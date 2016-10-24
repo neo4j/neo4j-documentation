@@ -699,6 +699,15 @@
         <version>${findbugs.version}</version>
         <scope>provided</scope>
       </dependency>
+
+      <!-- When this dependency is declared in the plugin configuration it
+           doesn't use m2.neo4j.org -->
+      <dependency>
+        <groupId>org.neo4j.build</groupId>
+        <artifactId>licensecheck-config</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 </project>
