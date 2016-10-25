@@ -39,8 +39,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService;
 import org.neo4j.graphdb.schema.Schema;
-import org.neo4j.kernel.api.security.AccessMode;
 import org.neo4j.kernel.api.KernelTransaction;
+import org.neo4j.kernel.api.security.AnonymousContext;
 import org.neo4j.kernel.impl.coreapi.InternalTransaction;
 import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
 import org.neo4j.test.TestGraphDatabaseFactory;
@@ -344,7 +344,7 @@ public class BlockTypeTest
         when( graph.schema() ).thenReturn( schema );
         doNothing().when( schema ).awaitIndexesOnline( anyLong(), any( TimeUnit.class ) );
         when( database.getGraphDatabaseService() ).thenReturn( graph );
-        when( database.beginTransaction( any( KernelTransaction.Type.class ), any( AccessMode.class ) ) )
+        when( database.beginTransaction( any( KernelTransaction.Type.class ), any( AnonymousContext.class ) ) )
                 .thenReturn( mock( InternalTransaction.class ) );
         Block block = new Block( myQuery, BlockType.CYPHER );
         org.neo4j.graphdb.Result result = mock( org.neo4j.graphdb.Result.class );

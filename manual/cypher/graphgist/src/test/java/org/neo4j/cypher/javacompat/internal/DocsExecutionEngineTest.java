@@ -29,7 +29,7 @@ import org.neo4j.cypher.internal.DocsExecutionEngine;
 import org.neo4j.cypher.internal.compiler.v3_1.executionplan.InternalExecutionResult;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
 import org.neo4j.kernel.api.KernelTransaction;
-import org.neo4j.kernel.api.security.AccessMode;
+import org.neo4j.kernel.api.security.SecurityContext;
 import org.neo4j.kernel.impl.coreapi.InternalTransaction;
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker;
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContext;
@@ -87,7 +87,7 @@ public class DocsExecutionEngineTest
 
     public static Neo4jTransactionalContext createTransactionalContext( String query )
     {
-        InternalTransaction transaction = database.beginTransaction( KernelTransaction.Type.implicit, AccessMode.Static.FULL );
+        InternalTransaction transaction = database.beginTransaction( KernelTransaction.Type.implicit, SecurityContext.AUTH_DISABLED );
         return contextFactory.newContext(
                 QuerySource.UNKNOWN, transaction, query, Collections.emptyMap() );
     }

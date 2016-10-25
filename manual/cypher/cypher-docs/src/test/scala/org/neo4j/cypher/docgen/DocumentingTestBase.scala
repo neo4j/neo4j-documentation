@@ -40,14 +40,14 @@ import org.neo4j.graphdb._
 import org.neo4j.graphdb.factory.GraphDatabaseSettings
 import org.neo4j.graphdb.index.Index
 import org.neo4j.kernel.api.KernelTransaction
-import org.neo4j.kernel.api.security.{AccessMode, AuthSubject}
+import org.neo4j.kernel.api.security.{SecurityContext}
 import org.neo4j.kernel.configuration.Settings
 import org.neo4j.kernel.impl.api.KernelStatement
 import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.core.ThreadToStatementContextBridge
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
-import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySource, TransactionalContext}
+import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySource}
 import org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.test.{GraphDescription, TestGraphDatabaseFactory}
 import org.neo4j.visualization.asciidoc.AsciidocHelper
@@ -325,7 +325,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     val results = planners.flatMap {
       case planner if expectedException.isEmpty =>
         val contextFactory = new Neo4jTransactionalContextFactory( db, new PropertyContainerLocker )
-        val transaction = db.beginTransaction( KernelTransaction.Type.`implicit`, AccessMode.Static.FULL )
+        val transaction = db.beginTransaction( KernelTransaction.Type.`implicit`, SecurityContext.AUTH_DISABLED )
         val result = engine.execute(
           s"$planner $query",
           parameters,
@@ -348,7 +348,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
       case s =>
         val contextFactory = new Neo4jTransactionalContextFactory( db, new PropertyContainerLocker )
-        val transaction = db.beginTransaction( KernelTransaction.Type.`implicit`, AccessMode.Static.FULL )
+        val transaction = db.beginTransaction( KernelTransaction.Type.`implicit`, SecurityContext.AUTH_DISABLED )
         val e = intercept[CypherException](
             engine.execute(
               s"$s $query",
@@ -434,7 +434,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   private def executeQueries(tx: InternalTransaction, queries: List[String]) {
     val contextFactory = new Neo4jTransactionalContextFactory( db, new PropertyContainerLocker )
     queries.foreach { query => {
-      val innerTx = db.beginTransaction( KernelTransaction.Type.`implicit`, tx.mode() )
+      val innerTx = db.beginTransaction( KernelTransaction.Type.`implicit`, tx.securityContext() )
       engine.execute( query, Map.empty[String, Object],
         contextFactory.newContext(
           QuerySource.UNKNOWN,
