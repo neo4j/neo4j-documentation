@@ -88,7 +88,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     val fullQuerySnippet = AsciidocHelper.createCypherSnippetFromPreformattedQuery(Prettifier(docQuery), true)
     allQueriesWriter.append(fullQuerySnippet).append("\n\n")
 
-    val contextFactory = new Neo4jTransactionalContextFactory( db, new PropertyContainerLocker )
+    val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
     val result = db.withTx(
       tx => engine.execute(testQuery, params,
         contextFactory.newContext(
