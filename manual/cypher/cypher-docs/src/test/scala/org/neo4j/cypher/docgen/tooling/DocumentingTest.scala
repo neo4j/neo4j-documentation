@@ -120,7 +120,7 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
 // Used to format values coming from Cypher. Maps, lists, nodes, relationships and paths all have custom
 // formatting applied to them
 class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) extends (Any => String) with CypherSerializer with GraphIcing {
-  val contextFactory = new Neo4jTransactionalContextFactory( db, new PropertyContainerLocker )
+  val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
   def apply(x: Any): String = {
 
     val transactionalContext = TransactionalContextWrapperv3_1(

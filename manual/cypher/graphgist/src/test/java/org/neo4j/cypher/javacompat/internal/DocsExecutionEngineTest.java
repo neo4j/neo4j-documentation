@@ -32,8 +32,9 @@ import org.neo4j.kernel.api.KernelTransaction;
 import org.neo4j.kernel.api.security.SecurityContext;
 import org.neo4j.kernel.impl.coreapi.InternalTransaction;
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker;
-import org.neo4j.kernel.impl.query.Neo4jTransactionalContext;
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory;
+import org.neo4j.kernel.impl.query.TransactionalContext;
+import org.neo4j.kernel.impl.query.TransactionalContextFactory;
 import org.neo4j.kernel.impl.query.QuerySource;
 import org.neo4j.logging.NullLogProvider;
 import org.neo4j.test.TestGraphDatabaseFactory;
@@ -46,7 +47,7 @@ public class DocsExecutionEngineTest
 {
     private static GraphDatabaseCypherService database;
     private static DocsExecutionEngine engine;
-    private static Neo4jTransactionalContextFactory contextFactory;
+    private static TransactionalContextFactory contextFactory;
 
     @Before
     public void setup()
@@ -54,7 +55,7 @@ public class DocsExecutionEngineTest
         EphemeralFileSystemAbstraction fs = new EphemeralFileSystemAbstraction();
         database = new GraphDatabaseCypherService(new TestGraphDatabaseFactory().setFileSystem( fs ).newImpermanentDatabase());
         engine = new DocsExecutionEngine( database, NullLogProvider.getInstance() );
-        contextFactory = new Neo4jTransactionalContextFactory( database, new PropertyContainerLocker() );
+        contextFactory = Neo4jTransactionalContextFactory.create( database, new PropertyContainerLocker() );
     }
 
     @After
@@ -85,7 +86,7 @@ public class DocsExecutionEngineTest
         assertThat( result.javaIterator().hasNext(), equalTo( true ) );
     }
 
-    public static Neo4jTransactionalContext createTransactionalContext( String query )
+    public static TransactionalContext createTransactionalContext( String query )
     {
         InternalTransaction transaction = database.beginTransaction( KernelTransaction.Type.implicit, SecurityContext.AUTH_DISABLED );
         return contextFactory.newContext(

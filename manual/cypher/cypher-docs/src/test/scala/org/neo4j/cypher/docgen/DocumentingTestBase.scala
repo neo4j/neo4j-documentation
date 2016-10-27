@@ -324,7 +324,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
     val results = planners.flatMap {
       case planner if expectedException.isEmpty =>
-        val contextFactory = new Neo4jTransactionalContextFactory( db, new PropertyContainerLocker )
+        val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
         val transaction = db.beginTransaction( KernelTransaction.Type.`implicit`, SecurityContext.AUTH_DISABLED )
         val result = engine.execute(
           s"$planner $query",
@@ -347,7 +347,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         Some(dump)
 
       case s =>
-        val contextFactory = new Neo4jTransactionalContextFactory( db, new PropertyContainerLocker )
+        val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
         val transaction = db.beginTransaction( KernelTransaction.Type.`implicit`, SecurityContext.AUTH_DISABLED )
         val e = intercept[CypherException](
             engine.execute(
@@ -432,7 +432,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   }
 
   private def executeQueries(tx: InternalTransaction, queries: List[String]) {
-    val contextFactory = new Neo4jTransactionalContextFactory( db, new PropertyContainerLocker )
+    val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
     queries.foreach { query => {
       val innerTx = db.beginTransaction( KernelTransaction.Type.`implicit`, tx.securityContext() )
       engine.execute( query, Map.empty[String, Object],
