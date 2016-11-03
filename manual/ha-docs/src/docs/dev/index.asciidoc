@@ -14,8 +14,6 @@ Neo4j High Availability or “Neo4j HA” provides the following two main featur
 
 include::architecture.asciidoc[]
 
-include::config.asciidoc[]
-
 include::operation.asciidoc[]
 
 include::arbiter.asciidoc[]
