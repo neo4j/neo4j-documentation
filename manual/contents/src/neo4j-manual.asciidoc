@@ -53,3 +53,5 @@ include::terminology.asciidoc[]
 :leveloffset: 0
 
 include::resources.asciidoc[]
+
+include::dummy-ids.asciidoc[]

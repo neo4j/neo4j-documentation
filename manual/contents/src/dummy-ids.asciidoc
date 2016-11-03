@@ -1,0 +1,11 @@
+// [appendix]
+[[dummy-ids]]
+Dummy IDs.
+
+
+[[file-locations]]
+File locations.
+
+[[ha-configuration]]
+HA configuration.
+

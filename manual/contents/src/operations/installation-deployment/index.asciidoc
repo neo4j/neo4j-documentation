@@ -13,9 +13,5 @@ include::requirements.asciidoc[]
 
 :leveloffset: 2
 
-include::file-locations.asciidoc[]
-
-:leveloffset: 2
-
 include::udc.asciidoc[]
 
