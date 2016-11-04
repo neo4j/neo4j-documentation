@@ -351,33 +351,6 @@
               </postProcess>
             </configuration>
           </execution>
-          <execution>
-            <id>generate-pdf</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>generate-pdf</goal>
-            </goals>
-            <configuration>
-              <includes>neo4j-manual-shortinfo.xml</includes>
-              <foCustomization>${docs.resources}/conf/fo.xsl</foCustomization>
-              <externalFOPConfiguration>${docs.resources}/conf/fop.xml</externalFOPConfiguration>
-              <generateToc>
-                book toc
-                part toc
-              </generateToc>
-              <preProcess>
-                <copy todir="${project.build.directory}/images" overwrite="true">
-                  <fileset dir="${docs.resources}/images"/>
-                </copy>
-                <copy todir="${project.build.directory}/images" overwrite="true">
-                  <fileset dir="${docs.contents}/src/images"/>
-                </copy>
-                <replace file="${project.build.directory}/neo4j-manual-shortinfo.xml" encoding="UTF-8" token="url=&quot;javadocs" value="url=&quot;http://neo4j.com/docs/${project.version}/javadocs" />
-                <replace file="${project.build.directory}/neo4j-manual-shortinfo.xml" encoding="UTF-8" token="url=&quot;cypher-refcard" value="url=&quot;http://neo4j.com/docs/${project.version}/cypher-refcard" />
-              </preProcess>
-              <admonGraphicsPath>${docs.resources}/images/icons/admon/</admonGraphicsPath>
-            </configuration>
-          </execution>
         </executions>
         <configuration>
           <xincludeSupported>true</xincludeSupported>
@@ -445,6 +418,7 @@
   </build>
 
   <profiles>
+
     <profile>
       <id>debug-asciidoc</id>
       <activation>
@@ -479,6 +453,54 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>create-pdf</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.agilejava.docbkx</groupId>
+            <artifactId>docbkx-maven-plugin</artifactId>
+            <version>2.0.16</version>
+            <executions>
+              <execution>
+                <id>generate-pdf</id>
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>generate-pdf</goal>
+                </goals>
+                <configuration>
+                  <includes>neo4j-manual-shortinfo.xml</includes>
+                  <foCustomization>${docs.resources}/conf/fo.xsl</foCustomization>
+                  <externalFOPConfiguration>${docs.resources}/conf/fop.xml</externalFOPConfiguration>
+                  <generateToc>
+                    book toc
+                    part toc
+                  </generateToc>
+                  <preProcess>
+                    <copy todir="${project.build.directory}/images" overwrite="true">
+                      <fileset dir="${docs.resources}/images"/>
+                    </copy>
+                    <copy todir="${project.build.directory}/images" overwrite="true">
+                      <fileset dir="${docs.contents}/src/images"/>
+                    </copy>
+                    <replace file="${project.build.directory}/neo4j-manual-shortinfo.xml" encoding="UTF-8" token="url=&quot;javadocs" value="url=&quot;http://neo4j.com/docs/${project.version}/javadocs" />
+                    <replace file="${project.build.directory}/neo4j-manual-shortinfo.xml" encoding="UTF-8" token="url=&quot;cypher-refcard" value="url=&quot;http://neo4j.com/docs/${project.version}/cypher-refcard" />
+                  </preProcess>
+                  <admonGraphicsPath>${docs.resources}/images/icons/admon/</admonGraphicsPath>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+
+    </profile>
+
   </profiles>
 
 </project>
