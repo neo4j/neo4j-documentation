@@ -2,8 +2,8 @@
 include::jmx-list.asciidoc[]
 
 [NOTE]
-For additional information on the primitive datatypes (+int+, +long+ etc.) used in the JMX attributes,
-please see <<property-value-types>> in <<graphdb-neo4j-properties>>.
+For additional information on the primitive datatypes (`int`, `long` etc.) used in the JMX attributes,
+please see <<property-value-types>> in link:{developer-manual-base-uri}/introduction/#graphdb-neo4j-properties[Developer Manual -> Introduction: Properties].
 
 include::jmx-branched-store.asciidoc[]
 
