@@ -32,7 +32,6 @@
     <module>enterprise-server-docs</module>
     <module>shell</module>
     <module>kernel</module>
-    <module>management-docs</module>
     <module>lucene</module>
     <module>backup</module>
     <module>ha-docs</module>
