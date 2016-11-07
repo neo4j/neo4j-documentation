@@ -22,12 +22,12 @@ package org.neo4j.cypher.docgen.tooling
 import java.io._
 import java.util.Collections
 
-import org.neo4j.cypher.internal.compiler.v3_1.CypherSerializer
-import org.neo4j.cypher.internal.frontend.v3_1.test_helpers.CypherFunSuite
+import org.neo4j.cypher.internal.compiler.v3_2.CypherSerializer
+import org.neo4j.cypher.internal.frontend.v3_2.test_helpers.CypherFunSuite
 import org.neo4j.cypher.internal.helpers.GraphIcing
-import org.neo4j.cypher.internal.spi.TransactionalContextWrapperv3_1
-import org.neo4j.cypher.internal.spi.v3_1.TransactionBoundQueryContext
-import org.neo4j.cypher.internal.spi.v3_1.TransactionBoundQueryContext.IndexSearchMonitor
+import org.neo4j.cypher.internal.spi.v3_2.TransactionalContextWrapper
+import org.neo4j.cypher.internal.spi.v3_2.TransactionBoundQueryContext
+import org.neo4j.cypher.internal.spi.v3_2.TransactionBoundQueryContext.IndexSearchMonitor
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.api.index.IndexDescriptor
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
@@ -123,7 +123,7 @@ class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) ext
   val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
   def apply(x: Any): String = {
 
-    val transactionalContext = TransactionalContextWrapperv3_1(
+    val transactionalContext = TransactionalContextWrapper(
       contextFactory.newContext( QuerySource.UNKNOWN, tx, "QUERY", Collections.emptyMap() )
     )
     val ctx = new TransactionBoundQueryContext(transactionalContext)(QuietMonitor)

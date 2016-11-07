@@ -26,7 +26,7 @@ import org.junit.Test;
 import java.util.Collections;
 
 import org.neo4j.cypher.internal.DocsExecutionEngine;
-import org.neo4j.cypher.internal.compiler.v3_1.executionplan.InternalExecutionResult;
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
 import org.neo4j.kernel.api.KernelTransaction;
 import org.neo4j.kernel.api.security.SecurityContext;
