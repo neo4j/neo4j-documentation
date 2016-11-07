@@ -70,7 +70,7 @@ import static org.neo4j.bolt.v1.transport.integration.TransportTestUtil.receiveO
 public class BoltFullExchangesDocTest
 {
     private static final long DEFAULT_TIME = 12L;
-    private static final String VERSION = "Neo4j/3.1.0";
+    private static final String VERSION = "Neo4j/3.2.0";
 
     private String ephemeralAuthPath = "/auth";
     private String authPath = this.getClass().getResource( "/authorization/auth" ).getPath();

@@ -24,10 +24,10 @@ Client: INIT "MyClient/1.0" { "scheme": "basic", "principal": "neo4j", "credenti
   63 72 65 64  65 6E 74 69  61 6C 73 86  73 65 63 72
   65 74 00 00
 
-Server: SUCCESS { "server": "Neo4j/3.1.0" }
+Server: SUCCESS { "server": "Neo4j/3.2.0" }
 
   00 16 B1 70  A1 86 73 65  72 76 65 72  8B 4E 65 6F
-  34 6A 2F 33  2E 31 2E 30  00 00
+  34 6A 2F 33  2E 32 2E 30  00 00
 
 Client: RUN "RETURN 1 AS num" {}
 
@@ -80,10 +80,10 @@ Client: INIT "MyClient/1.0" { "scheme": "basic", "principal": "neo4j", "credenti
   63 72 65 64  65 6E 74 69  61 6C 73 86  73 65 63 72
   65 74 00 00
 
-Server: SUCCESS { "server": "Neo4j/3.1.0" }
+Server: SUCCESS { "server": "Neo4j/3.2.0" }
 
   00 16 B1 70  A1 86 73 65  72 76 65 72  8B 4E 65 6F
-  34 6A 2F 33  2E 31 2E 30  00 00
+  34 6A 2F 33  2E 32 2E 30  00 00
 
 # Batch of messages
 Client: RUN "RETURN 1 AS num" {}
@@ -161,10 +161,10 @@ Client: INIT "MyClient/1.0" { "scheme": "basic", "principal": "neo4j", "credenti
   63 72 65 64  65 6E 74 69  61 6C 73 86  73 65 63 72
   65 74 00 00
 
-Server: SUCCESS { "server": "Neo4j/3.1.0" }
+Server: SUCCESS { "server": "Neo4j/3.2.0" }
 
   00 16 B1 70  A1 86 73 65  72 76 65 72  8B 4E 65 6F
-  34 6A 2F 33  2E 31 2E 30  00 00
+  34 6A 2F 33  2E 32 2E 30  00 00
 
 # Message with syntax error
 Client: RUN "This will cause a syntax error" {}
@@ -252,10 +252,10 @@ Client: INIT "MyClient/1.0" { "scheme": "basic", "principal": "neo4j", "credenti
   63 72 65 64  65 6E 74 69  61 6C 73 86  73 65 63 72
   65 74 00 00
 
-Server: SUCCESS { "server": "Neo4j/3.1.0" }
+Server: SUCCESS { "server": "Neo4j/3.2.0" }
 
   00 16 B1 70  A1 86 73 65  72 76 65 72  8B 4E 65 6F
-  34 6A 2F 33  2E 31 2E 30  00 00
+  34 6A 2F 33  2E 32 2E 30  00 00
 
 
 # We explicitly create a transaction
@@ -358,10 +358,10 @@ Client: INIT "MyClient/1.0" { "scheme": "basic", "principal": "neo4j", "credenti
   63 72 65 64  65 6E 74 69  61 6C 73 86  73 65 63 72
   65 74 00 00
 
-Server: SUCCESS { "server": "Neo4j/3.1.0" }
+Server: SUCCESS { "server": "Neo4j/3.2.0" }
 
   00 16 B1 70  A1 86 73 65  72 76 65 72  8B 4E 65 6F
-  34 6A 2F 33  2E 31 2E 30  00 00
+  34 6A 2F 33  2E 32 2E 30  00 00
 
 # Running a read-only statement will not return any statistics
 Client: RUN "RETURN 1 AS num" {}
@@ -441,10 +441,10 @@ Client: INIT "MyClient/1.0" { "scheme": "basic", "principal": "neo4j", "credenti
   63 72 65 64  65 6E 74 69  61 6C 73 86  73 65 63 72
   65 74 00 00
 
-Server: SUCCESS { "server": "Neo4j/3.1.0" }
+Server: SUCCESS { "server": "Neo4j/3.2.0" }
 
   00 16 B1 70  A1 86 73 65  72 76 65 72  8B 4E 65 6F
-  34 6A 2F 33  2E 31 2E 30  00 00
+  34 6A 2F 33  2E 32 2E 30  00 00
 
 # Explaining the query will not execute it, so it returns an empty result and the query plan
 Client: RUN "EXPLAIN RETURN 1 AS num" {}
@@ -469,7 +469,7 @@ Server: SUCCESS {
             "args": {
               "runtime-impl": "INTERPRETED",
               "planner-impl": "IDP",
-              "version": "CYPHER 3.1",
+              "version": "CYPHER 3.2",
               "KeyNames": "num",
               "EstimatedRows": 1.0,
               "planner": "COST",
@@ -494,7 +494,7 @@ Server: SUCCESS {
   8C 72 75 6E  74 69 6D 65  2D 69 6D 70  6C 8B 49 4E
   54 45 52 50  52 45 54 45  44 8C 70 6C  61 6E 6E 65
   72 2D 69 6D  70 6C 83 49  44 50 87 76  65 72 73 69
-  6F 6E 8A 43  59 50 48 45  52 20 33 2E  31 88 4B 65
+  6F 6E 8A 43  59 50 48 45  52 20 33 2E  32 88 4B 65
   79 4E 61 6D  65 73 83 6E  75 6D 8D 45  73 74 69 6D
   61 74 65 64  52 6F 77 73  C1 3F F0 00  00 00 00 00
   00 87 70 6C  61 6E 6E 65  72 84 43 4F  53 54 87 72
@@ -544,7 +544,7 @@ Server: SUCCESS {
               "KeyNames":"num",
               "runtime":"INTERPRETED",
               "runtime-impl":"INTERPRETED",
-              "version":"CYPHER 3.1",
+              "version":"CYPHER 3.2",
               "EstimatedRows":1.0,
               "planner":"COST",
               "DbHits":0,
@@ -581,7 +581,7 @@ Server: SUCCESS {
   52 45 54 45  44 8C 72 75  6E 74 69 6D  65 2D 69 6D
   70 6C 8B 49  4E 54 45 52  50 52 45 54  45 44 87 76
   65 72 73 69  6F 6E 8A 43  59 50 48 45  52 20 33 2E
-  31 8D 45 73  74 69 6D 61  74 65 64 52  6F 77 73 C1
+  32 8D 45 73  74 69 6D 61  74 65 64 52  6F 77 73 C1
   3F F0 00 00  00 00 00 00  87 70 6C 61  6E 6E 65 72
   84 43 4F 53  54 86 44 62  48 69 74 73  00 84 52 6F
   77 73 01 8C  6F 70 65 72  61 74 6F 72  54 79 70 65
@@ -623,10 +623,10 @@ Client: INIT "MyClient/1.0" { "scheme": "basic", "principal": "neo4j", "credenti
   63 72 65 64  65 6E 74 69  61 6C 73 86  73 65 63 72
   65 74 00 00
 
-Server: SUCCESS { "server": "Neo4j/3.1.0" }
+Server: SUCCESS { "server": "Neo4j/3.2.0" }
 
   00 16 B1 70  A1 86 73 65  72 76 65 72  8B 4E 65 6F
-  34 6A 2F 33  2E 31 2E 30  00 00
+  34 6A 2F 33  2E 32 2E 30  00 00
 
 # Sending a statement that would result in notifications
 Client: RUN "EXPLAIN MATCH (n), (m) RETURN n, m" {}
@@ -652,7 +652,7 @@ Server: SUCCESS {
             "args": {
               "runtime-impl": "INTERPRETED",
               "planner-impl": "IDP",
-              "version": "CYPHER 3.1",
+              "version": "CYPHER 3.2",
               "KeyNames": "n, m",
               "EstimatedRows": 1.0,
               "planner": "COST",
@@ -694,7 +694,7 @@ Server: SUCCESS {
   8C 72 75 6E  74 69 6D 65  2D 69 6D 70  6C 8B 49 4E
   54 45 52 50  52 45 54 45  44 8C 70 6C  61 6E 6E 65
   72 2D 69 6D  70 6C 83 49  44 50 87 76  65 72 73 69
-  6F 6E 8A 43  59 50 48 45  52 20 33 2E  31 88 4B 65
+  6F 6E 8A 43  59 50 48 45  52 20 33 2E  32 88 4B 65
   79 4E 61 6D  65 73 84 6E  2C 20 6D 8D  45 73 74 69
   6D 61 74 65  64 52 6F 77  73 C1 3F F0  00 00 00 00
   00 00 87 70  6C 61 6E 6E  65 72 84 43  4F 53 54 87
@@ -783,10 +783,10 @@ Client: INIT "MyClient/1.0" { "scheme": "basic", "principal": "neo4j", "credenti
   63 72 65 64  65 6E 74 69  61 6C 73 86  73 65 63 72
   65 74 00 00
 
-Server: SUCCESS { "server": "Neo4j/3.1.0" }
+Server: SUCCESS { "server": "Neo4j/3.2.0" }
 
   00 16 B1 70  A1 86 73 65  72 76 65 72  8B 4E 65 6F
-  34 6A 2F 33  2E 31 2E 30  00 00
+  34 6A 2F 33  2E 32 2E 30  00 00
 
 # Batch of messages
 Client: RUN "RETURN 1 AS num" {}
