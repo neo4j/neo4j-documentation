@@ -78,7 +78,7 @@ replace({original}, {search}, {replacement})
 ###
 
 Replace all occurrences of `search` with `replacement`.
-All arguments are be expressions.
+All arguments must be expressions.
 
 ###assertion=returns-one parameters=sub
 RETURN
