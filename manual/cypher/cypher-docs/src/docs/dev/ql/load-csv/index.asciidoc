@@ -11,7 +11,7 @@
 * The URL of the CSV file is specified by using `FROM` followed by an arbitrary expression evaluating to the URL in question.
 * It is required to specify a variable for the CSV data using `AS`.
 * `LOAD CSV` supports resources compressed with _gzip_, _Deflate_, as well as _ZIP_ archives.
-* CSV files can be stored on the database server and are then accessible using a `file:///` URL.
+* CSV files can be stored on the database server and are then accessible using a `+file:///+` URL.
   Alternatively, `LOAD CSV` also supports accessing CSV files via _HTTPS_, _HTTP_, and _FTP_.
 * `LOAD CSV` will follow _HTTP_ redirects but for security reasons it will not follow redirects that changes the protocol, for example if the redirect is going from _HTTPS_ to _HTTP_.
 
@@ -19,11 +19,11 @@
 .Configuration settings for file URLs
 ====
 link:{dbms-allow-csv-import-from-file-urls-uri}[dbms.security.allow_csv_import_from_file_urls]::
-This setting determines if Cypher will allow the use of `file:///` URLs when loading data using `LOAD CSV`.
+This setting determines if Cypher will allow the use of `+file:///+` URLs when loading data using `LOAD CSV`.
 Such URLs identify files on the filesystem of the database server. Default is _true_.
 link:{dbms-directories-import-uri}[dbms.directories.import]::
-Sets the root directory for `file:///` URLs used with the Cypher `LOAD CSV` clause.
-This must be set to a single directory on the filesystem of the database server, and will make all requests to load from `file:///` URLs relative to the specified directory (similar to how a unix chroot operates).
+Sets the root directory for `+file:///+` URLs used with the Cypher `LOAD CSV` clause.
+This must be set to a single directory on the filesystem of the database server, and will make all requests to load from `+file:///+` URLs relative to the specified directory (similar to how a unix chroot operates).
 The default value is _import_.
 This is a security measure which prevents the database from accessing files outside the standard import directory.
 
