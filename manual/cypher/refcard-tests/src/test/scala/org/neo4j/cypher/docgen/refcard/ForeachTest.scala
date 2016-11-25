@@ -58,12 +58,12 @@ MATCH path = (begin)-[*]->(end)
 WHERE id(begin) = %A% AND id(end) = %B%
 
 FOREACH (r IN rels(path) |
-  SET r.marked = TRUE)
+  SET r.marked = true)
 ###
 Execute a mutating operation for each relationship of a path.
 
 ###assertion=foreach
-WITH ["Alice", "Bob", "Charlie"] AS coll
+WITH ['Alice', 'Bob', 'Charlie'] AS coll
 
 FOREACH (value IN coll |
  CREATE (:Person {name: value}))

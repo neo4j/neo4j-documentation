@@ -73,7 +73,8 @@ It separates query parts explicitly, allowing you to declare which variables to 
 MATCH (user)-[:FRIEND]-(friend)
 WITH user, count(friend) AS friends
 ORDER BY friends DESC
-SKIP 1 LIMIT 3
+  SKIP 1
+  LIMIT 3
 RETURN user
 ###
 

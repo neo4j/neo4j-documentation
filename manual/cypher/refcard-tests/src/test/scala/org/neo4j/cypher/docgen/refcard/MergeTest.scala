@@ -62,15 +62,15 @@ class MergeTest extends RefcardTest with QueryStatisticsTestSupport {
 //
 
 MERGE (n:Person {name: {value}})
-ON CREATE SET n.created = timestamp()
-ON MATCH SET
+  ON CREATE SET n.created = timestamp()
+  ON MATCH SET
     n.counter = coalesce(n.counter, 0) + 1,
     n.accessTime = timestamp()
 
 RETURN n###
 
 Match pattern or create it if it does not exist.
-Use +ON CREATE+ and +ON MATCH+ for conditional updates.
+Use `ON CREATE` and `ON MATCH` for conditional updates.
 
 ###assertion=merge-rel parameters=names
 //
@@ -81,7 +81,7 @@ MERGE (a)-[r:LOVES]->(b)
 
 RETURN r###
 
-+MERGE+ finds or creates a relationship between the nodes.
+`MERGE` finds or creates a relationship between the nodes.
 
 ###assertion=merge-sub parameters=names
 //
@@ -92,6 +92,6 @@ MERGE
 
 RETURN r, b###
 
-+MERGE+ finds or creates subgraphs attached to the node.
+`MERGE` finds or creates subgraphs attached to the node.
 """
 }
