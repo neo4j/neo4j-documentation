@@ -46,7 +46,7 @@ class PrettyGraphsTest extends DocumentingTest with QueryStatisticsTestSupport {
            |- Find the minimum and maximum leaf and connect these.
            |- Return the id of the center node.""")
       query( """CREATE (center)
-               |foreach( x in range(1,6) |
+               |FOREACH ( x IN range(1,6) |
                |   CREATE (leaf {count:x}), (center)-[:X]->(leaf)
                |)
                |WITH center
@@ -54,12 +54,12 @@ class PrettyGraphsTest extends DocumentingTest with QueryStatisticsTestSupport {
                |WHERE large_leaf.count = small_leaf.count + 1
                |CREATE (small_leaf)-[:X]->(large_leaf)
                |
-               |WITH center, min(small_leaf.count) as min, max(large_leaf.count) as max
+               |WITH center, min(small_leaf.count) AS min, max(large_leaf.count) AS max
                |MATCH (first_leaf)<--(center)-->(last_leaf)
                |WHERE first_leaf.count = min AND last_leaf.count = max
                |CREATE (last_leaf)-[:X]->(first_leaf)
                |
-               |RETURN id(center) as id""", assertWheelGraph) {
+               |RETURN id(center) AS id""", assertWheelGraph) {
         p("The query returns the id of the center node.")
         resultTable()
         graphViz("graph [layout=neato]")
@@ -69,9 +69,9 @@ class PrettyGraphsTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """To create this graph, we first create 6 nodes and label them with the Leaf label.
           |We then match all the unique pairs of nodes, and create a relationship between them.""".stripMargin)
-      query( """FOREACH (x IN range(1,6)| CREATE (leaf:Leaf { count : x }))
+      query( """FOREACH (x IN range(1,6)| CREATE (leaf:Leaf {count: x}))
                |WITH *
-               |MATCH (leaf1:Leaf),(leaf2:Leaf)
+               |MATCH (leaf1:Leaf), (leaf2:Leaf)
                |WHERE leaf1.count < leaf2.count
                |CREATE (leaf1)-[:X]->(leaf2)""", assertCompleteGraph) {
         p("Nothing is returned by this query")
@@ -83,7 +83,7 @@ class PrettyGraphsTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """This query first creates a center node, and then once per element in the range, creates a cycle graph and connects it to the center.""".stripMargin)
       query( """CREATE (center)
-               |FOREACH (x IN range(1,3)| CREATE (leaf1),(leaf2),(center)-[:X]->(leaf1),(center)-[:X]->(leaf2),
+               |FOREACH (x IN range(1, 3)| CREATE (leaf1), (leaf2), (center)-[:X]->(leaf1), (center)-[:X]->(leaf2),
                |  (leaf1)-[:X]->(leaf2))
                |RETURN ID(center) AS id""", assertFriendshipGraph) {
         resultTable()

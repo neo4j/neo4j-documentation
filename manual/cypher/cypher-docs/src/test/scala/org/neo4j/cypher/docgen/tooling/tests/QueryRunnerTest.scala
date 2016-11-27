@@ -31,7 +31,7 @@ import org.scalatest.matchers.{MatchResult, Matcher}
 
 class QueryRunnerTest extends CypherFunSuite {
   test("invalid query fails") {
-    val query = "match n return x"
+    val query = "MATCH n RETURN x"
     val result = runQuery(query)
 
     result.queryResults should have size 1
@@ -39,7 +39,7 @@ class QueryRunnerTest extends CypherFunSuite {
   }
 
   test("assertion failure comes through nicely") {
-    val query = "match (n) return n"
+    val query = "MATCH (n) RETURN n"
     val result = runQuery(query, ResultAssertions(p => 1 should equal(2)))
 
     result.queryResults should have size 1

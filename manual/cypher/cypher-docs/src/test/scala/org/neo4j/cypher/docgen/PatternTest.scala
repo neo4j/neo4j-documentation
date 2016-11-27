@@ -61,7 +61,7 @@ is described in more details in:
 
 == Patterns for nodes ==
 
-The very simplest ``shape'' that can be described in a pattern is a node. A node is described using a pair of parentheses, and is typically given a name.
+The very simplest 'shape' that can be described in a pattern is a node. A node is described using a pair of parentheses, and is typically given a name.
 For example:
 
 [source,cypher]
@@ -83,7 +83,7 @@ For example:
 ----
 
 This pattern describes a very simple data shape: two nodes, and a single relationship from one to the other.
-In this example, the two nodes are both named as `a` and `b` respectively, and the relationship is ``directed'': it goes from `a` to `b`.
+In this example, the two nodes are both named as `a` and `b` respectively, and the relationship is 'directed': it goes from `a` to `b`.
 
 This way of describing nodes and relationships can be extended to cover an arbitrary number of nodes and the relationships between them, for example:
 
@@ -129,7 +129,7 @@ E.g. a node with two properties on it would look like:
 
 [source,cypher]
 ----
-(a { name: "Andres", sport: "Brazilian Ju-Jitsu" })
+(a { name: 'Andres', sport: 'Brazilian Ju-Jitsu'})
 ----
 
 A relationship with expectations on it would could look like:
@@ -218,7 +218,7 @@ This is equivalent to:
 (a)-->()-->(b)
 ----
 
-A range of lengths can also be specified: such relationship patterns are called ``variable length relationships''.
+A range of lengths can also be specified: such relationship patterns are called 'variable length relationships'.
 For example:
 
 [source,cypher]
@@ -257,7 +257,7 @@ MATCH (me)-[:KNOWS*1..2]-(remote_friend)
 WHERE me.name = "Filipa"
 RETURN remote_friend.name###
 
-This query finds data in the graph which a shape that fits the pattern: specifically a node (with the name property +Filipa+) and then the +KNOWS+ related nodes, one or two steps out.
+This query finds data in the graph which a shape that fits the pattern: specifically a node (with the name property `Filipa`) and then the `KNOWS` related nodes, one or two steps out.
 This is a typical example of finding first and second degree friends.
 
 Note that variable length relationships can not be used with `CREATE` and `MERGE`.

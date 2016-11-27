@@ -41,15 +41,15 @@ class CollabFilteringTest extends DocumentingTestBase {
       title = "Simple Friend Finder",
       text = """To find out the friends of Joe's friends that are not already his friends, the query looks like this:""",
       queryText =
-        "match (joe {name: 'Joe'})-[:knows*2..2]-(friend_of_friend) " +
-          "where not (joe)-[:knows]-(friend_of_friend) " +
-          "return friend_of_friend.name, COUNT(*) " +
-          "order by COUNT(*) DESC, friend_of_friend.name",
+        "MATCH (joe {name: 'Joe'})-[:knows*2..2]-(friend_of_friend) " +
+          "WHERE NOT (joe)-[:knows]-(friend_of_friend) " +
+          "RETURN friend_of_friend.name, count(*) " +
+          "ORDER BY count(*) DESC, friend_of_friend.name",
       optionalResultExplanation = "This returns a list of friends-of-friends ordered by the number of connections to them, and secondly by their name.",
       assertions = (p) => assertEquals(List(
-        Map("friend_of_friend.name" -> "Ian", "COUNT(*)" -> 2),
-        Map("friend_of_friend.name" -> "Derrick", "COUNT(*)" -> 1),
-        Map("friend_of_friend.name" -> "Jill", "COUNT(*)" -> 1)), p.toList))
+        Map("friend_of_friend.name" -> "Ian", "count(*)" -> 2),
+        Map("friend_of_friend.name" -> "Derrick", "count(*)" -> 1),
+        Map("friend_of_friend.name" -> "Jill", "count(*)" -> 1)), p.toList))
   }
 }
 

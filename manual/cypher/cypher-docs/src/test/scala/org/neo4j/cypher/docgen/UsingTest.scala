@@ -30,7 +30,7 @@ class UsingTest extends DocumentingTest {
       "CREATE INDEX ON :Science(name)",
 
       """CREATE
-        |(liskov:Scientist {name:'Liskov', born: 1939})-[:KNOWS]->(wing:Scientist {name:'Wing', born: 1956})-[:RESEARCHED]->(cs:Science {name:'Computer Science'})<-[:RESEARCHED]-(conway:Scientist {name: 'Conway', born: 1938}),
+        |(liskov:Scientist {name: 'Liskov', born: 1939})-[:KNOWS]->(wing:Scientist {name: 'Wing', born: 1956})-[:RESEARCHED]->(cs:Science {name: 'Computer Science'})<-[:RESEARCHED]-(conway:Scientist {name: 'Conway', born: 1938}),
         |(liskov)-[:RESEARCHED]->(cs),
         |(wing)-[:RESEARCHED]->(:Science {name: 'Engineering'}),
         |(chemistry:Science {name: 'Chemistry'})<-[:RESEARCHED]-(:Scientist {name: 'Curie', born: 1867}),

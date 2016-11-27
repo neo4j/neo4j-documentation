@@ -46,10 +46,10 @@ class HyperedgeTest extends DocumentingTestBase {
         'Group2'), the following query can traverse this HyperEdge node and
         provide answers.""",
       queryText =
-        "match ({name: 'User1'})-[:hasRoleInGroup]->(hyperEdge)-[:hasGroup]->({name: 'Group2'}), " +
+        "MATCH ({name: 'User1'})-[:hasRoleInGroup]->(hyperEdge)-[:hasGroup]->({name: 'Group2'}), " +
         "(hyperEdge)-[:hasRole]->(role) " +
-        "return role.name",
-      optionalResultExplanation = "The role of +User1+ is returned:",
+        "RETURN role.name",
+      optionalResultExplanation = "The role of `User1` is returned:",
       assertions = (p) => assertEquals(Map("role.name" -> "Role1"), p.toList.head))
   }
 
@@ -58,11 +58,11 @@ class HyperedgeTest extends DocumentingTestBase {
       title = "Find all groups and roles for a user",
       text = """Here, find all groups and the roles a user has, sorted by the name of the role.""",
       queryText =
-        "match ({name: 'User1'})-[:hasRoleInGroup]->(hyperEdge)-[:hasGroup]->(group), " +
+        "MATCH ({name: 'User1'})-[:hasRoleInGroup]->(hyperEdge)-[:hasGroup]->(group), " +
         "(hyperEdge)-[:hasRole]->(role) " +
-        "return role.name, group.name " +
-        "order by role.name asc",
-      optionalResultExplanation = "The groups and roles of +User1+ are returned:",
+        "RETURN role.name, group.name " +
+        "ORDER BY role.name asc",
+      optionalResultExplanation = "The groups and roles of `User1` are returned:",
       assertions = (p) => {
         val result = p.toList
         assertEquals(Map("role.name" -> "Role1", "group.name" -> "Group2"), result.head)

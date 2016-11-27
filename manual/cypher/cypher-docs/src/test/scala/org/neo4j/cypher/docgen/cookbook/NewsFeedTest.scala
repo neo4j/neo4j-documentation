@@ -33,13 +33,13 @@ class NewsFeedTest extends DocumentingTestBase {
   override val noTitle = true;
 
   override val setupQueries = List("""
-create
-(bob{name:'Bob'})-[:STATUS]->(bob_s1{name:'bob_s1', text:'bobs status1',date:1})-[:NEXT]->(bob_s2{name:'bob_s2', text:'bobs status2',date:4}),
-(alice{name:'Alice'})-[:STATUS]->(alice_s1{name:'alice_s1', text:'Alices status1',date:2})-[:NEXT]->(alice_s2{name:'alice_s2', text:'Alices status2',date:5}),
-(joe{name:'Joe'})-[:STATUS]->(joe_s1{name:'joe_s1', text:'Joe status1',date:3})-[:NEXT]->(joe_s2{name:'joe_s2', text:'Joe status2',date:6}),
-(joe)-[:FRIEND{status:'CONFIRMED'}]->(bob),
-(alice)-[:FRIEND{status:'PENDING'}]->(joe),
-(bob)-[:FRIEND{status:'CONFIRMED'}]->(alice)
+CREATE
+(bob {name: 'Bob'})-[:STATUS]->(bob_s1 {name: 'bob_s1', text: 'bobs status1', date: 1})-[:NEXT]->(bob_s2 {name: 'bob_s2', text: 'bobs status2', date: 4}),
+(alice {name: 'Alice'})-[:STATUS]->(alice_s1 {name: 'alice_s1', text: 'Alices status1', date: 2})-[:NEXT]->(alice_s2 {name: 'alice_s2', text: 'Alices status2', date: 5}),
+(joe {name: 'Joe'})-[:STATUS]->(joe_s1 {name: 'joe_s1', text: 'Joe status1', date: 3})-[:NEXT]->(joe_s2 {name: 'joe_s2', text: 'Joe status2', date: 6}),
+(joe)-[:FRIEND {status: 'CONFIRMED'}]->(bob),
+(alice)-[:FRIEND {status: 'PENDING'}]->(joe),
+(bob)-[:FRIEND {status: 'CONFIRMED'}]->(alice)
 """)
 
   @Test def timelineSearch() {
@@ -53,11 +53,12 @@ The query asked here is:
 
 Starting at `me`, retrieve the time-ordered status feed of the status updates of me and and all friends that are connected via a `CONFIRMED FRIEND` relationship to me.""",
       queryText = """MATCH (me {name: 'Joe'})-[rels:FRIEND*0..1]-(myfriend)
-WHERE ALL(r in rels WHERE r.status = 'CONFIRMED')
+WHERE ALL(r IN rels WHERE r.status = 'CONFIRMED')
 WITH myfriend
 MATCH (myfriend)-[:STATUS]-(latestupdate)-[:NEXT*0..1]-(statusupdates)
-RETURN myfriend.name as name, statusupdates.date as date, statusupdates.text as text
-ORDER BY statusupdates.date DESC LIMIT 3""",
+RETURN myfriend.name AS name, statusupdates.date AS date, statusupdates.text AS text
+ORDER BY statusupdates.date DESC
+LIMIT 3""",
       optionalResultExplanation =
 """
 To understand the strategy, let's divide the query into five steps:
