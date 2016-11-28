@@ -9,7 +9,7 @@ This section contains information on all functions in the Cypher query language.
 
 Note that related information exists in <<query-operators>>.
 
-Most functions in Cypher will return `NULL` if an input parameter is `NULL`.
+Most functions in Cypher will return `null` if an input parameter is `null`.
 
 **<<query-predicates,Predicate functions>>**
 
@@ -32,7 +32,7 @@ These functions return a single value.
 [options="header"]
 |===
 |Function                                           | Description
-|<<functions-coalesce,coalesce()>>                  | Returns the first non-`NULL` value in the list of expressions passed to it.
+|<<functions-coalesce,coalesce()>>                  | Returns the first non-`null` value in the list of expressions passed to it.
 |<<functions-endnode,endNode()>>                    | Returns the last node of a relationship.
 |<<functions-head,head()>>                          | Returns the first element in a list.
 |<<functions-id,id()>>                              | Returns the id of the relationship or node.
@@ -79,7 +79,7 @@ These functions all operate on numerical expressions only, and will return an er
 | <<functions-abs, abs()>>     | Returns the absolute value of a number.
 | <<functions-ceil, ceil()>>   | Returns the smallest integer greater than or equal to the argument.
 | <<functions-floor, floor()>> | Returns the greatest integer less than or equal to the expression.
-| <<functions-rand, rand()>>   | Returns a random number in the range from 0 (inclusive) to 1 (exclusive), `[0,1)`.
+| <<functions-rand, rand()>>   | Returns a random number in the range from 0 (inclusive) to 1 (exclusive), `[0, 1)`.
 | <<functions-round, round()>> | Returns the numerical expression, rounded to the nearest integer.
 | <<functions-sign, sign()>>   | Returns the signum of a number -- zero if the expression is zero, `-1` for any negative number, and `1` for any positive number.
 |===

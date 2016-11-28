@@ -12,9 +12,9 @@ Maps are only equal if they map exactly the same keys to equal values and lists 
 Values of different types are considered as equal according to the following rules:
 
 * Paths are treated as lists of alternating nodes and relationships and are equal to all lists that contain that very same sequence of nodes and relationships.
-* Testing any value against `NULL` with both the `=` and the `<>` operators always is `NULL`.
-This includes `NULL = NULL` and `NULL <> NULL`.
-The only way to reliably test if a value `v` is  `NULL` is by using the special `v IS NULL`, or `v IS NOT NULL` equality operators.
+* Testing any value against `null` with both the `=` and the `<>` operators always is `null`.
+This includes `null = null` and `null <> null`.
+The only way to reliably test if a value `v` is  `null` is by using the special `v IS NULL`, or `v IS NOT NULL` equality operators.
 
 All other combinations of types of values cannot be compared with each other.
 Especially, nodes, relationships, and literal maps are incomparable with each other.
@@ -31,7 +31,7 @@ The following points give some details on how the comparison is performed.
 * The special value `java.lang.Double.NaN` is regarded as being larger than all other numbers.
 * String values are compared for ordering using lexicographic order (e.g. `"x" < "xy"`).
 * Boolean values are compared for ordering such that `false < true`.
-* Comparing for ordering when one argument is +NULL+ is +NULL+ (e.g. `NULL < 3` is +NULL+).
+* Comparing for ordering when one argument is `null` (e.g. `null < 3` is `null`).
 * It is an error to compare other types of values with each other for ordering.
 
 == Chaining Comparison Operations ==

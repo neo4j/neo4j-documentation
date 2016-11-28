@@ -64,7 +64,7 @@ include::../../graphgists/intro/movies.csv[]
 [source,cypher]
 ----
 LOAD CSV WITH HEADERS FROM "movies.csv" AS line
-CREATE (m:Movie {id:line.id,title:line.title, released:toInt(line.year)});
+CREATE (m:Movie {id: line.id, title: line.title, released: toInt(line.year)});
 ----
 
 .persons.csv
@@ -76,7 +76,7 @@ include::../../graphgists/intro/persons.csv[]
 [source,cypher]
 ----
 LOAD CSV WITH HEADERS FROM "persons.csv" AS line
-MERGE (a:Person {id:line.id}) ON CREATE SET a.name=line.name;
+MERGE (a:Person {id: line.id}) ON CREATE SET a.name = line.name;
 ----
 
 .roles.csv
@@ -88,14 +88,14 @@ include::../../graphgists/intro/roles.csv[]
 [source,cypher]
 ----
 LOAD CSV WITH HEADERS FROM "roles.csv" AS line
-MATCH (m:Movie {id:line.movieId})
-MATCH (a:Person {id:line.personId})
+MATCH (m:Movie {id: line.movieId})
+MATCH (a:Person {id: line.personId})
 CREATE (a)-[:ACTED_IN {roles:[line.role]}]->(m);
 ----
 
 //graph
 
-If your file contains denormalized data, you can either run the same file with multiple passes and simple operations as shown above or you might have to use MERGE to create entities uniquely.
+If your file contains denormalized data, you can either run the same file with multiple passes and simple operations as shown above or you might have to use `MERGE` to create entities uniquely.
 
 For our use-case we can import the data using a CSV structure like this:
 
@@ -108,9 +108,9 @@ include::../../graphgists/intro/movie_actor_roles.csv[]
 [source,cypher]
 ----
 LOAD CSV WITH HEADERS FROM "movie_actor_roles.csv" AS line FIELDTERMINATOR ";"
-MERGE (m:Movie {title:line.title}) ON CREATE SET m.released = toInt(line.released)
-MERGE (a:Person {name:line.actor}) ON CREATE SET a.born = toInt(line.born)
-MERGE (a)-[:ACTED_IN {roles:split(line.characters,",") }]->(m)
+MERGE (m:Movie {title: line.title}) ON CREATE SET m.released = toInt(line.released)
+MERGE (a:Person {name: line.actor}) ON CREATE SET a.born = toInt(line.born)
+MERGE (a)-[:ACTED_IN {roles:split(line.characters, ',') }]->(m)
 ----
 
 //graph

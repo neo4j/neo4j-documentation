@@ -18,7 +18,7 @@ Note that databases with property existence constraints cannot be opened using N
 
 You can have multiple constraints for a given label and you can also combine unique and property existence constraints on the same property.
 
-Remember that adding constraints is an atomic operation that can take a while -- all existing data has to be scanned before Neo4j can turn the constraint ``on''.
+Remember that adding constraints is an atomic operation that can take a while -- all existing data has to be scanned before Neo4j can turn the constraint 'on'.
 
 Note that adding a unique property constraint on a property will also add an index on that property, so you cannot add such an index separately.
 Cypher will use that index for lookups just like other indexes.

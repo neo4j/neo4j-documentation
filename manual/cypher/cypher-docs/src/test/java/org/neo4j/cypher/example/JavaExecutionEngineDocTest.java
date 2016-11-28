@@ -171,10 +171,10 @@ public class JavaExecutionEngineDocTest
     public void testColumnAreInTheRightOrder() throws Exception
     {
         createTenNodes();
-        String q = "match (one), (two), (three), (four), (five), (six), (seven), (eight), (nine), (ten) " +
-                "where id(one) = 1 and id(two) = 2 and id(three) = 3 and id(four) = 4 and id(five) = 5 " +
-                "and id(six) = 6 and id(seven) = 7 and id(eight) = 8 and id(nine) = 9 and id(ten) = 10 " +
-                "return one, two, three, four, five, six, seven, eight, nine, ten";
+        String q = "MATCH (one), (two), (three), (four), (five), (six), (seven), (eight), (nine), (ten) " +
+                "WHERE id(one) = 1 AND id(two) = 2 AND id(three) = 3 AND id(four) = 4 AND id(five) = 5 " +
+                "AND id(six) = 6 AND id(seven) = 7 AND id(eight) = 8 AND id(nine) = 9 AND id(ten) = 10 " +
+                "RETURN one, two, three, four, five, six, seven, eight, nine, ten";
         Result result = db.execute( q );
         assertThat( result.resultAsString(), matchesPattern( "one.*two.*three.*four.*five.*six.*seven.*eight.*nine.*ten" ) );
     }
@@ -213,7 +213,7 @@ public class JavaExecutionEngineDocTest
         // START SNIPPET: exampleWithParameterForMultipleNodeIds
         Map<String, Object> params = new HashMap<>();
         params.put( "ids", Arrays.asList( 0, 1, 2 ) );
-        String query = "MATCH (n) WHERE id(n) in {ids} RETURN n.name";
+        String query = "MATCH (n) WHERE id(n) IN {ids} RETURN n.name";
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithParameterForMultipleNodeIds
 
@@ -394,7 +394,7 @@ public class JavaExecutionEngineDocTest
         // END SNIPPET: create_multiple_nodes_from_map
         dumpToFile( "create_multiple_nodes_from_map", query, params );
 
-        Result result = db.execute( "MATCH (n:Person) WHERE n.name in ['Andres', 'Michael'] AND n.position = 'Developer' RETURN n" );
+        Result result = db.execute( "MATCH (n:Person) WHERE n.name IN ['Andres', 'Michael'] AND n.position = 'Developer' RETURN n" );
         assertThat( count( result ), is( 2L ) );
 
         result = db.execute( "MATCH (n:Person) WHERE n.children = 3 RETURN n" );
