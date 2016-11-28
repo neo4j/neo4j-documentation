@@ -113,7 +113,7 @@ RETURN count(*);
 3
 ----
 
-Get only the actors whose names end with ``s'':
+Get only the actors whose names end with *'s'*:
 
 [source,cypher]
 ----

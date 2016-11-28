@@ -68,7 +68,7 @@ RETURN range(0, 10)[-5..]###
 ###
 RETURN range(0, 10)[..4]###
 
-NOTE: Out-of-bound slices are simply truncated, but out-of-bound single elements return +NULL+.
+NOTE: Out-of-bound slices are simply truncated, but out-of-bound single elements return `null`.
 
 ###
 RETURN range(0, 10)[15]###

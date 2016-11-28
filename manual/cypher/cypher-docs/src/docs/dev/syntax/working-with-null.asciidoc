@@ -5,7 +5,7 @@ Working with null
 == Introduction to 'null' in Cypher ==
 
 In Cypher, `null` is used to represent missing or undefined values.
-Conceptually, `null` means ``a missing unknown value'' and it is treated somewhat differently from other values.
+Conceptually, `null` means 'a missing unknown value' and it is treated somewhat differently from other values.
 For example getting a property from a node that does not have said property produces `null`.
 Most expressions that take `null` as input will produce `null`.
 This includes boolean expressions that are used as predicates in the `WHERE` clause.
@@ -17,7 +17,7 @@ So the expression `null` = `null` yields `null` and not `true`.
 
 == Logical operations with null ==
 
-The logical operators (`AND`, `OR`, `XOR`, `IN`, `NOT`) treat `null` as the ``unknown'' value of three-valued logic.
+The logical operators (`AND`, `OR`, `XOR`, `IN`, `NOT`) treat `null` as the 'unknown' value of three-valued logic.
 Here is the truth table for `AND`, `OR` and `XOR`.
 
 [options="header", cols="^,^,^,^,^", width="80%"]
