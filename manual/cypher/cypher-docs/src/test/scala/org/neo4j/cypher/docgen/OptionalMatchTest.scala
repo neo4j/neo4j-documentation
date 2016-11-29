@@ -54,7 +54,7 @@ class OptionalMatchTest extends DocumentingTestBase with SoftReset {
   @Test def optionalRelationship() {
     testQuery(
       title = "Relationship",
-      text = "If a relationship is optional, use the `OPTIONAL` `MATCH` clause. This is similar to how a SQL outer join " +
+      text = "If a relationship is optional, use the `OPTIONAL MATCH` clause. This is similar to how a SQL outer join " +
         "works. If the relationship is there, it is returned. If it's not, `null` is returned in its place. ",
       queryText = """MATCH (a:Movie {title: 'Wall Street'}) OPTIONAL MATCH (a)-->(x) RETURN x""",
       optionalResultExplanation = """Returns `null`, since the node has no outgoing relationships.""",

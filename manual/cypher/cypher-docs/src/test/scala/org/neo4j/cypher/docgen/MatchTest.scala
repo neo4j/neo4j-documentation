@@ -188,13 +188,13 @@ class MatchTest extends DocumentingTest {
       section("Match with properties on a variable length path") {
         val initQuery =
           """MATCH (charlie:Person {name: 'Charlie Sheen'}), (martin:Person {name: 'Martin Sheen'})
-            |CREATE (charlie)-[:X {blocked:false}]->(:Unblocked)<-[:X {blocked:false}]-(martin)
-            |CREATE (charlie)-[:X {blocked:true}]->(:Blocked)<-[:X {blocked:false}]-(martin)"""
+            |CREATE (charlie)-[:X {blocked: false}]->(:UNBLOCKED)<-[:X {blocked: false}]-(martin)
+            |CREATE (charlie)-[:X {blocked: true}]->(:BLOCKED)<-[:X {blocked: false}]-(martin)"""
         p("""A variable length relationship with properties defined on in it means that all
             |relationships in the path must have the property set to the given value. In this query,
             |there are two paths between *'Charlie Sheen'* and his father *'Martin Sheen'*. One of them includes a
-            |``blocked'' relationship and the other doesn't. In this case we first alter the original
-            |graph by using the following query to add ``blocked'' and ``unblocked'' relationships:""")
+            |*'blocked'* relationship and the other doesn't. In this case we first alter the original
+            |graph by using the following query to add `BLOCKED` and `UNBLOCKED` relationships:""")
         query(initQuery, assertBlockingRelationshipsAdded) {
           p("This means that we are starting out with the following graph: ")
           graphViz()
@@ -204,7 +204,7 @@ class MatchTest extends DocumentingTest {
             | WHERE charlie.name = 'Charlie Sheen' AND martin.name = 'Martin Sheen'
             | RETURN p""".stripMargin, assertBlockingRelationshipsAdded) {
           initQueries(initQuery)
-          p("Returns the paths between *'Charlie Sheen'* and *'Martin Sheen'* where all relationships have the `blocked` property set to `FALSE`.")
+          p("Returns the paths between *'Charlie Sheen'* and *'Martin Sheen'* where all relationships have the *'blocked'* property set to `false`.")
           resultTable()
         }
       }

@@ -80,7 +80,7 @@ class MergeTest extends DocumentingTestBase with QueryStatisticsTestSupport with
       title = "Merge single node specifying both label and property",
       text = "Merging a single node with both label and property matching an existing node.",
       queryText = "MERGE (michael:Person {name: 'Michael Douglas'})\nRETURN michael.name, michael.bornIn",
-      optionalResultExplanation = "*'Michael Douglas'* will be matched and the _name_ and  _bornIn_ properties returned.",
+      optionalResultExplanation = "*'Michael Douglas'* will be matched and the `name` and  `bornIn` properties returned.",
       assertions = (p) => assertStats(p, nodesCreated = 0, propertiesWritten = 0)
     )
   }
@@ -92,10 +92,10 @@ class MergeTest extends DocumentingTestBase with QueryStatisticsTestSupport with
         """For some property 'p' in each bound node in a set of nodes, a single new node is created for each
 unique value for 'p'.""",
       queryText = "MATCH (person:Person)\nMERGE (city:City {name: person.bornIn})\nRETURN person.name, person.bornIn, city",
-      optionalResultExplanation = """Three nodes labeled `City` are created, each of which contains a 'name' property
+      optionalResultExplanation = """Three nodes labeled `City` are created, each of which contains a `name` property
 with the value of *'New York'*, *'Ohio'*, and *'New Jersey'*, respectively. Note that even
 though the `MATCH` clause results in three bound nodes having the value *'New York'* for
-the 'bornIn' property, only a single *'New York'* node (i.e. a `City` node with a name
+the `bornIn` property, only a single *'New York'* node (i.e. a `City` node with a name
 of *'New York'*) is created. As the *'New York'* node is not matched for the first bound
 node, it is created. However, the newly-created *'New York'* node is matched and bound for the second and third bound nodes.""",
       assertions = (p) => assertStats(p, nodesCreated = 3, propertiesWritten = 3, labelsAdded = 3)
@@ -198,7 +198,7 @@ RETURN keanu.name, keanu.created, keanu.lastSeen""",
     testQuery(
       title = "Using map parameters with MERGE",
       text = """`MERGE` does not support map parameters like for example `CREATE` does.
-To use map parameters with `MERGE`, it is necessary to explicitly use the expected properties, like in the following example.
+To use map parameters with `MERGE`, it is necessary to explicitly use the expected properties, such as in the following example.
 For more information on parameters, see <<cypher-parameters>>.""",
       parameters = Map("param" -> Map("name" -> "Keanu Reeves", "role" -> "Neo")),
       queryText = "MERGE (person:Person {name: {param}.name, role: {param}.role}) RETURN person.name, person.role",
@@ -246,7 +246,7 @@ RETURN movie""",
 MERGE (charlie)-[r:KNOWS]-(oliver)
 RETURN r""",
       optionalResultExplanation = "As *'Charlie Sheen'* and *'Oliver Stone'* do not know each other, " +
-        "this `MERGE` query will create a `:KNOWS` relationship between them. " +
+        "this `MERGE` query will create a `KNOWS` relationship between them. " +
         "The direction of the created relationship is arbitrary.",
       assertions = (p) => assertStats(p, relationshipsCreated = 1)
     )
@@ -283,12 +283,12 @@ MERGE (person)-[r:HAS_CHAUFFEUR]->(chauffeur:Chauffeur {name: person.chauffeurNa
 RETURN person.name, person.chauffeurName, chauffeur""".stripMargin,
       optionalResultExplanation =
         """As `MERGE` found no matches -- in our example graph, there are no nodes labeled with `Chauffeur` and no `HAS_CHAUFFEUR`
-relationships -- `MERGE` creates five nodes labeled with `Chauffeur`, each of which contains a 'name' property whose value corresponds
-to each matched `Person` node's 'chauffeurName' property value. `MERGE` also creates a `HAS_CHAUFFEUR` relationship between each
+relationships -- `MERGE` creates five nodes labeled with `Chauffeur`, each of which contains a `name` property whose value corresponds
+to each matched `Person` node's `chauffeurName` property value. `MERGE` also creates a `HAS_CHAUFFEUR` relationship between each
 `Person` node and the newly-created corresponding `Chauffeur` node.
 As *'Charlie Sheen'* and *'Michael Douglas'* both have a chauffeur with the same name -- *'John Brown'* -- a new node is created in
-each case, resulting in 'two' `Chauffeur` nodes having a 'name' of *'John Brown'*, correctly denoting the fact that
-even though the 'name' property may be identical, these are two separate people.
+each case, resulting in 'two' `Chauffeur` nodes having a `name` of *'John Brown'*, correctly denoting the fact that
+even though the `name` property may be identical, these are two separate people.
 This is in contrast to the example shown above in <<merge-merge-on-a-relationship-between-two-existing-nodes>>,
 where we used the first `MERGE` to bind the `City` nodes to prevent them from being recreated (and thus duplicated) in the
 second `MERGE`.""",

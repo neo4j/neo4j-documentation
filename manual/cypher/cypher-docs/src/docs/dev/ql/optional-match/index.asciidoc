@@ -2,12 +2,12 @@
 = OPTIONAL MATCH
 
 [abstract]
-The `OPTIONAL MATCH` clause is used to search for the pattern described in it, while using `null`s for missing parts of the pattern.
+The `OPTIONAL MATCH` clause is used to search for the pattern described in it, while using nulls for missing parts of the pattern.
 
 == Introduction ==
 
 `OPTIONAL MATCH` matches patterns against your graph database, just like `MATCH` does.
-The difference is that if no matches are found, `OPTIONAL MATCH` will use `null`s for missing parts of the pattern.
+The difference is that if no matches are found, `OPTIONAL MATCH` will use a `null` for missing parts of the pattern.
 `OPTIONAL MATCH` could be considered the Cypher equivalent of the outer join in SQL.
 
 Either the whole pattern is matched, or nothing is matched.

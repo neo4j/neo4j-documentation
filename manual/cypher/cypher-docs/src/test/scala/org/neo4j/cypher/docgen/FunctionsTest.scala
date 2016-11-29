@@ -72,7 +72,7 @@ class FunctionsTest extends DocumentingTestBase {
       arguments = common_arguments,
       text = """Tests whether a predicate holds for at least one element in the list.""",
       queryText = """MATCH (a) WHERE a.name = 'Eskil' AND any(x IN a.array WHERE x = 'one') RETURN a""",
-      returns = """All nodes in the returned paths has at least one `one` value set in the array property named `array`.""",
+      returns = """All nodes in the returned paths has at least one *'one'* value set in the array property named `array`.""",
       assertions = (p) => assertEquals(List(Map("a"->node("E"))), p.toList))
   }
 
@@ -83,7 +83,7 @@ class FunctionsTest extends DocumentingTestBase {
       arguments = common_arguments,
       text = """Returns true if the predicate holds for no element in the list.""",
       queryText = """MATCH p = (n)-[*1..3]->(b) WHERE n.name = 'Alice' AND none(x IN nodes(p) WHERE x.age = 25) RETURN p""",
-      returns = """No nodes in the returned paths has a `age` property set to `25`.""",
+      returns = """No nodes in the returned paths has an `age` property set to *'25'*.""",
       assertions = (p) => assertEquals(2, p.toSeq.length))
   }
 
@@ -94,7 +94,7 @@ class FunctionsTest extends DocumentingTestBase {
       arguments = common_arguments,
       text = """Returns true if the predicate holds for exactly one of the elements in the list.""",
       queryText = """MATCH p = (n)-->(b) WHERE n.name = 'Alice' AND single(var IN nodes(p) WHERE var.eyes = 'blue') RETURN p""",
-      returns = """Exactly one node in every returned path will have the `eyes` property set to `"blue"`.""",
+      returns = """Exactly one node in every returned path will have the `eyes` property set to *'blue'*.""",
       assertions = (p) => assertEquals(1, p.toSeq.length))
   }
 
@@ -105,7 +105,7 @@ class FunctionsTest extends DocumentingTestBase {
       arguments = List("pattern-or-property" -> "A pattern or a property (in the form 'variable.prop')."),
       text = """Returns true if a match for the pattern exists in the graph, or the property exists in the node, relationship or map.""",
       queryText = """MATCH (n) WHERE exists(n.name) RETURN n.name AS name, exists((n)-[:MARRIED]->()) AS is_married""",
-      returns = """This query returns all the nodes with a name property along with a boolean true/false indicating if they are married.""",
+      returns = """This query returns all the nodes with a name property along with a boolean `true` / `false` indicating if they are married.""",
       assertions = (p) => assertEquals(5, p.toSeq.length))
   }
 
@@ -165,7 +165,7 @@ class FunctionsTest extends DocumentingTestBase {
       arguments = List("string" -> "An expression that returns a string"),
       text = """To return or filter on the length of a string, use the `length()` function.""",
       queryText = """MATCH (a) WHERE length(a.name) > 6 RETURN length(a.name)""",
-      returns = """The length of the name `Charlie` is returned by the query.""",
+      returns = """The length of the name *'Charlie'* is returned by the query.""",
       assertions = (p) => assertEquals(7, p.columnAs[Long]("length(a.name)").toList.head))
   }
 
@@ -207,14 +207,14 @@ class FunctionsTest extends DocumentingTestBase {
       syntax = "extract( variable IN list | expression )",
       arguments = List(
         "list" -> "An expression that returns a list",
-        "variable" -> "The closure will have a variable introduced in it's context. Here you decide which variable to use.",
+        "variable" -> "The closure will have a variable introduced in its context. Here you decide which variable to use.",
         "expression" -> "This expression will run once per value in the list, and produces the result list."
       ),
       text = """To return a single property, or the value of a function from a list of nodes or relationships,
  you can use `extract()`. It will go through a list, run an expression on every element, and return the results
  in a list with these values. It works like the `map` method in functional languages such as Lisp and Scala.""",
       queryText = """MATCH p = (a)-->(b)-->(c) WHERE a.name = 'Alice' AND b.name = 'Bob' AND c.name = 'Daniel' RETURN extract(n IN nodes(p) | n.age) AS extracted""",
-      returns = """The age property of all nodes in the path are returned.""",
+      returns = """The `age` property of all nodes in the path are returned.""",
       assertions = (p) => assertEquals(List(Map("extracted" -> List(38, 25, 54))), p.toList))
   }
 
@@ -233,7 +233,7 @@ class FunctionsTest extends DocumentingTestBase {
  an accumulator, you can use `reduce()`. It will go through a list, run an expression on every element, storing the partial result
  in the accumulator. It works like the `fold` or `reduce` method in functional languages such as Lisp and Scala.""",
       queryText = """MATCH p = (a)-->(b)-->(c) WHERE a.name = 'Alice' AND b.name = 'Bob' AND c.name = 'Daniel' RETURN reduce(totalAge = 0, n IN nodes(p) | totalAge + n.age) AS reduction""",
-      returns = """The age property of all nodes in the path are summed and returned as a single value.""",
+      returns = """The `age` property of all nodes in the path are summed and returned as a single value.""",
       assertions = (p) => assertEquals(List(Map("reduction" -> 117)), p.toList))
   }
 
@@ -286,7 +286,7 @@ class FunctionsTest extends DocumentingTestBase {
       arguments = common_arguments,
       text = "`filter()` returns all the elements in a list that comply to a predicate.",
       queryText = """MATCH (a) WHERE a.name = 'Eskil' RETURN a.array, filter(x IN a.array WHERE size(x) = 3)""",
-      returns = "This returns the property named `array` and a list of values in it, which have size `3`.",
+      returns = "This returns the property named `array` and a list of values in it, which have size *'3'*.",
       assertions = (p) => {
         val array = p.columnAs[Iterable[_]]("filter(x IN a.array WHERE size(x) = 3)").toList.head
         assert(List("one","two") === array.toList)
@@ -351,7 +351,7 @@ In case all arguments are `null`, `null` will be returned.""",
         "end" -> "A numerical expression.",
         "step" -> "A numerical expression."
       ),
-      text = "`range()` returns numerical values in a range. The default distance between values in the range is `1`. The r is inclusive in both ends.",
+      text = "`range()` returns numerical values in a range. The default distance between values in the range is `1`. The range is inclusive in both ends.",
       queryText = "RETURN range(0, 10), range(2, 18, 3)",
       returns = "Two lists of numbers in the given ranges are returned.",
       assertions = (p) => assert(List(Map(

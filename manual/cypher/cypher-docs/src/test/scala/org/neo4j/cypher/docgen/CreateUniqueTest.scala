@@ -95,7 +95,7 @@ class CreateUniqueTest extends DocumentingTestBase with QueryStatisticsTestSuppo
              "Cypher will create a new one.",
       queryText = "MATCH (a {name: 'A'}) CREATE UNIQUE (a)-[:KNOWS]-(c:blue) RETURN c",
       optionalResultExplanation = "The *'A'* node is connected in a `KNOWS` relationship to the *'c'* node, but since *'C'* doesn't have " +
-                "the `:blue` label, a new node labeled as `:blue` is created along with a `KNOWS` relationship "+
+                "the `blue` label, a new node labeled as `blue` is created along with a `KNOWS` relationship "+
                 "from *'A'* to it.",
       assertions = (p) => assertStats(p, relationshipsCreated = 1, nodesCreated = 1, labelsAdded = 1))
   }

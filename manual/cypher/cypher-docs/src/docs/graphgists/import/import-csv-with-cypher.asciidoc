@@ -53,7 +53,7 @@ Using `MERGE` avoids creating duplicate country nodes in the case where multiple
 When using `MERGE` or `MATCH` with `LOAD CSV` we need to make sure we have an index (see <<query-schema-index>>) or a unique constraint (see <<query-constraints>>) on the property we're merging.
 This will ensure the query executes in a performant way.
 
-Before running our query to connect movies and countries we'll create an index for the name property on the Country label to ensure the query runs as fast as it can:
+Before running our query to connect movies and countries we'll create an index for the name property on the `Country` label to ensure the query runs as fast as it can:
 
 [source,cypher]
 ----
@@ -86,9 +86,9 @@ Lastly, we create the relationships between the persons and the movies.
 Since the relationship is a many to many relationship, one actor can participate in many movies, and one movie has many actors in it.
 We have this data in a separate file.
 
-We'll index the id property on Person and Movie nodes.
-The id property is a temporary property used to look up the appropriate nodes for a relationship when importing the third file.
-By indexing the id property, node lookup (e.g. by `MATCH`) will be much faster.
+We'll index the `id` property on `Person` and `Movie` nodes.
+The `id` property is a temporary property used to look up the appropriate nodes for a relationship when importing the third file.
+By indexing the `id` property, node lookup (e.g. by `MATCH`) will be much faster.
 Since we expect the ids to be unique in each set, we'll create a unique constraint.
 This protects us from invalid data since constraint creation will fail if there are multiple nodes with the same id property.
 Creating a unique constraint also creates a unique index (which is faster than a regular index).
@@ -129,7 +129,7 @@ Relationships created: 6
 Properties set: 6
 ----
 
-Finally, as the `id` property was only necessary to import the relationships, we can drop the constraints and the id property from all movie and person nodes.
+Finally, as the `id` property was only necessary to import the relationships, we can drop the constraints and the `id` property from all movie and person nodes.
 
 [source,cypher]
 ----

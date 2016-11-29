@@ -166,7 +166,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """For isolation purposes this operator makes sure that operations that affect subsequent operations are executed fully for the whole dataset before continuing execution.
            | Otherwise it could trigger endless loops, matching data again, that was just created.
-           | The Eager operator can cause high memory usage when importing data or migrating graph structures.
+           | The `Eager` operator can cause high memory usage when importing data or migrating graph structures.
            | In such cases split up your operations into simpler steps e.g. you can import nodes and relationships separately.
            | Alternatively return the records to be updated and run an update statement afterwards.""".stripMargin,
       queryText = """MATCH (a)-[r]-(b) DELETE r,a,b MERGE ()""",
@@ -191,7 +191,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Merge Into",
       text =
-        """When both the start and end node have already been found, merge-into is used to find all connecting relationships or creating a new relationship between the two nodes.""".stripMargin,
+        """When both the start and end node have already been found, `Merge Into` is used to find all connecting relationships or creating a new relationship between the two nodes.""".stripMargin,
       queryText = """CYPHER planner=rule MATCH (p:Person {name: 'me'}), (f:Person {name: 'Andres'}) MERGE (p)-[:FRIENDS_WITH]->(f)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Merge(Into)"))
     )
@@ -201,7 +201,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Empty Result",
       text =
-        """Eagerly loads everything coming in to the EmptyResult operator and discards it.""".stripMargin,
+        """Eagerly loads everything coming in to the `EmptyResult` operator and discards it.""".stripMargin,
       queryText = """CREATE (:Person)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("EmptyResult"))
     )
@@ -220,7 +220,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Node index seek",
       text = """Finds nodes using an index seek. The node variable and the index used is shown in the arguments of the operator.
-                |If the index is a unique index, the operator is called NodeUniqueIndexSeek instead.""".stripMargin,
+                |If the index is a unique index, the operator is called `NodeUniqueIndexSeek` instead.""".stripMargin,
       queryText = """MATCH (location:Location {name: 'Malmo'}) RETURN location""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeek"))
     )
@@ -295,7 +295,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Filter",
       text =
-        """Filters each row coming from the child operator, only passing through rows that evaluate the predicates to `TRUE`.""".stripMargin,
+        """Filters each row coming from the child operator, only passing through rows that evaluate the predicates to `true`.""".stripMargin,
       queryText = """MATCH (p:Person) WHERE p.name =~ '^a.*' RETURN p""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Filter"))
     )
@@ -425,7 +425,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Union",
       text =
-        "Union concatenates the results from the right plan after the results of the left plan.",
+        "`Union` concatenates the results from the right plan after the results of the left plan.",
       queryText =
         """MATCH (p:Location)
            RETURN p.name

@@ -111,7 +111,7 @@ All trigonometric functions operate on radians, unless otherwise specified.
 | <<functions-cot, cot()>>           | Returns the cotangent of the expression.
 | <<functions-degrees, degrees()>>   | Converts radians to degrees.
 | <<functions-haversin, haversin()>> | Returns half the versine of the expression.
-| <<functions-pi, pi()>>             | Returns the mathematical constant pi.
+| <<functions-pi, pi()>>             | Returns the mathematical constant _pi_.
 | <<functions-radians, radians()>>   | Converts degrees to radians.
 | <<functions-sin, sin()>>           | Returns the sine of the expression.
 | <<functions-tan, tan()>>           | Returns the tangent of the expression.

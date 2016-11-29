@@ -2,7 +2,7 @@
 High Availability
 =================
 
-NOTE: The High Availability features are only available in the Neo4j Enterprise Edition.
+NOTE: The High Availability features are only available in Neo4j Enterprise Edition.
 
 Neo4j High Availability or “Neo4j HA” provides the following two main features:
 

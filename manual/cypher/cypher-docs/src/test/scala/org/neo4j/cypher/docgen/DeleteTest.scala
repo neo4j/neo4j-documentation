@@ -60,7 +60,7 @@ class DeleteTest extends DocumentingTestBase with QueryStatisticsTestSupport wit
   @Test def force_delete_a_node() {
     testQuery(
       title = "Delete a node with all its relationships",
-      text = "When you want to delete a node and any relationship going to or from it, use `DETACH` `DELETE`.",
+      text = "When you want to delete a node and any relationship going to or from it, use `DETACH DELETE`.",
       queryText = "MATCH (n {name: 'Andres'}) DETACH DELETE n",
       optionalResultExplanation = "",
       assertions = (p) => assertStats(p, relationshipsDeleted = 2, nodesDeleted = 1))

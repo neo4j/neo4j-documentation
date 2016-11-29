@@ -77,7 +77,7 @@ class UsingTest extends DocumentingTest {
             |slightly better for this query.""")
         query(s"$matchString USING INDEX liskov:Scientist(name) RETURN liskov.born AS $columnName",
               assertIntegersReturned(1939)) {
-          p("Returns the year Barbara Liskov was born.")
+          p("Returns the year *'Barbara Liskov'* was born.")
           profileExecutionPlan()
         }
       }
@@ -87,7 +87,7 @@ class UsingTest extends DocumentingTest {
             |one at each end of the match. It will then join these two branches using a join operator. """)
         query(s"$matchString USING INDEX liskov:Scientist(name) USING INDEX conway:Scientist(name) RETURN liskov.born AS $columnName",
               assertIntegersReturned(1939)) {
-          p("Returns the year Barbara Liskov was born, using a slightly better plan.")
+          p("Returns the year *'Barbara Liskov'* was born, using a slightly better plan.")
           profileExecutionPlan()
         }
       }
@@ -103,7 +103,7 @@ class UsingTest extends DocumentingTest {
                  |WHERE s.born < 1939
                  |RETURN s.born AS $columnName""",
               assertIntegersReturned(1938, 1867)) {
-          p("Returns all scientists born before 1939.")
+          p("Returns all scientists born before *'1939'*.")
           profileExecutionPlan()
         }
       }
@@ -128,7 +128,7 @@ class UsingTest extends DocumentingTest {
               |USING JOIN ON wing
               |RETURN wing.born AS $columnName""",
               assertIntegersReturnedAndUsingHashJoin(1956)) {
-          p("Returns the birth date of Jeanette Wing, using a slightly better plan.")
+          p("Returns the birth date of *'Jeanette Wing'*, using a slightly better plan.")
           profileExecutionPlan()
         }
       }
@@ -138,7 +138,7 @@ class UsingTest extends DocumentingTest {
               |USING INDEX liskov:Scientist(name)
               |USING JOIN ON liskov, cs
               |RETURN wing.born AS $columnName""", assertIntegersReturnedAndUsingHashJoin(1956)) {
-          p("Returns the birth date of Jeanette Wing.")
+          p("Returns the birth date of *'Jeanette Wing'*.")
           profileExecutionPlan()
         }
       }

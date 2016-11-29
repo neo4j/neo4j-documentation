@@ -94,7 +94,7 @@ class WhereTest extends DocumentingTestBase {
   @Test def regular_expressions() {
     testQuery(
       title = "Regular expressions",
-      text = "You can match on regular expressions by using `=~ \"regexp\"`, like this:",
+      text = "You can match on regular expressions by using `=~ 'regexp'`, like this:",
       queryText = """MATCH (n) WHERE n.name =~ 'Tob.*' RETURN n""",
       optionalResultExplanation = """*'Tobias'* is returned because his name starts with *'Tob'*.""",
       assertions = (p) => assertEquals(List(node("Tobias")), p.columnAs[Node]("n").toList))

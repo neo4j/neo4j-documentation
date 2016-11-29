@@ -51,7 +51,7 @@ class OrderByTest extends DocumentingTestBase with SoftReset {
       title = "Order nodes in descending order",
       text = "By adding `DESC[ENDING]` after the variable to sort on, the sort will be done in reverse order.",
       queryText = """MATCH (n) RETURN n ORDER BY n.name DESC""",
-      optionalResultExplanation = """The example returns the nodes, sorted by their name reversely.""",
+      optionalResultExplanation = """The example returns the nodes, sorted by their name in reverse order.""",
       assertions = (p) => assertEquals(List(node("C"), node("B"), node("A")), p.columnAs[Node]("n").toList))
   }
 

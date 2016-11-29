@@ -52,7 +52,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def create_index_on_a_label() {
     testQuery(
       title = "Create an index",
-      text = "To create an index on a property for all nodes that have a label, use `CREATE` `INDEX` `ON`. " +
+      text = "To create an index on a property for all nodes that have a label, use `CREATE INDEX ON`. " +
         "Note that the index is not immediately available, but will be created in the background.",
       queryText = "CREATE INDEX ON :Person(name)",
       optionalResultExplanation = "",
@@ -63,7 +63,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def drop_index_on_a_label() {
     prepareAndTestQuery(
       title = "Drop an index",
-      text = "To drop an index on all nodes that have a label and property combination, use the `DROP` `INDEX` clause.",
+      text = "To drop an index on all nodes that have a label and property combination, use the `DROP INDEX` clause.",
       prepare = _ => executePreparationQueries(List("create index on :Person(name)")),
       queryText = "DROP INDEX ON :Person(name)",
       optionalResultExplanation = "",
