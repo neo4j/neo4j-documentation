@@ -225,7 +225,7 @@ public class BlockTypeTest
     @Test
     public void graph()
     {
-        database.getGraphDatabaseService().execute( "CREATE (n:Person {name:\"Adam\"});" );
+        database.getGraphDatabaseService().execute( "CREATE (n:Person {name: 'Adam'});" );
         Block block = Block.getBlock( Arrays.asList( "// graph:xyz" ) );
         assertThat( block.type, sameInstance( BlockType.GRAPH ) );
         String output;
@@ -279,7 +279,7 @@ public class BlockTypeTest
     @Test
     public void graphWithoutId()
     {
-        database.getGraphDatabaseService().execute( "CREATE (n:Person {name:\"Adam\"});" );
+        database.getGraphDatabaseService().execute( "CREATE (n:Person {name: 'Adam'});" );
         Block block = Block.getBlock( Arrays.asList( "//graph" ) );
         assertThat( block.type, sameInstance( BlockType.GRAPH ) );
         String output;

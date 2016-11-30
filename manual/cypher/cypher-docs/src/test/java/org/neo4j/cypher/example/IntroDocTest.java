@@ -69,8 +69,8 @@ public class IntroDocTest implements GraphHolder
                     AsciidocHelper.createGraphViz( "Example Graph",
                             graphdb(), "cypher-intro" ) ) );
 
-            fw.append( "\nFor example, here is a query which finds a user called John and John's friends (though not " +
-                    "his direct friends) before returning both John and any friends-of-friends that are found." );
+            fw.append( "\nFor example, here is a query which finds a user called *'John'* and *'John's'* friends (though not " +
+                    "his direct friends) before returning both *'John'* and any friends-of-friends that are found." );
             fw.append( "\n\n" );
             String query = "MATCH (john {name: 'John'})-[:friend]->()-[:friend]->(fof) RETURN john.name, fof.name ";
             fw.append( AsciiDocGenerator.dumpToSeparateFileWithType( new File( DOCS_TARGET ), "intro.query",
@@ -82,7 +82,7 @@ public class IntroDocTest implements GraphHolder
             fw.append( "\nNext up we will add filtering to set more parts "
                     + "in motion:\n\nWe take a list of user names "
                     + "and find all nodes with names from this list, match their friends and return "
-                    + "only those followed users who have a +name+ property starting with +S+." );
+                    + "only those followed users who have a *'name'* property starting with *'S'*." );
             query = "MATCH (user)-[:friend]->(follower) WHERE "
                     + "user.name IN ['Joe', 'John', 'Sara', 'Maria', 'Steve'] AND follower.name =~ 'S.*' "
                             + "RETURN user.name, follower.name ";
@@ -102,11 +102,11 @@ public class IntroDocTest implements GraphHolder
         graphdb = new TestGraphDatabaseFactory().newImpermanentDatabase();
         cleanDatabaseContent( graphdb );
     }
-    
+
     @AfterClass
     public static void shutdown()
     {
-        try 
+        try
         {
             if ( graphdb != null ) graphdb.shutdown();
         }

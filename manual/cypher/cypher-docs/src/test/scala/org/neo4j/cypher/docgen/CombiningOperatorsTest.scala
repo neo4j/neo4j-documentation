@@ -165,7 +165,7 @@ class CombiningOperatorsTest extends DocumentingTest {
       query("""MATCH (other:Person)
               |WHERE other.age > 25 OR (other)-[:FRIENDS_WITH]->()
               |RETURN other.name""", assertPlanContains("SelectOrSemiApply")) {
-        p("Finds the names of all people who have friends, or are older than 25.")
+        p("Finds the names of all people who have friends, or are older than *'25'*.")
         executionPlan()
       }
     }
@@ -174,7 +174,7 @@ class CombiningOperatorsTest extends DocumentingTest {
       query("""MATCH (other:Person)
               |WHERE other.age > 25 OR NOT (other)-[:FRIENDS_WITH]->()
               |RETURN other.name""", assertPlanContains("SelectOrAntiSemiApply")) {
-        p("Finds the names of all people who do not have friends, or are older than 25.")
+        p("Finds the names of all people who do not have friends, or are older than *'25'*.")
         executionPlan()
       }
     }
@@ -182,7 +182,7 @@ class CombiningOperatorsTest extends DocumentingTest {
       p("Checks whether a variable is not `null`, and if so the right-hand side will be executed.")
       query("""MERGE (p:Person {name: 'Andres'}) ON MATCH SET p.exists = true""",
             assertPlanContains("ConditionalApply")) {
-        p("Looks for the existence of a person called Andres, and if found sets the `exists` property to `true`.")
+        p("Looks for the existence of a person called *'Andres'*, and if found sets the `exists` property to `true`.")
         executionPlan()
       }
     }
@@ -190,7 +190,7 @@ class CombiningOperatorsTest extends DocumentingTest {
       p("Checks whether a variable is `null`, and if so the right-hand side will be executed.")
       query("""MERGE (p:Person {name: 'Andres'}) ON CREATE SET p.exists = true""",
             assertPlanContains("ConditionalApply")) {
-        p("""Looks for the existence of a person called Andres, and if not found, creates one and
+        p("""Looks for the existence of a person called *'Andres'*, and if not found, creates one and
           |sets the `exists` property to `true`.""")
         executionPlan()
       }
@@ -200,8 +200,8 @@ class CombiningOperatorsTest extends DocumentingTest {
       query("MERGE (t:Team {name: 'Engineering', id: 42})",
             assertPlanContains("AssertSameNode")) {
         p("""Looks for the existence of a team with the supplied name and id, and if one does not exist,
-          |it will be created. Due to the existence of two uniqueness constraints
-          |on `:Team(name)` and `:Team(id)`, any node that would be found by the `UniqueIndexSeek`s
+          |it will be created. Owing to the existence of two uniqueness constraints
+          |on `:Team(name)` and `:Team(id)`, any node that would be found by the `UniqueIndexSeek`
           |must be the very same node, or the constraints would be violated.""")
         executionPlan()
       }

@@ -51,8 +51,8 @@ MATCH (n)
 RETURN
 
 CASE n.eyes
- WHEN "blue" THEN 1
- WHEN "brown" THEN 2
+ WHEN 'blue' THEN 1
+ WHEN 'brown' THEN 2
  ELSE 3
 END
 
@@ -60,14 +60,14 @@ AS result
 ###
 
 Return `THEN` value from the matching `WHEN` value.
-The `ELSE` value is optional, and substituted for `NULL` if missing.
+The `ELSE` value is optional, and substituted for `null` if missing.
 
 ###assertion=generic
 MATCH (n)
 RETURN
 
 CASE
- WHEN n.eyes = "blue" THEN 1
+ WHEN n.eyes = 'blue' THEN 1
  WHEN n.age < 40 THEN 2
  ELSE 3
 END
@@ -75,7 +75,7 @@ END
 AS result
 ###
 
-Return `THEN` value from the first `WHEN` predicate evaluating to `TRUE`.
+Return `THEN` value from the first `WHEN` predicate evaluating to `true`.
 Predicates are evaluated in order.
 
 """

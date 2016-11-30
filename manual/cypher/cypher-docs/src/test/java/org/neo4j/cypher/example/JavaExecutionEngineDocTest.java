@@ -146,7 +146,7 @@ public class JavaExecutionEngineDocTest
     public void exampleQuery() throws Exception
     {
 // START SNIPPET: JavaQuery
-        Result result = db.execute( "MATCH (n) WHERE id(n) = 0 AND 1=1 RETURN n" );
+        Result result = db.execute( "MATCH (n) WHERE id(n) = 0 AND 1 = 1 RETURN n" );
 
         assertThat( result.columns(), hasItem( "n" ) );
         Iterator<Node> n_column = result.columnAs( "n" );
@@ -171,10 +171,10 @@ public class JavaExecutionEngineDocTest
     public void testColumnAreInTheRightOrder() throws Exception
     {
         createTenNodes();
-        String q = "match (one), (two), (three), (four), (five), (six), (seven), (eight), (nine), (ten) " +
-                "where id(one) = 1 and id(two) = 2 and id(three) = 3 and id(four) = 4 and id(five) = 5 " +
-                "and id(six) = 6 and id(seven) = 7 and id(eight) = 8 and id(nine) = 9 and id(ten) = 10 " +
-                "return one, two, three, four, five, six, seven, eight, nine, ten";
+        String q = "MATCH (one), (two), (three), (four), (five), (six), (seven), (eight), (nine), (ten) " +
+                "WHERE id(one) = 1 AND id(two) = 2 AND id(three) = 3 AND id(four) = 4 AND id(five) = 5 " +
+                "AND id(six) = 6 AND id(seven) = 7 AND id(eight) = 8 AND id(nine) = 9 AND id(ten) = 10 " +
+                "RETURN one, two, three, four, five, six, seven, eight, nine, ten";
         Result result = db.execute( q );
         assertThat( result.resultAsString(), matchesPattern( "one.*two.*three.*four.*five.*six.*seven.*eight.*nine.*ten" ) );
     }
@@ -213,7 +213,7 @@ public class JavaExecutionEngineDocTest
         // START SNIPPET: exampleWithParameterForMultipleNodeIds
         Map<String, Object> params = new HashMap<>();
         params.put( "ids", Arrays.asList( 0, 1, 2 ) );
-        String query = "MATCH (n) WHERE id(n) in {ids} RETURN n.name";
+        String query = "MATCH (n) WHERE id(n) IN {ids} RETURN n.name";
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithParameterForMultipleNodeIds
 
@@ -368,7 +368,7 @@ public class JavaExecutionEngineDocTest
         // END SNIPPET: create_node_from_map
         dumpToFile( "create_node_from_map", query, params );
 
-        Result result = db.execute( "match (n) where n.name = 'Andres' and n.position = 'Developer' return n" );
+        Result result = db.execute( "MATCH (n) WHERE n.name = 'Andres' AND n.position = 'Developer' RETURN n" );
         assertThat( count( result ), is( 1L ) );
     }
 
@@ -394,13 +394,13 @@ public class JavaExecutionEngineDocTest
         // END SNIPPET: create_multiple_nodes_from_map
         dumpToFile( "create_multiple_nodes_from_map", query, params );
 
-        Result result = db.execute( "match (n:Person) where n.name in ['Andres', 'Michael'] and n.position = 'Developer' return n" );
+        Result result = db.execute( "MATCH (n:Person) WHERE n.name IN ['Andres', 'Michael'] AND n.position = 'Developer' RETURN n" );
         assertThat( count( result ), is( 2L ) );
 
-        result = db.execute( "match (n:Person) where n.children = 3 return n" );
+        result = db.execute( "MATCH (n:Person) WHERE n.children = 3 RETURN n" );
         assertThat( count( result ), is( 1L ) );
 
-        result = db.execute( "match (n:Person) where n.awesome = true return n" );
+        result = db.execute( "MATCH (n:Person) WHERE n.awesome = true RETURN n" );
         assertThat( count( result ), is( 1L ) );
     }
 
@@ -422,7 +422,7 @@ public class JavaExecutionEngineDocTest
             // END SNIPPET: set_properties_on_a_node_from_a_map
             dumpToFile( "set_properties_on_a_node_from_a_map", query, params );
 
-            db.execute( "match (n) where n.name in ['Andres', 'Michael'] and n.position = 'Developer' return n" );
+            db.execute( "MATCH (n) WHERE n.name IN ['Andres', 'Michael'] AND n.position = 'Developer' RETURN n" );
             assertThat( michaelaNode.getProperty( "name" ).toString(), is( "Andres" ) );
         }
     }
@@ -466,7 +466,7 @@ public class JavaExecutionEngineDocTest
     public void prettifier_makes_pretty() throws Exception
     {
         QueryExecutionEngine engine = ((GraphDatabaseAPI) db).getDependencyResolver().resolveDependency( QueryExecutionEngine.class );
-        String given = "match (n)-->() return n";
+        String given = "MATCH (n)-->() RETURN n";
         String expected = String.format("MATCH (n)-->()%nRETURN n");
 
         assertEquals(expected, engine.prettify(given));
@@ -476,7 +476,7 @@ public class JavaExecutionEngineDocTest
     public void explain_returns_plan() throws Exception
     {
         // START SNIPPET: explain_returns_plan
-        Result result = db.execute( "EXPLAIN CREATE (user:User{name:{name}}) RETURN user" );
+        Result result = db.execute( "EXPLAIN CREATE (user:User {name: {name}}) RETURN user" );
 
         assert result.getQueryExecutionType().isExplained();
         assert result.getQueryExecutionType().requestedExecutionPlanDescription();

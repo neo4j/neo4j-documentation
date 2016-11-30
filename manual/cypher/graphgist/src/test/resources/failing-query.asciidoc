@@ -1,11 +1,13 @@
 [source,cypher]
 ----
-CREATE (:Person {name:"John Doe"}), (:Vehicle {name:"John Doe"})
+CREATE (:Person {name: 'John Doe'}), (:Vehicle {name: 'John Doe'})
 ----
 
 [source,cypher]
 ----
-MATCH (n) WHERE n.name = "John Doe" RETURN labels(n)
+MATCH (n)
+WHERE n.name = 'John Doe'
+RETURN labels(n)
 ----
 
 [source,querytest]

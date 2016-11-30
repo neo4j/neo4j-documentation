@@ -1,69 +1,69 @@
 [[cypher-working-with-null]]
-Working with NULL
+Working with null
 =================
 
-== Introduction to NULL in Cypher ==
+== Introduction to 'null' in Cypher ==
 
-In Cypher, +NULL+ is used to represent missing or undefined values.
-Conceptually, +NULL+ means ``a missing unknown value'' and it is treated somewhat differently from other values.
-For example getting a property from a node that does not have said property produces +NULL+.
-Most expressions that take +NULL+ as input will produce +NULL+.
-This includes boolean expressions that are used as predicates in the +WHERE+ clause.
-In this case, anything that is not +TRUE+ is interpreted as being false.
+In Cypher, `null` is used to represent missing or undefined values.
+Conceptually, `null` means 'a missing unknown value' and it is treated somewhat differently from other values.
+For example getting a property from a node that does not have said property produces `null`.
+Most expressions that take `null` as input will produce `null`.
+This includes boolean expressions that are used as predicates in the `WHERE` clause.
+In this case, anything that is not `true` is interpreted as being false.
 
-+NULL+ is not equal to +NULL+.
+`null` is not equal to `null`.
 Not knowing two values does not imply that they are the same value.
-So the expression +NULL+ = +NULL+ yields +NULL+ and not +TRUE+.
+So the expression `null` = `null` yields `null` and not `true`.
 
-== Logical operations with NULL ==
+== Logical operations with null ==
 
-The logical operators (+AND+, +OR+, +XOR+, +IN+, +NOT+) treat +NULL+ as the ``unknown'' value of three-valued logic.
-Here is the truth table for +AND+, +OR+ and +XOR+.
+The logical operators (`AND`, `OR`, `XOR`, `IN`, `NOT`) treat `null` as the 'unknown' value of three-valued logic.
+Here is the truth table for `AND`, `OR` and `XOR`.
 
 [options="header", cols="^,^,^,^,^", width="80%"]
 |====
-|a | b | a +AND+ b | a +OR+ b | a +XOR+ b
-|+FALSE+ | +FALSE+ | +FALSE+ | +FALSE+ | +FALSE+
-|+FALSE+ | +NULL+ | +FALSE+ | +NULL+ | +NULL+
-|+FALSE+ | +TRUE+ | +FALSE+ | +TRUE+ | +TRUE+
-|+TRUE+ | +FALSE+ | +FALSE+ | +TRUE+ | +TRUE+
-|+TRUE+ | +NULL+ | +NULL+ | +TRUE+ | +NULL+
-|+TRUE+ | +TRUE+ | +TRUE+ | +TRUE+ | +FALSE+
-|+NULL+ | +FALSE+ | +FALSE+ | +NULL+ | +NULL+
-|+NULL+ | +NULL+ | +NULL+ | +NULL+ | +NULL+
-|+NULL+ | +TRUE+ | +NULL+ | +TRUE+ | +NULL+
+|a | b | a `AND` b | a `OR` b | a `XOR` b
+|`false` | `false` | `false` | `false` | `false`
+|`false` | `null` | `false` | `null` | `null`
+|`false` | `true` | `false` | `true` | `true`
+|`true` | `false` | `false` | `true` | `true`
+|`true` | `null` | `null` | `true` | `null`
+|`true` | `true` | `true` | `true` | `false`
+|`null` | `false` | `false` | `null` | `null`
+|`null` | `null` | `null` | `null` | `null`
+|`null` | `true` | `null` | `true` | `null`
 |====
 
-== The IN operator and NULL ==
+== The IN operator and null ==
 
 The `IN` operator follows similar logic.
 If Cypher knows that something exists in a list, the result will be `true`.
-Any list that contains a `NULL` and doesn't have a matching element will return `NULL`.
+Any list that contains a `null` and doesn't have a matching element will return `null`.
 Otherwise, the result will be false.
 Here is a table with examples:
 
 [options="header", cols="^,^", width="60%"]
 |====
 |Expression  | Result
-|2 IN [1, 2, 3] | +TRUE+
-|2 IN [1, +NULL+, 3] | +NULL+
-|2 IN [1, 2, +NULL+] | +TRUE+
-|2 IN [1] | +FALSE+
-|2 IN [] | +FALSE+
-|+NULL+ IN [1,2,3] | +NULL+
-|+NULL+ IN [1,+NULL+,3] | +NULL+
-|+NULL+ IN [] | +FALSE+
+|2 IN [1, 2, 3] | `true`
+|2 IN [1, `null`, 3] | `null`
+|2 IN [1, 2, `null`] | `true`
+|2 IN [1] | `false`
+|2 IN [] | `false`
+|`null` IN [1, 2, 3] | `null`
+|`null` IN [1, `null`, 3] | `null`
+|`null` IN [] | `false`
 |====
 
-Using +ALL+, +ANY+, +NONE+, and +SINGLE+ follows a similar rule.
-If the result can be calculated definitely, +TRUE+ or +FALSE+ is returned.
-Otherwise +NULL+ is produced.
+Using `all`, `any`, `none`, and `single` follows a similar rule.
+If the result can be calculated definitely, `true` or `false` is returned.
+Otherwise `null` is produced.
 
-== Expressions that return NULL ==
+== Expressions that return null ==
 
 * Getting a missing element from a list: `[][0]`, `head([])`
-* Trying to access a property that does not exist on a node or relationship: +n.missingProperty+
-* Comparisons when either side is +NULL+: +`1 < NULL`+
-* Arithmetic expressions containing +NULL+: +`1 + NULL`+
-* Function calls where any arguments are +NULL+: +sin(NULL)+
+* Trying to access a property that does not exist on a node or relationship: `n.missingProperty`
+* Comparisons when either side is `null`: `1 < null`
+* Arithmetic expressions containing `null`: `1 + null`
+* Function calls where any arguments are `null`: `sin(null)`
 

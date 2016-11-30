@@ -65,12 +65,13 @@ class FunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
 
   def text = """
 ###assertion=returns-one parameters=default
-MATCH (n)  WHERE id(n) = %A%
+MATCH (n)
+WHERE id(n) = %A%
 RETURN
 
 coalesce(n.property, {defaultValue})###
 
-The first non-++NULL++ expression.
+The first non-`null` expression.
 
 ###assertion=returns-one
 RETURN
@@ -93,14 +94,14 @@ RETURN
 
 toInt({expr})###
 
-Converts the given input into an integer if possible; otherwise it returns +NULL+.
+Converts the given input into an integer if possible; otherwise it returns `null`.
 
 ###assertion=toFloat parameters=toFloat
 RETURN
 
 toFloat({expr})###
 
-Converts the given input into a floating point number if possible; otherwise it returns +NULL+.
+Converts the given input into a floating point number if possible; otherwise it returns `null`.
 
 ###assertion=returns-one parameters=map
 RETURN

@@ -40,7 +40,7 @@ Cypher has good support for lists.
 A literal list is created by using brackets and separating the elements in the list with commas.
 
 ###
-RETURN [0,1,2,3,4,5,6,7,8,9] as list###
+RETURN [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as list###
 
 In our examples, we'll use the range function.
 It gives you a list containing all numbers between given start and end numbers.
@@ -50,36 +50,36 @@ To access individual elements in the list, we use the square brackets again.
 This will extract from the start index and up to but not including the end index.
 
 ###
-RETURN range(0,10)[3]###
+RETURN range(0, 10)[3]###
 
 You can also use negative numbers, to start from the end of the list instead.
 
 ###
-RETURN range(0,10)[-3]###
+RETURN range(0, 10)[-3]###
 
 Finally, you can use ranges inside the brackets to return ranges of the list.
 
 ###
-RETURN range(0,10)[0..3]###
+RETURN range(0, 10)[0..3]###
 ###
-RETURN range(0,10)[0..-5]###
+RETURN range(0, 10)[0..-5]###
 ###
-RETURN range(0,10)[-5..]###
+RETURN range(0, 10)[-5..]###
 ###
-RETURN range(0,10)[..4]###
+RETURN range(0, 10)[..4]###
 
-NOTE: Out-of-bound slices are simply truncated, but out-of-bound single elements return +NULL+.
-
-###
-RETURN range(0,10)[15]###
+NOTE: Out-of-bound slices are simply truncated, but out-of-bound single elements return `null`.
 
 ###
-RETURN range(0,10)[5..15]###
+RETURN range(0, 10)[15]###
+
+###
+RETURN range(0, 10)[5..15]###
 
 You can get the size of a list like this:
 
 ###
-RETURN size(range(0,10)[0..3])###
+RETURN size(range(0, 10)[0..3])###
 
 == List comprehension ==
 
@@ -90,7 +90,7 @@ and filter functions.
 ###
 RETURN [x IN range(0,10) WHERE x % 2 = 0 | x^3 ] AS result###
 
-Either the +WHERE+ part, or the expression, can be omitted, if you only want to filter or map respectively.
+Either the `WHERE` part, or the expression, can be omitted, if you only want to filter or map respectively.
 
 ###
 RETURN [x IN range(0,10) WHERE x % 2 = 0 ] AS result###
@@ -103,7 +103,7 @@ RETURN [x IN range(0,10) | x^3 ] AS result###
 From Cypher, you can also construct maps. Through REST you will get JSON objects; in Java they will be `java.util.Map<String,Object>`.
 
 ###
-RETURN { key : "Value", listKey: [ { inner: "Map1" }, { inner: "Map2" } ] } AS result###
+RETURN {key: 'Value', listKey: [ {inner: 'Map1'}, {inner: 'Map2'} ] } AS result###
 """
 }
 

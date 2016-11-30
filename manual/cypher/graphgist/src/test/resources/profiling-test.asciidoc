@@ -20,7 +20,7 @@ CREATE (pernilla)-[:FRIEND]->(david)
 
 [source,cypher]
 ----
-PROFILE MATCH (p {name:"Pernilla"})
+PROFILE MATCH (p {name: 'Pernilla'})
 RETURN p
 ----
 
@@ -33,7 +33,7 @@ AllNodesScan
 
 [source,cypher]
 ----
-PROFILE MATCH (p:Person {name:"Pernilla"})
+PROFILE MATCH (p:Person {name: 'Pernilla'})
 RETURN p
 ----
 
@@ -49,7 +49,7 @@ CREATE INDEX ON :Person(name)
 
 [source,cypher]
 ----
-PROFILE MATCH (p:Person {name:"Pernilla"})
+PROFILE MATCH (p:Person {name: 'Pernilla'})
 USING INDEX p:Person(name)
 RETURN p
 ----

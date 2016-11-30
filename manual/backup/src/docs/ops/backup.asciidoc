@@ -3,7 +3,7 @@
 
 NOTE:
 --
-The Backup features are only available in the Neo4j Enterprise Edition.
+The Backup features are only available in Neo4j Enterprise Edition.
 --
 
 

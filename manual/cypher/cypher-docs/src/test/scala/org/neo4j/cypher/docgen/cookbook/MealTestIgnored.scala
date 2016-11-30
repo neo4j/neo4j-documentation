@@ -59,8 +59,8 @@ class MealTestIgnored extends DocumentingTestBase {
       title = "Longest Paths -- find the leaf ingredients",
       text = """From the root, find the paths to all the leaf ingredients in order to return the paths for the weight calculation""",
       queryText = "MATCH (me)-[:eats]->(meal), " +
-        "path=(meal)-[r:composed_of*0..]->(ingredient) " +
-        "WHERE me.name='Peter' and not (ingredient) --> ()" +
+        "path = (meal)-[r:composed_of*0..]->(ingredient) " +
+        "WHERE me.name='Peter' AND NOT (ingredient)-->()" +
         "RETURN ingredient.name ",
       optionalResultExplanation = "",
       assertions = (p) => {

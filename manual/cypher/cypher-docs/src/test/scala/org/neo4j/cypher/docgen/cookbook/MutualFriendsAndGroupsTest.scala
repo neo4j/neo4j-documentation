@@ -25,11 +25,11 @@ import org.neo4j.cypher.docgen.DocumentingTestBase
 
 class MutualFriendsAndGroupsTest extends DocumentingTestBase {
   override def graphDescription = List(
-      "Joe member_of_group Group1", 
-      "Bob member_of_group Group1", 
-      "Bill member_of_group Group1", 
-      "Jill member_of_group Group1", 
-      "Joe knows Bill", 
+      "Joe member_of_group Group1",
+      "Bob member_of_group Group1",
+      "Bill member_of_group Group1",
+      "Jill member_of_group Group1",
+      "Joe knows Bill",
       "Jill knows Bill")
 
   def section = "cookbook"
@@ -43,9 +43,9 @@ class MutualFriendsAndGroupsTest extends DocumentingTestBase {
 between persons. If no mutual groups or friends are found, there should be a `0` returned.""",
       queryText = "MATCH (me {name: 'Joe'}), (other) " +
           "WHERE other.name IN ['Jill', 'Bob'] " +
-          "OPTIONAL MATCH pGroups=(me)-[:member_of_group]->(mg)<-[:member_of_group]-(other) \n" +
-          "OPTIONAL MATCH pMutualFriends=(me)-[:knows]->(mf)<-[:knows]-(other) " +
-          "RETURN other.name as name, \n count(distinct pGroups) AS mutualGroups, \n count(distinct pMutualFriends) AS mutualFriends " +
+          "OPTIONAL MATCH pGroups = (me)-[:member_of_group]->(mg)<-[:member_of_group]-(other) \n" +
+          "OPTIONAL MATCH pMutualFriends = (me)-[:knows]->(mf)<-[:knows]-(other) " +
+          "RETURN other.name AS name, \n count(DISTINCT pGroups) AS mutualGroups, \n count(DISTINCT pMutualFriends) AS mutualFriends " +
             "ORDER BY mutualFriends DESC",
       optionalResultExplanation =
 """The question we are asking is -- how many unique paths are there between me and Jill, the paths being common group memberships, and common friends.
@@ -53,5 +53,5 @@ If the paths are mandatory, no results will be returned if me and Bob lack any c
 you have to make at least one of it's relationships optional. That makes the whole path optional.""",
       assertions = (p) => assertEquals(List(Map("name" -> "Jill", "mutualGroups" -> 1, "mutualFriends" -> 1),
           Map("name" -> "Bob", "mutualGroups" -> 1, "mutualFriends" -> 0)), p.toList))
-  } 
+  }
 }

@@ -67,10 +67,10 @@ Therefore the clustering coefficient of node 1 is `1/6`.
 `n` and `r` are quite simple to retrieve via the following query:""",
               queryText =
       		"""
-MATCH (a {name: "startnode"})--(b)
-WITH a, count(distinct b) as n
+MATCH (a {name: 'startnode'})--(b)
+WITH a, count(distinct b) AS n
 MATCH (a)--()-[r]-()--(a)
-RETURN n, count(distinct r) as r
+RETURN n, count(distinct r) AS r
 """,
       optionalResultExplanation = "This returns `n` and `r` for the above calculations.",
       assertions = (p) => assertEquals(List(

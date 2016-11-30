@@ -90,7 +90,8 @@ Create a node with the given properties.
 ###assertion=create-nodes-from-maps parameters=maps
 //
 
-UNWIND {listOfMaps} AS properties CREATE (n) SET n = properties
+UNWIND {listOfMaps} AS properties
+CREATE (n) SET n = properties
 
 RETURN n###
 
