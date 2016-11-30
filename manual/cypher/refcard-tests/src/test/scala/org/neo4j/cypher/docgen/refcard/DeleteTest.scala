@@ -60,7 +60,8 @@ class DeleteTest extends RefcardTest with QueryStatisticsTestSupport {
 
   def text = """
 ###assertion=delete
-MATCH ()-[r]->() WHERE id(r) = 1
+MATCH ()-[r]->()
+WHERE id(r) = 1
 CREATE (n)
 
 DELETE n, r
@@ -76,7 +77,8 @@ DETACH DELETE n
 Delete a node and all relationships connected to it.
 
 ###assertion=delete-all
-MATCH (n) DETACH DELETE n
+MATCH (n)
+DETACH DELETE n
 ###
 Delete all nodes and relationships from the database.
 """

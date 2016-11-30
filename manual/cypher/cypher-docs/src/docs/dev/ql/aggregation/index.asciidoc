@@ -8,12 +8,12 @@ The following examples are assuming the example graph structure below.
 .Graph
 include::includes/cypher-aggregation-graph.asciidoc[]
 
-== COUNT ==
+== Count==
 
 [abstract]
-`COUNT` is used to count the number of rows.
+`count` is used to count the number of rows.
 
-`COUNT` can be used in two forms -- `COUNT(*)` which just counts the number of matching rows, and `COUNT(<expression>)`, which counts the number of non-`NULL` values in `<expression>`.
+`count` can be used in two forms -- `count(*)` which just counts the number of matching rows, and `count(<expression>)`, which counts the number of non-`null` values in `<expression>`.
 
 ifndef::asciidoctor[:leveloffset: 3]
 

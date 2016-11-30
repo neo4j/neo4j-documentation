@@ -14,7 +14,7 @@ This section describes the syntax of the Cypher query language.
 * <<cypher-comments,Comments>>
 * <<introduction-pattern,Patterns>>
 * <<syntax-lists,Lists>>
-* <<cypher-working-with-null,Working with NULL>>
+* <<cypher-working-with-null,Working with null>>
 
 ifndef::asciidoctor[:leveloffset: 2]
 

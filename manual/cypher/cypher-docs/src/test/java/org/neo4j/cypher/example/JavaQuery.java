@@ -66,7 +66,7 @@ public class JavaQuery
 
         // START SNIPPET: execute
         try ( Transaction ignored = db.beginTx();
-              Result result = db.execute( "match (n {name: 'my node'}) return n, n.name" ) )
+              Result result = db.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ) )
         {
             while ( result.hasNext() )
             {
@@ -81,7 +81,7 @@ public class JavaQuery
         // END SNIPPET: execute
         // the result is now empty, get a new one
         try ( Transaction ignored = db.beginTx();
-              Result result = db.execute( "match (n {name: 'my node'}) return n, n.name" ) )
+              Result result = db.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ) )
         {
             // START SNIPPET: items
             Iterator<Node> n_column = result.columnAs( "n" );
@@ -95,7 +95,7 @@ public class JavaQuery
             List<String> columns = result.columns();
             // END SNIPPET: columns
             columnsString = columns.toString();
-            resultString = db.execute( "match (n {name: 'my node'}) return n, n.name" ).resultAsString();
+            resultString = db.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ).resultAsString();
         }
 
         db.shutdown();

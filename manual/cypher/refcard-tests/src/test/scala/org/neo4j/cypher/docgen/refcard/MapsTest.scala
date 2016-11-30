@@ -64,8 +64,8 @@ class MapsTest extends RefcardTest with QueryStatisticsTestSupport {
 ###assertion=returns-one
 RETURN
 
-{name: "Alice", age: 38,
- address: {city: "London", residential: true}}
+{name: 'Alice', age: 38,
+ address: {city: 'London', residential: true}}
 
 ###
 
@@ -76,7 +76,7 @@ Nested maps and list are supported.
 //
 
 MERGE (p:Person {name: $map.name})
-ON CREATE SET p = $map
+  ON CREATE SET p = $map
 
 RETURN p
 ###
@@ -94,7 +94,7 @@ RETURN matchedNode
 Nodes and relationships are returned as maps of their data.
 
 ###assertion=returns-one
-WITH {name: "Alice", age: 38, children: ["John", "Max"]} AS map
+WITH {name: 'Alice', age: 38, children: ['John', 'Max']} AS map
 RETURN
 
 map.name, map.age, map.children[0]

@@ -39,7 +39,7 @@ class QueryResultContentBuilderTest extends CypherFunSuite with GraphIcing with 
   }
 
   test("should handle query with result table output and non-empty results") {
-    val result = runQuery("match (x) return x", init = "CREATE ()").asInstanceOf[QueryResultTable]
+    val result = runQuery("MATCH (x) RETURN x", init = "CREATE ()").asInstanceOf[QueryResultTable]
 
     result.columns should equal(Seq("x"))
     result.footer should equal("1 row")

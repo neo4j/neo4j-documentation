@@ -84,8 +84,8 @@ Use alias for result column name.
 
 ### assertion=unique
 MATCH (n)--(x)
-WHERE id(x) in [%A%,%C%]
-AND n.name = "B"
+WHERE id(x) IN [%A%,%C%]
+AND n.name = 'B'
 
 RETURN DISTINCT n###
 

@@ -63,8 +63,8 @@ WITH user, count(friend) AS friendCount
 WHERE friendCount > 10
 RETURN user.name
 ORDER BY friendCount DESC
-SKIP $skipNumber
-LIMIT 10
+  SKIP $skipNumber
+  LIMIT 10
 
 ###
 
@@ -76,7 +76,7 @@ See the `WITH` section for additional options on its usage.
 
 CREATE (user:Person {name: $name})
 SET user.city = $city
-FOREACH (n IN [user] : SET n.marked = true)
+FOREACH (n IN [user]: SET n.marked = true)
 DELETE user
 ###
 

@@ -77,7 +77,7 @@ round($expr)
 , floor($expr), ceil($expr)
 ###
 
-Round to the nearest integer, +ceil+ and +floor+ find the next integer up or down.
+Round to the nearest integer, `ceil` and `floor` find the next integer up or down.
 
 ###assertion=returns-one parameters=expression
 RETURN

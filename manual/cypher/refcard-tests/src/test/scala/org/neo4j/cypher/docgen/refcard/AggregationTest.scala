@@ -74,7 +74,7 @@ RETURN nodes(path),
 count(variable)
 ###
 
-The number of non-++NULL++ values.
+The number of non-`null` values.
 
 ###assertion=returns-one
 MATCH path = (variable)-->(m)
@@ -88,16 +88,18 @@ All aggregation functions also take the `DISTINCT` modifier,
 which removes duplicates from the values.
 
 ###assertion=returns-one
-MATCH (n) WHERE id(n) IN [%A%, %B%, %C%]
+MATCH (n)
+WHERE id(n) IN [%A%, %B%, %C%]
 RETURN
 
 collect(n.property)
 ###
 
-List from the values, ignores `NULL`.
+List from the values, ignores `null`.
 
 ###assertion=returns-one
-MATCH (n) WHERE id(n) IN [%A%, %B%, %C%]
+MATCH (n)
+WHERE id(n) IN [%A%, %B%, %C%]
 RETURN
 
 sum(n.property)
@@ -105,10 +107,11 @@ sum(n.property)
 ,avg(n.property), min(n.property), max(n.property)
 ###
 
-Sum numerical values. Similar functions are +avg+, +min+, +max+.
+Sum numerical values. Similar functions are `avg`, `min`, `max`.
 
 ###assertion=returns-one parameters=percentile
-MATCH (n) WHERE id(n) IN [%A%, %B%, %C%]
+MATCH (n)
+WHERE id(n) IN [%A%, %B%, %C%]
 RETURN
 
 percentileDisc(n.property, $percentile)
@@ -116,11 +119,12 @@ percentileDisc(n.property, $percentile)
 ,percentileCont(n.property, $percentile)
 ###
 
-Discrete percentile. Continuous percentile is +percentileCont+.
+Discrete percentile. Continuous percentile is `percentileCont`.
 The `percentile` argument is from `0.0` to `1.0`.
 
 ###assertion=returns-one parameters=percentile
-MATCH (n) WHERE id(n) IN [%A%, %B%, %C%]
+MATCH (n)
+WHERE id(n) IN [%A%, %B%, %C%]
 RETURN
 
 stdev(n.property)
@@ -129,6 +133,6 @@ stdev(n.property)
 ###
 
 Standard deviation for a sample of a population.
-For an entire population use +stdevp+.
+For an entire population use `stdevp`.
 """
 }

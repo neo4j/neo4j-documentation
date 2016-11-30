@@ -24,7 +24,7 @@ When you want to filter using aggregated data, you have to chain together two re
 [source,cypher]
 ----
 MATCH (n {name: 'John'})-[:FRIEND]-(friend)
-WITH n, count(friend) as friendsCount
+WITH n, count(friend) AS friendsCount
 WHERE friendsCount > 3
 RETURN n, friendsCount
 ----
@@ -36,7 +36,7 @@ Here's an example of updating the graph, writing the aggregated data to the grap
 [source,cypher]
 ----
 MATCH (n {name: 'John'})-[:FRIEND]-(friend)
-WITH n, count(friend) as friendsCount
+WITH n, count(friend) AS friendsCount
 SET n.friendCount = friendsCount
 RETURN n.friendsCount
 ----
