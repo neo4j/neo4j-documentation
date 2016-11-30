@@ -80,7 +80,8 @@ Note that for example `lower(n.name) = $value` will not use an index.
 ###assertion=match parameters=aname
 //
 
-MATCH (n:Person) WHERE n.name IN [$value]
+MATCH (n:Person)
+WHERE n.name IN [$value]
 
 RETURN n
 ###

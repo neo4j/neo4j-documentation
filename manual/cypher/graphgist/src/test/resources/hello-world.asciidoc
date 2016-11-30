@@ -7,7 +7,7 @@ Text here.
 [[init]]
 [source,cypher]
 ----
-CREATE (n:Person {name:"Adam"})
+CREATE (n:Person {name: 'Adam'})
 RETURN n;
 ----
 

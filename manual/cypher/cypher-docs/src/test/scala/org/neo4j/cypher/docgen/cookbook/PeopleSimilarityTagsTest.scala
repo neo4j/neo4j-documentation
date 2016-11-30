@@ -27,13 +27,13 @@ import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle
 
 
 class PeopleSimilarityTagsTest extends DocumentingTestBase {
-  override def graphDescription = List("Joe favorite Cats", "Joe favorite Horses", "Joe favorite Bikes","Joe favorite Surfing", 
-      "Cats tagged Animals", 
-      "Horses tagged Animals", 
-      "Surfing tagged Hobby", 
-      "Bikes tagged Hobby", 
-      "Derrick favorite Bikes", 
-      "Sara favorite Bikes", 
+  override def graphDescription = List("Joe favorite Cats", "Joe favorite Horses", "Joe favorite Bikes","Joe favorite Surfing",
+      "Cats tagged Animals",
+      "Horses tagged Animals",
+      "Surfing tagged Hobby",
+      "Bikes tagged Hobby",
+      "Derrick favorite Bikes",
+      "Sara favorite Bikes",
       "Sara favorite Horses")
 
   def section = "cookbook"
@@ -56,12 +56,12 @@ class PeopleSimilarityTagsTest extends DocumentingTestBase {
 """,
       queryText =
       		"MATCH (me)-[:favorite]->(myFavorites)-[:tagged]->(tag)<-[:tagged]-(theirFavorites)<-[:favorite]-(people) " +
-      		"WHERE me.name = 'Joe' AND NOT me=people " +
-      		"RETURN people.name as name, count(*) as similar_favs " +
+      		"WHERE me.name = 'Joe' AND NOT me = people " +
+      		"RETURN people.name AS name, count(*) AS similar_favs " +
       		"ORDER BY similar_favs DESC",
       optionalResultExplanation = "The query returns the list of possible friends ranked by them liking similar stuff that are not yet friends.",
       assertions = (p) => assertEquals(List(
         Map("name" -> "Sara", "similar_favs" -> 2),
         Map("name" -> "Derrick", "similar_favs" -> 1)), p.toList))
-  } 
+  }
 }

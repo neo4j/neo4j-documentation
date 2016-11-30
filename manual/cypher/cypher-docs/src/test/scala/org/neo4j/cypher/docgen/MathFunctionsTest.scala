@@ -246,12 +246,12 @@ class MathFunctionsTest extends DocumentingTest {
         }
       }
       section("pi()", "functions-pi") {
-        p("`pi()` returns the mathematical constant pi.")
+        p("`pi()` returns the mathematical constant _pi_.")
         function("`pi()`")
         query("RETURN pi()", ResultAssertions((r) => {
           r.toList.head("pi()") should equal(3.141592653589793)
         })) {
-          p("The constant pi is returned.")
+          p("The constant _pi_ is returned.")
           resultTable()
         }
       }
@@ -262,7 +262,7 @@ class MathFunctionsTest extends DocumentingTest {
         query("RETURN degrees(3.14159)", ResultAssertions((r) => {
           r.toList.head("degrees(3.14159)").asInstanceOf[Double] should equal(180.0 +- 0.001)
         })) {
-          p("The number of degrees in something close to pi.")
+          p("The number of degrees in something close to _pi_.")
           resultTable()
         }
       }
@@ -299,7 +299,7 @@ class MathFunctionsTest extends DocumentingTest {
                  |       haversin(radians( sm.lon - ber.lon )))) AS dist""".stripMargin, ResultAssertions((r) => {
           r.toList.head("dist").asInstanceOf[Double] should equal(9129.0 +- 1)
         })) {
-          p("The estimated distance between Berlin and San Mateo is returned.")
+          p("The estimated distance between *'Berlin'* and *'San Mateo'* is returned.")
           resultTable()
         }
       }

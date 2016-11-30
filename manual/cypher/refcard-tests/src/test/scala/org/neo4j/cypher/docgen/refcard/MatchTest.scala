@@ -54,7 +54,7 @@ class MatchTest extends RefcardTest with QueryStatisticsTestSupport {
 //
 
 MATCH (n:Person)-[:KNOWS]->(m:Person)
-WHERE n.name = "Alice"
+WHERE n.name = 'Alice'
 
 RETURN n, m###
 
@@ -73,7 +73,7 @@ Any pattern can be used in `MATCH`.
 ###assertion=related
 //
 
-MATCH (n {name: "Alice"})-->(m)
+MATCH (n {name: 'Alice'})-->(m)
 
 RETURN n, m###
 
@@ -97,13 +97,13 @@ OPTIONAL MATCH (n)-[r]->(m)
 
 RETURN r###
 
-Optional pattern, ++NULL++s will be used for missing parts.
+Optional pattern, `null`s will be used for missing parts.
 
 ###assertion=none
 MATCH (m:Person)
 USING SCAN m:Person
 
-WHERE m.name = "Alice"
+WHERE m.name = 'Alice'
 
 RETURN m###
 

@@ -77,7 +77,7 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
 CALL db.labels() YIELD label
 ###
 
-This shows a standalone call to the built-in procedure +db.labels+ to list all labels used in the database.
+This shows a standalone call to the built-in procedure `db.labels` to list all labels used in the database.
 Note that required procedure arguments are given explicitly in brackets after the procedure name.
 
 ### assertion=arg parameters=arg
@@ -86,7 +86,7 @@ Note that required procedure arguments are given explicitly in brackets after th
 CALL java.stored.procedureWithArgs
 ###
 
-Standalone calls may omit +YIELD+ and also provide arguments implicitly via statement parameters, e.g. a standalone call requiring one argument `input` may be run by passing the parameter map `{input: 'foo'}`.
+Standalone calls may omit `YIELD` and also provide arguments implicitly via statement parameters, e.g. a standalone call requiring one argument `input` may be run by passing the parameter map `{input: 'foo'}`.
 
 ### assertion=labels
 //
@@ -96,7 +96,7 @@ RETURN count(label) AS count
 ###
 
 Calls the built-in procedure `db.labels` inside a larger query to count all labels used in the database.
-Calls inside a larger query always requires passing arguments and naming results explicitly with +YIELD+.
+Calls inside a larger query always requires passing arguments and naming results explicitly with `YIELD`.
 """
 }
 

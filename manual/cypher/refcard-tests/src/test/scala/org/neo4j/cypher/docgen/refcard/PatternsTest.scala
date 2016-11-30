@@ -185,7 +185,8 @@ Variable length path of any number of relationships from `n` to `m`.
 (Please see the performance tips.)
 
 ###assertion=create parameters=aname
-MATCH (n) WHERE id(n) = %A%
+MATCH (n)
+WHERE id(n) = %A%
 CREATE UNIQUE
 
 (n)-[:KNOWS]->(m {property: $value})
@@ -209,7 +210,7 @@ MATCH p =
 
 allShortestPaths((n1:Person)-[*..6]->(n2:Person))
 
-WHERE n1.name = "Alice"
+WHERE n1.name = 'Alice'
 RETURN p###
 
 Find all shortest paths.

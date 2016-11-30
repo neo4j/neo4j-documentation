@@ -76,9 +76,9 @@ RETURN
 head($list), last($list), tail($list)
 ###
 
-+head+ returns the first, +last+ the last element
-of the list. +tail+ returns all but the first element.
-All return `NULL` for an empty list.
+`head` returns the first, `last` the last element
+of the list. `tail` returns all but the first element.
+All return `null` for an empty list.
 
 ###assertion=returns-one parameters=value
 MATCH path = (n)-->(m)
@@ -92,7 +92,8 @@ RETURN
 Combination of filter and extract in a concise notation.
 
 ###assertion=returns-one
-MATCH (n) WHERE id(n) = %A%
+MATCH (n)
+WHERE id(n) = %A%
 WITH [n] AS list
 RETURN
 
@@ -102,17 +103,19 @@ extract(x IN list | x.prop)
 A list of the value of the expression for each element in the original list.
 
 ###assertion=returns-one parameters=value
-MATCH (n) WHERE id(n) = %A%
+MATCH (n)
+WHERE id(n) = %A%
 WITH [n] AS list
 RETURN
 
 filter(x IN list WHERE x.prop <> $value)
 ###
 
-A filtered list of the elements where the predicate is `TRUE`.
+A filtered list of the elements where the predicate is `true`.
 
 ###assertion=returns-one
-MATCH (n) WHERE id(n) = %A%
+MATCH (n)
+WHERE id(n) = %A%
 WITH [n] AS list
 RETURN
 

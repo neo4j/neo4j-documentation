@@ -27,7 +27,7 @@ class ShortestPathPlanningTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("Shortest path planning", "query-shortestpath-planning")
     initQueries(
-      """CREATE (charlie:Person {name:'Charlie Sheen'}),
+      """CREATE (charlie:Person {name: 'Charlie Sheen'}),
         |       (martin:Person {name: 'Martin Sheen'}),
         |       (michael:Person {name: 'Michael Douglas'}),
         |       (oliver:Person {name: 'Oliver Stone'}),
@@ -67,10 +67,10 @@ class ShortestPathPlanningTest extends DocumentingTest {
         |path even though that could not be guaranteed at planning time.""".stripMargin)
     section("Shortest path with fast algorithm") {
       query(
-        """MATCH (ms:Person {name:'Martin Sheen'} ),
-          |      (cs:Person {name:'Charlie Sheen'}),
-          |      p = shortestPath( (ms)-[rels:ACTED_IN*]-(cs) )
-          |WHERE ALL(r in rels WHERE exists(r.role))
+        """MATCH (ms:Person {name: 'Martin Sheen'} ),
+          |      (cs:Person {name: 'Charlie Sheen'}),
+          |      p = shortestPath((ms)-[rels:ACTED_IN*]-(cs))
+          |WHERE all(r IN rels WHERE exists(r.role))
           |RETURN p""", assertShortestPathLength) {
         p(
           """This query can be evaluated with the fast algorithm -- there are no predicates that need to see the whole
@@ -84,9 +84,9 @@ class ShortestPathPlanningTest extends DocumentingTest {
           """Predicates used in the `WHERE` clause that apply to the shortest path pattern are evaluated before deciding
             |what the shortest matching path is. """)
         query(
-          """MATCH (cs:Person {name:'Charlie Sheen'}),
-            |      (ms:Person {name:'Martin Sheen'}),
-            |      p = shortestPath( (cs)-[*]-(ms) )
+          """MATCH (cs:Person {name: 'Charlie Sheen'}),
+            |      (ms:Person {name: 'Martin Sheen'}),
+            |      p = shortestPath((cs)-[*]-(ms))
             |WHERE length(p) > 1
             |RETURN p""", assertShortestPathLength) {
           p(
@@ -97,16 +97,16 @@ class ShortestPathPlanningTest extends DocumentingTest {
         }
         p(
           """The way the bigger exhaustive query plan works is by using `Apply`/`Optional` to ensure that when the
-            |fast algorithm does not find any results, a `NULL` result is generated instead of simply stopping the result
+            |fast algorithm does not find any results, a `null` result is generated instead of simply stopping the result
             |stream.
             |On top of this, the planner will issue an `AntiConditionalApply`, which will run the exhaustive search
-            |if the path variable is pointing to `NULL` instead of a path.""")
+            |if the path variable is pointing to `null` instead of a path.""")
       }
       section("Prevent the exhaustive search from being used as a fallback") {
         query(
-          """MATCH (cs:Person {name:'Charlie Sheen'}),
-            |      (ms:Person {name:'Martin Sheen'}),
-            |      p = shortestPath( (cs)-[*]-(ms) )
+          """MATCH (cs:Person {name: 'Charlie Sheen'}),
+            |      (ms:Person {name: 'Martin Sheen'}),
+            |      p = shortestPath((cs)-[*]-(ms))
             |WITH p
             |WHERE length(p) > 1
             |RETURN p""", assertShortestPathLength) {

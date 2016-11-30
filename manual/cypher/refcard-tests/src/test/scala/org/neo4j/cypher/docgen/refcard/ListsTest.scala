@@ -67,7 +67,7 @@ class ListsTest extends RefcardTest with QueryStatisticsTestSupport {
 ###assertion=returns-one
 RETURN
 
-["a", "b", "c"] AS list
+['a', 'b', 'c'] AS list
 
 ###
 
@@ -89,8 +89,8 @@ range($firstNum, $lastNum, $step) AS list
 
 ###
 
-Range creates a list of numbers (+step+ is optional), other functions returning list are:
-+labels+, +nodes+, +relationships+, +rels+, +filter+, +extract+.
+Range creates a list of numbers (`step` is optional), other functions returning list are:
+`labels`, `nodes`, `relationships`, `rels`, `filter`, `extract`.
 
 ###assertion=returns-one
 //
@@ -122,7 +122,7 @@ list[$startIdx..$endIdx] AS slice
 ###
 
 List elements can be accessed with `idx` subscripts in square brackets.
-Invalid indexes return `NULL`.
+Invalid indexes return `null`.
 Slices can be retrieved with intervals from `start_idx` to `end_idx` each of which can be omitted or negative.
 Out of range elements are ignored.
 

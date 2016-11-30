@@ -65,7 +65,7 @@ REMOVE n:Person
 Remove a label from `n`.
 
 ###assertion=remove-prop
-CREATE (n {property: "value"})
+CREATE (n {property: 'value'})
 
 REMOVE n.property
 ###

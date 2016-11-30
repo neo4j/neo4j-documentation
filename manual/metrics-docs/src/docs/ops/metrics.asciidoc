@@ -1,7 +1,7 @@
 [[metrics-extension]]
 = Metrics Reporting
 
-NOTE: Metrics reporting is only available in the Neo4j Enterprise Edition.
+NOTE: Metrics reporting is only available in Neo4j Enterprise Edition.
 
 [[metrics-introduction]]
 == Introducing Metrics ==

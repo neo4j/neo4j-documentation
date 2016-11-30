@@ -61,7 +61,7 @@ is described in more details in:
 
 == Patterns for nodes ==
 
-The very simplest ``shape'' that can be described in a pattern is a node. A node is described using a pair of parentheses, and is typically given a name.
+The very simplest 'shape' that can be described in a pattern is a node. A node is described using a pair of parentheses, and is typically given a name.
 For example:
 
 [source,cypher]
@@ -83,7 +83,7 @@ For example:
 ----
 
 This pattern describes a very simple data shape: two nodes, and a single relationship from one to the other.
-In this example, the two nodes are both named as `a` and `b` respectively, and the relationship is ``directed'': it goes from `a` to `b`.
+In this example, the two nodes are both named as `a` and `b` respectively, and the relationship is 'directed': it goes from `a` to `b`.
 
 This way of describing nodes and relationships can be extended to cover an arbitrary number of nodes and the relationships between them, for example:
 
@@ -129,7 +129,7 @@ E.g. a node with two properties on it would look like:
 
 [source,cypher]
 ----
-(a { name: "Andres", sport: "Brazilian Ju-Jitsu" })
+(a { name: 'Andres', sport: 'Brazilian Ju-Jitsu'})
 ----
 
 A relationship with expectations on it would could look like:
@@ -197,9 +197,9 @@ As with nodes, the name of the relationship can always be omitted, in this case 
 
 [CAUTION]
 Variable length pattern matching in versions 2.1.x and earlier does not enforce relationship uniqueness for patterns described inside of a single `MATCH` clause.
-This means that a query such as the following: `MATCH (a)-[r]->(b), (a)-[rs*]->(c) RETURN *` may include `r` as part of the `rs` set.
+This means that a query such as the following: `MATCH (a)-[r]\->(b), (a)-[rs*]\->(c) RETURN *` may include `r` as part of the `rs` set.
 This behavior has changed in versions 2.2.0 and later, in such a way that `r` will be excluded from the result set, as this better adheres to the rules of relationship uniqueness as documented here <<cypherdoc-uniqueness>>.
-If you have a query pattern that needs to retrace relationships rather than ignoring them as the relationship uniqueness rules normally dictate, you can accomplish this using multiple match clauses, as follows: `MATCH (a)-[r]->(b) MATCH (a)-[rs*]->(c) RETURN *`.
+If you have a query pattern that needs to retrace relationships rather than ignoring them as the relationship uniqueness rules normally dictate, you can accomplish this using multiple match clauses, as follows: `MATCH (a)-[r]\->(b) MATCH (a)-[rs*]\->(c) RETURN *`.
 This will work in all versions of Neo4j that support the `MATCH` clause, namely 2.0.0 and later.
 
 Rather than describing a long path using a sequence of many node and relationship descriptions in a pattern, many relationships (and the intermediate nodes) can be described by specifying a length in the relationship description of a pattern.
@@ -218,7 +218,7 @@ This is equivalent to:
 (a)-->()-->(b)
 ----
 
-A range of lengths can also be specified: such relationship patterns are called ``variable length relationships''.
+A range of lengths can also be specified: such relationship patterns are called 'variable length relationships'.
 For example:
 
 [source,cypher]
@@ -254,10 +254,10 @@ As a simple example, let's take the query below:
 
 ###
 MATCH (me)-[:KNOWS*1..2]-(remote_friend)
-WHERE me.name = "Filipa"
+WHERE me.name = 'Filipa'
 RETURN remote_friend.name###
 
-This query finds data in the graph which a shape that fits the pattern: specifically a node (with the name property +Filipa+) and then the +KNOWS+ related nodes, one or two steps out.
+This query finds data in the graph which a shape that fits the pattern: specifically a node (with the name property *'Filipa'*) and then the `KNOWS` related nodes, one or two steps out.
 This is a typical example of finding first and second degree friends.
 
 Note that variable length relationships can not be used with `CREATE` and `MERGE`.

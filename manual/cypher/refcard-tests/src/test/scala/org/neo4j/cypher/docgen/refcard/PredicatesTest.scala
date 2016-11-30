@@ -130,7 +130,7 @@ variable IS NULL
 
 RETURN n, m###
 
-Check if something is `NULL`.
+Check if something is `null`.
 
 ###assertion=returns-one parameters=aname
 MATCH (n)
@@ -140,7 +140,7 @@ NOT exists(n.property) OR n.property = $value
 
 RETURN n###
 
-Either property does not exist or predicate is +TRUE+.
+Either property does not exist or predicate is `true`.
 
 ###assertion=returns-none parameters=aname
 MATCH (n)
@@ -150,7 +150,7 @@ n.property = $value
 
 RETURN n###
 
-Non-existing property returns `NULL`, which is not equal to anything.
+Non-existing property returns `null`, which is not equal to anything.
 
 ###assertion=returns-none parameters=aname
 MATCH (n)
@@ -166,9 +166,9 @@ Properties may also be accessed using a dynamically computed property name.
 MATCH (n)
 WHERE
 
-n.property STARTS WITH "Tob" OR
-n.property ENDS WITH "n" OR
-n.property CONTAINS "goodie"
+n.property STARTS WITH 'Tob' OR
+n.property ENDS WITH 'n' OR
+n.property CONTAINS 'goodie'
 
 RETURN n###
 
@@ -178,7 +178,7 @@ String matching.
 MATCH (n)
 WHERE exists(n.property) AND
 
-n.property =~ "Tob.*"
+n.property =~ 'Tob.*'
 
 RETURN n###
 
