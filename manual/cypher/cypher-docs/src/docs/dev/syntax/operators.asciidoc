@@ -10,7 +10,7 @@ The mathematical operators are `+`, `-`, `*`, `/` and `%`, `^`.
 [[query-operators-comparison]]
 == Comparison operators ==
 
-The comparison operators are `=`, `<>`, `<`, `>`, `<=`, `>=`, `IS NULL`, and `IS NOT NULL`.
+The comparison operators are `=`, `<>`, `<`, `>`, `\<=`, `>=`, `IS NULL`, and `IS NOT NULL`.
 See <<cypher-comparison>> on how they behave.
 
 The operators `STARTS WITH`, `ENDS WITH` and `CONTAINS` can be used to search for a string value by its content.
