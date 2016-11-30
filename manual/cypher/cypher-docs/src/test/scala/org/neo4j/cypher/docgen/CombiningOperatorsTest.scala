@@ -201,7 +201,7 @@ class CombiningOperatorsTest extends DocumentingTest {
             assertPlanContains("AssertSameNode")) {
         p("""Looks for the existence of a team with the supplied name and id, and if one does not exist,
           |it will be created. Owing to the existence of two uniqueness constraints
-          |on `:Team(name)` and `:Team(id)`, any node that would be found by the `UniqueIndexSeek` s
+          |on `:Team(name)` and `:Team(id)`, any node that would be found by the `UniqueIndexSeek`
           |must be the very same node, or the constraints would be violated.""")
         executionPlan()
       }

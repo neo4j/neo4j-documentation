@@ -204,7 +204,7 @@ class MatchTest extends DocumentingTest {
             | WHERE charlie.name = 'Charlie Sheen' AND martin.name = 'Martin Sheen'
             | RETURN p""".stripMargin, assertBlockingRelationshipsAdded) {
           initQueries(initQuery)
-          p("Returns the paths between *'Charlie Sheen'* and *'Martin Sheen'* where all relationships have the *'blocked'* property set to `false`.")
+          p("Returns the paths between *'Charlie Sheen'* and *'Martin Sheen'* where all relationships have the `blocked` property set to `false`.")
           resultTable()
         }
       }

@@ -265,7 +265,7 @@ MERGE (person)-[r:BORN_IN]->(city)
 RETURN person.name, person.bornIn, city""".stripMargin,
       optionalResultExplanation =
         """This builds on the example from <<merge-merge-single-node-derived-from-an-existing-node-property>>. The second `MERGE` creates a `BORN_IN` relationship between each person and a city
-corresponding to the value of the person’s 'bornIn' property. *'Charlie Sheen'*, *'Rob Reiner'* and *'Oliver Stone'* all have
+corresponding to the value of the person’s `bornIn` property. *'Charlie Sheen'*, *'Rob Reiner'* and *'Oliver Stone'* all have
 a `BORN_IN` relationship to the 'same' `City` node (*'New York'*).""",
       assertions = (p) => assertStats(p, nodesCreated = 3, propertiesWritten = 3, labelsAdded = 3, relationshipsCreated = 5)
     )

@@ -61,7 +61,7 @@ class FunctionsTest extends DocumentingTestBase {
       arguments = common_arguments,
       text = """Tests whether a predicate holds for all elements of this list.""",
       queryText = """MATCH p = (a)-[*1..3]->(b) WHERE a.name = 'Alice' AND b.name = 'Daniel' AND all(x IN nodes(p) WHERE x.age > 30) RETURN p""",
-      returns = """All nodes in the returned paths will have an `age` property of at least 30.""",
+      returns = """All nodes in the returned paths will have an `age` property of at least *'30'*.""",
       assertions = (p) => assertEquals(1, p.toSeq.length))
   }
 
