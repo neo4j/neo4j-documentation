@@ -437,7 +437,9 @@ public class JavaExecutionEngineDocTest
         Map<String, Object> params = new HashMap<>();
         params.put( "props", props );
 
-        String query = "MATCH (n) WHERE id(n) = 0 CREATE UNIQUE p = (n)-[:REL]->($props) RETURN last(nodes(p)) AS X";
+        String query = "MATCH (n) WHERE id(n) = 0 " +
+                       "MERGE p = (n)-[:REL]->({name: $props.name, position: $props.position}) " +
+                       "RETURN last(nodes(p)) AS X";
         Result result = db.execute( query, params );
         assertThat( count( result ), is( 1L ) );
     }
@@ -457,7 +459,9 @@ public class JavaExecutionEngineDocTest
         params.put( "props1", props1 );
         params.put( "props2", props2 );
 
-        String query = "MATCH (n) WHERE id(n) = 0 CREATE UNIQUE p = (n)-[:REL]->($props1)-[:LER]->($props2) RETURN p";
+        String query = "MATCH (n) WHERE id(n) = 0 " +
+                       "MERGE p = (n)-[:REL]->({name: $props1.name, position: $props1.position})-[:LER]->({name: $props2.name, awesome: $props2.awesome}) " +
+                       "RETURN p";
         Result result = db.execute( query, params );
         assertThat( count( result ), is( 1L ) );
     }
