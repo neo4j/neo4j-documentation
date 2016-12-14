@@ -174,29 +174,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def updateGraph() {
-    profileQuery(
-      title = "Update Graph",
-      text =
-        """Applies updates to the graph.""".stripMargin,
-      queryText = """CYPHER planner=rule CREATE (:Person {name: 'Alistair'})""",
-      assertions = (p) => {
-        assertThat(p.executionPlanDescription().toString, containsString("CreateNode"))
-        assertThat(p.executionPlanDescription().toString, containsString("UpdateGraph"))
-      }
-    )
-  }
-
-  @Test def mergeInto() {
-    profileQuery(
-      title = "Merge Into",
-      text =
-        """When both the start and end node have already been found, `Merge Into` is used to find all connecting relationships or creating a new relationship between the two nodes.""".stripMargin,
-      queryText = """CYPHER planner=rule MATCH (p:Person {name: 'me'}), (f:Person {name: 'Andres'}) MERGE (p)-[:FRIENDS_WITH]->(f)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Merge(Into)"))
-    )
-  }
-
   @Test def emptyResult() {
     profileQuery(
       title = "Empty Result",

@@ -26,7 +26,7 @@ import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 import org.neo4j.cypher.internal.compiler.v3_2.pipes.IndexSeekByRange
 import org.neo4j.cypher.internal.compiler.v3_2.planDescription.InternalPlanDescription.Arguments.Planner
-import org.neo4j.cypher.internal.compiler.v3_2.{DPPlannerName, IDPPlannerName, RulePlannerName}
+import org.neo4j.cypher.internal.compiler.v3_2.{DPPlannerName, IDPPlannerName}
 import org.neo4j.cypher.internal.helpers.GraphIcing
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
@@ -196,8 +196,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     val plannerArgument = planDescription.arguments.find(a => a.name == "planner")
 
     plannerArgument match {
-      case Some(Planner(RulePlannerName.name)) =>
-        assertThat(planDescription.toString, containsString(ruleString))
       case Some(Planner(IDPPlannerName.name)) =>
         assertThat(planDescription.toString, containsString(costString))
       case Some(Planner(DPPlannerName.name)) =>

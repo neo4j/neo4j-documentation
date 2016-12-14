@@ -187,7 +187,7 @@ Variable length path of any number of relationships from `n` to `m`.
 ###assertion=create parameters=aname
 MATCH (n)
 WHERE id(n) = %A%
-CREATE UNIQUE
+MERGE
 
 (n)-[:KNOWS]->(m {property: $value})
 

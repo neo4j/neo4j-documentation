@@ -108,7 +108,7 @@ We return the relationship to check that it has not been created several times.
 [source,cypher]
 ----
 MATCH (me:User {name: 'Me'}), (friend:User {name: 'A Friend'})
-CREATE UNIQUE (me)-[friendship:FRIEND]->(friend)
+MERGE (me)-[friendship:FRIEND]->(friend)
 RETURN friendship;
 ----
 
