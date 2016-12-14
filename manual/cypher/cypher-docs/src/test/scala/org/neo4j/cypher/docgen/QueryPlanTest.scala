@@ -313,16 +313,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def top() {
-    profileQuery(
-      title = "Top",
-      text =
-        """Returns the first 'n' rows sorted by a provided key. The physical operator is called `Top`. Instead of sorting the whole input, only the top X rows are kept.""".stripMargin,
-      queryText = """MATCH (p:Person) RETURN p ORDER BY p.name LIMIT 2""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Top"))
-    )
-  }
-
   @Test def limit() {
     profileQuery(
       title = "Limit",
