@@ -20,9 +20,12 @@
 package org.neo4j.doc.server.web.logging;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpStatus;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestName;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,26 +52,29 @@ import static org.neo4j.test.assertion.Assert.assertEventually;
 
 public class HTTPLoggingDocIT extends ExclusiveServerTestBase
 {
+
+    private final ExpectedException exception = ExpectedException.none();
+    private final TestDirectory testDirectory = TestDirectory.testDirectory();
+    private final TestName testName = new TestName();
+
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public RuleChain ruleChain = RuleChain.outerRule( exception )
+            .around( testName ).around( testDirectory );
 
     @Test
     public void givenExplicitlyDisabledServerLoggingConfigurationShouldNotLogAccesses() throws Exception
     {
         // given
-        File logDirectory = testDirectory.directory(
-                "givenExplicitlyDisabledServerLoggingConfigurationShouldNotLogAccesses-logdir" );
+        String directoryPrefix = testName.getMethodName();
+        File logDirectory = testDirectory.directory( directoryPrefix + "-logdir" );
         FileUtils.forceMkdir( logDirectory );
-        final File confDir = testDirectory.directory(
-                "givenExplicitlyDisabledServerLoggingConfigurationShouldNotLogAccesses-confdir" );
+        final File confDir = testDirectory.directory( directoryPrefix + "-confdir" );
         FileUtils.forceMkdir( confDir );
 
         NeoServer server = CommunityServerBuilder.server().withDefaultDatabaseTuning()
                 .withProperty( ServerSettings.http_logging_enabled.name(), "false" )
                 .withProperty( GraphDatabaseSettings.logs_directory.name(), logDirectory.toString() )
-                .usingDataDir( testDirectory.directory(
-                        "givenExplicitlyDisabledServerLoggingConfigurationShouldNotLogAccesses-dbdir"
-                ).getAbsolutePath() )
+                .usingDataDir( testDirectory.directory( directoryPrefix + "-dbdir" ).getAbsolutePath() )
                 .build();
         try
         {
@@ -95,22 +101,14 @@ public class HTTPLoggingDocIT extends ExclusiveServerTestBase
     public void givenExplicitlyEnabledServerLoggingConfigurationShouldLogAccess() throws Exception
     {
         // given
-        final File logDirectory =
-                testDirectory.directory( "givenExplicitlyEnabledServerLoggingConfigurationShouldLogAccess-logdir" );
-        FileUtils.forceMkdir( logDirectory );
-        System.out.println(logDirectory);
-        final File confDir =
-                testDirectory.directory( "givenExplicitlyEnabledServerLoggingConfigurationShouldLogAccess-confdir" );
-        FileUtils.forceMkdir( confDir );
-
+        String directoryPrefix = testName.getMethodName();
+        File logDirectory = testDirectory.directory( directoryPrefix + "-logdir" );
         final String query = "?explicitlyEnabled=" + randomString();
 
-        NeoServer server = CommunityServerBuilder.server().withDefaultDatabaseTuning()
+        NeoServer server = CommunityServerBuilder.server().withDefaultDatabaseTuning().persistent()
                 .withProperty( ServerSettings.http_logging_enabled.name(), "true" )
                 .withProperty( GraphDatabaseSettings.logs_directory.name(), logDirectory.getAbsolutePath() )
-                .usingDataDir( testDirectory.directory(
-                        "givenExplicitlyEnabledServerLoggingConfigurationShouldLogAccess-dbdir"
-                ).getAbsolutePath() )
+                .usingDataDir( testDirectory.directory( directoryPrefix + "-dbdir" ).getAbsolutePath() )
                 .build();
         try
         {
@@ -120,7 +118,7 @@ public class HTTPLoggingDocIT extends ExclusiveServerTestBase
 
             // when
             JaxRsResponse response = new RestRequest().get( functionalTestHelper.managementUri() + query );
-            assertThat( response.getStatus(), is( 200 ) );
+            assertThat( response.getStatus(), is( HttpStatus.SC_OK ) );
             response.close();
 
             // then
@@ -132,9 +130,6 @@ public class HTTPLoggingDocIT extends ExclusiveServerTestBase
             server.stop();
         }
     }
-
-    @Rule
-    public final TestDirectory testDirectory = TestDirectory.testDirectory();
 
     private ThrowingSupplier<String, IOException> fileContentSupplier( final File file )
     {
