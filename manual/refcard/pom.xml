@@ -23,7 +23,7 @@
     <docs.sources>${project.build.directory}/docs</docs.sources>
     <docs-plugin.skip>true</docs-plugin.skip>
     <doctools.version>13</doctools.version>
-    <refcard.version>${project.version}</refcard.version>
+    <refcard.version>3.0</refcard.version>
   </properties>
 
   <dependencies>
