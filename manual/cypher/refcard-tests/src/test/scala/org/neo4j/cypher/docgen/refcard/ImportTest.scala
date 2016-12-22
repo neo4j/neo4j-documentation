@@ -29,7 +29,7 @@ class ImportTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List()
   val title = "Import"
   val css = "write c2-1 c4-4 c5-5 c6-3"
-  override val linkId = "cypherdoc-importing-csv-files-with-cypher"
+  override val linkId = "clauses/importing-csv-files-with-cypher"
 
   implicit var csvFilesDir: File = createDir(dir, "csv")
 

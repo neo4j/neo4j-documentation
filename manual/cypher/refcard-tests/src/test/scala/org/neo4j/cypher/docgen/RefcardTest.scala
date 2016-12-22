@@ -167,7 +167,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     writer.println("[options=\"header\"]")
     writer.println("|====")
     if (linkId != null) {
-      writer.println("| link:../" + linkId + ".html[" + title + "]")
+      writer.println("| link:{developer-manual-base-uri}/cypher/" + linkId + "[" + title + "]")
     } else {
       writer.println("|" + title)
     }

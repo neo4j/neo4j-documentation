@@ -28,7 +28,7 @@ class UnionTest extends RefcardTest with QueryStatisticsTestSupport {
     "A KNOWS B", "A LOVES B")
   val title = "UNION"
   val css = "read c2-2 c3-2 c4-2 c5-2 c6-2"
-  override val linkId = "query-union"
+  override val linkId = "clauses/union"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

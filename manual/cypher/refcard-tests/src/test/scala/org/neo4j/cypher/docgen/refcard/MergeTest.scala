@@ -27,7 +27,7 @@ class MergeTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "MERGE"
   val css = "write c4-3 c5-4 c6-2"
-  override val linkId = "query-merge"
+  override val linkId = "clauses/merge"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
