@@ -27,7 +27,7 @@ class AggregationTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A KNOWS B", "B KNOWS C", "C KNOWS ROOT")
   val title = "Aggregation"
   val css = "general c3-3 c4-1 c5-3 c6-6"
-  override val linkId = "query-aggregation"
+  override val linkId = "clauses/aggregation"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

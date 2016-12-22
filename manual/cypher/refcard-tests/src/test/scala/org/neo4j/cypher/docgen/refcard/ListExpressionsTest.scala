@@ -27,7 +27,7 @@ class ListExpressionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A:Person KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
   val title = "List Expressions"
   val css = "general c3-2 c4-3 c5-3 c6-6"
-  override val linkId = "query-function"
+  override val linkId = "functions"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

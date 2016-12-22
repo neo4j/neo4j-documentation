@@ -28,7 +28,7 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "CONSTRAINT"
   val css = "write c2-2 c4-4 c5-5 c6-3"
-  override val linkId = "query-constraints"
+  override val linkId = "schema/constraints"
 
   override protected def newTestGraphDatabaseFactory() = new TestEnterpriseGraphDatabaseFactory()
 

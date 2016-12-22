@@ -27,7 +27,7 @@ class DeleteTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A:Person", "A LINK B", "B LINK C", "C LINK ROOT")
   val title = "DELETE"
   val css = "write c2-2 c4-3 c5-4 c6-2"
-  override val linkId = "query-delete"
+  override val linkId = "clauses/delete"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
