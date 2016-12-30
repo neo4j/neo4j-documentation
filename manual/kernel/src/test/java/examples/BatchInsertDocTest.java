@@ -40,7 +40,7 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.helpers.collection.MapUtil;
-import org.neo4j.io.fs.DefaultFileSystemAbstraction;
+import org.neo4j.io.fs.FileSystemAbstraction;
 import org.neo4j.test.rule.fs.DefaultFileSystemRule;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserters;
@@ -52,7 +52,7 @@ public class BatchInsertDocTest
 {
     @Rule
     public DefaultFileSystemRule fileSystemRule = new DefaultFileSystemRule();
-    private DefaultFileSystemAbstraction fileSystem;
+    private FileSystemAbstraction fileSystem;
 
     @Before
     public void before() throws Exception
