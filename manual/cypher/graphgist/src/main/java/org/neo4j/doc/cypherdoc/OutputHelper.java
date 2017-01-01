@@ -68,6 +68,7 @@ public class OutputHelper
     private static String passthroughWithCondition( String condition, String content )
     {
         return StringUtils.join(
-                new String[] { condition, OutputHelper.PASSTHROUGH_BLOCK, content, OutputHelper.PASSTHROUGH_BLOCK, "endif::[]" }, CypherDoc.EOL );
+                new String[] { "ifndef::backend-pdf[]", condition, OutputHelper.PASSTHROUGH_BLOCK, content,
+                        OutputHelper.PASSTHROUGH_BLOCK, "endif::[]", "endif::[]" }, CypherDoc.EOL );
     }
 }
