@@ -35,8 +35,8 @@ public class Main
 {
     private static final String[] EXTENSIONS = new String[] { ".asciidoc", ".adoc" };
     private static final FileFilter fileFilter = new FileFilter(){
-        public boolean accept (File file) {
-            return Arrays.asList(EXTENSIONS).stream().anyMatch(ext -> file.getAbsolutePath().endsWith(ext));
+        public boolean accept( File file ) {
+            return Arrays.asList( EXTENSIONS ).stream().anyMatch( ext -> file.getAbsolutePath().endsWith( ext ));
         }
     };
 
