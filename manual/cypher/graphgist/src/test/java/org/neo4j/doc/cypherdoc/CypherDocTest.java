@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2016 "Neo Technology,"
+ * Copyright (c) 2002-2017 "Neo Technology,"
  * Network Engine for Objects in Lund AB [http://neotechnology.com]
  *
  * This file is part of Neo4j.
@@ -19,14 +19,15 @@
  */
 package org.neo4j.doc.cypherdoc;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -44,7 +45,7 @@ public class CypherDocTest
     @Test
     public void fullDocumentBlockParsing() throws IOException
     {
-        String content = FileUtils.readFileToString( resourceFile( "/hello-world.asciidoc" ) );
+        String content = readFileToString( resourceFile( "/hello-world.asciidoc" ) );
         List<Block> blocks = CypherDoc.parseBlocks( content );
         List<BlockType> types = new ArrayList<BlockType>();
         for ( Block block : blocks )
@@ -68,7 +69,7 @@ public class CypherDocTest
     public void shouldEmitProfileOnTestFailure() throws Exception
     {
         // given
-        String content = FileUtils.readFileToString( resourceFile( "/failing-query.asciidoc" ) );
+        String content = readFileToString( resourceFile( "/failing-query.asciidoc" ) );
 
         // when
         try
@@ -90,7 +91,7 @@ public class CypherDocTest
     @Test
     public void fullDocumentParsing() throws IOException
     {
-        String content = FileUtils.readFileToString( resourceFile( "/hello-world.asciidoc" ) );
+        String content = readFileToString( resourceFile( "/hello-world.asciidoc" ) );
         String output = CypherDoc.parse( content, null, "http://url/" );
         assertThat(
                 output,
@@ -111,29 +112,34 @@ public class CypherDocTest
     @Test
     public void test_both_against_cypher_and_sql() throws IOException
     {
-        String content = FileUtils.readFileToString( resourceFile( "/tests-with-sql.asciidoc" ) );
+        String content = readFileToString( resourceFile( "/tests-with-sql.asciidoc" ) );
         String output = CypherDoc.parse( content, null, "http://url/" );
     }
 
     @Test
     public void test_profiling_output() throws IOException
     {
-        String content = FileUtils.readFileToString( resourceFile( "/profiling-test.asciidoc" ) );
+        String content = readFileToString( resourceFile( "/profiling-test.asciidoc" ) );
         String output = CypherDoc.parse( content, null, "http://url/" );
     }
 
     @Test
     public void test_rewindable_results() throws IOException
     {
-        String content = FileUtils.readFileToString( resourceFile( "/patterns-in-practice.adoc" ) );
+        String content = readFileToString( resourceFile( "/patterns-in-practice.adoc" ) );
         String output = CypherDoc.parse( content, null, "http://url/" );
     }
 
-    private File resourceFile( String resource ) throws IOException
+    private String readFileToString( Path file ) throws IOException
+    {
+        return String.join( "\n", Files.readAllLines( file ) );
+    }
+
+    private Path resourceFile(String resource ) throws IOException
     {
         try
         {
-            return new File( getClass().getResource( resource ).toURI() );
+            return Paths.get( getClass().getResource( resource ).toURI() );
         }
         catch ( NullPointerException | URISyntaxException e )
         {
