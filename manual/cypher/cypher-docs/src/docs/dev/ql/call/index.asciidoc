@@ -51,7 +51,7 @@ ifndef::asciidoctor[:leveloffset: 2]
 
 include::call-a-procedure-using-a-quoted-namespace-and-name.asciidoc[]
 
-:leveloffset: 2
+ifndef::asciidoctor[:leveloffset: 2]
 
 include::call-a-procedure-with-literal-arguments.asciidoc[]
 
@@ -67,7 +67,7 @@ ifndef::asciidoctor[:leveloffset: 2]
 
 include::call-a-procedure-with-literal-and-default-arguments.asciidoc[]
 
-:leveloffset: 2
+ifndef::asciidoctor[:leveloffset: 2]
 
 include::call-a-procedure-within-a-complex-query.asciidoc[]
 
