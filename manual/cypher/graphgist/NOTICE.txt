@@ -28,7 +28,6 @@ Apache Software License, Version 2.0
   Apache Commons Compress
   Apache Commons Lang
   Caffeine cache
-  Commons IO
   ConcurrentLinkedHashMap
   Data Mapper for Jackson
   Jackson
