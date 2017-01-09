@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.doc.server.rest;
+package org.neo4j.server.rest;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,9 +30,11 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.neo4j.doc.server.enterprise.helpers.EnterpriseServerBuilder;
+import org.neo4j.server.enterprise.helpers.EnterpriseServerBuilder;
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.ServerHelper;
+import org.neo4j.doc.server.rest.RESTDocsGenerator;
+import org.neo4j.doc.server.rest.UniqueStrings;
 import org.neo4j.function.Factory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -42,7 +44,6 @@ import org.neo4j.graphdb.schema.ConstraintType;
 import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.logging.NullLogProvider;
 import org.neo4j.server.NeoServer;
-import org.neo4j.server.enterprise.EnterpriseServerSettings;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.test.GraphDescription;
 import org.neo4j.test.GraphHolder;
@@ -87,8 +88,7 @@ public class PropertyExistenceConstraintsDocIT implements GraphHolder
             @Override
             public Void call() throws IOException
             {
-                CommunityServerBuilder serverBuilder = EnterpriseServerBuilder.server( NullLogProvider.getInstance() )
-                        .withProperty( EnterpriseServerSettings.mode.name(), "enterprise" );
+                CommunityServerBuilder serverBuilder = EnterpriseServerBuilder.server( NullLogProvider.getInstance() );
 
                 PropertyExistenceConstraintsDocIT.server = ServerHelper.createNonPersistentServer( serverBuilder );
                 return null;

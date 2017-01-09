@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.doc.server.rest.security;
+package org.neo4j.server.rest.security;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -27,8 +27,9 @@ import javax.ws.rs.core.HttpHeaders;
 import org.codehaus.jackson.node.ArrayNode;
 import org.junit.Test;
 
+import org.neo4j.doc.server.rest.security.AuthenticationDocIT;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
-import org.neo4j.doc.server.enterprise.helpers.EnterpriseServerBuilder;
+import org.neo4j.server.enterprise.helpers.EnterpriseServerBuilder;
 import org.neo4j.doc.server.HTTP;
 
 import static org.hamcrest.CoreMatchers.equalTo;

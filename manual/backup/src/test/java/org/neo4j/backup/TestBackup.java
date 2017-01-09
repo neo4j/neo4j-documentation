@@ -146,7 +146,7 @@ public class TestBackup
         GraphDatabaseFactory dbFactory = new TestGraphDatabaseFactory()
         {
             @Override
-            protected GraphDatabaseService newDatabase( File storeDir, Map<String,String> config,
+            protected GraphDatabaseService newDatabase( File storeDir, Config config,
                     GraphDatabaseFacadeFactory.Dependencies dependencies )
             {
                 return new GraphDatabaseFacadeFactory( DatabaseInfo.COMMUNITY,
@@ -205,7 +205,7 @@ public class TestBackup
 
     private Config getFormatConfig()
     {
-        return new Config(
+        return Config.embeddedDefaults(
                 MapUtil.stringMap( GraphDatabaseSettings.record_format.name(), StandardV3_0.NAME ) );
     }
 
