@@ -21,14 +21,14 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
 
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "CONSTRAINT"
   val css = "write c2-2 c4-4 c5-5 c6-3"
-  override val linkId = "query-constraints"
+  override val linkId = "schema/constraints"
 
   override protected def newTestGraphDatabaseFactory() = new TestEnterpriseGraphDatabaseFactory()
 

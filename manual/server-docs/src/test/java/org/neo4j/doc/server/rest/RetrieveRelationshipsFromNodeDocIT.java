@@ -37,6 +37,7 @@ import org.junit.Test;
 
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.rest.domain.GraphDbHelper;
+import org.neo4j.doc.server.rest.repr.RepresentationTestBase;
 import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
@@ -47,7 +48,6 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class RetrieveRelationshipsFromNodeDocIT extends AbstractRestFunctionalDocTestBase
 {
@@ -88,7 +88,7 @@ public class RetrieveRelationshipsFromNodeDocIT extends AbstractRestFunctionalDo
         assertEquals( expectedSize, relreps.size() );
         for ( Map<String, Object> relrep : relreps )
         {
-            verifySerialisation( relrep );
+            RepresentationTestBase.verifySerialisation( relrep );
         }
     }
 
@@ -318,32 +318,5 @@ public class RetrieveRelationshipsFromNodeDocIT extends AbstractRestFunctionalDo
     private void isLegalJson( String entity ) throws IOException, JsonParseException
     {
         JsonHelper.jsonToMap( entity );
-    }
-
-    public static void verifySerialisation( Map<String, Object> relrep )
-    {
-        assertUriMatches( RELATIONSHIP_URI_PATTERN, relrep.get( "self" )
-                .toString() );
-        assertUriMatches( NODE_URI_PATTERN, relrep.get( "start" )
-                .toString() );
-        assertUriMatches( NODE_URI_PATTERN, relrep.get( "end" )
-                .toString() );
-        assertNotNull( relrep.get( "type" ) );
-        assertUriMatches( RELATIONSHIP_URI_PATTERN + "/properties", relrep.get( "properties" )
-                .toString() );
-        assertUriMatches( RELATIONSHIP_URI_PATTERN + "/properties/\\{key\\}", (String) relrep.get( "property" ) );
-        assertNotNull( relrep.get( "data" ) );
-        assertNotNull( relrep.get( "metadata" ) );
-        Map metadata = (Map) relrep.get( "metadata" );
-        assertNotNull( metadata.get("type") );
-        assertTrue( ( (Number) metadata.get("id") ).longValue() >= 0 );
-    }
-
-    private static final String NODE_URI_PATTERN = "http://.*/node/[0-9]+";
-    private static final String RELATIONSHIP_URI_PATTERN = "http://.*/relationship/[0-9]+";
-
-    private static void assertUriMatches( String expectedRegex, String actualUri )
-    {
-        assertTrue( "expected <" + expectedRegex + "> got <" + actualUri + ">", actualUri.matches( expectedRegex ) );
     }
 }

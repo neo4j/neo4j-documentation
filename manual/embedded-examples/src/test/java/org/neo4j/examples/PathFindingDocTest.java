@@ -41,7 +41,7 @@ import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.test.EmbeddedDatabaseRule;
+import org.neo4j.test.rule.EmbeddedDatabaseRule;
 
 import static org.junit.Assert.assertEquals;
 
@@ -127,7 +127,7 @@ public class PathFindingDocTest
     public WeightedPath findCheapestPathWithDijkstra( final Node nodeA, final Node nodeB )
     {
         // START SNIPPET: dijkstraUsage
-        PathFinder<WeightedPath> finder = GraphAlgoFactory.dijkstra(                
+        PathFinder<WeightedPath> finder = GraphAlgoFactory.dijkstra(
             PathExpanders.forTypeAndDirection( ExampleTypes.MY_TYPE, Direction.BOTH ), "cost" );
 
         WeightedPath path = finder.findSinglePath( nodeA, nodeB );

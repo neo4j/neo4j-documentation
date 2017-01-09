@@ -19,11 +19,11 @@
  */
 package org.neo4j.doc.server.rest;
 
-import org.junit.Test;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.Test;
 
 import org.neo4j.function.Factory;
 import org.neo4j.graphdb.Transaction;
@@ -35,18 +35,20 @@ import org.neo4j.test.GraphDescription;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
+
 import static org.neo4j.graphdb.Label.label;
-import static org.neo4j.graphdb.Neo4jMatchers.containsOnly;
-import static org.neo4j.graphdb.Neo4jMatchers.getConstraints;
-import static org.neo4j.graphdb.Neo4jMatchers.isEmpty;
 import static org.neo4j.helpers.collection.MapUtil.map;
 import static org.neo4j.server.rest.domain.JsonHelper.createJsonFrom;
 import static org.neo4j.server.rest.domain.JsonHelper.jsonToList;
 import static org.neo4j.server.rest.domain.JsonHelper.jsonToMap;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.containsOnly;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.getConstraints;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.isEmpty;
 
 public class SchemaConstraintsDocIT extends AbstractRestFunctionalTestBase
 {
@@ -239,5 +241,4 @@ public class SchemaConstraintsDocIT extends AbstractRestFunctionalTestBase
 
     private final Factory<String> labels =  UniqueStrings.withPrefix( "label" );
     private final Factory<String> properties =  UniqueStrings.withPrefix( "property" );
-    private final Factory<String> relationshipTypes =  UniqueStrings.withPrefix( "relationshipType" );
 }

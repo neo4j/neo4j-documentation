@@ -40,7 +40,8 @@ import static org.neo4j.kernel.impl.store.StoreFactory.RELATIONSHIP_STORE_NAME;
 
 public class RecordSizesDocTest
 {
-    public final @Rule DocsIncludeFile writer = DocsIncludeFile.inSection( "ops" );
+    @Rule
+    public final DocsIncludeFile writer = DocsIncludeFile.inSection( "ops" );
 
     @Test
     public void record_sizes_table() throws Exception

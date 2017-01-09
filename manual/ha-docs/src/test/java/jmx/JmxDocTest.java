@@ -55,7 +55,7 @@ import org.neo4j.graphdb.factory.TestHighlyAvailableGraphDatabaseFactory;
 import org.neo4j.helpers.collection.Iterators;
 import org.neo4j.doc.AsciiDocListGenerator;
 import org.neo4j.doc.SettingDescription;
-import org.neo4j.test.TargetDirectory;
+import org.neo4j.test.rule.TestDirectory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -79,7 +79,7 @@ public class JmxDocTest
         }
     };
     @ClassRule
-    public static final TargetDirectory.TestDirectory test = TargetDirectory.testDirForTest( JmxDocTest.class );
+    public static final TestDirectory test = TestDirectory.testDirectory();
     private static GraphDatabaseService d1b;
 
     @BeforeClass

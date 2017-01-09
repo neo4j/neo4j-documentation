@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen
 
 import org.junit.Assert._
 import org.junit.Test
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 import org.neo4j.graphdb.Node
 import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
 
@@ -550,8 +550,8 @@ In case all arguments are `null`, `null` will be returned.""",
       title = "properties()",
       syntax = "properties( expression )",
       arguments = List("expression" -> "An expression that returns a node, a relationship, or a map"),
-      text = "`properties()` converts the arguments to a map of its properties. " +
-        "If the argument is a node or a relationship, the returned map is a map of its properties ." +
+      text = "`properties()` converts the argument to a map of its properties. " +
+        "If the argument is a node or a relationship, the returned map is a map of its properties. " +
         "If the argument is already a map, it is returned unchanged.",
       queryText = "CREATE (p:Person {name: 'Stefan', city: 'Berlin'}) RETURN properties(p)",
       returns = "",

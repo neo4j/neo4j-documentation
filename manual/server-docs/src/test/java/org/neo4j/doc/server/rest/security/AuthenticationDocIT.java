@@ -19,37 +19,30 @@
  */
 package org.neo4j.doc.server.rest.security;
 
-import java.io.IOException;
-import javax.ws.rs.core.HttpHeaders;
-
-import com.sun.jersey.core.util.Base64;
 import org.codehaus.jackson.JsonNode;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.neo4j.doc.server.ExclusiveServerTestBase;
-import org.neo4j.doc.server.HTTP;
-import org.neo4j.doc.server.helpers.CommunityServerBuilder;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
+import java.io.IOException;
+import javax.ws.rs.core.HttpHeaders;
+
 import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
-import org.neo4j.string.UTF8;
 import org.neo4j.test.TestData;
+import org.neo4j.doc.server.HTTP;
+import org.neo4j.doc.server.HTTP.RawPayload;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-public class AuthenticationDocIT extends ExclusiveServerTestBase
+public class AuthenticationDocIT extends CommunityServerTestBase
 {
-    public @Rule TestData<RESTDocsGenerator> gen = TestData.producedThrough( RESTDocsGenerator.PRODUCER );
-    private CommunityNeoServer server;
+    @Rule
+    public TestData<RESTDocsGenerator> gen = TestData.producedThrough( RESTDocsGenerator.PRODUCER );
 
     @Before
     public void setUp()
@@ -188,15 +181,15 @@ public class AuthenticationDocIT extends ExclusiveServerTestBase
     }
 
     @Test
-    public void shouldNotAllowDataAccess() throws Exception
+    public void shouldAllowDataAccess() throws Exception
     {
         // Given
         startServerWithConfiguredUser();
 
         // When & then
-        assertAuthorizationRequired( "POST", "db/data/node", HTTP.RawPayload.quotedJson( "{'name':'jake'}" ), 201 );
+        assertAuthorizationRequired( "POST", "db/data/node", RawPayload.quotedJson( "{'name':'jake'}" ), 201 );
         assertAuthorizationRequired( "GET",  "db/data/node/1234", 404 );
-        assertAuthorizationRequired( "POST", "db/data/transaction/commit", HTTP.RawPayload.quotedJson(
+        assertAuthorizationRequired( "POST", "db/data/transaction/commit", RawPayload.quotedJson(
                 "{'statements':[{'statement':'MATCH (n) RETURN n'}]}" ), 200 );
 
         assertEquals(200, HTTP.GET( server.baseUri().resolve( "" ).toString() ).status() );
@@ -210,10 +203,10 @@ public class AuthenticationDocIT extends ExclusiveServerTestBase
 
         // When & then
         assertEquals( 201, HTTP.POST( server.baseUri().resolve( "db/data/node" ).toString(),
-                HTTP.RawPayload.quotedJson( "{'name':'jake'}" ) ).status() );
+                RawPayload.quotedJson( "{'name':'jake'}" ) ).status() );
         assertEquals( 404, HTTP.GET( server.baseUri().resolve( "db/data/node/1234" ).toString() ).status() );
         assertEquals( 200, HTTP.POST( server.baseUri().resolve( "db/data/transaction/commit" ).toString(),
-                HTTP.RawPayload.quotedJson( "{'statements':[{'statement':'MATCH (n) RETURN n'}]}" ) ).status() );
+                RawPayload.quotedJson( "{'statements':[{'statement':'MATCH (n) RETURN n'}]}" ) ).status() );
     }
 
     @Test
@@ -246,30 +239,28 @@ public class AuthenticationDocIT extends ExclusiveServerTestBase
         assertThat( firstError.get( "message" ).asText(), equalTo( "Too many failed authentication requests. Please wait 5 seconds and try again." ) );
     }
 
-    // TODO: Enable this test when we have authorization in place
     @Test
-    @Ignore
     public void shouldNotAllowDataAccessForUnauthorizedUser() throws Exception
     {
         // Given
-        startServerWithConfiguredUser(); // TODO: The user for this test should not have read access
+        startServer( true ); // The user should not have read access before changing the password
 
         // When
         HTTP.Response response =
-                HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "secret" ) ).POST(
+                HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) ).POST(
                         server.baseUri().resolve( "authentication" ).toString(),
-                        HTTP.RawPayload.quotedJson( "{'username':'neo4j', 'password':'secret'}" )
+                        HTTP.RawPayload.quotedJson( "{'username':'neo4j', 'password':'neo4j'}" )
                 );
 
         // When & then
-        assertEquals( 403, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "secret" ) )
+        assertEquals( 403, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) )
                 .POST( server.baseUri().resolve( "db/data/node" ).toString(),
-                        HTTP.RawPayload.quotedJson( "{'name':'jake'}" ) ).status() );
-        assertEquals( 403, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "secret" ) )
+                        RawPayload.quotedJson( "{'name':'jake'}" ) ).status() );
+        assertEquals( 403, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) )
                 .GET( server.baseUri().resolve( "db/data/node/1234" ).toString() ).status() );
-        assertEquals( 403, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "secret" ) )
+        assertEquals( 403, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) )
                 .POST( server.baseUri().resolve( "db/data/transaction/commit" ).toString(),
-                        HTTP.RawPayload.quotedJson( "{'statements':[{'statement':'MATCH (n) RETURN n'}]}" ) ).status() );
+                        RawPayload.quotedJson( "{'statements':[{'statement':'MATCH (n) RETURN n'}]}" ) ).status() );
     }
 
     private void assertAuthorizationRequired( String method, String path, int expectedAuthorizedStatus ) throws JsonParseException
@@ -304,53 +295,14 @@ public class AuthenticationDocIT extends ExclusiveServerTestBase
         assertThat(response.status(), equalTo(expectedAuthorizedStatus));
     }
 
-    @After
-    public void cleanup()
-    {
-        if(server != null) {server.stop();}
-    }
-
     public void startServerWithConfiguredUser() throws IOException
     {
         startServer( true );
         // Set the password
         HTTP.Response post = HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) ).POST(
                 server.baseUri().resolve( "/user/neo4j/password" ).toString(),
-                HTTP.RawPayload.quotedJson( "{'password':'secret'}" )
+                RawPayload.quotedJson( "{'password':'secret'}" )
         );
         assertEquals( 200, post.status() );
-    }
-
-    public void startServer( boolean authEnabled ) throws IOException
-    {
-        server = CommunityServerBuilder.server()
-                .withProperty( GraphDatabaseSettings.auth_enabled.name(), Boolean.toString( authEnabled ) )
-                .build();
-        server.start();
-    }
-
-    private String challengeResponse( String username, String password )
-    {
-        return "Basic " + base64( username + ":" + password );
-    }
-
-    private String dataURL()
-    {
-        return server.baseUri().resolve( "db/data/" ).toString();
-    }
-
-    private String userURL( String username )
-    {
-        return server.baseUri().resolve( "user/" + username ).toString();
-    }
-
-    private String passwordURL( String username )
-    {
-        return server.baseUri().resolve( "user/" + username + "/password" ).toString();
-    }
-
-    private String base64(String value)
-    {
-        return UTF8.decode( Base64.encode( value ) );
     }
 }

@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class ForeachTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A:Person KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
   val title = "FOREACH"
   val css = "write c2-2 c4-3 c5-5 c6-2"
-  override val linkId = "query-foreach"
+  override val linkId = "clauses/foreach"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

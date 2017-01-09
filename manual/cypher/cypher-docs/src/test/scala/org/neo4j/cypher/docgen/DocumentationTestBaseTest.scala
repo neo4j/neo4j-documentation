@@ -79,7 +79,7 @@ Use `UNWIND` to create multiple nodes from a parameter.
           Map("name" -> "Andres", "position" -> "Developer"),
           Map("name" -> "Michael", "position" -> "Developer")))
       ,
-      queryText = "UNWIND {props} AS properties CREATE (n) SET n = properties RETURN n",
+      queryText = "UNWIND $props AS properties CREATE (n) SET n = properties RETURN n",
       optionalResultExplanation = "",
       assertions = (p) => assertStats(p, nodesCreated = 2, propertiesWritten = 4))
 

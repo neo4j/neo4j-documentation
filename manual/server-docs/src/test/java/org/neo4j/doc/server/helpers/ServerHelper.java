@@ -28,7 +28,6 @@ import org.apache.commons.io.FileUtils;
 
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.IndexDefinition;
@@ -69,18 +68,6 @@ public class ServerHelper
         {
             throw new RuntimeException( e );
         }
-    }
-
-    public static NeoServer createNonPersistentServer() throws IOException
-    {
-        return createServer( CommunityServerBuilder.server(), false, null );
-    }
-
-    public static NeoServer createNonPersistentReadOnlyServer() throws IOException
-    {
-        CommunityServerBuilder builder = CommunityServerBuilder.server();
-        builder.withProperty( GraphDatabaseSettings.read_only.name(), "true" );
-        return createServer( builder, false, null );
     }
 
     public static NeoServer createNonPersistentServer( LogProvider logProvider ) throws IOException

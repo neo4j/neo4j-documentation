@@ -28,12 +28,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import org.neo4j.function.Factory;
-import org.neo4j.graphdb.Neo4jMatchers;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.test.GraphDescription;
+import org.neo4j.test.mockito.matcher.Neo4jMatchers;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
@@ -46,11 +46,11 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 import static org.neo4j.graphdb.Label.label;
-import static org.neo4j.graphdb.Neo4jMatchers.containsOnly;
 import static org.neo4j.helpers.collection.MapUtil.map;
 import static org.neo4j.server.rest.domain.JsonHelper.createJsonFrom;
 import static org.neo4j.server.rest.domain.JsonHelper.jsonToList;
 import static org.neo4j.server.rest.domain.JsonHelper.jsonToMap;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.containsOnly;
 
 public class SchemaIndexDocIT extends AbstractRestFunctionalTestBase
 {
@@ -75,7 +75,6 @@ public class SchemaIndexDocIT extends AbstractRestFunctionalTestBase
                 .entity();
 
         Map<String,Object> serialized = jsonToMap( result );
-
 
         Map<String,Object> index = new HashMap<>();
         index.put( "label", labelName );

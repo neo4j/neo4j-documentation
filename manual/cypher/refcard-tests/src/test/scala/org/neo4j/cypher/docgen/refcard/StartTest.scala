@@ -21,14 +21,14 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class StartTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A", "A LINK B", "B LINK C", "C LINK ROOT")
   val title = "START"
   val css = "col carddeprecation c2-2 c3-2 c4-4 c5-1 c6-2"
   override def indexProps: List[String] = List("value", "name", "key")
-  override val linkId = "query-start"
+  override val linkId = "clauses/start"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -79,7 +79,7 @@ class StartTest extends RefcardTest with QueryStatisticsTestSupport {
 ### assertion=index-match parameters=index-match
 //
 
-START n = node:nodeIndexName(key = {value})
+START n = node:nodeIndexName(key = $value)
 
 RETURN n###
 
@@ -88,17 +88,3 @@ Use `node_auto_index` for the automatic index.
 Note that other uses of `START` have been removed as of Cypher 2.2.
 """
 }
-
-/*
-
-### assertion=index-match parameters=index-query
-//
-
-START n=node:nodeIndexName({query})
-
-RETURN n###
-
-Query the index using a full Lucene query.
-A query can look like this: "name:Bob"
-
-*/

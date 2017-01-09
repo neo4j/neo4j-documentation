@@ -37,7 +37,7 @@ public class SettingsDocumenter
     private static final Predicate<SettingDescription> REGULAR_SETTINGS = ( s ) -> !s.isDeprecated();
     private static final Predicate<SettingDescription> DEPRECATED_SETTINGS = SettingDescription::isDeprecated;
 
-    private static final Pattern CONFIG_SETTING_PATTERN = Pattern.compile( "[a-z0-9]+((\\.|_)[a-z0-9]+)+" );
+    private static final Pattern CONFIG_SETTING_PATTERN = Pattern.compile( "\\+?[a-z0-9]+((\\.|_)[a-z0-9]+)+\\+?" );
     // TODO: This one, and the blacklist below, exist because we try and infer what is a config name
     //       in prose text. This is fraught with accidental error. We should instead look into
     //       adopting a convention for how we mark references to other config options in the @Description
@@ -45,7 +45,8 @@ public class SettingsDocumenter
     private static final Pattern NUMBER_OR_IP = Pattern.compile( "[0-9\\.]+" );
     private static final List<String> CONFIG_NAMES_BLACKLIST = Arrays.asList( "round_robin", "keep_all", "keep_last",
             "keep_none", "metrics.neo4j", "i.e", "e.g", "fixed_ascending", "fixed_descending", "high_limit",
-            "branch_then_copy", "copy_then_branch" );
+            "dbms.cluster.routing.get", "example_provider_name", "ldap.example.com", "javax.naming", "apoc.convert",
+            "apoc.load.json", "apoc.trigger.add", "branch_then_copy", "copy_then_branch", "neo4j.cert", "neo4j.key" );
 
     public static final String IFDEF_HTMLOUTPUT = String.format("ifndef::nonhtmloutput[]%n");
     public static final String IFDEF_NONHTMLOUTPUT = String.format("ifdef::nonhtmloutput[]%n");
@@ -189,6 +190,11 @@ public class SettingsDocumenter
             {
                 // a filenamne
                 match = "_" + match + "_";
+            }
+            else if ( match.startsWith( "+" ) && match.endsWith( "+" ) )
+            {
+                // marked as passthrough, strip the mark but otherwise do nothing
+                match = match.replaceAll( "^\\+|\\+$", "" );
             }
             else if ( match.equals( settingBeingRendered ) )
             {

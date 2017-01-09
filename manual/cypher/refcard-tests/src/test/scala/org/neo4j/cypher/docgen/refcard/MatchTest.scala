@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class MatchTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A:Person", "A KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
   val title = "MATCH"
   val css = "read c2-2 c3-2 c4-2 c5-2"
-  override val linkId = "query-match"
+  override val linkId = "clauses/match"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

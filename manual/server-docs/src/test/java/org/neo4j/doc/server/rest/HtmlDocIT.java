@@ -28,11 +28,10 @@ import java.util.Collections;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
-import org.neo4j.doc.server.HTTP;
-import org.neo4j.doc.server.SharedServerTestBase;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.rest.domain.GraphDbHelper;
 import org.neo4j.server.rest.domain.RelationshipDirection;
+import org.neo4j.doc.server.HTTP;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -50,7 +49,7 @@ public class HtmlDocIT extends AbstractRestFunctionalTestBase
     @BeforeClass
     public static void setupServer() throws IOException
     {
-        functionalTestHelper = new FunctionalTestHelper( SharedServerTestBase.server() );
+        functionalTestHelper = new FunctionalTestHelper( server() );
         helper = functionalTestHelper.getGraphDbHelper();
     }
 

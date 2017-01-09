@@ -30,7 +30,7 @@ import org.neo4j.test.GraphDefinition;
  * This class is supporting the generation of ASCIIDOC documentation
  * from Java JUnit tests. Snippets can be supplied programmatically in the Java-section
  * and will replace their @@snippetName placeholders in the documentation description.
- * 
+ *
  * @author peterneubauer
  *
  */
@@ -51,7 +51,7 @@ public class JavaTestDocsGenerator extends AsciiDocGenerator
             // TODO: invoke some complete method here?
         }
     };
-    
+
     public JavaTestDocsGenerator( String title )
     {
         super( title, "docs" );

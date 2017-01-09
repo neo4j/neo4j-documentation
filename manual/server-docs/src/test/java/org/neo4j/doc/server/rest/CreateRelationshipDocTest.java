@@ -25,6 +25,7 @@ import javax.ws.rs.core.MediaType;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import org.junit.Test;
 
+import org.neo4j.doc.server.rest.repr.RepresentationTestBase;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
@@ -114,7 +115,7 @@ public class CreateRelationshipDocTest extends AbstractRestFunctionalDocTestBase
     public void creating_a_loop_relationship()
             throws Exception
     {
-        
+
         Node joe = getNode( "Joe" );
         String jsonString = "{\"to\" : \"" + getNodeUri( joe )
                             + "\", \"type\" : \"LOVES\"}";
@@ -139,6 +140,6 @@ public class CreateRelationshipDocTest extends AbstractRestFunctionalDocTestBase
     private void assertProperRelationshipRepresentation(
             Map<String, Object> relrep )
     {
-        RetrieveRelationshipsFromNodeDocIT.verifySerialisation( relrep );
+        RepresentationTestBase.verifySerialisation( relrep );
     }
 }

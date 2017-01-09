@@ -47,8 +47,8 @@ import org.neo4j.test.TestData.Title;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.neo4j.graphdb.Neo4jMatchers.hasProperty;
-import static org.neo4j.graphdb.Neo4jMatchers.inTx;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.hasProperty;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.inTx;
 
 public class RelationshipDocIT extends AbstractRestFunctionalDocTestBase
 {
@@ -135,9 +135,10 @@ public class RelationshipDocIT extends AbstractRestFunctionalDocTestBase
     {
         data.get();
         Relationship loves = getFirstRelationshipFromRomeoNode();
-        gen().withHeader( StreamingFormat.STREAM_HEADER, "true" ).expectedStatus( Status.NOT_FOUND.getStatusCode
-                () ).delete(
-                getPropertiesUri( loves ) + "/non-existent" ).entity();
+        gen().withHeader( StreamingFormat.STREAM_HEADER, "true" )
+                .expectedStatus( Status.NOT_FOUND.getStatusCode() )
+                .delete( getPropertiesUri( loves ) + "/non-existent" )
+                .entity();
     }
 
     @Test

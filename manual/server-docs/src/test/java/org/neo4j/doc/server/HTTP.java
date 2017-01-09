@@ -62,19 +62,9 @@ public class HTTP
         CLIENT = Client.create( defaultClientConfig );
     }
 
-    public static Builder withHeaders( Map<String, String> headers )
-    {
-        return BUILDER.withHeaders( headers );
-    }
-
     public static Builder withHeaders( String... kvPairs )
     {
         return BUILDER.withHeaders( kvPairs );
-    }
-
-    public static Builder withBaseUri( String baseUri )
-    {
-        return BUILDER.withBaseUri( baseUri );
     }
 
     public static Response POST( String uri )
@@ -92,34 +82,9 @@ public class HTTP
         return BUILDER.POST( uri, payload );
     }
 
-    public static Response PUT( String uri )
-    {
-        return BUILDER.PUT( uri );
-    }
-
-    public static Response PUT( String uri, Object payload )
-    {
-        return BUILDER.PUT( uri, payload );
-    }
-
-    public static Response PUT( String uri, RawPayload payload )
-    {
-        return BUILDER.PUT( uri, payload );
-    }
-
-    public static Response DELETE( String uri )
-    {
-        return BUILDER.DELETE( uri );
-    }
-
     public static Response GET( String uri )
     {
         return BUILDER.GET( uri );
-    }
-
-    public static Response request( String method, String uri )
-    {
-        return BUILDER.request( method, uri );
     }
 
     public static Response request( String method, String uri, Object payload )
@@ -156,11 +121,6 @@ public class HTTP
             return new Builder( combined, baseUri );
         }
 
-        public Builder withBaseUri( String baseUri )
-        {
-            return new Builder( headers, baseUri );
-        }
-
         public Response POST( String uri )
         {
             return request( "POST", uri );
@@ -174,26 +134,6 @@ public class HTTP
         public Response POST( String uri, RawPayload payload )
         {
             return request( "POST", uri, payload );
-        }
-
-        public Response PUT( String uri )
-        {
-            return request( "PUT", uri );
-        }
-
-        public Response PUT( String uri, Object payload )
-        {
-            return request( "PUT", uri, payload );
-        }
-
-        public Response PUT( String uri, RawPayload payload )
-        {
-            return request( "PUT", uri, payload );
-        }
-
-        public Response DELETE( String uri )
-        {
-            return request( "DELETE", uri );
         }
 
         public Response GET( String uri )
@@ -308,11 +248,6 @@ public class HTTP
             return entity;
         }
 
-        public String stringFromContent( String key ) throws JsonParseException
-        {
-            return get(key).asText();
-        }
-
         public JsonNode get(String fieldName) throws JsonParseException
         {
             return JsonHelper.jsonNode( entity ).get( fieldName );
@@ -345,11 +280,6 @@ public class HTTP
     public static class RawPayload
     {
         private final String payload;
-
-        public static RawPayload rawPayload( String payload )
-        {
-            return new RawPayload( payload );
-        }
 
         public static RawPayload quotedJson( String json )
         {

@@ -26,23 +26,28 @@ import java.util.concurrent.TimeUnit
 import org.junit.{After, Before}
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
-import org.neo4j.cypher.internal.compiler.v3_0.prettifier.Prettifier
-import org.neo4j.cypher.internal.frontend.v3_0.helpers.Eagerly
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.helpers.RuntimeJavaValueConverter
+import org.neo4j.cypher.internal.compiler.v3_2.prettifier.Prettifier
+import org.neo4j.cypher.internal.frontend.v3_2.helpers.Eagerly
 import org.neo4j.cypher.internal.helpers.GraphIcing
 import org.neo4j.cypher.internal.javacompat.GraphImpl
-import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult}
+import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult, isGraphKernelResultValue}
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper}
 import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.factory.GraphDatabaseSettings
 import org.neo4j.graphdb.index.Index
+import org.neo4j.kernel.api.KernelTransaction
+import org.neo4j.kernel.api.security.{SecurityContext}
 import org.neo4j.kernel.configuration.Settings
 import org.neo4j.kernel.impl.api.KernelStatement
 import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.core.ThreadToStatementContextBridge
+import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
+import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySource}
 import org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.test.{GraphDescription, TestGraphDatabaseFactory}
 import org.neo4j.visualization.asciidoc.AsciidocHelper
@@ -155,6 +160,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                 assertions: InternalExecutionResult => Unit) {
     internalTestQuery(title, text, queryText, optionalResultExplanation, None, None, parameters, planners, assertions)
   }
+  private val javaValues = new RuntimeJavaValueConverter(isGraphKernelResultValue, identity)
 
   def testFailingQuery[T <: CypherException: ClassTag](title: String, text: String, queryText: String, optionalResultExplanation: String = null) {
     val classTag = implicitly[ClassTag[T]]
@@ -318,7 +324,19 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
     val results = planners.flatMap {
       case planner if expectedException.isEmpty =>
-        val rewindable = RewindableExecutionResult(engine.execute(s"$planner $query", parameters, db.session()))
+        val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
+        val transaction = db.beginTransaction( KernelTransaction.Type.`implicit`, SecurityContext.AUTH_DISABLED )
+        val result = engine.execute(
+          s"$planner $query",
+          parameters,
+          contextFactory.newContext(
+            QuerySource.UNKNOWN,
+            transaction,
+            query,
+            javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]]
+          )
+        )
+        val rewindable = RewindableExecutionResult(result)
         db.inTx(assertions(rewindable))
         val dump = rewindable.dumpToString()
         if (graphvizExecutedAfter && planner == planners.head) {
@@ -329,7 +347,20 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         Some(dump)
 
       case s =>
-        val e = intercept[CypherException](engine.execute(s"$s $query", parameters, db.session()))
+        val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
+        val transaction = db.beginTransaction( KernelTransaction.Type.`implicit`, SecurityContext.AUTH_DISABLED )
+        val e = intercept[CypherException](
+            engine.execute(
+              s"$s $query",
+              parameters,
+              contextFactory.newContext(
+                QuerySource.UNKNOWN,
+                transaction,
+                query,
+                javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]]
+              )
+            )
+          )
         val expectedExceptionType = expectedException.get
         e match {
           case expectedExceptionType(typedE) => expectedCaught(typedE)
@@ -341,11 +372,11 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     results.headOption
   }
 
-  var db: GraphDatabaseCypherService = null
-  var engine: ExecutionEngine = null
-  var nodeMap: Map[String, Long] = null
-  var nodeIndex: Index[Node] = null
-  var relIndex: Index[Relationship] = null
+  var db: GraphDatabaseCypherService = _
+  var engine: ExecutionEngine = _
+  var nodeMap: Map[String, Long] = _
+  var nodeIndex: Index[Node] = _
+  var relIndex: Index[Relationship] = _
   val properties: Map[String, Map[String, Any]] = Map()
   var generateConsole: Boolean = true
   var generateInitialGraphForConsole: Boolean = true
@@ -396,11 +427,23 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   def executePreparationQueries(queries: List[String]) {
     preparationQueries = queries
-    executeQueries(queries)
+
+    graph.withTx( executeQueries(_, queries), KernelTransaction.Type.`implicit` )
   }
 
-  private def executeQueries(queries: List[String]) {
-    queries.foreach { q => engine.execute(q, Map.empty[String, Object], db.session()) }
+  private def executeQueries(tx: InternalTransaction, queries: List[String]) {
+    val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
+    queries.foreach { query => {
+      val innerTx = db.beginTransaction( KernelTransaction.Type.`implicit`, tx.securityContext() )
+      engine.execute( query, Map.empty[String, Object],
+        contextFactory.newContext(
+          QuerySource.UNKNOWN,
+          innerTx,
+          query,
+          java.util.Collections.emptyMap()
+        )
+      )
+    } }
   }
 
   protected def sampleAllIndicesAndWait(mode: IndexSamplingMode = IndexSamplingMode.TRIGGER_REBUILD_ALL, time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS) = {
@@ -472,7 +515,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   override def softReset() {
     cleanDatabaseContent(db.getGraphDatabaseService)
 
-    db.inTx {
+    db.withTx( tx => {
       db.schema().awaitIndexesOnline(10, TimeUnit.SECONDS)
 
       nodeIndex = db.index().forNodes("nodes")
@@ -485,7 +528,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         case (name, node) => name -> node.getId
       }.toMap
 
-      executeQueries(setupQueries)
+      executeQueries(tx, setupQueries)
 
       db.getAllNodes().asScala.foreach((n) => {
         indexProperties(n, nodeIndex)
@@ -496,9 +539,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         case (n: Node, seq: Map[String, Any]) =>
           seq foreach { case (k, v) => n.setProperty(k, v) }
       }
-    }
+    }, KernelTransaction.Type.`explicit` )
 
-    executeQueries(setupConstraintQueries)
+    db.withTx( executeQueries(_, setupConstraintQueries), KernelTransaction.Type.`explicit` )
   }
 
   private def asNodeMap[T: ClassTag](m: Map[String, T]): Map[Node, T] =

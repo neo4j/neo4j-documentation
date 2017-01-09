@@ -19,15 +19,15 @@
  */
 package org.neo4j.doc.server.rest;
 
+import java.io.IOException;
+import java.net.URI;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URI;
 
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 
@@ -67,7 +67,7 @@ public class ConfigureBaseUriDocIT extends AbstractRestFunctionalTestBase
             String responseEntityBody = new String( data );
 
             assertTrue( responseEntityBody.contains( "http://foobar.com" ) );
-            assertFalse( responseEntityBody.contains( "localhost" ) );
+            assertFalse( responseEntityBody.contains( "http://localhost" ) );
         }
         finally
         {
@@ -99,7 +99,7 @@ public class ConfigureBaseUriDocIT extends AbstractRestFunctionalTestBase
             String responseEntityBody = new String( data );
 
             assertTrue( responseEntityBody.contains( "https://foobar.com" ) );
-            assertFalse( responseEntityBody.contains( "localhost" ) );
+            assertFalse( responseEntityBody.contains( "https://localhost" ) );
         }
         finally
         {
@@ -131,7 +131,7 @@ public class ConfigureBaseUriDocIT extends AbstractRestFunctionalTestBase
             String responseEntityBody = new String( data );
 
             assertTrue( responseEntityBody.contains( "http://foobar.com:9999" ) );
-            assertFalse( responseEntityBody.contains( "localhost" ) );
+            assertFalse( responseEntityBody.contains( "http://localhost" ) );
         }
         finally
         {
@@ -162,7 +162,7 @@ public class ConfigureBaseUriDocIT extends AbstractRestFunctionalTestBase
             String responseEntityBody = new String( data );
 
             assertTrue( responseEntityBody.contains( "http://foobar.com" ) );
-            assertFalse( responseEntityBody.contains( "localhost" ) );
+            assertFalse( responseEntityBody.contains( "http://localhost" ) );
         }
         finally
         {
@@ -194,14 +194,13 @@ public class ConfigureBaseUriDocIT extends AbstractRestFunctionalTestBase
             String responseEntityBody = new String( data );
 
             assertTrue( responseEntityBody.contains( "https://foobar.com:9999" ) );
-            assertFalse( responseEntityBody.contains( "localhost" ) );
+            assertFalse( responseEntityBody.contains( "https://localhost" ) );
         }
         finally
         {
             httpclient.getConnectionManager().shutdown();
         }
     }
-
 
     @Test
     public void shouldUseRequestUriWhenNoXForwardHeadersPresent() throws Exception
@@ -225,7 +224,7 @@ public class ConfigureBaseUriDocIT extends AbstractRestFunctionalTestBase
 
             assertFalse( responseEntityBody.contains( "https://foobar.com" ) );
             assertFalse( responseEntityBody.contains( ":0" ) );
-            assertTrue( responseEntityBody.contains( "localhost" ) );
+            assertTrue( responseEntityBody.contains( "http://localhost" ) );
         }
         finally
         {

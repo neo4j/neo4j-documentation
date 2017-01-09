@@ -19,15 +19,15 @@
  */
 package org.neo4j.doc.server;
 
+import java.io.IOException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-
+import org.neo4j.doc.server.helpers.ServerHelper;
 import org.neo4j.logging.AssertableLogProvider;
 import org.neo4j.server.NeoServer;
-import org.neo4j.doc.server.helpers.ServerHelper;
 
 public class NeoServerShutdownLoggingDocIT extends ExclusiveServerTestBase
 {

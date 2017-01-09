@@ -22,7 +22,7 @@ package org.neo4j.cypher.docgen
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
-import org.neo4j.cypher.internal.compiler.v3_0.pipes.IndexSeekByRange
+import org.neo4j.cypher.internal.compiler.v3_2.pipes.IndexSeekByRange
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
   override val setupQueries = List(
@@ -174,29 +174,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def updateGraph() {
-    profileQuery(
-      title = "Update Graph",
-      text =
-        """Applies updates to the graph.""".stripMargin,
-      queryText = """CYPHER planner=rule CREATE (:Person {name: 'Alistair'})""",
-      assertions = (p) => {
-        assertThat(p.executionPlanDescription().toString, containsString("CreateNode"))
-        assertThat(p.executionPlanDescription().toString, containsString("UpdateGraph"))
-      }
-    )
-  }
-
-  @Test def mergeInto() {
-    profileQuery(
-      title = "Merge Into",
-      text =
-        """When both the start and end node have already been found, `Merge Into` is used to find all connecting relationships or creating a new relationship between the two nodes.""".stripMargin,
-      queryText = """CYPHER planner=rule MATCH (p:Person {name: 'me'}), (f:Person {name: 'Andres'}) MERGE (p)-[:FRIENDS_WITH]->(f)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Merge(Into)"))
-    )
-  }
-
   @Test def emptyResult() {
     profileQuery(
       title = "Empty Result",
@@ -333,16 +310,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """Sorts rows by a provided key.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN p ORDER BY p.name""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Sort"))
-    )
-  }
-
-  @Test def top() {
-    profileQuery(
-      title = "Top",
-      text =
-        """Returns the first 'n' rows sorted by a provided key. The physical operator is called `Top`. Instead of sorting the whole input, only the top X rows are kept.""".stripMargin,
-      queryText = """MATCH (p:Person) RETURN p ORDER BY p.name LIMIT 2""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Top"))
     )
   }
 

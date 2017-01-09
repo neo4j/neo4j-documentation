@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class CreateTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A", "A LINK B", "B LINK C", "C LINK ROOT")
   val title = "CREATE"
   val css = "write c4-3 c5-4 c6-1"
-  override val linkId = "query-create"
+  override val linkId = "clauses/create"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -72,7 +72,7 @@ class CreateTest extends RefcardTest with QueryStatisticsTestSupport {
 ###assertion=create-node parameters=aname
 //
 
-CREATE (n {name: {value}})
+CREATE (n {name: $value})
 
 RETURN n###
 
@@ -81,7 +81,7 @@ Create a node with the given properties.
 ###assertion=create-node-from-map parameters=map
 //
 
-CREATE (n {map})
+CREATE (n $map)
 
 RETURN n###
 
@@ -90,7 +90,7 @@ Create a node with the given properties.
 ###assertion=create-nodes-from-maps parameters=maps
 //
 
-UNWIND {listOfMaps} AS properties
+UNWIND $listOfMaps AS properties
 CREATE (n) SET n = properties
 
 RETURN n###
@@ -111,7 +111,7 @@ Create a relationship with the given type and direction; bind a variable to it.
 MATCH (n), (m)
 WHERE id(n) = %A% AND id(m) = %B%
 
-CREATE (n)-[:LOVES {since: {value}}]->(m)
+CREATE (n)-[:LOVES {since: $value}]->(m)
 
 RETURN n###
 

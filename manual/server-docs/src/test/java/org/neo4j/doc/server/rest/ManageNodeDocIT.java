@@ -44,11 +44,9 @@ import org.junit.rules.TemporaryFolder;
 import org.neo4j.doc.metatest.TestJavaTestDocsGenerator;
 import org.neo4j.doc.server.ExclusiveServerTestBase;
 import org.neo4j.doc.server.HTTP;
-import org.neo4j.doc.server.SharedServerTestBase;
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.rest.domain.GraphDbHelper;
-import org.neo4j.helpers.FakeClock;
 import org.neo4j.kernel.configuration.Settings;
 import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
@@ -74,6 +72,8 @@ import org.neo4j.shell.ShellSettings;
 import org.neo4j.string.UTF8;
 import org.neo4j.test.TestData;
 import org.neo4j.test.TestGraphDatabaseFactory;
+import org.neo4j.time.Clocks;
+import org.neo4j.time.FakeClock;
 
 import static java.lang.System.lineSeparator;
 
@@ -87,7 +87,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import static org.neo4j.test.SuppressOutput.suppressAll;
+import static org.neo4j.test.rule.SuppressOutput.suppressAll;
 
 public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
 {
@@ -100,7 +100,7 @@ public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
     @BeforeClass
     public static void setupServer() throws IOException
     {
-        functionalTestHelper = new FunctionalTestHelper( SharedServerTestBase.server() );
+        functionalTestHelper = new FunctionalTestHelper( server() );
         helper = functionalTestHelper.getGraphDbHelper();
     }
 
@@ -354,8 +354,8 @@ public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
         @ClassRule
         public static TemporaryFolder staticFolder = new TemporaryFolder();
 
-        public
         @Rule
+        public
         TestData<RESTDocsGenerator> gen = TestData.producedThrough( RESTDocsGenerator.PRODUCER );
         private static FakeClock clock;
 
@@ -368,7 +368,7 @@ public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
         @BeforeClass
         public static void setupServer() throws Exception
         {
-            clock = new FakeClock();
+            clock = Clocks.fakeClock();
             server = CommunityServerBuilder.server()
                     .usingDataDir( staticFolder.getRoot().getAbsolutePath() )
                     .withClock( clock )
@@ -590,7 +590,6 @@ public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
         {
             Response response = consoleService.exec( new JsonFormat(),
                     "{ \"command\" : \"create (n) return n;\", \"engine\":\"shell\" }" );
-
 
             assertEquals( 200, response.getStatus() );
             String result = decode( response ).get( 0 );

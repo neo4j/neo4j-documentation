@@ -26,12 +26,12 @@ import java.io.IOException;
 import java.util.Collections;
 import javax.ws.rs.core.MediaType;
 
-import org.neo4j.doc.server.HTTP;
-import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.server.rest.repr.formats.StreamingJsonFormat;
+import org.neo4j.doc.server.HTTP;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -79,7 +79,6 @@ public class GetNodePropertiesDocIT extends AbstractRestFunctionalDocTestBase
         String germanText = "öäüÖÄÜß";
 
         String complicatedString = asianText + germanText;
-
 
         String entity = JsonHelper.createJsonFrom( Collections.singletonMap( "foo", complicatedString ));
         final RestRequest request = req;

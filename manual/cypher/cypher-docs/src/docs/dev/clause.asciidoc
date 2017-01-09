@@ -32,7 +32,6 @@ These comprise clauses that write the data to the database.
 |<<query-delete,DELETE>>                    |   Delete graph elements — nodes, relationships or paths.
 |<<query-remove,REMOVE>>                    |   Remove properties and labels from nodes and relationships.
 |<<query-foreach,FOREACH>>                  |   Update data within a list, whether components of a path, or the result of aggregation.
-|<<query-create-unique,CREATE UNIQUE>>      |   A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
 |<<cypherdoc-importing-csv-files-with-cypher,Importing CSV files with Cypher>> | How to import data from CSV files using `LOAD CSV`.
 |<<query-periodic-commit,PERIODIC COMMIT>>  |  How and when to use `PERIODIC COMMIT`
 |===
@@ -103,10 +102,6 @@ include::ql/remove/index.asciidoc[leveloffset=+1]
 ifndef::asciidoctor[:leveloffset: 2]
 
 include::ql/foreach/index.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 2]
-
-include::ql/create-unique/index.asciidoc[leveloffset=+1]
 
 ifndef::asciidoctor[:leveloffset: 2]
 

@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class SetTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A")
   val title = "SET"
   val css = "write c2-1 c4-3 c5-4 c6-1"
-  override val linkId = "query-set"
+  override val linkId = "clauses/set"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -57,8 +57,8 @@ class SetTest extends RefcardTest with QueryStatisticsTestSupport {
 ###assertion=set parameters=set
 MATCH (n) WHERE id(n) = %A%
 
-SET n.property1 = {value1},
-    n.property2 = {value2}
+SET n.property1 = $value1,
+    n.property2 = $value2
 
 RETURN n.property1###
 
@@ -67,7 +67,7 @@ Update or create a property.
 ###assertion=map parameters=map
 CREATE (n)
 
-SET n = {map}
+SET n = $map
 
 RETURN n.property###
 
@@ -77,7 +77,7 @@ This will remove any existing properties.
 ###assertion=map parameters=map
 CREATE (n)
 
-SET n += {map}
+SET n += $map
 
 RETURN n.property###
 

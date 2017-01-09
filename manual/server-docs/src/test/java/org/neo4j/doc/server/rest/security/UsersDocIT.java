@@ -19,28 +19,27 @@
  */
 package org.neo4j.doc.server.rest.security;
 
-import java.io.IOException;
-import javax.ws.rs.core.HttpHeaders;
-
 import com.sun.jersey.core.util.Base64;
 import org.codehaus.jackson.JsonNode;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.neo4j.doc.server.ExclusiveServerTestBase;
-import org.neo4j.doc.server.HTTP;
-import org.neo4j.doc.server.helpers.CommunityServerBuilder;
+import java.io.IOException;
+import javax.ws.rs.core.HttpHeaders;
+
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.CommunityNeoServer;
+import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.string.UTF8;
 import org.neo4j.test.TestData;
+import org.neo4j.doc.server.ExclusiveServerTestBase;
+import org.neo4j.doc.server.HTTP;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -48,7 +47,8 @@ import static org.junit.Assert.assertThat;
 
 public class UsersDocIT extends ExclusiveServerTestBase
 {
-    public @Rule TestData<RESTDocsGenerator> gen = TestData.producedThrough( RESTDocsGenerator.PRODUCER );
+    @Rule
+    public TestData<RESTDocsGenerator> gen = TestData.producedThrough( RESTDocsGenerator.PRODUCER );
     private CommunityNeoServer server;
 
     @Before
@@ -122,7 +122,7 @@ public class UsersDocIT extends ExclusiveServerTestBase
                 .post( server.baseUri().resolve( "/user/neo4j/password" ).toString() );
 
         // Then the new password should work
-        Assert.assertEquals( 200, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "secret" ) ).GET( dataURL() ).status() );
+        assertEquals( 200, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "secret" ) ).GET( dataURL() ).status() );
 
         // Then the old password should not be invalid
         assertEquals( 401, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) ).POST( dataURL() ).status() );

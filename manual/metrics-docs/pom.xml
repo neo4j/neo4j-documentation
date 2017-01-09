@@ -6,13 +6,13 @@
   <parent>
     <groupId>org.neo4j</groupId>
     <artifactId>parent</artifactId>
-    <version>3.0.9-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
 
   <groupId>org.neo4j.doc</groupId>
   <artifactId>neo4j-metrics-docs</artifactId>
-  <version>3.0.9-SNAPSHOT</version>
+  <version>3.2.0-SNAPSHOT</version>
 
   <name>Neo4j - Metrics Kernel Extension docs</name>
   <packaging>jar</packaging>
@@ -39,6 +39,7 @@
                   <arg value="org.neo4j.metrics.source.db.LogRotationMetrics" />
                   <arg value="org.neo4j.metrics.source.cluster.NetworkMetrics" />
                   <arg value="org.neo4j.metrics.source.cluster.ClusterMetrics" />
+                  <arg value="org.neo4j.metrics.source.causalclustering.CoreMetrics" />
 
                   <!-- keep this one last as it's a bit special compared to the others -->
                   <arg value="org.neo4j.metrics.source.jvm.JvmMetrics" />
@@ -71,6 +72,13 @@
    <dependency>
       <groupId>org.neo4j</groupId>
       <artifactId>neo4j-ha</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+   <dependency>
+      <groupId>org.neo4j</groupId>
+      <artifactId>neo4j-causal-clustering</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

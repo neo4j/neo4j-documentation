@@ -19,6 +19,10 @@
  */
 package org.neo4j.doc.server.rest;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,33 +35,28 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response.Status;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import org.neo4j.doc.server.helpers.FunctionalTestHelper;
-import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
-import org.neo4j.doc.server.rest.domain.GraphDbHelper;
 import org.neo4j.function.Factory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.MapUtil;
 import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.doc.server.helpers.FunctionalTestHelper;
+import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
+import org.neo4j.doc.server.rest.domain.GraphDbHelper;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.server.rest.domain.URIHelper;
 
 import static java.util.Collections.singletonList;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
-import static org.neo4j.graphdb.Neo4jMatchers.hasProperty;
-import static org.neo4j.graphdb.Neo4jMatchers.inTx;
+import static org.neo4j.doc.server.helpers.FunctionalTestHelper.CLIENT;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.hasProperty;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.inTx;
 
 public class IndexNodeDocIT extends AbstractRestFunctionalTestBase
 {
@@ -642,7 +641,7 @@ public class IndexNodeDocIT extends AbstractRestFunctionalTestBase
         assertEquals( 1, hits.size() );
         response.close();
 
-        FunctionalTestHelper.CLIENT.resource( location )
+        CLIENT.resource( location )
                 .delete();
         response = request.get( functionalTestHelper.indexNodeUri( indexName, key, URIHelper.encode( value ) ) );
         hits = (Collection<?>) JsonHelper.readJson( response.getEntity() );
@@ -779,7 +778,6 @@ public class IndexNodeDocIT extends AbstractRestFunctionalTestBase
         assertEquals( 1, data.get( "sequence" ) );
     }
 
-
     @Documented( "Create a unique node or return fail (fail).\n" +
                  "\n" +
                  "Here, in case\n" +
@@ -813,8 +811,6 @@ public class IndexNodeDocIT extends AbstractRestFunctionalTestBase
                           + "\", \"properties\": {\"" + key + "\": \"" + value
                                                        + "\", \"sequence\": 2}}" )
                                     .post( functionalTestHelper.nodeIndexUri() + index + "?uniqueness=create_or_fail" );
-
-
 
         Map<String, Object> result = JsonHelper.jsonToMap( response.entity() );
         Map<String, Object> data = assertCast( Map.class, result.get( "data" ) );

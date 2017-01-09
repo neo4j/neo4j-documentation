@@ -24,12 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.neo4j.server.rest.security.SecurityFilter;
 import org.neo4j.server.rest.security.SecurityRule;
 
-
 public class PermanentlyFailingSecurityRuleWithWildcardPath implements SecurityRule
 {
 
     public static final String REALM = "WallyWorld"; // as per RFC2617 :-)
-
 
     public boolean isAuthorized( HttpServletRequest request )
     {
@@ -42,7 +40,6 @@ public class PermanentlyFailingSecurityRuleWithWildcardPath implements SecurityR
         return "/protected/*";
     }
     // END SNIPPET: failingRuleWithWildcardPath
-
 
     public String wwwAuthenticateHeader()
     {

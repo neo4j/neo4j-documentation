@@ -19,12 +19,6 @@
  */
 package org.neo4j.doc.server.rest.paging;
 
-import java.net.URI;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-import javax.ws.rs.core.MediaType;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -33,7 +27,18 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import org.neo4j.doc.server.ExclusiveServerTestBase;
+import java.net.URI;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+import javax.ws.rs.core.MediaType;
+
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Transaction;
+import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.server.CommunityNeoServer;
+import org.neo4j.server.database.Database;
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.helpers.ServerHelper;
@@ -41,23 +46,18 @@ import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
 import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
 import org.neo4j.doc.server.rest.RestRequest;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.helpers.FakeClock;
-import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.server.CommunityNeoServer;
-import org.neo4j.server.database.Database;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.scripting.javascript.GlobalJavascriptInitializer;
 import org.neo4j.test.TestData;
+import org.neo4j.doc.server.ExclusiveServerTestBase;
+import org.neo4j.time.Clocks;
+import org.neo4j.time.FakeClock;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-
-import static org.neo4j.test.SuppressOutput.suppressAll;
+import static org.neo4j.test.rule.SuppressOutput.suppressAll;
 
 public class PagedTraverserDocIT extends ExclusiveServerTestBase
 {
@@ -73,8 +73,8 @@ public class PagedTraverserDocIT extends ExclusiveServerTestBase
     @ClassRule
     public static TemporaryFolder staticFolder = new TemporaryFolder();
 
-    public
     @Rule
+    public
     TestData<RESTDocsGenerator> gen = TestData.producedThrough( RESTDocsGenerator.PRODUCER );
     private static FakeClock clock;
 
@@ -87,7 +87,7 @@ public class PagedTraverserDocIT extends ExclusiveServerTestBase
     @BeforeClass
     public static void setupServer() throws Exception
     {
-        clock = new FakeClock();
+        clock = Clocks.fakeClock();
         server = CommunityServerBuilder.server()
                 .usingDataDir( staticFolder.getRoot().getAbsolutePath() )
                 .withClock( clock )
@@ -296,14 +296,13 @@ public class PagedTraverserDocIT extends ExclusiveServerTestBase
         assertEquals( 400, response.getStatus() );
     }
 
-
     @Test
     public void shouldRespondWith400OnScriptErrors()
     {
         GlobalJavascriptInitializer.initialize( GlobalJavascriptInitializer.Mode.SANDBOXED );
 
         theStartNode = createLinkedList( 1, server.getDatabase() );
-        
+
         JaxRsResponse response = RestRequest.req().post(
                 functionalTestHelper.nodeUri( theStartNode.getId() ) + "/paged/traverse/node?pageSize=50",
                 "{"
@@ -340,7 +339,6 @@ public class PagedTraverserDocIT extends ExclusiveServerTestBase
 
         // when
         JaxRsResponse pagedTraverserResponse = createStreamingPagedTraverserWithTimeoutInMinutesAndPageSize( 60, 1 );
-
 
         System.out.println( pagedTraverserResponse.getHeaders().getFirst( "Content-Type" ) );
 

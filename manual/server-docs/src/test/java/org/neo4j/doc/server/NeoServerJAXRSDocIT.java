@@ -21,7 +21,7 @@ package org.neo4j.doc.server;
 
 import java.net.URI;
 
-import org.dummy.web.service.DummyThirdPartyWebService;
+import org.dummy.doc.web.service.DummyThirdPartyWebService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.helpers.ServerHelper;
+import org.neo4j.doc.server.helpers.Transactor;
 import org.neo4j.doc.server.helpers.UnitOfWork;
 import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RestRequest;
@@ -36,9 +37,10 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.server.NeoServer;
-import org.neo4j.doc.server.helpers.Transactor;
 
 import static org.junit.Assert.assertEquals;
+
+import static org.neo4j.doc.server.helpers.FunctionalTestHelper.CLIENT;
 
 public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
 {
@@ -75,7 +77,7 @@ public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
     public void shouldLoadThirdPartyJaxRsClasses() throws Exception
     {
         server = CommunityServerBuilder.server()
-                .withThirdPartyJaxRsPackage( "org.dummy.web.service",
+                .withThirdPartyJaxRsPackage( "org.dummy.doc.web.service",
                         DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT )
                 .usingDataDir( folder.directory( name.getMethodName() ).getAbsolutePath() )
                 .build();
@@ -83,7 +85,7 @@ public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
 
         URI thirdPartyServiceUri = new URI( server.baseUri()
                 .toString() + DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT ).normalize();
-        String response = FunctionalTestHelper.CLIENT.resource( thirdPartyServiceUri.toString() )
+        String response = CLIENT.resource( thirdPartyServiceUri.toString() )
                 .get( String.class );
         assertEquals( "hello", response );
 
@@ -91,7 +93,7 @@ public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
         int nodesCreated = createSimpleDatabase( server.getDatabase().getGraph() );
         thirdPartyServiceUri = new URI( server.baseUri()
                 .toString() + DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT + "/inject-test" ).normalize();
-        response = FunctionalTestHelper.CLIENT.resource( thirdPartyServiceUri.toString() )
+        response = CLIENT.resource( thirdPartyServiceUri.toString() )
                 .get( String.class );
         assertEquals( String.valueOf( nodesCreated ), response );
     }

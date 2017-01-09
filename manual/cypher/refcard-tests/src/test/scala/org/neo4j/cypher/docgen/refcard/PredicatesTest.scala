@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class PredicatesTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A:Person KNOWS B", "B KNOWS C", "C KNOWS ROOT")
   val title = "Predicates"
   val css = "general c2-2 c3-3 c4-1 c5-1 c6-4"
-  override val linkId = "query-where"
+  override val linkId = "clauses/where"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -74,7 +74,7 @@ MATCH (n)-->(m)
 WHERE id(n) = %A% AND id(m) = %B%
 AND
 
-n.property <> {value}
+n.property <> $value
 
 RETURN n, m###
 
@@ -136,7 +136,7 @@ Check if something is `null`.
 MATCH (n)
 WHERE
 
-NOT exists(n.property) OR n.property = {value}
+NOT exists(n.property) OR n.property = $value
 
 RETURN n###
 
@@ -146,7 +146,7 @@ Either property does not exist or predicate is `true`.
 MATCH (n)
 WHERE
 
-n.property = {value}
+n.property = $value
 
 RETURN n###
 
@@ -156,7 +156,7 @@ Non-existing property returns `null`, which is not equal to anything.
 MATCH (n)
 WHERE
 
-n["property"] = {value}
+n["property"] = $value
 
 RETURN n###
 
@@ -208,7 +208,7 @@ Exclude matches to `(n)-[:KNOWS]->(m)` from the result.
 MATCH (n)
 WHERE exists(n.property) AND
 
-n.property IN [{value1}, {value2}]
+n.property IN [$value1, $value2]
 
 RETURN n###
 

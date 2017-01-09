@@ -26,8 +26,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.neo4j.test.rule.TestDirectory;
 import org.neo4j.doc.tools.AsciiDocGenerator;
-import org.neo4j.test.TargetDirectory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
 public class AsciiDocGeneratorTest
 {
     @Rule
-    public TargetDirectory.TestDirectory testDirectory = TargetDirectory.testDirForTest( getClass() );
+    public TestDirectory testDirectory = TestDirectory.testDirectory( getClass() );
 
     private File sectionDirectory;
 

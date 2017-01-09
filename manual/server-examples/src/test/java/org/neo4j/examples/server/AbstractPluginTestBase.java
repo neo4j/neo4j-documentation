@@ -23,13 +23,12 @@ import java.util.Map;
 
 import org.junit.BeforeClass;
 
-import org.neo4j.doc.server.rest.AbstractRestFunctionalTestBase;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
-import org.neo4j.doc.server.helpers.FunctionalTestHelper;
+import org.neo4j.server.helpers.FunctionalTestHelper;
 import org.neo4j.server.plugins.PluginFunctionalTestHelper;
 import org.neo4j.server.plugins.PluginFunctionalTestHelper.RegExp;
 import org.neo4j.server.plugins.ServerPlugin;
-import org.neo4j.doc.server.rest.domain.GraphDbHelper;
+import org.neo4j.server.rest.domain.GraphDbHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -88,7 +87,6 @@ public class AbstractPluginTestBase extends AbstractRestFunctionalTestBase
     protected String performPost( String uri, String body )
     {
         RESTDocsGenerator requestBuilder = gen.get()
-                .noGraph()
                 .expectedStatus( 200 );
         if ( body != null )
         {

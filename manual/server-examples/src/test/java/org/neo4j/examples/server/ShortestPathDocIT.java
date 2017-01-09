@@ -18,10 +18,10 @@
  */
 package org.neo4j.examples.server;
 
-import org.junit.Test;
-
 import java.util.List;
 import java.util.Map;
+
+import org.junit.Test;
 
 import org.neo4j.examples.server.plugins.ShortestPath;
 import org.neo4j.graphdb.Label;
@@ -41,11 +41,6 @@ public class ShortestPathDocIT extends AbstractPluginTestBase
 {
     private static final String SHORTEST_PATHS = "shortestPath";
 
-    protected String getDocumentationSectionName()
-    {
-        return "rest-api";
-    }
-
     @Test
     public void canFindExtension() throws Exception
     {
@@ -61,9 +56,9 @@ public class ShortestPathDocIT extends AbstractPluginTestBase
     {
         Node source = data.get().get( "C" );
         String sourceUri = functionalTestHelper.nodeUri( source.getId() );
-        Node target = data.get().get( "A" );        
+        Node target = data.get().get( "A" );
         String targetUri = functionalTestHelper.nodeUri( target.getId() );
-        
+
         String uri = (String) getNodeLevelPluginMetadata( ShortestPath.class, source.getId() ).get( SHORTEST_PATHS );
         String body = "{\"target\":\"" + targetUri + "\"}";
 
@@ -84,9 +79,9 @@ public class ShortestPathDocIT extends AbstractPluginTestBase
     {
         Node source = data.get().get( "C" );
         String sourceUri = functionalTestHelper.nodeUri( source.getId() );
-        Node target = data.get().get( "A" );        
+        Node target = data.get().get( "A" );
         String targetUri = functionalTestHelper.nodeUri( target.getId() );
-        
+
         String uri = (String) getNodeLevelPluginMetadata( ShortestPath.class, source.getId() ).get( SHORTEST_PATHS );
 
         String body = "{\"target\":\"" + targetUri + "\",\"types\":[\"knows\"]}";

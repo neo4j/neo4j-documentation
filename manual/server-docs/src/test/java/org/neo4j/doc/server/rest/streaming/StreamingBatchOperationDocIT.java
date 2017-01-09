@@ -27,19 +27,19 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.doc.server.rest.PrettyJSON;
-import org.neo4j.graphdb.Neo4jMatchers;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.Iterables;
 import org.neo4j.doc.server.rest.AbstractRestFunctionalTestBase;
 import org.neo4j.doc.server.rest.JaxRsResponse;
+import org.neo4j.doc.server.rest.PrettyJSON;
 import org.neo4j.doc.server.rest.RestRequest;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.server.rest.repr.BadInputException;
 import org.neo4j.server.rest.repr.StreamingFormat;
 import org.neo4j.test.GraphDescription.Graph;
+import org.neo4j.test.mockito.matcher.Neo4jMatchers;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static org.hamcrest.Matchers.containsString;
@@ -47,7 +47,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.neo4j.graphdb.Neo4jMatchers.inTx;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.inTx;
 
 public class StreamingBatchOperationDocIT extends AbstractRestFunctionalTestBase
 {
@@ -98,7 +98,6 @@ public class StreamingBatchOperationDocIT extends AbstractRestFunctionalTestBase
                 .endObject()
             .endArray().toString();
 
-
         String entity = gen.get()
         .expectedType( APPLICATION_JSON_TYPE )
         .withHeader(StreamingFormat.STREAM_HEADER,"true")
@@ -132,7 +131,6 @@ public class StreamingBatchOperationDocIT extends AbstractRestFunctionalTestBase
         // Should have created by the first PUT request
         Map<String, Object> body = (Map<String, Object>) getResult.get("body");
         assertEquals(1, ((Map<String, Object>) body.get("data")).get("age"));
-
 
     }
 
@@ -367,7 +365,7 @@ public class StreamingBatchOperationDocIT extends AbstractRestFunctionalTestBase
     @Graph("Peter likes Jazz")
     public void shouldHandleEscapedStrings() throws ClientHandlerException,
             UniformInterfaceException, JSONException, JsonParseException {
-    	String string = "Jazz";
+        String string = "Jazz";
         Node gnode = getNode( string );
         assertThat( gnode, inTx(graphdb(), Neo4jMatchers.hasProperty( "name" ).withValue(string)) );
 

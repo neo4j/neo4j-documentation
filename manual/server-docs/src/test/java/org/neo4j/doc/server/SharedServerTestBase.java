@@ -19,18 +19,18 @@
  */
 package org.neo4j.doc.server;
 
-import java.util.concurrent.Callable;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 
-import org.neo4j.doc.server.helpers.ServerHelper;
+import java.util.concurrent.Callable;
+
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.server.NeoServer;
-import org.neo4j.test.SuppressOutput;
+import org.neo4j.doc.server.helpers.ServerHelper;
+import org.neo4j.test.rule.SuppressOutput;
 
-import static org.neo4j.test.SuppressOutput.suppressAll;
+import static org.neo4j.test.rule.SuppressOutput.suppressAll;
 
 public class SharedServerTestBase
 {
@@ -43,8 +43,8 @@ public class SharedServerTestBase
 
     private static NeoServer server;
 
-	@Rule
-	public SuppressOutput suppressOutput = suppressAll();
+    @Rule
+    public SuppressOutput suppressOutput = suppressAll();
 
     @BeforeClass
     public static void allocateServer() throws Throwable

@@ -43,18 +43,6 @@ public class ServerTestUtils
         return Files.createTempDirectory( "neo4j-test" ).toFile();
     }
 
-    public static File getSharedTestTemporaryFolder()
-    {
-        try
-        {
-            return createTempConfigFile().getParentFile();
-        }
-        catch ( Exception e )
-        {
-            throw new RuntimeException( e );
-        }
-    }
-
     public static File createTempConfigFile() throws IOException
     {
         File file = File.createTempFile( "neo4j", "conf" );

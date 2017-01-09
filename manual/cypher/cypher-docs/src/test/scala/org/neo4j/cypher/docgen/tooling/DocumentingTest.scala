@@ -20,19 +20,18 @@
 package org.neo4j.cypher.docgen.tooling
 
 import java.io._
+import java.util.Collections
 
-import org.neo4j.cypher.internal.compiler.v3_0.CypherSerializer
-import org.neo4j.cypher.internal.frontend.v3_0.test_helpers.CypherFunSuite
+import org.neo4j.cypher.internal.compiler.v3_2.CypherSerializer
+import org.neo4j.cypher.internal.frontend.v3_2.test_helpers.CypherFunSuite
 import org.neo4j.cypher.internal.helpers.GraphIcing
-import org.neo4j.cypher.internal.spi.TransactionalContextWrapper
-import org.neo4j.cypher.internal.spi.v3_0.TransactionBoundQueryContext
-import org.neo4j.cypher.internal.spi.v3_0.TransactionBoundQueryContext.IndexSearchMonitor
-import org.neo4j.graphdb.Transaction
+import org.neo4j.cypher.internal.spi.v3_2.TransactionalContextWrapper
+import org.neo4j.cypher.internal.spi.v3_2.TransactionBoundQueryContext
+import org.neo4j.cypher.internal.spi.v3_2.TransactionBoundQueryContext.IndexSearchMonitor
 import org.neo4j.kernel.GraphDatabaseQueryService
-import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.api.index.IndexDescriptor
-import org.neo4j.kernel.impl.coreapi.{PropertyContainerLocker, InternalTransaction}
-import org.neo4j.kernel.impl.query.Neo4jTransactionalContext
+import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
+import org.neo4j.kernel.impl.query.{Neo4jTransactionalContext, Neo4jTransactionalContextFactory, QuerySource}
 import org.scalatest.{Assertions, Matchers}
 
 /**
@@ -121,8 +120,12 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
 // Used to format values coming from Cypher. Maps, lists, nodes, relationships and paths all have custom
 // formatting applied to them
 class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) extends (Any => String) with CypherSerializer with GraphIcing {
+  val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
   def apply(x: Any): String = {
-    val transactionalContext = new TransactionalContextWrapper(new Neo4jTransactionalContext(db, tx, db.statement, new PropertyContainerLocker))
+
+    val transactionalContext = TransactionalContextWrapper(
+      contextFactory.newContext( QuerySource.UNKNOWN, tx, "QUERY", Collections.emptyMap() )
+    )
     val ctx = new TransactionBoundQueryContext(transactionalContext)(QuietMonitor)
     serialize(x, ctx)
   }

@@ -29,13 +29,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import org.neo4j.doc.server.helpers.CommunityServerBuilder;
+import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.PrettyJSON;
 import org.neo4j.doc.server.rest.RestRequest;
 import org.neo4j.server.NeoServer;
-import org.neo4j.doc.server.rest.JaxRsResponse;
 
-import static org.dummy.web.service.DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT;
+import static org.dummy.doc.web.service.DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT;
 import static org.junit.Assert.assertEquals;
 
 import static org.neo4j.doc.server.helpers.CommunityServerBuilder.server;
@@ -51,7 +50,7 @@ public class BatchOperationHeaderDocIT extends ExclusiveServerTestBase
     @Before
     public void cleanTheDatabase() throws IOException
     {
-        server = CommunityServerBuilder.server().withThirdPartyJaxRsPackage( "org.dummy.web.service",
+        server = server().withThirdPartyJaxRsPackage( "org.dummy.doc.web.service",
                 DUMMY_WEB_SERVICE_MOUNT_POINT ).usingDataDir( folder.getRoot().getAbsolutePath() ).build();
         server.start();
     }

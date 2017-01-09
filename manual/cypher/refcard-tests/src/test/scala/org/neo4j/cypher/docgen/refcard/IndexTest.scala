@@ -23,13 +23,13 @@ import java.util.concurrent.TimeUnit
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "INDEX"
   val css = "write c4-4 c5-5 c6-3"
-  override val linkId = "query-schema-index"
+  override val linkId = "schema/index"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -69,19 +69,19 @@ Create an index on the label `Person` and property `name`.
 ###assertion=match parameters=aname
 //
 
-MATCH (n:Person) WHERE n.name = {value}
+MATCH (n:Person) WHERE n.name = $value
 
 RETURN n
 ###
 
 An index can be automatically used for the equality comparison.
-Note that for example `lower(n.name) = {value}` will not use an index.
+Note that for example `lower(n.name) = $value` will not use an index.
 
 ###assertion=match parameters=aname
 //
 
 MATCH (n:Person)
-WHERE n.name IN [{value}]
+WHERE n.name IN [$value]
 
 RETURN n
 ###
@@ -93,7 +93,7 @@ An index can be automatically used for the `IN` list checks.
 
 MATCH (n:Person)
 USING INDEX n:Person(name)
-WHERE n.name = {value}
+WHERE n.name = $value
 
 RETURN n
 ###

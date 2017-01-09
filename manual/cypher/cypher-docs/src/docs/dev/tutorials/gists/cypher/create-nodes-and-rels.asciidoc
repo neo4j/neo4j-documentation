@@ -61,7 +61,7 @@ Using this: `[r:ACTED_IN]` lets us return the relationship.
 [source,cypher]
 ----
 MATCH (actor:Actor {name: 'Tom Hanks'})
-CREATE UNIQUE (actor)-[r:ACTED_IN]->(movie:Movie {title: 'Forrest Gump'})
+MERGE (actor)-[r:ACTED_IN]->(movie:Movie {title: 'Forrest Gump'})
 RETURN r;
 ----
 

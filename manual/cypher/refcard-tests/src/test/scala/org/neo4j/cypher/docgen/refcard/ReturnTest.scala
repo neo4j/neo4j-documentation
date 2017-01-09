@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class ReturnTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A", "A LINK B", "B LINK C", "C LINK ROOT")
   val title = "RETURN"
   val css = "read c3-3 c4-2 c5-3 c6-2"
-  override val linkId = "query-return"
+  override val linkId = "clauses/return"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -116,7 +116,7 @@ Sort the result in descending order.
 MATCH (n)
 RETURN *
 
-SKIP {skipNumber}
+SKIP $skipNumber
 ###
 
 Skip a number of results.
@@ -126,7 +126,7 @@ Skip a number of results.
 MATCH (n)
 RETURN *
 
-LIMIT {limitNumber}
+LIMIT $limitNumber
 ###
 
 Limit the number of results.
@@ -136,7 +136,7 @@ Limit the number of results.
 MATCH (n)
 RETURN *
 
-SKIP {skipNumber} LIMIT {limitNumber}
+SKIP $skipNumber LIMIT $limitNumber
 ###
 
 Skip results at the top and limit the number of results.

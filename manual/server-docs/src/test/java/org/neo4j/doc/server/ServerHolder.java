@@ -25,7 +25,7 @@ import org.neo4j.server.NeoServer;
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.ServerHelper;
 
-final class ServerHolder extends Thread
+public final class ServerHolder extends Thread
 {
     private static AssertionError allocation;
     private static NeoServer server;

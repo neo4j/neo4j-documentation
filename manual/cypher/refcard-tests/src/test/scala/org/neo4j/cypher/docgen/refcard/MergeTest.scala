@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class MergeTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "MERGE"
   val css = "write c4-3 c5-4 c6-2"
-  override val linkId = "query-merge"
+  override val linkId = "clauses/merge"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -61,7 +61,7 @@ class MergeTest extends RefcardTest with QueryStatisticsTestSupport {
 ###assertion=merge parameters=aname
 //
 
-MERGE (n:Person {name: {value}})
+MERGE (n:Person {name: $value})
   ON CREATE SET n.created = timestamp()
   ON MATCH SET
     n.counter = coalesce(n.counter, 0) + 1,
@@ -75,8 +75,8 @@ Use `ON CREATE` and `ON MATCH` for conditional updates.
 ###assertion=merge-rel parameters=names
 //
 
-MATCH (a:Person {name: {value1}}),
-      (b:Person {name: {value2}})
+MATCH (a:Person {name: $value1}),
+      (b:Person {name: $value2})
 MERGE (a)-[r:LOVES]->(b)
 
 RETURN r###
@@ -86,9 +86,9 @@ RETURN r###
 ###assertion=merge-sub parameters=names
 //
 
-MATCH (a:Person {name: {value1}})
+MATCH (a:Person {name: $value1})
 MERGE
-  (a)-[r:KNOWS]->(b:Person {name: {value3}})
+  (a)-[r:KNOWS]->(b:Person {name: $value3})
 
 RETURN r, b###
 

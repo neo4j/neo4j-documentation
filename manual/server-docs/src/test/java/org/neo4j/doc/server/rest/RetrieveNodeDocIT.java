@@ -35,10 +35,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 
-import org.neo4j.doc.server.helpers.FunctionalTestHelper;
-import org.neo4j.doc.server.rest.domain.GraphDbHelper;
 import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
+import org.neo4j.doc.server.rest.domain.GraphDbHelper;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.repr.formats.CompactJsonFormat;
 

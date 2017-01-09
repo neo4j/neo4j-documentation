@@ -19,6 +19,10 @@
  */
 package examples;
 
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,10 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -40,8 +40,8 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.helpers.collection.MapUtil;
-import org.neo4j.io.fs.DefaultFileSystemAbstraction;
-import org.neo4j.test.DefaultFileSystemRule;
+import org.neo4j.io.fs.FileSystemAbstraction;
+import org.neo4j.test.rule.fs.DefaultFileSystemRule;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserters;
 
@@ -50,6 +50,18 @@ import static org.junit.Assert.assertThat;
 
 public class BatchInsertDocTest
 {
+    @Rule
+    public DefaultFileSystemRule fileSystemRule = new DefaultFileSystemRule();
+    private FileSystemAbstraction fileSystem;
+
+    @Before
+    public void before() throws Exception
+    {
+        fileSystem = fileSystemRule.get();
+        fileSystem.mkdirs( new File( "target" ) );
+        fileSystem.mkdirs( new File( "target/docs" ) );
+    }
+
     @Test
     public void insert() throws Exception
     {
@@ -153,17 +165,5 @@ public class BatchInsertDocTest
         File directory = new File( fileName );
         fileSystem.deleteRecursively( directory );
         return directory;
-    }
-
-    @Rule
-    public DefaultFileSystemRule fileSystemRule = new DefaultFileSystemRule();
-    private DefaultFileSystemAbstraction fileSystem;
-
-    @Before
-    public void before() throws Exception
-    {
-        fileSystem = fileSystemRule.get();
-        fileSystem.mkdirs( new File( "target" ) );
-        fileSystem.mkdirs( new File( "target/docs" ) );
     }
 }

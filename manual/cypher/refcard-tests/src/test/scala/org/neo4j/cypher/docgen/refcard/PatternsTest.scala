@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class PatternsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A:Person:Swedish KNOWS B", "B KNOWS C", "C KNOWS ROOT")
   val title = "Patterns"
   val css = "general c2-2 c3-2 c6-4"
-  override val linkId = "introduction-pattern"
+  override val linkId = "syntax/patterns"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -82,11 +82,20 @@ Node with both `Person` and `Swedish` labels.
 ###assertion=related parameters=alice
 MATCH
 
-(n:Person {name: {value}})
+(n:Person {name: $value})
 
 RETURN n###
 
 Node with the declared properties.
+
+###assertion=empty parameters=alice
+MATCH
+
+()-[r {name: $value}]-()
+
+RETURN r###
+
+Matches relationships with the declared properties.
 
 ###assertion=related
 MATCH
@@ -178,9 +187,9 @@ Variable length path of any number of relationships from `n` to `m`.
 ###assertion=create parameters=aname
 MATCH (n)
 WHERE id(n) = %A%
-CREATE UNIQUE
+MERGE
 
-(n)-[:KNOWS]->(m {property: {value}})
+(n)-[:KNOWS]->(m {property: $value})
 
 RETURN m###
 
@@ -207,7 +216,7 @@ RETURN p###
 Find all shortest paths.
 
 ###assertion=returns-one parameters=alice
-MATCH (n:Person {name: {value}})
+MATCH (n:Person {name: $value})
 RETURN
 
 size((n)-->()-->())
@@ -217,14 +226,4 @@ AS fof###
 Count the paths matching the pattern.
 """
 }
-/* confirm this, then add.
-###assertion=empty parameters=alice
-MATCH
 
-()-[r {name: {value}}]-()
-
-RETURN r###
-
-Matches relationships with the declared properties.
-
-*/

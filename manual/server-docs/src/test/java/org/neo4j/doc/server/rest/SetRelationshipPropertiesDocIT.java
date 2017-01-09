@@ -28,9 +28,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.rest.domain.GraphDbHelper;
-import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.test.GraphDescription.Graph;

@@ -26,7 +26,7 @@ import org.neo4j.server.rest.security.SecurityRule;
 
 public class PermanentlyPassingSecurityRule implements SecurityRule
 {
-    
+
     public static final String REALM = "WallyWorld"; // as per RFC2617 :-);
 
     @Override

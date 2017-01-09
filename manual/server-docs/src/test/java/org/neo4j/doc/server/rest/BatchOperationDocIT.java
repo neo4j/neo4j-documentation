@@ -28,10 +28,10 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.doc.server.ServerTestUtils;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.doc.server.ServerTestUtils;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.test.GraphDescription.Graph;
@@ -40,8 +40,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.neo4j.graphdb.Neo4jMatchers.hasProperty;
-import static org.neo4j.graphdb.Neo4jMatchers.inTx;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.hasProperty;
+import static org.neo4j.test.mockito.matcher.Neo4jMatchers.inTx;
 
 public class BatchOperationDocIT extends AbstractRestFunctionalDocTestBase
 {
@@ -106,7 +106,6 @@ public class BatchOperationDocIT extends AbstractRestFunctionalDocTestBase
                 .endObject()
             .endArray().toString();
 
-
         String entity = gen.get()
         .description( startGraph( "execute multiple operations in batch" ) )
         .payload(jsonString)
@@ -140,7 +139,6 @@ public class BatchOperationDocIT extends AbstractRestFunctionalDocTestBase
         // Should have created by the first PUT request
         Map<String, Object> body = (Map<String, Object>) getResult.get("body");
         assertEquals(1, ((Map<String, Object>) body.get("data")).get("age"));
-
 
     }
 
@@ -387,7 +385,7 @@ public class BatchOperationDocIT extends AbstractRestFunctionalDocTestBase
     public void shouldHandleEscapedStrings() throws ClientHandlerException,
             UniformInterfaceException, JSONException, JsonParseException
     {
-    	String string = "Jazz";
+        String string = "Jazz";
         Node gnode = getNode( string );
         assertThat( gnode, inTx(graphdb(), hasProperty( "name" ).withValue(string)) );
 

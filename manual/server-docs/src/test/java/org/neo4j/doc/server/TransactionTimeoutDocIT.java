@@ -29,11 +29,13 @@ import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.server.configuration.ServerSettings;
 
 import static java.util.Arrays.asList;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import static org.neo4j.doc.server.helpers.CommunityServerBuilder.server;
 import static org.neo4j.helpers.collection.MapUtil.map;
 import static org.neo4j.kernel.api.exceptions.Status.Transaction.TransactionNotFound;
-import static org.neo4j.doc.server.helpers.CommunityServerBuilder.server;
 
 public class TransactionTimeoutDocIT extends ExclusiveServerTestBase
 {
@@ -49,7 +51,7 @@ public class TransactionTimeoutDocIT extends ExclusiveServerTestBase
     public void shouldHonorReallyLowSessionTimeout() throws Exception
     {
         // Given
-        server = server().withProperty( ServerSettings.transaction_timeout.name(), "1" ).build();
+        server = server().withProperty( ServerSettings.transaction_idle_timeout.name(), "1" ).build();
         server.start();
 
         String tx = HTTP.POST( txURI(), asList( map( "statement", "CREATE (n)" ) ) ).location();
@@ -61,7 +63,7 @@ public class TransactionTimeoutDocIT extends ExclusiveServerTestBase
         // Then
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> errors = (List<Map<String, Object>>) response.get( "errors" );
-        assertThat( (String) errors.get( 0 ).get( "code" ), equalTo( TransactionNotFound.code().serialize() ) );
+        assertThat( errors.get( 0 ).get( "code" ), equalTo( TransactionNotFound.code().serialize() ) );
     }
 
     private String txURI()

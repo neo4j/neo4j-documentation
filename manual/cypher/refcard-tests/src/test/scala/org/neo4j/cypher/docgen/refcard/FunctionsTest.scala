@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class FunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A KNOWS B", "B KNOWS C", "C KNOWS ROOT")
   val title = "Functions"
   val css = "general c2-1 c3-2 c4-2 c5-3 c6-5"
-  override val linkId = "query-function"
+  override val linkId = "functions"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -38,9 +38,9 @@ class FunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
         assertStats(result, nodesCreated = 0)
         assert(result.toList.size === 0)
       case "toInt" =>
-        assert(result.toList === List(Map("toInt({expr})" -> 10)))
+        assert(result.toList === List(Map("toInt($expr)" -> 10)))
       case "toFloat" =>
-        assert(result.toList === List(Map("toFloat({expr})" -> 10.1)))
+        assert(result.toList === List(Map("toFloat($expr)" -> 10.1)))
     }
   }
 
@@ -69,7 +69,7 @@ MATCH (n)
 WHERE id(n) = %A%
 RETURN
 
-coalesce(n.property, {defaultValue})###
+coalesce(n.property, $defaultValue)###
 
 The first non-`null` expression.
 
@@ -92,21 +92,21 @@ The internal id of the relationship or node.
 ###assertion=toInt parameters=toInt
 RETURN
 
-toInt({expr})###
+toInt($expr)###
 
 Converts the given input into an integer if possible; otherwise it returns `null`.
 
 ###assertion=toFloat parameters=toFloat
 RETURN
 
-toFloat({expr})###
+toFloat($expr)###
 
 Converts the given input into a floating point number if possible; otherwise it returns `null`.
 
 ###assertion=returns-one parameters=map
 RETURN
 
-keys({expr})###
+keys($expr)###
 
 Returns a list of string representations for the property names of a node, relationship, or map."""
 }

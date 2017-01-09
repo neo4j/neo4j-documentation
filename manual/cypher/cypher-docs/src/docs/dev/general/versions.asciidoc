@@ -1,9 +1,10 @@
 [[cypher-versions]]
 = Supported Language Versions
 
-Neo4j 3.0 supports the following versions of the Cypher language:
+Neo4j 3.2 supports the following versions of the Cypher language:
 
-* Neo4j Cypher 3.0
+* Neo4j Cypher 3.2
+* Neo4j Cypher 3.1
 * Neo4j Cypher 2.3
 
 [TIP]

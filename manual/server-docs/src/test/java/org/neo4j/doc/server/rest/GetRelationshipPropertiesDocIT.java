@@ -29,17 +29,18 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 
-import org.neo4j.doc.server.HTTP;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.rest.domain.GraphDbHelper;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
+import org.neo4j.doc.server.HTTP;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.neo4j.doc.server.HTTP.RawPayload.quotedJson;
 
 public class GetRelationshipPropertiesDocIT extends AbstractRestFunctionalTestBase
 {
@@ -134,7 +135,7 @@ public class GetRelationshipPropertiesDocIT extends AbstractRestFunctionalTestBa
     {
         // Given
         String node = HTTP.POST( server().baseUri().resolve( "db/data/node" ).toString() ).location();
-        String rel = HTTP.POST( node + "/relationships", HTTP.RawPayload.quotedJson( "{'to':'" + node + "', " +
+        String rel = HTTP.POST( node + "/relationships", quotedJson( "{'to':'" + node + "', " +
                 "'type':'LOVES'}" ) ).location();
 
         // When

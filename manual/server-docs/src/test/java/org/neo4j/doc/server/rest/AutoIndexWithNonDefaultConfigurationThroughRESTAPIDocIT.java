@@ -29,12 +29,12 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
 
-import org.neo4j.doc.server.ExclusiveServerTestBase;
+import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
-import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.doc.server.helpers.ServerHelper;
 import org.neo4j.test.TestData;
+import org.neo4j.doc.server.ExclusiveServerTestBase;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -47,8 +47,8 @@ public class AutoIndexWithNonDefaultConfigurationThroughRESTAPIDocIT extends Exc
     @ClassRule
     public static TemporaryFolder staticFolder = new TemporaryFolder();
 
-    public
     @Rule
+    public
     TestData<RESTDocsGenerator> gen = TestData.producedThrough( RESTDocsGenerator.PRODUCER );
 
     @Before

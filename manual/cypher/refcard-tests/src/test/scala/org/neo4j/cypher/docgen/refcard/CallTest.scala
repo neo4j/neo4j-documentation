@@ -23,11 +23,11 @@ import org.junit.Before
 import org.neo4j.collection.RawIterator
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 import org.neo4j.kernel.api.KernelAPI
 import org.neo4j.kernel.api.exceptions.ProcedureException
-import org.neo4j.kernel.api.proc.CallableProcedure.{BasicProcedure, Context}
-import org.neo4j.kernel.api.proc.Neo4jTypes
+import org.neo4j.kernel.api.proc.CallableProcedure.BasicProcedure
+import org.neo4j.kernel.api.proc.{Context, Neo4jTypes}
 import org.neo4j.kernel.api.proc.ProcedureSignature._
 
 class CallTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -35,7 +35,7 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A:Person", "A KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
   val title = "CALL"
   val css = "write c2-2 c4-4 c5-4 c6-2"
-  override val linkId = "query-call"
+  override val linkId = "clauses/call"
 
   @Before
   override def init() {

@@ -19,21 +19,21 @@
  */
 package org.neo4j.doc.server.rest.transactional;
 
+import org.junit.Test;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
-import org.neo4j.doc.server.HTTP;
-import org.neo4j.doc.server.rest.AbstractRestFunctionalTestBase;
-import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
 import org.neo4j.kernel.api.exceptions.Status;
 import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.doc.server.rest.AbstractRestFunctionalTestBase;
+import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.server.rest.repr.util.RFC1123;
+import org.neo4j.doc.server.HTTP;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -44,9 +44,10 @@ import static org.hamcrest.collection.IsMapContaining.hasKey;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import static org.neo4j.helpers.collection.Iterators.iterator;
 import static org.neo4j.server.rest.domain.JsonHelper.jsonToMap;
+import static org.neo4j.doc.server.HTTP.GET;
+import static org.neo4j.doc.server.HTTP.POST;
 
 public class TransactionDocTest extends AbstractRestFunctionalTestBase
 {
@@ -81,7 +82,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
     public void execute_statements_in_an_open_transaction() throws JsonParseException
     {
         // Given
-        String location = HTTP.POST( getDataUri() + "transaction" ).location();
+        String location = POST( getDataUri() + "transaction" ).location();
 
         // Document
         ResponseEntity response = gen.get()
@@ -105,7 +106,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
     public void execute_statements_in_an_open_transaction_using_REST() throws JsonParseException
     {
         // Given
-        String location = HTTP.POST( getDataUri() + "transaction" ).location();
+        String location = POST( getDataUri() + "transaction" ).location();
 
         // Document
         ResponseEntity response = gen.get()
@@ -135,7 +136,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
             throws JsonParseException, ParseException, InterruptedException
     {
         // Given
-        HTTP.Response initialResponse = HTTP.POST( getDataUri() + "transaction" );
+        HTTP.Response initialResponse = POST( getDataUri() + "transaction" );
         String location = initialResponse.location();
         long initialExpirationTime = expirationTime( jsonToMap( initialResponse.rawContent() ) );
 
@@ -151,7 +152,6 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
                 .expectedStatus( 200 )
                 .payload( quotedJson( "{ 'statements': [ ] }" ) )
                 .post( location );
-
 
         // Then
         Map<String, Object> result = jsonToMap( response.entity() );
@@ -169,7 +169,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
     public void commit_an_open_transaction() throws JsonParseException
     {
         // Given
-        String location = HTTP.POST( getDataUri() + "transaction" ).location();
+        String location = POST( getDataUri() + "transaction" ).location();
 
         // Document
         ResponseEntity response = gen.get()
@@ -183,7 +183,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
         assertNoErrors( result );
 
         Integer id = resultCell( result, 0, 0 );
-        assertThat( HTTP.GET( getNodeUri( id ) ).status(), is( 200 ) );
+        assertThat( GET( getNodeUri( id ) ).status(), is( 200 ) );
     }
 
     @Test
@@ -205,7 +205,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
         assertNoErrors( result );
 
         Integer id = resultCell( result, 0, 0 );
-        assertThat( HTTP.GET( getNodeUri( id ) ).status(), is( 200 ) );
+        assertThat( GET( getNodeUri( id ) ).status(), is( 200 ) );
     }
 
     @Test
@@ -226,7 +226,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
         Map<String,Object> result = jsonToMap( response.entity() );
         assertNoErrors( result );
         Integer id = resultCell( result, 0, 0 );
-        assertThat( HTTP.GET( getNodeUri( id ) ).status(), is( 200 ) );
+        assertThat( GET( getNodeUri( id ) ).status(), is( 200 ) );
         assertThat( response.entity(), containsString( "My Node" ) );
     }
 
@@ -270,7 +270,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
     public void rollback_an_open_transaction() throws JsonParseException
     {
         // Given
-        HTTP.Response firstReq = HTTP.POST( getDataUri() + "transaction",
+        HTTP.Response firstReq = POST( getDataUri() + "transaction",
                 HTTP.RawPayload.quotedJson( "{ 'statements': [ { 'statement': 'CREATE (n) RETURN id(n)' } ] }" ) );
         String location = firstReq.location();
 
@@ -285,7 +285,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
         assertNoErrors( result );
 
         Integer id = resultCell( firstReq, 0, 0 );
-        assertThat( HTTP.GET( getNodeUri( id ) ).status(), is( 404 ) );
+        assertThat( GET( getNodeUri( id ) ).status(), is( 404 ) );
     }
 
     @Test
@@ -307,7 +307,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
     public void handling_errors() throws JsonParseException
     {
         // Given
-        String location = HTTP.POST( getDataUri() + "transaction" ).location();
+        String location = POST( getDataUri() + "transaction" ).location();
 
         // Document
         ResponseEntity response = gen.get()
@@ -330,7 +330,7 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
     public void errors_in_open_transaction() throws JsonParseException
     {
         // Given
-        String location = HTTP.POST( getDataUri() + "transaction" ).location();
+        String location = POST( getDataUri() + "transaction" ).location();
 
         // Document
         ResponseEntity response = gen.get()
@@ -367,8 +367,6 @@ public class TransactionDocTest extends AbstractRestFunctionalTestBase
         Map<String,Object> stats = (Map<String,Object>) firstResult.get( "stats" );
         assertThat( (Integer) stats.get( "nodes_created" ), equalTo( 1 ) );
     }
-
-
 
     private void assertNoErrors( Map<String, Object> response )
     {

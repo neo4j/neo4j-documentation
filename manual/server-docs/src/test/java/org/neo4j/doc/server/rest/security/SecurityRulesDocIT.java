@@ -22,20 +22,20 @@ package org.neo4j.doc.server.rest.security;
 import java.net.URI;
 import javax.ws.rs.core.MediaType;
 
-import org.dummy.web.service.DummyThirdPartyWebService;
+import org.dummy.doc.web.service.DummyThirdPartyWebService;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.neo4j.doc.server.ExclusiveServerTestBase;
-import org.neo4j.doc.server.helpers.CommunityServerBuilder;
-import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.CommunityNeoServer;
+import org.neo4j.doc.server.helpers.CommunityServerBuilder;
+import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
 import org.neo4j.test.TestData;
 import org.neo4j.test.TestData.Title;
+import org.neo4j.doc.server.ExclusiveServerTestBase;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -181,7 +181,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
     {
         String mountPoint = "/protected/tree/starts/here" + DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT;
         server = CommunityServerBuilder.server().withDefaultDatabaseTuning()
-                .withThirdPartyJaxRsPackage( "org.dummy.web.service",
+                .withThirdPartyJaxRsPackage( "org.dummy.doc.web.service",
                         mountPoint )
                 .withSecurityRules(
                         PermanentlyFailingSecurityRuleWithWildcardPath.class.getCanonicalName() )
@@ -230,7 +230,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
         String mountPoint = "/protected/wildcard_replacement/x/y/z/something/else/more_wildcard_replacement/a/b/c" +
                 "/final/bit";
         server = CommunityServerBuilder.server().withDefaultDatabaseTuning()
-                .withThirdPartyJaxRsPackage( "org.dummy.web.service",
+                .withThirdPartyJaxRsPackage( "org.dummy.doc.web.service",
                         mountPoint )
                 .withSecurityRules(
                         PermanentlyFailingSecurityRuleWithComplexWildcardPath.class.getCanonicalName() )
@@ -257,7 +257,6 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
 
         assertEquals( 401, clientResponse.getStatus() );
     }
-
 
     @Test
     public void should403WhenAuthenticatedButForbidden()

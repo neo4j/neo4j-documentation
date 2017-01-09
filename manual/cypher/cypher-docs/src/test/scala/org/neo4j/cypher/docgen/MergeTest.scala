@@ -201,7 +201,7 @@ RETURN keanu.name, keanu.created, keanu.lastSeen""",
 To use map parameters with `MERGE`, it is necessary to explicitly use the expected properties, such as in the following example.
 For more information on parameters, see <<cypher-parameters>>.""",
       parameters = Map("param" -> Map("name" -> "Keanu Reeves", "role" -> "Neo")),
-      queryText = "MERGE (person:Person {name: {param}.name, role: {param}.role}) RETURN person.name, person.role",
+      queryText = "MERGE (person:Person {name: $param.name, role: $param.role}) RETURN person.name, person.role",
       optionalResultExplanation = "",
       assertions = p => assertStats(p, nodesCreated = 1, propertiesWritten = 2, labelsAdded = 1)
     )

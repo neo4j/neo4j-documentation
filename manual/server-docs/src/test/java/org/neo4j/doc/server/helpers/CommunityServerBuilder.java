@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Clock;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,11 +31,9 @@ import java.util.Properties;
 
 import org.neo4j.dbms.DatabaseManagementSystemSettings;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
-import org.neo4j.helpers.Clock;
-import org.neo4j.helpers.HostnamePort;
+import org.neo4j.helpers.ListenSocketAddress;
 import org.neo4j.kernel.GraphDatabaseDependencies;
 import org.neo4j.kernel.configuration.Config;
-import org.neo4j.kernel.impl.factory.CommunityFacadeFactory;
 import org.neo4j.kernel.impl.factory.GraphDatabaseFacadeFactory;
 import org.neo4j.kernel.monitoring.Monitors;
 import org.neo4j.logging.Log;
@@ -43,6 +42,7 @@ import org.neo4j.logging.NullLogProvider;
 import org.neo4j.server.CommunityBootstrapper;
 import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.doc.server.ServerTestUtils;
+import org.neo4j.server.configuration.ClientConnectorSettings;
 import org.neo4j.server.configuration.ConfigLoader;
 import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.server.database.Database;
@@ -52,38 +52,37 @@ import org.neo4j.server.preflight.PreflightTask;
 import org.neo4j.server.rest.paging.LeaseManager;
 import org.neo4j.server.rest.web.DatabaseActions;
 import org.neo4j.test.ImpermanentGraphDatabase;
+import org.neo4j.time.Clocks;
 
-import static org.neo4j.helpers.Clock.SYSTEM_CLOCK;
 import static org.neo4j.helpers.collection.MapUtil.stringMap;
 import static org.neo4j.doc.server.ServerTestUtils.asOneLine;
-import static org.neo4j.server.configuration.ServerSettings.httpConnector;
 import static org.neo4j.server.database.LifecycleManagingDatabase.lifecycleManagingDatabase;
 
 public class CommunityServerBuilder
 {
     protected final LogProvider logProvider;
-    private HostnamePort address = new HostnamePort( "localhost", 7474 );
-    private HostnamePort httpsAddress = new HostnamePort( "localhost", 7473 );
+    private ListenSocketAddress address = new ListenSocketAddress( "localhost", 7474 );
+    private ListenSocketAddress httpsAddress = new ListenSocketAddress( "localhost", 7473 );
     private String maxThreads = null;
-    protected String dataDir = null;
+    private String dataDir = null;
     private String managementUri = "/db/manage/";
     private String restUri = "/db/data/";
-    protected PreFlightTasks preflightTasks;
+    private PreFlightTasks preflightTasks;
     private final HashMap<String, String> thirdPartyPackages = new HashMap<>();
     private final Properties arbitraryProperties = new Properties();
 
-    public static LifecycleManagingDatabase.GraphFactory  IN_MEMORY_DB = ( config, dependencies ) -> {
+    private static LifecycleManagingDatabase.GraphFactory  IN_MEMORY_DB = ( config, dependencies ) -> {
         File storeDir = config.get( DatabaseManagementSystemSettings.database_path );
         Map<String, String> params = config.getParams();
-        params.put( CommunityFacadeFactory.Configuration.ephemeral.name(), "true" );
+        params.put( GraphDatabaseFacadeFactory.Configuration.ephemeral.name(), "true" );
         return new ImpermanentGraphDatabase( storeDir, params, GraphDatabaseDependencies.newDependencies(dependencies) );
     };
 
-    protected Clock clock = null;
+    private Clock clock = null;
     private String[] autoIndexedNodeKeys = null;
     private final String[] autoIndexedRelationshipKeys = null;
     private String[] securityRuleClassNames;
-    public boolean persistent;
+    private boolean persistent;
     private boolean httpsEnabled = false;
 
     public static CommunityServerBuilder server( LogProvider logProvider )
@@ -176,17 +175,15 @@ public class CommunityServerBuilder
             properties.put( ServerSettings.security_rules.name(), propertyKeys );
         }
 
-        properties.put( httpConnector("http").type.name(), "HTTP" );
-        properties.put( httpConnector("http").enabled.name(), "true" );
-        properties.put( httpConnector("http").address.name(), address.toString() );
+        properties.put( ClientConnectorSettings.httpConnector("http").type.name(), "HTTP" );
+        properties.put( ClientConnectorSettings.httpConnector("http").enabled.name(), "true" );
+        properties.put( ClientConnectorSettings.httpConnector("http").address.name(), address.toString() );
+        properties.put( ClientConnectorSettings.httpConnector("http").encryption.name(), "NONE" );
 
-        if ( httpsEnabled )
-        {
-            properties.put( httpConnector("https").type.name(), "HTTP" );
-            properties.put( httpConnector("https").enabled.name(), "true" );
-            properties.put( httpConnector("https").address.name(), httpsAddress.toString() );
-            properties.put( httpConnector("https").encryption.name(), "TLS" );
-        }
+        properties.put( ClientConnectorSettings.httpConnector("https").type.name(), "HTTP" );
+        properties.put( ClientConnectorSettings.httpConnector("https").enabled.name(), String.valueOf( httpsEnabled ) );
+        properties.put( ClientConnectorSettings.httpConnector("https").address.name(), httpsAddress.toString() );
+        properties.put( ClientConnectorSettings.httpConnector("https").encryption.name(), "TLS" );
 
         properties.put( GraphDatabaseSettings.auth_enabled.name(), "false" );
         properties.put( ServerSettings.certificates_directory.name(), new File(temporaryFolder, "certificates").getAbsolutePath() );
@@ -208,12 +205,6 @@ public class CommunityServerBuilder
     public CommunityServerBuilder persistent()
     {
         this.persistent = true;
-        return this;
-    }
-
-    public CommunityServerBuilder withMaxJettyThreads( int maxThreads )
-    {
-        this.maxThreads = String.valueOf( maxThreads );
         return this;
     }
 
@@ -282,13 +273,13 @@ public class CommunityServerBuilder
         return this;
     }
 
-    public CommunityServerBuilder onAddress( HostnamePort address )
+    public CommunityServerBuilder onAddress( ListenSocketAddress address )
     {
         this.address = address;
         return this;
     }
 
-    public CommunityServerBuilder onHttpsAddress( HostnamePort address )
+    public CommunityServerBuilder onHttpsAddress( ListenSocketAddress address )
     {
         this.httpsAddress = address;
         return this;
@@ -312,15 +303,9 @@ public class CommunityServerBuilder
         return this;
     }
 
-    public CommunityServerBuilder withPreflightTasks( PreflightTask... tasks )
-    {
-        this.preflightTasks = new PreFlightTasks( NullLogProvider.getInstance(), tasks );
-        return this;
-    }
-
     protected DatabaseActions createDatabaseActionsObject( Database database, Config config )
     {
-        Clock clockToUse = (clock != null) ? clock : SYSTEM_CLOCK;
+        Clock clockToUse = (clock != null) ? clock : Clocks.systemClock();
 
         return new DatabaseActions(
                 new LeaseManager( clockToUse ),

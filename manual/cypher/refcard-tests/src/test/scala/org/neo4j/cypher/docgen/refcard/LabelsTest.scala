@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class LabelsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS ROOT")
   val title = "Labels"
   val css = "general c2-1 c3-2 c4-1 c5-2 c6-6"
-  override val linkId = "cypherdoc-labels-constraints-and-indexes"
+  override val linkId = "get-started/cypher/labels-constraints-and-indexes"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -66,7 +66,7 @@ class LabelsTest extends RefcardTest with QueryStatisticsTestSupport {
 ###assertion=create parameters=bname
 //
 
-CREATE (n:Person {name: {value}})
+CREATE (n:Person {name: $value})
 
 DELETE n
 RETURN n###
@@ -76,7 +76,7 @@ Create a node with label and property.
 ###assertion=create parameters=bname
 //
 
-MERGE (n:Person {name: {value}})
+MERGE (n:Person {name: $value})
 
 DELETE n
 RETURN n###
@@ -105,7 +105,7 @@ Matches nodes labeled `Person`.
 //
 
 MATCH (n:Person)
-WHERE n.name = {value}
+WHERE n.name = $value
 
 RETURN n###
 

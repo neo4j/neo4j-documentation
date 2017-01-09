@@ -11,7 +11,7 @@
 
   <groupId>org.neo4j</groupId>
   <artifactId>parent</artifactId>
-  <version>3.0.9-SNAPSHOT</version>
+  <version>3.2.0-SNAPSHOT</version>
 
   <packaging>pom</packaging>
   <name>Neo4j</name>
@@ -22,9 +22,6 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <neo4j.java.version>${maven.compiler.source}</neo4j.java.version>
-    <jta.groupId>org.apache.geronimo.specs</jta.groupId>
-    <jta.artifactId>geronimo-jta_1.1_spec</jta.artifactId>
-    <jta.version>1.1.1</jta.version>
     <pico.version>2.14.3</pico.version>
     <licensing.prepend.text>notice-agpl-prefix.txt</licensing.prepend.text>
     <licensing.phase>compile</licensing.phase>
@@ -32,7 +29,8 @@
     <bouncycastle.version>1.53</bouncycastle.version>
     <generate-config-docs-phase>prepare-package</generate-config-docs-phase>
     <hsqldb.version>2.3.2</hsqldb.version>
-    <test.runner.jvm.settings>-Xmx2G -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=target/test-data -Dorg.neo4j.unsafe.impl.internal.dragons.UnsafeUtil.DIRTY_MEMORY=true -Dorg.neo4j.unsafe.impl.internal.dragons.UnsafeUtil.CHECK_NATIVE_ACCESS=true -Dorg.neo4j.io.pagecache.impl.muninn.usePreciseCursorErrorStackTraces=true -XX:+UnlockExperimentalVMOptions -XX:+TrustFinalNonStaticFields</test.runner.jvm.settings>
+    <test.runner.jvm.settings.additional></test.runner.jvm.settings.additional>
+    <test.runner.jvm.settings>-Xmx2G -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=target/test-data -Dorg.neo4j.unsafe.impl.internal.dragons.UnsafeUtil.DIRTY_MEMORY=true -Dorg.neo4j.unsafe.impl.internal.dragons.UnsafeUtil.CHECK_NATIVE_ACCESS=true -Dorg.neo4j.io.pagecache.impl.muninn.usePreciseCursorErrorStackTraces=true -XX:+UnlockExperimentalVMOptions -XX:+TrustFinalNonStaticFields ${test.runner.jvm.settings.additional}</test.runner.jvm.settings>
     <doclint-groups>reference</doclint-groups>
     <jetty.version>9.2.9.v20150224</jetty.version>
     <findbugs.version>3.0.0</findbugs.version>
@@ -52,6 +50,42 @@
         <configuration>
           <argLine>${test.runner.jvm.settings}</argLine>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals><goal>add-source</goal></goals>
+            <configuration>
+              <sources>
+                <source>target/generated-sources/version</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.17</version>
+        <configuration>
+          <configLocation>build/checkstyle.xml</configLocation>
+          <consoleOutput>true</consoleOutput>
+          <logViolationsToConsole>true</logViolationsToConsole>
+          <failsOnError>true</failsOnError>
+          <failOnViolation>true</failOnViolation>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
     <pluginManagement>
@@ -233,43 +267,10 @@
       </activation>
       <modules>
         <module>manual</module>
-        <module>packaging</module>
-        <module>packaging/installer-linux</module>
       </modules>
       <properties>
         <attach-docs-phase>verify</attach-docs-phase>
       </properties>
-    </profile>
-    <profile>
-      <id>neodev</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <properties>
-        <attach-test-jar-phase>package</attach-test-jar-phase>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.neo4j.build.plugins</groupId>
-            <artifactId>license-maven-plugin</artifactId>
-            <!-- inserting licenses is better than checking for them -->
-            <executions>
-              <execution>
-                <id>check-licenses</id>
-                <phase>none</phase>
-              </execution>
-              <execution>
-                <id>insert-licenses</id>
-                <phase>initialize</phase>
-                <goals>
-                  <goal>format</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
     <profile>
       <id>neo-docs-build</id>
@@ -353,6 +354,12 @@
       </build>
     </profile>
     <profile>
+      <id>causal-clustering-tests-only</id>
+      <properties>
+        <test-phase>none</test-phase>
+      </properties>
+    </profile>
+    <profile>
       <id>java8-set-javadoc-doclint</id>
       <activation>
         <jdk>[1.8,)</jdk>
@@ -402,17 +409,11 @@
           </exclusion>
         </exclusions>
       </dependency>
-      <!-- special -->
-      <dependency>
-        <groupId>${jta.groupId}</groupId>
-        <artifactId>${jta.artifactId}</artifactId>
-        <version>${jta.version}</version>
-      </dependency>
       <!-- testing -->
       <dependency>
         <groupId>org.neo4j.driver</groupId>
         <artifactId>neo4j-java-driver</artifactId>
-        <version>1.0.4</version>
+        <version>1.1.0-M05</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -440,6 +441,13 @@
         <version>${pico.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>com.google.jimfs</groupId>
+        <artifactId>jimfs</artifactId>
+        <version>1.1</version>
+        <scope>test</scope>
+      </dependency>
+
 
       <!-- The JUnit-Hamcrest-Mockito combo -->
       <dependency>
@@ -475,12 +483,6 @@
           <scope>test</scope>
       </dependency>
 
-      <dependency>
-        <groupId>geronimo-spec</groupId>
-        <artifactId>geronimo-spec-j2ee</artifactId>
-        <version>1.4-rc4</version>
-        <scope>test</scope>
-      </dependency>
       <dependency>
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
@@ -530,6 +532,11 @@
         <artifactId>commons-lang3</artifactId>
         <version>3.3.2</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>1.12</version>
+      </dependency>
 
       <!-- Netty is used by three components: Com, Cluster and Bolt Socket Transport.
            Netty 4 is a significant improvement over Netty 3, in that it introduces
@@ -546,7 +553,7 @@
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-all</artifactId>
-        <version>4.0.28.Final</version>
+        <version>4.1.6.Final</version>
       </dependency>
 
       <dependency>
@@ -558,11 +565,6 @@
         <groupId>org.codehaus.janino</groupId>
         <artifactId>janino</artifactId>
         <version>2.6.1</version>
-      </dependency>
-      <dependency>
-        <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
-        <artifactId>concurrentlinkedhashmap-lru</artifactId>
-        <version>1.4.2</version>
       </dependency>
       <dependency>
         <groupId>net.sf.opencsv</groupId>

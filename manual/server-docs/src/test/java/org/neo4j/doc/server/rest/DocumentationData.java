@@ -23,7 +23,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
-public class DocumentationData
+class DocumentationData
 {
     private String payload;
     private MediaType payloadType = MediaType.APPLICATION_JSON_TYPE;
@@ -75,7 +75,6 @@ public class DocumentationData
     {
         this.title = title;
     }
-    
 
     public void setUri( final String uri )
     {

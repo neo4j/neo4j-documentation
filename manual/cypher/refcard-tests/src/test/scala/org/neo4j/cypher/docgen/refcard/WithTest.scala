@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class WithTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT FRIEND A", "A FRIEND B", "B FRIEND C", "C FRIEND ROOT")
   val title = "WITH"
   val css = "read c2-2 c3-3 c4-2 c5-3 c6-2"
-  override val linkId = "query-with"
+  override val linkId = "clauses/with"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -57,7 +57,7 @@ class WithTest extends RefcardTest with QueryStatisticsTestSupport {
 //
 
 MATCH (user)-[:FRIEND]-(friend)
-WHERE user.name = {name}
+WHERE user.name = $name
 WITH user, count(friend) AS friends
 WHERE friends > 10
 RETURN user

@@ -3,13 +3,13 @@
   <parent>
     <groupId>org.neo4j</groupId>
     <artifactId>parent</artifactId>
-    <version>3.0.9-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
   <groupId>org.neo4j.doc</groupId>
   <artifactId>neo4j-config-docs</artifactId>
   <name>Neo4j - Config Docs Generation</name>
-  <version>3.0.9-SNAPSHOT</version>
+  <version>3.2.0-SNAPSHOT</version>
 
   <description>Neo4j configuration docs generation</description>
   <url>http://components.neo4j.org/${project.artifactId}/${project.version}/</url>
@@ -63,6 +63,11 @@
     </dependency>
     <dependency>
       <groupId>org.neo4j</groupId>
+      <artifactId>neo4j-causal-clustering</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.neo4j</groupId>
       <artifactId>neo4j-ha</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -74,6 +79,11 @@
     <dependency>
       <groupId>org.neo4j.app</groupId>
       <artifactId>neo4j-server-enterprise</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.neo4j</groupId>
+      <artifactId>neo4j-security-enterprise</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -121,8 +131,11 @@
                   <arg value="org.neo4j.shell.ShellSettings" />
                   <arg value="org.neo4j.cluster.ClusterSettings" />
                   <arg value="org.neo4j.kernel.ha.HaSettings" />
+                  <arg value="org.neo4j.causalclustering.core.CausalClusteringSettings" />
                   <arg value="org.neo4j.consistency.ConsistencyCheckSettings" />
                   <arg value="org.neo4j.server.enterprise.EnterpriseServerSettings" />
+                  <arg value="org.neo4j.server.security.enterprise.configuration.SecuritySettings" />
+                  <arg value="org.neo4j.kernel.impl.enterprise.configuration.EnterpriseEditionSettings" />
                 </java>
 
                 <!-- Connector documentation is kept separate, because otherwise the
@@ -136,7 +149,7 @@
                 <java classname="org.neo4j.doc.GenerateConfigDocumentation"
                       classpathref="maven.compile.classpath" failonerror="true">
                   <arg line="-o ${project.build.directory}/docs/ops/configuration-http-connector-attributes.asciidoc" />
-                  <arg value="org.neo4j.server.configuration.ServerSettings$HttpConnector" />
+                  <arg value="org.neo4j.server.configuration.ClientConnectorSettings$HttpConnector" />
                 </java>
               </target>
             </configuration>

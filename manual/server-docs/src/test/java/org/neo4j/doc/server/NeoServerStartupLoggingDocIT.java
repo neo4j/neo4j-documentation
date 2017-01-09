@@ -28,11 +28,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import org.neo4j.doc.server.helpers.ServerHelper;
+import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RestRequest;
 import org.neo4j.logging.FormattedLogProvider;
 import org.neo4j.server.NeoServer;
-import org.neo4j.doc.server.helpers.ServerHelper;
-import org.neo4j.doc.server.rest.JaxRsResponse;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;

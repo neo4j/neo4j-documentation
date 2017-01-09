@@ -35,8 +35,8 @@ import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.UniqueFactory;
-import org.neo4j.test.TargetDirectory;
 import org.neo4j.test.TestGraphDatabaseFactory;
+import org.neo4j.test.rule.TestDirectory;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
@@ -45,8 +45,7 @@ import static org.junit.Assert.assertNotNull;
 public class GetOrCreateDocIT extends AbstractJavaDocTestBase
 {
     @ClassRule
-    public static TargetDirectory.TestDirectory testDirectory = TargetDirectory.testDirForTest( GetOrCreateDocIT
-            .class );
+    public static TestDirectory testDirectory = TestDirectory.testDirectory();
 
     @BeforeClass
     public static void init()
@@ -340,7 +339,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
         ResourceIterator<Node> resultIterator = null;
         try ( Transaction tx = graphDb.beginTx() )
         {
-            String queryString = "MERGE (n:User {name: {name}}) RETURN n";
+            String queryString = "MERGE (n:User {name: $name}) RETURN n";
             Map<String, Object> parameters = new HashMap<>();
             parameters.put( "name", username );
             resultIterator = graphDb.execute( queryString, parameters ).columnAs( "n" );

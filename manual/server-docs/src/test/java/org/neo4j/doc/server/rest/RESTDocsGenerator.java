@@ -103,7 +103,7 @@ public class RESTDocsGenerator extends AsciiDocGenerator
     /**
      * Creates a documented test case. Finish building it by using one of these:
      * {@link #get(String)}, {@link #post(String)}, {@link #put(String)},
-     * {@link #delete(String)}, {@link #request(ClientRequest)}. To access the
+     * {@link #delete(String)}. To access the
      * response, use {@link ResponseEntity#entity} to get the entity or
      * {@link ResponseEntity#response} to get the rest of the response
      * (excluding the entity).
@@ -123,8 +123,6 @@ public class RESTDocsGenerator extends AsciiDocGenerator
     {
         super( title, "rest-api" );
     }
-
-
 
     /**
      * Set the expected status of the response. The test will fail if the
@@ -248,17 +246,6 @@ public class RESTDocsGenerator extends AsciiDocGenerator
     {
         this.expectedHeaderFields.add( Pair.of(expectedHeaderField, Predicate.isEqual( expectedValue )) );
         return this;
-    }
-
-    /**
-     * Send a request using your own request object.
-     *
-     * @param request the request to perform
-     */
-    public ResponseEntity request( final ClientRequest request )
-    {
-        return retrieveResponse( title, description, request.getURI()
-                .toString(), expectedResponseStatus, expectedMediaType, expectedHeaderFields, request );
     }
 
     @Override

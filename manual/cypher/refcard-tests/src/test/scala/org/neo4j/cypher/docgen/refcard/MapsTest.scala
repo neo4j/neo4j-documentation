@@ -21,13 +21,13 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 
 class MapsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A KNOWS B")
   val title = "Maps"
   val css = "general c2-2 c3-3 c4-4 c5-2 c6-4"
-  override val linkId = "syntax-lists"
+  override val linkId = "syntax/lists/#_literal_maps"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
@@ -75,8 +75,8 @@ Nested maps and list are supported.
 ###assertion=returns-one-merge parameters=map
 //
 
-MERGE (p:Person {name: {map}.name})
-  ON CREATE SET p = {map}
+MERGE (p:Person {name: $map.name})
+  ON CREATE SET p = $map
 
 RETURN p
 ###
