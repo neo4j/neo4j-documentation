@@ -143,13 +143,13 @@
                 <java classname="org.neo4j.doc.GenerateConfigDocumentation"
                       classpathref="maven.compile.classpath" failonerror="true">
                   <arg line="-o ${project.build.directory}/docs/ops/configuration-bolt-connector-attributes.asciidoc" />
-                  <arg value="org.neo4j.graphdb.factory.GraphDatabaseSettings$BoltConnector" />
+                  <arg value="org.neo4j.kernel.configuration.BoltConnector" />
                 </java>
 
                 <java classname="org.neo4j.doc.GenerateConfigDocumentation"
                       classpathref="maven.compile.classpath" failonerror="true">
                   <arg line="-o ${project.build.directory}/docs/ops/configuration-http-connector-attributes.asciidoc" />
-                  <arg value="org.neo4j.server.configuration.ClientConnectorSettings$HttpConnector" />
+                  <arg value="org.neo4j.kernel.configuration.HttpConnector" />
                 </java>
               </target>
             </configuration>

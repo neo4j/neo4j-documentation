@@ -22,7 +22,7 @@ package org.neo4j.doc;
 import org.junit.Test;
 
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.graphdb.factory.Description;
+import org.neo4j.configuration.Description;
 import org.neo4j.kernel.configuration.Group;
 import org.neo4j.kernel.configuration.GroupSettingSupport;
 import org.neo4j.kernel.configuration.Internal;

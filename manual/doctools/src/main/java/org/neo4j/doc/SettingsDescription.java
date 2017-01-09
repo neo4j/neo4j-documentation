@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.graphdb.factory.Description;
+import org.neo4j.configuration.Description;
 import org.neo4j.kernel.configuration.Group;
 import org.neo4j.kernel.configuration.Internal;
 import org.neo4j.kernel.configuration.Obsoleted;
