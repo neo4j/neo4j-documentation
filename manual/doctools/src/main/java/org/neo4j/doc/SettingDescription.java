@@ -125,7 +125,7 @@ public final class SettingDescription
                 id, name,
                 f.apply( description ),
                 f.apply(mandatoryDescription),
-                f.apply(deprecationDescription),
+                deprecationDescription,
 
                 // I don't like this, but validationdescription contains a lot of
                 // technical terms, and the formatters barf on it. Leave it out for now,

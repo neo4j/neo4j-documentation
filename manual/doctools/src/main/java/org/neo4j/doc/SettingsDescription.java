@@ -70,7 +70,7 @@ public class SettingsDescription
                 String deprecationMessage = field.isAnnotationPresent( Obsoleted.class )
                                             ? field.getAnnotation( Obsoleted.class ).value()
                                             : field.isAnnotationPresent( Deprecated.class )
-                                              ? "The " + name + " configuration setting has been deprecated."
+                                              ? "The `" + name + "` configuration setting has been deprecated."
                                               : null;
                 try
                 {
