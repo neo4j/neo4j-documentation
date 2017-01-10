@@ -215,7 +215,7 @@ class MathFunctionsTest extends DocumentingTest {
       }
       section("acos()", "functions-acos") {
         p("`acos()` returns the arccosine of the expression, in radians.")
-        function("`abs( expression )`", ("expression", "A numeric expression that represents the angle in radians."))
+        function("`acos( expression )`", ("expression", "A numeric expression that represents the angle in radians."))
         query("RETURN acos(0.5)", ResultAssertions((r) => {
           r.toList.head("acos(0.5)") should equal(1.0471975511965979)
         })) {
