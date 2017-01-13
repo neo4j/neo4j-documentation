@@ -76,6 +76,9 @@ public class SettingsDescription
                 {
                     Object rawDefault = setting.apply( from -> null );
                     defaultValue = rawDefault != null ? rawDefault.toString() : null;
+                    if (name.equals("dbms.threads.worker_count")) {
+                        defaultValue = "The minimum between \"number of processors\" and 500";
+                    }
                 }
                 catch ( IllegalArgumentException iae )
                 {
