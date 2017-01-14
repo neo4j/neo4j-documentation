@@ -14,5 +14,6 @@ make_dir                   = $(tools_dir)/make
 
 include $(make_dir)/context-manual.make
 
-webhelp_dist: initialize install-extensions copy-images docbook docbook-html year-check
+webhelp_dist: initialize install-extensions copy-images docbook-html year-check
+
 # cleanup
