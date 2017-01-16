@@ -30,7 +30,6 @@ import org.neo4j.cypher.internal.spi.v3_0.TransactionBoundQueryContext.IndexSear
 import org.neo4j.graphdb.Transaction
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.api.KernelTransaction
-import org.neo4j.kernel.api.index.IndexDescriptor
 import org.neo4j.kernel.impl.coreapi.{PropertyContainerLocker, InternalTransaction}
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContext
 import org.scalatest.{Assertions, Matchers}
@@ -123,12 +122,8 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
 class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) extends (Any => String) with CypherSerializer with GraphIcing {
   def apply(x: Any): String = {
     val transactionalContext = new TransactionalContextWrapper(new Neo4jTransactionalContext(db, tx, db.statement, new PropertyContainerLocker))
-    val ctx = new TransactionBoundQueryContext(transactionalContext)(QuietMonitor)
+    val QUIET_MONITOR:IndexSearchMonitor = null // this is ok because we're only serializing using this TBQC
+    val ctx = new TransactionBoundQueryContext(transactionalContext)(QUIET_MONITOR)
     serialize(x, ctx)
   }
-}
-
-object QuietMonitor extends IndexSearchMonitor {
-  override def indexSeek(index: IndexDescriptor, value: Any) = {}
-  override def lockingUniqueIndexSeek(index: IndexDescriptor, value: Any) = {}
 }
