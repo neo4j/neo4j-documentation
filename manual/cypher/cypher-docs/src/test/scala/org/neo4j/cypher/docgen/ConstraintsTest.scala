@@ -21,6 +21,8 @@ package org.neo4j.cypher.docgen
 
 import org.junit.Test
 import org.neo4j.cypher.{ConstraintValidationException, CypherExecutionException}
+import org.neo4j.graphdb.{Label, RelationshipType}
+import org.neo4j.graphdb.schema.ConstraintDefinition
 import org.neo4j.kernel.api.constraints.{NodePropertyConstraint, RelationshipPropertyConstraint}
 import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
 
@@ -244,37 +246,29 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  private def assertNodeConstraintDoesNotExist(labelName: String, propName: String) {
-    assert(getNodeConstraintIterator(labelName, propName).isEmpty, "Expected constraint iterator to be empty")
-  }
-
   private def assertNodeConstraintExist(labelName: String, propName: String) {
-    assert(getNodeConstraintIterator(labelName, propName).size === 1)
+    assert(hasNodeConstraint(labelName, propName))
   }
 
-  private def assertRelationshipConstraintDoesNotExist(typeName: String, propName: String) {
-    assert(getRelationshipConstraintIterator(typeName, propName).isEmpty, "Expected constraint iterator to be empty")
+  private def assertNodeConstraintDoesNotExist(labelName: String, propName: String) {
+    assert(!hasNodeConstraint(labelName, propName))
   }
 
   private def assertRelationshipConstraintExist(typeName: String, propName: String) {
-    assert(getRelationshipConstraintIterator(typeName, propName).size === 1)
+    assert(hasRelationshipConstraint(typeName, propName))
   }
 
-  private def getNodeConstraintIterator(labelName: String, propName: String): Iterator[NodePropertyConstraint] = {
-    val statement = db.statement
-
-    val prop = statement.readOperations().propertyKeyGetForName(propName)
-    val label = statement.readOperations().labelGetForName(labelName)
-
-    statement.readOperations().constraintsGetForLabelAndPropertyKey(label, prop).asScala
+  private def assertRelationshipConstraintDoesNotExist(typeName: String, propName: String) {
+    assert(!hasRelationshipConstraint(typeName, propName))
   }
 
-  private def getRelationshipConstraintIterator(typeName: String, propName: String): Iterator[RelationshipPropertyConstraint] = {
-    val statement = db.statement
+  private def hasNodeConstraint(labelName: String, propName: String): Boolean = {
+    val constraints = db.schema().getConstraints( Label.label(labelName) ).asScala
+    constraints.exists( _.getPropertyKeys.asScala.exists(_ == propName))
+  }
 
-    val prop = statement.readOperations().propertyKeyGetForName(propName)
-    val relType = statement.readOperations().relationshipTypeGetForName(typeName)
-
-    statement.readOperations().constraintsGetForRelationshipTypeAndPropertyKey(relType, prop).asScala
+  private def hasRelationshipConstraint(typeName: String, propName: String): Boolean = {
+    val constraints = db.schema().getConstraints( RelationshipType.withName(typeName) ).asScala
+    constraints.exists( _.getPropertyKeys.asScala.exists(_ == propName))
   }
 }
