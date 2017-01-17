@@ -61,13 +61,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.neo4j.doc</groupId>
-      <artifactId>neo4j-cypher-refcard</artifactId>
-      <version>${neo4j.version}</version>
-      <classifier>docs</classifier>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.neo4j.build.plugins</groupId>
       <artifactId>neo4j-doctools</artifactId>
       <version>${doctools.version}</version>
@@ -142,7 +135,6 @@
               <classifier>docs</classifier>
               <includeClassifiers>docs</includeClassifiers>
               <excludeTransitive>true</excludeTransitive>
-              <excludeArtifactIds>neo4j-cypher-refcard</excludeArtifactIds>
               <useSubDirectoryPerArtifact>false</useSubDirectoryPerArtifact>
               <stripVersion>true</stripVersion>
               <excludes>META-INF,META-INF/**</excludes>
@@ -165,23 +157,6 @@
               <excludes>META-INF,META-INF/**</excludes>
               <type>jar</type>
               <outputDirectory>${docs.javadocs}</outputDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>unpack-refcard</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>unpack-dependencies</goal>
-            </goals>
-            <configuration>
-              <includeArtifactIds>neo4j-cypher-refcard</includeArtifactIds>
-              <includeClassifiers>docs</includeClassifiers>
-              <excludeTransitive>true</excludeTransitive>
-              <useSubDirectoryPerArtifact>false</useSubDirectoryPerArtifact>
-              <stripVersion>true</stripVersion>
-              <excludes>META-INF,META-INF/**</excludes>
-              <type>jar</type>
-              <outputDirectory>${docs.refcard}</outputDirectory>
             </configuration>
           </execution>
         </executions>
@@ -333,9 +308,6 @@
                 <copy todir="${project.build.directory}/docbkx/webhelp/javadocs" overwrite="true">
                   <fileset dir="${docs.javadocs}"/>
                 </copy>
-                <copy todir="${project.build.directory}/docbkx/webhelp/cypher-refcard" overwrite="true">
-                  <fileset dir="${docs.refcard}/neo4j-cypher-refcard-${neo4j.version}"/>
-                </copy>
                 <!-- source code used by the manual.
                 <copy todir="${project.build.directory}/docbkx/webhelp/code" overwrite="true">
                   <fileset dir="${docs.sourcecode}/neo4j-examples-sources-jar" />
@@ -455,13 +427,38 @@
     </profile>
 
     <profile>
-      <id>create-pdf</id>
+      <id>pdf</id>
       <activation>
         <activeByDefault>false</activeByDefault>
+        <property>
+          <name>withPdf</name>
+        </property>
       </activation>
+
 
       <build>
         <plugins>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>execute-asciidoc-pdf</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>make</executable>
+                  <arguments>
+                    <argument>docbook</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
           <plugin>
             <groupId>com.agilejava.docbkx</groupId>
             <artifactId>docbkx-maven-plugin</artifactId>
@@ -496,6 +493,7 @@
               </execution>
             </executions>
           </plugin>
+
         </plugins>
       </build>
 

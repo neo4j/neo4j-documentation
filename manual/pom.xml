@@ -19,7 +19,6 @@
     <module>config-docs</module>
     <module>contents</module>
     <module>javadocs</module>
-    <module>refcard</module>
     <module>cypher</module>
     <module>manual</module>
     <module>neo4j-harness-test</module>
@@ -125,20 +124,6 @@
         <dependency>
           <groupId>org.neo4j.doc</groupId>
           <artifactId>neo4j-graphgist</artifactId>
-          <version>${project.version}</version>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.neo4j.doc</groupId>
-          <artifactId>neo4j-cypher-refcard</artifactId>
-          <version>${project.version}</version>
-          <classifier>docs</classifier>
-          <type>pom</type>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.neo4j.doc</groupId>
-          <artifactId>neo4j-cypher-refcard-tests</artifactId>
           <version>${project.version}</version>
           <scope>provided</scope>
         </dependency>
