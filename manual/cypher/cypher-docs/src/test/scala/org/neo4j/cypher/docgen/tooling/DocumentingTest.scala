@@ -29,9 +29,8 @@ import org.neo4j.cypher.internal.spi.TransactionalContextWrapperv3_1
 import org.neo4j.cypher.internal.spi.v3_1.TransactionBoundQueryContext
 import org.neo4j.cypher.internal.spi.v3_1.TransactionBoundQueryContext.IndexSearchMonitor
 import org.neo4j.kernel.GraphDatabaseQueryService
-import org.neo4j.kernel.api.index.IndexDescriptor
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
-import org.neo4j.kernel.impl.query.{Neo4jTransactionalContext, Neo4jTransactionalContextFactory, QuerySource}
+import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySource}
 import org.scalatest.{Assertions, Matchers}
 
 /**
@@ -126,12 +125,8 @@ class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) ext
     val transactionalContext = TransactionalContextWrapperv3_1(
       contextFactory.newContext( QuerySource.UNKNOWN, tx, "QUERY", Collections.emptyMap() )
     )
-    val ctx = new TransactionBoundQueryContext(transactionalContext)(QuietMonitor)
+    val QUIET_MONITOR:IndexSearchMonitor = null // this is ok because we're only serializing using this TBQC
+    val ctx = new TransactionBoundQueryContext(transactionalContext)(QUIET_MONITOR)
     serialize(x, ctx)
   }
-}
-
-object QuietMonitor extends IndexSearchMonitor {
-  override def indexSeek(index: IndexDescriptor, value: Any) = {}
-  override def lockingUniqueIndexSeek(index: IndexDescriptor, value: Any) = {}
 }
