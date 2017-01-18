@@ -21,6 +21,7 @@ package org.neo4j.cypher.docgen
 
 import java.io.{File, FileOutputStream, OutputStreamWriter, PrintWriter, Writer}
 import java.lang.Iterable
+import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
 import java.util
 
@@ -37,7 +38,8 @@ import org.neo4j.graphdb._
 import org.neo4j.graphdb.index.Index
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker
-import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QueryEngineProvider, QuerySource, TransactionalContext}
+import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
+import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.test.{GraphDatabaseServiceCleaner, GraphDescription, TestGraphDatabaseFactory}
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions
@@ -92,7 +94,12 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     val result = db.withTx(
       tx => engine.execute(testQuery, params,
         contextFactory.newContext(
-          QuerySource.UNKNOWN,
+          new BoltConnectionInfo(
+            "username",
+            "neo4j-java-bolt-driver",
+            new InetSocketAddress("127.0.0.1", 56789),
+            new InetSocketAddress("127.0.0.1", 7687)
+          ),
           tx,
           testQuery,
           javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String,AnyRef]]

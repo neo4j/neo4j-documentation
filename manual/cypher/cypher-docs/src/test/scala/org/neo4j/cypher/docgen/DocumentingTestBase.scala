@@ -20,6 +20,7 @@
 package org.neo4j.cypher.docgen
 
 import java.io.{ByteArrayOutputStream, File, PrintWriter, StringWriter}
+import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
@@ -40,14 +41,15 @@ import org.neo4j.graphdb._
 import org.neo4j.graphdb.factory.GraphDatabaseSettings
 import org.neo4j.graphdb.index.Index
 import org.neo4j.kernel.api.KernelTransaction
-import org.neo4j.kernel.api.security.{SecurityContext}
+import org.neo4j.kernel.api.security.SecurityContext
 import org.neo4j.kernel.configuration.Settings
 import org.neo4j.kernel.impl.api.KernelStatement
 import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.core.ThreadToStatementContextBridge
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
-import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySource}
+import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
+import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.test.{GraphDescription, TestGraphDatabaseFactory}
 import org.neo4j.visualization.asciidoc.AsciidocHelper
@@ -330,7 +332,11 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
           s"$planner $query",
           parameters,
           contextFactory.newContext(
-            QuerySource.UNKNOWN,
+            new BoltConnectionInfo("username",
+              "neo4j-java-bolt-driver",
+              new InetSocketAddress("127.0.0.1", 56789),
+              new InetSocketAddress("127.0.0.1", 7687)
+            ),
             transaction,
             query,
             javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]]
@@ -354,7 +360,11 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
               s"$s $query",
               parameters,
               contextFactory.newContext(
-                QuerySource.UNKNOWN,
+                new BoltConnectionInfo("username",
+                  "neo4j-java-bolt-driver",
+                  new InetSocketAddress("127.0.0.1", 56789),
+                  new InetSocketAddress("127.0.0.1", 7687)
+                ),
                 transaction,
                 query,
                 javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]]
@@ -437,7 +447,12 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       val innerTx = db.beginTransaction( KernelTransaction.Type.`implicit`, tx.securityContext() )
       engine.execute( query, Map.empty[String, Object],
         contextFactory.newContext(
-          QuerySource.UNKNOWN,
+          new BoltConnectionInfo(
+            "username",
+            "neo4j-java-bolt-driver",
+            new InetSocketAddress("127.0.0.1", 56789),
+            new InetSocketAddress("127.0.0.1", 7687)
+          ),
           innerTx,
           query,
           java.util.Collections.emptyMap()

@@ -23,6 +23,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.InetSocketAddress;
 import java.util.Collections;
 
 import org.neo4j.cypher.internal.DocsExecutionEngine;
@@ -35,7 +36,7 @@ import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker;
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory;
 import org.neo4j.kernel.impl.query.TransactionalContext;
 import org.neo4j.kernel.impl.query.TransactionalContextFactory;
-import org.neo4j.kernel.impl.query.QuerySource;
+import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo;
 import org.neo4j.logging.NullLogProvider;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
@@ -89,7 +90,11 @@ public class DocsExecutionEngineTest
     public static TransactionalContext createTransactionalContext( String query )
     {
         InternalTransaction transaction = database.beginTransaction( KernelTransaction.Type.implicit, SecurityContext.AUTH_DISABLED );
-        return contextFactory.newContext(
-                QuerySource.UNKNOWN, transaction, query, Collections.emptyMap() );
+        BoltConnectionInfo boltConnection = new BoltConnectionInfo(
+                "username",
+                "neo4j-java-bolt-driver",
+                new InetSocketAddress("127.0.0.1", 56789),
+                new InetSocketAddress("127.0.0.1", 7687));
+        return contextFactory.newContext(boltConnection, transaction, query, Collections.emptyMap() );
     }
 }
