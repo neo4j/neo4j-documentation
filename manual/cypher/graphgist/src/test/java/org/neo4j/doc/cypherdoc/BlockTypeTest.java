@@ -299,7 +299,7 @@ public class BlockTypeTest
         String output = block.process( state );
         assertThat(
                 output,
-                allOf( startsWith( "ifdef::" ), endsWith( "endif::[]" + CypherDoc.EOL ),
+                allOf( startsWith( "ifndef::" ), endsWith( "endif::[]" + CypherDoc.EOL ),
                         containsString( "cypherdoc-console" ), containsString( "<p" ), containsString( "<simpara" ),
                         containsString( "html" ) ) );
     }
