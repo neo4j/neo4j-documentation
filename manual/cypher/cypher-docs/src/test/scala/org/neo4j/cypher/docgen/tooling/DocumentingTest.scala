@@ -20,6 +20,7 @@
 package org.neo4j.cypher.docgen.tooling
 
 import java.io._
+import java.net.InetSocketAddress
 import java.util.Collections
 
 import org.neo4j.cypher.internal.compiler.v3_2.CypherSerializer
@@ -29,7 +30,9 @@ import org.neo4j.cypher.internal.spi.v3_2.TransactionBoundQueryContext.IndexSear
 import org.neo4j.cypher.internal.spi.v3_2.{TransactionBoundQueryContext, TransactionalContextWrapper}
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
-import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySource}
+import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
+import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
+import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.scalatest.{Assertions, Matchers}
 
 /**
@@ -122,7 +125,14 @@ class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) ext
   def apply(x: Any): String = {
 
     val transactionalContext = TransactionalContextWrapper(
-      contextFactory.newContext( QuerySource.UNKNOWN, tx, "QUERY", Collections.emptyMap() )
+      contextFactory.newContext(
+        new BoltConnectionInfo(
+          "username",
+          "neo4j-java-bolt-driver",
+          new InetSocketAddress("127.0.0.1", 56789),
+          new InetSocketAddress("127.0.0.1", 7687)
+        ),
+        tx, "QUERY", Collections.emptyMap() )
     )
     val QUIET_MONITOR:IndexSearchMonitor = null // this is ok because we're only serializing using this TBQC
     val ctx = new TransactionBoundQueryContext(transactionalContext)(QUIET_MONITOR)

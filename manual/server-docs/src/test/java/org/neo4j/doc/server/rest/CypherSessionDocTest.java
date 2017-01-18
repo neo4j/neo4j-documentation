@@ -35,6 +35,7 @@ import org.neo4j.test.TestGraphDatabaseFactory;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CypherSessionDocTest
 {
@@ -47,7 +48,14 @@ public class CypherSessionDocTest
         executor.start();
         try
         {
-            CypherSession session = new CypherSession( executor, NullLogProvider.getInstance(), mock( HttpServletRequest.class ) );
+            HttpServletRequest httpServletRequest = mock(HttpServletRequest.class);
+            when(httpServletRequest.getScheme()).thenReturn("http");
+            when(httpServletRequest.getHeader("User-Agent")).thenReturn("user-agent");
+            when(httpServletRequest.getRemoteAddr()).thenReturn("remote-addr");
+            when(httpServletRequest.getRemotePort()).thenReturn(1234);
+            when(httpServletRequest.getServerName()).thenReturn("server-name");
+            when(httpServletRequest.getServerPort()).thenReturn(6789);
+            CypherSession session = new CypherSession( executor, NullLogProvider.getInstance(), httpServletRequest);
             Pair<String, String> result = session.evaluate( "create (a) return a" );
             assertThat( result.first(), containsString( "Node[0]" ) );
         }
