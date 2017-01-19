@@ -28,35 +28,24 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
 
     private final String id;
     private final String name;
-    private final String description;
-    private final String mandatoryDescription;
+    private final Optional<String> description;
     private final String deprecationMessage;
     private final String validationDescription;
     private final String defaultValue;
 
-//    public DocsConfigValue(String name, String description, String value, String deprecationMessage) {
-//        this("", name, description,
-//                "",
-//                deprecationMessage,
-//                "", value,
-//                false, false, false);
-//    }
-
     public DocsConfigValue(String id,
                            String name,
-                           String description,
-                           String mandatoryDescription,
+                           Optional<String> description,
                            String deprecationMessage,
                            String validationDescription,
-                           String defaultValue,
-                           boolean isDeprecated, boolean isMandatory, boolean hasDefault) {
-        super(name, Optional.of(description), Optional.of(defaultValue));
+                           Optional<?> defaultValue,
+                           boolean isDeprecated, boolean hasDefault) {
+        super(name, description, defaultValue);
         this.id = id;
         this.name = name;
         this.description = description;
-        this.mandatoryDescription = mandatoryDescription;
         this.validationDescription = validationDescription;
-        this.defaultValue = defaultValue;
+        this.defaultValue = defaultValue.get().toString();
         this.deprecationMessage = deprecationMessage;
     }
 
@@ -66,7 +55,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
     }
 
     @Override
-    public String theDescription() {
+    public Optional<String> description() {
         return description;
     }
 
@@ -83,16 +72,6 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
     @Override
     public String defaultValue() {
         return defaultValue;
-    }
-
-    @Override
-    public boolean isMandatory() {
-        return mandatoryDescription != null;
-    }
-
-    @Override
-    public String mandatoryDescription() {
-        return mandatoryDescription;
     }
 
     @Override
@@ -123,7 +102,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
         }
         SettingDescription that = (SettingDescription) o;
         return Objects.equals( name, that.name() ) &&
-                Objects.equals( description, that.theDescription() );
+                Objects.equals( description, that.description() );
     }
 
     @Override

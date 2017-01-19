@@ -18,6 +18,7 @@ package org.neo4j.doc;/*
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.Optional;
 import java.util.function.Function;
 
 public interface SettingDescription {
@@ -25,17 +26,13 @@ public interface SettingDescription {
 
     String name();
 
-    String theDescription();
+    Optional<String> description();
 
     boolean isDeprecated();
 
     boolean hasDefault();
 
     String defaultValue();
-
-    boolean isMandatory();
-
-    String mandatoryDescription();
 
     String deprecationMessage();
 

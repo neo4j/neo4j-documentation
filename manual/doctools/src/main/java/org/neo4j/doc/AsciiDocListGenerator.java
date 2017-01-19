@@ -59,7 +59,7 @@ public class AsciiDocListGenerator
         {
             String id = item.id();
             String name = item.name();
-            String description = item.theDescription();
+            String description = item.description().get();
             if ( shortenDescription )
             {
                 int pos = description.indexOf( ". " );

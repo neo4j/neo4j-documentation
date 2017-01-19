@@ -47,13 +47,11 @@ public class DocsConfigOptions extends ConfigOptions {
                     }
                     return new DocsConfigValue("config_" + (name.replace("(", "").replace(")", "")),
                             name,
-                            description().orElse("NO DESCRIPTION"),
-                            Optional.empty().toString(),
+                            description(),
                             deprecationMessage,
                             Optional.empty().toString(),
-//                            Optional.ofNullable(val.getValue()).get().toString(),
-                            Optional.ofNullable(val.getValue()).toString(),
-                            null==deprecationMessage, false, true);
+                            Optional.ofNullable(val.getValue()),
+                            null==deprecationMessage, true);
                 })
                 .collect( Collectors.toList() );
     }

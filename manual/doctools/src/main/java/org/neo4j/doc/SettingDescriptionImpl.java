@@ -20,6 +20,7 @@
 package org.neo4j.doc;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -29,36 +30,31 @@ public final class SettingDescriptionImpl implements SettingDescription {
 
     private final String id;
     private final String name;
-    private final String description;
-    private final String mandatoryDescription;
+    private final Optional<String> description;
     private final String deprecationDescription;
     private final String validationDescription;
     private final String defaultValue;
     private final boolean isDeprecated;
-    private final boolean isMandatory;
     private final boolean hasDefault;
 
-    public SettingDescriptionImpl( String id, String name, String description,
-                               String mandatoryDescription,
+    public SettingDescriptionImpl( String id, String name, Optional<String> description,
                                String deprecationDescription,
                                String validationDescription, String defaultValue,
-                               boolean isDeprecated, boolean isMandatory, boolean hasDefault )
+                               boolean isDeprecated, boolean hasDefault )
     {
         this.id = id;
-        this.mandatoryDescription = mandatoryDescription;
         this.deprecationDescription = deprecationDescription;
         this.validationDescription = validationDescription;
         this.defaultValue = defaultValue;
         this.isDeprecated = isDeprecated;
         this.name = name.replace( "{", "\\{" ).replace( "}", "\\}" );
         this.description = description;
-        this.isMandatory = isMandatory;
         this.hasDefault = hasDefault;
     }
 
-    public SettingDescriptionImpl( String id, String name, String description )
+    public SettingDescriptionImpl( String id, String name, Optional<String> description )
     {
-        this( id, name, description, null, null, null, null, false, false, false );
+        this( id, name, description, null, null, null, false, false );
     }
 
     @Override
@@ -74,7 +70,7 @@ public final class SettingDescriptionImpl implements SettingDescription {
     }
 
     @Override
-    public String theDescription()
+    public Optional<String> description()
     {
         return description;
     }
@@ -99,19 +95,6 @@ public final class SettingDescriptionImpl implements SettingDescription {
     }
 
     @Override
-    public boolean isMandatory()
-    {
-        return isMandatory;
-    }
-
-    @Override
-    public String mandatoryDescription()
-    {
-        // Note MANDATORY
-        return mandatoryDescription;
-    }
-
-    @Override
     public String deprecationMessage()
     {
         // Note OBSOLETED & DEPRECATED
@@ -132,11 +115,10 @@ public final class SettingDescriptionImpl implements SettingDescription {
     @Override
     public SettingDescription formatted(Function<String, String> format)
     {
-        Function<String,String> f = ( str ) -> str == null ? null : format.apply(str);
+        Function<String, String> f = ( str ) -> str == null ? null : format.apply(str);
         return new SettingDescriptionImpl(
                 id, name,
-                f.apply( description ),
-                f.apply(mandatoryDescription),
+                Optional.of(f.apply(description.get())),
                 deprecationDescription,
 
                 // I don't like this, but validationdescription contains a lot of
@@ -144,7 +126,7 @@ public final class SettingDescriptionImpl implements SettingDescription {
                 // which is what the old impl did, and improve the formatters at some point
                 validationDescription,
                 defaultValue,
-                isDeprecated, isMandatory, hasDefault );
+                isDeprecated, hasDefault );
     }
 
     @Override
@@ -160,7 +142,7 @@ public final class SettingDescriptionImpl implements SettingDescription {
         }
         SettingDescription that = (SettingDescription) o;
         return Objects.equals( name, that.name() ) &&
-               Objects.equals( description, that.theDescription() );
+               Objects.equals( description, that.description() );
     }
 
     @Override

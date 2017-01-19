@@ -18,34 +18,37 @@
  */
 package org.neo4j.doc;
 
-import org.neo4j.configuration.ConfigValue;
-import org.neo4j.kernel.configuration.Config;
 import org.neo4j.kernel.configuration.DocsConfig;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ConfigDocsGenerator {
 
+    private DocsConfig docsConfig;
+    private PrintStream out;
+
     public ConfigDocsGenerator() {
+        this.docsConfig = DocsConfig.documentedSettings();
     }
 
-    public void printSomeConfigValues() {
-        List<String> keys = new ArrayList<>();
-        keys.add("ha.host.data");
-        keys.add("dbms.directories.logs");
-        keys.add("metrics.neo4j.server.enabled");
-        int counter = 0;
-        DocsConfig docsConfig = DocsConfig.documentedSettings();
-        for (Map.Entry<String, DocsConfigValue> entry : docsConfig.getDocumentableSettings(keys).entrySet()) {
-            DocsConfigValue value = entry.getValue();
-            System.out.printf("[%d] %s%n", ++counter, entry.getKey());
-            System.out.printf("  description: %s%n", value.description().orElse("MISSING DESCRIPTION!"));
-            if (value.isDeprecated()) {
-                System.out.printf("  deprecation: %s%n", value.deprecationMessage());
-            }
-        }
+    public String document()
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        out = new PrintStream( baos );
+
+        List<SettingDescription> settingDescriptions = docsConfig.getAllDocumentableSettings().values().stream()
+                .filter(it -> !it.isDeprecated())
+                .collect(Collectors.toList());
+        out.print(new AsciiDocListGenerator("settings", "Settings", true).generateListAndTableCombo(settingDescriptions));
+        out.printf("%d settings processed%n", settingDescriptions.size());
+
+        out.flush();
+        return baos.toString();
     }
 
     public static void main(String[] args) {
@@ -53,7 +56,8 @@ public class ConfigDocsGenerator {
 //        generator.printStuff();
 //        generator.printOtherStuff();
 //        generator.printAllConfigValues();
-        generator.printSomeConfigValues();
+//        generator.printSomeConfigValues();
+        System.out.println(generator.document());
     }
 
 }

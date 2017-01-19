@@ -66,7 +66,7 @@ public class SettingsDescription
         {
             fieldAsSetting( settingClass, instance, field ).ifPresent( (setting) -> {
                 String name = setting.name();
-                String description = field.getAnnotation( Description.class ).value();
+                Optional<String> description = Optional.of(field.getAnnotation( Description.class ).value());
                 String validationMessage = setting.toString();
 
                 String defaultValue = null;
@@ -101,13 +101,10 @@ public class SettingsDescription
                 settings.add( new SettingDescriptionImpl(
                         "config_" + (name.replace( "(", "").replace( ")", "" ) ),
                         name, description,
-                        mandatoryMessage,
                         deprecationMessage,
                         validationMessage,
                         defaultValue,
-                        deprecationMessage != null,
-                        mandatoryMessage != null,
-                        defaultValue != null
+                        null != deprecationMessage, null != defaultValue
                 ));
             });
         }

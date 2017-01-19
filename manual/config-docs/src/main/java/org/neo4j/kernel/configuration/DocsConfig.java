@@ -31,6 +31,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
@@ -44,6 +45,7 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
     private final List<LoadableConfig> settingsClasses;
     private List<DocsConfigOptions> docsConfigOptions = null;
     private Map<String, DocsConfigValue> docsConfigValues = null;
+    private Predicate<Field> filter = (f) -> !f.isAnnotationPresent(Internal.class);
 
     private DocsConfig(
             Optional<File> configFile,
@@ -91,7 +93,7 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
         for (Field f : loadableConfig.getClass().getDeclaredFields()) {
             try {
                 Object publicSetting = f.get(loadableConfig);
-                if (publicSetting instanceof SettingGroup) {
+                if (publicSetting instanceof SettingGroup && filter.test(f)) {
                     final Description documentation = f.getAnnotation(Description.class);
                     final Optional<String> description;
                     if (null == documentation) {
@@ -129,9 +131,10 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
             docsConfigValues = getDocsConfigOptions().stream()
                     .map(it -> it.asDocsConfigValues(getRaw()))
                     .flatMap(List::stream)
+                    .sorted((a, b) -> a.name().compareTo(b.name()))
                     .collect(Collectors.toMap(DocsConfigValue::name, it -> it, (val1, val2) -> {
                         throw new RuntimeException("Duplicate setting: " + val1.name() + ": " + val1 + " and " + val2);
-                    }));
+                    }, LinkedHashMap::new));
         }
         return docsConfigValues;
     }
@@ -150,6 +153,13 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
 
     @Override
     public Map<String, DocsConfigValue> getAllDocumentableSettings() {
+        return getAllDocumentableSettings(f -> {
+            return f.isAnnotationPresent(Internal.class);
+        });
+    }
+
+    public Map<String, DocsConfigValue> getAllDocumentableSettings(Predicate<Field> filter) {
         return getDocsConfigValues();
     }
+
 }

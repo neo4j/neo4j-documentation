@@ -46,9 +46,8 @@ public class DocsConfigTest {
         DocsConfigValue docsConfigValue = docsConfig.getDocumentableSetting(settingKey);
         System.out.println(docsConfigValue.toString());
         assertTrue(
-                docsConfigValue.theDescription().equals(
-                        configValues.get(settingKey)
-                                .description().get())
+                docsConfigValue.description().get().equals(
+                        configValues.get(settingKey).description().get())
         );
     }
 
@@ -63,8 +62,7 @@ public class DocsConfigTest {
         System.out.printf("configValues.keySet.size(): %d%n", configValues.keySet().size());
         keys.forEach(key -> assertTrue(String.format("Assertion failed for key <%s>%n", key),
                 docsConfigValues.containsKey(key) &&
-                        docsConfigValues.get(key)
-                                .theDescription().equals(configValues.get(key).description().get()))
+                        docsConfigValues.get(key).description().get().equals(configValues.get(key).description().get()))
         );
     }
 
@@ -73,8 +71,6 @@ public class DocsConfigTest {
         DocsConfig docsConfig = DocsConfig.documentedSettings();
         Map<String, DocsConfigValue> docsConfigValues = docsConfig.getAllDocumentableSettings();
         docsConfigValues.keySet().forEach(key -> {
-//            System.out.printf("key: %s    configValues.get(key).description(): %s", key, configValues.get(key).description());
-            System.out.printf("%s does not equal %s%n", docsConfigValues.get(key).description(), configValues.get(key).description());
                 assertTrue(
                         String.format("key: %s    configValues.get(key).description(): %s", key, configValues.get(key).description()),
                configValues.containsKey(key) &&
