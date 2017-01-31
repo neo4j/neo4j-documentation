@@ -1,5 +1,5 @@
 [[rest-api-node-labels]]
-== Node labels ==
+== Node labels
 
 include::adding-a-label-to-a-node.asciidoc[]
 

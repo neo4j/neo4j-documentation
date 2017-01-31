@@ -159,19 +159,11 @@ public class PagedTraverserDocIT extends ExclusiveServerTestBase
     }
 
     @Documented( "Paging through the results of a paged traverser.\n\n" +
-                 "Paged traversers holdstate on the server, and allow clients to page through\n" +
-                 "the results of a traversal. To progress to the next page of traversal results,\n" +
-                 "the client issues a HTTP GET request on the paged traversal URI which causes the\n" +
-                 "traversal to fill the next page (or partially fill it if insufficient\n" +
-                 "results are available).\n" +
-                 " \n" +
-                 "Note that if a traverser expires through inactivity it will cause a 404\n" +
-                 "response on the next +GET+ request. Traversers' leases are renewed on\n" +
-                 "every successful access for the same amount of time as originally\n" +
-                 "specified.\n" +
-                 " \n" +
-                 "When the paged traverser reaches the end of its results, the client can\n" +
-                 "expect a 404 response as the traverser is disposed by the server." )
+                 "Paged traversers hold state on the server, and allow clients to page through the results of a traversal.\n" +
+                 "To progress to the next page of traversal results, the client issues a HTTP `GET` request on the paged traversal URI which causes the traversal to fill the next page (or partially fill it if insufficient results are available).\n \n" +
+                 "Note that if a traverser expires through inactivity it will cause a 404 response on the next `GET` request.\n" +
+                 "Traversers' leases are renewed on every successful access for the same amount of time as originally specified.\n\n" +
+                 "When the paged traverser reaches the end of its results, the client can expect a 404 response as the traverser is disposed by the server." )
     @Test
     public void shouldBeAbleToTraverseAllThePagesWithDefaultPageSize()
     {

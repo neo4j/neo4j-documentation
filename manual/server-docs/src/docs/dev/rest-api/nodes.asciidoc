@@ -1,5 +1,5 @@
 [[rest-api-nodes]]
-== Nodes ==
+== Nodes
 
 include::create-node.asciidoc[]
 

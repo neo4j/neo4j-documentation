@@ -1,5 +1,5 @@
 [[rest-api-security]]
-== REST API Authentication and Authorization ==
+== REST API Authentication and Authorization
 
 In order to prevent unauthorized access to Neo4j, the REST API supports authorization and authentication.
 When enabled, requests to the REST API must be authorized using the username and password of a valid user.

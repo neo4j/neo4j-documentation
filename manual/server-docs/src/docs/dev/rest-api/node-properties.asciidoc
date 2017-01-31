@@ -1,5 +1,5 @@
 [[rest-api-node-properties]]
-== Node properties ==
+== Node properties
 
 include::set-property-on-node.asciidoc[]
 

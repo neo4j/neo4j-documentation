@@ -1,5 +1,5 @@
 [[rest-api-node-degree]]
-== Node degree ==
+== Node degree
 
 The node degree is the number of relationships associated with a node.
 Neo4j stores the degree for each node, making this a useful mechanism to quickly get the number of relationships a node has.

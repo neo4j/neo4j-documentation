@@ -1,6 +1,5 @@
 [[rest-api]]
-REST API
-========
+= REST API
 
 include::introduction.asciidoc[]
 

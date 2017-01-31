@@ -1,11 +1,19 @@
 [[rest-api-indexes]]
-== Legacy indexing ==
+== Legacy indexing
 
-NOTE: This documents the legacy indexing in Neo4j, which is no longer the preferred way to handle indexes. Consider looking at <<rest-api-schema-indexes>>.
+[NOTE]
+--
+This documents the legacy indexing in Neo4j, which is no longer the preferred way to handle indexes.
+Consider looking at <<rest-api-schema-indexes>>.
+--
 
 An index can contain either nodes or relationships.
 
-NOTE: To create an index with default configuration, simply start using it by adding nodes/relationships to it. It will then be automatically created for you.
+[NOTE]
+--
+To create an index with default configuration, simply start using it by adding nodes/relationships to it.
+It will then be automatically created for you.
+--
 
 What default configuration means depends on how you have configured your database.
 If you haven't changed any indexing configuration, it means the indexes will be using a Lucene-based backend.

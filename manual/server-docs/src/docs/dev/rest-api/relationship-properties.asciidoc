@@ -1,5 +1,5 @@
 [[rest-api-relationship-properties]]
-== Relationship properties ==
+== Relationship properties
 
 include::update-relationship-properties.asciidoc[]
 

@@ -1,19 +1,26 @@
 [[rest-api-cypher]]
-== Legacy Cypher HTTP endpoint ==
+== Legacy Cypher HTTP endpoint
+
+:http-api-cypher-uri: {developer-manual-base-uri}/http-api/#http-api-transactional
+:cypher-query-lang-uri: {developer-manual-base-uri}/cypher/
+:cypher-parameters-uri: {developer-manual-base-uri}/cypher/#cypher-parameters
 
 [NOTE]
+--
 This endpoint is deprecated.
-Please transition to using the new transactional endpoint (see <<rest-api-transactional>>).
+Please transition to using the transactional HTTP endpoint (see the link:{http-api-cypher-uri}[Developer Manual]).
 Among other things it allows you to run multiple Cypher statements in the same transaction.
+--
 
-The Neo4j REST API allows querying with Cypher, see <<cypher>>.
-The results are returned as a list of string headers (+columns+), and a +data+ part,
-consisting of a list of all rows, every row consisting of a list of REST representations
-of the field value -- +Node+, +Relationship+, +Path+ or any simple value like +String+.
+The Neo4j REST API allows querying with Cypher (see the link:{cypher-query-lang-uri}[Cypher documentation]).
+The results are returned as a list of string headers (`columns`), and a `data` part, consisting of a list of all rows.
+Every row consists of a list of REST representations of the field value -- `Node`, `Relationship`, `Path`, or any simple value like `String`.
 
 [TIP]
+--
 In order to speed up queries in repeated scenarios, try not to use literals but replace them with parameters wherever possible in order to let the server cache query plans, see <<rest-api-use-parameters>> for details.
-Also see <<cypher-parameters>> for where parameters can be used.
+Also see the link:{cypher-parameters-uri}[Cypher documentation] for where parameters can be used.
+--
 
 include::use-parameters.asciidoc[]
 

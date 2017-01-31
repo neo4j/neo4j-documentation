@@ -1,5 +1,5 @@
 [[rest-api-transactional]]
-== Transactional Cypher HTTP endpoint ==
+== Transactional Cypher HTTP endpoint
 
 The default way to interact with Neo4j is by using this endpoint.
 

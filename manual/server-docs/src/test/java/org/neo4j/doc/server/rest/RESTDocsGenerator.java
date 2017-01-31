@@ -635,7 +635,7 @@ public class RESTDocsGenerator extends AsciiDocGenerator
     private String getAsciidocHeading( final String heading )
     {
         String equalSigns = EQUAL_SIGNS.substring( 0, headingLevel );
-        return equalSigns + ' ' + heading + ' ' + equalSigns;
+        return equalSigns + ' ' + heading;
     }
 
     public void writeEntity( final StringBuilder sb, final String entity )

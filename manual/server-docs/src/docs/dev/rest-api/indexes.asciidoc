@@ -1,9 +1,14 @@
 [[rest-api-schema-indexes]]
-== Indexing ==
+== Indexing
+:graphdb-neo4j-schema-uri: {developer-manual-base-uri}/introduction/#graphdb-neo4j-schema
 
-NOTE: This documents schema based indexes, a feature that was introduced in Neo4j 2.0, see <<rest-api-indexes>> for legacy indexing.
+How to use schema based indexes from the REST API.
+For more details about indexes and the optional schema in Neo4j, see the link:{graphdb-neo4j-schema-uri}[Developer Manual].
 
-For more details about indexes and the optional schema in Neo4j, see <<graphdb-neo4j-schema>>.
+[NOTE]
+--
+For how to use manual indexes ("legacy indexes") see <<rest-api-indexes>>.
+--
 
 include::create-index.asciidoc[]
 
