@@ -1,23 +1,24 @@
 [[tutorials-java-embedded-traversal]]
-Traversal
-=========
+= Traversal
 
 For reading about traversals, see <<tutorial-traversal>>.
 
-For more examples of traversals, see <<data-modeling-examples>>.
+// For more examples of traversals, see <<data-modeling-examples>>.
 
-== The Matrix ==
+== The Matrix
 
 This is the first graph we want to traverse into:
 
 image::examples-matrix.png[title="Matrix node space view"]
 
 [TIP]
+--
 The source code of this example is found here:
-https://github.com/neo4j/neo4j/blob/{neo4j-git-tag}/community/embedded-examples/src/main/java/org/neo4j/examples/NewMatrix.java[NewMatrix.java]
+https://github.com/neo4j/neo4j-documentation/blob/{neo4j-git-tag}/manual/embedded-examples/src/main/java/org/neo4j/examples/NewMatrix.java[NewMatrix.java]
+--
 
 .Friends and friends of friends
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 classifier=sources
@@ -27,7 +28,7 @@ tag=get-friends
 
 Let's perform the actual traversal and print the results:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 classifier=sources
@@ -40,7 +41,7 @@ Which will give us the following output:
 include::matrix-traversal-java-new-friends.asciidoc[]
 
 .Who coded the Matrix?
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 classifier=sources
@@ -48,9 +49,9 @@ source=org/neo4j/examples/NewMatrix.java
 tag=find-hackers
 ----
 
-Print out the result:    
+Print out the result:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 classifier=sources
@@ -63,16 +64,18 @@ Now we know who coded the Matrix:
 include::matrix-traversal-java-new-hackers.asciidoc[]
 
 
-=== Walking an ordered path ===
+=== Walking an ordered path
 
 This example shows how to use a path context holding a representation of a path.
 
 [TIP]
+--
 The source code of this example is found here:
-https://github.com/neo4j/neo4j/blob/{neo4j-git-tag}/community/embedded-examples/src/main/java/org/neo4j/examples/orderedpath/OrderedPath.java[OrderedPath.java]
+https://github.com/neo4j/neo4j-documentation/blob/{neo4j-git-tag}/manual/embedded-examples/src/main/java/org/neo4j/examples/orderedpath/OrderedPath.java[OrderedPath.java]
+--
 
 .Create a toy graph
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 classifier=sources
@@ -92,11 +95,11 @@ C -> D [label="REL3" color="EDGEHIGHLIGHT" fontcolor="EDGEHIGHLIGHT"]
 // include::ordered-path-java-graph.asciidoc[]
 // then, also include the property setting in the code.
 
-Now, the order of relationships (+REL1+ -> +REL2+ -> +REL3+) is stored in an +ArrayList+.
-Upon traversal, the +Evaluator+ can check against it to ensure that only paths are included and returned that have the predefined order of relationships:
+Now, the order of relationships (`REL1` -> `REL2` -> `REL3`) is stored in an `ArrayList`.
+Upon traversal, the `Evaluator` can check against it to ensure that only paths are included and returned that have the predefined order of relationships:
 
 .Define how to walk the path
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 classifier=sources
@@ -104,12 +107,12 @@ source=org/neo4j/examples/orderedpath/OrderedPath.java
 tag=walkOrderedPath
 ----
 
-Note that we set the uniqueness to 
-+link:javadocs/org/neo4j/graphdb/traversal/Uniqueness.html#NODE_PATH[Uniqueness.NODE_PATH]+
+Note that we set the uniqueness to
+`link:javadocs/org/neo4j/graphdb/traversal/Uniqueness.html#NODE_PATH[Uniqueness.NODE_PATH]`
 as we want to be able to revisit the same node dureing the traversal, but not the same path.
 
 .Perform the traversal and print the result
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 classifier=sources
@@ -124,7 +127,7 @@ include::ordered-path-java-output.asciidoc[]
 In this case we use a custom class to format the path output.
 This is how it's done:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 classifier=sources

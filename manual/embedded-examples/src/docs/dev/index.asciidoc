@@ -11,7 +11,7 @@ When running your own code and Neo4j in the same JVM, there are a few things you
 * Don't create or retain more objects than you strictly need to.
   Large caches in particular tend to promote more objects to the old generation, thus increasing the need for expensive full garbage collections.
 * Don't use internal Neo4j APIs.
-  They are internal to Neo4j, they may change in future releases and break the intended behavior of your code.
+  They are internal to Neo4j and subject to change without notice, which may break or change the behavior of your code.
 * Don't enable the `-XX:+TrustFinalNonStaticFields` JVM flag when running in embedded mode.
 ====
 

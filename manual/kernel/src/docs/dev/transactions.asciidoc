@@ -1,5 +1,6 @@
 [[transactions]]
 = Transaction Management
+:rest-api-unique-indexes-uri: {rest-docs-base-uri}/#rest-api-unique-indexes
 
 In order to fully maintain data integrity and ensure good transactional behavior, Neo4j supports the ACID properties:
 
@@ -58,7 +59,7 @@ Trying to do so will result in error on each call to a write operation.
 Transactions in Neo4j use a read-committed isolation level, which means they will see data as soon as it has been committed and will not see data in other transactions that have not yet been committed.
 This type of isolation is weaker than serialization but offers significant performance advantages whilst being sufficient for the overwhelming majority of cases.
 
-In addition, the Neo4j Java API (see <<advanced-usage>>) enables explicit locking of nodes and relationships.
+In addition, the Neo4j Java API enables explicit locking of nodes and relationships.
 Using locks gives the opportunity to simulate the effects of higher levels of isolation by obtaining and releasing locks explicitly.
 For example, if a write lock is taken on a common node or relationship, then all transactions will serialize on that lock -- giving the effect of a serialization isolation level.
 
@@ -165,9 +166,12 @@ Other code that requires synchronization should be synchronized in such a way th
 [[transactions-deadlocks-code]]
 === Deadlock handling example code
 
-Below you'll find examples of how deadlocks can be handled in server extensions/plugins or when using Neo4j embedded.
+Below you'll find examples of how deadlocks can be handled in procedures, server extensions or when using Neo4j embedded.
 
-TIP: The full source code used for the code snippets can be found at https://github.com/neo4j/neo4j/blob/{neo4j-git-tag}/community/kernel/src/test/java/examples/DeadlockDocTest.java[DeadlockDocTest.java].
+[TIP]
+--
+The full source code used for the code snippets can be found at https://github.com/neo4j/neo4j-documentation/blob/{neo4j-git-tag}/manual/kernel/src/test/java/examples/DeadlockDocTest.java[DeadlockDocTest.java].
+--
 
 When dealing with deadlocks in code, there are several issues you may want to address:
 
@@ -181,12 +185,12 @@ In the following sections you'll find example code in Java which shows how this 
 [[transactions-deadlocks-template]]
 ==== Handling deadlocks using TransactionTemplate
 
-If you don't want to write all the code yourself, there is a class called link:javadocs/org/neo4j/helpers/TransactionTemplate.html[TransactionTemplate] that will help you achieve what's needed.
+If you don't want to write all the code yourself, there is a class called +link:javadocs/org/neo4j/helpers/TransactionTemplate.html[TransactionTemplate]+ that will help you achieve what's needed.
 Below is an example of how to create, customize, and use this template for retries in transactions.
 
 First, define the base template:
 
-[snippet, java]
+[snippet,java]
 ----
 component=neo4j-kernel-docs
 source=examples/DeadlockDocTest.java
@@ -195,7 +199,7 @@ tag=template
 
 Next, specify the database to use and a function to execute:
 
-[snippet, java]
+[snippet,java]
 ----
 component=neo4j-kernel-docs
 source=examples/DeadlockDocTest.java
@@ -214,7 +218,7 @@ The template allows setting a predicate for what exceptions to retry on, and als
 If you want to roll your own retry-loop code, see below for inspiration.
 Here's an example of what a retry block might look like:
 
-[snippet, java]
+[snippet,java]
 ----
 component=neo4j-kernel-docs
 source=examples/DeadlockDocTest.java
@@ -263,11 +267,11 @@ On High Availability, an external single-threaded client can perform the operati
 The preferred way to get or create a unique node is to use unique constraints and Cypher.
 See <<tutorials-java-embedded-unique-get-or-create>> for more information.
 
-By using link:javadocs/org/neo4j/graphdb/index/Index.html#putIfAbsent%28T,%20java.lang.String,%20java.lang.Object%29[+put-if-absent+] functionality,
-entity uniqueness can be guaranteed using a legacy index. Here the legacy index acts as the lock and will only lock the smallest part needed to guaranteed uniqueness across threads and transactions.
+By using link:javadocs/org/neo4j/graphdb/index/Index.html#putIfAbsent-T-java.lang.String-java.lang.Object-[put-if-absent] functionality, entity uniqueness can be guaranteed using a manual index.
+Here the manual index acts as the lock and will only lock the smallest part needed to guaranteed uniqueness across threads and transactions.
 
 See <<tutorials-java-embedded-unique-get-or-create-with-factory>> for how to do this using the core Java API.
-When using the REST API, see <<rest-api-unique-indexes>>.
+When using the REST API, see link:{rest-api-unique-indexes-uri}[REST Documentation -> Uniqueness].
 
 
 === Pessimistic locking

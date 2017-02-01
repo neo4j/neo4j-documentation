@@ -42,7 +42,7 @@ public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
             "\n" +
             "@@graph\n" +
             "\n" +
-            "With the definition of the +RelationshipTypes+ as\n" +
+            "With the definition of the `RelationshipTypes` as\n" +
             "\n" +
             "@@sourceRels\n" +
             "\n" +
@@ -54,9 +54,9 @@ public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
             "\n" +
             "@@knowslikesoutput\n" +
             "\n" +
-            "Since link:javadocs/org/neo4j/graphdb/traversal/TraversalDescription.html[+TraversalDescription+]s\n" +
-            "are immutable it is also useful to create template descriptions which holds common\n" +
-            "settings shared by different traversals. For example, let's start with this traverser:\n" +
+            "Since link:javadocs/org/neo4j/graphdb/traversal/TraversalDescription.html[`TraversalDescription`]s\n" +
+            "are immutable it is also useful to create template descriptions which holds common settings shared by different traversals.\n" +
+            "For example, let's start with this traverser:\n" +
             "\n" +
             "@@basetraverser\n" +
             "\n" +
@@ -86,9 +86,9 @@ public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
             "or simply implement the\n" +
             "link:javadocs/org/neo4j/graphdb/traversal/Evaluator.html[Evaluator] interface yourself.\n" +
             "\n" +
-            "If you're not interested in the link:javadocs/org/neo4j/graphdb/Path.html[+Path+]s,\n" +
-            "but the link:javadocs/org/neo4j/graphdb/Node.html[+Node+]s\n" +
-            "you can transform the traverser into an iterable of link:javadocs/org/neo4j/graphdb/traversal/Traverser.html#nodes()[nodes]\n" +
+            "If you're not interested in the link:javadocs/org/neo4j/graphdb/Path.html[`Path`]s,\n" +
+            "but the link:javadocs/org/neo4j/graphdb/Node.html[`Node`]s\n" +
+            "you can transform the traverser into an iterable of link:javadocs/org/neo4j/graphdb/traversal/Traverser.html#nodes--[nodes]\n" +
             "like this:\n" +
             "\n" +
             "@@nodes\n" +
@@ -97,7 +97,7 @@ public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
             "\n" +
             "@@nodeoutput\n" +
             "\n" +
-            "link:javadocs/org/neo4j/graphdb/traversal/Traverser.html#relationships()[Relationships]\n" +
+            "link:javadocs/org/neo4j/graphdb/traversal/Traverser.html#relationships--[Relationships]\n" +
             "are fine as well, here's how to get them:\n" +
             "\n" +
             "@@relationships\n" +

@@ -3,14 +3,15 @@
 
 Sometimes you may want to terminate (abort) a long running transaction from another thread.
 
-
 [TIP]
+--
 The source code used in this example is found here:
-https://github.com/neo4j/neo4j/blob/{neo4j-git-tag}/community/embedded-examples/src/main/java/org/neo4j/examples/TerminateTransactions.java[TerminateTransactions.java]
+https://github.com/neo4j/neo4j-documentation/blob/{neo4j-git-tag}/manual/embedded-examples/src/main/java/org/neo4j/examples/TerminateTransactions.java[TerminateTransactions.java]
+--
 
 To begin with, we start the database server:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/TerminateTransactions.java
@@ -20,7 +21,7 @@ tag=startDb
 
 Now we start creating an infinite binary tree of nodes in the database, as an example of a long running transaction.
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/TerminateTransactions.java
@@ -31,7 +32,7 @@ tag=mkTree
 After waiting for some time, we decide to terminate the transaction.
 This is done from a separate thread.
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/TerminateTransactions.java
@@ -47,7 +48,7 @@ include::terminate-tx-java-result.asciidoc[]
 
 Finally, let's shut down the database again.
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/TerminateTransactions.java

@@ -1,28 +1,28 @@
 [[indexing]]
-= Legacy Indexing
+= Manual indexing
 
-NOTE: This is not the same as <<graphdb-neo4j-schema, indexes defined in the schema>>, the documentation below is for the legacy indexing in Neo4j.
+// NOTE: This is not the same as <<graphdb-neo4j-schema, indexes defined in the schema>>, the documentation below is for the manual indexing in Neo4j.
 
 This chapter focuses on how to use the Manual Indexes.
 As of Neo4j 2.0, this is not  the favored method of indexing data in Neo4j, instead we recommend defining indexes in the database schema.
 
-However, support for legacy indexes remains, because certain features, such as full-text search, are not yet handled by the new indexes.
+However, support for manual indexes remains, because certain features, such as full-text search, are not yet handled by the new indexes.
 
 
 [[indexing-introduction]]
 == Introduction
 
-Legacy Indexing operations are part of the link:javadocs/org/neo4j/graphdb/index/package-summary.html[Neo4j index API].
+Manual indexing operations are part of the link:javadocs/org/neo4j/graphdb/index/package-summary.html[Neo4j index API].
 
 Each index is tied to a unique, user-specified name (for example "first_name" or "books") and can index either link:javadocs/org/neo4j/graphdb/Node.html[nodes] or link:javadocs/org/neo4j/graphdb/Relationship.html[relationships].
 
-The default index implementation is provided by the +neo4j-lucene-index+ component, which is included in the standard Neo4j download.
+The default index implementation is provided by the `neo4j-lucene-index` component, which is included in the standard Neo4j download.
 It can also be downloaded separately from http://repo1.maven.org/maven2/org/neo4j/neo4j-lucene-index/ .
-For Maven users, the +neo4j-lucene-index+ component has the coordinates +org.neo4j:neo4j-lucene-index+ and should be used with the same version of +org.neo4j:neo4j-kernel+.
+For Maven users, the `neo4j-lucene-index` component has the coordinates `org.neo4j:neo4j-lucene-index` and should be used with the same version of `org.neo4j:neo4j-kernel`.
 Different versions of the index and kernel components are not compatible in the general case.
-Both components are included transitively by the +org.neo4j:neo4j:pom+ artifact which makes it simple to keep the versions in sync.
+Both components are included transitively by the `org.neo4j:neo4j:pom` artifact which makes it simple to keep the versions in sync.
 
-For initial import of data using indexes, see <<indexing-batchinsert>>.
+// For initial import of data using indexes, see <<indexing-batchinsert>>.
 
 .Transactions
 NOTE: All modifying index operations must be performed inside a transaction, as with any modifying operation in Neo4j.
@@ -73,7 +73,7 @@ tag=delete
 ----
 
 Note that the actual deletion of the index is made during the commit of _the surrounding transaction_.
-Calls made to such an index instance after link:javadocs/org/neo4j/graphdb/index/Index.html#delete%28%29[delete()] has been called are invalid inside that transaction as well as outside (if the transaction is successful), but will become valid again if the transaction is rolled back.
+Calls made to such an index instance after link:javadocs/org/neo4j/graphdb/index/Index.html#delete--[delete()] has been called are invalid inside that transaction as well as outside (if the transaction is successful), but will become valid again if the transaction is rolled back.
 
 
 [[indexing-add]]
@@ -108,7 +108,7 @@ include::movie-and-actor-graph.asciidoc[]
 [[indexing-remove]]
 == Remove
 
-link:javadocs/org/neo4j/graphdb/index/Index.html#remove%28T,%20java.lang.String,%20java.lang.Object%29[Removing] from an index is similar to adding, but can be done by supplying one of the following combinations of arguments:
+link:javadocs/org/neo4j/graphdb/index/Index.html#remove-T-java.lang.String-java.lang.Object-[Removing] from an index is similar to adding, but can be done by supplying one of the following combinations of arguments:
 
 * entity
 * entity, key
@@ -146,8 +146,8 @@ tag=update
 [[indexing-search]]
 == Search
 
-An index can be searched in two ways, link:javadocs/org/neo4j/graphdb/index/Index.html#get%28java.lang.String,%20java.lang.Object%29[get] and link:javadocs/org/neo4j/graphdb/index/Index.html#query%28java.lang.String,%20java.lang.Object%29[query].
-The +get+ method will return exact matches to the given key-value pair, whereas +query+ exposes querying capabilities directly from the backend used by the index.
+An index can be searched in two ways, link:javadocs/org/neo4j/graphdb/index/ReadableIndex.html#get-java.lang.String-java.lang.Object-[get] and link:javadocs/org/neo4j/graphdb/index/ReadableIndex.html#query-java.lang.Object-[query].
+The `get` method will return exact matches to the given key-value pair, whereas `query` exposes querying capabilities directly from the backend used by the index.
 For example the {lucene-base-uri}/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package_description[Lucene query syntax] can be used directly with the default indexing backend.
 
 
@@ -163,8 +163,8 @@ source=examples/ImdbDocTest.java
 tag=getSingleNode
 ----
 
-link:javadocs/org/neo4j/graphdb/index/IndexHits.html[IndexHits] is an +Iterable+ with some additional useful methods.
-For example link:javadocs/org/neo4j/graphdb/index/IndexHits.html#getSingle%28%29[getSingle()] returns the first and only item from the result iterator, or +null+ if there isn't any hit.
+link:javadocs/org/neo4j/graphdb/index/IndexHits.html[IndexHits] is an `Iterable` with some additional useful methods.
+For example link:javadocs/org/neo4j/graphdb/index/IndexHits.html#getSingle--[getSingle()] returns the first and only item from the result iterator, or `null` if there isn't any hit.
 
 Here's how to get a single relationship by exact matching and retrieve its start and end nodes:
 
@@ -184,7 +184,7 @@ source=examples/ImdbDocTest.java
 tag=getRelationships
 ----
 
-IMPORTANT: In case you don't iterate through all the hits, link:javadocs/org/neo4j/graphdb/index/IndexHits.html#close%28%29[IndexHits.close()] must be called explicitly.
+IMPORTANT: In case you don't iterate through all the hits, link:javadocs/org/neo4j/graphdb/index/IndexHits.html#close--[IndexHits.close()] must be called explicitly.
 
 
 [[indexing-search-query]]
@@ -248,7 +248,7 @@ A good example where this approach pays dividends is in time series data, where 
 [[indexing-scores]]
 == Scores
 
-The +IndexHits+ interface exposes link:javadocs/org/neo4j/graphdb/index/IndexHits.html#currentScore%28%29[scoring] so that the index can communicate scores for the hits.
+The `IndexHits` interface exposes link:javadocs/org/neo4j/graphdb/index/IndexHits.html#currentScore--[scoring] so that the index can communicate scores for the hits.
 Note that the result is not sorted by the score unless you explicitly specify that.
 See <<indexing-lucene-sort>> for how to sort by score.
 
@@ -259,6 +259,7 @@ component=neo4j-lucene-index-docs
 source=examples/ImdbDocTest.java
 tag=queryWithScore
 ----
+
 
 
 [[indexing-create-advanced]]
@@ -283,22 +284,22 @@ source=org/neo4j/index/impl/lucene/legacy/TestLuceneIndex.java
 tag=exact-case-insensitive
 ----
 
-TIP: In order to search for tokenized words, the +query+ method has to be used.
-  The +get+ method will only match the full string value, not the tokens.
+TIP: In order to search for tokenized words, the `query` method has to be used.
+  The `get` method will only match the full string value, not the tokens.
 
 The configuration of the index is persisted once the index has been created.
-The +provider+ configuration key is interpreted by Neo4j, but any other configuration is passed onto the backend index (e.g. Lucene) to interpret.
+The `provider` configuration key is interpreted by Neo4j, but any other configuration is passed onto the backend index (e.g. Lucene) to interpret.
 
 .Lucene indexing configuration parameters
 [options="header",frame="none",cols="<20m,<30,<50"]
 |========================================================
 | Parameter                 | Possible values   | Effect
-| type | +exact+, +fulltext+ |
-  +exact+ is the default and uses a Lucene  {lucene-base-uri}/analyzers-common/org/apache/lucene/analysis/core/KeywordAnalyzer.html[keyword analyzer].
-  +fulltext+ uses a white-space tokenizer in its analyzer.
-| to_lower_case | `true`, `false` | This parameter goes together with +type+: +fulltext+ and converts values to lower case during both additions and querying, making the index case insensitive. Defaults to `true`.
-| analyzer | the full class name of an {lucene-base-uri}/core/org/apache/lucene/analysis/Analyzer.html[Analyzer] | Overrides the +type+ so that a custom analyzer can be used.
-  Note: +to_lower_case+ still affects lowercasing of string queries.
+| type | `exact`, `fulltext` |
+  `exact` is the default and uses a Lucene  {lucene-base-uri}/analyzers-common/org/apache/lucene/analysis/core/KeywordAnalyzer.html[keyword analyzer].
+  `fulltext` uses a white-space tokenizer in its analyzer.
+| to_lower_case | `true`, `false` | This parameter goes together with `type`: `fulltext` and converts values to lower case during both additions and querying, making the index case insensitive. Defaults to `true`.
+| analyzer | the full class name of an {lucene-base-uri}/core/org/apache/lucene/analysis/Analyzer.html[Analyzer] | Overrides the `type` so that a custom analyzer can be used.
+  Note: `to_lower_case` still affects lowercasing of string queries.
   If the custom analyzer uppercases the indexed tokens, string queries will not match as expected.
 |========================================================
 
@@ -326,7 +327,7 @@ The same type must be used for indexing and querying.
 That is, you can't index a value as a Long and then query the index using an Integer.
 --
 
-By giving +null+ as from/to argument, an open ended query is created.
+By giving `null` as from/to argument, an open ended query is created.
 In the following example we are doing that, and have added sorting to the query as well:
 
 [snippet, java]
@@ -344,6 +345,7 @@ component=neo4j-lucene-index-docs
 source=examples/ImdbDocTest.java
 tag=exclusiveRange
 ----
+
 
 
 [[indexing-lucene-sort]]
@@ -369,6 +371,7 @@ tag=queryWithRelevance
 ----
 
 
+
 [[indexing-lucene-query-objects]]
 === Querying with Lucene query objects
 
@@ -381,7 +384,7 @@ source=examples/ImdbDocTest.java
 tag=termQuery
 ----
 
-Note that the {lucene-base-uri}/core/org/apache/lucene/search/TermQuery.html[TermQuery] is basically the same thing as using the +get+ method on the index.
+Note that the {lucene-base-uri}/core/org/apache/lucene/search/TermQuery.html[TermQuery] is basically the same thing as using the `get` method on the index.
 
 This is how to perform _wildcard_ searches using Lucene query objects:
 
@@ -413,7 +416,7 @@ CAUTION: Compound queries can't search across committed index entries and those 
 [[indexing-lucene-default-operator]]
 === Default operator
 
-The default operator (that is whether +AND+ or +OR+ is used in between different terms) in a query is +OR+. Changing that behavior is also done via the link:javadocs/org/neo4j/index/lucene/QueryContext.html[QueryContext] class:
+The default operator (that is whether `AND` or `OR` is used in between different terms) in a query is `OR`. Changing that behavior is also done via the link:javadocs/org/neo4j/index/lucene/QueryContext.html[QueryContext] class:
 
 [snippet, java]
 ----

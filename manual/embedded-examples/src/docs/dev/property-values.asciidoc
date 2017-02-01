@@ -29,4 +29,4 @@ For example `String`, `int` and `int[]` values are valid for properties.
 |String| sequence of Unicode characters |
 |========================================================
 
-For further details on float/double values, see http://docs.oracle.com/javase/specs/jls/se5.0/html/typesValues.html#4.2.3[Java Language Specification].
+For further details on float/double values, see http://docs.oracle.com/javase/specs/jls/se8/html/jls-4.html#jls-4.2.3[Java Language Specification].

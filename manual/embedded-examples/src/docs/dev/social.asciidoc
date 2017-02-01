@@ -1,34 +1,40 @@
 [[tutorials-java-embedded-social]]
-Social network
-==============
+= Social network
 
-NOTE: The following example uses the new enhanced traversal API.
+[NOTE]
+--
+The following example uses the new enhanced traversal API.
+--
 
 Social networks (know as social graphs out on the web) are natural to model with a graph.
 This example shows a very simple social model that connects friends and keeps track of status updates.
 
 [TIP]
+--
 The source code of the example is found here:
-https://github.com/neo4j/neo4j/tree/{neo4j-git-tag}/community/embedded-examples/src/main/java/org/neo4j/examples/socnet[socnet]
+https://github.com/neo4j/neo4j-documentation/tree/{neo4j-git-tag}/manual/embedded-examples/src/main/java/org/neo4j/examples/socnet[socnet]
+--
 
-== Simple social model ==
+
+== Simple social model
 
 image::socnet-model.svg[title="Social network data model"]
 
-The data model for a social network is pretty simple: +Persons+ with names and +StatusUpdates+ with timestamped text.
+The data model for a social network is pretty simple: `Persons` with names and `StatusUpdates` with timestamped text.
 These entities are then connected by specific relationships.
 
-* +Person+
-** +friend+: relates two distinct +Person+ instances (no self-reference)
-** +status+: connects to the most recent +StatusUpdate+
-* +StatusUpdate+
-** +next+: points to the next +StatusUpdate+ in the chain, which was posted before the current one
+* `Person`
+** `friend`: relates two distinct `Person` instances (no self-reference)
+** `status`: connects to the most recent `StatusUpdate`
+* `StatusUpdate`
+** `next`: points to the next `StatusUpdate` in the chain, which was posted before the current one
 
-== Status graph instance ==
 
-The +StatusUpdate+ list for a +Person+ is a linked list.
-The head of the list (the most recent status) is found by following +status+.
-Each subsequent +StatusUpdate+ is connected by +next+. 
+== Status graph instance
+
+The `StatusUpdate` list for a `Person` is a linked list.
+The head of the list (the most recent status) is found by following `status`.
+Each subsequent `StatusUpdate` is connected by `next`.
 
 Here's an example where Andreas Kollegger micro-blogged his way to work in the morning:
 
@@ -46,7 +52,7 @@ status2 -> status3 [label="next"]
 
 To read the status updates, we can create a traversal, like so:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/socnet/Person.java
@@ -54,10 +60,11 @@ classifier=sources
 tag=getStatusTraversal
 ----
 
-This gives us a traverser that will start at one +StatusUpdate+, and will follow the chain of updates until they run out.
+This gives us a traverser that will start at one `StatusUpdate`, and will follow the chain of updates until they run out.
 Traversers are lazy loading, so it's performant even when dealing with thousands of statuses -- they are not loaded until we actually consume them.
 
-== Activity stream ==
+
+== Activity stream
 
 Once we have friends, and they have status messages, we might want to read our friends status' messages, in reverse time order -- latest first.
 To do this, we go through these steps:
@@ -71,14 +78,14 @@ To do this, we go through these steps:
 
 Animated, the sequence looks like http://www.slideshare.net/systay/pattern-activity-stream[this].
 
-The code looks like: 
+The code looks like:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/socnet/FriendsStatusUpdateIterator.java
 classifier=sources
 tag=getActivityStream
 ----
-	
+
 

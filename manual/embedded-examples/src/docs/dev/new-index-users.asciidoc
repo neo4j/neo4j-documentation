@@ -1,16 +1,17 @@
 [[tutorials-java-embedded-new-index]]
-User database with indexes
-==========================
+= User database with indexes
 
 You have a user database, and want to retrieve users by name using indexes.
 
 [TIP]
+--
 The source code used in this example is found here:
-https://github.com/neo4j/neo4j/blob/{neo4j-git-tag}/community/embedded-examples/src/main/java/org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java[EmbeddedNeo4jWithNewIndexing.java]
+https://github.com/neo4j/neo4j-documentation/blob/{neo4j-git-tag}/manual/embedded-examples/src/main/java/org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java[EmbeddedNeo4jWithNewIndexing.java]
+--
 
 To begin with, we start the database server:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java
@@ -23,7 +24,7 @@ This only needs to be done once.
 
 NOTE: Schema changes and data changes are not allowed in the same transaction. Each transaction must either change the schema or the data, but not both.
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java
@@ -34,7 +35,7 @@ tag=createIndex
 Indexes are populated asynchronously when they are first created.
 It is possible to use the core API to wait for index population to complete:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java
@@ -44,7 +45,7 @@ tag=wait
 
 It is also possible to query the progress of the index population:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java
@@ -54,7 +55,7 @@ tag=progress
 
 It's time to add the users:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java
@@ -66,7 +67,7 @@ NOTE: Please read <<tutorials-java-embedded-resource-iteration>> on how to prope
 
 And here's how to find a user by id:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java
@@ -76,7 +77,7 @@ tag=findUsers
 
 When updating the name of a user, the index is updated as well:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java
@@ -86,7 +87,7 @@ tag=updateUsers
 
 When deleting a user, it is automatically removed from the index:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java
@@ -96,7 +97,7 @@ tag=deleteUsers
 
 In case we change our data model, we can drop the index as well:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-examples
 source=org/neo4j/examples/EmbeddedNeo4jWithNewIndexing.java
