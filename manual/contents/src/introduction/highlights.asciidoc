@@ -15,7 +15,7 @@ It features:
 Proper ACID behavior is the foundation of data reliability.
 Neo4j enforces that all operations that modify data occur within a transaction, guaranteeing consistent data.
 This robustness extends from single instance embedded graphs to multi-server high availability installations.
-For details, see <<transactions>>.
+// For details, see <<transactions>>.
 
 Reliable graph storage can easily be added to any application.
 A graph can scale in size and complexity as the application evolves, with little impact on performance.

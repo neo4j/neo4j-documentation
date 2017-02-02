@@ -65,3 +65,32 @@ Unique indexing
 Neo4j Status Codes
 
 
+
+
+// new-index-users.asciidoc
+[[tutorials-java-embedded-new-index]]
+User database with indexes
+
+// java-parameters.asciidoc
+[[tutorials-cypher-parameters-java]]
+Query parameters
+
+
+// ???
+[[tutorial-traversal-java-api]]
+something something
+
+
+// ???
+[[server-unmanaged-extensions]]
+server-unmanaged-extensions
+
+
+// ???
+[[property-values-detailed]]
+property-values-detailed
+
+
+// ???
+[[indexing-create-advanced]]
+indexing-create-advanced

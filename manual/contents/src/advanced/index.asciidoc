@@ -9,25 +9,25 @@ Among the topics covered are embedding Neo4j in your own software and writing pl
 You might want to keep the link:javadocs/[Neo4j JavaDocs] handy while reading!
 --
 
-:leveloffset: 1
+// :leveloffset: 1
 
-include::{importdir}/neo4j-server-examples-docs-jar/dev/index.asciidoc[]
+// include::{importdir}/neo4j-server-examples-docs-jar/dev/index.asciidoc[]
 
-:leveloffset: 1
+// :leveloffset: 1
 
-include::{importdir}/neo4j-examples-docs-jar/dev/index.asciidoc[]
+// include::{importdir}/neo4j-examples-docs-jar/dev/index.asciidoc[]
 
-:leveloffset: 2
+// :leveloffset: 2
 
-include::{importdir}/neo4j-cypher-docs-docs-jar/dev/java/index.asciidoc[]
+// include::{importdir}/neo4j-cypher-docs-docs-jar/dev/java/index.asciidoc[]
 
-:leveloffset: 1
+// :leveloffset: 1
 
-include::{importdir}/neo4j-examples-docs-jar/dev/traversal-framework.asciidoc[]
+// include::{importdir}/neo4j-examples-docs-jar/dev/traversal-framework.asciidoc[]
 
-:leveloffset: 1
+// :leveloffset: 1
 
-include::{importdir}/neo4j-lucene-index-docs-docs-jar/dev/index.asciidoc[]
+// include::{importdir}/neo4j-lucene-index-docs-docs-jar/dev/index.asciidoc[]
 
 :leveloffset: 1
 
