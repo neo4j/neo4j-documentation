@@ -11,17 +11,17 @@ It covers details on capabilities, transactions, indexing and queries among othe
 
 include::capabilities/cap-details.asciidoc[]
 
-:leveloffset: 1
+// :leveloffset: 1
 
-include::{importdir}/neo4j-kernel-docs-docs-jar/dev/transactions.asciidoc[]
+// include::{importdir}/neo4j-kernel-docs-docs-jar/dev/transactions.asciidoc[]
 
 :leveloffset: 1
 
 include::import/import.asciidoc[]
 
-:leveloffset: 1
+// :leveloffset: 1
 
-include::{importdir}/neo4j-server-docs-docs-jar/dev/rest-api/index.asciidoc[]
+// include::{importdir}/neo4j-server-docs-docs-jar/dev/rest-api/index.asciidoc[]
 
 :leveloffset: 1
 

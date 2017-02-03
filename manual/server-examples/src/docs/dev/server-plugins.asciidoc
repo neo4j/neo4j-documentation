@@ -27,7 +27,7 @@ The needed classes reside in the {maven-dependency}[org.neo4j:server-api] jar fi
 See the linked page for downloads and instructions on how to include it using dependency management.
 For Maven projects, add the Server API dependencies in your +pom.xml+:
 
-["source","xml","unnumbered","2",presubs="attributes"]
+["source","xml","unnumbered","2","subs=attributes,specialcharacters"]
 ----
 <dependency>
   <groupId>org.neo4j</groupId>
