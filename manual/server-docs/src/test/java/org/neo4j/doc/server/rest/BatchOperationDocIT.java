@@ -48,20 +48,13 @@ public class BatchOperationDocIT extends AbstractRestFunctionalDocTestBase
 
     @Documented( "Execute multiple operations in batch.\n" +
                  "\n" +
-                 "The batch service expects an array of job descriptions as input, each job\n" +
-                 "description describing an action to be performed via the normal server\n" +
-                 "API.\n" +
+                 "The batch service expects an array of job descriptions as input, each job description describing an action to be performed via the normal server API.\n" +
                  "\n" +
-                 "Each job description should contain a +to+ attribute, with a value\n" +
-                 "relative to the data API root (so http://localhost:7474/db/data/node becomes\n" +
-                 "just /node), and a +method+ attribute containing HTTP verb to use.\n" +
+                 "Each job description should contain a `to` attribute, with a value relative to the data API root (so `+http://localhost:7474/db/data/node+` becomes just `/node`), and a `method` attribute containing HTTP verb to use.\n" +
                  "\n" +
-                 "Optionally you may provide a +body+ attribute, and an +id+ attribute to\n" +
-                 "help you keep track of responses, although responses are guaranteed to be\n" +
-                 "returned in the same order the job descriptions are received.\n" +
+                 "Optionally you may provide a `body` attribute, and an `id` attribute to help you keep track of responses, although responses are guaranteed to be returned in the same order the job descriptions are received.\n" +
                  "\n" +
-                 "The following figure outlines the different parts of the job\n" +
-                 "descriptions:\n" +
+                 "The following figure outlines the different parts of the job descriptions:\n" +
                  "\n" +
                  "image::batch-request-api.png[]" )
     @SuppressWarnings( "unchecked" )

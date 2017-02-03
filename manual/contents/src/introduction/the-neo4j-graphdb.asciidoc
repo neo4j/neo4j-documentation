@@ -367,7 +367,7 @@ If you apply them on a slave you will receive a `Neo.ClientError.Transaction.Inv
 [abstract]
 Performance is gained by creating indexes, which improve the speed of looking up nodes in the database.
 
-NOTE: This feature was introduced in Neo4j 2.0, and is not the same as the legacy indexes (see <<indexing>>).
+// NOTE: This feature was introduced in Neo4j 2.0, and is not the same as the legacy indexes (see <<indexing>>).
 
 Once you’ve specified which properties to index, Neo4j will make sure your indexes are kept up to date as your graph evolves.
 Any operation that looks up nodes by the newly indexed properties will see a significant performance boost.
