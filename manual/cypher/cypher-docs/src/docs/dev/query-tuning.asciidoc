@@ -26,6 +26,7 @@ To read more about the execution plan operators mentioned in this chapter, see <
 * <<cypherdoc-basic-query-tuning-example,Basic query tuning example>>
 * <<query-using,USING>>
 
+
 [[how-are-queries-executed]]
 == How are queries executed?
 
@@ -42,13 +43,16 @@ This planner uses the statistics service in Neo4j to assign cost to alternative 
 While this should lead to superior execution plans in most cases, it is still under development.
 
 By default, Neo4j {neo4j-version} will use the cost planner for all queries.
-You can force it to use a specific planner by using the `cypher.planner` configuration setting (see link:{operations-manual-base-uri}/reference/#config_cypher.planner[Operations Manual -> Configuration Settings]), or by prepending your query with `CYPHER planner=cost` or `CYPHER planner=rule`.
+You can force it to use a specific planner by using the `cypher.planner` configuration setting
+ifdef::asciidoctor[(see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>),]
+or by prepending your query with `CYPHER planner=cost` or `CYPHER planner=rule`.
 
 You can see which planner was used by looking at the execution plan.
 
 [NOTE]
 When Cypher is building execution plans, it looks at the schema to see if it can find indexes it can use.
 These index decisions are only valid until the schema changes, so adding or removing indexes leads to the execution plan cache being flushed.
+
 
 [[how-do-i-profile-a-query]]
 == Profiling a query
