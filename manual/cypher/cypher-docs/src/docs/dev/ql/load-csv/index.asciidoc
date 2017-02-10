@@ -16,7 +16,7 @@
 [NOTE]
 .Configuration settings for file URLs
 ====
-ifdef::asciidoctor[<<operations-manual#config_dbms.allow.csv.import.from.file.urls, dbms.security.allow_csv_import_from_file_urls>>::]
+ifdef::asciidoctor[<<operations-manual#config_dbms.security.allow_csv_import_from_file_urls, dbms.security.allow_csv_import_from_file_urls>>::]
 ifndef::asciidoctor[`dbms.security.allow_csv_import_from_file_urls`::]
 This setting determines if Cypher will allow the use of `file:///` URLs when loading data using `LOAD CSV`.
 Such URLs identify files on the filesystem of the database server. Default is _true_.
