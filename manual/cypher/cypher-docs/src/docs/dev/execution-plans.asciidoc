@@ -31,7 +31,7 @@ There is no guarantee that a specific query will always be solved with the same 
 * <<execution-plans-starting-operators,Starting point operators>>
 * <<execution-plans-expand-operators,Expand operators>>
 * <<combining-operators,Combining operators>>
-* <<execution-plans-row-operators,Row operators>>
+// * <<execution-plans-row-operators,Row operators>>
 * <<execution-plans-update-operators,Update operators>>
 * <<query-shortestpath-planning,Shortest path planning>>
 
@@ -54,7 +54,7 @@ include::execution-plan-groups/combining-operators.adoc[leveloffset=+1]
 
 ifndef::asciidoctor[:leveloffset: 1]
 
-include::execution-plan-groups/row.asciidoc[leveloffset=+1]
+// include::execution-plan-groups/row.asciidoc[leveloffset=+1]
 
 ifndef::asciidoctor[:leveloffset: 1]
 

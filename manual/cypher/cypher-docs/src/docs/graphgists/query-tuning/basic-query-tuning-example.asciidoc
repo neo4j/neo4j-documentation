@@ -64,7 +64,7 @@ The first thing to keep in mind when reading execution plans is that you need to
 In that vein, starting from the last row, the first thing we notice is that the value in the `Rows` column seems high given there is only one node with the name property *'Tom Hanks'* in the database.
 If we look across to the `Operator` column we'll see that <<query-plan-all-nodes-scan, AllNodesScan>> has been used which means that the query planner scanned through all the nodes in the database.
 
-Moving up to the previous row we see the <<query-plan-filter, Filter>> operator which will check the `name` property on each of the nodes passed through by `AllNodesScan`.
+// Moving up to the previous row we see the <<query-plan-filter, Filter>> operator which will check the `name` property on each of the nodes passed through by `AllNodesScan`.
 
 This seems like an inefficient way of finding *'Tom Hanks'* given that we are looking at many nodes that aren't even people and therefore aren't what we're looking for.
 
