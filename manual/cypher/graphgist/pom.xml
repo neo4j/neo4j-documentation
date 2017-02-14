@@ -42,6 +42,19 @@
     </dependency>
     <dependency>
       <groupId>org.neo4j</groupId>
+      <artifactId>neo4j-enterprise-kernel</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+      <version>${neo4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.neo4j</groupId>
+      <artifactId>neo4j-enterprise-cypher</artifactId>
+      <scope>test</scope>
+      <version>${neo4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.neo4j</groupId>
       <artifactId>neo4j-io</artifactId>
       <type>test-jar</type>
       <scope>compile</scope>

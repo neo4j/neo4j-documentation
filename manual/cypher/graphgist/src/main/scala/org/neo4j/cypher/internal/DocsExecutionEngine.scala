@@ -27,8 +27,9 @@ import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.query.TransactionalContext
 import org.neo4j.logging.{LogProvider, NullLogProvider}
 
-class DocsExecutionEngine(graph: GraphDatabaseQueryService, logProvider: LogProvider = NullLogProvider.getInstance)
-  extends ExecutionEngine(graph, logProvider) {
+class DocsExecutionEngine(graph: GraphDatabaseQueryService, logProvider: LogProvider = NullLogProvider.getInstance,
+                          compatibilityFactory: CompatibilityFactory)
+  extends ExecutionEngine(graph, logProvider, compatibilityFactory) {
 
   @throws(classOf[SyntaxException])
   def internalExecute(query: String, params: JavaMap[String, AnyRef], context: TransactionalContext): InternalExecutionResult =

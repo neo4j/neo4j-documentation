@@ -23,6 +23,7 @@ import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.cypher.internal.compiler.v3_2.pipes.IndexSeekByRange
+import org.scalatest.Ignore
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
   override val setupQueries = List(
@@ -147,7 +148,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def relationshipCountFromCountStore() {
+  @Ignore def relationshipCountFromCountStore() {
     profileQuery(
       title = "Relationship Count From Count Store",
       text =

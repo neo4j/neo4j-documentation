@@ -26,19 +26,28 @@ import org.junit.Test;
 import java.net.InetSocketAddress;
 import java.util.Collections;
 
+import org.neo4j.cypher.internal.CommunityCompatibilityFactory;
 import org.neo4j.cypher.internal.DocsExecutionEngine;
+import org.neo4j.cypher.internal.EnterpriseCompatibilityFactory;
 import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult;
+import org.neo4j.graphdb.DependencyResolver;
+import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
+import org.neo4j.kernel.api.KernelAPI;
 import org.neo4j.kernel.api.KernelTransaction;
 import org.neo4j.kernel.api.security.SecurityContext;
 import org.neo4j.kernel.impl.coreapi.InternalTransaction;
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker;
+import org.neo4j.kernel.impl.logging.LogService;
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory;
 import org.neo4j.kernel.impl.query.TransactionalContext;
 import org.neo4j.kernel.impl.query.TransactionalContextFactory;
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo;
+import org.neo4j.kernel.internal.GraphDatabaseAPI;
+import org.neo4j.kernel.monitoring.Monitors;
+import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
-import org.neo4j.test.TestGraphDatabaseFactory;
+import org.neo4j.test.TestEnterpriseGraphDatabaseFactory;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -53,10 +62,10 @@ public class DocsExecutionEngineTest
     @Before
     public void setup()
     {
-        EphemeralFileSystemAbstraction fs = new EphemeralFileSystemAbstraction();
-        database = new GraphDatabaseCypherService(new TestGraphDatabaseFactory().setFileSystem( fs ).newImpermanentDatabase());
-        engine = new DocsExecutionEngine( database, NullLogProvider.getInstance() );
-        contextFactory = Neo4jTransactionalContextFactory.create( database, new PropertyContainerLocker() );
+        DocsSetup stuff = createStuff();
+        database = stuff.database();
+        engine = stuff.engine();
+        contextFactory = stuff.contextFactory();
     }
 
     @After
@@ -87,7 +96,7 @@ public class DocsExecutionEngineTest
         assertThat( result.javaIterator().hasNext(), equalTo( true ) );
     }
 
-    public static TransactionalContext createTransactionalContext( String query )
+    private static TransactionalContext createTransactionalContext( String query )
     {
         InternalTransaction transaction = database.beginTransaction( KernelTransaction.Type.implicit, SecurityContext.AUTH_DISABLED );
         BoltConnectionInfo boltConnection = new BoltConnectionInfo(
@@ -96,5 +105,60 @@ public class DocsExecutionEngineTest
                 new InetSocketAddress("127.0.0.1", 56789),
                 new InetSocketAddress("127.0.0.1", 7687));
         return contextFactory.newContext(boltConnection, transaction, query, Collections.emptyMap() );
+    }
+
+    public interface DocsSetup
+    {
+        GraphDatabaseCypherService database();
+
+        DocsExecutionEngine engine();
+
+        TransactionalContextFactory contextFactory();
+    }
+
+    private static DocsSetup createStuff()
+    {
+        EphemeralFileSystemAbstraction fs = new EphemeralFileSystemAbstraction();
+        GraphDatabaseService graph =
+                new TestEnterpriseGraphDatabaseFactory().setFileSystem( fs ).newImpermanentDatabase();
+        GraphDatabaseCypherService database = new GraphDatabaseCypherService( graph );
+        GraphDatabaseCypherService queryService = new GraphDatabaseCypherService( graph );
+        GraphDatabaseAPI graphAPI = (GraphDatabaseAPI) graph;
+        DependencyResolver resolver = graphAPI.getDependencyResolver();
+        LogService logService = resolver.resolveDependency( LogService.class );
+        KernelAPI kernelAPI = resolver.resolveDependency( KernelAPI.class );
+        Monitors monitors = resolver.resolveDependency( Monitors.class );
+        LogProvider logProvider = logService.getInternalLogProvider();
+        CommunityCompatibilityFactory inner =
+                new CommunityCompatibilityFactory( queryService, kernelAPI, monitors, logProvider );
+
+        EnterpriseCompatibilityFactory compatibilityFactory =
+                new EnterpriseCompatibilityFactory( inner, queryService, kernelAPI, monitors, logProvider );
+
+        NullLogProvider logProvider1 = NullLogProvider.getInstance();
+        DocsExecutionEngine engine = new DocsExecutionEngine( database, logProvider1, compatibilityFactory );
+        PropertyContainerLocker locker = new PropertyContainerLocker();
+        TransactionalContextFactory contextFactory = Neo4jTransactionalContextFactory.create( database, locker );
+
+        return new DocsSetup()
+        {
+            @Override
+            public GraphDatabaseCypherService database()
+            {
+                return database;
+            }
+
+            @Override
+            public DocsExecutionEngine engine()
+            {
+                return engine;
+            }
+
+            @Override
+            public TransactionalContextFactory contextFactory()
+            {
+                return contextFactory;
+            }
+        };
     }
 }

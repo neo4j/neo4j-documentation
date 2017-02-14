@@ -24,16 +24,16 @@ import java.io.{File, PrintWriter, StringWriter}
 import org.junit.Test
 import org.neo4j.cypher._
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
+import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 import org.neo4j.cypher.internal.compiler.v3_2.prettifier.Prettifier
 import org.neo4j.cypher.internal.javacompat.GraphImpl
-import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult}
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
 import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.index.Index
 import org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
-import org.neo4j.test.{GraphDescription, TestGraphDatabaseFactory}
+import org.neo4j.test.GraphDescription
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions
 
@@ -126,11 +126,8 @@ abstract class ArticleTest extends Assertions with DocumentationHelper with Exec
     }
 
     if (emptyGraph) {
-      val db = new TestGraphDatabaseFactory().
-        newImpermanentDatabaseBuilder().
-        newGraphDatabase()
       try {
-        val engine = new ExecutionEngine(new GraphDatabaseCypherService(db))
+        val (db,engine) = ExecutionEngineFactory.createDbAndEngine
         val result = executeQuery(query)(engine)
         testAssertions(result)
         result.dumpToString()
@@ -225,19 +222,20 @@ abstract class ArticleTest extends Assertions with DocumentationHelper with Exec
 
   private def init() = {
     dir = createDir(section)
-    db = new GraphDatabaseCypherService(new TestGraphDatabaseFactory().
-      newImpermanentDatabaseBuilder().
-      newGraphDatabase())
+    val (db, engine) = ExecutionEngineFactory.createDbAndEngine
+    val cypherService = new GraphDatabaseCypherService(db)
+    this.db = cypherService
+    val databaseService = cypherService.getGraphDatabaseService
 
-    cleanDatabaseContent( db.getGraphDatabaseService )
+    cleanDatabaseContent(databaseService)
 
-    db.inTx {
+    cypherService.inTx {
       nodeIndex = db.index().forNodes("nodes")
       relIndex = db.index().forRelationships("rels")
       val g = new GraphImpl(graphDescription.toArray[String])
       val description = GraphDescription.create(g)
 
-      nodes = description.create(db.getGraphDatabaseService).asScala.map {
+      nodes = description.create(databaseService).asScala.map {
         case (name, node) => name -> node.getId
       }.toMap
 
@@ -251,11 +249,7 @@ abstract class ArticleTest extends Assertions with DocumentationHelper with Exec
         n._2.foreach((kv) => nod.setProperty(kv._1, kv._2))
       })
     }
-    engine = new ExecutionEngine(db)
+    this.engine = engine
     db
   }
 }
-
-
-
-

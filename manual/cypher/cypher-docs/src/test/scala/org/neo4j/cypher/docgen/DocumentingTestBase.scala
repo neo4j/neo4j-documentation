@@ -51,7 +51,7 @@ import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLock
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
-import org.neo4j.test.{GraphDescription, TestGraphDatabaseFactory}
+import org.neo4j.test.{GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.neo4j.visualization.graphviz.{AsciiDocStyle, GraphStyle, GraphvizWriter}
 import org.neo4j.walk.Walker
@@ -514,15 +514,17 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     hardReset()
   }
 
-  protected def newTestGraphDatabaseFactory(): TestGraphDatabaseFactory = new TestGraphDatabaseFactory()
+  protected def newTestGraphDatabaseFactory(): TestGraphDatabaseFactory = new TestEnterpriseGraphDatabaseFactory()
 
   override def hardReset() {
     tearDown()
-    db = new GraphDatabaseCypherService(newTestGraphDatabaseFactory().newImpermanentDatabaseBuilder().
+    val database: GraphDatabaseService = newTestGraphDatabaseFactory().newImpermanentDatabaseBuilder().
       setConfig(GraphDatabaseSettings.node_keys_indexable, "name").
       setConfig(GraphDatabaseSettings.node_auto_indexing, Settings.TRUE).
-      newGraphDatabase())
-    engine = new ExecutionEngine(db)
+      newGraphDatabase()
+    db = new GraphDatabaseCypherService(database)
+
+    engine = ExecutionEngineFactory.createEngineFromDb(database)
 
     softReset()
   }
