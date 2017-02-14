@@ -20,16 +20,17 @@
 package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.ExecutionEngineHelper
+import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 import org.neo4j.cypher.internal.helpers.GraphIcing
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
-import org.neo4j.test.TestGraphDatabaseFactory
+import org.neo4j.test.{TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 
 import scala.util.Try
 
 /* I exist so my users can have a restartable database that is lazily created */
-class RestartableDatabase(init: Seq[String], factory: TestGraphDatabaseFactory = new TestGraphDatabaseFactory())
+class RestartableDatabase(init: Seq[String], factory: TestGraphDatabaseFactory = new TestEnterpriseGraphDatabaseFactory())
  extends GraphIcing with ExecutionEngineHelper {
 
   var graph: GraphDatabaseCypherService = null
@@ -44,8 +45,9 @@ class RestartableDatabase(init: Seq[String], factory: TestGraphDatabaseFactory =
 
   private def createAndStartIfNecessary() {
     if (graph == null) {
-      graph = new GraphDatabaseCypherService(factory.newImpermanentDatabase())
-      eengine = new ExecutionEngine(graph)
+      val db = factory.newImpermanentDatabase()
+      graph = new GraphDatabaseCypherService(db)
+      eengine = ExecutionEngineFactory.createEngineFromDb(db)
       _failures = initialize(init)
     }
   }

@@ -19,11 +19,9 @@
  */
 package org.neo4j.cypher.docgen
 
-import java.io.{File, FileOutputStream, OutputStreamWriter, PrintWriter, Writer}
-import java.lang.Iterable
+import java.io._
 import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
-import java.util
 
 import org.junit.{After, Before, Test}
 import org.neo4j.cypher._
@@ -38,9 +36,9 @@ import org.neo4j.graphdb._
 import org.neo4j.graphdb.index.Index
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker
-import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
-import org.neo4j.test.{GraphDatabaseServiceCleaner, GraphDescription, TestGraphDatabaseFactory}
+import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
+import org.neo4j.test.{GraphDatabaseServiceCleaner, GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions
 
@@ -249,7 +247,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     dir = createDir(section)
     allQueriesWriter = new OutputStreamWriter(new FileOutputStream(new File("target/all-queries.asciidoc"), true),
       StandardCharsets.UTF_8)
-    db = new GraphDatabaseCypherService(newTestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase())
+    val graph = newTestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase()
+    db = new GraphDatabaseCypherService(graph)
 
     GraphDatabaseServiceCleaner.cleanDatabaseContent(db.getGraphDatabaseService)
 
@@ -273,9 +272,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
         n.getRelationships(Direction.OUTGOING).asScala.foreach(indexProperties(_, relIndex))
       })
     }
-    engine = new ExecutionEngine(db)
+    engine = ExecutionEngineFactory.createEngineFromDb(graph)
   }
 
-  protected def newTestGraphDatabaseFactory(): TestGraphDatabaseFactory = new TestGraphDatabaseFactory()
+  protected def newTestGraphDatabaseFactory(): TestGraphDatabaseFactory = new TestEnterpriseGraphDatabaseFactory()
 }
 
