@@ -524,7 +524,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       newGraphDatabase()
     db = new GraphDatabaseCypherService(database)
 
-    engine = ExecutionEngineFactory.createEnterpriseEngineFromDb(database)
+    engine = ExecutionEngineFactory.createCommunityEngineFromDb(database) // TODO: This should be Enterprise!
 
     softReset()
   }

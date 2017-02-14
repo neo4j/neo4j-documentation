@@ -20,9 +20,9 @@
 package org.neo4j.cypher.docgen.cookbook
 
 import org.junit.Assert._
+import org.junit.Test
 import org.neo4j.cypher.docgen.DocumentingTestBase
 import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
-import org.scalatest.Ignore
 
 class HyperedgeCommonGroupsTest extends DocumentingTestBase {
   override def graphDescription = List(
@@ -57,7 +57,7 @@ class HyperedgeCommonGroupsTest extends DocumentingTestBase {
   override protected def getGraphvizStyle: GraphStyle = {
     AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
   }
-    @Ignore def findCommonGroups() {
+    @Test def findCommonGroups() {
       testQuery(
         title = "Find common groups based on shared roles",
         text = """Assume a more complicated graph:
