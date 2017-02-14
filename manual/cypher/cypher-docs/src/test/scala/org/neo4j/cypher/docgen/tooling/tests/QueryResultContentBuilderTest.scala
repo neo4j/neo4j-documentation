@@ -37,7 +37,7 @@ class QueryResultContentBuilderTest extends CypherFunSuite with GraphIcing with 
   init()
 
   private def init(): Unit = {
-    val (db, engine) = ExecutionEngineFactory.createDbAndEngine()
+    val (db, engine) = ExecutionEngineFactory.createEnterpriseDbAndEngine()
     _graph = new GraphDatabaseCypherService(db)
     _eengine = engine
   }

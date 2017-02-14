@@ -30,15 +30,29 @@ import org.neo4j.kernel.monitoring.Monitors
 import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
 
 object ExecutionEngineFactory {
-  def createDbAndEngine(): (GraphDatabaseService, ExecutionEngine) = {
+  def createEnterpriseDbAndEngine(): (GraphDatabaseService, ExecutionEngine) = {
     val fs = new EphemeralFileSystemAbstraction
     val graph: GraphDatabaseService = new TestEnterpriseGraphDatabaseFactory().setFileSystem(fs).newImpermanentDatabase
     val database = new GraphDatabaseCypherService(graph)
 
-    (graph, createEngineFromDb(graph))
+    (graph, createEnterpriseEngineFromDb(graph))
   }
 
-  def createEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
+  def createEnterpriseEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
+    val (database, queryService, kernelAPI, monitors, logProvider) = prepare(graph)
+
+    val inner = new CommunityCompatibilityFactory(queryService, kernelAPI, monitors, logProvider)
+    val compatibilityFactory = new EnterpriseCompatibilityFactory(inner, queryService, kernelAPI, monitors, logProvider)
+    new ExecutionEngine(database, logProvider, compatibilityFactory)
+  }
+
+  def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
+    val (database, queryService, kernelAPI, monitors, logProvider) = prepare(graph)
+    val compatibilityFactory = new CommunityCompatibilityFactory(queryService, kernelAPI, monitors, logProvider)
+    new ExecutionEngine(database, logProvider, compatibilityFactory)
+  }
+
+  private def prepare(graph: GraphDatabaseService) = {
     val database = new GraphDatabaseCypherService(graph)
     val queryService = new GraphDatabaseCypherService(graph)
     val graphAPI = graph.asInstanceOf[GraphDatabaseAPI]
@@ -47,8 +61,6 @@ object ExecutionEngineFactory {
     val kernelAPI = resolver.resolveDependency(classOf[KernelAPI])
     val monitors = resolver.resolveDependency(classOf[Monitors])
     val logProvider = logService.getInternalLogProvider
-    val inner = new CommunityCompatibilityFactory(queryService, kernelAPI, monitors, logProvider)
-    val compatibilityFactory = new EnterpriseCompatibilityFactory(inner, queryService, kernelAPI, monitors, logProvider)
-    new ExecutionEngine(database, logProvider, compatibilityFactory)
+    (database, queryService, kernelAPI, monitors, logProvider)
   }
 }

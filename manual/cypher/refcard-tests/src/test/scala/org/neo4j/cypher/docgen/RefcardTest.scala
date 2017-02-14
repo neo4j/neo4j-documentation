@@ -272,7 +272,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
         n.getRelationships(Direction.OUTGOING).asScala.foreach(indexProperties(_, relIndex))
       })
     }
-    engine = ExecutionEngineFactory.createEngineFromDb(graph)
+    engine = ExecutionEngineFactory.createCommunityEngineFromDb(graph) // TODO: This should be using the EnterpriseEngine
   }
 
   protected def newTestGraphDatabaseFactory(): TestGraphDatabaseFactory = new TestEnterpriseGraphDatabaseFactory()

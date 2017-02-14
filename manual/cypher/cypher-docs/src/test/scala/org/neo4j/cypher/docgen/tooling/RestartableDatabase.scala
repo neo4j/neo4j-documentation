@@ -47,7 +47,7 @@ class RestartableDatabase(init: Seq[String], factory: TestGraphDatabaseFactory =
     if (graph == null) {
       val db = factory.newImpermanentDatabase()
       graph = new GraphDatabaseCypherService(db)
-      eengine = ExecutionEngineFactory.createEngineFromDb(db)
+      eengine = ExecutionEngineFactory.createEnterpriseEngineFromDb(db)
       _failures = initialize(init)
     }
   }

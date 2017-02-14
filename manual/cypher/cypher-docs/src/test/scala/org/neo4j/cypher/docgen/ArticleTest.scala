@@ -127,7 +127,7 @@ abstract class ArticleTest extends Assertions with DocumentationHelper with Exec
 
     if (emptyGraph) {
       try {
-        val (db,engine) = ExecutionEngineFactory.createDbAndEngine
+        val (db,engine) = ExecutionEngineFactory.createEnterpriseDbAndEngine
         val result = executeQuery(query)(engine)
         testAssertions(result)
         result.dumpToString()
@@ -222,7 +222,7 @@ abstract class ArticleTest extends Assertions with DocumentationHelper with Exec
 
   private def init() = {
     dir = createDir(section)
-    val (db, engine) = ExecutionEngineFactory.createDbAndEngine
+    val (db, engine) = ExecutionEngineFactory.createEnterpriseDbAndEngine
     val cypherService = new GraphDatabaseCypherService(db)
     this.db = cypherService
     val databaseService = cypherService.getGraphDatabaseService

@@ -86,6 +86,11 @@
       <version>${neo4j.version}</version>
     </dependency>
     <dependency>
+      <artifactId>neo4j-enterprise-cypher</artifactId>
+      <groupId>org.neo4j</groupId>
+      <version>${neo4j.version}</version>
+    </dependency>
+    <dependency>
       <artifactId>neo4j-cypher</artifactId>
       <groupId>org.neo4j</groupId>
       <version>${neo4j.version}</version>
