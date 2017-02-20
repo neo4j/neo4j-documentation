@@ -46,7 +46,8 @@ public class SettingsDocumenter
     private static final List<String> CONFIG_NAMES_BLACKLIST = Arrays.asList( "round_robin", "keep_all", "keep_last",
             "keep_none", "metrics.neo4j", "i.e", "e.g", "fixed_ascending", "fixed_descending", "high_limit",
             "dbms.cluster.routing.get", "example_provider_name", "ldap.example.com", "javax.naming", "apoc.convert",
-            "apoc.load.json", "apoc.load", "apoc.trigger.add", "branch_then_copy", "copy_then_branch", "neo4j.cert", "neo4j.key" );
+            "apoc.load.json", "apoc.load", "apoc.trigger.add", "branch_then_copy", "copy_then_branch", "neo4j.cert", "neo4j.key",
+            "config.server_policies" );
 
     public static final String IFDEF_HTMLOUTPUT = String.format("ifndef::nonhtmloutput[]%n");
     public static final String IFDEF_NONHTMLOUTPUT = String.format("ifdef::nonhtmloutput[]%n");
