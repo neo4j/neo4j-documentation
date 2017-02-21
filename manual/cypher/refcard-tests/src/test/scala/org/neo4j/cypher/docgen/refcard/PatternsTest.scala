@@ -191,7 +191,7 @@ MATCH p =
 
 shortestPath((n1:Person)-[*..6]-(n2:Person))
 
-WHERE n1.name = "Alice" AND n2.name = "Bob"
+WHERE n1.name = 'Alice' AND n2.name = 'Bob'
 RETURN p###
 
 Find a single shortest path.
@@ -201,7 +201,7 @@ MATCH p =
 
 allShortestPaths((n1:Person)-[*..6]->(n2:Person))
 
-WHERE n1.name = 'Alice'
+WHERE n1.name = 'Alice' AND n2.name = 'Bob'
 RETURN p###
 
 Find all shortest paths.
