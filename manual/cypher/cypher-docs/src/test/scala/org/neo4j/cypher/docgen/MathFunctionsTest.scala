@@ -41,10 +41,10 @@ class MathFunctionsTest extends DocumentingTest {
         |       (bob)-[:MARRIED]->(eskil)"""
     )
     synopsis(
-      "These functions all operate on numerical expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>..")
+      "These functions all operate on numerical expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>.")
     p("The following graph is used for the examples below:")
     graphViz()
-    section("Number functions", "query-functions-numeric") {
+    section("Numeric functions", "query-functions-numeric") {
       section("abs()", "functions-abs") {
         p("`abs()` returns the absolute value of a number.")
         function("`abs( expression )`", ("expression", "A numeric expression."))
