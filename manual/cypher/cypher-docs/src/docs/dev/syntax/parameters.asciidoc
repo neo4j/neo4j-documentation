@@ -7,15 +7,15 @@ Additionally, parameters make caching of execution plans much easier for Cypher,
 
 Parameters can be used for:
 
-* Literals and expressions (such as in the `WHERE` clause)
-* Node and relationship ids
-* For legacy indexes only: index values and queries
+* literals and expressions
+* node and relationship ids
+* for legacy indexes only: index values and queries
 
 Parameters cannot be used for the following constructs, as these form part of the query structure that is compiled into a query plan:
 
-* Property keys; so, `MATCH (n) WHERE n.$param = 'something'` is invalid
-* Relationship types
-* Labels
+* property keys; so, `MATCH (n) WHERE n.$param = 'something'` is invalid
+* relationship types
+* labels
 
 Parameters may consist of letters and numbers, and any combination of these, but cannot start with a number or a currency symbol.
 
@@ -27,7 +27,7 @@ In these examples, parameters are given in JSON; the exact manner in which they 
 
 [NOTE]
 ====
-It is recommended that the new parameter syntax -- `$param` -- is used, as the old syntax (`{param}`) is deprecated and will be removed altogether in a later release.
+It is recommended that the new parameter syntax `$param` is used, as the old syntax `{param}` is deprecated and will be removed altogether in a later release.
 ====
 
 == String literal ==
