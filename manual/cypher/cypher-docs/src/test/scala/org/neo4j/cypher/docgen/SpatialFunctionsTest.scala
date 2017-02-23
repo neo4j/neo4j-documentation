@@ -105,7 +105,7 @@ class SpatialFunctionsTest extends DocumentingTest {
           ResultAssertions((r) => {
             r.toList.head("travelDistance").asInstanceOf[Double] should equal(27842)
           })) {
-          p("The distance in meters between Copenhagen's train station and the Neo Technology office in Malmo is returned.")
+          p("The distance in meters between the train station in Copenhagen and the Neo Technology office in Malmo is returned.")
           resultTable()
         }
         query("RETURN distance(null, point({longitude: 56.7, latitude: 12.78})) AS d",
