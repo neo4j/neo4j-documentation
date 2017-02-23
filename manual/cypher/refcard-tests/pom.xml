@@ -20,7 +20,7 @@
     <neo4j.version>${project.version}</neo4j.version>
     <docs-plugin.skip>false</docs-plugin.skip>
     <attach-docs-phase>package</attach-docs-phase>
-    <remote-csv-upload>http://neo4j.com/docs/${project.version}/cypher-refcard/csv</remote-csv-upload>
+    <remote-csv-upload>{csv-dir}</remote-csv-upload>
   </properties>
 
   <licenses>

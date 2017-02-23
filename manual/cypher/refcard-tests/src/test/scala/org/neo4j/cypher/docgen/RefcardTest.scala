@@ -60,6 +60,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   def title: String
   def linkId: String = null
+  def asciidocSubstitutions: String = null
   def css: String
   def section: String = "refcard"
   def assert(name: String, result: InternalExecutionResult)
@@ -156,7 +157,11 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       writer.println("|" + title)
     }
     for (i <- 0 until queryLines.length by 2) {
-      writer.println("a|[\"source\",\"cypher\"]")
+      writer.print("a|[source, cypher")
+      if (asciidocSubstitutions != null) {
+        writer.print(", subs=" + asciidocSubstitutions)
+      }
+      writer.println("]")
       writer.println("----")
       def query = queryLines(i).trim().replace("|", "\\|")
       def docQuery = urls.foldLeft(query)((acc, entry) => acc.replace(entry._1, entry._2))
