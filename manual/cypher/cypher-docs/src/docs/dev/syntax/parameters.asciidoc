@@ -74,6 +74,10 @@ include::includes/exampleWithParameterForNodeId.asciidoc[]
 
 include::includes/exampleWithParameterForMultipleNodeIds.asciidoc[]
 
+== Calling procedures
+
+include::includes/exampleWithParameterProcedureCall.asciidoc[]
+
 == Index value (legacy indexes) ==
 
 include::includes/exampleWithParameterForIndexValue.asciidoc[]
