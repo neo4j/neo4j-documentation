@@ -61,6 +61,6 @@ RETURN
 distance(point({x: {x1}, y: {y1}}), point({x: {x2}, y: {y2}}))
 ###
 
-Returns a floating point number representing in meters the geodesic distance between two points.
+Returns a floating point number representing the geodesic distance between two points.
 """
 }

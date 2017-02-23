@@ -164,7 +164,7 @@ These functions are used to specify points in a 2D coordinate system and to calc
 |===
 |Function                               |   Description
 |<<functions-point,point()>>            | Returns a point object, given two coordinate values.
-|<<functions-distance,distance()>>      | Returns a floating point number representing in meters the geodesic distance between any two given points.
+|<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two given points.
 |===
 
 [[query-predicates]]

@@ -88,14 +88,18 @@ class SpatialFunctionsTest extends DocumentingTest {
         }
       }
       section("distance()", "functions-distance") {
-        p("`distance()` returns the geodesic distance in meters between two points in the same CRS.")
+        p(
+          """`distance()` returns the geodesic distance between two points in the same CRS.
+            |If the points are in the _cartesian_ CRS, then the units of the returned distance will be the same as the units of the points, calculated using Pythagoras' theorem.
+            |If the points are in the _WGS-84_ CRS, then the units of the returned distance will be meters, based on the haversine formula over a spherical earth approximation.
+          """.stripMargin)
         function("`distance(point1, point2)`", ("point1", "A point in either the WGS 84 or cartesian CRS."),
           ("point2", "A point in the same CRS as 'point1'."))
         query("WITH point({x: 2.3, y: 4.5, crs: 'cartesian'}) as p1, point({x: 1.1, y: 5.4, crs: 'cartesian'}) as p2\nRETURN distance(p1,p2) AS dist",
           ResultAssertions((r) => {
             r.toList.head("dist").asInstanceOf[Double] should equal(1.5)
         })) {
-          p("The distance in meters between two points in the _cartesian_ CRS is returned.")
+          p("The distance between two points in the _cartesian_ CRS is returned.")
           resultTable()
         }
         query(
@@ -105,7 +109,7 @@ class SpatialFunctionsTest extends DocumentingTest {
           ResultAssertions((r) => {
             r.toList.head("travelDistance").asInstanceOf[Double] should equal(27842)
           })) {
-          p("The distance in meters between the train station in Copenhagen and the Neo Technology office in Malmo is returned.")
+          p("The distance between the train station in Copenhagen and the Neo Technology office in Malmo is returned.")
           resultTable()
         }
         query("RETURN distance(null, point({longitude: 56.7, latitude: 12.78})) AS d",
