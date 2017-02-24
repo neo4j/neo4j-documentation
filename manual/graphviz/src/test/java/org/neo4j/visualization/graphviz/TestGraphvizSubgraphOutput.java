@@ -38,12 +38,12 @@ import static java.util.Arrays.asList;
 
 public class TestGraphvizSubgraphOutput
 {
+    public final @Rule DatabaseRule dbRule = new ImpermanentDatabaseRule();
+
     enum type implements RelationshipType
     {
         KNOWS, WORKS_FOR
     }
-
-    public final @Rule DatabaseRule dbRule = new ImpermanentDatabaseRule();
 
     @Test
     public void testSimpleGraph() throws Exception
