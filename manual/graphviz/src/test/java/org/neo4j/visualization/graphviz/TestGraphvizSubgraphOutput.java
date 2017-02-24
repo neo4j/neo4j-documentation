@@ -38,7 +38,8 @@ import static java.util.Arrays.asList;
 
 public class TestGraphvizSubgraphOutput
 {
-    public final @Rule DatabaseRule dbRule = new ImpermanentDatabaseRule();
+    @Rule
+    public final DatabaseRule dbRule = new ImpermanentDatabaseRule();
 
     enum type implements RelationshipType
     {
