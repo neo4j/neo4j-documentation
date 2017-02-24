@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.neo4j.kernel.api.security.AccessMode;
 import org.neo4j.kernel.api.KernelTransaction;
@@ -319,8 +321,15 @@ enum BlockType
 
             state.parameters.clear();
             String cypher = StringUtils.join( prettifiedStatements, CypherDoc.EOL );
-            return AsciidocHelper.createCypherSnippetFromPreformattedQuery( cypher, exec ) + CypherDoc.EOL
-                   + CypherDoc.EOL;
+
+            String customSubstitutionsRegex = "(pre)?subs(titutions)?[\"\\s]?=(?<subs>[^\\s\\]]+)";
+            Matcher customSubstitutionsMatcher = Pattern.compile(customSubstitutionsRegex).matcher(firstLine);
+            if (customSubstitutionsMatcher.find()) {
+                return AsciidocHelper.createCypherSnippetFromPreformattedQueryWithCustomSubstitutions(cypher, exec, customSubstitutionsMatcher.group("subs")) + CypherDoc.EOL + CypherDoc.EOL;
+            } else {
+                return AsciidocHelper.createCypherSnippetFromPreformattedQuery(cypher, exec) + CypherDoc.EOL
+                        + CypherDoc.EOL;
+            }
         }
     },
     SQL

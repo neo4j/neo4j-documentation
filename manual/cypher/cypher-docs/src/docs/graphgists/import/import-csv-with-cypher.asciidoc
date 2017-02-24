@@ -22,7 +22,7 @@ We're also keeping track of the country in which each movie was made.
 
 Let's start with importing the persons:
 
-[source,cypher]
+[source, cypher, subs=attributes+]
 ----
 LOAD CSV WITH HEADERS FROM "persons.csv" AS csvLine
 CREATE (p:Person {id: toInt(csvLine.id), name: csvLine.name})
@@ -60,7 +60,7 @@ Before running our query to connect movies and countries we'll create an index f
 CREATE INDEX ON :Country(name)
 ----
 
-[source,cypher]
+[source, cypher, subs=attributes+]
 ----
 LOAD CSV WITH HEADERS FROM "movies.csv" AS csvLine
 MERGE (country:Country {name: csvLine.country})
@@ -109,7 +109,7 @@ For this query we'll use `USING PERIODIC COMMIT` (see <<query-periodic-commit>>)
 This hint tells Neo4j that the query might build up inordinate amounts of transaction state, and so needs to be periodically committed.
 In this case we also set the limit to `500` rows per commit.
 
-[source,cypher]
+[source, cypher, subs=attributes+]
 ----
 USING PERIODIC COMMIT 500
 LOAD CSV WITH HEADERS FROM "roles.csv" AS csvLine
