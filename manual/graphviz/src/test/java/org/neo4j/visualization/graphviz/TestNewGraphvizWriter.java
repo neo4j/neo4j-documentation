@@ -36,7 +36,8 @@ import org.neo4j.walk.Walker;
 
 public class TestNewGraphvizWriter
 {
-    public final @Rule DatabaseRule dbRule = new ImpermanentDatabaseRule();
+    @Rule
+    public final DatabaseRule dbRule = new ImpermanentDatabaseRule();
 
     enum type implements RelationshipType
     {
