@@ -279,10 +279,22 @@ public class AsciidocHelper
         return cypherSnippet( formattedQuery, ( executable ? "cypher" : "cypher-noexec" ) );
     }
 
+    public static String createCypherSnippetFromPreformattedQueryWithCustomSubstitutions
+            ( final String formattedQuery, boolean executable, String substitutions )
+    {
+        return cypherSnippet( formattedQuery, ( executable ? "cypher" : "cypher-noexec" ), substitutions );
+    }
+
     private static String cypherSnippet( final String formattedQuery, final String lang )
     {
         return format( "[source,%s]\n----\n%s%s----\n", lang, wrapQuery( formattedQuery ),
                 formattedQuery.endsWith( "\n" ) ? "" : "\n" );
+    }
+
+    private static String cypherSnippet( final String formattedQuery, final String lang, String substitutions )
+    {
+        return format( "[source, %s, subs=%s]\n----\n%s%s----\n",
+                lang, substitutions, wrapQuery( formattedQuery ), formattedQuery.endsWith( "\n" ) ? "" : "\n" );
     }
 
     public static String createAsciiDocSnippet(String language, String formattedQuery)

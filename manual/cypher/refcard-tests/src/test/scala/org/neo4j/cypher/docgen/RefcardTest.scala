@@ -60,7 +60,6 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   def title: String
   def linkId: String = null
-  def asciidocSubstitutions: String = null
   def css: String
   def section: String = "refcard"
   def assert(name: String, result: InternalExecutionResult)
