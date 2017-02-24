@@ -279,7 +279,7 @@ public class AsciidocHelper
         return cypherSnippet( formattedQuery, ( executable ? "cypher" : "cypher-noexec" ) );
     }
 
-    public static String createCypherSnippetFromPreformattedQueryWithCustomSubstitutions (
+    public static String createCypherSnippetFromPreformattedQueryWithCustomSubstitutions(
             final String formattedQuery, boolean executable, String substitutions )
     {
         return cypherSnippet( formattedQuery, ( executable ? "cypher" : "cypher-noexec" ), substitutions );
