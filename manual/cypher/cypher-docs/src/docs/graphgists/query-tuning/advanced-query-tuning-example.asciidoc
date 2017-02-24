@@ -7,7 +7,7 @@ As with the basic query tuning example <<cypherdoc-basic-query-tuning-example>> 
 //file:directors.csv
 
 //setup
-[source,cypher]
+[source, cypher, subs=attributes+]
 ----
 LOAD CSV WITH HEADERS FROM 'movies.csv' AS line
 MERGE (m:Movie {title: line.title})
@@ -15,7 +15,7 @@ ON CREATE SET m.released = toInt(line.released), m.tagline = line.tagline
 ----
 
 //setup
-[source,cypher]
+[source, cypher, subs=attributes+]
 ----
 LOAD CSV WITH HEADERS FROM 'actors.csv' AS line
 MATCH (m:Movie {title: line.title})
@@ -25,7 +25,7 @@ MERGE (p)-[:ACTED_IN {roles:split(line.roles, ';')}]->(m)
 ----
 
 //setup
-[source,cypher]
+[source, cypher, subs=attributes+]
 ----
 LOAD CSV WITH HEADERS FROM 'directors.csv' AS line
 MATCH (m:Movie {title: line.title})
