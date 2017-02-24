@@ -36,6 +36,7 @@
     <module>ha-docs</module>
     <module>metrics-docs</module>
     <module>doctools</module>
+    <module>graphviz</module>
   </modules>
 
   <scm>

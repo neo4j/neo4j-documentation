@@ -28,6 +28,7 @@ import org.junit.Assert._
 class LoadCSVTest extends DocumentingTestBase with QueryStatisticsTestSupport with SoftReset {
   override protected def getGraphvizStyle: GraphStyle =
     AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
+  override val asciidocSubstitutions = "attributes+"
 
   implicit var csvFilesDir: File = createDir(dir, "csv-files")
 

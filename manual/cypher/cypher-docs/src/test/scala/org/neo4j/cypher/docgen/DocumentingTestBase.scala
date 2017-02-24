@@ -86,10 +86,15 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
     new PrintWriter(new File(dir, niceify(title) + ".asciidoc"), StandardCharsets.UTF_8.name())
   }
 
+  def asciidocSubstitutions: String = null
   def createCypherSnippet(query: String) = {
     val escapedQuery = query.trim().replace("\\", "\\\\")
     val prettifiedQuery = Prettifier(escapedQuery)
-    AsciidocHelper.createCypherSnippetFromPreformattedQuery(prettifiedQuery, true)
+    if (asciidocSubstitutions != null) {
+      AsciidocHelper.createCypherSnippetFromPreformattedQueryWithCustomSubstitutions(prettifiedQuery, true, asciidocSubstitutions)
+    } else {
+      AsciidocHelper.createCypherSnippetFromPreformattedQuery(prettifiedQuery, true)
+    }
   }
 
   def prepareFormatting(query: String): String = {
