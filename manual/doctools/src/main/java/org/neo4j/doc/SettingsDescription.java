@@ -24,13 +24,17 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.graphdb.factory.Description;
+import org.neo4j.helpers.TimeUtil;
 import org.neo4j.kernel.configuration.Group;
 import org.neo4j.kernel.configuration.Internal;
 import org.neo4j.kernel.configuration.Obsoleted;
+import org.neo4j.kernel.configuration.Settings;
 
 /**
  * A meta description of a settings class, used to generate documentation.
@@ -64,6 +68,7 @@ public class SettingsDescription
                 String name = setting.name();
                 String description = field.getAnnotation( Description.class ).value();
                 String validationMessage = setting.toString();
+
                 String defaultValue = null;
                 String mandatoryMessage = null;
 
@@ -76,6 +81,11 @@ public class SettingsDescription
                 {
                     Object rawDefault = setting.apply( from -> null );
                     defaultValue = rawDefault != null ? rawDefault.toString() : null;
+                    // Kludge--because for DURATION settings, the internal representation (MS) is leaked as the default value
+                    Optional<? extends Function<String, ?>> parser = setting.getParser();
+                    if (null != defaultValue && parser.isPresent() && Settings.DURATION.equals(parser.get())) {
+                        defaultValue = Long.toString(TimeUtil.DEFAULT_TIME_UNIT.convert(Long.valueOf(defaultValue), TimeUnit.MILLISECONDS));
+                    }
                     if (name.equals("dbms.threads.worker_count")) {
                         defaultValue = "The minimum between \"number of processors\" and 500";
                     }
