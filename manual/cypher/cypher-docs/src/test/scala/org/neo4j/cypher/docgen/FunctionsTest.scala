@@ -188,8 +188,8 @@ class FunctionsTest extends DocumentingTestBase {
   @Test def keys() {
     testThis(
       title = "keys()",
-      syntax = "keys(  property-container )",
-      arguments = List("property-container" -> "A node, a relationship, or a literal map."),
+      syntax = "keys(  expression )",
+      arguments = List("expression" -> "An expression that returns a node, a relationship, or a map"),
       text = """Returns a list of string representations for the property names of a node, relationship, or map.""",
       queryText = """MATCH (a) WHERE a.name = 'Alice' RETURN keys(a)""",
       returns = """The name of the properties of `n` is returned by the query.""",
@@ -320,8 +320,8 @@ class FunctionsTest extends DocumentingTestBase {
   @Test def id() {
     testThis(
       title = "id()",
-      syntax = "id( property-container )",
-      arguments = List("property-container" -> "A node or a relationship."),
+      syntax = "id(  expression )",
+      arguments = List("expression" -> "An expression that returns a node or a relationship."),
       text = """Returns the id of the relationship or node.""",
       queryText = """MATCH (a) RETURN id(a)""",
       returns = """This returns the node id for three nodes.""",
