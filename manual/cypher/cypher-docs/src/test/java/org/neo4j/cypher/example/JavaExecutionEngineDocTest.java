@@ -37,6 +37,7 @@ import java.util.Map;
 
 import org.neo4j.doc.tools.AsciiDocGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Result;
@@ -88,15 +89,23 @@ public class JavaExecutionEngineDocTest
     public void setUp() throws IOException
     {
         db = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase();
+
         try ( Transaction tx = db.beginTx() )
         {
-            michaelaNode = db.createNode();
-            andreasNode = db.createNode();
-            johanNode = db.createNode();
+            db.schema().indexFor( Label.label( "Person" ) ).on( "name" ).create();
+            tx.success();
+        }
+
+        try ( Transaction tx = db.beginTx() )
+        {
+            michaelaNode =  db.createNode( Label.label( "Person" ) );
+            andreasNode = db.createNode( Label.label( "Person" ) );
+            johanNode =  db.createNode( Label.label( "Person" ) );
             andreasNode.setProperty( "name", "Andreas" );
             johanNode.setProperty( "name", "Johan" );
             michaelaNode.setProperty( "name", "Michaela" );
 
+            //this is legacy index functionality
             index( andreasNode );
             index( johanNode );
             index( michaelaNode );
@@ -234,7 +243,7 @@ public class JavaExecutionEngineDocTest
         // START SNIPPET: exampleWithStringLiteralAsParameter
         Map<String, Object> params = new HashMap<>();
         params.put( "name", "Johan" );
-        String query = "MATCH (n) WHERE n.name = $name RETURN n";
+        String query = "MATCH (n:Person) WHERE n.name = $name RETURN n";
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithStringLiteralAsParameter
 
@@ -248,7 +257,7 @@ public class JavaExecutionEngineDocTest
         // START SNIPPET: exampleWithShortSyntaxStringLiteralAsParameter
         Map<String, Object> params = new HashMap<>();
         params.put( "name", "Johan" );
-        String query = "MATCH (n {name: $name}) RETURN n";
+        String query = "MATCH (n:Person {name: $name}) RETURN n";
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithShortSyntaxStringLiteralAsParameter
 
@@ -294,7 +303,7 @@ public class JavaExecutionEngineDocTest
         // START SNIPPET: exampleWithParameterForNodeObject
         Map<String, Object> params = new HashMap<>();
         params.put( "node", andreasNode );
-        String query = "MATCH (n) WHERE n = $node RETURN n.name";
+        String query = "MATCH (n:Person) WHERE n = $node RETURN n.name";
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithParameterForNodeObject
 
@@ -310,7 +319,7 @@ public class JavaExecutionEngineDocTest
         Map<String, Object> params = new HashMap<>();
         params.put( "s", 1 );
         params.put( "l", 1 );
-        String query = "MATCH (n) RETURN n.name SKIP $s LIMIT $l";
+        String query = "MATCH (n:Person) RETURN n.name SKIP $s LIMIT $l";
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithParameterForSkipLimit
 
@@ -326,7 +335,7 @@ public class JavaExecutionEngineDocTest
         // START SNIPPET: exampleWithParameterRegularExpression
         Map<String, Object> params = new HashMap<>();
         params.put( "regex", ".*h.*" );
-        String query = "MATCH (n) WHERE n.name =~ $regex RETURN n.name";
+        String query = "MATCH (n:Person) WHERE n.name =~ $regex RETURN n.name";
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithParameterRegularExpression
         dumpToFile( "exampleWithParameterRegularExpression", query, params );
@@ -343,7 +352,7 @@ public class JavaExecutionEngineDocTest
         // START SNIPPET: exampleWithParameterCSCIStringPatternMatching
         Map<String, Object> params = new HashMap<>();
         params.put( "name", "Michael" );
-        String query = "MATCH (n) WHERE n.name STARTS WITH $name RETURN n.name";
+        String query = "MATCH (n:Person) WHERE n.name STARTS WITH $name RETURN n.name";
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithParameterCSCIStringPatternMatching
         dumpToFile( "exampleWithParameterCSCIStringPatternMatching", query, params );
@@ -351,6 +360,20 @@ public class JavaExecutionEngineDocTest
         assertThat( result.columns(), hasItem( "n.name" ) );
         Iterator<Object> n_column = result.columnAs( "n.name" );
         assertEquals( "Michaela", n_column.next() );
+    }
+
+    @Test
+    public void exampleWithParameterProcedureCall() throws Exception
+    {
+        // START SNIPPET: exampleWithParameterProcedureCall
+        Map<String, Object> params = new HashMap<>();
+        params.put( "indexname", ":Person(name)" );
+        String query = "CALL db.resampleIndex($indexname)";
+        Result result = db.execute( query, params );
+        // END SNIPPET: exampleWithParameterProcedureCall
+        dumpToFile( "exampleWithParameterProcedureCall", query, params );
+
+        assert result.columns().isEmpty();
     }
 
     @Test
@@ -417,12 +440,12 @@ public class JavaExecutionEngineDocTest
             Map<String, Object> params = new HashMap<>();
             params.put( "props", n1 );
 
-            String query = "MATCH (n) WHERE n.name='Michaela' SET n = $props";
+            String query = "MATCH (n:Person) WHERE n.name='Michaela' SET n = $props";
             db.execute( query, params );
             // END SNIPPET: set_properties_on_a_node_from_a_map
             dumpToFile( "set_properties_on_a_node_from_a_map", query, params );
 
-            db.execute( "MATCH (n) WHERE n.name IN ['Andres', 'Michael'] AND n.position = 'Developer' RETURN n" );
+            db.execute( "MATCH (n:Person) WHERE n.name IN ['Andres', 'Michael'] AND n.position = 'Developer' RETURN n" );
             assertThat( michaelaNode.getProperty( "name" ).toString(), is( "Andres" ) );
         }
     }
