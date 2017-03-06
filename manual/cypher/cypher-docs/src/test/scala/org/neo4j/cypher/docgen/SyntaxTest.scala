@@ -105,17 +105,25 @@ END AS result""",
 
   private def testThis(title: String, syntax: String, arguments: List[(String, String)], text: String, queryText: String, returns: String, assertions: InternalExecutionResult => Unit) {
     val argsText = arguments.map(x => "* _" + x._1 + ":_ " + x._2).mkString("\r\n\r\n")
-    val fullText = String.format("""%s
 
-*Syntax:*
-[source,cypher]
-----
-%s
-----
 
-*Arguments:*
+    val formattedArguments = arguments.map(x => "| `" + x._1 + "` | " + x._2).mkString("", "\n", "")
+    val fullText = String.format(
+      """%s
+         |
+         |*Syntax:*
+         |[source,cypher]
+         |%s
+         |
+         |*Arguments:*
+         |[options="header"]
+         ||===
+         || Name | Description
+         |%s
+         ||===
 
-%s""", text, syntax, argsText)
+      """.stripMargin, text, syntax, formattedArguments)
+
     testQuery(title, fullText, queryText, returns, assertions = assertions)
   }
 }
