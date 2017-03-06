@@ -7,11 +7,22 @@ Functions
 This section contains information on all functions in the Cypher query language.
 --
 
+* Predicate functions [<<header-query-predicates, Summary>>|<<query-predicates, Detail>>]
+* Scalar functions [<<header-query-functions-scalar, Summary>>|<<query-functions-scalar, Detail>>]
+* List functions [<<header-query-functions-list, Summary>>|<<query-functions-list, Detail>>]
+* Mathematical functions [<<header-query-functions-mathematical, Summary>>|<<query-functions-mathematical, Detail>>]
+** Numeric functions [<<header-query-functions-numeric, Summary>>|<<query-functions-numeric, Detail>>]
+** Logarithmic functions [<<header-query-functions-logarithmic, Summary>>|<<query-functions-logarithmic, Detail>>]
+** Trigonometric functions [<<header-query-functions-trigonometric, Summary>>|<<query-functions-trigonometric, Detail>>]
+* String functions [<<header-query-functions-string, Summary>>|<<query-functions-string, Detail>>]
+* Spatial functions [<<header-query-functions-spatial, Summary>>|<<query-functions-spatial, Detail>>]
+
 Note that related information exists in <<query-operators>>.
 
 Most functions in Cypher will return `null` if an input parameter is `null`.
 
-**<<query-predicates,Predicate functions>>**
+[[header-query-predicates]]
+**<<query-predicates, Predicate functions>>**
 
 These functions return either true or false for the arguments given.
 
@@ -25,7 +36,8 @@ These functions return either true or false for the arguments given.
 |<<functions-single,single()>>    | Returns true if the predicate holds for exactly one of the elements in the list.
 |===
 
-**<<query-functions-scalar,Scalar functions>>**
+[[header-query-functions-scalar]]
+**<<query-functions-scalar, Scalar functions>>**
 
 These functions return a single value.
 
@@ -49,7 +61,8 @@ These functions return a single value.
 |<<functions-type,type()>>                          | Returns a string representation of the relationship type.
 |===
 
-**<<query-functions-list,List functions>>**
+[[header-query-functions-list]]
+**<<query-functions-list, List functions>>**
 
 These functions return lists of other values.
 
@@ -67,11 +80,12 @@ These functions return lists of other values.
 |<<functions-tail,tail()>>                      | Returns all but the first element in a list.
 |===
 
-**<<query-functions-mathematical,Mathematical functions>>**
+[[header-query-functions-mathematical]]
+**<<query-functions-mathematical, Mathematical functions>>**
 
 These functions all operate on numerical expressions only, and will return an error if used on any other values.
 
-**1. <<query-functions-numeric, Numeric functions>>**
+**<<query-functions-numeric, Numeric functions>>**
 
 [options="header"]
 |===
@@ -84,7 +98,8 @@ These functions all operate on numerical expressions only, and will return an er
 | <<functions-sign, sign()>>   | Returns the signum of a number -- zero if the expression is zero, `-1` for any negative number, and `1` for any positive number.
 |===
 
-**2. <<query-functions-logarithmic, Logarithmic functions>>**
+[[header-query-functions-logarithmic]]
+**<<query-functions-logarithmic, Logarithmic functions>>**
 
 [options="header"]
 |===
@@ -96,7 +111,8 @@ These functions all operate on numerical expressions only, and will return an er
 | <<functions-sqrt, sqrt()>>   | Returns the square root of a number.
 |===
 
-**3. <<query-functions-trigonometric, Trigonometric functions>>**
+[[header-query-functions-trigonometric]]
+**<<query-functions-trigonometric, Trigonometric functions>>**
 
 All trigonometric functions operate on radians, unless otherwise specified.
 
@@ -117,7 +133,8 @@ All trigonometric functions operate on radians, unless otherwise specified.
 | <<functions-tan, tan()>>           | Returns the tangent of the expression.
 |===
 
-**<<query-functions-string,String functions>>**
+[[header-query-functions-string]]
+**<<query-functions-string, String functions>>**
 
 These functions are used to manipulate strings or to create a string representation of another value.
 
@@ -138,8 +155,20 @@ These functions are used to manipulate strings or to create a string representat
 |<<functions-upper,upper()>>            | Returns the original string in uppercase.
 |===
 
+[[header-query-functions-spatial]]
+**<<query-functions-spatial, Spatial functions>>**
+
+These functions are used to specify points in a 2D coordinate system and to calculate the geodesic distance between two points.
+
+[options="header"]
+|===
+|Function                               |   Description
+|<<functions-point,point()>>            | Returns a point object, given two coordinate values.
+|<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two given points.
+|===
+
 [[query-predicates]]
-== Predicates ==
+== Predicate functions ==
 
 Predicates are boolean functions that return true or false for a given set of input.
 They are most commonly used to filter out subgraphs in the `WHERE` part of a query.
@@ -241,6 +270,8 @@ include::range.asciidoc[leveloffset=+1]
 
 include::reduce.asciidoc[leveloffset=+1]
 
+//Mathematical functions
+
 ifndef::asciidoctor[:leveloffset: 2]
 
 include::query-functions-mathematical.adoc[leveloffset=+1]
@@ -283,3 +314,10 @@ include::split.asciidoc[leveloffset=+1]
 include::reverse.asciidoc[leveloffset=+1]
 
 include::tostring.asciidoc[leveloffset=+1]
+
+//Spatial functions
+
+ifndef::asciidoctor[:leveloffset: 2]
+
+include::query-functions-spatial.adoc[leveloffset=+1]
+
