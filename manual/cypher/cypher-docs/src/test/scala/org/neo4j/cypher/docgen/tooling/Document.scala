@@ -90,14 +90,12 @@ case class Paragraph(s: String) extends Content with NoQueries {
 
 case class Function(syntax: String, arguments: Seq[(String, String)]) extends Content with NoQueries {
   override def asciiDoc(level: Int) = {
-    val formatted = arguments.map(x => "* _" + x._1 + ":_ " + x._2).mkString("", NewLine, NewLine + NewLine)
-    String.format( """*Syntax:* %s
-                    |
-                    |*Arguments:*
-                    |
-                    |%s""".stripMargin,
-                   syntax,
-                   formatted)
+    val args = arguments.map(x => "| `" + x._1 + "` | " + x._2).mkString("", NewLine, "")
+    val formattedArguments = if(!arguments.isEmpty) Array("*Arguments:*", "[options=\"header\"]", "|===", "| Name | Description", args, "|===").mkString(NewLine, NewLine, "") else ""
+    String.format(
+      """*Syntax:* %s
+        |%s%n
+        |""".stripMargin, syntax, formattedArguments)
   }
 
 }

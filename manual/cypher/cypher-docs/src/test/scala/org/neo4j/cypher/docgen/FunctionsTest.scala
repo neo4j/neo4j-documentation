@@ -550,7 +550,7 @@ In case all arguments are `null`, `null` will be returned.""",
       title = "properties()",
       syntax = "properties( expression )",
       arguments = List("expression" -> "An expression that returns a node, a relationship, or a map"),
-      text = "`properties()` converts the argument to a map of its properties. " +
+      text = "`properties()` converts the arguments to a map of its properties. " +
         "If the argument is a node or a relationship, the returned map is a map of its properties. " +
         "If the argument is already a map, it is returned unchanged.",
       queryText = "CREATE (p:Person {name: 'Stefan', city: 'Berlin'}) RETURN properties(p)",
@@ -601,16 +601,17 @@ In case all arguments are `null`, `null` will be returned.""",
       assertions = (p) => assert(p.toList.head("endNode(r)") === node("C")))
   }
 
-  private def testThis(title: String, syntax: String, arguments: List[(String, String)], text: String, queryText: String,
-                       returns: String, assertions: (InternalExecutionResult => Unit)) {
-    val argsText = arguments.map(x => "* _" + x._1 + ":_ " + x._2).mkString("\r\n\r\n")
-    val fullText = String.format("""%s
+  private def testThis(title: String, syntax: String, arguments: List[(String, String)], text: String, queryText: String, returns: String, assertions: (InternalExecutionResult => Unit)) {
+    val args = arguments.map(x => "| `" + x._1 + "` | " + x._2).mkString("", "\n", "")
+    val formattedArguments = if (!arguments.isEmpty) Array("*Arguments:*", "[options=\"header\"]", "|===", "| Name | Description", args, "|===").mkString("\n", "\n", "") else ""
 
-*Syntax:* `%s`
+    val fullText = String.format(
+      """%s
+         |
+         |*Syntax:* `%s`
+         |%s
+      """.stripMargin, text, syntax, formattedArguments)
 
-*Arguments:*
-
-%s""", text, syntax, argsText)
     testQuery(title, fullText, queryText, returns, assertions = assertions)
   }
 }
