@@ -551,7 +551,7 @@ In case all arguments are `null`, `null` will be returned.""",
       syntax = "properties( expression )",
       arguments = List("expression" -> "An expression that returns a node, a relationship, or a map"),
       text = "`properties()` converts the arguments to a map of its properties. " +
-        "If the argument is a node or a relationship, the returned map is a map of its properties ." +
+        "If the argument is a node or a relationship, the returned map is a map of its properties. " +
         "If the argument is already a map, it is returned unchanged.",
       queryText = "CREATE (p:Person {name: 'Stefan', city: 'Berlin'}) RETURN properties(p)",
       returns = "",
