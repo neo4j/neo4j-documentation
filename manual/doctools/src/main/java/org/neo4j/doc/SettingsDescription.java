@@ -32,7 +32,7 @@ import org.neo4j.configuration.Description;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.helpers.TimeUtil;
 import org.neo4j.kernel.configuration.Group;
-import org.neo4j.kernel.configuration.Internal;
+import org.neo4j.configuration.Internal;
 import org.neo4j.kernel.configuration.Obsoleted;
 import org.neo4j.kernel.configuration.Settings;
 

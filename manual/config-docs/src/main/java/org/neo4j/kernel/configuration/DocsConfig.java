@@ -20,6 +20,7 @@ package org.neo4j.kernel.configuration;
 
 import org.neo4j.configuration.Description;
 import org.neo4j.configuration.DocumentedDefaultValue;
+import org.neo4j.configuration.Internal;
 import org.neo4j.configuration.ReplacedBy;
 import org.neo4j.configuration.LoadableConfig;
 import org.neo4j.doc.DocsConfigOptions;

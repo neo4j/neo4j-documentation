@@ -42,6 +42,7 @@ public class DocsConfigOptions extends ConfigOptions {
               description,
               defaultValue,
               deprecated,
+              internal,
               replacement);
         this.internal = internal;
         this.deprecated = deprecated;
@@ -59,6 +60,7 @@ public class DocsConfigOptions extends ConfigOptions {
                             description(),
                             deprecated,
                             settingGroup().toString(),
+                            documentedDefaultValue(),
                             Optional.ofNullable(val.getValue()),
                             internal,
                             replacement()

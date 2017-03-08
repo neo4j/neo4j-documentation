@@ -31,7 +31,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
     private final Optional<String> description;
     private final String deprecationMessage;
     private final String validationDescription;
-    private final Optional<?> defaultValue;
+    private final Optional<String> defaultValue;
     private final boolean isInternal;
     private final Optional<String> replacement;
 
@@ -40,12 +40,15 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
                            Optional<String> description,
                            boolean isDeprecated,
                            String validationDescription,
-                           Optional<?> defaultValue,
+                           Optional<String> defaultValue,
+                           Optional<?> value,
                            boolean isInternal,
                            Optional<String> replacement) {
         super(  name,
                 description,
                 defaultValue,
+                value,
+                isInternal,
                 isDeprecated,
                 replacement);
         this.id = id;
@@ -120,6 +123,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
                 // which is what the old impl did, and improve the formatters at some point
                 validationDescription,
                 defaultValue,
+                value(),
                 isInternal,
                 replacement());
     }

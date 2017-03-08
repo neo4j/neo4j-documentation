@@ -89,6 +89,11 @@ public final class SettingDescriptionImpl implements SettingDescription {
     }
 
     @Override
+    public boolean hasReplacement() {
+        return false;
+    }
+
+    @Override
     public boolean isInternal()
     {
         return false;

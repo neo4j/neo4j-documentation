@@ -69,6 +69,7 @@ public class ConfigDocsGenerator {
                         Optional.of(c.description().orElse("no description, likely an internal setting")),
                         c.deprecated(),
                         "VALIDATION_DESCRIPTION",
+                        c.getDocumentedDefaultValue(),
                         c.value(),
                         false,
                         c.replacement()
@@ -93,6 +94,7 @@ public class ConfigDocsGenerator {
                         c.deprecated(),
                         "VALIDATION_DESCRIPTION",
                         documentedDefaults.get(c.name()),
+                        c.value(),
                         false,
                         c.replacement()
 
