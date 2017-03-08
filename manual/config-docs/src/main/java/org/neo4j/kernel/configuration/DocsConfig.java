@@ -18,15 +18,12 @@
  */
 package org.neo4j.kernel.configuration;
 
+import org.neo4j.configuration.ConfigOptions;
 import org.neo4j.configuration.Description;
 import org.neo4j.configuration.DocumentedDefaultValue;
 import org.neo4j.configuration.Internal;
 import org.neo4j.configuration.ReplacedBy;
 import org.neo4j.configuration.LoadableConfig;
-import org.neo4j.doc.DocsConfigOptions;
-import org.neo4j.doc.DocsConfigValue;
-import org.neo4j.doc.DocumentableSettingGetter;
-import org.neo4j.doc.SettingDescription;
 import org.neo4j.graphdb.config.SettingGroup;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.logging.Log;
@@ -35,8 +32,6 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -44,11 +39,9 @@ import static org.neo4j.kernel.configuration.HttpConnector.Encryption.NONE;
 import static org.neo4j.kernel.configuration.HttpConnector.Encryption.TLS;
 import static org.neo4j.kernel.configuration.Settings.TRUE;
 
-public class DocsConfig extends Config implements DocumentableSettingGetter {
+public class DocsConfig extends Config {
 
     private final List<LoadableConfig> settingsClasses;
-    private List<DocsConfigOptions> docsConfigOptions = null;
-    private Map<String, DocsConfigValue> docsConfigValues = null;
     private Map<String, String> validValues = null;
 
     private DocsConfig(
@@ -91,14 +84,13 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
         return docsConfig;
     }
 
-    private List<DocsConfigOptions> getDocsConfigOptions(LoadableConfig loadableConfig) {
-        List<DocsConfigOptions> configOptions = new ArrayList<>();
+    private Map<String, String> validValues(LoadableConfig loadableConfig) {
+        Map<String, String> lValidValues = new HashMap<>();
 
         for (Field f : loadableConfig.getClass().getDeclaredFields()) {
             try {
                 Object publicSetting = f.get(loadableConfig);
                 if (publicSetting instanceof SettingGroup) {
-
                     final Description documentation = f.getAnnotation(Description.class);
                     final Optional<String> description;
                     if (null == documentation) {
@@ -123,77 +115,34 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
                         documentedDefaultValue = Optional.of( defValue.value() );
                     }
                     final boolean isInternal = f.isAnnotationPresent(Internal.class);
-                    configOptions.add(new DocsConfigOptions(
-                            (SettingGroup) publicSetting,
-                            description,
-                            documentedDefaultValue,
-                            deprecated,
-                            replacement,
-                            isInternal));
+                    ConfigOptions configOptions = new ConfigOptions(
+                                (SettingGroup) publicSetting,
+                                description,
+                                documentedDefaultValue,
+                                deprecated,
+                                isInternal,
+                                replacement
+                            );
+                    configOptions.settingGroup().values(getRaw()).forEach(
+                            (k, v) -> lValidValues.put(k, configOptions.settingGroup().toString())
+                    );
+
                 }
             } catch (IllegalAccessException ignored) {
-                // Field is private, ignore it
                 continue;
             }
         }
-
-        return configOptions;
-    }
-
-    private List<DocsConfigOptions> getDocsConfigOptions() {
-        if (null == docsConfigOptions) {
-            docsConfigOptions = settingsClasses.stream()
-                    .map( this::getDocsConfigOptions )
-                    .flatMap( List::stream )
-                    .collect( Collectors.toList() );
-        }
-        return docsConfigOptions;
-    }
-
-    private Map<String, DocsConfigValue> getDocsConfigValues() {
-        if (null == docsConfigValues) {
-            docsConfigValues = getDocsConfigOptions().stream()
-                    .map(it -> it.asDocsConfigValues(getRaw()))
-                    .flatMap(List::stream)
-                    .sorted((a, b) -> a.name().compareTo(b.name()))
-                    .collect(Collectors.toMap(DocsConfigValue::name, it -> it, (val1, val2) -> {
-                        throw new RuntimeException("Duplicate setting: " + val1.name() + ": " + val1 + " and " + val2);
-                    }, LinkedHashMap::new));
-        }
-        return docsConfigValues;
+        return lValidValues;
     }
 
     public Map<String, String> validValues() {
         if (null == validValues) {
             validValues = new HashMap<>();
-            getDocsConfigOptions().forEach(co -> validValues.putAll(co.validValues(getRaw())));
+            settingsClasses.stream()
+                    .map(this::validValues)
+                    .forEach(it -> validValues.putAll(it));
         }
         return validValues;
-    }
-
-    @Override
-    public DocsConfigValue getDocumentableSetting(String settingKey) {
-        return getDocsConfigValues().get(settingKey);
-    }
-
-    @Override
-    public Map<String, DocsConfigValue> getDocumentableSettings(List<String> settingKeys) {
-        return new HashMap<String, DocsConfigValue>() {{
-            getDocsConfigValues().entrySet().stream()
-                    .filter(it -> settingKeys.contains(it.getKey()))
-                    .forEach(e -> put(e.getKey(), e.getValue()));
-        }};
-    }
-
-    @Override
-    public Map<String, DocsConfigValue> getAllDocumentableSettings() {
-        return getDocsConfigValues();
-    }
-
-    public Map<String, DocsConfigValue> get(Predicate<DocsConfigValue> filter) {
-        return getDocsConfigValues().entrySet().stream()
-                .filter(it -> filter.test(it.getValue()))
-                .collect(Collectors.toMap(k -> k.getKey(), v -> v.getValue()));
     }
 
 }

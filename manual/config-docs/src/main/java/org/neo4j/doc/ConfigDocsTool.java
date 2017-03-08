@@ -90,7 +90,7 @@ public class ConfigDocsTool {
                             : Stream.of(v -> !v.isDeprecated());
                 // Include only deprecated settings.
                 case "deprecated-only":
-                    return Stream.of(DocsConfigValue::isDeprecated);
+                    return Stream.of(SettingDescription::isDeprecated);
                 // Include internal settings?
                 // If true, no filter is added. If false, require {@code DocsConfigValue#isInternal()} to be false.
                 case "internal":
