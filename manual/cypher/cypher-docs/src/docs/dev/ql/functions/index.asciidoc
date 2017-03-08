@@ -16,6 +16,7 @@ This section contains information on all functions in the Cypher query language.
 ** Trigonometric functions [<<header-query-functions-trigonometric, Summary>>|<<query-functions-trigonometric, Detail>>]
 * String functions [<<header-query-functions-string, Summary>>|<<query-functions-string, Detail>>]
 * Spatial functions [<<header-query-functions-spatial, Summary>>|<<query-functions-spatial, Detail>>]
+* <<query-functions-udf, User-defined functions>>
 
 Note that related information exists in <<query-operators>>.
 
