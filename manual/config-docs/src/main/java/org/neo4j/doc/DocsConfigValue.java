@@ -31,22 +31,31 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
     private final Optional<String> description;
     private final String deprecationMessage;
     private final String validationDescription;
-    private final String defaultValue;
+    private final Optional<?> defaultValue;
+    private final boolean isInternal;
+    private final Optional<String> replacement;
 
     public DocsConfigValue(String id,
                            String name,
                            Optional<String> description,
-                           String deprecationMessage,
+                           boolean isDeprecated,
                            String validationDescription,
                            Optional<?> defaultValue,
-                           boolean isDeprecated, boolean hasDefault) {
-        super(name, description, defaultValue);
+                           boolean isInternal,
+                           Optional<String> replacement) {
+        super(  name,
+                description,
+                defaultValue,
+                isDeprecated,
+                replacement);
         this.id = id;
         this.name = name;
         this.description = description;
+        this.deprecationMessage = "The `%s` configuration setting has been deprecated.";
         this.validationDescription = validationDescription;
-        this.defaultValue = defaultValue.get().toString();
-        this.deprecationMessage = deprecationMessage;
+        this.defaultValue = defaultValue;
+        this.isInternal = isInternal;
+        this.replacement = replacement;
     }
 
     @Override
@@ -61,22 +70,31 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
 
     @Override
     public boolean isDeprecated() {
-        return null != deprecationMessage;
+        return deprecated();
     }
 
     @Override
     public boolean hasDefault() {
-        return defaultValue != null;
+        return defaultValue.isPresent();
+    }
+
+    @Override
+    public boolean isInternal() {
+        return isInternal;
     }
 
     @Override
     public String defaultValue() {
-        return defaultValue;
+        return defaultValue.map(Object::toString).orElse(String.format("No default value available for `%s`.", name));
     }
 
     @Override
     public String deprecationMessage() {
-        return deprecationMessage;
+        if (replacement().isPresent()) {
+            return String.format(deprecationMessage + "%nReplaced by %s.", name, replacement.get());
+        } else {
+            return String.format(deprecationMessage, name);
+        }
     }
 
     @Override
@@ -84,9 +102,26 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
         return validationDescription;
     }
 
+    public boolean hasReplacement() {
+        return replacement.isPresent();
+    }
+
     @Override
-    public SettingDescription formatted(Function<String, String> format) {
-        throw new UnsupportedOperationException("not implemented yet");
+    public SettingDescription formatted(Function<String, String> format)
+    {
+        Function<String, String> f = ( str ) -> str == null ? null : format.apply(str);
+        return new DocsConfigValue(
+                id, name,
+                description(),
+                deprecated(),
+
+                // I don't like this, but validationdescription contains a lot of
+                // technical terms, and the formatters barf on it. Leave it out for now,
+                // which is what the old impl did, and improve the formatters at some point
+                validationDescription,
+                defaultValue,
+                isInternal,
+                replacement());
     }
 
     @Override

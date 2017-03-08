@@ -29,29 +29,40 @@ import javax.annotation.Nonnull;
 
 public class DocsConfigOptions extends ConfigOptions {
 
-    private String deprecationMessage;
+    private boolean internal;
+    private boolean deprecated;
 
-    public DocsConfigOptions(SettingGroup<?> settingGroup, Optional<String> description, String deprecationMessage) {
-        super(settingGroup, description);
-        this.deprecationMessage = deprecationMessage;
+    public DocsConfigOptions(SettingGroup<?> settingGroup,
+                             Optional<String> description,
+                             Optional<String> defaultValue,
+                             boolean deprecated,
+                             Optional<String> replacement,
+                             boolean internal) {
+        super(settingGroup,
+              description,
+              defaultValue,
+              deprecated,
+              replacement);
+        this.internal = internal;
+        this.deprecated = deprecated;
     }
 
     @Nonnull
     public List<DocsConfigValue> asDocsConfigValues(@Nonnull Map<String,String> validConfig)
     {
-        return settingGroup().values( validConfig ).entrySet().stream()
+        return settingGroup().values(validConfig).entrySet().stream()
                 .map( val -> {
                     final String name = val.getKey();
-                    if (null != deprecationMessage) {
-                        deprecationMessage = String.format(deprecationMessage, name);
-                    }
-                    return new DocsConfigValue("config_" + (name.replace("(", "").replace(")", "")),
+                    return new DocsConfigValue(
+                            "config_" + (name.replace("(", "").replace(")", "")),
                             name,
                             description(),
-                            deprecationMessage,
-                            Optional.empty().toString(),
+                            deprecated,
+                            settingGroup().toString(),
                             Optional.ofNullable(val.getValue()),
-                            null==deprecationMessage, true);
+                            internal,
+                            replacement()
+                    );
                 })
                 .collect( Collectors.toList() );
     }

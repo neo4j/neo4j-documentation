@@ -89,6 +89,12 @@ public final class SettingDescriptionImpl implements SettingDescription {
     }
 
     @Override
+    public boolean isInternal()
+    {
+        return false;
+    }
+
+    @Override
     public String defaultValue()
     {
         return defaultValue;

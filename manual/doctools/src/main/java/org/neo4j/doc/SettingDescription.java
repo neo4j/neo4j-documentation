@@ -32,6 +32,10 @@ public interface SettingDescription {
 
     boolean hasDefault();
 
+    boolean isInternal();
+
+    boolean hasReplacement();
+
     String defaultValue();
 
     String deprecationMessage();

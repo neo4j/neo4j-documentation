@@ -19,6 +19,8 @@
 package org.neo4j.kernel.configuration;
 
 import org.neo4j.configuration.Description;
+import org.neo4j.configuration.DocumentedDefaultValue;
+import org.neo4j.configuration.ReplacedBy;
 import org.neo4j.configuration.LoadableConfig;
 import org.neo4j.doc.DocsConfigOptions;
 import org.neo4j.doc.DocsConfigValue;
@@ -45,7 +47,6 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
     private final List<LoadableConfig> settingsClasses;
     private List<DocsConfigOptions> docsConfigOptions = null;
     private Map<String, DocsConfigValue> docsConfigValues = null;
-    private Predicate<Field> filter = (f) -> !f.isAnnotationPresent(Internal.class);
 
     private DocsConfig(
             Optional<File> configFile,
@@ -93,7 +94,7 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
         for (Field f : loadableConfig.getClass().getDeclaredFields()) {
             try {
                 Object publicSetting = f.get(loadableConfig);
-                if (publicSetting instanceof SettingGroup && filter.test(f)) {
+                if (publicSetting instanceof SettingGroup) {
                     final Description documentation = f.getAnnotation(Description.class);
                     final Optional<String> description;
                     if (null == documentation) {
@@ -101,12 +102,30 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
                     } else {
                         description = Optional.of(documentation.value());
                     }
-                    String deprecationMessage = f.isAnnotationPresent( Obsoleted.class )
-                            ? f.getAnnotation( Obsoleted.class ).value()
-                            : f.isAnnotationPresent( Deprecated.class )
-                            ? "The `%s` configuration setting has been deprecated."
-                            : null;
-                    configOptions.add(new DocsConfigOptions((SettingGroup) publicSetting, description, deprecationMessage));
+                    final Deprecated deprecatedAnnotation = f.getAnnotation( Deprecated.class );
+                    final boolean deprecated = null != deprecatedAnnotation;
+                    final ReplacedBy replacedByAnnotation = f.getAnnotation( ReplacedBy.class);
+                    final Optional<String> replacement;
+                    if (replacedByAnnotation == null ) {
+                        replacement = Optional.empty();
+                    } else {
+                        replacement = Optional.of( replacedByAnnotation.value() );
+                    }
+                    final DocumentedDefaultValue defValue = f.getAnnotation( DocumentedDefaultValue.class );
+                    final Optional<String> documentedDefaultValue;
+                    if ( defValue == null ) {
+                        documentedDefaultValue = Optional.empty();
+                    } else {
+                        documentedDefaultValue = Optional.of( defValue.value() );
+                    }
+                    final boolean isInternal = f.isAnnotationPresent(Internal.class);
+                    configOptions.add(new DocsConfigOptions(
+                            (SettingGroup) publicSetting,
+                            description,
+                            documentedDefaultValue,
+                            deprecated,
+                            replacement,
+                            isInternal));
                 }
             } catch (IllegalAccessException ignored) {
                 // Field is private, ignore it
@@ -147,19 +166,21 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
     @Override
     public Map<String, DocsConfigValue> getDocumentableSettings(List<String> settingKeys) {
         return new HashMap<String, DocsConfigValue>() {{
-            getDocsConfigValues().entrySet().stream().filter(it -> settingKeys.contains(it.getKey())).forEach(e -> put(e.getKey(), e.getValue()));
+            getDocsConfigValues().entrySet().stream()
+                    .filter(it -> settingKeys.contains(it.getKey()))
+                    .forEach(e -> put(e.getKey(), e.getValue()));
         }};
     }
 
     @Override
     public Map<String, DocsConfigValue> getAllDocumentableSettings() {
-        return getAllDocumentableSettings(f -> {
-            return f.isAnnotationPresent(Internal.class);
-        });
+        return getDocsConfigValues();
     }
 
-    public Map<String, DocsConfigValue> getAllDocumentableSettings(Predicate<Field> filter) {
-        return getDocsConfigValues();
+    public Map<String, DocsConfigValue> get(Predicate<DocsConfigValue> filter) {
+        return getDocsConfigValues().entrySet().stream()
+                .filter(it -> filter.test(it.getValue()))
+                .collect(Collectors.toMap(k -> k.getKey(), v -> v.getValue()));
     }
 
 }

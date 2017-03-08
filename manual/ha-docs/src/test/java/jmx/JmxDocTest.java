@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -158,7 +159,7 @@ public class JmxDocTest
                     .replace( '\n', ' ' );
 
             String id = getId( name );
-            settingDescriptions.add( new SettingDescriptionImpl( id, name, description ) );
+            settingDescriptions.add( new SettingDescriptionImpl( id, name, Optional.of(description) ) );
 
             writeDetailsToFile( id, objectName, bean, info, description );
         }
