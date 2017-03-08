@@ -18,6 +18,7 @@
  */
 package org.neo4j.doc;
 
+import org.neo4j.configuration.ConfigValue;
 import org.neo4j.kernel.configuration.Config;
 import org.neo4j.kernel.configuration.DocsConfig;
 
@@ -58,11 +59,13 @@ public class ConfigDocsGenerator {
         docsConfig = DocsConfig.documentedSettings();
     }
 
-    public String document(Predicate<DocsConfigValue> filter) {
+    public String document(Predicate<ConfigValue> filter) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         out = new PrintStream( baos );
         Map<String, Optional<String>> documentedDefaults = config.getDocumentedDefaults();
-        List<SettingDescription> settingDescriptions = config.serverDefaults().getConfigValues().values().stream()
+        List<SettingDescription> settingDescriptions = docsConfig.getConfigValues().values().stream()
+                .filter(filter)
+                .sorted((cv1, cv2) -> cv1.name().compareTo(cv2.name()))
                 .map(c -> new DocsConfigValue(
                         "config_" + (c.name().replace("(", "").replace(")", "")),
                         c.name(),

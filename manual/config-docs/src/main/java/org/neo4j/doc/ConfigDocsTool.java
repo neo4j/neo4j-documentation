@@ -18,6 +18,7 @@
  */
 package org.neo4j.doc;
 
+import org.neo4j.configuration.ConfigValue;
 import org.neo4j.function.Predicates;
 import org.neo4j.helpers.Args;
 
@@ -45,7 +46,7 @@ public class ConfigDocsTool {
         List<String> orphans = arguments.orphans();
         Path outFile = orphans.size() == 1 ? Paths.get(orphans.get(0)) : null;
 
-        Predicate<DocsConfigValue> filter = filters(arguments);
+        Predicate<ConfigValue> filter = filters(arguments);
 
         try {
             String doc = new ConfigDocsGenerator().document(filter);
@@ -73,30 +74,30 @@ public class ConfigDocsTool {
 
     /**
      * Create a combined filter to apply to "all settings" based on arguments.
-     * For each of the filters that can be specified as an argument to this tool, create a {@code Predicate<DocsConfigValue>}.
+     * For each of the filters that can be specified as an argument to this tool, create a {@code Predicate<ConfigValue>}.
      * Combine these predicates and pass along to the {@code ConfigDocsGenerator}.
      * @param arguments Arguments passed to this tool.
      * @return A Predicate used for filtering which settings to document.
      */
-    private static Predicate<DocsConfigValue> filters(Args arguments) {
-        Predicate<DocsConfigValue> filters = Predicates.all(arguments.asMap().entrySet().stream()
-                .<Predicate<DocsConfigValue>>flatMap(e -> {
+    private static Predicate<ConfigValue> filters(Args arguments) {
+        Predicate<ConfigValue> filters = Predicates.all(arguments.asMap().entrySet().stream()
+                .<Predicate<ConfigValue>>flatMap(e -> {
             switch (e.getKey()) {
                 // Include deprecated settings?
-                // If true, no filter is added. If false, require {@code DocsConfigValue#isDeprecated()} to be false.
+                // If true, no filter is added. If false, require {@code ConfigValue#isDeprecated()} to be false.
                 case "deprecated":
                     return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
                             ? Stream.empty()
-                            : Stream.of(v -> !v.isDeprecated());
+                            : Stream.of(v -> !v.deprecated());
                 // Include only deprecated settings.
                 case "deprecated-only":
-                    return Stream.of(SettingDescription::isDeprecated);
+                    return Stream.of(ConfigValue::deprecated);
                 // Include internal settings?
-                // If true, no filter is added. If false, require {@code DocsConfigValue#isInternal()} to be false.
+                // If true, no filter is added. If false, require {@code ConfigValue#isInternal()} to be false.
                 case "internal":
                     return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
                             ? Stream.empty()
-                            : Stream.of(v -> !v.isInternal());
+                            : Stream.of(v -> !v.internal());
                 // Include only the setting matching this name.
                 case "name":
                     return Stream.of(v -> v.name().equals(e.getValue()));
@@ -110,7 +111,7 @@ public class ConfigDocsTool {
                     return Stream.empty();
             }
         }).collect(Collectors.toList()));
-        return arguments.has("unsupported") ? filters : filters.and(v -> !v.isInternal());
+        return arguments.has("unsupported") ? filters : filters.and(v -> !v.internal());
     }
 
     private static void printUsage() {
