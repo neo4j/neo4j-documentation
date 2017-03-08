@@ -21,6 +21,7 @@ package org.neo4j.doc;
 import org.neo4j.configuration.ConfigOptions;
 import org.neo4j.graphdb.config.SettingGroup;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,6 +68,12 @@ public class DocsConfigOptions extends ConfigOptions {
                     );
                 })
                 .collect( Collectors.toList() );
+    }
+
+    public Map<String, String> validValues(@Nonnull Map<String, String> validConfig) {
+        Map<String, String> validValues = new HashMap<>();
+        settingGroup().values(validConfig).forEach((k, v) -> validValues.put(k, settingGroup().toString()));
+        return validValues;
     }
 
 }

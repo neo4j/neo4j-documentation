@@ -18,7 +18,6 @@
  */
 package org.neo4j.doc;
 
-import org.neo4j.function.Predicates;
 import org.neo4j.kernel.configuration.Config;
 import org.neo4j.kernel.configuration.DocsConfig;
 
@@ -50,36 +49,13 @@ public class ConfigDocsGenerator {
     public static final String IFDEF_HTMLOUTPUT = String.format("ifndef::nonhtmloutput[]%n");
     public static final String IFDEF_NONHTMLOUTPUT = String.format("ifdef::nonhtmloutput[]%n");
     public static final String ENDIF = String.format("endif::nonhtmloutput[]%n%n");
-    private DocsConfig docsConfig;
-    private Config config;
+    private final Config config;
+    private final DocsConfig docsConfig;
     private PrintStream out;
 
     public ConfigDocsGenerator() {
         config = Config.serverDefaults();
         docsConfig = DocsConfig.documentedSettings();
-    }
-
-    public String documentWithWorkarounds(Predicate<DocsConfigValue> filter) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        out = new PrintStream( baos );
-        List<SettingDescription> settingDescriptions = docsConfig.getAllDocumentableSettings().values().stream()
-                .map(c -> new DocsConfigValue(
-                        "config_" + (c.name().replace("(", "").replace(")", "")),
-                        c.name(),
-                        Optional.of(c.description().orElse("no description, likely an internal setting")),
-                        c.deprecated(),
-                        "VALIDATION_DESCRIPTION",
-                        c.getDocumentedDefaultValue(),
-                        c.value(),
-                        false,
-                        c.replacement()
-
-                ))
-                .collect(Collectors.toList());
-        out.print(documentSummary(settingDescriptions));
-        settingDescriptions.forEach(this::documentForAllOutputs);
-        out.flush();
-        return baos.toString();
     }
 
     public String document(Predicate<DocsConfigValue> filter) {
@@ -90,14 +66,13 @@ public class ConfigDocsGenerator {
                 .map(c -> new DocsConfigValue(
                         "config_" + (c.name().replace("(", "").replace(")", "")),
                         c.name(),
-                        Optional.of(c.description().orElse("no description, likely an internal setting")),
+                        c.description(),
                         c.deprecated(),
-                        "VALIDATION_DESCRIPTION",
-                        documentedDefaults.get(c.name()),
+                        docsConfig.validValues().get(c.name()),
+                        c.getDocumentedDefaultValue(),
                         c.value(),
-                        false,
+                        c.internal(),
                         c.replacement()
-
                 ))
                 .collect(Collectors.toList());
         out.print(documentSummary(settingDescriptions));
@@ -134,7 +109,7 @@ public class ConfigDocsGenerator {
                         "|Description a|%s%n" +
                         "|Valid values a|%s%n",
                 item.id(), item.name(),
-                item.description().get(), item.validationMessage() );
+                item.description().orElse("No description available."), item.validationMessage() );
 
         if (item.hasDefault()) {
             out.printf("|Default value m|%s%n", item.defaultValue() );

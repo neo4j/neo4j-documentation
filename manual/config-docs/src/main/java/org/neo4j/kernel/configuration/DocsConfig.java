@@ -26,6 +26,7 @@ import org.neo4j.configuration.LoadableConfig;
 import org.neo4j.doc.DocsConfigOptions;
 import org.neo4j.doc.DocsConfigValue;
 import org.neo4j.doc.DocumentableSettingGetter;
+import org.neo4j.doc.SettingDescription;
 import org.neo4j.graphdb.config.SettingGroup;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.logging.Log;
@@ -48,6 +49,7 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
     private final List<LoadableConfig> settingsClasses;
     private List<DocsConfigOptions> docsConfigOptions = null;
     private Map<String, DocsConfigValue> docsConfigValues = null;
+    private Map<String, String> validValues = null;
 
     private DocsConfig(
             Optional<File> configFile,
@@ -96,6 +98,7 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
             try {
                 Object publicSetting = f.get(loadableConfig);
                 if (publicSetting instanceof SettingGroup) {
+
                     final Description documentation = f.getAnnotation(Description.class);
                     final Optional<String> description;
                     if (null == documentation) {
@@ -133,6 +136,7 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
                 continue;
             }
         }
+
         return configOptions;
     }
 
@@ -157,6 +161,14 @@ public class DocsConfig extends Config implements DocumentableSettingGetter {
                     }, LinkedHashMap::new));
         }
         return docsConfigValues;
+    }
+
+    public Map<String, String> validValues() {
+        if (null == validValues) {
+            validValues = new HashMap<>();
+            getDocsConfigOptions().forEach(co -> validValues.putAll(co.validValues(getRaw())));
+        }
+        return validValues;
     }
 
     @Override
