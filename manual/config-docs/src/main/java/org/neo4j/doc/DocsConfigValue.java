@@ -115,7 +115,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
         Function<String, String> f = ( str ) -> str == null ? null : format.apply(str);
         return new DocsConfigValue(
                 id, name,
-                description(),
+                description.isPresent() ? Optional.of(f.apply(description.get())) : description,
                 deprecated(),
 
                 // I don't like this, but validationdescription contains a lot of
