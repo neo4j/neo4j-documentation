@@ -36,6 +36,8 @@ public interface SettingDescription {
 
     boolean hasReplacement();
 
+    String replacedBy();
+
     String defaultValue();
 
     String deprecationMessage();

@@ -94,6 +94,11 @@ public final class SettingDescriptionImpl implements SettingDescription {
     }
 
     @Override
+    public String replacedBy() {
+        throw new UnsupportedOperationException("Old config docs generator doesn't handle 'Replaced by'");
+    }
+
+    @Override
     public boolean isInternal()
     {
         return false;

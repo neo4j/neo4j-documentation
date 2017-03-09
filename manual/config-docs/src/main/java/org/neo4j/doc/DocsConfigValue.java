@@ -93,11 +93,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
 
     @Override
     public String deprecationMessage() {
-        if (replacement().isPresent()) {
-            return String.format(deprecationMessage + "%nReplaced by %s.", name, replacement.get());
-        } else {
-            return String.format(deprecationMessage, name);
-        }
+        return String.format(deprecationMessage, name);
     }
 
     @Override
@@ -107,6 +103,11 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
 
     public boolean hasReplacement() {
         return replacement.isPresent();
+    }
+
+    @Override
+    public String replacedBy() {
+        return replacement().get();
     }
 
     @Override

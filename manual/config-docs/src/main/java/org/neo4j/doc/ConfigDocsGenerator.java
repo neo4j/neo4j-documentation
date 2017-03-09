@@ -121,6 +121,9 @@ public class ConfigDocsGenerator {
 
         if (item.isDeprecated()) {
             out.printf( "|Deprecated a|%s%n", item.deprecationMessage() );
+            if (item.hasReplacement()) {
+                out.printf("|Replaced by a|%s%n", settingReferenceForHTML(item.replacedBy()));
+            }
         }
         if (item.isInternal()) {
             out.printf("|Internal a|%s is an internal, unsupported setting.%n", item.name());
