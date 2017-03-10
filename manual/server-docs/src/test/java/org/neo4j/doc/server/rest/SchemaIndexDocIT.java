@@ -35,16 +35,13 @@ import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.test.GraphDescription;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-
 import static org.neo4j.graphdb.Label.label;
 import static org.neo4j.graphdb.Neo4jMatchers.containsOnly;
 import static org.neo4j.helpers.collection.MapUtil.map;
@@ -59,7 +56,7 @@ public class SchemaIndexDocIT extends AbstractRestFunctionalTestBase
                  "This will start a background job in the database that will create and populate the index.\n" +
                  "You can check the status of your index by listing all the indexes for the relevant label." )
     @Test
-    @GraphDescription.Graph( nodes = {} )
+    @GraphDescription.Graph
     public void create_index() throws JsonParseException
     {
         data.get();
@@ -86,7 +83,7 @@ public class SchemaIndexDocIT extends AbstractRestFunctionalTestBase
 
     @Documented( "List indexes for a label." )
     @Test
-    @GraphDescription.Graph( nodes = {} )
+    @GraphDescription.Graph
     public void get_indexes_for_label() throws Exception
     {
         data.get();
@@ -95,19 +92,10 @@ public class SchemaIndexDocIT extends AbstractRestFunctionalTestBase
         createIndex( labelName, propertyKey );
         Map<String,Object> definition = map( "property_keys", singletonList( propertyKey ) );
 
-        List<Map<String,Object>> serializedList = retryOnStillPopulating( new Callable<String>()
-        {
-            @Override
-            public String call()
-            {
-                return gen.get()
-                        .noGraph()
-                        .expectedStatus( 200 )
-                        .payload( createJsonFrom( definition ) )
-                        .get( getSchemaIndexLabelUri( labelName ) )
-                        .entity();
-            }
-        } );
+        List<Map<String,Object>> serializedList = retryOnStillPopulating(
+                () -> gen.get().noGraph().expectedStatus( 200 )
+                         .payload( createJsonFrom( definition ) )
+                         .get( getSchemaIndexLabelUri( labelName ) ).entity() );
 
         Map<String,Object> index = new HashMap<>();
         index.put( "label", labelName );
@@ -153,7 +141,7 @@ public class SchemaIndexDocIT extends AbstractRestFunctionalTestBase
     @SuppressWarnings( "unchecked" )
     @Documented( "Get all indexes." )
     @Test
-    @GraphDescription.Graph( nodes = {} )
+    @GraphDescription.Graph
     public void get_indexes() throws Exception
     {
         data.get();
@@ -163,14 +151,8 @@ public class SchemaIndexDocIT extends AbstractRestFunctionalTestBase
         createIndex( labelName1, propertyKey1 );
         createIndex( labelName2, propertyKey2 );
 
-        List<Map<String,Object>> serializedList = retryOnStillPopulating( new Callable<String>()
-        {
-            @Override
-            public String call() throws Exception
-            {
-                return gen.get().noGraph().expectedStatus( 200 ).get( getSchemaIndexUri() ).entity();
-            }
-        } );
+        List<Map<String,Object>> serializedList = retryOnStillPopulating(
+                () -> gen.get().noGraph().expectedStatus( 200 ).get( getSchemaIndexUri() ).entity() );
 
         Map<String,Object> index1 = new HashMap<>();
         index1.put( "label", labelName1 );
@@ -185,7 +167,7 @@ public class SchemaIndexDocIT extends AbstractRestFunctionalTestBase
 
     @Documented( "Drop index" )
     @Test
-    @GraphDescription.Graph( nodes = {} )
+    @GraphDescription.Graph
     public void drop_index() throws Exception
     {
         data.get();
@@ -201,48 +183,6 @@ public class SchemaIndexDocIT extends AbstractRestFunctionalTestBase
                 .entity();
 
         assertThat( Neo4jMatchers.getIndexes( graphdb(), label( labelName ) ), not( containsOnly( schemaIndex ) ) );
-    }
-
-    /**
-     * Create an index for a label and property key which already exists.
-     */
-    @Test
-    public void create_existing_index()
-    {
-        String labelName = labels.newInstance(), propertyKey = properties.newInstance();
-        createIndex( labelName, propertyKey );
-        Map<String,Object> definition = map( "property_keys", singletonList( propertyKey ) );
-
-        gen.get()
-                .noGraph()
-                .expectedStatus( 409 )
-                .payload( createJsonFrom( definition ) )
-                .post( getSchemaIndexLabelUri( labelName ) );
-    }
-
-    @Test
-    public void drop_non_existent_index() throws Exception
-    {
-        String labelName = labels.newInstance(), propertyKey = properties.newInstance();
-
-        gen.get()
-                .expectedStatus( 404 )
-                .delete( getSchemaIndexLabelPropertyUri( labelName, propertyKey ) );
-    }
-
-    /**
-     * Creating a compound index should not yet be supported
-     */
-    @Test
-    public void create_compound_index()
-    {
-        Map<String,Object> definition = map( "property_keys", asList( properties.newInstance(), properties.newInstance()) );
-
-        gen.get()
-                .noGraph()
-                .expectedStatus( 400 )
-                .payload( createJsonFrom( definition ) )
-                .post( getSchemaIndexLabelUri( labels.newInstance() ) );
     }
 
     private IndexDefinition createIndex( String labelName, String propertyKey )
