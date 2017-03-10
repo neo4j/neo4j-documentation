@@ -20,13 +20,10 @@ package org.neo4j.doc;
 
 import org.neo4j.configuration.ConfigValue;
 import org.neo4j.kernel.configuration.Config;
-import org.neo4j.kernel.configuration.DocsConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
@@ -42,20 +39,17 @@ public class ConfigDocsGenerator {
     public static final String IFDEF_NONHTMLOUTPUT = String.format("ifdef::nonhtmloutput[]%n");
     public static final String ENDIF = String.format("endif::nonhtmloutput[]%n%n");
     private final Config config;
-    private final DocsConfig docsConfig;
     List<SettingDescription> settingDescriptions;
     private PrintStream out;
 
     public ConfigDocsGenerator() {
         config = Config.serverDefaults();
-        docsConfig = DocsConfig.documentedSettings();
     }
 
     public String document(Predicate<ConfigValue> filter) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         out = new PrintStream( baos );
-        Map<String, Optional<String>> documentedDefaults = config.getDocumentedDefaults();
-        settingDescriptions = docsConfig.getConfigValues().values().stream()
+        settingDescriptions = config.getConfigValues().values().stream()
                 .filter(filter)
                 .sorted((cv1, cv2) -> cv1.name().compareTo(cv2.name()))
                 .map(c -> new DocsConfigValue(
@@ -63,8 +57,8 @@ public class ConfigDocsGenerator {
                         c.name(),
                         c.description(),
                         c.deprecated(),
-                        docsConfig.validValues().get(c.name()),
-                        c.getDocumentedDefaultValue().isPresent() ? c.getDocumentedDefaultValue() : valueAsString(c),
+                        c.valueDescription(),
+                        c.documentedDefaultValue().isPresent() ? c.documentedDefaultValue() : valueAsString(c),
                         c.value(),
                         c.internal(),
                         c.replacement()

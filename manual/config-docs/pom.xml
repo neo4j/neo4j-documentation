@@ -132,19 +132,15 @@
             <phase>${generate-config-docs-phase}</phase>
             <configuration>
               <target>
+
                 <!-- Using new config docs tool. -->
                 <!-- All public settings -->
-                <!--<java classname="org.neo4j.doc.ConfigDocsTool"-->
-                      <!--classpathref="maven.compile.classpath" failonerror="true">-->
-                  <!--<arg line="-o ${project.build.directory}/docs/ops/all-settings.adoc" />-->
-                <!--</java>-->
-                <!-- All deprecated public settings -->
                 <java classname="org.neo4j.doc.ConfigDocsTool"
                       classpathref="maven.compile.classpath" failonerror="true">
                   <arg value="--deprecated=true" />
-                  <!--<arg value="&#45;&#45;internal=false" />-->
-                  <arg file="${project.build.directory}/docs/ops/all-settings-deprecated.adoc" />
+                  <arg file="${project.build.directory}/docs/ops/all-settings.adoc" />
                 </java>
+
                 <!-- Combined configuration docs for all public configuration other than
                      connectors, which are handled separately below. -->
                 <java classname="org.neo4j.doc.GenerateConfigDocumentation"
@@ -153,7 +149,7 @@
                   <arg value="org.neo4j.server.configuration.ServerSettings" />
                   <arg value="org.neo4j.graphdb.factory.GraphDatabaseSettings" />
                   <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
-                  <arg value="org.neo4j.metrics.MetricsSettings" />
+                  <!--<arg value="org.neo4j.metrics.MetricsSettings" />-->
                   <arg value="org.neo4j.backup.OnlineBackupSettings" />
                   <arg value="org.neo4j.ext.udc.UdcSettings" />
                   <arg value="org.neo4j.shell.ShellSettings" />

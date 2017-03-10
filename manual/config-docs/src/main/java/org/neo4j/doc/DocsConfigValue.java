@@ -30,7 +30,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
     private final String name;
     private final Optional<String> description;
     private final String deprecationMessage;
-    private final String validationDescription;
+    private final String valueDescription;
     private final Optional<String> defaultValue;
     private final boolean isInternal;
     private final Optional<String> replacement;
@@ -39,7 +39,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
                            String name,
                            Optional<String> description,
                            boolean isDeprecated,
-                           String validationDescription,
+                           String valueDescription,
                            Optional<String> defaultValue,
                            Optional<?> value,
                            boolean isInternal,
@@ -48,6 +48,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
                 description,
                 defaultValue,
                 value,
+                valueDescription,
                 isInternal,
                 isDeprecated,
                 replacement);
@@ -55,7 +56,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
         this.name = name;
         this.description = description;
         this.deprecationMessage = "The `%s` configuration setting has been deprecated.";
-        this.validationDescription = validationDescription;
+        this.valueDescription = valueDescription;
         this.defaultValue = defaultValue;
         this.isInternal = isInternal;
         this.replacement = replacement;
@@ -98,7 +99,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
 
     @Override
     public String validationMessage() {
-        return validationDescription;
+        return valueDescription;
     }
 
     public boolean hasReplacement() {
@@ -122,7 +123,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
                 // I don't like this, but validationdescription contains a lot of
                 // technical terms, and the formatters barf on it. Leave it out for now,
                 // which is what the old impl did, and improve the formatters at some point
-                validationDescription,
+                valueDescription,
                 defaultValue,
                 value(),
                 isInternal,

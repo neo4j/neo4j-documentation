@@ -40,7 +40,6 @@ import java.util.stream.Stream;
 public class ConfigDocsTool {
 
     public static void main(String[] args) throws IOException {
-        printUsage();
         Args arguments = Args.parse(args);
 
         List<String> orphans = arguments.orphans();
@@ -58,9 +57,7 @@ public class ConfigDocsTool {
                 System.out.println("Saving docs in '" + outFile.toFile().getAbsolutePath() + "'.");
                 Files.write(outFile, doc.getBytes());
             } else {
-                System.out.printf("%n====%nSomething has gone horribly wrong.%n");
-                System.out.println(arguments);
-                System.out.println("====");
+                System.out.println(doc);
             }
         } catch (NoSuchElementException nse) {
             nse.printStackTrace();
