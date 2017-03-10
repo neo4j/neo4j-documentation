@@ -28,7 +28,6 @@ import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionRe
 class ExamplesTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT:Person FRIEND A:Person", "A:Person FRIEND B:Person", "B:Person FRIEND C:Person", "C:Person FRIEND ROOT:Person")
   val title = "Query Structure"
-  val css = "general c2-2 c3-2 c4-2 c5-2"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

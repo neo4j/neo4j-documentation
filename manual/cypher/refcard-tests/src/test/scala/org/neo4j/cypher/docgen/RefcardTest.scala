@@ -67,7 +67,6 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   def title: String
   def linkId: String = null
-  def css: String
   def section: String = "refcard"
   def assert(name: String, result: InternalExecutionResult)
   def parameters(name: String): Map[String, Any] = Map()
@@ -164,8 +163,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     val writer: PrintWriter = createWriter(title, dir)
     val queryText = includeQueries(text.replaceAll("\r\n", "\n"), dir)
     val queryLines = queryText.split("\n\n")
+    writer.println("[subs=attributes+]")
     writer.println("++++")
-    writer.println("<div class='col card" + css +
+    writer.println("<div class='col card" + "{css}" +
       "\'><div class='blk'>")
     writer.println("++++")
     writer.println()
