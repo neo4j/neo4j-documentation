@@ -28,7 +28,6 @@ import org.neo4j.cypher.internal.compiler.v3_1.executionplan.InternalExecutionRe
 class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "INDEX"
-  val css = "write c4-4 c5-5 c6-3"
   override val linkId = "schema/index"
 
   override def assert(name: String, result: InternalExecutionResult) {
