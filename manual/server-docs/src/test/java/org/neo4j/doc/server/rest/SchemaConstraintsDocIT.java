@@ -33,7 +33,6 @@ import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.test.GraphDescription;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -55,7 +54,7 @@ public class SchemaConstraintsDocIT extends AbstractRestFunctionalTestBase
     @Documented( "Create uniqueness constraint.\n" +
                  "Create a uniqueness constraint on a property." )
     @Test
-    @GraphDescription.Graph( nodes = {} )
+    @GraphDescription.Graph
     public void createPropertyUniquenessConstraint() throws JsonParseException
     {
         data.get();
@@ -79,7 +78,7 @@ public class SchemaConstraintsDocIT extends AbstractRestFunctionalTestBase
     @Documented( "Get a specific uniqueness constraint.\n" +
                  "Get a specific uniqueness constraint for a label and a property." )
     @Test
-    @GraphDescription.Graph( nodes = {} )
+    @GraphDescription.Graph
     public void getLabelUniquenessPropertyConstraint() throws JsonParseException
     {
         data.get();
@@ -103,7 +102,7 @@ public class SchemaConstraintsDocIT extends AbstractRestFunctionalTestBase
     @SuppressWarnings( "unchecked" )
     @Documented( "Get all uniqueness constraints for a label." )
     @Test
-    @GraphDescription.Graph( nodes = {} )
+    @GraphDescription.Graph
     public void getLabelUniquenessPropertyConstraints() throws JsonParseException
     {
         data.get();
@@ -132,7 +131,7 @@ public class SchemaConstraintsDocIT extends AbstractRestFunctionalTestBase
     @SuppressWarnings( "unchecked" )
     @Documented( "Get all constraints for a label." )
     @Test
-    @GraphDescription.Graph( nodes = {} )
+    @GraphDescription.Graph
     public void getLabelPropertyConstraints() throws JsonParseException
     {
         data.get();
@@ -155,7 +154,7 @@ public class SchemaConstraintsDocIT extends AbstractRestFunctionalTestBase
     @SuppressWarnings( "unchecked" )
     @Documented( "Get all constraints." )
     @Test
-    @GraphDescription.Graph( nodes = {} )
+    @GraphDescription.Graph
     public void get_constraints() throws JsonParseException
     {
         data.get();
@@ -178,7 +177,7 @@ public class SchemaConstraintsDocIT extends AbstractRestFunctionalTestBase
     @Documented( "Drop uniqueness constraint.\n" +
                  "Drop uniqueness constraint for a label and a property." )
     @Test
-    @GraphDescription.Graph( nodes = {} )
+    @GraphDescription.Graph
     public void drop_constraint() throws Exception
     {
         data.get();
@@ -190,42 +189,6 @@ public class SchemaConstraintsDocIT extends AbstractRestFunctionalTestBase
         gen.get().noGraph().expectedStatus( 204 ).delete( getSchemaConstraintLabelUniquenessPropertyUri( labelName, propertyKey ) ).entity();
 
         assertThat( getConstraints( graphdb(), label( labelName ) ), isEmpty() );
-    }
-
-    /**
-     * Create an index for a label and property key which already exists.
-     */
-    @Test
-    public void create_existing_constraint()
-    {
-        String labelName = labels.newInstance(), propertyKey = properties.newInstance();
-        createLabelUniquenessPropertyConstraint( labelName, propertyKey );
-
-        Map<String, Object> definition = map( "property_keys", singletonList( propertyKey ) );
-        gen.get().noGraph().expectedStatus( 409 ).payload( createJsonFrom( definition ) )
-                .post( getSchemaConstraintLabelUniquenessUri( labelName ) ).entity();
-    }
-
-    @Test
-    public void drop_non_existent_constraint() throws Exception
-    {
-        String labelName = labels.newInstance(), propertyKey = properties.newInstance();
-
-        gen.get().noGraph().expectedStatus( 404 )
-                .delete( getSchemaConstraintLabelUniquenessPropertyUri( labelName, propertyKey ) );
-    }
-
-    /**
-     * Creating a compound index should not yet be supported.
-     */
-    @Test
-    public void create_compound_schema_index()
-    {
-        Map<String,Object> definition = map( "property_keys",
-                asList( properties.newInstance(), properties.newInstance() ) );
-
-        gen.get().noGraph().expectedStatus( 400 )
-                .payload( createJsonFrom( definition ) ).post( getSchemaIndexLabelUri( labels.newInstance() ) );
     }
 
     private ConstraintDefinition createLabelUniquenessPropertyConstraint( String labelName, String propertyKey )
