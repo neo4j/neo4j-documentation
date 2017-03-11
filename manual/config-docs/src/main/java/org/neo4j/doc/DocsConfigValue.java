@@ -18,47 +18,38 @@
  */
 package org.neo4j.doc;
 
-import org.neo4j.configuration.ConfigValue;
-
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class DocsConfigValue extends ConfigValue implements SettingDescription {
+public class DocsConfigValue implements SettingDescription {
+
+    private static final String DEPRECATION_MESSAGE = "The `%s` configuration setting has been deprecated.";
 
     private final String id;
     private final String name;
     private final Optional<String> description;
-    private final String deprecationMessage;
     private final String valueDescription;
     private final Optional<String> defaultValue;
-    private final boolean isInternal;
+    private final boolean internal;
+    private final boolean deprecated;
     private final Optional<String> replacement;
 
     public DocsConfigValue(String id,
                            String name,
                            Optional<String> description,
-                           boolean isDeprecated,
+                           boolean deprecated,
                            String valueDescription,
                            Optional<String> defaultValue,
-                           Optional<?> value,
-                           boolean isInternal,
+                           boolean internal,
                            Optional<String> replacement) {
-        super(  name,
-                description,
-                defaultValue,
-                value,
-                valueDescription,
-                isInternal,
-                isDeprecated,
-                replacement);
         this.id = id;
         this.name = name;
         this.description = description;
-        this.deprecationMessage = "The `%s` configuration setting has been deprecated.";
         this.valueDescription = valueDescription;
         this.defaultValue = defaultValue;
-        this.isInternal = isInternal;
+        this.internal = internal;
+        this.deprecated = deprecated;
         this.replacement = replacement;
     }
 
@@ -68,13 +59,18 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
     }
 
     @Override
+    public String name() {
+        return name;
+    }
+
+    @Override
     public Optional<String> description() {
         return description;
     }
 
     @Override
     public boolean isDeprecated() {
-        return deprecated();
+        return deprecated;
     }
 
     @Override
@@ -84,7 +80,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
 
     @Override
     public boolean isInternal() {
-        return isInternal;
+        return internal;
     }
 
     @Override
@@ -94,7 +90,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
 
     @Override
     public String deprecationMessage() {
-        return String.format(deprecationMessage, name);
+        return String.format(DEPRECATION_MESSAGE, name);
     }
 
     @Override
@@ -108,7 +104,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
 
     @Override
     public String replacedBy() {
-        return replacement().get();
+        return replacement.get();
     }
 
     @Override
@@ -118,16 +114,15 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
         return new DocsConfigValue(
                 id, name,
                 description.isPresent() ? Optional.of(f.apply(description.get())) : description,
-                deprecated(),
+                deprecated,
 
                 // I don't like this, but validationdescription contains a lot of
                 // technical terms, and the formatters barf on it. Leave it out for now,
                 // which is what the old impl did, and improve the formatters at some point
                 valueDescription,
                 defaultValue,
-                value(),
-                isInternal,
-                replacement());
+                internal,
+                replacement);
     }
 
     @Override
@@ -155,7 +150,7 @@ public class DocsConfigValue extends ConfigValue implements SettingDescription {
     @Override
     public String toString()
     {
-        return "SettingDescription{" + "id='" + id() + "\', name='" + name + "\', description='" + description + "\'}";
+        return "DocsConfigValue{" + "id='" + id() + "\', name='" + name + "\', description='" + description + "\'}";
     }
 
 }

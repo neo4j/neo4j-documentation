@@ -59,7 +59,6 @@ public class ConfigDocsGenerator {
                         c.deprecated(),
                         c.valueDescription(),
                         c.documentedDefaultValue().isPresent() ? c.documentedDefaultValue() : valueAsString(c),
-                        c.value(),
                         c.internal(),
                         c.replacement()
                 ))
