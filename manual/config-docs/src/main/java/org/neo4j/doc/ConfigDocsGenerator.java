@@ -46,14 +46,14 @@ public class ConfigDocsGenerator {
         config = Config.serverDefaults();
     }
 
-    public String document(Predicate<ConfigValue> filter) {
+    public String document(Predicate<ConfigValue> filter, String id, String title, String idPrefix) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         out = new PrintStream( baos );
         settingDescriptions = config.getConfigValues().values().stream()
                 .filter(filter)
                 .sorted((cv1, cv2) -> cv1.name().compareTo(cv2.name()))
                 .map(c -> new DocsConfigValue(
-                        "config_" + (c.name().replace("(", "").replace(")", "")),
+                        idPrefix + c.name(),
                         c.name(),
                         c.description(),
                         c.deprecated(),
@@ -63,7 +63,7 @@ public class ConfigDocsGenerator {
                         c.replacement()
                 ))
                 .collect(Collectors.toList());
-        out.print(documentSummary(settingDescriptions));
+        out.print(documentSummary(id, title, settingDescriptions));
         settingDescriptions.forEach(this::documentForAllOutputs);
         out.flush();
         return baos.toString();
@@ -78,8 +78,8 @@ public class ConfigDocsGenerator {
         }
     }
 
-    private String documentSummary(List<SettingDescription> settingDescriptions) {
-        return new AsciiDocListGenerator("settings-all", "Settings", true).generateListAndTableCombo(settingDescriptions);
+    private String documentSummary(String id, String title, List<SettingDescription> settingDescriptions) {
+        return new AsciiDocListGenerator(id, title, true).generateListAndTableCombo(settingDescriptions);
     }
 
     private void documentForAllOutputs(SettingDescription item) {
@@ -129,7 +129,7 @@ public class ConfigDocsGenerator {
     }
 
     private boolean shouldCreateCrossReference(String candidateSettingName) {
-        return settingDescriptions.stream().map(SettingDescription::name).anyMatch(p -> p.equals(candidateSettingName));
+        return settingDescriptions.stream().anyMatch(p -> p.name().equals(candidateSettingName));
     }
 
     private String transformSettingNames( String text, String settingBeingRendered, Function<String, String> transform ) {

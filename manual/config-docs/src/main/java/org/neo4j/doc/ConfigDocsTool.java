@@ -44,11 +44,14 @@ public class ConfigDocsTool {
 
         List<String> orphans = arguments.orphans();
         Path outFile = orphans.size() == 1 ? Paths.get(orphans.get(0)) : null;
+        String id = arguments.get("id");
+        String title = arguments.get("title");
+        String idPrefix = arguments.get("id-prefix");
 
         Predicate<ConfigValue> filter = filters(arguments);
 
         try {
-            String doc = new ConfigDocsGenerator().document(filter);
+            String doc = new ConfigDocsGenerator().document(filter, id, title, idPrefix);
             if (null != outFile) {
                 Path parentDir = outFile.getParent();
                 if (!Files.exists(parentDir)) {
