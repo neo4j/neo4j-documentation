@@ -427,7 +427,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void badRelationshipsDefault() throws IOException, CommandFailed, IncorrectUsage
+    public void badRelationships() throws IOException, CommandFailed, IncorrectUsage
     {
         // GIVEN
         File movies = file( "ops", "movies9.csv" );
@@ -470,7 +470,8 @@ public class ImportToolDocIT
                 "--database", "the_database",
                 "--nodes", movies.getAbsolutePath(),
                 "--nodes", actors.getAbsolutePath(),
-                "--relationships", roles.getAbsolutePath() );
+                "--relationships", roles.getAbsolutePath(),
+                "--ignore-missing-nodes" );
         importTool( arguments );
         assertTrue( badFile.exists() );
 
@@ -514,7 +515,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void badDuplicateNodesDefault() throws IOException, CommandFailed, IncorrectUsage
+    public void badDuplicateNodes() throws IOException, CommandFailed, IncorrectUsage
     {
         // GIVEN
         File actors = file( "ops", "actors10.csv" );
@@ -532,7 +533,7 @@ public class ImportToolDocIT
         String[] arguments = arguments(
                 "--database", "the_database",
                 "--nodes", actors.getAbsolutePath(),
-                "--skip-duplicate-nodes" );
+                "--ignore-duplicate-nodes" );
         importTool( arguments );
         assertTrue( badFile.exists() );
 
