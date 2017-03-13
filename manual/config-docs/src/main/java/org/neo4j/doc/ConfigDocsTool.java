@@ -39,14 +39,23 @@ import java.util.stream.Stream;
  */
 public class ConfigDocsTool {
 
+    private static final String DEFAULT_ID = "settings-reference";
+    private static final String DEFAULT_TITLE = "Settings reference";
+    private static final String DEFAULT_ID_PREFIX = "config_";
+
     public static void main(String[] args) throws IOException {
         Args arguments = Args.parse(args);
+        printUsage();
 
         List<String> orphans = arguments.orphans();
         Path outFile = orphans.size() == 1 ? Paths.get(orphans.get(0)) : null;
-        String id = arguments.get("id");
-        String title = arguments.get("title");
-        String idPrefix = arguments.get("id-prefix");
+
+        String id = arguments.has("id") || warnMissingOption("ID", "--id=my-id", DEFAULT_ID)
+                ? DEFAULT_ID : arguments.get("id");
+        String title = arguments.has("title") || warnMissingOption("title", "--title=my-title", DEFAULT_TITLE)
+                ? DEFAULT_TITLE : arguments.get("title");
+        String idPrefix = arguments.has("id-prefix") || warnMissingOption("ID prefix", "--id-prefix=my-id-prefix", DEFAULT_ID_PREFIX)
+                ? DEFAULT_ID_PREFIX : arguments.get("id-prefix");
 
         Predicate<ConfigValue> filter = filters(arguments);
 
@@ -69,7 +78,6 @@ public class ConfigDocsTool {
             nsf.printStackTrace();
             throw nsf;
         }
-
     }
 
     /**
@@ -114,16 +122,26 @@ public class ConfigDocsTool {
         return arguments.has("unsupported") ? filters : filters.and(v -> !v.internal());
     }
 
+    private static boolean warnMissingOption(String name, String example, String defaultValue) {
+        System.out.printf("    [x] No %s provided (%s), using default: '%s'%n", name, example, defaultValue);
+        return true;
+    }
+
     private static void printUsage() {
         System.out.printf("Usage: ConfigDocsTool [--options] <out_file>%n");
-        System.out.printf("    No options are mandatory. If no <out-file> is given prints to stdout.%n");
+        System.out.printf("    No options are mandatory but in most cases user will want to set --id, --id-prefix and --title.%n");
+        System.out.printf("    If no <out-file> is given prints to stdout.%n");
         System.out.printf("Options:%n");
-        System.out.printf("    %-30s%s%n", "--deprecated", "Include deprecated settings [true]");
-        System.out.printf("    %-30s%s%n", "--deprecated-only", "Include only deprecated settings [false]");
-        System.out.printf("    %-30s%s%n", "--name=<name>", "Single setting by name []");
-        System.out.printf("    %-30s%s%n", "--names=<name1>,<name2>", "Multiple settings by name []");
-        System.out.printf("    %-30s%s%n", "--prefix=<prefix>", "All settings whose namespace match <prefix> []");
-        System.out.printf("    %-30s%s%n", "--unsupported", "Include internal/unsupported settings [false]");
+        System.out.printf("    %-30s%s [%s]%n", "--id", "ID to use for settings summary", DEFAULT_ID);
+        System.out.printf("    %-30s%s [%s]%n", "--id-prefix", "ID to prepend to generated ID for each setting details", DEFAULT_ID_PREFIX);
+        System.out.printf("    %-30s%s [%s]%n", "--title", "Title to use for settings summary", DEFAULT_ID_PREFIX);
+        System.out.printf("Filter options:%n");
+        System.out.printf("    %-30s%s [%s]%n", "--deprecated", "Include deprecated settings", true);
+        System.out.printf("    %-30s%s [%s]%n", "--deprecated-only", "Include only deprecated settings", false);
+        System.out.printf("    %-30s%s [%s]%n", "--name=<name>", "Single setting by name", "");
+        System.out.printf("    %-30s%s [%s]%n", "--names=<name1>,<name2>", "Multiple settings by name", "");
+        System.out.printf("    %-30s%s [%s]%n", "--prefix=<prefix>", "All settings whose namespace match <prefix>", "");
+        System.out.printf("    %-30s%s [%s]%n", "--unsupported", "Include internal/unsupported settings", false);
 
     }
 

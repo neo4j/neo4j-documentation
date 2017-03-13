@@ -173,7 +173,6 @@
                   <arg file="${project.build.directory}/docs/ops/cc-settings.adoc" />
                 </java>
 
-
                 <!-- Old config docs tool -->
                 <!-- Combined configuration docs for all public configuration other than
                      connectors, which are handled separately below. -->
@@ -183,7 +182,7 @@
                   <arg value="org.neo4j.server.configuration.ServerSettings" />
                   <arg value="org.neo4j.graphdb.factory.GraphDatabaseSettings" />
                   <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
-                  <!--<arg value="org.neo4j.metrics.MetricsSettings" />-->
+                  <arg value="org.neo4j.metrics.MetricsSettings" />
                   <arg value="org.neo4j.backup.OnlineBackupSettings" />
                   <arg value="org.neo4j.ext.udc.UdcSettings" />
                   <arg value="org.neo4j.shell.ShellSettings" />
