@@ -51,7 +51,7 @@ Using patterns, you describe the shape of the data you're looking for. For examp
 The pattern describes the data using a form that is very similar to how one typically draws the shape of property graph data on a whiteboard: usually as circles (representing nodes) and arrows between them to represent relationships.
 
 Patterns appear in multiple places in Cypher: in `MATCH`, `CREATE` and `MERGE` clauses, and in pattern expressions. Each of these
-is described in more details in:
+is described in more detail in:
 
 * <<query-match>>
 * <<query-optional-match>>
@@ -59,6 +59,7 @@ is described in more details in:
 * <<query-merge>>
 * <<query-where-patterns>>
 
+[[cypher-pattern-node]]
 == Patterns for nodes ==
 
 The very simplest 'shape' that can be described in a pattern is a node. A node is described using a pair of parentheses, and is typically given a name.
@@ -71,9 +72,10 @@ For example:
 
 This simple pattern describes a single node, and names that node using the variable `a`.
 
+[[cypher-pattern-related-nodes]]
 == Patterns for related nodes ==
 
-More interesting is patterns that describe multiple nodes and relationships between them.
+A more powerful construct is a pattern that describes multiple nodes and relationships between them.
 Cypher patterns describe relationships by employing an arrow between two nodes.
 For example:
 
@@ -85,7 +87,7 @@ For example:
 This pattern describes a very simple data shape: two nodes, and a single relationship from one to the other.
 In this example, the two nodes are both named as `a` and `b` respectively, and the relationship is 'directed': it goes from `a` to `b`.
 
-This way of describing nodes and relationships can be extended to cover an arbitrary number of nodes and the relationships between them, for example:
+This manner of describing nodes and relationships can be extended to cover an arbitrary number of nodes and the relationships between them, for example:
 
 [source,cypher]
 ----
@@ -95,14 +97,15 @@ This way of describing nodes and relationships can be extended to cover an arbit
 Such a series of connected nodes and relationships is called a "path".
 
 Note that the naming of the nodes in these patterns is only necessary should one need to refer to the same node again, either later in the pattern or elsewhere in the Cypher query.
-If this is not necessary then the name may be omitted, like so:
+If this is not necessary, then the name may be omitted, as follows:
 
 [source,cypher]
 ----
 (a)-->()<--(c)
 ----
 
-== Labels ==
+[[cypher-pattern-label]]
+== Patterns for labels ==
 
 In addition to simply describing the shape of a node in the pattern, one can also describe attributes.
 The most simple attribute that can be described in the pattern is a label that the node must have.
@@ -120,6 +123,7 @@ One can also describe a node that has multiple labels:
 (a:User:Admin)-->(b)
 ----
 
+[[cypher-pattern-properties]]
 == Specifying properties ==
 
 Nodes and relationships are the fundamental structures in a graph. Neo4j uses properties on both of these to allow for far richer models.
@@ -132,7 +136,7 @@ E.g. a node with two properties on it would look like:
 (a { name: 'Andres', sport: 'Brazilian Ju-Jitsu'})
 ----
 
-A relationship with expectations on it would could look like:
+A relationship with expectations on it is given by:
 
 [source,cypher]
 ----
@@ -140,18 +144,19 @@ A relationship with expectations on it would could look like:
 ----
 
 When properties appear in patterns, they add an additional constraint to the shape of the data.
-In the case of a `CREATE` clause, the properties will be set in the newly created nodes and relationships.
+In the case of a `CREATE` clause, the properties will be set in the newly-created nodes and relationships.
 In the case of a `MERGE` clause, the properties will be used as additional constraints on the shape any existing data must have (the specified properties must exactly match any existing data in the graph).
 If no matching data is found, then `MERGE` behaves like `CREATE` and the properties will be set in the newly created nodes and relationships.
 
 Note that patterns supplied to `CREATE` may use a single parameter to specify properties, e.g: `CREATE (node {paramName})`.
 This is not possible with patterns used in other clauses, as Cypher needs to know the property names at the time the query is compiled, so that matching can be done effectively.
 
-== Describing relationships ==
+[[cypher-pattern-relationship]]
+== Patterns for relationships ==
 
 The simplest way to describe a relationship is by using the arrow between two nodes, as in the previous examples.
 Using this technique, you can describe that the relationship should exist and the directionality of it.
-If you don't care about the direction of the relationship, the arrow head can be omitted, like so:
+If you don't care about the direction of the relationship, the arrow head can be omitted, as exemplified by:
 
 [source,cypher]
 ----
@@ -168,7 +173,7 @@ For example:
 ----
 
 Much like labels on nodes, relationships can have types.
-To describe a relationship with a specific type, you can specify this like so:
+To describe a relationship with a specific type, you can specify this as follows:
 
 [source,cypher]
 ----
@@ -186,7 +191,7 @@ But if we'd like to describe some data such that the relationship could have any
 Note that this form of pattern can only be used to describe existing data (ie. when using a pattern with `MATCH` or as an expression).
 It will not work with `CREATE` or `MERGE`, since it's not possible to create a relationship with multiple types.
 
-As with nodes, the name of the relationship can always be omitted, in this case like so:
+As with nodes, the name of the relationship can always be omitted, as exemplified by:
 
 [source,cypher]
 ----
@@ -260,12 +265,13 @@ RETURN remote_friend.name###
 This query finds data in the graph which a shape that fits the pattern: specifically a node (with the name property *'Filipa'*) and then the `KNOWS` related nodes, one or two steps out.
 This is a typical example of finding first and second degree friends.
 
-Note that variable length relationships can not be used with `CREATE` and `MERGE`.
+Note that variable length relationships cannot be used with `CREATE` and `MERGE`.
 
+[[cypher-pattern-path-variables]]
 == Assigning to path variables ==
 
 As described above, a series of connected nodes and relationships is called a "path". Cypher allows paths to be named
-using an identifer, like so:
+using an identifer, as exemplified by:
 
 [source,cypher]
 ----

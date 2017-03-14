@@ -217,10 +217,10 @@ class WhereTest extends DocumentingTestBase {
 expressions are also predicates -- an empty list represents `false`, and a non-empty represents `true`.
 
 So, patterns are not only expressions, they are also predicates. The only limitation to your pattern is that you must be
-able to express it in a single path. You can not use commas between multiple paths like you do in `MATCH`. You can achieve
+able to express it in a single path. You cannot use commas between multiple paths like you do in `MATCH`. You can achieve
 the same effect by combining multiple patterns with `AND`.
 
-Note that you can not introduce new variables here. Although it might look very similar to the `MATCH` patterns, the
+Note that you cannot introduce new variables here. Although it might look very similar to the `MATCH` patterns, the
 `WHERE` clause is all about eliminating matched subgraphs. `MATCH (a)-[*]->(b)` is very different from `WHERE (a)-[*]->(b)`; the
 first will produce a subgraph for every path it can find between `a` and `b`, and the latter will eliminate any matched
 subgraphs where `a` and `b` do not have a directed relationship chain between them.
