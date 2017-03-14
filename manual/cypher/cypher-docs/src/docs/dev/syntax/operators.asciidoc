@@ -2,10 +2,22 @@
 Operators
 =========
 
+[[query-operators-summary]]
+== Operators at a glance ==
+
+|===
+| <<query-operators-mathematical,Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
+| <<query-operators-comparison,Comparison operators>>     | `=`, `<>`, `<`, `>`, `<=`, `>=`, `IS NULL`, `IS NOT NULL`
+| <<query-operators-comparison,String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
+| <<query-operators-boolean,Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
+| <<query-operators-string,String operators>>   | `+` for concatenation, `=~` for regex matching
+| <<query-operators-list,List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list
+|===
+
 [[query-operators-mathematical]]
 == Mathematical operators ==
 
-The mathematical operators include `+`, `-`, `*`, `/` and `%`, `^`.
+The mathematical operators include `+`, `-`, `*`, `/`, `%`, and `^`.
 
 [[query-operators-comparison]]
 == Comparison operators ==
@@ -17,7 +29,7 @@ The operators `STARTS WITH`, `ENDS WITH` and `CONTAINS` can be used to search fo
 
 [[query-operators-boolean]]
 == Boolean operators ==
-The boolean operators are `AND`, `OR`, `XOR`, `NOT`.
+The boolean operators are `AND`, `OR`, `XOR`, and `NOT`.
 
 [[query-operators-string]]
 == String operators ==

@@ -14,7 +14,7 @@ This section describes the syntax of the Cypher query language.
 * <<cypher-variables,Variables>>
 * <<cypher-parameters,Parameters>>
 * <<query-operators,Operators>>
- ** <<query-operators,Operator summary>>
+ ** <<query-operators,Operators at a glance>>
  ** <<query-operators-mathematical,Mathematical operators>>
  ** <<query-operators-comparison,Comparison operators>>
  ** <<query-operators-boolean,Boolean operators>>
