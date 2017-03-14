@@ -33,8 +33,9 @@ class CollectionsAndMapsTest extends ArticleTest {
 Lists
 =====
 
-Cypher has good support for lists.
+Cypher has comprehensive support for lists.
 
+[[cypher-lists-general]]
 == Lists in general ==
 
 A literal list is created by using brackets and separating the elements in the list with commas.
@@ -42,7 +43,7 @@ A literal list is created by using brackets and separating the elements in the l
 ###
 RETURN [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as list###
 
-In our examples, we'll use the range function.
+In our examples, we'll use the <<functions-range,range>> function.
 It gives you a list containing all numbers between given start and end numbers.
 Range is inclusive in both ends.
 
@@ -76,11 +77,12 @@ RETURN range(0, 10)[15]###
 ###
 RETURN range(0, 10)[5..15]###
 
-You can get the size of a list like this:
+You can get the <<functions-size,size>> of a list as follows:
 
 ###
 RETURN size(range(0, 10)[0..3])###
 
+[[cypher-list-comprehension]]
 == List comprehension ==
 
 List comprehension is a syntactic construct available in Cypher for creating a list based on existing lists.
@@ -97,7 +99,7 @@ RETURN [x IN range(0,10) WHERE x % 2 = 0 ] AS result###
 ###
 RETURN [x IN range(0,10) | x^3 ] AS result###
 
-
+[[cypher-literal-maps]]
 == Literal maps ==
 
 From Cypher, you can also construct maps. Through REST you will get JSON objects; in Java they will be `java.util.Map<String,Object>`.

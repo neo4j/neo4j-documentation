@@ -65,6 +65,7 @@ These functions return a single value.
 **<<query-functions-list, List functions>>**
 
 These functions return lists of other values.
+Further details and examples of lists may be found in <<syntax-lists>>.
 
 [options="header"]
 |===
@@ -245,7 +246,7 @@ ifndef::asciidoctor[:leveloffset: 1]
 
 List functions return lists of things -- nodes in a path, and so on.
 
-See also <<query-operators-list>>.
+Further details and examples of lists may be found in <<syntax-lists>> and <<query-operators-list>>.
 
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
