@@ -27,6 +27,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.neo4j</groupId>
+      <artifactId>neo4j-configuration</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.neo4j.app</groupId>
       <artifactId>neo4j-server</artifactId>
       <version>${project.version}</version>
@@ -91,6 +96,16 @@
       <artifactId>neo4j-doc-tools</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <licenses>
@@ -117,6 +132,48 @@
             <phase>${generate-config-docs-phase}</phase>
             <configuration>
               <target>
+
+                <!-- All settings -->
+                <java classname="org.neo4j.doc.ConfigDocsTool"
+                      classpathref="maven.compile.classpath" failonerror="true">
+                  <arg value="--id=settings-reference-all-settings" />
+                  <arg value="--id-prefix=config_" />
+                  <arg value="--title=All settings" />
+                  <arg value="--deprecated=true" />
+                  <arg file="${project.build.directory}/docs/ops/all-settings.adoc" />
+                </java>
+
+                <!-- All deprecated settings -->
+                <java classname="org.neo4j.doc.ConfigDocsTool"
+                      classpathref="maven.compile.classpath" failonerror="true">
+                  <arg value="--id=settings-reference-deprecated-settings" />
+                  <arg value="--title=Deprecated settings" />
+                  <arg value="--id-prefix=deprecated-setting_" />
+                  <arg value="--deprecated-only=true" />
+                  <arg file="${project.build.directory}/docs/ops/deprecated-settings.adoc" />
+                </java>
+
+                <!-- Enumerated HA settings -->
+                <java classname="org.neo4j.doc.ConfigDocsTool"
+                      classpathref="maven.compile.classpath" failonerror="true">
+                  <arg value="--id=settings-reference-ha-settings" />
+                  <arg value="--title=HA settings" />
+                  <arg value="--id-prefix=ha-setting_" />
+                  <arg value="--names=dbms.mode,ha.server_id,ha.host.coordination,ha.initial_hosts,ha.host.data,ha.join_timeout" />
+                  <arg file="${project.build.directory}/docs/ops/ha-settings.adoc" />
+                </java>
+
+                <!-- All Causal Clustering settings by prefix -->
+                <java classname="org.neo4j.doc.ConfigDocsTool"
+                      classpathref="maven.compile.classpath" failonerror="true">
+                  <arg value="--id=settings-reference-causal-clustering-settings" />
+                  <arg value="--title=Causal Clustering settings" />
+                  <arg value="--id-prefix=cc-setting_" />
+                  <arg value="--prefix=causal_clustering" />
+                  <arg file="${project.build.directory}/docs/ops/cc-settings.adoc" />
+                </java>
+
+                <!-- Old config docs tool -->
                 <!-- Combined configuration docs for all public configuration other than
                      connectors, which are handled separately below. -->
                 <java classname="org.neo4j.doc.GenerateConfigDocumentation"
@@ -151,6 +208,7 @@
                   <arg line="-o ${project.build.directory}/docs/ops/configuration-http-connector-attributes.asciidoc" />
                   <arg value="org.neo4j.kernel.configuration.HttpConnector" />
                 </java>
+
               </target>
             </configuration>
             <goals><goal>run</goal></goals>

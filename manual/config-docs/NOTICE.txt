@@ -26,8 +26,11 @@ Third-party licenses
 --------------------
 
 Apache Software License, Version 2.0
+  Apache Commons Compress
   Apache Commons Configuration
   Apache Commons Lang
+  Apache Shiro :: Core
+  Caffeine cache
   Commons BeanUtils
   Commons Digester
   Commons IO
@@ -36,6 +39,7 @@ Apache Software License, Version 2.0
   ConcurrentLinkedHashMap
   Data Mapper for Jackson
   Graphite Integration for Metrics
+  hazelcast-all
   Jackson
   JAX-RS provider for JSON content type
   Jetty :: Http Utility
@@ -100,6 +104,7 @@ GNU General Public License, version 2 with the Classpath Exception
 
 MIT License
   SLF4J API Module
+  SLF4J NOP Binding
 
 Mozilla Public License, Version 2.0
   Mozilla Rhino

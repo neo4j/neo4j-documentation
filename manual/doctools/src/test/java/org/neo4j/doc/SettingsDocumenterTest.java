@@ -25,7 +25,7 @@ import org.neo4j.graphdb.config.Setting;
 import org.neo4j.configuration.Description;
 import org.neo4j.kernel.configuration.Group;
 import org.neo4j.kernel.configuration.GroupSettingSupport;
-import org.neo4j.kernel.configuration.Internal;
+import org.neo4j.configuration.Internal;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;

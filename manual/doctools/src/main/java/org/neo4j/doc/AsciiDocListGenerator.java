@@ -50,16 +50,16 @@ public class AsciiDocListGenerator
         {
             sb.append( '.' ).append( title ).append( System.lineSeparator() );
         }
-        sb.append( SettingsDocumenter.IFDEF_HTMLOUTPUT ).append( System.lineSeparator() )
+        sb.append( SettingsDocumenter.IFDEF_HTMLOUTPUT )
           .append( String.format( "[options=\"header\"]%n" ) )
           .append( String.format( "|===%n") )
           .append( String.format( "|Name|Description%n" ) );
-        print.append( SettingsDocumenter.IFDEF_NONHTMLOUTPUT ).append( System.lineSeparator() );
+        print.append( SettingsDocumenter.IFDEF_NONHTMLOUTPUT );
         for ( SettingDescription item : items )
         {
             String id = item.id();
             String name = item.name();
-            String description = item.description();
+            String description = item.description().orElse(String.format("No description available for `%s`.", name));
             if ( shortenDescription )
             {
                 int pos = description.indexOf( ". " );

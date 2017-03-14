@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -48,6 +49,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 
 import org.neo4j.cluster.ClusterSettings;
+import org.neo4j.doc.SettingDescriptionImpl;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
@@ -157,7 +159,7 @@ public class JmxDocTest
                     .replace( '\n', ' ' );
 
             String id = getId( name );
-            settingDescriptions.add( new SettingDescription( id, name, description ) );
+            settingDescriptions.add( new SettingDescriptionImpl( id, name, Optional.of(description) ) );
 
             writeDetailsToFile( id, objectName, bean, info, description );
         }
