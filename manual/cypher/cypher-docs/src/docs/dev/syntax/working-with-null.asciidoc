@@ -2,6 +2,7 @@
 Working with null
 =================
 
+[[cypher-null-intro]]
 == Introduction to 'null' in Cypher ==
 
 In Cypher, `null` is used to represent missing or undefined values.
@@ -15,6 +16,7 @@ In this case, anything that is not `true` is interpreted as being false.
 Not knowing two values does not imply that they are the same value.
 So the expression `null` = `null` yields `null` and not `true`.
 
+[[cypher-null-logical-operators]]
 == Logical operations with null ==
 
 The logical operators (`AND`, `OR`, `XOR`, `IN`, `NOT`) treat `null` as the 'unknown' value of three-valued logic.
@@ -34,6 +36,7 @@ Here is the truth table for `AND`, `OR` and `XOR`.
 |`null` | `true` | `null` | `true` | `null`
 |====
 
+[[cypher-null-in-operator]]
 == The IN operator and null ==
 
 The `IN` operator follows similar logic.
@@ -59,6 +62,7 @@ Using `all`, `any`, `none`, and `single` follows a similar rule.
 If the result can be calculated definitely, `true` or `false` is returned.
 Otherwise `null` is produced.
 
+[[cypher-expressions-and-null]]
 == Expressions that return null ==
 
 * Getting a missing element from a list: `[][0]`, `head([])`
