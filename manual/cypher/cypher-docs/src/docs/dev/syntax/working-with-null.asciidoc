@@ -19,22 +19,9 @@ So the expression `null` = `null` yields `null` and not `true`.
 [[cypher-null-logical-operators]]
 == Logical operations with null ==
 
-The logical operators (`AND`, `OR`, `XOR`, `IN`, `NOT`) treat `null` as the 'unknown' value of three-valued logic.
-Here is the truth table for `AND`, `OR` and `XOR`.
+The logical operators (`AND`, `OR`, `XOR`, `NOT`) treat `null` as the 'unknown' value of three-valued logic.
 
-[options="header", cols="^,^,^,^,^", width="80%"]
-|====
-|a | b | a `AND` b | a `OR` b | a `XOR` b
-|`false` | `false` | `false` | `false` | `false`
-|`false` | `null` | `false` | `null` | `null`
-|`false` | `true` | `false` | `true` | `true`
-|`true` | `false` | `false` | `true` | `true`
-|`true` | `null` | `null` | `true` | `null`
-|`true` | `true` | `true` | `true` | `false`
-|`null` | `false` | `false` | `null` | `null`
-|`null` | `null` | `null` | `null` | `null`
-|`null` | `true` | `null` | `true` | `null`
-|====
+include::boolean-operator-table.asciidoc[]
 
 [[cypher-null-in-operator]]
 == The IN operator and null ==

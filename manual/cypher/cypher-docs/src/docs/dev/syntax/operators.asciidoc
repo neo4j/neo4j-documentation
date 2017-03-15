@@ -14,34 +14,7 @@ Operators
 | <<query-operators-list,List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list
 |===
 
-[[query-operators-mathematical]]
-== Mathematical operators ==
-
-The mathematical operators include `+`, `-`, `*`, `/`, `%`, and `^`.
-
-[[query-operators-comparison]]
-== Comparison operators ==
-
-The comparison operators include `=`, `<>`, `<`, `>`, `\<=`, `>=`, `IS NULL`, and `IS NOT NULL`.
-See <<cypher-comparison>> on their behavior.
-
-The operators `STARTS WITH`, `ENDS WITH` and `CONTAINS` can be used to search for a string value by its content.
-
-[[query-operators-boolean]]
-== Boolean operators ==
-The boolean operators are `AND`, `OR`, `XOR`, and `NOT`.
-
-[[query-operators-string]]
-== String operators ==
-
-Strings can be concatenated using the `+` operator.
-For regular expression matching the `=~` operator is used.
-
-[[query-operators-list]]
-== List operators ==
-
-Lists can be concatenated using the `+` operator.
-The `IN` operator can be used to check if an element exists in a list.
+include::../ql/syntax/operators.asciidoc[leveloffset=+1]
 
 [[query-operators-property]]
 == Property operators ==
