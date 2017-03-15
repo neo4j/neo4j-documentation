@@ -56,3 +56,7 @@ include::query-tuning.asciidoc[leveloffset=+1]
 ifndef::asciidoctor[:leveloffset: 1]
 
 include::execution-plans.asciidoc[leveloffset=+1]
+
+ifndef::asciidoctor[:leveloffset: 1]
+
+include::glossary.asciidoc[leveloffset=+1]
