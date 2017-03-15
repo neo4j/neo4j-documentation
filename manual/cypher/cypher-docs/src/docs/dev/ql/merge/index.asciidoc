@@ -47,6 +47,7 @@ include::merge-single-node-derived-from-an-existing-node-property.asciidoc[level
 
 ifndef::asciidoctor[:leveloffset: 2]
 
+[[query-merge-on-create-on-match]]
 == Use ON CREATE and ON MATCH ==
 
 ifndef::asciidoctor[:leveloffset: 3]
