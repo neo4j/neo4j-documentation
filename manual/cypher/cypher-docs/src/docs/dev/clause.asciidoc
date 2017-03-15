@@ -29,7 +29,8 @@ These comprise clauses that write the data to the database.
 |<<query-create,CREATE>>                    |   Create nodes and relationships.
 |<<query-merge,MERGE>>                      |   Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
 |<<query-set,SET>>                          |   Update labels on nodes and properties on nodes and relationships.
-|<<query-delete,DELETE>>                    |   Delete graph elements — nodes, relationships or paths.
+|<<query-delete,DELETE>>                    |   Delete graph elements — nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
+|<<query-delete,DETACH DELETE>>             |   Delete a node or set of nodes. All associated relationships will automatically be deleted.
 |<<query-remove,REMOVE>>                    |   Remove properties and labels from nodes and relationships.
 |<<query-foreach,FOREACH>>                  |   Update data within a list, whether components of a path, or the result of aggregation.
 |<<query-create-unique,CREATE UNIQUE>>      |   A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
