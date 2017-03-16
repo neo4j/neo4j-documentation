@@ -9,7 +9,6 @@ This section comprises a glossary of all the keywords -- grouped by category and
 * <<glossary-clauses,Clauses>>
 * <<glossary-sub-clauses,Sub-clauses>>
 * <<glossary-operators,Operators>>
-* <<glossary-aggregating-functions,Aggregating functions>>
 * <<glossary-functions,Functions>>
 * <<glossary-commands,Commands>>
 * <<glossary-hints,Hints>>
@@ -87,9 +86,6 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operators-boolean,XOR>>                         | Boolean     | Exclusive disjunction
 | <<query-operators-mathematical,^>>                      | Mathematical  | Exponentiation
 |===
-
-[[glossary-aggregating-functions]]
-== Aggregating functions
 
 [[glossary-functions]]
 == Functions
