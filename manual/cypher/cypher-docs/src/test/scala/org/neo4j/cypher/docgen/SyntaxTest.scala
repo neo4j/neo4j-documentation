@@ -113,7 +113,21 @@ END AS result""",
         """WITH 2 AS number, 3 AS exponent
            RETURN number ^ exponent AS result""",
       returns = "",
-      assertions = (p) => assert(Set(Map("result" -> 8)) === p.toSet)
+      assertions = (p) => assert(Set(Map("result" -> 8L)) === p.toSet)
+    )
+  }
+
+  @Test def mathematical_operator_unary_minus() {
+    testThis(
+      title = "Using the unary minus operator",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH -3 AS a, 4 AS b
+          |return b - a AS result""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("result" -> 7L)) === p.toSet)
     )
   }
 

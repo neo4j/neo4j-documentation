@@ -4,15 +4,19 @@
 The mathematical operators comprise:
 
 * addition: `+`
-* subtraction: `-`
+* subtraction or unary minus: `-`
 * multiplication: `*`
 * division: `/`
-* modulo: `%`
+* modulo division: `%`
 * exponentiation: `^`
 
 ifndef::asciidoctor[:leveloffset: 1]
 
 include::using-the-exponentiation-operator.asciidoc[]
+
+ifndef::asciidoctor[:leveloffset: 1]
+
+include::using-the-unary-minus-operator.asciidoc[]
 
 [[query-operators-comparison]]
 = Comparison operators =
