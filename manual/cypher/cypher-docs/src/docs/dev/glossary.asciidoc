@@ -3,7 +3,7 @@
 
 [abstract]
 --
-This section comprises a glossary of all the keywords -- grouped by category and thence ordered alphabetically -- in the Cypher query language.
+This section comprises a glossary of all the keywords -- grouped by category and thence ordered lexicographically -- in the Cypher query language.
 --
 
 * <<glossary-clauses,Clauses>>
@@ -16,7 +16,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 * <<glossary-expressions,Expressions>>
 
 [[glossary-clauses]]
-== Clauses
+== <<query-clause,Clauses>>
 
 [options="header"]
 |===
@@ -41,7 +41,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |===
 
 [[glossary-sub-clauses]]
-== Sub-clauses
+== <<query-clause,Sub-clauses>>
 
 [options="header"]
 |===
@@ -55,7 +55,38 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |===
 
 [[glossary-operators]]
-== Operators
+== <<query-operators,Operators>>
+
+[options="header"]
+|===
+|Operator                                                   | Type          | Description
+| <<query-operators-mathematical,%>>                      | Mathematical  | Modulo division
+| <<query-operators-mathematical,*>>                      | Mathematical  | Multiplication
+| <<query-operators-mathematical,+>>                      | Mathematical  | Addition
+| <<query-operators-string,+>>                            | String        | Concatenation
+| <<query-operators-list,+>>                              | List          | Concatenation
+| <<query-operators-mathematical,\->>                      | Mathematical  | Subtraction or unary minus
+| <<query-operators-mathematical,/>>                      | Mathematical  | Division
+| <<query-operators-comparison,<>>                        | Comparison    | Less than
+| <<query-operators-comparison,\<\=>>                       | Comparison    | Less than or equal to
+| <<query-operators-comparison,<> >>                       | Comparison    | Inequality
+| <<query-operators-comparison,\=>>                        | Comparison    | Equality
+| <<query-operators-string,=~>>                           | String        | Regular expression match
+| <<query-operators-comparison,> >>                        | Comparison    | Greater than
+| <<query-operators-comparison,>\=>>                       | Comparison    | Greater than or equal to
+| <<query-operators-boolean,AND>>                         | Boolean       | Conjunction
+| <<query-operator-comparison-string-specific,CONTAINS>>  | String comparison | Case-sensitive inclusion search
+| DISTINCT                                                  | xxx           | Duplicate removal
+| <<query-operator-comparison-string-specific,ENDS WITH>> | String comparison | Case-sensitive suffix search
+| <<query-operators-list,IN>>                             | List          | List element existence check
+| <<query-operators-comparison,IS NOT NULL>>              | Comparison    | Non-`null` check
+| <<query-operators-comparison,IS NULL>>                  | Comparison    | `Null` check
+| <<query-operators-boolean,NOT>>                         | Boolean       | Negation
+| <<query-operators-boolean,OR>>                          | Boolean       | Disjunction
+| <<query-operator-comparison-string-specific,STARTS WITH>>   | String comparison | Case-sensitive prefix search
+| <<query-operators-boolean,XOR>>                         | Boolean     | Exclusive disjunction
+| <<query-operators-mathematical,^>>                      | Mathematical  | Exponentiation
+|===
 
 [[glossary-aggregating-functions]]
 == Aggregating functions
