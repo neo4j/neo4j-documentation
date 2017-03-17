@@ -200,3 +200,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 [[glossary-expressions]]
 == Expressions
 
+[options="header"]
+|===
+|Name           | Description
+| <<query-syntax-case,CASE Expression>>  | A generic conditional expression, similar to if/else statements available in other languages.
+|===
