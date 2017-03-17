@@ -24,11 +24,11 @@ Note that adding a unique property constraint on a property will also add an ind
 Cypher will use that index for lookups just like other indexes.
 If you drop a unique property constraint and still want an index on the property, you will have to create the index.
 
-* <<query-constraints-unique-nodes,Unique node property constraints>>
-* <<query-constraints-prop-exist-nodes,Node property existence constraints>>
-* <<query-constraints-prop-exist-rels,Relationship property existence constraints>>
+* <<query-constraint-unique-nodes,Unique node property constraints>>
+* <<query-constraint-prop-exist-nodes,Node property existence constraints>>
+* <<query-constraint-prop-exist-rels,Relationship property existence constraints>>
 
-[[query-constraints-unique-nodes]]
+[[query-constraint-unique-nodes]]
 == Unique node property constraints
 
 ifndef::asciidoctor[:leveloffset: 3]
@@ -45,7 +45,7 @@ include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes
 
 ifndef::asciidoctor[:leveloffset: 2]
 
-[[query-constraints-prop-exist-nodes]]
+[[query-constraint-prop-exist-nodes]]
 == Node property existence constraints
 
 ifndef::asciidoctor[:leveloffset: 3]
@@ -64,7 +64,7 @@ include::failure-to-create-a-node-property-existence-constraint-due-to-existing-
 
 ifndef::asciidoctor[:leveloffset: 2]
 
-[[query-constraints-prop-exist-rels]]
+[[query-constraint-prop-exist-rels]]
 == Relationship property existence constraints
 
 ifndef::asciidoctor[:leveloffset: 3]
