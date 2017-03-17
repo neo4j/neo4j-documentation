@@ -24,7 +24,9 @@ Note that adding a unique property constraint on a property will also add an ind
 Cypher will use that index for lookups just like other indexes.
 If you drop a unique property constraint and still want an index on the property, you will have to create the index.
 
-The existing constraints can be listed using the REST API, see <<rest-api-schema-constraints>>.
+* <<query-constraints-unique-nodes,Unique node property constraints>>
+* <<query-constraints-prop-exist-nodes,Node property existence constraints>>
+* <<query-constraints-prop-exist-rels,Relationship property existence constraints>>
 
 [[query-constraints-unique-nodes]]
 == Unique node property constraints
