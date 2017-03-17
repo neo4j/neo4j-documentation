@@ -202,13 +202,6 @@
       <classifier>docs</classifier>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.neo4j.doc</groupId>
-      <artifactId>neo4j-bolt-docs</artifactId>
-      <version>${neo4j.version}</version>
-      <classifier>docs</classifier>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
 
   <build>
