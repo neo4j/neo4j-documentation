@@ -165,11 +165,11 @@ These functions are used to manipulate strings or to create a string representat
 |Function                               |   Description
 |<<functions-left,left()>>              | Returns a string containing the left n characters of the original string.
 |<<functions-lower,lower()>>            | Returns the original string in lowercase.
-|<<functions-ltrim,ltrim()>>            | Returns the original string with whitespace removed from the left side.
+|<<functions-ltrim,lTrim()>>            | Returns the original string with whitespace removed from the left side.
 |<<functions-replace,replace()>>        | Returns a string with the search string replaced by the replace string, replacing all occurrences.
 |<<functions-reverse,reverse()>>        | Returns the original string reversed.
 |<<functions-right,right()>>            | Returns a string containing the right n characters of the original string.
-|<<functions-rtrim,rtrim()>>            | Returns the original string with whitespace removed from the right side.
+|<<functions-rtrim,rTrim()>>            | Returns the original string with whitespace removed from the right side.
 |<<functions-split,split()>>            | Returns the sequence of strings which are delimited by split patterns.
 |<<functions-substring,substring()>>    | Returns a substring of the original, with a 0-based index start and length.
 |<<functions-tostring,toString()>>      | Converts the argument to a string.

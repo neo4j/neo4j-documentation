@@ -100,8 +100,8 @@ The first part of a string. The last part of the string.
 ###assertion=returns-one parameters=sub
 RETURN
 
-trim({original}), ltrim({original}),
-  rtrim({original})
+trim({original}), lTrim({original}),
+  rTrim({original})
 ###
 
 Trim all whitespace, or on left or right side.

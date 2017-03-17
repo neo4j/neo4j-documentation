@@ -128,7 +128,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-log, log()>>                       | Logarithmic       | Returns the natural logarithm of the expression.
 |<<functions-log10, log10()>>                   | Logarithmic       | Returns the common logarithm (base 10) of the expression.
 |<<functions-lower,lower()>>                    | String            | Returns the original string in lowercase.
-|<<functions-ltrim,ltrim()>>                    | String            | Returns the original string with whitespace removed from the left side.
+|<<functions-ltrim,lTrim()>>                    | String            | Returns the original string with whitespace removed from the left side.
 |<<functions-max,max()>>                        | Aggregating       | Returns the highest value in a numeric column.
 |<<functions-min,min()>>                        | Aggregating       | Returns the lowest value in a numeric column.
 |<<functions-nodes,nodes()>>                    | List              | Returns all nodes in a path.
@@ -147,7 +147,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-reverse,reverse()>>                | String            | Returns the original string reversed.
 |<<functions-right,right()>>                    | String            | Returns a string containing the right n characters of the original string.
 |<<functions-round, round()>>                   | Numeric           | Returns the numerical expression, rounded to the nearest integer.
-|<<functions-rtrim,rtrim()>>                    | String            | Returns the original string with whitespace removed from the right side.
+|<<functions-rtrim,rTrim()>>                    | String            | Returns the original string with whitespace removed from the right side.
 |<<functions-sign, sign()>>                     | Numeric           | Returns the signum of a number -- zero if the expression is zero, `-1` for any negative number, and `1` for any positive number.
 |<<functions-sin, sin()>>                       | Trigonometric     | Returns the sine of the expression.
 |<<functions-single,single()>>                  | Predicate         | Returns true if the predicate holds for exactly one of the elements in the list.

@@ -471,25 +471,25 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def ltrim() {
     testThis(
-      title = "ltrim()",
-      syntax = "ltrim( original )",
+      title = "lTrim()",
+      syntax = "lTrim( original )",
       arguments = List("original" -> "An expression that returns a string"),
-      text = "`ltrim()` returns the original string with whitespace removed from the left side.",
-      queryText = "RETURN ltrim('   hello')",
+      text = "`lTrim()` returns the original string with whitespace removed from the left side.",
+      queryText = "RETURN lTrim('   hello')",
       returns = "",
-      assertions = (p) => assert(List(Map("ltrim('   hello')" -> "hello")) === p.toList)
+      assertions = (p) => assert(List(Map("lTrim('   hello')" -> "hello")) === p.toList)
     )
   }
 
   @Test def rtrim() {
     testThis(
-      title = "rtrim()",
-      syntax = "rtrim( original )",
+      title = "rTrim()",
+      syntax = "rTrim( original )",
       arguments = List("original" -> "An expression that returns a string"),
-      text = "`rtrim()` returns the original string with whitespace removed from the right side.",
-      queryText = "RETURN rtrim('hello   ')",
+      text = "`rTrim()` returns the original string with whitespace removed from the right side.",
+      queryText = "RETURN rTrim('hello   ')",
       returns = "",
-      assertions = (p) => assert(List(Map("rtrim('hello   ')" -> "hello")) === p.toList)
+      assertions = (p) => assert(List(Map("rTrim('hello   ')" -> "hello")) === p.toList)
     )
   }
 
