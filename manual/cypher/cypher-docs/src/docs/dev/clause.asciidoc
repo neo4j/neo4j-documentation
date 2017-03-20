@@ -36,7 +36,6 @@ These comprise clauses that write the data to the database.
 |<<query-foreach,FOREACH>>                  |   Update data within a list, whether components of a path, or the result of aggregation.
 |<<query-create-unique,CREATE UNIQUE>>      |   A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
 |<<query-load-csv,LOAD CSV>>                |   Use when importing data from CSV files.
-|<<cypherdoc-importing-csv-files-with-cypher,Importing CSV files with Cypher>> | How to import data from CSV files using `LOAD CSV`.
 |===
 
 **General Clauses**
@@ -77,10 +76,6 @@ ifndef::asciidoctor[:leveloffset: 2]
 
 include::ql/aggregation/index.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 2]
-
-include::ql/load-csv/index.asciidoc[leveloffset=+1]
-
 //Writing
 ifndef::asciidoctor[:leveloffset: 2]
 
@@ -112,11 +107,7 @@ include::ql/create-unique/index.asciidoc[leveloffset=+1]
 
 ifndef::asciidoctor[:leveloffset: 2]
 
-include::../parsed-graphgists/import/import-csv-with-cypher.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 2]
-
-include::ql/periodic-commit/index.asciidoc[leveloffset=+1]
+include::ql/load-csv/index.asciidoc[leveloffset=+1]
 
 ifndef::asciidoctor[:leveloffset: 0]
 

@@ -61,4 +61,8 @@ ifndef::asciidoctor[:leveloffset: 2]
 
 include::import-data-containing-escaped-characters.asciidoc[]
 
+ifndef::asciidoctor[:leveloffset: 2]
+
+include::../../../parsed-graphgists/import/import-csv-with-cypher.asciidoc[leveloffset=+1]
+
 
