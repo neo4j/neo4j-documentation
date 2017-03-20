@@ -1,0 +1,15 @@
+Here is the truth table for `AND`, `OR`, `XOR` and `NOT`.
+
+[options="header", cols="^,^,^,^,^,^", width="85%"]
+|====
+|a | b | a `AND` b | a `OR` b | a `XOR` b | `NOT` a
+|`false` | `false` | `false` | `false` | `false` | `true`
+|`false` | `null` | `false` | `null` | `null` | `true`
+|`false` | `true` | `false` | `true` | `true` | `true`
+|`true` | `false` | `false` | `true` | `true` | `false`
+|`true` | `null` | `null` | `true` | `null` | `false`
+|`true` | `true` | `true` | `true` | `false` | `false`
+|`null` | `false` | `false` | `null` | `null` | `null`
+|`null` | `null` | `null` | `null` | `null` | `null`
+|`null` | `true` | `null` | `true` | `null` | `null`
+|====

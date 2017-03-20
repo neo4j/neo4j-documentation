@@ -244,7 +244,7 @@ class MatchTest extends DocumentingTest {
             |RETURN p""", assertShortestPathLength) {
           p(
             """This means: find a single shortest path between two nodes, as long as the path is max 15 relationships long.
-              |Inside of the parentheses you define a single link of a path -- the starting node, the connecting relationship
+              |Within the parentheses you define a single link of a path -- the starting node, the connecting relationship
               |and the end node. Characteristics describing the relationship like relationship type, max hops and direction
               |are all used when finding the shortest path. If there is a `WHERE` clause following the match of a
               |`shortestPath`, relevant predicates will be included in the `shortestPath`.

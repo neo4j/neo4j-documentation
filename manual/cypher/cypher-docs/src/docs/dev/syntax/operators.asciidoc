@@ -2,42 +2,27 @@
 Operators
 =========
 
-[[query-operators-mathematical]]
-== Mathematical operators ==
+[[query-operators-summary]]
+== Operators at a glance ==
 
-The mathematical operators are `+`, `-`, `*`, `/` and `%`, `^`.
+|===
+| <<query-operators-mathematical,Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
+| <<query-operators-comparison,Comparison operators>>     | `=`, `<>`, `<`, `>`, `<=`, `>=`, `IS NULL`, `IS NOT NULL`
+| <<query-operators-comparison,String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
+| <<query-operators-boolean,Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
+| <<query-operators-string,String operators>>   | `+` for concatenation, `=~` for regex matching
+| <<query-operators-list,List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list
+|===
 
-[[query-operators-comparison]]
-== Comparison operators ==
-
-The comparison operators are `=`, `<>`, `<`, `>`, `\<=`, `>=`, `IS NULL`, and `IS NOT NULL`.
-See <<cypher-comparison>> on how they behave.
-
-The operators `STARTS WITH`, `ENDS WITH` and `CONTAINS` can be used to search for a string value by its content.
-
-[[query-operators-boolean]]
-== Boolean operators ==
-The boolean operators are `AND`, `OR`, `XOR`, `NOT`.
-
-[[query-operators-string]]
-== String operators ==
-
-Strings can be concatenated using the `+` operator.
-For regular expression matching the `=~` operator is used.
-
-[[query-operators-list]]
-== List operators ==
-
-Lists can be concatenated using the `+` operator.
-To check if an element exists in a list, you can use the `IN` operator.
+include::../ql/syntax/operators.asciidoc[leveloffset=+1]
 
 [[query-operators-property]]
 == Property operators ==
 
 [NOTE]
-Since version 2.0, the previously existing property operators `?` and `!` have been removed.
+Since version 2.0, the previously supported property operators `?` and `!` have been removed.
 This syntax is no longer supported.
 Missing properties are now returned as `null`.
 Please use `(NOT(has(<ident>.prop)) OR <ident>.prop=<value>)` if you really need the old behavior of the `?` operator.
--- Also, the use of `?` for optional relationships has been removed in favor of the newly introduced `OPTIONAL MATCH` clause.
+-- Also, the use of `?` for optional relationships has been removed in favor of the newly-introduced `OPTIONAL MATCH` clause.
 
