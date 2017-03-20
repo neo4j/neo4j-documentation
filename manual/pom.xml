@@ -15,6 +15,14 @@
   <description>Neo4j Reference Manual Build.</description>
   <packaging>pom</packaging>
 
+  <properties>
+    <attach-java-sources-phase>package</attach-java-sources-phase>
+    <attach-java-test-sources-phase>package</attach-java-test-sources-phase>
+    <attach-test-jar-phase>package</attach-test-jar-phase>
+    <attach-docs-phase>verify</attach-docs-phase>
+    <integration-test-phase>integration-test</integration-test-phase>
+  </properties>
+
   <modules>
     <module>config-docs</module>
     <module>contents</module>
@@ -50,88 +58,41 @@
     </license>
   </licenses>
 
-  <profiles>
-    <profile>
-      <id>freeze</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>freeze</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-          <groupId>org.neo4j.build.plugins</groupId>
-          <artifactId>ease-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>aggregate-artifacts</id>
-                <goals>
-                  <goal>aggregate</goal>
-                </goals>
-                <configuration>
-                  <includes>
-                    <include>org.neo4j.examples:*</include>
-                    <include>org.neo4j.doc:*</include>
-                  </includes>
-                </configuration>
-              </execution>
-              <execution>
-                <id>freeze-artifacts</id>
-                <phase>none</phase>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-      <dependencies>
-        <dependency>
-          <groupId>org.neo4j.doc</groupId>
-          <artifactId>neo4j-manual-contents</artifactId>
-          <version>${project.version}</version>
-          <type>pom</type>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.neo4j.doc</groupId>
-          <artifactId>neo4j-javadocs</artifactId>
-          <version>${project.version}</version>
-          <type>pom</type>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.neo4j.doc</groupId>
-          <artifactId>neo4j-cypher-docs-parent</artifactId>
-          <version>${project.version}</version>
-          <type>pom</type>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.neo4j.doc</groupId>
-          <artifactId>neo4j-cypher-docs</artifactId>
-          <version>${project.version}</version>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.neo4j.doc</groupId>
-          <artifactId>neo4j-graphgist</artifactId>
-          <version>${project.version}</version>
-          <scope>provided</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.neo4j.examples</groupId>
-          <artifactId>neo4j-examples</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.neo4j.examples</groupId>
-          <artifactId>neo4j-server-examples</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <systemPropertyVariables>
+              <dbms.pagecache.memory.default.override>8m</dbms.pagecache.memory.default.override>
+            </systemPropertyVariables>
+            <includes>
+              <include>**/*Test.java</include>
+              <include>**/Test*.java</include>
+              <include>**/*TestCase.java</include>
+              <include>**/DocTest*.java</include>
+              <include>**/*DocTest.java</include>
+              <include>**/docgen/**</include>
+            </includes>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <configuration>
+            <includes>
+              <include>**/DocIT*.java</include>
+              <include>**/*DocIT.java</include>
+              <include>**/*DocITCase.java</include>
+            </includes>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+  </build>
 
 </project>
 
