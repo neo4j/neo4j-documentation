@@ -5,7 +5,7 @@
 The `DELETE` clause is used to delete graph elements -- nodes, relationships or paths.
 
 For removing properties and labels, see <<query-remove>>.
-Remember that you can not delete a node without also deleting relationships that start or end on said node.
+Remember that you cannot delete a node without also deleting relationships that start or end on said node.
 Either explicitly delete the relationships, or use `DETACH DELETE`.
 
 The examples start out with the following database:

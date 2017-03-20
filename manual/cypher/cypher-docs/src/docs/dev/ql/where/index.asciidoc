@@ -110,6 +110,7 @@ include::filter-on-null.asciidoc[leveloffset=+1]
 
 ifndef::asciidoctor[:leveloffset: 2]
 
+[[query-where-ranges]]
 == Using ranges ==
 
 ifndef::asciidoctor[:leveloffset: 3]

@@ -4,7 +4,7 @@
 [abstract]
 `ORDER BY` is a sub-clause following `RETURN` or `WITH`, and it specifies that the output should be sorted and how.
 
-Note that you can not sort on nodes or relationships, just on properties on these.
+Note that you cannot sort on nodes or relationships, just on properties on these.
 `ORDER BY` relies on comparisons to sort the output, see <<cypher-ordering>>.
 
 In terms of scope of variables, `ORDER BY` follows special rules, depending on if the projecting `RETURN` or `WITH` clause is either aggregating or `DISTINCT`.

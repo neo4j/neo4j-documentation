@@ -5,7 +5,7 @@
 //file:persons.csv
 //file:movie_actor_roles.csv
 
-As you've seen you can not only query data expressively but also create data with Cypher statements.
+As you've seen, you are able not only to query data expressively, but can also create data with Cypher statements.
 
 Naturally in most cases you wouldn't want to write or generate huge statements to generate your data but instead use an existing data source that you pass into your statement and which is used to drive the graph generation process.
 
@@ -18,7 +18,7 @@ In general we recommend passing in varying literal values from the outside as na
 This allows Cypher to reuse existing execution plans for the statements.
 
 Of course you can also pass in parameters for data to be imported.
-Those can be scalar values, maps, lists or even lists of maps.
+These can be scalar values, maps, lists or even lists of maps.
 
 In your Cypher statement you can then iterate over those values (e.g. with `UNWIND`) to create your graph structures.
 
