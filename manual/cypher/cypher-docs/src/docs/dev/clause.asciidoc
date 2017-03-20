@@ -16,7 +16,6 @@ This set is refined and augmented by subsequent parts of the query.
 |<<query-where,WHERE>>                      |   Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filter the results of a `WITH` clause.
 |<<query-start,START>>                      |   Find starting points through legacy indexes.
 |<<query-aggregation,Aggregation-TMP>>    |   Includes `DISTINCT`.
-|<<query-load-csv,LOAD CSV>>                |   Use when importing data from CSV files.
 |===
 
 **Write Clauses**
@@ -36,6 +35,7 @@ These comprise clauses that write the data to the database.
 |<<query-remove,REMOVE>>                    |   Remove properties and labels from nodes and relationships.
 |<<query-foreach,FOREACH>>                  |   Update data within a list, whether components of a path, or the result of aggregation.
 |<<query-create-unique,CREATE UNIQUE>>      |   A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
+|<<query-load-csv,LOAD CSV>>                |   Use when importing data from CSV files.
 |<<cypherdoc-importing-csv-files-with-cypher,Importing CSV files with Cypher>> | How to import data from CSV files using `LOAD CSV`.
 |===
 
