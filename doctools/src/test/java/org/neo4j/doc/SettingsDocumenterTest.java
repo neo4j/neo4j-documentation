@@ -98,7 +98,7 @@ public class SettingsDocumenterTest
             "ifndef::nonhtmloutput[]%n" +
             "[[config_public.default]]%n" +
             ".public.default%n" +
-            "[cols=\"<1h,<4\"]%n" +
+            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public with default.%n" +
             "|Valid values a|public.default is an integer%n" +
@@ -109,7 +109,7 @@ public class SettingsDocumenterTest
             "ifdef::nonhtmloutput[]%n" +
             "[[config_public.default]]%n" +
             ".public.default%n" +
-            "[cols=\"<1h,<4\"]%n" +
+            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public with default.%n" +
             "|Valid values a|public.default is an integer%n" +
@@ -120,7 +120,7 @@ public class SettingsDocumenterTest
             "ifndef::nonhtmloutput[]%n" +
             "[[config_public.deprecated]]%n" +
             ".public.deprecated%n" +
-            "[cols=\"<1h,<4\"]%n" +
+            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public deprecated.%n" +
             "|Valid values a|public.deprecated is a boolean%n" +
@@ -132,7 +132,7 @@ public class SettingsDocumenterTest
             "ifdef::nonhtmloutput[]%n" +
             "[[config_public.deprecated]]%n" +
             ".public.deprecated%n" +
-            "[cols=\"<1h,<4\"]%n" +
+            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public deprecated.%n" +
             "|Valid values a|public.deprecated is a boolean%n" +
@@ -144,7 +144,7 @@ public class SettingsDocumenterTest
             "ifndef::nonhtmloutput[]%n" +
             "[[config_public.nodefault]]%n" +
             ".public.nodefault%n" +
-            "[cols=\"<1h,<4\"]%n" +
+            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public nodefault.%n" +
             "|Valid values a|public.nodefault is a string%n" +
@@ -154,7 +154,7 @@ public class SettingsDocumenterTest
             "ifdef::nonhtmloutput[]%n" +
             "[[config_public.nodefault]]%n" +
             ".public.nodefault%n" +
-            "[cols=\"<1h,<4\"]%n" +
+            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public nodefault.%n" +
             "|Valid values a|public.nodefault is a string%n" +
@@ -194,7 +194,7 @@ public class SettingsDocumenterTest
                 "ifndef::nonhtmloutput[]%n" +
                 "[[config_group.key.spot_count]]%n" +
                 ".group.(key).spot_count%n" +
-                "[cols=\"<1h,<4\"]%n" +
+                "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
                 "|===%n" +
                 "|Description a|Number of spots this giraffe has, in number.%n" +
                 "|Valid values a|spot_count is an integer%n" +
@@ -205,7 +205,7 @@ public class SettingsDocumenterTest
                 "ifdef::nonhtmloutput[]%n" +
                 "[[config_group.key.spot_count]]%n" +
                 ".group.(key).spot_count%n" +
-                "[cols=\"<1h,<4\"]%n" +
+                "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
                 "|===%n" +
                 "|Description a|Number of spots this giraffe has, in number.%n" +
                 "|Valid values a|spot_count is an integer%n" +
@@ -216,7 +216,7 @@ public class SettingsDocumenterTest
                 "ifndef::nonhtmloutput[]%n" +
                 "[[config_group.key.type]]%n" +
                 ".group.(key).type%n" +
-                "[cols=\"<1h,<4\"]%n" +
+                "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
                 "|===%n" +
                 "|Description a|Animal type.%n" +
                 "|Valid values a|type is a string%n" +
@@ -227,7 +227,7 @@ public class SettingsDocumenterTest
                 "ifdef::nonhtmloutput[]%n" +
                 "[[config_group.key.type]]%n" +
                 ".group.(key).type%n" +
-                "[cols=\"<1h,<4\"]%n" +
+                "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
                 "|===%n" +
                 "|Description a|Animal type.%n" +
                 "|Valid values a|type is a string%n" +
