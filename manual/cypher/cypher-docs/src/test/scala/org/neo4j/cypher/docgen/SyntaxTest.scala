@@ -103,26 +103,126 @@ END AS result""",
     )
   }
 
+  @Test def mathematical_operator_exponentiation() {
+    testThis(
+      title = "Using the exponentiation operator",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH 2 AS number, 3 AS exponent
+           RETURN number ^ exponent AS result""",
+      returns = "",
+      assertions = (p) => assert(Set(Map("result" -> 8L)) === p.toSet)
+    )
+  }
+
+  @Test def mathematical_operator_unary_minus() {
+    testThis(
+      title = "Using the unary minus operator",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH -3 AS a, 4 AS b
+          |return b - a AS result""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("result" -> 7L)) === p.toSet)
+    )
+  }
+
+  @Test def comparison_operator() {
+    testThis(
+      title = "Comparing two numbers",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH 4 AS one, 3 AS two
+           RETURN one > two AS result""",
+      returns = "",
+      assertions = (p) => assert(Set(Map("result" -> true)) === p.toSet)
+    )
+  }
+
+  @Test def starts_with_comparison_operator() {
+    testThis(
+      title = "Using STARTS WITH to filter names",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH ['John', 'Mark', 'Jonathan', 'Bill'] AS somenames
+          |UNWIND somenames AS names
+          |WITH names AS candidate
+          |WHERE candidate STARTS WITH 'Jo'
+          |RETURN candidate""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("candidate" -> "John"), Map("candidate" -> "Jonathan")) === p.toSet)
+    )
+  }
+
+  @Test def boolean_operator() {
+    testThis(
+      title = "Using boolean operators to filter numbers",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH [2, 4, 7, 9, 12] AS numberlist
+          |UNWIND numberlist AS number
+          |WITH number
+          |WHERE number = 4 OR (number > 6 AND number < 10)
+          |RETURN number""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("number" -> 4L), Map("number" -> 7L), Map("number" -> 9L)) === p.toSet)
+    )
+  }
+
+  @Test def regex_string_operator() {
+    testThis(
+      title = "Using a regular expression to filter words",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH ['mouse', 'chair', 'door', 'house'] AS wordlist
+          |UNWIND wordlist AS word
+          |WITH word
+          |WHERE word =~ '.*ous.*'
+          |RETURN word""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("word" -> "mouse"), Map("word" -> "house")) === p.toSet)
+    )
+  }
+
+  @Test def in_list_operator() {
+    testThis(
+      title = "Using `IN` to check if a number is in a list",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH [2, 3, 4, 5] AS numberlist
+          |UNWIND numberlist AS number
+          |WITH number
+          |WHERE number IN [2, 3, 8]
+          |RETURN number""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("number" -> 2L), Map("number" -> 3L)) === p.toSet)
+    )
+  }
+
   private def testThis(title: String, syntax: String, arguments: List[(String, String)], text: String, queryText: String, returns: String, assertions: InternalExecutionResult => Unit) {
-    val argsText = arguments.map(x => "* _" + x._1 + ":_ " + x._2).mkString("\r\n\r\n")
+    val formattedSyntax = if (!syntax.isEmpty) Array("*Syntax:*", "[source,cypher]", syntax).mkString("\n", "\n", "") else ""
 
-
-    val formattedArguments = arguments.map(x => "| `" + x._1 + "` | " + x._2).mkString("", "\n", "")
+    val args = arguments.map(x => "| `" + x._1 + "` | " + x._2).mkString("", "\n", "")
+    val formattedArguments = if (!arguments.isEmpty) Array("*Arguments:*", "[options=\"header\"]", "|===", "| Name | Description", args, "|===").mkString("\n", "\n", "") else ""
     val fullText = String.format(
       """%s
-         |
-         |*Syntax:*
-         |[source,cypher]
          |%s
-         |
-         |*Arguments:*
-         |[options="header"]
-         ||===
-         || Name | Description
          |%s
-         ||===
-
-      """.stripMargin, text, syntax, formattedArguments)
+      """.stripMargin, text, formattedSyntax, formattedArguments)
 
     testQuery(title, fullText, queryText, returns, assertions = assertions)
   }

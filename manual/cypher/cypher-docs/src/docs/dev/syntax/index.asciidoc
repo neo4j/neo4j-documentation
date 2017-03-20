@@ -8,13 +8,39 @@ This section describes the syntax of the Cypher query language.
 
 * <<cypher-values,Values>>
 * <<cypher-expressions,Expressions>>
+ ** <<cypher-expressions-general,Expressions in general>>
+ ** <<cypher-expressions-string-literals,Note on string literals>>
+ ** <<query-syntax-case,CASE Expressions>>
 * <<cypher-variables,Variables>>
 * <<cypher-parameters,Parameters>>
 * <<query-operators,Operators>>
+ ** <<query-operators,Operators at a glance>>
+ ** <<query-operators-mathematical,Mathematical operators>>
+ ** <<query-operators-comparison,Comparison operators>>
+ ** <<query-operators-boolean,Boolean operators>>
+ ** <<query-operators-string,String operators>>
+ ** <<query-operators-list,List operators>>
+ ** <<query-operators-property,Property operators>>
+ ** <<cypher-comparison,Equality and comparison of values>>
+ ** <<cypher-ordering,Ordering and comparison of values>>
+ ** <<cypher-operations-chaining,Chaining comparison operations>>
 * <<cypher-comments,Comments>>
 * <<introduction-pattern,Patterns>>
+ ** <<cypher-pattern-node,Patterns for nodes>>
+ ** <<cypher-pattern-related-nodes,Patterns for related nodes>>
+ ** <<cypher-pattern-label,Patterns for labels>>
+ ** <<cypher-pattern-properties,Specifying properties>>
+ ** <<cypher-pattern-relationship,Patterns for relationships>>
+ ** <<cypher-pattern-path-variables,Assigning to path variables>>
 * <<syntax-lists,Lists>>
+ ** <<cypher-lists-general,Lists in general>>
+ ** <<cypher-list-comprehension,List comprehension>>
+ ** <<cypher-literal-maps,Literal maps>>
 * <<cypher-working-with-null,Working with null>>
+ ** <<cypher-null-intro,Introduction to 'null' in Cypher>>
+ ** <<cypher-null-logical-operators,Logical operations with null>>
+ ** <<cypher-null-in-operator,The IN operator and null>>
+ ** <<cypher-expressions-and-null,Expressions that return null>>
 
 ifndef::asciidoctor[:leveloffset: 2]
 

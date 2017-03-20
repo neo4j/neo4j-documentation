@@ -85,7 +85,7 @@ class WhereTest extends DocumentingTestBase {
   @Test def boolean_operations() {
     testQuery(
       title = "Boolean operations",
-      text = "You can use the expected boolean operators `AND` and `OR`, and also the boolean function `NOT`. " +
+      text = "You can use the boolean operators `AND`, `OR`, `XOR` and `NOT`. " +
         "See <<cypher-working-with-null>> for more information on how this works with `null`.",
       queryText = """MATCH (n) WHERE n.name = 'Peter' XOR (n.age < 30 AND n.name = 'Tobias') OR NOT (n.name = 'Tobias' OR n.name = 'Peter') RETURN n""",
       assertions = (p) => assertEquals(nodes("Andres", "Tobias", "Peter").toSet, p.columnAs[Node]("n").toSet))
@@ -103,7 +103,7 @@ class WhereTest extends DocumentingTestBase {
   @Test def regular_expressions_escaped() {
     testQuery(
       title = "Escaping in regular expressions",
-      text = "If you need a forward slash inside of your regular expression, escape it. Remember that back slash needs " +
+      text = "If you need a forward slash within your regular expression, escape it. Remember that back slash needs " +
              "to be escaped in string literals.",
       queryText = """MATCH (n) WHERE n.address =~ 'Sweden\\/Malmo' RETURN n""",
       optionalResultExplanation = """*'Tobias'* is returned because his address is in *'Sweden/Malmo'*.""",
@@ -217,10 +217,10 @@ class WhereTest extends DocumentingTestBase {
 expressions are also predicates -- an empty list represents `false`, and a non-empty represents `true`.
 
 So, patterns are not only expressions, they are also predicates. The only limitation to your pattern is that you must be
-able to express it in a single path. You can not use commas between multiple paths like you do in `MATCH`. You can achieve
+able to express it in a single path. You cannot use commas between multiple paths like you do in `MATCH`. You can achieve
 the same effect by combining multiple patterns with `AND`.
 
-Note that you can not introduce new variables here. Although it might look very similar to the `MATCH` patterns, the
+Note that you cannot introduce new variables here. Although it might look very similar to the `MATCH` patterns, the
 `WHERE` clause is all about eliminating matched subgraphs. `MATCH (a)-[*]->(b)` is very different from `WHERE (a)-[*]->(b)`; the
 first will produce a subgraph for every path it can find between `a` and `b`, and the latter will eliminate any matched
 subgraphs where `a` and `b` do not have a directed relationship chain between them.
@@ -260,7 +260,7 @@ subgraphs where `a` and `b` do not have a directed relationship chain between th
   @Test def simple_range() {
     testQuery(
       title = "Simple range",
-      text = "To check for an element being inside a specific range, use the inequality operators `<`, `<=`, `>=`, `>`.",
+      text = "To check for an element being inside a specific range, use the inequality operators `<`, `\\<=`, `>=`, `>`.",
       queryText = """MATCH (a) WHERE a.name >= 'Peter' RETURN a""",
       optionalResultExplanation = "Nodes having a name property lexicographically greater than or equal to *'Peter'* are returned.",
       assertions = (p) => assertEquals(List(node("Tobias"),node("Peter")), p.columnAs[Node]("a").toList))
