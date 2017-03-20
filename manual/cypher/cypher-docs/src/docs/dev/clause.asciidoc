@@ -37,7 +37,6 @@ These comprise clauses that write the data to the database.
 |<<query-foreach,FOREACH>>                  |   Update data within a list, whether components of a path, or the result of aggregation.
 |<<query-create-unique,CREATE UNIQUE>>      |   A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
 |<<cypherdoc-importing-csv-files-with-cypher,Importing CSV files with Cypher>> | How to import data from CSV files using `LOAD CSV`.
-|<<query-periodic-commit,PERIODIC COMMIT>>  |  How and when to use `PERIODIC COMMIT`
 |===
 
 **General Clauses**
