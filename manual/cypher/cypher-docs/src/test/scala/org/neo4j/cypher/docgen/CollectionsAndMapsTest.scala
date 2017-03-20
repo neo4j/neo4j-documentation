@@ -49,6 +49,12 @@ Lists
 
 Cypher has comprehensive support for lists.
 
+* <<cypher-lists-general,Lists in general>>
+* <<cypher-list-comprehension,List comprehension>>
+* <<cypher-pattern-comprehension,Pattern comprehension>>
+* <<cypher-literal-maps,Literal maps>>
+* <<cypher-map-projection,Map projection>>
+
 [[cypher-lists-general]]
 == Lists in general ==
 
@@ -134,7 +140,8 @@ From Cypher, you can also construct maps. Through REST you will get JSON objects
 ###
 RETURN {key: 'Value', listKey: [{inner: 'Map1'}, {inner: 'Map2'}]}###
 
-== Map Projection ==
+[[cypher-map-projection]]
+== Map projection ==
 Cypher supports a concept called "map projections".
 It allows for easily constructing map projections from nodes, relationships and other map values.
 
