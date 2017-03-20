@@ -197,6 +197,16 @@ This section comprises a glossary of all the keywords -- grouped by category and
 [[glossary-hints]]
 == Hints
 
+[options="header"]
+|===
+|Hint                                                              | Description
+|<<query-using-index-hint,USING INDEX variable:Label(property)>>   | Index hints are used to specify which index, if any, the planner should use as a starting point.
+|<<query-using-scan-hint,USING SCAN variable:Label>>               | Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
+|<<query-using-join-hint,USING JOIN ON variable>>                  | Join hints are used to enforce a join operation at specified points.
+|<<query-using-periodic-commit-hint,USING PERIODIC COMMIT>>        | This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
+|===
+
+
 [[glossary-expressions]]
 == Expressions
 
