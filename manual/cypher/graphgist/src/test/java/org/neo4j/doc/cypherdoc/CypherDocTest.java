@@ -96,7 +96,7 @@ public class CypherDocTest
         assertThat(
                 output,
                 allOf( containsString( "[[cypherdoc-hello-world]]" ),
-                        containsString( "<p class=\"cypherdoc-console\"></p>" ), containsString( "[source, cypher]" ),
+                        containsString( "<p class=\"cypherdoc-console\"></p>" ), containsString( "[source,cypher]" ),
                         containsString( "[queryresult]" ), containsString( "{Person|name = \\'Adam\\'\\l}" ),
                         containsString( "= Hello World =" ) ) );
         assertThat(
