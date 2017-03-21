@@ -35,7 +35,9 @@ This section describes the syntax of the Cypher query language.
 * <<syntax-lists,Lists>>
  ** <<cypher-lists-general,Lists in general>>
  ** <<cypher-list-comprehension,List comprehension>>
+ ** <<cypher-pattern-comprehension,Pattern comprehension>>
  ** <<cypher-literal-maps,Literal maps>>
+ ** <<cypher-map-projection,Map projection>>
 * <<cypher-working-with-null,Working with null>>
  ** <<cypher-null-intro,Introduction to 'null' in Cypher>>
  ** <<cypher-null-logical-operators,Logical operations with null>>
