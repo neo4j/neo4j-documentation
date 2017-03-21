@@ -1,6 +1,5 @@
 [[cypher-comments]]
-Comments
-========
+= Comments
 
 To add comments to your queries, use double slash. Examples:
 

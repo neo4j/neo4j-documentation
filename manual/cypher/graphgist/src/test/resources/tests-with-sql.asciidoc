@@ -1,4 +1,4 @@
-= Tests with SQL =
+= Tests with SQL
 
 [source,cypher]
 ----

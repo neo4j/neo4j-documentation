@@ -1,5 +1,5 @@
 [[cypher-cookbook-similar-favorites]]
-== Find people based on similar favorites ==
+== Find people based on similar favorites
 
 :leveloffset: 2
 

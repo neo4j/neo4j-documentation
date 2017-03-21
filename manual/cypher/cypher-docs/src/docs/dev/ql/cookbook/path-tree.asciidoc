@@ -1,8 +1,8 @@
 [[cypher-cookbook-path-tree]]
-== A multilevel indexing structure (path tree) ==
+== A multilevel indexing structure (path tree)
 
-In this example, a multi-level tree structure 
-is used to index event nodes (here +Event1+, +Event2+ and +Event3+, 
+In this example, a multi-level tree structure
+is used to index event nodes (here +Event1+, +Event2+ and +Event3+,
 in this case with a YEAR-MONTH-DAY granularity, making this a timeline indexing structure.
 However, this approach should work for a wide range of multi-level ranges.
 

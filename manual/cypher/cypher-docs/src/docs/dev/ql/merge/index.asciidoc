@@ -5,7 +5,7 @@
 The `MERGE` clause ensures that a pattern exists in the graph.
 Either the pattern already exists, or it needs to be created.
 
-== Introduction ==
+== Introduction
 
 `MERGE` either matches existing nodes and binds them, or it creates new data and binds that.
 It's like a combination of `MATCH` and `CREATE` that additionally allows you to specify what happens if the data was matched or created.
@@ -33,7 +33,7 @@ The following graph is used for the examples below:
 include::includes/cypher-merge-graph.asciidoc[]
 
 [[query-merge-node-derived]]
-== Merge nodes ==
+== Merge nodes
 
 include::merge-single-node-with-a-label.asciidoc[leveloffset=+1]
 
@@ -45,7 +45,7 @@ include::merge-single-node-derived-from-an-existing-node-property.asciidoc[level
 
 
 [[query-merge-on-create-on-match]]
-== Use ON CREATE and ON MATCH ==
+== Use ON CREATE and ON MATCH
 
 include::merge-with-on-create.asciidoc[leveloffset=+1]
 
@@ -55,7 +55,7 @@ include::merge-with-on-create-and-on-match.asciidoc[leveloffset=+1]
 
 include::merge-with-on-match-setting-multiple-properties.asciidoc[leveloffset=+1]
 
-== Merge relationships ==
+== Merge relationships
 
 include::merge-on-a-relationship.asciidoc[leveloffset=+1]
 
@@ -67,7 +67,7 @@ include::merge-on-a-relationship-between-two-existing-nodes.asciidoc[leveloffset
 
 include::merge-on-a-relationship-between-an-existing-node-and-a-merged-node-derived-from-a-node-property.asciidoc[leveloffset=+1]
 
-== Using unique constraints with MERGE ==
+== Using unique constraints with MERGE
 
 Cypher prevents getting conflicting results from `MERGE` when using patterns that involve uniqueness constraints.
 In this case, there must be at most one node that matches that pattern.

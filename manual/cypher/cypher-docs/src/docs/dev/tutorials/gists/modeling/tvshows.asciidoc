@@ -1,8 +1,8 @@
-= TV Shows =
+= TV Shows
 
 This example show how TV Shows with Seasons, Episodes, Characters, Actors, Users and Reviews can be modeled in a graph database.
 
-== Data Model ==
+== Data Model
 
 Let's start out with an entity-relationship model of the domain at hand:
 
@@ -31,7 +31,7 @@ To implement this in Neo4j we'll use the following relationship types:
 | WROTE_REVIEW | Connects users with reviews they contributed.
 |====
 
-== Sample Data ==
+== Sample Data
 
 Let's create some data and see how the domain plays out in practice:
 
@@ -104,7 +104,7 @@ Relationships created: 10
 Properties set: 11
 ----
 
-== Information for a show ==
+== Information for a show
 
 For a particular TV show, show  all the seasons and all the episodes and all the reviews and all the cast members from that show, that is all of the information connected to that TV show.
 
@@ -183,7 +183,7 @@ RETURN DISTINCT actor.name
 //table
 
 
-== Information for an actor ==
+== Information for an actor
 
 First let’s add another TV show that Josh Radnor appeared in:
 

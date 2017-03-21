@@ -8,7 +8,7 @@ The `CREATE` clause is used to create graph elements -- nodes and relationships.
 In the `CREATE` clause, patterns are used a lot.
 Read <<introduction-pattern>> for an introduction.
 
-== Create nodes ==
+== Create nodes
 
 include::create-single-node.asciidoc[leveloffset=+1]
 
@@ -22,7 +22,7 @@ include::create-node-and-add-labels-and-properties.asciidoc[leveloffset=+1]
 
 include::return-created-node.asciidoc[leveloffset=+1]
 
-== Create relationships ==
+== Create relationships
 
 include::create-a-relationship-between-two-nodes.asciidoc[leveloffset=+1]
 
@@ -30,7 +30,7 @@ include::create-a-relationship-and-set-properties.asciidoc[leveloffset=+1]
 
 include::create-a-full-path.asciidoc[]
 
-== Use parameters with CREATE ==
+== Use parameters with CREATE
 
 include::create-node-with-a-parameter-for-the-properties.asciidoc[leveloffset=+1]
 

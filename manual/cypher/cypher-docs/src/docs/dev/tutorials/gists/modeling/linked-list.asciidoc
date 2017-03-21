@@ -1,4 +1,4 @@
-= Linked Lists =
+= Linked Lists
 
 A powerful feature of using a graph database, is that you can create your own in-graph data structures -- for example a linked list.
 

@@ -1,4 +1,4 @@
-= Movie Database =
+= Movie Database
 
 Our example graph consists of movies with title and year and actors with a name.
 Actors have `ACTS_IN` relationships to movies, which represents the role they played.

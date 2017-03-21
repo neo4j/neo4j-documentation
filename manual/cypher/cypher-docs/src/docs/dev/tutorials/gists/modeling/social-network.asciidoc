@@ -1,8 +1,8 @@
-= Social Network =
+= Social Network
 
 This is a simple social network example, where users can be friends with other users, write posts and like or comment on posts.
 
-== Data Model ==
+== Data Model
 
 ["dot", "modeling-social-diaspora-er-diagram.svg", "meta", "node [shape=box fillcolor=white style=filled] edge [shape=none arrowhead=none penwidth=1.0]"]
 ----
@@ -12,7 +12,7 @@ This is a simple social network example, where users can be friends with other u
 "User" -> "Post" [label="commented" arrowhead="crow" dir="both" arrowtail="crow"]
 ----
 
-== Sample Data ==
+== Sample Data
 
 We'll start out with a minimal set of data and see what that gives us.
 
@@ -91,7 +91,7 @@ Labels added: 9
 
 Now let's write some queries!
 
-== Queries ==
+== Queries
 
 We'll start with one to find the posts made by Rachel's friends:
 

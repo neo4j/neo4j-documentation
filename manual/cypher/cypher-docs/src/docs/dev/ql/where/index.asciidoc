@@ -18,7 +18,7 @@ Both results and performance may be impacted if the `WHERE` is put inside the wr
 .Graph
 include::includes/cypher-where-graph.asciidoc[]
 
-== Basic usage ==
+== Basic usage
 
 include::boolean-operations.asciidoc[leveloffset=+1]
 
@@ -34,7 +34,7 @@ include::property-exists.asciidoc[leveloffset=+1]
 
 
 [[query-where-string]]
-== String matching ==
+== String matching
 
 The start and end of strings can be matched using `STARTS WITH` and `ENDS WITH`.
 To match regardless of location in a string, use `CONTAINS`.
@@ -50,7 +50,7 @@ include::string-matching-negation.asciidoc[leveloffset=+1]
 
 
 [[query-where-regex]]
-== Regular expressions ==
+== Regular expressions
 
 Cypher supports filtering using regular expressions.
 The regular expression syntax is inherited from https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html[the Java regular expressions].
@@ -65,7 +65,7 @@ include::case-insensitive-regular-expressions.asciidoc[leveloffset=+1]
 
 
 [[query-where-patterns]]
-== Using path patterns in WHERE ==
+== Using path patterns in WHERE
 
 include::filter-on-patterns.asciidoc[leveloffset=+1]
 
@@ -76,11 +76,11 @@ include::filter-on-patterns-with-properties.asciidoc[leveloffset=+1]
 include::filtering-on-relationship-type.asciidoc[leveloffset=+1]
 
 
-== Lists ==
+== Lists
 
 include::in-operator.asciidoc[leveloffset=+1]
 
-== Missing properties and values ==
+== Missing properties and values
 
 include::default-to-false-if-property-is-missing.asciidoc[leveloffset=+1]
 
@@ -90,7 +90,7 @@ include::filter-on-null.asciidoc[leveloffset=+1]
 
 
 [[query-where-ranges]]
-== Using ranges ==
+== Using ranges
 
 include::simple-range.asciidoc[leveloffset=+1]
 

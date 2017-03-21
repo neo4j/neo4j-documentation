@@ -1,4 +1,4 @@
-= Labels, Constraints and Indexes =
+= Labels, Constraints and Indexes
 
 Labels are a convenient way to group nodes together.
 They are used to restrict queries, define constraints and create indexes.

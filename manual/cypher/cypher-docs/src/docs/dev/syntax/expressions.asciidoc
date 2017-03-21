@@ -1,9 +1,9 @@
 [[cypher-expressions]]
-Expressions
-===========
+= Expressions
+
 
 [[cypher-expressions-general]]
-== Expressions in general ==
+== Expressions in general
 
 An expression in Cypher can be:
 
@@ -27,8 +27,10 @@ An expression in Cypher can be:
 * A case-sensitive string matching expression: `a.surname STARTS WITH 'Sven'`, `a.surname ENDS WITH 'son'` or `a.surname CONTAINS 'son'`
 * A `CASE` expression.
 
+
 [[cypher-expressions-string-literals]]
-== Note on string literals ==
+== Note on string literals
+
 String literals can contain the following escape sequences:
 
 [options="header", cols=">1,<2", width="50%"]

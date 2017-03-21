@@ -1,5 +1,5 @@
 [[cypher-cookbook-similar-tags]]
-== Find friends based on similar tagging ==
+== Find friends based on similar tagging
 
 :leveloffset: 2
 

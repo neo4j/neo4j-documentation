@@ -4,7 +4,7 @@
 Cypher can be used for both querying and updating your graph.
 
 [[query-updating-structure]]
-== The structure of update queries ==
+== The structure of update queries
 
 [abstract]
 * A Cypher query part can't both match and update the graph at the same time.
@@ -44,7 +44,7 @@ RETURN n.friendsCount
 You can chain together as many query parts as the available memory permits.
 
 [[query-updating-return]]
-== Returning data ==
+== Returning data
 
 Any query can return data.
 If your query only reads, it has to return data -- it serves no purpose if it doesn't, and it is not a valid Cypher query.

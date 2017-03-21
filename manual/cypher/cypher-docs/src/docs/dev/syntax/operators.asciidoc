@@ -1,9 +1,8 @@
 [[query-operators]]
-Operators
-=========
+= Operators
 
 [[query-operators-summary]]
-== Operators at a glance ==
+== Operators at a glance
 
 |===
 | <<query-operators-mathematical,Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
@@ -17,7 +16,7 @@ Operators
 include::../ql/syntax/operators.asciidoc[leveloffset=+1]
 
 [[query-operators-property]]
-== Property operators ==
+== Property operators
 
 [NOTE]
 Since version 2.0, the previously supported property operators `?` and `!` have been removed.

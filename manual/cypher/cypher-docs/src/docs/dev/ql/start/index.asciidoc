@@ -18,7 +18,7 @@ This is the graph the examples are using:
 .Graph
 include::includes/cypher-start-graph.asciidoc[]
 
-== Get node or relationship from index ==
+== Get node or relationship from index
 
 include::node-by-index-seek.asciidoc[leveloffset=+1]
 

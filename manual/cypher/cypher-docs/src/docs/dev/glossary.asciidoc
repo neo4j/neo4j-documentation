@@ -1,5 +1,5 @@
 [[cypher-glossary]]
-= Glossary of keywords =
+= Glossary of keywords
 
 [abstract]
 --

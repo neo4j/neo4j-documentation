@@ -1,5 +1,5 @@
 [[cypher-intro]]
-= Introduction =
+= Introduction
 
 For a short introduction, see <<cypher-introduction>>.
 To take your first steps with Cypher, see <<cypher-getting-started>>.

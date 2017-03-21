@@ -1,4 +1,4 @@
-= Create nodes and relationships =
+= Create nodes and relationships
 
 // console
 

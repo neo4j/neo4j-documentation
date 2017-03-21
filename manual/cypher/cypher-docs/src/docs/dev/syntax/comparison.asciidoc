@@ -1,7 +1,7 @@
 [[cypher-comparison]]
-== Equality and comparison of values ==
+== Equality and comparison of values
 
-=== Equality ===
+=== Equality
 
 Cypher supports comparing values (see <<cypher-values>>) by equality using the `=` and `<>` operators.
 
@@ -22,7 +22,7 @@ Especially, nodes, relationships, and literal maps are incomparable with each ot
 It is an error to compare values that cannot be compared.
 
 [[cypher-ordering]]
-== Ordering and comparison of values ==
+== Ordering and comparison of values
 
 The comparison operators `\<=`, `<` (for ascending) and `>=`, `>` (for descending) are used to compare values for ordering.
 The following points give some details on how the comparison is performed.
@@ -35,7 +35,7 @@ The following points give some details on how the comparison is performed.
 * It is an error to compare other types of values with each other for ordering.
 
 [[cypher-operations-chaining]]
-== Chaining comparison operations ==
+== Chaining comparison operations
 Comparisons can be chained arbitrarily, e.g., `x < y \<= z` is equivalent to `x < y AND y \<= z`.
 
 Formally, if `a, b, c, \..., y, z` are expressions and `op1, op2, \..., opN` are comparison operators, then `a op1 b op2 c \... y opN z` is equivalent to `a op1 b and b op2 c and \... y opN z`.

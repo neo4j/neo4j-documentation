@@ -1,5 +1,5 @@
 [[query-operators-mathematical]]
-= Mathematical operators =
+= Mathematical operators
 
 The mathematical operators comprise:
 
@@ -15,7 +15,7 @@ include::using-the-exponentiation-operator.asciidoc[]
 include::using-the-unary-minus-operator.asciidoc[]
 
 [[query-operators-comparison]]
-= Comparison operators =
+= Comparison operators
 
 The comparison operators comprise:
 
@@ -45,7 +45,7 @@ include::using-starts-with-to-filter-names.asciidoc[]
 <<query-where-string>> contains more information regarding the string-specific comparison operators as well as additional examples illustrating the usage thereof.
 
 [[query-operators-boolean]]
-= Boolean operators =
+= Boolean operators
 
 The boolean operators -- also known as logical operators -- comprise:
 
@@ -59,7 +59,7 @@ include::../../syntax/boolean-operator-table.asciidoc[]
 include::using-boolean-operators-to-filter-numbers.asciidoc[]
 
 [[query-operators-string]]
-= String operators =
+= String operators
 
 String operators comprise:
 
@@ -72,7 +72,7 @@ Further information and examples regarding the use of regular expressions in fil
 In addition, refer to <<query-operator-comparison-string-specific>> for details on string-specific comparison operators.
 
 [[query-operators-list]]
-= List operators =
+= List operators
 
 List operators comprise:
 

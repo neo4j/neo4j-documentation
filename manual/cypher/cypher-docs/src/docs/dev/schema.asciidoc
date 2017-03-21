@@ -1,5 +1,5 @@
 [[cypher-schema]]
-= Schema =
+= Schema
 
 [abstract]
 --

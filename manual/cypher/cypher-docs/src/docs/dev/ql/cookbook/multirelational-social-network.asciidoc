@@ -1,5 +1,5 @@
 [[cypher-cookbook-multirelational-social-network]]
-== Multirelational (social) graphs ==
+== Multirelational (social) graphs
 
 :leveloffset: 2
 

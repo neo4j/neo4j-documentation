@@ -1,6 +1,6 @@
 [[languages]]
-Languages
-=========
+= Languages
+
 
 Please see http://neo4j.com/developer/language-guides/ for the current set of drivers!
 
