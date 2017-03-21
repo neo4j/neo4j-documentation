@@ -1,17 +1,17 @@
-= Hello World
+= Hello World =
 
 Text here.
 
 // hide
 // setup
 [[init]]
-[source, cypher]
+[source,cypher]
 ----
 CREATE (n:Person {name: 'Adam'})
 RETURN n;
 ----
 
-[source, querytest]
+[source,querytest]
 ----
 Adam
 1 row
@@ -33,14 +33,14 @@ Let's find the node we created:
 }
 ----
 
-[source, cypher]
+[source,cypher]
 ----
 MATCH (person:Person)
 WHERE person.name = {name}
 RETURN person;
 ----
 
-[source, querytest]
+[source,querytest]
 ----
 Adam
 1 row
