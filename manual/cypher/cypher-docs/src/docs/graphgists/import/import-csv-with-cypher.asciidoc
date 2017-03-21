@@ -105,7 +105,7 @@ CREATE CONSTRAINT ON (movie:Movie) ASSERT movie.id IS UNIQUE
 
 Now importing the relationships is a matter of finding the nodes and then creating relationships between them.
 
-For this query we'll use `USING PERIODIC COMMIT` (see <<query-periodic-commit>>) which is helpful for queries that operate on large CSV files.
+For this query we'll use `USING PERIODIC COMMIT` (see <<query-using-periodic-commit-hint>>) which is helpful for queries that operate on large CSV files.
 This hint tells Neo4j that the query might build up inordinate amounts of transaction state, and so needs to be periodically committed.
 In this case we also set the limit to `500` rows per commit.
 

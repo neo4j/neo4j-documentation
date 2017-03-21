@@ -9,6 +9,7 @@ This section contains information on all functions in the Cypher query language.
 
 * Predicate functions [<<header-query-predicates, Summary>>|<<query-predicates, Detail>>]
 * Scalar functions [<<header-query-functions-scalar, Summary>>|<<query-functions-scalar, Detail>>]
+* Aggregating functions [<<header-query-functions-aggregating, Summary>>|<<query-functions-aggregating, Detail>>]
 * List functions [<<header-query-functions-list, Summary>>|<<query-functions-list, Detail>>]
 * Mathematical functions [<<header-query-functions-mathematical, Summary>>|<<query-functions-mathematical, Detail>>]
 ** Numeric functions [<<header-query-functions-numeric, Summary>>|<<query-functions-numeric, Detail>>]
@@ -61,6 +62,27 @@ These functions return a single value.
 |<<functions-tofloat,toFloat()>>                    | Converts the argument to a float and returns the result.
 |<<functions-type,type()>>                          | Returns a string representation of the relationship type.
 |===
+
+[[header-query-functions-aggregating]]
+**<<query-functions-aggregating, Aggregating functions>>**
+
+These functions take multiple values as arguments, and calculate and return an aggregated value from them.
+
+[options="header"]
+|===
+|Function                                       | Description
+|<<functions-count,count()>>                    | Returns the number of rows.
+|<<functions-collect,collect()>>                | Returns a list containing all collected values.
+|<<functions-avg,avg()>>                        | Returns the average of a numeric column.
+|<<functions-sum,sum()>>                        | Returns the sum of a numeric column.
+|<<functions-max,max()>>                        | Returns the highest value in a numeric column.
+|<<functions-min,min()>>                        | Returns the lowest value in a numeric column.
+|<<functions-stdev,stDev()>>                    | Returns the standard deviation for a given value over a group for a sample of a population.
+|<<functions-stdevp,stDevP()>>                  | Returns the standard deviation for a given value over a group for an entire population.
+|<<functions-percentiledisc,percentileDisc()>>  | Returns the nearest value to a given percentile over a group using a rounding method.
+|<<functions-percentilecont,percentileCont()>>  | Returns the percentile of a given value over a group using linear interpolation.
+|===
+
 
 [[header-query-functions-list]]
 **<<query-functions-list, List functions>>**
@@ -146,11 +168,11 @@ These functions are used to manipulate strings or to create a string representat
 |Function                               |   Description
 |<<functions-left,left()>>              | Returns a string containing the left n characters of the original string.
 |<<functions-lower,lower()>>            | Returns the original string in lowercase.
-|<<functions-ltrim,ltrim()>>            | Returns the original string with whitespace removed from the left side.
+|<<functions-ltrim,lTrim()>>            | Returns the original string with whitespace removed from the left side.
 |<<functions-replace,replace()>>        | Returns a string with the search string replaced by the replace string, replacing all occurrences.
 |<<functions-reverse,reverse()>>        | Returns the original string reversed.
 |<<functions-right,right()>>            | Returns a string containing the right n characters of the original string.
-|<<functions-rtrim,rtrim()>>            | Returns the original string with whitespace removed from the right side.
+|<<functions-rtrim,rTrim()>>            | Returns the original string with whitespace removed from the right side.
 |<<functions-split,split()>>            | Returns the sequence of strings which are delimited by split patterns.
 |<<functions-substring,substring()>>    | Returns a substring of the original, with a 0-based index start and length.
 |<<functions-tostring,toString()>>      | Converts the argument to a string.
@@ -240,6 +262,14 @@ include::properties.asciidoc[leveloffset=+1]
 include::toint.asciidoc[leveloffset=+1]
 
 include::tofloat.asciidoc[leveloffset=+1]
+
+ifndef::asciidoctor[:leveloffset: 1]
+
+//Aggregating functions
+
+ifndef::asciidoctor[:leveloffset: 2]
+
+include::query-functions-aggregating.adoc[leveloffset=+1]
 
 ifndef::asciidoctor[:leveloffset: 1]
 

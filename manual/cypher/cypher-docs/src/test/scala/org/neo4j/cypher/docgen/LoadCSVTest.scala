@@ -141,7 +141,7 @@ If the CSV file contains a significant number of rows (approaching hundreds of t
 can be used to instruct Neo4j to perform a commit after a number of rows.
 This reduces the memory overhead of the transaction state.
 By default, the commit will happen every 1000 rows.
-For more information, see <<query-periodic-commit>>.
+For more information, see <<query-using-periodic-commit-hint>>.
 """,
       queryText = s"USING PERIODIC COMMIT LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInt(line[2])})",
       optionalResultExplanation = "",
