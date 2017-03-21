@@ -12,7 +12,7 @@ It will just go ahead and directly create the patterns that you specify.
 
 For the patterns we've looked at so far this could look like the following:
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE (:Movie {title: 'The Matrix', released: 1997})
 ----
@@ -21,7 +21,7 @@ If we execute this statement, Cypher returns the number of changes, in this case
 
 //table
 
-[source,querytest]
+[source, querytest]
 ----
 Nodes created: 1
 Properties set: 2
@@ -34,7 +34,7 @@ As we started out with an empty database, we now have a database with a single n
 
 If case we also want to return the created data we can add a `RETURN` clause, which refers to the variable we've assigned to our pattern elements.
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE (p:Person {name: 'Keanu Reeves', born: 1964})
 RETURN p
@@ -48,7 +48,7 @@ If we want to create more than one element, we can separate the elements with co
 
 We can of course also create more complex structures, like an `ACTED_IN` relationship with information about the character, or `DIRECTED` ones for the director.
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE (a:Person {name: 'Tom Hanks', born: 1956})-[r:ACTED_IN {roles:['Forrest']}]->(m:Movie {title: 'Forrest Gump', released: 1994})
 CREATE (d:Person {name: 'Robert Zemeckis', born: 1951})-[:DIRECTED]->(m)
@@ -72,7 +72,7 @@ NOTE: A `MATCH` statement will search for the patterns we specify and return _on
 
 To find the data we've created so far, we can start looking for all nodes labeled with the `Movie` label.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (m:Movie)
 RETURN m
@@ -84,7 +84,7 @@ Here's the result:
 
 This should show both *'The Matrix'* and *'Forrest Gump'*.
 
-[source,querytest]
+[source, querytest]
 ----
 The Matrix
 Forrest Gump
@@ -92,7 +92,7 @@ Forrest Gump
 
 We can also look for a specific person, like *'Keanu Reeves'*.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (p:Person {name: 'Keanu Reeves'})
 RETURN p
@@ -102,7 +102,7 @@ This query returns the matching node:
 
 // graph_result
 
-[source,querytest]
+[source, querytest]
 ----
 Keanu Reeves
 1 row
@@ -113,7 +113,7 @@ In most cases you have key-properties like SSN, ISBN, emails, logins, geolocatio
 
 We can also find more interesting connections, like for instance the movies titles that *'Tom Hanks'* acted in and the roles he played.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (p:Person {name: 'Tom Hanks'})-[r:ACTED_IN]->(m:Movie)
 RETURN m.title, r.roles
@@ -121,7 +121,7 @@ RETURN m.title, r.roles
 
 // table
 
-[source,querytest]
+[source, querytest]
 ----
 Forrest Gump
 1 row
@@ -139,7 +139,7 @@ Now we know enough to connect new nodes to existing ones and can combine `MATCH`
 To extend the graph with new information, we first match the existing connection points and then attach the newly created nodes to them with relationships.
 Adding *'Cloud Atlas'* as a new movie for *'Tom Hanks'* could be achieved like this:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (p:Person {name: 'Tom Hanks'})
 CREATE (m:Movie {title: 'Cloud Atlas', released: 2012})
@@ -151,7 +151,7 @@ Here's what the structure looks like in the database:
 
 // graph_result
 
-[source,querytest]
+[source, querytest]
 ----
 1 row
 Nodes created: 1
@@ -184,7 +184,7 @@ Usually, as with `MATCH` you only want to include the key property to look for i
 
 If we wouldn't know if our graph already contained *'Cloud Atlas'* we could merge it in again.
 
-[source,cypher]
+[source, cypher]
 ----
 MERGE (m:Movie {title: 'Cloud Atlas'}) ON CREATE SET m.released = 2012
 RETURN m
@@ -208,7 +208,7 @@ But it's still not for free, so whenever you're sure to not create duplicate dat
 `MERGE` can also assert that a relationship is only created once.
 For that to work you _have to pass in_ both nodes from a previous pattern match.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (m:Movie {title: 'Cloud Atlas'})
 MATCH (p:Person {name: 'Tom Hanks'})
@@ -218,7 +218,7 @@ RETURN p, r, m
 
 //graph_result
 
-[source,querytest]
+[source, querytest]
 ----
 1 row
 Tom Hanks
@@ -233,7 +233,7 @@ If you choose to pass in only one node from a preceding clause, `MERGE` offers a
 It will then only match within the direct neighborhood of the provided node for the given pattern, and, if not found create it.
 This can come in very handy for creating for example tree structures.
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE (y:Year {year: 2014})
 MERGE (y)<-[:IN_YEAR]-(m10:Month {month: 10})
@@ -245,7 +245,7 @@ This is the graph structure that gets created:
 
 //graph_result
 
-[source,querytest]
+[source, querytest]
 ----
 1 row
 Nodes created: 3

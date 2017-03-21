@@ -18,15 +18,11 @@ This is the graph the examples are using:
 .Graph
 include::includes/cypher-start-graph.asciidoc[]
 
-== Get node or relationship from index ==
-
-ifndef::asciidoctor[:leveloffset: 3]
+== Get node or relationship from index
 
 include::node-by-index-seek.asciidoc[leveloffset=+1]
 
 include::relationship-by-index-seek.asciidoc[leveloffset=+1]
 
 include::node-by-index-query.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 2]
 

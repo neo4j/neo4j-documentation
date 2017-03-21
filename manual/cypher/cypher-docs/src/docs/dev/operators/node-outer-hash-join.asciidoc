@@ -1,5 +1,5 @@
 [[operator-node-outer-hash-join]]
-= Node outer hash join =
+= Node outer hash join
 
 Using a hash table, a node outer hash join joins the inputs coming from the left with the inputs coming from the right.
 If inputs from the left do not have any matches coming from the right, nulls are produced for the variables from the right.

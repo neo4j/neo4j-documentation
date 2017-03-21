@@ -1,5 +1,5 @@
 [[cypher-glossary]]
-= Glossary of keywords =
+= Glossary of keywords
 
 [abstract]
 --
@@ -13,6 +13,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 * <<glossary-commands,Commands>>
 * <<glossary-hints,Hints>>
 * <<glossary-expressions,Expressions>>
+
 
 [[glossary-clauses]]
 == <<query-clause,Clauses>>
@@ -39,6 +40,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-with,WITH>>                        | General   |  Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
 |===
 
+
 [[glossary-sub-clauses]]
 == <<query-clause,Sub-clauses>>
 
@@ -52,6 +54,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-skip,SKIP>>                            | General   | Defines from which row to start including the rows in the output.
 |<<query-where,WHERE>>                          | Read      | Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filter the results of a `WITH` clause.
 |===
+
 
 [[glossary-operators]]
 == <<query-operators,Operators>>
@@ -86,6 +89,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operators-boolean,XOR>>                         | Boolean     | Exclusive disjunction
 | <<query-operators-mathematical,^>>                      | Mathematical  | Exponentiation
 |===
+
 
 [[glossary-functions]]
 == <<query-function,Functions>>
@@ -171,6 +175,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-upper,upper()>>                    | String            | Returns the original string in uppercase.
 |===
 
+
 [[glossary-commands]]
 == Commands
 
@@ -193,6 +198,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<schema-index-create-an-index,CREATE INDEX ON :Label(property)>>    | Create an index on all nodes with a particular label and property.
 |<<schema-index-drop-an-index,DROP INDEX ON :Label(property)>>        | Drop an index on all nodes with a particular label and property.
 |===
+
 
 [[glossary-hints]]
 == Hints

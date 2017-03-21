@@ -1,8 +1,8 @@
-= TV Shows =
+= TV Shows
 
 This example show how TV Shows with Seasons, Episodes, Characters, Actors, Users and Reviews can be modeled in a graph database.
 
-== Data Model ==
+== Data Model
 
 Let's start out with an entity-relationship model of the domain at hand:
 
@@ -31,14 +31,14 @@ To implement this in Neo4j we'll use the following relationship types:
 | WROTE_REVIEW | Connects users with reviews they contributed.
 |====
 
-== Sample Data ==
+== Sample Data
 
 Let's create some data and see how the domain plays out in practice:
 
 // console
 
 //setup
-[source,cypher]
+[source, cypher]
 ----
 CREATE (himym:TVShow {name: 'How I Met Your Mother'})
 CREATE (himym_s1:Season {name: 'HIMYM Season 1'})
@@ -54,7 +54,7 @@ CREATE (wakenPayne:User {name: 'WakenPayne'})
 CREATE (wakenPayne)-[:WROTE_REVIEW]->(himym_s1_e1_review1)<-[:HAS_REVIEW]-(himym_s1_e1)
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Nodes created: 7
 Relationships created: 6
@@ -70,7 +70,7 @@ We gain a lot of flexibility in this way, for example if we want to connect comm
 
 Now let's add more data:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (himym:TVShow {name: 'How I Met Your Mother'}),
        (himym_s1:Season),
@@ -97,25 +97,25 @@ CREATE (atlasredux:User {name: 'atlasredux'})
 CREATE (atlasredux)-[:WROTE_REVIEW]->(himym_s1_e1_review2)<-[:HAS_REVIEW]-(himym_s1_e1)
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Nodes created: 10
 Relationships created: 10
 Properties set: 11
 ----
 
-== Information for a show ==
+== Information for a show
 
 For a particular TV show, show  all the seasons and all the episodes and all the reviews and all the cast members from that show, that is all of the information connected to that TV show.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (tvShow:TVShow)-[:HAS_SEASON]->(season)-[:HAS_EPISODE]->(episode)
 WHERE tvShow.name = 'How I Met Your Mother'
 RETURN season.name, episode.name
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 HIMYM Season 1
 Pilot
@@ -126,7 +126,7 @@ Pilot
 
 We could also grab the reviews if there are any by slightly tweaking the query:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (tvShow:TVShow)-[:HAS_SEASON]->(season)-[:HAS_EPISODE]->(episode)
 WHERE tvShow.name = 'How I Met Your Mother'
@@ -135,7 +135,7 @@ OPTIONAL MATCH (episode)-[:HAS_REVIEW]->(review)
 RETURN season.name, episode.name, review
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 HIMYM Season 1
 Pilot
@@ -152,14 +152,14 @@ Now let's list the characters featured in a show.
 Note that in this query we only put variables on the nodes we actually use later on.
 The other nodes of the path pattern are designated by `()`.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (tvShow:TVShow)-[:HAS_SEASON]->()-[:HAS_EPISODE]->()-[:FEATURED_CHARACTER]->(character)
 WHERE tvShow.name = 'How I Met Your Mother'
 RETURN DISTINCT character.name
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 5 rows
 ----
@@ -168,14 +168,14 @@ RETURN DISTINCT character.name
 
 Now let's look at how to get all cast members of a show.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (tvShow:TVShow)-[:HAS_SEASON]->()-[:HAS_EPISODE]->(episode)-[:FEATURED_CHARACTER]->()<-[:PLAYED_CHARACTER]-(actor)
 WHERE tvShow.name = 'How I Met Your Mother'
 RETURN DISTINCT actor.name
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 5 rows
 ----
@@ -183,11 +183,11 @@ RETURN DISTINCT actor.name
 //table
 
 
-== Information for an actor ==
+== Information for an actor
 
 First let’s add another TV show that Josh Radnor appeared in:
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE (er:TVShow {name: 'ER'})
 CREATE (er_s7:Season {name: 'ER S7'})
@@ -204,7 +204,7 @@ MERGE (actor)-[:PLAYED_CHARACTER]->(keith)
 MERGE (episode)-[:FEATURED_CHARACTER]->(keith)
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Nodes created: 5
 Relationships created: 4
@@ -213,14 +213,14 @@ Properties set: 5
 
 And now we’ll create a query to find the episodes that he has appeared in:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (actor:Actor)-[:PLAYED_CHARACTER]->(character)<-[:FEATURED_CHARACTER]-(episode)
 WHERE actor.name = 'Josh Radnor'
 RETURN episode.name AS Episode, character.name AS Character
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Pilot
 Ted Mosby
@@ -233,7 +233,7 @@ Keith
 
 Now let's go for a similar query, but add the season and show to it as well.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (actor:Actor)-[:PLAYED_CHARACTER]->(character)<-[:FEATURED_CHARACTER]-(episode),
      (episode)<-[:HAS_EPISODE]-(season)<-[:HAS_SEASON]-(tvshow)
@@ -241,7 +241,7 @@ WHERE actor.name = 'Josh Radnor'
 RETURN tvshow.name AS Show, season.name AS Season, episode.name AS Episode, character.name AS Character
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 How I Met Your Mother
 HIMYM Season 1

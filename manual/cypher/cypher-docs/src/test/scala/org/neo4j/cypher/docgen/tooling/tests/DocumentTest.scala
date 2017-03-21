@@ -347,7 +347,7 @@ class DocumentQueryTest extends CypherFunSuite {
         |= title
         |
         |.Query
-        |[source,cypher]
+        |[source, cypher]
         |----
         |MATCH (n)
         |RETURN n

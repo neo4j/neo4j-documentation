@@ -1,4 +1,4 @@
-= Linked Lists =
+= Linked Lists
 
 A powerful feature of using a graph database, is that you can create your own in-graph data structures -- for example a linked list.
 
@@ -11,13 +11,13 @@ To make it clear what happens, we will show how the graph looks after each query
 To initialize an empty linked list, we simply create a node, and make it link to itself.
 Unlike the actual list elements, it doesn't have a *'value'* property.
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE (root {name: 'ROOT'})-[:LINK]->(root)
 RETURN root
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 1 row
 Nodes created: 1
@@ -32,7 +32,7 @@ a new node, and two relationships to it.
 We also have to handle the fact that the *'before'* and *'after'* nodes could be the same as the *'root'* node.
 The case where *'before'*, *'after'* and the *'root'* node are all the same, makes it necessary to use `CREATE UNIQUE` to not create two new value nodes by mistake.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (root)-[:LINK*0..]->(before),
       (after)-[:LINK*0..]->(root),
@@ -44,7 +44,7 @@ MERGE (before)-[:LINK]->({value: 25})-[:LINK]->(after)
 DELETE old
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Nodes created: 1
 Relationships created: 2
@@ -57,7 +57,7 @@ Relationships deleted: 1
 
 Let's add one more value:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (root)-[:LINK*0..]->(before),
       (after)-[:LINK*0..]->(root),
@@ -69,7 +69,7 @@ MERGE (before)-[:LINK]->({value: 10})-[:LINK]->(after)
 DELETE old
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Nodes created: 1
 Relationships created: 2
@@ -82,7 +82,7 @@ Relationships deleted: 1
 Deleting a value, conversely, is done by finding the node with the value, and the two relationships going in and out
 from it, and replacing the relationships with a new one.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (root)-[:LINK*0..]->(before),
       (before)-[delBefore:LINK]->(del)-[delAfter:LINK]->(after),
@@ -92,7 +92,7 @@ MERGE (before)-[:LINK]->(after)
 DELETE del, delBefore, delAfter
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Relationships created: 1
 Nodes deleted: 1
@@ -104,7 +104,7 @@ Relationships deleted: 2
 Deleting the last value node is what requires us to use `MERGE` when replacing the relationships.
 Otherwise, we would end up with two relationships from the *'root'* node to itself, as both *'before'* and *'after'* nodes are equal to the *'root'* node, meaning the pattern would match twice.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (root)-[:LINK*0..]->(before),
       (before)-[delBefore:LINK]->(del)-[delAfter:LINK]->(after),
@@ -114,7 +114,7 @@ MERGE (before)-[:LINK]->(after)
 DELETE del, delBefore, delAfter
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Relationships created: 1
 Nodes deleted: 1

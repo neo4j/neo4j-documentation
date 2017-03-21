@@ -65,7 +65,7 @@ is described in more detail in:
 The very simplest 'shape' that can be described in a pattern is a node. A node is described using a pair of parentheses, and is typically given a name.
 For example:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)
 ----
@@ -79,7 +79,7 @@ A more powerful construct is a pattern that describes multiple nodes and relatio
 Cypher patterns describe relationships by employing an arrow between two nodes.
 For example:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-->(b)
 ----
@@ -89,7 +89,7 @@ In this example, the two nodes are both named as `a` and `b` respectively, and t
 
 This manner of describing nodes and relationships can be extended to cover an arbitrary number of nodes and the relationships between them, for example:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-->(b)<--(c)
 ----
@@ -99,7 +99,7 @@ Such a series of connected nodes and relationships is called a "path".
 Note that the naming of the nodes in these patterns is only necessary should one need to refer to the same node again, either later in the pattern or elsewhere in the Cypher query.
 If this is not necessary, then the name may be omitted, as follows:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-->()<--(c)
 ----
@@ -111,14 +111,14 @@ In addition to simply describing the shape of a node in the pattern, one can als
 The most simple attribute that can be described in the pattern is a label that the node must have.
 For example:
 
-[source,cypher]
+[source, cypher]
 ----
 (a:User)-->(b)
 ----
 
 One can also describe a node that has multiple labels:
 
-[source,cypher]
+[source, cypher]
 ----
 (a:User:Admin)-->(b)
 ----
@@ -131,14 +131,14 @@ Nodes and relationships are the fundamental structures in a graph. Neo4j uses pr
 Properties can be expressed in patterns using a map-construct: curly brackets surrounding a number of key-expression pairs, separated by commas.
 E.g. a node with two properties on it would look like:
 
-[source,cypher]
+[source, cypher]
 ----
 (a { name: 'Andres', sport: 'Brazilian Ju-Jitsu'})
 ----
 
 A relationship with expectations on it is given by:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-[{blocked: false}]->(b)
 ----
@@ -158,7 +158,7 @@ The simplest way to describe a relationship is by using the arrow between two no
 Using this technique, you can describe that the relationship should exist and the directionality of it.
 If you don't care about the direction of the relationship, the arrow head can be omitted, as exemplified by:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)--(b)
 ----
@@ -167,7 +167,7 @@ As with nodes, relationships may also be given names.
 In this case, a pair of square brackets is used to break up the arrow and the variable is placed between.
 For example:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-[r]->(b)
 ----
@@ -175,7 +175,7 @@ For example:
 Much like labels on nodes, relationships can have types.
 To describe a relationship with a specific type, you can specify this as follows:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-[r:REL_TYPE]->(b)
 ----
@@ -183,7 +183,7 @@ To describe a relationship with a specific type, you can specify this as follows
 Unlike labels, relationships can only have one type.
 But if we'd like to describe some data such that the relationship could have any one of a set of types, then they can all be listed in the pattern, separating them with the pipe symbol `|` like this:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-[r:TYPE1|TYPE2]->(b)
 ----
@@ -193,7 +193,7 @@ It will not work with `CREATE` or `MERGE`, since it's not possible to create a r
 
 As with nodes, the name of the relationship can always be omitted, as exemplified by:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-[:REL_TYPE]->(b)
 ----
@@ -210,7 +210,7 @@ This will work in all versions of Neo4j that support the `MATCH` clause, namely 
 Rather than describing a long path using a sequence of many node and relationship descriptions in a pattern, many relationships (and the intermediate nodes) can be described by specifying a length in the relationship description of a pattern.
 For example:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-[*2]->(b)
 ----
@@ -218,7 +218,7 @@ For example:
 This describes a graph of three nodes and two relationship, all in one path (a path of length 2).
 This is equivalent to:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-->()-->(b)
 ----
@@ -226,7 +226,7 @@ This is equivalent to:
 A range of lengths can also be specified: such relationship patterns are called 'variable length relationships'.
 For example:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-[*3..5]->(b)
 ----
@@ -236,21 +236,21 @@ It describes a graph of either 4 nodes and 3 relationships, 5 nodes and 4 relati
 
 Either bound can be omitted. For example, to describe paths of length 3 or more, use:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-[*3..]->(b)
 ----
 
 And to describe paths of length 5 or less, use:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-[*..5]->(b)
 ----
 
 Both bounds can be omitted, allowing paths of any length to be described:
 
-[source,cypher]
+[source, cypher]
 ----
 (a)-[*]->(b)
 ----
@@ -273,7 +273,7 @@ Note that variable length relationships cannot be used with `CREATE` and `MERGE`
 As described above, a series of connected nodes and relationships is called a "path". Cypher allows paths to be named
 using an identifer, as exemplified by:
 
-[source,cypher]
+[source, cypher]
 ----
 p = (a)-[*3..5]->(b)
 ----

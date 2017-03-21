@@ -4,7 +4,7 @@
 [abstract]
 The `OPTIONAL MATCH` clause is used to search for the pattern described in it, while using nulls for missing parts of the pattern.
 
-== Introduction ==
+== Introduction
 
 `OPTIONAL MATCH` matches patterns against your graph database, just like `MATCH` does.
 The difference is that if no matches are found, `OPTIONAL MATCH` will use a `null` for missing parts of the pattern.
