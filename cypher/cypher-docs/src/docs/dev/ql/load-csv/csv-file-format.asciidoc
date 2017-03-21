@@ -1,5 +1,5 @@
 [[csv-file-format]]
-= CSV file format =
+= CSV file format
 
 The CSV file to use with `LOAD CSV` must have the following characteristics:
 

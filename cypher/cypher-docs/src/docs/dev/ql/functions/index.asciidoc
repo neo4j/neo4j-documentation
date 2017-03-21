@@ -1,6 +1,6 @@
 [[query-function]]
-Functions
-=========
+= Functions
+
 
 [abstract]
 --
@@ -22,6 +22,7 @@ Note that related information exists in <<query-operators>>.
 
 Most functions in Cypher will return `null` if an input parameter is `null`.
 
+
 [[header-query-predicates]]
 **<<query-predicates, Predicate functions>>**
 
@@ -36,6 +37,7 @@ These functions return either true or false for the arguments given.
 |<<functions-none,none()>>        | Returns true if the predicate holds for no element in the list.
 |<<functions-single,single()>>    | Returns true if the predicate holds for exactly one of the elements in the list.
 |===
+
 
 [[header-query-functions-scalar]]
 **<<query-functions-scalar, Scalar functions>>**
@@ -61,6 +63,7 @@ These functions return a single value.
 |<<functions-tofloat,toFloat()>>                    | Converts the argument to a float and returns the result.
 |<<functions-type,type()>>                          | Returns a string representation of the relationship type.
 |===
+
 
 [[header-query-functions-aggregating]]
 **<<query-functions-aggregating, Aggregating functions>>**
@@ -103,10 +106,12 @@ Further details and examples of lists may be found in <<syntax-lists>>.
 |<<functions-tail,tail()>>                      | Returns all but the first element in a list.
 |===
 
+
 [[header-query-functions-mathematical]]
 **<<query-functions-mathematical, Mathematical functions>>**
 
 These functions all operate on numerical expressions only, and will return an error if used on any other values.
+
 
 [[header-query-functions-numeric]]
 **<<query-functions-numeric, Numeric functions>>**
@@ -122,6 +127,7 @@ These functions all operate on numerical expressions only, and will return an er
 | <<functions-sign, sign()>>   | Returns the signum of a number -- zero if the expression is zero, `-1` for any negative number, and `1` for any positive number.
 |===
 
+
 [[header-query-functions-logarithmic]]
 **<<query-functions-logarithmic, Logarithmic functions>>**
 
@@ -134,6 +140,7 @@ These functions all operate on numerical expressions only, and will return an er
 | <<functions-log10, log10()>> | Returns the common logarithm (base 10) of the expression.
 | <<functions-sqrt, sqrt()>>   | Returns the square root of a number.
 |===
+
 
 [[header-query-functions-trigonometric]]
 **<<query-functions-trigonometric, Trigonometric functions>>**
@@ -157,6 +164,7 @@ All trigonometric functions operate on radians, unless otherwise specified.
 | <<functions-tan, tan()>>           | Returns the tangent of the expression.
 |===
 
+
 [[header-query-functions-string]]
 **<<query-functions-string, String functions>>**
 
@@ -179,6 +187,7 @@ These functions are used to manipulate strings or to create a string representat
 |<<functions-upper,upper()>>            | Returns the original string in uppercase.
 |===
 
+
 [[header-query-functions-spatial]]
 **<<query-functions-spatial, Spatial functions>>**
 
@@ -191,8 +200,9 @@ These functions are used to specify points in a 2D coordinate system and to calc
 |<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two given points.
 |===
 
+
 [[query-predicates]]
-== Predicate functions ==
+== Predicate functions
 
 Predicates are boolean functions that return true or false for a given set of input.
 They are most commonly used to filter out subgraphs in the `WHERE` part of a query.
@@ -201,8 +211,6 @@ See also <<query-operators-comparison>>.
 
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::all.asciidoc[leveloffset=+1]
 
@@ -214,10 +222,9 @@ include::single.asciidoc[leveloffset=+1]
 
 include::exists.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 1]
 
 [[query-functions-scalar]]
-== Scalar functions ==
+== Scalar functions
 
 Scalar functions return a single value.
 
@@ -229,8 +236,6 @@ However, for clarity it is recommended to only use `length()` on strings and pat
 
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::size.asciidoc[leveloffset=+1]
 
@@ -262,18 +267,13 @@ include::toint.asciidoc[leveloffset=+1]
 
 include::tofloat.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 //Aggregating functions
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::query-functions-aggregating.adoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 1]
 
 [[query-functions-list]]
-== List functions ==
+== List functions
 
 List functions return lists of things -- nodes in a path, and so on.
 
@@ -281,8 +281,6 @@ Further details and examples of lists may be found in <<syntax-lists>> and <<que
 
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::nodes.asciidoc[leveloffset=+1]
 
@@ -304,14 +302,11 @@ include::reduce.asciidoc[leveloffset=+1]
 
 //Mathematical functions
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::query-functions-mathematical.adoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 1]
 
 [[query-functions-string]]
-== String functions ==
+== String functions
 
 These functions all operate on string expressions only, and will return an error if used on any other values.
 The exception to this rule is `toString()`, which also accepts numbers and booleans.
@@ -320,8 +315,6 @@ See also <<query-operators-string>>.
 
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::replace.asciidoc[leveloffset=+1]
 
@@ -348,8 +341,6 @@ include::reverse.asciidoc[leveloffset=+1]
 include::tostring.asciidoc[leveloffset=+1]
 
 //Spatial functions
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::query-functions-spatial.adoc[leveloffset=+1]
 

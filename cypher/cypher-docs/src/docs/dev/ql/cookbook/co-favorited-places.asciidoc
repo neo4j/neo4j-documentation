@@ -1,5 +1,5 @@
 [[cypher-cookbook-co-favorited-places]]
-== Co-favorited places ==
+== Co-favorited places
 
 :leveloffset: 2
 

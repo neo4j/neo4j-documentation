@@ -1,5 +1,5 @@
 [[cypher-cookbook-graphity]]
-== The Graphity activity stream model ==
+== The Graphity activity stream model
 
 :leveloffset: 2
 

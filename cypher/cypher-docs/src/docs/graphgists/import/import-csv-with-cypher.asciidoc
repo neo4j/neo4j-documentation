@@ -36,7 +36,7 @@ The CSV file we're using looks like this:
 include::../../graphgists/import/persons.csv[]
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Nodes created: 5
 Properties set: 10
@@ -55,7 +55,7 @@ This will ensure the query executes in a performant way.
 
 Before running our query to connect movies and countries we'll create an index for the name property on the `Country` label to ensure the query runs as fast as it can:
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE INDEX ON :Country(name)
 ----
@@ -75,7 +75,7 @@ include::../../graphgists/import/movies.csv[]
 ----
 
 
-[source,querytest]
+[source, querytest]
 ----
 Nodes created: 4
 Relationships created: 3
@@ -93,12 +93,12 @@ Since we expect the ids to be unique in each set, we'll create a unique constrai
 This protects us from invalid data since constraint creation will fail if there are multiple nodes with the same id property.
 Creating a unique constraint also creates a unique index (which is faster than a regular index).
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE CONSTRAINT ON (person:Person) ASSERT person.id IS UNIQUE
 ----
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE CONSTRAINT ON (movie:Movie) ASSERT movie.id IS UNIQUE
 ----
@@ -123,7 +123,7 @@ CREATE (person)-[:PLAYED {role: csvLine.role}]->(movie)
 include::../../graphgists/import/roles.csv[]
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Relationships created: 6
 Properties set: 6
@@ -131,24 +131,24 @@ Properties set: 6
 
 Finally, as the `id` property was only necessary to import the relationships, we can drop the constraints and the `id` property from all movie and person nodes.
 
-[source,cypher]
+[source, cypher]
 ----
 DROP CONSTRAINT ON (person:Person) ASSERT person.id IS UNIQUE
 ----
 
-[source,cypher]
+[source, cypher]
 ----
 DROP CONSTRAINT ON (movie:Movie) ASSERT movie.id IS UNIQUE
 ----
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (n)
 WHERE n:Person OR n:Movie
 REMOVE n.id
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Properties set: 8
 ----

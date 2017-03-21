@@ -6,7 +6,7 @@ The names you give the different parts are called variables.
 
 In this example:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (n)-->(b)
 RETURN b

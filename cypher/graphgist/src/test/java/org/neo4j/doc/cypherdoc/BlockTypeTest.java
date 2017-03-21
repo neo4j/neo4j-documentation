@@ -71,7 +71,7 @@ public class BlockTypeTest
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private static final String TEST_BLOCK_START = "[source,querytest]";
+    private static final String TEST_BLOCK_START = "[source, querytest]";
     private static final String TEST_BLOCK_MARKER = "----";
     private static final List<String> ADAM_QUERY = Arrays.asList( "[source, cypher]", "----",
             "CREATE (n:Person {name:\"Ad\" + \"am\"})", "RETURN n;", "----" );

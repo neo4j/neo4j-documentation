@@ -15,8 +15,6 @@ The examples start out with the following database:
 
 include::includes/cypher-remove-graph.asciidoc[]
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::remove-a-property.asciidoc[]
 
 include::remove-a-label-from-a-node.asciidoc[]

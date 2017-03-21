@@ -1,5 +1,5 @@
 [[cypher-cookbook-hyperedges]]
-== Hyperedges ==
+== Hyperedges
 
 Imagine a user being part of different groups.
 A group can have different roles, and a user can be part of different groups.
@@ -15,7 +15,7 @@ include::includes/cypher-hyperedge-graph.asciidoc[]
 include::find-groups.asciidoc[]
 
 include::find-all-groups-and-roles-for-a-user.asciidoc[]
-       
+
 include::find-common-groups-based-on-shared-roles.asciidoc[]
 
 

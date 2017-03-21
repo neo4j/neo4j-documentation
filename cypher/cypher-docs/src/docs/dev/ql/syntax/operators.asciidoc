@@ -1,5 +1,5 @@
 [[query-operators-mathematical]]
-= Mathematical operators =
+= Mathematical operators
 
 The mathematical operators comprise:
 
@@ -10,16 +10,13 @@ The mathematical operators comprise:
 * modulo division: `%`
 * exponentiation: `^`
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::using-the-exponentiation-operator.asciidoc[]
-
-ifndef::asciidoctor[:leveloffset: 1]
 
 include::using-the-unary-minus-operator.asciidoc[]
 
+
 [[query-operators-comparison]]
-= Comparison operators =
+= Comparison operators
 
 The comparison operators comprise:
 
@@ -32,6 +29,7 @@ The comparison operators comprise:
 * `IS NULL`
 * `IS NOT NULL`
 
+
 [[query-operator-comparison-string-specific]]
 String-specific comparison operators comprise:
 
@@ -39,20 +37,18 @@ String-specific comparison operators comprise:
 * `ENDS WITH`: perform case-sensitive suffix searching on strings
 * `CONTAINS`: perform case-sensitive inclusion searching in strings
 
-ifndef::asciidoctor[:leveloffset: 1]
 
 include::comparing-two-numbers.asciidoc[]
 
 See <<cypher-comparison>> for more details on the behavior of comparison operators, and <<query-where-ranges>> for more examples showing how these may be used.
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::using-starts-with-to-filter-names.asciidoc[]
 
 <<query-where-string>> contains more information regarding the string-specific comparison operators as well as additional examples illustrating the usage thereof.
 
+
 [[query-operators-boolean]]
-= Boolean operators =
+= Boolean operators
 
 The boolean operators -- also known as logical operators -- comprise:
 
@@ -63,35 +59,30 @@ The boolean operators -- also known as logical operators -- comprise:
 
 include::../../syntax/boolean-operator-table.asciidoc[]
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::using-boolean-operators-to-filter-numbers.asciidoc[]
 
+
 [[query-operators-string]]
-= String operators =
+= String operators
 
 String operators comprise:
 
 * concatenating strings: `+`
 * matching a regular expression: `=~`
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::using-a-regular-expression-to-filter-words.asciidoc[]
 
 Further information and examples regarding the use of regular expressions in filtering can be found in <<query-where-regex>>.
 In addition, refer to <<query-operator-comparison-string-specific>> for details on string-specific comparison operators.
 
+
 [[query-operators-list]]
-= List operators =
+= List operators
 
 List operators comprise:
 
 * concatenating lists: `+`
 * checking if an element exists in a list: `IN`
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::using-in-to-check-if-a-number-is-in-a-list.asciidoc[]
 
-ifndef::asciidoctor[:leveloffset: 1]

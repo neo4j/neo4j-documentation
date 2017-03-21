@@ -8,7 +8,7 @@ Example: looking for a user's friends of friends should not return said user.
 Let's create a few nodes and relationships:
 
 //setup
-[source,cypher]
+[source, cypher]
 ----
 CREATE (adam:User {name: 'Adam'}),
   (pernilla:User {name: 'Pernilla'}),
@@ -17,7 +17,7 @@ CREATE (adam:User {name: 'Adam'}),
   (pernilla)-[:FRIEND]->(david)
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Nodes created: 3
 Relationships created: 2
@@ -32,13 +32,13 @@ Which gives us the following graph:
 
 Now let's look for friends of friends of Adam:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (user:User {name: 'Adam'})-[r1:FRIEND]-()-[r2:FRIEND]-(friend_of_a_friend)
 RETURN friend_of_a_friend.name AS fofName
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 David
 1 row
@@ -51,14 +51,14 @@ In this query, Cypher makes sure to not return matches where the pattern relatio
 This is however not always desired.
 If the query should return the user, it is possible to spread the matching over multiple `MATCH` clauses, like so:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (user:User {name: 'Adam'})-[r1:FRIEND]-(friend)
 MATCH (friend)-[r2:FRIEND]-(friend_of_a_friend)
 RETURN friend_of_a_friend.name AS fofName
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 2 rows
 David
@@ -69,7 +69,7 @@ Adam
 
 Note that while the following query looks similar to the previous one, it is actually equivalent to the one before.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (user:User {name: 'Adam'})-[r1:FRIEND]-(friend),
       (friend)-[r2:FRIEND]-(friend_of_a_friend)
@@ -79,7 +79,7 @@ RETURN friend_of_a_friend.name AS fofName
 Here, the `MATCH` clause has a single pattern with two paths, while the previous query has two distinct patterns.
 
 
-[source,querytest]
+[source, querytest]
 ----
 David
 1 row
