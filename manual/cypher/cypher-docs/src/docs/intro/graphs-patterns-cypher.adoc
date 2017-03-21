@@ -33,7 +33,7 @@ Complex patterns, using multiple relationships, can express arbitrarily complex 
 For example, we might want to match instances where _a Person_  `LIVES_IN` _a Country_.
 The following Cypher code combines two simple patterns into a (mildly) complex pattern which performs this match:
 
-[source,cypher]
+[source, cypher]
 ----
 (:Person) -[:LIVES_IN]-> (:City) -[:PART_OF]-> (:Country)
 ----
@@ -65,7 +65,7 @@ Cypher uses a pair of parentheses (usually containing a text string) to represen
 This is reminiscent of a circle or a rectangle with rounded end caps.
 Here are some ASCII-art encodings for example Neo4j nodes, providing varying types and amounts of detail:
 
-[source,cypher]
+[source, cypher]
 ----
 ()
 (matrix)
@@ -95,7 +95,7 @@ Directed relationships have an arrowhead at one end (eg, `<--`, `-->`).
 Bracketed expressions (eg: `[...]`) can be used to add details.
 This may include variables, properties, and/or type information, eg:
 
-[source,cypher]
+[source, cypher]
 ----
 -->
 -[role]->
@@ -115,7 +115,7 @@ The properties (eg, `roles`) are entirely equivalent to node properties.
 Combining the syntax for nodes and relationships, we can express patterns.
 The following could be a simple pattern (or fact) in this domain:
 
-[source,cypher]
+[source, cypher]
 ----
 (keanu:Person:Actor {name:  'Keanu Reeves'} )
 -[role:ACTED_IN     {roles: ['Neo'] } ]->
@@ -139,7 +139,7 @@ Similarly, each pattern describes zero or more paths of nodes and relationships.
 To increase modularity and reduce repetition, Cypher allows patterns to be assigned to variables.
 This allow the matching paths to be inspected, used in other expressions, etc.
 
-[source,cypher]
+[source, cypher]
 ----
 acted_in = (:Person)-[:ACTED_IN]->(:Movie)
 ----

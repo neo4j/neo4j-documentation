@@ -1,6 +1,6 @@
 [[tutorials]]
-Tutorials
-=========
+= Tutorials
+
 
 [partintro]
 --

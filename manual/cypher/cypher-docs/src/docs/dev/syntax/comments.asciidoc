@@ -1,22 +1,21 @@
 [[cypher-comments]]
-Comments
-========
+= Comments
 
 To add comments to your queries, use double slash. Examples:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (n) RETURN n //This is an end of line comment
 ----
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (n)
 //This is a whole line comment
 RETURN n
 ----
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (n) WHERE n.property = '//This is NOT a comment' RETURN n
 ----

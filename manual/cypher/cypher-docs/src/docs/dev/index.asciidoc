@@ -1,7 +1,6 @@
 [[cypher]]
 = Cypher
 
-ifndef::asciidoctor[]
 [partintro]
 --
 The Cypher part is the authoritative source for details on the Cypher Query Language.
@@ -18,37 +17,18 @@ This chapter contains the complete and authoritative documentation for the Cyphe
 --
 endif::[]
 
-
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::general/index.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 1]
 
 include::syntax/index.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 1]
-
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::clause.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 1]
 
 include::ql/functions/index.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::schema.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 1]
 
 include::query-tuning.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::execution-plans.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 1]
 
 include::glossary.asciidoc[leveloffset=+1]

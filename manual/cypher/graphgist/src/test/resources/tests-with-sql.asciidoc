@@ -1,6 +1,6 @@
-= Tests with SQL =
+= Tests with SQL
 
-[source,cypher]
+[source, cypher]
 ----
 RETURN 'neo4j';
 ----
@@ -10,18 +10,18 @@ RETURN 'neo4j';
 VALUES('neo4j')
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 1 row
 neo4j
 ----
 
-[source,cypher]
+[source, cypher]
 ----
 RETURN 'graphdb';
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 1 row
 graphdb
@@ -32,7 +32,7 @@ graphdb
 VALUES('cypher')
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 1 row
 cypher

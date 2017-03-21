@@ -43,39 +43,21 @@ tag=indexingProcedure
 [NOTE]
 This clause cannot be combined with other clauses.
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::call-a-procedure.asciidoc[]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::call-a-procedure-using-a-quoted-namespace-and-name.asciidoc[]
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::call-a-procedure-with-literal-arguments.asciidoc[]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::call-a-procedure-with-parameter-arguments.asciidoc[]
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::call-a-procedure-with-mixed-literal-and-parameter-arguments.asciidoc[]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::call-a-procedure-with-literal-and-default-arguments.asciidoc[]
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::call-a-procedure-within-a-complex-query.asciidoc[]
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::call-a-procedure-and-filter-its-results.asciidoc[]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::call-a-procedure-within-a-complex-query-and-rename-its-outputs.asciidoc[]
 

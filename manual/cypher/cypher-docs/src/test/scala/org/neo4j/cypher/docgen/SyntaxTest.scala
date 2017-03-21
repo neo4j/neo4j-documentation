@@ -214,7 +214,7 @@ END AS result""",
   }
 
   private def testThis(title: String, syntax: String, arguments: List[(String, String)], text: String, queryText: String, returns: String, assertions: InternalExecutionResult => Unit) {
-    val formattedSyntax = if (!syntax.isEmpty) Array("*Syntax:*", "[source,cypher]", syntax).mkString("\n", "\n", "") else ""
+    val formattedSyntax = if (!syntax.isEmpty) Array("*Syntax:*", "[source, cypher]", syntax).mkString("\n", "\n", "") else ""
 
     val args = arguments.map(x => "| `" + x._1 + "` | " + x._2).mkString("", "\n", "")
     val formattedArguments = if (!arguments.isEmpty) Array("*Arguments:*", "[options=\"header\"]", "|===", "| Name | Description", args, "|===").mkString("\n", "\n", "") else ""

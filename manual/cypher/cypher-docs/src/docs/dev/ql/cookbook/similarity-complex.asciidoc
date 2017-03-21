@@ -1,5 +1,5 @@
 [[cypher-cookbook-similarity-calc]]
-== Complex similarity computations ==
+== Complex similarity computations
 
 :leveloffset: 2
 

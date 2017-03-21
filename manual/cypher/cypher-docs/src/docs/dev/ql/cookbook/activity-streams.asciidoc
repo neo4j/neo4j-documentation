@@ -1,5 +1,5 @@
 [[domain-modeling-activity-streams]]
-== Activity Streams ==
+== Activity Streams
 
 .Graph
 include::includes/cypher-graphity-graph.asciidoc[]

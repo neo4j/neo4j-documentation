@@ -1,5 +1,5 @@
 [[cypher-cookbook-newsfeed]]
-== Implementing newsfeeds in a graph ==
+== Implementing newsfeeds in a graph
 
 :leveloffset: 2
 

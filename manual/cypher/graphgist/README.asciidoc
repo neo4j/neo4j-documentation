@@ -1,4 +1,4 @@
-== Introduction ==
+== Introduction
 
 THIS IS OUTDATED ... will fix!
 
@@ -18,7 +18,7 @@ There are output files for:
 * live console
 * live console, starting with an empty database
 
-== Usage ==
+== Usage
 
 This is how to execute it from a Maven 'pom.xml' file:
 

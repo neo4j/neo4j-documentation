@@ -40,7 +40,7 @@ MERGE (p)-[:DIRECTED]->(m)
 Let's say we want to write a query to find *'Tom Hanks'*.
 The naive way of doing this would be to write the following:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (p {name: 'Tom Hanks'})
 RETURN p
@@ -51,7 +51,7 @@ We can profile the query to find out why that is.
 
 You can learn more about the options for profiling queries in <<how-do-i-profile-a-query>> but in this case we're going to prefix our query with `PROFILE`:
 
-[source,cypher]
+[source, cypher]
 ----
 PROFILE MATCH (p {name: 'Tom Hanks'})
 RETURN p
@@ -71,7 +71,7 @@ This seems like an inefficient way of finding *'Tom Hanks'* given that we are lo
 The solution to this problem is that whenever we're looking for a node we should specify a label to help the query planner narrow down the search space.
 For this query we'd need to add a `Person` label.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (p:Person {name: 'Tom Hanks'})
 RETURN p
@@ -81,7 +81,7 @@ This query will be faster than the first one but as the number of people in our 
 
 Again we can profile the query to work out why:
 
-[source,cypher]
+[source, cypher]
 ----
 PROFILE MATCH (p:Person {name: 'Tom Hanks'})
 RETURN p
@@ -96,14 +96,14 @@ Once we've done that we again scan through all those nodes using the `Filter` op
 
 This might be acceptable in some cases but if we're going to be looking up people by name frequently then we'll see better performance if we create an index on the `name` property for the `Person` label:
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE INDEX ON :Person(name)
 ----
 
 Now if we run the query again it will run more quickly:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (p:Person {name: 'Tom Hanks'})
 RETURN p
@@ -111,7 +111,7 @@ RETURN p
 
 Let's profile the query to see why that is:
 
-[source,cypher]
+[source, cypher]
 ----
 PROFILE MATCH (p:Person {name: 'Tom Hanks'})
 RETURN p

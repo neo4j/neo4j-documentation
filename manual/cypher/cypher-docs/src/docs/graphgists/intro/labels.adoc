@@ -1,4 +1,4 @@
-= Labels, Constraints and Indexes =
+= Labels, Constraints and Indexes
 
 Labels are a convenient way to group nodes together.
 They are used to restrict queries, define constraints and create indexes.
@@ -12,12 +12,12 @@ These constraints are also used by the `MERGE` clause to make certain that a nod
 The following will give an example of how to use labels and add constraints and indexes to them.
 Let's start out adding a constraint -- in this case we decided that all `Movie` node `title`s should be unique.
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE CONSTRAINT ON (movie:Movie) ASSERT movie.title IS UNIQUE
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Unique constraints added: 1
 ----
@@ -37,12 +37,12 @@ After the initial index seek you rely on in-graph structures and the first class
 
 In this case we want an index to speed up finding actors by name in the database:
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE INDEX ON :Actor(name)
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Indexes added: 1
 ----
@@ -52,14 +52,14 @@ Note that it will take some time for an index to come online when there's existi
 
 Now, let's add some data.
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE (actor:Actor {name: 'Tom Hanks'}),
   (movie:Movie {title: 'Sleepless in Seattle'}),
   (actor)-[:ACTED_IN]->(movie);
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Nodes created: 2
 Relationships created: 1
@@ -71,13 +71,13 @@ Normally you don't specify indexes when querying for data.
 They will be used automatically.
 This means we can simply look up the Tom Hanks node, and the index will kick in behind the scenes to boost performance.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (actor:Actor {name: 'Tom Hanks'})
 RETURN actor;
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Tom Hanks
 1 row
@@ -88,26 +88,26 @@ Tom Hanks
 Now let's say we want to add another label for a node.
 Here's how to do that:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (actor:Actor {name: 'Tom Hanks'})
 SET actor :American;
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Labels added: 1
 ----
 
 To remove a label from nodes, this is what to do:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (actor:Actor {name: 'Tom Hanks'})
 REMOVE actor:American;
 ----
 
-[source,querytest]
+[source, querytest]
 ----
 Labels removed: 1
 ----

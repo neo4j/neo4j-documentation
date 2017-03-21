@@ -1,5 +1,5 @@
 [[tutorials-cypher]]
-= Getting started with Cypher =
+= Getting started with Cypher
 
 This chapter will guide you through your first steps with <<cypher,Cypher>>.
 

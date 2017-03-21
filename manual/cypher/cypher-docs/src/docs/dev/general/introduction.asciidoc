@@ -1,5 +1,5 @@
 [[cypher-introduction]]
-= What is Cypher? =
+= What is Cypher?
 
 _Cypher_ is a declarative graph query language that allows for expressive and efficient querying and updating of the graph store.
 Cypher is a relatively simple  but still very powerful language.

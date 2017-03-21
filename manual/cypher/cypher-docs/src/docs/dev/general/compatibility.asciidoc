@@ -15,7 +15,7 @@ By simply putting `CYPHER 2.3` at the beginning, that particular query will be e
 
 Below is an example using the `START` clause to access a legacy index:
 
-[source,cypher]
+[source, cypher]
 ----
 CYPHER 2.3
 START n=node:nodes(name = "A")
