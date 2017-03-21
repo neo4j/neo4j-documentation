@@ -1,5 +1,5 @@
 [[execution-plans]]
-= Execution Plans =
+= Execution plans =
 
 [abstract]
 --
