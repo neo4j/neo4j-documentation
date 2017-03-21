@@ -35,8 +35,6 @@ include::includes/cypher-merge-graph.asciidoc[]
 [[query-merge-node-derived]]
 == Merge nodes ==
 
-ifndef::asciidoctor[:leveloffset: 3]
-
 include::merge-single-node-with-a-label.asciidoc[leveloffset=+1]
 
 include::merge-single-node-with-properties.asciidoc[leveloffset=+1]
@@ -45,12 +43,9 @@ include::merge-single-node-specifying-both-label-and-property.asciidoc[leveloffs
 
 include::merge-single-node-derived-from-an-existing-node-property.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 2]
 
 [[query-merge-on-create-on-match]]
 == Use ON CREATE and ON MATCH ==
-
-ifndef::asciidoctor[:leveloffset: 3]
 
 include::merge-with-on-create.asciidoc[leveloffset=+1]
 
@@ -60,11 +55,7 @@ include::merge-with-on-create-and-on-match.asciidoc[leveloffset=+1]
 
 include::merge-with-on-match-setting-multiple-properties.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 == Merge relationships ==
-
-ifndef::asciidoctor[:leveloffset: 3]
 
 include::merge-on-a-relationship.asciidoc[leveloffset=+1]
 
@@ -75,8 +66,6 @@ include::merge-on-an-undirected-relationship.asciidoc[leveloffset=+1]
 include::merge-on-a-relationship-between-two-existing-nodes.asciidoc[leveloffset=+1]
 
 include::merge-on-a-relationship-between-an-existing-node-and-a-merged-node-derived-from-a-node-property.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 == Using unique constraints with MERGE ==
 
@@ -90,8 +79,6 @@ Note that the following examples assume the existence of uniqueness constraints 
 
 include::includes/merge-setup-constraints.asciidoc[]
 
-ifndef::asciidoctor[:leveloffset: 3]
-
 include::merge-using-unique-constraints-creates-a-new-node-if-no-node-is-found.asciidoc[leveloffset=+1]
 
 include::merge-using-unique-constraints-matches-an-existing-node.asciidoc[leveloffset=+1]
@@ -99,8 +86,6 @@ include::merge-using-unique-constraints-matches-an-existing-node.asciidoc[levelo
 include::merge-with-unique-constraints-and-partial-matches.asciidoc[leveloffset=+1]
 
 include::merge-with-unique-constraints-and-conflicting-matches.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::using-map-parameters-with-merge.asciidoc[]
 

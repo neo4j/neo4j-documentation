@@ -11,19 +11,11 @@ For the terminology used, see <<terminology>>.
 * <<cypherdoc-uniqueness,Uniqueness>>
 * <<cypher-compatibility,Compatibility>>
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::introduction.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::updating.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::transactions.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::../../parsed-graphgists/uniqueness/uniqueness.asciidoc[leveloffset=+1]
 
@@ -31,14 +23,8 @@ include::../../parsed-graphgists/uniqueness/uniqueness.asciidoc[leveloffset=+1]
 
 // aggregation ?
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::compatibility.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 3]
-
 include::start-compatibility.asciidoc[leveloffset=+2]
-
-ifndef::asciidoctor[:leveloffset: 3]
 
 include::versions.asciidoc[leveloffset=+2]

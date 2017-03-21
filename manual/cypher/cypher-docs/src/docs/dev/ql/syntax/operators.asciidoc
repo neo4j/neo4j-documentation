@@ -10,11 +10,7 @@ The mathematical operators comprise:
 * modulo division: `%`
 * exponentiation: `^`
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::using-the-exponentiation-operator.asciidoc[]
-
-ifndef::asciidoctor[:leveloffset: 1]
 
 include::using-the-unary-minus-operator.asciidoc[]
 
@@ -39,13 +35,10 @@ String-specific comparison operators comprise:
 * `ENDS WITH`: perform case-sensitive suffix searching on strings
 * `CONTAINS`: perform case-sensitive inclusion searching in strings
 
-ifndef::asciidoctor[:leveloffset: 1]
 
 include::comparing-two-numbers.asciidoc[]
 
 See <<cypher-comparison>> for more details on the behavior of comparison operators, and <<query-where-ranges>> for more examples showing how these may be used.
-
-ifndef::asciidoctor[:leveloffset: 1]
 
 include::using-starts-with-to-filter-names.asciidoc[]
 
@@ -63,8 +56,6 @@ The boolean operators -- also known as logical operators -- comprise:
 
 include::../../syntax/boolean-operator-table.asciidoc[]
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::using-boolean-operators-to-filter-numbers.asciidoc[]
 
 [[query-operators-string]]
@@ -74,8 +65,6 @@ String operators comprise:
 
 * concatenating strings: `+`
 * matching a regular expression: `=~`
-
-ifndef::asciidoctor[:leveloffset: 1]
 
 include::using-a-regular-expression-to-filter-words.asciidoc[]
 
@@ -90,8 +79,5 @@ List operators comprise:
 * concatenating lists: `+`
 * checking if an element exists in a list: `IN`
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::using-in-to-check-if-a-number-is-in-a-list.asciidoc[]
 
-ifndef::asciidoctor[:leveloffset: 1]

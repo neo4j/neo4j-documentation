@@ -28,26 +28,18 @@ include::includes/cypher-createunique-graph.asciidoc[]
 
 == Create unique nodes
 
-ifndef::asciidoctor[:leveloffset: 3]
-
 include::create-node-if-missing.asciidoc[leveloffset=+1]
 
 include::create-nodes-with-values.asciidoc[leveloffset=+1]
 
 include::create-labeled-node-if-missing.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 
 == Create unique relationships
-
-ifndef::asciidoctor[:leveloffset: 3]
 
 include::create-relationship-if-it-is-missing.asciidoc[leveloffset=+1]
 
 include::create-relationship-with-values.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 2]
 
 include::describe-complex-pattern.asciidoc[]
 
