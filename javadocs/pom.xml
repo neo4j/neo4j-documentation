@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.neo4j</groupId>
-    <artifactId>parent</artifactId>
+    <groupId>org.neo4j.doc</groupId>
+    <artifactId>neo4j-manual-parent</artifactId>
     <version>3.0.10-SNAPSHOT</version>
-    <relativePath>../..</relativePath>
+    <relativePath>..</relativePath>
   </parent>
 
   <groupId>org.neo4j.doc</groupId>
@@ -296,18 +296,4 @@ the relevant Commercial Agreement.
     </plugins>
   </build>
 
-  <profiles>
-    <profile>
-      <id>neo-docs-build</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>docsBuild</name>
-        </property>
-      </activation>
-      <properties>
-        <attach-javadoc-phase>package</attach-javadoc-phase>
-      </properties>
-    </profile>
-  </profiles>
 </project>

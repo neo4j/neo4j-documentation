@@ -121,16 +121,4 @@
     </plugins>
   </build>
 
-  <profiles>
-    <profile>
-      <id>neo-docs-build</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>docsBuild</name>
-        </property>
-      </activation>
-    </profile>
-  </profiles>
-
 </project>

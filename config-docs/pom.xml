@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.neo4j</groupId>
-    <artifactId>parent</artifactId>
+    <groupId>org.neo4j.doc</groupId>
+    <artifactId>neo4j-manual-parent</artifactId>
     <version>3.0.10-SNAPSHOT</version>
-    <relativePath>../..</relativePath>
+    <relativePath>..</relativePath>
   </parent>
   <groupId>org.neo4j.doc</groupId>
   <artifactId>neo4j-config-docs</artifactId>
