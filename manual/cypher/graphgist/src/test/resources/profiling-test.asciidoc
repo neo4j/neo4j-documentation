@@ -1,7 +1,7 @@
 = Query tuning example
 
 //setup
-[source,cypher]
+[source, cypher]
 ----
 CREATE (adam:Person {name: 'Adam'})
 CREATE (pernilla:Person {name: 'Pernilla'})
@@ -18,7 +18,7 @@ CREATE (pernilla)-[:FRIEND]->(david)
 ----
 
 
-[source,cypher]
+[source, cypher]
 ----
 PROFILE MATCH (p {name: 'Pernilla'})
 RETURN p
@@ -26,35 +26,35 @@ RETURN p
 
 As the number of nodes in the database increase this query will slow down so we'd have a look at the profile output to try and work out why that is:
 
-[source,profiletest]
+[source, profiletest]
 ----
 AllNodesScan
 ----
 
-[source,cypher]
+[source, cypher]
 ----
 PROFILE MATCH (p:Person {name: 'Pernilla'})
 RETURN p
 ----
 
-[source,profiletest]
+[source, profiletest]
 ----
 NodeByLabelScan
 ----
 
-[source,cypher]
+[source, cypher]
 ----
 CREATE INDEX ON :Person(name)
 ----
 
-[source,cypher]
+[source, cypher]
 ----
 PROFILE MATCH (p:Person {name: 'Pernilla'})
 USING INDEX p:Person(name)
 RETURN p
 ----
 
-[source,profiletest]
+[source, profiletest]
 ----
 NodeIndexSeek
 ----

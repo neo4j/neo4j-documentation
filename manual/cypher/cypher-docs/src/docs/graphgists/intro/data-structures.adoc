@@ -14,7 +14,7 @@ They range from simple ones like `size(list)` that returns the size of a list to
 Let's first load a bit of data into the graph.
 If you want more details on how the data is loaded, see <<cypher-intro-importing-csv>>.
 
-[source,cypher]
+[source, cypher]
 ----
 LOAD CSV WITH HEADERS FROM "movies.csv" AS line
 CREATE (m:Movie {id:line.id, title:line.title, released:toInt(line.year)});
@@ -34,7 +34,7 @@ Now, let's try out data structures.
 
 To begin with, collect the names of the actors per movie, and return two of them:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (movie:Movie)<-[:ACTED_IN]-(actor:Person)
 RETURN movie.title as movie, collect(actor.name)[0..2] AS two_of_cast
@@ -50,7 +50,7 @@ Other functions to access parts of a list are `head(list)`, `tail(list)` and `la
 When using lists and arrays in comparisons you can use predicates like `value IN list` or `any(x IN list WHERE x = value)`.
 There are list predicates to satisfy conditions for `all`, `any`, `none` and `single` elements.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH path = (:Person)-->(:Movie)<--(:Person)
 WHERE any(n in nodes(path) WHERE n.name = 'Michael Douglas')
@@ -67,7 +67,7 @@ This kind of list-processing can reduce the amount of data handled and returned,
 
 A simple, non-graph example would be:
 
-[source,cypher]
+[source, cypher]
 ----
 WITH range(1, 10) as numbers
 WITH extract(n IN numbers | n*n) AS squares
@@ -80,7 +80,7 @@ RETURN reduce(a = 0, n IN large_squares | a + n) AS sum_large_squares
 In a graph-query you can filter or aggregate collected values instead or work on array properties.
 // need to be rephrased somehow
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (m:Movie)<-[r:ACTED_IN]-(a:Person)
 WITH m.title AS movie, collect({name: a.name, roles: r.roles}) AS cast
@@ -98,7 +98,7 @@ Then you can use the `UNWIND` clause to unroll a list into a sequence of rows ag
 
 For instance, a query to find the top 3 co-actors and then follow their movies and again list the cast for each of those movies:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (actor:Person)-[:ACTED_IN]->(movie:Movie)<-[:ACTED_IN]-(colleague:Person)
 WHERE actor.name < colleague.name

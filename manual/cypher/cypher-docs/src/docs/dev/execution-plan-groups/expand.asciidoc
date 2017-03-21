@@ -3,8 +3,8 @@
 
 These operators explore the graph by expanding graph patterns.
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 include::../ql/query-plan/expand-all.asciidoc[]
+
 include::../ql/query-plan/expand-into.asciidoc[]
+
 include::../ql/query-plan/optional-expand-all.asciidoc[]

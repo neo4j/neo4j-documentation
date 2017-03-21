@@ -1,5 +1,5 @@
 [[cypher-parameters]]
-= Parameters =
+= Parameters
 
 Cypher supports querying with parameters.
 This means developers don't have to resort to string building to create a query.
@@ -29,7 +29,7 @@ In these examples, parameters are given in JSON; the exact manner in which they 
 We introduce in this release the new parameter syntax `$param`, and note that the current syntax `{param}` will be deprecated in a later release.
 ====
 
-== String literal ==
+== String literal
 
 include::includes/exampleWithStringLiteralAsParameter.asciidoc[]
 
@@ -37,46 +37,46 @@ You can use parameters in this syntax as well:
 
 include::includes/exampleWithShortSyntaxStringLiteralAsParameter.asciidoc[]
 
-== Regular expression ==
+== Regular expression
 
 include::includes/exampleWithParameterRegularExpression.asciidoc[]
 
 
-== Case-sensitive string pattern matching  ==
+== Case-sensitive string pattern matching
 
 include::includes/exampleWithParameterCSCIStringPatternMatching.asciidoc[]
 
 
-== Create node with properties ==
+== Create node with properties
 
 include::includes/create_node_from_map.asciidoc[]
 
-== Create multiple nodes with properties ==
+== Create multiple nodes with properties
 
 include::includes/create_multiple_nodes_from_map.asciidoc[]
 
-== Setting all properties on a node ==
+== Setting all properties on a node
 
 Note that this will replace all the current properties.
 
 include::includes/set_properties_on_a_node_from_a_map.asciidoc[]
 
-== SKIP and LIMIT ==
+== SKIP and LIMIT
 
 include::includes/exampleWithParameterForSkipLimit.asciidoc[]
 
-== Node id ==
+== Node id
 
 include::includes/exampleWithParameterForNodeId.asciidoc[]
 
-== Multiple node ids ==
+== Multiple node ids
 
 include::includes/exampleWithParameterForMultipleNodeIds.asciidoc[]
 
-== Index value (legacy indexes) ==
+== Index value (legacy indexes)
 
 include::includes/exampleWithParameterForIndexValue.asciidoc[]
 
-== Index query (legacy indexes) ==
+== Index query (legacy indexes)
 
 include::includes/exampleWithParametersForQuery.asciidoc[]

@@ -28,10 +28,9 @@ If you drop a unique property constraint and still want an index on the property
 * <<query-constraint-prop-exist-nodes,Node property existence constraints>>
 * <<query-constraint-prop-exist-rels,Relationship property existence constraints>>
 
+
 [[query-constraint-unique-nodes]]
 == Unique node property constraints
-
-ifndef::asciidoctor[:leveloffset: 3]
 
 include::create-uniqueness-constraint.asciidoc[leveloffset=+1]
 
@@ -43,12 +42,9 @@ include::create-a-node-that-breaks-a-unique-property-constraint.asciidoc[levelof
 
 include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 2]
 
 [[query-constraint-prop-exist-nodes]]
 == Node property existence constraints
-
-ifndef::asciidoctor[:leveloffset: 3]
 
 include::create-node-property-existence-constraint.asciidoc[leveloffset=+1]
 
@@ -62,12 +58,9 @@ include::removing-an-existence-constrained-node-property.asciidoc[leveloffset=+1
 
 include::failure-to-create-a-node-property-existence-constraint-due-to-existing-node.asciidoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 2]
 
 [[query-constraint-prop-exist-rels]]
 == Relationship property existence constraints
-
-ifndef::asciidoctor[:leveloffset: 3]
 
 include::create-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
 
@@ -80,7 +73,3 @@ include::create-a-relationship-that-breaks-a-property-existence-constraint.ascii
 include::removing-an-existence-constrained-relationship-property.asciidoc[leveloffset=+1]
 
 include::failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 2]
-
-
