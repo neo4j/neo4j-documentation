@@ -8,48 +8,7 @@ The following examples are assuming the example graph structure below.
 .Graph
 include::includes/cypher-aggregation-graph.asciidoc[]
 
-== Count==
-
-[abstract]
-`count` is used to count the number of rows.
-
-`count` can be used in two forms -- `count(*)` which just counts the number of matching rows, and `count(<expression>)`, which counts the number of non-`null` values in `<expression>`.
-
-ifndef::asciidoctor[:leveloffset: 3]
-
-include::count-nodes.asciidoc[leveloffset=+1]
-
-include::group-count-relationship-types.asciidoc[leveloffset=+1]
-
-include::count-entities.asciidoc[leveloffset=+1]
-
-include::count-non-null-values.asciidoc[leveloffset=+1]
-
 ifndef::asciidoctor[:leveloffset: 2]
-
-== Statistics ==
-
-ifndef::asciidoctor[:leveloffset: 3]
-
-include::sum.asciidoc[leveloffset=+1]
-
-include::avg.asciidoc[leveloffset=+1]
-
-include::percentiledisc.asciidoc[leveloffset=+1]
-
-include::percentilecont.asciidoc[leveloffset=+1]
-
-include::stdev.asciidoc[leveloffset=+1]
-
-include::stdevp.asciidoc[leveloffset=+1]
-
-include::max.asciidoc[leveloffset=+1]
-
-include::min.asciidoc[leveloffset=+1]
-
-ifndef::asciidoctor[:leveloffset: 2]
-
-include::collect.asciidoc[]
 
 include::distinct.asciidoc[]
 

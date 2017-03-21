@@ -29,15 +29,7 @@ include::syntax/index.asciidoc[leveloffset=+1]
 
 ifndef::asciidoctor[:leveloffset: 1]
 
-//xxinclude::general.asciidoc[leveloffset=+1]
-
-//:leveloffset: 1
-
-//xxinclude::read.asciidoc[leveloffset=+1]
-
 ifndef::asciidoctor[:leveloffset: 1]
-
-//xxinclude::write.asciidoc[leveloffset=+1]
 
 include::clause.asciidoc[leveloffset=+1]
 
@@ -56,3 +48,7 @@ include::query-tuning.asciidoc[leveloffset=+1]
 ifndef::asciidoctor[:leveloffset: 1]
 
 include::execution-plans.asciidoc[leveloffset=+1]
+
+ifndef::asciidoctor[:leveloffset: 1]
+
+include::glossary.asciidoc[leveloffset=+1]
