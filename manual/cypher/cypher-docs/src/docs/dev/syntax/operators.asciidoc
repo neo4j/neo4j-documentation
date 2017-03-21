@@ -1,6 +1,7 @@
 [[query-operators]]
 = Operators
 
+
 [[query-operators-summary]]
 == Operators at a glance
 
@@ -14,6 +15,7 @@
 |===
 
 include::../ql/syntax/operators.asciidoc[leveloffset=+1]
+
 
 [[query-operators-property]]
 == Property operators

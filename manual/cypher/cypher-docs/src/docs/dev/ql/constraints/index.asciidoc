@@ -28,6 +28,7 @@ If you drop a unique property constraint and still want an index on the property
 * <<query-constraint-prop-exist-nodes,Node property existence constraints>>
 * <<query-constraint-prop-exist-rels,Relationship property existence constraints>>
 
+
 [[query-constraint-unique-nodes]]
 == Unique node property constraints
 
@@ -40,6 +41,7 @@ include::create-a-node-that-complies-with-unique-property-constraints.asciidoc[l
 include::create-a-node-that-breaks-a-unique-property-constraint.asciidoc[leveloffset=+1]
 
 include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes.asciidoc[leveloffset=+1]
+
 
 [[query-constraint-prop-exist-nodes]]
 == Node property existence constraints
@@ -55,6 +57,7 @@ include::create-a-node-that-breaks-a-property-existence-constraint.asciidoc[leve
 include::removing-an-existence-constrained-node-property.asciidoc[leveloffset=+1]
 
 include::failure-to-create-a-node-property-existence-constraint-due-to-existing-node.asciidoc[leveloffset=+1]
+
 
 [[query-constraint-prop-exist-rels]]
 == Relationship property existence constraints

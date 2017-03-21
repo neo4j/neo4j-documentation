@@ -11,6 +11,7 @@ Naturally in most cases you wouldn't want to write or generate huge statements t
 
 That process not only includes creating completely new data but also integrating with existing structures and updating your graph.
 
+
 [[cypher-intro-load-parameters]]
 == Parameters
 
@@ -42,6 +43,7 @@ FOREACH (role IN movie.cast |
    MERGE (a)-[:ACTED_IN {roles:role.characters}]->(m)
 )
 ----
+
 
 [[cypher-intro-importing-csv]]
 == Importing CSV

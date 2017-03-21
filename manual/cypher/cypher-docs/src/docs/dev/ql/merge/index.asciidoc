@@ -1,6 +1,7 @@
 [[query-merge]]
 = MERGE
 
+
 [abstract]
 The `MERGE` clause ensures that a pattern exists in the graph.
 Either the pattern already exists, or it needs to be created.
@@ -31,6 +32,7 @@ The following graph is used for the examples below:
 
 .Graph
 include::includes/cypher-merge-graph.asciidoc[]
+
 
 [[query-merge-node-derived]]
 == Merge nodes

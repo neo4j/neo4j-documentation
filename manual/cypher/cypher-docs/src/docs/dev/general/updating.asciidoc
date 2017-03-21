@@ -3,8 +3,10 @@
 
 Cypher can be used for both querying and updating your graph.
 
+
 [[query-updating-structure]]
 == The structure of update queries
+
 
 [abstract]
 * A Cypher query part can't both match and update the graph at the same time.
@@ -42,6 +44,7 @@ RETURN n.friendsCount
 ----
 
 You can chain together as many query parts as the available memory permits.
+
 
 [[query-updating-return]]
 == Returning data

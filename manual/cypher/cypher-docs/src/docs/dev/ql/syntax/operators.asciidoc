@@ -14,6 +14,7 @@ include::using-the-exponentiation-operator.asciidoc[]
 
 include::using-the-unary-minus-operator.asciidoc[]
 
+
 [[query-operators-comparison]]
 = Comparison operators
 
@@ -27,6 +28,7 @@ The comparison operators comprise:
 * greater than or equal to: `>=`
 * `IS NULL`
 * `IS NOT NULL`
+
 
 [[query-operator-comparison-string-specific]]
 String-specific comparison operators comprise:
@@ -44,6 +46,7 @@ include::using-starts-with-to-filter-names.asciidoc[]
 
 <<query-where-string>> contains more information regarding the string-specific comparison operators as well as additional examples illustrating the usage thereof.
 
+
 [[query-operators-boolean]]
 = Boolean operators
 
@@ -58,6 +61,7 @@ include::../../syntax/boolean-operator-table.asciidoc[]
 
 include::using-boolean-operators-to-filter-numbers.asciidoc[]
 
+
 [[query-operators-string]]
 = String operators
 
@@ -70,6 +74,7 @@ include::using-a-regular-expression-to-filter-words.asciidoc[]
 
 Further information and examples regarding the use of regular expressions in filtering can be found in <<query-where-regex>>.
 In addition, refer to <<query-operator-comparison-string-specific>> for details on string-specific comparison operators.
+
 
 [[query-operators-list]]
 = List operators

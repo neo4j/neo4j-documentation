@@ -21,6 +21,7 @@ Especially, nodes, relationships, and literal maps are incomparable with each ot
 
 It is an error to compare values that cannot be compared.
 
+
 [[cypher-ordering]]
 == Ordering and comparison of values
 
@@ -33,6 +34,7 @@ The following points give some details on how the comparison is performed.
 * Boolean values are compared for ordering such that `false < true`.
 * Comparing for ordering when one argument is `null` (e.g. `null < 3` is `null`).
 * It is an error to compare other types of values with each other for ordering.
+
 
 [[cypher-operations-chaining]]
 == Chaining comparison operations

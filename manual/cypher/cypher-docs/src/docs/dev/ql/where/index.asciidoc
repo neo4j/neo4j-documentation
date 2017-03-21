@@ -1,6 +1,7 @@
 [[query-where]]
 = WHERE
 
+
 [abstract]
 `WHERE` adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.
 

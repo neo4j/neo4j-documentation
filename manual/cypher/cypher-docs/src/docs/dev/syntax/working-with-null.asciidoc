@@ -16,12 +16,14 @@ In this case, anything that is not `true` is interpreted as being false.
 Not knowing two values does not imply that they are the same value.
 So the expression `null` = `null` yields `null` and not `true`.
 
+
 [[cypher-null-logical-operators]]
 == Logical operations with null
 
 The logical operators (`AND`, `OR`, `XOR`, `NOT`) treat `null` as the 'unknown' value of three-valued logic.
 
 include::boolean-operator-table.asciidoc[]
+
 
 [[cypher-null-in-operator]]
 == The IN operator and null
@@ -48,6 +50,7 @@ Here is a table with examples:
 Using `all`, `any`, `none`, and `single` follows a similar rule.
 If the result can be calculated definitely, `true` or `false` is returned.
 Otherwise `null` is produced.
+
 
 [[cypher-expressions-and-null]]
 == Expressions that return null
