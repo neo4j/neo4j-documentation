@@ -24,7 +24,7 @@ import org.neo4j.cypher.docgen.tooling._
 class UsingTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/"
   override def doc = new DocBuilder {
-    doc("USING", "query-using")
+    doc("Planner hints and the USING keyword", "query-using")
     initQueries(
       "CREATE INDEX ON :Scientist(name)",
       "CREATE INDEX ON :Science(name)",
@@ -39,18 +39,23 @@ class UsingTest extends DocumentingTest {
         |(chemistry)<-[:RESEARCHED]-(:Scientist {name: 'Harrison'})
       """
     )
-    synopsis("The `USING` clause is used to influence the decisions of the planner when building an execution plan for a query.")
+    synopsis("A planner hint is used to influence the decisions of the planner when building an execution plan for a query. Planner hints are specified in a query with the `USING` keyword.")
     caution {
       p("Forcing planner behavior is an advanced feature, and should be used with caution by experienced developers and/or database administrators only, as it may cause queries to perform poorly.")
     }
-    section("Introduction") {
+    p("""* <<query-using-introduction,Introduction>>
+        |* <<query-using-index-hint,Index hints>>
+        |* <<query-using-scan-hint,Scan hints>>
+        |* <<query-using-join-hint,Join hints>>
+        |* <<query-using-periodic-commit-hint,`PERIODIC COMMIT` query hint>>""")
+    section("Introduction", "query-using-introduction") {
       p("""When executing a query, Neo4j needs to decide where in the query graph to start matching.
           |This is done by looking at the `MATCH` clause and the `WHERE` conditions and using that information to find useful indexes, or other starting points.""")
       p("""However, the selected index might not always be the best choice.
           |Sometimes multiple indexes are possible candidates, and the query planner picks the wrong one from a performance point of view.
-          |And in some circumstances (albeit rarely) it is better not to use an index at all.""")
-      p("""You can force Neo4j to use a specific starting point through the `USING` clause. This is called giving a planner hint.
-          |There are three types of planner hints: index hints, scan hints, and join hints.""")
+          |Moreover, in some circumstances (albeit rarely) it is better not to use an index at all.""")
+      p("""Neo4j can be forced to use a specific starting point through the `USING` keyword. This is called giving a planner hint.
+          |There are four types of planner hints: index hints, scan hints, join hints, and the `PERIODIC COMMIT` query hint.""")
       note {
         p("You cannot use planner hints if your query has a `START` clause.")
       }
@@ -63,7 +68,7 @@ class UsingTest extends DocumentingTest {
         profileExecutionPlan()
       }
     }
-    section("Index hints") {
+    section("Index hints", "query-using-index-hint") {
       p("""Index hints are used to specify which index, if any, the planner should use as a starting point.
           |This can be beneficial in cases where the index statistics are not accurate for the specific values that
           |the query at hand is known to use, which would result in the planner picking a non-optimal index.
@@ -92,7 +97,7 @@ class UsingTest extends DocumentingTest {
         }
       }
     }
-    section("Scan hints") {
+    section("Scan hints", "query-using-scan-hint") {
       p("""If your query matches large parts of an index, it might be faster to scan the label and filter out nodes that do not match.
           |To do this, you can use `USING SCAN variable:Label` after the applicable `MATCH` clause.
           |This will force Cypher to not use an index that could have been used, and instead do a label scan.""")
@@ -108,7 +113,7 @@ class UsingTest extends DocumentingTest {
         }
       }
     }
-    section("Join hints") {
+    section("Join hints", "query-using-join-hint") {
       p("""Join hints are the most advanced type of hints, and are not used to find starting points for the
           |query execution plan, but to enforce that joins are made at specified points. This implies that there
           |has to be more than one starting point (leaf) in the plan, in order for the query to be able to join the two branches ascending
@@ -142,6 +147,23 @@ class UsingTest extends DocumentingTest {
           profileExecutionPlan()
         }
       }
+    }
+    section("`PERIODIC COMMIT` query hint", "query-using-periodic-commit-hint") {
+      note {
+        p("""See <<cypherdoc-importing-csv-files-with-cypher>> on how to import data from CSV files.""")
+      }
+      p("""Importing large amounts of data using `LOAD CSV` with a single Cypher query may fail due to memory constraints.
+          |This will manifest itself as an `OutOfMemoryError`.""")
+      p("""For this situation _only,_ Cypher provides the global `USING PERIODIC COMMIT` query hint for updating queries using `LOAD CSV`.
+          |If required, the limit for the number of rows per commit may be set as follows: `USING PERIODIC COMMIT 500`.""")
+      p("""`PERIODIC COMMIT` will process the rows until the number of rows reaches a limit.
+          |Then the current transaction will be committed and replaced with a newly opened transaction.
+          |If no limit is set, a default value will be used.""")
+      p("""See <<load-csv-importing-large-amounts-of-data>> in <<query-load-csv>> for examples of `USING PERIODIC COMMIT` with and without setting the number of rows per commit.""")
+      important {
+        p("""Using `PERIODIC COMMIT` will prevent running out of memory when importing large amounts of data.
+                |However, it will also break transactional isolation and thus it should only be used where needed.""")
+        }
     }
   }.build()
 
