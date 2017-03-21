@@ -21,7 +21,7 @@ The parts are separated using the `WITH` statement.
 
 When you want to filter using aggregated data, you have to chain together two reading query parts -- the first one does the aggregating, and the second filters on the results coming from the first one.
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (n {name: 'John'})-[:FRIEND]-(friend)
 WITH n, count(friend) AS friendsCount
@@ -33,7 +33,7 @@ Using `WITH`, you specify how you want the aggregation to happen, and that the a
 
 Here's an example of updating the graph, writing the aggregated data to the graph:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (n {name: 'John'})-[:FRIEND]-(friend)
 WITH n, count(friend) AS friendsCount

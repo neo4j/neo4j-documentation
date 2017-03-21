@@ -4,7 +4,7 @@
 In versions of Cypher prior to 2.2 it was also possible to access specific nodes or relationships using the `START` clause.
 In this case you could use a syntax like the following:
 
-[source,cypher]
+[source, cypher]
 ----
 CYPHER 1.9
 START n=node(42)

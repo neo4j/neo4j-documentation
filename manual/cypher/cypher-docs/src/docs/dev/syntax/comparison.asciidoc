@@ -44,14 +44,14 @@ Note that `a op1 b op2 c` does not imply any kind of comparison between `a` and 
 
 The example:
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (n) WHERE 21 < n.age <= 30 RETURN n
 ----
 
 is equivalent to
 
-[source,cypher]
+[source, cypher]
 ----
 MATCH (n) WHERE 21 < n.age AND n.age <= 30 RETURN n
 ----
@@ -62,14 +62,14 @@ This syntax extends to all equality and inequality comparisons, as well as exten
 
 For example:
 
-[source,cypher]
+[source, cypher]
 ----
 a < b = c <= d <> e
 ----
 
 Is equivalent to:
 
-[source,cypher]
+[source, cypher]
 ----
 a < b AND b = c AND c <= d AND d <> e
 ----

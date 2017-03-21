@@ -49,7 +49,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         |These are non-aggregate expressions, that are used to group the values going into the aggregate functions.""")
     p("""So, if the return statement looks something like this:""")
     p(
-      """[source,cypher]
+      """[source, cypher]
         |----
         |RETURN n, count(*)
         |----

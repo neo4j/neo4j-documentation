@@ -209,7 +209,7 @@ case class Query(queryText: String, assertions: QueryAssertions, myInitQueries: 
   override def asciiDoc(level: Int) = {
     val inner = Prettifier(queryText)
     s""".Query
-       |[source,cypher]
+       |[source, cypher]
        |----
        |$inner
        |----
