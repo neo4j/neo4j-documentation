@@ -273,6 +273,26 @@ END AS result""",
     )
   }
 
+  @Test def dynamic_property_access() {
+    testThis(
+      title = "Filtering on a dynamically-computed property key",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """CREATE (a:Restaurant {name: 'Hungry Jo', rating_hygiene: 10, rating_food: 7}),
+          | (b:Restaurant {name: 'Buttercup Tea Rooms', rating_hygiene: 5, rating_food: 6}),
+          | (c1:Category {name: 'hygiene'}),
+          | (c2:Category {name: 'food'})
+          |WITH a, b, c1, c2
+          |MATCH (restaurant:Restaurant), (category:Category)
+          |WHERE restaurant["rating_" + category.name] > 6
+          |RETURN DISTINCT restaurant.name""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("restaurant.name" -> "Hungry Jo")) === p.toSet)
+    )
+  }
+
   private def testThis(title: String, syntax: String, arguments: List[(String, String)], text: String, queryText: String, returns: String, assertions: InternalExecutionResult => Unit) {
     val formattedSyntax = if (!syntax.isEmpty) Array("*Syntax:*", "[source, cypher]", syntax).mkString("\n", "\n", "") else ""
 
