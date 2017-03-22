@@ -122,6 +122,20 @@ END AS result""",
     )
   }
 
+  @Test def property_access_operator() {
+    testThis(
+      title = "Accessing the property of a nested literal map",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH {person: {name: 'Anne', age: 25}} AS p
+          |RETURN  p.person.name""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("p.person.name" -> "Anne")) === p.toSet)
+    )
+  }
+
   @Test def mathematical_operator_exponentiation() {
     testThis(
       title = "Using the exponentiation operator",

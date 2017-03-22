@@ -68,6 +68,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operators-string,+>>                            | String        | Concatenation
 | <<query-operators-list,+>>                              | List          | Concatenation
 | <<query-operators-mathematical,\->>                      | Mathematical  | Subtraction or unary minus
+| <<query-operators-general,.>>                             | General      | Property access
 | <<query-operators-mathematical,/>>                      | Mathematical  | Division
 | <<query-operators-comparison,<>>                        | Comparison    | Less than
 | <<query-operators-comparison,\<\=>>                       | Comparison    | Less than or equal to

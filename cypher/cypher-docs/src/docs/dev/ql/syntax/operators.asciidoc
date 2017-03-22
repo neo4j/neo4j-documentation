@@ -4,10 +4,13 @@
 The general operators comprise:
 
 * remove duplicates values: `DISTINCT`
+* access the property of a node, relationship or literal map: `.`
 
 include::using-the-distinct-operator.asciidoc[]
 
 `DISTINCT` is commonly used in conjunction with <<query-functions-aggregating,aggregating functions>>.
+
+include::accessing-the-property-of-a-nested-literal-map.asciidoc[]
 
 
 [[query-operators-mathematical]]
