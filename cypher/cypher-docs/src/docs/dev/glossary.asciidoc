@@ -78,7 +78,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operators-comparison,>\=>>                       | Comparison    | Greater than or equal to
 | <<query-operators-boolean,AND>>                         | Boolean       | Conjunction
 | <<query-operator-comparison-string-specific,CONTAINS>>  | String comparison | Case-sensitive inclusion search
-| DISTINCT                                                  |            | Duplicate removal
+| <<query-operators-general,DISTINCT>>           | General           | Duplicate removal
 | <<query-operator-comparison-string-specific,ENDS WITH>> | String comparison | Case-sensitive suffix search
 | <<query-operators-list,IN>>                             | List          | List element existence check
 | <<query-operators-comparison,IS NOT NULL>>              | Comparison    | Non-`null` check

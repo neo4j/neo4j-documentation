@@ -6,6 +6,7 @@
 == Operators at a glance
 
 |===
+| <<query-operators-general,General operators>> | `DISTINCT`, `.`, `[]` for dynamic property access
 | <<query-operators-mathematical,Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
 | <<query-operators-comparison,Comparison operators>>     | `=`, `<>`, `<`, `>`, `<=`, `>=`, `IS NULL`, `IS NOT NULL`
 | <<query-operators-comparison,String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`

@@ -1,3 +1,15 @@
+[[query-operators-general]]
+= General operators
+
+The general operators comprise:
+
+* remove duplicates values: `DISTINCT`
+
+include::using-the-distinct-operator.asciidoc[]
+
+`DISTINCT` is commonly used in conjunction with <<query-functions-aggregating,aggregating functions>>.
+
+
 [[query-operators-mathematical]]
 = Mathematical operators
 

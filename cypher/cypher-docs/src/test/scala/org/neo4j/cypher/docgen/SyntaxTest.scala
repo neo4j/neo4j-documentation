@@ -19,6 +19,7 @@
  */
 package org.neo4j.cypher.docgen
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
 
@@ -100,6 +101,24 @@ END""",
 END AS result""",
       returns = "",
       assertions = (p) => assert(Set(Map("result" -> 3), Map("result" -> 1), Map("result" -> 2), Map("result" -> 1), Map("result" -> 3)) === p.toSet)
+    )
+  }
+
+  @Test def distinct_operator() {
+    testThis(
+      title = "Using the DISTINCT operator",
+      syntax = "",
+      arguments = List.empty,
+      text = "Retrieve the unique eye colors from `Person` nodes.",
+      queryText =
+        """CREATE (a:Person {name: 'Anne', eyeColor: 'blue'}),
+          |             (b:Person {name: 'Bill', eyeColor: 'brown'}),
+          |             (c:Person {name: 'Carol', eyeColor: 'blue'})
+          |WITH a, b, c
+          |MATCH (p:Person)
+          |RETURN DISTINCT p.eyeColor""".stripMargin,
+      returns = "Even though both *'Anne'* and *'Carol'* have blue eyes, *'blue'* is only returned once.",
+      assertions = (p) => assert(Set(Map("p.eyeColor" -> "blue"), Map("p.eyeColor" -> "brown")) === p.toSet)
     )
   }
 
