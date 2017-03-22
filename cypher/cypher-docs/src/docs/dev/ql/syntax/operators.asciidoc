@@ -98,6 +98,13 @@ List operators comprise:
 
 * concatenating lists: `+`
 * checking if an element exists in a list: `IN`
+* accessing an element(s) in a list: `[]`
+
+include::concatenating-two-lists.asciidoc[]
 
 include::using-in-to-check-if-a-number-is-in-a-list.asciidoc[]
+
+include::accessing-elements-in-a-list.asciidoc[]
+
+More details on lists can be found in <<cypher-lists-general>>.
 

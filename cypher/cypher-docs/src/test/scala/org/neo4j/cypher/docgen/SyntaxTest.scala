@@ -246,6 +246,33 @@ END AS result""",
     )
   }
 
+  @Test def concatenation_list_operator() {
+    testThis(
+      title = "Concatenating two lists",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """RETURN [1,2,3,4,5] + [6,7] AS myList""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("myList" -> List(1L, 2L, 3L, 4L, 5L, 6L, 7L))) === p.toSet)
+    )
+  }
+
+  @Test def accessing_element_list_operator() {
+    testThis(
+      title = "Accessing elements in a list",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH ['Anne', 'John', 'Bill', 'Diane', 'Eve'] AS names
+          |RETURN names[1..3] AS result""".stripMargin,
+      returns = "The square brackets will extract the elements from the start index `1`, and up to (but excluding) the end index `3`.",
+      assertions = (p) => assert(Set(Map("result" -> List("John", "Bill"))) === p.toSet)
+    )
+  }
+
   private def testThis(title: String, syntax: String, arguments: List[(String, String)], text: String, queryText: String, returns: String, assertions: InternalExecutionResult => Unit) {
     val formattedSyntax = if (!syntax.isEmpty) Array("*Syntax:*", "[source, cypher]", syntax).mkString("\n", "\n", "") else ""
 
