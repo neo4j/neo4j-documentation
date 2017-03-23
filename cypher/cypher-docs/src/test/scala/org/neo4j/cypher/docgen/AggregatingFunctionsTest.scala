@@ -69,6 +69,28 @@ class AggregatingFunctionsTest extends DocumentingTest {
         |More information about `DISTINCT` may be found <<query-operators-general,here>>.""")
     p("The following graph is used for the examples below:")
     graphViz()
+    section("avg()", "functions-avg") {
+      p("`avg()` calculates the average of a numeric column.")
+      function("`avg( expression )`", ("expression", "A numeric expression."))
+      query("MATCH (n:Person) RETURN avg(n.age)", ResultAssertions((r) => {
+        r.toList.head("avg(n.age)") should equal(30L)
+      })) {
+        p("The average of all the values in the property `age` is returned by the example query.")
+        resultTable()
+      }
+    }
+    section("collect()", "functions-collect") {
+      p(
+        """`collect()` collects all the values into a list.
+          |It will ignore `null` values.""".stripMargin)
+      function("`collect( expression )`", ("expression", "An expression."))
+      query("MATCH (n:Person) RETURN collect(n.age)", ResultAssertions((r) => {
+        r.toList.head("collect(n.age)") should equal(Seq(13, 33, 44))
+      })) {
+        p("Returns a single row, with all the values collected.")
+        resultTable()
+      }
+    }
     section("count()", "functions-count") {
       p(
         """`count()` is used to count the number of rows.
@@ -127,40 +149,6 @@ class AggregatingFunctionsTest extends DocumentingTest {
         }
       }
     }
-    section("collect()", "functions-collect") {
-      p(
-        """`collect()` collects all the values into a list.
-          |It will ignore `null` values.""".stripMargin)
-      function("`collect( expression )`", ("expression", "An expression."))
-      query("MATCH (n:Person) RETURN collect(n.age)", ResultAssertions((r) => {
-        r.toList.head("collect(n.age)") should equal(Seq(13, 33, 44))
-      })) {
-        p("Returns a single row, with all the values collected.")
-        resultTable()
-      }
-    }
-    section("avg()", "functions-avg") {
-      p("`avg()` calculates the average of a numeric column.")
-      function("`avg( expression )`", ("expression", "A numeric expression."))
-      query("MATCH (n:Person) RETURN avg(n.age)", ResultAssertions((r) => {
-        r.toList.head("avg(n.age)") should equal(30L)
-      })) {
-        p("The average of all the values in the property `age` is returned by the example query.")
-        resultTable()
-      }
-    }
-    section("sum()", "functions-sum") {
-      p(
-        """`sum()` simply adds up all the numeric values it encounters.
-          |Any `null` values are silently dropped.""".stripMargin)
-      function("`sum( expression )`", ("expression", "A numeric expression."))
-      query("MATCH (n:Person) RETURN sum(n.age)", ResultAssertions((r) => {
-        r.toList.head("sum(n.age)") should equal(90L)
-      })) {
-        p("This returns the sum of all the values in the property `age`.")
-        resultTable()
-      }
-    }
     section("max()", "functions-max") {
       p("`max()` takes a numeric property as input, and returns the highest value in that column.")
       function("`max( expression )`", ("expression", "A numeric expression."))
@@ -178,6 +166,32 @@ class AggregatingFunctionsTest extends DocumentingTest {
         r.toList.head("min(n.age)") should equal(13L)
       })) {
         p("The lowest of all the values in the property `age` is returned.")
+        resultTable()
+      }
+    }
+    section("percentileCont()", "functions-percentilecont") {
+      p(
+        """`percentileCont()` calculates the percentile of a given value over a group, with a percentile from 0.0 to 1.0.
+          |It uses a linear interpolation method, calculating a weighted average between two values, if the desired percentile lies between them.
+          |For nearest values using a rounding method, see `percentileDisc`.""")
+      function("`percentileCont( expression, percentile )`", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
+      query("MATCH (n:Person) RETURN percentileCont(n.age, 0.4)", ResultAssertions((r) => {
+        r.toList.head("percentileCont(n.age, 0.4)") should equal(29L)
+      })) {
+        p("The 40th percentile of the values in the property `age` is returned by the example query, calculated with a weighted average.")
+        resultTable()
+      }
+    }
+    section("percentileDisc()", "functions-percentiledisc") {
+      p(
+        """`percentileDisc()` calculates the percentile of a given value over a group, with a percentile from 0.0 to 1.0.
+          |It uses a rounding method, returning the nearest value to the percentile.
+          |For interpolated values, see `percentileCont`.""")
+      function("`percentileDisc( expression, percentile )`", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
+      query("MATCH (n:Person) RETURN percentileDisc(n.age, 0.5)", ResultAssertions((r) => {
+        r.toList.head("percentileDisc(n.age, 0.5)") should equal(33L)
+      })) {
+        p("The 50th percentile of the values in the property `age` is returned by the example query. In this case, 0.5 is the median, or 50th percentile.")
         resultTable()
       }
     }
@@ -207,29 +221,15 @@ class AggregatingFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("percentileDisc()", "functions-percentiledisc") {
+    section("sum()", "functions-sum") {
       p(
-        """`percentileDisc()` calculates the percentile of a given value over a group, with a percentile from 0.0 to 1.0.
-          |It uses a rounding method, returning the nearest value to the percentile.
-          |For interpolated values, see `percentileCont`.""")
-      function("`percentileDisc( expression, percentile )`", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
-      query("MATCH (n:Person) RETURN percentileDisc(n.age, 0.5)", ResultAssertions((r) => {
-        r.toList.head("percentileDisc(n.age, 0.5)") should equal(33L)
+        """`sum()` simply adds up all the numeric values it encounters.
+          |Any `null` values are silently dropped.""".stripMargin)
+      function("`sum( expression )`", ("expression", "A numeric expression."))
+      query("MATCH (n:Person) RETURN sum(n.age)", ResultAssertions((r) => {
+        r.toList.head("sum(n.age)") should equal(90L)
       })) {
-        p("The 50th percentile of the values in the property `age` is returned by the example query. In this case, 0.5 is the median, or 50th percentile.")
-        resultTable()
-      }
-    }
-    section("percentileCont()", "functions-percentilecont") {
-      p(
-        """`percentileCont()` calculates the percentile of a given value over a group, with a percentile from 0.0 to 1.0.
-          |It uses a linear interpolation method, calculating a weighted average between two values, if the desired percentile lies between them.
-          |For nearest values using a rounding method, see `percentileDisc`.""")
-      function("`percentileCont( expression, percentile )`", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
-      query("MATCH (n:Person) RETURN percentileCont(n.age, 0.4)", ResultAssertions((r) => {
-        r.toList.head("percentileCont(n.age, 0.4)") should equal(29L)
-      })) {
-        p("The 40th percentile of the values in the property `age` is returned by the example query, calculated with a weighted average.")
+        p("This returns the sum of all the values in the property `age`.")
         resultTable()
       }
     }
