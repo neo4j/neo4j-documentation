@@ -64,8 +64,9 @@ class AggregatingFunctionsTest extends DocumentingTest {
       """If you want to use aggregations to sort your result set, the aggregation must be included in the `RETURN` to be used in your `ORDER BY`.
         |""")
     p(
-      """The last piece of the puzzle is the `DISTINCT` keyword.
-        |It is used to make all values unique before running them through an aggregate function.""")
+      """The last piece of the puzzle is the `DISTINCT` operator.
+        |It is used to make all values unique before running them through an aggregate function.
+        |More information about `DISTINCT` may be found <<query-operators-general,here>>.""")
     p("The following graph is used for the examples below:")
     graphViz()
     section("count()", "functions-count") {
