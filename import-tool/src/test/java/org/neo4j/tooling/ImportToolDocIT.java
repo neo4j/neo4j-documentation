@@ -532,8 +532,7 @@ public class ImportToolDocIT
         File badFile = badFile();
         String[] arguments = arguments(
                 "--database", "the_database",
-                "--nodes", actors.getAbsolutePath(),
-                "--ignore-duplicate-nodes" );
+                "--nodes", actors.getAbsolutePath() );
         importTool( arguments );
         assertTrue( badFile.exists() );
 
