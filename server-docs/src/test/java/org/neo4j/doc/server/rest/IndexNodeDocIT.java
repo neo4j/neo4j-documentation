@@ -140,7 +140,7 @@ public class IndexNodeDocIT extends AbstractRestFunctionalTestBase
     @Documented( "Create node index with configuration.\n\n" +
                  "This request is only necessary if you want to customize the index settings.\n" +
                  "If you are happy with the defaults, you can just start indexing nodes/relationships, as non-existent indexes will automatically be created as you do.\n" +
-                 "ifdef::asciidoctor[See <<java-reference#indexing-create-advanced, Configuration and full-text indexing>> for more information on index configuration.]" )
+                 "See <<java-reference#indexing-create-advanced, Configuration and full-text indexing>> for more information on index configuration." )
     @Test
     public void shouldCreateANamedNodeIndexWithConfiguration() throws Exception
     {
