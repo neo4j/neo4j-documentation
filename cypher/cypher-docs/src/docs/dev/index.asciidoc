@@ -1,21 +1,10 @@
 [[cypher]]
 = Cypher
 
-[partintro]
---
-The Cypher part is the authoritative source for details on the Cypher Query Language.
-For a short introduction, see <<cypher-introduction>>.
-To take your first steps with Cypher, see <<cypher-getting-started>>.
-For the terminology used, see <<terminology>>.
---
-endif::[]
-
-ifdef::asciidoctor[]
 [abstract]
 --
 This chapter contains the complete and authoritative documentation for the Cypher query language.
 --
-endif::[]
 
 include::general/index.asciidoc[leveloffset=+1]
 

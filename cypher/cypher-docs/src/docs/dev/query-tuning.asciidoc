@@ -48,9 +48,7 @@ This planner uses the statistics service in Neo4j to assign cost to alternative 
 While this should lead to superior execution plans in most cases, it is still under development.
 
 By default, Neo4j {neo4j-version} will use the cost planner for all queries.
-You can force it to use a specific planner by using the `cypher.planner` configuration setting
-ifdef::asciidoctor[(see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>),]
-or by prepending your query with `CYPHER planner=cost` or `CYPHER planner=rule`.
+You can force it to use a specific planner by using the `cypher.planner` configuration setting (see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>), or by prepending your query with `CYPHER planner=cost` or `CYPHER planner=rule`.
 
 You can see which planner was used by looking at the execution plan.
 
