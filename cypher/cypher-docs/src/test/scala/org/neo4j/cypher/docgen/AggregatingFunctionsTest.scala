@@ -43,7 +43,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     p("""To calculate aggregated data, Cypher offers aggregation, much like SQL's `GROUP BY`.""")
     p(
       """Aggregate functions take multiple input values and calculate an aggregated value from them.
-        |Examples are `avg` that calculates the average of multiple numeric values, or `min` that finds the smallest numeric value in a set of values.""")
+        |Examples are `avg()` that calculates the average of multiple numeric values, or `min()` that finds the smallest numeric value in a set of values.""")
     p(
       """Aggregation can be done over all the matching subgraphs, or it can be further divided by introducing key values.
         |These are non-aggregate expressions, that are used to group the values going into the aggregate functions.""")
@@ -72,7 +72,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     section("count()", "functions-count") {
       p(
         """`count()` is used to count the number of rows.
-          |`count` can be used in two forms -- `count(*)` which just counts the number of matching rows, and `count(<expression>)`, which counts the number of non-`null` values in `<expression>`.
+          |`count()` can be used in two forms -- `count(*)` which just counts the number of matching rows, and `count(<expression>)`, which counts the number of non-`null` values in `<expression>`.
         """.stripMargin)
       function("`count( expression )`", ("expression", "An expression."))
       section("Count nodes") {
@@ -152,7 +152,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     section("sum()", "functions-sum") {
       p(
         """`sum()` simply adds up all the numeric values it encounters.
-          |`Null` values are silently dropped.""".stripMargin)
+          |Any `null` values are silently dropped.""".stripMargin)
       function("`sum( expression )`", ("expression", "A numeric expression."))
       query("MATCH (n:Person) RETURN sum(n.age)", ResultAssertions((r) => {
         r.toList.head("sum(n.age)") should equal(90L)
