@@ -1,3 +1,23 @@
+[[query-operators-general]]
+= General operators
+
+The general operators comprise:
+
+* remove duplicates values: `DISTINCT`
+* access the property of a node, relationship or literal map: `.`
+* dynamic property access: `[]`
+
+include::using-the-distinct-operator.asciidoc[]
+
+`DISTINCT` is commonly used in conjunction with <<query-functions-aggregating,aggregating functions>>.
+
+include::accessing-the-property-of-a-nested-literal-map.asciidoc[]
+
+include::filtering-on-a-dynamically-computed-property-key.asciidoc[]
+
+See <<query-where-basic>> for more details on dynamic property access.
+
+
 [[query-operators-mathematical]]
 = Mathematical operators
 
@@ -83,6 +103,13 @@ List operators comprise:
 
 * concatenating lists: `+`
 * checking if an element exists in a list: `IN`
+* accessing an element(s) in a list: `[]`
+
+include::concatenating-two-lists.asciidoc[]
 
 include::using-in-to-check-if-a-number-is-in-a-list.asciidoc[]
+
+include::accessing-elements-in-a-list.asciidoc[]
+
+More details on lists can be found in <<cypher-lists-general>>.
 

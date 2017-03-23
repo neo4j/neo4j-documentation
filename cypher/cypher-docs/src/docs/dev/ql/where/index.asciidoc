@@ -19,6 +19,8 @@ Both results and performance may be impacted if the `WHERE` is put inside the wr
 .Graph
 include::includes/cypher-where-graph.asciidoc[]
 
+
+[[query-where-basic]]
 == Basic usage
 
 include::boolean-operations.asciidoc[leveloffset=+1]
