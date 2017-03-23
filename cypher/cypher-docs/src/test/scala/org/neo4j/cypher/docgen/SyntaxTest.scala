@@ -19,6 +19,7 @@
  */
 package org.neo4j.cypher.docgen
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
 
@@ -100,6 +101,38 @@ END""",
 END AS result""",
       returns = "",
       assertions = (p) => assert(Set(Map("result" -> 3), Map("result" -> 1), Map("result" -> 2), Map("result" -> 1), Map("result" -> 3)) === p.toSet)
+    )
+  }
+
+  @Test def distinct_operator() {
+    testThis(
+      title = "Using the DISTINCT operator",
+      syntax = "",
+      arguments = List.empty,
+      text = "Retrieve the unique eye colors from `Person` nodes.",
+      queryText =
+        """CREATE (a:Person {name: 'Anne', eyeColor: 'blue'}),
+          |             (b:Person {name: 'Bill', eyeColor: 'brown'}),
+          |             (c:Person {name: 'Carol', eyeColor: 'blue'})
+          |WITH a, b, c
+          |MATCH (p:Person)
+          |RETURN DISTINCT p.eyeColor""".stripMargin,
+      returns = "Even though both *'Anne'* and *'Carol'* have blue eyes, *'blue'* is only returned once.",
+      assertions = (p) => assert(Set(Map("p.eyeColor" -> "blue"), Map("p.eyeColor" -> "brown")) === p.toSet)
+    )
+  }
+
+  @Test def property_access_operator() {
+    testThis(
+      title = "Accessing the property of a nested literal map",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH {person: {name: 'Anne', age: 25}} AS p
+          |RETURN  p.person.name""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("p.person.name" -> "Anne")) === p.toSet)
     )
   }
 
@@ -210,6 +243,53 @@ END AS result""",
           |RETURN number""".stripMargin,
       returns = "",
       assertions = (p) => assert(Set(Map("number" -> 2L), Map("number" -> 3L)) === p.toSet)
+    )
+  }
+
+  @Test def concatenation_list_operator() {
+    testThis(
+      title = "Concatenating two lists",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """RETURN [1,2,3,4,5] + [6,7] AS myList""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("myList" -> List(1L, 2L, 3L, 4L, 5L, 6L, 7L))) === p.toSet)
+    )
+  }
+
+  @Test def accessing_element_list_operator() {
+    testThis(
+      title = "Accessing elements in a list",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """WITH ['Anne', 'John', 'Bill', 'Diane', 'Eve'] AS names
+          |RETURN names[1..3] AS result""".stripMargin,
+      returns = "The square brackets will extract the elements from the start index `1`, and up to (but excluding) the end index `3`.",
+      assertions = (p) => assert(Set(Map("result" -> List("John", "Bill"))) === p.toSet)
+    )
+  }
+
+  @Test def dynamic_property_access() {
+    testThis(
+      title = "Filtering on a dynamically-computed property key",
+      syntax = "",
+      arguments = List.empty,
+      text = "",
+      queryText =
+        """CREATE (a:Restaurant {name: 'Hungry Jo', rating_hygiene: 10, rating_food: 7}),
+          | (b:Restaurant {name: 'Buttercup Tea Rooms', rating_hygiene: 5, rating_food: 6}),
+          | (c1:Category {name: 'hygiene'}),
+          | (c2:Category {name: 'food'})
+          |WITH a, b, c1, c2
+          |MATCH (restaurant:Restaurant), (category:Category)
+          |WHERE restaurant["rating_" + category.name] > 6
+          |RETURN DISTINCT restaurant.name""".stripMargin,
+      returns = "",
+      assertions = (p) => assert(Set(Map("restaurant.name" -> "Hungry Jo")) === p.toSet)
     )
   }
 
