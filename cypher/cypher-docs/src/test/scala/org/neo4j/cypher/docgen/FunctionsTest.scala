@@ -140,6 +140,7 @@ class FunctionsTest extends DocumentingTestBase {
                |This is the same `size()` method described before,
                |but instead of passing in a list directly, you provide a pattern expression
                |that can be used in a match query to provide a new set of results.
+               |These results are a _list_ of paths.
                |The size of the result is calculated, not the length of the expression itself.
                |""".stripMargin,
       queryText = """MATCH (a) WHERE a.name = 'Alice' RETURN size((a)-->()-->()) AS fof""",
@@ -158,15 +159,15 @@ class FunctionsTest extends DocumentingTestBase {
       assertions = (p) => assertEquals(2, p.columnAs[Long]("length(p)").toList.head))
   }
 
-  @Test def lengthString() {
+  @Test def sizeString() {
     testThis(
-      title = "Length of string",
-      syntax = "length( string )",
+      title = "Size of string",
+      syntax = "size( string )",
       arguments = List("string" -> "An expression that returns a string"),
-      text = """To return or filter on the length of a string, use the `length()` function.""",
-      queryText = """MATCH (a) WHERE length(a.name) > 6 RETURN length(a.name)""",
-      returns = """The length of the name *'Charlie'* is returned by the query.""",
-      assertions = (p) => assertEquals(7, p.columnAs[Long]("length(a.name)").toList.head))
+      text = """To return or filter on the size of a string, use the `size()` function.""",
+      queryText = """MATCH (a) WHERE size(a.name) > 6 RETURN size(a.name)""",
+      returns = """The size of the name *'Charlie'* is returned by the query.""",
+      assertions = (p) => assertEquals(7, p.columnAs[Long]("size(a.name)").toList.head))
   }
 
   @Test def labels() {

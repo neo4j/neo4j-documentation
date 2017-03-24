@@ -133,7 +133,7 @@ Reverse a string.
 ###assertion=returns-one parameters=string
 RETURN
 
-length({string})
+size({string})
 ###
 
 Calculate the number of characters in the string.

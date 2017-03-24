@@ -169,11 +169,11 @@ In this example, we both have additional quotes around the values, as well as es
 include::csv-files/artists-with-escaped-char.csv[]
 ----
 """,
-      queryText = s"LOAD CSV FROM '%ARTIST_WITH_ESCAPE_CHAR%' AS line CREATE (a:Artist {name: line[1], year: toInt(line[2])}) RETURN a.name AS name, a.year as year, length(a.name) AS length",
+      queryText = s"LOAD CSV FROM '%ARTIST_WITH_ESCAPE_CHAR%' AS line CREATE (a:Artist {name: line[1], year: toInt(line[2])}) RETURN a.name AS name, a.year as year, size(a.name) AS size",
       optionalResultExplanation = """
 Note that strings are wrapped in quotes in the output here.
 You can see that when comparing to the length of the string in this case!""",
-      assertions = (p) => assertEquals(List(Map("name" -> """The "Symbol"""", "year" -> 1992, "length" -> 12)), p.toList)
+      assertions = (p) => assertEquals(List(Map("name" -> """The "Symbol"""", "year" -> 1992, "size" -> 12)), p.toList)
     )
   }
 }
