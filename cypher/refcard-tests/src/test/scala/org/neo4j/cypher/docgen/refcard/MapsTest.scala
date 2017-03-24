@@ -69,7 +69,17 @@ RETURN
 ###
 
 Literal maps are declared in curly braces much like property maps.
-Nested maps and lists are supported.
+Lists are supported.
+
+###assertion=returns-one
+//
+
+WITH {person: {name: 'Anne', age: 25}} AS p
+RETURN p.person.name
+
+###
+
+Access the property of a nested map.
 
 ###assertion=returns-one-merge parameters=map
 //
