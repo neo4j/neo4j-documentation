@@ -174,7 +174,6 @@ These functions are used to manipulate strings or to create a string representat
 |===
 |Function                               |   Description
 |<<functions-left,left()>>              | Returns a string containing the left n characters of the original string.
-|<<functions-lower,lower()>>            | Returns the original string in lowercase.
 |<<functions-ltrim,lTrim()>>            | Returns the original string with whitespace removed from the left side.
 |<<functions-replace,replace()>>        | Returns a string with the search string replaced by the replace string, replacing all occurrences.
 |<<functions-reverse,reverse()>>        | Returns the original string reversed.
@@ -182,9 +181,10 @@ These functions are used to manipulate strings or to create a string representat
 |<<functions-rtrim,rTrim()>>            | Returns the original string with whitespace removed from the right side.
 |<<functions-split,split()>>            | Returns the sequence of strings which are delimited by split patterns.
 |<<functions-substring,substring()>>    | Returns a substring of the original, with a 0-based index start and length.
+|<<functions-tolower,toLower()>>            | Returns the original string in lowercase.
 |<<functions-tostring,toString()>>      | Converts the argument to a string.
+|<<functions-toupper,toUpper()>>            | Returns the original string in uppercase.
 |<<functions-trim,trim()>>              | Returns the original string with whitespace removed from both sides.
-|<<functions-upper,upper()>>            | Returns the original string in uppercase.
 |===
 
 
@@ -313,12 +313,13 @@ The exception to this rule is `toString()`, which also accepts numbers and boole
 
 See also <<query-operators-string>>.
 
+[NOTE]
+The functions `lower()` and `upper()` have been superseded by `toLower()` and `toUpper()`, respectively, and will be deprecated in a future release.
+
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
 
 include::left.asciidoc[leveloffset=+1]
-
-include::lower.asciidoc[leveloffset=+1]
 
 include::ltrim.asciidoc[leveloffset=+1]
 
@@ -334,11 +335,13 @@ include::split.asciidoc[leveloffset=+1]
 
 include::substring.asciidoc[leveloffset=+1]
 
+include::tolower.asciidoc[leveloffset=+1]
+
 include::tostring.asciidoc[leveloffset=+1]
 
-include::trim.asciidoc[leveloffset=+1]
+include::toupper.asciidoc[leveloffset=+1]
 
-include::upper.asciidoc[leveloffset=+1]
+include::trim.asciidoc[leveloffset=+1]
 
 //Spatial functions
 

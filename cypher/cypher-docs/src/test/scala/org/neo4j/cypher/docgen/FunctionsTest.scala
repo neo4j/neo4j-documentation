@@ -433,27 +433,27 @@ In case all arguments are `null`, `null` will be returned.""",
     )
   }
 
-  @Test def lower() {
+  @Test def tolower() {
     testThis(
-      title = "lower()",
-      syntax = "lower( original )",
+      title = "toLower()",
+      syntax = "toLower( original )",
       arguments = List("original" -> "An expression that returns a string"),
-      text = "`lower()` returns the original string in lowercase.",
-      queryText = "RETURN lower('HELLO')",
+      text = "`toLower()` returns the original string in lowercase.",
+      queryText = "RETURN toLower('HELLO')",
       returns = "",
-      assertions = (p) => assert(List(Map("lower('HELLO')" -> "hello")) === p.toList)
+      assertions = (p) => assert(List(Map("toLower('HELLO')" -> "hello")) === p.toList)
     )
   }
 
-  @Test def upper() {
+  @Test def toupper() {
     testThis(
-      title = "upper()",
-      syntax = "upper( original )",
+      title = "toUpper()",
+      syntax = "toUpper( original )",
       arguments = List("original" -> "An expression that returns a string"),
-      text = "`upper()` returns the original string in uppercase.",
-      queryText = "RETURN upper('hello')",
+      text = "`toUpper()` returns the original string in uppercase.",
+      queryText = "RETURN toUpper('hello')",
       returns = "",
-      assertions = (p) => assert(List(Map("upper('hello')" -> "HELLO")) === p.toList)
+      assertions = (p) => assert(List(Map("toUpper('hello')" -> "HELLO")) === p.toList)
     )
   }
 

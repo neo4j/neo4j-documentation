@@ -74,7 +74,7 @@ RETURN n
 ###
 
 An index can be automatically used for the equality comparison.
-Note that for example `lower(n.name) = {value}` will not use an index.
+Note that for example `toLower(n.name) = {value}` will not use an index.
 
 ###assertion=match parameters=aname
 //

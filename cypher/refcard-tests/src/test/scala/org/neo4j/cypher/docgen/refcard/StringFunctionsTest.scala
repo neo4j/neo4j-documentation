@@ -109,7 +109,7 @@ Trim all whitespace, or on left or right side.
 ###assertion=returns-one parameters=sub
 RETURN
 
-upper({original}), lower({original})
+toUpper({original}), toLower({original})
 ###
 
 UPPERCASE and lowercase.
