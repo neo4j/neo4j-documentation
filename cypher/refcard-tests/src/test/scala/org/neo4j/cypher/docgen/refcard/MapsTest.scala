@@ -69,7 +69,7 @@ RETURN
 ###
 
 Literal maps are declared in curly braces much like property maps.
-Nested maps and list are supported.
+Nested maps and lists are supported.
 
 ###assertion=returns-one-merge parameters=map
 //
@@ -80,7 +80,7 @@ MERGE (p:Person {name: {map}.name})
 RETURN p
 ###
 
-Maps can be passed in as parameters and used as map or by accessing keys.
+Maps can be passed in as parameters and used either as a map or by accessing keys.
 
 ###assertion=returns-one
 //

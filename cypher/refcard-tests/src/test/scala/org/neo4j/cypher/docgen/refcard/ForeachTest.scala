@@ -59,7 +59,7 @@ WHERE id(begin) = %A% AND id(end) = %B%
 FOREACH (r IN rels(path) |
   SET r.marked = true)
 ###
-Execute a mutating operation for each relationship of a path.
+Execute a mutating operation for each relationship in a path.
 
 ###assertion=foreach
 WITH ['Alice', 'Bob', 'Charlie'] AS coll

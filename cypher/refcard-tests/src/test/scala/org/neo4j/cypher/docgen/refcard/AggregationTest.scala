@@ -25,7 +25,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 
 class AggregationTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A KNOWS B", "B KNOWS C", "C KNOWS ROOT")
-  val title = "Aggregation"
+  val title = "Aggregating Functions"
   override val linkId = "query-functions-aggregating"
 
   override def assert(name: String, result: InternalExecutionResult) {
@@ -83,7 +83,7 @@ RETURN nodes(path),
 count(DISTINCT variable)
 ###
 
-All aggregation functions also take the `DISTINCT` modifier,
+All aggregating functions also take the `DISTINCT` operator,
 which removes duplicates from the values.
 
 ###assertion=returns-one
@@ -106,7 +106,7 @@ sum(n.property)
 ,avg(n.property), min(n.property), max(n.property)
 ###
 
-Sum numerical values. Similar functions are `avg`, `min`, `max`.
+Sum numerical values. Similar functions are `avg()`, `min()`, `max()`.
 
 ###assertion=returns-one parameters=percentile
 MATCH (n)
@@ -118,7 +118,7 @@ percentileDisc(n.property, {percentile})
 ,percentileCont(n.property, {percentile})
 ###
 
-Discrete percentile. Continuous percentile is `percentileCont`.
+Discrete percentile. Continuous percentile is `percentileCont()`.
 The `percentile` argument is from `0.0` to `1.0`.
 
 ###assertion=returns-one parameters=percentile
@@ -126,12 +126,12 @@ MATCH (n)
 WHERE id(n) IN [%A%, %B%, %C%]
 RETURN
 
-stdev(n.property)
+stDev(n.property)
 
-, stdevp(n.property)
+, stDevP(n.property)
 ###
 
 Standard deviation for a sample of a population.
-For an entire population use `stdevp`.
+For an entire population use `stDevP()`.
 """
 }

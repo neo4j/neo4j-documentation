@@ -104,7 +104,7 @@ trim({original}), lTrim({original}),
   rTrim({original})
 ###
 
-Trim all whitespace, or on left or right side.
+Trim all whitespace, or on the left or right side.
 
 ###assertion=returns-one parameters=sub
 RETURN

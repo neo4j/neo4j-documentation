@@ -23,7 +23,7 @@ import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
 
-class CollectionExpressionsTest extends RefcardTest with QueryStatisticsTestSupport {
+class ListExpressionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A:Person KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
   val title = "List Expressions"
   override val linkId = "query-function"
@@ -75,8 +75,8 @@ RETURN
 head({coll}), last({coll}), tail({coll})
 ###
 
-`head` returns the first, `last` the last element
-of the list. `tail` returns all but the first element.
+`head()` returns the first, `last()` the last element
+of the list. `tail()` returns all but the first element.
 All return `null` for an empty list.
 
 ###assertion=returns-one parameters=value
