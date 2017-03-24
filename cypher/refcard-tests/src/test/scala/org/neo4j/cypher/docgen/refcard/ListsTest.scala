@@ -89,7 +89,7 @@ range({firstNum}, {lastNum}, {step}) AS coll
 ###
 
 `range()` creates a list of numbers (`step` is optional), other functions returning lists are:
-`labels()`, `nodes()`, `relationships()`, `rels()`, `filter()`, `extract()`.
+`labels()`, `nodes()`, `relationships()`, `filter()`, `extract()`.
 
 ###assertion=returns-one
 //
