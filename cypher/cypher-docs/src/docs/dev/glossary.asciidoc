@@ -83,7 +83,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operator-comparison-string-specific,ENDS WITH>> | String comparison | Case-sensitive suffix search
 | <<query-operators-list,IN>>                             | List          | List element existence check
 | <<query-operators-comparison,IS NOT NULL>>              | Comparison    | Non-`null` check
-| <<query-operators-comparison,IS NULL>>                  | Comparison    | `Null` check
+| <<query-operators-comparison,IS NULL>>                  | Comparison    | `null` check
 | <<query-operators-boolean,NOT>>                         | Boolean       | Negation
 | <<query-operators-boolean,OR>>                          | Boolean       | Disjunction
 | <<query-operator-comparison-string-specific,STARTS WITH>>   | String comparison | Case-sensitive prefix search
@@ -131,10 +131,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-last,last()>>                      | Scalar            | Returns the last element in a list.
 |<<functions-left,left()>>                      | String            | Returns a string containing the left n characters of the original string.
 |<<functions-length,length()>>                  | Scalar            | Returns the length of a path.
-|<<functions-length-of-string,Length of string>>  | Scalar          | Returns the length of a string.
 |<<functions-log, log()>>                       | Logarithmic       | Returns the natural logarithm of the expression.
 |<<functions-log10, log10()>>                   | Logarithmic       | Returns the common logarithm (base 10) of the expression.
-|<<functions-lower,lower()>>                    | String            | Returns the original string in lowercase.
 |<<functions-ltrim,lTrim()>>                    | String            | Returns the original string with whitespace removed from the left side.
 |<<functions-max,max()>>                        | Aggregating       | Returns the highest value in a numeric column.
 |<<functions-min,min()>>                        | Aggregating       | Returns the lowest value in a numeric column.
@@ -160,6 +158,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-single,single()>>                  | Predicate         | Returns true if the predicate holds for exactly one of the elements in the list.
 |<<functions-size,size()>>                      | Scalar            | Returns the number of items in a list.
 |<<functions-size-of-pattern-expression,Size of pattern expression>>  | Scalar   | Returns the number of sub-graphs matching the pattern expression.
+|<<functions-size-of-string,Size of string>>  | Scalar          | Returns the size of a string.
 |<<functions-split,split()>>                    | String            | Returns the sequence of strings which are delimited by split patterns.
 |<<functions-sqrt, sqrt()>>                     | Logarithmic       | Returns the square root of a number.
 |<<functions-startnode,startNode()>>            | Scalar            | Returns the first node of a relationship.
@@ -172,10 +171,11 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-timestamp,timestamp()>>            | Scalar            | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
 |<<functions-toint,toInt()>>                    | Scalar            | Converts the argument to an integer and returns the result.
 |<<functions-tofloat,toFloat()>>                | Scalar            | Converts the argument to a float and returns the result.
+|<<functions-tolower,toLower()>>                    | String            | Returns the original string in lowercase.
 |<<functions-tostring,toString()>>              | String            | Converts the argument to a string.
+|<<functions-toupper,toUpper()>>                    | String            | Returns the original string in uppercase.
 |<<functions-trim,trim()>>                      | String            | Returns the original string with whitespace removed from both sides.
 |<<functions-type,type()>>                      | Scalar            | Returns a string representation of the relationship type.
-|<<functions-upper,upper()>>                    | String            | Returns the original string in uppercase.
 |===
 
 

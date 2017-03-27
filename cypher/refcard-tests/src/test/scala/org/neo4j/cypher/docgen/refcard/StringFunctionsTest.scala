@@ -104,12 +104,12 @@ trim($original), lTrim($original),
   rTrim($original)
 ###
 
-Trim all whitespace, or on left or right side.
+Trim all whitespace, or on the left or right side.
 
 ###assertion=returns-one parameters=sub
 RETURN
 
-upper($original), lower($original)
+toUpper($original), lower($original)
 ###
 
 UPPERCASE and lowercase.
@@ -133,7 +133,7 @@ Reverse a string.
 ###assertion=returns-one parameters=string
 RETURN
 
-length($string)
+size($string)
 ###
 
 Calculate the number of characters in the string.

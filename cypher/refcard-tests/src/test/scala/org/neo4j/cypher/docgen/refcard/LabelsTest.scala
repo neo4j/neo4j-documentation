@@ -80,7 +80,7 @@ MERGE (n:Person {name: $value})
 DELETE n
 RETURN n###
 
-Matches or creates unique node(s) with label and property.
+Matches or creates unique node(s) with the label and property.
 
 ###assertion=add-labels
 MATCH (n:Person)
@@ -117,7 +117,7 @@ WHERE (n:Person)
 
 RETURN n###
 
-Checks existence of label on node.
+Checks the existence of the label on the node.
 
 ###assertion=related
 MATCH (n:Person)
@@ -136,6 +136,6 @@ REMOVE n:Person
 
 ###
 
-Remove label from node.
+Remove the label from the node.
              """
 }

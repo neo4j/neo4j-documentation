@@ -96,17 +96,7 @@ OPTIONAL MATCH (n)-[r]->(m)
 
 RETURN r###
 
-Optional pattern, `null`s will be used for missing parts.
-
-###assertion=none
-MATCH (m:Person)
-USING SCAN m:Person
-
-WHERE m.name = 'Alice'
-
-RETURN m###
-
-Force the planner to use a label scan to solve the query (for manual performance tuning).
+Optional pattern: ``null``s will be used for missing parts.
 
 """
 }

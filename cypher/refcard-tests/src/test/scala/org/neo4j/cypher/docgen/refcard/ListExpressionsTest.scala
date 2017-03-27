@@ -75,8 +75,8 @@ RETURN
 head($list), last($list), tail($list)
 ###
 
-`head` returns the first, `last` the last element
-of the list. `tail` returns all but the first element.
+`head()` returns the first, `last()` the last element
+of the list. `tail()` returns all but the first element.
 All return `null` for an empty list.
 
 ###assertion=returns-one parameters=value

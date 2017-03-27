@@ -139,7 +139,7 @@ NOT exists(n.property) OR n.property = $value
 
 RETURN n###
 
-Either property does not exist or predicate is `true`.
+Either the property does not exist or the predicate is `true`.
 
 ###assertion=returns-none parameters=aname
 MATCH (n)
@@ -191,7 +191,7 @@ WHERE
 
 RETURN n###
 
-Make sure the pattern has at least one match.
+Ensure the pattern has at least one match.
 
 ###assertion=returns-none
 MATCH (n), (m)
