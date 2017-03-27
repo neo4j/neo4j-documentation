@@ -77,6 +77,6 @@ ORDER BY friends DESC
 RETURN user
 ###
 
-You can also use `ORDER BY`, `SKIP`, `LIMIT` with `WITH`.
+`ORDER BY`, `SKIP`, and `LIMIT` can also be used with `WITH`.
 """
 }

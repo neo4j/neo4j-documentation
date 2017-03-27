@@ -64,9 +64,9 @@ RETURN
 rand()
 ###
 
-Returns a random number in the range from 0 (inclusive) to 1 (exclusive), [0,1).
+Returns a random number in the range from 0 (inclusive) to 1 (exclusive), `[0,1)`.
 Returns a new value for each call.
-Also useful for selecting subset or random ordering.
+Also useful for selecting a subset or random ordering.
 
 ###assertion=returns-one parameters=expression
 RETURN
@@ -76,7 +76,7 @@ round({expr})
 , floor({expr}), ceil({expr})
 ###
 
-Round to the nearest integer, `ceil` and `floor` find the next integer up or down.
+Round to the nearest integer; `ceil()` and `floor()` find the next integer up or down.
 
 ###assertion=returns-one parameters=expression
 RETURN
@@ -102,7 +102,7 @@ sin({expr})
 ,cos({expr}), tan({expr}), cot({expr}), asin({expr}), acos({expr}), atan({expr}), atan2({expr}, {expr}), haversin({expr})
 ###
 
-Trigonometric functions, also `cos`, `tan`, `cot`, `asin`, `acos`, `atan`, `atan2`, `haversin`.
+Trigonometric functions also include `cos()`, `tan()`, `cot()`, `asin()`, `acos()`, `atan()`, `atan2()`, and `haversin()`.
 All arguments for the trigonometric functions should be in radians, if not otherwise specified.
 
 ###assertion=returns-one parameters=expression
@@ -111,7 +111,7 @@ RETURN
 degrees({expr}), radians({expr}), pi()
 ###
 
-Converts radians into degrees, use `radians` for the reverse. `pi` for π.
+Converts radians into degrees; use `radians()` for the reverse, and `pi()` for π.
 
 ###assertion=returns-one parameters=expression
 RETURN
@@ -119,6 +119,6 @@ RETURN
 log10({expr}), log({expr}), exp({expr}), e()
 ###
 
-Logarithm base 10, natural logarithm, `e` to the power of the parameter. Value of `e`.
+Logarithm base 10, natural logarithm, `e` to the power of the parameter, and the value of `e`.
              """
 }

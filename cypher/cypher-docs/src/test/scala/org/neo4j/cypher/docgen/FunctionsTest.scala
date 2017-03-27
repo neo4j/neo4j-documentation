@@ -140,6 +140,7 @@ class FunctionsTest extends DocumentingTestBase {
                |This is the same `size()` method described before,
                |but instead of passing in a list directly, you provide a pattern expression
                |that can be used in a match query to provide a new set of results.
+               |These results are a _list_ of paths.
                |The size of the result is calculated, not the length of the expression itself.
                |""".stripMargin,
       queryText = """MATCH (a) WHERE a.name = 'Alice' RETURN size((a)-->()-->()) AS fof""",
@@ -158,15 +159,15 @@ class FunctionsTest extends DocumentingTestBase {
       assertions = (p) => assertEquals(2, p.columnAs[Long]("length(p)").toList.head))
   }
 
-  @Test def lengthString() {
+  @Test def sizeString() {
     testThis(
-      title = "Length of string",
-      syntax = "length( string )",
+      title = "Size of string",
+      syntax = "size( string )",
       arguments = List("string" -> "An expression that returns a string"),
-      text = """To return or filter on the length of a string, use the `length()` function.""",
-      queryText = """MATCH (a) WHERE length(a.name) > 6 RETURN length(a.name)""",
-      returns = """The length of the name *'Charlie'* is returned by the query.""",
-      assertions = (p) => assertEquals(7, p.columnAs[Long]("length(a.name)").toList.head))
+      text = """To return or filter on the size of a string, use the `size()` function.""",
+      queryText = """MATCH (a) WHERE size(a.name) > 6 RETURN size(a.name)""",
+      returns = """The size of the name *'Charlie'* is returned by the query.""",
+      assertions = (p) => assertEquals(7, p.columnAs[Long]("size(a.name)").toList.head))
   }
 
   @Test def labels() {
@@ -433,27 +434,27 @@ In case all arguments are `null`, `null` will be returned.""",
     )
   }
 
-  @Test def lower() {
+  @Test def tolower() {
     testThis(
-      title = "lower()",
-      syntax = "lower( original )",
+      title = "toLower()",
+      syntax = "toLower( original )",
       arguments = List("original" -> "An expression that returns a string"),
-      text = "`lower()` returns the original string in lowercase.",
-      queryText = "RETURN lower('HELLO')",
+      text = "`toLower()` returns the original string in lowercase.",
+      queryText = "RETURN toLower('HELLO')",
       returns = "",
-      assertions = (p) => assert(List(Map("lower('HELLO')" -> "hello")) === p.toList)
+      assertions = (p) => assert(List(Map("toLower('HELLO')" -> "hello")) === p.toList)
     )
   }
 
-  @Test def upper() {
+  @Test def toupper() {
     testThis(
-      title = "upper()",
-      syntax = "upper( original )",
+      title = "toUpper()",
+      syntax = "toUpper( original )",
       arguments = List("original" -> "An expression that returns a string"),
-      text = "`upper()` returns the original string in uppercase.",
-      queryText = "RETURN upper('hello')",
+      text = "`toUpper()` returns the original string in uppercase.",
+      queryText = "RETURN toUpper('hello')",
       returns = "",
-      assertions = (p) => assert(List(Map("upper('hello')" -> "HELLO")) === p.toList)
+      assertions = (p) => assert(List(Map("toUpper('hello')" -> "HELLO")) === p.toList)
     )
   }
 

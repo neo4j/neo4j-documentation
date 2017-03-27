@@ -18,7 +18,7 @@ This approach makes query optimization an implementation detail instead of burde
 Cypher is inspired by a number of different approaches and builds upon established practices for expressive querying.
 Most of the keywords like `WHERE` and `ORDER BY` are inspired by http://en.wikipedia.org/wiki/SQL[SQL].
 Pattern matching borrows expression approaches from http://en.wikipedia.org/wiki/SPARQL[SPARQL].
-Some of the collection semantics have been borrowed from languages such as Haskell and Python.
+Some of the list semantics have been borrowed from languages such as Haskell and Python.
 
 **Structure**
 
