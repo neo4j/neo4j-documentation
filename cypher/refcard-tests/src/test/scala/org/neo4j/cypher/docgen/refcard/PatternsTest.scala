@@ -181,7 +181,7 @@ WHERE id(n) = %A% AND id(m) = %B%
 RETURN n, m###
 
 Variable length path of any number of relationships from `n` to `m`.
-(Please see the performance tips.)
+(See Performance section.)
 
 ###assertion=create parameters=aname
 MATCH (n)

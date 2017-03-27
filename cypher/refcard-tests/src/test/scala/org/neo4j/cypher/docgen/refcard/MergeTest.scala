@@ -68,7 +68,7 @@ MERGE (n:Person {name: $value})
 
 RETURN n###
 
-Match pattern or create it if it does not exist.
+Match a pattern or create it if it does not exist.
 Use `ON CREATE` and `ON MATCH` for conditional updates.
 
 ###assertion=merge-rel parameters=names

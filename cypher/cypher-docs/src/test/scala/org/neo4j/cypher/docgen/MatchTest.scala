@@ -260,7 +260,7 @@ class MatchTest extends DocumentingTest {
           """MATCH (charlie:Person {name: 'Charlie Sheen'}),
             |      (martin:Person {name: 'Martin Sheen'}),
             |      p = shortestPath( (charlie)-[*]-(martin) )
-            |WHERE none(r in rels(p) WHERE type(r) = 'FATHER')
+            |WHERE none(r in relationships(p) WHERE type(r) = 'FATHER')
             |RETURN p""", assertShortestPathLength) {
           p(
             """This query will find the shortest path between *'Charlie Sheen'* and *'Martin Sheen'*, and the `WHERE` predicate

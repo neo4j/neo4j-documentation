@@ -54,14 +54,14 @@ These functions return a single value.
 |<<functions-id,id()>>                              | Returns the id of the relationship or node.
 |<<functions-last,last()>>                          | Returns the last element in a list.
 |<<functions-length,length()>>               | Returns the length of a path.
-|<<functions-length-of-string,Length of string>>   | Returns the length of a string.
 |<<functions-properties,properties()>>              | If the argument is a node or a relationship, the returned map is a map of its properties.
-|<<functions-startnode,startNode()>>                | Returns the first node of a relationship.
 |<<functions-size,size()>>                   | Returns the number of items in a list.
 |<<functions-size-of-pattern-expression,Size of pattern expression>>    | Returns the number of sub-graphs matching the pattern expression.
+|<<functions-size-of-string,Size of string>>   | Returns the size of a string.
+|<<functions-startnode,startNode()>>                | Returns the first node of a relationship.
 |<<functions-timestamp,timestamp()>>                | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
-|<<functions-toint,toInt()>>                        | Converts the argument to an integer and returns the result.
 |<<functions-tofloat,toFloat()>>                    | Converts the argument to a float and returns the result.
+|<<functions-toint,toInt()>>                        | Converts the argument to an integer and returns the result.
 |<<functions-type,type()>>                          | Returns a string representation of the relationship type.
 |===
 
@@ -74,16 +74,16 @@ These functions take multiple values as arguments, and calculate and return an a
 [options="header"]
 |===
 |Function                                       | Description
-|<<functions-count,count()>>                    | Returns the number of rows.
-|<<functions-collect,collect()>>                | Returns a list containing all collected values.
 |<<functions-avg,avg()>>                        | Returns the average of a numeric column.
-|<<functions-sum,sum()>>                        | Returns the sum of a numeric column.
+|<<functions-collect,collect()>>                | Returns a list containing all collected values.
+|<<functions-count,count()>>                    | Returns the number of rows.
 |<<functions-max,max()>>                        | Returns the highest value in a numeric column.
 |<<functions-min,min()>>                        | Returns the lowest value in a numeric column.
+|<<functions-percentilecont,percentileCont()>>  | Returns the percentile of a given value over a group using linear interpolation.
+|<<functions-percentiledisc,percentileDisc()>>  | Returns the nearest value to a given percentile over a group using a rounding method.
 |<<functions-stdev,stDev()>>                    | Returns the standard deviation for a given value over a group for a sample of a population.
 |<<functions-stdevp,stDevP()>>                  | Returns the standard deviation for a given value over a group for an entire population.
-|<<functions-percentiledisc,percentileDisc()>>  | Returns the nearest value to a given percentile over a group using a rounding method.
-|<<functions-percentilecont,percentileCont()>>  | Returns the percentile of a given value over a group using linear interpolation.
+|<<functions-sum,sum()>>                        | Returns the sum of a numeric column.
 |===
 
 
@@ -175,7 +175,6 @@ These functions are used to manipulate strings or to create a string representat
 |===
 |Function                               |   Description
 |<<functions-left,left()>>              | Returns a string containing the left n characters of the original string.
-|<<functions-lower,lower()>>            | Returns the original string in lowercase.
 |<<functions-ltrim,lTrim()>>            | Returns the original string with whitespace removed from the left side.
 |<<functions-replace,replace()>>        | Returns a string with the search string replaced by the replace string, replacing all occurrences.
 |<<functions-reverse,reverse()>>        | Returns the original string reversed.
@@ -183,9 +182,10 @@ These functions are used to manipulate strings or to create a string representat
 |<<functions-rtrim,rTrim()>>            | Returns the original string with whitespace removed from the right side.
 |<<functions-split,split()>>            | Returns the sequence of strings which are delimited by split patterns.
 |<<functions-substring,substring()>>    | Returns a substring of the original, with a 0-based index start and length.
+|<<functions-tolower,toLower()>>            | Returns the original string in lowercase.
 |<<functions-tostring,toString()>>      | Converts the argument to a string.
+|<<functions-toupper,toUpper()>>            | Returns the original string in uppercase.
 |<<functions-trim,trim()>>              | Returns the original string with whitespace removed from both sides.
-|<<functions-upper,upper()>>            | Returns the original string in uppercase.
 |===
 
 
@@ -197,8 +197,8 @@ These functions are used to specify points in a 2D coordinate system and to calc
 [options="header"]
 |===
 |Function                               |   Description
-|<<functions-point,point()>>            | Returns a point object, given two coordinate values.
 |<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two given points.
+|<<functions-point,point()>>            | Returns a point object, given two coordinate values.
 |===
 
 
@@ -217,11 +217,11 @@ include::all.asciidoc[leveloffset=+1]
 
 include::any.asciidoc[leveloffset=+1]
 
+include::exists.asciidoc[leveloffset=+1]
+
 include::none.asciidoc[leveloffset=+1]
 
 include::single.asciidoc[leveloffset=+1]
-
-include::exists.asciidoc[leveloffset=+1]
 
 
 [[query-functions-scalar]]
@@ -232,41 +232,41 @@ Scalar functions return a single value.
 [IMPORTANT]
 The `length()` and `size()` functions are quite similar, and so it is important to take note of the difference.
 Due to backwards compatibility, `length()` currently works on four types: strings, paths, lists and pattern expressions.
-However, for clarity it is recommended to only use `length()` on strings and paths, and use the new `size()` function on lists and pattern expressions.
+However, it is recommended to use `length()` only for paths, and the `size()` function for strings, lists and pattern expressions.
 `length()` on those types may be deprecated in future.
 
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
 
+include::coalesce.asciidoc[leveloffset=+1]
+
+include::endnode.asciidoc[leveloffset=+1]
+
+include::head.asciidoc[leveloffset=+1]
+
+include::id.asciidoc[leveloffset=+1]
+
+include::last.asciidoc[leveloffset=+1]
+
+include::length.asciidoc[leveloffset=+1]
+
+include::properties.asciidoc[leveloffset=+1]
+
 include::size.asciidoc[leveloffset=+1]
 
 include::size-of-pattern-expression.asciidoc[leveloffset=+1]
 
-include::length.asciidoc[leveloffset=+1]
-
-include::length-of-string.asciidoc[leveloffset=+1]
-
-include::type.asciidoc[leveloffset=+1]
-
-include::id.asciidoc[leveloffset=+1]
-
-include::coalesce.asciidoc[leveloffset=+1]
-
-include::head.asciidoc[leveloffset=+1]
-
-include::last.asciidoc[leveloffset=+1]
-
-include::timestamp.asciidoc[leveloffset=+1]
+include::size-of-string.asciidoc[leveloffset=+1]
 
 include::startnode.asciidoc[leveloffset=+1]
 
-include::endnode.asciidoc[leveloffset=+1]
+include::timestamp.asciidoc[leveloffset=+1]
 
-include::properties.asciidoc[leveloffset=+1]
+include::tofloat.asciidoc[leveloffset=+1]
 
 include::toint.asciidoc[leveloffset=+1]
 
-include::tofloat.asciidoc[leveloffset=+1]
+include::type.asciidoc[leveloffset=+1]
 
 //Aggregating functions
 
@@ -283,23 +283,23 @@ Further details and examples of lists may be found in <<syntax-lists>> and <<que
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
 
-include::nodes.asciidoc[leveloffset=+1]
-
-include::relationships.asciidoc[leveloffset=+1]
-
-include::labels.asciidoc[leveloffset=+1]
-
-include::keys.asciidoc[leveloffset=+1]
-
 include::extract.asciidoc[leveloffset=+1]
 
 include::filter.asciidoc[leveloffset=+1]
 
-include::tail.asciidoc[leveloffset=+1]
+include::keys.asciidoc[leveloffset=+1]
+
+include::labels.asciidoc[leveloffset=+1]
+
+include::nodes.asciidoc[leveloffset=+1]
 
 include::range.asciidoc[leveloffset=+1]
 
 include::reduce.asciidoc[leveloffset=+1]
+
+include::relationships.asciidoc[leveloffset=+1]
+
+include::tail.asciidoc[leveloffset=+1]
 
 //Mathematical functions
 
@@ -314,32 +314,35 @@ The exception to this rule is `toString()`, which also accepts numbers and boole
 
 See also <<query-operators-string>>.
 
+[NOTE]
+The functions `lower()` and `upper()` have been superseded by `toLower()` and `toUpper()`, respectively, and will be deprecated in a future release.
+
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
 
-include::replace.asciidoc[leveloffset=+1]
-
-include::substring.asciidoc[leveloffset=+1]
-
 include::left.asciidoc[leveloffset=+1]
-
-include::right.asciidoc[leveloffset=+1]
 
 include::ltrim.asciidoc[leveloffset=+1]
 
-include::rtrim.asciidoc[leveloffset=+1]
-
-include::trim.asciidoc[leveloffset=+1]
-
-include::lower.asciidoc[leveloffset=+1]
-
-include::upper.asciidoc[leveloffset=+1]
-
-include::split.asciidoc[leveloffset=+1]
+include::replace.asciidoc[leveloffset=+1]
 
 include::reverse.asciidoc[leveloffset=+1]
 
+include::right.asciidoc[leveloffset=+1]
+
+include::rtrim.asciidoc[leveloffset=+1]
+
+include::split.asciidoc[leveloffset=+1]
+
+include::substring.asciidoc[leveloffset=+1]
+
+include::tolower.asciidoc[leveloffset=+1]
+
 include::tostring.asciidoc[leveloffset=+1]
+
+include::toupper.asciidoc[leveloffset=+1]
+
+include::trim.asciidoc[leveloffset=+1]
 
 //Spatial functions
 

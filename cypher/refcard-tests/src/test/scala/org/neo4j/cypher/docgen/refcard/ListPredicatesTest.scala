@@ -23,7 +23,7 @@ import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.internal.compiler.v3_1.executionplan.InternalExecutionResult
 
-class CollectionPredicatesTest extends RefcardTest with QueryStatisticsTestSupport {
+class ListPredicatesTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A KNOWS B", "B KNOWS C", "C KNOWS ROOT")
   val title = "List Predicates"
   override val linkId = "functions/predicates"
@@ -55,7 +55,7 @@ all(x IN coll WHERE exists(x.property))
 
 RETURN n,m###
 
-Returns `true` if the predicate is `true` for all elements of the list.
+Returns `true` if the predicate is `true` for all elements in the list.
 
 ###assertion=returns-one
 MATCH path = (n)-->(m)
@@ -67,7 +67,7 @@ any(x IN coll WHERE exists(x.property))
 
 RETURN n, m###
 
-Returns `true` if the predicate is `true` for at least one element of the list.
+Returns `true` if the predicate is `true` for at least one element in the list.
 
 ###assertion=returns-none
 MATCH path = (n)-->(m)
@@ -79,7 +79,7 @@ none(x IN coll WHERE exists(x.property))
 
 RETURN n, m###
 
-Returns `true` if the predicate is `false` for all elements of the list.
+Returns `true` if the predicate is `false` for all elements in the list.
 
 ###assertion=returns-none
 MATCH path = (n)-->(m)

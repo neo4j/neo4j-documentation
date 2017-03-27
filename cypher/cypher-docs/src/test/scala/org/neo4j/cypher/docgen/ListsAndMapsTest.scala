@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.internal.compiler.v3_1.executionplan.InternalExecutionResult
 
-class CollectionsAndMapsTest extends ArticleTest {
+class ListsAndMapsTest extends ArticleTest {
   def assert(name: String, result: InternalExecutionResult) {}
 
   override def graphDescription = List(

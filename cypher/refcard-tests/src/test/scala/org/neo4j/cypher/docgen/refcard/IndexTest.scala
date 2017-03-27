@@ -74,7 +74,7 @@ RETURN n
 ###
 
 An index can be automatically used for the equality comparison.
-Note that for example `lower(n.name) = $value` will not use an index.
+Note that for example `toLower(n.name) = $value` will not use an index.
 
 ###assertion=match parameters=aname
 //
@@ -85,7 +85,7 @@ WHERE n.name IN [$value]
 RETURN n
 ###
 
-An index can be automatically used for the `IN` list checks.
+An index can automatically be used for the `IN` list checks.
 
 ###assertion=match parameters=aname
 //
@@ -97,7 +97,7 @@ WHERE n.name = $value
 RETURN n
 ###
 
-Index usage can be enforced, when Cypher uses a suboptimal index or
+Index usage can be enforced when Cypher uses a suboptimal index, or
 more than one index should be used.
 
 ###assertion=drop-index

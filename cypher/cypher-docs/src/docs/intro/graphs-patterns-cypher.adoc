@@ -145,7 +145,7 @@ acted_in = (:Person)-[:ACTED_IN]->(:Movie)
 ----
 
 The `acted_in` variable would contain two nodes and the connecting relationship for each path that was found or created.
-There are a number of functions to access details of a path, including `nodes(path)`, `rels(path)` (same as `relationships(path)`), and `length(path)`.
+There are a number of functions to access details of a path, including `nodes(path)`, `relationships(path)`, and `length(path)`.
 
 == Clauses
 

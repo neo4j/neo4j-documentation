@@ -35,7 +35,7 @@ class UnwindTest extends DocumentingTestBase {
       assertions = (p) => assertEquals(List(1,2,3), p.columnAs[Int]("x").toList)
     )
   }
-  @Test def distinct_collection() {
+  @Test def distinct_list() {
     testQuery(
       title = "Create a distinct list",
       text = "We want to transform a list of duplicates into a set using `DISTINCT`.",
@@ -45,7 +45,7 @@ class UnwindTest extends DocumentingTestBase {
     )
   }
 
-  @Test def create_data_from_collection_parameter() {
+  @Test def create_data_from_list_parameter() {
     testQuery(
       title = "Create nodes from a list parameter",
       text = "Create a number of nodes and relationships from a parameter-list without using `FOREACH`.",

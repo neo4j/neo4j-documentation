@@ -88,8 +88,8 @@ range($firstNum, $lastNum, $step) AS list
 
 ###
 
-Range creates a list of numbers (`step` is optional), other functions returning list are:
-`labels`, `nodes`, `relationships`, `rels`, `filter`, `extract`.
+`range()` creates a list of numbers (`step` is optional), other functions returning lists are:
+`labels()`, `nodes()`, `relationships()`, `filter()`, `extract()`.
 
 ###assertion=returns-one
 //
@@ -122,7 +122,7 @@ list[$startIdx..$endIdx] AS slice
 
 List elements can be accessed with `idx` subscripts in square brackets.
 Invalid indexes return `null`.
-Slices can be retrieved with intervals from `start_idx` to `end_idx` each of which can be omitted or negative.
+Slices can be retrieved with intervals from `start_idx` to `end_idx`, each of which can be omitted or negative.
 Out of range elements are ignored.
 
 ###assertion=returns-one parameters=names
@@ -134,7 +134,7 @@ RETURN avg(n.age)
 
 ###
 
-With `UNWIND`, you can transform any list back into individual rows.
+With `UNWIND`, any list can be transformed back into individual rows.
 The example matches all names from a list of names.
 
 ###assertion=returns-two parameters=names
