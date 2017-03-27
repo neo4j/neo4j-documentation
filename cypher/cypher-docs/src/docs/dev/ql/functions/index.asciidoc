@@ -60,6 +60,7 @@ These functions return a single value.
 |<<functions-size-of-string,Size of string>>   | Returns the size of a string.
 |<<functions-startnode,startNode()>>                | Returns the first node of a relationship.
 |<<functions-timestamp,timestamp()>>                | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
+|<<functions-toboolean,toBoolean()>>                    | Converts the argument to a boolean and returns the result.
 |<<functions-tofloat,toFloat()>>                    | Converts the argument to a float and returns the result.
 |<<functions-toint,toInt()>>                        | Converts the argument to an integer and returns the result.
 |<<functions-type,type()>>                          | Returns a string representation of the relationship type.
@@ -261,6 +262,8 @@ include::size-of-string.asciidoc[leveloffset=+1]
 include::startnode.asciidoc[leveloffset=+1]
 
 include::timestamp.asciidoc[leveloffset=+1]
+
+include::toboolean.asciidoc[leveloffset=+1]
 
 include::tofloat.asciidoc[leveloffset=+1]
 

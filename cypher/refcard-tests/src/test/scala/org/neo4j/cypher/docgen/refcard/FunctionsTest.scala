@@ -40,6 +40,8 @@ class FunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
         assert(result.toList === List(Map("toInt($expr)" -> 10)))
       case "toFloat" =>
         assert(result.toList === List(Map("toFloat($expr)" -> 10.1)))
+      case "toBoolean" =>
+        assert(result.toList === List(Map("toBoolean($expr)" -> true)))
     }
   }
 
@@ -51,6 +53,8 @@ class FunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
         Map("expr" -> "10")
       case "parameters=toFloat" =>
         Map("expr" -> "10.1")
+      case "parameters=toBoolean" =>
+        Map("expr" -> "TRUE")
       case "parameters=map" =>
         Map("expr" -> Map("name" -> "Bob"))
       case "" =>
@@ -101,6 +105,13 @@ RETURN
 toFloat($expr)###
 
 Converts the given input into a floating point number if possible; otherwise it returns `null`.
+
+###assertion=toBoolean parameters=toBoolean
+RETURN
+
+toBoolean($expr)###
+
+Converts the given input into a boolean if possible; otherwise it returns `null`.
 
 ###assertion=returns-one parameters=map
 RETURN
