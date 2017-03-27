@@ -506,16 +506,16 @@ In case all arguments are `null`, `null` will be returned.""",
     )
   }
 
-  @Test def toInt() {
+  @Test def toInteger() {
     testThis(
-      title = "toInt()",
-      syntax = "toInt( expression )",
+      title = "toInteger()",
+      syntax = "toInteger( expression )",
       arguments = List("expression" -> "An expression that returns anything"),
-      text = "`toInt()` converts the argument to an integer. A string is parsed as if it was an integer number. If the " +
+      text = "`toInteger()` converts the argument to an integer. A string is parsed as if it was an integer number. If the " +
         "parsing fails, `null` will be returned. A floating point number will be cast into an integer.",
-      queryText = "RETURN toInt('42'), toInt('not a number')",
+      queryText = "RETURN toInteger('42'), toInteger('not a number')",
       returns = "",
-      assertions = (p) => assert(List(Map("toInt('42')" -> 42, "toInt('not a number')" -> null)) === p.toList)
+      assertions = (p) => assert(List(Map("toInteger('42')" -> 42, "toInteger('not a number')" -> null)) === p.toList)
     )
   }
 

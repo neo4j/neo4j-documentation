@@ -171,7 +171,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-timestamp,timestamp()>>            | Scalar            | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
 |<<functions-toboolean,toBoolean()>>                | Scalar            | Converts the argument to a boolean and returns the result.
 |<<functions-tofloat,toFloat()>>                | Scalar            | Converts the argument to a float and returns the result.
-|<<functions-toint,toInt()>>                    | Scalar            | Converts the argument to an integer and returns the result.
+|<<functions-tointeger,toInteger()>>                    | Scalar            | Converts the argument to an integer and returns the result.
 |<<functions-tolower,toLower()>>                    | String            | Returns the original string in lowercase.
 |<<functions-tostring,toString()>>              | String            | Converts the argument to a string.
 |<<functions-toupper,toUpper()>>                    | String            | Returns the original string in uppercase.

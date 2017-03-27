@@ -62,7 +62,7 @@ These functions return a single value.
 |<<functions-timestamp,timestamp()>>                | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
 |<<functions-toboolean,toBoolean()>>                    | Converts the argument to a boolean and returns the result.
 |<<functions-tofloat,toFloat()>>                    | Converts the argument to a float and returns the result.
-|<<functions-toint,toInt()>>                        | Converts the argument to an integer and returns the result.
+|<<functions-tointeger,toInteger()>>                        | Converts the argument to an integer and returns the result.
 |<<functions-type,type()>>                          | Returns a string representation of the relationship type.
 |===
 
@@ -236,6 +236,9 @@ Due to backwards compatibility, `length()` currently works on four types: string
 However, it is recommended to use `length()` only for paths, and the `size()` function for strings, lists and pattern expressions.
 `length()` on those types may be deprecated in future.
 
+[NOTE]
+The function `toInt()` has been superseded by `toInteger()`, and will be deprecated in a future release.
+
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
 
@@ -267,7 +270,7 @@ include::toboolean.asciidoc[leveloffset=+1]
 
 include::tofloat.asciidoc[leveloffset=+1]
 
-include::toint.asciidoc[leveloffset=+1]
+include::tointeger.asciidoc[leveloffset=+1]
 
 include::type.asciidoc[leveloffset=+1]
 

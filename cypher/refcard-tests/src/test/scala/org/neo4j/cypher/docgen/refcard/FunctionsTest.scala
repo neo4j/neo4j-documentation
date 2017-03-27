@@ -36,8 +36,8 @@ class FunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
       case "returns-none" =>
         assertStats(result, nodesCreated = 0)
         assert(result.toList.size === 0)
-      case "toInt" =>
-        assert(result.toList === List(Map("toInt($expr)" -> 10)))
+      case "toInteger" =>
+        assert(result.toList === List(Map("toInteger($expr)" -> 10)))
       case "toFloat" =>
         assert(result.toList === List(Map("toFloat($expr)" -> 10.1)))
       case "toBoolean" =>
@@ -49,7 +49,7 @@ class FunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
     name match {
       case "parameters=default" =>
         Map("defaultValue" -> "Bob")
-      case "parameters=toInt" =>
+      case "parameters=toInteger" =>
         Map("expr" -> "10")
       case "parameters=toFloat" =>
         Map("expr" -> "10.1")
@@ -92,10 +92,10 @@ id(nodeOrRelationship)###
 
 The internal id of the relationship or node.
 
-###assertion=toInt parameters=toInt
+###assertion=toInteger parameters=toInteger
 RETURN
 
-toInt($expr)###
+toInteger($expr)###
 
 Converts the given input into an integer if possible; otherwise it returns `null`.
 
