@@ -146,5 +146,15 @@ RETURN [(a)-->(b) WHERE b.name = 'Bob' | b.age]
 ###
 
 Pattern comprehensions may be used to do a custom projection from a match directly into a list.
+
+###assertion=returns-two parameters=names
+//
+
+MATCH (person)
+RETURN person { .name, .age}
+
+###
+
+Map projections may be easily constructed from nodes, relationships and other map values.
 """
 }
