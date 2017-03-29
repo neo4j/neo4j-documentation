@@ -169,8 +169,9 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-tail,tail()>>                      | List              | Returns all but the first element in a list.
 |<<functions-tan, tan()>>                       | Trigonometric     | Returns the tangent of the expression.
 |<<functions-timestamp,timestamp()>>            | Scalar            | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
-|<<functions-toint,toInt()>>                    | Scalar            | Converts the argument to an integer and returns the result.
+|<<functions-toboolean,toBoolean()>>                | Scalar            | Converts the argument to a boolean and returns the result.
 |<<functions-tofloat,toFloat()>>                | Scalar            | Converts the argument to a float and returns the result.
+|<<functions-tointeger,toInteger()>>                    | Scalar            | Converts the argument to an integer and returns the result.
 |<<functions-tolower,toLower()>>                    | String            | Returns the original string in lowercase.
 |<<functions-tostring,toString()>>              | String            | Converts the argument to a string.
 |<<functions-toupper,toUpper()>>                    | String            | Returns the original string in uppercase.

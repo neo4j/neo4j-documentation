@@ -506,16 +506,16 @@ In case all arguments are `null`, `null` will be returned.""",
     )
   }
 
-  @Test def toInt() {
+  @Test def toInteger() {
     testThis(
-      title = "toInt()",
-      syntax = "toInt( expression )",
+      title = "toInteger()",
+      syntax = "toInteger( expression )",
       arguments = List("expression" -> "An expression that returns anything"),
-      text = "`toInt()` converts the argument to an integer. A string is parsed as if it was an integer number. If the " +
+      text = "`toInteger()` converts the argument to an integer. A string is parsed as if it was an integer number. If the " +
         "parsing fails, `null` will be returned. A floating point number will be cast into an integer.",
-      queryText = "RETURN toInt('42'), toInt('not a number')",
+      queryText = "RETURN toInteger('42'), toInteger('not a number')",
       returns = "",
-      assertions = (p) => assert(List(Map("toInt('42')" -> 42, "toInt('not a number')" -> null)) === p.toList)
+      assertions = (p) => assert(List(Map("toInteger('42')" -> 42, "toInteger('not a number')" -> null)) === p.toList)
     )
   }
 
@@ -524,11 +524,24 @@ In case all arguments are `null`, `null` will be returned.""",
       title = "toFloat()",
       syntax = "toFloat( expression )",
       arguments = List("expression" -> "An expression that returns anything"),
-      text = "`toFloat()` converts the argument to a float. A string is parsed as if it was an floating point number. " +
+      text = "`toFloat()` converts the argument to a float. A string is parsed as if it was a floating point number. " +
         "If the parsing fails, `null` will be returned. An integer will be cast to a floating point number.",
       queryText = "RETURN toFloat('11.5'), toFloat('not a number')",
       returns = "",
       assertions = (p) => assert(List(Map("toFloat('11.5')" -> 11.5, "toFloat('not a number')" -> null)) === p.toList)
+    )
+  }
+
+  @Test def toBoolean() {
+    testThis(
+      title = "toBoolean()",
+      syntax = "toBoolean( expression )",
+      arguments = List("expression" -> "An expression that returns a boolean or a string"),
+      text = "`toBoolean()` converts the argument to a boolean. It attempts to convert a string to a boolean value, and if passed a boolean, it will leave it unchanged. " +
+        "If the parsing fails, `null` will be returned.",
+      queryText = "RETURN toBoolean('TRUE'), toBoolean('not a boolean')",
+      returns = "",
+      assertions = (p) => assert(List(Map("toBoolean('TRUE')" -> true, "toBoolean('not a boolean')" -> null)) === p.toList)
     )
   }
 
@@ -537,7 +550,7 @@ In case all arguments are `null`, `null` will be returned.""",
       title = "toString()",
       syntax = "toString( expression )",
       arguments = List("expression" -> "An expression that returns a number, a boolean, or a string"),
-      text = "`toString()` converts the argument to a string. It converts integral and floating point numbers and booleans to strings, and if called with a string will leave it unchanged.",
+      text = "`toString()` converts the argument to a string. It converts integral and floating point numbers and booleans to strings, and if passed a string, it will leave it unchanged.",
       queryText = "RETURN toString(11.5), toString('already a string'), toString(true)",
       returns = "",
       assertions = (p) => assert(List(Map("toString(11.5)" -> "11.5",
