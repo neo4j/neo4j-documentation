@@ -7,11 +7,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 --
 
 * <<glossary-clauses,Clauses>>
-* <<glossary-sub-clauses,Sub-clauses>>
 * <<glossary-operators,Operators>>
 * <<glossary-functions,Functions>>
-* <<glossary-commands,Commands>>
-* <<glossary-hints,Hints>>
 * <<glossary-expressions,Expressions>>
 
 
@@ -21,38 +18,42 @@ This section comprises a glossary of all the keywords -- grouped by category and
 [options="header"]
 |===
 |Clause                                     | Type      |   Description
-|<<query-call,CALL>>                        | General   | Invoke a procedure deployed in the database.
-|<<query-create,CREATE>>                    | Write     |  Create nodes and relationships.
-|<<query-create-unique,CREATE UNIQUE>>      | Write     |  A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
-|<<query-delete,DELETE>>                    | Write     |  Delete graph elements — nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
-|<<query-delete,DETACH DELETE>>             | Write     |  Delete a node or set of nodes. All associated relationships will automatically be deleted.
-|<<query-foreach,FOREACH>>                  | Write     |  Update data within a list, whether components of a path, or the result of aggregation.
-|<<query-load-csv,LOAD CSV>>                | Write     |  Use when importing data from CSV files.
-|<<query-match,MATCH>>                      | Read      |  Specify the patterns to search for in the database.
-|<<query-merge,MERGE>>                      | Write     |  Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
-|<<query-optional-match,OPTIONAL MATCH>>    | Read      |  Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
-|<<query-remove,REMOVE>>                    | Write     |  Remove properties and labels from nodes and relationships.
-|<<query-return,RETURN>>                    | General   |  Defines what to include in the query result set.
-|<<query-set,SET>>                          | Write     |  Update labels on nodes and properties on nodes and relationships.
-|<<query-start,START>>                      | Read      |  Find starting points through legacy indexes.
-|<<query-union,UNION>>                      | General   |  Combines the result of multiple queries.
-|<<query-unwind,UNWIND>>                    | General   |  Expands a list into a sequence of rows.
-|<<query-with,WITH>>                        | General   |  Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
-|===
-
-
-[[glossary-sub-clauses]]
-== <<query-clause,Sub-clauses>>
-
-[options="header"]
-|===
-|Sub-clause                                     | Description
-|<<query-limit,LIMIT>>                          | Constrains the number of rows in the output.
-|<<query-merge-on-create-on-match,ON CREATE>>   | Used in conjunction with `MERGE`, specifying the actions to take if the pattern needs to be created.
-|<<query-merge-on-create-on-match,ON MATCH>>    | Used in conjunction with `MERGE`, specifying the actions to take if the pattern already exists.
-|<<query-order,ORDER BY>>                       | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in particular way.
-|<<query-skip,SKIP>>                            | Defines from which row to start including the rows in the output.
-|<<query-where,WHERE>>                          | Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filter the results of a `WITH` clause.
+|<<query-call,CALL...YIELD>>                        | Procedure   | Invoke a procedure deployed in the database.
+|<<query-create,CREATE>>                    | Writing     |  Create nodes and relationships.
+|<<constraints-create-node-property-existence-constraint,CREATE CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>  | Schema   | Create a constraint ensuring that all nodes with a particular label have a certain property.
+|<<constraints-create-relationship-property-existence-constraint,CREATE CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>  | Schema   | Create a constraint ensuring that all relationship with a particular type have a certain property.
+|<<constraints-create-uniqueness-constraint,CREATE CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>  |  Schema | Create a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
+|<<schema-index-create-an-index,CREATE INDEX ON :Label(property)>>  | Schema  | Create an index on all nodes with a particular label and property.
+|<<query-create-unique,CREATE UNIQUE>>      | Writing     |  A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
+|<<query-delete,DELETE>>                    | Writing     |  Delete graph elements — nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
+|<<query-delete,DETACH DELETE>>             | Writing     |  Delete a node or set of nodes. All associated relationships will automatically be deleted.
+|<<constraints-drop-node-property-existence-constraint,DROP CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>      | Schema   | Drop a constraint ensuring that all nodes with a particular label have a certain property.
+|<<constraints-drop-relationship-property-existence-constraint,DROP CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>      | Schema   | Drop a constraint ensuring that all relationship with a particular type have a certain property.
+|<<constraints-drop-uniqueness-constraint,DROP CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>       | Schema | Drop a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
+|<<schema-index-drop-an-index,DROP INDEX ON :Label(property)>>       | Schema | Drop an index on all nodes with a particular label and property.
+|<<query-foreach,FOREACH>>                  | Writing     |  Update data within a list, whether components of a path, or the result of aggregation.
+|<<query-limit,LIMIT>>                          | Reading sub-clause | A sub-clause used to constrain the number of rows in the output.
+|<<query-load-csv,LOAD CSV>>                | Reading/Writing     |  Use when importing data from CSV files.
+|<<query-match,MATCH>>                      | Reading      |  Specify the patterns to search for in the database.
+|<<query-merge,MERGE>>                      | Reading/Writing     |  Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
+|<<query-merge-on-create-on-match,ON CREATE>>   | Reading/Writing | Used in conjunction with `MERGE`, specifying the actions to take if the pattern needs to be created.
+|<<query-merge-on-create-on-match,ON MATCH>>    | Reading/Writing | Used in conjunction with `MERGE`, specifying the actions to take if the pattern already exists.
+|<<query-optional-match,OPTIONAL MATCH>>    | Reading      |  Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
+|<<query-order,ORDER BY>>                       | Reading sub-clause | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in particular way.
+|<<query-remove,REMOVE>>                    | Writing     |  Remove properties and labels from nodes and relationships.
+|<<query-return,RETURN>>                    | Projecting   |  Defines what to include in the query result set.
+|<<query-set,SET>>                          | Writing     |  Update labels on nodes and properties on nodes and relationships.
+|<<query-skip,SKIP>>                            | Reading/Writing | A sub-clause defining from which row to start including the rows in the output.
+|<<query-start,START>>                      | Reading      |  Find starting points through legacy indexes.
+|<<query-union,UNION>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are removed.
+|<<query-union,UNION ALL>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are retained.
+|<<query-unwind,UNWIND>>                    | Reading   |  Expands a list into a sequence of rows.
+|<<query-using-index-hint,USING INDEX variable:Label(property)>>  | Hint | Index hints are used to specify which index, if any, the planner should use as a starting point.
+|<<query-using-join-hint,USING JOIN ON variable>>                 | Hint | Join hints are used to enforce a join operation at specified points.
+|<<query-using-periodic-commit-hint,USING PERIODIC COMMIT>>       | Hint | This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
+|<<query-using-scan-hint,USING SCAN variable:Label>>              | Hint | Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
+|<<query-with,WITH>>                        | Projecting   |  Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
+|<<query-where,WHERE>>                          | Reading sub-clause | A sub-clause used to add constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause, or to filter the results of a `WITH` clause.
 |===
 
 
@@ -176,43 +177,6 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-toupper,toUpper()>>                    | String            | Returns the original string in uppercase.
 |<<functions-trim,trim()>>                      | String            | Returns the original string with whitespace removed from both sides.
 |<<functions-type,type()>>                      | Scalar            | Returns a string representation of the relationship type.
-|===
-
-
-[[glossary-commands]]
-== Commands
-
-=== <<query-constraints,Constraints>>
-[options="header"]
-|===
-|Constraint command                                    | Type   | Description
-|<<constraints-create-uniqueness-constraint,CREATE CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>  |  Unique node property | Create a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
-|<<constraints-drop-uniqueness-constraint,DROP CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>       | Unique node property | Drop a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
-|<<constraints-create-node-property-existence-constraint,CREATE CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>  | Node property existence   | Create a constraint ensuring that all nodes with a particular label have a certain property.
-|<<constraints-drop-node-property-existence-constraint,DROP CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>      | Node property existence   | Drop a constraint ensuring that all nodes with a particular label have a certain property.
-|<<constraints-create-relationship-property-existence-constraint,CREATE CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>  | Relationship property existence   | Create a constraint ensuring that all relationship with a particular type have a certain property.
-|<<constraints-drop-relationship-property-existence-constraint,DROP CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>      | Relationship property existence   | Drop a constraint ensuring that all relationship with a particular type have a certain property.
-|===
-
-=== <<query-schema-index,Indexes>>
-[options="header"]
-|===
-|Index command                                              | Description
-|<<schema-index-create-an-index,CREATE INDEX ON :Label(property)>>    | Create an index on all nodes with a particular label and property.
-|<<schema-index-drop-an-index,DROP INDEX ON :Label(property)>>        | Drop an index on all nodes with a particular label and property.
-|===
-
-
-[[glossary-hints]]
-== Hints
-
-[options="header"]
-|===
-|Hint                                                              | Description
-|<<query-using-index-hint,USING INDEX variable:Label(property)>>   | Index hints are used to specify which index, if any, the planner should use as a starting point.
-|<<query-using-scan-hint,USING SCAN variable:Label>>               | Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
-|<<query-using-join-hint,USING JOIN ON variable>>                  | Join hints are used to enforce a join operation at specified points.
-|<<query-using-periodic-commit-hint,USING PERIODIC COMMIT>>        | This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
 |===
 
 
