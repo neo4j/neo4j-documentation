@@ -46,13 +46,13 @@ This section comprises a glossary of all the keywords -- grouped by category and
 
 [options="header"]
 |===
-|Sub-clause                                     | Type      |   Description
-|<<query-limit,LIMIT>>                          | General   | Constrains the number of rows in the output.
-|<<query-merge-on-create-on-match,ON CREATE>>   | Write     | Used in conjunction with `MERGE`, specifying the actions to take if the pattern needs to be created.
-|<<query-merge-on-create-on-match,ON MATCH>>    | Write     | Used in conjunction with `MERGE`, specifying the actions to take if the pattern already exists.
-|<<query-order,ORDER BY>>                       | General   | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in particular way.
-|<<query-skip,SKIP>>                            | General   | Defines from which row to start including the rows in the output.
-|<<query-where,WHERE>>                          | Read      | Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filter the results of a `WITH` clause.
+|Sub-clause                                     | Description
+|<<query-limit,LIMIT>>                          | Constrains the number of rows in the output.
+|<<query-merge-on-create-on-match,ON CREATE>>   | Used in conjunction with `MERGE`, specifying the actions to take if the pattern needs to be created.
+|<<query-merge-on-create-on-match,ON MATCH>>    | Used in conjunction with `MERGE`, specifying the actions to take if the pattern already exists.
+|<<query-order,ORDER BY>>                       | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in particular way.
+|<<query-skip,SKIP>>                            | Defines from which row to start including the rows in the output.
+|<<query-where,WHERE>>                          | Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filter the results of a `WITH` clause.
 |===
 
 
