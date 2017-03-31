@@ -39,7 +39,7 @@ Here's an example of updating the graph, writing the aggregated data to the grap
 ----
 MATCH (n {name: 'John'})-[:FRIEND]-(friend)
 WITH n, count(friend) AS friendsCount
-SET n.friendCount = friendsCount
+SET n.friendsCount = friendsCount
 RETURN n.friendsCount
 ----
 
