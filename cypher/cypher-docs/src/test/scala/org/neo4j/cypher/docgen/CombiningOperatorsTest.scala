@@ -87,6 +87,20 @@ class CombiningOperatorsTest extends DocumentingTest {
                 |CREATE (andres)-[:FRIENDS_WITH]->(andreas)"""
     )
     synopsis("The combining operators are used to piece together other operators.")
+    p(
+      """* <<query-plan-apply,Apply>>
+         * <<query-plan-semi-apply,SemiApply>>
+         * <<query-plan-anti-semi-apply,AntiSemiApply>>
+         * <<query-plan-let-semi-apply,LetSemiApply>>
+         * <<query-plan-let-anti-semi-apply,LetAntiSemiApply>>
+         * <<query-plan-select-or-semi-apply,SelectOrSemiApply>>
+         * <<query-plan-select-or-anti-semi-apply,SelectOrAntiSemiApply>>
+         * <<query-plan-conditional-apply,ConditionalApply>>
+         * <<query-plan-anti-conditional-apply,AntiConditionalApply>>
+         * <<query-plan-assert-same-node,AssertSameNode>>
+         * <<query-plan-node-hash-join,NodeHashJoin>>
+         * <<query-plan-triadic,Triadic>>
+                          """.stripMargin)
     p("The following graph is used for the examples below:")
     graphViz()
     section("Apply", "query-plan-apply") {
