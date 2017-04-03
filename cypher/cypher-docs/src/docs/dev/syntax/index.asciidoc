@@ -10,9 +10,20 @@ This section describes the syntax of the Cypher query language.
 * <<cypher-expressions,Expressions>>
  ** <<cypher-expressions-general,Expressions in general>>
  ** <<cypher-expressions-string-literals,Note on string literals>>
- ** <<query-syntax-case,CASE Expressions>>
+ ** <<query-syntax-case,CASE expressions>>
 * <<cypher-variables,Variables>>
 * <<cypher-parameters,Parameters>>
+ ** <<cypher-parameters-string-literal,String literal>>
+ ** <<cypher-parameters-regular-expression,Regular expression>>
+ ** <<cypher-parameters-case-sensitive-pattern-matching,Case-sensitive string pattern matching>>
+ ** <<cypher-parameters-create-node-with-properties,Create node with properties>>
+ ** <<cypher-parameters-create-multiple-nodes-with-properties,Create multiple nodes with properties>>
+ ** <<cypher-parameters-setting-all-properties-on-a-node,Setting all properties on a node>>
+ ** <<cypher-parameters-skip-and-limit,SKIP and LIMIT>>
+ ** <<cypher-parameters-node-id,Node id>>
+ ** <<cypher-parameters-multiple-node-ids,Multiple node ids>>
+ ** <<cypher-parameters-index-value-legacy,Index value (legacy indexes)>>
+ **<<cypher-parameters-index-query-legacy,Index query (legacy indexes)>>
 * <<query-operators,Operators>>
  ** <<query-operators,Operators at a glance>>
  ** <<query-operators-general,General operators>>

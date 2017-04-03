@@ -1,6 +1,10 @@
 [[cypher-expressions]]
 = Expressions
 
+* <<cypher-expressions-general,Expressions in general>>
+* <<cypher-expressions-string-literals,Note on string literals>>
+* <<query-syntax-case,CASE expressions>>
+
 
 [[cypher-expressions-general]]
 == Expressions in general
