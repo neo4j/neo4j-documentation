@@ -148,7 +148,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-rand, rand()>>                     | Numeric           | Returns a random number in the range from 0 (inclusive) to 1 (exclusive), `[0, 1)`.
 |<<functions-range,range()>>                    | List              | Returns numerical values in a range.
 |<<functions-reduce,reduce()>>                  | List              | Runs an expression against individual elements of a list, storing the result of the expression in an accumulator.
-|<<functions-relationships,relationships()>>    | List              | Returns all relationships in a path.
+|<<functions-relationships,relationships()/rels()>>    | List              | Returns all relationships in a path.
 |<<functions-replace,replace()>>                | String            | Returns a string with the search string replaced by the replace string, replacing all occurrences.
 |<<functions-reverse,reverse()>>                | String            | Returns the original string reversed.
 |<<functions-right,right()>>                    | String            | Returns a string containing the right n characters of the original string.
