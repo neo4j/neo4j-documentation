@@ -1,6 +1,18 @@
 [[query-operators]]
 = Operators
 
+* <<query-operators-summary,Operators at a glance>>
+* <<query-operators-general,General operators>>
+* <<query-operators-mathematical,Mathematical operators>>
+* <<query-operators-comparison,Comparison operators>>
+* <<query-operators-boolean,Boolean operators>>
+* <<query-operators-string,String operators>>
+* <<query-operators-list,List operators>>
+* <<query-operators-property,Property operators>>
+* <<cypher-comparison,Equality and comparison of values>>
+* <<cypher-ordering,Ordering and comparison of values>>
+* <<cypher-operations-chaining,Chaining comparison operations>>
+
 
 [[query-operators-summary]]
 == Operators at a glance
