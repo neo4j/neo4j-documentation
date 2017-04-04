@@ -4,6 +4,8 @@
 * <<cypher-expressions-general,Expressions in general>>
 * <<cypher-expressions-string-literals,Note on string literals>>
 * <<query-syntax-case,`CASE` expressions>>
+ ** <<syntax-simple-case,Simple `CASE`>>
+ ** <<syntax-generic-case,Generic `CASE`>>
 
 
 [[cypher-expressions-general]]

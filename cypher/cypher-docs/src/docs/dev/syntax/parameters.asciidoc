@@ -90,7 +90,7 @@ include::includes/set_properties_on_a_node_from_a_map.asciidoc[]
 
 
 [[cypher-parameters-skip-and-limit]]
-== SKIP and LIMIT
+== `SKIP` and `LIMIT`
 
 include::includes/exampleWithParameterForSkipLimit.asciidoc[]
 

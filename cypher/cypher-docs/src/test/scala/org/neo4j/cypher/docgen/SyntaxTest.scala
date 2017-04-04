@@ -51,7 +51,7 @@ class SyntaxTest extends DocumentingTestBase {
 
   @Test def simple_case() {
     testThis(
-      title = "Simple CASE",
+      title = "Simple `CASE`",
       syntax = """CASE test
 WHEN value THEN result
 [WHEN ...]
@@ -79,7 +79,7 @@ END AS result""",
 
   @Test def generic_case() {
     testThis(
-      title = "Generic CASE",
+      title = "Generic `CASE`",
       syntax = """CASE
 WHEN predicate THEN result
 [WHEN ...]
@@ -106,7 +106,7 @@ END AS result""",
 
   @Test def distinct_operator() {
     testThis(
-      title = "Using the DISTINCT operator",
+      title = "Using the `DISTINCT` operator",
       syntax = "",
       arguments = List.empty,
       text = "Retrieve the unique eye colors from `Person` nodes.",
@@ -180,7 +180,7 @@ END AS result""",
 
   @Test def starts_with_comparison_operator() {
     testThis(
-      title = "Using STARTS WITH to filter names",
+      title = "Using `STARTS WITH` to filter names",
       syntax = "",
       arguments = List.empty,
       text = "",
