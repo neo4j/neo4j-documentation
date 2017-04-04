@@ -56,7 +56,7 @@ class FunctionsTest extends DocumentingTestBase {
 
 
     testThis(
-      title = "all()",
+      title = "`all()`",
       syntax = "all(variable IN list WHERE predicate)",
       arguments = common_arguments,
       text = """Tests whether a predicate holds for all elements of this list.""",
@@ -67,7 +67,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def any() {
     testThis(
-      title = "any()",
+      title = "`any()`",
       syntax = "any(variable IN list WHERE predicate)",
       arguments = common_arguments,
       text = """Tests whether a predicate holds for at least one element in the list.""",
@@ -78,7 +78,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def none() {
     testThis(
-      title = "none()",
+      title = "`none()`",
       syntax = "none(variable IN list WHERE predicate)",
       arguments = common_arguments,
       text = """Returns true if the predicate holds for no element in the list.""",
@@ -89,7 +89,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def single() {
     testThis(
-      title = "single()",
+      title = "`single()`",
       syntax = "single(variable IN list WHERE predicate)",
       arguments = common_arguments,
       text = """Returns true if the predicate holds for exactly one of the elements in the list.""",
@@ -100,7 +100,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def exists() {
     testThis(
-      title = "exists()",
+      title = "`exists()`",
       syntax = "exists( pattern-or-property )",
       arguments = List("pattern-or-property" -> "A pattern or a property (in the form 'variable.prop')."),
       text = """Returns true if a match for the pattern exists in the graph, or the property exists in the node, relationship or map.""",
@@ -111,7 +111,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def relationship_type() {
     testThis(
-      title = "type()",
+      title = "`type()`",
       syntax = "type( relationship )",
       arguments = List("relationship" -> "A relationship."),
       text = """Returns a string representation of the relationship type.""",
@@ -122,7 +122,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def size() {
     testThis(
-      title = "size()",
+      title = "`size()`",
       syntax = "size( list )",
       arguments = List("list" -> "An expression that returns a list"),
       text = """To return or filter on the size of a list, use the `size()` function.""",
@@ -150,7 +150,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def length() {
     testThis(
-      title = "length()",
+      title = "`length()`",
       syntax = "length( path )",
       arguments = List("path" -> "An expression that returns a path"),
       text = """To return or filter on the length of a path, use the `length()` function.""",
@@ -172,7 +172,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def labels() {
     testThis(
-      title = "labels()",
+      title = "`labels()`",
       syntax = "labels( node )",
       arguments = List("node" -> "Any expression that returns a single node"),
       text = """Returns a list of string representations for the labels attached to a node.""",
@@ -188,7 +188,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def keys() {
     testThis(
-      title = "keys()",
+      title = "`keys()`",
       syntax = "keys(  expression )",
       arguments = List("expression" -> "An expression that returns a node, a relationship, or a map"),
       text = """Returns a list of string representations for the property names of a node, relationship, or map.""",
@@ -204,7 +204,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def extract() {
     testThis(
-      title = "extract()",
+      title = "`extract()`",
       syntax = "extract( variable IN list | expression )",
       arguments = List(
         "list" -> "An expression that returns a list",
@@ -221,7 +221,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def reduce() {
     testThis(
-      title = "reduce()",
+      title = "`reduce()`",
       syntax = "reduce( accumulator = initial, variable IN list | expression )",
       arguments = List(
         "accumulator" -> "A variable that will hold the result and the partial results as the list is iterated",
@@ -240,7 +240,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def head() {
     testThis(
-      title = "head()",
+      title = "`head()`",
       syntax = "head( expression )",
       arguments = List(
         "expression" -> "This expression should return a list of some kind."
@@ -253,7 +253,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def last() {
     testThis(
-      title = "last()",
+      title = "`last()`",
       syntax = "last( expression )",
       arguments = List(
         "expression" -> "This expression should return a list of some kind."
@@ -266,7 +266,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def tail() {
     testThis(
-      title = "tail()",
+      title = "`tail()`",
       syntax = "tail( expression )",
       arguments = List(
         "expression" -> "This expression should return a list of some kind."
@@ -282,7 +282,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def filter() {
     testThis(
-      title = "filter()",
+      title = "`filter()`",
       syntax = "filter(variable IN list WHERE predicate)",
       arguments = common_arguments,
       text = "`filter()` returns all the elements in a list that comply to a predicate.",
@@ -296,7 +296,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def nodes_in_path() {
     testThis(
-      title = "nodes()",
+      title = "`nodes()`",
       syntax = "nodes( path )",
       arguments = List("path" -> "A path."),
       text = """Returns all nodes in a path.""",
@@ -308,7 +308,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def rels_in_path() {
     testThis(
-      title = "relationships()",
+      title = "`relationships()`",
       syntax = "relationships( path )",
       arguments = List("path" -> "A path."),
       text = """Returns all relationships in a path.""",
@@ -320,7 +320,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def id() {
     testThis(
-      title = "id()",
+      title = "`id()`",
       syntax = "id(  expression )",
       arguments = List("expression" -> "An expression that returns a node or a relationship."),
       text = """Returns the id of the relationship or node.""",
@@ -332,7 +332,7 @@ class FunctionsTest extends DocumentingTestBase {
 
   @Test def coalesce() {
     testThis(
-      title = "coalesce()",
+      title = "`coalesce()`",
       syntax = "coalesce( expression [, expression]* )",
       arguments = List("expression" -> "The expression that might return `null`."),
       text = """Returns the first non-`null` value in the list of expressions passed to it.
@@ -345,7 +345,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def range() {
     testThis(
-      title = "range()",
+      title = "`range()`",
       syntax = "range( start, end [, step] )",
       arguments = List(
         "start" -> "A numerical expression.",
@@ -364,7 +364,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def replace() {
     testThis(
-      title = "replace()",
+      title = "`replace()`",
       syntax = "replace( original, search, replace )",
       arguments = List("original" -> "An expression that returns a string",
                        "search" -> "An expression that returns a string to search for",
@@ -378,7 +378,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def split() {
     testThis(
-      title = "split()",
+      title = "`split()`",
       syntax = "split( original, splitPattern )",
       arguments = List(
         "original" -> "An expression that returns a string",
@@ -396,7 +396,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def left() {
     testThis(
-      title = "left()",
+      title = "`left()`",
       syntax = "left( original, length )",
       arguments = List("original" -> "An expression that returns a string",
                        "n" -> "An expression that returns a positive number"),
@@ -409,7 +409,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def right() {
     testThis(
-      title = "right()",
+      title = "`right()`",
       syntax = "right( original, length )",
       arguments = List("original" -> "An expression that returns a string",
                        "n" -> "An expression that returns a positive number"),
@@ -422,7 +422,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def substring() {
     testThis(
-      title = "substring()",
+      title = "`substring()`",
       syntax = "substring( original, start [, length] )",
       arguments = List("original" -> "An expression that returns a string",
                        "start" -> "An expression that returns a positive number",
@@ -436,7 +436,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def tolower() {
     testThis(
-      title = "toLower()",
+      title = "`toLower()`",
       syntax = "toLower( original )",
       arguments = List("original" -> "An expression that returns a string"),
       text = "`toLower()` returns the original string in lowercase.",
@@ -448,7 +448,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def toupper() {
     testThis(
-      title = "toUpper()",
+      title = "`toUpper()`",
       syntax = "toUpper( original )",
       arguments = List("original" -> "An expression that returns a string"),
       text = "`toUpper()` returns the original string in uppercase.",
@@ -460,7 +460,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def reverse() {
     testThis(
-      title = "reverse()",
+      title = "`reverse()`",
       syntax = "reverse( original )",
       arguments = List("original" -> "An expression that returns a string"),
       text = "`reverse()` returns the original string reversed.",
@@ -472,7 +472,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def ltrim() {
     testThis(
-      title = "lTrim()",
+      title = "`lTrim()`",
       syntax = "lTrim( original )",
       arguments = List("original" -> "An expression that returns a string"),
       text = "`lTrim()` returns the original string with whitespace removed from the left side.",
@@ -484,7 +484,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def rtrim() {
     testThis(
-      title = "rTrim()",
+      title = "`rTrim()`",
       syntax = "rTrim( original )",
       arguments = List("original" -> "An expression that returns a string"),
       text = "`rTrim()` returns the original string with whitespace removed from the right side.",
@@ -496,7 +496,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def trim() {
     testThis(
-      title = "trim()",
+      title = "`trim()`",
       syntax = "trim( original )",
       arguments = List("original" -> "An expression that returns a string"),
       text = "`trim()` returns the original string with whitespace removed from both sides.",
@@ -508,7 +508,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def toInt() {
     testThis(
-      title = "toInt()",
+      title = "`toInt()`",
       syntax = "toInt( expression )",
       arguments = List("expression" -> "An expression that returns anything"),
       text = "`toInt()` converts the argument to an integer. A string is parsed as if it was an integer number. If the " +
@@ -521,7 +521,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def toFloat() {
     testThis(
-      title = "toFloat()",
+      title = "`toFloat()`",
       syntax = "toFloat( expression )",
       arguments = List("expression" -> "An expression that returns anything"),
       text = "`toFloat()` converts the argument to a float. A string is parsed as if it was an floating point number. " +
@@ -534,7 +534,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def toStringFunc() {
     testThis(
-      title = "toString()",
+      title = "`toString()`",
       syntax = "toString( expression )",
       arguments = List("expression" -> "An expression that returns a number, a boolean, or a string"),
       text = "`toString()` converts the argument to a string. It converts integral and floating point numbers and booleans to strings, and if called with a string will leave it unchanged.",
@@ -548,7 +548,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def propertiesFunc() {
     testThis(
-      title = "properties()",
+      title = "`properties()`",
       syntax = "properties( expression )",
       arguments = List("expression" -> "An expression that returns a node, a relationship, or a map"),
       text = "`properties()` converts the arguments to a map of its properties. " +
@@ -563,7 +563,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def now() {
     testThis(
-      title = "timestamp()",
+      title = "`timestamp()`",
       syntax = "timestamp()",
       arguments = List.empty,
       text = "`timestamp()` returns the difference, measured in milliseconds, between the current time and midnight, " +
@@ -582,7 +582,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def startNode() {
     testThis(
-      title = "startNode()",
+      title = "`startNode()`",
       syntax = "startNode( relationship )",
       arguments = List("relationship" -> "An expression that returns a relationship"),
       text = "`startNode()` returns the starting node of a relationship",
@@ -593,7 +593,7 @@ In case all arguments are `null`, `null` will be returned.""",
 
   @Test def endNode() {
     testThis(
-      title = "endNode()",
+      title = "`endNode()`",
       syntax = "endNode( relationship )",
       arguments = List("relationship" -> "An expression that returns a relationship"),
       text = "`endNode()` returns the end node of a relationship",

@@ -207,6 +207,12 @@ These functions are used to specify points in a 2D coordinate system and to calc
 Predicates are boolean functions that return true or false for a given set of input.
 They are most commonly used to filter out subgraphs in the `WHERE` part of a query.
 
+* <<functions-all,all()>>
+* <<functions-any,any()>>
+* <<functions-exists,exists()>>
+* <<functions-none,none()>>
+* <<functions-single,single()>>
+
 See also <<query-operators-comparison>>.
 
 .Graph
@@ -233,6 +239,22 @@ The `length()` and `size()` functions are quite similar, and so it is important 
 Due to backwards compatibility, `length()` currently works on four types: strings, paths, lists and pattern expressions.
 However, it is recommended to use `length()` only for paths, and the `size()` function for strings, lists and pattern expressions.
 `length()` on those types may be deprecated in future.
+
+* <<functions-coalesce,coalesce()>>
+* <<functions-endnode,endNode()>>
+* <<functions-head,head()>>
+* <<functions-id,id()>>
+* <<functions-last,last()>>
+* <<functions-length,length()>>
+* <<functions-properties,properties()>>
+* <<functions-size,size()>>
+* <<functions-size-of-pattern-expression,Size of pattern expression>>
+* <<functions-size-of-string,Size of string>>
+* <<functions-startnode,startNode()>>
+* <<functions-timestamp,timestamp()>>
+* <<functions-tofloat,toFloat()>>
+* <<functions-toint,toInt()>>
+* <<functions-type,type()>>
 
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
@@ -279,6 +301,16 @@ List functions return lists of things -- nodes in a path, and so on.
 
 Further details and examples of lists may be found in <<syntax-lists>> and <<query-operators-list>>.
 
+* <<functions-extract,extract()>>
+* <<functions-filter,filter()>>
+* <<functions-keys,keys()>>
+* <<functions-labels,labels()>>
+* <<functions-nodes,nodes()>>
+* <<functions-range,range()>>
+* <<functions-reduce,reduce()>>
+* <<functions-relationships,relationships()>>
+* <<functions-tail,tail()>>
+
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
 
@@ -315,6 +347,20 @@ See also <<query-operators-string>>.
 
 [NOTE]
 The functions `lower()` and `upper()` have been superseded by `toLower()` and `toUpper()`, respectively, and will be deprecated in a future release.
+
+* <<functions-left,left()>>
+* <<functions-ltrim,lTrim()>>
+* <<functions-replace,replace()>>
+* <<functions-reverse,reverse()>>
+* <<functions-right,right()>>
+* <<functions-rtrim,rTrim()>>
+* <<functions-split,split()>>
+* <<functions-substring,substring()>>
+* <<functions-tolower,toLower()>>
+* <<functions-tostring,toString()>>
+* <<functions-toupper,toUpper()>>
+* <<functions-trim,trim()>>
+
 
 .Graph
 include::includes/cypher-functions-graph.asciidoc[]
