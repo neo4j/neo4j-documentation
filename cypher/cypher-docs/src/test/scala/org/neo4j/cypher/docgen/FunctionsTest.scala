@@ -309,7 +309,7 @@ class FunctionsTest extends DocumentingTestBase {
   @Test def rels_in_path() {
     testThis(
       title = "relationships()",
-      syntax = "relationships( path )",
+      syntax = "relationships( path ) or rels( path )",
       arguments = List("path" -> "A path."),
       text = """Returns all relationships in a path.""",
       queryText = """MATCH p = (a)-->(b)-->(c) WHERE a.name = 'Alice' AND c.name = 'Eskil' RETURN relationships(p)""",
