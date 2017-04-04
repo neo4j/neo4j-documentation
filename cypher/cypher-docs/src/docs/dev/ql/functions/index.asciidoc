@@ -197,7 +197,9 @@ These functions are used to specify points in a 2D coordinate system and to calc
 |===
 |Function                               |   Description
 |<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two given points.
-|<<functions-point,point()>>            | Returns a point object, given two coordinate values.
+|<<functions-point-cartesian,point() - cartesian 2D>>            | Returns a point object, given two coordinate values in the cartesian coordinate system.
+|<<functions-point,point() - WGS 84>>            | Returns a point object, given two coordinate valuesin the WGS 84 coordinate system.
+
 |===
 
 

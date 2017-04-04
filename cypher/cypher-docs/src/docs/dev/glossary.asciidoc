@@ -141,7 +141,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-percentilecont,percentileCont()>>  | Aggregating       | Returns the percentile of a given value over a group using linear interpolation.
 |<<functions-percentiledisc,percentileDisc()>>  | Aggregating       | Returns the nearest value to a given percentile over a group using a rounding method.
 |<<functions-pi, pi()>>                         | Trigonometric     | Returns the mathematical constant _pi_.
-|<<functions-point,point()>>                    | Spatial           | Returns a point object, given two coordinate values.
+|<<functions-point-cartesian,point() - cartesian 2D>>                    | Spatial           | Returns a point object, given two coordinate values in the cartesian coordinate system.
+|<<functions-point,point() - WGS 84>>                    | Spatial           | Returns a point object, given two coordinate values in the WGS 84 coordinate system.
 |<<functions-properties,properties()>>          | Scalar            | If the argument is a node or a relationship, the returned map is a map of its properties.
 |<<functions-radians, radians()>>               | Trigonometric     | Converts degrees to radians.
 |<<functions-rand, rand()>>                     | Numeric           | Returns a random number in the range from 0 (inclusive) to 1 (exclusive), `[0, 1)`.

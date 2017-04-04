@@ -40,7 +40,8 @@ class SpatialFunctionsTest extends DocumentingTest {
     p(
       """
         |* <<functions-distance,distance()>>
-        |* <<functions-point,point()>>
+        |* <<functions-point,point() - WGS 84>>
+        |* <<functions-point-cartesian,point() - cartesian 2D>>
       """.stripMargin)
     p("The following graph is used for some of the examples below.")
     graphViz()
