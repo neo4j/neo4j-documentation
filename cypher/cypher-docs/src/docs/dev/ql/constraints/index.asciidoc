@@ -6,6 +6,32 @@ Neo4j helps enforce data integrity with the use of constraints.
 Constraints can be applied to either nodes or relationships.
 Unique node property constraints can be created, as well as node and relationship property existence constraints.
 
+* <<query-constraint-introduction,Introduction>>
+* <<query-constraint-unique-nodes,Unique node property constraints>>
+ ** <<constraints-create-uniqueness-constraint,Create uniqueness constraint>>
+ ** <<constraints-drop-uniqueness-constraint,Drop uniqueness constraint>>
+ ** <<constraints-create-a-node-that-complies-with-unique-property-constraints,Create a node that complies with unique property constraints>>
+ ** <<constraints-create-a-node-that-breaks-a-unique-property-constraint,Create a node that breaks a unique property constraint>>
+ ** <<constraints-failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes,Failure to create a unique property constraint due to conflicting nodes>>
+* <<query-constraint-prop-exist-nodes,Node property existence constraints>>
+ ** <<constraints-create-node-property-existence-constraint,Create node property existence constraint>>
+ ** <<constraints-drop-node-property-existence-constraint,Drop node property existence constraint>>
+ ** <<constraints-create-a-node-that-complies-with-property-existence-constraints,Create a node that complies with property existence constraints>>
+ ** <<constraints-create-a-node-that-breaks-a-property-existence-constraint,Create a node that breaks a property existence constraint>>
+ ** <<constraints-removing-an-existence-constrained-node-property,Removing an existence constrained node property>>
+ ** <<constraints-failure-to-create-a-node-property-existence-constraint-due-to-existing-node,Failure to create a node property existence constraint due to existing node>>
+* <<query-constraint-prop-exist-rels,Relationship property existence constraints>>
+ ** <<constraints-create-relationship-property-existence-constraint,Create relationship property existence constraint>>
+ ** <<constraints-drop-relationship-property-existence-constraint,Drop relationship property existence constraint>>
+ ** <<constraints-create-a-relationship-that-complies-with-property-existence-constraints,Create a relationship that complies with property existence constraints>>
+ ** <<constraints-create-a-relationship-that-breaks-a-property-existence-constraint,Create a relationship that breaks a property existence constraint>>
+ ** <<constraints-removing-an-existence-constrained-relationship-property,Removing an existence constrained relationship property>>
+ ** <<constraints-failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship,Failure to create a relationship property existence constraint due to existing relationship>>
+
+
+[[query-constraint-introduction]]
+== Introduction
+
 You can use unique property constraints to ensure that property values are unique for all nodes with a specific label.
 Unique constraints do not mean that all nodes have to have a unique value for the properties -- nodes without the property are not subject to this rule.
 
@@ -23,10 +49,6 @@ Remember that adding constraints is an atomic operation that can take a while --
 Note that adding a unique property constraint on a property will also add an index on that property, so you cannot add such an index separately.
 Cypher will use that index for lookups just like other indexes.
 If you drop a unique property constraint and still want an index on the property, you will have to create the index.
-
-* <<query-constraint-unique-nodes,Unique node property constraints>>
-* <<query-constraint-prop-exist-nodes,Node property existence constraints>>
-* <<query-constraint-prop-exist-rels,Relationship property existence constraints>>
 
 
 [[query-constraint-unique-nodes]]

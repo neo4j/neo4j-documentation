@@ -10,7 +10,7 @@ This section describes the syntax of the Cypher query language.
 * <<cypher-expressions,Expressions>>
  ** <<cypher-expressions-general,Expressions in general>>
  ** <<cypher-expressions-string-literals,Note on string literals>>
- ** <<query-syntax-case,CASE expressions>>
+ ** <<query-syntax-case,`CASE` expressions>>
 * <<cypher-variables,Variables>>
 * <<cypher-parameters,Parameters>>
  ** <<cypher-parameters-string-literal,String literal>>
@@ -19,7 +19,7 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-parameters-create-node-with-properties,Create node with properties>>
  ** <<cypher-parameters-create-multiple-nodes-with-properties,Create multiple nodes with properties>>
  ** <<cypher-parameters-setting-all-properties-on-a-node,Setting all properties on a node>>
- ** <<cypher-parameters-skip-and-limit,SKIP and LIMIT>>
+ ** <<cypher-parameters-skip-and-limit,`SKIP` and `LIMIT`>>
  ** <<cypher-parameters-node-id,Node id>>
  ** <<cypher-parameters-multiple-node-ids,Multiple node ids>>
  ** <<cypher-parameters-index-value-legacy,Index value (legacy indexes)>>
@@ -49,10 +49,10 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-list-comprehension,List comprehension>>
  ** <<cypher-literal-maps,Literal maps>>
 * <<cypher-working-with-null,Working with null>>
- ** <<cypher-null-intro,Introduction to 'null' in Cypher>>
- ** <<cypher-null-logical-operators,Logical operations with null>>
- ** <<cypher-null-in-operator,The IN operator and null>>
- ** <<cypher-expressions-and-null,Expressions that return null>>
+ ** <<cypher-null-intro,Introduction to `null` in Cypher>>
+ ** <<cypher-null-logical-operators,Logical operations with `null`>>
+ ** <<cypher-null-in-operator,The `IN` operator and `null`>>
+ ** <<cypher-expressions-and-null,Expressions that return `null`>>
 
 include::values.asciidoc[leveloffset=+1]
 

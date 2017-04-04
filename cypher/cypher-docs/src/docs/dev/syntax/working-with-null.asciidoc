@@ -1,10 +1,10 @@
 [[cypher-working-with-null]]
 = Working with null
 
-* <<cypher-null-intro,Introduction to 'null' in Cypher>>
-* <<cypher-null-logical-operators,Logical operations with null>>
-* <<cypher-null-in-operator,The IN operator and null>>
-* <<cypher-expressions-and-null,Expressions that return null>>
+* <<cypher-null-intro,Introduction to `null` in Cypher>>
+* <<cypher-null-logical-operators,Logical operations with `null`>>
+* <<cypher-null-in-operator,The `IN` operator and `null`>>
+* <<cypher-expressions-and-null,Expressions that return `null`>>
 
 
 [[cypher-null-intro]]
