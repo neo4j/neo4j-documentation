@@ -19,67 +19,90 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.junit.Assert._
-import org.junit.Test
-import org.neo4j.visualization.graphviz.GraphStyle
-import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class OptionalMatchTest extends DocumentingTestBase with SoftReset {
 
-  override def graphDescription = List(
-    "Charlie:Person ACTED_IN WallStreet:Movie",
-    "Martin:Person ACTED_IN WallStreet:Movie",
-    "Michael:Person ACTED_IN WallStreet:Movie",
-    "Martin:Person ACTED_IN TheAmericanPresident:Movie",
-    "Michael:Person ACTED_IN TheAmericanPresident:Movie",
-    "Oliver:Person DIRECTED WallStreet:Movie",
-    "Rob:Person DIRECTED TheAmericanPresident:Movie",
-    "Charlie:Person FATHER Martin:Person")
+class OptionalMatchTest extends DocumentingTest {
+  override def outputPath = "target/docs/dev/ql"
 
-  override val properties = Map(
-    "Charlie" -> Map("name" -> "Charlie Sheen"),
-    "Oliver" -> Map("name" -> "Oliver Stone"),
-    "Michael" -> Map("name" -> "Michael Douglas"),
-    "Rob" -> Map("name" -> "Rob Reiner"),
-    "Martin" -> Map("name" -> "Martin Sheen"),
-    "WallStreet" -> Map("title" -> "Wall Street"),
-    "TheAmericanPresident" -> Map("title" -> "The American President")
-  )
-
-  override protected def getGraphvizStyle: GraphStyle =
-    AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
-
-  def section: String = "OPTIONAL MATCH"
-
-  @Test def optionalRelationship() {
-    testQuery(
-      title = "Relationship",
-      text = "If a relationship is optional, use the `OPTIONAL MATCH` clause. This is similar to how a SQL outer join " +
-        "works. If the relationship is there, it is returned. If it's not, `null` is returned in its place. ",
-      queryText = """MATCH (a:Movie {title: 'Wall Street'}) OPTIONAL MATCH (a)-->(x) RETURN x""",
-      optionalResultExplanation = """Returns `null`, since the node has no outgoing relationships.""",
-      assertions = (p) => assertEquals(List(Map("x" -> null)), p.toList)
-    )
-  }
-
-  @Test def nodePropertyFromOptionalNode() {
-    testQuery(
-      title = "Properties on optional elements",
-      text = "Returning a property from an optional element that is `null` will also return `null`.",
-      queryText = "MATCH (a:Movie {title: 'Wall Street'}) OPTIONAL MATCH (a)-->(x) RETURN x, x.name",
-      optionalResultExplanation = """Returns the element x (`null` in this query), and `null` as its name.""",
-      assertions = (p) => assertEquals(List(Map("x" -> null, "x.name" -> null)), p.toList)
-    )
-  }
-
-  @Test def optionalTypedRelationship() {
-    testQuery(
-      title = "Optional typed and named relationship",
-      text = "Just as with a normal relationship, you can decide which variable it goes into, and what relationship type " +
-        "you need.",
-      queryText = """MATCH (a:Movie {title: 'Wall Street'}) OPTIONAL MATCH (a)-[r:ACTS_IN]->() RETURN r""",
-      optionalResultExplanation = """This returns a node, and `null`, since the node has no outgoing `ACTS_IN` relationships.""",
-      assertions = (p) => assertEquals(List(Map("r" -> null)), p.toList)
-    )
-  }
+  override def doc = new DocBuilder {
+    doc("OPTIONAL MATCH", "query-optional-match")
+    initQueries(
+      """CREATE (charlie:Person {name: 'Charlie Sheen'}),
+        |       (martin:Person {name: 'Martin Sheen'}),
+        |       (michael:Person {name: 'Michael Douglas'}),
+        |       (oliver:Person {name: 'Oliver Stone'}),
+        |       (rob:Person {name: 'Rob Reiner'}),
+        |
+        |       (wallStreet:Movie {title: 'Wall Street'}),
+        |
+        |       (charlie)-[:ACTED_IN]->(wallStreet),
+        |       (martin)-[:ACTED_IN]->(wallStreet),
+        |       (michael)-[:ACTED_IN]->(wallStreet),
+        |       (oliver)-[:DIRECTED]->(wallStreet),
+        |
+        |       (thePresident:Movie {title: 'The American President'}),
+        |
+        |       (martin)-[:ACTED_IN]->(thePresident),
+        |       (michael)-[:ACTED_IN]->(thePresident),
+        |       (rob)-[:DIRECTED]->(thePresident),
+        |
+        |       (charlie)-[:FATHER]->(martin)
+      """.stripMargin)
+    synopsis("The `OPTIONAL MATCH` clause is used to search for the pattern described in it, while using nulls for missing parts of the pattern.")
+    p(
+      """
+        |* <<optional-match-introduction,Introduction>>
+        |* <<optional-relationships,Optional relationships>>
+        |* <<properties-on-optional-elements,Properties on optional elements>>
+        |* <<optional-typed-named-relationship,Optional typed and named relationship>>
+      """.stripMargin)
+    section("Introduction", "optional-match-introduction") {
+      p(
+        """`OPTIONAL MATCH` matches patterns against your graph database, just like `MATCH` does.
+          |The difference is that if no matches are found, `OPTIONAL MATCH` will use a `null` for missing parts of the pattern.
+          |`OPTIONAL MATCH` could be considered the Cypher equivalent of the outer join in SQL.
+        """)
+      p(
+        """Either the whole pattern is matched, or nothing is matched.
+          |Remember that `WHERE` is part of the pattern description, and the predicates will be considered while looking for matches, not after.
+          |This matters especially in the case of multiple (`OPTIONAL`) `MATCH` clauses, where it is crucial to put `WHERE` together with the `MATCH` it belongs to.""")
+      tip {
+        p("To understand the patterns used in the `OPTIONAL MATCH` clause, read <<introduction-pattern>>.")
+      }
+      p("The following graph is used for the examples below:")
+      graphViz()
+    }
+    section("Optional relationships", "optional-relationships") {
+      p(
+        """If a relationship is optional, use the `OPTIONAL MATCH` clause.
+          |This is similar to how a SQL outer join works.
+          |If the relationship is there, it is returned.
+          |If it's not, `null` is returned in its place.""".stripMargin)
+      query("MATCH (a:Movie {title: 'Wall Street'})\nOPTIONAL MATCH (a)-->(x)\nRETURN x", ResultAssertions((r) => {
+        r.toList should equal(List(Map("x" -> null)))
+      })) {
+        p("Returns `null`, since the node has no outgoing relationships.")
+        resultTable()
+      }
+    }
+    section("Properties on optional elements", "properties-on-optional-elements") {
+      p("Returning a property from an optional element that is `null` will also return `null`.")
+      query("MATCH (a:Movie { title: 'Wall Street' })\nOPTIONAL MATCH (a)-->(x)\nRETURN x, x.name", ResultAssertions((r) => {
+        r.toList should equal(List(Map("x" -> null, "x.name" -> null)))
+      })) {
+        p("Returns the element x (`null` in this query), and `null` as its name.")
+        resultTable()
+      }
+    }
+    section("Optional typed and named relationship", "optional-typed-named-relationship") {
+      p("Just as with a normal relationship, you can decide which variable it goes into, and what relationship type you need.")
+      query("MATCH (a:Movie {title: 'Wall Street'})\nOPTIONAL MATCH (a)-[r:ACTS_IN]->()\nRETURN r", ResultAssertions((r) => {
+        r.toList should equal(List(Map("r" -> null)))
+      })) {
+        p("This returns a node, and `null`, since the node has no outgoing `ACTS_IN` relationships.")
+        resultTable()
+      }
+    }
+  }.build()
 }

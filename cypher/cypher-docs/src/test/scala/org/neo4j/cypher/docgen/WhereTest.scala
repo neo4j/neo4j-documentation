@@ -59,7 +59,7 @@ class WhereTest extends DocumentingTestBase {
       title = "Filter on node property",
       text = "To filter on a node property, write your clause after the `WHERE` keyword.",
       queryText = """MATCH (n) WHERE n.age < 30 RETURN n""",
-      optionalResultExplanation = """*'Tobias'* is returned because he is younger than 30.""",
+      optionalResultExplanation = """*'Tobias'* is returned because he is under the age of 30.""",
       assertions = (p) => assertEquals(List(node("Tobias")), p.columnAs[Node]("n").toList))
   }
 

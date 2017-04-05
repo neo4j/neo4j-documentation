@@ -38,12 +38,14 @@ class MatchTest extends DocumentingTest {
         |       (rob:Person {name: 'Rob Reiner'}),
         |
         |       (wallStreet:Movie {title: 'Wall Street'}),
+        |
         |       (charlie)-[:ACTED_IN {role: 'Bud Fox'}]->(wallStreet),
         |       (martin)-[:ACTED_IN {role: 'Carl Fox'}]->(wallStreet),
         |       (michael)-[:ACTED_IN {role: 'Gordon Gekko'}]->(wallStreet),
         |       (oliver)-[:DIRECTED]->(wallStreet),
         |
         |       (thePresident:Movie {title: 'The American President'}),
+        |
         |       (martin)-[:ACTED_IN {role: 'A.J. MacInerney'}]->(thePresident),
         |       (michael)-[:ACTED_IN {role: 'President Andrew Shepherd'}]->(thePresident),
         |       (rob)-[:DIRECTED]->(thePresident)"""
@@ -51,7 +53,7 @@ class MatchTest extends DocumentingTest {
     synopsis("The `MATCH` clause is used to search for the pattern described in it.")
     p(
       """
-        |* <<query-match-introduction,Introduction>>
+        |* <<match-introduction,Introduction>>
         |* <<basic-node-finding,Basic node finding>>
         | ** <<get-all-nodes,Get all nodes>>
         | ** <<get-all-nodes-with-label,Get all nodes with a label>>
@@ -81,7 +83,7 @@ class MatchTest extends DocumentingTest {
         | ** <<match-rel-by-id,Relationship by id>>
         | ** <<match-multiple-nodes-by-id,Multiple nodes by id>>
       """.stripMargin)
-    section("Introduction", "query-match-introduction") {
+    section("Introduction", "match-introduction") {
       p( """The `MATCH` clause allows you to specify the patterns Neo4j will search for in the database.
            |This is the primary way of getting data into the current set of bindings.
            |It is worth reading up more on the specification of the patterns themselves in <<introduction-pattern>>.""")

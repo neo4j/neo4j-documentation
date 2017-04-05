@@ -57,7 +57,7 @@ These comprise general clauses that work in conjunction with other clauses.
 //Reading
 include::ql/query-match.adoc[leveloffset=+1]
 
-include::ql/optional-match/index.asciidoc[leveloffset=+1]
+include::ql/query-optional-match.adoc[leveloffset=+1]
 
 include::ql/where/index.asciidoc[leveloffset=+1]
 
