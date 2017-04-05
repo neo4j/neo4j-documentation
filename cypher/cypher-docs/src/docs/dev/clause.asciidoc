@@ -59,7 +59,7 @@ include::ql/query-match.adoc[leveloffset=+1]
 
 include::ql/query-optional-match.adoc[leveloffset=+1]
 
-include::ql/where/index.asciidoc[leveloffset=+1]
+include::ql/query-where.adoc[leveloffset=+1]
 
 include::ql/start/index.asciidoc[leveloffset=+1]
 
