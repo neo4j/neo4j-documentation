@@ -83,7 +83,7 @@ include::ql/load-csv/index.asciidoc[leveloffset=+1]
 //General
 include::ql/query-return.adoc[leveloffset=+1]
 
-include::ql/order-by/index.asciidoc[leveloffset=+1]
+include::ql/query-order.adoc[leveloffset=+1]
 
 include::ql/limit/index.asciidoc[leveloffset=+1]
 
