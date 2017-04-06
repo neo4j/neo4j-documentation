@@ -3,6 +3,10 @@
 
 These operators explore the graph by expanding graph patterns.
 
+* <<query-plan-expand-all, Expand(All) >>
+* <<query-plan-expand-into, Expand(Into)>>
+* <<query-plan-optional-expand-all, OptionalExpand(All)>>
+
 include::../ql/query-plan/expand-all.asciidoc[]
 
 include::../ql/query-plan/expand-into.asciidoc[]
