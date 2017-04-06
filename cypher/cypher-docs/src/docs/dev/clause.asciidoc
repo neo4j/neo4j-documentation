@@ -85,7 +85,7 @@ include::ql/query-return.adoc[leveloffset=+1]
 
 include::ql/query-order.adoc[leveloffset=+1]
 
-include::ql/limit/index.asciidoc[leveloffset=+1]
+include::ql/query-limit.adoc[leveloffset=+1]
 
 include::ql/skip/index.asciidoc[leveloffset=+1]
 
