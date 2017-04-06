@@ -8,9 +8,9 @@ Find starting points through legacy indexes.
 The `START` clause should only be used when accessing legacy indexes.
 In all other cases, use `MATCH` instead (see <<query-match>>).
 
-* <<start-node-by-index-seek,Node by index seek>>
-* <<start-relationship-by-index-seek,Relationship by index seek>>
-* <<start-node-by-index-query,Node by index query>>
+* <<start-node-by-index-seek, Node by index seek>>
+* <<start-relationship-by-index-seek, Relationship by index seek>>
+* <<start-node-by-index-query, Node by index query>>
 
 In Cypher, every query describes a pattern, and in that pattern one can have multiple starting points.
 A starting point is a relationship or a node where a pattern is anchored.

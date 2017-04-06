@@ -53,35 +53,35 @@ class MatchTest extends DocumentingTest {
     synopsis("The `MATCH` clause is used to search for the pattern described in it.")
     p(
       """
-        |* <<match-introduction,Introduction>>
-        |* <<basic-node-finding,Basic node finding>>
-        | ** <<get-all-nodes,Get all nodes>>
-        | ** <<get-all-nodes-with-label,Get all nodes with a label>>
-        | ** <<related-nodes,Related nodes>>
-        | ** <<match-with-labels,Match with labels>>
-        |* <<relationship-basics,Relationship basics>>
-        | ** <<outgoing-relationships,Outgoing relationships>>
-        | ** <<directed-rels-and-variable,Directed relationships and variable>>
-        | ** <<match-on-rel-type,Match on relationship type>>
-        | ** <<match-on-multiple-rel-types,Match on multiple relationship types>>
-        | ** <<match-on-rel-type-use-variable,Match on relationship type and use a variable>>
-        |* <<relationships-in-depth,Relationships in depth>>
-        | ** <<rel-types-with-uncommon-chars,Relationship types with uncommon characters>>
-        | ** <<multiple-rels,Multiple relationships>>
-        | ** <<varlength-rels,Variable length relationships>>
-        | ** <<rel-variable-in-varlength-rels,Relationship variable in variable length relationships>>
-        | ** <<match-props-on-varlength-path,Match with properties on a variable length path>>
-        | ** <<zero-length-paths,Zero length paths>>
-        | ** <<named-paths,Named paths>>
-        | ** <<match-on-bound-rel,Matching on a bound relationship>>
-        |* <<query-shortest-path,Shortest path>>
-        | ** <<single-shortest-path,Single shortest path>>
-        | ** <<single-shortest-path-with-predicates,Single shortest path with predicates>>
-        | ** <<all-shortest-paths,All shortest paths>>
-        |* <<get-node-rel-by-id,Get node or relationship by id>>
-        | ** <<match-node-by-id,Node by id>>
-        | ** <<match-rel-by-id,Relationship by id>>
-        | ** <<match-multiple-nodes-by-id,Multiple nodes by id>>
+        |* <<match-introduction, Introduction>>
+        |* <<basic-node-finding, Basic node finding>>
+        | ** <<get-all-nodes, Get all nodes>>
+        | ** <<get-all-nodes-with-label, Get all nodes with a label>>
+        | ** <<related-nodes, Related nodes>>
+        | ** <<match-with-labels, Match with labels>>
+        |* <<relationship-basics, Relationship basics>>
+        | ** <<outgoing-relationships, Outgoing relationships>>
+        | ** <<directed-rels-and-variable, Directed relationships and variable>>
+        | ** <<match-on-rel-type, Match on relationship type>>
+        | ** <<match-on-multiple-rel-types, Match on multiple relationship types>>
+        | ** <<match-on-rel-type-use-variable, Match on relationship type and use a variable>>
+        |* <<relationships-in-depth, Relationships in depth>>
+        | ** <<rel-types-with-uncommon-chars, Relationship types with uncommon characters>>
+        | ** <<multiple-rels, Multiple relationships>>
+        | ** <<varlength-rels, Variable length relationships>>
+        | ** <<rel-variable-in-varlength-rels, Relationship variable in variable length relationships>>
+        | ** <<match-props-on-varlength-path, Match with properties on a variable length path>>
+        | ** <<zero-length-paths, Zero length paths>>
+        | ** <<named-paths, Named paths>>
+        | ** <<match-on-bound-rel, Matching on a bound relationship>>
+        |* <<query-shortest-path, Shortest path>>
+        | ** <<single-shortest-path, Single shortest path>>
+        | ** <<single-shortest-path-with-predicates, Single shortest path with predicates>>
+        | ** <<all-shortest-paths, All shortest paths>>
+        |* <<get-node-rel-by-id, Get node or relationship by id>>
+        | ** <<match-node-by-id, Node by id>>
+        | ** <<match-rel-by-id, Relationship by id>>
+        | ** <<match-multiple-nodes-by-id, Multiple nodes by id>>
       """.stripMargin)
     section("Introduction", "match-introduction") {
       p( """The `MATCH` clause allows you to specify the patterns Neo4j will search for in the database.

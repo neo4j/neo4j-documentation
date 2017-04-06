@@ -4,8 +4,8 @@
 [abstract]
 The `FOREACH` clause is used to update data within a list, whether components of a path, or result of aggregation.
 
-* <<query-foreach-introduction,Introduction>>
-* <<foreach-mark-all-nodes-along-a-path,Mark all nodes along a path>>
+* <<query-foreach-introduction, Introduction>>
+* <<foreach-mark-all-nodes-along-a-path, Mark all nodes along a path>>
 
 
 [[query-foreach-introduction]]

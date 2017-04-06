@@ -1,15 +1,15 @@
 [[query-schema-index]]
 = Indexes
 
-* <<query-schema-index-introduction,Introduction>>
-* <<schema-index-create-an-index,Create an index>>
-* <<schema-index-drop-an-index,Drop an index>>
-* <<schema-index-use-index,Use index>>
-* <<schema-index-use-index-with-where-using-equality,Use index with `WHERE` using equality>>
-* <<schema-index-use-index-with-where-using-inequality,Use index with `WHERE` using inequality>>
-* <<schema-index-use-index-with-in,Use index with `IN`>>
-* <<schema-index-use-index-with-starts-with,Use index with `STARTS WITH`>>
-* <<schema-index-use-index-when-checking-for-the-existence-of-a-property,Use index when checking for the existence of a property>>
+* <<query-schema-index-introduction, Introduction>>
+* <<schema-index-create-an-index, Create an index>>
+* <<schema-index-drop-an-index, Drop an index>>
+* <<schema-index-use-index, Use index>>
+* <<schema-index-use-index-with-where-using-equality, Use index with `WHERE` using equality>>
+* <<schema-index-use-index-with-where-using-inequality, Use index with `WHERE` using inequality>>
+* <<schema-index-use-index-with-in, Use index with `IN`>>
+* <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
+* <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>
 
 
 [[query-schema-index-introduction]]

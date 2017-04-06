@@ -37,37 +37,37 @@ class WhereTest extends DocumentingTest {
     synopsis("`WHERE` adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.")
     p(
       """
-        |* <<where-introduction,Introduction>>
-        |* <<query-where-basic,Basic usage>>
-        | ** <<boolean-operations,Boolean operations>>
-        | ** <<filter-on-node-label,Filter on node label>>
-        | ** <<filter-on-node-property,Filter on node property>>
-        | ** <<filter-on-relationship-property,Filter on relationship property>>
-        | ** <<filter-on-dynamic-property,Filter on dynamically-computed property>>
-        | ** <<property-existence-checking,Property existence checking>>
-        |* <<query-where-string,String matching>>
-        | ** <<match-string-start,Match the beginning of a string>>
-        | ** <<match-string-end,Match the ending of a string>>
-        | ** <<match-string-contains,Match anywhere within a string>>
-        | ** <<match-string-negation,String matching negation>>
-        |* <<query-where-regex,Regular expressions>>
-        | ** <<matching-using-regular-expressions,Matching using regular expressions>>
-        | ** <<escaping-in-regular-expressions,Escaping in regular expressions>>
-        | ** <<case-insensitive-regular-expressions,Case-insensitive regular expressions>>
-        |* <<query-where-patterns,Using path patterns in `WHERE`>>
-        | ** <<filter-on-patterns,Filter on patterns>>
-        | ** <<filter-on-patterns-using-not,Filter on patterns using `NOT`>>
-        | ** <<filter-on-patterns-with-properties,Filter on patterns with properties>>
-        | ** <<filter-on-relationship-type,Filter on relationship type>>
-        |* <<query-where-lists,Lists>>
-        | ** <<where-in-operator,`IN` operator>>
-        |* <<missing-properties-and-values,Missing properties and values>>
-        | ** <<default-to-false-missing-property,Default to `false` if property is missing>>
-        | ** <<default-to-true-missing-property,Default to `true` if property is missing>>
-        | ** <<filter-on-null,Filter on `null`>>
-        |* <<query-where-ranges,Using ranges>>
-        | ** <<simple-range,Simple range>>
-        | ** <<composite-range,Composite range>>
+        |* <<where-introduction, Introduction>>
+        |* <<query-where-basic, Basic usage>>
+        | ** <<boolean-operations, Boolean operations>>
+        | ** <<filter-on-node-label, Filter on node label>>
+        | ** <<filter-on-node-property, Filter on node property>>
+        | ** <<filter-on-relationship-property, Filter on relationship property>>
+        | ** <<filter-on-dynamic-property, Filter on dynamically-computed property>>
+        | ** <<property-existence-checking, Property existence checking>>
+        |* <<query-where-string, String matching>>
+        | ** <<match-string-start, Match the beginning of a string>>
+        | ** <<match-string-end, Match the ending of a string>>
+        | ** <<match-string-contains, Match anywhere within a string>>
+        | ** <<match-string-negation, String matching negation>>
+        |* <<query-where-regex, Regular expressions>>
+        | ** <<matching-using-regular-expressions, Matching using regular expressions>>
+        | ** <<escaping-in-regular-expressions, Escaping in regular expressions>>
+        | ** <<case-insensitive-regular-expressions, Case-insensitive regular expressions>>
+        |* <<query-where-patterns, Using path patterns in `WHERE`>>
+        | ** <<filter-on-patterns, Filter on patterns>>
+        | ** <<filter-on-patterns-using-not, Filter on patterns using `NOT`>>
+        | ** <<filter-on-patterns-with-properties, Filter on patterns with properties>>
+        | ** <<filter-on-relationship-type, Filter on relationship type>>
+        |* <<query-where-lists, Lists>>
+        | ** <<where-in-operator, `IN` operator>>
+        |* <<missing-properties-and-values, Missing properties and values>>
+        | ** <<default-to-false-missing-property, Default to `false` if property is missing>>
+        | ** <<default-to-true-missing-property, Default to `true` if property is missing>>
+        | ** <<filter-on-null, Filter on `null`>>
+        |* <<query-where-ranges, Using ranges>>
+        | ** <<simple-range, Simple range>>
+        | ** <<composite-range, Composite range>>
       """.stripMargin)
     section("Introduction", "where-introduction") {
       p("`WHERE` is not a clause in its own right -- rather, it's part of `MATCH`, `OPTIONAL MATCH`, `START` and `WITH`.")

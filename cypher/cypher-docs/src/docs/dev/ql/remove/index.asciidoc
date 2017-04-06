@@ -4,10 +4,10 @@
 [abstract]
 The `REMOVE` clause is used to remove properties and labels from graph elements.
 
-* <<query-remove-introduction,Introduction>>
-* <<remove-remove-a-property,Remove a property>>
-* <<remove-remove-a-label-from-a-node,Remove a label from a node>>
-* <<remove-removing-multiple-labels,Removing multiple labels>>
+* <<query-remove-introduction, Introduction>>
+* <<remove-remove-a-property, Remove a property>>
+* <<remove-remove-a-label-from-a-node, Remove a label from a node>>
+* <<remove-removing-multiple-labels, Removing multiple labels>>
 
 
 [[query-remove-introduction]]

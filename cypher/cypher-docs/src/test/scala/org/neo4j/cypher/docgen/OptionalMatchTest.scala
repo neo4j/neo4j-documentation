@@ -52,10 +52,10 @@ class OptionalMatchTest extends DocumentingTest {
     synopsis("The `OPTIONAL MATCH` clause is used to search for the pattern described in it, while using nulls for missing parts of the pattern.")
     p(
       """
-        |* <<optional-match-introduction,Introduction>>
-        |* <<optional-relationships,Optional relationships>>
-        |* <<properties-on-optional-elements,Properties on optional elements>>
-        |* <<optional-typed-named-relationship,Optional typed and named relationship>>
+        |* <<optional-match-introduction, Introduction>>
+        |* <<optional-relationships, Optional relationships>>
+        |* <<properties-on-optional-elements, Properties on optional elements>>
+        |* <<optional-typed-named-relationship, Optional typed and named relationship>>
       """.stripMargin)
     section("Introduction", "optional-match-introduction") {
       p(
