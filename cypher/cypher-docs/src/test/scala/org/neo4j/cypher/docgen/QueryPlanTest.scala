@@ -360,7 +360,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Expand All",
       text =
-        """Given a start node, expand-all will follow relationships coming in or out, depending on the pattern relationship. Can also handle variable length pattern relationships.""".stripMargin,
+        """Given a start node, expand-all will follow incoming or outgoing relationships, depending on the pattern relationship. Can also handle variable length pattern relationships.""".stripMargin,
       queryText = """MATCH (p:Person {name: 'me'})-[:FRIENDS_WITH]->(fof) RETURN fof""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Expand(All)"))
     )
@@ -409,7 +409,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Skip",
       text =
-        """Skips 'n' rows from the incoming rows
+        """Skips 'n' rows from the incoming rows.
         """.stripMargin,
       queryText =
         """MATCH (p:Person)
