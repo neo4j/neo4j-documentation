@@ -3,10 +3,10 @@
 
 These operators are used in queries that update the graph.
 
-* <<query-plan-constraint-operation,Constraint operation>>
-* <<query-plan-empty-result,EmptyResult>>
-* <<query-plan-update-graph,UpdateGraph>>
-* <<query-plan-merge-into,Merge(Into)>>
+* <<query-plan-constraint-operation, Constraint operation>>
+* <<query-plan-empty-result, EmptyResult>>
+* <<query-plan-update-graph, UpdateGraph>>
+* <<query-plan-merge-into, Merge(Into)>>
 
 include::../ql/query-plan/constraint-operation.asciidoc[]
 

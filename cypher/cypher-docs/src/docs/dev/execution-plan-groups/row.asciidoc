@@ -3,20 +3,20 @@
 
 These operators take rows produced by another operator and transform them to a different set of rows
 
-* <<query-plan-eager,Eager>>
-* <<query-plan-distinct,Distinct>>
-* <<query-plan-eager-aggregation,EagerAggregation>>
-* <<query-plan-node-count-from-count-store,NodeCountFromCountStore>>
-* <<query-plan-relationship-count-from-count-store,RelationshipCountFromCountStore>>
-* <<query-plan-filter,Filter>>
-* <<query-plan-limit,Limit>>
-* <<query-plan-projection,Projection>>
-* <<query-plan-skip,Skip>>
-* <<query-plan-sort,Sort>>
-* <<query-plan-top,Top>>
-* <<query-plan-union,Union>>
-* <<query-plan-unwind,Unwind>>
-* <<query-plan-call-procedure,ProcedureCall>>
+* <<query-plan-eager, Eager>>
+* <<query-plan-distinct, Distinct>>
+* <<query-plan-eager-aggregation, EagerAggregation>>
+* <<query-plan-node-count-from-count-store, NodeCountFromCountStore>>
+* <<query-plan-relationship-count-from-count-store, RelationshipCountFromCountStore>>
+* <<query-plan-filter, Filter>>
+* <<query-plan-limit, Limit>>
+* <<query-plan-projection, Projection>>
+* <<query-plan-skip, Skip>>
+* <<query-plan-sort, Sort>>
+* <<query-plan-top, Top>>
+* <<query-plan-union, Union>>
+* <<query-plan-unwind, Unwind>>
+* <<query-plan-call-procedure, ProcedureCall>>
 
 include::../ql/query-plan/eager.asciidoc[]
 
