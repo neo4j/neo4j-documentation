@@ -87,9 +87,23 @@ class CombiningOperatorsTest extends DocumentingTest {
                 |CREATE (andres)-[:FRIENDS_WITH]->(andreas)"""
     )
     synopsis("The combining operators are used to piece together other operators.")
+    p(
+      """* <<query-plan-apply, Apply>>
+         * <<query-plan-semi-apply, SemiApply>>
+         * <<query-plan-anti-semi-apply, AntiSemiApply>>
+         * <<query-plan-let-semi-apply, LetSemiApply>>
+         * <<query-plan-let-anti-semi-apply, LetAntiSemiApply>>
+         * <<query-plan-select-or-semi-apply, SelectOrSemiApply>>
+         * <<query-plan-select-or-anti-semi-apply, SelectOrAntiSemiApply>>
+         * <<query-plan-conditional-apply, ConditionalApply>>
+         * <<query-plan-anti-conditional-apply, AntiConditionalApply>>
+         * <<query-plan-assert-same-node, AssertSameNode>>
+         * <<query-plan-node-hash-join, NodeHashJoin>>
+         * <<query-plan-triadic, Triadic>>
+                          """.stripMargin)
     p("The following graph is used for the examples below:")
     graphViz()
-    section("Apply") {
+    section("Apply", "query-plan-apply") {
       p("""`Apply` works by performing a nested loop.
            |Every row being produced on the left-hand side of the `Apply` operator will be fed to the leaf
            |operator on the right-hand side, and then `Apply` will yield the combined results.
@@ -103,7 +117,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("SemiApply") {
+    section("SemiApply", "query-plan-semi-apply") {
       p("""Tests for the existence of a pattern predicate.
            |`SemiApply` takes a row from its child operator and feeds it to the leaf operator on the right-hand side.
            |If the right-hand side operator tree yields at least one row, the row from the
@@ -116,7 +130,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("AntiSemiApply") {
+    section("AntiSemiApply", "query-plan-anti-semi-apply") {
       p("""Tests for the existence of a pattern predicate.
            |`SemiApply` takes a row from its child operator and feeds it to the leaf operator on the right-hand side.
            |If the right-hand side operator tree yields at least one row, the row from the
@@ -129,7 +143,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("LetSemiApply") {
+    section("LetSemiApply", "query-plan-let-semi-apply") {
       p("""Tests for the existence of a pattern predicate.
           |When a query contains multiple pattern predicates `LetSemiApply` will be used to evaluate the first of these.
           |It will record the result of evaluating the predicate but will leave any filtering to a another operator.""")
@@ -142,7 +156,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("LetAntiSemiApply") {
+    section("LetAntiSemiApply", "query-plan-let-anti-semi-apply") {
       p("""Tests for the absence of a pattern predicate.
           |When a query contains multiple pattern predicates `LetAntiSemiApply` will be used to evaluate the first of these.
           |It will record the result of evaluating the predicate but will leave any filtering to another operator.
@@ -156,7 +170,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("SelectOrSemiApply") {
+    section("SelectOrSemiApply", "query-plan-select-or-semi-apply") {
       p("""Tests for the existence of a pattern predicate and evaluates a predicate.
           |This operator allows for the mixing of normal predicates and pattern predicates
           |that check for the existence of a pattern.
@@ -169,7 +183,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("SelectOrAntiSemiApply") {
+    section("SelectOrAntiSemiApply", "query-plan-select-or-anti-semi-apply") {
       p("Tests for the absence of a pattern predicate and evaluates a predicate.")
       query("""MATCH (other:Person)
               |WHERE other.age > 25 OR NOT (other)-[:FRIENDS_WITH]->()
@@ -178,7 +192,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("ConditionalApply") {
+    section("ConditionalApply", "query-plan-conditional-apply") {
       p("Checks whether a variable is not `null`, and if so the right-hand side will be executed.")
       query("""MERGE (p:Person {name: 'Andres'}) ON MATCH SET p.exists = true""",
             assertPlanContains("ConditionalApply")) {
@@ -186,7 +200,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("AntiConditionalApply") {
+    section("AntiConditionalApply", "query-plan-anti-conditional-apply") {
       p("Checks whether a variable is `null`, and if so the right-hand side will be executed.")
       query("""MERGE (p:Person {name: 'Andres'}) ON CREATE SET p.exists = true""",
             assertPlanContains("ConditionalApply")) {
@@ -195,7 +209,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("AssertSameNode") {
+    section("AssertSameNode", "query-plan-assert-same-node") {
       p("This operator is used to ensure that no uniqueness constraints are violated.")
       query("MERGE (t:Team {name: 'Engineering', id: 42})",
             assertPlanContains("AssertSameNode")) {
@@ -206,7 +220,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("NodeHashJoin") {
+    section("NodeHashJoin", "query-plan-node-hash-join") {
       p("Using a hash table, a `NodeHashJoin` joins the input coming from the left with the input coming from the right.")
       query("""MATCH (andy:Person {name:'Andreas'})-[:WORKS_IN]->(loc)<-[:WORKS_IN]-(matt:Person {name:'Mattis'})
               |RETURN loc.name""",
@@ -219,7 +233,7 @@ class CombiningOperatorsTest extends DocumentingTest {
         executionPlan()
       }
     }
-    section("Triadic") {
+    section("Triadic", "query-plan-triadic") {
       p("""Triadic is used to solve triangular queries, such as the very
           |common 'find my friend-of-friends that are not already my friend'.
           |It does so by putting all the friends in a set, and use that set to check if the
