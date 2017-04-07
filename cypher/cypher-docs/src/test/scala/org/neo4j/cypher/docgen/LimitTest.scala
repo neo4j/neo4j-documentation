@@ -41,8 +41,8 @@ class LimitTest extends DocumentingTest {
     synopsis("`LIMIT` constrains the number of rows in the output.")
     p(
       """* <<limit-introduction, Introduction>>
-        |* <<limit-subset-results, Return a subset of the rows>>
-        |* <<limit-subset-results-using-expression, Using an expression with `LIMIT` to return a subset of the rows>>
+        |* <<limit-subset-rows, Return a subset of the rows>>
+        |* <<limit-subset-rows-using-expression, Using an expression with `LIMIT` to return a subset of the rows>>
       """.stripMargin)
     section("Introduction", "limit-introduction") {
       p("""`LIMIT` accepts any expression that evaluates to a positive integer -- however the expression cannot refer to nodes or relationships.""")
