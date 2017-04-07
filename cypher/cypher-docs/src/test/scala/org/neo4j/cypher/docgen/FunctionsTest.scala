@@ -113,74 +113,6 @@ class FunctionsTest extends DocumentingTestBase {
       assertions = (p) => assertEquals(7, p.columnAs[Long]("size(a.name)").toList.head))
   }
 
-  @Test def labels() {
-    testThis(
-      title = "`labels()`",
-      syntax = "labels( node )",
-      arguments = List("node" -> "Any expression that returns a single node"),
-      text = """Returns a list of string representations for the labels attached to a node.""",
-      queryText = """MATCH (a) WHERE a.name = 'Alice' RETURN labels(a)""",
-      returns = """The labels of `n` is returned by the query.""",
-      assertions = {
-        (p) =>
-          val iter: Iterable[String] = p.columnAs[Iterable[String]]("labels(a)").next()
-          assert(iter.toSet === Set("foo", "bar"))
-      }
-    )
-  }
-
-  @Test def keys() {
-    testThis(
-      title = "`keys()`",
-      syntax = "keys(  expression )",
-      arguments = List("expression" -> "An expression that returns a node, a relationship, or a map"),
-      text = """Returns a list of string representations for the property names of a node, relationship, or map.""",
-      queryText = """MATCH (a) WHERE a.name = 'Alice' RETURN keys(a)""",
-      returns = """The name of the properties of `n` is returned by the query.""",
-      assertions = {
-        (p) =>
-          val iter: Iterable[String] = p.columnAs[Iterable[String]]("keys(a)").next()
-          assert(iter.toSet === Set("name", "age", "eyes"))
-      }
-    )
-  }
-
-  @Test def extract() {
-    testThis(
-      title = "`extract()`",
-      syntax = "extract( variable IN list | expression )",
-      arguments = List(
-        "list" -> "An expression that returns a list",
-        "variable" -> "The closure will have a variable introduced in its context. Here you decide which variable to use.",
-        "expression" -> "This expression will run once per value in the list, and produces the result list."
-      ),
-      text = """To return a single property, or the value of a function from a list of nodes or relationships,
- you can use `extract()`. It will go through a list, run an expression on every element, and return the results
- in a list with these values. It works like the `map` method in functional languages such as Lisp and Scala.""",
-      queryText = """MATCH p = (a)-->(b)-->(c) WHERE a.name = 'Alice' AND b.name = 'Bob' AND c.name = 'Daniel' RETURN extract(n IN nodes(p) | n.age) AS extracted""",
-      returns = """The `age` property of all nodes in the path are returned.""",
-      assertions = (p) => assertEquals(List(Map("extracted" -> List(38, 25, 54))), p.toList))
-  }
-
-  @Test def reduce() {
-    testThis(
-      title = "`reduce()`",
-      syntax = "reduce( accumulator = initial, variable IN list | expression )",
-      arguments = List(
-        "accumulator" -> "A variable that will hold the result and the partial results as the list is iterated",
-        "initial"    -> "An expression that runs once to give a starting value to the accumulator",
-        "list" -> "An expression that returns a list",
-        "variable" -> "The closure will have a variable introduced in its context. Here you decide which variable to use.",
-        "expression" -> "This expression will run once per value in the list, and produces the result value."
-      ),
-      text = """To run an expression against individual elements of a list, and store the result of the expression in
- an accumulator, you can use `reduce()`. It will go through a list, run an expression on every element, storing the partial result
- in the accumulator. It works like the `fold` or `reduce` method in functional languages such as Lisp and Scala.""",
-      queryText = """MATCH p = (a)-->(b)-->(c) WHERE a.name = 'Alice' AND b.name = 'Bob' AND c.name = 'Daniel' RETURN reduce(totalAge = 0, n IN nodes(p) | totalAge + n.age) AS reduction""",
-      returns = """The `age` property of all nodes in the path are summed and returned as a single value.""",
-      assertions = (p) => assertEquals(List(Map("reduction" -> 117)), p.toList))
-  }
-
   @Test def head() {
     testThis(
       title = "`head()`",
@@ -207,59 +139,6 @@ class FunctionsTest extends DocumentingTestBase {
       assertions = (p) => assertEquals(List("three"), p.columnAs[List[_]]("last(a.array)").toList))
   }
 
-  @Test def tail() {
-    testThis(
-      title = "`tail()`",
-      syntax = "tail( expression )",
-      arguments = List(
-        "expression" -> "This expression should return a list of some kind."
-      ),
-      text = "`tail()` returns all but the first element in a list.",
-      queryText = """MATCH (a) WHERE a.name = 'Eskil' RETURN a.array, tail(a.array)""",
-      returns = "This returns the property named `array` and all elements of that property except the first one.",
-      assertions = (p) => {
-        val toList = p.columnAs[Iterable[_]]("tail(a.array)").toList.head.toList
-        assert(toList === List("two","three"))
-      })
-  }
-
-  @Test def filter() {
-    testThis(
-      title = "`filter()`",
-      syntax = "filter(variable IN list WHERE predicate)",
-      arguments = common_arguments,
-      text = "`filter()` returns all the elements in a list that comply to a predicate.",
-      queryText = """MATCH (a) WHERE a.name = 'Eskil' RETURN a.array, filter(x IN a.array WHERE size(x) = 3)""",
-      returns = "This returns the property named `array` and a list of values in it, which have size *'3'*.",
-      assertions = (p) => {
-        val array = p.columnAs[Iterable[_]]("filter(x IN a.array WHERE size(x) = 3)").toList.head
-        assert(List("one","two") === array.toList)
-      })
-  }
-
-  @Test def nodes_in_path() {
-    testThis(
-      title = "`nodes()`",
-      syntax = "nodes( path )",
-      arguments = List("path" -> "A path."),
-      text = """Returns all nodes in a path.""",
-      queryText = """MATCH p = (a)-->(b)-->(c) WHERE a.name = 'Alice' AND c.name = 'Eskil' RETURN nodes(p)""",
-      returns = """All the nodes in the path `p` are returned by the example query.""",
-      assertions = (p) => assert(List(node("A"), node("B"), node("E")) === p.columnAs[Seq[Node]]("nodes(p)").toList.head)
-    )
-  }
-
-  @Test def rels_in_path() {
-    testThis(
-      title = "`relationships()`",
-      syntax = "relationships( path )",
-      arguments = List("path" -> "A path."),
-      text = """Returns all relationships in a path.""",
-      queryText = """MATCH p = (a)-->(b)-->(c) WHERE a.name = 'Alice' AND c.name = 'Eskil' RETURN relationships(p)""",
-      returns = """All the relationships in the path `p` are returned.""",
-      assertions = (p) => assert(2 === p.columnAs[Seq[Node]]("relationships(p)").toSeq.head.length)
-    )
-  }
 
   @Test def id() {
     testThis(
@@ -285,27 +164,6 @@ In case all arguments are `null`, `null` will be returned.""",
       assertions = (p) => assert(Seq("brown") === p.columnAs[String]("coalesce(a.hairColor, a.eyes)").toSeq)
     )
   }
-
-  @Test def range() {
-    testThis(
-      title = "`range()`",
-      syntax = "range( start, end [, step] )",
-      arguments = List(
-        "start" -> "A numerical expression.",
-        "end" -> "A numerical expression.",
-        "step" -> "A numerical expression."
-      ),
-      text = "`range()` returns numerical values in a range. The default distance between values in the range is `1`. The range is inclusive in both ends.",
-      queryText = "RETURN range(0, 10), range(2, 18, 3)",
-      returns = "Two lists of numbers in the given ranges are returned.",
-      assertions = (p) => assert(List(Map(
-        "range(0, 10)"-> List(0,1,2,3,4,5,6,7,8,9,10),
-        "range(2, 18, 3)"->List(2,5,8,11,14,17)
-      )) === p.toList)
-    )
-  }
-
-
 
   @Test def toInt() {
     testThis(

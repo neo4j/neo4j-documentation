@@ -272,44 +272,9 @@ include::type.asciidoc[leveloffset=+1]
 
 include::query-functions-aggregating.adoc[leveloffset=+1]
 
+//List functions
 
-[[query-functions-list]]
-== List functions
-
-List functions return lists of things -- nodes in a path, and so on.
-
-Further details and examples of lists may be found in <<syntax-lists>> and <<query-operators-list>>.
-
-* <<functions-extract,extract()>>
-* <<functions-filter,filter()>>
-* <<functions-keys,keys()>>
-* <<functions-labels,labels()>>
-* <<functions-nodes,nodes()>>
-* <<functions-range,range()>>
-* <<functions-reduce,reduce()>>
-* <<functions-relationships,relationships()>>
-* <<functions-tail,tail()>>
-
-.Graph
-include::includes/cypher-functions-graph.asciidoc[]
-
-include::extract.asciidoc[leveloffset=+1]
-
-include::filter.asciidoc[leveloffset=+1]
-
-include::keys.asciidoc[leveloffset=+1]
-
-include::labels.asciidoc[leveloffset=+1]
-
-include::nodes.asciidoc[leveloffset=+1]
-
-include::range.asciidoc[leveloffset=+1]
-
-include::reduce.asciidoc[leveloffset=+1]
-
-include::relationships.asciidoc[leveloffset=+1]
-
-include::tail.asciidoc[leveloffset=+1]
+include::query-functions-list.adoc[leveloffset=+1]
 
 //Mathematical functions
 
