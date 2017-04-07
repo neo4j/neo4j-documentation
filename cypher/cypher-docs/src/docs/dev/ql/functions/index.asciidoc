@@ -315,58 +315,9 @@ include::tail.asciidoc[leveloffset=+1]
 
 include::query-functions-mathematical.adoc[leveloffset=+1]
 
+//String functioms
 
-[[query-functions-string]]
-== String functions
-
-These functions all operate on string expressions only, and will return an error if used on any other values.
-The exception to this rule is `toString()`, which also accepts numbers and booleans.
-
-See also <<query-operators-string>>.
-
-[NOTE]
-The functions `lower()` and `upper()` have been superseded by `toLower()` and `toUpper()`, respectively, and will be deprecated in a future release.
-
-* <<functions-left,left()>>
-* <<functions-ltrim,lTrim()>>
-* <<functions-replace,replace()>>
-* <<functions-reverse,reverse()>>
-* <<functions-right,right()>>
-* <<functions-rtrim,rTrim()>>
-* <<functions-split,split()>>
-* <<functions-substring,substring()>>
-* <<functions-tolower,toLower()>>
-* <<functions-tostring,toString()>>
-* <<functions-toupper,toUpper()>>
-* <<functions-trim,trim()>>
-
-
-.Graph
-include::includes/cypher-functions-graph.asciidoc[]
-
-include::left.asciidoc[leveloffset=+1]
-
-include::ltrim.asciidoc[leveloffset=+1]
-
-include::replace.asciidoc[leveloffset=+1]
-
-include::reverse.asciidoc[leveloffset=+1]
-
-include::right.asciidoc[leveloffset=+1]
-
-include::rtrim.asciidoc[leveloffset=+1]
-
-include::split.asciidoc[leveloffset=+1]
-
-include::substring.asciidoc[leveloffset=+1]
-
-include::tolower.asciidoc[leveloffset=+1]
-
-include::tostring.asciidoc[leveloffset=+1]
-
-include::toupper.asciidoc[leveloffset=+1]
-
-include::trim.asciidoc[leveloffset=+1]
+include::query-functions-string.adoc[leveloffset=+1]
 
 //Spatial functions
 
