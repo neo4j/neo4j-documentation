@@ -82,7 +82,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       """.stripMargin)
     p("The following graph is used for the examples below:")
     graphViz()
-    section("`avg()`", "functions-avg") {
+    section("avg()", "functions-avg") {
       p("`avg()` calculates the average of a numeric column.")
       function("avg(expression)", ("expression", "A numeric expression."))
       query("MATCH (n:Person) RETURN avg(n.age)", ResultAssertions((r) => {
@@ -92,7 +92,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("`collect()`", "functions-collect") {
+    section("collect()", "functions-collect") {
       p(
         """`collect()` collects all the values into a list.
           |It will ignore `null` values.""".stripMargin)
@@ -104,7 +104,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("`count()`", "functions-count") {
+    section("count()", "functions-count") {
       p(
         """`count()` is used to count the number of rows.
           |`count()` can be used in two forms -- `count(*)` which just counts the number of matching rows, and `count(<expression>)`, which counts the number of non-`null` values in `<expression>`.
@@ -162,7 +162,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         }
       }
     }
-    section("`max()`", "functions-max") {
+    section("max()", "functions-max") {
       p("`max()` takes a numeric property as input, and returns the highest value in that column.")
       function("max(expression)", ("expression", "A numeric expression."))
       query("MATCH (n:Person) RETURN max(n.age)", ResultAssertions((r) => {
@@ -172,7 +172,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("`min()`", "functions-min") {
+    section("min()", "functions-min") {
       p("`min()` takes a numeric property as input, and returns the lowest value in that column.")
       function("min(expression)", ("expression", "A numeric expression."))
       query("MATCH (n:Person) RETURN min(n.age)", ResultAssertions((r) => {
@@ -182,7 +182,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("`percentileCont()`", "functions-percentilecont") {
+    section("percentileCont()", "functions-percentilecont") {
       p(
         """`percentileCont()` calculates the percentile of a given value over a group, with a percentile from 0.0 to 1.0.
           |It uses a linear interpolation method, calculating a weighted average between two values, if the desired percentile lies between them.
@@ -195,7 +195,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("`percentileDisc()`", "functions-percentiledisc") {
+    section("percentileDisc()", "functions-percentiledisc") {
       p(
         """`percentileDisc()` calculates the percentile of a given value over a group, with a percentile from 0.0 to 1.0.
           |It uses a rounding method, returning the nearest value to the percentile.
@@ -208,7 +208,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("`stDev()`", "functions-stdev") {
+    section("stDev()", "functions-stdev") {
       p(
         """`stDev()` calculates the standard deviation for a given value over a group.
           |It uses a standard two-pass method, with `N - 1` as the denominator, and should be used when taking a sample of the population for an unbiased estimate.
@@ -221,7 +221,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("`stDevP()`", "functions-stdevp") {
+    section("stDevP()", "functions-stdevp") {
       p(
         """`stDevP()` calculates the standard deviation for a given value over a group.
           |It uses a standard two-pass method, with `N` as the denominator, and should be used when calculating the standard deviation for an entire population.
@@ -234,7 +234,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("`sum()`", "functions-sum") {
+    section("sum()", "functions-sum") {
       p(
         """`sum()` simply adds up all the numeric values it encounters.
           |Any `null` values are silently dropped.""".stripMargin)

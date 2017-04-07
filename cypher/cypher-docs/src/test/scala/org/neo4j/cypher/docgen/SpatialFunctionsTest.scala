@@ -45,7 +45,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       """.stripMargin)
     p("The following graph is used for some of the examples below.")
     graphViz()
-    section("`distance()`", "functions-distance") {
+    section("distance()", "functions-distance") {
       p(
         """`distance()` returns the geodesic distance between two points in the same CRS.
           |If the points are in the _cartesian_ CRS, then the units of the returned distance will be the same as the units of the points, calculated using Pythagoras' theorem.
@@ -74,7 +74,7 @@ class SpatialFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("`point()` - WGS 84", "functions-point") {
+    section("point() - WGS 84", "functions-point") {
       p("`point()` returns a value of type 'Point', which represents a point in the _WGS 84_ coordinate system.")
       function("point({longitude | x, latitude | y [, crs]})", ("A single map consisting of the following", ""), ("longitude/x", "A numeric expression"), ("latitude/y", "A numeric expression"), ("crs", "The string 'WGS-84'"))
       query("RETURN point({longitude: 56.7, latitude: 12.78}) AS point", ResultAssertions((r) => {
@@ -102,7 +102,7 @@ class SpatialFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("`point()` - cartesian 2D", "functions-point-cartesian") {
+    section("point() - cartesian 2D", "functions-point-cartesian") {
       p("`point()` returns a value of type 'Point', which represents a point in the _cartesian_ coordinate system.")
       function("point({x, y [, crs]})", ("A single map consisting of the following", ""), ("x", "A numeric expression"), ("y", "A numeric expression"), ("crs", "The string 'cartesian'"))
       query("RETURN point({x: 2.3, y: 4.5}) AS point", ResultAssertions((r) => {
