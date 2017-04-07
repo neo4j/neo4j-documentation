@@ -207,66 +207,9 @@ These functions are used to specify points in a 2D coordinate system and to calc
 
 include::query-functions-predicate.adoc[leveloffset=+1]
 
+//Scalar functions
 
-[[query-functions-scalar]]
-== Scalar functions
-
-Scalar functions return a single value.
-
-[IMPORTANT]
-The `length()` and `size()` functions are quite similar, and so it is important to take note of the difference.
-Due to backwards compatibility, `length()` currently works on four types: strings, paths, lists and pattern expressions.
-However, it is recommended to use `length()` only for paths, and the `size()` function for strings, lists and pattern expressions.
-`length()` on those types may be deprecated in future.
-
-* <<functions-coalesce,coalesce()>>
-* <<functions-endnode,endNode()>>
-* <<functions-head,head()>>
-* <<functions-id,id()>>
-* <<functions-last,last()>>
-* <<functions-length,length()>>
-* <<functions-properties,properties()>>
-* <<functions-size,size()>>
-* <<functions-size-of-pattern-expression,Size of pattern expression>>
-* <<functions-size-of-string,Size of string>>
-* <<functions-startnode,startNode()>>
-* <<functions-timestamp,timestamp()>>
-* <<functions-tofloat,toFloat()>>
-* <<functions-toint,toInt()>>
-* <<functions-type,type()>>
-
-.Graph
-include::includes/cypher-functions-graph.asciidoc[]
-
-include::coalesce.asciidoc[leveloffset=+1]
-
-include::endnode.asciidoc[leveloffset=+1]
-
-include::head.asciidoc[leveloffset=+1]
-
-include::id.asciidoc[leveloffset=+1]
-
-include::last.asciidoc[leveloffset=+1]
-
-include::length.asciidoc[leveloffset=+1]
-
-include::properties.asciidoc[leveloffset=+1]
-
-include::size.asciidoc[leveloffset=+1]
-
-include::size-of-pattern-expression.asciidoc[leveloffset=+1]
-
-include::size-of-string.asciidoc[leveloffset=+1]
-
-include::startnode.asciidoc[leveloffset=+1]
-
-include::timestamp.asciidoc[leveloffset=+1]
-
-include::tofloat.asciidoc[leveloffset=+1]
-
-include::toint.asciidoc[leveloffset=+1]
-
-include::type.asciidoc[leveloffset=+1]
+include::query-functions-scalar.adoc[leveloffset=+1]
 
 //Aggregating functions
 
