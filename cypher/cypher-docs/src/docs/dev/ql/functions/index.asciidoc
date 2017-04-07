@@ -7,7 +7,7 @@
 This section contains information on all functions in the Cypher query language.
 --
 
-* Predicate functions [<<header-query-predicates, Summary>>|<<query-predicates, Detail>>]
+* Predicate functions [<<header-query-predicates, Summary>>|<<query-functions-predicate, Detail>>]
 * Scalar functions [<<header-query-functions-scalar, Summary>>|<<query-functions-scalar, Detail>>]
 * Aggregating functions [<<header-query-functions-aggregating, Summary>>|<<query-functions-aggregating, Detail>>]
 * List functions [<<header-query-functions-list, Summary>>|<<query-functions-list, Detail>>]
@@ -24,7 +24,7 @@ Most functions in Cypher will return `null` if an input parameter is `null`.
 
 
 [[header-query-predicates]]
-**<<query-predicates, Predicate functions>>**
+**<<query-functions-predicate, Predicate functions>>**
 
 These functions return either true or false for the arguments given.
 
@@ -203,32 +203,9 @@ These functions are used to specify points in a 2D coordinate system and to calc
 |===
 
 
-[[query-predicates]]
-== Predicate functions
+//Predicate functions
 
-Predicates are boolean functions that return true or false for a given set of input.
-They are most commonly used to filter out subgraphs in the `WHERE` part of a query.
-
-* <<functions-all,all()>>
-* <<functions-any,any()>>
-* <<functions-exists,exists()>>
-* <<functions-none,none()>>
-* <<functions-single,single()>>
-
-See also <<query-operators-comparison>>.
-
-.Graph
-include::includes/cypher-functions-graph.asciidoc[]
-
-include::all.asciidoc[leveloffset=+1]
-
-include::any.asciidoc[leveloffset=+1]
-
-include::exists.asciidoc[leveloffset=+1]
-
-include::none.asciidoc[leveloffset=+1]
-
-include::single.asciidoc[leveloffset=+1]
+include::query-functions-predicate.adoc[leveloffset=+1]
 
 
 [[query-functions-scalar]]

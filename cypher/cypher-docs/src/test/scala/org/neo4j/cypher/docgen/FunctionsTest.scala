@@ -52,63 +52,6 @@ class FunctionsTest extends DocumentingTestBase {
     "predicate" -> "A predicate that is tested against all items in the list."
   )
 
-  @Test def all() {
-
-
-    testThis(
-      title = "`all()`",
-      syntax = "all(variable IN list WHERE predicate)",
-      arguments = common_arguments,
-      text = """Tests whether a predicate holds for all elements of this list.""",
-      queryText = """MATCH p = (a)-[*1..3]->(b) WHERE a.name = 'Alice' AND b.name = 'Daniel' AND all(x IN nodes(p) WHERE x.age > 30) RETURN p""",
-      returns = """All nodes in the returned paths will have an `age` property of at least *'30'*.""",
-      assertions = (p) => assertEquals(1, p.toSeq.length))
-  }
-
-  @Test def any() {
-    testThis(
-      title = "`any()`",
-      syntax = "any(variable IN list WHERE predicate)",
-      arguments = common_arguments,
-      text = """Tests whether a predicate holds for at least one element in the list.""",
-      queryText = """MATCH (a) WHERE a.name = 'Eskil' AND any(x IN a.array WHERE x = 'one') RETURN a""",
-      returns = """All nodes in the returned paths has at least one *'one'* value set in the array property named `array`.""",
-      assertions = (p) => assertEquals(List(Map("a"->node("E"))), p.toList))
-  }
-
-  @Test def none() {
-    testThis(
-      title = "`none()`",
-      syntax = "none(variable IN list WHERE predicate)",
-      arguments = common_arguments,
-      text = """Returns true if the predicate holds for no element in the list.""",
-      queryText = """MATCH p = (n)-[*1..3]->(b) WHERE n.name = 'Alice' AND none(x IN nodes(p) WHERE x.age = 25) RETURN p""",
-      returns = """No nodes in the returned paths has an `age` property set to *'25'*.""",
-      assertions = (p) => assertEquals(2, p.toSeq.length))
-  }
-
-  @Test def single() {
-    testThis(
-      title = "`single()`",
-      syntax = "single(variable IN list WHERE predicate)",
-      arguments = common_arguments,
-      text = """Returns true if the predicate holds for exactly one of the elements in the list.""",
-      queryText = """MATCH p = (n)-->(b) WHERE n.name = 'Alice' AND single(var IN nodes(p) WHERE var.eyes = 'blue') RETURN p""",
-      returns = """Exactly one node in every returned path will have the `eyes` property set to *'blue'*.""",
-      assertions = (p) => assertEquals(1, p.toSeq.length))
-  }
-
-  @Test def exists() {
-    testThis(
-      title = "`exists()`",
-      syntax = "exists( pattern-or-property )",
-      arguments = List("pattern-or-property" -> "A pattern or a property (in the form 'variable.prop')."),
-      text = """Returns true if a match for the pattern exists in the graph, or the property exists in the node, relationship or map.""",
-      queryText = """MATCH (n) WHERE exists(n.name) RETURN n.name AS name, exists((n)-[:MARRIED]->()) AS is_married""",
-      returns = """This query returns all the nodes with a name property along with a boolean `true` / `false` indicating if they are married.""",
-      assertions = (p) => assertEquals(5, p.toSeq.length))
-  }
-
   @Test def relationship_type() {
     testThis(
       title = "`type()`",
