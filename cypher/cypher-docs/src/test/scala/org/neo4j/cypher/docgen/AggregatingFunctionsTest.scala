@@ -84,7 +84,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     graphViz()
     section("`avg()`", "functions-avg") {
       p("`avg()` calculates the average of a numeric column.")
-      function("`avg( expression )`", ("expression", "A numeric expression."))
+      function("avg(expression)", ("expression", "A numeric expression."))
       query("MATCH (n:Person) RETURN avg(n.age)", ResultAssertions((r) => {
         r.toList.head("avg(n.age)") should equal(30L)
       })) {
@@ -96,7 +96,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       p(
         """`collect()` collects all the values into a list.
           |It will ignore `null` values.""".stripMargin)
-      function("`collect( expression )`", ("expression", "An expression."))
+      function("collect(expression)", ("expression", "An expression."))
       query("MATCH (n:Person) RETURN collect(n.age)", ResultAssertions((r) => {
         r.toList.head("collect(n.age)") should equal(Seq(13, 33, 44))
       })) {
@@ -109,7 +109,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         """`count()` is used to count the number of rows.
           |`count()` can be used in two forms -- `count(*)` which just counts the number of matching rows, and `count(<expression>)`, which counts the number of non-`null` values in `<expression>`.
         """.stripMargin)
-      function("`count( expression )`", ("expression", "An expression."))
+      function("count(expression)", ("expression", "An expression."))
       section("Count nodes") {
         p("`count(*)` can be used to count the number of nodes; for example, the number of nodes connected to one node.")
         query("MATCH (n {name: 'A'})-->(x) RETURN labels(n), n.age, count(*)", ResultAssertions((r) => {
@@ -164,7 +164,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     }
     section("`max()`", "functions-max") {
       p("`max()` takes a numeric property as input, and returns the highest value in that column.")
-      function("`max( expression )`", ("expression", "A numeric expression."))
+      function("max(expression)", ("expression", "A numeric expression."))
       query("MATCH (n:Person) RETURN max(n.age)", ResultAssertions((r) => {
         r.toList.head("max(n.age)") should equal(44L)
       })) {
@@ -174,7 +174,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     }
     section("`min()`", "functions-min") {
       p("`min()` takes a numeric property as input, and returns the lowest value in that column.")
-      function("`min( expression )`", ("expression", "A numeric expression."))
+      function("min(expression)", ("expression", "A numeric expression."))
       query("MATCH (n:Person) RETURN min(n.age)", ResultAssertions((r) => {
         r.toList.head("min(n.age)") should equal(13L)
       })) {
@@ -187,7 +187,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         """`percentileCont()` calculates the percentile of a given value over a group, with a percentile from 0.0 to 1.0.
           |It uses a linear interpolation method, calculating a weighted average between two values, if the desired percentile lies between them.
           |For nearest values using a rounding method, see `percentileDisc`.""")
-      function("`percentileCont( expression, percentile )`", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
+      function("percentileCont(expression, percentile)", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
       query("MATCH (n:Person) RETURN percentileCont(n.age, 0.4)", ResultAssertions((r) => {
         r.toList.head("percentileCont(n.age, 0.4)") should equal(29L)
       })) {
@@ -200,7 +200,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         """`percentileDisc()` calculates the percentile of a given value over a group, with a percentile from 0.0 to 1.0.
           |It uses a rounding method, returning the nearest value to the percentile.
           |For interpolated values, see `percentileCont`.""")
-      function("`percentileDisc( expression, percentile )`", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
+      function("percentileDisc(expression, percentile)", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
       query("MATCH (n:Person) RETURN percentileDisc(n.age, 0.5)", ResultAssertions((r) => {
         r.toList.head("percentileDisc(n.age, 0.5)") should equal(33L)
       })) {
@@ -213,7 +213,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         """`stDev()` calculates the standard deviation for a given value over a group.
           |It uses a standard two-pass method, with `N - 1` as the denominator, and should be used when taking a sample of the population for an unbiased estimate.
           |When the standard variation of the entire population is being calculated, `stdDevP` should be used.""")
-      function("`stDev( expression )`", ("expression", "A numeric expression."))
+      function("stDev(expression)", ("expression", "A numeric expression."))
       query("MATCH (n) WHERE n.name IN ['A', 'B', 'C'] RETURN stDev(n.age)", ResultAssertions(f = (r) => {
         assertEquals(15.7162336455, r.toList.head("stDev(n.age)").asInstanceOf[Double], 0.0000001)
       })) {
@@ -226,7 +226,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         """`stDevP()` calculates the standard deviation for a given value over a group.
           |It uses a standard two-pass method, with `N` as the denominator, and should be used when calculating the standard deviation for an entire population.
           |When the standard variation of only a sample of the population is being calculated, `stDev` should be used.""")
-      function("`stDevP( expression )`", ("expression", "A numeric expression."))
+      function("stDevP(expression)", ("expression", "A numeric expression."))
       query("MATCH (n) WHERE n.name IN ['A', 'B', 'C'] RETURN stDevP(n.age)", ResultAssertions((r) => {
         assertEquals(12.8322510366, r.toList.head("stDevP(n.age)").asInstanceOf[Double], 0.0000001)
       })) {
@@ -238,7 +238,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       p(
         """`sum()` simply adds up all the numeric values it encounters.
           |Any `null` values are silently dropped.""".stripMargin)
-      function("`sum( expression )`", ("expression", "A numeric expression."))
+      function("sum(expression)", ("expression", "A numeric expression."))
       query("MATCH (n:Person) RETURN sum(n.age)", ResultAssertions((r) => {
         r.toList.head("sum(n.age)") should equal(90L)
       })) {
