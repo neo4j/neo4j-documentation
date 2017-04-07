@@ -27,21 +27,23 @@ class PredicateFunctionsTest extends DocumentingTest {
 
   override def doc = new DocBuilder {
     doc("Predicate functions", "query-functions-predicate")
-    initQueries("""CREATE (alice {name:'Alice', age: 38, eyes: 'brown'}),
-                  |       (bob {name: 'Bob', age: 25, eyes: 'blue'}),
-                  |       (charlie {name: 'Charlie', age: 53, eyes: 'green'}),
-                  |       (daniel {name: 'Daniel', age: 54, eyes: 'brown'}),
-                  |       (eskil {name: 'Eskil', age: 41, eyes: 'blue', array: ['one', 'two', 'three']}),
-                  |
-                  |       (alice)-[:KNOWS]->(bob),
-                  |       (alice)-[:KNOWS]->(charlie),
-                  |       (bob)-[:KNOWS]->(daniel),
-                  |       (charlie)-[:KNOWS]->(daniel),
-                  |       (bob)-[:MARRIED]->(eskil)""")
+    initQueries(
+      """CREATE (alice {name:'Alice', age: 38, eyes: 'brown'}),
+        |       (bob {name: 'Bob', age: 25, eyes: 'blue'}),
+        |       (charlie {name: 'Charlie', age: 53, eyes: 'green'}),
+        |       (daniel {name: 'Daniel', age: 54, eyes: 'brown'}),
+        |       (eskil {name: 'Eskil', age: 41, eyes: 'blue', array: ['one', 'two', 'three']}),
+        |
+        |       (alice)-[:KNOWS]->(bob),
+        |       (alice)-[:KNOWS]->(charlie),
+        |       (bob)-[:KNOWS]->(daniel),
+        |       (charlie)-[:KNOWS]->(daniel),
+        |       (bob)-[:MARRIED]->(eskil)""")
     synopsis(
       """Predicates are boolean functions that return true or false for a given set of input.
         |They are most commonly used to filter out subgraphs in the `WHERE` part of a query.""".stripMargin)
-    p("""* <<functions-all,all()>>
+    p(
+      """* <<functions-all,all()>>
         |* <<functions-any,any()>>
         |* <<functions-exists,exists()>>
         |* <<functions-none,none()>>
@@ -55,8 +57,8 @@ class PredicateFunctionsTest extends DocumentingTest {
           |WHERE a.name = 'Alice' AND b.name = 'Daniel'
           |AND all(x IN nodes(p) WHERE x.age > 30)
           |RETURN p""".stripMargin, ResultAssertions((r) => {
-        r.toList.length should equal(1)
-      })) {
+          r.toList.length should equal(1)
+        })) {
         p("All nodes in the returned paths will have an `age` property of at least *'30'*.")
         resultTable()
       }
