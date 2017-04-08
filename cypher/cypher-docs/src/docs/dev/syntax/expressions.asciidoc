@@ -54,5 +54,5 @@ String literals can contain the following escape sequences:
 |`\Uxxxxxxxx`|Unicode UTF-32 code point (8 hex digits must follow the `\U`)
 |===================
 
-include::../ql/syntax/index.asciidoc[leveloffset=+1]
+include::../ql/query-syntax-case.adoc[leveloffset=+1]
 

@@ -49,60 +49,6 @@ class SyntaxTest extends DocumentingTestBase {
 
 
 
-  @Test def simple_case() {
-    testThis(
-      title = "Simple `CASE`",
-      syntax = """CASE test
-WHEN value THEN result
-[WHEN ...]
-[ELSE default]
-END""",
-
-      arguments = List(
-        "test" -> "A valid expression.",
-        "value" -> "An expression whose result will be compared to the `test` expression.",
-        "result" -> "This is the result expression used if the value expression matches the `test` expression.",
-        "default" -> "The expression to use if no match is found."
-      ),
-      text = "The expression is calculated, and compared in order with the `WHEN` clauses until a match is found. " +
-        "If no match is found the expression in the `ELSE` clause is used, or `null`, if no `ELSE` case exists.",
-      queryText =
-        """MATCH (n) RETURN CASE n.eyes
-    WHEN 'blue'  THEN 1
-    WHEN 'brown' THEN 2
-                 ELSE 3
-END AS result""",
-      returns = "",
-      assertions = (p) => assert(Set(Map("result" -> 2), Map("result" -> 1), Map("result" -> 2), Map("result" -> 1), Map("result" -> 3)) === p.toSet)
-    )
-  }
-
-  @Test def generic_case() {
-    testThis(
-      title = "Generic `CASE`",
-      syntax = """CASE
-WHEN predicate THEN result
-[WHEN ...]
-[ELSE default]
-END""",
-
-      arguments = List(
-        "predicate" -> "A predicate that is tested to find a valid alternative.",
-        "result" -> "This is the result expression used if the predicate matches.",
-        "default" -> "The expression to use if no match is found."
-      ),
-      text = "The predicates are evaluated in order until a true value is found, and the result value is used. " +
-        "If no match is found the expression in the `ELSE` clause is used, or `null`, if no `ELSE` case exists.",
-      queryText =
-        """MATCH (n) RETURN CASE
-    WHEN n.eyes = 'blue'  THEN 1
-    WHEN n.age < 40       THEN 2
-                          ELSE 3
-END AS result""",
-      returns = "",
-      assertions = (p) => assert(Set(Map("result" -> 3), Map("result" -> 1), Map("result" -> 2), Map("result" -> 1), Map("result" -> 3)) === p.toSet)
-    )
-  }
 
   @Test def distinct_operator() {
     testThis(
