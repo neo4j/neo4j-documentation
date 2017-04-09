@@ -25,7 +25,7 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-parameters-index-value-legacy, Index value (legacy indexes)>>
  ** <<cypher-parameters-index-query-legacy, Index query (legacy indexes)>>
 * <<query-operators, Operators>>
- ** <<query-operators, Operators at a glance>>
+ ** <<query-operators-summary, Operators at a glance>>
  ** <<query-operators-general, General operators>>
  ** <<query-operators-mathematical, Mathematical operators>>
  ** <<query-operators-comparison, Comparison operators>>
@@ -61,6 +61,8 @@ include::expressions.asciidoc[leveloffset=+1]
 include::variables.asciidoc[leveloffset=+1]
 
 include::parameters.asciidoc[leveloffset=+1]
+
+include::../ql/query-operators.adoc[leveloffset=+1]
 
 include::operators.asciidoc[leveloffset=+1]
 
