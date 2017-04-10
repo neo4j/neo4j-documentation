@@ -22,8 +22,6 @@ package org.neo4j.cypher.docgen
 import org.junit.Test
 import org.neo4j.cypher.{ConstraintValidationException, CypherExecutionException}
 import org.neo4j.graphdb.{Label, RelationshipType}
-import org.neo4j.graphdb.schema.ConstraintDefinition
-import org.neo4j.kernel.api.constraints.{NodePropertyConstraint, RelationshipPropertyConstraint}
 import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
 
 import scala.collection.JavaConverters._
