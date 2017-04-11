@@ -1,6 +1,24 @@
 [[cypher-parameters]]
 = Parameters
 
+
+* <<cypher-parameters-introduction,Introduction>>
+* <<cypher-parameters-string-literal,String literal>>
+* <<cypher-parameters-regular-expression,Regular expression>>
+* <<cypher-parameters-case-sensitive-pattern-matching,Case-sensitive string pattern matching>>
+* <<cypher-parameters-create-node-with-properties,Create node with properties>>
+* <<cypher-parameters-create-multiple-nodes-with-properties,Create multiple nodes with properties>>
+* <<cypher-parameters-setting-all-properties-on-a-node,Setting all properties on a node>>
+* <<cypher-parameters-skip-and-limit,`SKIP` and `LIMIT`>>
+* <<cypher-parameters-node-id,Node id>>
+* <<cypher-parameters-multiple-node-ids,Multiple node ids>>
+* <<cypher-parameters-call-procedure,Calling procedures>>
+* <<cypher-parameters-index-value-legacy,Index value (legacy indexes)>>
+* <<cypher-parameters-index-query-legacy,Index query (legacy indexes)>>
+
+
+[[cypher-parameters-introduction]]
+== Introduction
 Cypher supports querying with parameters.
 This means developers don't have to resort to string building to create a query.
 Additionally, parameters make caching of execution plans much easier for Cypher, thus leading to faster query execution times.
@@ -30,6 +48,8 @@ In these examples, parameters are given in JSON; the exact manner in which they 
 It is recommended that the new parameter syntax `$param` is used, as the old syntax `{param}` is deprecated and will be removed altogether in a later release.
 ====
 
+
+[[cypher-parameters-string-literal]]
 == String literal
 
 include::includes/exampleWithStringLiteralAsParameter.asciidoc[]
@@ -38,50 +58,70 @@ You can use parameters in this syntax as well:
 
 include::includes/exampleWithShortSyntaxStringLiteralAsParameter.asciidoc[]
 
+
+[[cypher-parameters-regular-expression]]
 == Regular expression
 
 include::includes/exampleWithParameterRegularExpression.asciidoc[]
 
 
+[[cypher-parameters-case-sensitive-pattern-matching]]
 == Case-sensitive string pattern matching
 
 include::includes/exampleWithParameterCSCIStringPatternMatching.asciidoc[]
 
 
+[[cypher-parameters-create-node-with-properties]]
 == Create node with properties
 
 include::includes/create_node_from_map.asciidoc[]
 
+
+[[cypher-parameters-create-multiple-nodes-with-properties]]
 == Create multiple nodes with properties
 
 include::includes/create_multiple_nodes_from_map.asciidoc[]
 
+
+[[cypher-parameters-setting-all-properties-on-a-node]]
 == Setting all properties on a node
 
 Note that this will replace all the current properties.
 
 include::includes/set_properties_on_a_node_from_a_map.asciidoc[]
 
-== SKIP and LIMIT
+
+[[cypher-parameters-skip-and-limit]]
+== `SKIP` and `LIMIT`
 
 include::includes/exampleWithParameterForSkipLimit.asciidoc[]
 
+
+[[cypher-parameters-node-id]]
 == Node id
 
 include::includes/exampleWithParameterForNodeId.asciidoc[]
 
+
+[[cypher-parameters-multiple-node-ids]]
 == Multiple node ids
 
 include::includes/exampleWithParameterForMultipleNodeIds.asciidoc[]
 
+
+[[cypher-parameters-call-procedure]]
 == Calling procedures
 
 include::includes/exampleWithParameterProcedureCall.asciidoc[]
 
+
+[[cypher-parameters-index-value-legacy]]
 == Index value (legacy indexes)
 
 include::includes/exampleWithParameterForIndexValue.asciidoc[]
 
+
+[[cypher-parameters-index-query-legacy]]
 == Index query (legacy indexes)
 
 include::includes/exampleWithParametersForQuery.asciidoc[]

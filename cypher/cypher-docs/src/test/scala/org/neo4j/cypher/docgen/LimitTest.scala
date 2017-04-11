@@ -19,36 +19,63 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.junit.Assert.{assertEquals, assertTrue}
-import org.junit.Test
-import org.neo4j.graphdb.Node
-import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class LimitTest extends DocumentingTestBase with SoftReset {
-  override def graphDescription = List("A KNOWS B", "A KNOWS C", "A KNOWS D", "A KNOWS E")
+class LimitTest extends DocumentingTest {
+  override def outputPath = "target/docs/dev/ql"
 
-  override protected def getGraphvizStyle: GraphStyle =
-    AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
+  override def doc = new DocBuilder {
+    doc("LIMIT", "query-limit")
+    initQueries(
+      """CREATE (a {name: 'A'}),
+                (b {name: 'B'}),
+                (c {name: 'C'}),
+                (d {name: 'D'}),
+                (e {name: 'E'}),
 
-  def section: String = "Limit"
-
-  @Test def returnFirstThree() {
-      testQuery(
-        title = "Return first part",
-        text = "To return a subset of the result, starting from the top, use this syntax:",
-        queryText = "MATCH (n) RETURN n ORDER BY n.name LIMIT 3",
-        optionalResultExplanation = "The top three items are returned by the example query.",
-        assertions = (p) => assertEquals(List(node("A"), node("B"), node("C")), p.columnAs[Node]("n").toList))
+                (a)-[:KNOWS]->(b),
+                (a)-[:KNOWS]->(c),
+                (a)-[:KNOWS]->(d),
+                (a)-[:KNOWS]->(e)
+      """.stripMargin)
+    synopsis("`LIMIT` constrains the number of rows in the output.")
+    p(
+      """* <<limit-introduction, Introduction>>
+        |* <<limit-subset-rows, Return a subset of the rows>>
+        |* <<limit-subset-rows-using-expression, Using an expression with `LIMIT` to return a subset of the rows>>
+      """.stripMargin)
+    section("Introduction", "limit-introduction") {
+      p("""`LIMIT` accepts any expression that evaluates to a positive integer -- however the expression cannot refer to nodes or relationships.""")
+      graphViz()
     }
-
-  @Test def returnFromExpression() {
-    testQuery(
-      title = "Return first from expression",
-      text = "Limit accepts any expression that evaluates to a positive integer as long as it is not referring to any external variables:",
-      queryText = "MATCH (n) RETURN n ORDER BY n.name LIMIT toInt(3 * rand()) + 1",
-      parameters = Map("p" -> 12),
-      optionalResultExplanation = "Returns one to three top items",
-      assertions = (p) => assertTrue(p.columnAs[Node]("n").nonEmpty))
-  }
+    section("Return a subset of the rows", "limit-subset-rows") {
+      p(
+        """To return a subset of the result, starting from the top, use this syntax:""".stripMargin)
+      query(
+        """MATCH (n)
+          |RETURN n.name
+          |ORDER BY n.name
+          |LIMIT 3""".stripMargin, ResultAssertions((r) => {
+        r.toList should equal(List(Map("n.name" -> "A"), Map("n.name" -> "B"), Map("n.name" -> "C")))
+      })) {
+        p("The top three items are returned by the example query.")
+        resultTable()
+      }
+    }
+    section("Using an expression with `LIMIT` to return a subset of the rows", "limit-subset-rows-using-expression") {
+      p(
+        """Limit accepts any expression that evaluates to a positive integer as long as it is not referring to any external variables:""".stripMargin)
+      query(
+        """MATCH (n)
+          |RETURN n.name
+          |ORDER BY n.name
+          |LIMIT toInt(3 * rand()) + 1""".stripMargin, ResultAssertions((r) => {
+          r.toSet should contain(Map("n.name" -> "A"))
+        })) {
+        p("Returns one to three top items.")
+        resultTable()
+      }
+    }
+  }.build()
 }
 

@@ -77,7 +77,7 @@ will remove all other properties on the receiving graph element.""".stripMargin,
     testQuery(
       title = "Adding properties from maps",
       text =
-        """When setting properties from a map (literal, paremeter, or graph element), you can use the `+=` form of `SET`
+        """When setting properties from a map (literal, parameter, or graph element), you can use the `+=` form of `SET`
           |to only add properties, and not remove any of the existing properties on the graph element.
         """.stripMargin,
       queryText = "MATCH (peter {name: 'Peter'}) SET peter += {hungry: true, position: 'Entrepreneur'}",
@@ -115,7 +115,7 @@ This will replace all existing properties on the node with the new set provided 
 
   @Test def set_multiple_properties_in_one_set_clause() {
     testQuery(
-      title = "Set multiple properties using one SET clause",
+      title = "Set multiple properties using one `SET` clause",
       text = "If you want to set multiple properties in one go, simply separate them with a comma.",
       queryText = "MATCH (n {name: 'Andres'}) SET n.position = 'Developer', n.surname = 'Taylor'",
       optionalResultExplanation = "",

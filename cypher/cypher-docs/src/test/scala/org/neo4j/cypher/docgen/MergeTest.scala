@@ -104,7 +104,7 @@ node, it is created. However, the newly-created *'New York'* node is matched and
 
   @Test def merge_node_and_set_property_on_creation() {
     testQuery(
-      title = "Merge with ON CREATE",
+      title = "Merge with `ON CREATE`",
       text = "Merge a node and set properties if the node needs to be created.",
       queryText = """MERGE (keanu:Person {name: 'Keanu Reeves'})
 ON CREATE SET keanu.created = timestamp()
@@ -116,7 +116,7 @@ RETURN keanu.name, keanu.created""",
 
   @Test def merge_node_and_set_property_on_match() {
     testQuery(
-      title = "Merge with ON MATCH",
+      title = "Merge with `ON MATCH`",
       text = "Merging nodes and setting properties on found nodes.",
       queryText = "MERGE (person:Person) ON MATCH SET person.found = true RETURN person.name, person.found",
       optionalResultExplanation = "The query finds all the `Person` nodes, sets a property on them, and returns them.",
@@ -126,7 +126,7 @@ RETURN keanu.name, keanu.created""",
 
   @Test def merge_node_and_set_property_on_creation_or_update_prop() {
     testQuery(
-      title = "Merge with ON CREATE and ON MATCH",
+      title = "Merge with `ON CREATE` and `ON MATCH`",
       text = "Merge a node and set properties if the node needs to be created.",
       queryText =
         """MERGE (keanu:Person {name: 'Keanu Reeves'})
@@ -141,7 +141,7 @@ RETURN keanu.name, keanu.created, keanu.lastSeen""",
 
   @Test def merge_and_set_multiple_properties_on_match() {
     testQuery(
-      title = "Merge with ON MATCH setting multiple properties",
+      title = "Merge with `ON MATCH` setting multiple properties",
       text = "If multiple properties should be set, simply separate them with commas.",
       queryText = """MERGE (person:Person)
                     |ON MATCH SET person.found = true, person.lastAccessed = timestamp()
@@ -196,7 +196,7 @@ RETURN keanu.name, keanu.created, keanu.lastSeen""",
 
   @Test def using_map_parameters_with_merge() {
     testQuery(
-      title = "Using map parameters with MERGE",
+      title = "Using map parameters with `MERGE`",
       text = """`MERGE` does not support map parameters like for example `CREATE` does.
 To use map parameters with `MERGE`, it is necessary to explicitly use the expected properties, such as in the following example.
 For more information on parameters, see <<cypher-parameters>>.""",

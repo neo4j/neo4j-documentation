@@ -44,6 +44,18 @@ class PatternTest extends ArticleTest {
 Patterns
 ========
 
+* <<cypher-pattern-node-introduction,Introduction>>
+* <<cypher-pattern-node,Patterns for nodes>>
+* <<cypher-pattern-related-nodes,Patterns for related nodes>>
+* <<cypher-pattern-label,Patterns for labels>>
+* <<cypher-pattern-properties,Specifying properties>>
+* <<cypher-pattern-relationship,Patterns for relationships>>
+* <<cypher-pattern-path-variables,Assigning to path variables>>
+
+
+[[cypher-pattern-node-introduction]]
+== Introduction ==
+
 Patterns and pattern-matching are at the very heart of Cypher, so being effective with Cypher requires a good understanding of patterns.
 
 Using patterns, you describe the shape of the data you're looking for. For example, in the `MATCH` clause you describe the shape with a pattern, and Cypher will figure out how to get that data for you.

@@ -4,10 +4,27 @@
 [abstract]
 The `CREATE` clause is used to create graph elements -- nodes and relationships.
 
+* <<create-nodes, Create nodes>>
+ ** <<create-create-single-node, Create single node>>
+ ** <<create-create-multiple-nodes, Create multiple nodes>>
+ ** <<create-create-a-node-with-a-label, Create a node with a label>>
+ ** <<create-create-a-node-with-multiple-labels, Create a node with multiple labels>>
+ ** <<create-create-node-and-add-labels-and-properties, Create node and add labels and properties>>
+ ** <<create-return-created-node, Return created node>>
+* <<create-relationships, Create relationships>>
+ ** <<create-create-a-relationship-between-two-nodes, Create a relationship between two nodes>>
+ ** <<create-create-a-relationship-and-set-properties, Create a relationship and set properties>>
+* <<create-create-a-full-path, Create a full path>>
+* <<use-parameters-with-create, Use parameters with `CREATE`>>
+ ** <<create-create-node-with-a-parameter-for-the-properties, Create node with a parameter for the properties>>
+ ** <<create-create-multiple-nodes-with-a-parameter-for-their-properties, Create multiple nodes with a parameter for their properties>>
+
 [TIP]
 In the `CREATE` clause, patterns are used a lot.
 Read <<introduction-pattern>> for an introduction.
 
+
+[[create-nodes]]
 == Create nodes
 
 include::create-single-node.asciidoc[leveloffset=+1]
@@ -22,6 +39,8 @@ include::create-node-and-add-labels-and-properties.asciidoc[leveloffset=+1]
 
 include::return-created-node.asciidoc[leveloffset=+1]
 
+
+[[create-relationships]]
 == Create relationships
 
 include::create-a-relationship-between-two-nodes.asciidoc[leveloffset=+1]
@@ -30,7 +49,9 @@ include::create-a-relationship-and-set-properties.asciidoc[leveloffset=+1]
 
 include::create-a-full-path.asciidoc[]
 
-== Use parameters with CREATE
+
+[[use-parameters-with-create]]
+== Use parameters with `CREATE`
 
 include::create-node-with-a-parameter-for-the-properties.asciidoc[leveloffset=+1]
 
