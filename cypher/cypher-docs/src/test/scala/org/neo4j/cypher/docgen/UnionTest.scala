@@ -19,59 +19,65 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
-import org.junit.Test
-import org.neo4j.visualization.graphviz.GraphStyle
-import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class UnionTest extends DocumentingTestBase with QueryStatisticsTestSupport {
+class UnionTest extends DocumentingTest {
+  override def outputPath = "target/docs/dev/ql"
 
-  override protected def getGraphvizStyle: GraphStyle =
-    AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
-
-  override val setupQueries = List("""
-CREATE (ah:Actor {name: 'Anthony Hopkins'}),
-  (hm:Actor {name: 'Helen Mirren'}),
-  (hitchcock:Actor {name: 'Hitchcock'}),
-  (hitchcockMovie:Movie {title: 'Hitchcock'}),
-  (ah)-[:KNOWS]->(hm),
-  (ah)-[:ACTS_IN]->(hitchcockMovie),
-  (hm)-[:ACTS_IN]->(hitchcockMovie)
-""")
-
-  def section = "Union"
-
-  @Test def union_between_two_queries() {
-    testQuery(
-      title = "Combine two queries",
-      text = "Combining the results from two queries is done using `UNION ALL`.",
-      queryText =
-        """MATCH (n:Actor) RETURN n.name AS name
-           UNION ALL
-           MATCH (n:Movie) RETURN n.title AS name""",
-      optionalResultExplanation = "The combined result is returned, including duplicates.",
-      assertions = (p) => {
-        val result = p.toList
-        assert(result.size === 4)
-        assert(result.toSet === Set(Map("name" -> "Anthony Hopkins"), Map("name" -> "Helen Mirren"), Map("name" -> "Hitchcock")))
+  override def doc = new DocBuilder {
+    doc("UNION", "query-union")
+    initQueries("""CREATE (ah:Actor {name: 'Anthony Hopkins'}),
+                  |       (hm:Actor {name: 'Helen Mirren'}),
+                  |       (hitchcock:Actor {name: 'Hitchcock'}),
+                  |       (hitchcockMovie:Movie {title: 'Hitchcock'}),
+                  |       (ah)-[:KNOWS]->(hm),
+                  |       (ah)-[:ACTS_IN]->(hitchcockMovie),
+                  |       (hm)-[:ACTS_IN]->(hitchcockMovie)""")
+    synopsis("The `UNION` clause is used to combine the result of multiple queries.")
+    p(
+      """* <<union-introduction, Introduction>>
+        |* <<union-combine-queries-retain-duplicates, Combine two queries and retain duplicates>>
+        |* <<union-combine-queries-remove-duplicates, Combine two queries and remove duplicates>>
+      """.stripMargin)
+    section("Introduction", "union-introduction") {
+      p("It combines the results of two or more queries into a single result set that includes all the rows that belong to all queries in the union.")
+      p("""The number and the names of the columns must be identical in all queries combined by using `UNION`.""")
+      p(
+        """To keep all the result rows, use `UNION ALL`.
+          |Using just `UNION` will combine and remove duplicates from the result set.""".stripMargin)
+      graphViz()
+    }
+    section("Combine two queries and retain duplicates", "union-combine-queries-retain-duplicates") {
+      p(
+        """Combining the results from two queries is done using `UNION ALL`.""".stripMargin)
+      query(
+        """MATCH (n:Actor)
+          |RETURN n.name AS name
+          |UNION ALL
+          |MATCH (n:Movie)
+          |RETURN n.title AS name""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("name" -> "Anthony Hopkins"), Map("name" -> "Helen Mirren"), Map("name" -> "Hitchcock"), Map("name" -> "Hitchcock")))
+        })) {
+        p("The combined result is returned, including duplicates.")
+        resultTable()
       }
-    )
-  }
+    }
 
-  @Test def union_between_two_queries_distinct() {
-    testQuery(
-      title = "Combine two queries and remove duplicates",
-      text = "By not including `ALL` in the `UNION`, duplicates are removed from the combined result set",
-      queryText =
-        """MATCH (n:Actor) RETURN n.name AS name
-UNION
-MATCH (n:Movie) RETURN n.title AS name""",
-      optionalResultExplanation = "The combined result is returned, without duplicates.",
-      assertions = (p) => {
-        val result = p.toList
-        assert(result.size === 3)
-        assert(result.toSet === Set(Map("name" -> "Anthony Hopkins"), Map("name" -> "Helen Mirren"), Map("name" -> "Hitchcock")))
+    section("Combine two queries and remove duplicates", "union-combine-queries-remove-duplicates") {
+      p(
+        """By not including `ALL` in the `UNION`, duplicates are removed from the combined result set""".stripMargin)
+      query(
+        """MATCH (n:Actor)
+          |RETURN n.name AS name
+          |UNION
+          |MATCH (n:Movie)
+          |RETURN n.title AS name""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("name" -> "Anthony Hopkins"), Map("name" -> "Helen Mirren"), Map("name" -> "Hitchcock")))
+        })) {
+        p("The combined result is returned, without duplicates.")
+        resultTable()
       }
-    )
-  }
+    }
+  }.build()
+
 }

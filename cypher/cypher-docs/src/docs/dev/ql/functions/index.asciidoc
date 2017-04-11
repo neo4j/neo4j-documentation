@@ -7,14 +7,13 @@
 This section contains information on all functions in the Cypher query language.
 --
 
-* Predicate functions [<<header-query-predicates, Summary>>|<<query-predicates, Detail>>]
+* Predicate functions [<<header-query-predicates, Summary>>|<<query-functions-predicate, Detail>>]
 * Scalar functions [<<header-query-functions-scalar, Summary>>|<<query-functions-scalar, Detail>>]
 * Aggregating functions [<<header-query-functions-aggregating, Summary>>|<<query-functions-aggregating, Detail>>]
 * List functions [<<header-query-functions-list, Summary>>|<<query-functions-list, Detail>>]
-* Mathematical functions [<<header-query-functions-mathematical, Summary>>|<<query-functions-mathematical, Detail>>]
-** Numeric functions [<<header-query-functions-numeric, Summary>>|<<query-functions-numeric, Detail>>]
-** Logarithmic functions [<<header-query-functions-logarithmic, Summary>>|<<query-functions-logarithmic, Detail>>]
-** Trigonometric functions [<<header-query-functions-trigonometric, Summary>>|<<query-functions-trigonometric, Detail>>]
+* Mathematical functions - numeric [<<header-query-functions-numeric, Summary>>|<<query-functions-mathematical-numeric, Detail>>]
+* Mathematical functions - logarithmic [<<header-query-functions-logarithmic, Summary>>|<<query-functions-mathematical-logarithmic, Detail>>]
+* Mathematical functions - trigonometric [<<header-query-functions-trigonometric, Summary>>|<<query-functions-mathematical-trigonometric, Detail>>]
 * String functions [<<header-query-functions-string, Summary>>|<<query-functions-string, Detail>>]
 * Spatial functions [<<header-query-functions-spatial, Summary>>|<<query-functions-spatial, Detail>>]
 
@@ -24,7 +23,7 @@ Most functions in Cypher will return `null` if an input parameter is `null`.
 
 
 [[header-query-predicates]]
-**<<query-predicates, Predicate functions>>**
+**<<query-functions-predicate, Predicate functions>>**
 
 These functions return either true or false for the arguments given.
 
@@ -107,14 +106,10 @@ Further details and examples of lists may be found in <<syntax-lists>>.
 |===
 
 
-[[header-query-functions-mathematical]]
-**<<query-functions-mathematical, Mathematical functions>>**
+[[header-query-functions-numeric]]
+**<<query-functions-mathematical-numeric, Mathematical functions - numeric>>**
 
 These functions all operate on numerical expressions only, and will return an error if used on any other values.
-
-
-[[header-query-functions-numeric]]
-**<<query-functions-numeric, Numeric functions>>**
 
 [options="header"]
 |===
@@ -129,7 +124,9 @@ These functions all operate on numerical expressions only, and will return an er
 
 
 [[header-query-functions-logarithmic]]
-**<<query-functions-logarithmic, Logarithmic functions>>**
+**<<query-functions-mathematical-logarithmic, Mathematical functions - logarithmic>>**
+
+These functions all operate on numerical expressions only, and will return an error if used on any other values.
 
 [options="header"]
 |===
@@ -143,7 +140,9 @@ These functions all operate on numerical expressions only, and will return an er
 
 
 [[header-query-functions-trigonometric]]
-**<<query-functions-trigonometric, Trigonometric functions>>**
+**<<query-functions-mathematical-trigonometric, Mathematical functions - trigonometric>>**
+
+These functions all operate on numerical expressions only, and will return an error if used on any other values.
 
 All trigonometric functions operate on radians, unless otherwise specified.
 
@@ -197,151 +196,43 @@ These functions are used to specify points in a 2D coordinate system and to calc
 |===
 |Function                               |   Description
 |<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two given points.
-|<<functions-point,point()>>            | Returns a point object, given two coordinate values.
+|<<functions-point-cartesian,point() - cartesian 2D>>            | Returns a point object, given two coordinate values in the cartesian coordinate system.
+|<<functions-point,point() - WGS 84>>            | Returns a point object, given two coordinate valuesin the WGS 84 coordinate system.
+
 |===
 
 
-[[query-predicates]]
-== Predicate functions
+//Predicate functions
 
-Predicates are boolean functions that return true or false for a given set of input.
-They are most commonly used to filter out subgraphs in the `WHERE` part of a query.
+include::query-functions-predicate.adoc[leveloffset=+1]
 
-See also <<query-operators-comparison>>.
+//Scalar functions
 
-.Graph
-include::includes/cypher-functions-graph.asciidoc[]
-
-include::all.asciidoc[leveloffset=+1]
-
-include::any.asciidoc[leveloffset=+1]
-
-include::exists.asciidoc[leveloffset=+1]
-
-include::none.asciidoc[leveloffset=+1]
-
-include::single.asciidoc[leveloffset=+1]
-
-
-[[query-functions-scalar]]
-== Scalar functions
-
-Scalar functions return a single value.
-
-[IMPORTANT]
-The `length()` and `size()` functions are quite similar, and so it is important to take note of the difference.
-Due to backwards compatibility, `length()` currently works on four types: strings, paths, lists and pattern expressions.
-However, it is recommended to use `length()` only for paths, and the `size()` function for strings, lists and pattern expressions.
-`length()` on those types may be deprecated in future.
-
-.Graph
-include::includes/cypher-functions-graph.asciidoc[]
-
-include::coalesce.asciidoc[leveloffset=+1]
-
-include::endnode.asciidoc[leveloffset=+1]
-
-include::head.asciidoc[leveloffset=+1]
-
-include::id.asciidoc[leveloffset=+1]
-
-include::last.asciidoc[leveloffset=+1]
-
-include::length.asciidoc[leveloffset=+1]
-
-include::properties.asciidoc[leveloffset=+1]
-
-include::size.asciidoc[leveloffset=+1]
-
-include::size-of-pattern-expression.asciidoc[leveloffset=+1]
-
-include::size-of-string.asciidoc[leveloffset=+1]
-
-include::startnode.asciidoc[leveloffset=+1]
-
-include::timestamp.asciidoc[leveloffset=+1]
-
-include::tofloat.asciidoc[leveloffset=+1]
-
-include::toint.asciidoc[leveloffset=+1]
-
-include::type.asciidoc[leveloffset=+1]
+include::query-functions-scalar.adoc[leveloffset=+1]
 
 //Aggregating functions
 
 include::query-functions-aggregating.adoc[leveloffset=+1]
 
+//List functions
 
-[[query-functions-list]]
-== List functions
+include::query-functions-list.adoc[leveloffset=+1]
 
-List functions return lists of things -- nodes in a path, and so on.
+//Mathematical functions - numeric
 
-Further details and examples of lists may be found in <<syntax-lists>> and <<query-operators-list>>.
+include::query-functions-mathematical-numeric.adoc[leveloffset=+1]
 
-.Graph
-include::includes/cypher-functions-graph.asciidoc[]
+//Mathematical functions - logarithmic
 
-include::extract.asciidoc[leveloffset=+1]
+include::query-functions-mathematical-logarithmic.adoc[leveloffset=+1]
 
-include::filter.asciidoc[leveloffset=+1]
+//Mathematical functions - trigonometric
 
-include::keys.asciidoc[leveloffset=+1]
+include::query-functions-mathematical-trigonometric.adoc[leveloffset=+1]
 
-include::labels.asciidoc[leveloffset=+1]
+//String functioms
 
-include::nodes.asciidoc[leveloffset=+1]
-
-include::range.asciidoc[leveloffset=+1]
-
-include::reduce.asciidoc[leveloffset=+1]
-
-include::relationships.asciidoc[leveloffset=+1]
-
-include::tail.asciidoc[leveloffset=+1]
-
-//Mathematical functions
-
-include::query-functions-mathematical.adoc[leveloffset=+1]
-
-
-[[query-functions-string]]
-== String functions
-
-These functions all operate on string expressions only, and will return an error if used on any other values.
-The exception to this rule is `toString()`, which also accepts numbers and booleans.
-
-See also <<query-operators-string>>.
-
-[NOTE]
-The functions `lower()` and `upper()` have been superseded by `toLower()` and `toUpper()`, respectively, and will be deprecated in a future release.
-
-.Graph
-include::includes/cypher-functions-graph.asciidoc[]
-
-include::left.asciidoc[leveloffset=+1]
-
-include::ltrim.asciidoc[leveloffset=+1]
-
-include::replace.asciidoc[leveloffset=+1]
-
-include::reverse.asciidoc[leveloffset=+1]
-
-include::right.asciidoc[leveloffset=+1]
-
-include::rtrim.asciidoc[leveloffset=+1]
-
-include::split.asciidoc[leveloffset=+1]
-
-include::substring.asciidoc[leveloffset=+1]
-
-include::tolower.asciidoc[leveloffset=+1]
-
-include::tostring.asciidoc[leveloffset=+1]
-
-include::toupper.asciidoc[leveloffset=+1]
-
-include::trim.asciidoc[leveloffset=+1]
+include::query-functions-string.adoc[leveloffset=+1]
 
 //Spatial functions
 

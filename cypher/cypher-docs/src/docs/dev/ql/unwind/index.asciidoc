@@ -4,6 +4,15 @@
 [abstract]
 `UNWIND` expands a list into a sequence of rows.
 
+* <<query-unwind-introduction, Introduction>>
+* <<unwind-unwind-a-list, Unwind a list>>
+* <<unwind-create-a-distinct-list, Create a distinct list>>
+* <<unwind-create-nodes-from-a-list-parameter, Create nodes from a list parameter>>
+
+
+[[query-unwind-introduction]]
+== Introduction
+
 With `UNWIND`, you can transform any list back into individual rows.
 These lists can be parameters that were passed in, previously `collect` -ed result or other list expressions.
 

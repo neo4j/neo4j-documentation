@@ -35,6 +35,11 @@ Lists
 
 Cypher has comprehensive support for lists.
 
+* <<cypher-lists-general,Lists in general>>
+* <<cypher-list-comprehension,List comprehension>>
+* <<cypher-literal-maps,Literal maps>>
+
+
 [[cypher-lists-general]]
 == Lists in general ==
 
