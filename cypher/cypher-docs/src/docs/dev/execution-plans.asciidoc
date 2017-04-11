@@ -28,7 +28,7 @@ Operators are grouped into high-level categories.
 Please remember that the statistics of the actual database where the queries run on will decide the plan used.
 There is no guarantee that a specific query will always be solved with the same plan.
 
-* <<execution-plan-operators, Execution plan operators at a glance>>
+* <<execution-plan-operators-summary, Execution plan operators at a glance>>
 * <<execution-plans-starting-operators, Starting point operators>>
 * <<execution-plans-expand-operators, Expand operators>>
 * <<combining-operators, Combining operators>>
@@ -42,7 +42,7 @@ There is no guarantee that a specific query will always be solved with the same 
 // with these values.
 
 
-[[execution-plan-operators]]
+[[execution-plan-operators-summary]]
 **Execution plan operators at a glance**
 
 This table comprises all the execution plan operators ordered lexicographically.
