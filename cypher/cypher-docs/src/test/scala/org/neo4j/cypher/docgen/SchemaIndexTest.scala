@@ -89,7 +89,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_where_using_equality() {
     profileQuery(
-      title = "Use index with WHERE using equality",
+      title = "Use index with `WHERE` using equality",
       text = "Indexes are also automatically used for equality comparisons of an indexed property in the `WHERE` clause. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
       queryText = "MATCH (person:Person) WHERE person.name = 'Andres' RETURN person",
@@ -108,7 +108,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Use index with WHERE using inequality",
+      title = "Use index with `WHERE` using inequality",
       text = "Indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
       queryText = "MATCH (person:Person) WHERE person.name > 'B' RETURN person",
@@ -133,7 +133,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     sampleAllIndicesAndWait()
 
     profileQuery(
-      title = "Use index with IN",
+      title = "Use index with `IN`",
       text =
         "The `IN` predicate on `person.name` in the following query will use the `Person(name)` index, if it exists. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
@@ -157,7 +157,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     sampleAllIndicesAndWait()
 
     profileQuery(
-      title = "Use index with STARTS WITH",
+      title = "Use index with `STARTS WITH`",
       text =
         "The `STARTS WITH` predicate on `person.name` in the following query will use the `Person(name)` index, if it exists. ",
       queryText = "MATCH (person:Person) WHERE person.name STARTS WITH 'And' RETURN person",

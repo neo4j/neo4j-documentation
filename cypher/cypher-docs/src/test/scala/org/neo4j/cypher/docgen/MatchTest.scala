@@ -38,18 +38,52 @@ class MatchTest extends DocumentingTest {
         |       (rob:Person {name: 'Rob Reiner'}),
         |
         |       (wallStreet:Movie {title: 'Wall Street'}),
+        |
         |       (charlie)-[:ACTED_IN {role: 'Bud Fox'}]->(wallStreet),
         |       (martin)-[:ACTED_IN {role: 'Carl Fox'}]->(wallStreet),
         |       (michael)-[:ACTED_IN {role: 'Gordon Gekko'}]->(wallStreet),
         |       (oliver)-[:DIRECTED]->(wallStreet),
         |
         |       (thePresident:Movie {title: 'The American President'}),
+        |
         |       (martin)-[:ACTED_IN {role: 'A.J. MacInerney'}]->(thePresident),
         |       (michael)-[:ACTED_IN {role: 'President Andrew Shepherd'}]->(thePresident),
         |       (rob)-[:DIRECTED]->(thePresident)"""
     )
     synopsis("The `MATCH` clause is used to search for the pattern described in it.")
-    section("Introduction") {
+    p(
+      """
+        |* <<match-introduction, Introduction>>
+        |* <<basic-node-finding, Basic node finding>>
+        | ** <<get-all-nodes, Get all nodes>>
+        | ** <<get-all-nodes-with-label, Get all nodes with a label>>
+        | ** <<related-nodes, Related nodes>>
+        | ** <<match-with-labels, Match with labels>>
+        |* <<relationship-basics, Relationship basics>>
+        | ** <<outgoing-relationships, Outgoing relationships>>
+        | ** <<directed-rels-and-variable, Directed relationships and variable>>
+        | ** <<match-on-rel-type, Match on relationship type>>
+        | ** <<match-on-multiple-rel-types, Match on multiple relationship types>>
+        | ** <<match-on-rel-type-use-variable, Match on relationship type and use a variable>>
+        |* <<relationships-in-depth, Relationships in depth>>
+        | ** <<rel-types-with-uncommon-chars, Relationship types with uncommon characters>>
+        | ** <<multiple-rels, Multiple relationships>>
+        | ** <<varlength-rels, Variable length relationships>>
+        | ** <<rel-variable-in-varlength-rels, Relationship variable in variable length relationships>>
+        | ** <<match-props-on-varlength-path, Match with properties on a variable length path>>
+        | ** <<zero-length-paths, Zero length paths>>
+        | ** <<named-paths, Named paths>>
+        | ** <<match-on-bound-rel, Matching on a bound relationship>>
+        |* <<query-shortest-path, Shortest path>>
+        | ** <<single-shortest-path, Single shortest path>>
+        | ** <<single-shortest-path-with-predicates, Single shortest path with predicates>>
+        | ** <<all-shortest-paths, All shortest paths>>
+        |* <<get-node-rel-by-id, Get node or relationship by id>>
+        | ** <<match-node-by-id, Node by id>>
+        | ** <<match-rel-by-id, Relationship by id>>
+        | ** <<match-multiple-nodes-by-id, Multiple nodes by id>>
+      """.stripMargin)
+    section("Introduction", "match-introduction") {
       p( """The `MATCH` clause allows you to specify the patterns Neo4j will search for in the database.
            |This is the primary way of getting data into the current set of bindings.
            |It is worth reading up more on the specification of the patterns themselves in <<introduction-pattern>>.""")
@@ -72,29 +106,29 @@ class MatchTest extends DocumentingTest {
       p("The following graph is used for the examples below:")
       graphViz()
     }
-    section("Basic node finding") {
-      section("Get all nodes") {
+    section("Basic node finding", "basic-node-finding") {
+      section("Get all nodes", "get-all-nodes") {
         p("By just specifying a pattern with a single node and no labels, all nodes in the graph will be returned.")
         query("MATCH (n) RETURN n", assertAllNodesReturned) {
           p("Returns all the nodes in the database.")
           resultTable()
         }
       }
-      section("Get all nodes with a label") {
+      section("Get all nodes with a label", "get-all-nodes-with-label") {
         p("Getting all nodes with a label on them is done with a single node pattern where the node has a label on it.")
         query("MATCH (movie:Movie) RETURN movie.title", assertAllMoviesAreReturned) {
           p("Returns all the movies in the database.")
           resultTable()
         }
       }
-      section("Related nodes") {
+      section("Related nodes", "related-nodes") {
         p("The symbol `--` means _related to,_ without regard to type or direction of the relationship.")
         query("MATCH (director {name: 'Oliver Stone'})--(movie) RETURN movie.title", assertWallStreetIsReturned) {
           p("Returns all the movies directed by *'Oliver Stone'*.")
           resultTable()
         }
       }
-      section("Match with labels") {
+      section("Match with labels", "match-with-labels") {
         p("To constrain your pattern with labels on nodes, you add it to your pattern nodes, using the label syntax.")
         query("MATCH (:Person {name: 'Oliver Stone'})--(movie:Movie) RETURN movie.title", assertWallStreetIsReturned) {
           p("Returns any nodes connected with the `Person` *'Oliver'* that are labeled `Movie`.")
@@ -102,36 +136,36 @@ class MatchTest extends DocumentingTest {
         }
       }
     }
-    section("Relationship basics") {
-      section("Outgoing relationships") {
-        p("When the direction of a relationship is interesting, it is shown by using `-->` or `<--`, like this:")
+    section("Relationship basics", "relationship-basics") {
+      section("Outgoing relationships", "outgoing-relationships") {
+        p("When the direction of a relationship is of interest, it is shown by using `-->` or `<--`, like this:")
         query("MATCH (:Person {name: 'Oliver Stone'})-->(movie) RETURN movie.title", assertWallStreetIsReturned) {
           p("Returns any nodes connected with the `Person` *'Oliver'* by an outgoing relationship.")
           resultTable()
         }
       }
-      section("Directed relationships and variable") {
-        p("If an variable is needed, either for filtering on properties of the relationship, or to return the relationship, this is how you introduce the variable.")
+      section("Directed relationships and variable", "directed-rels-and-variable") {
+        p("If a variable is required, either for filtering on properties of the relationship, or to return the relationship, this is how you introduce the variable.")
         query("MATCH (:Person {name: 'Oliver Stone'})-[r]->(movie) RETURN type(r)", assertRelationshipIsDirected) {
           p("Returns the type of each outgoing relationship from *'Oliver'*.")
           resultTable()
         }
       }
-      section("Match by relationship type") {
+      section("Match on relationship type", "match-on-rel-type") {
         p("When you know the relationship type you want to match on, you can specify it by using a colon together with the relationship type.")
         query("MATCH (wallstreet:Movie {title: 'Wall Street'})<-[:ACTED_IN]-(actor) RETURN actor.name", assertAllActorsOfWallStreetAreFound) {
           p("Returns all actors that `ACTED_IN` *'Wall Street'*.")
           resultTable()
         }
       }
-      section("Match by multiple relationship types") {
+      section("Match on multiple relationship types", "match-on-multiple-rel-types") {
         p("To match on one of multiple types, you can specify this by chaining them together with the pipe symbol `|`.")
         query("MATCH (wallstreet {title: 'Wall Street'})<-[:ACTED_IN|:DIRECTED]-(person) RETURN person.name", assertEveryoneConnectedToWallStreetIsFound) {
           p("Returns nodes with an `ACTED_IN` or `DIRECTED` relationship to *'Wall Street'*.")
           resultTable()
         }
       }
-      section("Match by relationship type and use an variable") {
+      section("Match on relationship type and use a variable", "match-on-rel-type-use-variable") {
         p("If you both want to introduce an variable to hold the relationship, and specify the relationship type you want, just add them both, like this:")
         query("MATCH (wallstreet {title: 'Wall Street'})<-[r:ACTED_IN]-(actor) RETURN r.role", assertRelationshipsToWallStreetAreReturned) {
           p("Returns `ACTED_IN` roles for *'Wall Street'*.")
@@ -139,11 +173,11 @@ class MatchTest extends DocumentingTest {
         }
       }
     }
-    section("Relationships in depth") {
+    section("Relationships in depth", "relationships-in-depth") {
       note {
         p("Inside a single pattern, relationships will only be matched once. You can read more about this in <<cypherdoc-uniqueness>>.")
       }
-      section("Relationship types with uncommon characters") {
+      section("Relationship types with uncommon characters", "rel-types-with-uncommon-chars") {
         val initQuery =
           """MATCH (charlie:Person {name: 'Charlie Sheen'}), (rob:Person {name: 'Rob Reiner'})
             | CREATE (rob)-[:`TYPE WITH SPACE`]->(charlie)"""
@@ -160,14 +194,14 @@ class MatchTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Multiple relationships") {
+      section("Multiple relationships", "multiple-rels") {
         p("Relationships can be expressed by using multiple statements in the form of `()--()`, or they can be strung together, like this:")
         query("match (charlie {name: 'Charlie Sheen'})-[:ACTED_IN]->(movie)<-[:DIRECTED]-(director) RETURN movie.title, director.name", assertFindAllDirectors) {
           p("Returns the movie *'Charlie Sheen'* acted in and its director.")
           resultTable()
         }
       }
-      section("Variable length relationships") {
+      section("Variable length relationships", "varlength-rels") {
         p("""Nodes that are a variable number of relationship->node hops away can be found using the following syntax:
             | `-[:TYPE*minHops..maxHops]->`.
             | `minHops` and `maxHops` are optional and default to 1 and infinity respectively.
@@ -178,14 +212,14 @@ class MatchTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Relationship variable in variable length relationships") {
+      section("Relationship variable in variable length relationships", "rel-variable-in-varlength-rels") {
         p("When the connection between two nodes is of variable length, a relationship variable becomes a list of relationships.")
         query("MATCH (actor {name: 'Charlie Sheen'})-[r:ACTED_IN*2]-(co_actor) RETURN r", assertActedInRelationshipsAreReturned) {
           p("Returns a list of relationships.")
           resultTable()
         }
       }
-      section("Match with properties on a variable length path") {
+      section("Match with properties on a variable length path", "match-props-on-varlength-path") {
         val initQuery =
           """MATCH (charlie:Person {name: 'Charlie Sheen'}), (martin:Person {name: 'Martin Sheen'})
             |CREATE (charlie)-[:X {blocked: false}]->(:UNBLOCKED)<-[:X {blocked: false}]-(martin)
@@ -208,7 +242,7 @@ class MatchTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Zero length paths") {
+      section("Zero length paths", "zero-length-paths") {
         p(
           """Using variable length paths that have the lower bound zero means that two variables can point to the same node.
             |If the path length between two nodes is zero, they are by definition the same node.
@@ -218,14 +252,14 @@ class MatchTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Named path") {
+      section("Named paths", "named-paths") {
         p("If you want to return or filter on a path in your pattern graph, you can a introduce a named path.")
         query("MATCH p = (michael {name: 'Michael Douglas'})-->() RETURN p", assertRowCount(2)) {
           p("Returns the two paths starting from *'Michael Douglas'*")
           resultTable()
         }
       }
-      section("Matching on a bound relationship") {
+      section("Matching on a bound relationship", "match-on-bound-rel") {
         p("""When your pattern contains a bound relationship, and that relationship pattern doesn’t
             | specify direction, Cypher will try to match the relationship in both directions.""")
         query("MATCH (a)-[r]-(b) WHERE id(r)= 0 RETURN a,b", assertRowCount(2)) {
@@ -235,7 +269,7 @@ class MatchTest extends DocumentingTest {
       }
     }
     section("Shortest path", "query-shortest-path") {
-      section("Single shortest path") {
+      section("Single shortest path", "single-shortest-path") {
         p("Finding a single shortest path between two nodes is as easy as using the `shortestPath` function. It's done like this:")
         query(
           """MATCH (martin:Person {name: 'Martin Sheen'}),
@@ -253,7 +287,7 @@ class MatchTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Single shortest path with predicates") {
+      section("Single shortest path with predicates", "single-shortest-path-with-predicates") {
         p("""Predicates used in the `WHERE` clause that apply to the shortest path pattern are evaluated before deciding
           |what the shortest matching path is.""")
         query(
@@ -268,7 +302,7 @@ class MatchTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("All shortest paths") {
+      section("All shortest paths", "all-shortest-paths") {
         p("Finds all the shortest paths between two nodes.")
         query("""MATCH (martin:Person {name: 'Martin Sheen'} ),
                 |      (michael:Person {name: 'Michael Douglas'}),
@@ -279,7 +313,7 @@ class MatchTest extends DocumentingTest {
         }
       }
     }
-    section("Get node or relationship by id") {
+    section("Get node or relationship by id", "get-node-rel-by-id") {
       section("Node by id", "match-node-by-id") {
         p("Searching for nodes by id can be done with the `id()` function in a predicate.")
         note {
@@ -292,7 +326,7 @@ class MatchTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Relationship by id") {
+      section("Relationship by id", "match-rel-by-id") {
         p("""
             |Search for relationships by id can be done with the `id()` function in a predicate.
             |
@@ -303,7 +337,7 @@ class MatchTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Multiple nodes by id") {
+      section("Multiple nodes by id", "match-multiple-nodes-by-id") {
         p("Multiple nodes are selected by specifying them in an IN clause.")
         query("MATCH (n) WHERE id(n) IN [0, 3, 5] RETURN n", assertHasNodes(0, 3, 5)) {
           p("This returns the nodes listed in the `IN` expression.")

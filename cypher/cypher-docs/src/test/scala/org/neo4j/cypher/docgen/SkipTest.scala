@@ -19,44 +19,84 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.junit.Assert.{assertEquals, assertTrue}
-import org.junit.Test
-import org.neo4j.graphdb.Node
-import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class SkipTest extends DocumentingTestBase {
-  override def graphDescription = List("A KNOWS B", "A KNOWS C", "A KNOWS D", "A KNOWS E")
+class SkipTest extends DocumentingTest {
+  override def outputPath = "target/docs/dev/ql"
 
-  override protected def getGraphvizStyle: GraphStyle =
-    AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
+  override def doc = new DocBuilder {
+    doc("SKIP", "query-skip")
+    initQueries(
+      """CREATE (a {name: 'A'}),
+        |       (b {name: 'B'}),
+        |       (c {name: 'C'}),
+        |       (d {name: 'D'}),
+        |       (e {name: 'E'}),
+        |
+        |       (a)-[:KNOWS]->(b),
+        |       (a)-[:KNOWS]->(c),
+        |       (a)-[:KNOWS]->(d),
+        |       (a)-[:KNOWS]->(e)
+      """.stripMargin)
+    synopsis("`SKIP` defines from which row to start including the rows in the output.")
+    p(
+      """* <<skip-introduction, Introduction>>
+        |* <<skip-first-three-rows, Skip first three rows>>
+        |* <<skip-return-middle-rows, Return middle two rows>>
+        |* <<skip-using-expression, Using an expression with `SKIP` to return a subset of the rows>>
+      """.stripMargin)
+    section("Introduction", "skip-introduction") {
+      p(
+        """By using `SKIP`, the result set will get trimmed from the top.
+          |Please note that no guarantees are made on the order of the result unless the query specifies the `ORDER BY` clause.
+          |`SKIP` accepts any expression that evaluates to a positive integer -- however the expression cannot refer to nodes or relationships.""".stripMargin)
+      graphViz()
+    }
+    section("Skip first three rows", "skip-first-three-rows") {
+      p(
+        """To return a subset of the result, starting from the fourth result, use the following syntax:""".stripMargin)
+      query(
+        """MATCH (n)
+          |RETURN n.name
+          |ORDER BY n.name
+          |SKIP 3""".stripMargin, ResultAssertions((r) => {
+        r.toList should equal(List(Map("n.name" -> "D"), Map("n.name" -> "E")))
+      })) {
+        p("The first three nodes are skipped, and only the last two are returned in the result.")
+        resultTable()
+      }
+    }
+    section("Return middle two rows", "skip-return-middle-rows") {
+      p(
+        """To return a subset of the result, starting from somewhere in the middle, use this syntax:""".stripMargin)
+      query(
+        """MATCH (n)
+          |RETURN n.name
+          |ORDER BY n.name
+          |SKIP 1
+          |LIMIT 2""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "B"), Map("n.name" -> "C")))
+        })) {
+        p("Two nodes from the middle are returned.")
+        resultTable()
+      }
+    }
+    section("Using an expression with `SKIP` to return a subset of the rows", "skip-using-expression") {
+      p(
+        """Skip accepts any expression that evaluates to a positive integer as long as it is not referring to any external variables:""".stripMargin)
+      query(
+        """MATCH (n)
+          |RETURN n.name
+          |ORDER BY n.name
+          |SKIP toInt(3*rand()) + 1""".stripMargin, ResultAssertions((r) => {
+          r.toSet should contain(Map("n.name" -> "E"))
+        })) {
+        p("The first three nodes are skipped, and only the last two are returned in the result.")
+        resultTable()
+      }
+    }
+  }.build()
 
-  def section: String = "Skip"
-
-  @Test def returnFromThree() {
-    testQuery(
-      title = "Skip first three",
-      text = "To return a subset of the result, starting from the fourth result, use the following syntax:",
-      queryText = "MATCH (n) RETURN n ORDER BY n.name SKIP 3",
-      optionalResultExplanation = "The first three nodes are skipped, and only the last two are returned in the result.",
-      assertions = (p) => assertEquals(List(node("D"), node("E")), p.columnAs[Node]("n").toList))
-  }
-
-  @Test def returnFromOneLimitTwo() {
-    testQuery(
-      title = "Return middle two",
-      text = "To return a subset of the result, starting from somewhere in the middle, use this syntax:",
-      queryText = "MATCH (n) RETURN n ORDER BY n.name SKIP 1 LIMIT 2",
-      optionalResultExplanation = "Two nodes from the middle are returned.",
-      assertions = (p) => assertEquals(List(node("B"), node("C")), p.columnAs[Node]("n").toList))
-  }
-
-  @Test def returnFromExpression() {
-    testQuery(
-      title = "Skip first from expression",
-      text = "Skip accepts any expression that evaluates to a positive integer as long as it is not referring to any external variables:",
-      queryText = "MATCH (n) RETURN n ORDER BY n.name SKIP toInt(3*rand()) + 1",
-      optionalResultExplanation = "The first three nodes are skipped, and only the last two are returned in the result.",
-      assertions = (p) => assertTrue(p.columnAs[Node]("n").nonEmpty))
-  }
 }
+
 

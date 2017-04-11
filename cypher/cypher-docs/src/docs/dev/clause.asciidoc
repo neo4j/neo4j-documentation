@@ -149,25 +149,25 @@ These comprise clauses used to manage the schema; further details can found in <
 //Reading
 include::ql/query-match.adoc[leveloffset=+1]
 
-include::ql/optional-match/index.asciidoc[leveloffset=+1]
+include::ql/query-optional-match.adoc[leveloffset=+1]
 
 include::ql/start/index.asciidoc[leveloffset=+1]
 
 //Projecting
-include::ql/return/index.asciidoc[leveloffset=+1]
+include::ql/query-return.adoc[leveloffset=+1]
 
-include::ql/with/index.asciidoc[leveloffset=+1]
+include::ql/query-with.adoc[leveloffset=+1]
 
 include::ql/unwind/index.asciidoc[leveloffset=+1]
 
 //Reading sub-clauses
-include::ql/where/index.asciidoc[leveloffset=+1]
+include::ql/query-where.adoc[leveloffset=+1]
 
-include::ql/order-by/index.asciidoc[leveloffset=+1]
+include::ql/query-order.adoc[leveloffset=+1]
 
-include::ql/skip/index.asciidoc[leveloffset=+1]
+include::ql/query-skip.adoc[leveloffset=+1]
 
-include::ql/limit/index.asciidoc[leveloffset=+1]
+include::ql/query-limit.adoc[leveloffset=+1]
 
 //Writing
 include::ql/create/index.asciidoc[leveloffset=+1]
@@ -188,7 +188,7 @@ include::ql/call/index.asciidoc[leveloffset=+1]
 include::ql/create-unique/index.asciidoc[leveloffset=+1]
 
 //Set
-include::ql/union/index.asciidoc[leveloffset=+1]
+include::ql/query-union.adoc[leveloffset=+1]
 
 //Importing
 include::ql/load-csv/index.asciidoc[leveloffset=+1]
