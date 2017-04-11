@@ -195,7 +195,7 @@ class OperatorsTest extends DocumentingTest {
       p("""Here is the truth table for `AND`, `OR`, `XOR` and `NOT`.
           |
           |[options="header", cols="^,^,^,^,^,^", width="85%"]
-          ||====
+          ||===
           ||a | b | a `AND` b | a `OR` b | a `XOR` b | `NOT` a
           ||`false` | `false` | `false` | `false` | `false` | `true`
           ||`false` | `null` | `false` | `null` | `null` | `true`
@@ -206,9 +206,9 @@ class OperatorsTest extends DocumentingTest {
           ||`null` | `false` | `false` | `null` | `null` | `null`
           ||`null` | `null` | `null` | `null` | `null` | `null`
           ||`null` | `true` | `null` | `true` | `null` | `null`
-          ||====
+          ||===
           |
-          |""".stripMargin)
+          |""")
       section("Using boolean operators to filter numbers", "syntax-using-boolean-operators-to-filter-numbers") {
         query(
           """WITH [2, 4, 7, 9, 12] AS numberlist
