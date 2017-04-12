@@ -19,102 +19,98 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling._
 
-class MapsTest extends ArticleTest {
-  def assert(name: String, result: InternalExecutionResult) {}
+class MapsTest extends DocumentingTest {
+  override def outputPath = "target/docs/dev/ql/"
 
-  override def graphDescription = List(
-    "Charlie:Person ACTED_IN WallStreet:Movie",
-    "Charlie ACTED_IN RedDawn:Movie",
-    "Charlie ACTED_IN ApocalypseNow:Movie",
-    "Martin:Person ACTED_IN ApocalypseNow:Movie",
-    "Martin ACTED_IN WallStreet"
-  )
+  override def doc = new DocBuilder {
+    doc("Maps", "cypher-maps")
+    initQueries(
+      """CREATE (charlie:Person {name: 'Charlie Sheen',  realName: 'Carlos Irwin Estévez'}),
+                |(martin:Person {name: 'Martin Sheen'}),
+                |(wallstreet:Movie {title: 'Wall Street', year: 1987}),
+                |(reddawn:Movie {title: 'Red Dawn', year: 1984}),
+                |(apocalypsenow:Movie {title: 'Apocalypse Now', year: 1979}),
+                |
+                |(charlie)-[:ACTED_IN]->(wallstreet),
+                |(charlie)-[:ACTED_IN]->(reddawn),
+                |(charlie)-[:ACTED_IN]->(apocalypsenow),
+                |(martin)-[:ACTED_IN]->(wallstreet),
+                |(martin)-[:ACTED_IN]->(apocalypsenow)
 
-  override val properties = Map(
-    "Charlie" -> Map("name" -> "Charlie Sheen", "realName" -> "Carlos Irwin Estévez"),
-    "Martin" -> Map("name" -> "Martin Sheen"),
-    "WallStreet" -> Map("title" -> "Wall Street", "year" -> 1987),
-    "RedDawn" -> Map("title" -> "Red Dawn", "year" -> 1984),
-    "ApocalypseNow" -> Map("title" -> "Apocalypse Now", "year" -> 1979)
-  )
+      """.stripMargin)
+    synopsis("Cypher has solid support for maps.")
+    p(
+      """* <<cypher-literal-maps, Literal maps>>
+        |* <<cypher-map-projection, Map projection>>
+        |** <<cypher-map-projection-examples, Examples of map projection>>""")
+    p("The following graph is used for the examples below:")
+    graphViz()
+    section("Literal maps", "cypher-literal-maps") {
+      p(
+        """From Cypher, you can also construct maps.
+          |Through REST you will get JSON objects; in Java they will be `java.util.Map<String,Object>`.""".stripMargin)
+      query(
+        """RETURN {key: 'Value', listKey: [{inner: 'Map1'}, {inner: 'Map2'}]}""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("{key: 'Value', listKey: [{inner: 'Map1'}, {inner: 'Map2'}]}" -> Map("key" -> "Value", "listKey" -> List(Map("inner" -> "Map1"), Map("inner" -> "Map2"))))))
+        })) {
+        resultTable()
+      }
+    }
+    section("Map projection", "cypher-map-projection") {
+      p(
+        """Cypher supports a concept called "map projections".
+          |It allows for easily constructing map projections from nodes, relationships and other map values.""")
+      p(
+        """A map projection begins with the variable bound to the graph entity to be projected from, and contains a body of coma separated map elements, enclosed by `{` and  `}`.
+        """)
+      p("`map_variable {map_element, [, ...n]}`")
+      p(
+        """A map element projects one or more key value pair to the map projection.
+          |There exists four different types of map projection elements:
+          |
+          |* Property selector - Projects the property name as the key, and the value from the `map_variable` as the value for the projection.
+          |* Literal entry - This is a key value pair, with the value being arbitrary expression `key: <expression>`.
+          |* Variable selector - Projects an variable, with the variable name as the key, and the value the variable is pointing to as the value of the projection. Its syntax is just the variable.
+          |* All-properties selector - projects all key value pair from the `map_variable` value.
+          |""".stripMargin)
+      p("Note that if the `map_variable` points to a `null` value, the whole map projection will evaluate to `null`.")
+      section("Examples of map projections", "cypher-map-projection-examples") {
+        p(
+          """Find *'Charlie Sheen'* and return data about him and the movies he has acted in.
+            |This example shows an example of map projection with a literal entry, which in turn also uses map projection inside the aggregating `collect()`.""")
+        query("""MATCH (actor:Person {name: 'Charlie Sheen'})-[:ACTED_IN]->(movie:Movie)
+            |RETURN actor{ .name, .realName, movies: collect(movie{ .title, .year })}""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("actor" -> Map("name" -> "Charlie Sheen", "realName" -> "Carlos Irwin Estévez", "movies" -> List(Map("title" -> "Apocalypse Now", "year" -> 1979), Map("title" -> "Red Dawn", "year" -> 1984), Map("title" -> "Wall Street", "year" -> 1987))))))
+          })) {
+          resultTable()
+        }
+        p(
+          """Find all persons that have acted in movies, and show number for each.
+            |This example introduces an variable with the count, and uses a variable selector to project the value.""")
+        query("""MATCH (actor:Person)-[:ACTED_IN]->(movie:Movie)
+            |WITH actor, count(movie) as nrOfMovies
+            |RETURN actor{ .name, nrOfMovies}""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("actor" -> Map("name" -> "Martin Sheen", "nrOfMovies" -> 2)), Map("actor" -> Map("name" -> "Charlie Sheen", "nrOfMovies" -> 3))))
+          })) {
+          resultTable()
+        }
+        p(
+          """Again, focusing on *'Charlie Sheen'*, this time returning all properties from the node.
+            |Here we use an all-properties selector to project all the node properties, and additionally, explicitly project the property `age`.
+            |Since this property does not exist on the node, a `null` value is projected instead.""")
+        query(
+          """MATCH (actor:Person {name: 'Charlie Sheen'})
+            |RETURN actor{.*, .age}""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("actor" -> Map("name" -> "Charlie Sheen", "realName" -> "Carlos Irwin Estévez", "age" -> null))))
+          })) {
+          resultTable()
+        }
+      }
+    }
 
-  val title = "Maps"
-  val section = "Syntax"
-  val text =
-    """
-Maps
-=====
-
-Cypher has comprehensive support for maps.
-
-* <<cypher-literal-maps, Literal maps>>
-* <<cypher-map-projection, Map projection>>
-
-
-[[cypher-literal-maps]]
-== Literal maps ==
-
-From Cypher, you can also construct maps. Through REST you will get JSON objects; in Java they will be `java.util.Map<String,Object>`.
-
-###
-RETURN {key: 'Value', listKey: [{inner: 'Map1'}, {inner: 'Map2'}]}###
-
-[[cypher-map-projection]]
-== Map projection ==
-Cypher supports a concept called "map projections".
-It allows for easily constructing map projections from nodes, relationships and other map values.
-
-A map projection begins with the variable bound to the graph entity to be projected from, and contains a body of coma separated map elements, enclosed by `{` and  `}`.
-
-`map_variable {map_element, [, ...n]}`
-
-A map element projects one or more key value pair to the map projection.
-There exists four different types of map projection elements:
-
-* Property selector - Projects the property name as the key, and the value from the `map_variable` as the value for the projection.
-
-* Literal entry - This is a key value pair, with the value being arbitrary expression `key: <expression>`.
-
-* Variable selector - Projects an variable, with the variable name as the key, and the value the variable is pointing to as the value of the projection.
-Its syntax is just the variable.
-
-* All-properties selector - projects all key value pair from the `map_variable` value.
-
-Note that if the `map_variable` points to a null value, the whole map projection will evaluate to null.
-
-=== Examples of map projections ===
-
-Find Charlie Sheen and return data about him and the movies he has acted in.
-This example shows an example of map projection with a literal entry, which in turn also uses map projection inside the aggregating `collect()`.
-
-###
-MATCH (actor:Person {name: 'Charlie Sheen'})-[:ACTED_IN]->(movie:Movie)
-RETURN actor{
-        .name,
-        .realName,
-         movies: collect(movie{ .title, .year })
-      }###
-
-
-Find all persons that have acted in movies, and show number for each.
-This example introduces an variable with the count, and uses an variable selector to project the value.
-
-###
-MATCH (actor:Person)-[:ACTED_IN]->(movie:Movie)
-WITH actor, count(movie) as nrOfMovies
-RETURN actor{
-        .name,
-         nrOfMovies
-      }###
-
-Again, focusing on *'Charlie Sheen'*, this time returning all properties from the node.
-Here we use an all-properties selector to project all the node properties, and additionally, explicitly project the property `age`.
-Since this property does not exist on the node, a null value is projected instead.
-
-###
-MATCH (actor:Person {name: 'Charlie Sheen'})
-RETURN actor{.*, .age}###
-"""
+  }.build()
 }
+
+

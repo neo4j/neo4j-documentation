@@ -68,7 +68,7 @@ class OptionalMatchTest extends DocumentingTest {
           |Remember that `WHERE` is part of the pattern description, and the predicates will be considered while looking for matches, not after.
           |This matters especially in the case of multiple (`OPTIONAL`) `MATCH` clauses, where it is crucial to put `WHERE` together with the `MATCH` it belongs to.""")
       tip {
-        p("To understand the patterns used in the `OPTIONAL MATCH` clause, read <<introduction-pattern>>.")
+        p("To understand the patterns used in the `OPTIONAL MATCH` clause, read <<cypher-patterns>>.")
       }
       p("The following graph is used for the examples below:")
       graphViz()
