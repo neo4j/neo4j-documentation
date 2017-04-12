@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_1.executionplan.InternalExecutionRe
 class MapsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A KNOWS B")
   val title = "Maps"
-  override val linkId = "syntax/lists/#_literal_maps"
+  override val linkId = "syntax/maps"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
