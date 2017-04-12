@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionRe
 class ForeachTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A:Person KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
   val title = "FOREACH"
-  override val linkId = "query-foreach"
+  override val linkId = "clauses/foreach"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

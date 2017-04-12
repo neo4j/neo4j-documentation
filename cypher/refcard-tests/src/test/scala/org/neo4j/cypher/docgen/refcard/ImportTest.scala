@@ -28,7 +28,7 @@ import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionRe
 class ImportTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List()
   val title = "Import"
-  override val linkId = "clauses/importing-csv-files-with-cypher"
+  override val linkId = "get-started/cypher/importing-csv-files-with-cypher"
   override val asciidocSubstitutions = "attributes+"
 
   implicit var csvFilesDir: File = createDir(dir, "csv")
