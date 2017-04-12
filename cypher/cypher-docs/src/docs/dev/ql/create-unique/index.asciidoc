@@ -30,7 +30,7 @@ If multiple matching subgraphs are found an error will be generated.
 
 [TIP]
 In the `CREATE UNIQUE` clause, patterns are used a lot.
-Read <<introduction-pattern>> for an introduction.
+Read <<cypher-patterns>> for an introduction.
 
 The examples use the following graph:
 

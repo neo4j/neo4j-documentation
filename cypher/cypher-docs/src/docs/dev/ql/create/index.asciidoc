@@ -21,7 +21,7 @@ The `CREATE` clause is used to create graph elements -- nodes and relationships.
 
 [TIP]
 In the `CREATE` clause, patterns are used a lot.
-Read <<introduction-pattern>> for an introduction.
+Read <<cypher-patterns>> for an introduction.
 
 
 [[create-nodes]]

@@ -86,7 +86,7 @@ class MatchTest extends DocumentingTest {
     section("Introduction", "match-introduction") {
       p( """The `MATCH` clause allows you to specify the patterns Neo4j will search for in the database.
            |This is the primary way of getting data into the current set of bindings.
-           |It is worth reading up more on the specification of the patterns themselves in <<introduction-pattern>>.""")
+           |It is worth reading up more on the specification of the patterns themselves in <<cypher-patterns>>.""")
       p( """`MATCH` is often coupled to a `WHERE` part which adds restrictions, or predicates, to the `MATCH` patterns, making them more specific.
            |The predicates are part of the pattern description, and should not be considered a filter applied only after the matching is done.
            |_This means that `WHERE` should always be put together with the `MATCH` clause it belongs to._""")
@@ -101,7 +101,7 @@ class MatchTest extends DocumentingTest {
            |However, there are cases where you can influence the decisions taken by the query compiler.
            |Read more about indexes in <<query-schema-index>>, and more about specifying hints to force Neo4j to solve a query in a specific way in <<query-using>>.""")
       tip {
-        p("To understand more about the patterns used in the `MATCH` clause, read <<introduction-pattern>>")
+        p("To understand more about the patterns used in the `MATCH` clause, read <<cypher-patterns>>")
       }
       p("The following graph is used for the examples below:")
       graphViz()
