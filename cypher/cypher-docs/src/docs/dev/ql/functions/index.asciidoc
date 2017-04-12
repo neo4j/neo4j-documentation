@@ -89,7 +89,7 @@ These functions take multiple values as arguments, and calculate and return an a
 **<<query-functions-list, List functions>>**
 
 These functions return lists of other values.
-Further details and examples of lists may be found in <<syntax-lists>>.
+Further details and examples of lists may be found in <<cypher-lists>>.
 
 [options="header"]
 |===
