@@ -49,6 +49,7 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-lists-general, Lists in general>>
  ** <<cypher-list-comprehension, List comprehension>>
  ** <<cypher-pattern-comprehension, Pattern comprehension>>
+* <<syntax-lists, Maps>>
  ** <<cypher-literal-maps, Literal maps>>
  ** <<cypher-map-projection, Map projection>>
 * <<cypher-working-with-null, Working with `null`>>
@@ -76,6 +77,8 @@ include::comments.asciidoc[leveloffset=+1]
 include::../ql/introduction/pattern.asciidoc[leveloffset=+1]
 
 include::../ql/syntax/lists.asciidoc[leveloffset=+1]
+
+include::../ql/syntax/maps.asciidoc[leveloffset=+1]
 
 include::working-with-null.asciidoc[leveloffset=+1]
 
