@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 class WithTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT FRIEND A", "A FRIEND B", "B FRIEND C", "C FRIEND ROOT")
   val title = "WITH"
-  override val linkId = "query-with"
+  override val linkId = "clauses/with"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

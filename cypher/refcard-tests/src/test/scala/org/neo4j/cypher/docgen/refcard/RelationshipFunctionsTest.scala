@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 class RelationshipFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A KNOWS B", "B KNOWS C", "C KNOWS ROOT")
   val title = "Relationship Functions"
-  override val linkId = "query-functions-scalar"
+  override val linkId = "functions/scalar"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

@@ -27,7 +27,7 @@ import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "CONSTRAINT"
-  override val linkId = "query-constraints"
+  override val linkId = "schema/constraints"
 
   override protected def newTestGraphDatabaseFactory() = new TestEnterpriseGraphDatabaseFactory()
 

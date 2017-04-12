@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 class ReturnTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A", "A LINK B", "B LINK C", "C LINK ROOT")
   val title = "RETURN"
-  override val linkId = "query-return"
+  override val linkId = "clauses/return"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

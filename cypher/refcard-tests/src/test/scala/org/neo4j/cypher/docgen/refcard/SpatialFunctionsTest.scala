@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 class SpatialFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A")
   val title = "Spatial Functions"
-  override val linkId = "query-functions-spatial"
+  override val linkId = "functions/spatial"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

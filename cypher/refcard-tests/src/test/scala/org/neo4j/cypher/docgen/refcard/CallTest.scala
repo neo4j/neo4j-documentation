@@ -34,7 +34,7 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
 
   val graphDescription = List("ROOT KNOWS A:Person", "A KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
   val title = "CALL"
-  override val linkId = "query-call"
+  override val linkId = "clauses/call"
 
   @Before
   override def init() {

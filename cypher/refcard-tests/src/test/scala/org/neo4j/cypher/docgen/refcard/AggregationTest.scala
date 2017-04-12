@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 class AggregationTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A KNOWS B", "B KNOWS C", "C KNOWS ROOT")
   val title = "Aggregating Functions"
-  override val linkId = "query-functions-aggregating"
+  override val linkId = "functions/aggregating"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
