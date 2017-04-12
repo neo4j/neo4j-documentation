@@ -27,7 +27,7 @@ class UnionTest extends RefcardTest with QueryStatisticsTestSupport {
   def graphDescription = List(
     "A KNOWS B", "A LOVES B")
   val title = "UNION"
-  override val linkId = "query-union"
+  override val linkId = "clauses/union"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

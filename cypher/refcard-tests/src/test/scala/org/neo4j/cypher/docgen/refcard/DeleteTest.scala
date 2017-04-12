@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 class DeleteTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A:Person", "A LINK B", "B LINK C", "C LINK ROOT")
   val title = "DELETE"
-  override val linkId = "query-delete"
+  override val linkId = "clauses/delete"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

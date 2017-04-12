@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 class MergeTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "MERGE"
-  override val linkId = "query-merge"
+  override val linkId = "clauses/merge"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

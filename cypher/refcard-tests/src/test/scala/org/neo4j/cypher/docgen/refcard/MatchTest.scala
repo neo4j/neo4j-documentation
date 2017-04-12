@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 class MatchTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A:Person", "A KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
   val title = "MATCH"
-  override val linkId = "query-match"
+  override val linkId = "clauses/match"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {

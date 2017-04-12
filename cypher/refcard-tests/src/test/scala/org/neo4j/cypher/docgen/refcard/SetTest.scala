@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 class SetTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A")
   val title = "SET"
-  override val linkId = "query-set"
+  override val linkId = "clauses/set"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
