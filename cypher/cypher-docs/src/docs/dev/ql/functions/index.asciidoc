@@ -250,4 +250,4 @@ ifndef::asciidoctor[:leveloffset: 2]
 
 include::call-a-user-defined-function.asciidoc[leveloffset=+1]
 
-ifdef::asciidoctor[See also <<user-defined-functions>>.]
+ifdef::asciidoctor[To write, test, and deploy a user-defined function in Neo4j, see <<user-defined-functions, Extending Neo4j -> User-defined functions>>.]
