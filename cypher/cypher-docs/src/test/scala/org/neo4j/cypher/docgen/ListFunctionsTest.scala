@@ -41,7 +41,7 @@ class ListFunctionsTest extends DocumentingTest {
         |       (charlie)-[:KNOWS]->(daniel),
         |       (bob)-[:MARRIED]->(eskil)""")
     synopsis("List functions return lists of things -- nodes in a path, and so on.")
-    p("Further details and examples of lists may be found in <<syntax-lists>> and <<query-operators-list>>.")
+    p("Further details and examples of lists may be found in <<cypher-lists>> and <<query-operators-list>>.")
     p(
       """* <<functions-extract,extract()>>
         |* <<functions-filter,filter()>>
