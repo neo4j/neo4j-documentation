@@ -19,98 +19,145 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionResult
-
-class ListsAndMapsTest extends ArticleTest {
-  def assert(name: String, result: InternalExecutionResult) {}
-
-  val graphDescription = List()
-
-  val title = "Lists"
-  val section = "Syntax"
-  val text =
-    """
-Lists
-=====
-
-Cypher has comprehensive support for lists.
-
-* <<cypher-lists-general,Lists in general>>
-* <<cypher-list-comprehension,List comprehension>>
-* <<cypher-literal-maps,Literal maps>>
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
 
-[[cypher-lists-general]]
-== Lists in general ==
+class ListsAndMapsTest extends DocumentingTest {
+  override def outputPath = "target/docs/dev/ql/"
 
-A literal list is created by using brackets and separating the elements in the list with commas.
+  override def doc = new DocBuilder {
+    doc("Lists", "cypher-lists")
+    initQueries(
+      """CREATE (charlie:Person {name: 'Charlie Sheen',  realName: 'Carlos Irwin Estévez'}),
+                |(martin:Person {name: 'Martin Sheen'}),
+                |(wallstreet:Movie {title: 'Wall Street', year: 1987}),
+                |(reddawn:Movie {title: 'Red Dawn', year: 1984}),
+                |(apocalypsenow:Movie {title: 'Apocalypse Now', year: 1979}),
+                |
+                |(charlie)-[:ACTED_IN]->(wallstreet),
+                |(charlie)-[:ACTED_IN]->(reddawn),
+                |(charlie)-[:ACTED_IN]->(apocalypsenow),
+                |(martin)-[:ACTED_IN]->(wallstreet),
+                |(martin)-[:ACTED_IN]->(apocalypsenow)
 
-###
-RETURN [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as list###
+      """.stripMargin)
+    synopsis("Cypher has comprehensive support for lists.")
+    p(
+      """* <<cypher-lists-general,Lists in general>>
+        |* <<cypher-list-comprehension,List comprehension>>
+        |* <<cypher-literal-maps,Literal maps>>""")
+    section("Lists in general", "cypher-lists-general") {
+      p(
+        """A literal list is created by using brackets and separating the elements in the list with commas.""".stripMargin)
+      query(
+        """RETURN [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] AS list""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("list" -> List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))))
+        })) {
+        resultTable()
+      }
+      p(
+        """In our examples, we'll use the <<functions-range,`range`>> function.
+          |It gives you a list containing all numbers between given start and end numbers.
+          |Range is inclusive in both ends.""".stripMargin)
+      p("""To access individual elements in the list, we use the square brackets again.
+          |This will extract from the start index and up to but not including the end index.""")
+      query(
+        """RETURN range(0, 10)[3]""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("range(0, 10)[3]" -> 3)))
+        })) {
+        resultTable()
+      }
+      p("You can also use negative numbers, to start from the end of the list instead.")
+      query(
+        """RETURN range(0, 10)[-3]""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("range(0, 10)[-3]" -> 8)))
+        })) {
+        resultTable()
+      }
+      p("Finally, you can use ranges inside the brackets to return ranges of the list.")
+      query(
+        """RETURN range(0, 10)[0..3]""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("range(0, 10)[0..3]" -> List(0, 1, 2))))
+        })) {
+        resultTable()
+      }
+      query(
+        """RETURN range(0, 10)[0..-5]""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("range(0, 10)[0..-5]" -> List(0, 1, 2, 3, 4, 5))))
+        })) {
+        resultTable()
+      }
+      query(
+        """RETURN range(0, 10)[-5..]""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("range(0, 10)[-5..]" -> List(6, 7, 8, 9, 10))))
+        })) {
+        resultTable()
+      }
+      query(
+        """RETURN range(0, 10)[..4]""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("range(0, 10)[..4]" -> List(0, 1, 2, 3))))
+        })) {
+        resultTable()
+      }
+      note {
+        p("Out-of-bound slices are simply truncated, but out-of-bound single elements return `null`.")
+      }
+      query(
+        """RETURN range(0, 10)[15]""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("range(0, 10)[15]" -> null)))
+        })) {
+        resultTable()
+      }
+      query(
+        """RETURN range(0, 10)[5..15]""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("range(0, 10)[5..15]" -> List(5, 6, 7, 8, 9, 10))))
+        })) {
+        resultTable()
+      }
+      p("You can get the <<functions-size,`size`>> of a list as follows:")
+      query(
+        """RETURN size(range(0, 10)[0..3])""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("size(range(0, 10)[0..3])" -> 3)))
+        })) {
+        resultTable()
+      }
+    }
+    section("List comprehension", "cypher-list-comprehension") {
+      p(
+        """List comprehension is a syntactic construct available in Cypher for creating a list based on existing lists.
+          |It follows the form of the mathematical set-builder notation (set comprehension) instead of the use of map and filter functions.""".stripMargin)
+      query(
+        """RETURN [x IN range(0,10) WHERE x % 2 = 0 | x^3 ] AS result""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("result" -> List(0.0,8.0,64.0,216.0,512.0,1000.0))))
+        })) {
+        resultTable()
+      }
+      p("Either the `WHERE` part, or the expression, can be omitted, if you only want to filter or map respectively.")
+      query(
+        """RETURN [x IN range(0,10) WHERE x % 2 = 0 ] AS result""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("result" -> List(0, 2, 4, 6, 8, 10))))
+        })) {
+        resultTable()
+      }
+      query(
+        """RETURN [x IN range(0,10) | x^3 ] AS result""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("result" -> List(0.0,1.0,8.0,27.0,64.0,125.0,216.0,343.0,512.0,729.0,1000.0))))
+        })) {
+        resultTable()
+      }
+    }
 
-In our examples, we'll use the <<functions-range,range>> function.
-It gives you a list containing all numbers between given start and end numbers.
-Range is inclusive in both ends.
 
-To access individual elements in the list, we use the square brackets again.
-This will extract from the start index and up to but not including the end index.
-
-###
-RETURN range(0, 10)[3]###
-
-You can also use negative numbers, to start from the end of the list instead.
-
-###
-RETURN range(0, 10)[-3]###
-
-Finally, you can use ranges inside the brackets to return ranges of the list.
-
-###
-RETURN range(0, 10)[0..3]###
-###
-RETURN range(0, 10)[0..-5]###
-###
-RETURN range(0, 10)[-5..]###
-###
-RETURN range(0, 10)[..4]###
-
-NOTE: Out-of-bound slices are simply truncated, but out-of-bound single elements return `null`.
-
-###
-RETURN range(0, 10)[15]###
-
-###
-RETURN range(0, 10)[5..15]###
-
-You can get the <<functions-size,size>> of a list as follows:
-
-###
-RETURN size(range(0, 10)[0..3])###
-
-[[cypher-list-comprehension]]
-== List comprehension ==
-
-List comprehension is a syntactic construct available in Cypher for creating a list based on existing lists.
-It follows the form of the mathematical set-builder notation (set comprehension) instead of the use of map
-and filter functions.
-
-###
-RETURN [x IN range(0,10) WHERE x % 2 = 0 | x^3 ] AS result###
-
-Either the `WHERE` part, or the expression, can be omitted, if you only want to filter or map respectively.
-
-###
-RETURN [x IN range(0,10) WHERE x % 2 = 0 ] AS result###
-###
-RETURN [x IN range(0,10) | x^3 ] AS result###
-
-[[cypher-literal-maps]]
-== Literal maps ==
-
-From Cypher, you can also construct maps. Through REST you will get JSON objects; in Java they will be `java.util.Map<String,Object>`.
-
-###
-RETURN {key: 'Value', listKey: [ {inner: 'Map1'}, {inner: 'Map2'} ] } AS result###
-"""
+    section("Literal maps", "cypher-literal-maps") {
+      p(
+        """From Cypher, you can also construct maps.
+          |Through REST you will get JSON objects; in Java they will be `java.util.Map<String,Object>`.""".stripMargin)
+      query(
+        """RETURN {key: 'Value', listKey: [{inner: 'Map1'}, {inner: 'Map2'}]}""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("{key: 'Value', listKey: [{inner: 'Map1'}, {inner: 'Map2'}]}" -> Map("key" -> "Value", "listKey" -> List(Map("inner" -> "Map1"), Map("inner" -> "Map2"))))))
+        })) {
+        resultTable()
+      }
+    }
+  }.build()
 }
-
