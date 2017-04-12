@@ -8,6 +8,7 @@ The `DELETE` clause is used to delete graph elements -- nodes, relationships or 
 * <<delete-delete-single-node, Delete a single node>>
 * <<delete-delete-all-nodes-and-relationships, Delete all nodes and relationships>>
 * <<delete-delete-a-node-with-all-its-relationships, Delete a node with all its relationships>>
+* <<delete-delete-relationships-only, Delete relationships only>>
 
 
 [[query-delete-introduction]]
@@ -26,4 +27,6 @@ include::delete-single-node.asciidoc[]
 include::delete-all-nodes-and-relationships.asciidoc[]
 
 include::delete-a-node-with-all-its-relationships.asciidoc[]
+
+include::delete-relationships-only.asciidoc[]
 
