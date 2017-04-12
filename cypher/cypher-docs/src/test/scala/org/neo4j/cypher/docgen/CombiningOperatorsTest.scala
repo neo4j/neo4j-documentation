@@ -131,11 +131,11 @@ class CombiningOperatorsTest extends DocumentingTest {
       }
     }
     section("AntiSemiApply", "query-plan-anti-semi-apply") {
-      p("""Tests for the existence of a pattern predicate.
-           |`SemiApply` takes a row from its child operator and feeds it to the leaf operator on the right-hand side.
+      p("""Tests for the absence of a pattern predicate.
+           |`AntiSemiApply` takes a row from its child operator and feeds it to the leaf operator on the right-hand side.
            |If the right-hand side operator tree yields at least one row, the row from the
-           |left-hand side is yielded by the `SemiApply` operator.
-           |This makes `SemiApply` a filtering operator, used mostly for pattern predicates in queries.""")
+           |left-hand side is yielded by the `AntiSemiApply` operator.
+           |This makes `AntiSemiApply` a filtering operator, used mostly for pattern predicates in queries.""")
       query("""MATCH (me:Person {name: "me"}), (other:Person)
                |WHERE NOT (me)-[:FRIENDS_WITH]->(other)
                |RETURN other.name""", assertPlanContains("AntiSemiApply")) {
@@ -146,7 +146,7 @@ class CombiningOperatorsTest extends DocumentingTest {
     section("LetSemiApply", "query-plan-let-semi-apply") {
       p("""Tests for the existence of a pattern predicate.
           |When a query contains multiple pattern predicates `LetSemiApply` will be used to evaluate the first of these.
-          |It will record the result of evaluating the predicate but will leave any filtering to a another operator.""")
+          |It will record the result of evaluating the predicate but will leave any filtering to another operator.""")
       query("""MATCH (other:Person)
               |WHERE (other)-[:FRIENDS_WITH]->() OR (other)-[:WORKS_IN]->()
               |RETURN other.name""", assertPlanContains("LetSemiApply")) {
