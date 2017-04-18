@@ -1,10 +1,8 @@
 
 include::jmx-list.asciidoc[]
 
-ifdef::asciidoctor[]
 [NOTE]
 For additional information on the primitive datatypes (`int`, `long` etc.) used in the JMX attributes, please see <<developer-manual#graphdb-neo4j-properties, Developer Manual -> Introduction: Properties>>.
-endif::[]
 
 include::jmx-branched-store.asciidoc[]
 
