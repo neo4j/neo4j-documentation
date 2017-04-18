@@ -65,4 +65,13 @@ class DeleteTest extends DocumentingTestBase with QueryStatisticsTestSupport wit
       optionalResultExplanation = "",
       assertions = (p) => assertStats(p, relationshipsDeleted = 2, nodesDeleted = 1))
   }
+
+  @Test def delete_a_relationship() {
+    testQuery(
+      title = "Delete relationships only",
+      text = "It is also possible to delete relationships only, leaving the node(s) otherwise unaffected.",
+      queryText = "MATCH (n {name: 'Andres'})-[r:KNOWS]->() DELETE r",
+      optionalResultExplanation = "This deletes all outgoing `KNOWS` relationships from the node with the name *'Andres'*.",
+      assertions = (p) => assertStats(p, relationshipsDeleted = 2, nodesDeleted = 0))
+  }
 }
