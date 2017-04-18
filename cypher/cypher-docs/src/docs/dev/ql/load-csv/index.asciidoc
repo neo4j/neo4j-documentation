@@ -30,14 +30,15 @@
 .Configuration settings for file URLs
 <<operations-manual#config_dbms.security.allow_csv_import_from_file_urls, dbms.security.allow_csv_import_from_file_urls>>::
 This setting determines if Cypher will allow the use of `+file:///+` URLs when loading data using `LOAD CSV`.
-Such URLs identify files on the filesystem of the database server. Default is _true_.
+Such URLs identify files on the filesystem of the database server.
+Default is _true_.
 Setting `dbms.security.allow_csv_import_from_file_urls=false` will completely disable access to the file system for `LOAD CSV`.
 
 <<operations-manual#config_dbms.directories.import, dbms.directories.import>>::
 Sets the root directory for `+file:///+` URLs used with the Cypher `LOAD CSV` clause.
-This must be set to a single directory on the filesystem of the database server, and will make all requests to load from `+file:///+` URLs relative to the specified directory (similar to how a unix chroot operates).
+This must be set to a single directory on the filesystem of the database server, and will make all requests to load from `+file:///+` URLs relative to the specified directory (similar to how a Unix `chroot` operates).
 The default value is _import_.
-This is a security measure which prevents the database from accessing files outside the standard import directory.
+This is a security measure which prevents the database from accessing files outside the standard <<operations-manual#file-locations, import directory>>.
 Setting `dbms.directories.import` to be empty removes this security measure and instead allows access to any file on the system.
 This is not recommended.
 
