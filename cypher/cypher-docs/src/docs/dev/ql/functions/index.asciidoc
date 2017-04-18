@@ -240,8 +240,10 @@ include::query-functions-spatial.adoc[leveloffset=+1]
 
 ifndef::asciidoctor[:leveloffset: 1]
 
+
 [[query-functions-udf]]
 == User-defined functions ==
+
 User-defined functions are written in Java, deployed into the database and are called in the same way as any other Cypher function.
 
 This example shows how you invoke a user-defined function called `join` from Cypher.
@@ -250,4 +252,4 @@ ifndef::asciidoctor[:leveloffset: 2]
 
 include::call-a-user-defined-function.asciidoc[leveloffset=+1]
 
-ifdef::asciidoctor[See also <<user-defined-functions>>.]
+For developing and deploy user-defined functions in Neo4j, see <<user-defined-functions, Extending Neo4j -> User-defined functions>>.
