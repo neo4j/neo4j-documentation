@@ -1,11 +1,12 @@
 [[cypher-expressions]]
 = Expressions
 
-* <<cypher-expressions-general,Expressions in general>>
-* <<cypher-expressions-string-literals,Note on string literals>>
-* <<query-syntax-case,`CASE` expressions>>
- ** <<syntax-simple-case,Simple `CASE`>>
- ** <<syntax-generic-case,Generic `CASE`>>
+* <<cypher-expressions-general, Expressions in general>>
+* <<cypher-expressions-string-literals, Note on string literals>>
+* <<query-syntax-case, `CASE` expressions>>
+ ** <<syntax-simple-case, Simple `CASE` form: comparing an expression against multiple values>>
+ ** <<syntax-generic-case, Generic `CASE` form: allowing for multiple conditionals to be expressed>>
+ ** <<syntax-distinguish-case, Distinguishing between when to use the simple and generic `CASE` forms>>
 
 
 [[cypher-expressions-general]]
