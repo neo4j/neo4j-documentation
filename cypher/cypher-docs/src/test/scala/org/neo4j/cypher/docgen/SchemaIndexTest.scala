@@ -177,7 +177,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Use index when checking for the existence of a property",
       text =
-        "The `has(p.name)` predicate in the following query will use the `Person(name)` index, if it exists.",
+        "The `exists(p.name)` predicate in the following query will use the `Person(name)` index, if it exists.",
       queryText = "MATCH (p:Person) WHERE exists(p.name) RETURN p",
       assertions = {
         (p) =>
