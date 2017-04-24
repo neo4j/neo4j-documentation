@@ -31,22 +31,22 @@ class OperatorsTest extends DocumentingTest {
       """* <<query-operators-summary,Operators at a glance>>
         |* <<query-operators-general,General operators>>
         | ** <<syntax-using-the-distinct-operator,Using the `DISTINCT` operator>>
-        | ** <<syntax-accessing-the-property-of-a-nested-literal-map,Accessing the property of a nested literal map>>
-        | ** <<syntax-filtering-on-a-dynamically-computed-property-key,Filtering on a dynamically-computed property key>>
+        | ** <<syntax-accessing-the-property-of-a-nested-literal-map,Accessing the property of a nested literal map using the `.` operator>>
+        | ** <<syntax-filtering-on-a-dynamically-computed-property-key,Filtering on a dynamically-computed property key using the `[]` operator>>
         |* <<query-operators-mathematical,Mathematical operators>>
-        | ** <<syntax-using-the-exponentiation-operator,Using the exponentiation operator>>
-        | ** <<syntax-using-the-unary-minus-operator,Using the unary minus operator>>
+        | ** <<syntax-using-the-exponentiation-operator,Using the exponentiation operator `^`>>
+        | ** <<syntax-using-the-unary-minus-operator,Using the unary minus operator `-`>>
         |* <<query-operators-comparison,Comparison operators>>
         | ** <<syntax-comparing-two-numbers,Comparing two numbers>>
         | ** <<syntax-using-starts-with-to-filter-names,Using `STARTS WITH` to filter names>>
         |* <<query-operators-boolean,Boolean operators>>
         | ** <<syntax-using-boolean-operators-to-filter-numbers,Using boolean operators to filter numbers>>
         |* <<query-operators-string,String operators>>
-        | ** <<syntax-using-a-regular-expression-to-filter-words,Using a regular expression to filter words>>
+        | ** <<syntax-using-a-regular-expression-to-filter-words,Using a regular expression with `=~` to filter words>>
         |* <<query-operators-list,List operators>>
-        | ** <<syntax-concatenating-two-lists,Concatenating two lists>>
+        | ** <<syntax-concatenating-two-lists,Concatenating two lists using `+`>>
         | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list,Using `IN` to check if a number is in a list>>
-        | ** <<syntax-accessing-elements-in-a-list,Accessing elements in a list>>
+        | ** <<syntax-accessing-elements-in-a-list,Accessing elements in a list using the `[]` operator>>
         |* <<query-operators-property,Property operators>>
         |* <<cypher-comparison,Equality and comparison of values>>
         |* <<cypher-ordering,Ordering and comparison of values>>
@@ -71,8 +71,8 @@ class OperatorsTest extends DocumentingTest {
         """The general operators comprise:
           |
           |* remove duplicates values: `DISTINCT`
-          |* access the property of a node, relationship or literal map: `.`
-          |* dynamic property access: `[]`""".stripMargin)
+          |* access the property of a node, relationship or literal map using the dot operator: `.`
+          |* dynamic property access using the subscript operator: `[]`""".stripMargin)
       section("Using the `DISTINCT` operator", "syntax-using-the-distinct-operator") {
         p("Retrieve the unique eye colors from `Person` nodes.")
         query(
@@ -89,7 +89,7 @@ class OperatorsTest extends DocumentingTest {
         }
         p("`DISTINCT` is commonly used in conjunction with <<query-functions-aggregating,aggregating functions>>.")
       }
-      section("Accessing the property of a nested literal map", "syntax-accessing-the-property-of-a-nested-literal-map") {
+      section("Accessing the property of a nested literal map using the `.` operator", "syntax-accessing-the-property-of-a-nested-literal-map") {
         query(
           """WITH {person: {name: 'Anne', age: 25}} AS p
             |RETURN  p.person.name""".stripMargin, ResultAssertions((r) => {
@@ -98,7 +98,7 @@ class OperatorsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Filtering on a dynamically-computed property key", "syntax-filtering-on-a-dynamically-computed-property-key") {
+      section("Filtering on a dynamically-computed property key using the `[]` operator", "syntax-filtering-on-a-dynamically-computed-property-key") {
         query(
           """CREATE (a:Restaurant {name: 'Hungry Jo', rating_hygiene: 10, rating_food: 7}),
             |(b:Restaurant {name: 'Buttercup Tea Rooms', rating_hygiene: 5, rating_food: 6}),
@@ -125,7 +125,7 @@ class OperatorsTest extends DocumentingTest {
           |* division: `/`
           |* modulo division: `%`
           |* exponentiation: `^`""".stripMargin)
-      section("Using the exponentiation operator", "syntax-using-the-exponentiation-operator") {
+      section("Using the exponentiation operator `^`", "syntax-using-the-exponentiation-operator") {
         query(
           """WITH 2 AS number, 3 AS exponent
             |RETURN number ^ exponent AS result""".stripMargin, ResultAssertions((r) => {
@@ -134,7 +134,7 @@ class OperatorsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Using the unary minus operator", "syntax-using-the-unary-minus-operator") {
+      section("Using the unary minus operator `-`", "syntax-using-the-unary-minus-operator") {
         query(
           """WITH -3 AS a, 4 AS b
             |RETURN b - a AS result""".stripMargin, ResultAssertions((r) => {
@@ -228,7 +228,7 @@ class OperatorsTest extends DocumentingTest {
           |
           |* concatenating strings: `+`
           |* matching a regular expression: `=~`""".stripMargin)
-      section("Using a regular expression to filter words", "syntax-using-a-regular-expression-to-filter-words") {
+      section("Using a regular expression with `=~` to filter words", "syntax-using-a-regular-expression-to-filter-words") {
         query(
           """WITH ['mouse', 'chair', 'door', 'house'] AS wordlist
             |UNWIND wordlist AS word
@@ -249,8 +249,8 @@ class OperatorsTest extends DocumentingTest {
           |
           |* concatenating lists: `+`
           |* checking if an element exists in a list: `IN`
-          |* accessing an element(s) in a list: `[]`""".stripMargin)
-      section("Concatenating two lists", "syntax-concatenating-two-lists") {
+          |* accessing an element(s) in a list using the subscript operator: `[]`""".stripMargin)
+      section("Concatenating two lists using `+`", "syntax-concatenating-two-lists") {
         query(
           """RETURN [1,2,3,4,5] + [6,7] AS myList""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map("myList" -> List(1L, 2L, 3L, 4L, 5L, 6L, 7L))))
@@ -270,7 +270,7 @@ class OperatorsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Accessing elements in a list", "syntax-accessing-elements-in-a-list") {
+      section("Accessing elements in a list using the `[]` operator", "syntax-accessing-elements-in-a-list") {
         query(
           """WITH ['Anne', 'John', 'Bill', 'Diane', 'Eve'] AS names
             |RETURN names[1..3] AS result""".stripMargin, ResultAssertions((r) => {
