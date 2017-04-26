@@ -6,7 +6,7 @@
 * <<schema-index-drop-an-index, Drop an index>>
 * <<schema-index-use-index, Use index>>
 * <<schema-index-use-index-with-where-using-equality, Use index with `WHERE` using equality>>
-* <<schema-index-use-index-with-where-using-inequality, Use index with `WHERE` using inequality>>
+* <<schema-index-use-index-with-where-using-range-comparisons, Use index with `WHERE` using range comparisons>>
 * <<schema-index-use-index-with-in, Use index with `IN`>>
 * <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
 * <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>
@@ -30,7 +30,7 @@ include::use-index.asciidoc[]
 
 include::use-index-with-where-using-equality.asciidoc[]
 
-include::use-index-with-where-using-inequality.asciidoc[]
+include::use-index-with-where-using-range-comparisons.asciidoc[]
 
 include::use-index-with-in.asciidoc[]
 

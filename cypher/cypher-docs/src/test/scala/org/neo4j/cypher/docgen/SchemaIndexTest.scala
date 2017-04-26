@@ -102,13 +102,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_index_with_where_using_inequality() {
+  @Test def use_index_with_where_using_range_comparisons() {
     // Need to make index preferable in terms of cost
     executePreparationQueries((0 to 300).map { i =>
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Use index with `WHERE` using inequality",
+      title = "Use index with `WHERE` using range comparisons",
       text = "Indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
       queryText = "MATCH (person:Person) WHERE person.name > 'B' RETURN person",
