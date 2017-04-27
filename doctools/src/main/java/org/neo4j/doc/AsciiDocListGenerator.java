@@ -60,17 +60,8 @@ public class AsciiDocListGenerator
             String id = item.id();
             String name = item.name();
             String description = item.description().orElse(String.format("No description available for `%s`.", name));
-            if ( shortenDescription )
-            {
-                int pos = description.indexOf( ". " );
-                if  ( pos == -1 )
-                {
-                    pos = description.indexOf( "; " );
-                }
-                if ( pos > 10 )
-                {
-                    description = description.substring( 0, pos );
-                }
+            if ( shortenDescription ) {
+                description = shortenDescription(description);
             }
             sb.append( "|<<" )
                 .append( id )
@@ -101,4 +92,25 @@ public class AsciiDocListGenerator
         sb.append( print.toString() );
         return sb.toString();
     }
+
+    /**
+     * Shorten the description to the first sentence. If that sentence contains "deprecated", include one more
+     * sentence in the shortened description. This is to handle the common "This setting is deprecated." which
+     * is insufficient as a summary of the description.
+     * @param description
+     * @return The description shortened to one or two sentences.
+     */
+    private String shortenDescription(String description) {
+        int pos = description.indexOf(". ");
+        if (-1 == pos) {
+            pos = description.indexOf("; ");
+        } else if (pos < 30 && description.substring(0, pos).contains("deprecated")) {
+            pos = description.indexOf(". ", pos + 1);
+        }
+        if (pos > 10) {
+            description = description.substring(0, pos) + ".";
+        }
+        return description;
+    }
+
 }
