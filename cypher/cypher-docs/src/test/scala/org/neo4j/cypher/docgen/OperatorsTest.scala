@@ -28,41 +28,41 @@ class OperatorsTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("Operators", "query-operators")
     p(
-      """* <<query-operators-summary,Operators at a glance>>
-        |* <<query-operators-general,General operators>>
-        | ** <<syntax-using-the-distinct-operator,Using the `DISTINCT` operator>>
-        | ** <<syntax-accessing-the-property-of-a-nested-literal-map,Accessing the property of a nested literal map using the `.` operator>>
-        | ** <<syntax-filtering-on-a-dynamically-computed-property-key,Filtering on a dynamically-computed property key using the `[]` operator>>
-        |* <<query-operators-mathematical,Mathematical operators>>
-        | ** <<syntax-using-the-exponentiation-operator,Using the exponentiation operator `^`>>
-        | ** <<syntax-using-the-unary-minus-operator,Using the unary minus operator `-`>>
-        |* <<query-operators-comparison,Comparison operators>>
-        | ** <<syntax-comparing-two-numbers,Comparing two numbers>>
-        | ** <<syntax-using-starts-with-to-filter-names,Using `STARTS WITH` to filter names>>
-        |* <<query-operators-boolean,Boolean operators>>
-        | ** <<syntax-using-boolean-operators-to-filter-numbers,Using boolean operators to filter numbers>>
-        |* <<query-operators-string,String operators>>
-        | ** <<syntax-using-a-regular-expression-to-filter-words,Using a regular expression with `=~` to filter words>>
-        |* <<query-operators-list,List operators>>
-        | ** <<syntax-concatenating-two-lists,Concatenating two lists using `+`>>
-        | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list,Using `IN` to check if a number is in a list>>
-        | ** <<syntax-accessing-elements-in-a-list,Accessing elements in a list using the `[]` operator>>
-        |* <<query-operators-property,Property operators>>
-        |* <<cypher-comparison,Equality and comparison of values>>
-        |* <<cypher-ordering,Ordering and comparison of values>>
-        |* <<cypher-operations-chaining,Chaining comparison operations>>
+      """* <<query-operators-summary, Operators at a glance>>
+        |* <<query-operators-general, General operators>>
+        | ** <<syntax-using-the-distinct-operator, Using the `DISTINCT` operator>>
+        | ** <<syntax-accessing-the-property-of-a-nested-literal-map, Accessing properties of a nested literal map using the `.` operator>>
+        | ** <<syntax-filtering-on-a-dynamically-computed-property-key, Filtering on a dynamically-computed property key using the `[]` operator>>
+        |* <<query-operators-mathematical, Mathematical operators>>
+        | ** <<syntax-using-the-exponentiation-operator, Using the exponentiation operator `^`>>
+        | ** <<syntax-using-the-unary-minus-operator, Using the unary minus operator `-`>>
+        |* <<query-operators-comparison, Comparison operators>>
+        | ** <<syntax-comparing-two-numbers, Comparing two numbers>>
+        | ** <<syntax-using-starts-with-to-filter-names, Using `STARTS WITH` to filter names>>
+        |* <<query-operators-boolean, Boolean operators>>
+        | ** <<syntax-using-boolean-operators-to-filter-numbers, Using boolean operators to filter numbers>>
+        |* <<query-operators-string, String operators>>
+        | ** <<syntax-using-a-regular-expression-to-filter-words, Using a regular expression with `=~` to filter words>>
+        |* <<query-operators-list, List operators>>
+        | ** <<syntax-concatenating-two-lists, Concatenating two lists using `+`>>
+        | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list, Using `IN` to check if a number is in a list>>
+        | ** <<syntax-accessing-elements-in-a-list, Accessing elements in a list using the `[]` operator>>
+        |* <<query-operators-property, Property operators>>
+        |* <<cypher-comparison, Equality and comparison of values>>
+        |* <<cypher-ordering, Ordering and comparison of values>>
+        |* <<cypher-operations-chaining, Chaining comparison operations>>
       """.stripMargin)
     section("Operators at a glance", "query-operators-summary") {
       p(
         """
           ||===
-           || <<query-operators-general,General operators>> | `DISTINCT`, `.` for property access, `[]` for dynamic property access
-           || <<query-operators-mathematical,Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
-           || <<query-operators-comparison,Comparison operators>>     | `=`, `<>`, `<`, `>`, `<=`, `>=`, `IS NULL`, `IS NOT NULL`
-           || <<query-operators-comparison,String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
-           || <<query-operators-boolean,Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
-           || <<query-operators-string,String operators>>   | `+` for concatenation, `=~` for regex matching
-           || <<query-operators-list,List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s)
+           || <<query-operators-general, General operators>> | `DISTINCT`, `.` for property access, `[]` for dynamic property access
+           || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
+           || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `<=`, `>=`, `IS NULL`, `IS NOT NULL`
+           || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
+           || <<query-operators-boolean, Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
+           || <<query-operators-string, String operators>>   | `+` for concatenation, `=~` for regex matching
+           || <<query-operators-list, List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s)
            ||===
            |""")
     }
@@ -89,7 +89,7 @@ class OperatorsTest extends DocumentingTest {
         }
         p("`DISTINCT` is commonly used in conjunction with <<query-functions-aggregating,aggregating functions>>.")
       }
-      section("Accessing the property of a nested literal map using the `.` operator", "syntax-accessing-the-property-of-a-nested-literal-map") {
+      section("Accessing properties of a nested literal map using the `.` operator", "syntax-accessing-the-property-of-a-nested-literal-map") {
         query(
           """WITH {person: {name: 'Anne', age: 25}} AS p
             |RETURN  p.person.name""".stripMargin, ResultAssertions((r) => {
