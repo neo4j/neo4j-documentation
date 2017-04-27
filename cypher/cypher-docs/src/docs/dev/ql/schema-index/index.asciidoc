@@ -2,10 +2,10 @@
 = Indexes
 
 * <<query-schema-index-introduction, Introduction>>
-* <<schema-index-create-an-index, Create an index>>
-* <<schema-index-drop-an-index, Drop an index>>
+* <<schema-index-create-an-index-on-a-single-property-and-node-label, Create an index on a single property and node label>>
+* <<schema-index-drop-an-index-on-a-single-property-and-node-label, Drop an index on a single property and node label>>
 * <<schema-index-use-index, Use index>>
-* <<schema-index-use-index-with-where-using-equality, Use index with `WHERE` using equality>>
+* <<schema-index-use-index-on-a-single-property-and-node-label-with-where-using-equality, Use index on a single property and node label with `WHERE` using equality>>
 * <<schema-index-use-index-with-where-using-range-comparisons, Use index with `WHERE` using range comparisons>>
 * <<schema-index-use-index-with-in, Use index with `IN`>>
 * <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
@@ -22,13 +22,13 @@ Cypher allows the creation of indexes over one or more properties for all nodes 
 Once an index has been created, it will automatically be managed and kept up to date by the database whenever the graph is changed.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
 
-include::create-an-index.asciidoc[]
+include::create-an-index-on-a-single-property-and-node-label.asciidoc[]
 
-include::drop-an-index.asciidoc[]
+include::drop-an-index-on-a-single-property-and-node-label.asciidoc[]
 
 include::use-index.asciidoc[]
 
-include::use-index-with-where-using-equality.asciidoc[]
+include::use-index-on-a-single-property-and-node-label-with-where-using-equality.asciidoc[]
 
 include::use-index-with-where-using-range-comparisons.asciidoc[]
 

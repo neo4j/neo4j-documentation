@@ -12,10 +12,10 @@ Together, indexes and constraints are the schema of the graph.
 Cypher includes data definition language (DDL) statements for manipulating the schema.
 
 * <<query-schema-index,Indexes>>
- ** <<schema-index-create-an-index,Create an index>>
- ** <<schema-index-drop-an-index,Drop an index>>
+ ** <<schema-index-create-an-index-on-a-single-property-and-node-label, Create an index on a single property and node label>>
+ ** <<schema-index-drop-an-index-on-a-single-property-and-node-label, Drop an index on a single property and node label>>
  ** <<schema-index-use-index,Use index>>
- ** <<schema-index-use-index-with-where-using-equality,Use index with `WHERE` using equality>>
+ ** <<schema-index-use-index-on-a-single-property-and-node-label-with-where-using-equality, Use index on a single property and node label with `WHERE` using equality>>
  ** <<schema-index-use-index-with-where-using-range-comparisons,Use index with `WHERE` using range comparisons>>
  ** <<schema-index-use-index-with-in,Use index with `IN`>>
  ** <<schema-index-use-index-with-starts-with,Use index with `STARTS WITH`>>

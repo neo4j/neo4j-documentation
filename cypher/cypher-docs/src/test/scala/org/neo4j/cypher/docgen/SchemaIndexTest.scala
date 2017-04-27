@@ -39,33 +39,33 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   )
 
   override val properties = Map(
-    "andres" -> Map("name" -> "Andres"),
-    "mark" -> Map("name" -> "Mark")
+    "andres" -> Map("firstname" -> "Andres"),
+    "mark" -> Map("firstname" -> "Mark")
   )
 
   override val setupConstraintQueries = List(
-    "CREATE INDEX ON :Person(name)"
+    "CREATE INDEX ON :Person(firstname)"
   )
 
   def section = "Schema Index"
 
-  @Test def create_index_on_a_label() {
+  @Test def create_index_on_a_label_single_property() {
     testQuery(
-      title = "Create an index",
+      title = "Create an index on a single property and node label",
       text = "To create an index on a property for all nodes that have a label, use `CREATE INDEX ON`. " +
         "Note that the index is not immediately available, but will be created in the background.",
-      queryText = "CREATE INDEX ON :Person(name)",
+      queryText = "CREATE INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
-      assertions = (p) => assertIndexesOnLabels("Person", List(List("name")))
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname")))
     )
   }
 
-  @Test def drop_index_on_a_label() {
+  @Test def drop_index_on_a_label_single_property() {
     prepareAndTestQuery(
-      title = "Drop an index",
+      title = "Drop an index on a single property and node label",
       text = "To drop an index on all nodes that have a label and property combination, use the `DROP INDEX` clause.",
-      prepare = _ => executePreparationQueries(List("create index on :Person(name)")),
-      queryText = "DROP INDEX ON :Person(name)",
+      prepare = _ => executePreparationQueries(List("create index on :Person(firstname)")),
+      queryText = "DROP INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
       assertions = (p) => assertIndexesOnLabels("Person", List())
     )
@@ -75,9 +75,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Use index",
       text = "There is usually no need to specify which indexes to use in a query, Cypher will figure that out by itself. " +
-        "For example the query below will use the `Person(name)` index, if it exists. " +
+        "For example the query below will use the `Person(firstname)` index, if it exists. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
-      queryText = "MATCH (person:Person {name: 'Andres'}) RETURN person",
+      queryText = "MATCH (person:Person {firstname: 'Andres'}) RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -87,12 +87,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_index_with_where_using_equality() {
+  @Test def use_index_with_where_using_equality_single_property() {
     profileQuery(
-      title = "Use index with `WHERE` using equality",
-      text = "Indexes are also automatically used for equality comparisons of an indexed property in the `WHERE` clause. " +
+      title = "Use index on a single property and node label with `WHERE` using equality",
+      text = "Indexes are also automatically used for equality comparisons of a single indexed property in the `WHERE` clause. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
-      queryText = "MATCH (person:Person) WHERE person.name = 'Andres' RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.firstname = 'Andres' RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -111,7 +111,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Use index with `WHERE` using range comparisons",
       text = "Indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
-      queryText = "MATCH (person:Person) WHERE person.name > 'B' RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.firstname > 'B' RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -126,7 +126,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     executePreparationQueries(
       List(
         "FOREACH (x IN range(0, 100) | CREATE (:Person) )",
-        "FOREACH (x IN range(0, 400) | CREATE (:Person {name: x}) )"
+        "FOREACH (x IN range(0, 400) | CREATE (:Person {firstname: x}) )"
       )
     )
 
@@ -135,9 +135,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Use index with `IN`",
       text =
-        "The `IN` predicate on `person.name` in the following query will use the `Person(name)` index, if it exists. " +
+        "The `IN` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
-      queryText = "MATCH (person:Person) WHERE person.name IN ['Andres', 'Mark'] RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andres', 'Mark'] RETURN person",
       assertions = {
         (p) =>
           assertEquals(2, p.size)
@@ -150,7 +150,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def use_index_with_starts_with() {
     executePreparationQueries {
       val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
-      val b = (0 to 300).map { i => s"CREATE (:Person {name: '$i'})" }.toList
+      val b = (0 to 300).map { i => s"CREATE (:Person {firstname: '$i'})" }.toList
       a ++ b
     }
 
@@ -159,8 +159,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Use index with `STARTS WITH`",
       text =
-        "The `STARTS WITH` predicate on `person.name` in the following query will use the `Person(name)` index, if it exists. ",
-      queryText = "MATCH (person:Person) WHERE person.name STARTS WITH 'And' RETURN person",
+        "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. ",
+      queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -177,8 +177,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Use index when checking for the existence of a property",
       text =
-        "The `exists(p.name)` predicate in the following query will use the `Person(name)` index, if it exists.",
-      queryText = "MATCH (p:Person) WHERE exists(p.name) RETURN p",
+        "The `exists(p.firstname)` predicate in the following query will use the `Person(firstname)` index, if it exists.",
+      queryText = "MATCH (p:Person) WHERE exists(p.firstname) RETURN p",
       assertions = {
         (p) =>
           assertEquals(2, p.size)
