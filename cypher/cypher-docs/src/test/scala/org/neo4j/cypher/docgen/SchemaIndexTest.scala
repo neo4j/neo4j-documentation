@@ -39,8 +39,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   )
 
   override val properties = Map(
-    "andres" -> Map("firstname" -> "Andres"),
-    "mark" -> Map("firstname" -> "Mark")
+    "andres" -> Map("firstname" -> "Andres", "surname" -> "Taylor"),
+    "mark" -> Map("firstname" -> "Mark", "surname" -> "Needham")
   )
 
   override val setupConstraintQueries = List(
@@ -51,8 +51,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def create_index_on_a_label_single_property() {
     testQuery(
-      title = "Create an index on a single property and node label",
-      text = "To create an index on a property for all nodes that have a label, use `CREATE INDEX ON`. " +
+      title = "Create a single-property index",
+      text = "An index on a single property for all nodes that have a particular label can be created with `CREATE INDEX ON :Label(property)`. " +
         "Note that the index is not immediately available, but will be created in the background.",
       queryText = "CREATE INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
@@ -62,8 +62,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def drop_index_on_a_label_single_property() {
     prepareAndTestQuery(
-      title = "Drop an index on a single property and node label",
-      text = "To drop an index on all nodes that have a label and property combination, use the `DROP INDEX` clause.",
+      title = "Drop a single-property index",
+      text = "An index on all nodes that have a label and single property combination can be dropped with `DROP INDEX ON :Label(property)`.",
       prepare = _ => executePreparationQueries(List("create index on :Person(firstname)")),
       queryText = "DROP INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
@@ -89,8 +89,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_where_using_equality_single_property() {
     profileQuery(
-      title = "Use index on a single property and node label with `WHERE` using equality",
-      text = "Indexes are also automatically used for equality comparisons of a single indexed property in the `WHERE` clause. " +
+      title = "Use a single-property index with `WHERE` using equality",
+      text = "A query containing equality comparisons of a single indexed property in the `WHERE` clause is backed automatically by the index. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname = 'Andres' RETURN person",
       assertions = {
@@ -109,7 +109,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     }.toList)
     profileQuery(
       title = "Use index with `WHERE` using range comparisons",
-      text = "Indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
+      text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
+        "Composite indexes are currently not able to support range comparisons. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname > 'B' RETURN person",
       assertions = {
@@ -159,7 +160,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Use index with `STARTS WITH`",
       text =
-        "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. ",
+        "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
+          "Composite indexes are currently not able to support `STARTS WITH`, `ENDS WITH` and `CONTAINS`. ",
       queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' RETURN person",
       assertions = {
         (p) =>
@@ -177,7 +179,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Use index when checking for the existence of a property",
       text =
-        "The `exists(p.firstname)` predicate in the following query will use the `Person(firstname)` index, if it exists.",
+        "The `exists(p.firstname)` predicate in the following query will use the `Person(firstname)` index, if it exists. " +
+          "Composite indexes are currently not able to support the `exists` predicate. ",
       queryText = "MATCH (p:Person) WHERE exists(p.firstname) RETURN p",
       assertions = {
         (p) =>
