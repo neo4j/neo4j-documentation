@@ -40,8 +40,8 @@ class CaseExpressionsTest extends DocumentingTest {
         |       (charlie)-[:KNOWS]->(daniel),
         |       (bob)-[:MARRIED]->(eskil)""")
     p(
-      """Generic conditional expressions -- similar to if/else statements in other languages -- may be expressed using the well-known `CASE` construct.
-        |Two variants of `CASE` exist within Cypher: the _simple_ form, which allows an expression to be compared against multiple values, and the _generic_ form, which allows multiple conditional statements to be expressed.
+      """Generic conditional expressions may be expressed using the well-known `CASE` construct.
+        |Two variants of `CASE` exist within Cypher: the simple form, which allows an expression to be compared against multiple values, and the generic form, which allows multiple conditional statements to be expressed.
       """.stripMargin)
     p("The following graph is used for the examples below:")
     graphViz()
