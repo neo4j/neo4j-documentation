@@ -56,7 +56,7 @@ class WithTest extends DocumentingTest {
           |By combining `ORDER BY` and `LIMIT`, it's possible to get the top X entries by some criteria, and then bring in additional data from the graph.""".stripMargin)
       p(
         """Another use is to filter on aggregated values.
-          |`WITH` is used to introduce aggregates which can then by used in predicates in `WHERE`.
+          |`WITH` is used to introduce aggregates which can then be used in predicates in `WHERE`.
           |These aggregate expressions create new bindings in the results.
           |`WITH` can also, like `RETURN`, alias expressions that are introduced into the results using the aliases as the binding name.""".stripMargin)
       p(
@@ -96,7 +96,7 @@ class WithTest extends DocumentingTest {
     }
     section("Limit branching of a path search", "with-limit-branching-of-path-search") {
       p(
-        """You can match paths, limit to a certain number, and then match again using those paths as a base As well as any number of similar limited searches.""".stripMargin)
+        """You can match paths, limit to a certain number, and then match again using those paths as a base, as well as any number of similar limited searches.""".stripMargin)
       query(
         """MATCH (n {name: 'Anders'})--(m)
           |WITH m
