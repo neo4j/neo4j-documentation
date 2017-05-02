@@ -20,40 +20,44 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |Clause                                     | Type      |   Description
 |<<query-call,CALL...YIELD>>                        | Reading/Writing   | Invoke a procedure deployed in the database.
 |<<query-create,CREATE>>                    | Writing     |  Create nodes and relationships.
-|<<constraints-create-node-property-existence-constraint,CREATE CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>  | Schema   | Create a constraint ensuring that all nodes with a particular label have a certain property.
-|<<constraints-create-relationship-property-existence-constraint,CREATE CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>  | Schema   | Create a constraint ensuring that all relationship with a particular type have a certain property.
-|<<constraints-create-uniqueness-constraint,CREATE CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>  |  Schema | Create a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
-|<<schema-index-create-an-index,CREATE INDEX ON :Label(property)>>  | Schema  | Create an index on all nodes with a particular label and property.
-|<<query-create-unique,CREATE UNIQUE>>      | Reading/Writing     |  A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
-|<<query-delete,DELETE>>                    | Writing     |  Delete graph elements — nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
-|<<query-delete,DETACH DELETE>>             | Writing     |  Delete a node or set of nodes. All associated relationships will automatically be deleted.
-|<<constraints-drop-node-property-existence-constraint,DROP CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>      | Schema   | Drop a constraint ensuring that all nodes with a particular label have a certain property.
-|<<constraints-drop-relationship-property-existence-constraint,DROP CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>      | Schema   | Drop a constraint ensuring that all relationship with a particular type have a certain property.
-|<<constraints-drop-uniqueness-constraint,DROP CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>       | Schema | Drop a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
-|<<schema-index-drop-an-index,DROP INDEX ON :Label(property)>>       | Schema | Drop an index on all nodes with a particular label and property.
-|<<query-foreach,FOREACH>>                  | Writing     |  Update data within a list, whether components of a path, or the result of aggregation.
-|<<query-limit,LIMIT>>                          | Reading sub-clause | A sub-clause used to constrain the number of rows in the output.
-|<<query-load-csv,LOAD CSV>>                | Importing data     |  Use when importing data from CSV files.
-|<<query-match,MATCH>>                      | Reading      |  Specify the patterns to search for in the database.
-|<<query-merge,MERGE>>                      | Reading/Writing     |  Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
-|<<query-merge-on-create-on-match,ON CREATE>>   | Reading/Writing | Used in conjunction with `MERGE`, specifying the actions to take if the pattern needs to be created.
-|<<query-merge-on-create-on-match,ON MATCH>>    | Reading/Writing | Used in conjunction with `MERGE`, specifying the actions to take if the pattern already exists.
-|<<query-optional-match,OPTIONAL MATCH>>    | Reading      |  Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
-|<<query-order,ORDER BY>>                       | Reading sub-clause | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in particular way.
-|<<query-remove,REMOVE>>                    | Writing     |  Remove properties and labels from nodes and relationships.
-|<<query-return,RETURN>>                    | Projecting   |  Defines what to include in the query result set.
-|<<query-set,SET>>                          | Writing     |  Update labels on nodes and properties on nodes and relationships.
-|<<query-skip,SKIP>>                            | Reading/Writing | A sub-clause defining from which row to start including the rows in the output.
-|<<query-start,START>>                      | Reading      |  Find starting points through legacy indexes.
-|<<query-union,UNION>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are removed.
-|<<query-union,UNION ALL>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are retained.
-|<<query-unwind,UNWIND>>                    | Projecting   |  Expands a list into a sequence of rows.
-|<<query-using-index-hint,USING INDEX variable:Label(property)>>  | Hint | Index hints are used to specify which index, if any, the planner should use as a starting point.
-|<<query-using-join-hint,USING JOIN ON variable>>                 | Hint | Join hints are used to enforce a join operation at specified points.
-|<<query-using-periodic-commit-hint,USING PERIODIC COMMIT>>       | Hint | This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
-|<<query-using-scan-hint,USING SCAN variable:Label>>              | Hint | Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
-|<<query-with,WITH>>                        | Projecting   |  Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
-|<<query-where,WHERE>>                          | Reading sub-clause | A sub-clause used to add constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause, or to filter the results of a `WITH` clause.
+|<<constraints-create-node-property-existence-constraint, CREATE CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>  | Schema   | Create a constraint ensuring that all nodes with a particular label have a certain property.
+|<<constraints-create-relationship-property-existence-constraint, CREATE CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>  | Schema   | Create a constraint ensuring that all relationship with a particular type have a certain property.
+|<<constraints-create-uniqueness-constraint, CREATE CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>  |  Schema | Create a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
+|<<constraints-create-a-node-key, CREATE CONSTRAINT ON (n:Label) ASSERT (n.prop1, ..., n.propN) IS NODE KEY>>  |  Schema | Create a constraint ensuring all nodes with a particular label have all the specified properties and that the combination of property values is unique; i.e. ensures existence and uniqueness.
+|<<schema-index-create-a-single-property-index, CREATE INDEX ON :Label(property)>>  | Schema  | Create an index on all nodes with a particular label and a single property; i.e. create a single-property index.
+|<<create-a-composite-index, CREATE INDEX ON :Label(prop1, ..., propN)>>  | Schema  | Create an index on all nodes with a particular label and multiple properties; i.e. create a composite index.
+|<<query-create-unique, CREATE UNIQUE>>      | Reading/Writing     |  A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
+|<<query-delete, DELETE>>                    | Writing     |  Delete graph elements — nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
+|<<query-delete, DETACH DELETE>>             | Writing     |  Delete a node or set of nodes. All associated relationships will automatically be deleted.
+|<<constraints-drop-node-property-existence-constraint, DROP CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>      | Schema   | Drop a constraint ensuring that all nodes with a particular label have a certain property.
+|<<constraints-drop-relationship-property-existence-constraint, DROP CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>      | Schema   | Drop a constraint ensuring that all relationship with a particular type have a certain property.
+|<<constraints-drop-uniqueness-constraint, DROP CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>       | Schema | Drop a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
+|<<constraints-drop-a-node-key, DROP CONSTRAINT ON (n:Label) ASSERT (n.prop1, ..., n.propN) IS NODE KEY>>       | Schema | Drop a constraint ensuring all nodes with a particular label have all the specified properties and that the combination of property values is unique.
+|<<schema-index-drop-a-single-property-index, DROP INDEX ON :Label(property)>>       | Schema | Drop an index on all nodes with a particular label and a single property; i.e. drop a single-property index.
+|<<drop-a-composite-index, DROP INDEX ON :Label(prop1, ..., propN)>>       | Schema | Drop an index on all nodes with a particular label and multiple properties; i.e. drop a composite index.
+|<<query-foreach, FOREACH>>                  | Writing     |  Update data within a list, whether components of a path, or the result of aggregation.
+|<<query-limit, LIMIT>>                          | Reading sub-clause | A sub-clause used to constrain the number of rows in the output.
+|<<query-load-csv, LOAD CSV>>                | Importing data     |  Use when importing data from CSV files.
+|<<query-match, MATCH>>                      | Reading      |  Specify the patterns to search for in the database.
+|<<query-merge, MERGE>>                      | Reading/Writing     |  Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
+|<<query-merge-on-create-on-match, ON CREATE>>   | Reading/Writing | Used in conjunction with `MERGE`, specifying the actions to take if the pattern needs to be created.
+|<<query-merge-on-create-on-match, ON MATCH>>    | Reading/Writing | Used in conjunction with `MERGE`, specifying the actions to take if the pattern already exists.
+|<<query-optional-match, OPTIONAL MATCH>>    | Reading      |  Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
+|<<query-order, ORDER BY>>                       | Reading sub-clause | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in particular way.
+|<<query-remove, REMOVE>>                    | Writing     |  Remove properties and labels from nodes and relationships.
+|<<query-return, RETURN>>                    | Projecting   |  Defines what to include in the query result set.
+|<<query-set, SET>>                          | Writing     |  Update labels on nodes and properties on nodes and relationships.
+|<<query-skip, SKIP>>                            | Reading/Writing | A sub-clause defining from which row to start including the rows in the output.
+|<<query-start, START>>                      | Reading      |  Find starting points through legacy indexes.
+|<<query-union, UNION>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are removed.
+|<<query-union, UNION ALL>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are retained.
+|<<query-unwind, UNWIND>>                    | Projecting   |  Expands a list into a sequence of rows.
+|<<query-using-index-hint, USING INDEX variable:Label(property)>>  | Hint | Index hints are used to specify which index, if any, the planner should use as a starting point.
+|<<query-using-join-hint, USING JOIN ON variable>>                 | Hint | Join hints are used to enforce a join operation at specified points.
+|<<query-using-periodic-commit-hint, USING PERIODIC COMMIT>>       | Hint | This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
+|<<query-using-scan-hint, USING SCAN variable:Label>>              | Hint | Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
+|<<query-with, WITH>>                        | Projecting   |  Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
+|<<query-where, WHERE>>                          | Reading sub-clause | A sub-clause used to add constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause, or to filter the results of a `WITH` clause.
 |===
 
 
@@ -63,35 +67,35 @@ This section comprises a glossary of all the keywords -- grouped by category and
 [options="header"]
 |===
 |Operator                                                   | Type          | Description
-| <<query-operators-mathematical,%>>                      | Mathematical  | Modulo division
-| <<query-operators-mathematical,*>>                      | Mathematical  | Multiplication
-| <<query-operators-mathematical,+>>                      | Mathematical  | Addition
-| <<query-operators-string,+>>                            | String        | Concatenation
-| <<query-operators-list,+>>                              | List          | Concatenation
-| <<query-operators-mathematical,\->>                      | Mathematical  | Subtraction or unary minus
-| <<query-operators-general,.>>                             | General      | Property access
-| <<query-operators-mathematical,/>>                      | Mathematical  | Division
-| <<query-operators-comparison,<>>                        | Comparison    | Less than
-| <<query-operators-comparison,\<\=>>                       | Comparison    | Less than or equal to
-| <<query-operators-comparison,<> >>                       | Comparison    | Inequality
-| <<query-operators-comparison,\=>>                        | Comparison    | Equality
-| <<query-operators-string,=~>>                           | String        | Regular expression match
-| <<query-operators-comparison,> >>                        | Comparison    | Greater than
-| <<query-operators-comparison,>\=>>                       | Comparison    | Greater than or equal to
-| <<query-operators-boolean,AND>>                         | Boolean       | Conjunction
-| <<query-operator-comparison-string-specific,CONTAINS>>  | String comparison | Case-sensitive inclusion search
-| <<query-operators-general,DISTINCT>>           | General           | Duplicate removal
-| <<query-operator-comparison-string-specific,ENDS WITH>> | String comparison | Case-sensitive suffix search
-| <<query-operators-list,IN>>                             | List          | List element existence check
-| <<query-operators-comparison,IS NOT NULL>>              | Comparison    | Non-`null` check
-| <<query-operators-comparison,IS NULL>>                  | Comparison    | `null` check
-| <<query-operators-boolean,NOT>>                         | Boolean       | Negation
-| <<query-operators-boolean,OR>>                          | Boolean       | Disjunction
-| <<query-operator-comparison-string-specific,STARTS WITH>>   | String comparison | Case-sensitive prefix search
-| <<query-operators-boolean,XOR>>                         | Boolean     | Exclusive disjunction
-| <<query-operators-general,[]>>                            | General        | Subscript (dynamic property access)
-| <<query-operators-list,[]>>                            | List        | Subscript (accessing element(s) in a list)
-| <<query-operators-mathematical,^>>                      | Mathematical  | Exponentiation
+| <<query-operators-mathematical, %>>                      | Mathematical  | Modulo division
+| <<query-operators-mathematical, *>>                      | Mathematical  | Multiplication
+| <<query-operators-mathematical, +>>                      | Mathematical  | Addition
+| <<query-operators-string, +>>                            | String        | Concatenation
+| <<query-operators-list, +>>                              | List          | Concatenation
+| <<query-operators-mathematical, \->>                      | Mathematical  | Subtraction or unary minus
+| <<query-operators-general, .>>                             | General      | Property access
+| <<query-operators-mathematical, />>                      | Mathematical  | Division
+| <<query-operators-comparison, <>>                        | Comparison    | Less than
+| <<query-operators-comparison, \<\=>>                       | Comparison    | Less than or equal to
+| <<query-operators-comparison, <> >>                       | Comparison    | Inequality
+| <<query-operators-comparison, \=>>                        | Comparison    | Equality
+| <<query-operators-string, =~>>                           | String        | Regular expression match
+| <<query-operators-comparison, > >>                        | Comparison    | Greater than
+| <<query-operators-comparison, >\=>>                       | Comparison    | Greater than or equal to
+| <<query-operators-boolean, AND>>                         | Boolean       | Conjunction
+| <<query-operator-comparison-string-specific, CONTAINS>>  | String comparison | Case-sensitive inclusion search
+| <<query-operators-general, DISTINCT>>           | General           | Duplicate removal
+| <<query-operator-comparison-string-specific, ENDS WITH>> | String comparison | Case-sensitive suffix search
+| <<query-operators-list, IN>>                             | List          | List element existence check
+| <<query-operators-comparison, IS NOT NULL>>              | Comparison    | Non-`null` check
+| <<query-operators-comparison, IS NULL>>                  | Comparison    | `null` check
+| <<query-operators-boolean, NOT>>                         | Boolean       | Negation
+| <<query-operators-boolean, OR>>                          | Boolean       | Disjunction
+| <<query-operator-comparison-string-specific, STARTS WITH>>   | String comparison | Case-sensitive prefix search
+| <<query-operators-boolean, XOR>>                         | Boolean     | Exclusive disjunction
+| <<query-operators-general, []>>                            | General        | Subscript (dynamic property access)
+| <<query-operators-list, []>>                            | List        | Subscript (accessing element(s) in a list)
+| <<query-operators-mathematical, ^>>                      | Mathematical  | Exponentiation
 |===
 
 

@@ -126,7 +126,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Create a node that complies with property existence constraints",
-      text = "Create a `Book` node with an existing `isbn` property.",
+      text = "Create a `Book` node with an `isbn` property.",
       queryText = "CREATE (book:Book {isbn: '1449356265', title: 'Graph Databases'})",
       optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)")),
@@ -199,7 +199,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Create a relationship that complies with property existence constraints",
-      text = "Create a `LIKED` relationship with an existing `day` property.",
+      text = "Create a `LIKED` relationship with a `day` property.",
       queryText = "CREATE (user:User)-[like:LIKED {day: 'yesterday'}]->(book:Book)",
       optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)")),
@@ -244,12 +244,94 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def create_node_key_constraint() {
+    testQuery(
+      title = "Create a Node Key",
+      text = "To create a Node Key ensuring that all nodes with a particular label have a set of defined properties whose combined value is unique, and where all properties in the set are present, use the `ASSERT (variable.propertyName_1, ..., variable.propertyName_n) IS NODE KEY` syntax.",
+      queryText = "CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
+      optionalResultExplanation = "",
+      assertions = (p) => assertNodeKeyConstraintExists("Person", "firstname", "surname")
+    )
+  }
+
+  @Test def drop_node_key_constraint() {
+    generateConsole = false
+
+    prepareAndTestQuery(
+      title = "Drop a Node Key",
+      text = "Use `DROP CONSTRAINT` to remove a Node Key from the database.",
+      queryText = "DROP CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
+      optionalResultExplanation = "",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
+      assertions = (p) => assertNodeKeyConstraintDoesNotExist("Person", "firstname", "surname")
+    )
+  }
+
+  @Test def play_nice_with_node_key_constraint() {
+    generateConsole = false
+
+    prepareAndTestQuery(
+      title = "Create a node that complies with a Node Key",
+      text = "Create a `Person` node with both a `firstname` and `surname` property.",
+      queryText = "CREATE (p:Person {firstname: 'John', surname: 'Wood', age: 55})",
+      optionalResultExplanation = "",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
+      assertions = (p) => assertNodeKeyConstraintExists("Person", "firstname", "surname")
+    )
+  }
+
+  @Test def break_node_key_constraint() {
+    generateConsole = false
+    execute("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")
+    testFailingQuery[ConstraintValidationException](
+      title = "Create a node that breaks a Node Key",
+      text = "Trying to create a `Person` node without a `surname` property, given a Node Key on `:Person(firstname, surname)`, will fail.",
+      queryText = "CREATE (p:Person {firstname: 'Jane', age: 34})",
+      optionalResultExplanation = "In this case the node isn't created in the graph."
+    )
+  }
+
+  //TODO reinstate when "Composite lookups not yet supported" bug is fixed
+//  @Test def break_node_key_constraint_by_removing_property() {
+//    generateConsole = false
+//    execute("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")
+//    execute("CREATE (p:Person {firstname: 'John', surname: 'Wood'})")
+//    testFailingQuery[ConstraintValidationException](
+//      title = "Removing a `NODE KEY` constrained property",
+//      text = "Trying to remove the `surname` property from an existing node `Person`, given a `NODE KEY` constraint on `:Person(firstname, surname)`.",
+//      queryText = "MATCH (p:Person {firstname: 'John', surname: 'Wood'}) REMOVE p.surname",
+//      optionalResultExplanation = "In this case the property is not removed."
+//    )
+//  }
+
+  @Test def fail_to_create_node_key_constraint() {
+    generateConsole = false
+    execute("CREATE (p:Person {firstname: 'Jane', age: 34})")
+
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create a Node Key due to existing node",
+      text = "Trying to create a Node Key on the property `surname` on nodes with the `Person` label will fail when " +
+        " a node without a `surname` already exists in the database.",
+      queryText = "CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
+      optionalResultExplanation = "In this case the Node Key can't be created because it is violated by existing " +
+        "data. We may choose to remove the offending nodes and then re-apply the constraint."
+    )
+  }
+
   private def assertNodeConstraintExist(labelName: String, propName: String) {
     assert(hasNodeConstraint(labelName, propName))
   }
 
+  private def assertNodeKeyConstraintExists(labelName: String, propNames: String*) {
+    assert(hasNodeKeyConstraint(labelName, propNames.toSeq))
+  }
+
   private def assertNodeConstraintDoesNotExist(labelName: String, propName: String) {
     assert(!hasNodeConstraint(labelName, propName))
+  }
+
+  private def assertNodeKeyConstraintDoesNotExist(labelName: String, propNames: String*) {
+    assert(!hasNodeKeyConstraint(labelName, propNames.toSeq))
   }
 
   private def assertRelationshipConstraintExist(typeName: String, propName: String) {
@@ -268,5 +350,10 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   private def hasRelationshipConstraint(typeName: String, propName: String): Boolean = {
     val constraints = db.schema().getConstraints( RelationshipType.withName(typeName) ).asScala
     constraints.exists( _.getPropertyKeys.asScala.exists(_ == propName))
+  }
+
+  private def hasNodeKeyConstraint(labelName: String, propNames: Seq[String]): Boolean = {
+    val constraints = db.schema().getConstraints( Label.label(labelName) ).asScala
+    !constraints.isEmpty && constraints.head.getPropertyKeys().asScala.toList == propNames.toList
   }
 }

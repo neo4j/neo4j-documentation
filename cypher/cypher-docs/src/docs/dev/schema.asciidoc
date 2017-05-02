@@ -12,21 +12,25 @@ Together, indexes and constraints are the schema of the graph.
 Cypher includes data definition language (DDL) statements for manipulating the schema.
 
 * <<query-schema-index,Indexes>>
- ** <<schema-index-create-an-index,Create an index>>
- ** <<schema-index-drop-an-index,Drop an index>>
- ** <<schema-index-use-index,Use index>>
- ** <<schema-index-use-index-with-where-using-equality,Use index with `WHERE` using equality>>
- ** <<schema-index-use-index-with-where-using-inequality,Use index with `WHERE` using inequality>>
+ ** <<schema-index-create-a-single-property-index, Create a single-property index>>
+ ** <<create-a-composite-index, Create a composite index>>
+ ** <<schema-index-drop-a-single-property-index, Drop a single-property index>>
+ ** <<drop-a-composite-index, Drop a composite index>>
+ ** <<schema-index-use-index, Use index>>
+ ** <<schema-index-use-a-single-property-index-with-where-using-equality, Use a single-property index with `WHERE` using equality>>
+ ** <<use-a-composite-index-with-where-using-equality, Use a composite index with `WHERE` using equality>>
+ ** <<schema-index-use-index-with-where-using-range-comparisons, Use index with `WHERE` using range comparisons>>
  ** <<schema-index-use-index-with-in,Use index with `IN`>>
- ** <<schema-index-use-index-with-starts-with,Use index with `STARTS WITH`>>
- ** <<schema-index-use-index-when-checking-for-the-existence-of-a-property,Use index when checking for the existence of a property>>
-* <<query-constraints,Constraints>>
- ** <<query-constraint-unique-nodes,Unique node property constraints>>
- ** <<query-constraint-prop-exist-nodes,Node property existence constraints>>
- ** <<query-constraint-prop-exist-rels,Relationship property existence constraints>>
+ ** <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
+ ** <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>
+* <<query-constraints, Constraints>>
+ ** <<query-constraint-unique-nodes, Unique node property constraints>>
+ ** <<query-constraint-prop-exist-nodes, Node property existence constraints>>
+ ** <<query-constraint-prop-exist-rels, Relationship property existence constraints>>
+ ** <<query-constraint-node-key, Node Keys>>
 * <<query-schema-statistics,Statistics>>
- ** <<query-schema-statistics-config-options,Configuration options>>
- ** <<query-schema-statistics-manual-index-sampling,Manual index sampling>>
+ ** <<query-schema-statistics-config-options, Configuration options>>
+ ** <<query-schema-statistics-manual-index-sampling, Manual index sampling>>
 
 include::ql/schema-index/index.asciidoc[leveloffset=+1]
 
