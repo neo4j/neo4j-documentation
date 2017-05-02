@@ -26,7 +26,7 @@ Cypher includes data definition language (DDL) statements for manipulating the s
  ** <<query-constraint-prop-exist-rels,Relationship property existence constraints>>
 * <<query-schema-statistics,Statistics>>
  ** <<query-schema-statistics-config-options,Configuration options>>
- ** <<query-schema-statistics-shell,Managing statistics from the shell>>
+ ** <<query-schema-statistics-manual-index-sampling,Manual index sampling>>
 
 include::ql/schema-index/index.asciidoc[leveloffset=+1]
 
