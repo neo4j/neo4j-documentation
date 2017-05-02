@@ -197,7 +197,7 @@ RETURN keanu.name, keanu.created, keanu.lastSeen""",
   @Test def using_map_parameters_with_merge() {
     testQuery(
       title = "Using map parameters with `MERGE`",
-      text = """`MERGE` does not support map parameters like for example `CREATE` does.
+      text = """`MERGE` does not support map parameters the same way `CREATE` does.
 To use map parameters with `MERGE`, it is necessary to explicitly use the expected properties, such as in the following example.
 For more information on parameters, see <<cypher-parameters>>.""",
       parameters = Map("param" -> Map("name" -> "Keanu Reeves", "role" -> "Neo")),

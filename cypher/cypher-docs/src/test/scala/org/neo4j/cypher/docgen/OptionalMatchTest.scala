@@ -97,10 +97,10 @@ class OptionalMatchTest extends DocumentingTest {
     }
     section("Optional typed and named relationship", "optional-typed-named-relationship") {
       p("Just as with a normal relationship, you can decide which variable it goes into, and what relationship type you need.")
-      query("MATCH (a:Movie {title: 'Wall Street'})\nOPTIONAL MATCH (a)-[r:ACTS_IN]->()\nRETURN r", ResultAssertions((r) => {
-        r.toList should equal(List(Map("r" -> null)))
+      query("MATCH (a:Movie {title: 'Wall Street'})\nOPTIONAL MATCH (a)-[r:ACTS_IN]->()\nRETURN a.title, r", ResultAssertions((r) => {
+        r.toList should equal(List(Map("a.title" -> "Wall Street", "r" -> null)))
       })) {
-        p("This returns a node, and `null`, since the node has no outgoing `ACTS_IN` relationships.")
+        p("This returns the title of the node, *'Wall Street'*, and, since the node has no outgoing `ACTS_IN` relationships, `null` is returned for the relationship denoted by `r`.")
         resultTable()
       }
     }
