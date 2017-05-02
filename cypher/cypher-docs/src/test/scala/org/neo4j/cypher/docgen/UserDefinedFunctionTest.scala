@@ -44,10 +44,10 @@ class UserDefinedFunctionTest extends DocumentingTestBase with QueryStatisticsTe
     testQuery(
       title = "Call a user-defined function",
       text = "This calls the user-defined function `org.neo4j.procedure.example.join()`.",
-      queryText = "MATCH (n:Member) RETURN org.neo4j.function.example.join(collect(n.name))",
+      queryText = "MATCH (n:Member) RETURN org.neo4j.function.example.join(collect(n.name)) AS members",
       optionalResultExplanation = "",
       assertions = (p) => {
-        p.toList === List("John,Paul,George,Ringo")
+        assert(p.toList === List(Map("members" -> "John,Paul,George,Ringo")))
       })
   }
 }
