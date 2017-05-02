@@ -40,7 +40,7 @@ class UnionTest extends DocumentingTest {
         |* <<union-combine-queries-remove-duplicates, Combine two queries and remove duplicates>>
       """.stripMargin)
     section("Introduction", "union-introduction") {
-      p("It combines the results of two or more queries into a single result set that includes all the rows that belong to all queries in the union.")
+      p("`UNION` combines the results of two or more queries into a single result set that includes all the rows that belong to all queries in the union.")
       p("""The number and the names of the columns must be identical in all queries combined by using `UNION`.""")
       p(
         """To keep all the result rows, use `UNION ALL`.
