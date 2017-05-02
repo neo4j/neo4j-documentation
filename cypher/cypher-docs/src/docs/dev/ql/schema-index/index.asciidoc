@@ -1,6 +1,11 @@
 [[query-schema-index]]
 = Indexes
 
+[abstract]
+--
+This section explains how to work with indexes in Neo4j and Cypher.
+--
+
 * <<query-schema-index-introduction, Introduction>>
 * <<schema-index-create-a-single-property-index, Create a single-property index>>
 * <<create-a-composite-index, Create a composite index>>
@@ -21,12 +26,13 @@
 A database index is a redundant copy of information in the database for the purpose of making retrieving said data more efficient.
 This comes at the cost of additional storage space and slower writes, so deciding what to index and what not to index is an important and often non-trivial task.
 
-Cypher allows the creation of indexes on one or more properties for all nodes that have a given label:
+Cypher enables the creation of indexes on one or more properties for all nodes that have a given label:
 
 * An index that is created on a single property for any given label is called a _single-property index_.
-* An index that is created on more than one property for any given label is called a _composite index_, and we detail differences in its usage patterns compared with the single-property index in the examples below.
+* An index that is created on more than one property for any given label is called a _composite index_.
+  Differences in the usage patterns between composite and single-property indexes are detailed in the examples below.
 
-Once an index has been created, it will automatically be managed and kept up to date by the database whenever the graph is changed.
+Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changes.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
 
 include::create-a-single-property-index.asciidoc[]
@@ -35,9 +41,8 @@ include::create-a-single-property-index.asciidoc[]
 [[create-a-composite-index]]
 == Create a composite index
 
-An index on multiple properties for all nodes that have a particular label - i.e. a composite index - can be created with `CREATE INDEX ON :Label(property_1, ..., property_n)`.
-Only nodes labeled with the specified label and which contain _all_ the properties defined in the index will be added to the index.
-
+An index on multiple properties for all nodes that have a particular label -- i.e. a composite index -- can be created with `CREATE INDEX ON :Label(prop1, ..., propN)`.
+Only nodes labeled with the specified label and which contain all the properties in the index definition will be added to the index.
 
 The following statement will create a composite index on all nodes labeled with `Person` and which have both a `firstname` and `surname` property:
 
@@ -64,7 +69,7 @@ include::drop-a-single-property-index.asciidoc[]
 [[drop-a-composite-index]]
 == Drop a composite index
 
-A composite index on all nodes that have a label and multiple property combination can be dropped  with `DROP INDEX ON :Label(property_1, ..., property_n)`.
+A composite index on all nodes that have a label and multiple property combination can be dropped  with `DROP INDEX ON :Label(prop1, ..., propN)`.
 
 The following statement will drop a composite index on all nodes labeled with `Person` and which have both a `firstname` and `surname` property:
 
@@ -77,10 +82,11 @@ include::use-index.asciidoc[]
 
 include::use-a-single-property-index-with-where-using-equality.asciidoc[]
 
+
 [[use-a-composite-index-with-where-using-equality]]
 == Use a composite index with `WHERE` using equality
 
-A query containing equality comparisons of multiple indexed properties in the `WHERE` clause is backed automatically by the composite index, provided that _all_ the properties exist as equality predicates in the query.
+A query containing equality comparisons for all the properties of a composite index will automatically be backed by the same index.
 
 For instance, assume the following composite index has been created:
 
