@@ -214,6 +214,19 @@ include::query-functions-scalar.adoc[leveloffset=+1]
 
 include::query-functions-aggregating.adoc[leveloffset=+1]
 
+[[query-functions-user-defined-aggregation]]
+== User-defined aggregation functions ==
+
+User-defined aggregation functions are written in Java, deployed into the database and are called in the same way as any other Cypher function.
+
+This example shows how you invoke a user-defined aggregation function called `longestString` from Cypher.
+
+ifndef::asciidoctor[:leveloffset: 2]
+
+include::call-a-user-defined-aggregation-function.asciidoc[leveloffset=+1]
+
+For developing and deploy user-defined aggregation functions in Neo4j, see <<user-defined-aggregation-functions, Extending Neo4j -> User-defined aggregation functions>>.
+
 //List functions
 
 include::query-functions-list.adoc[leveloffset=+1]
@@ -230,7 +243,7 @@ include::query-functions-mathematical-logarithmic.adoc[leveloffset=+1]
 
 include::query-functions-mathematical-trigonometric.adoc[leveloffset=+1]
 
-//String functioms
+//String functions
 
 include::query-functions-string.adoc[leveloffset=+1]
 
