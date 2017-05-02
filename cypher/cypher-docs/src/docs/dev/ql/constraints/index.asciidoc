@@ -4,7 +4,7 @@
 [abstract]
 Neo4j helps enforce data integrity with the use of constraints.
 Constraints can be applied to either nodes or relationships.
-Unique node property constraints can be created, along with node and relationship property existence constraints, and `NODE KEY` constraints, which guarantee both existence and uniqueness.
+Unique node property constraints can be created, along with node and relationship property existence constraints, and Node Keys, which guarantee both existence and uniqueness.
 
 * <<query-constraint-introduction, Introduction>>
 * <<query-constraint-unique-nodes, Unique node property constraints>>
@@ -27,12 +27,12 @@ Unique node property constraints can be created, along with node and relationshi
  ** <<constraints-create-a-relationship-that-breaks-a-property-existence-constraint, Create a relationship that breaks a property existence constraint>>
  ** <<constraints-removing-an-existence-constrained-relationship-property, Removing an existence constrained relationship property>>
  ** <<constraints-failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship, Failure to create a relationship property existence constraint due to existing relationship>>
-* <<query-constraint-node-key, `NODE KEY` constraints>>
- ** <<constraints-create-node-key-constraint, Create `NODE KEY` constraint>>
- ** <<constraints-drop-node-key-constraint, Drop `NODE KEY` constraint>>
- ** <<constraints-create-a-node-that-complies-with-a-node-key-constraint, Create a node that complies with a `NODE KEY` constraint>>
- ** <<constraints-create-a-node-that-breaks-a-node-key-constraint, Create a node that breaks a `NODE KEY` constraint>>
- ** <<constraints-failure-to-create-a-node-key-constraint-due-to-existing-node, Failure to create a `NODE KEY` constraint due to existing node>>
+* <<query-constraint-node-key, Node Keys>>
+ ** <<constraints-create-a-node-key, Create a Node Key>>
+ ** <<constraints-drop-a-node-key, Drop a Node Key>>
+ ** <<constraints-create-a-node-that-complies-with-a-node-key, Create a node that complies with a Node Key>>
+ ** <<constraints-create-a-node-that-breaks-a-node-key, Create a node that offends a Node Key>>
+ ** <<constraints-failure-to-create-a-node-key-due-to-existing-node, Failure to create a Node Key due to existing node>>
 
 
 [[query-constraint-introduction]]
@@ -44,16 +44,21 @@ Unique constraints do not mean that all nodes have to have a unique value for th
 Property existence constraints ensure that a property exists for all nodes with a specific label or for all relationships with a specific type.
 All queries that try to create new nodes or relationships without the property, or queries that try to remove the mandatory property will now fail.
 
-`NODE KEY` constraints ensure that, for a given label and set of properties: (i) all the properties exist on all the nodes with that label and (ii) the combination of the property values is unique.
+Node Keys ensure that, for a given label and set of properties:
+
+[lowerroman]
+. All the properties exist on all the nodes with that label.
+. The combination of the property values is unique.
+
 Queries attempting to do any of the following will fail:
 
-* Creating new nodes without all the properties or where the combination of property values is not unique.
-* Removing one of the mandatory properties.
-* Updating the properties so that the combination of property values is no longer unique.
+* Create new nodes without all the properties or where the combination of property values is not unique.
+* Remove one of the mandatory properties.
+* Update the properties so that the combination of property values is no longer unique.
 
 [NOTE]
-Property existence constraints and `NODE KEY` constraints are only available in Neo4j Enterprise Edition.
-Note that databases with property existence constraints and/or `NODE KEY` constraints cannot be opened using Neo4j Community Edition.
+Property existence constraints and Node Keys are only available in Neo4j Enterprise Edition.
+Note that databases with property existence constraints and/or Node Keys cannot be opened using Neo4j Community Edition.
 
 A given label can have multiple constraints, and unique and property existence constraints can be combined on the same property.
 
@@ -62,10 +67,10 @@ Adding constraints is an atomic operation that can take a while -- all existing 
 Creating a constraint has the following implications on indexes:
 
 * Adding a unique property constraint on a property will also add a <<schema-index-create-a-single-property-index, single-property index>> on that property, so such an index cannot be added separately.
-* Adding a `NODE KEY` constraint on a set of properties will also add a <<create-a-composite-index, composite index>> on those properties, so such an index cannot be added separately.
+* Adding a Node Key for a set of properties will also add a <<create-a-composite-index, composite index>> on those properties, so such an index cannot be added separately.
 * Cypher will use these indexes for lookups just like other indexes; see the <<query-schema-index,Indexes>> section for more details on the rules governing their behavior.
 * If a unique property constraint is dropped and the single-property index on the property is still required, the index will need to be created explicitly.
-* If a `NODE KEY` constraint is dropped and the composite-property index on the properties is still required, the index will need to be created explicitly.
+* If a Node Key is dropped and the composite-property index on the properties is still required, the index will need to be created explicitly.
 
 
 [[query-constraint-unique-nodes]]
@@ -115,16 +120,16 @@ include::failure-to-create-a-relationship-property-existence-constraint-due-to-e
 
 
 [[query-constraint-node-key]]
-== `NODE KEY` constraints
+== Node Keys
 
-include::create-node-key-constraint.asciidoc[leveloffset=+1]
+include::create-a-node-key.asciidoc[leveloffset=+1]
 
-include::drop-node-key-constraint.asciidoc[leveloffset=+1]
+include::drop-a-node-key.asciidoc[leveloffset=+1]
 
-include::create-a-node-that-complies-with-a-node-key-constraint.asciidoc[leveloffset=+1]
+include::create-a-node-that-complies-with-a-node-key.asciidoc[leveloffset=+1]
 
-include::create-a-node-that-breaks-a-node-key-constraint.asciidoc[leveloffset=+1]
+include::create-a-node-that-breaks-a-node-key.asciidoc[leveloffset=+1]
 
 //include::removing-a-node-key-constrained-property.asciidoc[leveloffset=+1]
 
-include::failure-to-create-a-node-key-constraint-due-to-existing-node.asciidoc[leveloffset=+1]
+include::failure-to-create-a-node-key-due-to-existing-node.asciidoc[leveloffset=+1]

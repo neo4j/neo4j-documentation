@@ -246,8 +246,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   @Test def create_node_key_constraint() {
     testQuery(
-      title = "Create `NODE KEY` constraint",
-      text = "To create a `NODE KEY` constraint ensuring that all nodes with a particular label have a set of defined properties whose combined value is unique, and where all properties in the set are present, use the `ASSERT (variable.propertyName_1, ..., variable.propertyName_n) IS NODE KEY` syntax.",
+      title = "Create a Node Key",
+      text = "To create a Node Key ensuring that all nodes with a particular label have a set of defined properties whose combined value is unique, and where all properties in the set are present, use the `ASSERT (variable.propertyName_1, ..., variable.propertyName_n) IS NODE KEY` syntax.",
       queryText = "CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
       optionalResultExplanation = "",
       assertions = (p) => assertNodeKeyConstraintExists("Person", "firstname", "surname")
@@ -258,8 +258,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Drop `NODE KEY` constraint",
-      text = "Use `DROP CONSTRAINT` to remove a `NODE KEY` constraint from the database.",
+      title = "Drop a Node Key",
+      text = "Use `DROP CONSTRAINT` to remove a Node Key from the database.",
       queryText = "DROP CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
       optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
@@ -271,7 +271,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Create a node that complies with a `NODE KEY` constraint",
+      title = "Create a node that complies with a Node Key",
       text = "Create a `Person` node with both a `firstname` and `surname` property.",
       queryText = "CREATE (p:Person {firstname: 'John', surname: 'Wood', age: 55})",
       optionalResultExplanation = "",
@@ -284,8 +284,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
     execute("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")
     testFailingQuery[ConstraintValidationException](
-      title = "Create a node that breaks a `NODE KEY` constraint",
-      text = "Trying to create a `Person` node without a `surname` property, given a `NODE KEY` constraint on `:Person(firstname, surname)`, will fail.",
+      title = "Create a node that breaks a Node Key",
+      text = "Trying to create a `Person` node without a `surname` property, given a Node Key on `:Person(firstname, surname)`, will fail.",
       queryText = "CREATE (p:Person {firstname: 'Jane', age: 34})",
       optionalResultExplanation = "In this case the node isn't created in the graph."
     )
@@ -309,11 +309,11 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     execute("CREATE (p:Person {firstname: 'Jane', age: 34})")
 
     testFailingQuery[CypherExecutionException](
-      title = "Failure to create a `NODE KEY` constraint due to existing node",
-      text = "Trying to create a `NODE KEY` constraint on the property `surname` on nodes with the `Person` label will fail when " +
+      title = "Failure to create a Node Key due to existing node",
+      text = "Trying to create a Node Key on the property `surname` on nodes with the `Person` label will fail when " +
         " a node without a `surname` already exists in the database.",
       queryText = "CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
-      optionalResultExplanation = "In this case the constraint can't be created because it is violated by existing " +
+      optionalResultExplanation = "In this case the Node Key can't be created because it is violated by existing " +
         "data. We may choose to remove the offending nodes and then re-apply the constraint."
     )
   }
