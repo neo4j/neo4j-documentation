@@ -214,19 +214,6 @@ include::query-functions-scalar.adoc[leveloffset=+1]
 
 include::query-functions-aggregating.adoc[leveloffset=+1]
 
-[[query-functions-user-defined-aggregation]]
-== User-defined aggregation functions ==
-
-User-defined aggregation functions are written in Java, deployed into the database and are called in the same way as any other Cypher function.
-
-This example shows how you invoke a user-defined aggregation function called `longestString` from Cypher.
-
-ifndef::asciidoctor[:leveloffset: 2]
-
-include::call-a-user-defined-aggregation-function.asciidoc[leveloffset=+1]
-
-For developing and deploy user-defined aggregation functions in Neo4j, see <<user-defined-aggregation-functions, Extending Neo4j -> User-defined aggregation functions>>.
-
 //List functions
 
 include::query-functions-list.adoc[leveloffset=+1]
@@ -251,8 +238,6 @@ include::query-functions-string.adoc[leveloffset=+1]
 
 include::query-functions-spatial.adoc[leveloffset=+1]
 
-ifndef::asciidoctor[:leveloffset: 1]
-
 
 [[query-functions-udf]]
 == User-defined functions ==
@@ -261,8 +246,18 @@ User-defined functions are written in Java, deployed into the database and are c
 
 This example shows how you invoke a user-defined function called `join` from Cypher.
 
-ifndef::asciidoctor[:leveloffset: 2]
-
 include::call-a-user-defined-function.asciidoc[leveloffset=+1]
 
-For developing and deploy user-defined functions in Neo4j, see <<user-defined-functions, Extending Neo4j -> User-defined functions>>.
+For developing and deploying user-defined functions in Neo4j, see <<user-defined-functions, Extending Neo4j -> User-defined functions>>.
+
+
+[[query-functions-user-defined-aggregation]]
+=== User-defined aggregation functions ===
+
+User-defined aggregation functions are written in Java, deployed into the database and are called in the same way as any other Cypher function.
+
+This example shows how you invoke a user-defined aggregation function called `longestString` from Cypher.
+
+include::call-a-user-defined-aggregation-function.asciidoc[leveloffset=+1]
+
+For developing and deploying user-defined aggregation functions in Neo4j, see <<user-defined-aggregation-functions, Extending Neo4j -> User-defined aggregation functions>>.
