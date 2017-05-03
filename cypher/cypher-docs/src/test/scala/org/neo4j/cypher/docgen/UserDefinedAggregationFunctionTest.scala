@@ -21,17 +21,17 @@ package org.neo4j.cypher.docgen
 
 import org.junit.Test
 import org.neo4j.cypher.QueryStatisticsTestSupport
-import org.neo4j.function.example.JoinFunction
+import org.neo4j.function.example.LongestString
 import org.neo4j.graphdb.Label
 import org.neo4j.kernel.impl.proc.Procedures
 
-class UserDefinedFunctionTest extends DocumentingTestBase with QueryStatisticsTestSupport with HardReset {
+class UserDefinedAggregationFunctionTest extends DocumentingTestBase with QueryStatisticsTestSupport with HardReset {
 
   override def section = "functions"
 
   override def hardReset() = {
     super.hardReset()
-    db.getDependencyResolver.resolveDependency(classOf[Procedures]).registerFunction(classOf[JoinFunction])
+    db.getDependencyResolver.resolveDependency(classOf[Procedures]).registerAggregationFunction(classOf[LongestString])
     db.inTx {
       for (name <- List("John", "Paul", "George", "Ringo")) {
         val node = db.createNode(Label.label("Member"))
@@ -40,14 +40,14 @@ class UserDefinedFunctionTest extends DocumentingTestBase with QueryStatisticsTe
     }
   }
 
-  @Test def call_a_udf() {
+  @Test def call_a_user_defined_aggregation_function() {
     testQuery(
-      title = "Call a user-defined function",
-      text = "This calls the user-defined function `org.neo4j.procedure.example.join()`.",
-      queryText = "MATCH (n:Member) RETURN org.neo4j.function.example.join(collect(n.name)) AS members",
+      title = "Call a user-defined aggregation function",
+      text = "This calls the user-defined function `org.neo4j.procedure.example.longestString()`.",
+      queryText = "MATCH (n:Member) RETURN org.neo4j.function.example.longestString(n.name) AS member",
       optionalResultExplanation = "",
       assertions = (p) => {
-        assert(p.toList === List(Map("members" -> "John,Paul,George,Ringo")))
+        assert(p.toList === List(Map("member" -> "George")))
       })
   }
 }
