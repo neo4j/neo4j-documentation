@@ -481,17 +481,15 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
     pc match {
       case node: Node =>
-        if (statement.txState().nodeIsDeletedInThisTx(node.getId)) {
+        if (statement.readableTxState().nodeIsDeletedInThisTx(node.getId)) {
         fail("Expected " + pc + " to be deleted, but it isn't.")
         }
       case rel: Relationship =>
-        if (statement.txState().relationshipIsDeletedInThisTx(rel.getId)) {
+        if (statement.readableTxState().relationshipIsDeletedInThisTx(rel.getId)) {
           fail("Expected " + pc + " to be deleted, but it isn't.")
         }
       case _ => throw new ClassCastException
     }
-
-
   }
 
   protected def getLabelsFromNode(p: InternalExecutionResult): Iterable[String] = p.columnAs[Node]("n").next().labels
