@@ -69,13 +69,13 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def break_unique_property_constraint() {
+  @Test def violate_unique_property_constraint() {
     generateConsole = false
     execute("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")
     execute("CREATE (book:Book {isbn: '1449356265', title: 'Graph Databases'})")
 
     testFailingQuery[CypherExecutionException](
-      title = "Create a node that breaks a unique property constraint",
+      title = "Create a node that violates a unique property constraint",
       text = "Create a `Book` node with an `isbn` that is already used in the database.",
       queryText = "CREATE (book:Book {isbn: '1449356265', title: 'Graph Databases'})",
       optionalResultExplanation = "In this case the node isn't created in the graph."
@@ -134,18 +134,18 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def break_node_property_existence_constraint() {
+  @Test def violate_node_property_existence_constraint() {
     generateConsole = false
     execute("CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)")
     testFailingQuery[ConstraintValidationException](
-      title = "Create a node that breaks a property existence constraint",
+      title = "Create a node that violates a property existence constraint",
       text = "Trying to create a `Book` node without an `isbn` property, given a property existence constraint on `:Book(isbn)`.",
       queryText = "CREATE (book:Book {title: 'Graph Databases'})",
       optionalResultExplanation = "In this case the node isn't created in the graph."
     )
   }
 
-  @Test def break_node_property_existence_constraint_by_removing_property() {
+  @Test def violate_node_property_existence_constraint_by_removing_property() {
     generateConsole = false
     execute("CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)")
     execute("CREATE (book:Book {isbn: '1449356265', title: 'Graph Databases'})")
@@ -207,18 +207,18 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def break_relationship_property_existence_constraint() {
+  @Test def violate_relationship_property_existence_constraint() {
     generateConsole = false
     execute("CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)")
     testFailingQuery[ConstraintValidationException](
-      title = "Create a relationship that breaks a property existence constraint",
+      title = "Create a relationship that violates a property existence constraint",
       text = "Trying to create a `LIKED` relationship without a `day` property, given a property existence constraint `:LIKED(day)`.",
       queryText = "CREATE (user:User)-[like:LIKED]->(book:Book)",
       optionalResultExplanation = "In this case the relationship isn't created in the graph."
     )
   }
 
-  @Test def break_relationship_property_existence_constraint_by_removing_property() {
+  @Test def violate_relationship_property_existence_constraint_by_removing_property() {
     generateConsole = false
     execute("CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)")
     execute("CREATE (user:User)-[like:LIKED {day: 'today'}]->(book:Book)")
@@ -280,11 +280,11 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def break_node_key_constraint() {
+  @Test def violate_node_key_constraint() {
     generateConsole = false
     execute("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")
     testFailingQuery[ConstraintValidationException](
-      title = "Create a node that breaks a Node Key",
+      title = "Create a node that violates a Node Key",
       text = "Trying to create a `Person` node without a `surname` property, given a Node Key on `:Person(firstname, surname)`, will fail.",
       queryText = "CREATE (p:Person {firstname: 'Jane', age: 34})",
       optionalResultExplanation = "In this case the node isn't created in the graph."
