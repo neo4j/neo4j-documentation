@@ -11,27 +11,27 @@ Unique node property constraints can be created, along with node and relationshi
  ** <<constraints-create-uniqueness-constraint, Create uniqueness constraint>>
  ** <<constraints-drop-uniqueness-constraint, Drop uniqueness constraint>>
  ** <<constraints-create-a-node-that-complies-with-unique-property-constraints, Create a node that complies with unique property constraints>>
- ** <<constraints-create-a-node-that-breaks-a-unique-property-constraint, Create a node that breaks a unique property constraint>>
+ ** <<constraints-create-a-node-that-violates-a-unique-property-constraint, Create a node that violates a unique property constraint>>
  ** <<constraints-failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes, Failure to create a unique property constraint due to conflicting nodes>>
 * <<query-constraint-prop-exist-nodes, Node property existence constraints>>
  ** <<constraints-create-node-property-existence-constraint, Create node property existence constraint>>
  ** <<constraints-drop-node-property-existence-constraint, Drop node property existence constraint>>
  ** <<constraints-create-a-node-that-complies-with-property-existence-constraints, Create a node that complies with property existence constraints>>
- ** <<constraints-create-a-node-that-breaks-a-property-existence-constraint, Create a node that breaks a property existence constraint>>
+ ** <<constraints-create-a-node-that-violates-a-property-existence-constraint, Create a node that violates a property existence constraint>>
  ** <<constraints-removing-an-existence-constrained-node-property, Removing an existence constrained node property>>
  ** <<constraints-failure-to-create-a-node-property-existence-constraint-due-to-existing-node, Failure to create a node property existence constraint due to existing node>>
 * <<query-constraint-prop-exist-rels, Relationship property existence constraints>>
  ** <<constraints-create-relationship-property-existence-constraint, Create relationship property existence constraint>>
  ** <<constraints-drop-relationship-property-existence-constraint, Drop relationship property existence constraint>>
  ** <<constraints-create-a-relationship-that-complies-with-property-existence-constraints, Create a relationship that complies with property existence constraints>>
- ** <<constraints-create-a-relationship-that-breaks-a-property-existence-constraint, Create a relationship that breaks a property existence constraint>>
+ ** <<constraints-create-a-relationship-that-violates-a-property-existence-constraint, Create a relationship that violates a property existence constraint>>
  ** <<constraints-removing-an-existence-constrained-relationship-property, Removing an existence constrained relationship property>>
  ** <<constraints-failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship, Failure to create a relationship property existence constraint due to existing relationship>>
 * <<query-constraint-node-key, Node Keys>>
  ** <<constraints-create-a-node-key, Create a Node Key>>
  ** <<constraints-drop-a-node-key, Drop a Node Key>>
  ** <<constraints-create-a-node-that-complies-with-a-node-key, Create a node that complies with a Node Key>>
- ** <<constraints-create-a-node-that-breaks-a-node-key, Create a node that offends a Node Key>>
+ ** <<constraints-create-a-node-that-violates-a-node-key, Create a node that violates a Node Key>>
  ** <<constraints-failure-to-create-a-node-key-due-to-existing-node, Failure to create a Node Key due to existing node>>
 
 
@@ -82,7 +82,7 @@ include::drop-uniqueness-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-node-that-complies-with-unique-property-constraints.asciidoc[leveloffset=+1]
 
-include::create-a-node-that-breaks-a-unique-property-constraint.asciidoc[leveloffset=+1]
+include::create-a-node-that-violates-a-unique-property-constraint.asciidoc[leveloffset=+1]
 
 include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes.asciidoc[leveloffset=+1]
 
@@ -96,7 +96,7 @@ include::drop-node-property-existence-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-node-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+1]
 
-include::create-a-node-that-breaks-a-property-existence-constraint.asciidoc[leveloffset=+1]
+include::create-a-node-that-violates-a-property-existence-constraint.asciidoc[leveloffset=+1]
 
 include::removing-an-existence-constrained-node-property.asciidoc[leveloffset=+1]
 
@@ -112,7 +112,7 @@ include::drop-relationship-property-existence-constraint.asciidoc[leveloffset=+1
 
 include::create-a-relationship-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+1]
 
-include::create-a-relationship-that-breaks-a-property-existence-constraint.asciidoc[leveloffset=+1]
+include::create-a-relationship-that-violates-a-property-existence-constraint.asciidoc[leveloffset=+1]
 
 include::removing-an-existence-constrained-relationship-property.asciidoc[leveloffset=+1]
 
@@ -128,7 +128,7 @@ include::drop-a-node-key.asciidoc[leveloffset=+1]
 
 include::create-a-node-that-complies-with-a-node-key.asciidoc[leveloffset=+1]
 
-include::create-a-node-that-breaks-a-node-key.asciidoc[leveloffset=+1]
+include::create-a-node-that-violates-a-node-key.asciidoc[leveloffset=+1]
 
 //include::removing-a-node-key-constrained-property.asciidoc[leveloffset=+1]
 
