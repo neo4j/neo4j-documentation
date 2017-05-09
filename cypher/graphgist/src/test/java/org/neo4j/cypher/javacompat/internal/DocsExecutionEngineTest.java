@@ -29,7 +29,7 @@ import java.util.Collections;
 import org.neo4j.cypher.internal.CommunityCompatibilityFactory;
 import org.neo4j.cypher.internal.DocsExecutionEngine;
 import org.neo4j.cypher.internal.EnterpriseCompatibilityFactory;
-import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult;
+import org.neo4j.cypher.internal.compiler.v3_3.executionplan.InternalExecutionResult;
 import org.neo4j.graphdb.DependencyResolver;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
