@@ -22,6 +22,8 @@
     <attach-test-jar-phase>package</attach-test-jar-phase>
     <attach-docs-phase>verify</attach-docs-phase>
     <integration-test-phase>integration-test</integration-test-phase>
+    <docs-plugin.filter>false</docs-plugin.filter>
+    <docs-plugin.skip>false</docs-plugin.skip>
   </properties>
 
   <modules>
@@ -106,6 +108,28 @@
           </configuration>
         </plugin>
 
+        <plugin>
+          <groupId>org.neo4j.build.plugins</groupId>
+          <artifactId>docs-maven-plugin</artifactId>
+          <version>5</version>
+          <configuration>
+            <filter>${docs-plugin.filter}</filter>
+            <skipdocs>${docs-plugin.skip}</skipdocs>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.shared</groupId>
+              <artifactId>maven-filtering</artifactId>
+              <version>1.0</version>
+            </dependency>
+            <dependency>
+              <groupId>org.codehaus.plexus</groupId>
+              <artifactId>plexus-archiver</artifactId>
+              <version>1.2</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
       </plugins>
     </pluginManagement>
   </build>
@@ -137,8 +161,8 @@
 
   <pluginRepositories>
     <pluginRepository>
-      <id>neo4j-release-repository</id>
-      <name>Neo4j Maven 2 release repository</name>
+      <id>neo4j-plugin-release-repository</id>
+      <name>Neo4j Maven 2 plugin release repository</name>
       <url>http://m2.neo4j.org/content/repositories/releases</url>
       <releases>
         <enabled>true</enabled>
@@ -148,8 +172,8 @@
       </snapshots>
     </pluginRepository>
     <pluginRepository>
-      <id>neo4j-snapshot-repository</id>
-      <name>Neo4j Maven 2 snapshot repository</name>
+      <id>neo4j-plugin-snapshot-repository</id>
+      <name>Neo4j Maven 2 plugin snapshot repository</name>
       <url>http://m2.neo4j.org/content/repositories/snapshots</url>
       <snapshots>
         <enabled>true</enabled>
