@@ -26,7 +26,7 @@ import org.neo4j.cypher.internal.compiler.v3_0.executionplan.InternalExecutionRe
 class LabelsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS ROOT")
   val title = "Labels"
-  override val linkId = "get-started/cypher/labels-constraints-and-indexes"
+  override val linkId = "../get-started/cypher/labels-constraints-and-indexes"
 
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
