@@ -20,6 +20,7 @@ package org.neo4j.examples;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -27,6 +28,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.test.TestGraphDatabaseFactory;
+import org.neo4j.test.rule.TestDirectory;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -37,6 +39,8 @@ import static org.junit.Assert.assertThat;
  */
 public class Neo4jBasicDocTest
 {
+    @Rule
+    public TestDirectory testDirectory = TestDirectory.testDirectory();
     protected GraphDatabaseService graphDb;
 
     /**
@@ -46,7 +50,7 @@ public class Neo4jBasicDocTest
     @Before
     public void prepareTestDatabase()
     {
-        graphDb = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        graphDb = new TestGraphDatabaseFactory().newImpermanentDatabase( testDirectory.directory() );
     }
     // END SNIPPET: beforeTest
 
