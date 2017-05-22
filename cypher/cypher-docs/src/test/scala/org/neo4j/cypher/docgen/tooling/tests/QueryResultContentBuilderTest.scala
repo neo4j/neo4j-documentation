@@ -26,20 +26,25 @@ import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.frontend.v3_3.test_helpers.CypherFunSuite
 import org.neo4j.cypher.internal.helpers.GraphIcing
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
+import org.scalatest.BeforeAndAfterAll
 
-class QueryResultContentBuilderTest extends CypherFunSuite with GraphIcing with ExecutionEngineHelper {
+class QueryResultContentBuilderTest extends CypherFunSuite with GraphIcing with ExecutionEngineHelper with BeforeAndAfterAll {
 
   def graph: GraphDatabaseCypherService = _graph
   var _graph: GraphDatabaseCypherService = _
   def eengine: ExecutionEngine = _eengine
   var _eengine: ExecutionEngine = _
 
-  init()
-
-  private def init(): Unit = {
+  override protected def beforeAll(): Unit = {
+    super.beforeAll()
     val (db, engine) = ExecutionEngineFactory.createEnterpriseDbAndEngine()
     _graph = new GraphDatabaseCypherService(db)
     _eengine = engine
+  }
+
+  override protected def afterAll(): Unit = {
+    super.afterAll()
+    _graph.shutdown()
   }
 
   test("should handle query with result table output and empty results") {
@@ -55,6 +60,8 @@ class QueryResultContentBuilderTest extends CypherFunSuite with GraphIcing with 
     result.footer should equal("1 row")
     result.rows should have size 1
   }
+
+
 
   def runQuery(query: String, init: String = ""): Content = {
     if (init != "") graph.execute(init)
