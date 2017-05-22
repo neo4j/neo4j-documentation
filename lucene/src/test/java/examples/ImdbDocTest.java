@@ -27,6 +27,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
@@ -56,6 +57,7 @@ import org.neo4j.index.lucene.QueryContext;
 import org.neo4j.index.lucene.ValueContext;
 import org.neo4j.index.lucene.unsafe.batchinsert.LuceneBatchInserterIndexProvider;
 import org.neo4j.test.TestGraphDatabaseFactory;
+import org.neo4j.test.rule.TestDirectory;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserterIndex;
 import org.neo4j.unsafe.batchinsert.BatchInserterIndexProvider;
@@ -72,6 +74,8 @@ import static org.neo4j.test.mockito.matcher.Neo4jMatchers.inTx;
 
 public class ImdbDocTest
 {
+    @Rule
+    public TestDirectory testDirectory = TestDirectory.testDirectory();
     private static GraphDatabaseService graphDb;
     private Transaction tx;
 
@@ -203,7 +207,8 @@ public class ImdbDocTest
     @Test
     public void deleteIndex()
     {
-        GraphDatabaseService graphDb = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        File storeDir = testDirectory.directory( "deleteIndex" );
+        GraphDatabaseService graphDb = new TestGraphDatabaseFactory().newImpermanentDatabase( storeDir );
         try ( Transaction tx = graphDb.beginTx() )
         {
             // START SNIPPET: delete
