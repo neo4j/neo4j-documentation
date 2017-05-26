@@ -481,11 +481,11 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
     pc match {
       case node: Node =>
-        if (statement.readableTxState().nodeIsDeletedInThisTx(node.getId)) {
+        if (statement.txState().nodeIsDeletedInThisTx(node.getId)) {
         fail("Expected " + pc + " to be deleted, but it isn't.")
         }
       case rel: Relationship =>
-        if (statement.readableTxState().relationshipIsDeletedInThisTx(rel.getId)) {
+        if (statement.txState().relationshipIsDeletedInThisTx(rel.getId)) {
           fail("Expected " + pc + " to be deleted, but it isn't.")
         }
       case _ => throw new ClassCastException
