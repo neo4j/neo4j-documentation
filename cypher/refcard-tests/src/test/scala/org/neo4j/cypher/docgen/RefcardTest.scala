@@ -25,8 +25,8 @@ import java.nio.charset.StandardCharsets
 
 import org.junit.{After, Before, Test}
 import org.neo4j.cypher._
-import org.neo4j.cypher.internal.compiler.v3_3.executionplan.InternalExecutionResult
-import org.neo4j.cypher.internal.compiler.v3_3.helpers.RuntimeJavaValueConverter
+import org.neo4j.cypher.internal.compatibility.v3_3.runtime.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compatibility.v3_3.runtime.helpers.RuntimeJavaValueConverter
 import org.neo4j.cypher.internal.compiler.v3_3.prettifier.Prettifier
 import org.neo4j.cypher.internal.helpers.GraphIcing
 import org.neo4j.cypher.internal.javacompat.GraphImpl
@@ -49,7 +49,7 @@ Use this base class for refcard tests
  */
 abstract class RefcardTest extends Assertions with DocumentationHelper with GraphIcing {
 
-  private val javaValues = new RuntimeJavaValueConverter(isGraphKernelResultValue, identity)
+  private val javaValues = new RuntimeJavaValueConverter(isGraphKernelResultValue)
 
   var db: GraphDatabaseCypherService = null
   implicit var engine: ExecutionEngine = null
