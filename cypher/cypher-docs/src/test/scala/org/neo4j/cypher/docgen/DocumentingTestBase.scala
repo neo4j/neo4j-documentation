@@ -27,8 +27,8 @@ import java.util.concurrent.TimeUnit
 import org.junit.{After, Before}
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
-import org.neo4j.cypher.internal.compiler.v3_3.executionplan.InternalExecutionResult
-import org.neo4j.cypher.internal.compiler.v3_3.helpers.RuntimeJavaValueConverter
+import org.neo4j.cypher.internal.compatibility.v3_3.runtime.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.compatibility.v3_3.runtime.helpers.RuntimeJavaValueConverter
 import org.neo4j.cypher.internal.compiler.v3_3.prettifier.Prettifier
 import org.neo4j.cypher.internal.frontend.v3_3.helpers.Eagerly
 import org.neo4j.cypher.internal.helpers.GraphIcing
@@ -167,7 +167,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                 assertions: InternalExecutionResult => Unit) {
     internalTestQuery(title, text, queryText, optionalResultExplanation, None, None, parameters, planners, assertions)
   }
-  private val javaValues = new RuntimeJavaValueConverter(isGraphKernelResultValue, identity)
+  private val javaValues = new RuntimeJavaValueConverter(isGraphKernelResultValue)
 
   def testFailingQuery[T <: CypherException: ClassTag](title: String, text: String, queryText: String, optionalResultExplanation: String = null) {
     val classTag = implicitly[ClassTag[T]]
