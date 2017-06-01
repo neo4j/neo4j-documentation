@@ -38,7 +38,8 @@ class SpatialFunctionsTest extends DocumentingTest {
     p("""_WGS 84_ is specified with a map containing coordinate values for either `longitude` and `latitude` (this is the default), or `x` and `y`.
         |_Cartesian_ is specified with a map containing only `x` and `y` coordinate values.""" stripMargin)
     p(
-      """
+      """Functions:
+        |
         |* <<functions-distance,distance()>>
         |* <<functions-point,point() - WGS 84>>
         |* <<functions-point-cartesian,point() - cartesian 2D>>

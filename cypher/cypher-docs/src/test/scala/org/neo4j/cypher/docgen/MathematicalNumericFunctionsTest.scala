@@ -41,7 +41,8 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
         |       (bob)-[:MARRIED]->(eskil)""")
     synopsis("These functions all operate on numerical expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>.")
     p(
-      """
+      """Functions:
+        |
         |* <<functions-abs, abs()>>
         |* <<functions-ceil, ceil()>>
         |* <<functions-floor, floor()>>

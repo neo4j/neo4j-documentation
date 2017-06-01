@@ -29,7 +29,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     doc("Mathematical functions - trigonometric", "query-functions-mathematical-trigonometric")
     synopsis("These functions all operate on numerical expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>.")
     p(
-      """
+      """Functions:
+        |
         |* <<functions-acos, acos()>>
         |* <<functions-asin, asin()>>
         |* <<functions-atan, atan()>>

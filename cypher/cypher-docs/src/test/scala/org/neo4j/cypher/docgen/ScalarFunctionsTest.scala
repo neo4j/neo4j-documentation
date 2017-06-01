@@ -52,7 +52,9 @@ class ScalarFunctionsTest extends DocumentingTest {
       p("The function `toInt()` has been superseded by `toInteger()`, and will be deprecated in a future release.")
     }
     p(
-      """* <<functions-coalesce,coalesce()>>
+      """Functions:
+        |
+        |* <<functions-coalesce,coalesce()>>
         |* <<functions-endnode,endNode()>>
         |* <<functions-head,head()>>
         |* <<functions-id,id()>>

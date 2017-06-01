@@ -1,7 +1,10 @@
 [[execution-plans-row-operators]]
 = Row operators
 
+[abstract]
 These operators take rows produced by another operator and transform them to a different set of rows
+
+Operators:
 
 * <<query-plan-eager, Eager>>
 * <<query-plan-distinct, Distinct>>
