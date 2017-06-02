@@ -43,7 +43,7 @@ class CallTest extends DocumentingTestBase with QueryStatisticsTestSupport with 
 
   @Test def call_a_procedure() {
     testQuery(
-      title = "Call a procedure",
+      title = "Call a procedure using `CALL`",
       text = "This calls the built-in procedure `db.labels`, which lists all labels used in the database.",
       queryText = "CALL db.labels",
       optionalResultExplanation = "",
@@ -61,7 +61,7 @@ class CallTest extends DocumentingTestBase with QueryStatisticsTestSupport with 
 
   @Test def call_a_procedure_within_a_complex_query() {
     testQuery(
-      title = "Call a procedure within a complex query",
+      title = "Call a procedure within a complex query using `CALL...YIELD`",
       text = "This calls the built-in procedure `db.labels` to count all labels used in the database.",
       planners = Seq(""),
       queryText = "CALL db.labels() YIELD label RETURN count(label) AS numLabels",
