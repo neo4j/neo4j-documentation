@@ -24,6 +24,7 @@ import org.neo4j.graphdb.Path
 
 class ShortestPathPlanningTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/execution-plan-groups/"
+
   override def doc = new DocBuilder {
     doc("Shortest path planning", "query-shortestpath-planning")
     initQueries(
@@ -42,17 +43,17 @@ class ShortestPathPlanningTest extends DocumentingTest {
         |       (thePresident:Movie {title: 'The American President'}),
         |       (martin)-[:ACTED_IN {role: 'A.J. MacInerney'}]->(thePresident),
         |       (michael)-[:ACTED_IN {role: 'President Andrew Shepherd'}]->(thePresident),
-        |       (rob)-[:DIRECTED]->(thePresident)""",
-        "CREATE INDEX ON :Person(name)"
-    )
+        |       (rob)-[:DIRECTED]->(thePresident)""", "CREATE INDEX ON :Person(name)")
     synopsis("Shortest path finding in Cypher and how it is planned.")
-    p("""Planning shortest paths in Cypher can lead to different query plans depending on the predicates that need
+    p(
+      """Planning shortest paths in Cypher can lead to different query plans depending on the predicates that need
         |to be evaluated. Internally, Neo4j will use a fast bidirectional breadth-first search algorithm if the
         |predicates can be evaluated whilst searching for the path. Therefore, this fast algorithm will always
         |be certain to return the right answer when there are universal predicates on the path; for example, when
         |searching for the shortest path where all nodes have the `Person` label, or where there are no nodes with
         |a `name` property.""".stripMargin)
-    p("""If the predicates need to inspect the whole path before deciding on whether it is valid or not, this fast
+    p(
+      """If the predicates need to inspect the whole path before deciding on whether it is valid or not, this fast
         |algorithm cannot be relied on to find the shortest path, and Neo4j may have to resort to using a slower
         |exhaustive depth-first search algorithm to find the path. This means that query plans for shortest path
         |queries with non-universal predicates will include a fallback to running the exhaustive search to find
@@ -60,11 +61,18 @@ class ShortestPathPlanningTest extends DocumentingTest {
         |path query with existential predicates -- such as the requirement that at least one node contains the property
         |`name='Charlie Sheen'` -- may not be able to be found by the fast algorithm. In this case, Neo4j will fall back to using
         |the exhaustive search to enumerate all paths and potentially return an answer.""".stripMargin)
-    p("""The running times of these two algorithms may differ by orders of magnitude, so it is important to ensure
+    p(
+      """The running times of these two algorithms may differ by orders of magnitude, so it is important to ensure
         |that the fast approach is used for time-critical queries.""".stripMargin)
-    p("""When the exhaustive search is planned, it is still only executed when the fast algorithm fails to find any
+    p(
+      """When the exhaustive search is planned, it is still only executed when the fast algorithm fails to find any
         |matching paths. The fast algorithm is always executed first, since it is possible that it can find a valid
         |path even though that could not be guaranteed at planning time.""".stripMargin)
+    p(
+      """Please note that falling back to the exhaustive search may prove to be a very time consuming strategy in some
+        |cases; such as when there is no shortest path between two nodes.
+        |Therefore, in these cases, it is recommended to set `cypher.forbid_exhaustive_shortestpath` to `true`,
+        |as explained in <<operations-manual#config_cypher.forbid_exhaustive_shortestpath, Operations Manual -> Configuration settings>>""".stripMargin)
     section("Shortest path with fast algorithm") {
       query(
         """MATCH (ms:Person {name: 'Martin Sheen'} ),
@@ -122,6 +130,5 @@ class ShortestPathPlanningTest extends DocumentingTest {
     }
   }.build()
 
-  private def assertShortestPathLength = ResultAssertions(result =>
-    result.toList.head("p").asInstanceOf[Path].length() shouldBe 2)
+  private def assertShortestPathLength = ResultAssertions(result => result.toList.head("p").asInstanceOf[Path].length() shouldBe 2)
 }
