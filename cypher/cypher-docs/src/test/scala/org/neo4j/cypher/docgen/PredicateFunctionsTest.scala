@@ -43,7 +43,9 @@ class PredicateFunctionsTest extends DocumentingTest {
       """Predicates are boolean functions that return true or false for a given set of input.
         |They are most commonly used to filter out subgraphs in the `WHERE` part of a query.""".stripMargin)
     p(
-      """* <<functions-all,all()>>
+      """Functions:
+        |
+        |* <<functions-all,all()>>
         |* <<functions-any,any()>>
         |* <<functions-exists,exists()>>
         |* <<functions-none,none()>>

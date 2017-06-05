@@ -1,7 +1,10 @@
 [[execution-plans-expand-operators]]
 = Expand operators
 
+[abstract]
 These operators explore the graph by expanding graph patterns.
+
+Operators:
 
 * <<query-plan-expand-all, Expand(All) >>
 * <<query-plan-expand-into, Expand(Into)>>

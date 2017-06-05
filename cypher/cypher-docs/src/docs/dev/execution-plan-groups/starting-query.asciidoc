@@ -1,7 +1,11 @@
 [[execution-plans-starting-operators]]
 = Starting point operators
 
+[abstract]
 These operators find parts of the graph from which to start.
+
+
+Operators:
 
 * <<query-plan-all-nodes-scan, AllNodesScan>>
 * <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>

@@ -68,7 +68,8 @@ class AggregatingFunctionsTest extends DocumentingTest {
         |It is used to make all values unique before running them through an aggregate function.
         |More information about `DISTINCT` may be found <<query-operators-general,here>>.""")
     p(
-      """
+      """Functions:
+        |
         |* <<functions-avg,avg()>>
         |* <<functions-collect,collect()>>
         |* <<functions-count,count()>>
