@@ -18,7 +18,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 [options="header"]
 |===
 |Clause                                     | Type      |   Description
-|<<query-call,CALL...YIELD>>                        | Reading/Writing   | Invoke a procedure deployed in the database.
+|<<query-call,CALL [...YIELD]>>                        | Reading/Writing   | Invoke a procedure deployed in the database.
 |<<query-create,CREATE>>                    | Writing     |  Create nodes and relationships.
 |<<constraints-create-node-property-existence-constraint, CREATE CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>  | Schema   | Create a constraint ensuring that all nodes with a particular label have a certain property.
 |<<constraints-create-relationship-property-existence-constraint, CREATE CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>  | Schema   | Create a constraint ensuring that all relationship with a particular type have a certain property.
