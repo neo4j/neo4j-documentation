@@ -35,7 +35,9 @@ class StringFunctionsTest extends DocumentingTest {
     }
     p("""See also <<query-operators-string>>.""")
     p(
-      """* <<functions-left,left()>>
+      """Functions:
+        |
+        |* <<functions-left,left()>>
         |* <<functions-ltrim,lTrim()>>
         |* <<functions-replace,replace()>>
         |* <<functions-reverse,reverse()>>

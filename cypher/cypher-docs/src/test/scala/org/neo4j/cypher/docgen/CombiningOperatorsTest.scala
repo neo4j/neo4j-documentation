@@ -88,7 +88,9 @@ class CombiningOperatorsTest extends DocumentingTest {
     )
     synopsis("The combining operators are used to piece together other operators.")
     p(
-      """* <<query-plan-apply, Apply>>
+      """Operators:
+
+         * <<query-plan-apply, Apply>>
          * <<query-plan-semi-apply, SemiApply>>
          * <<query-plan-anti-semi-apply, AntiSemiApply>>
          * <<query-plan-let-semi-apply, LetSemiApply>>

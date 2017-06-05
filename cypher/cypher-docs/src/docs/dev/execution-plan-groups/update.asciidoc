@@ -1,7 +1,10 @@
 [[execution-plans-update-operators]]
 = Update operators
 
+[abstract]
 These operators are used in queries that update the graph.
+
+Operators:
 
 * <<query-plan-constraint-operation, Constraint operation>>
 * <<query-plan-empty-result, EmptyResult>>
