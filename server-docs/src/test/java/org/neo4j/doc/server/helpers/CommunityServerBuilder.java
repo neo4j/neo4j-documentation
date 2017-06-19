@@ -35,6 +35,7 @@ import org.neo4j.helpers.ListenSocketAddress;
 import org.neo4j.kernel.GraphDatabaseDependencies;
 import org.neo4j.kernel.configuration.Config;
 import org.neo4j.kernel.configuration.HttpConnector;
+import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.kernel.impl.factory.GraphDatabaseFacadeFactory;
 import org.neo4j.kernel.monitoring.Monitors;
 import org.neo4j.logging.Log;
@@ -189,7 +190,7 @@ public class CommunityServerBuilder
         properties.put( httpsConnector.encryption.name(), "TLS" );
 
         properties.put( GraphDatabaseSettings.auth_enabled.name(), "false" );
-        properties.put( ServerSettings.certificates_directory.name(), new File(temporaryFolder, "certificates").getAbsolutePath() );
+        properties.put( LegacySslPolicyConfig.certificates_directory.name(), new File(temporaryFolder, "certificates").getAbsolutePath() );
         properties.put( GraphDatabaseSettings.logs_directory.name(), new File(temporaryFolder, "logs").getAbsolutePath() );
         properties.put( GraphDatabaseSettings.pagecache_memory.name(), "8m" );
 

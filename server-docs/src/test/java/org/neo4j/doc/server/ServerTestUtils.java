@@ -34,6 +34,7 @@ import java.util.Properties;
 import org.neo4j.dbms.DatabaseManagementSystemSettings;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
+import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.server.configuration.ServerSettings;
 
 public class ServerTestUtils
@@ -59,7 +60,7 @@ public class ServerTestUtils
     {
         addRelativeProperty( temporaryFolder, properties, DatabaseManagementSystemSettings.data_directory );
         addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.logs_directory );
-        addRelativeProperty( temporaryFolder, properties, ServerSettings.certificates_directory );
+        addRelativeProperty( temporaryFolder, properties, LegacySslPolicyConfig.certificates_directory );
     }
 
     private static void addRelativeProperty( File temporaryFolder, Map<String,String> properties,
