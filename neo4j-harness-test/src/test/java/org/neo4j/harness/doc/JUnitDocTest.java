@@ -28,7 +28,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.harness.junit.Neo4jRule;
-import org.neo4j.server.configuration.ServerSettings;
+import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.test.rule.SuppressOutput;
 import org.neo4j.test.server.HTTP;
 
@@ -47,8 +47,8 @@ public class JUnitDocTest
     @Rule
     public Neo4jRule neo4j = new Neo4jRule()
             .withFixture( "CREATE (admin:Admin)" )
-            .withConfig( ServerSettings.certificates_directory.name(),
-                    getRelativePath( getSharedTestTemporaryFolder(), ServerSettings.certificates_directory ) )
+            .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
+                    getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
             .withFixture( new Function<GraphDatabaseService, Void>()
             {
                 @Override
