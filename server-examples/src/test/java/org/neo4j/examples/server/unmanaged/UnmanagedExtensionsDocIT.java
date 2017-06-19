@@ -27,6 +27,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.neo4j.harness.junit.Neo4jRule;
+import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.server.ServerTestUtils;
 import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.test.server.HTTP;
@@ -46,8 +47,8 @@ public class UnmanagedExtensionsDocIT
                     "MERGE (m:Movie  {name: 'The Matrix'}) " +
                     "MERGE (p:Person {name: actor}) " +
                     "MERGE (p)-[:ACTED_IN]->(m) " )
-            .withConfig( ServerSettings.certificates_directory.name(),
-                    getRelativePath( getSharedTestTemporaryFolder(), ServerSettings.certificates_directory ) )
+            .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
+                    getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
             .withExtension( "/path/to/my/extension1", ColleaguesCypherExecutionResource.class )
             .withExtension( "/path/to/my/extension2", ColleaguesResource.class );
 

@@ -24,6 +24,7 @@ import org.junit.Test
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Node
 import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
+import scala.io
 
 class DocumentationTestBaseTest extends DocumentingTestBase with QueryStatisticsTestSupport {
   override def graphDescription = List("A KNOWS B", "A BLOCKS C", "D KNOWS A", "B KNOWS E", "C KNOWS E", "B BLOCKS D")
