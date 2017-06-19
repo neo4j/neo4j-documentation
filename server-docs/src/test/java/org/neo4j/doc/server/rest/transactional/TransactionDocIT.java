@@ -49,7 +49,7 @@ import static org.neo4j.server.rest.domain.JsonHelper.jsonToMap;
 import static org.neo4j.doc.server.HTTP.GET;
 import static org.neo4j.doc.server.HTTP.POST;
 
-public class TransactionDocTest extends AbstractRestFunctionalTestBase
+public class TransactionDocIT extends AbstractRestFunctionalTestBase
 {
     @Test
     @Documented( "Begin a transaction\n" +
