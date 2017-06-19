@@ -45,7 +45,7 @@ import static org.neo4j.server.ServerTestUtils.getRelativePath;
 import static org.neo4j.server.ServerTestUtils.getSharedTestTemporaryFolder;
 
 
-public class JUnitDocTest
+public class JUnitDocIT
 {
     @Rule
     public SuppressOutput suppressOutput = SuppressOutput.suppressAll();

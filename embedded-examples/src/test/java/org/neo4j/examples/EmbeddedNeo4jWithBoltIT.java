@@ -20,7 +20,7 @@ package org.neo4j.examples;
 
 import org.junit.Test;
 
-public class EmbeddedNeo4jWithBoltTest
+public class EmbeddedNeo4jWithBoltIT
 {
     @Test
     public void justExecuteIt() throws Throwable

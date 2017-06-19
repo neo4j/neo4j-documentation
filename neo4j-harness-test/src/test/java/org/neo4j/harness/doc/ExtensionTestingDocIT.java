@@ -44,7 +44,7 @@ import static org.junit.Assert.assertEquals;
 import static org.neo4j.helpers.collection.Iterators.count;
 import static org.neo4j.server.ServerTestUtils.getSharedTestTemporaryFolder;
 
-public class ExtensionTestingDocTest
+public class ExtensionTestingDocIT
 {
     @Rule
     public SuppressOutput suppressOutput = SuppressOutput.suppressAll();

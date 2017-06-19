@@ -36,7 +36,7 @@ import org.neo4j.test.TestData.Title;
 
 import static org.junit.Assert.assertTrue;
 
-public class CreateRelationshipDocTest extends AbstractRestFunctionalDocTestBase
+public class CreateRelationshipDocIT extends AbstractRestFunctionalDocTestBase
 {
     @Test
     @Graph( "Joe knows Sara" )
