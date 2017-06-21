@@ -41,7 +41,7 @@ public class OrderedPath
 {
     private static final RelationshipType REL1 = withName( "REL1" ), REL2 = withName( "REL2" ),
             REL3 = withName( "REL3" );
-    static final File DB_PATH = new File( "target/neo4j-orderedpath-db" );
+    static final File databaseDirectory = new File( "target/neo4j-orderedpath-db" );
     GraphDatabaseService db;
 
     public OrderedPath( GraphDatabaseService db )
@@ -51,7 +51,7 @@ public class OrderedPath
 
     public static void main( String[] args )
     {
-        GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
+        GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
         OrderedPath op = new OrderedPath( db );
         op.shutdownGraph();
     }

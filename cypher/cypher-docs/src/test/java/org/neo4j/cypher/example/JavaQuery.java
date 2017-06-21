@@ -37,7 +37,7 @@ import static org.neo4j.io.fs.FileUtils.deleteRecursively;
 
 public class JavaQuery
 {
-    private static final File DB_PATH = new File( "target/java-query-db" );
+    private static final File databaseDirectory = new File( "target/java-query-db" );
     String resultString;
     String columnsString;
     String nodeResult;
@@ -54,7 +54,7 @@ public class JavaQuery
         clearDbPath();
 
         // START SNIPPET: addData
-        GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
+        GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
 
         try ( Transaction tx = db.beginTx())
         {
@@ -105,7 +105,7 @@ public class JavaQuery
     {
         try
         {
-            deleteRecursively( DB_PATH );
+            deleteRecursively( databaseDirectory );
         }
         catch ( IOException e )
         {

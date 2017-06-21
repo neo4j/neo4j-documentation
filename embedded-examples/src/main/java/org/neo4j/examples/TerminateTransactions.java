@@ -34,7 +34,7 @@ import org.neo4j.io.fs.FileUtils;
 
 public class TerminateTransactions
 {
-    private static final File DB_PATH = new File( "target/neo4j-terminate-tx-db" );
+    private static final File databaseDirectory = new File( "target/neo4j-terminate-tx-db" );
 
     public static void main(String[] args) throws IOException
     {
@@ -44,10 +44,10 @@ public class TerminateTransactions
 
     public String run() throws IOException
     {
-        FileUtils.deleteRecursively( DB_PATH );
+        FileUtils.deleteRecursively( databaseDirectory );
 
         // START SNIPPET: startDb
-        GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
+        GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
         // END SNIPPET: startDb
 
         // START SNIPPET: mkTree

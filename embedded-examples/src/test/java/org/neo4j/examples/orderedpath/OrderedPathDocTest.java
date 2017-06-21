@@ -48,9 +48,9 @@ public class OrderedPathDocTest
     @BeforeClass
     public static void setUp() throws IOException
     {
-        if ( OrderedPath.DB_PATH.exists() )
+        if ( OrderedPath.databaseDirectory.exists() )
         {
-            FileUtils.deleteRecursively( OrderedPath.DB_PATH );
+            FileUtils.deleteRecursively( OrderedPath.databaseDirectory );
         }
         db = new TestGraphDatabaseFactory().newImpermanentDatabase();
         orderedPath = new OrderedPath( db );

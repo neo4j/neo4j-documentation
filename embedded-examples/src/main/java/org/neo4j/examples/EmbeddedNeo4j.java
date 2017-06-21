@@ -32,7 +32,7 @@ import org.neo4j.io.fs.FileUtils;
 
 public class EmbeddedNeo4j
 {
-    private static final File DB_PATH = new File( "target/neo4j-hello-db" );
+    private static final File databaseDirectory = new File( "target/neo4j-hello-db" );
 
     public String greeting;
 
@@ -60,10 +60,10 @@ public class EmbeddedNeo4j
 
     void createDb() throws IOException
     {
-        FileUtils.deleteRecursively( DB_PATH );
+        FileUtils.deleteRecursively( databaseDirectory );
 
         // START SNIPPET: startDb
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
+        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
         registerShutdownHook( graphDb );
         // END SNIPPET: startDb
 
