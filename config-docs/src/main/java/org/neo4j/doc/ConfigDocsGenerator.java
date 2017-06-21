@@ -23,6 +23,7 @@ import org.neo4j.kernel.configuration.Config;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.time.Duration;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -70,11 +71,27 @@ public class ConfigDocsGenerator {
     }
 
     private Optional<String> valueAsString(ConfigValue configValue) {
+        Optional<String> valueString;
         try {
-            return Optional.of(String.valueOf(configValue.value().get()));
+            Object value = configValue.value().get();
+            if (value instanceof java.time.Duration) {
+                valueString = Optional.of(parseDurationValue((Duration) value));
+            } else {
+                valueString = Optional.of(String.valueOf(value));
+            }
         } catch (NoSuchElementException ex) {
             System.out.printf("    [x] failed to get value for setting `%s`%n", configValue.name());
-            return Optional.empty();
+            valueString = Optional.empty();
+        }
+        return valueString;
+    }
+
+    private String parseDurationValue(Duration value) {
+        long ms = value.toMillis();
+        if (ms % 1000 == 0) {
+            return String.format("%ds", ms / 1000);
+        } else {
+            return String.format("%dms", ms);
         }
     }
 
