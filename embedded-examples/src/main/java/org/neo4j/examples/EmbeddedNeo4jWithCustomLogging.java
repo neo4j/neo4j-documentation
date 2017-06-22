@@ -30,7 +30,7 @@ import org.neo4j.logging.LogProvider;
 
 public class EmbeddedNeo4jWithCustomLogging
 {
-    private static final File DB_PATH = new File( "target/neo4j-store" );
+    private static final File databaseDirectory = new File( "target/neo4j-store" );
     private static GraphDatabaseService graphDb;
 
     private static class MyCustomLogProvider implements LogProvider
@@ -54,13 +54,13 @@ public class EmbeddedNeo4jWithCustomLogging
 
     public static void main( final String[] args ) throws IOException
     {
-        FileUtils.deleteRecursively( DB_PATH );
+        FileUtils.deleteRecursively( databaseDirectory );
 
         Object output = new Object();
 
         // START SNIPPET: startDbWithLogProvider
         LogProvider logProvider = new MyCustomLogProvider( output );
-        graphDb = new GraphDatabaseFactory().setUserLogProvider( logProvider ).newEmbeddedDatabase( DB_PATH );
+        graphDb = new GraphDatabaseFactory().setUserLogProvider( logProvider ).newEmbeddedDatabase( databaseDirectory );
         // END SNIPPET: startDbWithLogProvider
 
         shutdown();

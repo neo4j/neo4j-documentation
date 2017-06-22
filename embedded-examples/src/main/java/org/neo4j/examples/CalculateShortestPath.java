@@ -35,7 +35,7 @@ import org.neo4j.graphdb.traversal.Paths;
 
 public class CalculateShortestPath
 {
-    private static final File DB_PATH = new File( "target/neo4j-shortest-path" );
+    private static final File databaseDirectory = new File( "target/neo4j-shortest-path" );
     private static final String NAME_KEY = "name";
     private static RelationshipType KNOWS = RelationshipType.withName( "KNOWS" );
 
@@ -44,8 +44,8 @@ public class CalculateShortestPath
 
     public static void main( final String[] args )
     {
-        deleteFileOrDirectory( DB_PATH );
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
+        deleteFileOrDirectory( databaseDirectory );
+        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
         registerShutdownHook();
         try ( Transaction tx = graphDb.beginTx() )
         {

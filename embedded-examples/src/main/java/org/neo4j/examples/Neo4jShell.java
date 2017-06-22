@@ -45,7 +45,7 @@ import org.neo4j.shell.kernel.GraphDatabaseShellServer;
 
 public class Neo4jShell
 {
-    private static final File DB_PATH = new File( "neo4j-store" );
+    private static final File databaseDirectory = new File( "neo4j-store" );
     private static final String USERNAME_KEY = "username";
     private static GraphDatabaseService graphDb;
 
@@ -74,7 +74,7 @@ public class Neo4jShell
 
     private static void startLocalShell() throws Exception
     {
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
+        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
         createExampleGraph();
         ShellServer shellServer = new GraphDatabaseShellServer( (GraphDatabaseAPI) graphDb );
         ShellLobby.newClient( shellServer ).grabPrompt();
@@ -83,7 +83,7 @@ public class Neo4jShell
 
     private static void startRemoteShellAndWait() throws Exception
     {
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( DB_PATH )
+        graphDb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( databaseDirectory )
                 .
                 setConfig( ShellSettings.remote_shell_enabled, Settings.TRUE ).
                 newGraphDatabase();

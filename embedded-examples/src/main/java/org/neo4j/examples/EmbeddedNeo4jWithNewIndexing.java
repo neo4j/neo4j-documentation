@@ -37,15 +37,15 @@ import static org.neo4j.helpers.collection.Iterators.loop;
 
 public class EmbeddedNeo4jWithNewIndexing
 {
-    private static final File DB_PATH = new File( "target/neo4j-store-with-new-indexing" );
+    private static final File databaseDirectory = new File( "target/neo4j-store-with-new-indexing" );
 
     public static void main( final String[] args ) throws IOException
     {
         System.out.println( "Starting database ..." );
-        FileUtils.deleteRecursively( DB_PATH );
+        FileUtils.deleteRecursively( databaseDirectory );
 
         // START SNIPPET: startDb
-        GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
+        GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
         // END SNIPPET: startDb
 
         {
