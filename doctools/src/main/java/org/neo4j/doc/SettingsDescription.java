@@ -29,11 +29,10 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.neo4j.configuration.Description;
+import org.neo4j.configuration.Internal;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.helpers.TimeUtil;
 import org.neo4j.kernel.configuration.Group;
-import org.neo4j.configuration.Internal;
-import org.neo4j.kernel.configuration.Obsoleted;
 import org.neo4j.kernel.configuration.Settings;
 
 /**
@@ -72,9 +71,7 @@ public class SettingsDescription
                 String defaultValue = null;
                 String mandatoryMessage = null;
 
-                String deprecationMessage = field.isAnnotationPresent( Obsoleted.class )
-                                            ? field.getAnnotation( Obsoleted.class ).value()
-                                            : field.isAnnotationPresent( Deprecated.class )
+                String deprecationMessage = field.isAnnotationPresent( Deprecated.class )
                                               ? "The `" + name + "` configuration setting has been deprecated."
                                               : null;
                 try
