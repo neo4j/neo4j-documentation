@@ -55,10 +55,11 @@ class OperatorsTest extends DocumentingTest {
     section("Operators at a glance", "query-operators-summary") {
       p(
         """
+          |[subs=none]
           ||===
            || <<query-operators-general, General operators>> | `DISTINCT`, `.` for property access, `[]` for dynamic property access
            || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
-           || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `<=`, `>=`, `IS NULL`, `IS NOT NULL`
+           || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
            || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
            || <<query-operators-boolean, Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
            || <<query-operators-string, String operators>>   | `+` for concatenation, `=~` for regex matching
