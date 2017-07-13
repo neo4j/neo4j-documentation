@@ -198,10 +198,7 @@ case class QueryResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: 
        |""".stripMargin
   }
 
-  private def escape(in: String): String =
-    in.replace("|", "\\|").
-       replace("{", "\\{").
-       replace("}", "\\}")
+  private def escape(in: String): String = "+%s+".format(in)
 }
 
 case class Query(queryText: String, assertions: QueryAssertions, myInitQueries: Seq[String], content: Content) extends Content {

@@ -117,7 +117,8 @@ public class Main
         if ( Files.exists(file) && file.isAbsolute() )
         {
             throw new IllegalArgumentException(
-                    "Destination directory must either not exist or be a directory." );
+                    String.format("Destination directory must either not exist or be a directory: [%s]", file)
+            );
         }
         return file;
     }
