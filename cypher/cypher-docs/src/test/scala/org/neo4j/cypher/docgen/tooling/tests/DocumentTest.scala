@@ -271,8 +271,8 @@ class DocumentAsciiDocTest extends CypherFunSuite {
       """.Result
         |[role="queryresult",options="header,footer",cols="2*<m"]
         ||===
-        ||+n1+|+n2+
-        ||+1+|+2+
+        || +n1+ | +n2+
+        || +1+ | +2+
         |2+d|1 row
         ||===
         |
@@ -286,8 +286,8 @@ class DocumentAsciiDocTest extends CypherFunSuite {
       """.Result
         |[role="queryresult",options="header,footer",cols="2*<m"]
         ||===
-        ||+n1|x1+|+n2+
-        ||+1|2+|+2+
+        || +n1|x1+ | +n2+
+        || +1|2+ | +2+
         |2+d|1 row
         ||===
         |

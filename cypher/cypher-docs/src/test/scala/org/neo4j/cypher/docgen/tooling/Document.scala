@@ -176,10 +176,10 @@ case class QueryResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: 
     val cols = if (columns.isEmpty) 1 else columns.size
     val rowsOutput: String = if (rows.isEmpty) s"$cols+|(empty result)"
     else {
-      val columnHeader = columns.map(escape).mkString("|", "|", "")
+      val columnHeader = columns.map(escape).mkString("| ", " | ", "")
       val tableRows =
         rows.
-          map(row => row.values.map(escape).mkString("||", "|", "")).
+          map(row => row.values.map(escape).mkString("|| ", " | ", "")).
           mkString("\n")
 
       s"$columnHeader\n$tableRows"
