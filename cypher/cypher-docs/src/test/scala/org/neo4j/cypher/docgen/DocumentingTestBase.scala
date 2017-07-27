@@ -466,13 +466,12 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     } }
   }
 
-  protected def sampleAllIndicesAndWait(mode: IndexSamplingMode = IndexSamplingMode.TRIGGER_REBUILD_ALL, time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS) = {
-    samplingController.sampleIndexes(mode)
-    samplingController.awaitSamplingCompleted(time, unit)
-  }
-
-  protected def samplingController = indexingService.getSamplingController
   protected def indexingService = db.getDependencyResolver.resolveDependency(classOf[IndexingService])
+
+  protected def sampleAllIndicesAndWait(mode: IndexSamplingMode = IndexSamplingMode.TRIGGER_REBUILD_ALL, time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS) = {
+    indexingService.triggerIndexSampling(mode)
+    unit.sleep(time)
+  }
 
   protected def assertIsDeleted(pc: PropertyContainer) {
     val nodeManager: ThreadToStatementContextBridge = db.getDependencyResolver.resolveDependency(classOf[ThreadToStatementContextBridge])

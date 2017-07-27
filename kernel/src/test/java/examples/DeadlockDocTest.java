@@ -34,7 +34,7 @@ import org.neo4j.test.rule.EmbeddedDatabaseRule;
 public class DeadlockDocTest
 {
     @Rule
-    public EmbeddedDatabaseRule rule = new EmbeddedDatabaseRule(  );
+    public EmbeddedDatabaseRule rule = new EmbeddedDatabaseRule();
 
     @Test
     public void transactionWithRetries() throws InterruptedException
