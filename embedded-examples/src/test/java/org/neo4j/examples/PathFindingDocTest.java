@@ -48,7 +48,7 @@ import static org.junit.Assert.assertEquals;
 public class PathFindingDocTest
 {
     @ClassRule
-    public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule( PathFindingDocTest.class );
+    public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
     private static GraphDatabaseService graphDb;
     private Transaction tx;
 
