@@ -7,13 +7,13 @@ The `CALL` clause is used to call a procedure deployed in the database.
 --
 
 * <<query-call-introduction, Introduction>>
-* <<call-call-a-procedure, Call a procedure using `CALL`>>
+* <<call-call-a-procedure-using-call, Call a procedure using `CALL`>>
 * <<call-call-a-procedure-using-a-quoted-namespace-and-name, Call a procedure using a quoted namespace and name>>
 * <<call-call-a-procedure-with-literal-arguments, Call a procedure with literal arguments>>
 * <<call-call-a-procedure-with-parameter-arguments, Call a procedure with parameter arguments>>
 * <<call-call-a-procedure-with-mixed-literal-and-parameter-arguments, Call a procedure with mixed literal and parameter arguments>>
 * <<call-call-a-procedure-with-literal-and-default-arguments, Call a procedure with literal and default arguments>>
-* <<call-call-a-procedure-within-a-complex-query, Call a procedure within a complex query using `CALL...YIELD`>>
+* <<call-call-a-procedure-within-a-complex-query-using-call-yield, Call a procedure within a complex query using `CALL...YIELD`>>
 * <<call-call-a-procedure-and-filter-its-results, Call a procedure and filter its results>>
 * <<call-call-a-procedure-within-a-complex-query-and-rename-its-outputs, Call a procedure within a complex query and rename its outputs>>
 
@@ -58,7 +58,7 @@ tag=indexingProcedure
 [NOTE]
 This clause cannot be combined with other clauses.
 
-include::call-a-procedure.asciidoc[]
+include::call-a-procedure-using-call.asciidoc[]
 
 include::call-a-procedure-using-a-quoted-namespace-and-name.asciidoc[]
 
@@ -70,7 +70,7 @@ include::call-a-procedure-with-mixed-literal-and-parameter-arguments.asciidoc[]
 
 include::call-a-procedure-with-literal-and-default-arguments.asciidoc[]
 
-include::call-a-procedure-within-a-complex-query.asciidoc[]
+include::call-a-procedure-within-a-complex-query-using-call-yield.asciidoc[]
 
 include::call-a-procedure-and-filter-its-results.asciidoc[]
 
