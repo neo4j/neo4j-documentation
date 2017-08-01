@@ -41,6 +41,18 @@ class CallTest extends DocumentingTestBase with QueryStatisticsTestSupport with 
     }
   }
 
+  //TODO validate output
+  @Test def view_the_signature_for_a_procedure() {
+    testQuery(
+      title = "View the signature for a procedure",
+      text = "To `CALL` a procedure, its input parameters need to be known, and to use `YIELD`, its output parameters need to be known. " +
+        "The built-in procedure `dbms.procedures` returns the name, signature and description for all procedures. " +
+        "The following query can be used to return the signature for a particular procedure:",
+      queryText = "CALL dbms.procedures() YIELD name, signature WHERE name='dbms.listConfig' RETURN signature",
+      optionalResultExplanation = "We can see that the `dbms.listConfig` has one input parameter, `searchString`, and three output parameters, `name`, `description` and `value`.",
+      assertions = (p) => assert(p.nonEmpty) )
+  }
+
   @Test def call_a_procedure() {
     testQuery(
       title = "Call a procedure using `CALL`",
