@@ -38,13 +38,14 @@ This set is refined and augmented by subsequent parts of the query.
 **Projecting clauses**
 
 These comprise clauses that define which expressions to return in the result set.
+The returned expressions may all be aliased using `AS`.
 
 [options="header"]
 |===
 |Clause                      |   Description
-|<<query-return,RETURN>>     | Defines what to include in the query result set.
-|<<query-with,WITH>>         | Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
-|<<query-unwind,UNWIND>>                    | Expands a list into a sequence of rows.
+|<<query-return,RETURN ... [AS]>>     | Defines what to include in the query result set.
+|<<query-with,WITH ... [AS]>>         | Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
+|<<query-unwind,UNWIND ... [AS]>>                    | Expands a list into a sequence of rows.
 |===
 
 
