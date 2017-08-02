@@ -1,22 +1,41 @@
 [[cypher-values]]
-= Values
+= Values and types
 
 
 All values that are handled by Cypher have a distinct type.
-The supported types of values are:
+The supported types are:
 
-* Numeric values,
-* String values,
-* Boolean values,
-* Nodes,
-* Relationships,
-* Paths,
-* Maps from Strings to other values,
-* Lists of any other type of value.
+*Primitive types:*
+
+* Numeric, which can be sub-divided into the following:
+   ** Integer
+   ** Float
+* String
+* Boolean
+
+*Graph element types:*
+
+* Nodes
+* Relationships
+* Paths
+
+*Compound types:*
+
+* Lists of values, where the type of any value may be one of the following:
+   ** a primitive type
+   ** a graph element type
+   ** a List
+   ** a Map
+* Maps, comprising a collection of (_key_, _value_) pairs, where:
+   ** the _key_ is a String
+   ** the _value_ is any one of the following types:
+      *** a primitive type
+      *** a graph element type
+      *** a List
+      *** a Map
 
 Most types of values can be constructed in a query using literal expressions (see <<cypher-expressions>>).
 Special care must be taken when using `null`, as `null` is a value of every type (see <<cypher-working-with-null>>).
 Nodes, relationships, and paths are returned as a result of pattern matching.
 
 Note that labels are not values but are a form of pattern syntax.
-
