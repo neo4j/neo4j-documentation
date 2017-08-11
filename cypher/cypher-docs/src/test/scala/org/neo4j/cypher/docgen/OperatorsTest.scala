@@ -80,8 +80,8 @@ class OperatorsTest extends DocumentingTest {
           """CREATE (a:Person {name: 'Anne', eyeColor: 'blue'}),
                         (b:Person {name: 'Bill', eyeColor: 'brown'}),
                         (c:Person {name: 'Carol', eyeColor: 'blue'})
-                        WITH a, b, c
-                  MATCH (p:Person)
+                        WITH [a, b, c] AS ps
+                  UNWIND ps AS p
                   RETURN DISTINCT p.eyeColor""", ResultAssertions((r) => {
             r.toList should equal(List(Map("p.eyeColor" -> "blue"), Map("p.eyeColor" -> "brown")))
           })) {
