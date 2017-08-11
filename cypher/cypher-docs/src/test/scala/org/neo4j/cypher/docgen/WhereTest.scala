@@ -332,7 +332,7 @@ class WhereTest extends DocumentingTest {
     }
     section("Using ranges", "query-where-ranges") {
       section("Simple range", "simple-range") {
-        p("To check for an element being inside a specific range, use the inequality operators `<`, `\\\\<=`, `>=`, `>`.")
+        p("""To check for an element being inside a specific range, use the inequality operators `<`, `\<=`, `>=`, `>`.""".stripMargin)
         query("MATCH (a)\nWHERE a.name >= 'Peter'\nRETURN a.name, a.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("a.name" -> "Tobias", "a.age" -> 25l), Map("a.name" -> "Peter", "a.age" -> 35l)))
         })) {
