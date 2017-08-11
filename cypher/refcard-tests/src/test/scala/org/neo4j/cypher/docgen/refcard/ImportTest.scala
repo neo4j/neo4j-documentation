@@ -93,6 +93,17 @@ Load CSV data which has headers.
 ###assertion=created
 //
 
+USING PERIODIC COMMIT 500
+LOAD CSV WITH HEADERS FROM
+'%ARTIS_WITH_HEADER%' AS line
+CREATE (:Artist {name: line.Name, year: toInt(line.Year)})
+###
+
+Commit the current transaction after every 500 rows when importing large amounts of data.
+
+###assertion=created
+//
+
 LOAD CSV FROM
 '%ARTIST_WITH_FIELD_DELIMITER%'
 AS line FIELDTERMINATOR ';'
