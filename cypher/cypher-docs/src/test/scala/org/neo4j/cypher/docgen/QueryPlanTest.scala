@@ -239,7 +239,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(title = "Node index range seek",
                  text =
                    """Finds nodes using an index seek where the value of the property matches a given prefix string.
-                     |This operator can be used for `STARTS WITH` and comparators such as `<`, `>`, `<=` and `>=`""".stripMargin,
+                     |This operator can be used for `STARTS WITH` and comparators such as `<`, `>`, `\<=` and `>=`""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE l.name STARTS WITH 'Lon' RETURN l",
                  assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString(IndexSeekByRange.name))
     )
