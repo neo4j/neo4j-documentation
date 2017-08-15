@@ -48,6 +48,7 @@ import org.neo4j.test.DbRepresentation;
 import org.neo4j.test.TestGraphDatabaseFactory;
 import org.neo4j.test.rule.TestDirectory;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestBackup
