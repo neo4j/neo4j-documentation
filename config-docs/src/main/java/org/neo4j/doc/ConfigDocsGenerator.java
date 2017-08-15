@@ -18,9 +18,6 @@
  */
 package org.neo4j.doc;
 
-import org.neo4j.configuration.ConfigValue;
-import org.neo4j.kernel.configuration.Config;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.time.Duration;
@@ -33,6 +30,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.neo4j.configuration.ConfigValue;
+import org.neo4j.kernel.configuration.Config;
+
 public class ConfigDocsGenerator {
 
     private static final Pattern CONFIG_SETTING_PATTERN = Pattern.compile( "\\+?[a-z0-9]+((\\.|_)[a-z0-9]+)+\\+?" );
@@ -44,7 +44,7 @@ public class ConfigDocsGenerator {
     private PrintStream out;
 
     public ConfigDocsGenerator() {
-        config = Config.serverDefaults();
+        config = Config.builder().withServerDefaults().build();
     }
 
     public String document(Predicate<ConfigValue> filter, String id, String title, String idPrefix) {
