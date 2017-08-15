@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.neo4j.dbms.DatabaseManagementSystemSettings;
+import org.neo4j.doc.server.ServerTestUtils;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.helpers.ListenSocketAddress;
 import org.neo4j.kernel.GraphDatabaseDependencies;
@@ -41,22 +42,18 @@ import org.neo4j.kernel.monitoring.Monitors;
 import org.neo4j.logging.Log;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
-import org.neo4j.server.CommunityBootstrapper;
 import org.neo4j.server.CommunityNeoServer;
-import org.neo4j.doc.server.ServerTestUtils;
-import org.neo4j.server.configuration.ConfigLoader;
 import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.server.database.Database;
 import org.neo4j.server.database.LifecycleManagingDatabase;
 import org.neo4j.server.preflight.PreFlightTasks;
-import org.neo4j.server.preflight.PreflightTask;
 import org.neo4j.server.rest.paging.LeaseManager;
 import org.neo4j.server.rest.web.DatabaseActions;
 import org.neo4j.test.ImpermanentGraphDatabase;
 import org.neo4j.time.Clocks;
 
-import static org.neo4j.helpers.collection.MapUtil.stringMap;
 import static org.neo4j.doc.server.ServerTestUtils.asOneLine;
+import static org.neo4j.helpers.collection.MapUtil.stringMap;
 import static org.neo4j.server.database.LifecycleManagingDatabase.lifecycleManagingDatabase;
 
 public class CommunityServerBuilder
@@ -102,12 +99,12 @@ public class CommunityServerBuilder
         {
             throw new IllegalStateException( "Must specify path" );
         }
-        final Optional<File> configFile = buildBefore();
+        final File configFile = buildBefore();
 
         Log log = logProvider.getLog( getClass() );
-        Config config = ConfigLoader.loadConfig( Optional.empty(), configFile );
+        Config config = Config.fromFile( configFile ).build();
         config.setLogger( log );
-        return build( configFile, config, GraphDatabaseDependencies.newDependencies().userLogProvider( logProvider )
+        return build( Optional.of( configFile ), config, GraphDatabaseDependencies.newDependencies().userLogProvider( logProvider )
                 .monitors( new Monitors() ) );
     }
 
@@ -117,14 +114,14 @@ public class CommunityServerBuilder
         return new TestCommunityNeoServer( config, configFile, dependencies, logProvider );
     }
 
-    public Optional<File> createConfigFiles() throws IOException
+    public File createConfigFiles() throws IOException
     {
         File temporaryConfigFile = ServerTestUtils.createTempConfigFile();
         File temporaryFolder = ServerTestUtils.createTempDir();
 
         ServerTestUtils.writeConfigToFile( createConfiguration( temporaryFolder ), temporaryConfigFile );
 
-        return Optional.of( temporaryConfigFile );
+        return temporaryConfigFile;
     }
 
     public CommunityServerBuilder withClock( Clock clock )
@@ -316,9 +313,9 @@ public class CommunityServerBuilder
                 config.get( ServerSettings.script_sandboxing_enabled ), database.getGraph() );
     }
 
-    protected Optional<File> buildBefore() throws IOException
+    protected File buildBefore() throws IOException
     {
-        Optional<File> configFile = createConfigFiles();
+        File configFile = createConfigFiles();
 
         if ( preflightTasks == null )
         {
