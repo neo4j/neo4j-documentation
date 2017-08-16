@@ -23,10 +23,10 @@ import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.cypher.QueryStatisticsTestSupport
-import org.neo4j.cypher.internal.compatibility.v3_3.runtime.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.InternalExecutionResult
 import org.neo4j.cypher.internal.compatibility.v3_3.runtime.pipes.IndexSeekByRange
+import org.neo4j.cypher.internal.compatibility.v3_3.runtime.planDescription.InternalPlanDescription.Arguments.Planner
 import org.neo4j.cypher.internal.compiler.v3_3.{DPPlannerName, IDPPlannerName}
-import org.neo4j.cypher.internal.compiler.v3_3.planDescription.InternalPlanDescription.Arguments.Planner
 import org.neo4j.cypher.internal.helpers.GraphIcing
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
@@ -202,6 +202,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       case Some(Planner(IDPPlannerName.name)) =>
         assertThat(planDescription.toString, containsString(costString))
       case Some(Planner(DPPlannerName.name)) =>
+        assertThat(planDescription.toString, containsString(costString))
+      case Some(Planner(name)) if name.equals("COST") =>
         assertThat(planDescription.toString, containsString(costString))
 
       case x =>

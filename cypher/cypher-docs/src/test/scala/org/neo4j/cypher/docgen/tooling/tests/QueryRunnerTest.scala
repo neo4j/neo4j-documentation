@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen.tooling.tests
 
 import org.neo4j.cypher.SyntaxException
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.cypher.internal.compatibility.v3_3.runtime.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.InternalExecutionResult
 import org.neo4j.cypher.internal.frontend.v3_3.test_helpers.CypherFunSuite
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
