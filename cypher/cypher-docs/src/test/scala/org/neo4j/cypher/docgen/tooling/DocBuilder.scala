@@ -60,6 +60,10 @@ trait DocBuilder {
     current.addContent(Function(formattedSyntax, arguments))
   }
 
+  def considerations(lines: String*) = {
+    current.addContent(Consideration(lines))
+  }
+
   def resultTable() = {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
