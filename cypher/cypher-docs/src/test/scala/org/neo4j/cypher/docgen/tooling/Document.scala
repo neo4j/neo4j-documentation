@@ -100,6 +100,17 @@ case class Function(syntax: String, arguments: Seq[(String, String)]) extends Co
 
 }
 
+case class Consideration(lines: Seq[(String)]) extends Content with NoQueries {
+  override def asciiDoc(level: Int) = {
+    val items = lines.map(x => "|" + x).mkString("", NewLine, "")
+    val formattedLines = if(!lines.isEmpty) Array("*Considerations:*", "|===", items, "|===").mkString(NewLine, NewLine, "") else ""
+    String.format(
+      """%s%n
+        |""".stripMargin, formattedLines)
+  }
+
+}
+
 object Admonitions {
 
   object Tip {
