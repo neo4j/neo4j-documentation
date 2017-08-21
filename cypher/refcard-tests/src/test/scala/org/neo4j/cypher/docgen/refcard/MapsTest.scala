@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compatibility.v3_3.runtime.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.InternalExecutionResult
 
 class MapsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A KNOWS B")

@@ -19,7 +19,7 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import org.neo4j.cypher.internal.compatibility.v3_3.runtime.executionplan.InternalExecutionResult
+import org.neo4j.cypher.internal.InternalExecutionResult
 import org.neo4j.cypher.internal.helpers.GraphIcing
 
 /**

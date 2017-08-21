@@ -509,7 +509,6 @@ public class JavaExecutionEngineDocTest
         assert result.getQueryExecutionType().requestedExecutionPlanDescription();
         assert !result.hasNext();
         assert !result.getQueryStatistics().containsUpdates();
-        assert result.columns().isEmpty();
         assert !result.getExecutionPlanDescription().hasProfilerStatistics();
         // END SNIPPET: explain_returns_plan
     }

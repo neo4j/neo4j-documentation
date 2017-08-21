@@ -90,7 +90,7 @@ class ListFunctionsTest extends DocumentingTest {
       query(
         """MATCH (a) WHERE a.name = 'Alice'
           |RETURN keys(a)""".stripMargin, ResultAssertions((r) => {
-          r.columnAs[Iterable[_]]("keys(a)").toList.head should equal(Array("name", "age", "eyes"))
+          r.columnAs[Iterable[_]]("keys(a)").toList.head should contain theSameElementsAs Array("name", "age", "eyes")
         })) {
         p("The name of the properties of `n` is returned by the query.")
         resultTable()

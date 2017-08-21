@@ -25,12 +25,11 @@ import java.nio.charset.StandardCharsets
 
 import org.junit.{After, Before, Test}
 import org.neo4j.cypher._
-import org.neo4j.cypher.internal.compatibility.v3_3.runtime.executionplan.InternalExecutionResult
 import org.neo4j.cypher.internal.compatibility.v3_3.runtime.helpers.RuntimeJavaValueConverter
 import org.neo4j.cypher.internal.compiler.v3_3.prettifier.Prettifier
 import org.neo4j.cypher.internal.helpers.GraphIcing
-import org.neo4j.cypher.internal.javacompat.GraphImpl
-import org.neo4j.cypher.internal.{ExecutionEngine, ExecutionResult, RewindableExecutionResult, isGraphKernelResultValue}
+import org.neo4j.cypher.internal.javacompat.{ExecutionResult, GraphImpl}
+import org.neo4j.cypher.internal.{ExecutionEngine, InternalExecutionResult, RewindableExecutionResult, isGraphKernelResultValue}
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.index.Index
@@ -77,7 +76,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   var filePaths: Map[String, String] = Map.empty
   var urls: Map[String, String] = Map.empty
 
-  def executeQuery(queryText: String, params: Map[String, Any])(implicit engine: ExecutionEngine): ExecutionResult = try {
+  def executeQuery(queryText: String, params: Map[String, Any])(implicit engine: ExecutionEngine): Result = try {
     val query = replaceNodeIds(queryText)
 
     assert(filePaths.size == urls.size)
