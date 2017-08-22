@@ -39,7 +39,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
         |       (bob)-[:KNOWS]->(daniel),
         |       (charlie)-[:KNOWS]->(daniel),
         |       (bob)-[:MARRIED]->(eskil)""")
-    synopsis("These functions all operate on numerical expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>.")
+    synopsis("These functions all operate on numeric expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>.")
     p(
       """Functions:
         |
@@ -94,7 +94,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("round()", "functions-round") {
-      p("`round()` returns the numerical expression, rounded to the nearest integer.")
+      p("`round()` returns the numeric expression, rounded to the nearest integer.")
       function("round(expression)", ("expression", "A numeric expression that represents the angle in radians."))
       query("RETURN round(3.141592)", ResultAssertions((r) => {
         r.toList.head("round(3.141592)") should equal(3.0)

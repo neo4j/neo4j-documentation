@@ -27,7 +27,7 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
 
   override def doc = new DocBuilder {
     doc("Mathematical functions - trigonometric", "query-functions-mathematical-trigonometric")
-    synopsis("These functions all operate on numerical expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>.")
+    synopsis("These functions all operate on numeric expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>.")
     p(
       """Functions:
         |
