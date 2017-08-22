@@ -132,8 +132,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-last,last()>>                      | Scalar            | Returns the last element in a list.
 |<<functions-left,left()>>                      | String            | Returns a string containing the left n characters of the original string.
 |<<functions-length,length()>>                  | Scalar            | Returns the length of a path.
-|<<functions-log, log()>>                       | Logarithmic       | Returns the natural logarithm of the expression.
-|<<functions-log10, log10()>>                   | Logarithmic       | Returns the common logarithm (base 10) of the expression.
+|<<functions-log, log()>>                       | Logarithmic       | Returns the natural logarithm of a number.
+|<<functions-log10, log10()>>                   | Logarithmic       | Returns the common logarithm (base 10) of a number.
 |<<functions-ltrim,lTrim()>>                    | String            | Returns the original string with whitespace removed from the left side.
 |<<functions-max,max()>>                        | Aggregating       | Returns the maximum value in a set of values returned by an expression.
 |<<functions-min,min()>>                        | Aggregating       | Returns the minimum value in a set of values returned by an expression.

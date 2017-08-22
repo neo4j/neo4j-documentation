@@ -40,6 +40,7 @@ class MathematicalLogarithmicFunctionsTest extends DocumentingTest {
     section("e()", "functions-e") {
       p("`e()` returns the base of the natural logarithm, `e`.")
       function("e()")
+      considerations("The return value is a Float.")
       query("RETURN e()", ResultAssertions((r) => {
         r.toList.head("e()") should equal(Math.E)
       })) {
@@ -50,6 +51,7 @@ class MathematicalLogarithmicFunctionsTest extends DocumentingTest {
     section("exp()", "functions-exp") {
       p("`exp()` returns `e^n`, where `e` is the base of the natural logarithm, and `n` is the value of the argument expression.")
       function("e(expression)", ("expression", "A numeric expression."))
+      considerations("`exp(null)` returns `null`.", "The return value is a Float.")
       query("RETURN exp(2)", ResultAssertions((r) => {
         r.toList.head("exp(2)").asInstanceOf[Double] should equal(Math.E * Math.E +- 0.00000001)
       })) {
@@ -58,8 +60,9 @@ class MathematicalLogarithmicFunctionsTest extends DocumentingTest {
       }
     }
     section("log()", "functions-log") {
-      p("`log()` returns the natural logarithm of the expression.")
+      p("`log()` returns the natural logarithm of a number.")
       function("log(expression)", ("expression", "A numeric expression."))
+      considerations("`log(null)` returns `null`.", "`log(0)` returns `null`.", "The return value is a Float.")
       query("RETURN log(27)", ResultAssertions((r) => {
         r.toList.head("log(27)") should equal(3.295836866004329)
       })) {
@@ -68,8 +71,9 @@ class MathematicalLogarithmicFunctionsTest extends DocumentingTest {
       }
     }
     section("log10()", "functions-log10") {
-      p("`log10()` returns the common logarithm (base 10) of the expression.")
+      p("`log10()` returns the common logarithm (base 10) of a number.")
       function("log10(expression)", ("expression", "A numeric expression."))
+      considerations("`log10(null)` returns `null`.", "`log10(0)` returns `null`.", "The return value is a Float.")
       query("RETURN log10(27)", ResultAssertions((r) => {
         r.toList.head("log10(27)") should equal(1.4313637641589874)
       })) {
@@ -80,6 +84,7 @@ class MathematicalLogarithmicFunctionsTest extends DocumentingTest {
     section("sqrt()", "functions-sqrt") {
       p("`sqrt()` returns the square root of a number.")
       function("sqrt(expression)", ("expression", "A numeric expression."))
+      considerations("`sqrt(null)` returns `null`.", "`sqrt(<any negative number>)` returns `null`", "The return value is a Float.")
       query("RETURN sqrt(256)", ResultAssertions((r) => {
         r.toList.head("sqrt(256)") should equal(16.0)
       })) {
