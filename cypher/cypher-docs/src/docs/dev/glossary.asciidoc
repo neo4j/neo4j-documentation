@@ -102,18 +102,18 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |===
 |Function                                       | Type              | Description
 |<<functions-abs, abs()>>                       |  Numeric          | Returns the absolute value of a number.
-|<<functions-acos, acos()>>                     | Trigonometric     | Returns the arccosine of the expression.
+|<<functions-acos, acos()>>                     | Trigonometric     | Returns the arccosine of a number in radians.
 |<<functions-all,all()>>                        | Predicate         | Tests whether a predicate holds for all elements in the list.
 |<<functions-any,any()>>                        | Predicate         | Tests whether a predicate holds for at least one element in the list.
-|<<functions-asin, asin()>>                     | Trigonometric     | Returns the arcsine of the expression.
-|<<functions-atan, atan()>>                     | Trigonometric     | Returns the arctangent of the expression.
-|<<functions-atan2, atan2()>>                   | Trigonometric     | Returns the arctangent2 of a set of coordinates.
+|<<functions-asin, asin()>>                     | Trigonometric     | Returns the arcsine of a number in radians.
+|<<functions-atan, atan()>>                     | Trigonometric     | Returns the arctangent of a number in radians.
+|<<functions-atan2, atan2()>>                   | Trigonometric     | Returns the arctangent2 of a set of coordinates in radians.
 |<<functions-avg,avg()>>                        | Aggregating       | Returns the average value of a numeric expression.
 |<<functions-ceil, ceil()>>                     | Numeric           | Returns the smallest integer greater than or equal to the argument.
 |<<functions-coalesce,coalesce()>>              | Scalar            | Returns the first non-`null` value in the list of expressions passed to it.
 |<<functions-collect,collect()>>                | Aggregating       | Returns a list containing the values returned by an expression.
-|<<functions-cos, cos()>>                       | Trigonometric     | Returns the cosine of the expression.
-|<<functions-cot, cot()>>                       | Trigonometric     | Returns the cotangent of the expression.
+|<<functions-cos, cos()>>                       | Trigonometric     | Returns the cosine of a number.
+|<<functions-cot, cot()>>                       | Trigonometric     | Returns the cotangent of a number.
 |<<functions-count,count()>>                    | Aggregating       | Returns the number of values or rows.
 |<<functions-degrees, degrees()>>               | Trigonometric     | Converts radians to degrees.
 |<<functions-distance,distance()>>              | Spatial           | Returns a floating point number representing the geodesic distance between any two given points.
@@ -124,7 +124,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-extract,extract()>>                | List              | Returns a list `l~result~` containing the values resulting from an expression which has been applied to each element in a list `l~original~`.
 |<<functions-filter,filter()>>                  | List              | Returns a list `l~result~` containing all the elements from a list `l~original~` that comply with a given predicate.
 |<<functions-floor, floor()>>                   | Numeric           | Returns the greatest integer less than or equal to the expression.
-|<<functions-haversin, haversin()>>             | Trigonometric     | Returns half the versine of the expression.
+|<<functions-haversin, haversin()>>             | Trigonometric     | Returns half the versine of a number.
 |<<functions-head,head()>>                      | Scalar            | Returns the first element in a list.
 |<<functions-id,id()>>                          | Scalar            | Returns the id of the relationship or node.
 |<<functions-keys,keys()>>                      | List              | Returns a list containing the string representations for all the property names of a node, relationship, or map.
@@ -156,7 +156,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-round, round()>>                   | Numeric           | Returns the numerical expression, rounded to the nearest integer.
 |<<functions-rtrim,rTrim()>>                    | String            | Returns the original string with whitespace removed from the right side.
 |<<functions-sign, sign()>>                     | Numeric           | Returns the signum of a number -- zero if the expression is zero, `-1` for any negative number, and `1` for any positive number.
-|<<functions-sin, sin()>>                       | Trigonometric     | Returns the sine of the expression.
+|<<functions-sin, sin()>>                       | Trigonometric     | Returns the sine of a number.
 |<<functions-single,single()>>                  | Predicate         | Returns true if the predicate holds for exactly one of the elements in the list.
 |<<functions-size,size()>>                      | Scalar            | Returns the number of items in a list.
 |<<functions-size-of-pattern-expression,Size of pattern expression>>  | Scalar   | Returns the number of sub-graphs matching the pattern expression.
@@ -169,7 +169,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-substring,substring()>>            | String            | Returns a substring of the original, with a 0-based index start and length.
 |<<functions-sum,sum()>>                        | Aggregating       | Returns the sum of all the non-`null` values returned by a numeric expression.
 |<<functions-tail,tail()>>                      | List              | Returns a list `l~result~` containing all the elements, excluding the first one, from a list `l~original~`.
-|<<functions-tan, tan()>>                       | Trigonometric     | Returns the tangent of the expression.
+|<<functions-tan, tan()>>                       | Trigonometric     | Returns the tangent of a number.
 |<<functions-timestamp,timestamp()>>            | Scalar            | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
 |<<functions-toboolean,toBoolean()>>                | Scalar            | Converts the argument to a boolean and returns the result.
 |<<functions-tofloat,toFloat()>>                | Scalar            | Converts the argument to a float and returns the result.
