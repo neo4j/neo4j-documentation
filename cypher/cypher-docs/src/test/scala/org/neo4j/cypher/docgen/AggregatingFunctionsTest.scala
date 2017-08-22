@@ -85,8 +85,8 @@ class AggregatingFunctionsTest extends DocumentingTest {
     graphViz()
     section("avg()", "functions-avg") {
       p(
-        "`avg()` returns the average value of a numeric expression.")
-      function("avg(expression)", ("expression", "A numeric expression."))
+        "`avg()` returns the average of a set of numeric values.")
+      function("avg(expression)", ("expression", "An expression returning a set of numeric values."))
       considerations("Any `null` values are excluded from the calculation.", "`avg(null)` returns `null`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
       query("MATCH (n:Person) RETURN avg(n.age)", ResultAssertions((r) => {
         r.toList.head("avg(n.age)") should equal(30L)
@@ -99,7 +99,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       p(
         """`collect()` returns a list containing the values returned by an expression.
           |Using this function aggregates data by amalgamating multiple records or values into a single list.""".stripMargin)
-      function("collect(expression)", ("expression", "An expression."))
+      function("collect(expression)", ("expression", "An expression returning a set of values."))
       considerations("Any `null` values are ignored and will not be added to the list.", "`collect(null)` returns an empty list.")
       query("MATCH (n:Person) RETURN collect(n.age)", ResultAssertions((r) => {
         r.toList.head("collect(n.age)") should equal(Seq(13, 33, 44))
@@ -171,8 +171,8 @@ class AggregatingFunctionsTest extends DocumentingTest {
       }
     }
     section("max()", "functions-max") {
-      p("`max()` returns the maximum value in a set of values returned by an expression.")
-      function("max(expression)", ("expression", "A numeric or string expression."))
+      p("`max()` returns the maximum value in a set of values.")
+      function("max(expression)", ("expression", "An expression returning a set of numeric or string values."))
       considerations("Any `null` values are excluded from the calculation.", "`max(null)` returns `null`.", "Depending on the values returned by `expression`, the return value will be either an Integer or a Float or a String.")
       query("MATCH (n:Person) RETURN max(n.age)", ResultAssertions((r) => {
         r.toList.head("max(n.age)") should equal(44L)
@@ -182,8 +182,8 @@ class AggregatingFunctionsTest extends DocumentingTest {
       }
     }
     section("min()", "functions-min") {
-      p("`min()` returns the minimum value in a set of values returned by an expression.")
-      function("min(expression)", ("expression", "A numeric or string expression."))
+      p("`min()` returns the minimum value in a set of values.")
+      function("min(expression)", ("expression", "An expression returning a set of numeric or string values."))
       considerations("Any `null` values are excluded from the calculation.", "`min(null)` returns `null`.", "Depending on the values returned by `expression`, the return value will be either an Integer or a Float or a String.")
       query("MATCH (n:Person) RETURN min(n.age)", ResultAssertions((r) => {
         r.toList.head("min(n.age)") should equal(13L)
@@ -249,8 +249,8 @@ class AggregatingFunctionsTest extends DocumentingTest {
       }
     }
     section("sum()", "functions-sum") {
-      p("`sum()` returns the sum of all the non-`null` values returned by a numeric expression.")
-      function("sum(expression)", ("expression", "A numeric expression."))
+      p("`sum()` returns the sum of a set of non-`null` numeric values.")
+      function("sum(expression)", ("expression", "An expression returning a set of numeric values."))
       considerations("Any `null` values are excluded from the calculation.", "`sum(null)` returns `0`.", "Depending on the values returned by `expression`, the return value is either an Integer or a Float.")
       query("MATCH (n:Person) RETURN sum(n.age)", ResultAssertions((r) => {
         r.toList.head("sum(n.age)") should equal(90L)
