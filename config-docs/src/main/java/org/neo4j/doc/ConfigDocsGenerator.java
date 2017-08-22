@@ -61,7 +61,8 @@ public class ConfigDocsGenerator {
                         c.valueDescription(),
                         c.documentedDefaultValue().isPresent() ? c.documentedDefaultValue() : valueAsString(c),
                         c.internal(),
-                        c.replacement()
+                        c.replacement(),
+                        c.dynamic()
                 ))
                 .collect(Collectors.toList());
         out.print(documentSummary(id, title, settingDescriptions));
@@ -124,6 +125,10 @@ public class ConfigDocsGenerator {
                         "|Valid values a|%s%n",
                 item.id(), item.name(),
                 item.description().orElse("No description available."), item.validationMessage() );
+
+        if (item.isDynamic()) {
+            out.printf("|Dynamic a|true%n");
+        }
 
         if (item.hasDefault()) {
             out.printf("|Default value m|%s%n", item.defaultValue() );

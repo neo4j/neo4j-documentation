@@ -54,7 +54,7 @@ public final class SettingDescriptionImpl implements SettingDescription {
 
     public SettingDescriptionImpl( String id, String name, Optional<String> description )
     {
-        this( id, name, description, null, null, null, false, false );
+        this( id, name, description, null, null, null, false, false  );
     }
 
     @Override
@@ -102,6 +102,11 @@ public final class SettingDescriptionImpl implements SettingDescription {
     public boolean isInternal()
     {
         return false;
+    }
+
+    @Override
+    public boolean isDynamic() {
+        throw new UnsupportedOperationException("This implementation does not support 'dynamic' ");
     }
 
     @Override
