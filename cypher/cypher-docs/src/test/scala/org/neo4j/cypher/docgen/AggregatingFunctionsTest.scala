@@ -87,7 +87,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       p(
         "`avg()` returns the average of a set of numeric values.")
       function("avg(expression)", ("expression", "An expression returning a set of numeric values."))
-      considerations("Any `null` values are excluded from the calculation.", "`avg(null)` returns `null`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
+      considerations("Any `null` values are excluded from the calculation.", "`avg(null)` returns `null`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the value returned by the function is either an Integer or a Float.")
       query("MATCH (n:Person) RETURN avg(n.age)", ResultAssertions((r) => {
         r.toList.head("avg(n.age)") should equal(30L)
       })) {
@@ -116,7 +116,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           |* `count(expr)` returns the number of non-`null` values returned by an expression.
         """.stripMargin)
       function("count(expression)", ("expression", "An expression."))
-      considerations("`count(*)` includes rows returning `null`.", "`count(expr)` ignores `null` values.", "`count(null)` returns `0`.", "The return value is an Integer.")
+      considerations("`count(*)` includes rows returning `null`.", "`count(expr)` ignores `null` values.", "`count(null)` returns `0`.", "The value returned is an Integer.")
       section("Using `count(*)` to return the number of nodes") {
         p("`count(*)` can be used to return the number of nodes; for example, the number of nodes connected to some node `n`.")
         query("MATCH (n {name: 'A'})-->(x) RETURN labels(n), n.age, count(*)", ResultAssertions((r) => {
@@ -173,7 +173,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     section("max()", "functions-max") {
       p("`max()` returns the maximum value in a set of values.")
       function("max(expression)", ("expression", "An expression returning a set of numeric or string values."))
-      considerations("Any `null` values are excluded from the calculation.", "`max(null)` returns `null`.", "Depending on the values returned by `expression`, the return value will be either an Integer or a Float or a String.")
+      considerations("Any `null` values are excluded from the calculation.", "`max(null)` returns `null`.", "Depending on the values returned by `expression`, the value returned by the function will be either an Integer or a Float or a String.")
       query("MATCH (n:Person) RETURN max(n.age)", ResultAssertions((r) => {
         r.toList.head("max(n.age)") should equal(44L)
       })) {
@@ -184,7 +184,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     section("min()", "functions-min") {
       p("`min()` returns the minimum value in a set of values.")
       function("min(expression)", ("expression", "An expression returning a set of numeric or string values."))
-      considerations("Any `null` values are excluded from the calculation.", "`min(null)` returns `null`.", "Depending on the values returned by `expression`, the return value will be either an Integer or a Float or a String.")
+      considerations("Any `null` values are excluded from the calculation.", "`min(null)` returns `null`.", "Depending on the values returned by `expression`, the value returned by the function will be either an Integer or a Float or a String.")
       query("MATCH (n:Person) RETURN min(n.age)", ResultAssertions((r) => {
         r.toList.head("min(n.age)") should equal(13L)
       })) {
@@ -198,7 +198,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           |It uses a linear interpolation method, calculating a weighted average between two values if the desired percentile lies between them.
           |For nearest values using a rounding method, see `percentileDisc`.""")
       function("percentileCont(expression, percentile)", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
-      considerations("Any `null` values are excluded from the calculation.", "`percentileCont(null, <percentile>)` returns `null`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
+      considerations("Any `null` values are excluded from the calculation.", "`percentileCont(null, <percentile>)` returns `null`.", "The value returned is a Float.")
       query("MATCH (n:Person) RETURN percentileCont(n.age, 0.4)", ResultAssertions((r) => {
         r.toList.head("percentileCont(n.age, 0.4)") should equal(29L)
       })) {
@@ -212,7 +212,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           |It uses a rounding method and calculates the nearest value to the percentile.
           |For interpolated values, see `percentileCont`.""")
       function("percentileDisc(expression, percentile)", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
-      considerations("Any `null` values are excluded from the calculation.", "`percentileDisc(null, <percentile>)` returns `null`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
+      considerations("Any `null` values are excluded from the calculation.", "`percentileDisc(null, <percentile>)` returns `null`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the value returned by the function is either an Integer or a Float.")
       query("MATCH (n:Person) RETURN percentileDisc(n.age, 0.5)", ResultAssertions((r) => {
         r.toList.head("percentileDisc(n.age, 0.5)") should equal(33L)
       })) {
@@ -226,7 +226,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           |It uses a standard two-pass method, with `N - 1` as the denominator, and should be used when taking a sample of the population for an unbiased estimate.
           |When the standard variation of the entire population is being calculated, `stdDevP` should be used.""")
       function("stDev(expression)", ("expression", "A numeric expression."))
-      considerations("Any `null` values are excluded from the calculation.", "`stDev(null)` returns `0`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
+      considerations("Any `null` values are excluded from the calculation.", "`stDev(null)` returns `0`.", "The value returned is a Float.")
       query("MATCH (n) WHERE n.name IN ['A', 'B', 'C'] RETURN stDev(n.age)", ResultAssertions(f = (r) => {
         assertEquals(15.7162336455, r.toList.head("stDev(n.age)").asInstanceOf[Double], 0.0000001)
       })) {
@@ -240,7 +240,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           |It uses a standard two-pass method, with `N` as the denominator, and should be used when calculating the standard deviation for an entire population.
           |When the standard variation of only a sample of the population is being calculated, `stDev` should be used.""")
       function("stDevP(expression)", ("expression", "A numeric expression."))
-      considerations("Any `null` values are excluded from the calculation.", "`stDevP(null)` returns `0`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
+      considerations("Any `null` values are excluded from the calculation.", "`stDevP(null)` returns `0`.", "The value returned is a Float.")
       query("MATCH (n) WHERE n.name IN ['A', 'B', 'C'] RETURN stDevP(n.age)", ResultAssertions((r) => {
         assertEquals(12.8322510366, r.toList.head("stDevP(n.age)").asInstanceOf[Double], 0.0000001)
       })) {
@@ -251,7 +251,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     section("sum()", "functions-sum") {
       p("`sum()` returns the sum of a set of non-`null` numeric values.")
       function("sum(expression)", ("expression", "An expression returning a set of numeric values."))
-      considerations("Any `null` values are excluded from the calculation.", "`sum(null)` returns `0`.", "Depending on the values returned by `expression`, the return value is either an Integer or a Float.")
+      considerations("Any `null` values are excluded from the calculation.", "`sum(null)` returns `0`.", "Depending on the values returned by `expression`, the value returned by the function is either an Integer or a Float.")
       query("MATCH (n:Person) RETURN sum(n.age)", ResultAssertions((r) => {
         r.toList.head("sum(n.age)") should equal(90L)
       })) {
