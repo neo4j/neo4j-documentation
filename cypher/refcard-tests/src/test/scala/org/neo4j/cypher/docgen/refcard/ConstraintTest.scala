@@ -34,22 +34,22 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   override def assert(name: String, result: InternalExecutionResult) {
     name match {
       case "create-unique-property-constraint" =>
-        assertStats(result, constraintsAdded = 1)
+        assertStats(result, uniqueConstraintsAdded = 1)
         assert(result.toList.size === 0)
       case "drop-unique-property-constraint" =>
-        assertStats(result, constraintsRemoved = 1)
+        assertStats(result, uniqueConstraintsRemoved = 1)
         assert(result.toList.size === 0)
       case "create-node-property-existence-constraint" =>
-        assertStats(result, constraintsAdded = 1)
+        assertStats(result, existenceConstraintsAdded = 1)
         assert(result.toList.size === 0)
       case "drop-node-property-existence-constraint" =>
-        assertStats(result, constraintsRemoved = 1)
+        assertStats(result, existenceConstraintsRemoved = 1)
         assert(result.toList.size === 0)
       case "create-relationship-property-existence-constraint" =>
-        assertStats(result, constraintsAdded = 1)
+        assertStats(result, existenceConstraintsAdded = 1)
         assert(result.toList.size === 0)
       case "drop-relationship-property-existence-constraint" =>
-        assertStats(result, constraintsRemoved = 1)
+        assertStats(result, existenceConstraintsRemoved = 1)
         assert(result.toList.size === 0)
       case "match" =>
         assertStats(result, nodesCreated = 0)
