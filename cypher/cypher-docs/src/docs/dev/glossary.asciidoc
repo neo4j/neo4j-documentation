@@ -108,13 +108,13 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-asin, asin()>>                     | Trigonometric     | Returns the arcsine of the expression.
 |<<functions-atan, atan()>>                     | Trigonometric     | Returns the arctangent of the expression.
 |<<functions-atan2, atan2()>>                   | Trigonometric     | Returns the arctangent2 of a set of coordinates.
-|<<functions-avg,avg()>>                        | Aggregating       | Returns the average of a numeric column.
+|<<functions-avg,avg()>>                        | Aggregating       | Returns the average value of a numeric expression.
 |<<functions-ceil, ceil()>>                     | Numeric           | Returns the smallest integer greater than or equal to the argument.
 |<<functions-coalesce,coalesce()>>              | Scalar            | Returns the first non-`null` value in the list of expressions passed to it.
-|<<functions-collect,collect()>>                | Aggregating       | Returns a list containing all collected values.
+|<<functions-collect,collect()>>                | Aggregating       | Returns a list containing the values returned by an expression.
 |<<functions-cos, cos()>>                       | Trigonometric     | Returns the cosine of the expression.
 |<<functions-cot, cot()>>                       | Trigonometric     | Returns the cotangent of the expression.
-|<<functions-count,count()>>                    | Aggregating       | Returns the number of rows.
+|<<functions-count,count()>>                    | Aggregating       | Returns the number of values or rows.
 |<<functions-degrees, degrees()>>               | Trigonometric     | Converts radians to degrees.
 |<<functions-distance,distance()>>              | Spatial           | Returns a floating point number representing the geodesic distance between any two given points.
 |<<functions-e, e()>>                           | Logarithmic       | Returns the base of the natural logarithm, `e`.
@@ -135,8 +135,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-log, log()>>                       | Logarithmic       | Returns the natural logarithm of the expression.
 |<<functions-log10, log10()>>                   | Logarithmic       | Returns the common logarithm (base 10) of the expression.
 |<<functions-ltrim,lTrim()>>                    | String            | Returns the original string with whitespace removed from the left side.
-|<<functions-max,max()>>                        | Aggregating       | Returns the highest value in a numeric column.
-|<<functions-min,min()>>                        | Aggregating       | Returns the lowest value in a numeric column.
+|<<functions-max,max()>>                        | Aggregating       | Returns the maximum value in a set of values returned by an expression.
+|<<functions-min,min()>>                        | Aggregating       | Returns the minimum value in a set of values returned by an expression.
 |<<functions-nodes,nodes()>>                    | List              | Returns all nodes in a path.
 |<<functions-none,none()>>                      | Predicate         | Returns true if the predicate holds for no element in the list.
 |<<functions-percentilecont,percentileCont()>>  | Aggregating       | Returns the percentile of a given value over a group using linear interpolation.
@@ -167,7 +167,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-stdev,stDev()>>                    | Aggregating       | Returns the standard deviation for a given value over a group for a sample of a population.
 |<<functions-stdevp,stDevP()>>                  | Aggregating       | Returns the standard deviation for a given value over a group for an entire population.
 |<<functions-substring,substring()>>            | String            | Returns a substring of the original, with a 0-based index start and length.
-|<<functions-sum,sum()>>                        | Aggregating       | Returns the sum of a numeric column.
+|<<functions-sum,sum()>>                        | Aggregating       | Returns the sum of all the non-`null` values returned by a numeric expression.
 |<<functions-tail,tail()>>                      | List              | Returns all but the first element in a list.
 |<<functions-tan, tan()>>                       | Trigonometric     | Returns the tangent of the expression.
 |<<functions-timestamp,timestamp()>>            | Scalar            | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
