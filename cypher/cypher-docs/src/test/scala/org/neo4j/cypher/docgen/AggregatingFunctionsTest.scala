@@ -40,14 +40,14 @@ class AggregatingFunctionsTest extends DocumentingTest {
         |       (a)-[:KNOWS]->(b),
         |       (c)-[:KNOWS]->(d2),
         |       (b)-[:KNOWS]->(d2)""")
-    p("""To calculate aggregated data, Cypher offers aggregation, much like SQL's `GROUP BY`.""")
+    p("""To calculate aggregated data, Cypher offers aggregation, analogous to SQL's `GROUP BY`.""")
     p(
-      """Aggregate functions take multiple input values and calculate an aggregated value from them.
+      """Aggregate functions take multiple input values and calculate an aggregated value over them.
         |Examples are `avg()` that calculates the average of multiple numeric values, or `min()` that finds the smallest numeric value in a set of values.""")
     p(
-      """Aggregation can be done over all the matching subgraphs, or it can be further divided by introducing key values.
+      """Aggregation can be computed over all the matching subgraphs, or it can be further divided by introducing key values.
         |These are non-aggregate expressions, that are used to group the values going into the aggregate functions.""")
-    p("""So, if the return statement looks something like this:""")
+    p("""Assume we have the following return statement:""")
     p(
       """[source, cypher]
         |----
@@ -58,13 +58,13 @@ class AggregatingFunctionsTest extends DocumentingTest {
       """We have two return expressions: `n`, and `count(*)`.
         |The first, `n`, is not an aggregate function, and so it will be the grouping key.
         |The latter, `count(*)` is an aggregate expression.
-        |So the matching subgraphs will be divided into different buckets, depending on the grouping key.
-        |The aggregate function will then run on these buckets, calculating the aggregate values.""")
+        |The matching subgraphs will be divided into different buckets, depending on the grouping key.
+        |The aggregate function will then be run on these buckets, calculating the aggregate values.""")
     p(
-      """If you want to use aggregations to sort your result set, the aggregation must be included in the `RETURN` to be used in your `ORDER BY`.
+      """To use aggregations to sort the result set, the aggregation must be included in the `RETURN` to be used in the `ORDER BY`.
         |""")
     p(
-      """The last piece of the puzzle is the `DISTINCT` operator.
+      """The `DISTINCT` operator works in conjunction with aggregation.
         |It is used to make all values unique before running them through an aggregate function.
         |More information about `DISTINCT` may be found <<query-operators-general,here>>.""")
     p(
@@ -85,19 +85,19 @@ class AggregatingFunctionsTest extends DocumentingTest {
     graphViz()
     section("avg()", "functions-avg") {
       p(
-        "`avg()` returns the average value of a numeric expression `expr`.")
+        "`avg()` returns the average value of a numeric expression.")
       function("avg(expression)", ("expression", "A numeric expression."))
-      considerations("Any `null` values are excluded from the calculation.", "`avg(null)` returns `null`.")
+      considerations("Any `null` values are excluded from the calculation.", "`avg(null)` returns `null`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
       query("MATCH (n:Person) RETURN avg(n.age)", ResultAssertions((r) => {
         r.toList.head("avg(n.age)") should equal(30L)
       })) {
-        p("The query returns the average of all the values in the property `age`.")
+        p("The average of all the values in the property `age` is returned.")
         resultTable()
       }
     }
     section("collect()", "functions-collect") {
       p(
-        """`collect()` returns a list containing the values returned by an expression `expr`.
+        """`collect()` returns a list containing the values returned by an expression.
           |Using this function aggregates data by amalgamating multiple records or values into a single list.""".stripMargin)
       function("collect(expression)", ("expression", "An expression."))
       considerations("Any `null` values are ignored and will not be added to the list.", "`collect(null)` returns an empty list.")
@@ -113,16 +113,16 @@ class AggregatingFunctionsTest extends DocumentingTest {
         """`count()` returns the number of values or rows, and appears in two variants:
           |
           |* `count(*)` returns the number of matching rows, and
-          |* `count(expr)` returns the number of non-`null` values returned by an expression `expr`.
+          |* `count(expr)` returns the number of non-`null` values returned by an expression.
         """.stripMargin)
       function("count(expression)", ("expression", "An expression."))
-      considerations("`count(*)` includes rows returning `null`.", "`count(expr)` ignores `null` values.", "`count(null)` returns `0`.")
+      considerations("`count(*)` includes rows returning `null`.", "`count(expr)` ignores `null` values.", "`count(null)` returns `0`.", "The return value is an Integer.")
       section("Using `count(*)` to return the number of nodes") {
         p("`count(*)` can be used to return the number of nodes; for example, the number of nodes connected to some node `n`.")
         query("MATCH (n {name: 'A'})-->(x) RETURN labels(n), n.age, count(*)", ResultAssertions((r) => {
           r.toList should equal(List(Map("labels(n)" -> List("Person"), "n.age" -> 13L, "count(*)" -> 3L)))
         })) {
-          p("This returns the labels and `age` property of the start node `n` and the number of nodes related to `n`.")
+          p("The labels and `age` property of the start node `n` and the number of nodes related to `n` are returned.")
           resultTable()
         }
       }
@@ -131,7 +131,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         query("MATCH (n {name: 'A'})-[r]->() RETURN type(r), count(*)", ResultAssertions((r) => {
           r.toList should equal(List(Map("type(r)" -> "KNOWS", "count(*)" -> 3L)))
         })) {
-          p("The relationship types and their group count is returned.")
+          p("The relationship types and their group count are returned.")
           resultTable()
         }
       }
@@ -171,9 +171,9 @@ class AggregatingFunctionsTest extends DocumentingTest {
       }
     }
     section("max()", "functions-max") {
-      p("`max()` returns the maximum value in a set of values returned by an expression `expr`.")
+      p("`max()` returns the maximum value in a set of values returned by an expression.")
       function("max(expression)", ("expression", "A numeric or string expression."))
-      considerations("Any `null` values are excluded from the calculation.", "`max(null)` returns `null`.")
+      considerations("Any `null` values are excluded from the calculation.", "`max(null)` returns `null`.", "Depending on the values returned by `expression`, the return value will be either an Integer or a Float or a String.")
       query("MATCH (n:Person) RETURN max(n.age)", ResultAssertions((r) => {
         r.toList.head("max(n.age)") should equal(44L)
       })) {
@@ -182,9 +182,9 @@ class AggregatingFunctionsTest extends DocumentingTest {
       }
     }
     section("min()", "functions-min") {
-      p("`min()` returns the maximum value in a set of values returned by an expression `expr`.")
+      p("`min()` returns the minimum value in a set of values returned by an expression.")
       function("min(expression)", ("expression", "A numeric or string expression."))
-      considerations("Any `null` values are excluded from the calculation.", "`min(null)` returns `null`.")
+      considerations("Any `null` values are excluded from the calculation.", "`min(null)` returns `null`.", "Depending on the values returned by `expression`, the return value will be either an Integer or a Float or a String.")
       query("MATCH (n:Person) RETURN min(n.age)", ResultAssertions((r) => {
         r.toList.head("min(n.age)") should equal(13L)
       })) {
@@ -198,7 +198,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           |It uses a linear interpolation method, calculating a weighted average between two values if the desired percentile lies between them.
           |For nearest values using a rounding method, see `percentileDisc`.""")
       function("percentileCont(expression, percentile)", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
-      considerations("Any `null` values are excluded from the calculation.", "`percentileCont(null, <percentile>)` returns `null`.")
+      considerations("Any `null` values are excluded from the calculation.", "`percentileCont(null, <percentile>)` returns `null`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
       query("MATCH (n:Person) RETURN percentileCont(n.age, 0.4)", ResultAssertions((r) => {
         r.toList.head("percentileCont(n.age, 0.4)") should equal(29L)
       })) {
@@ -212,7 +212,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           |It uses a rounding method and calculates the nearest value to the percentile.
           |For interpolated values, see `percentileCont`.""")
       function("percentileDisc(expression, percentile)", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
-      considerations("Any `null` values are excluded from the calculation.", "`percentileDisc(null, <percentile>)` returns `null`.")
+      considerations("Any `null` values are excluded from the calculation.", "`percentileDisc(null, <percentile>)` returns `null`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
       query("MATCH (n:Person) RETURN percentileDisc(n.age, 0.5)", ResultAssertions((r) => {
         r.toList.head("percentileDisc(n.age, 0.5)") should equal(33L)
       })) {
@@ -226,7 +226,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           |It uses a standard two-pass method, with `N - 1` as the denominator, and should be used when taking a sample of the population for an unbiased estimate.
           |When the standard variation of the entire population is being calculated, `stdDevP` should be used.""")
       function("stDev(expression)", ("expression", "A numeric expression."))
-      considerations("Any `null` values are excluded from the calculation.", "`stDev(null)` returns `0`.")
+      considerations("Any `null` values are excluded from the calculation.", "`stDev(null)` returns `0`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
       query("MATCH (n) WHERE n.name IN ['A', 'B', 'C'] RETURN stDev(n.age)", ResultAssertions(f = (r) => {
         assertEquals(15.7162336455, r.toList.head("stDev(n.age)").asInstanceOf[Double], 0.0000001)
       })) {
@@ -240,7 +240,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           |It uses a standard two-pass method, with `N` as the denominator, and should be used when calculating the standard deviation for an entire population.
           |When the standard variation of only a sample of the population is being calculated, `stDev` should be used.""")
       function("stDevP(expression)", ("expression", "A numeric expression."))
-      considerations("Any `null` values are excluded from the calculation.", "`stDevP(null)` returns `0`.")
+      considerations("Any `null` values are excluded from the calculation.", "`stDevP(null)` returns `0`.", "Depending on the values returned by `expression` and whether or not the calculation overflows, the return value is either an Integer or a Float.")
       query("MATCH (n) WHERE n.name IN ['A', 'B', 'C'] RETURN stDevP(n.age)", ResultAssertions((r) => {
         assertEquals(12.8322510366, r.toList.head("stDevP(n.age)").asInstanceOf[Double], 0.0000001)
       })) {
@@ -249,9 +249,9 @@ class AggregatingFunctionsTest extends DocumentingTest {
       }
     }
     section("sum()", "functions-sum") {
-      p("`sum()` returns the sum of all the non-`null` values returned by a numeric expression `expr`.")
+      p("`sum()` returns the sum of all the non-`null` values returned by a numeric expression.")
       function("sum(expression)", ("expression", "A numeric expression."))
-      considerations("Any `null` values are excluded from the calculation.", "`sum(null)` returns `0`.")
+      considerations("Any `null` values are excluded from the calculation.", "`sum(null)` returns `0`.", "Depending on the values returned by `expression`, the return value is either an Integer or a Float.")
       query("MATCH (n:Person) RETURN sum(n.age)", ResultAssertions((r) => {
         r.toList.head("sum(n.age)") should equal(90L)
       })) {
