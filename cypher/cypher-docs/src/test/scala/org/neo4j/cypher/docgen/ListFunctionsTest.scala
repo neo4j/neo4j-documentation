@@ -59,7 +59,7 @@ class ListFunctionsTest extends DocumentingTest {
       p(
         """`extract()` returns a list `l~result~` containing the values resulting from an expression which has been applied to each element in a list `list`.
            |This function is analogous to the `map` method in functional languages such as Lisp and Scala.""".stripMargin)
-      function("extract(variable IN list | expression)", ("list", "An expression that returns a list."), ("variable", "The closure will have a variable introduced in its context. We decide here which variable to use."), ("expression", "This expression will run once per value in `list`, and add it to the list which is returned by `extract()`."))
+      function("extract(variable IN list | expression)", "A list containing heterogeneous elements; the types of the elements are determined by `expression`.", ("list", "An expression that returns a list."), ("variable", "The closure will have a variable introduced in its context. We decide here which variable to use."), ("expression", "This expression will run once per value in `list`, and add it to the list which is returned by `extract()`."))
       considerations("Any `null` values in `list` are preserved.")
       p(
         """
@@ -79,7 +79,7 @@ class ListFunctionsTest extends DocumentingTest {
     }
     section("filter()", "functions-filter") {
       p("""`filter()` returns a list `l~result~` containing all the elements from a list `list` that comply with a given predicate.""")
-      function("filter(variable IN list WHERE predicate)", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from the predicate."), ("predicate", "A predicate that is tested against all elements in `list`."))
+      function("filter(variable IN list WHERE predicate)", "A list containing heterogeneous elements; the types of the elements are determined by the elements in `list`.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from the predicate."), ("predicate", "A predicate that is tested against all elements in `list`."))
       query(
         """MATCH (a)
           |WHERE a.name = 'Eskil'
@@ -92,7 +92,7 @@ class ListFunctionsTest extends DocumentingTest {
     }
     section("keys()", "functions-keys") {
       p("""`keys` returns a list containing the string representations for all the property names of a node, relationship, or map.""")
-      function("keys(expression)", ("expression", "An expression that returns a node, a relationship, or a map."))
+      function("keys(expression)", "A list containing String elements.", ("expression", "An expression that returns a node, a relationship, or a map."))
       considerations("`keys(null)` returns `null`.")
       query(
         """MATCH (a) WHERE a.name = 'Alice'
@@ -105,7 +105,7 @@ class ListFunctionsTest extends DocumentingTest {
     }
     section("labels()", "functions-labels") {
       p("""`labels` returns a list containing the string representations for all the labels of a node.""")
-      function("labels(node)", ("node", "An expression that returns a single node."))
+      function("labels(node)", "A list containing String elements.", ("node", "An expression that returns a single node."))
       considerations("`labels(null)` returns `null`.")
       query(
         """MATCH (a) WHERE a.name = 'Alice'
@@ -118,7 +118,7 @@ class ListFunctionsTest extends DocumentingTest {
     }
     section("nodes()", "functions-nodes") {
       p("`nodes()` returns a list containing all the nodes in a path.")
-      function("nodes(path)", ("path", "An expression that returns a path."))
+      function("nodes(path)", "A list containing Node elements.", ("path", "An expression that returns a path."))
       considerations("`nodes(null)` returns `null`.")
       query(
         """MATCH p = (a)-->(b)-->(c)
@@ -132,9 +132,9 @@ class ListFunctionsTest extends DocumentingTest {
     }
     section("range()", "functions-range") {
       p(
-        """`range()` returns a list comprising all numeric values within a range bounded by a start value `start` and end value `end`, where the difference `step` between any two consecutive values is constant; i.e. an arithmetic progression.
+        """`range()` returns a list comprising all integral values within a range bounded by a start value `start` and end value `end`, where the difference `step` between any two consecutive values is constant; i.e. an arithmetic progression.
           |The range is inclusive, and the arithmetic progression will therefore always contain `start` and -- depending on the values of `start`, `step` and `end` -- `end`.""".stripMargin)
-      function("range(start, end [, step])", ("start", "A numeric expression."), ("end", "A numeric expression."), ("step", "A numeric expression defining the difference between any two consecutive values, with a default of `1`."))
+      function("range(start, end [, step])", "A list of Integer elements.", ("start", "An integral expression."), ("end", "An integral expression."), ("step", "A numeric expression defining the difference between any two consecutive values, with a default of `1`."))
       query(
         """RETURN range(0, 10), range(2, 18, 3)""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("range(0, 10)" -> List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), "range(2, 18, 3)" -> List(2, 5, 8, 11, 14, 17))))
@@ -148,8 +148,7 @@ class ListFunctionsTest extends DocumentingTest {
         """`reduce()` returns the value resulting from the application of an expression on each successive element in a list in conjunction with the result of the computation thus far.
            This function will iterate through each element `e` in the given list, run the expression on `e` -- taking into account the current partial result -- and store the new partial result in the accumulator.
            This function is analogous to the `fold` or `reduce` method in functional languages such as Lisp and Scala.""")
-      function("reduce(accumulator = initial, variable IN list | expression)", ("accumulator", "A variable that will hold the result and the partial results as the list is iterated."), ("initial", "An expression that runs once to give a starting value to the accumulator."), ("list", "An expression that returns a list."), ("variable", "The closure will have a variable introduced in its context. We decide here which variable to use."), ("expression", "This expression will run once per value in the list, and produce the result value."))
-      considerations("The type of the value returned depends on the arguments provided, along with the semantics of `expression`.")
+      function("reduce(accumulator = initial, variable IN list | expression)", "The type of the value returned depends on the arguments provided, along with the semantics of `expression`.", ("accumulator", "A variable that will hold the result and the partial results as the list is iterated."), ("initial", "An expression that runs once to give a starting value to the accumulator."), ("list", "An expression that returns a list."), ("variable", "The closure will have a variable introduced in its context. We decide here which variable to use."), ("expression", "This expression will run once per value in the list, and produce the result value."))
       query(
         """MATCH p = (a)-->(b)-->(c)
           |WHERE a.name = 'Alice' AND b.name = 'Bob' AND c.name = 'Daniel'
@@ -162,7 +161,7 @@ class ListFunctionsTest extends DocumentingTest {
     }
     section("relationships()", "functions-relationships") {
       p("""`relationships()` returns a list containing all the relationships in a path.""")
-      function("relationships(path)", ("path", "An expression that returns a path."))
+      function("relationships(path)", "A list containing Relationship elements.", ("path", "An expression that returns a path."))
       considerations("`relationships(null)` returns `null`.")
       query(
         """MATCH p = (a)-->(b)-->(c)
@@ -176,7 +175,7 @@ class ListFunctionsTest extends DocumentingTest {
     }
     section("tail()", "functions-tail") {
       p("""`tail()` returns a list `l~result~` containing all the elements, excluding the first one, from a list `list`.""")
-      function("tail(list)", ("list", "An expression that returns a list."))
+      function("tail(list)", "A list containing heterogeneous elements; the types of the elements are determined by the elements in `list`.", ("list", "An expression that returns a list."))
       query(
         """MATCH (a) WHERE a.name = 'Eskil'
           |RETURN a.array, tail(a.array)""".stripMargin, ResultAssertions((r) => {

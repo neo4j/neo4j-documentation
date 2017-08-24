@@ -47,8 +47,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
       """.stripMargin)
     section("acos()", "functions-acos") {
       p("`acos()` returns the arccosine of a number in radians.")
-      function("acos(expression)", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`acos(null)` returns `null`.", "If `expression` < -1 or `expression` > 1, `acos(expression)` returns `null`.", "The value returned is a Float.")
+      function("acos(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
+      considerations("`acos(null)` returns `null`.", "If `expression` < -1 or `expression` > 1, `acos(expression)` returns `null`.")
       query("RETURN acos(0.5)", ResultAssertions((r) => {
         r.toList.head("acos(0.5)") should equal(1.0471975511965979)
       })) {
@@ -58,8 +58,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("asin()", "functions-asin") {
       p("`asin()` returns the arcsine of a number in radians.")
-      function("asin(expression)", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`asin(null)` returns `null`.", "If `expression` < -1 or `expression` > 1, `asin(expression)` returns `null`.", "The value returned is a Float.")
+      function("asin(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
+      considerations("`asin(null)` returns `null`.", "If `expression` < -1 or `expression` > 1, `asin(expression)` returns `null`.")
       query("RETURN asin(0.5)", ResultAssertions((r) => {
         r.toList.head("asin(0.5)") should equal(0.5235987755982989)
       })) {
@@ -69,8 +69,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("atan()", "functions-atan") {
       p("`atan()` returns the arctangent of a number in radians.")
-      function("atan(expression)", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`atan(null)` returns `null`.", "The value returned is a Float.")
+      function("atan(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
+      considerations("`atan(null)` returns `null`.")
       query("RETURN atan(0.5)", ResultAssertions((r) => {
         r.toList.head("atan(0.5)") should equal(0.4636476090008061)
       })) {
@@ -80,8 +80,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("atan2()", "functions-atan2") {
       p("`atan2()` returns the arctangent2 of a set of coordinates in radians.")
-      function("atan2(expression1, expression2)", ("expression1", "A numeric expression for y that represents the angle in radians."), ("expression2", "A numeric expression for x that represents the angle in radians."))
-      considerations("`atan2(null, null)`, `atan2(null, expression2)` and `atan(expression1, null)` all return `null`.", "The value returned is a Float.")
+      function("atan2(expression1, expression2)", "A Float.", ("expression1", "A numeric expression for y that represents the angle in radians."), ("expression2", "A numeric expression for x that represents the angle in radians."))
+      considerations("`atan2(null, null)`, `atan2(null, expression2)` and `atan(expression1, null)` all return `null`.")
       query("RETURN atan2(0.5, 0.6)", ResultAssertions((r) => {
         r.toList.head("atan2(0.5, 0.6)") should equal(0.6947382761967033)
       })) {
@@ -91,8 +91,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("cos()", "functions-cos") {
       p("`cos()` returns the cosine of a number.")
-      function("cos(expression)", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`cos(null)` returns `null`.", "The value returned is a Float.")
+      function("cos(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
+      considerations("`cos(null)` returns `null`.")
       query("RETURN cos(0.5)", ResultAssertions((r) => {
         r.toList.head("cos(0.5)") should equal(0.8775825618903728)
       })) {
@@ -102,8 +102,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("cot()", "functions-cot") {
       p("`cot()` returns the cotangent of a number.")
-      function("cot(expression)", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`cot(null)` returns `null`.", "`cot(0)` returns `null`.", "The value returned is a Float.")
+      function("cot(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
+      considerations("`cot(null)` returns `null`.", "`cot(0)` returns `null`.")
       query("RETURN cot(0.5)", ResultAssertions((r) => {
         r.toList.head("cot(0.5)") should equal(1.830487721712452)
       })) {
@@ -113,8 +113,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("degrees()", "functions-degrees") {
       p("`degrees()` converts radians to degrees.")
-      function("degrees(expression)", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`degrees(null)` returns `null`.", "The value returned is a Float.")
+      function("degrees(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
+      considerations("`degrees(null)` returns `null`.")
       query("RETURN degrees(3.14159)", ResultAssertions((r) => {
         r.toList.head("degrees(3.14159)").asInstanceOf[Double] should equal(180.0 +- 0.001)
       })) {
@@ -124,8 +124,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("haversin()", "functions-haversin") {
       p("`haversin()` returns half the versine of a number.")
-      function("haversin(expression)", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`haversin(null)` returns `null`.", "The value returned is a Float.")
+      function("haversin(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
+      considerations("`haversin(null)` returns `null`.")
       query("RETURN haversin(0.5)", ResultAssertions((r) => {
         r.toList.head("haversin(0.5)") should equal(0.06120871905481362)
       })) {
@@ -152,8 +152,7 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("pi()", "functions-pi") {
       p("`pi()` returns the mathematical constant _pi_.")
-      function("pi()")
-      considerations("The value returned is a Float.")
+      function("pi()", "A Float.")
       query("RETURN pi()", ResultAssertions((r) => {
         r.toList.head("pi()") should equal(3.141592653589793)
       })) {
@@ -163,8 +162,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("radians()", "functions-radians") {
       p("`radians()` converts degrees to radians.")
-      function("radians(expression)", ("expression", "A numeric expression that represents the angle in degrees."))
-      considerations("`radians(null)` returns `null`.", "The value returned is a Float.")
+      function("radians(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in degrees."))
+      considerations("`radians(null)` returns `null`.")
       query("RETURN radians(180)", ResultAssertions((r) => {
         r.toList.head("radians(180)") should equal(3.141592653589793)
       })) {
@@ -174,8 +173,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("sin()", "functions-sin") {
       p("`sin()` returns the sine of a number.")
-      function("sin(expression)", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`sin(null)` returns `null`.", "The value returned is a Float.")
+      function("sin(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
+      considerations("`sin(null)` returns `null`.")
       query("RETURN sin(0.5)", ResultAssertions((r) => {
         r.toList.head("sin(0.5)") should equal(0.479425538604203)
       })) {
@@ -185,8 +184,8 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     }
     section("tan()", "functions-tan") {
       p("`tan()` returns the tangent of a number.")
-      function("tan(expression)", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`tan(null)` returns `null`.", "The value returned is a Float.")
+      function("tan(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
+      considerations("`tan(null)` returns `null`.")
       query("RETURN tan(0.5)", ResultAssertions((r) => {
         r.toList.head("tan(0.5)") should equal(0.5463024898437905)
       })) {
