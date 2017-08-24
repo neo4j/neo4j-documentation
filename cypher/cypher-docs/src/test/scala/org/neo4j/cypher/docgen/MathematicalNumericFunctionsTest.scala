@@ -64,7 +64,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("ceil()", "functions-ceil") {
-      p("`ceil()` returns the smallest number greater than or equal to a given number, and which is equal to an integer.")
+      p("`ceil()` returns the smallest floating point number greater than or equal to a given number, and which is equal to an integer.")
       function("ceil(expression)", ("expression", "A numeric expression."))
       considerations("`ceil(null)` returns `null`.", "The value returned is a Float.")
       query("RETURN ceil(0.1)", ResultAssertions((r) => {
@@ -75,7 +75,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("floor()", "functions-floor") {
-      p("`floor()` returns the largest number less than or equal to a given number, and which is equal to an integer.")
+      p("`floor()` returns the largest floating point number less than or equal to a given number, and which is equal to an integer.")
       function("floor(expression)", ("expression", "A numeric expression."))
       considerations("`floor(null)` returns `null`.", "The value returned is a Float.")
       query("RETURN floor(0.9)", ResultAssertions((r) => {
@@ -86,7 +86,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("rand()", "functions-rand") {
-      p("`rand()` returns a random number in the range from 0 (inclusive) to 1 (exclusive); i.e. [0,1). " +
+      p("`rand()` returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. [0,1). " +
         "The numbers returned follow an approximate uniform distribution.")
       function("rand()")
       considerations("The value returned is a Float.")
