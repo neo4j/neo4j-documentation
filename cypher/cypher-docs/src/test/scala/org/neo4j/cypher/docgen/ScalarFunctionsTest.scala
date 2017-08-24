@@ -74,8 +74,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("coalesce()", "functions-coalesce") {
       p(
         "`coalesce()` returns the first non-`null` value in a given list of expressions.")
-      function("coalesce(expression [, expression]*)", ("expression", "An expression which may return `null`."))
-      considerations("`null` will be returned if all the arguments are `null`.", "The type of the value returned will be that of the first non-`null` expression.")
+      function("coalesce(expression [, expression]*)", "The type of the value returned will be that of the first non-`null` expression.", ("expression", "An expression which may return `null`."))
+      considerations("`null` will be returned if all the arguments are `null`.")
       query(
         """MATCH (a)
           |WHERE a.name = 'Alice'
@@ -88,7 +88,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("endNode()", "functions-endnode") {
       p(
         """`endNode()` returns the end node of a relationship.""".stripMargin)
-      function("endNode(relationship)", ("relationship", "An expression that returns a relationship."))
+      function("endNode(relationship)", "A Node.", ("relationship", "An expression that returns a relationship."))
       considerations("`endNode(null)` returns `null`.")
       query(
         """MATCH (x:Developer)-[r]-()
@@ -101,8 +101,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("head()", "functions-head") {
       p(
         """`head()` returns the first element in a list.""".stripMargin)
-      function("head(list)", ("list", "An expression that returns a list."))
-      considerations("`head(null)` returns `null`.", "If the first element in `list` is `null`, `head(list)` will return `null`.", "The type of the value returned will be that of the first element of `list`.")
+      function("head(list)", "The type of the value returned will be that of the first element of `list`.", ("list", "An expression that returns a list."))
+      considerations("`head(null)` returns `null`.", "If the first element in `list` is `null`, `head(list)` will return `null`.")
       query(
         """MATCH (a)
           |WHERE a.name = 'Eskil'
@@ -116,8 +116,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("id()", "functions-id") {
       p(
         """`id()` returns the id of a relationship or node.""".stripMargin)
-      function("id(expression)", ("expression", "An expression that returns a node or a relationship."))
-      considerations("`id(null)` returns `null`.", "The value returned is an Integer.")
+      function("id(expression)", "An Integer.", ("expression", "An expression that returns a node or a relationship."))
+      considerations("`id(null)` returns `null`.")
       query(
         """MATCH (a)
           |RETURN id(a)""".stripMargin, ResultAssertions((r) => {
@@ -130,8 +130,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("last()", "functions-last") {
       p(
         """`last()` returns the last element in a list.""".stripMargin)
-      function("last(expression)", ("list", "An expression that returns a list."))
-      considerations("`last(null)` returns `null`.", "If the last element in `list` is `null`, `last(list)` will return `null`.", "The type of the value returned will be that of the last element of `list`.")
+      function("last(expression)", "The type of the value returned will be that of the last element of `list`.", ("list", "An expression that returns a list."))
+      considerations("`last(null)` returns `null`.", "If the last element in `list` is `null`, `last(list)` will return `null`.")
       query(
         """MATCH (a)
           |WHERE a.name = 'Eskil'
@@ -145,8 +145,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("length()", "functions-length") {
       p(
         """`length()` returns the length of a path.""".stripMargin)
-      function("length(path)", ("path", "An expression that returns a path."))
-      considerations("`length(null)` returns `null`.", "The value returned is an Integer.")
+      function("length(path)", "An Integer.", ("path", "An expression that returns a path."))
+      considerations("`length(null)` returns `null`.")
       query(
         """MATCH p = (a)-->(b)-->(c)
           |WHERE a.name = 'Alice'
@@ -161,7 +161,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       p(
         """`properties()` returns a map containing all the properties of a node or relationship.
           |If the argument is already a map, it is returned unchanged.""".stripMargin)
-      function("properties(expression)", ("expression", "An expression that returns a node, a relationship, or a map."))
+      function("properties(expression)", "A Map.", ("expression", "An expression that returns a node, a relationship, or a map."))
       considerations("`properties(null)` returns `null`.")
       query(
         """CREATE (p:Person {name: 'Stefan', city: 'Berlin'})
@@ -174,8 +174,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("size()", "functions-size") {
       p(
         """`size()` returns the number of elements in a list.""".stripMargin)
-      function("size(list)", ("list", "An expression that returns a list."))
-      considerations("`size(null)` returns `null`.", "The value returned is an Integer.")
+      function("size(list)", "An Integer.", ("list", "An expression that returns a list."))
+      considerations("`size(null)` returns `null`.")
       query(
         """RETURN size(['Alice', 'Bob'])""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("size(['Alice', 'Bob'])" -> 2)))
@@ -203,8 +203,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("Size of string", "functions-size-of-string") {
       p(
         """`size()` returns the size of a string value.""".stripMargin)
-      function("size(string)", ("string", "An expression that returns a string value."))
-      considerations("`size(null)` returns `null`.", "The value returned is an Integer.")
+      function("size(string)", "An Integer.", ("string", "An expression that returns a string value."))
+      considerations("`size(null)` returns `null`.")
       query(
         """MATCH (a)
           |WHERE size(a.name) > 6
@@ -218,7 +218,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("startNode()", "functions-startnode") {
       p(
         """`startNode()` returns the start node of a relationship.""".stripMargin)
-      function("startNode(relationship)", ("relationship", "An expression that returns a relationship."))
+      function("startNode(relationship)", "A Node.", ("relationship", "An expression that returns a relationship."))
       considerations("`startNode(null)` returns `null`.")
       query(
         """MATCH (x:Developer)-[r]-()
@@ -231,8 +231,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("timestamp()", "functions-timestamp") {
       p(
         """`timestamp()` returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.""".stripMargin)
-      function("timestamp()")
-      considerations("`timestamp()` will return the same value during one entire query, even for long-running queries.", "The value returned is an Integer.")
+      function("timestamp()", "An Integer.")
+      considerations("`timestamp()` will return the same value during one entire query, even for long-running queries.")
       query(
         """RETURN timestamp()""".stripMargin, ResultAssertions((r) => {
           r.toList.head("timestamp()") match {
@@ -248,7 +248,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("toBoolean()", "functions-toboolean") {
       p(
         "`toBoolean()` casts a string value to a boolean value.")
-      function("toBoolean(expression)", ("expression", "An expression that returns a boolean or string value."))
+      function("toBoolean(expression)", "A Boolean.", ("expression", "An expression that returns a boolean or string value."))
       considerations("`toBoolean(null)` returns `null`.", "If `expression` is a boolean value, it will be returned unchanged.", "If the parsing fails, `null` will be returned.")
       query(
         """RETURN toBoolean('TRUE'), toBoolean('not a boolean')""".stripMargin, ResultAssertions((r) => {
@@ -260,7 +260,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("toFloat()", "functions-tofloat") {
       p(
         "`toFloat()` casts an integer or string value to a floating point number.".stripMargin)
-      function("toFloat(expression)", ("expression", "An expression that returns a numeric or string value."))
+      function("toFloat(expression)", "A Float.", ("expression", "An expression that returns a numeric or string value."))
       considerations("`toFloat(null)` returns `null`.", "If `expression` is a floating point number, it will be returned unchanged.", "If the parsing fails, `null` will be returned.")
       query(
         """RETURN toFloat('11.5'), toFloat('not a number')""".stripMargin, ResultAssertions((r) => {
@@ -272,7 +272,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("toInteger()", "functions-tointeger") {
       p(
         """`toInteger()` casts a floating point or string value to an integer value.""".stripMargin)
-      function("toInteger(expression)", ("expression", "An expression that returns a numeric or string value."))
+      function("toInteger(expression)", "An Integer.", ("expression", "An expression that returns a numeric or string value."))
       considerations("`toInteger(null)` returns `null`.", "If `expression` is an integer value, it will be returned unchanged.", "If the parsing fails, `null` will be returned.")
       query(
         """RETURN toInteger('42'), toInteger('not a number')""".stripMargin, ResultAssertions((r) => {
@@ -284,7 +284,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("type()", "functions-type") {
       p(
         """`type()` returns a string representation of the relationship type.""".stripMargin)
-      function("type(relationship)", ("relationship", "An expression that returns a relationship."))
+      function("type(relationship)", "A String.", ("relationship", "An expression that returns a relationship."))
       considerations("`type(null)` returns `null`.")
       query(
         """MATCH (n)-[r]->()

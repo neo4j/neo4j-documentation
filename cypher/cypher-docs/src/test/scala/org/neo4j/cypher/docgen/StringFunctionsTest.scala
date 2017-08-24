@@ -51,8 +51,8 @@ class StringFunctionsTest extends DocumentingTest {
         |* <<functions-trim,trim()>>""")
     section("left()", "functions-left") {
       p("`left()` returns a string containing the specified number of leftmost characters of the original string.")
-      function("left(original, length)", ("original", "An expression that returns a string."), ("n", "An expression that returns a positive integer."))
-      considerations("`left(null, length)` and `left(null, null)` both return `null`", "`left(original, null)` will raise an error.", "If `length` is not a positive integer, an error is raised.", "If `length` exceeds the size of `original`, `original` is returned.", "The value returned is a String.")
+      function("left(original, length)", "A String.", ("original", "An expression that returns a string."), ("n", "An expression that returns a positive integer."))
+      considerations("`left(null, length)` and `left(null, null)` both return `null`", "`left(original, null)` will raise an error.", "If `length` is not a positive integer, an error is raised.", "If `length` exceeds the size of `original`, `original` is returned.")
       query(
         """RETURN left('hello', 3)""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("left('hello', 3)" -> "hel")))
@@ -62,8 +62,8 @@ class StringFunctionsTest extends DocumentingTest {
     }
     section("ltrim()", "functions-ltrim") {
       p("`lTrim()` returns the original string with leading whitespace removed.")
-      function("lTrim(original)", ("original", "An expression that returns a string."))
-      considerations("`lTrim(null)` returns `null`", "The value returned is a String.")
+      function("lTrim(original)", "A String.", ("original", "An expression that returns a string."))
+      considerations("`lTrim(null)` returns `null`")
       query(
         """RETURN lTrim('   hello')""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("lTrim('   hello')" -> "hello")))
@@ -73,8 +73,8 @@ class StringFunctionsTest extends DocumentingTest {
     }
     section("replace()", "functions-replace") {
       p("`replace()` returns a string in which all occurrences of a specified string in the original string have been replaced by another string.")
-      function("replace(original, search, replace)", ("original", "An expression that returns a string."), ("search", "An expression that specifies the string to be replaced in `original`."), ("replace", "An expression that specifies the replacement string."))
-      considerations("If any argument is `null`, `null` will be returned.", "If `search` is not found in `original`, `original` will be returned.", "The value returned is a String.")
+      function("replace(original, search, replace)", "A String.", ("original", "An expression that returns a string."), ("search", "An expression that specifies the string to be replaced in `original`."), ("replace", "An expression that specifies the replacement string."))
+      considerations("If any argument is `null`, `null` will be returned.", "If `search` is not found in `original`, `original` will be returned.")
       query(
         """RETURN replace("hello", "l", "w")""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("replace(\"hello\", \"l\", \"w\")" -> "hewwo")))
@@ -84,8 +84,8 @@ class StringFunctionsTest extends DocumentingTest {
     }
     section("reverse()", "functions-reverse") {
       p("`reverse()` returns a string in which all characters in the original string have been reversed.")
-      function("reverse(original)", ("original", "An expression that returns a string."))
-      considerations("`reverse(null)` returns `null`.", "The value returned is a String.")
+      function("reverse(original)", "A String.", ("original", "An expression that returns a string."))
+      considerations("`reverse(null)` returns `null`.")
       query(
         """RETURN reverse('anagram')""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("reverse('anagram')" -> "margana")))
@@ -95,8 +95,8 @@ class StringFunctionsTest extends DocumentingTest {
     }
     section("right()", "functions-right") {
       p("`right()` returns a string containing the specified number of rightmost characters of the original string.")
-      function("right(original, length)", ("original", "An expression that returns a string."), ("n", "An expression that returns a positive integer."))
-      considerations("`right(null, length)` and `right(null, null)` both return `null`", "`right(original, null)` will raise an error.", "If `length` is not a positive integer, an error is raised.", "If `length` exceeds the size of `original`, `original` is returned.", "The value returned is a String.")
+      function("right(original, length)", "A String.", ("original", "An expression that returns a string."), ("n", "An expression that returns a positive integer."))
+      considerations("`right(null, length)` and `right(null, null)` both return `null`", "`right(original, null)` will raise an error.", "If `length` is not a positive integer, an error is raised.", "If `length` exceeds the size of `original`, `original` is returned.")
       query(
         """RETURN right('hello', 3)""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("right('hello', 3)" -> "llo")))
@@ -106,8 +106,8 @@ class StringFunctionsTest extends DocumentingTest {
     }
     section("rtrim()", "functions-rtrim") {
       p("`rTrim()` returns the original string with trailing whitespace removed.")
-      function("rTrim(original)", ("original", "An expression that returns a string."))
-      considerations("`rTrim(null)` returns `null`", "The value returned is a String.")
+      function("rTrim(original)", "A String.", ("original", "An expression that returns a string."))
+      considerations("`rTrim(null)` returns `null`")
       query(
         """RETURN rTrim('hello   ')""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("rTrim('hello   ')" -> "hello")))
@@ -117,8 +117,8 @@ class StringFunctionsTest extends DocumentingTest {
     }
     section("split()", "functions-split") {
       p("`split()` returns a list of strings resulting from the splitting of the original string around matches of a given delimiter.")
-      function("split(original, splitDelimiter)", ("original", "An expression that returns a string."), ("splitDelimiter", "The string with which to split `original`."))
-      considerations("`split(null, splitDelimiter)` and `split(original, null)` both return `null`", "The value returned is a list of strings.")
+      function("split(original, splitDelimiter)", "A list of Strings.", ("original", "An expression that returns a string."), ("splitDelimiter", "The string with which to split `original`."))
+      considerations("`split(null, splitDelimiter)` and `split(original, null)` both return `null`")
       query(
         """RETURN split('one,two', ',')""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("split('one,two', ',')" -> List("one", "two"))))
@@ -129,8 +129,8 @@ class StringFunctionsTest extends DocumentingTest {
     section("substring()", "functions-substring") {
       p(
         """`substring()` returns a substring of the original string, beginning  with a 0-based index start and length.""".stripMargin)
-      function("substring(original, start [, length])", ("original", "An expression that returns a string."), ("start", "An expression that returns a positive integer, denoting the position at which the substring will begin."), ("length", "An expression that returns a positive integer, denoting how many characters of `original` will be returned."))
-      considerations("`start` uses a zero-based index.", "If `length` is omitted, the function returns the substring starting at the position given by `start` and extending to the end of `original`.", "If `original` is `null`, `null` is returned.", "If either `start` or `length` is `null` or a negative integer, an error is raised.", "If `start` is `0`, the substring will start at the beginning of `original`.", "If `length` is `0`, the empty string will be returned.", "The value returned is a String.")
+      function("substring(original, start [, length])", "A String.", ("original", "An expression that returns a string."), ("start", "An expression that returns a positive integer, denoting the position at which the substring will begin."), ("length", "An expression that returns a positive integer, denoting how many characters of `original` will be returned."))
+      considerations("`start` uses a zero-based index.", "If `length` is omitted, the function returns the substring starting at the position given by `start` and extending to the end of `original`.", "If `original` is `null`, `null` is returned.", "If either `start` or `length` is `null` or a negative integer, an error is raised.", "If `start` is `0`, the substring will start at the beginning of `original`.", "If `length` is `0`, the empty string will be returned.")
       query(
         """RETURN substring('hello', 1, 3), substring('hello', 2)""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("substring('hello', 1, 3)" -> "ell", "substring('hello', 2)" -> "llo")))
@@ -141,8 +141,8 @@ class StringFunctionsTest extends DocumentingTest {
     section("toLower()", "functions-tolower") {
       p(
         """`toLower()` returns the original string in lowercase.""".stripMargin)
-      function("toLower(original)", ("original", "An expression that returns a string."))
-      considerations("`toLower(null)` returns `null`", "The value returned is a String.")
+      function("toLower(original)", "A String.", ("original", "An expression that returns a string."))
+      considerations("`toLower(null)` returns `null`")
       query(
         """RETURN toLower('HELLO')""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("toLower('HELLO')" -> "hello")))
@@ -153,8 +153,8 @@ class StringFunctionsTest extends DocumentingTest {
     section("toString()", "functions-tostring") {
       p(
         """`toString()` casts an integer, float or boolean value to a string.""".stripMargin)
-      function("toString(expression)", ("expression", "An expression that returns a number, a boolean, or a string."))
-      considerations("`toString(null)` returns `null`", "If `expression` is a string, it will be returned unchanged.", "The value returned is a String.")
+      function("toString(expression)", "A String.", ("expression", "An expression that returns a number, a boolean, or a string."))
+      considerations("`toString(null)` returns `null`", "If `expression` is a string, it will be returned unchanged.")
       query(
         """RETURN toString(11.5), toString('already a string'), toString(true)""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("toString(11.5)" -> "11.5", "toString('already a string')" -> "already a string", "toString(true)" -> "true")))
@@ -165,8 +165,8 @@ class StringFunctionsTest extends DocumentingTest {
     section("toUpper()", "functions-toupper") {
       p(
         """`toUpper()` returns the original string in uppercase.""".stripMargin)
-      function("toUpper(original)", ("original", "An expression that returns a string."))
-      considerations("`toUpper(null)` returns `null`", "The value returned is a String.")
+      function("toUpper(original)", "A String.", ("original", "An expression that returns a string."))
+      considerations("`toUpper(null)` returns `null`")
       query(
         """RETURN toUpper('hello')""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("toUpper('hello')" -> "HELLO")))
@@ -177,8 +177,8 @@ class StringFunctionsTest extends DocumentingTest {
     section("trim()", "functions-trim") {
       p(
         """`trim()` returns the original string with leading and trailing whitespace removed.""".stripMargin)
-      function("trim(original)", ("original", "An expression that returns a string."))
-      considerations("`trim(null)` returns `null`", "The value returned is a String.")
+      function("trim(original)", "A String.", ("original", "An expression that returns a string."))
+      considerations("`trim(null)` returns `null`")
       query(
         """RETURN trim('   hello   ')""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("trim('   hello   ')" -> "hello")))

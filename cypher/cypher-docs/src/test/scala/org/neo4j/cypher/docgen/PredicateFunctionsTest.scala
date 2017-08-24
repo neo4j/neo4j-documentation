@@ -53,8 +53,7 @@ class PredicateFunctionsTest extends DocumentingTest {
     graphViz()
     section("all()", "functions-all") {
       p("`all()` returns true if the predicate holds for all elements in a given list.")
-      function("all(variable IN list WHERE predicate)", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
-      considerations("The value returned is a Boolean.")
+      function("all(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (a)-[*1..3]->(b)
           |WHERE a.name = 'Alice' AND b.name = 'Daniel'
@@ -68,8 +67,7 @@ class PredicateFunctionsTest extends DocumentingTest {
     }
     section("any()", "functions-any") {
       p("`any()` returns true if the predicate holds for at least one element in a given list.")
-      function("any(variable IN list WHERE predicate)", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
-      considerations("The value returned is a Boolean.")
+      function("any(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH (a)
           |WHERE a.name = 'Eskil'
@@ -84,8 +82,7 @@ class PredicateFunctionsTest extends DocumentingTest {
     }
     section("exists()", "functions-exists") {
       p("`exists()` returns true if a match for a given pattern exists in the graph, or if a specified property exists in the node, relationship or map.")
-      function("exists(pattern-or-property)", ("pattern-or-property", "A pattern or a property (in the form 'variable.prop')."))
-      considerations("The value returned is a Boolean.")
+      function("exists(pattern-or-property)", "A Boolean.", ("pattern-or-property", "A pattern or a property (in the form 'variable.prop')."))
       query(
         """MATCH (n)
           |WHERE exists(n.name)
@@ -98,8 +95,7 @@ class PredicateFunctionsTest extends DocumentingTest {
     }
     section("none()", "functions-none") {
       p("`none()` returns true if the predicate holds for no element in a given list.")
-      function("none(variable IN list WHERE predicate)", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
-      considerations("The value returned is a Boolean.")
+      function("none(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (n)-[*1..3]->(b)
           |WHERE n.name = 'Alice'
@@ -112,8 +108,7 @@ class PredicateFunctionsTest extends DocumentingTest {
     }
     section("single()", "functions-single") {
       p("`single()` returns true if the predicate holds for exactly one of the elements in a given list.")
-      function("single(variable IN list WHERE predicate)", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
-      considerations("The value returned is a Boolean.")
+      function("single(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (n)-->(b)
           |WHERE n.name = 'Alice'
