@@ -31,11 +31,11 @@ These functions return either true or false for the arguments given.
 [options="header"]
 |===
 |Function                         |   Description
-|<<functions-all,all()>>          | Tests whether a predicate holds for all elements in the list.
-|<<functions-any,any()>>          | Tests whether a predicate holds for at least one element in the list.
-|<<functions-exists,exists()>>    | Returns true if a match for the pattern exists in the graph, or the property exists in the node, relationship or map.
-|<<functions-none,none()>>        | Returns true if the predicate holds for no element in the list.
-|<<functions-single,single()>>    | Returns true if the predicate holds for exactly one of the elements in the list.
+|<<functions-all,all()>>          | Tests whether a predicate holds for all elements in a given list.
+|<<functions-any,any()>>          | Tests whether a predicate holds for at least one element in a given list.
+|<<functions-exists,exists()>>    | Returns true if a match for a given pattern exists in the graph, or if a specified property exists in the node, relationship or map.
+|<<functions-none,none()>>        | Returns true if the predicate holds for no element in a given list.
+|<<functions-single,single()>>    | Returns true if the predicate holds for exactly one of the elements in a given list.
 |===
 
 
@@ -47,21 +47,21 @@ These functions return a single value.
 [options="header"]
 |===
 | Function                                                            | Description
-| <<functions-coalesce,coalesce()>>                                   | Returns the first non-`null` value in the list of expressions passed to it.
-| <<functions-endnode,endNode()>>                                     | Returns the last node of a relationship.
+| <<functions-coalesce,coalesce()>>                                   | Returns the first non-`null` value in a given list of expressions.
+| <<functions-endnode,endNode()>>                                     | Returns the end node of a relationship.
 | <<functions-head,head()>>                                           | Returns the first element in a list.
-| <<functions-id,id()>>                                               | Returns the id of the relationship or node.
+| <<functions-id,id()>>                                               | Returns the id of a relationship or node.
 | <<functions-last,last()>>                                           | Returns the last element in a list.
 | <<functions-length,length()>>                                       | Returns the length of a path.
-| <<functions-properties,properties()>>                               | If the argument is a node or a relationship, the returned map is a map of its properties.
+| <<functions-properties,properties()>>                               | Returns a map containing all the properties of a node or relationship.
 | <<functions-size,size()>>                                           | Returns the number of items in a list.
 | <<functions-size-of-pattern-expression,Size of pattern expression>> | Returns the number of sub-graphs matching the pattern expression.
 | <<functions-size-of-string,Size of string>>                         | Returns the size of a string.
-| <<functions-startnode,startNode()>>                                 | Returns the first node of a relationship.
+| <<functions-startnode,startNode()>>                                 | Returns the start node of a relationship.
 | <<functions-timestamp,timestamp()>>                                 | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
-| <<functions-toboolean,toBoolean()>>                                 | Converts the argument to a boolean and returns the result.
-| <<functions-tofloat,toFloat()>>                                     | Converts the argument to a float and returns the result.
-| <<functions-tointeger,toInteger()>>                                 | Converts the argument to an integer and returns the result.
+| <<functions-toboolean,toBoolean()>>                                 | Casts a string value to a boolean value.
+| <<functions-tofloat,toFloat()>>                                     | Casts an integer or string value to a floating point number.
+| <<functions-tointeger,toInteger()>>                                 | Casts a floating point or string value to an integer value.
 | <<functions-type,type()>>                                           | Returns a string representation of the relationship type.
 |===
 
@@ -74,16 +74,16 @@ These functions take multiple values as arguments, and calculate and return an a
 [options="header"]
 |===
 |Function                                       | Description
-|<<functions-avg,avg()>>                        | Returns the average of a numeric column.
-|<<functions-collect,collect()>>                | Returns a list containing all collected values.
-|<<functions-count,count()>>                    | Returns the number of rows.
-|<<functions-max,max()>>                        | Returns the highest value in a numeric column.
-|<<functions-min,min()>>                        | Returns the lowest value in a numeric column.
+|<<functions-avg,avg()>>                        | Returns the average of a set of numeric values.
+|<<functions-collect,collect()>>                | Returns a list containing the values returned by a given expression.
+|<<functions-count,count()>>                    | Returns the number of values or rows.
+|<<functions-max,max()>>                        | Returns the maximum value in a set of values.
+|<<functions-min,min()>>                        | Returns the minimum value in a set of values.
 |<<functions-percentilecont,percentileCont()>>  | Returns the percentile of a given value over a group using linear interpolation.
 |<<functions-percentiledisc,percentileDisc()>>  | Returns the nearest value to a given percentile over a group using a rounding method.
 |<<functions-stdev,stDev()>>                    | Returns the standard deviation for a given value over a group for a sample of a population.
 |<<functions-stdevp,stDevP()>>                  | Returns the standard deviation for a given value over a group for an entire population.
-|<<functions-sum,sum()>>                        | Returns the sum of a numeric column.
+|<<functions-sum,sum()>>                        | Returns the sum of a set of non-`null` numeric values.
 |===
 
 
@@ -96,15 +96,15 @@ Further details and examples of lists may be found in <<cypher-lists>>.
 [options="header"]
 |===
 |Function                                       | Description
-|<<functions-extract,extract()>>                | Returns a single property, or the value of a function from a list of nodes or relationships.
-|<<functions-filter,filter()>>                  | Returns all the elements in a list complying with a predicate.
-|<<functions-keys,keys()>>                      | Returns a list of string representations for the property names of a node, relationship, or map.
-|<<functions-labels,labels()>>                  | Returns a list of string representations for the labels attached to a node.
-|<<functions-nodes,nodes()>>                    | Returns all nodes in a path.
-|<<functions-range,range()>>                    | Returns numerical values in a range.
-|<<functions-reduce,reduce()>>                  | Runs an expression against individual elements of a list, storing the result of the expression in an accumulator.
-|<<functions-relationships,relationships()/rels()>>    | Returns all relationships in a path.
-|<<functions-tail,tail()>>                      | Returns all but the first element in a list.
+|<<functions-extract,extract()>>                | Returns a list `l~result~` containing the values resulting from an expression which has been applied to each element in a list `list`.
+|<<functions-filter,filter()>>                  | Returns a list `l~result~` containing all the elements from a list `list` that comply with a given predicate.
+|<<functions-keys,keys()>>                      | Returns a list containing the string representations for all the property names of a node, relationship, or map.
+|<<functions-labels,labels()>>                  | Returns a list containing the string representations for all the labels of a node.
+|<<functions-nodes,nodes()>>                    | Returns a list containing all the nodes in a path.
+|<<functions-range,range()>>                    | Returns a list comprising all integral values within a range bounded by a start and end value, where the difference between any two consecutive values is constant.
+|<<functions-reduce,reduce()>>                  | Returns the value resulting from the application of an expression on each successive element in a list in conjunction with the result of the computation thus far.
+|<<functions-relationships,relationships()/rels()>>    | Returns a list containing all the relationships in a path.
+|<<functions-tail,tail()>>                      | Returns a list `l~result~` containing all the elements, excluding the first one, from a list `list`.
 |===
 
 
@@ -116,12 +116,12 @@ These functions all operate on numerical expressions only, and will return an er
 [options="header"]
 |===
 | Function                     | Description
-| <<functions-abs, abs()>>     | Returns the absolute value of a number.
-| <<functions-ceil, ceil()>>   | Returns the smallest integer greater than or equal to the argument.
-| <<functions-floor, floor()>> | Returns the greatest integer less than or equal to the expression.
-| <<functions-rand, rand()>>   | Returns a random number in the range from 0 (inclusive) to 1 (exclusive), `[0, 1)`.
-| <<functions-round, round()>> | Returns the numerical expression, rounded to the nearest integer.
-| <<functions-sign, sign()>>   | Returns the signum of a number -- zero if the expression is zero, `-1` for any negative number, and `1` for any positive number.
+| <<functions-abs, abs()>>     | Returns the absolute value of a given number.
+| <<functions-ceil, ceil()>>   | Returns the smallest floating point number greater than or equal to a given number, and which is equal to an integer.
+| <<functions-floor, floor()>> | Returns the largest floating point number less than or equal to a given number, and which is equal to an integer.
+| <<functions-rand, rand()>>   | Returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. [0,1).
+| <<functions-round, round()>> | Returns the value of a given number rounded to the nearest integer.
+| <<functions-sign, sign()>>   | Returns the signum of a given number: `0` if the number is `0`, `-1` for any negative number, and `1` for any positive number.
 |===
 
 
@@ -135,8 +135,8 @@ These functions all operate on numerical expressions only, and will return an er
 | Function                     | Description
 | <<functions-e, e()>>         | Returns the base of the natural logarithm, `e`.
 | <<functions-exp, exp()>>     | Returns `e^n`, where `e` is the base of the natural logarithm, and `n` is the value of the argument expression.
-| <<functions-log, log()>>     | Returns the natural logarithm of the expression.
-| <<functions-log10, log10()>> | Returns the common logarithm (base 10) of the expression.
+| <<functions-log, log()>>     | Returns the natural logarithm of a number.
+| <<functions-log10, log10()>> | Returns the common logarithm (base 10) of a number.
 | <<functions-sqrt, sqrt()>>   | Returns the square root of a number.
 |===
 
@@ -151,18 +151,18 @@ All trigonometric functions operate on radians, unless otherwise specified.
 [options="header"]
 |===
 | Function                           | Description
-| <<functions-acos, acos()>>         | Returns the arccosine of the expression.
-| <<functions-asin, asin()>>         | Returns the arcsine of the expression.
-| <<functions-atan, atan()>>         | Returns the arctangent of the expression.
-| <<functions-atan2, atan2()>>       | Returns the arctangent2 of a set of coordinates.
-| <<functions-cos, cos()>>           | Returns the cosine of the expression.
-| <<functions-cot, cot()>>           | Returns the cotangent of the expression.
+| <<functions-acos, acos()>>         | Returns the arccosine of a number in radians.
+| <<functions-asin, asin()>>         | Returns the arcsine of a number in radians.
+| <<functions-atan, atan()>>         | Returns the arctangent of a number in radians.
+| <<functions-atan2, atan2()>>       | Returns the arctangent2 of a set of coordinates in radians.
+| <<functions-cos, cos()>>           | Returns the cosine of a number.
+| <<functions-cot, cot()>>           | Returns the cotangent of a number.
 | <<functions-degrees, degrees()>>   | Converts radians to degrees.
-| <<functions-haversin, haversin()>> | Returns half the versine of the expression.
+| <<functions-haversin, haversin()>> | Returns half the versine of a number.
 | <<functions-pi, pi()>>             | Returns the mathematical constant _pi_.
 | <<functions-radians, radians()>>   | Converts degrees to radians.
-| <<functions-sin, sin()>>           | Returns the sine of the expression.
-| <<functions-tan, tan()>>           | Returns the tangent of the expression.
+| <<functions-sin, sin()>>           | Returns the sine of a number.
+| <<functions-tan, tan()>>           | Returns the tangent of a number.
 |===
 
 
@@ -174,18 +174,18 @@ These functions are used to manipulate strings or to create a string representat
 [options="header"]
 |===
 |Function                               |   Description
-|<<functions-left,left()>>              | Returns a string containing the left n characters of the original string.
-|<<functions-ltrim,lTrim()>>            | Returns the original string with whitespace removed from the left side.
-|<<functions-replace,replace()>>        | Returns a string with the search string replaced by the replace string, replacing all occurrences.
-|<<functions-reverse,reverse()>>        | Returns the original string reversed.
-|<<functions-right,right()>>            | Returns a string containing the right n characters of the original string.
-|<<functions-rtrim,rTrim()>>            | Returns the original string with whitespace removed from the right side.
-|<<functions-split,split()>>            | Returns the sequence of strings which are delimited by split patterns.
-|<<functions-substring,substring()>>    | Returns a substring of the original, with a 0-based index start and length.
+|<<functions-left,left()>>              | Returns a string containing the specified number of leftmost characters of the original string.
+|<<functions-ltrim,lTrim()>>            | Returns the original string with leading whitespace removed.
+|<<functions-replace,replace()>>        | Returns a string in which all occurrences of a specified string in the original string have been replaced by another string.
+|<<functions-reverse,reverse()>>        | Returns a string in which all characters in the original string have been reversed.
+|<<functions-right,right()>>            | Returns a string containing the specified number of rightmost characters of the original string.
+|<<functions-rtrim,rTrim()>>            | Returns the original string with trailing whitespace removed.
+|<<functions-split,split()>>            | Returns a list of strings resulting from the splitting of the original string around matches of a given delimiter.
+|<<functions-substring,substring()>>    | Returns a substring of the original string, beginning  with a 0-based index start and length.
 |<<functions-tolower,toLower()>>            | Returns the original string in lowercase.
-|<<functions-tostring,toString()>>      | Converts the argument to a string.
+|<<functions-tostring,toString()>>      | Casts an integer, float or boolean value to a string.
 |<<functions-toupper,toUpper()>>            | Returns the original string in uppercase.
-|<<functions-trim,trim()>>              | Returns the original string with whitespace removed from both sides.
+|<<functions-trim,trim()>>              | Returns the original string with leading and trailing whitespace removed.
 |===
 
 
@@ -197,9 +197,9 @@ These functions are used to specify points in a 2D coordinate system and to calc
 [options="header"]
 |===
 |Function                               |   Description
-|<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two given points.
+|<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two given points in the same CRS.
 |<<functions-point-cartesian,point() - cartesian 2D>>            | Returns a point object, given two coordinate values in the cartesian coordinate system.
-|<<functions-point,point() - WGS 84>>            | Returns a point object, given two coordinate valuesin the WGS 84 coordinate system.
+|<<functions-point,point() - WGS 84>>            | Returns a point object, given two coordinate values in the WGS 84 coordinate system.
 |===
 
 //Predicate functions
