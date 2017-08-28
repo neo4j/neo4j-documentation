@@ -48,7 +48,7 @@ class SpatialFunctionsTest extends DocumentingTest {
     graphViz()
     section("distance()", "functions-distance") {
       p(
-        """`distance()` returns the geodesic distance between two points in the same CRS.
+        """`distance()` returns a floating point number representing the geodesic distance between two points in the same CRS.
           |If the points are in the _cartesian_ CRS, then the units of the returned distance will be the same as the units of the points, calculated using Pythagoras' theorem.
           |If the points are in the _WGS-84_ CRS, then the units of the returned distance will be meters, based on the haversine formula over a spherical earth approximation.
         """.stripMargin)
