@@ -24,6 +24,9 @@
     <integration-test-phase>integration-test</integration-test-phase>
     <docs-plugin.filter>false</docs-plugin.filter>
     <docs-plugin.skip>false</docs-plugin.skip>
+    <test.runner.jvm.settings.additional>
+      -Dorg.neo4j.kernel.impl.api.KernelStatement.trackStatements=false
+    </test.runner.jvm.settings.additional>
   </properties>
 
   <modules>
