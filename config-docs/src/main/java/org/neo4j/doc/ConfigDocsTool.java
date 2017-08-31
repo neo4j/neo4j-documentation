@@ -51,13 +51,15 @@ public class ConfigDocsTool {
         Path outFile = orphans.size() == 1 ? Paths.get(orphans.get(0)) : null;
 
         String id = arguments.has("id") || warnMissingOption("ID", "--id=my-id", DEFAULT_ID)
-                ? DEFAULT_ID : arguments.get("id");
+                ? arguments.get("id") : DEFAULT_ID;
         String title = arguments.has("title") || warnMissingOption("title", "--title=my-title", DEFAULT_TITLE)
-                ? DEFAULT_TITLE : arguments.get("title");
+                ? arguments.get("title") : DEFAULT_TITLE;
         String idPrefix = arguments.has("id-prefix") || warnMissingOption("ID prefix", "--id-prefix=my-id-prefix", DEFAULT_ID_PREFIX)
-                ? DEFAULT_ID_PREFIX : arguments.get("id-prefix");
+                ? arguments.get("id-prefix") : DEFAULT_ID_PREFIX;
 
         Predicate<ConfigValue> filter = filters(arguments);
+
+        System.out.printf("[+++] id=%s  title=%s  idPrefix=%s%n", id, title, idPrefix);
 
         try {
             String doc = new ConfigDocsGenerator().document(filter, id, title, idPrefix);
@@ -115,6 +117,9 @@ public class ConfigDocsTool {
                 // Include settings matching this prefix (that are in this namespace).
                 case "prefix":
                     return Stream.of(v -> v.name().startsWith(e.getValue()));
+                // Include only dynamic settings
+                case "dynamic-only":
+                    return Stream.of(v -> v.dynamic());
                 default:
                     return Stream.empty();
             }
@@ -124,7 +129,7 @@ public class ConfigDocsTool {
 
     private static boolean warnMissingOption(String name, String example, String defaultValue) {
         System.out.printf("    [x] No %s provided (%s), using default: '%s'%n", name, example, defaultValue);
-        return true;
+        return false;
     }
 
     private static void printUsage() {
@@ -138,6 +143,7 @@ public class ConfigDocsTool {
         System.out.printf("Filter options:%n");
         System.out.printf("    %-30s%s [%s]%n", "--deprecated", "Include deprecated settings", true);
         System.out.printf("    %-30s%s [%s]%n", "--deprecated-only", "Include only deprecated settings", false);
+        System.out.printf("    %-30s%s [%s]%n", "--dynamic-only", "Include only dynamic settings", false);
         System.out.printf("    %-30s%s [%s]%n", "--name=<name>", "Single setting by name", "");
         System.out.printf("    %-30s%s [%s]%n", "--names=<name1>,<name2>", "Multiple settings by name", "");
         System.out.printf("    %-30s%s [%s]%n", "--prefix=<prefix>", "All settings whose namespace match <prefix>", "");
