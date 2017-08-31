@@ -36,6 +36,8 @@ public interface SettingDescription {
 
     boolean hasReplacement();
 
+    boolean isDynamic();
+
     String replacedBy();
 
     String defaultValue();
