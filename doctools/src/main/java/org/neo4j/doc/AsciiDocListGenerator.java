@@ -42,6 +42,7 @@ public class AsciiDocListGenerator
     {
         StringBuilder sb = new StringBuilder( 200 * items.size() );
         StringBuilder print = new StringBuilder( 100 * items.size() );
+        sb.append(String.format("// tag::%s[]%n", listId));
         if ( listId != null )
         {
             sb.append( "[[" ).append( listId ).append( String.format( "]]%n" ) );
@@ -90,6 +91,7 @@ public class AsciiDocListGenerator
         print.append( SettingsDocumenter.ENDIF )
             .append( System.lineSeparator() );
         sb.append( print.toString() );
+        sb.append(String.format("// end::%s[]%n%n", listId));
         return sb.toString();
     }
 

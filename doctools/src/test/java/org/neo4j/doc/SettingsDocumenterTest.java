@@ -59,6 +59,7 @@ public class SettingsDocumenterTest
         // in which case you should trust your best judgement, and change the assertion
         // below accordingly.
         assertThat( result, equalTo( String.format(
+            "// tag::config-org.neo4j.doc.SettingsDocumenterTest-SimpleSettings[]%n" +
             "[[config-org.neo4j.doc.SettingsDocumenterTest-SimpleSettings]]%n" +
             ".List of configuration settings%n" +
             "ifndef::nonhtmloutput[]%n" +
@@ -76,6 +77,8 @@ public class SettingsDocumenterTest
             "endif::nonhtmloutput[]%n" +
             "%n" +
             "%n" +
+            "// end::config-org.neo4j.doc.SettingsDocumenterTest-SimpleSettings[]%n%n" +
+            "// tag::config-org.neo4j.doc.SettingsDocumenterTest-SimpleSettings-deprecated[]%n" +
             "[[config-org.neo4j.doc.SettingsDocumenterTest-SimpleSettings-deprecated]]%n" +
             ".Deprecated settings%n" +
             "ifndef::nonhtmloutput[]%n" +
@@ -91,6 +94,7 @@ public class SettingsDocumenterTest
             "endif::nonhtmloutput[]%n" +
             "%n" +
             "%n" +
+            "// end::config-org.neo4j.doc.SettingsDocumenterTest-SimpleSettings-deprecated[]%n%n" +
             "ifndef::nonhtmloutput[]%n" +
             "[[config_public.default]]%n" +
             ".public.default%n" +
@@ -155,7 +159,8 @@ public class SettingsDocumenterTest
             "|Description a|Public nodefault.%n" +
             "|Valid values a|public.nodefault is a string%n" +
             "|===%n" +
-            "endif::nonhtmloutput[]%n%n" ) ));
+            "endif::nonhtmloutput[]%n%n"
+        ) ));
     }
 
     @Test
@@ -166,6 +171,7 @@ public class SettingsDocumenterTest
 
         // then
         assertThat( result, equalTo( String.format(
+                "// tag::config-org.neo4j.doc.SettingsDocumenterTest-Giraffe[]%n" +
                 "[[config-org.neo4j.doc.SettingsDocumenterTest-Giraffe]]%n" +
                 ".Use this group to configure giraffes%n" +
                 "ifndef::nonhtmloutput[]%n" +
@@ -185,6 +191,7 @@ public class SettingsDocumenterTest
                 "endif::nonhtmloutput[]%n" +
                 "%n" +
                 "%n" +
+                "// end::config-org.neo4j.doc.SettingsDocumenterTest-Giraffe[]%n%n" +
                 "ifndef::nonhtmloutput[]%n" +
                 "[[config_group.key.spot_count]]%n" +
                 ".group.(key).spot_count%n" +

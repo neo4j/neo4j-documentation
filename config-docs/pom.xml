@@ -178,7 +178,6 @@
                       classpathref="maven.compile.classpath" failonerror="true">
                   <arg value="--id=reference-dynamic-settings-reference" />
                   <arg value="--title=Dynamic settings reference" />
-                  <arg value="--id-prefix=dynamic-setting_" />
                   <arg value="--dynamic-only=true" />
                   <arg file="${project.build.directory}/docs/ops/dynamic-settings.adoc" />
                 </java>
