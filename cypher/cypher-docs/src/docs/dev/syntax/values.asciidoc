@@ -3,7 +3,12 @@
 
 Cypher provides first class support for a number of data types.
 
-These fall into several categories.
+These fall into several categories which will be described in detail in the following subsections:
+
+* Property types
+* Structural types
+* Composite types
+
 
 == Property types
 
@@ -26,6 +31,7 @@ NOTE: Homogeneous lists of simple types can also be stored as properties, althou
 
 NOTE: Cypher also provides pass-through support for byte arrays, which can be stored as property values.
 Byte arrays are _not_ considered a first class data type by Cypher, so do not have a literal representation.
+
 
 == Structural types
 
@@ -51,6 +57,7 @@ Structural types comprise:
 NOTE: Nodes, relationships, and paths are returned as a result of pattern matching.
 
 NOTE: Labels are not values but are a form of pattern syntax.
+
 
 [[composite-types]]
 == Composite types

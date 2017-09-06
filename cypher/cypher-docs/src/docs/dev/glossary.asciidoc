@@ -39,7 +39,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-merge-on-create-on-match,ON CREATE>>   | Reading/Writing | Used in conjunction with `MERGE`, specifying the actions to take if the pattern needs to be created.
 |<<query-merge-on-create-on-match,ON MATCH>>    | Reading/Writing | Used in conjunction with `MERGE`, specifying the actions to take if the pattern already exists.
 |<<query-optional-match,OPTIONAL MATCH>>    | Reading      |  Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
-|<<query-order,ORDER BY [ASC[ENDING] \| DESC[ENDING]]>>                       | Reading sub-clause | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in either ascending [the default] or descending order.
+|<<query-order,ORDER BY [ASC[ENDING] \| DESC[ENDING]]>>                       | Reading sub-clause | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in either ascending (the default) or descending order.
 |<<query-remove,REMOVE>>                    | Writing     |  Remove properties and labels from nodes and relationships.
 |<<query-return,RETURN ... [AS]>>                    | Projecting   |  Defines what to include in the query result set.
 |<<query-set,SET>>                          | Writing     |  Update labels on nodes and properties on nodes and relationships.
