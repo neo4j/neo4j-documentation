@@ -38,13 +38,14 @@ This set is refined and augmented by subsequent parts of the query.
 **Projecting clauses**
 
 These comprise clauses that define which expressions to return in the result set.
+The returned expressions may all be aliased using `AS`.
 
 [options="header"]
 |===
 |Clause                      |   Description
-|<<query-return,RETURN>>     | Defines what to include in the query result set.
-|<<query-with,WITH>>         | Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
-|<<query-unwind,UNWIND>>                    | Expands a list into a sequence of rows.
+|<<query-return,RETURN ... [AS]>>     | Defines what to include in the query result set.
+|<<query-with,WITH ... [AS]>>         | Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
+|<<query-unwind,UNWIND ... [AS]>>                    | Expands a list into a sequence of rows.
 |===
 
 
@@ -57,7 +58,7 @@ These comprise sub-clauses that must operate as part of reading clauses.
 |===
 |Sub-clause                                         | Description
 |<<query-where,WHERE>>                          | Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.
-|<<query-order,ORDER BY>>                       | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in particular way.
+|<<query-order,ORDER BY [ASC[ENDING] \| DESC[ENDING]]>>                       | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in either ascending (the default) or descending order.
 |<<query-skip,SKIP>>                            | Defines from which row to start including the rows in the output.
 |<<query-limit,LIMIT>>                          | Constrains the number of rows in the output.
 |===

@@ -6,20 +6,20 @@
 This section comprises a glossary of all the keywords -- grouped by category and thence ordered lexicographically -- in the Cypher query language.
 --
 
-* <<glossary-clauses,Clauses>>
-* <<glossary-operators,Operators>>
-* <<glossary-functions,Functions>>
-* <<glossary-expressions,Expressions>>
+* <<glossary-clauses, Clauses>>
+* <<glossary-operators, Operators>>
+* <<glossary-functions, Functions>>
+* <<glossary-expressions, Expressions>>
 
 
 [[glossary-clauses]]
-== <<query-clause,Clauses>>
+== <<query-clause, Clauses>>
 
 [options="header"]
 |===
 |Clause                                     | Type      |   Description
-|<<query-call,CALL [...YIELD]>>                        | Reading/Writing   | Invoke a procedure deployed in the database.
-|<<query-create,CREATE>>                    | Writing     |  Create nodes and relationships.
+|<<query-call, CALL [...YIELD]>>                        | Reading/Writing   | Invoke a procedure deployed in the database.
+|<<query-create, CREATE>>                    | Writing     |  Create nodes and relationships.
 |<<constraints-create-node-property-existence-constraint, CREATE CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>  | Schema   | Create a constraint ensuring that all nodes with a particular label have a certain property.
 |<<constraints-create-relationship-property-existence-constraint, CREATE CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>  | Schema   | Create a constraint ensuring that all relationship with a particular type have a certain property.
 |<<constraints-create-uniqueness-constraint, CREATE CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>  |  Schema | Create a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
@@ -43,26 +43,26 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-merge-on-create-on-match, ON CREATE>>   | Reading/Writing | Used in conjunction with `MERGE`, specifying the actions to take if the pattern needs to be created.
 |<<query-merge-on-create-on-match, ON MATCH>>    | Reading/Writing | Used in conjunction with `MERGE`, specifying the actions to take if the pattern already exists.
 |<<query-optional-match, OPTIONAL MATCH>>    | Reading      |  Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
-|<<query-order, ORDER BY>>                       | Reading sub-clause | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in particular way.
+|<<query-order, ORDER BY [ASC[ENDING] \| DESC[ENDING]]>>                       | Reading sub-clause | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in either ascending (the default) or descending order.
 |<<query-remove, REMOVE>>                    | Writing     |  Remove properties and labels from nodes and relationships.
-|<<query-return, RETURN>>                    | Projecting   |  Defines what to include in the query result set.
+|<<query-return, RETURN ... [AS]>>                    | Projecting   |  Defines what to include in the query result set.
 |<<query-set, SET>>                          | Writing     |  Update labels on nodes and properties on nodes and relationships.
 |<<query-skip, SKIP>>                            | Reading/Writing | A sub-clause defining from which row to start including the rows in the output.
 |<<query-start, START>>                      | Reading      |  Find starting points through legacy indexes.
 |<<query-union, UNION>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are removed.
 |<<query-union, UNION ALL>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are retained.
-|<<query-unwind, UNWIND>>                    | Projecting   |  Expands a list into a sequence of rows.
+|<<query-unwind, UNWIND ... [AS]>>                    | Projecting   |  Expands a list into a sequence of rows.
 |<<query-using-index-hint, USING INDEX variable:Label(property)>>  | Hint | Index hints are used to specify which index, if any, the planner should use as a starting point.
 |<<query-using-join-hint, USING JOIN ON variable>>                 | Hint | Join hints are used to enforce a join operation at specified points.
 |<<query-using-periodic-commit-hint, USING PERIODIC COMMIT>>       | Hint | This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
 |<<query-using-scan-hint, USING SCAN variable:Label>>              | Hint | Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
-|<<query-with, WITH>>                        | Projecting   |  Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
+|<<query-with, WITH ... [AS]>>                        | Projecting   |  Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
 |<<query-where, WHERE>>                          | Reading sub-clause | A sub-clause used to add constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause, or to filter the results of a `WITH` clause.
 |===
 
 
 [[glossary-operators]]
-== <<query-operators,Operators>>
+== <<query-operators, Operators>>
 
 [options="header"]
 |===
@@ -100,89 +100,89 @@ This section comprises a glossary of all the keywords -- grouped by category and
 
 
 [[glossary-functions]]
-== <<query-function,Functions>>
+== <<query-function, Functions>>
 
 [options="header"]
 |===
 |Function                                       | Type              | Description
 |<<functions-abs, abs()>>                       |  Numeric          | Returns the absolute value of a number.
 |<<functions-acos, acos()>>                     | Trigonometric     | Returns the arccosine of the expression.
-|<<functions-all,all()>>                        | Predicate         | Tests whether a predicate holds for all elements in the list.
-|<<functions-any,any()>>                        | Predicate         | Tests whether a predicate holds for at least one element in the list.
+|<<functions-all, all()>>                        | Predicate         | Tests whether a predicate holds for all elements in the list.
+|<<functions-any, any()>>                        | Predicate         | Tests whether a predicate holds for at least one element in the list.
 |<<functions-asin, asin()>>                     | Trigonometric     | Returns the arcsine of the expression.
 |<<functions-atan, atan()>>                     | Trigonometric     | Returns the arctangent of the expression.
 |<<functions-atan2, atan2()>>                   | Trigonometric     | Returns the arctangent2 of a set of coordinates.
-|<<functions-avg,avg()>>                        | Aggregating       | Returns the average of a numeric column.
+|<<functions-avg, avg()>>                        | Aggregating       | Returns the average of a numeric column.
 |<<functions-ceil, ceil()>>                     | Numeric           | Returns the smallest integer greater than or equal to the argument.
-|<<functions-coalesce,coalesce()>>              | Scalar            | Returns the first non-`null` value in the list of expressions passed to it.
-|<<functions-collect,collect()>>                | Aggregating       | Returns a list containing all collected values.
+|<<functions-coalesce, coalesce()>>              | Scalar            | Returns the first non-`null` value in the list of expressions passed to it.
+|<<functions-collect, collect()>>                | Aggregating       | Returns a list containing all collected values.
 |<<functions-cos, cos()>>                       | Trigonometric     | Returns the cosine of the expression.
 |<<functions-cot, cot()>>                       | Trigonometric     | Returns the cotangent of the expression.
-|<<functions-count,count()>>                    | Aggregating       | Returns the number of rows.
+|<<functions-count, count()>>                    | Aggregating       | Returns the number of rows.
 |<<functions-degrees, degrees()>>               | Trigonometric     | Converts radians to degrees.
-|<<functions-distance,distance()>>              | Spatial           | Returns a floating point number representing the geodesic distance between any two given points.
+|<<functions-distance, distance()>>              | Spatial           | Returns a floating point number representing the geodesic distance between any two given points.
 |<<functions-e, e()>>                           | Logarithmic       | Returns the base of the natural logarithm, `e`.
-|<<functions-endnode,endNode()>>                | Scalar            | Returns the last node of a relationship.
-|<<functions-exists,exists()>>                  | Predicate         | Returns true if a match for the pattern exists in the graph, or the property exists in the node, relationship or map.
+|<<functions-endnode, endNode()>>                | Scalar            | Returns the last node of a relationship.
+|<<functions-exists, exists()>>                  | Predicate         | Returns true if a match for the pattern exists in the graph, or the property exists in the node, relationship or map.
 |<<functions-exp, exp()>>                       | Logarithmic       | Returns `e^n`, where `e` is the base of the natural logarithm, and `n` is the value of the argument expression.
-|<<functions-extract,extract()>>                | List              | Returns a single property, or the value of a function from a list of nodes or relationships.
-|<<functions-filter,filter()>>                  | List              | Returns all the elements in a list complying with a predicate.
+|<<functions-extract, extract()>>                | List              | Returns a single property, or the value of a function from a list of nodes or relationships.
+|<<functions-filter, filter()>>                  | List              | Returns all the elements in a list complying with a predicate.
 |<<functions-floor, floor()>>                   | Numeric           | Returns the greatest integer less than or equal to the expression.
 |<<functions-haversin, haversin()>>             | Trigonometric     | Returns half the versine of the expression.
-|<<functions-head,head()>>                      | Scalar            | Returns the first element in a list.
-|<<functions-id,id()>>                          | Scalar            | Returns the id of the relationship or node.
-|<<functions-keys,keys()>>                      | List              | Returns a list of string representations for the property names of a node, relationship, or map.
-|<<functions-labels,labels()>>                  | List              | Returns a list of string representations for the labels attached to a node.
-|<<functions-last,last()>>                      | Scalar            | Returns the last element in a list.
-|<<functions-left,left()>>                      | String            | Returns a string containing the left n characters of the original string.
-|<<functions-length,length()>>                  | Scalar            | Returns the length of a path.
+|<<functions-head, head()>>                      | Scalar            | Returns the first element in a list.
+|<<functions-id, id()>>                          | Scalar            | Returns the id of the relationship or node.
+|<<functions-keys, keys()>>                      | List              | Returns a list of string representations for the property names of a node, relationship, or map.
+|<<functions-labels, labels()>>                  | List              | Returns a list of string representations for the labels attached to a node.
+|<<functions-last, last()>>                      | Scalar            | Returns the last element in a list.
+|<<functions-left, left()>>                      | String            | Returns a string containing the left n characters of the original string.
+|<<functions-length, length()>>                  | Scalar            | Returns the length of a path.
 |<<functions-log, log()>>                       | Logarithmic       | Returns the natural logarithm of the expression.
 |<<functions-log10, log10()>>                   | Logarithmic       | Returns the common logarithm (base 10) of the expression.
-|<<functions-ltrim,lTrim()>>                    | String            | Returns the original string with whitespace removed from the left side.
-|<<functions-max,max()>>                        | Aggregating       | Returns the highest value in a numeric column.
-|<<functions-min,min()>>                        | Aggregating       | Returns the lowest value in a numeric column.
-|<<functions-nodes,nodes()>>                    | List              | Returns all nodes in a path.
-|<<functions-none,none()>>                      | Predicate         | Returns true if the predicate holds for no element in the list.
-|<<functions-percentilecont,percentileCont()>>  | Aggregating       | Returns the percentile of a given value over a group using linear interpolation.
-|<<functions-percentiledisc,percentileDisc()>>  | Aggregating       | Returns the nearest value to a given percentile over a group using a rounding method.
+|<<functions-ltrim, lTrim()>>                    | String            | Returns the original string with whitespace removed from the left side.
+|<<functions-max, max()>>                        | Aggregating       | Returns the highest value in a numeric column.
+|<<functions-min, min()>>                        | Aggregating       | Returns the lowest value in a numeric column.
+|<<functions-nodes, nodes()>>                    | List              | Returns all nodes in a path.
+|<<functions-none, none()>>                      | Predicate         | Returns true if the predicate holds for no element in the list.
+|<<functions-percentilecont, percentileCont()>>  | Aggregating       | Returns the percentile of a given value over a group using linear interpolation.
+|<<functions-percentiledisc, percentileDisc()>>  | Aggregating       | Returns the nearest value to a given percentile over a group using a rounding method.
 |<<functions-pi, pi()>>                         | Trigonometric     | Returns the mathematical constant _pi_.
-|<<functions-point-cartesian,point() - cartesian 2D>>                    | Spatial           | Returns a point object, given two coordinate values in the cartesian coordinate system.
-|<<functions-point,point() - WGS 84>>                    | Spatial           | Returns a point object, given two coordinate values in the WGS 84 coordinate system.
-|<<functions-properties,properties()>>          | Scalar            | If the argument is a node or a relationship, the returned map is a map of its properties.
+|<<functions-point-cartesian, point() - cartesian 2D>>                    | Spatial           | Returns a point object, given two coordinate values in the cartesian coordinate system.
+|<<functions-point, point() - WGS 84>>                    | Spatial           | Returns a point object, given two coordinate values in the WGS 84 coordinate system.
+|<<functions-properties, properties()>>          | Scalar            | If the argument is a node or a relationship, the returned map is a map of its properties.
 |<<functions-radians, radians()>>               | Trigonometric     | Converts degrees to radians.
 |<<functions-rand, rand()>>                     | Numeric           | Returns a random number in the range from 0 (inclusive) to 1 (exclusive), `[0, 1)`.
-|<<functions-range,range()>>                    | List              | Returns numerical values in a range.
-|<<functions-reduce,reduce()>>                  | List              | Runs an expression against individual elements of a list, storing the result of the expression in an accumulator.
-|<<functions-relationships,relationships()/rels()>>    | List              | Returns all relationships in a path.
-|<<functions-replace,replace()>>                | String            | Returns a string with the search string replaced by the replace string, replacing all occurrences.
-|<<functions-reverse,reverse()>>                | String            | Returns the original string reversed.
-|<<functions-right,right()>>                    | String            | Returns a string containing the right n characters of the original string.
+|<<functions-range, range()>>                    | List              | Returns numerical values in a range.
+|<<functions-reduce, reduce()>>                  | List              | Runs an expression against individual elements of a list, storing the result of the expression in an accumulator.
+|<<functions-relationships, relationships()/rels()>>    | List              | Returns all relationships in a path.
+|<<functions-replace, replace()>>                | String            | Returns a string with the search string replaced by the replace string, replacing all occurrences.
+|<<functions-reverse, reverse()>>                | String            | Returns the original string reversed.
+|<<functions-right, right()>>                    | String            | Returns a string containing the right n characters of the original string.
 |<<functions-round, round()>>                   | Numeric           | Returns the numerical expression, rounded to the nearest integer.
-|<<functions-rtrim,rTrim()>>                    | String            | Returns the original string with whitespace removed from the right side.
+|<<functions-rtrim, rTrim()>>                    | String            | Returns the original string with whitespace removed from the right side.
 |<<functions-sign, sign()>>                     | Numeric           | Returns the signum of a number -- zero if the expression is zero, `-1` for any negative number, and `1` for any positive number.
 |<<functions-sin, sin()>>                       | Trigonometric     | Returns the sine of the expression.
-|<<functions-single,single()>>                  | Predicate         | Returns true if the predicate holds for exactly one of the elements in the list.
-|<<functions-size,size()>>                      | Scalar            | Returns the number of items in a list.
-|<<functions-size-of-pattern-expression,Size of pattern expression>>  | Scalar   | Returns the number of sub-graphs matching the pattern expression.
-|<<functions-size-of-string,Size of string>>  | Scalar          | Returns the size of a string.
-|<<functions-split,split()>>                    | String            | Returns the sequence of strings which are delimited by split patterns.
+|<<functions-single, single()>>                  | Predicate         | Returns true if the predicate holds for exactly one of the elements in the list.
+|<<functions-size, size()>>                      | Scalar            | Returns the number of items in a list.
+|<<functions-size-of-pattern-expression, Size of pattern expression>>  | Scalar   | Returns the number of sub-graphs matching the pattern expression.
+|<<functions-size-of-string, Size of string>>  | Scalar          | Returns the size of a string.
+|<<functions-split, split()>>                    | String            | Returns the sequence of strings which are delimited by split patterns.
 |<<functions-sqrt, sqrt()>>                     | Logarithmic       | Returns the square root of a number.
-|<<functions-startnode,startNode()>>            | Scalar            | Returns the first node of a relationship.
-|<<functions-stdev,stDev()>>                    | Aggregating       | Returns the standard deviation for a given value over a group for a sample of a population.
-|<<functions-stdevp,stDevP()>>                  | Aggregating       | Returns the standard deviation for a given value over a group for an entire population.
-|<<functions-substring,substring()>>            | String            | Returns a substring of the original, with a 0-based index start and length.
-|<<functions-sum,sum()>>                        | Aggregating       | Returns the sum of a numeric column.
-|<<functions-tail,tail()>>                      | List              | Returns all but the first element in a list.
+|<<functions-startnode, startNode()>>            | Scalar            | Returns the first node of a relationship.
+|<<functions-stdev, stDev()>>                    | Aggregating       | Returns the standard deviation for a given value over a group for a sample of a population.
+|<<functions-stdevp, stDevP()>>                  | Aggregating       | Returns the standard deviation for a given value over a group for an entire population.
+|<<functions-substring, substring()>>            | String            | Returns a substring of the original, with a 0-based index start and length.
+|<<functions-sum, sum()>>                        | Aggregating       | Returns the sum of a numeric column.
+|<<functions-tail, tail()>>                      | List              | Returns all but the first element in a list.
 |<<functions-tan, tan()>>                       | Trigonometric     | Returns the tangent of the expression.
-|<<functions-timestamp,timestamp()>>            | Scalar            | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
-|<<functions-toboolean,toBoolean()>>                | Scalar            | Converts the argument to a boolean and returns the result.
-|<<functions-tofloat,toFloat()>>                | Scalar            | Converts the argument to a float and returns the result.
-|<<functions-tointeger,toInteger()>>                    | Scalar            | Converts the argument to an integer and returns the result.
-|<<functions-tolower,toLower()>>                    | String            | Returns the original string in lowercase.
-|<<functions-tostring,toString()>>              | String            | Converts the argument to a string.
-|<<functions-toupper,toUpper()>>                    | String            | Returns the original string in uppercase.
-|<<functions-trim,trim()>>                      | String            | Returns the original string with whitespace removed from both sides.
-|<<functions-type,type()>>                      | Scalar            | Returns a string representation of the relationship type.
+|<<functions-timestamp, timestamp()>>            | Scalar            | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
+|<<functions-toboolean, toBoolean()>>                | Scalar            | Converts the argument to a boolean and returns the result.
+|<<functions-tofloat, toFloat()>>                | Scalar            | Converts the argument to a float and returns the result.
+|<<functions-tointeger, toInteger()>>                    | Scalar            | Converts the argument to an integer and returns the result.
+|<<functions-tolower, toLower()>>                    | String            | Returns the original string in lowercase.
+|<<functions-tostring, toString()>>              | String            | Converts the argument to a string.
+|<<functions-toupper, toUpper()>>                    | String            | Returns the original string in uppercase.
+|<<functions-trim, trim()>>                      | String            | Returns the original string with whitespace removed from both sides.
+|<<functions-type, type()>>                      | Scalar            | Returns a string representation of the relationship type.
 |===
 
 
@@ -192,5 +192,5 @@ This section comprises a glossary of all the keywords -- grouped by category and
 [options="header"]
 |===
 |Name           | Description
-| <<query-syntax-case,CASE Expression>>  | A generic conditional expression, similar to if/else statements available in other languages.
+| <<query-syntax-case, CASE Expression>>  | A generic conditional expression, similar to if/else statements available in other languages.
 |===
