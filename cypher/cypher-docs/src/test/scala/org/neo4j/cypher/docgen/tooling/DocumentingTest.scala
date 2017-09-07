@@ -32,6 +32,8 @@ import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
+import org.neo4j.values.virtual.VirtualValues
+import org.neo4j.values.virtual.VirtualValues.EMPTY_MAP
 import org.scalatest.{Assertions, Matchers}
 
 /**
@@ -131,7 +133,7 @@ class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) ext
           new InetSocketAddress("127.0.0.1", 56789),
           new InetSocketAddress("127.0.0.1", 7687)
         ),
-        tx, "QUERY", Collections.emptyMap() )
+        tx, "QUERY", EMPTY_MAP )
     )
     val QUIET_MONITOR:IndexSearchMonitor = null // this is ok because we're only serializing using this TBQC
     val ctx = new TransactionBoundQueryContext(transactionalContext)(QUIET_MONITOR)

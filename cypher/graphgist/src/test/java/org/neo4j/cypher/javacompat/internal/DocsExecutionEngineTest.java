@@ -48,10 +48,12 @@ import org.neo4j.kernel.monitoring.Monitors;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
 import org.neo4j.test.TestEnterpriseGraphDatabaseFactory;
+import org.neo4j.values.virtual.VirtualValues;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.neo4j.values.virtual.VirtualValues.EMPTY_MAP;
 
 public class DocsExecutionEngineTest
 {
@@ -104,7 +106,7 @@ public class DocsExecutionEngineTest
                 "neo4j-java-bolt-driver",
                 new InetSocketAddress("127.0.0.1", 56789),
                 new InetSocketAddress("127.0.0.1", 7687));
-        return contextFactory.newContext(boltConnection, transaction, query, Collections.emptyMap() );
+        return contextFactory.newContext(boltConnection, transaction, query, EMPTY_MAP );
     }
 
     public interface DocsSetup

@@ -33,6 +33,7 @@ import org.neo4j.cypher.internal.{ExecutionEngine, InternalExecutionResult, Rewi
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.index.Index
+import org.neo4j.helpers.ValueUtils
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
@@ -98,7 +99,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
           ),
           tx,
           testQuery,
-          javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String,AnyRef]]
+          ValueUtils.asMapValue(javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String,AnyRef]])
         )
       ), KernelTransaction.Type.`implicit` )
     result
