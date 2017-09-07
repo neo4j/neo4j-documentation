@@ -1,22 +1,83 @@
 [[cypher-values]]
-= Values
+= Values and types
+
+Cypher provides first class support for a number of data types.
+
+These fall into several categories which will be described in detail in the following subsections:
+
+* Property types
+* Structural types
+* Composite types
 
 
-All values that are handled by Cypher have a distinct type.
-The supported types of values are:
+== Property types
 
-* Numeric values,
-* String values,
-* Boolean values,
-* Nodes,
-* Relationships,
-* Paths,
-* Maps from Strings to other values,
-* Lists of any other type of value.
+* [*] Can be returned from Cypher queries
+* [*] Can be used as <<cypher-parameters, parameters>>
+* [*] Can be stored as properties
+* [*] Can be constructed with <<cypher-expressions, Cypher literals>>
 
-Most types of values can be constructed in a query using literal expressions (see <<cypher-expressions>>).
-Special care must be taken when using `null`, as `null` is a value of every type (see <<cypher-working-with-null>>).
-Nodes, relationships, and paths are returned as a result of pattern matching.
+Property types comprise:
 
-Note that labels are not values but are a form of pattern syntax.
+* _Number_, an abstract type, which has the following subtypes:
+   ** Integer
+   ** Float
+* String
+* Boolean
+
+NOTE: The adjective 'numeric' -- when used in the context of describing  Cypher functions or expressions -- indicates that any type of Number applies (Integer or Float).
+
+NOTE: Homogeneous lists of simple types can also be stored as properties, although lists in general (see <<composite-types, Composite types>>) cannot be stored.
+
+NOTE: Cypher also provides pass-through support for byte arrays, which can be stored as property values.
+Byte arrays are _not_ considered a first class data type by Cypher, so do not have a literal representation.
+
+
+== Structural types
+
+* [*] Can be returned from Cypher queries
+* [ ] Cannot be used as <<cypher-parameters, parameters>>
+* [ ] Cannot be stored as properties
+* [ ] Cannot be constructed with <<cypher-expressions, Cypher literals>>
+
+Structural types comprise:
+
+* Nodes, comprising:
+   ** Id
+   ** Label(s)
+   ** Map (of properties)
+* Relationships, comprising:
+   ** Id
+   ** Type
+   ** Map (of properties)
+   ** Id of the start and end nodes
+* Paths
+   ** An alternating sequence of nodes and relationships
+
+NOTE: Nodes, relationships, and paths are returned as a result of pattern matching.
+
+NOTE: Labels are not values but are a form of pattern syntax.
+
+
+[[composite-types]]
+== Composite types
+
+* [*] Can be returned from Cypher queries
+* [*] Can be used as <<cypher-parameters, parameters>>
+* [ ] Cannot be stored as properties
+* [*] Can be constructed with <<cypher-expressions, Cypher literals>>
+
+Composite types comprise:
+
+* *Lists* are heterogeneous, ordered collections of values, each of which has any property, structural or composite type.
+* *Maps* are heterogeneous, unordered collections of (key, value) pairs, where:
+   ** the key is a String
+   ** the value has any property, structural or composite type
+
+NOTE: Composite values can also contain `null`.
+
+'''
+
+Special care must be taken when using `null` (see <<cypher-working-with-null>>).
+
 

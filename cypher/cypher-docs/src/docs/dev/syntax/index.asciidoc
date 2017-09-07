@@ -6,7 +6,7 @@
 This section describes the syntax of the Cypher query language.
 --
 
-* <<cypher-values, Values>>
+* <<cypher-values, Values and types>>
 * <<cypher-expressions, Expressions>>
  ** <<cypher-expressions-general, Expressions in general>>
  ** <<cypher-expressions-string-literals, Note on string literals>>
