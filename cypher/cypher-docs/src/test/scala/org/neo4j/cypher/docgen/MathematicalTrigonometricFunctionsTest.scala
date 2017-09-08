@@ -48,7 +48,7 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     section("acos()", "functions-acos") {
       p("`acos()` returns the arccosine of a number in radians.")
       function("acos(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`acos(null)` returns `null`.", "If `expression` < -1 or `expression` > 1, `acos(expression)` returns `null`.")
+      considerations("`acos(null)` returns `null`.", "If (`expression` < -1) or (`expression` > 1), then (`acos(expression)`) returns `null`.")
       query("RETURN acos(0.5)", ResultAssertions((r) => {
         r.toList.head("acos(0.5)") should equal(1.0471975511965979)
       })) {
@@ -59,7 +59,7 @@ class MathematicalTrigonometricFunctionsTest extends DocumentingTest {
     section("asin()", "functions-asin") {
       p("`asin()` returns the arcsine of a number in radians.")
       function("asin(expression)", "A Float.", ("expression", "A numeric expression that represents the angle in radians."))
-      considerations("`asin(null)` returns `null`.", "If `expression` < -1 or `expression` > 1, `asin(expression)` returns `null`.")
+      considerations("`asin(null)` returns `null`.", "If (`expression` < -1) or (`expression` > 1), then (`asin(expression)`) returns `null`.")
       query("RETURN asin(0.5)", ResultAssertions((r) => {
         r.toList.head("asin(0.5)") should equal(0.5235987755982989)
       })) {

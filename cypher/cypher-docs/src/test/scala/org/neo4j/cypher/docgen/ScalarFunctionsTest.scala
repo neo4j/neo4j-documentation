@@ -184,7 +184,7 @@ class ScalarFunctionsTest extends DocumentingTest {
         p("The number of elements in the list is returned.")
       }
     }
-    section("Size of pattern expression", "functions-size-of-pattern-expression") {
+    section("size() applied to pattern expression", "functions-size-of-pattern-expression") {
       p(
         """This is the same `size()` method as described above, but instead of passing in a list directly, pattern expression can be provided that can be used in a match query to provide a new set of results.
           |These results are a _list_ of paths.
@@ -200,7 +200,7 @@ class ScalarFunctionsTest extends DocumentingTest {
         p("The number of sub-graphs matching the pattern expression is returned.")
       }
     }
-    section("Size of string", "functions-size-of-string") {
+    section("size() applied to string", "functions-size-of-string") {
       p(
         """`size()` returns the size of a string value.""".stripMargin)
       function("size(string)", "An Integer.", ("string", "An expression that returns a string value."))
@@ -247,7 +247,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     }
     section("toBoolean()", "functions-toboolean") {
       p(
-        "`toBoolean()` casts a string value to a boolean value.")
+        "`toBoolean()` converts a string value to a boolean value.")
       function("toBoolean(expression)", "A Boolean.", ("expression", "An expression that returns a boolean or string value."))
       considerations("`toBoolean(null)` returns `null`.", "If `expression` is a boolean value, it will be returned unchanged.", "If the parsing fails, `null` will be returned.")
       query(
@@ -259,7 +259,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     }
     section("toFloat()", "functions-tofloat") {
       p(
-        "`toFloat()` casts an integer or string value to a floating point number.".stripMargin)
+        "`toFloat()` converts an integer or string value to a floating point number.".stripMargin)
       function("toFloat(expression)", "A Float.", ("expression", "An expression that returns a numeric or string value."))
       considerations("`toFloat(null)` returns `null`.", "If `expression` is a floating point number, it will be returned unchanged.", "If the parsing fails, `null` will be returned.")
       query(
@@ -271,7 +271,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     }
     section("toInteger()", "functions-tointeger") {
       p(
-        """`toInteger()` casts a floating point or string value to an integer value.""".stripMargin)
+        """`toInteger()` converts a floating point or string value to an integer value.""".stripMargin)
       function("toInteger(expression)", "An Integer.", ("expression", "An expression that returns a numeric or string value."))
       considerations("`toInteger(null)` returns `null`.", "If `expression` is an integer value, it will be returned unchanged.", "If the parsing fails, `null` will be returned.")
       query(
