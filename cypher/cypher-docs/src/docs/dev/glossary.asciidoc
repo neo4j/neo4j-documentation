@@ -18,7 +18,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 
 [options="header"]
 |===
-|Clause                                     | Type      |   Description
+|Clause                                     | Category      |   Description
 |<<query-call,CALL [...YIELD]>>                        | Reading/Writing   | Invoke a procedure deployed in the database.
 |<<query-create,CREATE>>                    | Writing     |  Create nodes and relationships.
 |<<constraints-create-node-property-existence-constraint,CREATE CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>  | Schema   | Create a constraint ensuring that all nodes with a particular label have a certain property.
@@ -63,7 +63,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 
 [options="header"]
 |===
-|Operator                                                   | Type          | Description
+|Operator                                                   | Category          | Description
 | <<query-operators-mathematical,%>>                      | Mathematical  | Modulo division
 | <<query-operators-mathematical,*>>                      | Mathematical  | Multiplication
 | <<query-operators-mathematical,+>>                      | Mathematical  | Addition
@@ -101,30 +101,30 @@ This section comprises a glossary of all the keywords -- grouped by category and
 
 [options="header"]
 |===
-|Function                                       | Type              | Description
-|<<functions-abs, abs()>>                       |  Numeric          | Returns the absolute value of a given number.
+|Function                                       | Category              | Description
+|<<functions-abs, abs()>>                       |  Numeric          | Returns the absolute value of a number.
 |<<functions-acos, acos()>>                     | Trigonometric     | Returns the arccosine of a number in radians.
-|<<functions-all,all()>>                        | Predicate         | Tests whether a predicate holds for all elements in a given list.
-|<<functions-any,any()>>                        | Predicate         | Tests whether a predicate holds for at least one element in a given list.
+|<<functions-all,all()>>                        | Predicate         | Tests whether a predicate holds for all elements in a list.
+|<<functions-any,any()>>                        | Predicate         | Tests whether a predicate holds for at least one element in a list.
 |<<functions-asin, asin()>>                     | Trigonometric     | Returns the arcsine of a number in radians.
 |<<functions-atan, atan()>>                     | Trigonometric     | Returns the arctangent of a number in radians.
 |<<functions-atan2, atan2()>>                   | Trigonometric     | Returns the arctangent2 of a set of coordinates in radians.
 |<<functions-avg,avg()>>                        | Aggregating       | Returns the average of a set of values.
-|<<functions-ceil, ceil()>>                     | Numeric           | Returns the smallest floating point number greater than or equal to a given number, and which is equal to an integer.
-|<<functions-coalesce,coalesce()>>              | Scalar            | Returns the first non-`null` value in a given list of expressions.
-|<<functions-collect,collect()>>                | Aggregating       | Returns a list containing the values returned by a given expression.
+|<<functions-ceil, ceil()>>                     | Numeric           | Returns the smallest floating point number greater than or equal to a number.
+|<<functions-coalesce,coalesce()>>              | Scalar            | Returns the first non-`null` value in a list of expressions.
+|<<functions-collect,collect()>>                | Aggregating       | Returns a list containing the values returned by an expression.
 |<<functions-cos, cos()>>                       | Trigonometric     | Returns the cosine of a number.
 |<<functions-cot, cot()>>                       | Trigonometric     | Returns the cotangent of a number.
 |<<functions-count,count()>>                    | Aggregating       | Returns the number of values or rows.
 |<<functions-degrees, degrees()>>               | Trigonometric     | Converts radians to degrees.
-|<<functions-distance,distance()>>              | Spatial           | Returns a floating point number representing the geodesic distance between any two given points in the same CRS.
+|<<functions-distance,distance()>>              | Spatial           | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
 |<<functions-e, e()>>                           | Logarithmic       | Returns the base of the natural logarithm, `e`.
 |<<functions-endnode,endNode()>>                | Scalar            | Returns the end node of a relationship.
-|<<functions-exists,exists()>>                  | Predicate         | Returns true if a match for a given pattern exists in the graph, or if a specified property exists in the node, relationship or map.
+|<<functions-exists,exists()>>                  | Predicate         | Returns true if a match for a pattern exists in the graph, or if a specified property exists in the node, relationship or map.
 |<<functions-exp, exp()>>                       | Logarithmic       | Returns `e^n`, where `e` is the base of the natural logarithm, and `n` is the value of the argument expression.
 |<<functions-extract,extract()>>                | List              | Returns a list `l~result~` containing the values resulting from an expression which has been applied to each element in a list `list`.
-|<<functions-filter,filter()>>                  | List              | Returns a list `l~result~` containing all the elements from a list `list` that comply with a given predicate.
-|<<functions-floor, floor()>>                   | Numeric           | Returns the largest floating point number less than or equal to a given number, and which is equal to an integer.
+|<<functions-filter,filter()>>                  | List              | Returns a list `l~result~` containing all the elements from a list `list` that comply with a predicate.
+|<<functions-floor, floor()>>                   | Numeric           | Returns the largest floating point number less than or equal to a number.
 |<<functions-haversin, haversin()>>             | Trigonometric     | Returns half the versine of a number.
 |<<functions-head,head()>>                      | Scalar            | Returns the first element in a list.
 |<<functions-id,id()>>                          | Scalar            | Returns the id of a relationship or node.
@@ -139,7 +139,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-max,max()>>                        | Aggregating       | Returns the maximum value in a set of values.
 |<<functions-min,min()>>                        | Aggregating       | Returns the minimum value in a set of values.
 |<<functions-nodes,nodes()>>                    | List              | Returns a list containing all the nodes in a path.
-|<<functions-none,none()>>                      | Predicate         | Returns true if the predicate holds for no element in a given list.
+|<<functions-none,none()>>                      | Predicate         | Returns true if the predicate holds for no element in a list.
 |<<functions-percentilecont,percentileCont()>>  | Aggregating       | Returns the percentile of a given value over a group using linear interpolation.
 |<<functions-percentiledisc,percentileDisc()>>  | Aggregating       | Returns the nearest value to a given percentile over a group using a rounding method.
 |<<functions-pi, pi()>>                         | Trigonometric     | Returns the mathematical constant _pi_.
@@ -147,36 +147,36 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-point,point() - WGS 84>>                    | Spatial           | Returns a point object, given two coordinate values in the WGS 84 coordinate system.
 |<<functions-properties,properties()>>          | Scalar            | Returns a map containing all the properties of a node or relationship.
 |<<functions-radians, radians()>>               | Trigonometric     | Converts degrees to radians.
-|<<functions-rand, rand()>>                     | Numeric           | Returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. [0, 1).
-|<<functions-range,range()>>                    | List              | Returns a list comprising all integral values within a range bounded by a start and end value, where the difference between any two consecutive values is constant.
-|<<functions-reduce,reduce()>>                  | List              | Returns the value resulting from the application of an expression on each successive element in a list in conjunction with the result of the computation thus far.
+|<<functions-rand, rand()>>                     | Numeric           | Returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. `[0, 1)`.
+|<<functions-range,range()>>                    | List              | Returns a list comprising all integer values within a specified range.
+|<<functions-reduce,reduce()>>                  | List              | Runs an expression against individual elements of a list, storing the result of the expression in an accumulator.
 |<<functions-relationships,relationships()/rels()>>    | List              | Returns a list containing all the relationships in a path.
 |<<functions-replace,replace()>>                | String            | Returns a string in which all occurrences of a specified string in the original string have been replaced by another string.
-|<<functions-reverse,reverse()>>                | String            | Returns a string in which all characters in the original string have been reversed.
+|<<functions-reverse,reverse()>>                | String            | Returns a string in which the order of all characters in the original string have been reversed.
 |<<functions-right,right()>>                    | String            | Returns a string containing the specified number of rightmost characters of the original string.
-|<<functions-round, round()>>                   | Numeric           | Returns the value of a given number rounded to the nearest integer.
+|<<functions-round, round()>>                   | Numeric           | Returns the value of a number rounded to the nearest integer.
 |<<functions-rtrim,rTrim()>>                    | String            | Returns the original string with trailing whitespace removed.
-|<<functions-sign, sign()>>                     | Numeric           | Returns the signum of a given number: `0` if the number is `0`, `-1` for any negative number, and `1` for any positive number.
+|<<functions-sign, sign()>>                     | Numeric           | Returns the signum of a number: `0` if the number is `0`, `-1` for any negative number, and `1` for any positive number.
 |<<functions-sin, sin()>>                       | Trigonometric     | Returns the sine of a number.
-|<<functions-single,single()>>                  | Predicate         | Returns true if the predicate holds for exactly one of the elements in a given list.
+|<<functions-single,single()>>                  | Predicate         | Returns true if the predicate holds for exactly one of the elements in a list.
 |<<functions-size,size()>>                      | Scalar            | Returns the number of items in a list.
-|<<functions-size-of-pattern-expression,Size of pattern expression>>  | Scalar   | Returns the number of sub-graphs matching the pattern expression.
-|<<functions-size-of-string,Size of string>>  | Scalar          | Returns the size of a string.
+|<<functions-size-of-pattern-expression,size() applied to pattern expression>>  | Scalar   | Returns the number of sub-graphs matching the pattern expression.
+|<<functions-size-of-string,size() applied to string>>  | Scalar          | Returns the size of a string.
 |<<functions-split,split()>>                    | String            | Returns a list of strings resulting from the splitting of the original string around matches of a given delimiter.
 |<<functions-sqrt, sqrt()>>                     | Logarithmic       | Returns the square root of a number.
 |<<functions-startnode,startNode()>>            | Scalar            | Returns the start node of a relationship.
 |<<functions-stdev,stDev()>>                    | Aggregating       | Returns the standard deviation for a given value over a group for a sample of a population.
 |<<functions-stdevp,stDevP()>>                  | Aggregating       | Returns the standard deviation for a given value over a group for an entire population.
-|<<functions-substring,substring()>>            | String            | Returns a substring of the original string, beginning  with a 0-based index start and length..
-|<<functions-sum,sum()>>                        | Aggregating       | Returns the sum of a set of non-`null` numeric values.
-|<<functions-tail,tail()>>                      | List              | Returns a list `l~result~` containing all the elements, excluding the first one, from a list `list`.
+|<<functions-substring,substring()>>            | String            | Returns a substring of the original string, beginning  with a 0-based index start and length.
+|<<functions-sum,sum()>>                        | Aggregating       | Returns the sum of a set of numeric values.
+|<<functions-tail,tail()>>                      | List              | Returns all but the first element in a list.
 |<<functions-tan, tan()>>                       | Trigonometric     | Returns the tangent of a number.
 |<<functions-timestamp,timestamp()>>            | Scalar            | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
-|<<functions-toboolean,toBoolean()>>                | Scalar            | Casts a string value to a boolean value.
-|<<functions-tofloat,toFloat()>>                | Scalar            | Casts an integer or string value to a floating point number.
-|<<functions-tointeger,toInteger()>>                    | Scalar            | Casts a floating point or string value to an integer value.
+|<<functions-toboolean,toBoolean()>>                | Scalar            | Converts a string value to a boolean value.
+|<<functions-tofloat,toFloat()>>                | Scalar            | Converts an integer or string value to a floating point number.
+|<<functions-tointeger,toInteger()>>                    | Scalar            | Converts a floating point or string value to an integer value.
 |<<functions-tolower,toLower()>>                    | String            | Returns the original string in lowercase.
-|<<functions-tostring,toString()>>              | String            | Casts an integer, float or boolean value to a string.
+|<<functions-tostring,toString()>>              | String            | Converts an integer, float or boolean value to a string.
 |<<functions-toupper,toUpper()>>                    | String            | Returns the original string in uppercase.
 |<<functions-trim,trim()>>                      | String            | Returns the original string with leading and trailing whitespace removed.
 |<<functions-type,type()>>                      | Scalar            | Returns a string representation of the relationship type.

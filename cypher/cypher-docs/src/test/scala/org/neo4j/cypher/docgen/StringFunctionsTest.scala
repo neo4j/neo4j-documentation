@@ -83,7 +83,7 @@ class StringFunctionsTest extends DocumentingTest {
       }
     }
     section("reverse()", "functions-reverse") {
-      p("`reverse()` returns a string in which all characters in the original string have been reversed.")
+      p("`reverse()` returns a string in which the order of all characters in the original string have been reversed.")
       function("reverse(original)", "A String.", ("original", "An expression that returns a string."))
       considerations("`reverse(null)` returns `null`.")
       query(
@@ -152,7 +152,7 @@ class StringFunctionsTest extends DocumentingTest {
     }
     section("toString()", "functions-tostring") {
       p(
-        """`toString()` casts an integer, float or boolean value to a string.""".stripMargin)
+        """`toString()` converts an integer, float or boolean value to a string.""".stripMargin)
       function("toString(expression)", "A String.", ("expression", "An expression that returns a number, a boolean, or a string."))
       considerations("`toString(null)` returns `null`", "If `expression` is a string, it will be returned unchanged.")
       query(

@@ -132,9 +132,9 @@ class ListFunctionsTest extends DocumentingTest {
     }
     section("range()", "functions-range") {
       p(
-        """`range()` returns a list comprising all integral values within a range bounded by a start value `start` and end value `end`, where the difference `step` between any two consecutive values is constant; i.e. an arithmetic progression.
+        """`range()` returns a list comprising all integer values within a range bounded by a start value `start` and end value `end`, where the difference `step` between any two consecutive values is constant; i.e. an arithmetic progression.
           |The range is inclusive, and the arithmetic progression will therefore always contain `start` and -- depending on the values of `start`, `step` and `end` -- `end`.""".stripMargin)
-      function("range(start, end [, step])", "A list of Integer elements.", ("start", "An integral expression."), ("end", "An integral expression."), ("step", "A numeric expression defining the difference between any two consecutive values, with a default of `1`."))
+      function("range(start, end [, step])", "A list of Integer elements.", ("start", "An expression that returns an integer value."), ("end", "An expression that returns an integer value."), ("step", "A numeric expression defining the difference between any two consecutive values, with a default of `1`."))
       query(
         """RETURN range(0, 10), range(2, 18, 3)""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("range(0, 10)" -> List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), "range(2, 18, 3)" -> List(2, 5, 8, 11, 14, 17))))

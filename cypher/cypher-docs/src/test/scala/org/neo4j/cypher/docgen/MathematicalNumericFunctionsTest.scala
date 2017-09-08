@@ -86,7 +86,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("rand()", "functions-rand") {
-      p("`rand()` returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. [0,1). " +
+      p("`rand()` returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. `[0,1)`. " +
         "The numbers returned follow an approximate uniform distribution.")
       function("rand()", "A Float.")
       query("RETURN rand()", ResultAssertions((r) => {
