@@ -58,6 +58,7 @@ public class SharedServerTestBase
                 public Void call() throws Exception
                 {
                     ServerHolder.setServerBuilderProperty( GraphDatabaseSettings.cypher_hints_error.name(), "true" );
+                    ServerHolder.setServerBuilderProperty( GraphDatabaseSettings.record_id_batch_size.name(), "1" );
                     server = ServerHolder.allocate();
                     ServerHelper.cleanTheDatabase( server );
                     return null;

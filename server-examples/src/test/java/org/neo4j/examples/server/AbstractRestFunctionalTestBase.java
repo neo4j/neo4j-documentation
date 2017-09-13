@@ -27,6 +27,8 @@ import javax.ws.rs.core.Response.Status;
 
 import org.junit.Rule;
 
+import org.neo4j.doc.server.HTTP;
+import org.neo4j.doc.server.SharedServerTestBase;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -38,8 +40,6 @@ import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.test.GraphDescription;
 import org.neo4j.test.GraphHolder;
 import org.neo4j.test.TestData;
-import org.neo4j.test.server.HTTP;
-import org.neo4j.test.server.SharedServerTestBase;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
 import static java.lang.String.format;
