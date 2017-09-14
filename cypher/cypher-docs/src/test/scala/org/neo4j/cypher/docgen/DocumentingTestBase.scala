@@ -39,6 +39,8 @@ import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.factory.GraphDatabaseSettings
 import org.neo4j.graphdb.index.Index
+import org.neo4j.helpers.ValueUtils
+import org.neo4j.helpers.ValueUtils.asMapValue
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.api.security.SecurityContext
 import org.neo4j.kernel.configuration.Settings
@@ -51,6 +53,7 @@ import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.test.{GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
+import org.neo4j.values.virtual.VirtualValues
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.neo4j.visualization.graphviz.{AsciiDocStyle, GraphStyle, GraphvizWriter}
 import org.neo4j.walk.Walker
@@ -343,7 +346,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
             ),
             transaction,
             query,
-            javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]]
+            asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
           )
         )
         val rewindable = RewindableExecutionResult(result)
@@ -371,7 +374,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                 ),
                 transaction,
                 query,
-                javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]]
+                asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
               )
             )
           )
@@ -459,7 +462,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
           ),
           innerTx,
           query,
-          java.util.Collections.emptyMap()
+          VirtualValues.EMPTY_MAP
         )
       )
     } }
