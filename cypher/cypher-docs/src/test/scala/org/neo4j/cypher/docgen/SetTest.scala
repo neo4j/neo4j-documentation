@@ -126,7 +126,7 @@ This will replace all existing properties on the node with the new set provided 
     testQuery(
       title = "Set a label on a node",
       text = "To set a label on a node, use `SET`.",
-      queryText = "MATCH (n {name: 'Stefan'}) SET n :German RETURN n",
+      queryText = "MATCH (n {name: 'Stefan'}) SET n:German RETURN n",
       optionalResultExplanation = "The newly labeled node is returned by the query.",
       assertions = (p) => assert(getLabelsFromNode(p) === List("German")))
   }
@@ -135,7 +135,7 @@ This will replace all existing properties on the node with the new set provided 
     testQuery(
       title = "Set multiple labels on a node",
       text = "To set multiple labels on a node, use `SET` and separate the different labels using `:`.",
-      queryText = "MATCH (n {name: 'Emil'}) SET n :Swedish:Bossman RETURN n",
+      queryText = "MATCH (n {name: 'Emil'}) SET n:Swedish:Bossman RETURN n",
       optionalResultExplanation = "The newly labeled node is returned by the query.",
       assertions = (p) => assert(getLabelsFromNode(p) === List("Swedish", "Bossman")))
   }
