@@ -138,6 +138,20 @@
 
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.neo4j.build.plugins</groupId>
+        <artifactId>docs-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-docs</id>
+            <phase>${attach-docs-phase}</phase>
+            <goals><goal>assemble</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <repositories>
