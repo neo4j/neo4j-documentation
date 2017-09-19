@@ -26,21 +26,24 @@ import java.io.PrintWriter;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.kernel.configuration.Settings;
 import org.neo4j.helpers.collection.Iterables;
+import org.neo4j.kernel.configuration.Settings;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.shell.impl.CollectingOutput;
 import org.neo4j.shell.impl.RemoteClient;
 import org.neo4j.shell.kernel.GraphDatabaseShellServer;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
-import static java.lang.System.lineSeparator;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import static java.lang.System.lineSeparator;
+
+import static org.neo4j.graphdb.factory.GraphDatabaseSettings.record_id_batch_size;
 import static org.neo4j.shell.ShellLobby.NO_INITIAL_SESSION;
 import static org.neo4j.shell.ShellLobby.remoteLocation;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createGraphViz;
@@ -199,8 +202,11 @@ public class ShellDocTest
     @Test
     public void testMatrix() throws Exception
     {
-        GraphDatabaseAPI db = (GraphDatabaseAPI) new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder()
-                .loadPropertiesFromURL( getClass().getResource( "/autoindex.properties" ) ).newGraphDatabase();
+        GraphDatabaseAPI db = (GraphDatabaseAPI) new TestGraphDatabaseFactory()
+                .newImpermanentDatabaseBuilder()
+                .loadPropertiesFromURL( getClass().getResource( "/autoindex.properties" ) )
+                .setConfig( record_id_batch_size, "1" )
+                .newGraphDatabase();
         final GraphDatabaseShellServer server = new GraphDatabaseShellServer( db, false );
 
         Documenter doc = new Documenter( "a matrix example", server );
