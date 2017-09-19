@@ -41,7 +41,7 @@ class StartTest extends DocumentingTestBase {
 
   @Test def relationships_by_index() {
     generateConsole = false
-    val setPropertyAndUpdateLegacyIndex = (db: GraphDatabaseQueryService) => db.inTx {
+    val setPropertyAndUpdateExplicitIndex = (db: GraphDatabaseQueryService) => db.inTx {
       val r = db.getRelationshipById(0)
       val property = "name"
       val value = "Andrés"
@@ -56,7 +56,7 @@ class StartTest extends DocumentingTestBase {
       queryText = """START r = relationship:rels(name = 'Andrés') return r""",
       optionalResultExplanation = """The relationship indexed with the `name` property set to "`Andrés`" is returned by the query.""",
       assertions = (p) => assertEquals(List(Map("r" -> rel(0))), p.toList),
-      prepare = setPropertyAndUpdateLegacyIndex)
+      prepare = setPropertyAndUpdateExplicitIndex)
   }
 
   @Test def nodes_by_index_query() {

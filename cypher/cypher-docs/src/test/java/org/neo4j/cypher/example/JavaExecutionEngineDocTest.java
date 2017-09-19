@@ -105,7 +105,7 @@ public class JavaExecutionEngineDocTest
             johanNode.setProperty( "name", "Johan" );
             michaelaNode.setProperty( "name", "Michaela" );
 
-            //this is legacy index functionality
+            //this is explicit index functionality
             index( andreasNode );
             index( johanNode );
             index( michaelaNode );
