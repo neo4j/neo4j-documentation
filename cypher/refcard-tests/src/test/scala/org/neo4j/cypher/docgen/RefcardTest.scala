@@ -25,8 +25,8 @@ import java.nio.charset.StandardCharsets
 
 import org.junit.{After, Before, Test}
 import org.neo4j.cypher._
-import org.neo4j.cypher.internal.compatibility.v3_3.runtime.helpers.RuntimeJavaValueConverter
-import org.neo4j.cypher.internal.compiler.v3_3.prettifier.Prettifier
+import org.neo4j.cypher.internal.compatibility.v3_4.runtime.helpers.RuntimeJavaValueConverter
+import org.neo4j.cypher.internal.compiler.v3_4.prettifier.Prettifier
 import org.neo4j.cypher.internal.helpers.GraphIcing
 import org.neo4j.cypher.internal.javacompat.{ExecutionResult, GraphImpl}
 import org.neo4j.cypher.internal.{ExecutionEngine, InternalExecutionResult, RewindableExecutionResult, isGraphKernelResultValue}

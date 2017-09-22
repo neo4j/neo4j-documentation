@@ -27,9 +27,9 @@ import java.util.concurrent.TimeUnit
 import org.junit.{After, Before}
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
-import org.neo4j.cypher.internal.compatibility.v3_3.runtime.helpers.RuntimeJavaValueConverter
-import org.neo4j.cypher.internal.compiler.v3_3.prettifier.Prettifier
-import org.neo4j.cypher.internal.frontend.v3_3.helpers.Eagerly
+import org.neo4j.cypher.internal.compatibility.v3_4.runtime.helpers.RuntimeJavaValueConverter
+import org.neo4j.cypher.internal.compiler.v3_4.prettifier.Prettifier
+import org.neo4j.cypher.internal.frontend.v3_4.helpers.Eagerly
 import org.neo4j.cypher.internal.helpers.GraphIcing
 import org.neo4j.cypher.internal.javacompat.GraphImpl
 import org.neo4j.cypher.internal.{ExecutionEngine, InternalExecutionResult, RewindableExecutionResult, isGraphKernelResultValue}

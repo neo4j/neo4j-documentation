@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.cypher.internal.compatibility.v3_3.runtime.{CRS, CartesianPoint, GeographicPoint}
+import org.neo4j.cypher.internal.compatibility.v3_4.runtime.{CRS, CartesianPoint, GeographicPoint}
 
 class SpatialFunctionsTest extends DocumentingTest {
 
