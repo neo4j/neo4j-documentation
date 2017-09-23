@@ -26,8 +26,9 @@ label = "{Person|name = \'Robert Zemeckis\'\lborn = 1951\l}"
 ]
 ----
 
+
 [[graphdb-neo4j-nodes]]
-== Nodes ==
+== Nodes
 
 [abstract]
 A graph records data in nodes and relationships.
@@ -68,8 +69,9 @@ label = "{name = \'Robert Zemeckis\'\lborn = 1951\l}"
 ]
 ----
 
+
 [[graphdb-neo4j-relationships]]
-== Relationships ==
+== Relationships
 
 [abstract]
 Relationships organize the nodes by connecting them.
@@ -181,8 +183,9 @@ label = "{name = \'Robert Zemeckis\'\lborn = 1951\l}"
 | get movies directed by | person node | DIRECTED | outgoing
 |========================================================
 
+
 [[graphdb-neo4j-properties]]
-== Properties ==
+== Properties
 
 [abstract]
 Both nodes and relationships can have properties.
@@ -203,8 +206,9 @@ The supported property values are:
 
 For further details on supported property values, see <<property-values-detailed>>.
 
+
 [[graphdb-neo4j-labels]]
-== Labels ==
+== Labels
 
 [abstract]
 Labels assign roles or types to nodes.
@@ -252,7 +256,8 @@ label = "{Person\nActor|name = \'Tom Hanks\'\lborn = 1956\l}"
 ]
 ----
 
-=== Label names ===
+
+=== Label names
 
 Any non-empty Unicode string can be used as a label name.
 In Cypher, you may need to use the backtick (++`++) syntax to avoid clashes with Cypher identifier rules or to allow non-alphanumeric characters in a label.
@@ -261,8 +266,9 @@ For instance, +User+ or +CarOwner+.
 
 Labels have an id space of an int, meaning the maximum number of labels the database can contain is roughly 2 billion.
 
+
 [[graphdb-neo4j-traversal]]
-== Traversal ==
+== Traversal
 
 [abstract]
 A traversal navigates through a graph to find paths.
@@ -302,8 +308,9 @@ label = "{Person|name = \'Robert Zemeckis\'\lborn = 1951\l}"
 ]
 ----
 
+
 [[graphdb-neo4j-paths]]
-== Paths ==
+== Paths
 
 [abstract]
 A path is one or more nodes with connecting relationships, typically retrieved as a query or traversal result.
@@ -347,8 +354,9 @@ label = "KNOWS"
 ]
 ----
 
+
 [[graphdb-neo4j-schema]]
-== Schema ==
+== Schema
 
 [abstract]
 Neo4j is a schema-optional graph database.
@@ -361,15 +369,14 @@ This allows a way of working where the schema does not get in your way until you
 Schema commands can only be applied on the master machine in a Neo4j cluster (see <<ha>>).
 If you apply them on a slave you will receive a `Neo.ClientError.Transaction.InvalidType` error code (see <<status-codes>>).
 
+
 [[graphdb-neo4j-schema-indexes]]
-=== Indexes ===
+=== Indexes
 
 [abstract]
 Performance is gained by creating indexes, which improve the speed of looking up nodes in the database.
 
-// NOTE: This feature was introduced in Neo4j 2.0, and is not the same as the legacy indexes (see <<indexing>>).
-
-Once you’ve specified which properties to index, Neo4j will make sure your indexes are kept up to date as your graph evolves.
+Once you've specified which properties to index, Neo4j will make sure your indexes are kept up to date as your graph evolves.
 Any operation that looks up nodes by the newly indexed properties will see a significant performance boost.
 
 Indexes in Neo4j are _eventually available_.
@@ -393,8 +400,9 @@ How to use indexes through the different APIs:
 * Listing Indexes via Shell: <<shell-listing-indexes-and-constraints>>
 * Java Core API: <<tutorials-java-embedded-new-index>>
 
+
 [[graphdb-neo4j-schema-constraints]]
-=== Constraints ===
+=== Constraints
 
 NOTE: This feature was introduced in Neo4j 2.0.
 

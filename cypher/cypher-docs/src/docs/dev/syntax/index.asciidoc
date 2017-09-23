@@ -23,8 +23,8 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-parameters-node-id, Node id>>
  ** <<cypher-parameters-multiple-node-ids, Multiple node ids>>
  ** <<cypher-parameters-call-procedure, Calling procedures>>
- ** <<cypher-parameters-index-value-legacy, Index value (legacy indexes)>>
- ** <<cypher-parameters-index-query-legacy, Index query (legacy indexes)>>
+ ** <<cypher-parameters-index-value-explicit, Index value (explicit indexes)>>
+ ** <<cypher-parameters-index-query-explicit, Index query (explicit indexes)>>
 * <<query-operators, Operators>>
  ** <<query-operators-summary, Operators at a glance>>
  ** <<query-operators-general, General operators>>

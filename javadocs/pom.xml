@@ -267,7 +267,7 @@ the relevant Commercial Agreement.
                   <packages>org.neo4j.helpers:org.neo4j.helpers.*</packages>
                 </group>
                 <group>
-                  <title>Legacy Indexes</title>
+                  <title>Explicit Indexes</title>
                   <packages>org.neo4j.index:org.neo4j.index.*</packages>
                 </group>
               </groups>

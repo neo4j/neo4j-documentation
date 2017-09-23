@@ -33,7 +33,7 @@ public class IndexingProcedure
     public GraphDatabaseService db;
 
     /**
-     * Adds a node to a named legacy index. Useful to, for instance, update
+     * Adds a node to a named explicit index. Useful to, for instance, update
      * a full-text index through cypher.
      * @param indexName the name of the index in question
      * @param nodeId id of the node to add to the index

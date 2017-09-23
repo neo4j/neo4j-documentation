@@ -48,7 +48,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-return, RETURN ... [AS]>>                    | Projecting   |  Defines what to include in the query result set.
 |<<query-set, SET>>                          | Writing     |  Update labels on nodes and properties on nodes and relationships.
 |<<query-skip, SKIP>>                            | Reading/Writing | A sub-clause defining from which row to start including the rows in the output.
-|<<query-start, START>>                      | Reading      |  Find starting points through legacy indexes.
+|<<query-start, START>>                      | Reading      |  Find starting points through explicit indexes.
 |<<query-union, UNION>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are removed.
 |<<query-union, UNION ALL>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are retained.
 |<<query-unwind, UNWIND ... [AS]>>                    | Projecting   |  Expands a list into a sequence of rows.

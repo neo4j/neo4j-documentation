@@ -2,10 +2,10 @@
 = START
 
 [abstract]
-Find starting points through legacy indexes.
+Find starting points through explicit indexes.
 
 [IMPORTANT]
-The `START` clause should only be used when accessing legacy indexes.
+The `START` clause should only be used when accessing explicit indexes.
 In all other cases, use `MATCH` instead (see <<query-match>>).
 
 * <<start-node-by-index-seek, Node by index seek>>
@@ -14,8 +14,8 @@ In all other cases, use `MATCH` instead (see <<query-match>>).
 
 In Cypher, every query describes a pattern, and in that pattern one can have multiple starting points.
 A starting point is a relationship or a node where a pattern is anchored.
-Using `START` you can only introduce starting points by legacy index seeks.
-Note that trying to use a legacy index that doesn't exist will generate an error.
+Using `START` you can only introduce starting points by explicit index seeks.
+Note that trying to use a explicit index that doesn't exist will generate an error.
 
 This is the graph the examples are using:
 
