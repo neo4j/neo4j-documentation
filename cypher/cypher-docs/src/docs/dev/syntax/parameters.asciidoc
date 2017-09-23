@@ -13,8 +13,8 @@
 * <<cypher-parameters-node-id,Node id>>
 * <<cypher-parameters-multiple-node-ids,Multiple node ids>>
 * <<cypher-parameters-call-procedure,Calling procedures>>
-* <<cypher-parameters-index-value-legacy,Index value (legacy indexes)>>
-* <<cypher-parameters-index-query-legacy,Index query (legacy indexes)>>
+* <<cypher-parameters-index-value-explicit,Index value (explicit indexes)>>
+* <<cypher-parameters-index-query-explicit,Index query (explicit indexes)>>
 
 
 [[cypher-parameters-introduction]]
@@ -27,7 +27,7 @@ Parameters can be used for:
 
 * literals and expressions
 * node and relationship ids
-* for legacy indexes only: index values and queries
+* for explicit indexes only: index values and queries
 
 Parameters cannot be used for the following constructs, as these form part of the query structure that is compiled into a query plan:
 
@@ -115,14 +115,14 @@ include::includes/exampleWithParameterForMultipleNodeIds.asciidoc[]
 include::includes/exampleWithParameterProcedureCall.asciidoc[]
 
 
-[[cypher-parameters-index-value-legacy]]
-== Index value (legacy indexes)
+[[cypher-parameters-index-value-explicit]]
+== Index value (explicit indexes)
 
 include::includes/exampleWithParameterForIndexValue.asciidoc[]
 
 
-[[cypher-parameters-index-query-legacy]]
-== Index query (legacy indexes)
+[[cypher-parameters-index-query-explicit]]
+== Index query (explicit indexes)
 
 include::includes/exampleWithParametersForQuery.asciidoc[]
 

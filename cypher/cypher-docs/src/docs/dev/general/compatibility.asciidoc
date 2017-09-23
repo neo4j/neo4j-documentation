@@ -13,7 +13,7 @@ Every Cypher query will use this version, provided the query hasn't explicitly b
 The other way is on a query by query basis.
 By simply putting `CYPHER 2.3` at the beginning, that particular query will be executed with the version of Cypher included in Neo4j 2.3.
 
-Below is an example using the `START` clause to access a legacy index:
+Below is an example using the `START` clause to access an explicit index:
 
 [source, cypher]
 ----

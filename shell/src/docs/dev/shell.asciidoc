@@ -333,7 +333,8 @@ The `schema` command provides information about indexes and constraints together
 
 [NOTE]
 --
-This command does not list legacy indexes. For working with legacy indexes, please see <<shell-legacy-indexing>>.
+This command does not list explicit indexes.
+For working with explicit indexes, please see <<shell-explicit-indexing>>.
 --
 
 The `schema` command supports the following actions:
@@ -392,20 +393,20 @@ They are updated automatically
 whenever the graph is changed.
 See <<graphdb-neo4j-schema>> for more information.
 
-[[shell-legacy-indexing]]
-=== Legacy Indexing
+[[shell-explicit-indexing]]
+=== Explicit Indexing
 
-It's possible to query and manipulate legacy indexes via the index command.
+It's possible to query and manipulate explicit indexes via the index command.
 
-Example: +index -i persons name+ (will index the name for the current node or relationship in the "persons" legacy index).
+Example: +index -i persons name+ (will index the name for the current node or relationship in the "persons" explicit index).
 
-* +-g+ will do exact lookup in the legacy index and display hits. You can supply +-c+ with a command to be executed for each hit.
-* +-q+ will ask the legacy index a query and display hits. You can supply +-c+ with a command to be executed for each hit.
+* +-g+ will do exact lookup in the explicit index and display hits. You can supply +-c+ with a command to be executed for each hit.
+* +-q+ will ask the explicit index a query and display hits. You can supply +-c+ with a command to be executed for each hit.
 * +--cd+ will change current location to the hit from the query. It's just a convenience for using the +-c+ option.
 * +--ls+ will do a listing of the contents for each hit. It's just a convenience for using the +-c+ option.
-* +-i+ will index a key-value pair into a legacy index for the current node/relationship. If no value is given the property value for that key for the current node is used as value.
-* +-r+ will remove a key-value pair (if it exists) from a legacy index for the current node/relationship. Key and value are optional.
-* +-t+ will set the legacy index type to work with, for example `index -t Relationship --delete friends` will delete the +friends+ relationship index.
+* +-i+ will index a key-value pair into a explicit index for the current node/relationship. If no value is given the property value for that key for the current node is used as value.
+* +-r+ will remove a key-value pair (if it exists) from a explicit index for the current node/relationship. Key and value are optional.
+* +-t+ will set the explicit index type to work with, for example `index -t Relationship --delete friends` will delete the +friends+ relationship index.
 
 === Transactions
 
