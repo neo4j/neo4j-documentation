@@ -24,9 +24,9 @@ import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.internal.InternalExecutionResult
-import org.neo4j.cypher.internal.compatibility.v3_3.runtime.pipes.IndexSeekByRange
-import org.neo4j.cypher.internal.compatibility.v3_3.runtime.planDescription.InternalPlanDescription.Arguments.Planner
-import org.neo4j.cypher.internal.compiler.v3_3.{DPPlannerName, IDPPlannerName}
+import org.neo4j.cypher.internal.compatibility.v3_4.runtime.pipes.IndexSeekByRange
+import org.neo4j.cypher.internal.compatibility.v3_4.runtime.planDescription.InternalPlanDescription.Arguments.Planner
+import org.neo4j.cypher.internal.compiler.v3_4.{DPPlannerName, IDPPlannerName}
 import org.neo4j.cypher.internal.helpers.GraphIcing
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
