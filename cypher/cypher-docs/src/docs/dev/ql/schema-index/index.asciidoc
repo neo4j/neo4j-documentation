@@ -8,6 +8,7 @@ This section explains how to work with indexes in Neo4j and Cypher.
 
 * <<query-schema-index-introduction, Introduction>>
 * <<schema-index-create-a-single-property-index, Create a single-property index>>
+* <<schema-index-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
 * <<create-a-composite-index, Create a composite index>>
 * <<schema-index-drop-a-single-property-index, Drop a single-property index>>
 * <<drop-a-composite-index, Drop a composite index>>
@@ -37,6 +38,7 @@ Neo4j will automatically pick up and start using the index once it has been crea
 
 include::create-a-single-property-index.asciidoc[]
 
+include::get-a-list-of-all-indexes-in-the-database.asciidoc[]
 
 [[create-a-composite-index]]
 == Create a composite index
