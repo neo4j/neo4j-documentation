@@ -26,6 +26,7 @@ Cypher includes data definition language (DDL) statements for manipulating the s
  ** <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>
 * <<query-constraints, Constraints>>
  ** <<query-constraint-unique-nodes, Unique node property constraints>>
+ ** <<constraints-get-a-list-of-all-constraints-in-the-database, Get a list of all constraints in the database>>
  ** <<query-constraint-prop-exist-nodes, Node property existence constraints>>
  ** <<query-constraint-prop-exist-rels, Relationship property existence constraints>>
  ** <<query-constraint-node-key, Node Keys>>
