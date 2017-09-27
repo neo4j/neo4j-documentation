@@ -104,6 +104,7 @@ Further details and examples of lists may be found in <<cypher-lists>>.
 |<<functions-range,range()>>                    | Returns a list comprising all integer values within a specified range.
 |<<functions-reduce,reduce()>>                  | Runs an expression against individual elements of a list, storing the result of the expression in an accumulator.
 |<<functions-relationships,relationships()/rels()>>    | Returns a list containing all the relationships in a path.
+|<<functions-reverse-list,reverse()>>        | Returns a list in which the order of all elements in the original list have been reversed.
 |<<functions-tail,tail()>>                      | Returns all but the first element in a list.
 |===
 

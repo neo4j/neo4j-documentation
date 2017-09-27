@@ -53,6 +53,7 @@ class ListFunctionsTest extends DocumentingTest {
         |* <<functions-range,range()>>
         |* <<functions-reduce,reduce()>>
         |* <<functions-relationships,relationships()>>
+        |* <<functions-reverse-list, reverse()>>
         |* <<functions-tail,tail()>>""")
     graphViz()
     section("extract()", "functions-extract") {
@@ -170,6 +171,18 @@ class ListFunctionsTest extends DocumentingTest {
           r.columnAs[Seq[Relationship]]("relationships(p)").toList.head.map(_.getId) should equal(Array(0, 4))
         })) {
         p("A list containing all the relationships in the path `p` is returned.")
+        resultTable()
+      }
+    }
+    section("reverse()", "functions-reverse-list") {
+      p("""`reverse()` returns a list in which the order of all elements in the original list have been reversed.""")
+      function("reverse(original)", "A list containing homogeneous or heterogeneous elements; the types of the elements are determined by the elements within `original`.", ("original", "An expression that returns a list."))
+      considerations("Any `null` element in `original` is preserved.")
+      query(
+        """WITH [4923,'abc',521, null, 487] AS ids
+          |RETURN reverse(ids)""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("reverse(ids)" -> Vector(487, null, 521, "abc", 4923))))
+        })) {
         resultTable()
       }
     }
