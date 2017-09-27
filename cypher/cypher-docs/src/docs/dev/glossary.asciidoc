@@ -103,8 +103,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |Function                                       | Category              | Description
 |<<functions-abs, abs()>>                       |  Numeric          | Returns the absolute value of a number.
 |<<functions-acos, acos()>>                     | Trigonometric     | Returns the arccosine of a number in radians.
-|<<functions-all,all()>>                        | Predicate         | Tests whether a predicate holds for all elements in a list.
-|<<functions-any,any()>>                        | Predicate         | Tests whether a predicate holds for at least one element in a list.
+|<<functions-all,all()>>                        | Predicate         | Tests whether the predicate holds for all elements in a list.
+|<<functions-any,any()>>                        | Predicate         | Tests whether the predicate holds for at least one element in a list.
 |<<functions-asin, asin()>>                     | Trigonometric     | Returns the arcsine of a number in radians.
 |<<functions-atan, atan()>>                     | Trigonometric     | Returns the arctangent of a number in radians.
 |<<functions-atan2, atan2()>>                   | Trigonometric     | Returns the arctangent2 of a set of coordinates in radians.
@@ -139,8 +139,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-min,min()>>                        | Aggregating       | Returns the minimum value in a set of values.
 |<<functions-nodes,nodes()>>                    | List              | Returns a list containing all the nodes in a path.
 |<<functions-none,none()>>                      | Predicate         | Returns true if the predicate holds for no element in a list.
-|<<functions-percentilecont,percentileCont()>>  | Aggregating       | Returns the percentile of a given value over a group using linear interpolation.
-|<<functions-percentiledisc,percentileDisc()>>  | Aggregating       | Returns the nearest value to a given percentile over a group using a rounding method.
+|<<functions-percentilecont,percentileCont()>>  | Aggregating       | Returns the percentile of the given value over a group using linear interpolation.
+|<<functions-percentiledisc,percentileDisc()>>  | Aggregating       | Returns the nearest value to the given percentile over a group using a rounding method.
 |<<functions-pi, pi()>>                         | Trigonometric     | Returns the mathematical constant _pi_.
 |<<functions-point-cartesian,point() - cartesian 2D>>                    | Spatial           | Returns a point object, given two coordinate values in the cartesian coordinate system.
 |<<functions-point,point() - WGS 84>>                    | Spatial           | Returns a point object, given two coordinate values in the WGS 84 coordinate system.
@@ -161,11 +161,11 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-size,size()>>                      | Scalar            | Returns the number of items in a list.
 |<<functions-size-of-pattern-expression,size() applied to pattern expression>>  | Scalar   | Returns the number of sub-graphs matching the pattern expression.
 |<<functions-size-of-string,size() applied to string>>  | Scalar          | Returns the size of a string.
-|<<functions-split,split()>>                    | String            | Returns a list of strings resulting from the splitting of the original string around matches of a given delimiter.
+|<<functions-split,split()>>                    | String            | Returns a list of strings resulting from the splitting of the original string around matches of the given delimiter.
 |<<functions-sqrt, sqrt()>>                     | Logarithmic       | Returns the square root of a number.
 |<<functions-startnode,startNode()>>            | Scalar            | Returns the start node of a relationship.
-|<<functions-stdev,stDev()>>                    | Aggregating       | Returns the standard deviation for a given value over a group for a sample of a population.
-|<<functions-stdevp,stDevP()>>                  | Aggregating       | Returns the standard deviation for a given value over a group for an entire population.
+|<<functions-stdev,stDev()>>                    | Aggregating       | Returns the standard deviation for the given value over a group for a sample of a population.
+|<<functions-stdevp,stDevP()>>                  | Aggregating       | Returns the standard deviation for the given value over a group for an entire population.
 |<<functions-substring,substring()>>            | String            | Returns a substring of the original string, beginning  with a 0-based index start and length.
 |<<functions-sum,sum()>>                        | Aggregating       | Returns the sum of a set of numeric values.
 |<<functions-tail,tail()>>                      | List              | Returns all but the first element in a list.
@@ -178,7 +178,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-tostring,toString()>>              | String            | Converts an integer, float or boolean value to a string.
 |<<functions-toupper,toUpper()>>                    | String            | Returns the original string in uppercase.
 |<<functions-trim,trim()>>                      | String            | Returns the original string with leading and trailing whitespace removed.
-|<<functions-type,type()>>                      | Scalar            | Returns a string representation of the relationship type.
+|<<functions-type,type()>>                      | Scalar            | Returns the string representation of the relationship type.
 |===
 
 

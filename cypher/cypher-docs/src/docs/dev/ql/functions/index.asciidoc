@@ -31,8 +31,8 @@ These functions return either true or false for the given arguments.
 [options="header"]
 |===
 |Function                         |   Description
-|<<functions-all,all()>>          | Tests whether a predicate holds for all elements in a list.
-|<<functions-any,any()>>          | Tests whether a predicate holds for at least one element in a list.
+|<<functions-all,all()>>          | Tests whether the predicate holds for all elements in a list.
+|<<functions-any,any()>>          | Tests whether the predicate holds for at least one element in a list.
 |<<functions-exists,exists()>>    | Returns true if a match for the pattern exists in the graph, or if the specified property exists in the node, relationship or map.
 |<<functions-none,none()>>        | Returns true if the predicate holds for no element in a list.
 |<<functions-single,single()>>    | Returns true if the predicate holds for exactly one of the elements in a list.
@@ -62,7 +62,7 @@ These functions return a single value.
 | <<functions-toboolean,toBoolean()>>                                 | Converts a string value to a boolean value.
 | <<functions-tofloat,toFloat()>>                                     | Converts an integer or string value to a floating point number.
 | <<functions-tointeger,toInteger()>>                                 | Converts a floating point or string value to an integer value.
-| <<functions-type,type()>>                                           | Returns a string representation of the relationship type.
+| <<functions-type,type()>>                                           | Returns the string representation of the relationship type.
 |===
 
 
@@ -80,9 +80,9 @@ These functions take multiple values as arguments, and calculate and return an a
 |<<functions-max,max()>>                        | Returns the maximum value in a set of values.
 |<<functions-min,min()>>                        | Returns the minimum value in a set of values.
 |<<functions-percentilecont,percentileCont()>>  | Returns the percentile of a value over a group using linear interpolation.
-|<<functions-percentiledisc,percentileDisc()>>  | Returns the nearest value to a given percentile over a group using a rounding method.
-|<<functions-stdev,stDev()>>                    | Returns the standard deviation for a given value over a group for a sample of a population.
-|<<functions-stdevp,stDevP()>>                  | Returns the standard deviation for a given value over a group for an entire population.
+|<<functions-percentiledisc,percentileDisc()>>  | Returns the nearest value to the given percentile over a group using a rounding method.
+|<<functions-stdev,stDev()>>                    | Returns the standard deviation for the given value over a group for a sample of a population.
+|<<functions-stdevp,stDevP()>>                  | Returns the standard deviation for the given value over a group for an entire population.
 |<<functions-sum,sum()>>                        | Returns the sum of a set of numeric values.
 |===
 
@@ -180,7 +180,7 @@ These functions are used to manipulate strings or to create a string representat
 |<<functions-reverse,reverse()>>        | Returns a string in which the order of all characters in the original string have been reversed.
 |<<functions-right,right()>>            | Returns a string containing the specified number of rightmost characters of the original string.
 |<<functions-rtrim,rTrim()>>            | Returns the original string with trailing whitespace removed.
-|<<functions-split,split()>>            | Returns a list of strings resulting from the splitting of the original string around matches of a given delimiter.
+|<<functions-split,split()>>            | Returns a list of strings resulting from the splitting of the original string around matches of the given delimiter.
 |<<functions-substring,substring()>>    | Returns a substring of the original string, beginning  with a 0-based index start and length.
 |<<functions-tolower,toLower()>>            | Returns the original string in lowercase.
 |<<functions-tostring,toString()>>      | Converts an integer, float or boolean value to a string.

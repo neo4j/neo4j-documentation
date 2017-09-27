@@ -116,7 +116,7 @@ class StringFunctionsTest extends DocumentingTest {
       }
     }
     section("split()", "functions-split") {
-      p("`split()` returns a list of strings resulting from the splitting of the original string around matches of a given delimiter.")
+      p("`split()` returns a list of strings resulting from the splitting of the original string around matches of the given delimiter.")
       function("split(original, splitDelimiter)", "A list of Strings.", ("original", "An expression that returns a string."), ("splitDelimiter", "The string with which to split `original`."))
       considerations("`split(null, splitDelimiter)` and `split(original, null)` both return `null`")
       query(
