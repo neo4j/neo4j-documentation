@@ -64,7 +64,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("ceil()", "functions-ceil") {
-      p("`ceil()` returns the smallest floating point number greater than or equal to a given number, and which is equal to an integer.")
+      p("`ceil()` returns the smallest floating point number that is greater than or equal to the given number and equal to a mathematical integer.")
       function("ceil(expression)", "A Float.", ("expression", "A numeric expression."))
       considerations("`ceil(null)` returns `null`.")
       query("RETURN ceil(0.1)", ResultAssertions((r) => {
@@ -75,7 +75,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("floor()", "functions-floor") {
-      p("`floor()` returns the largest floating point number less than or equal to a given number, and which is equal to an integer.")
+      p("`floor()` returns the largest floating point number that is less than or equal to the given number and equal to a mathematical integer.")
       function("floor(expression)", "A Float.", ("expression", "A numeric expression."))
       considerations("`floor(null)` returns `null`.")
       query("RETURN floor(0.9)", ResultAssertions((r) => {

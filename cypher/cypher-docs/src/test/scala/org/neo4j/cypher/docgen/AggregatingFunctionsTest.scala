@@ -42,11 +42,11 @@ class AggregatingFunctionsTest extends DocumentingTest {
         |       (b)-[:KNOWS]->(d2)""")
     p("""To calculate aggregated data, Cypher offers aggregation, analogous to SQL's `GROUP BY`.""")
     p(
-      """Aggregating functions take multiple input values and calculate an aggregated value over them.
-        |Examples are `avg()` that calculates the average of multiple numeric values, or `min()` that finds the smallest numeric value in a set of values.
+      """Aggregating functions take a set of values and calculate an aggregated value over them.
+        |Examples are `avg()` that calculates the average of multiple numeric values, or `min()` that finds the smallest numeric or string value in a set of values.
         |When we say below that an aggregating function operates on a _set of values_, we mean these to be the result of the application of the inner expression (such as `n.age`) to all the records within the same aggregation group.""")
     p(
-      """Aggregation can be computed over all the matching subgraphs, or it can be further divided by introducing key values.
+      """Aggregation can be computed over all the matching subgraphs, or it can be further divided by introducing grouping keys.
         |These are non-aggregate expressions, that are used to group the values going into the aggregate functions.""")
     p("""Assume we have the following return statement:""")
     p(
@@ -60,7 +60,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         |The first, `n`, is not an aggregate function, and so it will be the grouping key.
         |The latter, `count(*)` is an aggregate expression.
         |The matching subgraphs will be divided into different buckets, depending on the grouping key.
-        |The aggregate function will then be run on these buckets, calculating the aggregate values.""")
+        |The aggregate function will then be run on these buckets, calculating an aggregate value per bucket.""")
     p(
       """To use aggregations to sort the result set, the aggregation must be included in the `RETURN` to be used in the `ORDER BY`.
         |""")

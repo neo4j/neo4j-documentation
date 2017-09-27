@@ -72,7 +72,7 @@ class StringFunctionsTest extends DocumentingTest {
       }
     }
     section("replace()", "functions-replace") {
-      p("`replace()` returns a string in which all occurrences of a specified string in the original string have been replaced by another string.")
+      p("`replace()` returns a string in which all occurrences of a specified string in the original string have been replaced by another (specified) string.")
       function("replace(original, search, replace)", "A String.", ("original", "An expression that returns a string."), ("search", "An expression that specifies the string to be replaced in `original`."), ("replace", "An expression that specifies the replacement string."))
       considerations("If any argument is `null`, `null` will be returned.", "If `search` is not found in `original`, `original` will be returned.")
       query(

@@ -186,7 +186,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     }
     section("size() applied to pattern expression", "functions-size-of-pattern-expression") {
       p(
-        """This is the same `size()` method as described above, but instead of passing in a list directly, pattern expression can be provided that can be used in a match query to provide a new set of results.
+        """This is the same `size()` method as described above, but instead of passing in a list directly, a pattern expression can be provided that can be used in a match query to provide a new set of results.
           |These results are a _list_ of paths.
           |The size of the result is calculated, not the length of the expression itself.""".stripMargin)
       function("size(pattern expression)", ("pattern expression", "A pattern expression that returns a list."))

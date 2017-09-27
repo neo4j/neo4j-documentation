@@ -81,7 +81,7 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("exists()", "functions-exists") {
-      p("`exists()` returns true if a match for a given pattern exists in the graph, or if a specified property exists in the node, relationship or map.")
+      p("`exists()` returns true if a match for the given pattern exists in the graph, or if the specified property exists in the node, relationship or map.")
       function("exists(pattern-or-property)", "A Boolean.", ("pattern-or-property", "A pattern or a property (in the form 'variable.prop')."))
       query(
         """MATCH (n)
@@ -89,7 +89,7 @@ class PredicateFunctionsTest extends DocumentingTest {
           |RETURN n.name AS name, exists((n)-[:MARRIED]->()) AS is_married""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("name" -> "Alice", "is_married" -> false), Map("name" -> "Bob", "is_married" -> true), Map("name" -> "Charlie", "is_married" -> false), Map("name" -> "Daniel", "is_married" -> false), Map("name" -> "Eskil", "is_married" -> false)))
         })) {
-        p("The names of all nodes with a `name` property is returned, along with a boolean `true` / `false` indicating if they are married.")
+        p("The names of all nodes with the `name` property are returned, along with a boolean `true` / `false` indicating if they are married.")
         resultTable()
       }
     }
