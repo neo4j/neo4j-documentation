@@ -195,7 +195,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     }
     section("percentileCont()", "functions-percentilecont") {
       p(
-        """`percentileCont()` returns the percentile of a given value over a group, with a percentile from 0.0 to 1.0.
+        """`percentileCont()` returns the percentile of the given value over a group, with a percentile from 0.0 to 1.0.
           |It uses a linear interpolation method, calculating a weighted average between two values if the desired percentile lies between them.
           |For nearest values using a rounding method, see `percentileDisc`.""")
       function("percentileCont(expression, percentile)", "A Float.", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
@@ -209,7 +209,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     }
     section("percentileDisc()", "functions-percentiledisc") {
       p(
-        """`percentileDisc()` returns the percentile of a given value over a group, with a percentile from 0.0 to 1.0.
+        """`percentileDisc()` returns the percentile of the given value over a group, with a percentile from 0.0 to 1.0.
           |It uses a rounding method and calculates the nearest value to the percentile.
           |For interpolated values, see `percentileCont`.""")
       function("percentileDisc(expression, percentile)", "Either an Integer or a Float, depending on the values returned by `expression` and whether or not the calculation overflows.", ("expression", "A numeric expression."), ("percentile", "A numeric value between 0.0 and 1.0"))
@@ -223,7 +223,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     }
     section("stDev()", "functions-stdev") {
       p(
-        """`stDev()` returns the standard deviation for a given value over a group.
+        """`stDev()` returns the standard deviation for the given value over a group.
           |It uses a standard two-pass method, with `N - 1` as the denominator, and should be used when taking a sample of the population for an unbiased estimate.
           |When the standard variation of the entire population is being calculated, `stdDevP` should be used.""")
       function("stDev(expression)", "A Float.", ("expression", "A numeric expression."))
@@ -237,7 +237,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     }
     section("stDevP()", "functions-stdevp") {
       p(
-        """`stDevP()` returns the standard deviation for a given value over a group.
+        """`stDevP()` returns the standard deviation for the given value over a group.
           |It uses a standard two-pass method, with `N` as the denominator, and should be used when calculating the standard deviation for an entire population.
           |When the standard variation of only a sample of the population is being calculated, `stDev` should be used.""")
       function("stDevP(expression)", "A Float.", ("expression", "A numeric expression."))

@@ -52,7 +52,7 @@ class PredicateFunctionsTest extends DocumentingTest {
         |* <<functions-single,single()>>""")
     graphViz()
     section("all()", "functions-all") {
-      p("`all()` returns true if the predicate holds for all elements in a given list.")
+      p("`all()` returns true if the predicate holds for all elements in the given list.")
       function("all(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (a)-[*1..3]->(b)
@@ -66,7 +66,7 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("any()", "functions-any") {
-      p("`any()` returns true if the predicate holds for at least one element in a given list.")
+      p("`any()` returns true if the predicate holds for at least one element in the given list.")
       function("any(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH (a)
@@ -94,7 +94,7 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("none()", "functions-none") {
-      p("`none()` returns true if the predicate holds for no element in a given list.")
+      p("`none()` returns true if the predicate holds for no element in the given list.")
       function("none(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (n)-[*1..3]->(b)
@@ -107,7 +107,7 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("single()", "functions-single") {
-      p("`single()` returns true if the predicate holds for exactly one of the elements in a given list.")
+      p("`single()` returns true if the predicate holds for exactly one of the elements in the given list.")
       function("single(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (n)-->(b)

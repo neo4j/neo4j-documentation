@@ -53,7 +53,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
     p("The following graph is used for the examples below:")
     graphViz()
     section("abs()", "functions-abs") {
-      p("`abs()` returns the absolute value of a given number.")
+      p("`abs()` returns the absolute value of the given number.")
       function("abs(expression)", "The type of the value returned will be that of `expression`.", ("expression", "A numeric expression."))
       considerations("`abs(null)` returns `null`.", "If `expression` is negative, `-(expression)` (i.e. the _negation_ of `expression`) is returned.")
       query("MATCH (a), (e) WHERE a.name = 'Alice' AND e.name = 'Eskil' RETURN a.age, e.age, abs(a.age - e.age)", ResultAssertions((r) => {
@@ -98,7 +98,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("round()", "functions-round") {
-      p("`round()` returns the value of a given number rounded to the nearest integer.")
+      p("`round()` returns the value of the given number rounded to the nearest integer.")
       function("round(expression)", "A Float.", ("expression", "A numeric expression."))
       considerations("`round(null)` returns `null`.")
       query("RETURN round(3.141592)", ResultAssertions((r) => {
@@ -109,7 +109,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("sign()", "functions-sign") {
-      p("`sign()` returns the signum of a given number: `0` if the number is `0`, `-1` for any negative number, and `1` for any positive number.")
+      p("`sign()` returns the signum of the given number: `0` if the number is `0`, `-1` for any negative number, and `1` for any positive number.")
       function("sign(expression)", "An Integer.", ("expression", "A numeric expression."))
       considerations("`sign(null)` returns `null`.")
       query("RETURN sign(-17), sign(0.1)", ResultAssertions((r) => {

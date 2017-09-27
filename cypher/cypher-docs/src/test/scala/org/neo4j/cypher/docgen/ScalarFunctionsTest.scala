@@ -73,7 +73,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     graphViz()
     section("coalesce()", "functions-coalesce") {
       p(
-        "`coalesce()` returns the first non-`null` value in a given list of expressions.")
+        "`coalesce()` returns the first non-`null` value in the given list of expressions.")
       function("coalesce(expression [, expression]*)", "The type of the value returned will be that of the first non-`null` expression.", ("expression", "An expression which may return `null`."))
       considerations("`null` will be returned if all the arguments are `null`.")
       query(
@@ -283,7 +283,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     }
     section("type()", "functions-type") {
       p(
-        """`type()` returns a string representation of the relationship type.""".stripMargin)
+        """`type()` returns the string representation of the relationship type.""".stripMargin)
       function("type(relationship)", "A String.", ("relationship", "An expression that returns a relationship."))
       considerations("`type(null)` returns `null`.")
       query(

@@ -78,7 +78,7 @@ class ListFunctionsTest extends DocumentingTest {
       }
     }
     section("filter()", "functions-filter") {
-      p("""`filter()` returns a list `l~result~` containing all the elements from a list `list` that comply with a given predicate.""")
+      p("""`filter()` returns a list `l~result~` containing all the elements from a list `list` that comply with the given predicate.""")
       function("filter(variable IN list WHERE predicate)", "A list containing heterogeneous elements; the types of the elements are determined by the elements in `list`.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from the predicate."), ("predicate", "A predicate that is tested against all elements in `list`."))
       query(
         """MATCH (a)
