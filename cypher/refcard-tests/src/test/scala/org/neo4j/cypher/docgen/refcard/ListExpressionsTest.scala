@@ -72,6 +72,14 @@ Number of elements in the list.
 ###assertion=returns-one parameters=list
 RETURN
 
+reverse($list)
+###
+
+Reverse the order of the elements in the list.
+
+###assertion=returns-one parameters=list
+RETURN
+
 head($list), last($list), tail($list)
 ###
 
