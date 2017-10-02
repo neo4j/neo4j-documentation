@@ -192,7 +192,7 @@
                   <arg value="org.neo4j.graphdb.factory.GraphDatabaseSettings" />
                   <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
                   <arg value="org.neo4j.metrics.MetricsSettings" />
-                  <arg value="org.neo4j.backup.OnlineBackupSettings" />
+                  <arg value="org.neo4j.kernel.impl.enterprise.configuration.OnlineBackupSettings" />
                   <arg value="org.neo4j.ext.udc.UdcSettings" />
                   <arg value="org.neo4j.shell.ShellSettings" />
                   <arg value="org.neo4j.cluster.ClusterSettings" />
