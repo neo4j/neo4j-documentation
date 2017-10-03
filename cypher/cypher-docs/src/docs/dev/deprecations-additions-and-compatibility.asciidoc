@@ -11,6 +11,7 @@ New features get added to the language continuously, and occasionally, some feat
  ** <<cypher-deprecations-additions-removals-3.0, Version 3.0>>
  ** <<cypher-deprecations-additions-removals-3.1, Version 3.1>>
  ** <<cypher-deprecations-additions-removals-3.2, Version 3.2>>
+ ** <<cypher-deprecations-additions-removals-3.3, Version 3.3>>
 * <<cypher-compatibility, Compatibility>>
 * <<cypher-versions, Supported language versions>>
 
@@ -78,6 +79,16 @@ Replacement syntax for deprecated and removed features are also indicated.
 |===
 
 
+[[cypher-deprecations-additions-removals-3.3]]
+=== Version 3.3
+[options="header"]
+|===
+| Feature          | Type | Change | Details
+| `START`     | Clause | Removed | Replaced by the built-in procedures `db.nodeManualIndexSeek`, `db.nodeManualIndexSearch`, `db.relationshipManualIndexSeek`, and `db.relationshipManualIndexSearch`
+| <<functions-max, max()>>, <<functions-min, min()>> | Function  | Extended | Now also supports aggregation over a set containing lists of strings and numbers
+|===
+
+
 [[cypher-compatibility]]
 == Compatibility
 
@@ -105,8 +116,9 @@ RETURN n
 [[cypher-versions]]
 == Supported language versions
 
-Neo4j 3.2 supports the following versions of the Cypher language:
+Neo4j 3.3 supports the following versions of the Cypher language:
 
+* Neo4j Cypher 3.3
 * Neo4j Cypher 3.2
 * Neo4j Cypher 3.1
 * Neo4j Cypher 2.3
