@@ -327,7 +327,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                                               providedPlanners: Seq[String],
                                               prepareFunction: => Unit) = {
     // COST planner is default. Can't specify it without getting exception thrown if it's unavailable.
-    val planners = if (providedPlanners.isEmpty) Seq("", "CYPHER PLANNER=rule ") else providedPlanners
+    val planners = if (providedPlanners.isEmpty) Seq("") else providedPlanners
 
     val results = planners.flatMap {
       case planner if expectedException.isEmpty =>

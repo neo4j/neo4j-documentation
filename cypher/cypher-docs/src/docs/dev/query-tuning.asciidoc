@@ -62,26 +62,17 @@ Here we detail the available versions:
 
 Each query is turned into an execution plan by something called the _execution planner_.
 The execution plan tells Neo4j which operations to perform when executing the query.
-Two different execution planning strategies are included in Neo4j:
 
-Rule::
-This planner has rules that are used to produce execution plans.
-The planner considers available indexes, but does not use statistical information to guide the query compilation.
+Neo4j uses a _cost_-based execution planning strategy (known as the 'cost' planner): the statistics service in Neo4j is used to assign a cost to alternative plans and picks the cheapest one.
 
-Cost::
-This planner uses the statistics service in Neo4j to assign cost to alternative plans and picks the cheapest one.
-Compared with the rule planner, the cost planner results in superior query execution performance.
+All previous versions of Neo4j also included a rule-based planner, which used rules to produce execution plans.
+This planner considered available indexes, but did not use statistical information to guide the query compilation.
+The rule planner was removed in Neo4j 3.2 owing to inferior query performance when compared with the cost planner.
 
-While this should lead to superior execution plans in most cases, it is still under development.
-
-[options="header"]
-|===
-| Query option | Description | Default?
-| `planner=rule` | This will force the query to use the rule planner.  |
-| `planner=cost` | This will force the query to use the cost planner. As this is the default planner, it is not necessary to use this option explicitly. | X
-|===
-
-It is also possible to change the default planner by using the `cypher.planner` configuration setting (see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>).
+[NOTE]
+Neo4j {neo4j-version} uses the cost planner for _all_ queries.
+If required, you can force it to use the rule planner by using the `cypher.planner` configuration setting (see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>), or by prepending your query with `CYPHER planner=rule`.
+However, doing this will cause the query to fall back to using Cypher 3.1.
 
 You can see which planner was used by looking at the execution plan.
 
