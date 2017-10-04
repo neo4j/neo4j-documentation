@@ -45,6 +45,7 @@ This section describes the preparser options available in Cypher.
 Queries are able to be fine-tuned through the use of _preparser options_.
 If there is a requirement to use one or more of these options, the query must be prepended with `CYPHER`, followed by the preparser option(s), as exemplified thus: `CYPHER preparser-option1 [further preparser options] query`.
 
+[[cypher-preparser-version]]
 === Cypher version
 
 Occasionally, there is a requirement to use a previous version of the Cypher compiler when running a query.
@@ -58,6 +59,7 @@ Here we detail the available versions:
 | `3.1` | This will force the query to use Neo4j Cypher 3.1. As this is the default version, it is not necessary to use this option explicitly. | X
 |===
 
+[[cypher-preparser-planner]]
 === Cypher planner
 
 Each query is turned into an execution plan by something called the _execution planner_.
