@@ -62,7 +62,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 [options="header"]
 |===
 | Feature          | Type | Change | Details
-| Rule planner     | Functionality | Removed | All queries now use the cost planner
+| `CYPHER planner=rule` (Rule planner)    | Functionality | Removed | All queries now use the cost planner
 | `CREATE UNIQUE`     | Clause | Removed | Running such queries will fall back to using Cypher 3.1 (and use the rule planner)
 | `START`     | Clause | Removed | Running such queries will fall back to using Cypher 3.1 (and use the rule planner)
 | `MATCH (n)-[rs*]-() RETURN rs`     | Syntax | Deprecated | Replaced by `MATCH p=(n)-[*]-() RETURN relationships(p) AS rs`
@@ -72,6 +72,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | <<user-defined-aggregation-functions, User-defined aggregation functions>> | Functionality | Added |
 | <<query-schema-index-introduction, Composite indexes>> | Index | Added |
 | <<query-constraint-node-key, Node Key>> | Index | Added | Neo4j Enterprise Edition only
+| `CYPHER runtime=compiled` (Compiled runtime) | Functionality | Added | Neo4j Enterprise Edition only
 | <<functions-reverse-list,reverse()>> | Function  | Extended | Now also allows a list as input
 | <<functions-max, max()>>, <<functions-min, min()>> | Function  | Extended | Now also supports aggregation over a set containing both strings and numbers
 |===
