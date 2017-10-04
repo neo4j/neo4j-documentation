@@ -85,6 +85,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 |===
 | Feature          | Type | Change | Details
 | `START`     | Clause | Removed | Replaced by the built-in procedures `db.nodeManualIndexSeek`, `db.nodeManualIndexSearch`, `db.relationshipManualIndexSeek`, and `db.relationshipManualIndexSearch`
+| `CYPHER runtime=slotted` (Faster interpreted runtime) | Functionality | Added | Neo4j Enterprise Edition only
 | <<functions-max, max()>>, <<functions-min, min()>> | Function  | Extended | Now also supports aggregation over a set containing lists of strings and numbers
 |===
 
