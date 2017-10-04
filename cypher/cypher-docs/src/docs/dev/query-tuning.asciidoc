@@ -21,7 +21,7 @@ This allows Cypher to re-use your queries instead of having to parse and build n
 
 To read more about the execution plan operators mentioned in this chapter, see <<execution-plans>>.
 
-* <<how-are-queries-executed,How are queries executed?>>
+* <<how-are-queries-executed,How are queries executed? XXXThis must be changed by Docs Team!>>
 * <<how-do-i-profile-a-query,Profiling a query>>
 * <<cypherdoc-basic-query-tuning-example,Basic query tuning example>>
 * <<query-using,Planner hints and the `USING` keyword>>
@@ -35,6 +35,31 @@ To read more about the execution plan operators mentioned in this chapter, see <
 [[how-are-queries-executed]]
 == How are queries executed?
 
+_***XXTODO by Docs Team - change this heading to something like 'Preparser options' (this is what they are called internally), or something more reader-friendly (if a term other than 'preparser' is decided upon, please also change accordingly in the text). This section no longer deals with 'how queries are executed' per se. More of that content will be added by me later on. END TODO***_
+
+[abstract]
+--
+This section describes the preparser options available in Cypher.
+--
+
+Queries are able to be fine-tuned through the use of _preparser options_.
+If there is a requirement to use one or more of these options, the query must be prepended with `CYPHER`, followed by the preparser option(s), as exemplified thus: `CYPHER preparser-option1 [further preparser options] query`.
+
+=== Cypher version
+
+Occasionally, there is a requirement to use a previous version of the Cypher compiler when running a query.
+Here we detail the available versions:
+
+[options="header"]
+|===
+| Preparser option | Description | Default?
+| `2.3` | This will force the query to use Neo4j Cypher 2.3.  |
+| `3.0` | This will force the query to use Neo4j Cypher 3.0. |
+| `3.1` | This will force the query to use Neo4j Cypher 3.1. As this is the default version, it is not necessary to use this option explicitly. | X
+|===
+
+=== Cypher planner
+
 Each query is turned into an execution plan by something called the _execution planner_.
 The execution plan tells Neo4j which operations to perform when executing the query.
 Two different execution planning strategies are included in Neo4j:
@@ -47,8 +72,14 @@ Cost::
 This planner uses the statistics service in Neo4j to assign cost to alternative plans and picks the cheapest one.
 While this should lead to superior execution plans in most cases, it is still under development.
 
-By default, Neo4j {neo4j-version} will use the cost planner for all queries.
-You can force it to use a specific planner by using the `cypher.planner` configuration setting (see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>), or by prepending your query with `CYPHER planner=cost` or `CYPHER planner=rule`.
+[options="header"]
+|===
+| Preparser option | Description | Default?
+| `planner=rule` | This will force the query to use the rule planner.  |
+| `planner=cost` | This will force the query to use the cost planner. As this is the default planner, it is not necessary to use this option explicitly. | X
+|===
+
+It is also possible to force queries to use a specific planner by using the `cypher.planner` configuration setting (see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>).
 
 You can see which planner was used by looking at the execution plan.
 
