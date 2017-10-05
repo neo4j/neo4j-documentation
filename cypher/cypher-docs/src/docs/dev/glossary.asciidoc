@@ -198,10 +198,10 @@ This section comprises a glossary of all the keywords -- grouped by category and
 
 [options="header"]
 |===
-|Name           | Description
-| <<cypher-preparser-version, CYPHER $version query>>  | This will force `'query'` to use Neo4j Cypher `$version`. The default is `3.1`.
-| <<cypher-preparser-planner, CYPHER planner=rule query>> | This will force `'query'` to use the rule planner.
-| <<cypher-preparser-planner, CYPHER planner=cost query>> | This will force `'query'` to use the cost planner. This is the default planner.
+|Name           | Type | Description
+| <<cypher-preparser-version, CYPHER $version query>>  | Version | This will force `'query'` to use Neo4j Cypher `$version`. The default is `3.1`.
+| <<cypher-preparser-planner, CYPHER planner=rule query>> | Planner | This will force `'query'` to use the rule planner.
+| <<cypher-preparser-planner, CYPHER planner=cost query>> | Planner | This will force `'query'` to use the cost planner. This is the default planner.
 |===
 
 
