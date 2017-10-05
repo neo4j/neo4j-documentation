@@ -11,13 +11,13 @@
 [abstract]
 --
 Cypher is a language that is constantly evolving.
-New features get added to the language all the time, and occasionally, some features become deprecated and are subsequently removed.
+New features get added to the language continuously, and occasionally, some features become deprecated and are subsequently removed.
 --
 
 [[cypher-deprecations-additions-removals]]
 == Removals, deprecations, additions and extensions
 
-The following tables lists all the features which have been removed, deprecated, added or extended to Cypher.
+The following tables lists all the features which have been removed, deprecated, added or extended in Cypher.
 Replacement syntax for deprecated and removed features are also indicated.
 
 [[cypher-deprecations-additions-removals-3.0]]
