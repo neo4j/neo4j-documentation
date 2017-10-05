@@ -40,8 +40,8 @@ To read more about the execution plan operators mentioned in this chapter, see <
 This section describes the query options available in Cypher.
 --
 
-Query execution can be fine-tuned through the use of query options.
-In order to use one or more of these options, the query must be prepended with `CYPHER`, followed by the query option(s), as exemplified thus: `CYPHER query-option [further-query-options] query`.
+Queries are able to be fine-tuned through the use of query options.
+If there is a requirement to use one or more of these options, the query must be prepended with `CYPHER`, followed by the query option(s), as exemplified thus: `CYPHER query-option [further-query-options] query`.
 
 [[cypher-version]]
 === Cypher version
@@ -53,8 +53,8 @@ Here we detail the available versions:
 |===
 | Query option | Description | Default?
 | `2.3` | This will force the query to use Neo4j Cypher 2.3.  |
-| `3.1` | This will force the query to use Neo4j Cypher 3.1. |
-| `3.2` | This will force the query to use Neo4j Cypher 3.2. As this is the default version, it is not necessary to use this option explicitly. | X
+| `3.2` | This will force the query to use Neo4j Cypher 3.2. |
+| `3.3` | This will force the query to use Neo4j Cypher 3.3. As this is the default version, it is not necessary to use this option explicitly. | X
 |===
 
 
@@ -66,9 +66,10 @@ The execution plan tells Neo4j which operations to perform when executing the qu
 
 Neo4j uses a _cost_-based execution planning strategy (known as the 'cost' planner): the statistics service in Neo4j is used to assign a cost to alternative plans and picks the cheapest one.
 
-All previous versions of Neo4j also included a rule-based planner, which used rules to produce execution plans.
+All versions of Neo4j prior to Neo4j 3.2 also included a rule-based planner, which used rules to produce execution plans.
 This planner considered available indexes, but did not use statistical information to guide the query compilation.
-The rule planner was removed in Neo4j 3.2 owing to inferior query execution performance when compared with the cost planner.
+The rule planner was removed in Neo4j 3.2 owing to inferior query performance when compared with the cost planner.
+
 
 [options="header"]
 |===
@@ -90,15 +91,23 @@ These index decisions are only valid until the schema changes, so adding or remo
 === Cypher runtime
 
 Using the execution plan, the query is executed -- and records returned -- by the query engine, or _runtime_.
-Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used, there are two different runtimes available:
+Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used, there are three different runtimes available:
 
 Interpreted::
 In this runtime, the operators in the execution plan are chained together in a tree, where each non-leaf operator feeds from one or two child operators.
 The tree thus comprises nested iterators, and the records are streamed in a pipelined manner from the top iterator, which pulls from the next iterator and so on.
 
+Slotted::
+This is very similar to the interpreted runtime, except that there are additional optimizations regarding the way in which the records are streamed through the iterators.
+This results in improvements to both the performance and memory usage of the query.
+In effect, this can be thought of as a the 'faster interpreted' runtime.
+
+[NOTE]
+The slotted runtime is only available in Neo4j Enterprise Edition.
+
 Compiled::
-Algorithms are employed to intelligently group the operators in the execution plan in order to generate new combinations and orders of execution which are optimised for performance and memory usage.
-While this should lead to superior performance in most cases, it is still under development and does not support all possible operators or queries.
+Algorithms are employed to group intelligently the operators in the execution plan in order to generate new combinations and orders of execution which are optimised for performance and memory usage.
+While this should lead to superior performance in most cases (over both the interpreted and slotted runtimes), it is still under development and does not support all possible operators or queries (the slotted runtime has a higher coverage of operators and queries).
 
 [NOTE]
 The compiled runtime is only available in Neo4j Enterprise Edition.
@@ -106,9 +115,11 @@ The compiled runtime is only available in Neo4j Enterprise Edition.
 [options="header"]
 |===
 | Option | Description | Default?
-| `runtime=interpreted` | This will cause the query execution engine to disregard the compiled runtime, and therefore use the interpreted runtime. | This is the default option for some queries in Enterprise Edition, and the only option for all queries in Community Edition (so it is not necessary to use this option in Community Edition).
-| `runtime=compiled` | This will cause the query execution engine to use the compiled runtime if it supports the query, and fall back to using the interpreted runtime if it does not. | This is the default option for some queries in Enterprise Edition only.
+| `runtime=interpreted` | This will force the query to use the interpreted runtime.  | This is the default option for some queries in Enterprise Edition, and the only option for all queries in Community Edition (so it is not necessary to use this option in Community Edition).
+| `runtime=slotted` | This will force the query to use the slotted runtime. | This is the default option for some queries in Enterprise Edition only. Setting this option for a query that does not support the slotted runtime will cause the query to fall back to using the interpreted runtime.
+| `runtime=compiled` | This will force the query to use the compiled runtime. | This is the default option for some queries in Enterprise Edition only. Setting this option for a query that does not support the compiled runtime will cause the query to fall back to using the slotted or interpreted runtime.
 |===
+
 
 [[how-do-i-profile-a-query]]
 == Profiling a query
