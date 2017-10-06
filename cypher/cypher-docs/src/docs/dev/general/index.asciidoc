@@ -9,7 +9,6 @@ For the terminology used, see <<terminology>>.
 * <<query-updating,Querying and updating the graph>>
 * <<query-transactions,Transactions>>
 * <<cypherdoc-uniqueness,Uniqueness>>
-* <<cypher-compatibility,Compatibility>>
 
 include::introduction.asciidoc[leveloffset=+1]
 
@@ -23,8 +22,3 @@ include::../../parsed-graphgists/uniqueness/uniqueness.asciidoc[leveloffset=+1]
 
 // aggregation ?
 
-include::compatibility.asciidoc[leveloffset=+1]
-
-include::start-compatibility.asciidoc[leveloffset=+2]
-
-include::versions.asciidoc[leveloffset=+2]
