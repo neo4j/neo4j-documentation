@@ -14,7 +14,7 @@ Let's start by importing the data:
 ----
 LOAD CSV WITH HEADERS FROM 'movies.csv' AS line
 MERGE (m:Movie {title: line.title})
-ON CREATE SET m.released = toInt(line.released), m.tagline = line.tagline
+ON CREATE SET m.released = toInteger(line.released), m.tagline = line.tagline
 ----
 
 //setup
@@ -23,7 +23,7 @@ ON CREATE SET m.released = toInt(line.released), m.tagline = line.tagline
 LOAD CSV WITH HEADERS FROM 'actors.csv' AS line
 MATCH (m:Movie {title: line.title})
 MERGE (p:Person {name: line.name})
-ON CREATE SET p.born = toInt(line.born)
+ON CREATE SET p.born = toInteger(line.born)
 MERGE (p)-[:ACTED_IN {roles:split(line.roles, ';')}]->(m)
 ----
 
@@ -33,7 +33,7 @@ MERGE (p)-[:ACTED_IN {roles:split(line.roles, ';')}]->(m)
 LOAD CSV WITH HEADERS FROM 'directors.csv' AS line
 MATCH (m:Movie {title: line.title})
 MERGE (p:Person {name: line.name})
-ON CREATE SET p.born = toInt(line.born)
+ON CREATE SET p.born = toInteger(line.born)
 MERGE (p)-[:DIRECTED]->(m)
 ----
 

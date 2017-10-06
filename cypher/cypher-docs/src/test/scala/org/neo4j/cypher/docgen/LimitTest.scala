@@ -69,7 +69,7 @@ class LimitTest extends DocumentingTest {
         """MATCH (n)
           |RETURN n.name
           |ORDER BY n.name
-          |LIMIT toInt(3 * rand()) + 1""".stripMargin, ResultAssertions((r) => {
+          |LIMIT toInteger(3 * rand()) + 1""".stripMargin, ResultAssertions((r) => {
           r.toSet should contain(Map("n.name" -> "A"))
         })) {
         p("Returns one to three top items.")
