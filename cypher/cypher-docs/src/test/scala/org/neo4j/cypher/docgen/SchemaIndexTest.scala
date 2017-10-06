@@ -60,6 +60,17 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
+  @Test def get_all_indexes() {
+    prepareAndTestQuery(
+      title = "Get a list of all indexes in the database",
+      text = "Calling the built-in procedure `db.indexes` will list all the indexes in the database.",
+      prepare = _ => executePreparationQueries(List("create index on :Person(firstname)")),
+      queryText = "CALL db.indexes",
+      optionalResultExplanation = "",
+      assertions = (p) => assertEquals(1, p.size)
+    )
+  }
+
   @Test def drop_index_on_a_label_single_property() {
     prepareAndTestQuery(
       title = "Drop a single-property index",

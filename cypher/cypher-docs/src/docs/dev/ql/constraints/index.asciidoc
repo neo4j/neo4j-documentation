@@ -13,6 +13,7 @@ Unique node property constraints can be created, along with node and relationshi
  ** <<constraints-create-a-node-that-complies-with-unique-property-constraints, Create a node that complies with unique property constraints>>
  ** <<constraints-create-a-node-that-violates-a-unique-property-constraint, Create a node that violates a unique property constraint>>
  ** <<constraints-failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes, Failure to create a unique property constraint due to conflicting nodes>>
+* <<constraints-get-a-list-of-all-constraints-in-the-database, Get a list of all constraints in the database>>
 * <<query-constraint-prop-exist-nodes, Node property existence constraints>>
  ** <<constraints-create-node-property-existence-constraint, Create node property existence constraint>>
  ** <<constraints-drop-node-property-existence-constraint, Drop node property existence constraint>>
@@ -86,6 +87,7 @@ include::create-a-node-that-violates-a-unique-property-constraint.asciidoc[level
 
 include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes.asciidoc[leveloffset=+1]
 
+include::get-a-list-of-all-constraints-in-the-database.asciidoc[]
 
 [[query-constraint-prop-exist-nodes]]
 == Node property existence constraints
