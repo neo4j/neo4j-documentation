@@ -125,7 +125,7 @@ You can later on refer to that column using its alias.
 [source, cypher]
 ----
 MATCH (p:Person)
-RETURN p, p.name AS name, upper(p.name), coalesce(p.nickname, 'n/a') AS nickname, {name: p.name, label: head(labels(p))} AS person
+RETURN p, p.name AS name, toUpper(p.name), coalesce(p.nickname, 'n/a') AS nickname, {name: p.name, label: head(labels(p))} AS person
 ----
 
 //table
