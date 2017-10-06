@@ -39,7 +39,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
         |       (bob)-[:KNOWS]->(daniel),
         |       (charlie)-[:KNOWS]->(daniel),
         |       (bob)-[:MARRIED]->(eskil)""")
-    synopsis("These functions all operate on numerical expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>.")
+    synopsis("These functions all operate on numeric expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>.")
     p(
       """Functions:
         |
@@ -53,8 +53,9 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
     p("The following graph is used for the examples below:")
     graphViz()
     section("abs()", "functions-abs") {
-      p("`abs()` returns the absolute value of a number.")
-      function("abs(expression)", ("expression", "A numeric expression."))
+      p("`abs()` returns the absolute value of the given number.")
+      function("abs(expression)", "The type of the value returned will be that of `expression`.", ("expression", "A numeric expression."))
+      considerations("`abs(null)` returns `null`.", "If `expression` is negative, `-(expression)` (i.e. the _negation_ of `expression`) is returned.")
       query("MATCH (a), (e) WHERE a.name = 'Alice' AND e.name = 'Eskil' RETURN a.age, e.age, abs(a.age - e.age)", ResultAssertions((r) => {
         r.toList should equal(List(Map("a.age" -> 38L, "e.age" -> 41L, "abs(a.age - e.age)" -> 3L)))
       })) {
@@ -63,18 +64,20 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("ceil()", "functions-ceil") {
-      p("`ceil()` returns the smallest integer greater than or equal to the argument.")
-      function("ceil(expression)", ("expression", "A numeric expression."))
+      p("`ceil()` returns the smallest floating point number that is greater than or equal to the given number and equal to a mathematical integer.")
+      function("ceil(expression)", "A Float.", ("expression", "A numeric expression."))
+      considerations("`ceil(null)` returns `null`.")
       query("RETURN ceil(0.1)", ResultAssertions((r) => {
         r.toList.head("ceil(0.1)") should equal(1.0)
       })) {
-        p("The ceil of `0.1`.")
+        p("The ceil of `0.1` is returned.")
         resultTable()
       }
     }
     section("floor()", "functions-floor") {
-      p("`floor()` returns the greatest integer less than or equal to the expression.")
-      function("floor(expression)", ("expression", "A numeric expression."))
+      p("`floor()` returns the largest floating point number that is less than or equal to the given number and equal to a mathematical integer.")
+      function("floor(expression)", "A Float.", ("expression", "A numeric expression."))
+      considerations("`floor(null)` returns `null`.")
       query("RETURN floor(0.9)", ResultAssertions((r) => {
         r.toList.head("floor(0.9)") should equal(0.0)
       })) {
@@ -83,8 +86,9 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("rand()", "functions-rand") {
-      p("`rand()` returns a random number in the range from 0 (inclusive) to 1 (exclusive), [0,1). The numbers returned follow an approximate uniform distribution.")
-      function("rand()")
+      p("`rand()` returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. `[0,1)`. " +
+        "The numbers returned follow an approximate uniform distribution.")
+      function("rand()", "A Float.")
       query("RETURN rand()", ResultAssertions((r) => {
         r.toList.head("rand()").asInstanceOf[Double] should be >= 0.0
         r.toList.head("rand()").asInstanceOf[Double] should be < 1.0
@@ -94,8 +98,9 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("round()", "functions-round") {
-      p("`round()` returns the numerical expression, rounded to the nearest integer.")
-      function("round(expression)", ("expression", "A numeric expression that represents the angle in radians."))
+      p("`round()` returns the value of the given number rounded to the nearest integer.")
+      function("round(expression)", "A Float.", ("expression", "A numeric expression."))
+      considerations("`round(null)` returns `null`.")
       query("RETURN round(3.141592)", ResultAssertions((r) => {
         r.toList.head("round(3.141592)") should equal(3.0)
       })) {
@@ -104,8 +109,9 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("sign()", "functions-sign") {
-      p("`sign()` returns the signum of a number -- zero if the expression is zero, `-1` for any negative number, and `1` for any positive number.")
-      function("sign(expression)", ("expression", "A numeric expression."))
+      p("`sign()` returns the signum of the given number: `0` if the number is `0`, `-1` for any negative number, and `1` for any positive number.")
+      function("sign(expression)", "An Integer.", ("expression", "A numeric expression."))
+      considerations("`sign(null)` returns `null`.")
       query("RETURN sign(-17), sign(0.1)", ResultAssertions((r) => {
         r.toList.head("sign(-17)") should equal(-1L)
         r.toList.head("sign(0.1)") should equal(1L)
