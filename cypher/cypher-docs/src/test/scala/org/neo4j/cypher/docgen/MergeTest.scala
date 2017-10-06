@@ -57,7 +57,7 @@ class MergeTest extends DocumentingTestBase with QueryStatisticsTestSupport with
   @Test def merge_single_node_with_label() {
     testQuery(
       title = "Merge single node with a label",
-      text = "Merging a single node with a given label.",
+      text = "Merging a single node with the given label.",
       queryText = "MERGE (robert:Critic)\nRETURN robert, labels(robert)",
       optionalResultExplanation = "A new node is created because there are no nodes labeled `Critic` in the database.",
       assertions = (p) => assertStats(p, nodesCreated = 1, labelsAdded = 1)
