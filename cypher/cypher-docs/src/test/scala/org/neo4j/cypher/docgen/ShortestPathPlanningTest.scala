@@ -77,8 +77,8 @@ class ShortestPathPlanningTest extends DocumentingTest {
       query(
         """MATCH (ms:Person {name: 'Martin Sheen'} ),
           |      (cs:Person {name: 'Charlie Sheen'}),
-          |      p = shortestPath((ms)-[rels:ACTED_IN*]-(cs))
-          |WHERE all(r IN rels WHERE exists(r.role))
+          |      p = shortestPath((ms)-[:ACTED_IN*]-(cs))
+          |WHERE all(r IN relationships(p) WHERE exists(r.role))
           |RETURN p""", assertShortestPathLength) {
         p(
           """This query can be evaluated with the fast algorithm -- there are no predicates that need to see the whole
