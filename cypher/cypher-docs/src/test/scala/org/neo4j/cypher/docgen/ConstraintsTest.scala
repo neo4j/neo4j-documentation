@@ -43,6 +43,19 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def get_all_constraints() {
+    generateConsole = false
+
+    prepareAndTestQuery(
+      title = "Get a list of all constraints in the database",
+      text = "Calling the built-in procedure `db.constraints` will list all the constraints in the database.",
+      queryText = "CALL db.constraints",
+      optionalResultExplanation = "",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
+      assertions = (p) => assert(p.size == 1)
+    )
+  }
+
   @Test def drop_unique_constraint() {
     generateConsole = false
 
