@@ -88,7 +88,7 @@ class SkipTest extends DocumentingTest {
         """MATCH (n)
           |RETURN n.name
           |ORDER BY n.name
-          |SKIP toInt(3*rand()) + 1""".stripMargin, ResultAssertions((r) => {
+          |SKIP toInteger(3*rand()) + 1""".stripMargin, ResultAssertions((r) => {
           r.toSet should contain(Map("n.name" -> "E"))
         })) {
         p("The first three nodes are skipped, and only the last two are returned in the result.")

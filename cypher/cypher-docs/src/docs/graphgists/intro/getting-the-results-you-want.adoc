@@ -113,7 +113,7 @@ But what are actually expressions in Cypher?
 The simplest expressions are literal values like numbers, strings and arrays as `[1, 2, 3]`, and maps like `{name: 'Tom Hanks', born: 1964, movies:['Forrest Gump', ...], count: 13}`.
 You can access individual properties of any node, relationship, or map with a dot-syntax like `n.name`.
 Individual elements or slices of arrays can be retrieved with subscripts like `names[0]` or `movies[1..-1]`.
-Each function evaluation like `length(array)`, `toInt('12')`, `substring('2014-07-01', 0, 4)`, or `coalesce(p.nickname, 'n/a')` is also an expression.
+Each function evaluation like `length(array)`, `toInteger('12')`, `substring('2014-07-01', 0, 4)`, or `coalesce(p.nickname, 'n/a')` is also an expression.
 
 Predicates that you'd use in `WHERE` count as boolean expressions.
 
