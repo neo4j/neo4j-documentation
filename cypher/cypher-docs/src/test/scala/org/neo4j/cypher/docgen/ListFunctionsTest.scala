@@ -57,75 +57,84 @@ class ListFunctionsTest extends DocumentingTest {
     graphViz()
     section("extract()", "functions-extract") {
       p(
-        """To return a single property, or the value of a function from a list of nodes or relationships, you can use `extract()`.
-     It will go through a list, run an expression on every element, and return the results in a list with these values.
-     It works like the `map` method in functional languages such as Lisp and Scala.""")
-      function("extract(variable IN list | expression)", ("list", "An expression that returns a list"), ("variable", "The closure will have a variable introduced in its context. Here you decide which variable to use."), ("expression", "This expression will run once per value in the list, and produces the result list."))
+        """`extract()` returns a list `l~result~` containing the values resulting from an expression which has been applied to each element in a list `list`.
+           |This function is analogous to the `map` method in functional languages such as Lisp and Scala.""".stripMargin)
+      function("extract(variable IN list | expression)", "A list containing heterogeneous elements; the types of the elements are determined by `expression`.", ("list", "An expression that returns a list."), ("variable", "The closure will have a variable introduced in its context. We decide here which variable to use."), ("expression", "This expression will run once per value in `list`, and add it to the list which is returned by `extract()`."))
+      considerations("Any `null` values in `list` are preserved.")
+      p(
+        """
+          |Common usages of `extract()` include:
+          |
+          |* Returning a property from a list of nodes or relationships; for example, `expression` = `n.prop` and `list` = `nodes(<some-path>)`.
+          |* Returning the result of the application of a function on each element in a list; for example, `expression` = `toUpper(x)` and `variable` = `x`.""".stripMargin)
       query(
         """MATCH p = (a)-->(b)-->(c)
           |WHERE a.name = 'Alice' AND b.name = 'Bob' AND c.name = 'Daniel'
           |RETURN extract(n IN nodes(p) | n.age) AS extracted""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("extracted" -> List(38, 25, 54))))
         })) {
-        p("The `age` property of all nodes in the path are returned.")
+        p("The `age` property of all nodes in path `p` are returned.")
         resultTable()
       }
     }
     section("filter()", "functions-filter") {
-      p("""`filter()` returns all the elements in a list that comply to a predicate.""")
-      function("filter(variable IN list WHERE predicate)", ("list", "An expression that returns a list"), ("variable", "This is the variable that can be used from the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
+      p("""`filter()` returns a list `l~result~` containing all the elements from a list `list` that comply with the given predicate.""")
+      function("filter(variable IN list WHERE predicate)", "A list containing heterogeneous elements; the types of the elements are determined by the elements in `list`.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from the predicate."), ("predicate", "A predicate that is tested against all elements in `list`."))
       query(
         """MATCH (a)
           |WHERE a.name = 'Eskil'
           |RETURN a.array, filter(x IN a.array WHERE size(x) = 3)""".stripMargin, ResultAssertions((r) => {
           r.columnAs[Iterable[_]]("filter(x IN a.array WHERE size(x) = 3)").toList.head should equal(Array("one", "two"))
         })) {
-        p("This returns the property named `array` and a list of values in it, which have size *'3'*.")
+        p("The property named `array` and a list of all values having size *'3'* are returned.")
         resultTable()
       }
     }
     section("keys()", "functions-keys") {
-      p("""Returns a list of string representations for the property names of a node, relationship, or map.""")
-      function("keys(expression)", ("expression", "An expression that returns a node, a relationship, or a map."))
+      p("""`keys` returns a list containing the string representations for all the property names of a node, relationship, or map.""")
+      function("keys(expression)", "A list containing String elements.", ("expression", "An expression that returns a node, a relationship, or a map."))
+      considerations("`keys(null)` returns `null`.")
       query(
         """MATCH (a) WHERE a.name = 'Alice'
           |RETURN keys(a)""".stripMargin, ResultAssertions((r) => {
           r.columnAs[Iterable[_]]("keys(a)").toList.head should equal(Array("name", "age", "eyes"))
         })) {
-        p("The name of the properties of `n` is returned by the query.")
+        p("A list containing the names of all the properties on the node bound to `a` is returned.")
         resultTable()
       }
     }
     section("labels()", "functions-labels") {
-      p("""Returns a list of string representations for the labels attached to a node.""")
-      function("labels(node)", ("node", "Any expression that returns a single node."))
+      p("""`labels` returns a list containing the string representations for all the labels of a node.""")
+      function("labels(node)", "A list containing String elements.", ("node", "An expression that returns a single node."))
+      considerations("`labels(null)` returns `null`.")
       query(
         """MATCH (a) WHERE a.name = 'Alice'
           |RETURN labels(a)""".stripMargin, ResultAssertions((r) => {
           r.columnAs[Iterable[_]]("labels(a)").toList.head should equal(Array("Person", "Developer"))
         })) {
-        p("The labels of `n` are returned by the query.")
+        p("A list containing all the labels of the node bound to `a` is returned.")
         resultTable()
       }
     }
     section("nodes()", "functions-nodes") {
-      p("""Returns all nodes in a path.""")
-      function("nodes(path)", ("path", "A path."))
+      p("`nodes()` returns a list containing all the nodes in a path.")
+      function("nodes(path)", "A list containing Node elements.", ("path", "An expression that returns a path."))
+      considerations("`nodes(null)` returns `null`.")
       query(
         """MATCH p = (a)-->(b)-->(c)
           |WHERE a.name = 'Alice' AND c.name = 'Eskil'
           |RETURN nodes(p)""".stripMargin, ResultAssertions((r) => {
           r.columnAs[Seq[Node]]("nodes(p)").toList.head.map(_.getId) should equal(Array(0, 1, 4))
         })) {
-        p("All the nodes in the path `p` are returned by the example query.")
+        p("A list containing all the nodes in the path `p` is returned.")
         resultTable()
       }
     }
     section("range()", "functions-range") {
       p(
-        """`range()` returns numerical values in a range. The default distance between values in the range is `1`.
-          |The range is inclusive in both ends.""".stripMargin)
-      function("range(start, end [, step])", ("start", "A numerical expression."), ("end", "A numerical expression."), ("step", "A numerical expression."))
+        """`range()` returns a list comprising all integer values within a range bounded by a start value `start` and end value `end`, where the difference `step` between any two consecutive values is constant; i.e. an arithmetic progression.
+          |The range is inclusive, and the arithmetic progression will therefore always contain `start` and -- depending on the values of `start`, `step` and `end` -- `end`.""".stripMargin)
+      function("range(start, end [, step])", "A list of Integer elements.", ("start", "An expression that returns an integer value."), ("end", "An expression that returns an integer value."), ("step", "A numeric expression defining the difference between any two consecutive values, with a default of `1`."))
       query(
         """RETURN range(0, 10), range(2, 18, 3)""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("range(0, 10)" -> List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), "range(2, 18, 3)" -> List(2, 5, 8, 11, 14, 17))))
@@ -136,10 +145,10 @@ class ListFunctionsTest extends DocumentingTest {
     }
     section("reduce()", "functions-reduce") {
       p(
-        """To run an expression against individual elements of a list, and store the result of the expression in an accumulator, you can use `reduce()`.
-     It will go through a list, run an expression on every element, storing the partial result in the accumulator.
-     It works like the `fold` or `reduce` method in functional languages such as Lisp and Scala.""")
-      function("reduce(accumulator = initial, variable IN list | expression)", ("accumulator", "A variable that will hold the result and the partial results as the list is iterated."), ("initial", "An expression that runs once to give a starting value to the accumulator."), ("list", "An expression that returns a list."), ("variable", "The closure will have a variable introduced in its context. Here you decide which variable to use."), ("expression", "This expression will run once per value in the list, and produces the result value."))
+        """`reduce()` returns the value resulting from the application of an expression on each successive element in a list in conjunction with the result of the computation thus far.
+           This function will iterate through each element `e` in the given list, run the expression on `e` -- taking into account the current partial result -- and store the new partial result in the accumulator.
+           This function is analogous to the `fold` or `reduce` method in functional languages such as Lisp and Scala.""")
+      function("reduce(accumulator = initial, variable IN list | expression)", "The type of the value returned depends on the arguments provided, along with the semantics of `expression`.", ("accumulator", "A variable that will hold the result and the partial results as the list is iterated."), ("initial", "An expression that runs once to give a starting value to the accumulator."), ("list", "An expression that returns a list."), ("variable", "The closure will have a variable introduced in its context. We decide here which variable to use."), ("expression", "This expression will run once per value in the list, and produce the result value."))
       query(
         """MATCH p = (a)-->(b)-->(c)
           |WHERE a.name = 'Alice' AND b.name = 'Bob' AND c.name = 'Daniel'
@@ -151,27 +160,28 @@ class ListFunctionsTest extends DocumentingTest {
       }
     }
     section("relationships()", "functions-relationships") {
-      p("""Returns all relationships in a path.""")
-      function("relationships(path)", ("path", "A path."))
+      p("""`relationships()` returns a list containing all the relationships in a path.""")
+      function("relationships(path)", "A list containing Relationship elements.", ("path", "An expression that returns a path."))
+      considerations("`relationships(null)` returns `null`.")
       query(
         """MATCH p = (a)-->(b)-->(c)
           |WHERE a.name = 'Alice' AND c.name = 'Eskil'
           |RETURN relationships(p)""".stripMargin, ResultAssertions((r) => {
           r.columnAs[Seq[Relationship]]("relationships(p)").toList.head.map(_.getId) should equal(Array(0, 4))
         })) {
-        p("All the relationships in the path `p` are returned.")
+        p("A list containing all the relationships in the path `p` is returned.")
         resultTable()
       }
     }
     section("tail()", "functions-tail") {
-      p("""`tail()` returns all but the first element in a list.""")
-      function("tail(expression)", ("expression", "This expression should return a list of some kind."))
+      p("""`tail()` returns a list `l~result~` containing all the elements, excluding the first one, from a list `list`.""")
+      function("tail(list)", "A list containing heterogeneous elements; the types of the elements are determined by the elements in `list`.", ("list", "An expression that returns a list."))
       query(
         """MATCH (a) WHERE a.name = 'Eskil'
           |RETURN a.array, tail(a.array)""".stripMargin, ResultAssertions((r) => {
           r.columnAs[Iterable[_]]("tail(a.array)").toList.head should equal(Array("two", "three"))
         })) {
-        p("This returns the property named `array` and all elements of that property except the first one.")
+        p("The property named `array` and a list comprising all but the first element of the `array` property are returned.")
         resultTable()
       }
     }

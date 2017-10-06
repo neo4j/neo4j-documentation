@@ -50,14 +50,25 @@ trait DocBuilder {
 
   def p(text: String) = current.addContent(Paragraph(text.stripMargin))
 
+  private def formattedSyntax(syntax: String) : String = {
+    if (!syntax.isEmpty) "*Syntax:* `" + syntax + "`" else ""
+  }
+
   def function(syntax: String, arguments: (String, String)*) = {
-    val formattedSyntax = if (!syntax.isEmpty) "*Syntax:* `" + syntax + "`" else ""
-    current.addContent(Function(formattedSyntax, arguments))
+    current.addContent(Function(formattedSyntax(syntax), "", arguments))
+  }
+
+  def function(syntax: String, returns: String, arguments: (String, String)*) = {
+    current.addContent(Function(formattedSyntax(syntax), returns, arguments))
   }
 
   def functionWithCypherStyleFormatting(syntax: String, arguments: (String, String)*) = {
     val formattedSyntax = if (!syntax.isEmpty) Array("*Syntax:*", "[source, cypher]", syntax).mkString("\n", "\n", "") else ""
-    current.addContent(Function(formattedSyntax, arguments))
+    current.addContent(Function(formattedSyntax, "", arguments))
+  }
+
+  def considerations(lines: String*) = {
+    current.addContent(Consideration(lines))
   }
 
   def resultTable() = {
