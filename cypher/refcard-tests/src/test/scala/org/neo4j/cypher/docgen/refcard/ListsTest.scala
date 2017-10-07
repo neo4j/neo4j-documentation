@@ -94,12 +94,12 @@ range($firstNum, $lastNum, $step) AS list
 ###assertion=returns-one
 //
 
-MATCH (a)-[r:KNOWS*]->()
-RETURN r AS rels
+MATCH p = (a)-[:KNOWS*]->()
+RETURN relationships(p) AS r
 
 ###
 
-Relationship variables of a variable length path contain a list of relationships.
+The list of relationships comprising a variable length path can be returned using named paths and `relationships()`.
 
 ###assertion=returns-two
 MATCH (matchedNode)
