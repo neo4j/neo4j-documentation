@@ -150,8 +150,6 @@ include::ql/query-match.adoc[leveloffset=+1]
 
 include::ql/query-optional-match.adoc[leveloffset=+1]
 
-include::ql/start/index.asciidoc[leveloffset=+1]
-
 //Projecting
 include::ql/query-return.adoc[leveloffset=+1]
 
@@ -183,8 +181,6 @@ include::ql/foreach/index.asciidoc[leveloffset=+1]
 include::ql/merge/index.asciidoc[leveloffset=+1]
 
 include::ql/call/index.asciidoc[leveloffset=+1]
-
-include::ql/create-unique/index.asciidoc[leveloffset=+1]
 
 //Set
 include::ql/query-union.adoc[leveloffset=+1]
