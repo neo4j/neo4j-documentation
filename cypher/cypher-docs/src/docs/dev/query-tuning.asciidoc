@@ -42,8 +42,8 @@ _***XXTODO by Docs Team - change this heading to something like 'Preparser optio
 This section describes the preparser options available in Cypher.
 --
 
-Queries are able to be fine-tuned through the use of _preparser options_.
-If there is a requirement to use one or more of these options, the query must be prepended with `CYPHER`, followed by the preparser option(s), as exemplified thus: `CYPHER preparser-option1 [further preparser options] query`.
+Query execution can be fine-tuned through the use of _preparser options_.
+In order to use one or more of these options, the query must be prepended with `CYPHER`, followed by the preparser option(s), as exemplified thus: `CYPHER preparser-option1 [further preparser options] query`.
 
 [[cypher-preparser-version]]
 === Cypher version
@@ -81,7 +81,7 @@ While this should lead to superior execution plans in most cases, it is still un
 | `planner=cost` | This will force the query to use the cost planner. As this is the default planner, it is not necessary to use this option explicitly. | X
 |===
 
-It is also possible to force queries to use a specific planner by using the `cypher.planner` configuration setting (see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>).
+It is also possible to set the default planner by using the `cypher.planner` configuration setting (see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>).
 
 You can see which planner was used by looking at the execution plan.
 
