@@ -5,7 +5,9 @@
 Find starting points through legacy indexes.
 
 [IMPORTANT]
-The `START` clause should only be used when accessing legacy indexes.
+The `START` clause was removed in Cypher 3.2.
+Using the `START` clause will cause the query to fall back to using Cypher 3.1.
+`START` should only be used when accessing legacy indexes.
 In all other cases, use `MATCH` instead (see <<query-match>>).
 
 * <<start-node-by-index-seek, Node by index seek>>
