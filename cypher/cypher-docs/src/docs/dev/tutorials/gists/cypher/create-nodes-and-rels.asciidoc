@@ -55,7 +55,6 @@ This is how our graph looks now:
 // graph:created-first-movie
 
 We can do more of the work in a single clause.
-`CREATE UNIQUE` will make sure we don't create duplicate patterns.
 Using this: `[r:ACTED_IN]` lets us return the relationship.
 
 [source, cypher]
