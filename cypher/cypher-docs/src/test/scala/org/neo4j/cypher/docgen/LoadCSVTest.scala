@@ -87,7 +87,7 @@ Then you write it to your database using the normal updating clauses of Cypher.
 include::csv-files/artists.csv[]
 ----
 """,
-      queryText = s"LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInt(line[2])})",
+      queryText = s"LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
       optionalResultExplanation =
         """
 A new node with the `Artist` label is created for each row in the CSV file.
@@ -107,7 +107,7 @@ When your CSV file has headers, you can view each row in the file as a map inste
 include::csv-files/artists-with-headers.csv[]
 ----
 """,
-      queryText = s"LOAD CSV WITH HEADERS FROM '%ARTIS_WITH_HEADER%' AS line CREATE (:Artist {name: line.Name, year: toInt(line.Year)})",
+      queryText = s"LOAD CSV WITH HEADERS FROM '%ARTIS_WITH_HEADER%' AS line CREATE (:Artist {name: line.Name, year: toInteger(line.Year)})",
       optionalResultExplanation = """
 This time, the file starts with a single row containing column names.
 Indicate this using `WITH HEADERS` and you can access specific fields by their corresponding column name.""",
@@ -127,7 +127,7 @@ You can specify which delimiter your file uses using `FIELDTERMINATOR`.
 include::csv-files/artists-fieldterminator.csv[]
 ----
 """,
-      queryText = s"LOAD CSV FROM '%ARTIST_WITH_FIELD_DELIMITER%' AS line FIELDTERMINATOR ';' CREATE (:Artist {name: line[1], year: toInt(line[2])})",
+      queryText = s"LOAD CSV FROM '%ARTIST_WITH_FIELD_DELIMITER%' AS line FIELDTERMINATOR ';' CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
       optionalResultExplanation =
         "As values in this file are separated by a semicolon, a custom `FIELDTERMINATOR` is specified in the `LOAD CSV` clause.",
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
@@ -143,7 +143,7 @@ This reduces the memory overhead of the transaction state.
 By default, the commit will happen every 1000 rows.
 For more information, see <<query-using-periodic-commit-hint>>.
 """,
-      queryText = s"USING PERIODIC COMMIT LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInt(line[2])})",
+      queryText = s"USING PERIODIC COMMIT LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
       optionalResultExplanation = "",
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
@@ -152,7 +152,7 @@ For more information, see <<query-using-periodic-commit-hint>>.
     testQuery(
       title = "Setting the rate of periodic commits",
       text = """You can set the number of rows as in the example, where it is set to 500 rows.""",
-      queryText = s"USING PERIODIC COMMIT 500 LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInt(line[2])})",
+      queryText = s"USING PERIODIC COMMIT 500 LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
       optionalResultExplanation = "",
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
@@ -169,7 +169,7 @@ In this example, we both have additional quotes around the values, as well as es
 include::csv-files/artists-with-escaped-char.csv[]
 ----
 """,
-      queryText = s"LOAD CSV FROM '%ARTIST_WITH_ESCAPE_CHAR%' AS line CREATE (a:Artist {name: line[1], year: toInt(line[2])}) RETURN a.name AS name, a.year as year, size(a.name) AS size",
+      queryText = s"LOAD CSV FROM '%ARTIST_WITH_ESCAPE_CHAR%' AS line CREATE (a:Artist {name: line[1], year: toInteger(line[2])}) RETURN a.name AS name, a.year as year, size(a.name) AS size",
       optionalResultExplanation = """
 Note that strings are wrapped in quotes in the output here.
 You can see that when comparing to the length of the string in this case!""",

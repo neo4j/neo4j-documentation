@@ -25,7 +25,7 @@ Let's start with importing the persons:
 [source, cypher, subs=attributes+]
 ----
 LOAD CSV WITH HEADERS FROM "persons.csv" AS csvLine
-CREATE (p:Person {id: toInt(csvLine.id), name: csvLine.name})
+CREATE (p:Person {id: toInteger(csvLine.id), name: csvLine.name})
 ----
 
 The CSV file we're using looks like this:
@@ -64,7 +64,7 @@ CREATE INDEX ON :Country(name)
 ----
 LOAD CSV WITH HEADERS FROM "movies.csv" AS csvLine
 MERGE (country:Country {name: csvLine.country})
-CREATE (movie:Movie {id: toInt(csvLine.id), title: csvLine.title, year:toInt(csvLine.year)})
+CREATE (movie:Movie {id: toInteger(csvLine.id), title: csvLine.title, year:toInteger(csvLine.year)})
 CREATE (movie)-[:MADE_IN]->(country)
 ----
 
@@ -113,7 +113,7 @@ In this case we also set the limit to `500` rows per commit.
 ----
 USING PERIODIC COMMIT 500
 LOAD CSV WITH HEADERS FROM "roles.csv" AS csvLine
-MATCH (person:Person {id: toInt(csvLine.personId)}),(movie:Movie {id: toInt(csvLine.movieId)})
+MATCH (person:Person {id: toInteger(csvLine.personId)}),(movie:Movie {id: toInteger(csvLine.movieId)})
 CREATE (person)-[:PLAYED {role: csvLine.role}]->(movie)
 ----
 

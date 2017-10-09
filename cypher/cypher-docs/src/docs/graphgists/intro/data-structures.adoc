@@ -17,7 +17,7 @@ If you want more details on how the data is loaded, see <<cypher-intro-importing
 [source, cypher]
 ----
 LOAD CSV WITH HEADERS FROM "movies.csv" AS line
-CREATE (m:Movie {id:line.id, title:line.title, released:toInt(line.year)});
+CREATE (m:Movie {id:line.id, title:line.title, released:toInteger(line.year)});
 LOAD CSV WITH HEADERS FROM "persons.csv" AS line
 MERGE (a:Person {id: line.id}) ON CREATE SET a.name = line.name;
 LOAD CSV WITH HEADERS FROM "roles.csv" AS line
@@ -25,8 +25,8 @@ MATCH (m:Movie {id: line.movieId})
 MATCH (a:Person {id: line.personId})
 CREATE (a)-[:ACTED_IN {roles:[line.role]}]->(m);
 LOAD CSV WITH HEADERS FROM "movie_actor_roles.csv" AS line FIELDTERMINATOR ";"
-MERGE (m:Movie {title: line.title}) ON CREATE SET m.released = toInt(line.released)
-MERGE (a:Person {name: line.actor}) ON CREATE SET a.born = toInt(line.born)
+MERGE (m:Movie {title: line.title}) ON CREATE SET m.released = toInteger(line.released)
+MERGE (a:Person {name: line.actor}) ON CREATE SET a.born = toInteger(line.born)
 MERGE (a)-[:ACTED_IN {roles:split(line.characters,",") }]->(m)
 ----
 

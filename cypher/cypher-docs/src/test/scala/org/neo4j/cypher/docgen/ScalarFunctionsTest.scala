@@ -49,7 +49,7 @@ class ScalarFunctionsTest extends DocumentingTest {
      `length()` on those types may be deprecated in future.""")
     }
     note {
-      p("The function `toInt()` has been superseded by `toInteger()`, and will be deprecated in a future release.")
+      p("The function `toInt()` has been superseded by `toInteger()`, and will be removed in a future release.")
     }
     p(
       """Functions:

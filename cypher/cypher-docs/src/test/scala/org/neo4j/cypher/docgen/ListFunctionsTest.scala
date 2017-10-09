@@ -42,6 +42,9 @@ class ListFunctionsTest extends DocumentingTest {
         |       (bob)-[:MARRIED]->(eskil)""")
     synopsis("List functions return lists of things -- nodes in a path, and so on.")
     p("Further details and examples of lists may be found in <<cypher-lists>> and <<query-operators-list>>.")
+    note {
+      p("The function `rels()` has been superseded by `relationships()`, and will be removed in a future release.")
+    }
     p(
       """Functions:
         |
