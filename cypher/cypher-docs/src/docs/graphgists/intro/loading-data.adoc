@@ -66,7 +66,7 @@ include::../../graphgists/intro/movies.csv[]
 [source, cypher]
 ----
 LOAD CSV WITH HEADERS FROM "movies.csv" AS line
-CREATE (m:Movie {id: line.id, title: line.title, released: toInt(line.year)});
+CREATE (m:Movie {id: line.id, title: line.title, released: toInteger(line.year)});
 ----
 
 .persons.csv
@@ -110,8 +110,8 @@ include::../../graphgists/intro/movie_actor_roles.csv[]
 [source, cypher]
 ----
 LOAD CSV WITH HEADERS FROM "movie_actor_roles.csv" AS line FIELDTERMINATOR ";"
-MERGE (m:Movie {title: line.title}) ON CREATE SET m.released = toInt(line.released)
-MERGE (a:Person {name: line.actor}) ON CREATE SET a.born = toInt(line.born)
+MERGE (m:Movie {title: line.title}) ON CREATE SET m.released = toInteger(line.released)
+MERGE (a:Person {name: line.actor}) ON CREATE SET a.born = toInteger(line.born)
 MERGE (a)-[:ACTED_IN {roles:split(line.characters, ',') }]->(m)
 ----
 

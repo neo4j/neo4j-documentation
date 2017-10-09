@@ -31,7 +31,7 @@ class StringFunctionsTest extends DocumentingTest {
       """These functions all operate on string expressions only, and will return an error if used on any other values.
         |The exception to this rule is `toString()`, which also accepts numbers and booleans.""".stripMargin)
     note {
-      p("""The functions `lower()` and `upper()` have been superseded by `toLower()` and `toUpper()`, respectively, and will be deprecated in a future release.""")
+      p("""The functions `lower()` and `upper()` have been superseded by `toLower()` and `toUpper()`, respectively, and will be removed in a future release.""")
     }
     p("""See also <<query-operators-string>>.""")
     p(

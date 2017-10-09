@@ -153,9 +153,9 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-rand, rand()>>                     | Numeric           | Returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. `[0, 1)`.
 |<<functions-range, range()>>                    | List              | Returns a list comprising all integer values within a specified range.
 |<<functions-reduce, reduce()>>                  | List              | Runs an expression against individual elements of a list, storing the result of the expression in an accumulator.
-|<<functions-relationships, relationships()/rels()>>    | List              | Returns a list containing all the relationships in a path.
+|<<functions-relationships, relationships()>>    | List              | Returns a list containing all the relationships in a path.
 |<<functions-replace, replace()>>                | String            | Returns a string in which all occurrences of a specified string in the original string have been replaced by another (specified) string.
-|<<functions-reverse-list,reverse()>>           | List              | Returns a list in which the order of all elements in the original list have been reversed.
+|<<functions-reverse-list, reverse()>>           | List              | Returns a list in which the order of all elements in the original list have been reversed.
 |<<functions-reverse, reverse()>>                | String            | Returns a string in which the order of all characters in the original string have been reversed.
 |<<functions-right, right()>>                    | String            | Returns a string containing the specified number of rightmost characters of the original string.
 |<<functions-round, round()>>                   | Numeric           | Returns the value of a number rounded to the nearest integer.

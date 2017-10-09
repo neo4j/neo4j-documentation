@@ -75,7 +75,7 @@ class ImportTest extends RefcardTest with QueryStatisticsTestSupport {
 
 LOAD CSV FROM
 '%ARTIST%' AS line
-CREATE (:Artist {name: line[1], year: toInt(line[2])})
+CREATE (:Artist {name: line[1], year: toInteger(line[2])})
 ###
 
 Load data from a CSV file and create nodes.
@@ -85,7 +85,7 @@ Load data from a CSV file and create nodes.
 
 LOAD CSV WITH HEADERS FROM
 '%ARTIS_WITH_HEADER%' AS line
-CREATE (:Artist {name: line.Name, year: toInt(line.Year)})
+CREATE (:Artist {name: line.Name, year: toInteger(line.Year)})
 ###
 
 Load CSV data which has headers.
@@ -96,7 +96,7 @@ Load CSV data which has headers.
 USING PERIODIC COMMIT 500
 LOAD CSV WITH HEADERS FROM
 '%ARTIS_WITH_HEADER%' AS line
-CREATE (:Artist {name: line.Name, year: toInt(line.Year)})
+CREATE (:Artist {name: line.Name, year: toInteger(line.Year)})
 ###
 
 Commit the current transaction after every 500 rows when importing large amounts of data.
@@ -107,7 +107,7 @@ Commit the current transaction after every 500 rows when importing large amounts
 LOAD CSV FROM
 '%ARTIST_WITH_FIELD_DELIMITER%'
 AS line FIELDTERMINATOR ';'
-CREATE (:Artist {name: line[1], year: toInt(line[2])})
+CREATE (:Artist {name: line[1], year: toInteger(line[2])})
 ###
 
 Use a different field terminator, not the default which is a comma (with no whitespace around it).
