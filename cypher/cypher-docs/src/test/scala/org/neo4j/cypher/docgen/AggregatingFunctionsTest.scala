@@ -173,8 +173,14 @@ class AggregatingFunctionsTest extends DocumentingTest {
     }
     section("max()", "functions-max") {
       p("`max()` returns the maximum value in a set of values.")
-      function("max(expression)", "Either an Integer or a Float or a String, depending on the values returned by `expression`.", ("expression", "An expression returning a set of numeric or string values."))
-      considerations("Any `null` values are excluded from the calculation.", "`max(null)` returns `null`.")
+      function("max(expression)", "Either an Integer or a Float or a String, depending on the values returned by `expression`.", ("expression", "An expression returning a set containing either numeric values only, or string values only, or a mixture of string and numeric values."))
+      considerations("Any `null` values are excluded from the calculation.", "In a mixed list, any numeric value is always considered to be higher than any string value.", "`max(null)` returns `null`.")
+      query("UNWIND [1, 'a', null, 0.2, 'b', '1', '99'] AS val RETURN max(val)", ResultAssertions((r) => {
+        r.toList.head("max(val)") should equal(1L)
+      })) {
+        p("The highest of all the values in the mixed list is returned.")
+        resultTable()
+      }
       query("MATCH (n:Person) RETURN max(n.age)", ResultAssertions((r) => {
         r.toList.head("max(n.age)") should equal(44L)
       })) {
@@ -184,8 +190,14 @@ class AggregatingFunctionsTest extends DocumentingTest {
     }
     section("min()", "functions-min") {
       p("`min()` returns the minimum value in a set of values.")
-      function("min(expression)", "Either an Integer or a Float or a String, depending on the values returned by `expression`.", ("expression", "An expression returning a set of numeric or string values."))
-      considerations("Any `null` values are excluded from the calculation.", "`min(null)` returns `null`.")
+      function("min(expression)", "Either an Integer or a Float or a String, depending on the values returned by `expression`.", ("expression", "An expression returning a set containing either numeric values only, or string values only, or a mixture of string and numeric values."))
+      considerations("Any `null` values are excluded from the calculation.", "In a mixed list, any string value is always considered to be lower than any numeric value.", "`min(null)` returns `null`.")
+      query("UNWIND [1, 'a', null, 0.2, 'b', '1', '99'] AS val RETURN min(val)", ResultAssertions((r) => {
+        r.toList.head("min(val)") should equal("1")
+      })) {
+        p("The lowest of all the values in the mixed list is returned.")
+        resultTable()
+      }
       query("MATCH (n:Person) RETURN min(n.age)", ResultAssertions((r) => {
         r.toList.head("min(n.age)") should equal(13L)
       })) {
