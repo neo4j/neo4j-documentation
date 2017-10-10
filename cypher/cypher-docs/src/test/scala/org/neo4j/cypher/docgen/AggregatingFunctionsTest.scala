@@ -180,7 +180,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       })) {
         p(
           """The highest of all the values in the mixed list -- in this case, the numeric value `1` -- is returned.
-            |Note that the (string) value `\"99\"`, which may _appear_ at first glance to be the highest value in the list, is considered to be a lower value than `1` as the latter is a string.""".stripMargin)
+            |Note that the (string) value `"99"`, which may _appear_ at first glance to be the highest value in the list, is considered to be a lower value than `1` as the latter is a string.""".stripMargin)
         resultTable()
       }
       query("MATCH (n:Person) RETURN max(n.age)", ResultAssertions((r) => {
@@ -198,8 +198,8 @@ class AggregatingFunctionsTest extends DocumentingTest {
         r.toList.head("min(val)") should equal("1")
       })) {
         p(
-          """The lowest of all the values in the mixed list -- in this case, the string value `\"1\"` -- is returned.
-            |Note that the (numeric) value `0.2`, which may _appear_ at first glance to be the lowest value in the list, is considered to be a higher value than `\"1\"` as the latter is a string.
+          """The lowest of all the values in the mixed list -- in this case, the string value `"1"` -- is returned.
+            |Note that the (numeric) value `0.2`, which may _appear_ at first glance to be the lowest value in the list, is considered to be a higher value than `"1"` as the latter is a string.
           """.stripMargin)
         resultTable()
       }
