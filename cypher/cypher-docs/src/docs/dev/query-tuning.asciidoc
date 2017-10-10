@@ -72,6 +72,8 @@ The planner considers available indexes, but does not use statistical informatio
 
 Cost::
 This planner uses the statistics service in Neo4j to assign cost to alternative plans and picks the cheapest one.
+Compared with the rule planner, the cost planner results in superior query execution performance.
+
 While this should lead to superior execution plans in most cases, it is still under development.
 
 [options="header"]
@@ -81,7 +83,7 @@ While this should lead to superior execution plans in most cases, it is still un
 | `planner=cost` | This will force the query to use the cost planner. As this is the default planner, it is not necessary to use this option explicitly. | X
 |===
 
-It is also possible to set the default planner by using the `cypher.planner` configuration setting (see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>).
+It is also possible to change the default planner by using the `cypher.planner` configuration setting (see <<operations-manual#config_cypher.planner, Operations Manual -> Configuration Settings>>).
 
 You can see which planner was used by looking at the execution plan.
 
