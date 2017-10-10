@@ -141,6 +141,19 @@
 
     <plugins>
       <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-java-test-sources</id>
+            <phase>${attach-java-test-sources-phase}</phase>
+            <goals>
+              <goal>test-jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.neo4j.build.plugins</groupId>
         <artifactId>docs-maven-plugin</artifactId>
         <executions>
