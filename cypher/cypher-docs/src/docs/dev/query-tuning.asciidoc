@@ -63,6 +63,7 @@ Here we detail the available versions:
 [[cypher-planner]]
 === Cypher planner
 
+x
 Each query is turned into an execution plan by something called the _execution planner_.
 The execution plan tells Neo4j which operations to perform when executing the query.
 
