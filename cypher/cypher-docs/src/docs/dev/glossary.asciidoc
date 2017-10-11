@@ -10,6 +10,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 * <<glossary-operators,Operators>>
 * <<glossary-functions,Functions>>
 * <<glossary-expressions,Expressions>>
+* <<glossary-cypher-query-options,Cypher query options>>
 
 
 [[glossary-clauses]]
@@ -190,3 +191,17 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |Name           | Description
 | <<query-syntax-case,CASE Expression>>  | A generic conditional expression, similar to if/else statements available in other languages.
 |===
+
+
+[[glossary-cypher-query-options]]
+== Cypher query options
+
+[options="header"]
+|===
+|Name           | Type | Description
+| <<cypher-version, CYPHER $version query>>  | Version | This will force `'query'` to use Neo4j Cypher `$version`. The default is `3.1`.
+| <<cypher-planner, CYPHER planner=rule query>> | Planner | This will force `'query'` to use the rule planner.
+| <<cypher-planner, CYPHER planner=cost query>> | Planner | This will force `'query'` to use the cost planner. This is the default planner.
+|===
+
+
