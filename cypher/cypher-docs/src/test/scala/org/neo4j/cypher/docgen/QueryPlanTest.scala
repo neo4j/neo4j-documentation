@@ -179,7 +179,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Update Graph",
       text =
-        """Applies updates to the graph.""".stripMargin,
+        """Creates a node in the graph.""".stripMargin,
       queryText = """CYPHER planner=rule CREATE (:Person {name: 'Alistair'})""",
       assertions = (p) => {
         assertThat(p.executionPlanDescription().toString, containsString("CreateNode"))
