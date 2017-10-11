@@ -10,7 +10,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 * <<glossary-operators,Operators>>
 * <<glossary-functions,Functions>>
 * <<glossary-expressions,Expressions>>
-* <<glossary-preparser-options,Preparser options XXTODO Docs Team please harmonize this term>>
+* <<glossary-cypher-query-options,Cypher query options>>
 
 
 [[glossary-clauses]]
@@ -193,15 +193,15 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |===
 
 
-[[glossary-preparser-options]]
-== Preparser options XX Docs Team: please harmonize
+[[glossary-cypher-query-options]]
+== Cypher query options
 
 [options="header"]
 |===
 |Name           | Type | Description
-| <<cypher-preparser-version, CYPHER $version query>>  | Version | This will force `'query'` to use Neo4j Cypher `$version`. The default is `3.1`.
-| <<cypher-preparser-planner, CYPHER planner=rule query>> | Planner | This will force `'query'` to use the rule planner.
-| <<cypher-preparser-planner, CYPHER planner=cost query>> | Planner | This will force `'query'` to use the cost planner. This is the default planner.
+| <<cypher-version, CYPHER $version query>>  | Version | This will force `'query'` to use Neo4j Cypher `$version`. The default is `3.1`.
+| <<cypher-planner, CYPHER planner=rule query>> | Planner | This will force `'query'` to use the rule planner.
+| <<cypher-planner, CYPHER planner=cost query>> | Planner | This will force `'query'` to use the cost planner. This is the default planner.
 |===
 
 

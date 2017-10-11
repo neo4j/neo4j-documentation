@@ -21,7 +21,7 @@ This allows Cypher to re-use your queries instead of having to parse and build n
 
 To read more about the execution plan operators mentioned in this chapter, see <<execution-plans>>.
 
-* <<how-are-queries-executed,How are queries executed? XXXThis must be changed by Docs Team!>>
+* <<cypher-query-options,Cypher query options>>
 * <<how-do-i-profile-a-query,Profiling a query>>
 * <<cypherdoc-basic-query-tuning-example,Basic query tuning example>>
 * <<query-using,Planner hints and the `USING` keyword>>
@@ -32,20 +32,18 @@ To read more about the execution plan operators mentioned in this chapter, see <
 ** <<query-using-periodic-commit-hint,`PERIODIC COMMIT` query hint>>
 
 
-[[how-are-queries-executed]]
-== How are queries executed?
-
-_***XXTODO by Docs Team - change this heading to something like 'Preparser options' (this is what they are called internally), or something more reader-friendly (if a term other than 'preparser' is decided upon, please also change accordingly in the text). This section no longer deals with 'how queries are executed' per se. More of that content will be added by me later on. END TODO***_
+[[cypher-query-options]]
+== Cypher query options
 
 [abstract]
 --
-This section describes the preparser options available in Cypher.
+This section describes the query options available in Cypher.
 --
 
-Query execution can be fine-tuned through the use of _preparser options_.
-In order to use one or more of these options, the query must be prepended with `CYPHER`, followed by the preparser option(s), as exemplified thus: `CYPHER preparser-option1 [further preparser options] query`.
+Query execution can be fine-tuned through the use of query options.
+In order to use one or more of these options, the query must be prepended with `CYPHER`, followed by the query option(s), as exemplified thus: `CYPHER query-option [further-query-options] query`.
 
-[[cypher-preparser-version]]
+[[cypher-version]]
 === Cypher version
 
 Occasionally, there is a requirement to use a previous version of the Cypher compiler when running a query.
@@ -53,13 +51,13 @@ Here we detail the available versions:
 
 [options="header"]
 |===
-| Preparser option | Description | Default?
+| Query option | Description | Default?
 | `2.3` | This will force the query to use Neo4j Cypher 2.3.  |
 | `3.0` | This will force the query to use Neo4j Cypher 3.0. |
 | `3.1` | This will force the query to use Neo4j Cypher 3.1. As this is the default version, it is not necessary to use this option explicitly. | X
 |===
 
-[[cypher-preparser-planner]]
+[[cypher-planner]]
 === Cypher planner
 
 Each query is turned into an execution plan by something called the _execution planner_.
@@ -78,7 +76,7 @@ While this should lead to superior execution plans in most cases, it is still un
 
 [options="header"]
 |===
-| Preparser option | Description | Default?
+| Query option | Description | Default?
 | `planner=rule` | This will force the query to use the rule planner.  |
 | `planner=cost` | This will force the query to use the cost planner. As this is the default planner, it is not necessary to use this option explicitly. | X
 |===
