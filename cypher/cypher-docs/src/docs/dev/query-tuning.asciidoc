@@ -103,6 +103,7 @@ Slotted::
 This is very similar to the interpreted runtime, except that there are additional optimizations regarding the way in which the records are streamed through the iterators.
 This results in improvements to both the performance and memory usage of the query.
 In effect, this can be thought of as a the 'faster interpreted' runtime.
+This is still under development and does not support all possible operators or queries.
 
 [NOTE]
 The slotted runtime is only available in Neo4j Enterprise Edition.
@@ -114,12 +115,15 @@ While this should lead to superior performance in most cases (over both the inte
 [NOTE]
 The compiled runtime is only available in Neo4j Enterprise Edition.
 
+[NOTE]
+In Enterprise Edition, the query execution engine's fallback mechanism is to try the compiled runtime first, and if it does not support the query, to then try the slotted runtime, and if that also does not support the query, to finally fall back to the interpreted runtime, which supports all queries.
+
 [options="header"]
 |===
 | Option | Description | Default?
 | `runtime=interpreted` | This will force the query execution engine to use the interpreted runtime. | This is the default option for some queries in Enterprise Edition, and the only option for all queries in Community Edition (so it is not necessary to use this option in Community Edition).
-| `runtime=slotted` | This will force the query to use the slotted runtime. | This is the default option for some queries in Enterprise Edition only. Setting this option for a query that does not support the slotted runtime will cause the query to fall back to using the interpreted runtime.
-| `runtime=compiled` | This will cause the query execution engine to use the compiled runtime if it supports the query, and fall back to using the interpreted runtime if it does not. | This is the default option for some queries in Enterprise Edition only.
+| `runtime=slotted` | This will cause the query execution engine to use the slotted runtime if it supports the query, and fall back to using the interpreted runtime if it does not. | This is the default option for some queries in Enterprise Edition only.
+| `runtime=compiled` | This will cause the query execution engine to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the engine will fall back to the slotted runtime, and, failing that, to the interpreted runtime. | This is the default option for some queries in Enterprise Edition only.
 |===
 
 
