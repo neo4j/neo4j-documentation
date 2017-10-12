@@ -72,8 +72,6 @@ Cost::
 This planner uses the statistics service in Neo4j to assign cost to alternative plans and picks the cheapest one.
 Compared with the rule planner, the cost planner results in superior query execution performance.
 
-While this should lead to superior execution plans in most cases, it is still under development.
-
 [options="header"]
 |===
 | Query option | Description | Default?
