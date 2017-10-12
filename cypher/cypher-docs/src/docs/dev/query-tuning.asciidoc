@@ -40,7 +40,7 @@ To read more about the execution plan operators mentioned in this chapter, see <
 This section describes the query options available in Cypher.
 --
 
-Query execution can to be fine-tuned through the use of query options.
+Query execution can be fine-tuned through the use of query options.
 In order to use one or more of these options, the query must be prepended with `CYPHER`, followed by the query option(s), as exemplified thus: `CYPHER query-option [further-query-options] query`.
 
 
