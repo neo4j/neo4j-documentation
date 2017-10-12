@@ -18,7 +18,7 @@ It allows you to do updating commands on elements in a path, or a list created b
 The variable context within the foreach parenthesis is separate from the one outside it.
 This means that if you `CREATE` a node variable within a `FOREACH`, you will _not_ be able to use it outside of the foreach statement, unless you match to find it.
 
-Within the `FOREACH` parentheses, you can do any of the updating commands -- `CREATE`, `CREATE UNIQUE`, `MERGE`, `DELETE`, and `FOREACH`.
+Within the `FOREACH` parentheses, you can do any of the updating commands -- `CREATE`, `MERGE`, `DELETE`, and `FOREACH`.
 
 If you want to execute an additional `MATCH` for each element in a list then `UNWIND` (see <<query-unwind>>) would be a more appropriate command.
 

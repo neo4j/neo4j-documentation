@@ -57,6 +57,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-assert-same-node, AssertSameNode>>                            | Combining | This operator is used to ensure that no uniqueness constraints are violated.
 | <<query-plan-conditional-apply, ConditionalApply>>                         | Combining | Checks whether a variable is not `null`, and if so the right-hand side will be executed.
 | <<query-plan-constraint-operation, Constraint operation>>                  | Update | Creates a constraint on a (label,property) pair.
+| <<query-plan-create-node, CreateNode>>                                   | Update | Creates a node.
 | <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>  | Starting point | Reads one or more relationships by id from the relationship store.
 | <<query-plan-distinct, Distinct>>                                          | Row | Removes duplicate rows from the incoming stream of rows.
 | <<query-plan-eager, Eager>>                                                | Row | For isolation purposes, `Eager` ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.
@@ -68,7 +69,6 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-let-anti-semi-apply, LetAntiSemiApply>>                       | Combining | Tests for the absence of a pattern predicate in queries containing multiple pattern predicates.
 | <<query-plan-let-semi-apply, LetSemiApply>>                                | Combining | Tests for the existence of a pattern predicate in queries containing multiple pattern predicates.
 | <<query-plan-limit, Limit>>                                                | Row | Returns the first 'n' rows from the incoming input.
-| <<query-plan-merge-into, Merge(Into)>>                                     | Update | When both the start and end node have already been found, `Merge(Into)` is used to find all connecting relationships or creating a new relationship between the two nodes.
 | <<query-plan-node-by-id-seek, NodeByIdSeek>>                               | Starting point | Reads one or more nodes by id from the node store.
 | <<query-plan-node-by-label-scan, NodeByLabelScan>>                         | Starting point | Using the label index, fetches all nodes with a specific label on them from the node label index.
 | <<query-plan-node-count-from-count-store, NodeCountFromCountStore>>        | Row | Uses the count store to answer questions about node counts.
@@ -92,7 +92,6 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-undirected-relationship-by-id-seek, UndirectedRelationshipByIdSeek>> | Starting point | Reads one or more relationships by id from the relationship store.
 | <<query-plan-union, Union>>                                                | Row | Concatenates the results from the right plan after the results of the left plan.
 | <<query-plan-unwind, Unwind>>                                              | Row | Takes a list of values and returns one row per item in the list.
-| <<query-plan-update-graph, UpdateGraph>>                                   | Update | Applies updates to the graph.
 |===
 
 

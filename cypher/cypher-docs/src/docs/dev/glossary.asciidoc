@@ -27,7 +27,6 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<constraints-create-uniqueness-constraint, CREATE CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>  |  Schema | Create a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
 |<<schema-index-create-a-single-property-index, CREATE INDEX ON :Label(property)>>  | Schema  | Create an index on all nodes with a particular label and a single property; i.e. create a single-property index.
 |<<create-a-composite-index, CREATE INDEX ON :Label(prop1, ..., propN)>>  | Schema  | Create an index on all nodes with a particular label and multiple properties; i.e. create a composite index.
-|<<query-create-unique, CREATE UNIQUE>>      | Reading/Writing     |  A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
 |<<query-delete, DELETE>>                    | Writing     |  Delete graph elements — nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
 |<<query-delete, DETACH DELETE>>             | Writing     |  Delete a node or set of nodes. All associated relationships will automatically be deleted.
 |<<constraints-drop-node-property-existence-constraint, DROP CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>      | Schema   | Drop a constraint ensuring that all nodes with a particular label have a certain property.
@@ -49,7 +48,6 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-return, RETURN ... [AS]>>                    | Projecting   |  Defines what to include in the query result set.
 |<<query-set, SET>>                          | Writing     |  Update labels on nodes and properties on nodes and relationships.
 |<<query-skip, SKIP>>                            | Reading/Writing | A sub-clause defining from which row to start including the rows in the output.
-|<<query-start, START>>                      | Reading      |  Find starting points through explicit indexes.
 |<<query-union, UNION>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are removed.
 |<<query-union, UNION ALL>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are retained.
 |<<query-unwind, UNWIND ... [AS]>>                    | Projecting   |  Expands a list into a sequence of rows.
@@ -204,9 +202,9 @@ This section comprises a glossary of all the keywords -- grouped by category and
 [options="header"]
 |===
 |Name           | Type | Description
-| <<cypher-version, CYPHER $version query>>  | Version | This will force `'query'` to use Neo4j Cypher `$version`. The default is `3.1`.
-| <<cypher-planner, CYPHER planner=rule query>> | Planner | This will force `'query'` to use the rule planner.
-| <<cypher-planner, CYPHER planner=cost query>> | Planner | This will force `'query'` to use the cost planner. This is the default planner.
+| <<cypher-version, CYPHER $version query>>  | Version | This will force `'query'` to use Neo4j Cypher `$version`. The default is `3.2`.
+| <<cypher-planner, CYPHER planner=rule query>> | Planner |  This will force `'query'` to use the rule planner. As the rule planner has been removed in 3.2, doing this will cause `'query'` to fall back to using Cypher 3.1.
+| <<cypher-planner, CYPHER planner=cost query>> | Planner | Neo4j {neo4j-version} uses the cost planner for all queries.
+| <<cypher-runtime, CYPHER runtime=interpreted query>> | Runtime | This will cause the query execution engine to disregard the compiled runtime, and therefore use the interpreted runtime. This is the only option in Neo4j Community Edition.
+| <<cypher-runtime, CYPHER runtime=compiled query>> | Runtime | This will cause the query execution engine to use the compiled runtime if it supports `'query'`, and fall back to using the interpreted runtime if it does not. This is only available in Neo4j Enterprise Edition.
 |===
-
-
