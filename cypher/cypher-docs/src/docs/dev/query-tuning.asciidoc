@@ -53,40 +53,12 @@ Here we detail the available versions:
 |===
 | Query option | Description | Default?
 | `2.3` | This will force the query to use Neo4j Cypher 2.3.  |
-| `3.0` | This will force the query to use Neo4j Cypher 3.0. |
-| `3.1` | This will force the query to use Neo4j Cypher 3.1. As this is the default version, it is not necessary to use this option explicitly. | X
-|===
-
-[[cypher-planner]]
-=== Cypher planner
-
-_***XXTODO by Docs Team - change this heading to something like 'Preparser options' (this is what they are called internally), or something more reader-friendly (if a term other than 'preparser' is decided upon, please also change accordingly in the text). This section no longer deals with 'how queries are executed' per se. More of that content will be added by me later on. END TODO***_
-
-[abstract]
---
-This section describes the preparser options available in Cypher.
---
-
-Query execution can be fine-tuned through the use of _preparser options_.
-In order to use one or more of these options, the query must be prepended with `CYPHER`, followed by the preparser option(s), as exemplified thus: `CYPHER preparser-option1 [further preparser options] query`.
-
-
-[[cypher-preparser-version]]
-=== Cypher version
-
-Occasionally, there is a requirement to use a previous version of the Cypher compiler when running a query.
-Here we detail the available versions:
-
-[options="header"]
-|===
-| Preparser option | Description | Default?
-| `2.3` | This will force the query to use Neo4j Cypher 2.3.  |
 | `3.1` | This will force the query to use Neo4j Cypher 3.1. |
 | `3.2` | This will force the query to use Neo4j Cypher 3.2. As this is the default version, it is not necessary to use this option explicitly. | X
 |===
 
 
-[[cypher-preparser-planner]]
+[[cypher-planner]]
 === Cypher planner
 
 Each query is turned into an execution plan by something called the _execution planner_.
@@ -100,7 +72,7 @@ The rule planner was removed in Neo4j 3.2 owing to inferior query execution perf
 
 [options="header"]
 |===
-| Preparser option | Description | Default?
+| Option         | Description | Default?
 | `planner=rule` | This will force the query to use the rule planner, and will therefore cause the query to fall back to using Cypher 3.1.  |
 | `planner=cost` | Neo4j {neo4j-version} uses the cost planner for _all_ queries, and therefore it is not necessary to use this option explicitly. | X
 |===
@@ -114,7 +86,7 @@ When Cypher is building execution plans, it looks at the schema to see if it can
 These index decisions are only valid until the schema changes, so adding or removing indexes leads to the execution plan cache being flushed.
 
 
-[[cypher-preparser-runtime]]
+[[cypher-runtime]]
 === Cypher runtime
 
 Using the execution plan, the query is executed -- and records returned -- by the query engine, or _runtime_.
@@ -133,7 +105,7 @@ The compiled runtime is only available in Neo4j Enterprise Edition.
 
 [options="header"]
 |===
-| Preparser option | Description | Default?
+| Option | Description | Default?
 | `runtime=interpreted` | This will cause the query execution engine to disregard the compiled runtime, and therefore use the interpreted runtime. | This is the default option for some queries in Enterprise Edition, and the only option for all queries in Community Edition (so it is not necessary to use this option in Community Edition).
 | `runtime=compiled` | This will cause the query execution engine to use the compiled runtime if it supports the query, and fall back to using the interpreted runtime if it does not. | This is the default option for some queries in Enterprise Edition only.
 |===
