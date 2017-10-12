@@ -9,7 +9,7 @@ These fall into several categories which will be described in detail in the foll
 * Structural types
 * Composite types
 
-
+[[property-types]]
 == Property types
 
 * [*] Can be returned from Cypher queries
@@ -32,7 +32,7 @@ NOTE: Homogeneous lists of simple types can also be stored as properties, althou
 NOTE: Cypher also provides pass-through support for byte arrays, which can be stored as property values.
 Byte arrays are _not_ considered a first class data type by Cypher, so do not have a literal representation.
 
-
+[[structural-types]]
 == Structural types
 
 * [*] Can be returned from Cypher queries
