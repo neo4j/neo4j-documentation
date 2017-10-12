@@ -30,7 +30,6 @@ This set is refined and augmented by subsequent parts of the query.
 |Clause                                     |   Description
 |<<query-match,MATCH>>                      |   Specify the patterns to search for in the database.
 |<<query-optional-match,OPTIONAL MATCH>>    |   Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
-|<<query-start,START>>                      |   Find starting points through explicit indexes.
 |===
 
 
@@ -108,7 +107,6 @@ These comprise clauses that both read data from and write data to the database.
 |--- <<query-merge-on-create-on-match,ON CREATE>>   | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
 |--- <<query-merge-on-create-on-match,ON MATCH>>    | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
 |<<query-call,CALL [...YIELD]>>         | Invoke a procedure deployed in the database and return any results.
-|<<query-create-unique,CREATE UNIQUE>>      |   A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
 |===
 
 
@@ -152,8 +150,6 @@ include::ql/query-match.adoc[leveloffset=+1]
 
 include::ql/query-optional-match.adoc[leveloffset=+1]
 
-include::ql/start/index.asciidoc[leveloffset=+1]
-
 //Projecting
 include::ql/query-return.adoc[leveloffset=+1]
 
@@ -185,8 +181,6 @@ include::ql/foreach/index.asciidoc[leveloffset=+1]
 include::ql/merge/index.asciidoc[leveloffset=+1]
 
 include::ql/call/index.asciidoc[leveloffset=+1]
-
-include::ql/create-unique/index.asciidoc[leveloffset=+1]
 
 //Set
 include::ql/query-union.adoc[leveloffset=+1]

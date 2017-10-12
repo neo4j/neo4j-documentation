@@ -93,7 +93,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("SchemaIndex", "NodeIndexSeek")
+          checkPlanDescription(p)("NodeIndexSeek")
       }
     )
   }
@@ -108,7 +108,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("SchemaIndex", "NodeIndexSeek")
+          checkPlanDescription(p)("NodeIndexSeek")
       }
     )
   }
@@ -128,7 +128,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("SchemaIndex", "NodeIndexSeek")
+          checkPlanDescription(p)("NodeIndexSeek")
       }
     )
   }
@@ -154,7 +154,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(2, p.size)
 
-          checkPlanDescription(p)("SchemaIndex", "NodeIndexSeek")
+          checkPlanDescription(p)("NodeIndexSeek")
       }
     )
   }
@@ -205,7 +205,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     assert(expectedIndexes === db.indexPropsForLabel(label))
   }
 
-  private def checkPlanDescription(result: InternalExecutionResult)(ruleString: String, costString: String): Unit = {
+  private def checkPlanDescription(result: InternalExecutionResult)(costString: String): Unit = {
     val planDescription = result.executionPlanDescription()
     val plannerArgument = planDescription.arguments.find(a => a.name == "planner")
 
