@@ -173,14 +173,21 @@ class AggregatingFunctionsTest extends DocumentingTest {
     }
     section("max()", "functions-max") {
       p("`max()` returns the maximum value in a set of values.")
-      function("max(expression)", "Either an Integer or a Float or a String, depending on the values returned by `expression`.", ("expression", "An expression returning a set containing either numeric values only, or string values only, or a mixture of string and numeric values."))
-      considerations("Any `null` values are excluded from the calculation.", "In a mixed list, any numeric value is always considered to be higher than any string value.", "`max(null)` returns `null`.")
+      function("max(expression)", "A <<property-types, property type>>, or a list, depending on the values returned by `expression`.", ("expression", "An expression returning a set containing any combination of <<property-types, property types>> and lists thereof."))
+      considerations("Any `null` values are excluded from the calculation.", "In a mixed set, any numeric value is always considered to be higher than any string value, and any string value is always considered to be higher than any list.", "Lists are compared in dictionary order, i.e. list elements are compared pairwise in ascending order from the start of the list to the end.",  "`max(null)` returns `null`.")
       query("UNWIND [1, 'a', null, 0.2, 'b', '1', '99'] AS val RETURN max(val)", ResultAssertions((r) => {
         r.toList.head("max(val)") should equal(1L)
       })) {
         p(
-          """The highest of all the values in the mixed list -- in this case, the numeric value `1` -- is returned.
+          """The highest of all the values in the mixed set -- in this case, the numeric value `1` -- is returned.
             |Note that the (string) value `"99"`, which may _appear_ at first glance to be the highest value in the list, is considered to be a lower value than `1` as the latter is a string.""".stripMargin)
+        resultTable()
+      }
+      query("UNWIND [[1, 'a', 89], [1, 2]] AS val RETURN max(val)", ResultAssertions((r) => {
+        r.toList.head("max(val)") should equal(List(1L, 2L))
+      })) {
+        p(
+          """The highest of all the lists in the set -- in this case, the list `[1, 2]` -- is returned, as the number `2` is considered to be a higher value than the string `"a"`, even though the list `[1, 'a', 89]` contains more elements.""".stripMargin)
         resultTable()
       }
       query("MATCH (n:Person) RETURN max(n.age)", ResultAssertions((r) => {
@@ -192,17 +199,25 @@ class AggregatingFunctionsTest extends DocumentingTest {
     }
     section("min()", "functions-min") {
       p("`min()` returns the minimum value in a set of values.")
-      function("min(expression)", "Either an Integer or a Float or a String, depending on the values returned by `expression`.", ("expression", "An expression returning a set containing either numeric values only, or string values only, or a mixture of string and numeric values."))
-      considerations("Any `null` values are excluded from the calculation.", "In a mixed list, any string value is always considered to be lower than any numeric value.", "`min(null)` returns `null`.")
+      function("min(expression)", "A <<property-types, property type>>, or a list, depending on the values returned by `expression`.", ("expression", "An expression returning a set containing any combination of <<property-types, property types>> and lists thereof."))
+      considerations("Any `null` values are excluded from the calculation.", "In a mixed set, any string value is always considered to be lower than any numeric value, and any list is always considered to be lower than any string.", "Lists are compared in dictionary order, i.e. list elements are compared pairwise in ascending order from the start of the list to the end.", "`min(null)` returns `null`.")
       query("UNWIND [1, 'a', null, 0.2, 'b', '1', '99'] AS val RETURN min(val)", ResultAssertions((r) => {
         r.toList.head("min(val)") should equal("1")
       })) {
         p(
-          """The lowest of all the values in the mixed list -- in this case, the string value `"1"` -- is returned.
+          """The lowest of all the values in the mixed set -- in this case, the string value `"1"` -- is returned.
             |Note that the (numeric) value `0.2`, which may _appear_ at first glance to be the lowest value in the list, is considered to be a higher value than `"1"` as the latter is a string.
           """.stripMargin)
         resultTable()
       }
+      query("UNWIND ['d', [1, 2], ['a', 'c', 23]] AS val RETURN min(val)", ResultAssertions((r) => {
+        r.toList.head("min(val)") should equal(List("a", "c", 23L))
+      })) {
+        p(
+          """The lowest of all the values in the set -- in this case, the list `['a', 'c', 23]` -- is returned, as (i) the two lists are considered to be lower values than the string `"d"`, and (ii) the string `"a"` is considered to be a lower value than the numerical value `1`.""".stripMargin)
+        resultTable()
+      }
+      //UNWIND ['a', [1, 2], ['b', 'c', 23]] AS x RETURN max(x) = a
       query("MATCH (n:Person) RETURN min(n.age)", ResultAssertions((r) => {
         r.toList.head("min(n.age)") should equal(13L)
       })) {
