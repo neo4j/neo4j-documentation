@@ -23,7 +23,6 @@
     <docs.images>${project.build.outputDirectory}/images</docs.images>
     <neo4j.version>${project.version}</neo4j.version>
     <attach-docs-phase>none</attach-docs-phase>
-    <attach-test-jar-phase>none</attach-test-jar-phase>
     <additional-document-attributes></additional-document-attributes>
   </properties>
 

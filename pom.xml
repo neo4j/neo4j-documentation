@@ -17,11 +17,7 @@
 
   <properties>
     <generate-config-docs-phase>prepare-package</generate-config-docs-phase>
-    <attach-java-sources-phase>package</attach-java-sources-phase>
-    <attach-java-test-sources-phase>package</attach-java-test-sources-phase>
-    <attach-test-jar-phase>package</attach-test-jar-phase>
     <attach-docs-phase>verify</attach-docs-phase>
-    <integration-test-phase>integration-test</integration-test-phase>
     <docs-plugin.filter>false</docs-plugin.filter>
     <docs-plugin.skip>false</docs-plugin.skip>
     <test.runner.jvm.settings.additional>
@@ -100,14 +96,6 @@
           <artifactId>licensing-maven-plugin</artifactId>
           <executions>
             <execution>
-              <id>enforce-licensing-oss</id>
-              <phase/>
-            </execution>
-            <execution>
-              <id>enforce-licensing-com</id>
-              <phase/>
-            </execution>
-            <execution>
               <id>list-all-licenses</id>
               <phase/>
             </execution>
@@ -140,19 +128,6 @@
     </pluginManagement>
 
     <plugins>
-      <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-java-test-sources</id>
-            <phase>${attach-java-test-sources-phase}</phase>
-            <goals>
-              <goal>test-jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
       <plugin>
         <groupId>org.neo4j.build.plugins</groupId>
         <artifactId>docs-maven-plugin</artifactId>
