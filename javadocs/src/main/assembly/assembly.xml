@@ -27,8 +27,7 @@
   </formats>
   <fileSets>
     <fileSet>
-      <directory>${project.build.directory}/site/apidocs</directory>
-      <outputDirectory></outputDirectory>
+      <directory>${project.build.directory}/apidocs</directory>
     </fileSet>
   </fileSets>
 </assembly>
