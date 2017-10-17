@@ -4,31 +4,10 @@
 [abstract]
 Find starting points through explicit indexes.
 
+The `START` clause was removed in Cypher 3.2, and the recommendation is to use `MATCH` instead (see <<query-match>>).
+However, if the use of explicit indexes is required, a series of <<explicit-indexes-procedures, built-in procedures>> allows these to be managed and used.
+These procedures offer the same functionality as the `START` clause.
+In addition, queries using these procedures may exhibit superior execution performance over queries using `START` owing to the use of the <<cypher-planner, cost planner>> and newer Cypher 3.2 compiler.
+
 [IMPORTANT]
-The `START` clause was removed in Cypher 3.2.
-Using the `START` clause will cause the query to fall back to using Cypher 3.1.
-`START` should only be used when accessing legacy indexes.
-In all other cases, use `MATCH` instead (see <<query-match>>).
-
-* <<start-node-by-index-seek, Node by index seek>>
-* <<start-relationship-by-index-seek, Relationship by index seek>>
-* <<start-node-by-index-query, Node by index query>>
-
-In Cypher, every query describes a pattern, and in that pattern one can have multiple starting points.
-A starting point is a relationship or a node where a pattern is anchored.
-Using `START` you can only introduce starting points by explicit index seeks.
-Note that trying to use a explicit index that doesn't exist will generate an error.
-
-This is the graph the examples are using:
-
-.Graph
-include::includes/cypher-start-graph.asciidoc[]
-
-== Get node or relationship from index
-
-include::node-by-index-seek.asciidoc[leveloffset=+1]
-
-include::relationship-by-index-seek.asciidoc[leveloffset=+1]
-
-include::node-by-index-query.asciidoc[leveloffset=+1]
-
+Using the `START` clause explicitly in a query will cause the query to fall back to using Cypher 3.1.
