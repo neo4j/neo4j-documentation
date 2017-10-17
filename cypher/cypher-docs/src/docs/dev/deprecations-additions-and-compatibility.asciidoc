@@ -84,7 +84,9 @@ Replacement syntax for deprecated and removed features are also indicated.
 [options="header"]
 |===
 | Feature          | Type | Change | Details
-| `START`     | Clause | Removed | As in Cypher 3.2, any queries using the `START` clause will revert back to Cypher 3.1 `planner=rule`. However, there are now built-in procedures for accessing explicit indexes that will enable users to use the current version of Cypher and the cost planner together with these indexes. An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*')`.
+| `START`          | Clause | Removed | As in Cypher 3.2, any queries using the `START` clause will revert back to Cypher 3.1 `planner=rule`.
+However, there are <<explicit-indexes-procedures, built-in procedures>> for accessing explicit indexes that will enable users to use the current version of Cypher and the cost planner together with these indexes.
+An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*')`.
 | `CYPHER runtime=slotted` (Faster interpreted runtime) | Functionality | Added | Neo4j Enterprise Edition only
 | <<functions-max, max()>>, <<functions-min, min()>> | Function  | Extended | Now also supports aggregation over sets containing lists of strings and/or numbers, as well as over sets containing strings, numbers, and lists of strings and/or numbers
 |===

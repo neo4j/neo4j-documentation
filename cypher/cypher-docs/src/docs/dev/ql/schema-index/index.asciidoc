@@ -19,6 +19,7 @@ This section explains how to work with indexes in Neo4j and Cypher.
 * <<schema-index-use-index-with-in, Use index with `IN`>>
 * <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
 * <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>
+* <<explicit-indexes-procedures, Use built-in procedures to manage and use explicit indexes>>
 
 
 [[query-schema-index-introduction]]
@@ -152,3 +153,4 @@ include::use-index-with-starts-with.asciidoc[]
 
 include::use-index-when-checking-for-the-existence-of-a-property.asciidoc[]
 
+include::explicit-index-procedures.adoc[leveloffset=+1]
