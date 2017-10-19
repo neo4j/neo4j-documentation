@@ -1,3 +1,4 @@
+[role=deprecated]
 [[query-create-unique]]
 = CREATE UNIQUE
 
