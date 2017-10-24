@@ -21,6 +21,7 @@
     <attach-docs-phase>verify</attach-docs-phase>
     <docs-plugin.filter>false</docs-plugin.filter>
     <docs-plugin.skip>false</docs-plugin.skip>
+    <scala-test-compile-phase>process-test-resources</scala-test-compile-phase>
     <test.runner.jvm.settings.additional>
       -Dorg.neo4j.kernel.impl.api.KernelStatement.trackStatements=false
     </test.runner.jvm.settings.additional>
