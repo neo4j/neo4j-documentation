@@ -23,7 +23,7 @@ import org.neo4j.cypher.ExecutionEngineHelper
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.frontend.v3_4.test_helpers.CypherFunSuite
+import org.neo4j.cypher.internal.util.v3_4.test_helpers.CypherFunSuite
 import org.neo4j.cypher.internal.helpers.GraphIcing
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
 import org.scalatest.BeforeAndAfterAll

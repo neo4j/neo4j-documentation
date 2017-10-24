@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.internal.InternalExecutionResult
 import org.neo4j.cypher.internal.compiler.v3_4.prettifier.Prettifier
-import org.neo4j.cypher.internal.frontend.v3_4.InternalException
+import org.neo4j.cypher.internal.util.v3_4.InternalException
 import org.neo4j.kernel.GraphDatabaseQueryService
 
 case class ContentWithInit(init: Seq[String], queryResultPlaceHolder: QueryResultPlaceHolder) {
