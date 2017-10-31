@@ -120,12 +120,6 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.neo4j</groupId>
-      <artifactId>neo4j-cypher-compiler-3.4</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
    <dependency>
       <groupId>org.neo4j</groupId>
       <artifactId>neo4j-cypher-frontend-3.4</artifactId>
