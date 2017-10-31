@@ -19,8 +19,8 @@ package org.neo4j.cypher.internal.compatibility.v3_4.runtime
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import org.neo4j.cypher.internal.compiler.v3_4.helpers.IsList
 import org.neo4j.cypher.internal.runtime.QueryContext
+import org.neo4j.cypher.internal.runtime.interpreted.IsList
 import org.neo4j.cypher.internal.runtime.interpreted.commands.values.KeyToken
 import org.neo4j.cypher.internal.runtime.interpreted.pipes.QueryState
 import org.neo4j.graphdb.{Node, PropertyContainer, Relationship}
@@ -48,7 +48,7 @@ trait CypherSerializer {
     case x: Relationship => ":" + x.getType.name() + "[" + x.getId + "]" + serializeProperties(x, qtx)
     case x: Any if x.isInstanceOf[Map[_, _]] => makeString(_ => x.asInstanceOf[Map[String, Any]], qtx)
     case x: Any if x.isInstanceOf[java.util.Map[_, _]] => makeString(_ => x.asInstanceOf[java.util.Map[String, Any]].asScala, qtx)
-    case IsList(coll)    => coll.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
+    case IsList(coll)    => coll.asArray().map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
     case x: String       => "\"" + x + "\""
     case v: KeyToken     => v.name
     case Some(x)         => x.toString
