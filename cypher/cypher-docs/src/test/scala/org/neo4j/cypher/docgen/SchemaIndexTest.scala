@@ -22,12 +22,11 @@ package org.neo4j.cypher.docgen
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
-import org.neo4j.cypher.QueryStatisticsTestSupport
-import org.neo4j.cypher.internal.InternalExecutionResult
-import org.neo4j.cypher.internal.compatibility.v3_4.runtime.pipes.IndexSeekByRange
-import org.neo4j.cypher.internal.compatibility.v3_4.runtime.planDescription.InternalPlanDescription.Arguments.Planner
 import org.neo4j.cypher.internal.compiler.v3_4.{DPPlannerName, IDPPlannerName}
-import org.neo4j.cypher.internal.helpers.GraphIcing
+import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
+import org.neo4j.cypher.internal.runtime.planDescription.InternalPlanDescription.Arguments.Planner
+import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
 

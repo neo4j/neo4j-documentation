@@ -27,19 +27,16 @@ import java.util.concurrent.TimeUnit
 import org.junit.{After, Before}
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
-import org.neo4j.cypher.internal.compatibility.v3_4.runtime.helpers.RuntimeJavaValueConverter
 import org.neo4j.cypher.internal.compiler.v3_4.prettifier.Prettifier
-import org.neo4j.cypher.internal.frontend.v3_4.helpers.Eagerly
-import org.neo4j.cypher.internal.helpers.GraphIcing
-import org.neo4j.cypher.internal.javacompat.GraphImpl
-import org.neo4j.cypher.internal.{ExecutionEngine, InternalExecutionResult, RewindableExecutionResult, isGraphKernelResultValue}
-import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
-import org.neo4j.cypher.{CypherException, ExecutionEngineHelper}
+import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
+import org.neo4j.cypher.internal.runtime.{InternalExecutionResult, RuntimeJavaValueConverter, isGraphKernelResultValue}
+import org.neo4j.cypher.internal.util.v3_4.Eagerly
+import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult}
+import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
 import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.factory.GraphDatabaseSettings
 import org.neo4j.graphdb.index.Index
-import org.neo4j.kernel.impl.util.ValueUtils.asMapValue
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.api.security.SecurityContext
 import org.neo4j.kernel.configuration.Settings
@@ -50,6 +47,7 @@ import org.neo4j.kernel.impl.core.ThreadToStatementContextBridge
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
+import org.neo4j.kernel.impl.util.ValueUtils.asMapValue
 import org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.test.{GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.values.virtual.VirtualValues
@@ -162,7 +160,7 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
 
 }
 
-abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper with GraphIcing with ResetStrategy {
+abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper with ResetStrategy {
   def testQuery(title: String, text: String, queryText: String, optionalResultExplanation: String = null,
                 parameters: Map[String, Any] = Map.empty, planners: Seq[String] = Seq.empty,
                 assertions: InternalExecutionResult => Unit) {

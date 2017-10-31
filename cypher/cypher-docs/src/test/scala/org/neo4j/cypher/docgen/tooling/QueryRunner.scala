@@ -19,10 +19,12 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import org.neo4j.cypher.internal.InternalExecutionResult
+import org.neo4j.cypher.GraphIcing
+import org.neo4j.cypher.internal.runtime.InternalExecutionResult
 import org.neo4j.cypher.internal.util.v3_4.InternalException
-import org.neo4j.cypher.internal.helpers.GraphIcing
 import org.neo4j.kernel.GraphDatabaseQueryService
+import org.neo4j.kernel.api.KernelTransaction.Type
+import org.neo4j.kernel.api.security.SecurityContext.AUTH_DISABLED
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 
 import scala.collection.immutable.Iterable
@@ -91,43 +93,48 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
   private def runSingleQuery(database: RestartableDatabase, queryText: String, assertions: QueryAssertions, content: TablePlaceHolder): QueryRunResult = {
     val format: (InternalTransaction) => (InternalExecutionResult) => Content = (tx: InternalTransaction) => formatter(database.getInnerDb, tx)(_)
 
-      val result: Either[Throwable, InternalTransaction => Content] =
-        try {
-          val resultTry = Try(database.execute(queryText))
-          (assertions, resultTry) match {
-            // *** Success conditions
+    val result: Either[Throwable, InternalTransaction => Content] =
+      try {
+        val resultTry = Try(database.execute(queryText))
+        (assertions, resultTry) match {
+          // *** Success conditions
 
-            case (ResultAssertions(f), Success(r)) =>
-              f(r)
-              Right(format(_)(r))
+          case (ResultAssertions(f), Success(r)) =>
+            f(r)
+            Right(format(_)(r))
 
-            case (ResultAndDbAssertions(f), Success(r)) =>
-              f(r, database.getInnerDb)
-              Right(format(_)(r))
+          case (ResultAndDbAssertions(f), Success(r)) =>
+            f(r, database.getInnerDb)
+            Right(format(_)(r))
 
-            case (NoAssertions, Success(r)) =>
-              Right(format(_)(r))
+          case (NoAssertions, Success(r)) =>
+            Right(format(_)(r))
 
-            // *** Error conditions
-            case (_, Failure(exception: Throwable)) =>
-              Left(exception)
+          // *** Error conditions
+          case (_, Failure(exception: Throwable)) =>
+            Left(exception)
 
-            case x =>
-              throw new InternalException(s"Did not see this one coming $x")
-          }
-        } catch {
-          case e: Throwable =>
-            Left(e)
+          case x =>
+            throw new InternalException(s"Did not see this one coming $x")
         }
-
-      val formattedResult: Either[Throwable, Content] = database.getInnerDb.withTx { tx =>
-        result.right.map {
-          case contentBuilder => contentBuilder(tx)
-        }
+      } catch {
+        case e: Throwable =>
+          Left(e)
       }
 
-      QueryRunResult(queryText, content, formattedResult)
+    val formattedResult: Either[Throwable, Content] = {
+      val tx = database.getInnerDb.beginTransaction(Type.`implicit`, AUTH_DISABLED)
+      try {
+        val r = result.right.map(contentBuilder => contentBuilder(tx))
+        tx.success()
+        r
+      } finally {
+        tx.close()
+      }
     }
+
+    QueryRunResult(queryText, content, formattedResult)
+  }
 
   private def explainSingleQuery(database: RestartableDatabase,
                                  queryText: String,

@@ -19,10 +19,10 @@ package org.neo4j.cypher.internal.compatibility.v3_4.runtime
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import org.neo4j.cypher.internal.compatibility.v3_4.runtime.commands.values.KeyToken
-import org.neo4j.cypher.internal.compatibility.v3_4.runtime.pipes.QueryState
 import org.neo4j.cypher.internal.compiler.v3_4.helpers.IsList
-import org.neo4j.cypher.internal.spi.v3_4.QueryContext
+import org.neo4j.cypher.internal.runtime.QueryContext
+import org.neo4j.cypher.internal.runtime.interpreted.commands.values.KeyToken
+import org.neo4j.cypher.internal.runtime.interpreted.pipes.QueryState
 import org.neo4j.graphdb.{Node, PropertyContainer, Relationship}
 
 import scala.collection.Map

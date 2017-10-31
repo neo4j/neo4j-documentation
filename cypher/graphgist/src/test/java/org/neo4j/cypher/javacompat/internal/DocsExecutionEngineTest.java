@@ -22,14 +22,11 @@ package org.neo4j.cypher.javacompat.internal;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.net.InetSocketAddress;
-import java.util.Collections;
-
 import org.neo4j.cypher.internal.CommunityCompatibilityFactory;
 import org.neo4j.cypher.internal.DocsExecutionEngine;
 import org.neo4j.cypher.internal.EnterpriseCompatibilityFactory;
-import org.neo4j.cypher.internal.InternalExecutionResult;
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService;
+import org.neo4j.cypher.internal.runtime.InternalExecutionResult;
 import org.neo4j.graphdb.DependencyResolver;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
@@ -48,7 +45,9 @@ import org.neo4j.kernel.monitoring.Monitors;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
 import org.neo4j.test.TestEnterpriseGraphDatabaseFactory;
-import org.neo4j.values.virtual.VirtualValues;
+
+import java.net.InetSocketAddress;
+import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;

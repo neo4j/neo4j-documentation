@@ -19,8 +19,8 @@
  */
 package org.neo4j.cypher.docgen
 
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.internal.{CommunityCompatibilityFactory, EnterpriseCompatibilityFactory, ExecutionEngine}
-import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction
 import org.neo4j.kernel.api.KernelAPI

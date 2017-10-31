@@ -26,6 +26,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService;
+import org.neo4j.graphdb.schema.Schema;
+import org.neo4j.kernel.api.KernelTransaction;
+import org.neo4j.kernel.api.security.AnonymousContext;
+import org.neo4j.kernel.impl.coreapi.InternalTransaction;
+import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
+import org.neo4j.test.TestGraphDatabaseFactory;
 
 import java.io.File;
 import java.sql.Connection;
@@ -37,31 +44,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService;
-import org.neo4j.graphdb.schema.Schema;
-import org.neo4j.kernel.api.KernelTransaction;
-import org.neo4j.kernel.api.security.AnonymousContext;
-import org.neo4j.kernel.impl.coreapi.InternalTransaction;
-import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
-import org.neo4j.test.TestGraphDatabaseFactory;
-
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assume.assumeFalse;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class BlockTypeTest
 {

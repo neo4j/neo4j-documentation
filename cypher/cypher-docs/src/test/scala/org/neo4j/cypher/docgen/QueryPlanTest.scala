@@ -22,8 +22,7 @@ package org.neo4j.cypher.docgen
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
-import org.neo4j.cypher.internal.compatibility.v3_4.runtime.pipes.IndexSeekByRange
-import org.scalatest.Ignore
+import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
   override val setupQueries = List(

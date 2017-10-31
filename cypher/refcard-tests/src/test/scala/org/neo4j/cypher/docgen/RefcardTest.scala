@@ -25,19 +25,17 @@ import java.nio.charset.StandardCharsets
 
 import org.junit.{After, Before, Test}
 import org.neo4j.cypher._
-import org.neo4j.cypher.internal.compatibility.v3_4.runtime.helpers.RuntimeJavaValueConverter
 import org.neo4j.cypher.internal.compiler.v3_4.prettifier.Prettifier
-import org.neo4j.cypher.internal.helpers.GraphIcing
-import org.neo4j.cypher.internal.javacompat.{ExecutionResult, GraphImpl}
-import org.neo4j.cypher.internal.{ExecutionEngine, InternalExecutionResult, RewindableExecutionResult, isGraphKernelResultValue}
-import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
+import org.neo4j.cypher.internal.runtime.{InternalExecutionResult, RuntimeJavaValueConverter, isGraphKernelResultValue}
+import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult}
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.index.Index
-import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
+import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.test.{GraphDatabaseServiceCleaner, GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions

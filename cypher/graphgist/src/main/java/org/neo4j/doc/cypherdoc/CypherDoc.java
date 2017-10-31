@@ -19,6 +19,12 @@
  */
 package org.neo4j.doc.cypherdoc;
 
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService;
+import org.neo4j.graphdb.config.Setting;
+import org.neo4j.graphdb.factory.GraphDatabaseSettings;
+import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
+import org.neo4j.test.TestGraphDatabaseFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -26,17 +32,7 @@ import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService;
-import org.neo4j.graphdb.config.Setting;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
-import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
-import org.neo4j.test.TestGraphDatabaseFactory;
+import java.util.*;
 
 /**
  * Parse AsciiDoc-like content for use in Cypher documentation.

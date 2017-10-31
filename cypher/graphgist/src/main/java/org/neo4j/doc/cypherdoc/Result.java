@@ -19,16 +19,16 @@
  */
 package org.neo4j.doc.cypherdoc;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService;
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 class Result
 {

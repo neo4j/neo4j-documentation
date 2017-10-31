@@ -19,15 +19,15 @@
  */
 package org.neo4j.doc.cypherdoc;
 
+import org.neo4j.cypher.internal.compiler.v3_4.prettifier.Prettifier;
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService;
+
 import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.neo4j.cypher.internal.compiler.v3_4.prettifier.Prettifier;
-import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService;
 
 class State
 {

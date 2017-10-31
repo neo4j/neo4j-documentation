@@ -19,11 +19,11 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import org.neo4j.cypher.ExecutionEngineHelper
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
-import org.neo4j.cypher.internal.helpers.GraphIcing
-import org.neo4j.cypher.internal.{ExecutionEngine, InternalExecutionResult}
-import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.ExecutionEngine
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.test.{TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 
 import scala.util.Try

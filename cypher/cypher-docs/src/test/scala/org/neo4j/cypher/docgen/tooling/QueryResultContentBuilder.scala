@@ -19,8 +19,8 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import org.neo4j.cypher.internal.InternalExecutionResult
-import org.neo4j.cypher.internal.helpers.GraphIcing
+import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+
 
 /**
  * This class is responsible for replacing the Content tags asking for query results
@@ -28,7 +28,7 @@ import org.neo4j.cypher.internal.helpers.GraphIcing
  * textual output of ExecutionResultDumper
  */
 class QueryResultContentBuilder(valueFormatter: Any => String)
-  extends (InternalExecutionResult => Content) with GraphIcing {
+  extends (InternalExecutionResult => Content) {
 
   override def apply(result: InternalExecutionResult): Content = {
 
