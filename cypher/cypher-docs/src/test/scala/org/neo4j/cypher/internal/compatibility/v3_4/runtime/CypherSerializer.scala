@@ -22,12 +22,25 @@ package org.neo4j.cypher.internal.compatibility.v3_4.runtime
 import org.neo4j.cypher.internal.runtime.QueryContext
 import org.neo4j.cypher.internal.runtime.interpreted.IsList
 import org.neo4j.cypher.internal.runtime.interpreted.commands.values.KeyToken
-import org.neo4j.cypher.internal.runtime.interpreted.pipes.QueryState
 import org.neo4j.graphdb.{Node, PropertyContainer, Relationship}
 
 import scala.collection.Map
 
 trait CypherSerializer {
+
+  import scala.collection.JavaConverters._
+  protected def serialize(a: Any, qtx: QueryContext): String = a match {
+    case x: Node         => x.toString + serializeProperties(x, qtx)
+    case x: Relationship => ":" + x.getType.name() + "[" + x.getId + "]" + serializeProperties(x, qtx)
+    case x: Any if x.isInstanceOf[Map[_, _]] => makeString(x.asInstanceOf[Map[String, Any]], qtx)
+    case x: Any if x.isInstanceOf[java.util.Map[_, _]] => makeString(x.asInstanceOf[java.util.Map[String, Any]].asScala, qtx)
+    case IsList(coll)    => coll.asArray().map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
+    case x: String       => "\"" + x + "\""
+    case v: KeyToken     => v.name
+    case Some(x)         => x.toString
+    case null            => "<null>"
+    case x               => x.toString
+  }
 
   protected def serializeProperties(x: PropertyContainer, qtx: QueryContext): String = {
     val (ops, id, deleted) = x match {
@@ -42,34 +55,7 @@ trait CypherSerializer {
     keyValStrings.mkString("{", ",", "}")
   }
 
-  import scala.collection.JavaConverters._
-  protected def serialize(a: Any, qtx: QueryContext): String = a match {
-    case x: Node         => x.toString + serializeProperties(x, qtx)
-    case x: Relationship => ":" + x.getType.name() + "[" + x.getId + "]" + serializeProperties(x, qtx)
-    case x: Any if x.isInstanceOf[Map[_, _]] => makeString(_ => x.asInstanceOf[Map[String, Any]], qtx)
-    case x: Any if x.isInstanceOf[java.util.Map[_, _]] => makeString(_ => x.asInstanceOf[java.util.Map[String, Any]].asScala, qtx)
-    case IsList(coll)    => coll.asArray().map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
-    case x: String       => "\"" + x + "\""
-    case v: KeyToken     => v.name
-    case Some(x)         => x.toString
-    case null            => "<null>"
-    case x               => x.toString
-  }
-
-  protected def serializeWithType(x: Any)(implicit qs: QueryState) = s"${serialize(x, qs.query)} (${x.getClass.getSimpleName})"
-
-  private def makeString(m: QueryContext => Map[String, Any], qtx: QueryContext) = m(qtx).map {
+  private def makeString(m: Map[String, Any], qtx: QueryContext) = m.map {
     case (k, v) => k + " -> " + serialize(v, qtx)
   }.mkString("{", ", ", "}")
-
-   def makeSize(txt: String, wantedSize: Int): String = {
-     val actualSize = txt.length()
-     if (actualSize > wantedSize) {
-       txt.slice(0, wantedSize)
-     } else if (actualSize < wantedSize) {
-      txt + repeat(" ", wantedSize - actualSize)
-    } else txt
-  }
-
-  def repeat(x: String, size: Int): String = (1 to size).map((i) => x).mkString
 }
