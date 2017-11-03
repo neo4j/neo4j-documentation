@@ -47,6 +47,7 @@
     <module>metrics-docs</module>
     <module>doctools</module>
     <module>graphviz</module>
+    <module>procedures</module>
   </modules>
 
   <scm>
