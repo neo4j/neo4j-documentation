@@ -96,7 +96,7 @@ public class ProcedureReferenceGenerator {
                     it.name(),
                     it.description(),
                     it.signature(),
-                    enterpriseProcedures.containsKey(it.name()) ? String.join(",", enterpriseProcedures.get(it.name()).roles()) : "N/A"
+                    null == enterpriseProcedures.get(it.name()).roles() ? "N/A" : String.join(", ", enterpriseProcedures.get(it.name()).roles())
             );
         });
         List<Procedure> distinctEnterpriseProcedures = enterpriseProcedures.entrySet().stream()
