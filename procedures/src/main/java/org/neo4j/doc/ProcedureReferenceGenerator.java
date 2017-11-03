@@ -41,15 +41,15 @@ public class ProcedureReferenceGenerator {
         this.neo = new Neo4jInstance();
     }
 
-    public String generate() {
+    public String document(String id, String title) {
         Map<String, Procedure> communityProcedures = communityEditionProcedures();
         Map<String, Procedure> enterpriseProcedures = enterpriseEditionProcedures();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         this.out = new PrintStream(baos);
 
-        out.printf("[procedure-reference]%n");
-        out.printf(".Procedure reference%n");
+        out.printf("[%s]%n", id);
+        out.printf(".%s%n", title);
         out.printf("[options=header]%n");
         out.printf("|===%n");
         out.printf("|Name%n|Description%n|Signature%n[roles=enterprise]|Roles (Enterprise Edition)%n");
