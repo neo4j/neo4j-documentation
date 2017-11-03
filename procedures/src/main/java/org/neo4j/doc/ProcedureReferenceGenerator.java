@@ -25,6 +25,7 @@ import org.neo4j.graphdb.Transaction;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class ProcedureReferenceGenerator {
 
         out.printf("[%s]%n", id);
         out.printf(".%s%n", title);
-        out.printf("[options=header]%n");
+        out.printf("[options=header, cols=\"a,a,m,a\"]%n");
         out.printf("|===%n");
         out.printf("|Name%n|Description%n|Signature%n[roles=enterprise]|Roles (Enterprise Edition)%n");
         document(communityProcedures, enterpriseProcedures);
@@ -91,7 +92,7 @@ public class ProcedureReferenceGenerator {
     }
 
     private void document(Map<String, Procedure> communityProcedures, Map<String, Procedure> enterpriseProcedures) {
-        communityProcedures.values().forEach(it -> {
+        communityProcedures.values().stream().sorted(Comparator.comparing(Procedure::name)).forEach(it -> {
             out.printf("|%s |%s |%s |%s%n",
                     it.name(),
                     it.description(),
@@ -102,9 +103,10 @@ public class ProcedureReferenceGenerator {
         List<Procedure> distinctEnterpriseProcedures = enterpriseProcedures.entrySet().stream()
                 .filter(it -> !communityProcedures.keySet().contains(it.getKey()))
                 .map(Map.Entry::getValue)
+                .sorted(Comparator.comparing(Procedure::name))
                 .collect(Collectors.toList());
         distinctEnterpriseProcedures.forEach(it -> {
-            out.printf("|%s |%s |%s |%s%n",
+            out.printf("[roles=enterprise]|%s |%s |%s |%s%n",
                     it.name(),
                     it.description(),
                     it.signature(),

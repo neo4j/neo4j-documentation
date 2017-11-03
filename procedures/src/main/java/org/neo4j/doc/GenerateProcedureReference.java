@@ -34,9 +34,6 @@ public class GenerateProcedureReference {
     private static final String DEFAULT_ID = "procedure-reference";
     private static final String DEFAULT_TITLE = "Procedure reference";
 
-    public GenerateProcedureReference() {
-    }
-
     public static void main(String[] args) throws IOException {
         Args arguments = Args.parse(args);
         printUsage();

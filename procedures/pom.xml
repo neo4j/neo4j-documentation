@@ -48,7 +48,7 @@
               <target>
                 <java classname="org.neo4j.doc.GenerateProcedureReference"
                   classpathref="maven.compile.classpath" failonerror="true">
-                  <arg line="-o ${project.build.directory}/docs/procedure-reference.adoc" />
+                  <arg line="${project.build.directory}/docs/procedure-reference.adoc" />
                 </java>
               </target>
             </configuration>
