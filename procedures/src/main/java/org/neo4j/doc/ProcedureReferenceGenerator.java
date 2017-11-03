@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 public class ProcedureReferenceGenerator {
 
     private final String query = "CALL dbms.procedures()";
+    private final String ENTERPRISE_FEATURE_ROLE_TEMPLATE = "[enterprise-feature]#%s#";
     private final Neo4jInstance neo;
 
     private PrintStream out;
@@ -49,11 +50,13 @@ public class ProcedureReferenceGenerator {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         this.out = new PrintStream(baos);
 
-        out.printf("[%s]%n", id);
+        out.printf("[[%s]]%n", id);
         out.printf(".%s%n", title);
         out.printf("[options=header, cols=\"a,a,m,a\"]%n");
         out.printf("|===%n");
-        out.printf("|Name%n|Description%n|Signature%n[roles=enterprise]|Roles (Enterprise Edition)%n");
+        out.printf("|Name%n|Description%n|Signature%n|");
+        out.printf(ENTERPRISE_FEATURE_ROLE_TEMPLATE, "Roles");
+        out.printf("%n");
         document(communityProcedures, enterpriseProcedures);
         out.printf("|===%n");
         out.flush();
@@ -97,7 +100,8 @@ public class ProcedureReferenceGenerator {
                     it.name(),
                     it.description(),
                     it.signature(),
-                    null == enterpriseProcedures.get(it.name()).roles() ? "N/A" : String.join(", ", enterpriseProcedures.get(it.name()).roles())
+                    null == enterpriseProcedures.get(it.name()).roles() ? "N/A" :
+                            String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, String.join(", ", enterpriseProcedures.get(it.name()).roles()))
             );
         });
         List<Procedure> distinctEnterpriseProcedures = enterpriseProcedures.entrySet().stream()
@@ -110,7 +114,7 @@ public class ProcedureReferenceGenerator {
                     it.name(),
                     it.description(),
                     it.signature(),
-                    String.join(",", it.roles())
+                    String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, String.join(",", it.roles()))
             );
         });
     }
