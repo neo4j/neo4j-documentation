@@ -113,7 +113,6 @@ public class ProcedureReferenceGenerator {
         });
     }
 
-
     class Procedure {
         private String name;
         private String signature;
