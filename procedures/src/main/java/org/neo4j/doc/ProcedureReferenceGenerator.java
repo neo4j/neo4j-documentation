@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 public class ProcedureReferenceGenerator {
 
     private final String query = "CALL dbms.procedures()";
-    private final String ENTERPRISE_FEATURE_ROLE_TEMPLATE = "[enterprise-feature]#%s#";
+    private final String ENTERPRISE_FEATURE_ROLE_TEMPLATE = "[enterprise-edition]#%s#";
     private final Neo4jInstance neo;
 
     private PrintStream out;
