@@ -29,7 +29,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProcedureReferenceGenerator {
 
@@ -54,9 +54,7 @@ public class ProcedureReferenceGenerator {
         out.printf(".%s%n", title);
         out.printf("[options=header, cols=\"a,a,m,a\"]%n");
         out.printf("|===%n");
-        out.printf("|Name%n|Description%n|Signature%n|");
-        out.printf(ENTERPRISE_FEATURE_ROLE_TEMPLATE, "Roles");
-        out.printf("%n");
+        out.printf("|Name%n|Description%n|Signature%n|").printf(ENTERPRISE_FEATURE_ROLE_TEMPLATE, "Roles").printf("%n");
         document(communityProcedures, enterpriseProcedures);
         out.printf("|===%n");
         out.flush();
@@ -79,7 +77,7 @@ public class ProcedureReferenceGenerator {
 
     private Map<String, Procedure> procedures(GraphDatabaseService db) {
         Map<String, Procedure> procedures;
-        try (Transaction ignore = db.beginTx(); Result result = db.execute(query);) {
+        try (Transaction ignore = db.beginTx(); Result result = db.execute(query)) {
             procedures = parseResult(result);
         }
         return procedures;
@@ -95,41 +93,41 @@ public class ProcedureReferenceGenerator {
     }
 
     private void document(Map<String, Procedure> communityProcedures, Map<String, Procedure> enterpriseProcedures) {
-        communityProcedures.values().stream().sorted(Comparator.comparing(Procedure::name)).forEach(it -> {
+        enterpriseProcedures.values().forEach(
+                proc -> proc.setEnterpriseOnly(!proc.equals(communityProcedures.get(proc.name())))
+        );
+        Stream.concat(
+                enterpriseProcedures.values().stream(),
+                communityProcedures.values().stream().filter(proc -> !proc.equals(enterpriseProcedures.get(proc.name())))
+        ).sorted(
+                Comparator
+                        .comparing(Procedure::enterpriseOnly)
+                        .thenComparing(Procedure::name)
+        ).forEach(it -> {
             out.printf("|%s |%s |%s |%s%n",
-                    it.name(),
+                    it.enterpriseOnly() ? String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, it.name()) : it.name(),
                     it.description(),
                     it.signature(),
-                    null == enterpriseProcedures.get(it.name()).roles() ? "N/A" :
-                            String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, String.join(", ", enterpriseProcedures.get(it.name()).roles()))
-            );
-        });
-        List<Procedure> distinctEnterpriseProcedures = enterpriseProcedures.entrySet().stream()
-                .filter(it -> !communityProcedures.keySet().contains(it.getKey()))
-                .map(Map.Entry::getValue)
-                .sorted(Comparator.comparing(Procedure::name))
-                .collect(Collectors.toList());
-        distinctEnterpriseProcedures.forEach(it -> {
-            out.printf("[roles=enterprise]|%s |%s |%s |%s%n",
-                    it.name(),
-                    it.description(),
-                    it.signature(),
-                    String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, String.join(",", it.roles()))
+                    null == it.roles() ? "N/A" : String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, String.join(", ", it.roles()))
             );
         });
     }
+
 
     class Procedure {
         private String name;
         private String signature;
         private String description;
         private List<String> roles;
+        private Boolean enterpriseOnly;
         Procedure(Map<String, Object> row) {
             this.name = (String) row.get("name");
             this.signature = (String) row.get("signature");
             this.description = (String) row.get("description");
             this.roles = (List<String>) row.get("roles");
+            this.enterpriseOnly = false;
         }
+
         String name() {
             return name;
         }
@@ -141,6 +139,34 @@ public class ProcedureReferenceGenerator {
         }
         List<String> roles() {
             return roles;
+        }
+        Boolean enterpriseOnly() { return enterpriseOnly; }
+        void setEnterpriseOnly(Boolean enterpriseOnly) { this.enterpriseOnly = enterpriseOnly; }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Procedure procedure = (Procedure) o;
+
+            if (!name.equals(procedure.name)) return false;
+            return signature.equals(procedure.signature);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = name.hashCode();
+            result = 31 * result + signature.hashCode();
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Procedure{" +
+                    "name='" + name + '\'' +
+                    ", signature='" + signature + '\'' +
+                    '}';
         }
     }
 
