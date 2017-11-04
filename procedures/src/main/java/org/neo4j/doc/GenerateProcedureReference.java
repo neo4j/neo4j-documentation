@@ -46,7 +46,7 @@ public class GenerateProcedureReference {
         String title = arguments.has("title") || warnMissingOption("title", "--title=my-title", DEFAULT_TITLE)
                 ? arguments.get("title") : DEFAULT_TITLE;
 
-        System.out.printf("[+++] id=%s  title=%s", id, title);
+        System.out.printf("[+++] id=%s  title=%s%n", id, title);
 
         try {
             String doc = new ProcedureReferenceGenerator().document(id, title);
