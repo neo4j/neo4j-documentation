@@ -51,6 +51,12 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
       case "drop-relationship-property-existence-constraint" =>
         assertStats(result, constraintsRemoved = 1)
         assert(result.toList.size === 0)
+      case "create-node-key-constraint" =>
+        assertStats(result, constraintsAdded = 0)
+        assert(result.toList.size === 0)
+      case "drop-node-key-constraint" =>
+        assertStats(result, constraintsRemoved = 0)
+        assert(result.toList.size === 0)
       case "match" =>
         assertStats(result, nodesCreated = 0)
         assert(result.toList.size === 1)
@@ -58,8 +64,8 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("name" -> "Alice"),
-    "B" -> Map("name" -> "Bobo"))
+    "A" -> Map("name" -> "Alice", "firstname" -> "Alice", "surname" -> "Johnson"),
+    "B" -> Map("name" -> "Bobo", "firstname" -> "Bobo", "surname" -> "Baumann"))
 
   override def parameters(name: String): Map[String, Any] =
     name match {
@@ -130,5 +136,29 @@ DROP CONSTRAINT ON ()-[l:LIKED]-()
 ###
 
 Drop the relationship property existence constraint on the type `LIKED` and property `when`.
+
+###assertion=create-node-key-constraint
+//
+
+CREATE CONSTRAINT ON (p:Person)
+      ASSERT (p.firstname, p.surname) IS NODE KEY
+###
+
+Create a Node Key constraint on the label `Person` and properties `firstname` and `surname`.
+If a node with that label is created without both `firstname` and `surname`
+or if the combination of the two is not unique,
+or if the `firstname` and/or `surname` labels on an existing node with the `Person` label
+is modified to violate these constraints, the write operation will fail.
+
+###assertion=drop-node-key-constraint
+//
+
+DROP CONSTRAINT ON (p:Person)
+      ASSERT (p.firstname, p.surname) IS NODE KEY
+
+###
+
+Drop the Node Key constraint on the label `Person` and properties `firstname` and `surname`.
+
 """
 }
