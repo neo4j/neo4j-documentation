@@ -37,6 +37,8 @@
                   <arg value="org.neo4j.metrics.source.db.TransactionMetrics" />
                   <arg value="org.neo4j.metrics.source.db.CypherMetrics" />
                   <arg value="org.neo4j.metrics.source.db.LogRotationMetrics" />
+                  <arg value="org.neo4j.metrics.source.db.BoltMetrics" />
+                  <arg value="org.neo4j.metrics.source.server.ServerMetrics" />
                   <arg value="org.neo4j.metrics.source.cluster.NetworkMetrics" />
                   <arg value="org.neo4j.metrics.source.cluster.ClusterMetrics" />
 
