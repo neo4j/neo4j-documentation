@@ -23,7 +23,6 @@ import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.internal.{CommunityCompatibilityFactory, EnterpriseCompatibilityFactory, ExecutionEngine}
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction
-import org.neo4j.kernel.api.KernelAPI
 import org.neo4j.kernel.impl.logging.LogService
 import org.neo4j.kernel.internal.GraphDatabaseAPI
 import org.neo4j.kernel.monitoring.Monitors
@@ -39,16 +38,16 @@ object ExecutionEngineFactory {
   }
 
   def createEnterpriseEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
-    val (database, queryService, kernelAPI, monitors, logProvider) = prepare(graph)
+    val (database, queryService, monitors, logProvider) = prepare(graph)
 
-    val inner = new CommunityCompatibilityFactory(queryService, kernelAPI, monitors, logProvider)
-    val compatibilityFactory = new EnterpriseCompatibilityFactory(inner, queryService, kernelAPI, monitors, logProvider)
+    val inner = new CommunityCompatibilityFactory(queryService, monitors, logProvider)
+    val compatibilityFactory = new EnterpriseCompatibilityFactory(inner, queryService, monitors, logProvider)
     new ExecutionEngine(database, logProvider, compatibilityFactory)
   }
 
   def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
-    val (database, queryService, kernelAPI, monitors, logProvider) = prepare(graph)
-    val compatibilityFactory = new CommunityCompatibilityFactory(queryService, kernelAPI, monitors, logProvider)
+    val (database, queryService, monitors, logProvider) = prepare(graph)
+    val compatibilityFactory = new CommunityCompatibilityFactory(queryService, monitors, logProvider)
     new ExecutionEngine(database, logProvider, compatibilityFactory)
   }
 
@@ -58,9 +57,8 @@ object ExecutionEngineFactory {
     val graphAPI = graph.asInstanceOf[GraphDatabaseAPI]
     val resolver = graphAPI.getDependencyResolver
     val logService = resolver.resolveDependency(classOf[LogService])
-    val kernelAPI = resolver.resolveDependency(classOf[KernelAPI])
     val monitors = resolver.resolveDependency(classOf[Monitors])
     val logProvider = logService.getInternalLogProvider
-    (database, queryService, kernelAPI, monitors, logProvider)
+    (database, queryService, monitors, logProvider)
   }
 }

@@ -21,8 +21,8 @@ package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.graphdb.{Node, Path, Relationship}
-import org.neo4j.kernel.api.KernelTransaction
-import org.neo4j.kernel.api.security.{AnonymousContext}
+import org.neo4j.internal.kernel.api.Transaction.Type
+import org.neo4j.kernel.api.security.AnonymousContext
 
 import scala.collection.JavaConverters._
 
@@ -348,7 +348,7 @@ class MatchTest extends DocumentingTest {
   }.build()
 
   private def assertAllNodesReturned = ResultAndDbAssertions((p, db) => {
-    val tx = db.beginTransaction(KernelTransaction.Type.explicit, AnonymousContext.read() )
+    val tx = db.beginTransaction(Type.explicit, AnonymousContext.read() )
     try {
       val allNodes: List[Node] = db.getAllNodes().asScala.toList
       allNodes should equal(p.columnAs[Node]("n").toList)
@@ -356,7 +356,7 @@ class MatchTest extends DocumentingTest {
   })
 
   private def assertLabelStats(variable: String, stats: Map[String, Int]) = ResultAndDbAssertions((result, db) => {
-    val tx = db.beginTransaction(KernelTransaction.Type.explicit, AnonymousContext.read() )
+    val tx = db.beginTransaction(Type.explicit, AnonymousContext.read() )
     try {
       val nodes = result.columnAs[Node](variable).toList
       val labelStats = nodes.foldLeft(Map[String,Int]()) { (acc, node) =>
