@@ -19,6 +19,7 @@
  */
 package org.neo4j.doc;
 
+import org.neo4j.function.Predicates;
 import org.neo4j.helpers.Args;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 public class GenerateProcedureReference {
 
@@ -46,10 +48,13 @@ public class GenerateProcedureReference {
         String title = arguments.has("title") || warnMissingOption("title", "--title=my-title", DEFAULT_TITLE)
                 ? arguments.get("title") : DEFAULT_TITLE;
 
+        Predicate<ProcedureReferenceGenerator.Procedure> filter = filter(arguments);
+
         System.out.printf("[+++] id=%s  title=%s%n", id, title);
 
+
         try {
-            String doc = new ProcedureReferenceGenerator().document(id, title);
+            String doc = new ProcedureReferenceGenerator().document(id, title, filter);
             if (null != outFile) {
                 Path parentDir = outFile.getParent();
                 if (!Files.exists(parentDir)) {
@@ -79,8 +84,16 @@ public class GenerateProcedureReference {
         System.out.printf("    No options are mandatory but in most cases user will want to set --id and --title.%n");
         System.out.printf("    If no <out-file> is given prints to stdout.%n");
         System.out.printf("Options:%n");
-        System.out.printf("    %-30s%s [%s]%n", "--id", "ID to use for settings summary", DEFAULT_ID);
-        System.out.printf("    %-30s%s [%s]%n", "--title", "Title to use for settings summary", DEFAULT_TITLE);
+        System.out.printf("    %-30s%s [%s]%n", "--id", "ID to use for procedures reference", DEFAULT_ID);
+        System.out.printf("    %-30s%s [%s]%n", "--title", "Title to use for procedures reference", DEFAULT_TITLE);
+        System.out.printf("    %-30s%s [%s]%n", "--filter", "Filter to apply, for example '^db.index.explicit.*` to only include procedures in that namespace", DEFAULT_TITLE);
+    }
+
+    private static Predicate<ProcedureReferenceGenerator.Procedure> filter(Args arguments) {
+        if (arguments.has("filter")) {
+            return procedure -> procedure.name().matches(arguments.get("filter"));
+        }
+        return Predicates.alwaysTrue();
     }
 
 }
