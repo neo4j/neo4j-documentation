@@ -52,7 +52,6 @@ public class GenerateProcedureReference {
 
         System.out.printf("[+++] id=%s  title=%s%n", id, title);
 
-
         try {
             String doc = new ProcedureReferenceGenerator().document(id, title, filter);
             if (null != outFile) {
