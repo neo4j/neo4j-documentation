@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class ProcedureReferenceGenerator {
@@ -36,6 +37,7 @@ public class ProcedureReferenceGenerator {
     private final String query = "CALL dbms.procedures()";
     private final String ENTERPRISE_FEATURE_ROLE_TEMPLATE = "[enterprise-edition]#%s#";
     private final Neo4jInstance neo;
+    private Predicate<Procedure> filter;
 
     private PrintStream out;
 
@@ -43,7 +45,8 @@ public class ProcedureReferenceGenerator {
         this.neo = new Neo4jInstance();
     }
 
-    public String document(String id, String title) {
+    public String document(String id, String title, Predicate<Procedure> filter) {
+        this.filter = filter;
         Map<String, Procedure> communityProcedures = communityEditionProcedures();
         Map<String, Procedure> enterpriseProcedures = enterpriseEditionProcedures();
 
@@ -103,7 +106,7 @@ public class ProcedureReferenceGenerator {
                 Comparator
                         .comparing(Procedure::enterpriseOnly)
                         .thenComparing(Procedure::name)
-        ).forEach(it -> {
+        ).filter(filter).forEach(it -> {
             out.printf("|%s |%s |%s |%s%n",
                     it.enterpriseOnly() ? String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, it.name()) : it.name(),
                     it.description(),
