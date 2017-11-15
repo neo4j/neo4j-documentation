@@ -22,6 +22,7 @@ package org.neo4j.doc;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.EnterpriseGraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -33,25 +34,30 @@ public class Neo4jInstance {
 
     public GraphDatabaseService newEnterpriseInstance() {
         baseDatabaseDirectory.toFile().mkdirs();
-        GraphDatabaseService graphDb = new EnterpriseGraphDatabaseFactory().newEmbeddedDatabase(databaseDirectory());
+        GraphDatabaseService graphDb = new EnterpriseGraphDatabaseFactory()
+                .newEmbeddedDatabaseBuilder(databaseDirectory())
+                .setConfig(GraphDatabaseSettings.auth_enabled, "true")
+                .newGraphDatabase();
         registerShutdownHook(graphDb);
         return graphDb;
     }
 
     public GraphDatabaseService newCommunityInstance() {
         boolean mkdirs = baseDatabaseDirectory.toFile().mkdirs();
-        GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(databaseDirectory());
+        GraphDatabaseService graphDb = new GraphDatabaseFactory()
+                .newEmbeddedDatabaseBuilder(databaseDirectory())
+                .setConfig(GraphDatabaseSettings.auth_enabled, "true")
+                .newGraphDatabase();
         registerShutdownHook(graphDb);
         return graphDb;
     }
 
-    File databaseDirectory() {
+    private File databaseDirectory() {
         String uniqueDbDirString = String.format("graph-db-%d", System.currentTimeMillis());
         return baseDatabaseDirectory.resolve(uniqueDbDirString).toFile();
     }
 
-    private static void registerShutdownHook( final GraphDatabaseService graphDb )
-    {
+    private static void registerShutdownHook(final GraphDatabaseService graphDb) {
         Runtime.getRuntime().addShutdownHook( new Thread()
         {
             @Override
