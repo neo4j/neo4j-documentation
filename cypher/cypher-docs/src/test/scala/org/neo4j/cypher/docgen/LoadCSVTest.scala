@@ -119,7 +119,10 @@ Indicate this using `WITH HEADERS` and you can access specific fields by their c
       title = "Import data from a CSV file with a custom field delimiter",
       text = """
 Sometimes, your CSV file has other field delimiters than commas.
-You can specify which delimiter your file uses using `FIELDTERMINATOR`.
+You can specify which delimiter your file uses, using `FIELDTERMINATOR`.
+Hexadecimal representation of the unicode character encoding can be used if prepended by `{backslash}u`.
+The encoding must be written with four digits.
+For example, `{backslash}u002C` is equivalent to `;`.
 
 .artists-fieldterminator.csv
 [source]
