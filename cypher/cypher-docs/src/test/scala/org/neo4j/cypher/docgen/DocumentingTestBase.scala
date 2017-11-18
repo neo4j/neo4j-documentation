@@ -37,8 +37,8 @@ import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.factory.GraphDatabaseSettings
 import org.neo4j.graphdb.index.Index
-import org.neo4j.kernel.api.KernelTransaction
-import org.neo4j.kernel.api.security.SecurityContext
+import org.neo4j.internal.kernel.api.security.SecurityContext
+import org.neo4j.internal.kernel.api.Transaction.Type
 import org.neo4j.kernel.configuration.Settings
 import org.neo4j.kernel.impl.api.KernelStatement
 import org.neo4j.kernel.impl.api.index.IndexingService
@@ -331,7 +331,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     val results = planners.flatMap {
       case planner if expectedException.isEmpty =>
         val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
-        val transaction = db.beginTransaction( KernelTransaction.Type.`implicit`, SecurityContext.AUTH_DISABLED )
+        val transaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
         val result = engine.execute(
           s"$planner $query",
           parameters,
@@ -358,7 +358,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
       case s =>
         val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
-        val transaction = db.beginTransaction( KernelTransaction.Type.`implicit`, SecurityContext.AUTH_DISABLED )
+        val transaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
         val e = intercept[CypherException](
             engine.execute(
               s"$s $query",
@@ -442,13 +442,13 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   def executePreparationQueries(queries: List[String]) {
     preparationQueries = queries
 
-    graph.withTx( executeQueries(_, queries), KernelTransaction.Type.`implicit` )
+    graph.withTx( executeQueries(_, queries), Type.`implicit` )
   }
 
   private def executeQueries(tx: InternalTransaction, queries: List[String]) {
     val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
     queries.foreach { query => {
-      val innerTx = db.beginTransaction( KernelTransaction.Type.`implicit`, tx.securityContext() )
+      val innerTx = db.beginTransaction( Type.`implicit`, tx.securityContext() )
       engine.execute( query, Map.empty[String, Object],
         contextFactory.newContext(
           new BoltConnectionInfo(
@@ -557,9 +557,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         case (n: Node, seq: Map[String, Any]) =>
           seq foreach { case (k, v) => n.setProperty(k, v) }
       }
-    }, KernelTransaction.Type.`explicit` )
+    }, Type.`explicit` )
 
-    db.withTx( executeQueries(_, setupConstraintQueries), KernelTransaction.Type.`explicit` )
+    db.withTx( executeQueries(_, setupConstraintQueries), Type.`explicit` )
   }
 
   private def asNodeMap[T: ClassTag](m: Map[String, T]): Map[Node, T] =

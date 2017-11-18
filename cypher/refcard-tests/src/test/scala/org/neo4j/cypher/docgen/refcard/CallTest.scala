@@ -24,7 +24,7 @@ import org.neo4j.collection.RawIterator
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.internal.runtime.InternalExecutionResult
-import org.neo4j.kernel.api.KernelAPI
+import org.neo4j.kernel.api.InwardKernel
 import org.neo4j.kernel.api.exceptions.ProcedureException
 import org.neo4j.kernel.api.proc.CallableProcedure.BasicProcedure
 import org.neo4j.kernel.api.proc.ProcedureSignature._
@@ -40,7 +40,7 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
   override def init() {
     super.init()
 
-    val kernel = db.getDependencyResolver.resolveDependency(classOf[KernelAPI])
+    val kernel = db.getDependencyResolver.resolveDependency(classOf[InwardKernel])
     val builder = procedureSignature(Array("java", "stored"), "procedureWithArgs")
       .in("input", Neo4jTypes.NTString)
       .out("result", Neo4jTypes.NTString)

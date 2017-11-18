@@ -30,9 +30,8 @@ import org.neo4j.cypher.internal.runtime.InternalExecutionResult;
 import org.neo4j.graphdb.DependencyResolver;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
-import org.neo4j.kernel.api.KernelAPI;
-import org.neo4j.kernel.api.KernelTransaction;
-import org.neo4j.kernel.api.security.SecurityContext;
+import org.neo4j.internal.kernel.api.Transaction.Type;
+import org.neo4j.internal.kernel.api.security.SecurityContext;
 import org.neo4j.kernel.impl.coreapi.InternalTransaction;
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker;
 import org.neo4j.kernel.impl.logging.LogService;
@@ -99,7 +98,7 @@ public class DocsExecutionEngineTest
 
     private static TransactionalContext createTransactionalContext( String query )
     {
-        InternalTransaction transaction = database.beginTransaction( KernelTransaction.Type.implicit, SecurityContext.AUTH_DISABLED );
+        InternalTransaction transaction = database.beginTransaction( Type.implicit, SecurityContext.AUTH_DISABLED );
         BoltConnectionInfo boltConnection = new BoltConnectionInfo(
                 "username",
                 "neo4j-java-bolt-driver",
@@ -127,14 +126,13 @@ public class DocsExecutionEngineTest
         GraphDatabaseAPI graphAPI = (GraphDatabaseAPI) graph;
         DependencyResolver resolver = graphAPI.getDependencyResolver();
         LogService logService = resolver.resolveDependency( LogService.class );
-        KernelAPI kernelAPI = resolver.resolveDependency( KernelAPI.class );
         Monitors monitors = resolver.resolveDependency( Monitors.class );
         LogProvider logProvider = logService.getInternalLogProvider();
         CommunityCompatibilityFactory inner =
-                new CommunityCompatibilityFactory( queryService, kernelAPI, monitors, logProvider );
+                new CommunityCompatibilityFactory( queryService, monitors, logProvider );
 
         EnterpriseCompatibilityFactory compatibilityFactory =
-                new EnterpriseCompatibilityFactory( inner, queryService, kernelAPI, monitors, logProvider );
+                new EnterpriseCompatibilityFactory( inner, queryService, monitors, logProvider );
 
         NullLogProvider logProvider1 = NullLogProvider.getInstance();
         DocsExecutionEngine engine = new DocsExecutionEngine( database, logProvider1, compatibilityFactory );

@@ -31,7 +31,7 @@ import org.neo4j.cypher.internal.runtime.{InternalExecutionResult, RuntimeJavaVa
 import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult}
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.index.Index
-import org.neo4j.kernel.api.KernelTransaction
+import org.neo4j.internal.kernel.api.Transaction
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
@@ -99,7 +99,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
           testQuery,
           ValueUtils.asMapValue(javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String,AnyRef]])
         )
-      ), KernelTransaction.Type.`implicit` )
+      ), Transaction.Type.`implicit` )
     result
   } catch {
     case e: CypherException => throw new InternalException(queryText, e)
