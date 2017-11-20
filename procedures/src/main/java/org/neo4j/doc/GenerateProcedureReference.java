@@ -35,6 +35,7 @@ public class GenerateProcedureReference {
 
     private static final String DEFAULT_ID = "procedure-reference";
     private static final String DEFAULT_TITLE = "Procedure reference";
+    private static final String DEFAULT_EDITION = "both";
 
     public static void main(String[] args) throws IOException {
         Args arguments = Args.parse(args);
@@ -47,13 +48,15 @@ public class GenerateProcedureReference {
                 ? arguments.get("id") : DEFAULT_ID;
         String title = arguments.has("title") || warnMissingOption("title", "--title=my-title", DEFAULT_TITLE)
                 ? arguments.get("title") : DEFAULT_TITLE;
+        String edition = arguments.has("edition") || warnMissingOption("edition", "--edition=community", DEFAULT_EDITION)
+                ? arguments.get("edition") : DEFAULT_EDITION;
 
         Predicate<ProcedureReferenceGenerator.Procedure> filter = filter(arguments);
 
         System.out.printf("[+++] id=%s  title=%s%n", id, title);
 
         try {
-            String doc = new ProcedureReferenceGenerator().document(id, title, filter);
+            String doc = new ProcedureReferenceGenerator().document(id, title, edition, filter);
             if (null != outFile) {
                 Path parentDir = outFile.getParent();
                 if (!Files.exists(parentDir)) {
@@ -86,6 +89,7 @@ public class GenerateProcedureReference {
         System.out.printf("    %-30s%s [%s]%n", "--id", "ID to use for procedures reference", DEFAULT_ID);
         System.out.printf("    %-30s%s [%s]%n", "--title", "Title to use for procedures reference", DEFAULT_TITLE);
         System.out.printf("    %-30s%s [%s]%n", "--filter", "Filter to apply, for example '^db.index.explicit.*` to only include procedures in that namespace", DEFAULT_TITLE);
+        System.out.printf("    %-30s%s [%s]%n", "--edition", "Which Neo4j Edition to use. One of 'enterprise', 'community' or 'both'", DEFAULT_EDITION);
     }
 
     private static Predicate<ProcedureReferenceGenerator.Procedure> filter(Args arguments) {
