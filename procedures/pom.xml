@@ -10,6 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>procedure-documentation</artifactId>
+  <name>Neo4j - Procedure Docs Generation</name>
 
   <properties>
     <generate-procedure-docs-phase>prepare-package</generate-procedure-docs-phase>
@@ -38,30 +39,67 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.7</version>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>generate-procedure-documentation</id>
+            <id>generate-community-procedure-reference</id>
             <phase>${generate-procedure-docs-phase}</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
             <configuration>
-              <target>
-                <java classname="org.neo4j.doc.GenerateProcedureReference"
-                  classpathref="maven.compile.classpath" failonerror="true">
-                  <arg line="${project.build.directory}/docs/procedure-reference.adoc" />
-                </java>
-              </target>
+              <executable>java</executable>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath/>
+                <argument>org.neo4j.doc.GenerateProcedureReference</argument>
+                <argument>--edition=community</argument>
+                <argument>--id=community-edition-procedure-reference</argument>
+                <argument>--title=Community Edition procedures</argument>
+                <argument>${project.build.directory}/docs/procedure-reference-community-edition.adoc</argument>
+              </arguments>
             </configuration>
-            <goals><goal>run</goal></goals>
+          </execution>
+          <execution>
+            <id>generate-enterprise-procedure-reference</id>
+            <phase>${generate-procedure-docs-phase}</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath/>
+                <argument>org.neo4j.doc.GenerateProcedureReference</argument>
+                <argument>--edition=enterprise</argument>
+                <argument>--id=enterprise-edition-procedure-reference</argument>
+                <argument>--title=Enterprise Edition procedures</argument>
+                <argument>${project.build.directory}/docs/procedure-reference-enterprise-edition.adoc</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-complete-procedure-reference</id>
+            <phase>${generate-procedure-docs-phase}</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath/>
+                <argument>org.neo4j.doc.GenerateProcedureReference</argument>
+                <argument>--edition=both</argument>
+                <argument>--id=complete-procedure-reference</argument>
+                <argument>--title=Complete procedure reference</argument>
+                <argument>${project.build.directory}/docs/procedure-reference-complete.adoc</argument>
+              </arguments>
+            </configuration>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant-launcher</artifactId>
-            <version>1.8.4</version>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
   </build>
