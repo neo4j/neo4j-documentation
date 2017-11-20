@@ -25,6 +25,7 @@ import org.neo4j.graphdb.Transaction;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ public class ProcedureReferenceGenerator {
     private final String query = "CALL dbms.procedures()";
     private final String ENTERPRISE_FEATURE_ROLE_TEMPLATE = "[enterprise-edition]#%s#";
     private final Neo4jInstance neo;
+    private boolean includeRolesColumn = true;
     private Predicate<Procedure> filter;
 
     private PrintStream out;
@@ -45,19 +47,23 @@ public class ProcedureReferenceGenerator {
         this.neo = new Neo4jInstance();
     }
 
-    public String document(String id, String title, Predicate<Procedure> filter) {
+    public String document(String id, String title, String edition, Predicate<Procedure> filter) {
         this.filter = filter;
-        Map<String, Procedure> communityProcedures = communityEditionProcedures();
-        Map<String, Procedure> enterpriseProcedures = enterpriseEditionProcedures();
+        this.includeRolesColumn = !edition.equalsIgnoreCase("community");
+        Map<String, Procedure> communityProcedures = edition.equalsIgnoreCase("enterprise") ? Collections.emptyMap() : communityEditionProcedures();
+        Map<String, Procedure> enterpriseProcedures = edition.equalsIgnoreCase("community") ? Collections.emptyMap() : enterpriseEditionProcedures();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         this.out = new PrintStream(baos);
 
         out.printf("[[%s]]%n", id);
         out.printf(".%s%n", title);
-        out.printf("[options=header, cols=\"a,a,m,a\"]%n");
+        out.printf("[options=header, cols=\"%s\"]%n", includeRolesColumn ? "a,a,m,a" : "a,a,m");
         out.printf("|===%n");
-        out.printf("|Name%n|Description%n|Signature%n|").printf(ENTERPRISE_FEATURE_ROLE_TEMPLATE, "Roles").printf("%n");
+        out.printf("|Name%n|Description%n|Signature%n");
+        if (includeRolesColumn) {
+            out.printf("|").printf(ENTERPRISE_FEATURE_ROLE_TEMPLATE, "Roles").printf("%n");
+        }
         document(communityProcedures, enterpriseProcedures);
         out.printf("|===%n");
         out.flush();
@@ -107,12 +113,15 @@ public class ProcedureReferenceGenerator {
                         .comparing(Procedure::enterpriseOnly)
                         .thenComparing(Procedure::name)
         ).filter(filter).forEach(it -> {
-            out.printf("|%s |%s |%s |%s%n",
+            out.printf("|%s |%s |%s",
                     it.enterpriseOnly() ? String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, it.name()) : it.name(),
                     it.description(),
-                    it.signature(),
-                    null == it.roles() ? "N/A" : String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, String.join(", ", it.roles()))
+                    it.signature()
             );
+            if (includeRolesColumn) {
+                out.printf(" |%s", null == it.roles() ? "N/A" : String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, String.join(", ", it.roles())));
+            }
+            out.printf("%n");
         });
     }
 
