@@ -39,6 +39,7 @@ public class ProcedureReferenceGenerator {
     private final String ENTERPRISE_FEATURE_ROLE_TEMPLATE = "[enterprise-edition]#%s#";
     private final Neo4jInstance neo;
     private boolean includeRolesColumn = true;
+    private boolean inlineEditionRole = false;
     private Predicate<Procedure> filter;
 
     private PrintStream out;
@@ -50,6 +51,7 @@ public class ProcedureReferenceGenerator {
     public String document(String id, String title, String edition, Predicate<Procedure> filter) {
         this.filter = filter;
         this.includeRolesColumn = !edition.equalsIgnoreCase("community");
+        this.inlineEditionRole = edition.equalsIgnoreCase("enterprise");
         Map<String, Procedure> communityProcedures = edition.equalsIgnoreCase("enterprise") ? Collections.emptyMap() : communityEditionProcedures();
         Map<String, Procedure> enterpriseProcedures = edition.equalsIgnoreCase("community") ? Collections.emptyMap() : enterpriseEditionProcedures();
 
@@ -57,12 +59,15 @@ public class ProcedureReferenceGenerator {
         this.out = new PrintStream(baos);
 
         out.printf("[[%s]]%n", id);
+        if (!inlineEditionRole) {
+            out.printf("[role=enterprise-edition]%n");
+        }
         out.printf(".%s%n", title);
         out.printf("[options=header, cols=\"%s\"]%n", includeRolesColumn ? "a,a,m,a" : "a,a,m");
         out.printf("|===%n");
         out.printf("|Name%n|Description%n|Signature%n");
         if (includeRolesColumn) {
-            out.printf("|").printf(ENTERPRISE_FEATURE_ROLE_TEMPLATE, "Roles").printf("%n");
+            out.printf("|").printf(inlineEditionRole ? ENTERPRISE_FEATURE_ROLE_TEMPLATE : "%s", "Roles").printf("%n");
         }
         document(communityProcedures, enterpriseProcedures);
         out.printf("|===%n");
@@ -114,12 +119,12 @@ public class ProcedureReferenceGenerator {
                         .thenComparing(Procedure::name)
         ).filter(filter).forEach(it -> {
             out.printf("|%s |%s |%s",
-                    it.enterpriseOnly() ? String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, it.name()) : it.name(),
+                    it.enterpriseOnly() ? String.format(inlineEditionRole ? ENTERPRISE_FEATURE_ROLE_TEMPLATE : "%s", it.name()) : it.name(),
                     it.description(),
                     it.signature()
             );
             if (includeRolesColumn) {
-                out.printf(" |%s", null == it.roles() ? "N/A" : String.format(ENTERPRISE_FEATURE_ROLE_TEMPLATE, String.join(", ", it.roles())));
+                out.printf(" |%s", null == it.roles() ? "N/A" : String.format(inlineEditionRole ? ENTERPRISE_FEATURE_ROLE_TEMPLATE : "%s", String.join(", ", it.roles())));
             }
             out.printf("%n");
         });

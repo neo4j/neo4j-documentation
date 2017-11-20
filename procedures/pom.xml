@@ -43,7 +43,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>generate-procedure-reference</id>
+            <id>generate-community-procedure-reference</id>
             <phase>${generate-procedure-docs-phase}</phase>
             <goals>
               <goal>exec</goal>
@@ -55,7 +55,47 @@
                 <classpath/>
                 <argument>org.neo4j.doc.GenerateProcedureReference</argument>
                 <argument>--edition=community</argument>
-                <argument>${project.build.directory}/docs/procedure-reference.adoc</argument>
+                <argument>--id=community-edition-procedure-reference</argument>
+                <argument>--title=Community Edition procedures</argument>
+                <argument>${project.build.directory}/docs/procedure-reference-community-edition.adoc</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-enterprise-procedure-reference</id>
+            <phase>${generate-procedure-docs-phase}</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath/>
+                <argument>org.neo4j.doc.GenerateProcedureReference</argument>
+                <argument>--edition=enterprise</argument>
+                <argument>--id=enterprise-edition-procedure-reference</argument>
+                <argument>--title=Enterprise Edition procedures</argument>
+                <argument>${project.build.directory}/docs/procedure-reference-enterprise-edition.adoc</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-complete-procedure-reference</id>
+            <phase>${generate-procedure-docs-phase}</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath/>
+                <argument>org.neo4j.doc.GenerateProcedureReference</argument>
+                <argument>--edition=both</argument>
+                <argument>--id=complete-procedure-reference</argument>
+                <argument>--title=Complete procedure reference</argument>
+                <argument>${project.build.directory}/docs/procedure-reference-complete.adoc</argument>
               </arguments>
             </configuration>
           </execution>
