@@ -51,7 +51,7 @@ public class ProcedureReferenceGenerator {
     public String document(String id, String title, String edition, Predicate<Procedure> filter) {
         this.filter = filter;
         this.includeRolesColumn = !edition.equalsIgnoreCase("community");
-        this.inlineEditionRole = edition.equalsIgnoreCase("enterprise");
+        this.inlineEditionRole = edition.equalsIgnoreCase("both");
         Map<String, Procedure> communityProcedures = edition.equalsIgnoreCase("enterprise") ? Collections.emptyMap() : communityEditionProcedures();
         Map<String, Procedure> enterpriseProcedures = edition.equalsIgnoreCase("community") ? Collections.emptyMap() : enterpriseEditionProcedures();
 
@@ -59,7 +59,7 @@ public class ProcedureReferenceGenerator {
         this.out = new PrintStream(baos);
 
         out.printf("[[%s]]%n", id);
-        if (!inlineEditionRole) {
+        if (!inlineEditionRole && includeRolesColumn) {
             out.printf("[role=enterprise-edition]%n");
         }
         out.printf(".%s%n", title);
@@ -137,7 +137,7 @@ public class ProcedureReferenceGenerator {
         private List<String> roles;
         private Boolean enterpriseOnly;
         Procedure(Map<String, Object> row) {
-            this.name = (String) row.get("name");
+            setName((String) row.get("name"));
             this.signature = (String) row.get("signature");
             this.description = (String) row.get("description");
             this.roles = (List<String>) row.get("roles");
@@ -146,6 +146,9 @@ public class ProcedureReferenceGenerator {
 
         String name() {
             return name;
+        }
+        void setName(String name) {
+            this.name = name.endsWith("()") ? name : name + "()";
         }
         String signature() {
             return signature;
