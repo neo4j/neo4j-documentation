@@ -30,7 +30,7 @@ import org.neo4j.cypher.internal.runtime.InternalExecutionResult;
 import org.neo4j.graphdb.DependencyResolver;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
-import org.neo4j.internal.kernel.api.Transaction.Type;
+import org.neo4j.kernel.api.KernelTransaction;
 import org.neo4j.internal.kernel.api.security.SecurityContext;
 import org.neo4j.kernel.impl.coreapi.InternalTransaction;
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker;
@@ -98,7 +98,7 @@ public class DocsExecutionEngineTest
 
     private static TransactionalContext createTransactionalContext( String query )
     {
-        InternalTransaction transaction = database.beginTransaction( Type.implicit, SecurityContext.AUTH_DISABLED );
+        InternalTransaction transaction = database.beginTransaction( KernelTransaction.Type.implicit, SecurityContext.AUTH_DISABLED );
         BoltConnectionInfo boltConnection = new BoltConnectionInfo(
                 "username",
                 "neo4j-java-bolt-driver",
