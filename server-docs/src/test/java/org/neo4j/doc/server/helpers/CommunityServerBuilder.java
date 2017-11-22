@@ -70,7 +70,7 @@ public class CommunityServerBuilder
     private final Properties arbitraryProperties = new Properties();
 
     private static LifecycleManagingDatabase.GraphFactory  IN_MEMORY_DB = ( config, dependencies ) -> {
-        File storeDir = config.get( DatabaseManagementSystemSettings.database_path );
+        File storeDir = config.get( GraphDatabaseSettings.database_path );
         Map<String, String> params = config.getRaw();
         params.put( GraphDatabaseFacadeFactory.Configuration.ephemeral.name(), "true" );
         return new ImpermanentGraphDatabase( storeDir, params, GraphDatabaseDependencies.newDependencies(dependencies) );
@@ -140,7 +140,7 @@ public class CommunityServerBuilder
 
         if ( dataDir != null )
         {
-            properties.put( DatabaseManagementSystemSettings.data_directory.name(), dataDir );
+            properties.put( GraphDatabaseSettings.data_directory.name(), dataDir );
         }
 
         if ( maxThreads != null )
