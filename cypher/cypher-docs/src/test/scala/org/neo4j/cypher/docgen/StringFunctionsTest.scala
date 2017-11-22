@@ -147,7 +147,7 @@ class StringFunctionsTest extends DocumentingTest {
       function("toString(expression)", ("expression", "An expression that returns a number, a boolean, or a string."))
       query(
         """RETURN toString(11.5), toString('already a string'), toString(true)""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("toString(11.5)" -> "11.5", "toString('already a string')" -> "already a string", "toString(true)" -> "true")))
+          r.toList should equal(List(Map("toString(11.5)" -> "11.5", "toString('already a string')" -> "already a string", "toString(TRUE )" -> "true")))
         })) {
         resultTable()
       }
