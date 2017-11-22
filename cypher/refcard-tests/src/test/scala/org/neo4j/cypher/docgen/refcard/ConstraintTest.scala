@@ -104,7 +104,7 @@ CREATE CONSTRAINT ON (p:Person)
        ASSERT exists(p.name)
 ###
 
-(†) Create a node property existence constraint on the label `Person` and property `name`.
+(★) Create a node property existence constraint on the label `Person` and property `name`.
 If a node with that label is created without a `name`, or if the `name` property is
 removed from an existing node with the `Person` label, the write operation will fail.
 
@@ -115,7 +115,7 @@ DROP CONSTRAINT ON (p:Person)
      ASSERT exists(p.name)
 ###
 
-(†) Drop the node property existence constraint on the label `Person` and property `name`.
+(★) Drop the node property existence constraint on the label `Person` and property `name`.
 
 ###assertion=create-relationship-property-existence-constraint
 //
@@ -124,7 +124,7 @@ CREATE CONSTRAINT ON ()-[l:LIKED]-()
        ASSERT exists(l.when)
 ###
 
-(†) Create a relationship property existence constraint on the type `LIKED` and property `when`.
+(★) Create a relationship property existence constraint on the type `LIKED` and property `when`.
 If a relationship with that type is created without a `when`, or if the `when` property is
 removed from an existing relationship with the `LIKED` type, the write operation will fail.
 
@@ -135,7 +135,7 @@ DROP CONSTRAINT ON ()-[l:LIKED]-()
      ASSERT exists(l.when)
 ###
 
-(†) Drop the relationship property existence constraint on the type `LIKED` and property `when`.
+(★) Drop the relationship property existence constraint on the type `LIKED` and property `when`.
 
 ###assertion=create-node-key-constraint
 //
@@ -144,7 +144,7 @@ CREATE CONSTRAINT ON (p:Person)
       ASSERT (p.firstname, p.surname) IS NODE KEY
 ###
 
-(†) Create a Node Key constraint on the label `Person` and properties `firstname` and `surname`.
+(★) Create a Node Key constraint on the label `Person` and properties `firstname` and `surname`.
 If a node with that label is created without both `firstname` and `surname`
 or if the combination of the two is not unique,
 or if the `firstname` and/or `surname` labels on an existing node with the `Person` label
@@ -158,7 +158,7 @@ DROP CONSTRAINT ON (p:Person)
 
 ###
 
-(†) Drop the Node Key constraint on the label `Person` and properties `firstname` and `surname`.
+(★) Drop the Node Key constraint on the label `Person` and properties `firstname` and `surname`.
 
 """
 }
