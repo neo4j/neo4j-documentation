@@ -205,15 +205,15 @@ class WhereTest extends DocumentingTest {
       }
       section("Escaping in regular expressions", "escaping-in-regular-expressions") {
         p(
-          """If you need a forward slash within your regular expression, escape it.
-            |Remember that the backslash needs to be escaped in string literals.""".stripMargin)
+          """Characters like `.` or `*` have special meaning in a regular expression.
+            |To use these as ordinary characters, without special meaning, escape them.""".stripMargin)
         query(
           """MATCH (n)
-            |WHERE n.address =~ 'Sweden\\/Malmo'
-            |RETURN n.name, n.age, n.address""".stripMargin, ResultAssertions((r) => {
-            r.toList should equal(List(Map("n.name" -> "Tobias", "n.age" -> 25l, "n.address" -> "Sweden/Malmo")))
+            |WHERE n.email =~ '.*\\\\.com'
+            |RETURN n.name, n.age, n.email""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("n.name" -> "Peter", "n.age" -> 35l, "n.email" -> "peter_n@example.com")))
           })) {
-          p("The name, age and address for the *'Tobias'* node are returned because his address is in *'Sweden/Malmo'*.")
+          p("The name, age and email for the *'Peter'* node are returned because his email ends with *'.com'*.")
           resultTable()
         }
       }

@@ -180,7 +180,8 @@ class MatchTest extends DocumentingTest {
       section("Relationship types with uncommon characters", "rel-types-with-uncommon-chars") {
         val initQuery =
           """MATCH (charlie:Person {name: 'Charlie Sheen'}), (rob:Person {name: 'Rob Reiner'})
-            | CREATE (rob)-[:`TYPE WITH SPACE`]->(charlie)"""
+            |CREATE (rob)-[:`TYPE
+            |WITH SPACE`]->(charlie)"""
         p("""Sometimes your database will have types with non-letter characters, or with spaces in them.
             | Use ``` (backtick) to quote these.
             | To demonstrate this we can add an additional relationship between *'Charlie Sheen'* and *'Rob Reiner'*:""")
@@ -188,7 +189,7 @@ class MatchTest extends DocumentingTest {
           p("Which leads to the following graph: ")
           graphViz()
         }
-        query("MATCH (n {name: 'Rob Reiner'})-[r:`TYPE WITH SPACE`]->() RETURN type(r)", assertRelType("TYPE WITH SPACE")) {
+        query("MATCH (n {name: 'Rob Reiner'})-[r:`TYPE\nWITH SPACE`]->() RETURN type(r)", assertRelType("TYPE\nWITH SPACE")) {
           initQueries(initQuery)
           p("Returns a relationship type with a space in it")
           resultTable()

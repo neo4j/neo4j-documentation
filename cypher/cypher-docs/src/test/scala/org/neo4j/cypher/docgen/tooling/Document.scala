@@ -216,19 +216,20 @@ case class QueryResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: 
 
 case class Query(queryText: String, assertions: QueryAssertions, myInitQueries: Seq[String], content: Content) extends Content {
 
+  val prettified = Prettifier(queryText)
+
   override def asciiDoc(level: Int) = {
-    val inner = Prettifier(queryText)
     s""".Query
        |[source, cypher]
        |----
-       |$inner
+       |$prettified
        |----
        |
        |""".stripMargin + content.asciiDoc(level)
   }
 
   override def runnableContent(initQueries: Seq[String]) =
-    content.runnableContent(initQueries ++ myInitQueries :+ queryText)
+    content.runnableContent(initQueries ++ myInitQueries :+ prettified)
 }
 
 case class ConsoleData(globalInitQueries: Seq[String], localInitQueries: Seq[String], query: String) extends Content with NoQueries {
