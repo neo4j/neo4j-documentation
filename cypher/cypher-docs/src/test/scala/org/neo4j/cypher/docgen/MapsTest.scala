@@ -52,8 +52,8 @@ class MapsTest extends DocumentingTest {
         """From Cypher, you can also construct maps.
           |Through REST you will get JSON objects; in Java they will be `java.util.Map<String,Object>`.""".stripMargin)
       query(
-        """RETURN {key: 'Value', listKey: [{inner: 'Map1'}, {inner: 'Map2'}]}""", ResultAssertions((r) => {
-          r.toList should equal(List(Map("{key: 'Value', listKey: [{inner: 'Map1'}, {inner: 'Map2'}]}" -> Map("key" -> "Value", "listKey" -> List(Map("inner" -> "Map1"), Map("inner" -> "Map2"))))))
+        """RETURN { key: 'Value', listKey: [{ inner: 'Map1' }, { inner: 'Map2' }]}""", ResultAssertions((r) => {
+          r.toList should equal(List(Map("{ key: 'Value', listKey: [{ inner: 'Map1' }, { inner: 'Map2' }]}" -> Map("key" -> "Value", "listKey" -> List(Map("inner" -> "Map1"), Map("inner" -> "Map2"))))))
         })) {
         resultTable()
       }
