@@ -75,8 +75,8 @@ class ListFunctionsTest extends DocumentingTest {
       query(
         """MATCH (a)
           |WHERE a.name = 'Eskil'
-          |RETURN a.array, filter(x IN a.array WHERE size(x) = 3)""".stripMargin, ResultAssertions((r) => {
-          r.columnAs[Iterable[_]]("filter(x IN a.array WHERE size(x) = 3)").toList.head should equal(Array("one", "two"))
+          |RETURN a.array, filter(x IN a.array WHERE size(x)= 3)""".stripMargin, ResultAssertions((r) => {
+          r.columnAs[Iterable[_]]("filter(x IN a.array WHERE size(x)= 3)").toList.head should equal(Array("one", "two"))
         })) {
         p("This returns the property named `array` and a list of values in it, which have size *'3'*.")
         resultTable()
