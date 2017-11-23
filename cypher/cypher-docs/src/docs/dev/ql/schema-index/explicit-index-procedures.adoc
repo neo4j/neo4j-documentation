@@ -169,8 +169,8 @@ These data structures are special-purpose and the procedures are primarily provi
 .db.index.explicit.searchRelationships
 [options="header"]
 |===
-| Signature | Description
-|
+| Signature                                                                                                                         | Description
+| `db.index.explicit.searchRelationships(indexName :: STRING?, query :: ANY?) :: (relationship :: RELATIONSHIP?, weight :: FLOAT?)` | Search relationship from explicit index. Replaces `START r=relationship:relIndex('key:foo*')`
 |===
 
 
