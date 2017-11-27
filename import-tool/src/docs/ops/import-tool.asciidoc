@@ -34,8 +34,8 @@ The header row of each data source specifies how the fields should be interprete
 The same delimiter is used for the header row as for the rest of the data.
 
 The header contains information for each field, with the format: `<name>:<field_type>`.
-The `<name>` is used as the property key for values, and ignored in other cases.
-The following `<field_type>` settings can be used for both nodes and relationships:
+The `<name>` is used as the property key for values and optionally for node identifiers (`<name>:ID`), and ignored in other cases.
+The following `<field_type>` settings can be used for both node and relationship properties:
 
 Property value:: Use one of `int`, `long`, `float`, `double`, `boolean`, `byte`, `short`, `char`, `string` to designate the data type.
   If no data type is given, this defaults to `string`.
@@ -56,6 +56,7 @@ ID::
   Each node must have a unique id which is used during the import.
   The ids are used to find the correct nodes when creating relationships.
   Note that the id has to be unique across all nodes in the import, even nodes with different labels.
+  Note that this field type can optionally define a name in the form of `<name>:ID`, in which case the ID will be persisted in a property called `<name>`.
 LABEL::
   Read one or more labels from this field.
   Like array values, multiple labels are separated by `;`, or by the character specified with `--array-delimiter`.
@@ -71,6 +72,9 @@ START_ID::
   The id of the start node of the relationship to create.
 END_ID::
   The id of the end node of the relationship to create.
+
+Note that neither the `START_ID` nor the `END_ID` fields take a name, i.e. the `<name>` in `<name>:START_ID` and `<name>:END_ID` is ignored.
+Even if the start and/or the end nodes have an **ID** with a specific name, it does not need to be specified at the relationships. The import tool will take care of finding the appropriate nodes.
 
 [[import-tool-id-spaces]]
 === ID spaces
