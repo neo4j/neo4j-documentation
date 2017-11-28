@@ -23,6 +23,7 @@ import java.io._
 import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
 
+import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
 import org.neo4j.cypher._
 import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
@@ -48,6 +49,20 @@ import scala.collection.JavaConverters._
 Use this base class for refcard tests
  */
 abstract class RefcardTest extends Assertions with DocumentationHelper with GraphIcing {
+
+  val neo4jVersion: String = System.getenv("NEO4JVERSION")
+
+  def versionFenceAllowsThisTest(featureVersion: String): Int = {
+    if (null == neo4jVersion) {
+      println("neo4jVersion is null, which is smaller than everything else")
+      return -1
+    } else if (null == featureVersion) {
+      return 1
+    }
+    var result = new ComparableVersion(neo4jVersion).compareTo(new ComparableVersion(featureVersion))
+    println("result of comparison: " + result)
+    result
+  }
 
   private val javaValues = new RuntimeJavaValueConverter(isGraphKernelResultValue, identity)
 
