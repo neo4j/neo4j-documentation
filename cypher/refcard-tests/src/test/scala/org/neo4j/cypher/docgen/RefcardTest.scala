@@ -52,16 +52,13 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   val neo4jVersion: String = System.getenv("NEO4JVERSION")
 
-  def versionFenceAllowsThisTest(featureVersion: String): Int = {
+  def versionFenceAllowsThisTest(featureVersion: String): Boolean = {
+    // Unknown Neo4j version: run all tests
     if (null == neo4jVersion) {
-      println("neo4jVersion is null, which is smaller than everything else")
-      return -1
-    } else if (null == featureVersion) {
-      return 1
+      true
     }
-    var result = new ComparableVersion(neo4jVersion).compareTo(new ComparableVersion(featureVersion))
-    println("result of comparison: " + result)
-    result
+    // Neo4j version is greater than the version required by the test?
+    new ComparableVersion(neo4jVersion).compareTo(new ComparableVersion(featureVersion)) > -1
   }
 
   private val javaValues = new RuntimeJavaValueConverter(isGraphKernelResultValue, identity)
