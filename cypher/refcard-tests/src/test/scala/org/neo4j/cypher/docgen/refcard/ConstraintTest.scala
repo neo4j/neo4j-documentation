@@ -137,6 +137,7 @@ DROP CONSTRAINT ON ()-[l:LIKED]-()
 
 (★) Drop the relationship property existence constraint on the type `LIKED` and property `when`.
 
+""".concat(if (!versionFenceAllowsThisTest("3.2.9")) "" else """
 ###assertion=create-node-key-constraint
 //
 
@@ -160,5 +161,5 @@ DROP CONSTRAINT ON (p:Person)
 
 (★) Drop the Node Key constraint on the label `Person` and properties `firstname` and `surname`.
 
-"""
+""")
 }
