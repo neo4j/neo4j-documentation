@@ -143,6 +143,12 @@
       <version>${neo4j.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>3.5.2</version>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 
