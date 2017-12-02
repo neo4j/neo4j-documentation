@@ -19,10 +19,38 @@
  */
 package org.neo4j.cypher.docgen
 
+import java.util
+
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.cypher.internal.runtime.{CRS, CartesianPoint, GeographicPoint}
+import org.neo4j.graphdb.spatial
+import org.neo4j.graphdb.spatial.Coordinate
+
+import collection.JavaConverters._
 
 class SpatialFunctionsTest extends DocumentingTest {
+
+  case class CRS(name: String, code: Int, href: String) extends org.neo4j.graphdb.spatial.CRS {
+    override def getHref: String = href
+
+    override def getType: String = name
+
+    override def getCode: Int = code
+  }
+
+  object CRS {
+    val Cartesian = CRS("cartesian", 7203, "http://spatialreference.org/ref/sr-org/7203/")
+    val WGS84 = CRS("WGS-84", 4326, "http://spatialreference.org/ref/epsg/4326/")
+  }
+
+  class TestPoint(x: Double, y: Double, crs: CRS) extends org.neo4j.graphdb.spatial.Point {
+    override def getCRS: spatial.CRS = crs
+
+    override def getCoordinates: util.List[Coordinate] = List(new Coordinate(x, y)).asJava
+  }
+
+  case class GeographicPoint(x: Double, y: Double, crs: CRS) extends TestPoint(x, y, crs)
+
+  case class CartesianPoint(x: Double, y: Double, crs: CRS) extends TestPoint(x, y, crs)
 
   override def outputPath = "target/docs/dev/ql/functions"
 
