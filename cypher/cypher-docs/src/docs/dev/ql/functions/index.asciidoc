@@ -18,9 +18,13 @@ This section contains information on all functions in the Cypher query language.
 * Spatial functions [<<header-query-functions-spatial, Summary>>|<<query-functions-spatial, Detail>>]
 * <<query-functions-udf, User-defined functions>>
 
-Note that related information exists in <<query-operators>>.
+Related information may be found in <<query-operators>>.
 
 Most functions in Cypher will return `null` if an input parameter is `null`.
+
+[NOTE]
+Functions taking a string as input all operate on _Unicode code points_ rather than on a standard `char[]`.
+For example, `size(s)`, where `s` is a character in the Chinese alphabet, will return *1*.
 
 
 [[header-query-predicates]]
