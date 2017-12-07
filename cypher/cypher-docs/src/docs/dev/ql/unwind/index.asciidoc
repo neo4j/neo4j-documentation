@@ -5,9 +5,13 @@
 `UNWIND` expands a list into a sequence of rows.
 
 * <<query-unwind-introduction, Introduction>>
-* <<unwind-unwind-a-list, Unwind a list>>
-* <<unwind-create-a-distinct-list, Create a distinct list>>
-* <<unwind-create-nodes-from-a-list-parameter, Create nodes from a list parameter>>
+* <<unwind-unwinding-a-list, Unwinding a list>>
+* <<unwind-creating-a-distinct-list, Creating a distinct list>>
+* <<unwind-using-unwind-with-any-expression-returning-a-list, Using `UNWIND` with any expression returning a list>>
+* <<unwind-using-unwind-with-a-list-of-lists, Using `UNWIND` with a list of lists>>
+* <<unwind-using-unwind-with-an-empty-list, Using `UNWIND` with an empty list>>
+* <<unwind-using-unwind-with-an-expression-that-is-not-a-list, Using `UNWIND` with an expression that is not a list>>
+* <<unwind-creating-nodes-from-a-list-parameter, Creating nodes from a list parameter>>
 
 
 [[query-unwind-introduction]]
@@ -21,8 +25,16 @@ Another is to create data from parameter lists that are provided to the query.
 
 `UNWIND` requires you to specify a new name for the inner values.
 
-include::unwind-a-list.asciidoc[]
+include::unwinding-a-list.asciidoc[]
 
-include::create-a-distinct-list.asciidoc[]
+include::creating-a-distinct-list.asciidoc[]
 
-include::create-nodes-from-a-list-parameter.asciidoc[]
+include::using-unwind-with-any-expression-returning-a-list.asciidoc[]
+
+include::using-unwind-with-a-list-of-lists.asciidoc[]
+
+include::using-unwind-with-an-empty-list.asciidoc[]
+
+include::using-unwind-with-an-expression-that-is-not-a-list.asciidoc[]
+
+include::creating-nodes-from-a-list-parameter.asciidoc[]
