@@ -22,8 +22,7 @@ package org.neo4j.tooling;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.MockingDetails;
-
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -39,7 +38,6 @@ import java.util.Set;
 
 import org.neo4j.commandline.admin.CommandFailed;
 import org.neo4j.commandline.admin.IncorrectUsage;
-import org.neo4j.commandline.admin.NullOutsideWorld;
 import org.neo4j.commandline.admin.OutsideWorld;
 import org.neo4j.commandline.admin.RealOutsideWorld;
 import org.neo4j.commandline.dbms.ImportCommand;
@@ -56,16 +54,11 @@ import org.neo4j.tooling.ImportTool.Options;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockingDetails;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 import static org.neo4j.helpers.ArrayUtil.join;
 import static org.neo4j.helpers.collection.Iterators.asSet;
 import static org.neo4j.io.fs.FileUtils.readTextFile;
 import static org.neo4j.io.fs.FileUtils.writeToFile;
 import static org.neo4j.tooling.ImportTool.MULTI_FILE_DELIMITER;
-import static org.neo4j.unsafe.impl.batchimport.Configuration.BAD_FILE_NAME;
 
 public class ImportToolDocIT
 {
@@ -746,7 +739,7 @@ public class ImportToolDocIT
 
     private void importTool( String[] arguments ) throws CommandFailed, IncorrectUsage
     {
-        importTool( arguments, new RealOutsideWorld() );
+        importTool( arguments, new RealOutsideWorld( System.out, System.err, new ByteArrayInputStream( new byte[0] ) ) );
     }
 
     private File badFile()
