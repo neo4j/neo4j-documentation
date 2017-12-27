@@ -4,26 +4,4 @@ include::jmx-list.asciidoc[]
 [NOTE]
 For additional information on the primitive datatypes (`int`, `long` etc.) used in the JMX attributes, please see <<developer-manual#graphdb-neo4j-properties, Developer Manual -> Introduction: Properties>>.
 
-include::jmx-branched-store.asciidoc[]
-
-include::jmx-configuration.asciidoc[]
-
-include::jmx-diagnostics.asciidoc[]
-
-include::jmx-high-availability.asciidoc[]
-
-include::jmx-kernel.asciidoc[]
-
-include::jmx-locking.asciidoc[]
-
-include::jmx-memory-mapping.asciidoc[]
-
-include::jmx-page-cache.asciidoc[]
-
-include::jmx-primitive-count.asciidoc[]
-
-include::jmx-store-file-sizes.asciidoc[]
-
-include::jmx-transactions.asciidoc[]
-
-include::jmx-index-sampler.asciidoc[]
+include::jmx-includes.asciidoc[]
