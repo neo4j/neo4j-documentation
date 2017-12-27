@@ -75,10 +75,10 @@ public class JmxDocTest {
     private static final String ENDIF = "endif::nonhtmloutput[]\n";
     private static final String BEAN_NAME0 = "name0";
     private static final String BEAN_NAME = "name";
-    private static final List<String> QUERIES = Collections.singletonList("org.neo4j:*");
+    private static final String QUERY = "org.neo4j:*";
     private static final String JAVADOC_URL = "link:javadocs/";
     private static final int EXPECTED_NUMBER_OF_BEANS = 13;
-    private static final Set<String> EXCLUDES = Iterators.set("JMX Server");
+    private static final String EXCLUDE = "JMX Server";
     private static final Map<String, String> TYPES = new HashMap<String, String>() {{
         put("java.lang.String", "String");
         put("java.util.List", "List (java.util.List)");
@@ -112,14 +112,11 @@ public class JmxDocTest {
 
     @Test
     public void dumpJmxInfo() throws Exception {
-        Stream<ObjectInstance> objectInstanceStream = Stream.empty();
-        for (String query : QUERIES) {
-            objectInstanceStream = Stream.concat(objectInstanceStream, mBeanServer.queryMBeans(new ObjectName(query), null).stream());
-        }
+        Stream<ObjectInstance> objectInstanceStream = mBeanServer.queryMBeans(new ObjectName(QUERY), null).stream();
 
         List<Map.Entry<String, ObjectName>> sorted = objectInstanceStream
                 .map(ObjectInstance::getObjectName)
-                .filter(it -> !EXCLUDES.contains(it.getKeyProperty(BEAN_NAME)))
+                .filter(it -> !EXCLUDE.equalsIgnoreCase(it.getKeyProperty(BEAN_NAME)))
                 .sorted(Comparator.comparing(o -> o.getKeyProperty(BEAN_NAME).toLowerCase()))
                 .map(it -> new HashMap.SimpleEntry<>(it.getKeyProperty(BEAN_NAME), it))
                 .collect(Collectors.toList());
