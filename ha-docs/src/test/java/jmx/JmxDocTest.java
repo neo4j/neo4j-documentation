@@ -90,7 +90,7 @@ public class JmxDocTest {
     private static GraphDatabaseService db;
     private MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
     private final Path outPath = Paths.get("target", "docs", "ops");
-    private final Path includesFilePath = outPath.resolve("jmx-includes.asciidoc");
+    private final Path includesFilePath = outPath.resolve("jmx-includes.adoc");
 
     @BeforeClass
     public static void startDb() throws Exception {
@@ -137,13 +137,13 @@ public class JmxDocTest {
         write(listGenerator.generateListAndTableCombo(settingDescriptions), path("List"));
 
         String includes = settingDescriptions.stream()
-                .map(it -> String.format("include::jmx-%s.asciidoc[]%n%n", it.name().replace( " ", "-" ).toLowerCase()))
+                .map(it -> String.format("include::jmx-%s.adoc[]%n%n", it.name().replace( " ", "-" ).toLowerCase()))
                 .reduce("", String::concat);
         write(includes, includesFilePath);
     }
 
     private Path path(String name) {
-        String filename = String.format("jmx-%s.asciidoc", name.replace(" ", "-").toLowerCase());
+        String filename = String.format("jmx-%s.adoc", name.replace(" ", "-").toLowerCase());
         return outPath.resolve(filename);
     }
 
