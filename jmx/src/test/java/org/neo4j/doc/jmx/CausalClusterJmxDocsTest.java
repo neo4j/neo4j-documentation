@@ -39,6 +39,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,7 @@ import static org.neo4j.kernel.configuration.Settings.setting;
 
 public class CausalClusterJmxDocsTest {
 
-    private static final String QUERY = "org.neo4j:*";
+    private static final String QUERY = "org.neo4j:instance=kernel#0,*";
     private final Path outPath = Paths.get("target", "docs", "ops");
     private final Path includesFilePath = outPath.resolve("jmx-includes.asciidoc");
 
@@ -70,7 +71,7 @@ public class CausalClusterJmxDocsTest {
     public void shouldFindCausalClusteringJmxBeans() throws Exception {
         // given
         cluster = clusterRule
-                .withNumberOfCoreMembers( 3 )
+                .withNumberOfCoreMembers(2)
                 .withInstanceCoreParam(setting("jmx.port", STRING, NO_DEFAULT), id -> Integer.toString(9913 + id))
                 .startCluster();
         CoreClusterMember coreClusterMember = cluster.getCoreMemberById(0);
@@ -84,9 +85,9 @@ public class CausalClusterJmxDocsTest {
         assertNotEquals("9913", core1JmxPort);
 
         // when
-        Collection<ObjectInstance> objectInstances = jmxBeanDocumenter.query(QUERY).stream()
-                .collect(Collectors.toMap(it -> it.getObjectName().getKeyProperty("name"), p -> p, (p, q) -> p))
-                .values();
+        List<ObjectInstance> objectInstances = jmxBeanDocumenter.query(QUERY).stream()
+                .sorted(Comparator.comparing(o -> o.getObjectName().getKeyProperty("name").toLowerCase()))
+                .collect(Collectors.toList());
 
         // then
         assertFalse(objectInstances.isEmpty());
