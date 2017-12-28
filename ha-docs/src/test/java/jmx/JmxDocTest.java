@@ -43,6 +43,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -59,14 +60,14 @@ public class JmxDocTest {
 
     private static final String BEAN_NAME = "name";
     private static final String QUERY = "org.neo4j:*";
-    private static final int EXPECTED_NUMBER_OF_BEANS = 13;
-    private static final String EXCLUDE = "JMX Server";
+    private static final int EXPECTED_NUMBER_OF_BEANS = 2;
+    private static final List<String> INCLUDES = Arrays.asList("Branched Store", "High Availability");
 
     @ClassRule
     public static final TestDirectory test = TestDirectory.testDirectory();
     private static GraphDatabaseService db;
     private final Path outPath = Paths.get("target", "docs", "ops");
-    private final Path includesFilePath = outPath.resolve("jmx-includes.adoc");
+    private final Path includesFilePath = outPath.resolve("jmx-ha-includes.adoc");
     private final JmxBeanDocumenter jmxBeanDocumenter = new JmxBeanDocumenter();
 
     @BeforeClass
@@ -93,7 +94,7 @@ public class JmxDocTest {
 
         List<Map.Entry<String, ObjectName>> sorted = objectInstanceStream
                 .map(ObjectInstance::getObjectName)
-                .filter(it -> !EXCLUDE.equalsIgnoreCase(it.getKeyProperty(BEAN_NAME)))
+                .filter(it -> INCLUDES.contains(it.getKeyProperty(BEAN_NAME)))
                 .sorted(Comparator.comparing(o -> o.getKeyProperty(BEAN_NAME).toLowerCase()))
                 .map(it -> new HashMap.SimpleEntry<>(it.getKeyProperty(BEAN_NAME), it))
                 .collect(Collectors.toList());
@@ -109,17 +110,17 @@ public class JmxDocTest {
             write(details, path(beanEntry.getKey()));
             settingDescriptions.add(jmxBeanDocumenter.asSettingDescription(beanEntry.getValue(), beanEntry.getKey()));
         }
-        AsciiDocListGenerator listGenerator = new AsciiDocListGenerator("jmx-list", "MBeans exposed by Neo4j", false);
+        AsciiDocListGenerator listGenerator = new AsciiDocListGenerator("ha-only-jmx-list", "MBeans exposed by Neo4j in High Availability mode", false);
         write(listGenerator.generateListAndTableCombo(settingDescriptions), path("List"));
 
         String includes = settingDescriptions.stream()
-                .map(it -> String.format("include::jmx-%s.adoc[]%n%n", it.name().replace( " ", "-" ).toLowerCase()))
+                .map(it -> String.format("include::jmx-ha-%s.adoc[]%n%n", it.name().replace( " ", "-" ).toLowerCase()))
                 .reduce("", String::concat);
         write(includes, includesFilePath);
     }
 
     private Path path(String name) {
-        String filename = String.format("jmx-%s.adoc", name.replace(" ", "-").toLowerCase());
+        String filename = String.format("jmx-ha-%s.adoc", name.replace(" ", "-").toLowerCase());
         return outPath.resolve(filename);
     }
 
