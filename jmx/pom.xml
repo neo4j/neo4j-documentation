@@ -23,13 +23,12 @@
       <artifactId>neo4j</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.neo4j.doc</groupId>
       <artifactId>neo4j-doc-tools</artifactId>
-      <version>3.3.2-SNAPSHOT</version>
-      <scope>test</scope>
+      <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.neo4j</groupId>
       <artifactId>neo4j-causal-clustering</artifactId>
