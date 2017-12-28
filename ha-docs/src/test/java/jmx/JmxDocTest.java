@@ -25,31 +25,21 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.neo4j.cluster.ClusterSettings;
 import org.neo4j.doc.AsciiDocListGenerator;
-import org.neo4j.doc.SettingDescription;
 import org.neo4j.doc.jmx.JmxBeanDocumenter;
+import org.neo4j.doc.util.FileUtil;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.TestHighlyAvailableGraphDatabaseFactory;
 import org.neo4j.test.rule.TestDirectory;
 
-import javax.management.InstanceNotFoundException;
-import javax.management.IntrospectionException;
 import javax.management.ObjectInstance;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.kernel.configuration.Settings.NO_DEFAULT;
@@ -67,8 +57,8 @@ public class JmxDocTest {
     public static final TestDirectory test = TestDirectory.testDirectory();
     private static GraphDatabaseService db;
     private final Path outPath = Paths.get("target", "docs", "ops");
-    private final Path includesFilePath = outPath.resolve("jmx-ha-includes.adoc");
     private final JmxBeanDocumenter jmxBeanDocumenter = new JmxBeanDocumenter();
+    private final FileUtil fileUtil = new FileUtil(outPath, "jmx-ha-%s.adoc");
 
     @BeforeClass
     public static void startDb() throws Exception {
@@ -90,46 +80,18 @@ public class JmxDocTest {
 
     @Test
     public void dumpJmxInfo() throws Exception {
-        Stream<ObjectInstance> objectInstanceStream = jmxBeanDocumenter.query(QUERY).stream();
-
-        List<Map.Entry<String, ObjectName>> sorted = objectInstanceStream
-                .map(ObjectInstance::getObjectName)
-                .filter(it -> INCLUDES.contains(it.getKeyProperty(BEAN_NAME)))
-                .sorted(Comparator.comparing(o -> o.getKeyProperty(BEAN_NAME).toLowerCase()))
-                .map(it -> new HashMap.SimpleEntry<>(it.getKeyProperty(BEAN_NAME), it))
+        List<ObjectInstance> objectInstances = jmxBeanDocumenter.query(QUERY).stream()
+                .filter(it -> INCLUDES.contains(it.getObjectName().getKeyProperty(BEAN_NAME)))
+                .sorted(Comparator.comparing(it -> it.getObjectName().getKeyProperty(BEAN_NAME).toLowerCase()))
                 .collect(Collectors.toList());
 
-        assertEquals("Sanity checking the number of beans found;", EXPECTED_NUMBER_OF_BEANS, sorted.size());
-        document(sorted);
-    }
-
-    private void document(List<Map.Entry<String, ObjectName>> neo4jBeans) throws IOException, IntrospectionException, InstanceNotFoundException, ReflectionException {
-        List<SettingDescription> settingDescriptions = new ArrayList<>();
-        for (Map.Entry<String, ObjectName> beanEntry : neo4jBeans) {
-            String details = jmxBeanDocumenter.asDetails(beanEntry.getValue(), beanEntry.getKey());
-            write(details, path(beanEntry.getKey()));
-            settingDescriptions.add(jmxBeanDocumenter.asSettingDescription(beanEntry.getValue(), beanEntry.getKey()));
-        }
-        AsciiDocListGenerator listGenerator = new AsciiDocListGenerator("ha-only-jmx-list", "MBeans exposed by Neo4j in High Availability mode", false);
-        write(listGenerator.generateListAndTableCombo(settingDescriptions), path("List"));
-
-        String includes = settingDescriptions.stream()
-                .map(it -> String.format("include::jmx-ha-%s.adoc[]%n%n", it.name().replace( " ", "-" ).toLowerCase()))
-                .reduce("", String::concat);
-        write(includes, includesFilePath);
-    }
-
-    private Path path(String name) {
-        String filename = String.format("jmx-ha-%s.adoc", name.replace(" ", "-").toLowerCase());
-        return outPath.resolve(filename);
-    }
-
-    private void write(String content, Path filePath) throws IOException {
-        Path parentDir = filePath.getParent();
-        if (!Files.exists(parentDir)) {
-            Files.createDirectories(parentDir);
-        }
-        Files.write(filePath, content.getBytes("UTF-8"));
+        assertEquals("Sanity checking the number of beans found;", EXPECTED_NUMBER_OF_BEANS, objectInstances.size());
+        jmxBeanDocumenter.document(
+                QUERY,
+                it -> INCLUDES.contains(it.getObjectName().getKeyProperty(BEAN_NAME)),
+                fileUtil,
+                new AsciiDocListGenerator("ha-only-jmx-list", "MBeans exposed by Neo4j in High Availability mode", false)
+        );
     }
 
 }

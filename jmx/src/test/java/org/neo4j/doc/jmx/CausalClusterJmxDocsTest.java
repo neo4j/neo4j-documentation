@@ -25,26 +25,17 @@ import org.junit.Test;
 import org.neo4j.causalclustering.discovery.Cluster;
 import org.neo4j.causalclustering.discovery.CoreClusterMember;
 import org.neo4j.doc.AsciiDocListGenerator;
-import org.neo4j.doc.SettingDescription;
+import org.neo4j.doc.util.FileUtil;
 import org.neo4j.test.causalclustering.ClusterRule;
 
-import javax.management.InstanceNotFoundException;
-import javax.management.IntrospectionException;
 import javax.management.ObjectInstance;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.neo4j.kernel.configuration.Settings.NO_DEFAULT;
 import static org.neo4j.kernel.configuration.Settings.STRING;
@@ -53,18 +44,20 @@ import static org.neo4j.kernel.configuration.Settings.setting;
 public class CausalClusterJmxDocsTest {
 
     private static final String QUERY = "org.neo4j:instance=kernel#0,*";
+    private static final int EXPECTED_NUMBER_OF_BEANS = 12;
     private final Path outPath = Paths.get("target", "docs", "ops");
-    private final Path includesFilePath = outPath.resolve("jmx-includes.asciidoc");
 
     @Rule
     public final ClusterRule clusterRule = new ClusterRule( getClass() );
 
     private JmxBeanDocumenter jmxBeanDocumenter;
+    private FileUtil fileUtil;
     private Cluster cluster;
 
     @Before
     public void init() {
         this.jmxBeanDocumenter = new JmxBeanDocumenter();
+        this.fileUtil = new FileUtil(outPath, "jmx-%s.adoc");
     }
 
     @Test
@@ -90,39 +83,14 @@ public class CausalClusterJmxDocsTest {
                 .collect(Collectors.toList());
 
         // then
-        assertFalse(objectInstances.isEmpty());
+        assertEquals("Sanity checking the number of beans found;", EXPECTED_NUMBER_OF_BEANS, objectInstances.size());
 
-        document(objectInstances);
-    }
-
-    private void document(Collection<ObjectInstance> objectInstances) throws IntrospectionException, InstanceNotFoundException, ReflectionException, IOException {
-        List<SettingDescription> settingDescriptions = new ArrayList<>();
-        for (ObjectInstance objectInstance : objectInstances) {
-            ObjectName objectName = objectInstance.getObjectName();
-            String name = objectName.getKeyProperty("name");
-            settingDescriptions.add(jmxBeanDocumenter.asSettingDescription(objectName, name));
-            write(jmxBeanDocumenter.asDetails(objectName, name), path(name));
-        }
-
-        write(new AsciiDocListGenerator("jmx-list", "MBeans exposed by Neo4j", false).generateListAndTableCombo(settingDescriptions), path("List"));
-
-        String includes = settingDescriptions.stream()
-                .map(it -> String.format("include::jmx-%s.adoc[]%n%n", it.name().replace(" ", "-").toLowerCase()))
-                .reduce("", String::concat);
-        write(includes, includesFilePath);
-    }
-
-    private Path path(String name) {
-        String filename = String.format("jmx-%s.adoc", name.replace(" ", "-").toLowerCase());
-        return outPath.resolve(filename);
-    }
-
-    private void write(String content, Path filePath) throws IOException {
-        Path parentDir = filePath.getParent();
-        if (!Files.exists(parentDir)) {
-            Files.createDirectories(parentDir);
-        }
-        Files.write(filePath, content.getBytes("UTF-8"));
+        jmxBeanDocumenter.document(
+                QUERY,
+                it -> true,
+                fileUtil,
+                new AsciiDocListGenerator("jmx-list", "MBeans exposed by Neo4j", false)
+        );
     }
 
 }

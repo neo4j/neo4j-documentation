@@ -19,8 +19,10 @@
  */
 package org.neo4j.doc.jmx;
 
+import org.neo4j.doc.AsciiDocListGenerator;
 import org.neo4j.doc.SettingDescription;
 import org.neo4j.doc.SettingDescriptionImpl;
+import org.neo4j.doc.util.FileUtil;
 
 import javax.management.Descriptor;
 import javax.management.InstanceNotFoundException;
@@ -34,12 +36,19 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class JmxBeanDocumenter {
 
@@ -59,18 +68,41 @@ public class JmxBeanDocumenter {
         this.mBeanServer = ManagementFactory.getPlatformMBeanServer();
     }
 
+    public void document(String query, Predicate<ObjectInstance> filter, FileUtil fileUtil, AsciiDocListGenerator asciiDocListGenerator) throws IntrospectionException, InstanceNotFoundException, ReflectionException, IOException, MalformedObjectNameException {
+        List<ObjectInstance> objectInstances = query(query).stream()
+                .filter(filter)
+                .sorted(Comparator.comparing(o -> o.getObjectName().getKeyProperty("name").toLowerCase()))
+                .collect(Collectors.toList());
+        List<SettingDescription> settingDescriptions = new ArrayList<>();
+        for (ObjectInstance objectInstance : objectInstances) {
+            ObjectName objectName = objectInstance.getObjectName();
+            String name = objectName.getKeyProperty("name");
+            PrintStream out = fileUtil.fileBackedPrintStream(name);
+
+            settingDescriptions.add(asSettingDescription(objectName, name));
+            asDetails(objectName, name, out);
+            out.flush();
+        }
+        fileUtil.write(asciiDocListGenerator.generateListAndTableCombo(settingDescriptions), "List");
+
+        String includes = settingDescriptions.stream()
+                .map(it -> String.format("include::%s[]%n%n", fileUtil.filename(it.name())))
+                .reduce("", String::concat);
+        fileUtil.write(includes, "includes");
+    }
+
     public Set<ObjectInstance> query(String query) throws MalformedObjectNameException {
         return mBeanServer.queryMBeans(new ObjectName(query), null);
     }
 
-    public SettingDescription asSettingDescription(ObjectName objectName, String name) throws IntrospectionException, InstanceNotFoundException, ReflectionException {
+    private SettingDescription asSettingDescription(ObjectName objectName, String name) throws IntrospectionException, InstanceNotFoundException, ReflectionException {
         MBeanInfo mBeanInfo = mBeanServer.getMBeanInfo(objectName);
         String description = mBeanInfo.getDescription();
         String id = getId(name);
         return new SettingDescriptionImpl(id, name, Optional.of(description));
     }
 
-    public String asDetails(ObjectName objectName, String name) throws IntrospectionException, InstanceNotFoundException, ReflectionException {
+    private void asDetails(ObjectName objectName, String name, PrintStream out) throws IntrospectionException, InstanceNotFoundException, ReflectionException {
         Set<ObjectInstance> mBeans = mBeanServer.queryMBeans(objectName, null);
         if (mBeans.size() != 1) {
             throw new IllegalStateException(String.format("Unexpected size [%s] of query result for [%s].", mBeans.size(), objectName));
@@ -79,113 +111,87 @@ public class JmxBeanDocumenter {
         MBeanInfo info = mBeanServer.getMBeanInfo(objectName);
         String description = info.getDescription().replace('\n', ' ');
         String id = getId(name);
-        return document(id, name, objectName, bean, info, description);
-    }
-
-    public String document(String id, String name, ObjectName objectName, ObjectInstance bean, MBeanInfo info, String description) {
-        StringBuilder beanInfo = new StringBuilder(2048);
         String name0 = objectName.getKeyProperty("name0");
         if (name0 != null) {
             name += "/" + name0;
         }
 
         MBeanAttributeInfo[] attributes = info.getAttributes();
-        beanInfo.append("[[")
-                .append(id)
-                .append("]]\n");
+        out.printf("[[%s]]%n", id);
         if (attributes.length > 0) {
-            beanInfo.append(".MBean ")
-                    .append(name)
-                    .append(" (")
-                    .append(bean.getClassName())
-                    .append(") Attributes\n");
-            attributesTable(description, beanInfo, attributes, false);
-            attributesTable(description, beanInfo, attributes, true);
-            beanInfo.append("\n");
+            out.printf(".MBean %s (%s) Attributes%n", name, bean.getClassName());
+            attributesTable(description, out, attributes, false);
+            attributesTable(description, out, attributes, true);
+            out.println();
         }
 
         MBeanOperationInfo[] operations = info.getOperations();
         if (operations.length > 0) {
-            beanInfo.append(".MBean ")
-                    .append(name)
-                    .append(" (")
-                    .append(bean.getClassName())
-                    .append(") Operations\n");
-            operationsTable(beanInfo, operations, false);
-            operationsTable(beanInfo, operations, true);
-            beanInfo.append("\n");
+            out.printf(".MBean %s (%s) Operations%n", name, bean.getClassName());
+            operationsTable(out, operations, false);
+            operationsTable(out, operations, true);
+            out.println();
         }
-
-        return beanInfo.toString();
     }
 
-    private void attributesTable(String description, StringBuilder beanInfo, MBeanAttributeInfo[] attributes, boolean nonHtml) {
-        beanInfo.append(nonHtmlCondition(nonHtml))
-                .append("[options=\"header\", cols=\"20m,36,20m,7,7\"]\n")
-                .append("|===\n")
-                .append("|Name|Description|Type|Read|Write\n")
-                .append("5.1+^e|")
-                .append(description)
-                .append('\n');
+    private void attributesTable(String description, PrintStream out, MBeanAttributeInfo[] attributes, boolean nonHtml) {
+        out.print(nonHtmlCondition(nonHtml));
+        out.println("[options=\"header\", cols=\"20m,36,20m,7,7\"]");
+        out.println("|===");
+        out.println("|Name|Description|Type|Read|Write");
+        out.printf("5.1+^e|%s%n", description);
         Arrays.stream(attributes)
-                .map(attrInfo -> attributeRow(attrInfo, nonHtml))
-                .sorted(String.CASE_INSENSITIVE_ORDER)
-                .forEach(beanInfo::append);
-        beanInfo.append("|===\n");
-        beanInfo.append(ENDIF);
+                .sorted(Comparator.comparing(it -> it.getName().toLowerCase()))
+                .forEach(it -> attributeRow(out, it, nonHtml));
+        out.println("|===");
+        out.print(ENDIF);
     }
 
-    private String attributeRow(MBeanAttributeInfo attrInfo, boolean nonHtml) {
+    private void attributeRow(PrintStream out, MBeanAttributeInfo attrInfo, boolean nonHtml) {
         String type = getType(attrInfo.getType());
         Descriptor descriptor = attrInfo.getDescriptor();
         type = getCompositeType(type, descriptor, nonHtml);
-        return String.format("|%s|%s|%s|%s|%s%n",
+        out.printf("|%s|%s|%s|%s|%s%n",
                 makeBreakable(attrInfo.getName(), nonHtml),
                 attrInfo.getDescription().replace('\n', ' '),
                 type,
                 attrInfo.isReadable() ? "yes" : "no",
-                attrInfo.isWritable() ? "yes" : "no"
-        );
+                attrInfo.isWritable() ? "yes" : "no");
     }
 
-    private void operationsTable(StringBuilder beanInfo, MBeanOperationInfo[] operations, boolean nonHtml) {
-        beanInfo.append(nonHtmlCondition(nonHtml))
-                .append("[options=\"header\", cols=\"23m,37,20m,20m\"]\n")
-                .append("|===\n")
-                .append("|Name|Description|ReturnType|Signature\n");
+    private void operationsTable(PrintStream out, MBeanOperationInfo[] operations, boolean nonHtml) {
+        out.print(nonHtmlCondition(nonHtml));
+        out.println("[options=\"header\", cols=\"23m,37,20m,20m\"]");
+        out.println("|===");
+        out.println("|Name|Description|ReturnType|Signature");
         Arrays.stream(operations)
-                .map(operInfo -> operationRow(operInfo, nonHtml))
-                .sorted(String.CASE_INSENSITIVE_ORDER)
-                .forEach(beanInfo::append);
-        beanInfo.append("|===\n");
-        beanInfo.append(ENDIF);
+                .sorted(Comparator.comparing(it -> it.getName().toLowerCase()))
+                .forEach(it -> operationRow(out, it, nonHtml));
+        out.println("|===");
+        out.print(ENDIF);
     }
 
-    private String operationRow(MBeanOperationInfo operInfo, boolean nonHtml) {
-        StringBuilder operationRow = new StringBuilder(512);
+    private void operationRow(PrintStream out, MBeanOperationInfo operInfo, boolean nonHtml) {
         String type = getType(operInfo.getReturnType());
         Descriptor descriptor = operInfo.getDescriptor();
         type = getCompositeType(type, descriptor, nonHtml);
-        operationRow.append(
-                String.format("|%s|%s|%s|",
-                        operInfo.getName(),
-                        operInfo.getDescription().replace('\n', ' '),
-                        type)
-        );
+        out.printf("|%s|%s|%s|",
+                operInfo.getName(),
+                operInfo.getDescription().replace('\n', ' '),
+                type);
         MBeanParameterInfo[] params = operInfo.getSignature();
         if (params.length > 0) {
             for (int i = 0; i < params.length; i++) {
                 MBeanParameterInfo param = params[i];
-                operationRow.append(param.getType());
+                out.print(param.getType());
                 if (i != (params.length - 1)) {
-                    operationRow.append(',');
+                    out.print(",");
                 }
             }
         } else {
-            operationRow.append("(no parameters)");
+            out.print("(no parameters)");
         }
-        operationRow.append('\n');
-        return operationRow.toString();
+        out.println();
     }
 
     private String getType(String type) {
