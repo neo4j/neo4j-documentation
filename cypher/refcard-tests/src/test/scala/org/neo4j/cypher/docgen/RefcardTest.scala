@@ -55,7 +55,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   def versionFenceAllowsThisTest(featureVersion: String): Boolean = {
     // Unknown Neo4j version: run all tests
     if (null == neo4jVersion) {
-      true
+      return true
     }
     // Neo4j version is greater than the version required by the test?
     new ComparableVersion(neo4jVersion).compareTo(new ComparableVersion(featureVersion)) > -1
