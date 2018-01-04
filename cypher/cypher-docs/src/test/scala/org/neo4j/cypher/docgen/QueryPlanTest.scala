@@ -358,7 +358,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Optional Expand All",
       text =
-        """Optional expand traverses relationships from a given node, and makes sure that predicates are evaluated before producing rows.
+        """The `OptionalExpand(All)` operator traverses relationships from a given node, and ensures that predicates are evaluated before producing rows.
           |
           |If no matching relationships are found, a single row with `null` for the relationship and end node variable is produced.""".stripMargin,
       queryText =
@@ -433,7 +433,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Expand All",
       text =
-        """Given a start node, expand-all will follow incoming or outgoing relationships, depending on the pattern relationship. Can also handle variable length pattern relationships.""".stripMargin,
+        """Given a start node, the `Expand(All)` operator will follow incoming or outgoing relationships, depending on the pattern relationship.""".stripMargin,
       queryText = """MATCH (p:Person {name: 'me'})-[:FRIENDS_WITH]->(fof) RETURN fof""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Expand(All)"))
     )
@@ -443,9 +443,41 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Expand Into",
       text =
-        """When both the start and end node have already been found, expand-into is used to find all connecting relationships between the two nodes.""".stripMargin,
+        """When both the start and end node have already been found, the `Expand(Into)` operator is used to find all relationships connecting the two nodes.""".stripMargin,
       queryText = """MATCH (p:Person {name: 'me'})-[:FRIENDS_WITH]->(fof)-->(p) RETURN fof""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Expand(Into)"))
+    )
+  }
+
+
+  @Test def optionalExpandInto() {
+    profileQuery(
+      title = "Optional Expand Into",
+      text =
+        """When both the start and end node have already been found, the `OptionalExpand(Into)` operator is used to find all relationships connecting the two nodes.
+          |If no matching relationships are found, a single row with `null` for the relationship and end node variable is produced.xxxxx""".stripMargin,
+      queryText = """MATCH (p:Person)-[works_in:WORKS_IN]->(l) OPTIONAL MATCH (l)-->(p) RETURN p""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("OptionalExpand(Into)"))
+    )
+  }
+
+  @Test def varlengthExpandAll() {
+    profileQuery(
+      title = "VarLength Expand All",
+      text =
+        """Given a start node, the `VarLengthExpand(All)` operator will follow variable-length relationships. xxx""".stripMargin,
+      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(q:Person) RETURN p, q""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(All)"))
+    )
+  }
+
+  @Test def varlengthExpandInto() {
+    profileQuery(
+      title = "VarLength Expand Into",
+      text =
+        """When both the start and end node have already been found, the `VarLengthExpand(Into)` operator is used to find all variable-length relationships connecting the two nodes. xxx""".stripMargin,
+      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(p:Person) RETURN p""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(Into)"))
     )
   }
 

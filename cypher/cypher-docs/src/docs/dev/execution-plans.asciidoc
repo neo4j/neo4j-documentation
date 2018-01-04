@@ -82,8 +82,9 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-node-index-seek, NodeIndexSeek>>                              | Starting point | Finds nodes using an index seek.
 | <<query-plan-node-index-range-seek, NodeIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek where the value of the property matches the given prefix string.
 | <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>                        | Starting point | Finds nodes using an index seek within a unique index.
-| <<query-plan-optional-expand-all, OptionalExpand(All)>>                    | Expand | Traverses relationships from the given node, and ensures that predicates are evaluated before producing rows.
 | <<query-plan-optional, Optional>>                    | Row | xxx.
+| <<query-plan-optional-expand-all, OptionalExpand(All)>>                    | Expand | Traverses relationships from the given node, and ensures that predicates are evaluated before producing rows.
+| <<query-plan-optional-expand-into, OptionalExpand(Into)>>                    | Expand | xx.
 | <<query-plan-call-procedure, ProcedureCall>>                               | Row | Calls a procedure.
 | <<query-plan-project-endpoints, ProjectEndpoints>>                         | Row | For each incoming row, `ProjectEndpoints` evaluates xxx.
 | <<query-plan-projection, Projection>>                                      | Row | For each incoming row, `Projection` evaluates a set of expressions and produces a row with the results of the expressions.
@@ -99,6 +100,8 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-union, Union>>                                                | Row | Concatenates the results from the right plan after the results of the left plan.
 | <<query-plan-unwind, Unwind>>                                              | Row | Returns one row per item in a list.
 | <<query-plan-update-graph, UpdateGraph>>                                   | Update | Applies updates to the graph.
+| <<query-plan-varlength-expand-all, VarLengthExpand(All)>>                                   | Expand | xxx.
+| <<query-plan-varlength-expand-into, VarLengthExpand(Into)>>                                   | Expand | xxx.
 |===
 
 
