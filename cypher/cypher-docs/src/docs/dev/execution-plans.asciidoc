@@ -54,7 +54,8 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-anti-conditional-apply, AntiConditionalApply>>                | Combining | Checks whether a variable is `null`, and if so the right-hand side will be executed.
 | <<query-plan-anti-semi-apply, AntiSemiApply>>                              | Combining | Tests for the existence of a pattern predicate.
 | <<query-plan-apply, Apply>>                                                | Combining | `Apply` works by performing a nested loop.
-| <<query-plan-assert-same-node, AssertSameNode>>                            | Combining | This operator is used to ensure that no uniqueness constraints are violated.
+| <<query-plan-argument, Argument>>                                | Starting point | Indicates the variable to be used as an argument to the right-hand side of an `Apply` operator xxx.
+| <<query-plan-assert-same-node, AssertSameNode>>                            | Combining | Used to ensure that no uniqueness constraints are violated.
 | <<query-plan-conditional-apply, ConditionalApply>>                         | Combining | Checks whether a variable is not `null`, and if so the right-hand side will be executed.
 | <<query-plan-constraint-operation, Constraint operation>>                  | Update | Creates a constraint on a (label,property) pair.
 | <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>  | Starting point | Reads one or more relationships by id from the relationship store.
@@ -68,17 +69,19 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-let-anti-semi-apply, LetAntiSemiApply>>                       | Combining | Tests for the absence of a pattern predicate in queries containing multiple pattern predicates.
 | <<query-plan-let-semi-apply, LetSemiApply>>                                | Combining | Tests for the existence of a pattern predicate in queries containing multiple pattern predicates.
 | <<query-plan-limit, Limit>>                                                | Row | Returns the first 'n' rows from the incoming input.
+| <<query-plan-load-csv, LoadCSV>>                                                  | Starting point | Used when executing a query containing LOAD CSV.
 | <<query-plan-lock, Lock>>                                                | Row | Locks the start and end node when creating a relationship.
 | <<query-plan-merge-into, Merge(Into)>>                                     | Update | When both the start and end node have already been found, `Merge(Into)` is used to find all connecting relationships or creating a new relationship between the two nodes.
 | <<query-plan-node-by-id-seek, NodeByIdSeek>>                               | Starting point | Reads one or more nodes by id from the node store.
 | <<query-plan-node-by-label-scan, NodeByLabelScan>>                         | Starting point | Using the label index, fetches all nodes with a specific label on them from the node label index.
 | <<query-plan-node-count-from-count-store, NodeCountFromCountStore>>        | Row | Uses the count store to answer questions about node counts.
 | <<query-plan-node-hash-join, NodeHashJoin>>                                | Combining | Using a hash table, a `NodeHashJoin` joins the input coming from the left with the input coming from the right.
-| <<query-plan-node-index-contains-scan, NodeIndexContainsScan>>             | Starting point | An index contains scan goes through all values stored in an index, and searches for entries containing a specific string.
+| <<query-plan-node-index-contains-scan, NodeIndexContainsScan>>             | Starting point | Goes through all values stored in an index, and searches for entries containing a specific string.
+| <<query-plan-node-index-ends-with-scan, NodeIndexEndsWithScan>>        | Starting point | Goes through all values stored in an index, and searches for entries ending in a specific string.
 | <<query-plan-node-index-scan, NodeIndexScan>>                              | Starting point | An index scan goes through all values stored in an index, and can be used to find all nodes with a particular label having a specified property.
 | <<query-plan-node-index-seek, NodeIndexSeek>>                              | Starting point | Finds nodes using an index seek.
 | <<query-plan-node-index-range-seek, NodeIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek where the value of the property matches the given prefix string.
-| <<query-plan-node-index-seek, NodeUniqueIndexSeek>>                        | Starting point | Finds nodes using an index seek within a unique index.
+| <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>                        | Starting point | Finds nodes using an index seek within a unique index.
 | <<query-plan-optional-expand-all, OptionalExpand(All)>>                    | Expand | Traverses relationships from the given node, and ensures that predicates are evaluated before producing rows.
 | <<query-plan-optional, Optional>>                    | Row | xxx.
 | <<query-plan-call-procedure, ProcedureCall>>                               | Row | Calls a procedure.
@@ -91,7 +94,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-skip, Skip>>                                                  | Row | Skips 'n' rows from the incoming rows.
 | <<query-plan-sort, Sort>>                                                  | Row | Sorts rows by a provided key.
 | <<query-plan-top, Top>>                                                    | Row | Returns the first 'n' rows sorted by a provided key.
-| <<query-plan-triadic, Triadic>>                                            | Combining | `Triadic` is used to solve triangular queries, such as the very common 'find my friend-of-friends that are not already my friend'.
+| <<query-plan-triadic, Triadic>>                                            | Combining | Used to solve triangular queries, such as the very common 'find my friend-of-friends that are not already my friend'.
 | <<query-plan-undirected-relationship-by-id-seek, UndirectedRelationshipByIdSeek>> | Starting point | Reads one or more relationships by id from the relationship store.
 | <<query-plan-union, Union>>                                                | Row | Concatenates the results from the right plan after the results of the left plan.
 | <<query-plan-unwind, Unwind>>                                              | Row | Returns one row per item in a list.

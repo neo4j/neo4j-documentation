@@ -2,7 +2,7 @@
 = Starting point operators
 
 [abstract]
-These operators find parts of the graph from which to start.
+These operators locate the starting nodes and relationships required in order to execute the query.
 
 
 Operators:
@@ -12,11 +12,14 @@ Operators:
 * <<query-plan-node-by-id-seek, NodeByIdSeek>>
 * <<query-plan-node-by-label-scan, NodeByLabelScan>>
 * <<query-plan-node-index-seek, NodeIndexSeek>>
-* <<query-plan-node-index-seek, NodeUniqueIndexSeek>>
+* <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>
 * <<query-plan-node-index-range-seek, NodeIndexSeekByRange>>
 * <<query-plan-node-index-contains-scan, NodeIndexContainsScan>>
+* <<query-plan-node-index-ends-with-scan, NodeIndexEndsWithScan>>
 * <<query-plan-node-index-scan, NodeIndexScan>>
 * <<query-plan-undirected-relationship-by-id-seek, UndirectedRelationshipByIdSeek>>
+* <<query-plan-argument, Argument>>
+* <<query-plan-load-csv, LoadCSV>>
 
 include::../ql/query-plan/all-nodes-scan.asciidoc[]
 
@@ -28,10 +31,18 @@ include::../ql/query-plan/node-by-label-scan.asciidoc[]
 
 include::../ql/query-plan/node-index-seek.asciidoc[]
 
+include::../ql/query-plan/node-unique-index-seek.asciidoc[]
+
 include::../ql/query-plan/node-index-range-seek.asciidoc[]
 
 include::../ql/query-plan/node-index-contains-scan.asciidoc[]
 
+include::../ql/query-plan/node-index-ends-with-scan.asciidoc[]
+
 include::../ql/query-plan/node-index-scan.asciidoc[]
 
 include::../ql/query-plan/undirected-relationship-by-id-seek.asciidoc[]
+
+include::../ql/query-plan/argument.asciidoc[]
+
+include::../ql/query-plan/load-csv.asciidoc[]

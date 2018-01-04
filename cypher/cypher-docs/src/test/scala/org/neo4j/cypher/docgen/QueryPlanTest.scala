@@ -96,7 +96,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "All Nodes Scan",
       text =
-        """Reads all nodes from the node store. The variable that will contain the nodes is seen in the arguments.
+        """The `AllNodesScan` operator reads all nodes from the node store. The variable that will contain the nodes is seen in the arguments.
           |If your query is using this operator, you are very likely to see performance problems on any non-trivial database.""".stripMargin,
       queryText = """MATCH (n) RETURN n""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("AllNodesScan"))
@@ -118,7 +118,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Distinct",
       text =
-        """Duplicate rows are removed from the incoming stream of rows.""".stripMargin,
+        """The `Distinct` operator removes duplicate rows from the incoming stream of rows.""".stripMargin,
       queryText = """MATCH (l:Location)<-[:WORKS_IN]-(p:Person) RETURN DISTINCT l""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Distinct"))
     )
@@ -209,20 +209,48 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def nodeByLabelScan() {
     profileQuery(
-      title = "Node by label scan",
-      text = """Using the label index, fetches all nodes with a specific label on them from the node label index.""".stripMargin,
+      title = "Node By Label Scan",
+      text = """The `NodeByLabelScan` operator fetches all nodes with a specific label from the node label index.""".stripMargin,
       queryText = """MATCH (person:Person) RETURN person""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LabelScan"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeByLabelScan"))
     )
   }
 
   @Test def nodeByIndexSeek() {
     profileQuery(
-      title = "Node index seek",
-      text = """Finds nodes using an index seek. The node variable and the index used is shown in the arguments of the operator.
-                |If the index is a unique index, the operator is called `NodeUniqueIndexSeek` instead.""".stripMargin,
+      title = "Node Index Seek",
+      text = """The `NodeIndexSeek`operator finds nodes using an index seek. The node variable and the index used is shown in the arguments of the operator.
+                |If the index is a unique index, the operator is instead called `NodeUniqueIndexSeek`.""".stripMargin,
       queryText = """MATCH (location:Location {name: 'Malmo'}) RETURN location""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeek"))
+    )
+  }
+
+  @Test def nodeByUniqueIndexSeek() {
+    profileQuery(
+      title = "Node Unique Index Seek",
+      text = """The `NodeUniqueIndexSeek` operator finds nodes using an index seek within a unique index. The node variable and the index used is shown in the arguments of the operator.
+               |If the index is not unique, the operator is instead called `NodeIndexSeek`.""".stripMargin,
+      queryText = """MATCH (t:Team {name: 'Malmo'}) RETURN t""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeUniqueIndexSeek"))
+    )
+  }
+
+  @Test def argument() {
+    profileQuery(
+      title = "Argument",
+      text = """The `Argument` operator indicates the variable to be used as an argument to the right-hand side of an <<query-plan-apply, Apply>> operator.""".stripMargin,
+      queryText = """MATCH (s:Person {name: 'me'}) MERGE (s)-[:FRIENDS_WITH]->(s)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Argument"))
+    )
+  }
+
+  @Test def loadCSV() {
+    profileQuery(
+      title = "Load CSV",
+      text = """The `LoadCSV` operator is used when executing a query containing the <<query-load-csv, LOAD CSV>> clause.""".stripMargin,
+      queryText = """LOAD CSV FROM 'https://neo4j.com/docs/cypher-refcard/3.3/csv/artists.csv' AS line RETURN line""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LoadCSV"))
     )
   }
 
@@ -235,12 +263,12 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
     sampleAllIndicesAndWait()
 
-    profileQuery(title = "Node index range seek",
+    profileQuery(title = "Node Index Seek By Range",
                  text =
-                   """Finds nodes using an index seek where the value of the property matches a given prefix string.
-                     |This operator can be used for `STARTS WITH` and comparators such as `<`, `>`, `\<=` and `>=`""".stripMargin,
+                   """The `NodeIndexSeekByRange` operator finds nodes using an index seek where the value of the property matches a given prefix string.
+                     |`NodeIndexSeekByRange` can be used for `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE l.name STARTS WITH 'Lon' RETURN l",
-                 assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString(IndexSeekByRange.name))
+                 assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeekByRange"))
     )
   }
 
@@ -248,9 +276,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     executePreparationQueries((0 to 250).map { i =>
       "CREATE (:Location)"
     }.toList)
-    profileQuery(title = "Node index scan",
+    profileQuery(title = "Node Index Scan",
                  text = """
-                          |An index scan goes through all values stored in an index, and can be used to find all nodes with a particular label having a specified property (e.g. `exists(n.prop)`).""".stripMargin,
+                          |The `NodeIndexScan` operator goes through all values stored in an index, and searches for all nodes with a particular label having a specified property (e.g. `exists(n.prop)`).""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE exists(l.name) RETURN l",
                  assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
     )
@@ -260,22 +288,37 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     executePreparationQueries((0 to 250).map { i =>
       "CREATE (:Location)"
     }.toList)
-    profileQuery(title = "Node index contains scan",
+    profileQuery(title = "Node Index Contains Scan",
                  text = """
-                          |An index contains scan goes through all values stored in an index, and searches for entries
-                          | containing a specific string. This is slower than an index seek, since all entries need to be
-                          | examined, but still faster than the indirection needed by a label scan and then a property store
+                          |The `NodeIndexContainsScan` operator goes through all values stored in an index, and searches for entries
+                          | containing a specific string, such as when using `CONTAINS`. Although this is slower than an index seek (since all entries need to be
+                          | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
                           | filter.""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE l.name CONTAINS 'al' RETURN l",
                  assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexContainsScan"))
     )
   }
 
+  @Test def nodeIndexEndsWithScan() {
+    executePreparationQueries((0 to 250).map { i =>
+      "CREATE (:Location)"
+    }.toList)
+    profileQuery(title = "Node Index Ends With Scan",
+      text = """
+               |The `NodeIndexEndsWithScan` operator goes through all values stored in an index, and searches for entries
+               | ending in a specific string, such as when using `ENDS WITH`. Although this is slower than an index seek (since all entries need to be
+               | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
+               | filter xxx.""".stripMargin,
+      queryText = "MATCH (l:Location) WHERE l.name ENDS WITH 'al' RETURN l",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexEndsWithScan"))
+    )
+  }
+
   @Test def nodeByIdSeek() {
     profileQuery(
-      title = "Node by Id seek",
+      title = "Node By Id Seek",
       text =
-        """Reads one or more nodes by id from the node store.""".stripMargin,
+        """The `NodeByIdSeek` operator reads one or more nodes by id from the node store.""".stripMargin,
       queryText = """MATCH (n) WHERE id(n) = 0 RETURN n""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeByIdSeek"))
     )
@@ -285,7 +328,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Projection",
       text =
-        """For each incoming row, `Projection` evaluates a set of expressions and produces a row with the results of the expressions.""".stripMargin,
+        """For each incoming row, the `Projection` operator evaluates a set of expressions and produces a row with the results of the expressions.""".stripMargin,
       queryText = """RETURN 'hello' AS greeting""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Projection"))
     )
@@ -295,7 +338,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Filter",
       text =
-        """Filters each row coming from the child operator, only passing through rows that evaluate the predicates to `true`.""".stripMargin,
+        """The `Filter` operator filters each row coming from the child operator, only passing through rows that evaluate the predicates to `true`.""".stripMargin,
       queryText = """MATCH (p:Person) WHERE p.name =~ '^a.*' RETURN p""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Filter"))
     )
@@ -330,7 +373,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Sort",
       text =
-        """Sorts rows by a provided key.""".stripMargin,
+        """The `Sort` operator sorts rows by a provided key.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN p ORDER BY p.name""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Sort"))
     )
@@ -340,7 +383,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Top",
       text =
-        """Returns the first 'n' rows sorted by a provided key. Instead of sorting the entire input, only the top 'n' rows are kept.""".stripMargin,
+        """The `Top` operator returns the first 'n' rows sorted by a provided key. Instead of sorting the entire input, only the top 'n' rows are retained.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN p ORDER BY p.name LIMIT 2""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Top"))
     )
@@ -350,7 +393,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Limit",
       text =
-        """Returns the first 'n' rows from the incoming input.""".stripMargin,
+        """The `Limit` operator returns the first 'n' rows from the incoming input.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN p LIMIT 3""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Limit"))
     )
@@ -360,7 +403,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Lock",
       text =
-        """Locks the start and end node when creating a relationship.""".stripMargin,
+        """The `Lock` operator locks the start and end node when creating a relationship.""".stripMargin,
       queryText = """MATCH (s:Person {name: 'me'}) MERGE (s)-[:FRIENDS_WITH]->(s)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Lock"))
     )
@@ -380,7 +423,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Project Endpoints",
       text =
-        """Projects the start and end node of a relationship xxx.""".stripMargin,
+        """The `ProjectEndpoints` operator projects the start and end node of a relationship xxx.""".stripMargin,
       queryText = """CREATE (n)-[p:KNOWS]->(m) WITH p AS r MATCH (u)-[r]->(v) RETURN u, v""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProjectEndpoints"))
     )
@@ -410,7 +453,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Directed Relationship By Id Seek",
       text =
-        """Reads one or more relationships by id from the relationship store. Produces both the relationship and the nodes on either side.""".stripMargin,
+        """The `DirectedRelationshipByIdSeek` operator reads one or more relationships by id from the relationship store, and produces both the relationship and the nodes on either side.""".stripMargin,
       queryText =
         """MATCH (n1)-[r]->()
            WHERE id(r) = 0
@@ -424,8 +467,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Undirected Relationship By Id Seek",
       text =
-        """Reads one or more relationships by id from the relationship store.
-          |For each relationship, two rows are produced with start and end nodes arranged differently.""".stripMargin,
+        """The `UndirectedRelationshipByIdSeek` operator reads one or more relationships by id from the relationship store.
+          |As the direction is unspecified, two rows are produced for each relationship as a result of alternating the combination of the start and end node.""".stripMargin,
       queryText =
         """MATCH (n1)-[r]-()
            WHERE id(r) = 1
@@ -439,7 +482,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Skip",
       text =
-        """Skips 'n' rows from the incoming rows.
+        """The `Skip` operator skips 'n' rows from the incoming rows.
         """.stripMargin,
       queryText =
         """MATCH (p:Person)
@@ -455,7 +498,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Union",
       text =
-        "Concatenates the results from the right plan with the results of the left plan.",
+        "The `Union` operator concatenates the results from the right plan with the results of the left plan.",
       queryText =
         """MATCH (p:Location)
            RETURN p.name
@@ -471,7 +514,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Unwind",
       text =
-        """Returns one row per item in a list.""".stripMargin,
+        """The `Unwind` operator returns one row per item in a list.""".stripMargin,
       queryText = """UNWIND range(1, 5) as value return value;""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Unwind"))
     )
