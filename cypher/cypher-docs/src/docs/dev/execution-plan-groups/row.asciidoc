@@ -13,6 +13,9 @@ Operators:
 * <<query-plan-relationship-count-from-count-store, RelationshipCountFromCountStore>>
 * <<query-plan-filter, Filter>>
 * <<query-plan-limit, Limit>>
+* <<query-plan-lock, Lock>>
+* <<query-plan-optional, Optional>>
+* <<query-plan-project-endpoints, ProjectEndpoints>>
 * <<query-plan-projection, Projection>>
 * <<query-plan-skip, Skip>>
 * <<query-plan-sort, Sort>>
@@ -34,6 +37,12 @@ include::../ql/query-plan/relationship-count-from-count-store.asciidoc[]
 include::../ql/query-plan/filter.asciidoc[]
 
 include::../ql/query-plan/limit.asciidoc[]
+
+include::../ql/query-plan/lock.asciidoc[]
+
+include::../ql/query-plan/optional.asciidoc[]
+
+include::../ql/query-plan/project-endpoints.asciidoc[]
 
 include::../ql/query-plan/projection.asciidoc[]
 

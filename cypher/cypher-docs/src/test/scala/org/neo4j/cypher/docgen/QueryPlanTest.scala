@@ -118,7 +118,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Distinct",
       text =
-        """Removes duplicate rows from the incoming stream of rows.""".stripMargin,
+        """Duplicate rows are removed from the incoming stream of rows.""".stripMargin,
       queryText = """MATCH (l:Location)<-[:WORKS_IN]-(p:Person) RETURN DISTINCT l""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Distinct"))
     )
@@ -128,7 +128,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Eager Aggregation",
       text =
-        """Eagerly loads underlying results and stores it in a hash-map, using the grouping keys as the keys for the map.""".stripMargin,
+        """The `EagerAggregation` operator eagerly loads underlying results and stores it in a hash map, using the grouping keys as the keys for the map.""".stripMargin,
       queryText = """MATCH (l:Location)<-[:WORKS_IN]-(p:Person) RETURN l.name AS location, collect(p.name) AS people""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("EagerAggregation"))
     )
@@ -138,9 +138,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Node Count From Count Store",
       text =
-        """Use the count store to answer questions about node counts.
-          | This is much faster than eager aggregation which achieves the same result by actually counting.
-          | However the count store only saves a limited range of combinations, so eager aggregation will still be used for more complex queries.
+        """The `NodeCountFromCountStore` operator uses the count store to answer questions about node counts.
+          | This is much faster than the `EagerAggregation` operator which achieves the same result by actually counting.
+          | However, as the count store only stores a limited range of combinations, `EagerAggregation` will still be used for more complex queries.
           | For example, we can get counts for all nodes, and nodes with a label, but not nodes with more than one label.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN count(p) AS people""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeCountFromCountStore"))
@@ -151,9 +151,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Relationship Count From Count Store",
       text =
-        """Use the count store to answer questions about relationship counts.
-          | This is much faster than eager aggregation which achieves the same result by actually counting.
-          | However the count store only saves a limited range of combinations, so eager aggregation will still be used for more complex queries.
+        """The `RelationshipCountFromCountStore` operator uses the count store to answer questions about relationship counts.
+          | This is much faster than the `EagerAggregation` operator which achieves the same result by actually counting.
+          | However, as the count store only stores a limited range of combinations, `EagerAggregation` will still be used for more complex queries.
           | For example, we can get counts for all relationships, relationships with a type, relationships with a label on one end, but not relationships with labels on both end nodes.""".stripMargin,
       queryText = """MATCH (p:Person)-[r:WORKS_IN]->() RETURN count(r) AS jobs""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("RelationshipCountFromCountStore"))
@@ -164,11 +164,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Eager",
       text =
-        """For isolation purposes this operator makes sure that operations that affect subsequent operations are executed fully for the whole dataset before continuing execution.
-           | Otherwise it could trigger endless loops, matching data again, that was just created.
+        """For isolation purposes, the `Eager` operator ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.
+           | Otherwise, endless loops could be triggered in which data that was just created is matched.
            | The `Eager` operator can cause high memory usage when importing data or migrating graph structures.
-           | In such cases split up your operations into simpler steps e.g. you can import nodes and relationships separately.
-           | Alternatively return the records to be updated and run an update statement afterwards.""".stripMargin,
+           | In such cases, the operations should be split into simpler steps; e.g. importing nodes and relationships separately.
+           | Alternatively, the records to be updated can be returned, followed by an update statement.""".stripMargin,
       queryText = """MATCH (a)-[r]-(b) DELETE r,a,b MERGE ()""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Eager"))
     )
@@ -285,7 +285,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Projection",
       text =
-        """For each row from its input, projection evaluates a set of expressions and produces a row with the results of the expressions.""".stripMargin,
+        """For each incoming row, `Projection` evaluates a set of expressions and produces a row with the results of the expressions.""".stripMargin,
       queryText = """RETURN 'hello' AS greeting""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Projection"))
     )
@@ -340,7 +340,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Top",
       text =
-        """Returns the first 'n' rows sorted by a provided key. The physical operator is called `Top`. Instead of sorting the whole input, only the top X rows are kept.""".stripMargin,
+        """Returns the first 'n' rows sorted by a provided key. Instead of sorting the entire input, only the top 'n' rows are kept.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN p ORDER BY p.name LIMIT 2""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Top"))
     )
@@ -353,6 +353,36 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """Returns the first 'n' rows from the incoming input.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN p LIMIT 3""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Limit"))
+    )
+  }
+
+  @Test def lock() {
+    profileQuery(
+      title = "Lock",
+      text =
+        """Locks the start and end node when creating a relationship.""".stripMargin,
+      queryText = """MATCH (s:Person {name: 'me'}) MERGE (s)-[:FRIENDS_WITH]->(s)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Lock"))
+    )
+  }
+
+  @Test def optional() {
+    profileQuery(
+      title = "Optional",
+      text =
+        """xxx For use in optional match.""".stripMargin,
+      queryText = """MATCH (p:Person {name:'me'}) OPTIONAL MATCH (q:Person {name: 'Lulu'}) RETURN p, q""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Optional"))
+    )
+  }
+
+  @Test def projectEndpoints() {
+    profileQuery(
+      title = "Project Endpoints",
+      text =
+        """Projects the start and end node of a relationship xxx.""".stripMargin,
+      queryText = """CREATE (n)-[p:KNOWS]->(m) WITH p AS r MATCH (u)-[r]->(v) RETURN u, v""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProjectEndpoints"))
     )
   }
 
@@ -425,7 +455,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Union",
       text =
-        "`Union` concatenates the results from the right plan after the results of the left plan.",
+        "Concatenates the results from the right plan with the results of the left plan.",
       queryText =
         """MATCH (p:Location)
            RETURN p.name
@@ -441,7 +471,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Unwind",
       text =
-        """Takes a list of values and returns one row per item in the list.""".stripMargin,
+        """Returns one row per item in a list.""".stripMargin,
       queryText = """UNWIND range(1, 5) as value return value;""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Unwind"))
     )
@@ -449,8 +479,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def call(): Unit = {
     profileQuery(
-      title = "Call Procedure",
-      text = """Return all labels sorted by name""".stripMargin,
+      title = "Procedure Call",
+      text = """The `ProcedureCall` operator indicates an invocation to a procedure.""".stripMargin,
       queryText = """CALL db.labels() YIELD label RETURN * ORDER BY label""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProcedureCall"))
     )
