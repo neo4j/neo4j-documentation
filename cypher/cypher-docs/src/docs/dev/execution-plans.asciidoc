@@ -82,6 +82,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-node-index-seek, NodeIndexSeek>>                              | Starting point | Finds nodes using an index seek.
 | <<query-plan-node-index-range-seek, NodeIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek where the value of the property matches the given prefix string.
 | <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>                        | Starting point | Finds nodes using an index seek within a unique index.
+| <<query-plan-node-unique-index-range-seek, NodeUniqueIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek within a unique index where the value of the property matches the given prefix string.
 | <<query-plan-optional, Optional>>                    | Row | xxx.
 | <<query-plan-optional-expand-all, OptionalExpand(All)>>                    | Expand | Traverses relationships from the given node, and ensures that predicates are evaluated before producing rows.
 | <<query-plan-optional-expand-into, OptionalExpand(Into)>>                    | Expand | xx.

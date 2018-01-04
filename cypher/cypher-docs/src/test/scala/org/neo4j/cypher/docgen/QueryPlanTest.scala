@@ -266,11 +266,32 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(title = "Node Index Seek By Range",
                  text =
                    """The `NodeIndexSeekByRange` operator finds nodes using an index seek where the value of the property matches a given prefix string.
-                     |`NodeIndexSeekByRange` can be used for `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`""".stripMargin,
+                     |`NodeIndexSeekByRange` can be used for `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`.
+                     |If the index is a unique index, the operator is instead called `NodeUniqueIndexSeekByRange`.""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE l.name STARTS WITH 'Lon' RETURN l",
                  assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeekByRange"))
     )
   }
+
+  @Test def nodeUniqueIndexRangeSeek() {
+    executePreparationQueries {
+      val a = (0 to 100).map { i => "CREATE (:Team)" }.toList
+      val b = (0 to 300).map { i => s"CREATE (:Team {name: '$i'})" }.toList
+      a ++ b
+    }
+
+    sampleAllIndicesAndWait()
+
+    profileQuery(title = "Node Unique Index Seek By Range",
+      text =
+        """The `NodeUniqueIndexSeekByRange` operator finds nodes using an index seek within a unique index, where the value of the property matches a given prefix string.
+          |`NodeUniqueIndexSeekByRange` can be used for `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`.
+          |If the index is not unique, the operator is instead called `NodeIndexSeekByRange`.""".stripMargin,
+      queryText = "MATCH (t:Team) WHERE t.name STARTS WITH 'Ma' RETURN t",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeUniqueIndexSeekByRange"))
+    )
+  }
+
 
   @Test def nodeIndexScan() {
     executePreparationQueries((0 to 250).map { i =>
