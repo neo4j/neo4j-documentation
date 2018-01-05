@@ -56,6 +56,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-apply, Apply>>                                                | Combining | `Apply` works by performing a nested loop.
 | <<query-plan-argument, Argument>>                                | Starting point | Indicates the variable to be used as an argument to the right-hand side of an `Apply` operator xxx.
 | <<query-plan-assert-same-node, AssertSameNode>>                            | Combining | Used to ensure that no uniqueness constraints are violated.
+| <<query-plan-cartesian-product, CartesianProduct>>                 | Combining | xx.
 | <<query-plan-conditional-apply, ConditionalApply>>                         | Combining | Checks whether a variable is not `null`, and if so the right-hand side will be executed.
 | <<query-plan-constraint-operation, Constraint operation>>                  | Update | Creates a constraint on a (label,property) pair.
 | <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>  | Starting point | Reads one or more relationships by id from the relationship store.
@@ -66,7 +67,10 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-expand-all, Expand(All) >>                                    | Expand | Given a start node, `Expand(All)` will follow incoming or outgoing relationships, depending on the pattern relationship.
 | <<query-plan-expand-into, Expand(Into)>>                                   | Expand | When both the start and end node have already been found, `Expand(Into)` is used to find all connecting relationships between the two nodes.
 | <<query-plan-filter, Filter>>                                              | Row | Filters each row coming from the child operator, only passing through rows that evaluate the predicates to `true`.
+| <<query-plan-foreach, Foreach>>                                              | Combining | xxx
 | <<query-plan-let-anti-semi-apply, LetAntiSemiApply>>                       | Combining | Tests for the absence of a pattern predicate in queries containing multiple pattern predicates.
+| <<query-plan-let-select-or-semi-apply, LetSelectOrSemiApply>>              | Combining | xxxx
+| <<query-plan-let-select-or-anti-semi-apply, LetSelectOrAntiSemiApply>>     | Combining | xxx
 | <<query-plan-let-semi-apply, LetSemiApply>>                                | Combining | Tests for the existence of a pattern predicate in queries containing multiple pattern predicates.
 | <<query-plan-limit, Limit>>                                                | Row | Returns the first 'n' rows from the incoming input.
 | <<query-plan-load-csv, LoadCSV>>                                                  | Starting point | Used when executing a query containing LOAD CSV.
@@ -81,6 +85,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-node-index-scan, NodeIndexScan>>                              | Starting point | An index scan goes through all values stored in an index, and can be used to find all nodes with a particular label having a specified property.
 | <<query-plan-node-index-seek, NodeIndexSeek>>                              | Starting point | Finds nodes using an index seek.
 | <<query-plan-node-index-range-seek, NodeIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek where the value of the property matches the given prefix string.
+| <<query-plan-node-outer-hash-join, NodeOuterHashJoin>>      | Combining | xxx.
 | <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>                        | Starting point | Finds nodes using an index seek within a unique index.
 | <<query-plan-node-unique-index-range-seek, NodeUniqueIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek within a unique index where the value of the property matches the given prefix string.
 | <<query-plan-optional, Optional>>                    | Row | xxx.
@@ -90,6 +95,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-project-endpoints, ProjectEndpoints>>                         | Row | For each incoming row, `ProjectEndpoints` evaluates xxx.
 | <<query-plan-projection, Projection>>                                      | Row | For each incoming row, `Projection` evaluates a set of expressions and produces a row with the results of the expressions.
 | <<query-plan-relationship-count-from-count-store, RelationshipCountFromCountStore>>    | Row | Uses the count store to answer questions about relationship counts.
+| <<query-plan-roll-up-apply, RollUpApply>>      | Combining | xxx
 | <<query-plan-select-or-anti-semi-apply, SelectOrAntiSemiApply>>            | Combining | Tests for the absence of a pattern predicate and evaluates a predicate.
 | <<query-plan-select-or-semi-apply, SelectOrSemiApply>>                     | Combining | Tests for the existence of a pattern predicate and evaluates a predicate.
 | <<query-plan-semi-apply, SemiApply>>                                       | Combining | Tests for the existence of a pattern predicate.
@@ -101,6 +107,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-union, Union>>                                                | Row | Concatenates the results from the right plan after the results of the left plan.
 | <<query-plan-unwind, Unwind>>                                              | Row | Returns one row per item in a list.
 | <<query-plan-update-graph, UpdateGraph>>                                   | Update | Applies updates to the graph.
+| <<query-plan-value-hash-join, ValueHashJoin>>                       | Combining | xxx.
 | <<query-plan-varlength-expand-all, VarLengthExpand(All)>>                                   | Expand | xxx.
 | <<query-plan-varlength-expand-into, VarLengthExpand(Into)>>                                   | Expand | xxx.
 |===
@@ -110,7 +117,7 @@ include::execution-plan-groups/starting-query.asciidoc[leveloffset=+1]
 
 include::execution-plan-groups/expand.asciidoc[leveloffset=+1]
 
-include::execution-plan-groups/combining-operators.adoc[leveloffset=+1]
+include::execution-plan-groups/combining-operators.asciidoc[leveloffset=+1]
 
 include::execution-plan-groups/row.asciidoc[leveloffset=+1]
 

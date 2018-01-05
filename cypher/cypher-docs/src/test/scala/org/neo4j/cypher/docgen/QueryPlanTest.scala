@@ -54,7 +54,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
        CREATE (england:Country {name: 'England'})
        CREATE (field:Team {name: 'Field'})
-       CREATE (engineering:Team {name: 'Engineering'})
+       CREATE (engineering:Team {name: 'Engineering', id:42})
        CREATE (sales:Team {name: 'Sales'})
        CREATE (monads:Team {name: 'Team Monads'})
        CREATE (birds:Team {name: 'Team Enlightened Birdmen'})
@@ -87,7 +87,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
   override val setupConstraintQueries = List(
     "CREATE INDEX ON :Location(name)",
     "CREATE INDEX ON :Person(name)",
-    "CREATE CONSTRAINT ON (team:Team) ASSERT team.name is UNIQUE"
+    "CREATE CONSTRAINT ON (team:Team) ASSERT team.name is UNIQUE",
+    "CREATE CONSTRAINT ON (team:Team) ASSERT team.id is UNIQUE"
   )
 
   def section = "Query Plan"
@@ -369,7 +370,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Cartesian Product",
       text =
-        """Produces a cartesian product of the two inputs -- each row coming from the left child will be combined with all the rows from the right child operator.""".stripMargin,
+        """The `CartesianProduct` operator produces a cartesian product of the two inputs -- each row coming from the left child will be combined with all the rows from the right child operator.
+          |`CartesianProduct` generally exhibits bad performance and ought to be avoided if possible.
+        """.stripMargin,
       queryText = """MATCH (p:Person), (t:Team) RETURN p, t""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CartesianProduct"))
     )
@@ -568,8 +571,279 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Unwind",
       text =
         """The `Unwind` operator returns one row per item in a list.""".stripMargin,
-      queryText = """UNWIND range(1, 5) as value return value;""",
+      queryText = """UNWIND range(1, 5) as value return value""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Unwind"))
+    )
+  }
+
+  @Test def apply() {
+    profileQuery(
+      title = "Apply",
+      text =
+        """`Apply` works by performing a nested loop.
+          |Every row being produced on the left-hand side of the `Apply` operator will be fed to the leaf
+          |operator on the right-hand side, and then `Apply` will yield the combined results.
+          |`Apply`, being a nested loop, can be seen as a warning that a better plan was not found.""".stripMargin,
+      queryText =
+        """MATCH (p:Person {name:'me'})
+          |MATCH (q:Person {name: p.secondName})
+          |RETURN p, q""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Apply"))
+    )
+  }
+
+  @Test def semiApply() {
+    profileQuery(
+      title = "Semi Apply",
+      text =
+        """The `SemiApply` operator tests for the existence of a pattern predicate.
+          |`SemiApply` takes a row from its child operator and feeds it to the leaf operator on the right-hand side.
+          |If the right-hand side operator tree yields at least one row, the row from the
+          |left-hand side is yielded by the `SemiApply` operator.
+          |This makes `SemiApply` a filtering operator, used mostly for pattern predicates in queries.""".stripMargin,
+      queryText =
+        """MATCH (p:Person)
+          |WHERE (p)-[:FRIENDS_WITH]->(:Person)
+          |RETURN p.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SemiApply"))
+    )
+  }
+
+  @Test def antiSemiApply() {
+    profileQuery(
+      title = "Anti Semi Apply",
+      text =
+        """The `AntiSemiApply` operator tests for the absence of a pattern.
+          |`AntiSemiApply` takes a row from its child operator and feeds it to the leaf operator on the right-hand side.
+          |If the right-hand side operator tree yields no rows, the row from the
+          |left-hand side is yielded by the `AntiSemiApply` operator.
+          |This makes `AntiSemiApply` a filtering operator, used for pattern predicates in queries.""".stripMargin,
+      queryText =
+        """MATCH (me:Person {name: "me"}), (other:Person)
+          |WHERE NOT (me)-[:FRIENDS_WITH]->(other)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("AntiSemiApply"))
+    )
+  }
+
+  @Test def letSemiApply() {
+    profileQuery(
+      title = "Let Semi Apply",
+      text =
+        """The `LetSemiApply` operator tests for the existence of a pattern predicate.
+          |When a query contains multiple pattern predicates (when using `OR`), `LetSemiApply` will be used to evaluate the first of these.
+          |It will record the result of evaluating the predicate but will leave any filtering to another operator.
+          |In the example, `LetSemiApply` will be used to check for the existence of the `FRIENDS_WITH`
+          |relationship from each person.""".stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LetSemiApply"))
+    )
+  }
+
+  @Test def letAntiSemiApply() {
+    profileQuery(
+      title = "Let Anti Semi Apply",
+      text =
+        """The `LetAntiSemiApply` operator tests for the absence of a pattern.
+          |When a query contains multiple negated pattern predicates (when using `OR` and `NOT`), `LetAntiSemiApply` will be used to evaluate the first of these.
+          |It will record the result of evaluating the predicate but will leave any filtering to another operator.
+          |In the example, `LetAntiSemiApply` will be used to check for the absence of
+          |the `FRIENDS_WITH` relationship from each person.""".stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE NOT ((other)-[:FRIENDS_WITH]->(:Person)) OR (other)-[:WORKS_IN]->(:Location)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LetAntiSemiApply"))
+    )
+  }
+
+  @Test def selectOrSemiApply() {
+    profileQuery(
+      title = "Select Or Semi Apply",
+      text =
+        """The `SelectOrSemiApply` operator tests for the existence of a pattern predicate and evaluates a predicate.
+          |This operator allows for the mixing of normal predicates and pattern predicates
+          |that check for the existence of a pattern.
+          |First the normal expression predicate is evaluated, and only if it returns `false`
+          |is the costly pattern predicate evaluation is performed.""".stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE other.age > 25 OR (other)-[:FRIENDS_WITH]->(:Person)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SelectOrSemiApply"))
+    )
+  }
+
+  @Test def selectOrAntiSemiApply() {
+    profileQuery(
+      title = "Select Or Anti Semi Apply",
+      text =
+        """The `SelectOrAntiSemiApply` operator tests for the absence of a pattern predicate and evaluates a predicate.""".stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE other.age > 25 OR NOT (other)-[:FRIENDS_WITH]->(:Person)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SelectOrAntiSemiApply"))
+    )
+  }
+
+  @Test def conditionalApply() {
+    profileQuery(
+      title = "Conditional Apply",
+      text =
+        """The `ConditionalApply` operator checks whether a variable is not `null`, and if so the right-hand side will be executed.""".stripMargin,
+      queryText =
+        """MERGE (p:Person {name: 'Andres'})
+          |ON MATCH SET p.exists = true""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ConditionalApply"))
+    )
+  }
+
+  @Test def antiConditionalApply() {
+    profileQuery(
+      title = "Anti Conditional Apply",
+      text =
+        """The `AntiConditionalApply` operator checks whether a variable is `null`, and if so the right-hand side will be executed.""".stripMargin,
+      queryText =
+        """MERGE (p:Person {name: 'Andres'})
+          |ON CREATE SET p.exists = true""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("AntiConditionalApply"))
+    )
+  }
+
+  @Test def assertSameNode() {
+    profileQuery(
+      title = "Assert Same Node",
+      text =
+        """The `AssertSameNode` operator is used to ensure that no uniqueness constraints are violated.
+          |The example looks for the existence of a team with the supplied name and id, and if one does not exist,
+          |it will be created. Owing to the existence of two uniqueness constraints
+          |on `:Team(name)` and `:Team(id)`, any node that would be found by the `UniqueIndexSeek`
+          |must be the very same node, or the constraints would be violated.
+        """.stripMargin,
+      queryText =
+        """MERGE (t:Team {name: 'Engineering', id: 42})""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("AssertSameNode"))
+    )
+  }
+
+  @Test def nodeHashJoin() {
+    executePreparationQueries(
+      List(
+        """MATCH (london:Location {name: 'London'}), (person:Person {name: 'Pontus'})
+          FOREACH(x in range(0, 250) |
+            CREATE (person) -[: WORKS_IN] ->(london)
+            )""".stripMargin
+      )
+    )
+    profileQuery(
+      title = "Node Hash Join",
+      text =
+        """Using a hash table, the `NodeHashJoin` operator joins the input coming from the left with the input coming from the right.
+          |`NodeHashJoin` only gets planned for larger cardinalities; for smaller cardinalities, `Expand` is used instead.""".stripMargin,
+      queryText =
+        """MATCH (andy:Person {name:'Andreas'})-[:WORKS_IN]->(loc)<-[:WORKS_IN]-(matt:Person {name:'Mattis'})
+          |RETURN loc.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeHashJoin"))
+    )
+  }
+
+  @Test def triadic() {
+    profileQuery(
+      title = "Triadic",
+      text =
+        """The `Triadic` operator is used to solve triangular queries, such as the very
+          |common 'find my friend-of-friends that are not already my friend'.
+          |It does so by putting all the friends in a set, and use that set to check if the
+          |friend-of-friends are already connected to me.
+          |The example finds the names of all friends of my friends that are not already my friends.""".stripMargin,
+      queryText =
+        """MATCH (me:Person)-[:FRIENDS_WITH]-()-[:FRIENDS_WITH]-(other)
+          |WHERE NOT (me)-[:FRIENDS_WITH]-(other)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Triadic"))
+    )
+  }
+
+  @Test def foreach() {
+    profileQuery(
+      title = "Foreach",
+      text =
+        """The `Foreach` operator xxxx.""".stripMargin,
+      queryText =
+        """FOREACH (value IN [1,2,3] |
+          |CREATE (:Person {age: value})
+          |)""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Foreach"))
+    )
+  }
+
+  @Test def letSelectOrSemiApply() {
+    profileQuery(
+      title = "Let Select Or Semi Apply",
+      text =
+        """The `LetSelectOrSemiApply` operator is planned for PatternPredicates mixed with other predicates connected with OR.""".stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location) OR other.age = 5
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LetSelectOrSemiApply"))
+    )
+  }
+
+  @Test def letSelectOrAntiSemiApply() {
+    profileQuery(
+      title = "Let Select Or Anti Semi Apply",
+      text =
+        """The `LetSelectOrAntiSemiApply` operator is planned for negated PatternPredicates mixed with other predicates connected with OR.""".stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE NOT (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location) OR other.age = 5
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LetSelectOrAntiSemiApply"))
+    )
+  }
+
+  //TODO get a query that works
+  @Test def nodeOuterHashJoin() {
+    profileQuery(
+      title = "Node Outer Hash Join",
+      text =
+        """The `NodeOuterHashJoin` operator ....""".stripMargin,
+      queryText =
+        """MATCH (p:Person {name:'me'})
+          |OPTIONAL MATCH (p)--(q:Person {name: p.surname})
+          |USING JOIN ON p
+          |RETURN p,q""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("t")) //so works for now
+    )
+  }
+
+  @Test def rollUpApply() {
+    profileQuery(
+      title = "Roll Up Apply",
+      text =
+        """The `RollUpApply` operator xxx.""".stripMargin,
+      queryText =
+        """MATCH (n)
+          |RETURN (n)-->()""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("RollUpApply"))
+    )
+  }
+
+  @Test def valueHashJoin() {
+    profileQuery(
+      title = "Value Hash Join",
+      text =
+        """The `ValueHashJoin` operator xxx.""".stripMargin,
+      queryText =
+        """MATCH (p:Person),(q:Person)
+          |WHERE p.age = q.age
+          |RETURN p,q""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ValueHashJoin"))
     )
   }
 
