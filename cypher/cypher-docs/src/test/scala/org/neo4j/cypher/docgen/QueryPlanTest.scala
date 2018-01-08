@@ -514,7 +514,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       (0 to 300).map { i => s"CREATE (:Location {name: '$i'})" }.toList
     }
 
-    sampleAllIndicesAndWait()
+    sampleAllIndexesAndWait()
 
     profileQuery(title = "Node Index Seek By Range",
                  text =
@@ -531,7 +531,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       (0 to 300).map { i => s"CREATE (:Team {name: '$i'})" }.toList
     }
 
-    sampleAllIndicesAndWait()
+    sampleAllIndexesAndWait()
 
     profileQuery(title = "Node Unique Index Seek By Range",
       text =
