@@ -22,9 +22,12 @@ package org.neo4j.cypher.docgen
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
-import org.neo4j.cypher.internal.compiler.v3_1.pipes.IndexSeekByRange
+import org.neo4j.test.{TestEnterpriseGraphDatabaseFactory}
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
+
+  override protected def newTestGraphDatabaseFactory() = new TestEnterpriseGraphDatabaseFactory()
+
   override val setupQueries = List(
     """CREATE (me:Person {name: 'me'})
        CREATE (andres:Person {name: 'Andres'})
@@ -104,14 +107,103 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def constraintOperation() {
+  @Test def createUniqueConstraint() {
     profileQuery(
-      title = "Constraint Operation",
+      title = "Create Unique Constraint",
       text =
-        """Creates a constraint on a (label,property) pair.
+        """The `CreateUniqueConstraint` operator creates a unique constraint on a (label,property) pair.
           |The following query will create a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """CREATE CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateUniqueConstraint"))
+    )
+  }
+
+  @Test def dropUniqueConstraint() {
+    executePreparationQueries {
+      List("CREATE CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE")
+    }
+
+    profileQuery(
+      title = "Drop Unique Constraint",
+      text =
+        """The `DropUniqueConstraint` operator drops a unique constraint on a (label,property) pair.
+          |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
+      queryText = """DROP CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropUniqueConstraint"))
+    )
+  }
+
+  @Test def createNodePropertyExistenceConstraint() {
+    profileQuery(
+      title = "Create Node Property Existence Constraint (Enterprise Edition only)",
+      text =
+        """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint on a node property.""".stripMargin,
+      queryText = """CREATE CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateNodePropertyExistenceConstraint"))
+    )
+  }
+
+  @Test def dropNodePropertyExistenceConstraint() {
+    executePreparationQueries {
+      List("CREATE CONSTRAINT ON (p:Person) ASSERT exists(p.name)")
+    }
+
+    profileQuery(
+      title = "Drop Node Property Existence Constraint (Enterprise Edition only)",
+      text =
+        """The `DropNodePropertyExistenceConstraint` operator drops an existence constraint from a node property.""".stripMargin,
+      queryText = """DROP CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropNodePropertyExistenceConstraint"))
+    )
+  }
+
+  @Test def createRelationshipPropertyExistenceConstraint() {
+    profileQuery(
+      title = "Create Relationship Property Existence Constraint (Enterprise Edition only)",
+      text =
+        """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint on a relationship property.""".stripMargin,
+      queryText = """CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateRelationshipPropertyExistenceConstraint"))
+    )
+  }
+
+  @Test def dropRelationshipPropertyExistenceConstraint() {
+    executePreparationQueries {
+      List("CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)")
+    }
+
+    profileQuery(
+      title = "Drop Relationship Property Existence Constraint (Enterprise Edition only)",
+      text =
+        """The `DropRelationshipPropertyExistenceConstraint` operator drops an existence constraint from a relationship property.""".stripMargin,
+      queryText = """DROP CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropRelationshipPropertyExistenceConstraint"))
+    )
+  }
+
+  @Test def createIndex() {
+    profileQuery(
+      title = "Create Index",
+      text =
+        """The `CreateIndex` operator creates an index on a (label, property) pair.
+          |The following query will create an index on the `name` property of nodes with the `Country` label.""".stripMargin,
+      queryText = """CREATE INDEX ON :Country(name)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateIndex"))
+    )
+  }
+
+  @Test def dropIndex() {
+    executePreparationQueries {
+      List("CREATE INDEX ON :Country(name)")
+    }
+
+    profileQuery(
+      title = "Drop Index",
+      text =
+        """The `DropIndex` operator drops an index on a (label, property) pair.
+          |The following query will drop an index on the `name` property of nodes with the `Country` label.""".stripMargin,
+      queryText = """DROP INDEX ON :Country(name)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropIndex"))
     )
   }
 
@@ -179,7 +271,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Update Graph",
       text =
-        """Creates a node in the graph.""".stripMargin,
+        """The `UpdateGraph` operator creates a node in the graph.
+          |This operator is only used for the rule planner (xxlink to this.)""".stripMargin,
       queryText = """CYPHER planner=rule CREATE (:Person {name: 'Alistair'})""",
       assertions = (p) => {
         assertThat(p.executionPlanDescription().toString, containsString("CreateNode"))
@@ -192,9 +285,152 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Merge Into",
       text =
-        """When both the start and end node have already been found, `Merge Into` is used to find all connecting relationships or creating a new relationship between the two nodes.""".stripMargin,
+        """When both the start and end node have already been found, the `Merge Into` operator is used to find all connecting relationships or creating a new relationship between the two nodes.
+          |This operator is only used for the rule planner (xxlink to this.)
+        """.stripMargin,
       queryText = """CYPHER planner=rule MATCH (p:Person {name: 'me'}), (f:Person {name: 'Andres'}) MERGE (p)-[:FRIENDS_WITH]->(f)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Merge(Into)"))
+    )
+  }
+
+  @Test def createNode() {
+    profileQuery(
+      title = "Create Node",
+      text =
+        """The `CreateNode` operator is used to create a node.""".stripMargin,
+      queryText = """CREATE (:Person {name: 'Jack'})""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateNode"))
+    )
+  }
+
+  @Test def createRelationship() {
+    profileQuery(
+      title = "Create Relationship",
+      text =
+        """The `CreateRelationship` operator is used to create a relationship.""".stripMargin,
+      queryText =
+        """MATCH (a:Person {name: 'Max'}), (b:Person {name: 'Chris'})
+          |CREATE (a)-[:FRIENDS_WITH]->(b)""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateRelationship"))
+    )
+  }
+
+  @Test def delete() {
+    profileQuery(
+      title = "Delete",
+      text =
+        """The `Delete` operator is used to delete a node or a relationship.""".stripMargin,
+      queryText =
+        """MATCH (me:Person {name: 'me'})-[w:WORKS_IN {duration: 190}]->(london:Location {name: 'London'})
+          |DELETE w""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Delete"))
+    )
+  }
+
+  @Test def detachDelete() {
+    profileQuery(
+      title = "Detach Delete",
+      text =
+        """The `DetachDelete` operator is used in all queries containing `DETACH DELETE`, when deleting nodes and their relationships.""".stripMargin,
+      queryText =
+        """MATCH (p:Person)
+          |DETACH DELETE p""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DetachDelete"))
+    )
+  }
+
+  @Test def mergeCreateNode() {
+    profileQuery(
+      title = "Merge Create Node",
+      text =
+        """The `MergeCreateNode` operator is used when creating a node as a result of a `MERGE` failing to find the node.""".stripMargin,
+      queryText =
+        """MERGE (:Person {name: 'Sally'})""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("MergeCreateNode"))
+    )
+  }
+
+  @Test def mergeCreateRelationship() {
+    profileQuery(
+      title = "Merge Create Relationship",
+      text =
+        """The `MergeCreateRelationship` operator is used when creating a relationship as a result of a `MERGE` failing to find the relationship.""".stripMargin,
+      queryText =
+        """MATCH (s:Person {name: 'Sally'})
+          |MERGE (s)-[:FRIENDS_WITH]->(s)""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("MergeCreateRelationship"))
+    )
+  }
+
+  @Test def removeLabels() {
+    profileQuery(
+      title = "Remove Labels",
+      text =
+        """The `RemoveLabels` operator is used when deleting labels from a node.""".stripMargin,
+      queryText =
+        """MATCH (n)
+          |REMOVE n:Person""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("RemoveLabels"))
+    )
+  }
+
+  @Test def setLabels() {
+    profileQuery(
+      title = "Set Labels",
+      text =
+        """The `SetLabels` operator is used when setting labels on a node.""".stripMargin,
+      queryText =
+        """MATCH (n)
+          |SET n:Person""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetLabels"))
+    )
+  }
+
+  @Test def setNodePropertyFromMap() {
+    profileQuery(
+      title = "Set Node Property From Map",
+      text =
+        """The `SetNodePropertyFromMap` operator is used when setting properties from a map on a node.""".stripMargin,
+      queryText =
+        """MATCH (n)
+          |SET n = {weekday: 'Monday', meal: 'Lunch'}""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetNodePropertyFromMap"))
+    )
+  }
+
+  @Test def setRelationshipPropertyFromMap() {
+    profileQuery(
+      title = "Set Relationship Property From Map",
+      text =
+        """The `SetRelationshipPropertyFromMap` operator is used when setting properties from a map on a relationship.""".stripMargin,
+      queryText =
+        """MATCH (n)-[r]->(m)
+          |SET r = {weight: 5, unit: 'kg'}""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetRelationshipPropertyFromMap"))
+    )
+  }
+
+  @Test def setNodeProperty() {
+    profileQuery(
+      title = "Set Node Property",
+      text =
+        """The `SetNodeProperty` operator is used when setting a property on a node.""".stripMargin,
+      queryText =
+        """MATCH (n)
+          |SET n.checked = true""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetNodeProperty"))
+    )
+  }
+
+  @Test def setRelationshipProperty() {
+    profileQuery(
+      title = "Set Relationship Property",
+      text =
+        """The `SetRelationshipProperty` operator is used when setting a property on a relationship.""".stripMargin,
+      queryText =
+        """MATCH (n)-[r]->(m)
+          |SET r.weight = 100""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetRelationshipProperty"))
     )
   }
 

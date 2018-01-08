@@ -58,9 +58,20 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-assert-same-node, AssertSameNode>>                            | Combining | Used to ensure that no uniqueness constraints are violated.
 | <<query-plan-cartesian-product, CartesianProduct>>                 | Combining | xx.
 | <<query-plan-conditional-apply, ConditionalApply>>                         | Combining | Checks whether a variable is not `null`, and if so the right-hand side will be executed.
-| <<query-plan-constraint-operation, Constraint operation>>                  | Update | Creates a constraint on a (label,property) pair.
+| <<query-plan-create-index, CreateIndex>>              | Update | Creates an index xx.
+| <<query-plan-create-unique-constraint, CreateUniqueConstraint>>                  | Update | Creates a unique constraint on a (label,property) pair.
+| <<query-plan-create-node, CreateNode>>              | Update | Creates a node.
+| <<query-plan-create-node-property-existence-constraint, CreateNodePropertyExistenceConstraint>>     | Update | Creates an existence constraint on a node property.
+| <<query-plan-create-relationship, CreateRelationship>>              | Update | Creates a relationship.
+| <<query-plan-create-relationship-property-existence-constraint, CreateRelationshipPropertyExistenceConstraint>>     | Update | Creates an existence constraint on a relationship property.
+| <<query-plan-delete, Delete>>                                          | Update |Deletes a node or relationship.
+| <<query-plan-detach-delete, DetachDelete>>               | Update |Used when executing a query containing `DETACH DELETE` to delete nodes and their relationships.
 | <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>  | Starting point | Reads one or more relationships by id from the relationship store.
 | <<query-plan-distinct, Distinct>>                                          | Row | Removes duplicate rows from the incoming stream of rows.
+| <<query-plan-drop-index, DropIndex>>              | Update | Drops an index xx.
+| <<query-plan-drop-node-property-existence-constraint, DropNodePropertyExistenceConstraint>>     | Update | Drops an existence constraint from a node property.
+| <<query-plan-drop-relationship-property-existence-constraint, DropRelationshipPropertyExistenceConstraint>>     | Update | Drops an existence constraint from a relationship property.
+| <<query-plan-drop-unique-constraint, DropUniqueConstraint>>                  | Update | Drops a unique constraint on a (label,property) pair.
 | <<query-plan-eager, Eager>>                                                | Row | For isolation purposes, `Eager` ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.
 | <<query-plan-eager-aggregation, EagerAggregation>>                         | Row | Eagerly loads underlying results and stores it in a hash map, using the grouping keys as the keys for the map.
 | <<query-plan-empty-result, EmptyResult>>                                   | Update | Eagerly loads everything coming in to the EmptyResult operator and discards it.
@@ -76,6 +87,8 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-load-csv, LoadCSV>>                                                  | Starting point | Used when executing a query containing LOAD CSV.
 | <<query-plan-lock, Lock>>                                                | Row | Locks the start and end node when creating a relationship.
 | <<query-plan-merge-into, Merge(Into)>>                                     | Update | When both the start and end node have already been found, `Merge(Into)` is used to find all connecting relationships or creating a new relationship between the two nodes.
+| <<query-plan-merge-create-node, MergeCreateNode>>            | Updating | xxxx.
+| <<query-plan-merge-create-relationship, MergeCreateRelationship>>            | Updating | xxxx.
 | <<query-plan-node-by-id-seek, NodeByIdSeek>>                               | Starting point | Reads one or more nodes by id from the node store.
 | <<query-plan-node-by-label-scan, NodeByLabelScan>>                         | Starting point | Using the label index, fetches all nodes with a specific label on them from the node label index.
 | <<query-plan-node-count-from-count-store, NodeCountFromCountStore>>        | Row | Uses the count store to answer questions about node counts.
@@ -95,10 +108,16 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-project-endpoints, ProjectEndpoints>>                         | Row | For each incoming row, `ProjectEndpoints` evaluates xxx.
 | <<query-plan-projection, Projection>>                                      | Row | For each incoming row, `Projection` evaluates a set of expressions and produces a row with the results of the expressions.
 | <<query-plan-relationship-count-from-count-store, RelationshipCountFromCountStore>>    | Row | Uses the count store to answer questions about relationship counts.
+| <<query-plan-remove-labels, RemoveLabels>>   | Update | Used when deleting labels from a node.
 | <<query-plan-roll-up-apply, RollUpApply>>      | Combining | xxx
 | <<query-plan-select-or-anti-semi-apply, SelectOrAntiSemiApply>>            | Combining | Tests for the absence of a pattern predicate and evaluates a predicate.
 | <<query-plan-select-or-semi-apply, SelectOrSemiApply>>                     | Combining | Tests for the existence of a pattern predicate and evaluates a predicate.
 | <<query-plan-semi-apply, SemiApply>>                                       | Combining | Tests for the existence of a pattern predicate.
+| <<query-plan-set-labels, SetLabels>>                            | Update | Used when setting labels on a node.
+| <<query-plan-set-node-property, SetNodeProperty>>          | Update | Used when setting a property on a node.
+| <<query-plan-set-node-property-from-map, SetNodePropertyFromMap>>          | Update | Used when setting properties from a map on a node.
+| <<query-plan-set-relationship-property, SetRelationshipProperty>>          | Update | Used when setting a property on a relationship.
+| <<query-plan-set-relationship-property-from-map, SetRelationshipPropertyFromMap>>    | Update | Used when setting properties from a map on a relationship.
 | <<query-plan-skip, Skip>>                                                  | Row | Skips 'n' rows from the incoming rows.
 | <<query-plan-sort, Sort>>                                                  | Row | Sorts rows by a provided key.
 | <<query-plan-top, Top>>                                                    | Row | Returns the first 'n' rows sorted by a provided key.
