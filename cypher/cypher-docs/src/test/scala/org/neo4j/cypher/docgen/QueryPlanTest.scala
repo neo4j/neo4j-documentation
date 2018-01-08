@@ -438,9 +438,19 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Empty Result",
       text =
-        """Eagerly loads everything coming in to the `EmptyResult` operator and discards it.""".stripMargin,
+        """The `EmptyResult` operator eagerly loads everything coming in to the `EmptyResult` operator and discards it xxx.""".stripMargin,
       queryText = """CREATE (:Person)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("EmptyResult"))
+    )
+  }
+
+  @Test def produceResult() {
+    profileQuery(
+      title = "Produce Result",
+      text =
+        """The `ProduceResult` operator ....""".stripMargin,
+      queryText = """MATCH (n) RETURN n""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProduceResult"))
     )
   }
 

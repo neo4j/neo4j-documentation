@@ -26,7 +26,6 @@ Operators:
 * <<query-plan-drop-relationship-property-existence-constraint, DropRelationshipPropertyExistenceConstraint>>
 * <<query-plan-create-index, CreateIndex>>
 * <<query-plan-drop-index, DropIndex>>
-* <<query-plan-empty-result, EmptyResult>>
 * <<query-plan-update-graph, UpdateGraph>>
 * <<query-plan-merge-into, Merge(Into)>>
 
@@ -69,8 +68,6 @@ include::../ql/query-plan/drop-relationship-property-existence-constraint.asciid
 include::../ql/query-plan/create-index.asciidoc[]
 
 include::../ql/query-plan/drop-index.asciidoc[]
-
-include::../ql/query-plan/empty-result.asciidoc[]
 
 include::../ql/query-plan/update-graph.asciidoc[]
 

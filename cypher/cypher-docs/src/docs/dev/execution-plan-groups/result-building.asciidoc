@@ -1,0 +1,14 @@
+[[execution-plans-result-building-operators]]
+= Result building operators
+
+[abstract]
+These operators build up the result returned by a query.
+
+Operators:
+
+* <<query-plan-empty-result, EmptyResult>>
+* <<query-plan-produce-result, ProduceResult>>
+
+include::../ql/query-plan/empty-result.asciidoc[]
+
+include::../ql/query-plan/produce-result.asciidoc[]

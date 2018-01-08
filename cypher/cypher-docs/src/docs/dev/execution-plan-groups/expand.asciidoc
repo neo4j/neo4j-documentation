@@ -9,7 +9,6 @@ Operators:
 * <<query-plan-expand-all, Expand(All) >>
 * <<query-plan-expand-into, Expand(Into)>>
 * <<query-plan-optional-expand-all, OptionalExpand(All)>>
-
 * <<query-plan-optional-expand-into, OptionalExpand(Into)>>
 * <<query-plan-varlength-expand-all, VarLengthExpand(All)>>
 * <<query-plan-varlength-expand-into, VarLengthExpand(Into)>>
