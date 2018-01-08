@@ -277,7 +277,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Update Graph",
       text =
         """The `UpdateGraph` operator creates a node in the graph.
-          |This operator is only used for the rule planner (xxlink to this.)""".stripMargin,
+          |This operator is only used for the <<cypher-query-options, rule planner>>.""".stripMargin,
       queryText = """CYPHER planner=rule CREATE (:Person {name: 'Alistair'})""",
       assertions = (p) => {
         assertThat(p.executionPlanDescription().toString, containsString("CreateNode"))
@@ -291,7 +291,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Merge Into",
       text =
         """When both the start and end node have already been found, the `Merge Into` operator is used to find all connecting relationships or creating a new relationship between the two nodes.
-          |This operator is only used for the rule planner (xxlink to this.)
+          |This operator is only used for the <<cypher-query-options, rule planner>>.)
         """.stripMargin,
       queryText = """CYPHER planner=rule MATCH (p:Person {name: 'me'}), (f:Person {name: 'Andres'}) MERGE (p)-[:FRIENDS_WITH]->(f)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Merge(Into)"))
@@ -582,7 +582,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
                | ending in a specific string, such as when using `ENDS WITH`.
                | Although this is slower than an index seek (since all entries need to be
                | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
-               | filter xxx.""".stripMargin,
+               | filter.""".stripMargin,
       queryText = "MATCH (l:Location) WHERE l.name ENDS WITH 'al' RETURN l",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexEndsWithScan"))
     )
@@ -700,7 +700,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Project Endpoints",
       text =
-        """The `ProjectEndpoints` operator projects the start and end node of a relationship xxx.""".stripMargin,
+        """The `ProjectEndpoints` operator projects the start and end node of a relationship.""".stripMargin,
       queryText = """CREATE (n)-[p:KNOWS]->(m) WITH p AS r MATCH (u)-[r]->(v) RETURN u, v""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProjectEndpoints"))
     )
@@ -746,7 +746,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "VarLength Expand All",
       text =
-        """Given a start node, the `VarLengthExpand(All)` operator will follow variable-length relationships. xxx""".stripMargin,
+        """Given a start node, the `VarLengthExpand(All)` operator will follow variable-length relationships.""".stripMargin,
       queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(q:Person) RETURN p, q""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(All)"))
     )
@@ -756,7 +756,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "VarLength Expand Into",
       text =
-        """When both the start and end node have already been found, the `VarLengthExpand(Into)` operator is used to find all variable-length relationships connecting the two nodes. xxx""".stripMargin,
+        """When both the start and end node have already been found, the `VarLengthExpand(Into)` operator is used to find all variable-length relationships connecting the two nodes.""".stripMargin,
       queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(p:Person) RETURN p""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(Into)"))
     )
