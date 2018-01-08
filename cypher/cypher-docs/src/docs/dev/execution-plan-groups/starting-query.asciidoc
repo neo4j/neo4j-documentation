@@ -14,7 +14,7 @@ Operators:
 * <<query-plan-node-index-seek, NodeIndexSeek>>
 * <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>
 * <<query-plan-node-index-range-seek, NodeIndexSeekByRange>>
-* <<query-plan-node-unique-index-range-seek, NodeUniqueIndexSeekByRange>>
+* <<query-plan-node-unique-index-seek-by-range, NodeUniqueIndexSeekByRange>>
 * <<query-plan-node-index-contains-scan, NodeIndexContainsScan>>
 * <<query-plan-node-index-ends-with-scan, NodeIndexEndsWithScan>>
 * <<query-plan-node-index-scan, NodeIndexScan>>
@@ -36,7 +36,7 @@ include::../ql/query-plan/node-unique-index-seek.asciidoc[]
 
 include::../ql/query-plan/node-index-range-seek.asciidoc[]
 
-include::../ql/query-plan/node-unique-index-range-seek.asciidoc[]
+include::../ql/query-plan/node-unique-index-seek-by-range.asciidoc[]
 
 include::../ql/query-plan/node-index-contains-scan.asciidoc[]
 

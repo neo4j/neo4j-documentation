@@ -31,7 +31,8 @@ There is no guarantee that a specific query will always be solved with the same 
 * <<execution-plan-operators-summary, Execution plan operators at a glance>>
 * <<execution-plans-starting-operators, Starting point operators>>
 * <<execution-plans-expand-operators, Expand operators>>
-* <<combining-operators, Combining operators>>
+* <<execution-plans-result-building-operators, Result-building operators>>
+* <<execution-plans-combining-operators, Combining operators>>
 * <<execution-plans-row-operators, Row operators>>
 * <<execution-plans-update-operators, Update operators>>
 * <<query-shortestpath-planning, Shortest path planning>>
@@ -100,11 +101,11 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-node-index-range-seek, NodeIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek where the value of the property matches the given prefix string.
 | <<query-plan-node-outer-hash-join, NodeOuterHashJoin>>      | Combining | xxx.
 | <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>                        | Starting point | Finds nodes using an index seek within a unique index.
-| <<query-plan-node-unique-index-range-seek, NodeUniqueIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek within a unique index where the value of the property matches the given prefix string.
+| <<query-plan-node-unique-index-seek-by-range, NodeUniqueIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek within a unique index where the value of the property matches the given prefix string.
 | <<query-plan-optional, Optional>>                    | Row | xxx.
 | <<query-plan-optional-expand-all, OptionalExpand(All)>>                    | Expand | Traverses relationships from the given node, and ensures that predicates are evaluated before producing rows.
 | <<query-plan-optional-expand-into, OptionalExpand(Into)>>                    | Expand | xx.
-| <<query-plan-call-procedure, ProcedureCall>>                               | Row | Calls a procedure.
+| <<query-plan-procedure-call, ProcedureCall>>                               | Row | Calls a procedure.
 | <<query-plan-produce-result, ProduceResult>>                                   | Result building | xx.
 | <<query-plan-project-endpoints, ProjectEndpoints>>                         | Row | For each incoming row, `ProjectEndpoints` evaluates xxx.
 | <<query-plan-projection, Projection>>                                      | Row | For each incoming row, `Projection` evaluates a set of expressions and produces a row with the results of the expressions.
@@ -139,7 +140,7 @@ include::execution-plan-groups/expand.asciidoc[leveloffset=+1]
 
 include::execution-plan-groups/result-building.asciidoc[leveloffset=+1]
 
-include::execution-plan-groups/combining-operators.asciidoc[leveloffset=+1]
+include::execution-plan-groups/combining.asciidoc[leveloffset=+1]
 
 include::execution-plan-groups/row.asciidoc[leveloffset=+1]
 

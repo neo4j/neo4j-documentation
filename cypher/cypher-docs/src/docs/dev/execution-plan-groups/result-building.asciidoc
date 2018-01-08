@@ -1,5 +1,5 @@
 [[execution-plans-result-building-operators]]
-= Result building operators
+= Result-building operators
 
 [abstract]
 These operators build up the result returned by a query.

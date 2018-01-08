@@ -22,7 +22,7 @@ Operators:
 * <<query-plan-top, Top>>
 * <<query-plan-union, Union>>
 * <<query-plan-unwind, Unwind>>
-* <<query-plan-call-procedure, ProcedureCall>>
+* <<query-plan-procedure-call, ProcedureCall>>
 
 include::../ql/query-plan/eager.asciidoc[]
 

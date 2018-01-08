@@ -135,9 +135,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def createNodePropertyExistenceConstraint() {
     profileQuery(
-      title = "Create Node Property Existence Constraint (Enterprise Edition only)",
+      title = "Create Node Property Existence Constraint",
       text =
-        """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint on a node property.""".stripMargin,
+        """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint on a node property.
+          |This will only appear in Enterprise Edition.
+        """.stripMargin,
       queryText = """CREATE CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateNodePropertyExistenceConstraint"))
     )
@@ -149,9 +151,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Node Property Existence Constraint (Enterprise Edition only)",
+      title = "Drop Node Property Existence Constraint",
       text =
-        """The `DropNodePropertyExistenceConstraint` operator drops an existence constraint from a node property.""".stripMargin,
+        """The `DropNodePropertyExistenceConstraint` operator drops an existence constraint from a node property.
+          |This will only appear in Enterprise Edition.
+        """.stripMargin,
       queryText = """DROP CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropNodePropertyExistenceConstraint"))
     )
@@ -159,9 +163,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def createRelationshipPropertyExistenceConstraint() {
     profileQuery(
-      title = "Create Relationship Property Existence Constraint (Enterprise Edition only)",
+      title = "Create Relationship Property Existence Constraint",
       text =
-        """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint on a relationship property.""".stripMargin,
+        """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint on a relationship property.
+          |This will only appear in Enterprise Edition.
+        """.stripMargin,
       queryText = """CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateRelationshipPropertyExistenceConstraint"))
     )
@@ -173,9 +179,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Relationship Property Existence Constraint (Enterprise Edition only)",
+      title = "Drop Relationship Property Existence Constraint",
       text =
-        """The `DropRelationshipPropertyExistenceConstraint` operator drops an existence constraint from a relationship property.""".stripMargin,
+        """The `DropRelationshipPropertyExistenceConstraint` operator drops an existence constraint from a relationship property.
+          |This will only appear in Enterprise Edition.""".stripMargin,
       queryText = """DROP CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropRelationshipPropertyExistenceConstraint"))
     )
@@ -291,7 +298,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Merge Into",
       text =
         """When both the start and end node have already been found, the `Merge Into` operator is used to find all connecting relationships or creating a new relationship between the two nodes.
-          |This operator is only used for the <<cypher-query-options, rule planner>>.)
+          |This operator is only used for the <<cypher-query-options, rule planner>>.
         """.stripMargin,
       queryText = """CYPHER planner=rule MATCH (p:Person {name: 'me'}), (f:Person {name: 'Andres'}) MERGE (p)-[:FRIENDS_WITH]->(f)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Merge(Into)"))
@@ -336,7 +343,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Detach Delete",
       text =
-        """The `DetachDelete` operator is used in all queries containing `DETACH DELETE`, when deleting nodes and their relationships.""".stripMargin,
+        """The `DetachDelete` operator is used in all queries containing the <<query-delete, DETACH DELETE>> clause, when deleting nodes and their relationships.""".stripMargin,
       queryText =
         """MATCH (p:Person)
           |DETACH DELETE p""".stripMargin,
@@ -348,7 +355,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Merge Create Node",
       text =
-        """The `MergeCreateNode` operator is used when creating a node as a result of a `MERGE` failing to find the node.""".stripMargin,
+        """The `MergeCreateNode` operator is used when creating a node as a result of a <<query-merge, MERGE>> clause failing to find the node.""".stripMargin,
       queryText =
         """MERGE (:Person {name: 'Sally'})""".stripMargin,
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("MergeCreateNode"))
@@ -359,7 +366,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Merge Create Relationship",
       text =
-        """The `MergeCreateRelationship` operator is used when creating a relationship as a result of a `MERGE` failing to find the relationship.""".stripMargin,
+        """The `MergeCreateRelationship` operator is used when creating a relationship as a result of a <<query-merge, MERGE>> clause failing to find the relationship.""".stripMargin,
       queryText =
         """MATCH (s:Person {name: 'Sally'})
           |MERGE (s)-[:FRIENDS_WITH]->(s)""".stripMargin,
@@ -472,8 +479,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
   @Test def nodeByIndexSeek() {
     profileQuery(
       title = "Node Index Seek",
-      text = """The `NodeIndexSeek`operator finds nodes using an index seek. The node variable and the index used is shown in the arguments of the operator.
-                |If the index is a unique index, the operator is instead called `NodeUniqueIndexSeek`.""".stripMargin,
+      text =
+        """The `NodeIndexSeek` operator finds nodes using an index seek.
+          |The node variable and the index used is shown in the arguments of the operator.
+          |If the index is a unique index, the operator is instead called `NodeUniqueIndexSeek`.""".stripMargin,
       queryText = """MATCH (location:Location {name: 'Malmo'}) RETURN location""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeek"))
     )
