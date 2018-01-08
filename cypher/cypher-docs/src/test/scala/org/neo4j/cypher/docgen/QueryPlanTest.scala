@@ -1048,7 +1048,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Node Outer Hash Join",
       text =
-        """The `NodeOuterHashJoin` operator ....""".stripMargin,
+        """Using a hash table, the `NodeOuterHashJoin` operator joins the input coming from the left with the input coming from the right.
+          |If the input from the left does not have any matches coming from the right, a `null` is produced for the variable on the right.
+          |`NodeOuterHashJoin` only gets planned for larger cardinalities; for smaller cardinalities, `Expand` is used instead.""".stripMargin,
       queryText =
         """MATCH (p:Person {name:'me'})
           |OPTIONAL MATCH (p)--(q:Person {name: p.surname})
