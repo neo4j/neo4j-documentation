@@ -109,6 +109,10 @@ class ShortestPathPlanningTest extends DocumentingTest {
             |stream.
             |On top of this, the planner will issue an `AntiConditionalApply`, which will run the exhaustive search
             |if the path variable is pointing to `null` instead of a path.""")
+        p(
+          """An `ErrorPlan` operator will appear in the execution plan in cases where (i)
+            |`cypher.forbid_exhaustive_shortestpath` is set to `true`, and (ii) the fast algorithm is not able to fulfill the query.""".stripMargin
+        )
       }
       section("Prevent the exhaustive search from being used as a fallback") {
         query(
