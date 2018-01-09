@@ -50,6 +50,7 @@
     <module>doctools</module>
     <module>graphviz</module>
     <module>procedures</module>
+    <module>jmx</module>
   </modules>
 
   <scm>
