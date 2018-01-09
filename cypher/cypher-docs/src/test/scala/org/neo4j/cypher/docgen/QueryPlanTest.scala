@@ -101,7 +101,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "All Nodes Scan",
       text =
         """The `AllNodesScan` operator reads all nodes from the node store. The variable that will contain the nodes is seen in the arguments.
-          |If your query is using this operator, you are very likely to see performance problems on any non-trivial database.""".stripMargin,
+          |Any query using this operator is likely to encounter performance problems on a non-trivial database.""".stripMargin,
       queryText = """MATCH (n) RETURN n""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("AllNodesScan"))
     )
@@ -126,7 +126,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Drop Unique Constraint",
       text =
-        """The `DropUniqueConstraint` operator drops a unique constraint on a (label,property) pair.
+        """The `DropUniqueConstraint` operator removes a unique constraint from a (label,property) pair.
           |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """DROP CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropUniqueConstraint"))
@@ -153,7 +153,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Drop Node Property Existence Constraint",
       text =
-        """The `DropNodePropertyExistenceConstraint` operator drops an existence constraint from a node property.
+        """The `DropNodePropertyExistenceConstraint` operator removes an existence constraint from a node property.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """DROP CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
@@ -181,7 +181,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Drop Relationship Property Existence Constraint",
       text =
-        """The `DropRelationshipPropertyExistenceConstraint` operator drops an existence constraint from a relationship property.
+        """The `DropRelationshipPropertyExistenceConstraint` operator removes an existence constraint from a relationship property.
           |This will only appear in Enterprise Edition.""".stripMargin,
       queryText = """DROP CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropRelationshipPropertyExistenceConstraint"))
@@ -207,7 +207,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Drop Index",
       text =
-        """The `DropIndex` operator drops an index on a (label, property) pair.
+        """The `DropIndex` operator removes an index from a (label, property) pair.
           |The following query will drop an index on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """DROP INDEX ON :Country(name)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropIndex"))
@@ -219,7 +219,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Distinct",
       text =
         """The `Distinct` operator removes duplicate rows from the incoming stream of rows.
-          |To ensure only distinct elements are returned, `Distinct` needs to eagerly pull in all data from its source and build up state, which will lead to increased memory pressure in the system.""".stripMargin,
+          |To ensure only distinct elements are returned, `Distinct` needs to pull in all data eagerly from its source and build up state, which will lead to increased memory pressure in the system.""".stripMargin,
       queryText = """MATCH (l:Location)<-[:WORKS_IN]-(p:Person) RETURN DISTINCT l""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Distinct"))
     )
@@ -231,7 +231,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `EagerAggregation` operator evaluates a grouping expression and uses the result to group rows into different groupings.
           |For each of these groupings, `EagerAggregation` will then evaluate all aggregation functions and return the result.
-          |To do this, `EagerAggregation`, as the name implies, needs to eagerly pull in all data from its source and build up state, which leads to increased memory pressure in the system.""".stripMargin,
+          |To do this, `EagerAggregation`, as the name implies, needs to pull in all data eagerly from its source and build up state, which leads to increased memory pressure in the system.""".stripMargin,
       queryText = """MATCH (l:Location)<-[:WORKS_IN]-(p:Person) RETURN l.name AS location, collect(p.name) AS people""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("EagerAggregation"))
     )
@@ -268,7 +268,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Eager",
       text =
         """For isolation purposes, the `Eager` operator ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.
-           | Information from the stores is fetched in a lazy manner, i.e. the pattern matching might not be fully exhausted before updates are applied.
+           | Information from the stores is fetched in a lazy manner; i.e. the pattern matching might not be fully exhausted before updates are applied.
            | To guarantee reasonable semantics, the query planner will insert `Eager` operators into the query plan to prevent updates from influencing pattern matching;
            | this scenario is exemplified by the query below, where the `DELETE` clause influences the `MATCH` clause.
            | The `Eager` operator can cause high memory usage when importing data or migrating graph structures.
@@ -297,7 +297,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Merge Into",
       text =
-        """When both the start and end node have already been found, the `Merge Into` operator is used to find all connecting relationships or creating a new relationship between the two nodes.
+        """When both the start and end node have already been found, the `Merge(Into)` operator is used either to find all connecting relationships or to create a new relationship between the two nodes.
           |This operator is only used for the <<cypher-query-options, rule planner>>.
         """.stripMargin,
       queryText = """CYPHER planner=rule MATCH (p:Person {name: 'me'}), (f:Person {name: 'Andres'}) MERGE (p)-[:FRIENDS_WITH]->(f)""",
@@ -482,7 +482,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `NodeIndexSeek` operator finds nodes using an index seek.
           |The node variable and the index used is shown in the arguments of the operator.
-          |If the index is a unique index, the operator is instead called `NodeUniqueIndexSeek`.""".stripMargin,
+          |If the index is a unique index, the operator is instead called <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>.""".stripMargin,
       queryText = """MATCH (location:Location {name: 'Malmo'}) RETURN location""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeek"))
     )
@@ -492,7 +492,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Node Unique Index Seek",
       text = """The `NodeUniqueIndexSeek` operator finds nodes using an index seek within a unique index. The node variable and the index used is shown in the arguments of the operator.
-               |If the index is not unique, the operator is instead called `NodeIndexSeek`.""".stripMargin,
+               |If the index is not unique, the operator is instead called <<query-plan-node-index-seek, NodeIndexSeek>>.""".stripMargin,
       queryText = """MATCH (t:Team {name: 'Malmo'}) RETURN t""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeUniqueIndexSeek"))
     )
@@ -545,7 +545,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(title = "Node Unique Index Seek By Range",
       text =
         """The `NodeUniqueIndexSeekByRange` operator finds nodes using an index seek within a unique index, where the value of the property matches a given prefix string.
-          |`NodeUniqueIndexSeekByRange` can be used for `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`.
+          |`NodeUniqueIndexSeekByRange` is used by `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`.
           |If the index is not unique, the operator is instead called `NodeIndexSeekByRange`.""".stripMargin,
       queryText = "MATCH (t:Team) WHERE t.name STARTS WITH 'Ma' RETURN t",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeUniqueIndexSeekByRange"))
@@ -559,7 +559,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }.toList)
     profileQuery(title = "Node Index Scan",
                  text = """
-                          |The `NodeIndexScan` operator examines all values stored in an index, returning all nodes with a particular label having a specified property.""".stripMargin,
+                          |The `NodeIndexScan` operator examines all values stored in an index, and returns all nodes with a particular label having a specified property.""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE exists(l.name) RETURN l",
                  assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
     )
@@ -572,7 +572,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(title = "Node Index Contains Scan",
                  text = """
                           |The `NodeIndexContainsScan` operator examines all values stored in an index, and searches for entries
-                          | containing a specific string, such as when using `CONTAINS`.
+                          | containing a specific string; for example, in queries including `CONTAINS`.
                           | Although this is slower than an index seek (since all entries need to be
                           | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
                           | filter.""".stripMargin,
@@ -588,7 +588,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(title = "Node Index Ends With Scan",
       text = """
                |The `NodeIndexEndsWithScan` operator examines all values stored in an index, and searches for entries
-               | ending in a specific string, such as when using `ENDS WITH`.
+               | ending in a specific string; for example, in queries containing `ENDS WITH`.
                | Although this is slower than an index seek (since all entries need to be
                | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
                | filter.""".stripMargin,
@@ -631,7 +631,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Cartesian Product",
       text =
-        """The `CartesianProduct` operator produces a cartesian product of the two inputs -- each row coming from the left child will be combined with all the rows from the right child operator.
+        """The `CartesianProduct` operator produces a cartesian product of the two inputs -- each row coming from the left child operator will be combined with all the rows from the right child operator.
           |`CartesianProduct` generally exhibits bad performance and ought to be avoided if possible.
         """.stripMargin,
       queryText = """MATCH (p:Person), (t:Team) RETURN p, t""",
@@ -659,7 +659,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Sort",
       text =
         """The `Sort` operator sorts rows by a provided key.
-          |In order to sort the data, all data from the source operator needs to be eagerly pulled in and kept in the query state, which will lead to increased memory pressure in the system.""".stripMargin,
+          |In order to sort the data, all data from the source operator needs to be pulled in eagerly and kept in the query state, which will lead to increased memory pressure in the system.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN p ORDER BY p.name""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Sort"))
     )
@@ -719,7 +719,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Expand All",
       text =
-        """Given a start node, the `Expand(All)` operator will follow incoming or outgoing relationships, depending on the pattern relationship.""".stripMargin,
+        """Given a start node, and depending on the pattern relationship, the `Expand(All)` operator will traverse incoming or outgoing relationships.""".stripMargin,
       queryText = """MATCH (p:Person {name: 'me'})-[:FRIENDS_WITH]->(fof) RETURN fof""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Expand(All)"))
     )
@@ -742,8 +742,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Optional Expand Into",
       text =
-        """When both the start and end node have already been found, the `OptionalExpand(Into)` operator is used to find all relationships connecting the two nodes.
-          |If no matching relationships are found, `OptionalExpand(Into)` will return a single row with the relationship and end node set to `null`.
+        """The `OptionalExpand(Into)` operator is analogous to <<query-plan-expand-into, Expand(Into)>>, apart from when no matching relationships are found.
+          |In this situation, `OptionalExpand(Into)` will return a single row with the relationship and end node set to `null`.
           |As both the start and end node of the relationship are already in scope, the node with the smallest degree will be used.
           |This can make a noticeable difference when dense nodes appear as end points.""".stripMargin,
       queryText = """MATCH (p:Person)-[works_in:WORKS_IN]->(l) OPTIONAL MATCH (l)-->(p) RETURN p""",
@@ -755,7 +755,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "VarLength Expand All",
       text =
-        """Given a start node, the `VarLengthExpand(All)` operator will follow variable-length relationships.""".stripMargin,
+        """Given a start node, the `VarLengthExpand(All)` operator will traverse variable-length relationships.""".stripMargin,
       queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(q:Person) RETURN p, q""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(All)"))
     )
@@ -820,7 +820,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Union",
       text =
-        "The `Union` operator concatenates the results from the right plan with the results of the left plan.",
+        "The `Union` operator concatenates the results from the right child operator with the results from the left child operator.",
       queryText =
         """MATCH (p:Location)
            RETURN p.name
@@ -847,7 +847,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Apply",
       text =
         """`Apply` works by performing a nested loop.
-          |Every row being produced on the left-hand side of the `Apply` operator will be fed to the leaf
+          |Every row being produced by the left child operator of the `Apply` operator will be fed to the leaf
           |operator on the right-hand side, and then `Apply` will yield the combined results.
           |`Apply`, being a nested loop, can be seen as a warning that a better plan was not found.""".stripMargin,
       queryText =
@@ -864,8 +864,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `SemiApply` operator tests for the existence of a pattern predicate.
           |`SemiApply` takes a row from its child operator and feeds it to the leaf operator on the right-hand side.
-          |If the right-hand side operator tree yields at least one row, the row from the
-          |left-hand side is yielded by the `SemiApply` operator.
+          |If the right child operator yields at least one row, the row from the
+          |left child operator is yielded by the `SemiApply` operator.
           |This makes `SemiApply` a filtering operator, used mostly for pattern predicates in queries.""".stripMargin,
       queryText =
         """MATCH (p:Person)
@@ -881,8 +881,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `AntiSemiApply` operator tests for the absence of a pattern.
           |`AntiSemiApply` takes a row from its child operator and feeds it to the leaf operator on the right-hand side.
-          |If the right-hand side operator tree yields no rows, the row from the
-          |left-hand side is yielded by the `AntiSemiApply` operator.
+          |If the right child operator yields no rows, the row from the
+          |left child operator is yielded by the `AntiSemiApply` operator.
           |This makes `AntiSemiApply` a filtering operator, used for pattern predicates in queries.""".stripMargin,
       queryText =
         """MATCH (me:Person {name: "me"}), (other:Person)
@@ -897,7 +897,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Let Semi Apply",
       text =
         """The `LetSemiApply` operator tests for the existence of a pattern predicate.
-          |When a query contains multiple pattern predicates (when using `OR`), `LetSemiApply` will be used to evaluate the first of these.
+          |When a query contains multiple pattern predicates separated with `OR`, `LetSemiApply` will be used to evaluate the first of these.
           |It will record the result of evaluating the predicate but will leave any filtering to another operator.
           |In the example, `LetSemiApply` will be used to check for the existence of the `FRIENDS_WITH`
           |relationship from each person.""".stripMargin,
@@ -914,7 +914,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Let Anti Semi Apply",
       text =
         """The `LetAntiSemiApply` operator tests for the absence of a pattern.
-          |When a query contains multiple negated pattern predicates (when using `OR` and `NOT`), `LetAntiSemiApply` will be used to evaluate the first of these.
+          |When a query contains multiple negated pattern predicates -- i.e. predicates separated with `OR`, where at least one predicate contains `NOT` -- `LetAntiSemiApply` will be used to evaluate the first of these.
           |It will record the result of evaluating the predicate but will leave any filtering to another operator.
           |In the example, `LetAntiSemiApply` will be used to check for the absence of
           |the `FRIENDS_WITH` relationship from each person.""".stripMargin,
@@ -933,8 +933,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `SelectOrSemiApply` operator tests for the existence of a pattern predicate and evaluates a predicate.
           |This operator allows for the mixing of normal predicates and pattern predicates
           |that check for the existence of a pattern.
-          |First the normal expression predicate is evaluated, and only if it returns `false`
-          |is the costly pattern predicate evaluation is performed.""".stripMargin,
+          |First, the normal expression predicate is evaluated, and, only if it returns `false`, is the costly pattern predicate evaluated.""".stripMargin,
       queryText =
         """MATCH (other:Person)
           |WHERE other.age > 25 OR (other)-[:FRIENDS_WITH]->(:Person)
@@ -960,7 +959,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Conditional Apply",
       text =
-        """The `ConditionalApply` operator checks whether a variable is not `null`, and if so the right-hand side will be executed.""".stripMargin,
+        """The `ConditionalApply` operator checks whether a variable is not `null`, and if so, the right child operator will be executed.""".stripMargin,
       queryText =
         """MERGE (p:Person {name: 'Andres'})
           |ON MATCH SET p.exists = true""".stripMargin,
@@ -972,7 +971,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Anti Conditional Apply",
       text =
-        """The `AntiConditionalApply` operator checks whether a variable is `null`, and if so the right-hand side will be executed.""".stripMargin,
+        """The `AntiConditionalApply` operator checks whether a variable is `null`, and if so, the right child operator will be executed.""".stripMargin,
       queryText =
         """MERGE (p:Person {name: 'Andres'})
           |ON CREATE SET p.exists = true""".stripMargin,
@@ -1008,7 +1007,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Node Hash Join",
       text =
-        """Using a hash table, the `NodeHashJoin` operator joins the input coming from the left with the input coming from the right.
+        """Using a hash table, the `NodeHashJoin` operator joins the input coming from the left child operator with the input coming from the right child operator.
           |`NodeHashJoin` only gets planned for larger cardinalities; for smaller cardinalities, `Expand` is used instead.""".stripMargin,
       queryText =
         """MATCH (andy:Person {name:'Andreas'})-[:WORKS_IN]->(loc)<-[:WORKS_IN]-(matt:Person {name:'Mattis'})
@@ -1023,7 +1022,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `Triadic` operator is used to solve triangular queries, such as the very
           |common 'find my friend-of-friends that are not already my friend'.
-          |It does so by putting all the friends in a set, and use that set to check if the
+          |It does so by putting all the friends into a set, and uses the set to check if the
           |friend-of-friends are already connected to me.
           |The example finds the names of all friends of my friends that are not already my friends.""".stripMargin,
       queryText =
@@ -1051,7 +1050,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Let Select Or Semi Apply",
       text =
-        """The `LetSelectOrSemiApply` operator is planned for PatternPredicates mixed with other predicates connected with OR.""".stripMargin,
+        """The `LetSelectOrSemiApply` operator is planned for pattern predicates that are combined with other predicates using `OR`.""".stripMargin,
       queryText =
         """MATCH (other:Person)
           |WHERE (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location) OR other.age = 5
@@ -1064,7 +1063,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Let Select Or Anti Semi Apply",
       text =
-        """The `LetSelectOrAntiSemiApply` operator is planned for negated PatternPredicates mixed with other predicates connected with OR.""".stripMargin,
+        """The `LetSelectOrAntiSemiApply` operator is planned for negated pattern predicates -- i.e. pattern predicates preceded with `NOT` -- that are combined with other predicates using `OR`.""".stripMargin,
       queryText =
         """MATCH (other:Person)
           |WHERE NOT (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location) OR other.age = 5
@@ -1078,8 +1077,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Node Outer Hash Join",
       text =
-        """Using a hash table, the `NodeOuterHashJoin` operator joins the input coming from the left with the input coming from the right.
-          |If the input from the left does not have any matches coming from the right, a `null` is produced for the variable on the right.""".stripMargin,
+        """Using a hash table, the `NodeOuterHashJoin` operator joins the input coming from the left child operator with the input coming from the right child operator.
+          |If the input from the left child operator does not have any matches coming from the right child operator, a `null` is produced for the variable on the right.""".stripMargin,
       queryText =
         """MATCH (p:Person {name:'me'})
           |OPTIONAL MATCH (p)--(q:Person {name: p.surname})

@@ -98,7 +98,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-node-index-ends-with-scan, NodeIndexEndsWithScan>>        | Starting point | Goes through all values stored in an index, and searches for entries ending in a specific string.
 | <<query-plan-node-index-scan, NodeIndexScan>>                              | Starting point | An index scan goes through all values stored in an index, and can be used to find all nodes with a particular label having a specified property.
 | <<query-plan-node-index-seek, NodeIndexSeek>>                              | Starting point | Finds nodes using an index seek.
-| <<query-plan-node-index-range-seek, NodeIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek where the value of the property matches the given prefix string.
+| <<query-plan-node-index-seek-by-range, NodeIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek where the value of the property matches the given prefix string.
 | <<query-plan-node-outer-hash-join, NodeOuterHashJoin>>      | Combining | xxx.
 | <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>                        | Starting point | Finds nodes using an index seek within a unique index.
 | <<query-plan-node-unique-index-seek-by-range, NodeUniqueIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek within a unique index where the value of the property matches the given prefix string.

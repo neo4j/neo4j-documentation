@@ -56,4 +56,4 @@ include::../ql/query-plan/union.asciidoc[]
 
 include::../ql/query-plan/unwind.asciidoc[]
 
-include::../ql/query-plan/call-procedure.asciidoc[]
+include::../ql/query-plan/procedure-call.asciidoc[]
