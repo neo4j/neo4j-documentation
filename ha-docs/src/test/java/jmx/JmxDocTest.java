@@ -70,7 +70,7 @@ public class JmxDocTest
     private static final String BEAN_NAME = "name";
     private static final List<String> QUERIES = Collections.singletonList( "org.neo4j:*" );
     private static final String JAVADOC_URL = "link:javadocs/";
-    private static final int EXPECTED_NUMBER_OF_BEANS = 13;
+    private static final int EXPECTED_NUMBER_OF_BEANS = 14;
     private static final Set<String> EXCLUDES = Iterators.set( "JMX Server" );
     private static final Map<String, String> TYPES = new HashMap<String, String>()
     {
