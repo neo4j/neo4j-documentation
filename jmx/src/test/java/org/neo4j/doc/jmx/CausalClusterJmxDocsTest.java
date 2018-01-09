@@ -48,7 +48,7 @@ public class CausalClusterJmxDocsTest {
     private final Path outPath = Paths.get("target", "docs", "ops");
 
     @Rule
-    public final ClusterRule clusterRule = new ClusterRule( getClass() );
+    public final ClusterRule clusterRule = new ClusterRule();
 
     private JmxBeanDocumenter jmxBeanDocumenter;
     private FileUtil fileUtil;
