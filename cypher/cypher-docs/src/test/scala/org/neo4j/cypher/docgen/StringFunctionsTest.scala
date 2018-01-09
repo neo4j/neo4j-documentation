@@ -30,6 +30,7 @@ class StringFunctionsTest extends DocumentingTest {
     synopsis(
       """These functions all operate on string expressions only, and will return an error if used on any other values.
         |The exception to this rule is `toString()`, which also accepts numbers and booleans.""".stripMargin)
+    p("Functions taking a string as input all operate on _Unicode characters_ rather than on a standard `char[]`. For example, `size(s)`, where `s` is a character in the Chinese alphabet, will return *1*.")
     note {
       p("""The functions `lower()` and `upper()` have been superseded by `toLower()` and `toUpper()`, respectively, and will be removed in a future release.""")
     }

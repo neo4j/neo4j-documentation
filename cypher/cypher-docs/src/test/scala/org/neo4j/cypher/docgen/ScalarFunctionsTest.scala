@@ -202,7 +202,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     }
     section("size() applied to string", "functions-size-of-string") {
       p(
-        """`size()` returns the size of a string value.""".stripMargin)
+        """`size()` returns the number of Unicode characters in a string.""".stripMargin)
       function("size(string)", "An Integer.", ("string", "An expression that returns a string value."))
       considerations("`size(null)` returns `null`.")
       query(
@@ -212,7 +212,7 @@ class ScalarFunctionsTest extends DocumentingTest {
           r.toList should equal(List(Map("size(a.name)" -> 7)))
         })) {
         resultTable()
-        p("The size of the string *'Charlie'* is returned.")
+        p("The number of characters in the string *'Charlie'* is returned.")
       }
     }
     section("startNode()", "functions-startnode") {
