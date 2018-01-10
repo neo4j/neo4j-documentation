@@ -24,17 +24,10 @@ A _database hit_ is an abstract unit of this storage engine work.
 See <<how-do-i-profile-a-query>> for how to view the execution plan for your query.
 
 For a deeper understanding of how each operator works, see the relevant section.
-Operators are grouped into high-level categories.
 Please remember that the statistics of the actual database where the queries run on will decide the plan used.
 There is no guarantee that a specific query will always be solved with the same plan.
 
-* <<execution-plan-operators-summary, Execution plan operators at a glance>>
-* <<execution-plans-leaf-operators, Leaf operators>>
-* <<execution-plans-expand-operators, Expand operators>>
-* <<execution-plans-result-building-operators, Result-building operators>>
-* <<execution-plans-combining-operators, Combining operators>>
-* <<execution-plans-row-operators, Row operators>>
-* <<execution-plans-update-operators, Update operators>>
+* <<execution-plan-operators-summary, Execution plan operators>>
 * <<query-shortestpath-planning, Shortest path planning>>
 
 // The conditional leveloffsets below are "wrong" for the neo4j/neo4j
@@ -138,17 +131,7 @@ Leaf operators, in general, locate the starting nodes and relationships required
 
 Update operators are used in queries that update the graph.
 
-include::execution-plan-groups/leaf-operators.asciidoc[leveloffset=+1]
-
-include::execution-plan-groups/expand.asciidoc[leveloffset=+1]
-
-include::execution-plan-groups/result-building.asciidoc[leveloffset=+1]
-
-include::execution-plan-groups/combining.asciidoc[leveloffset=+1]
-
-include::execution-plan-groups/row.asciidoc[leveloffset=+1]
-
-include::execution-plan-groups/update.asciidoc[leveloffset=+1]
+include::execution-plan-groups/operators.asciidoc[leveloffset=+1]
 
 include::execution-plan-groups/query-shortestpath-planning.adoc[leveloffset=+1]
 
