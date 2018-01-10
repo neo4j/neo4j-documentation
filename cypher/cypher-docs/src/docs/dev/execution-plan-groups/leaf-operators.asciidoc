@@ -1,5 +1,5 @@
-[[execution-plans-starting-operators]]
-= Starting point operators
+[[execution-plans-leaf-operators]]
+= Leaf operators
 
 [abstract]
 These operators locate the starting nodes and relationships required in order to execute the query.
