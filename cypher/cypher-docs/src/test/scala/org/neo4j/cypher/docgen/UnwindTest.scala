@@ -77,7 +77,8 @@ class UnwindTest extends DocumentingTestBase {
     testQuery(
       title = "Using `UNWIND` with an empty list",
       text = "Using an empty list with `UNWIND` will produce no rows, irrespective of whether or not any rows existed beforehand, or whether or not other values are being projected. " +
-        "Essentially, `UNWIND []` reduces the number of rows to zero, and thus causes the query to cease its execution, returning no results.",
+        "Essentially, `UNWIND []` reduces the number of rows to zero, and thus causes the query to cease its execution, returning no results. " +
+        "This has value in cases such as `UNWIND v`, where `v` is a variable from an earlier clause that may or may not be an empty list -- when it is an empty list, this will behave just as a `MATCH` that has no results.",
       queryText =
         """UNWIND [] AS empty
            RETURN empty, 'literal_that_is_not_returned'""".stripMargin,
@@ -88,7 +89,7 @@ class UnwindTest extends DocumentingTestBase {
   @Test def using_non_lists() {
     testQuery(
       title = "Using `UNWIND` with an expression that is not a list",
-      text = "Attempting to use `UNWIND` on an expression that does not return a list will cause an error. " +
+      text = "Attempting to use `UNWIND` on an expression that does not return a list -- such as `UNWIND 5` -- will cause an error. " +
         "The exception to this is when the expression returns `null` -- this will reduce the number of rows to zero, causing it to cease its execution and return no results.",
       queryText = """UNWIND null AS x RETURN x, 'some_literal'""",
       assertions = (p) => assertEquals(List(), p.toList)
