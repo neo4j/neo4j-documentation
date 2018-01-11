@@ -69,6 +69,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-eager, Eager>>                                                | For isolation purposes, `Eager` ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.  | |
 | <<query-plan-eager-aggregation, EagerAggregation>>                         | Eagerly loads underlying results and stores it in a hash map, using the grouping keys as the keys for the map. | |
 | <<query-plan-empty-result, EmptyResult>>                                   | Eagerly loads everything coming in to the EmptyResult operator and discards it. | |
+| <<query-plan-empty-row, EmptyRow>>                                   | xxt. | Y |
 | <<query-plan-expand-all, Expand(All) >>                                    | Given a start node, `Expand(All)` will follow incoming or outgoing relationships, depending on the pattern relationship. | |
 | <<query-plan-expand-into, Expand(Into)>>                                   | When both the start and end node have already been found, `Expand(Into)` is used to find all connecting relationships between the two nodes. | |
 | <<query-plan-filter, Filter>>                                              | Filters each row coming from the child operator, only passing through rows that evaluate the predicates to `true`. | |

@@ -66,13 +66,41 @@ include::../ql/query-plan/select-or-semi-apply.asciidoc[]
 
 include::../ql/query-plan/select-or-anti-semi-apply.asciidoc[]
 
+include::../ql/query-plan/let-select-or-semi-apply.asciidoc[]
+
+include::../ql/query-plan/let-select-or-anti-semi-apply.asciidoc[]
+
 include::../ql/query-plan/conditional-apply.asciidoc[]
 
 include::../ql/query-plan/anti-conditional-apply.asciidoc[]
 
+include::../ql/query-plan/roll-up-apply.asciidoc[]
+
 include::../ql/query-plan/assert-same-node.asciidoc[]
 
+
+[[execution-plans-operators-hash-join-general]]
+== Hash joins in general
+
+Hash joins have two inputs: the build input and probe input.
+The query planner assigns these roles so that the smaller of the two inputs is the build input.
+The build input is pulled in eagerly, and is used to build a probe table.
+Once this is complete, the probe table is checked for each row coming from the probe input side.
+
+
+In query plans, the build input is always the left operator, and the probe input the right operator.
+
+There are three hash join operators:
+
+* <<query-plan-node-hash-join, NodeHashJoin>>
+* <<query-plan-node-outer-hash-join, NodeOuterHashJoin>>
+* <<query-plan-value-hash-join, ValueHashJoin>>
+
 include::../ql/query-plan/node-hash-join.asciidoc[]
+
+include::../ql/query-plan/node-outer-hash-join.asciidoc[]
+
+include::../ql/query-plan/value-hash-join.asciidoc[]
 
 include::../ql/query-plan/triadic.asciidoc[]
 
@@ -80,15 +108,6 @@ include::../ql/query-plan/cartesian-product.asciidoc[]
 
 include::../ql/query-plan/foreach.asciidoc[]
 
-include::../ql/query-plan/let-select-or-semi-apply.asciidoc[]
-
-include::../ql/query-plan/let-select-or-anti-semi-apply.asciidoc[]
-
-include::../ql/query-plan/node-outer-hash-join.asciidoc[]
-
-include::../ql/query-plan/value-hash-join.asciidoc[]
-
-include::../ql/query-plan/roll-up-apply.asciidoc[]
 
 
 include::../ql/query-plan/eager.asciidoc[]

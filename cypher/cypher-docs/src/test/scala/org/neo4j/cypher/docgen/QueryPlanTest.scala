@@ -219,7 +219,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Distinct",
       text =
         """The `Distinct` operator removes duplicate rows from the incoming stream of rows.
-          |To ensure only distinct elements are returned, `Distinct` needs to pull in all data eagerly from its source and build up state, which will lead to increased memory pressure in the system.""".stripMargin,
+          |To ensure only distinct elements are returned, `Distinct` will pull in data lazily from its source and build up state.
+          |This may lead to increased memory pressure in the system.""".stripMargin,
       queryText = """MATCH (l:Location)<-[:WORKS_IN]-(p:Person) RETURN DISTINCT l""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Distinct"))
     )
@@ -450,7 +451,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Empty Result",
       text =
-        """The `EmptyResult` operator eagerly loads all data coming into the `EmptyResult` operator and discards it xxx.""".stripMargin,
+        """The `EmptyResult` operator eagerly loads all data coming into the `EmptyResult` operator and discards it.""".stripMargin,
       queryText = """CREATE (:Person)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("EmptyResult"))
     )
@@ -492,7 +493,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Node Unique Index Seek",
       text = """The `NodeUniqueIndexSeek` operator finds nodes using an index seek within a unique index. The node variable and the index used is shown in the arguments of the operator.
-               |If the index is not unique, the operator is instead called <<query-plan-node-index-seek, NodeIndexSeek>>.""".stripMargin,
+               |If the index is not unique, the operator is instead called <<query-plan-node-index-seek, NodeIndexSeek>>.
+               |If the index seek is used to solve a <<query-merge, MERGE>> clause, it will also be marked with `(Locking)`.
+               |This makes it clear that any nodes returned from the index will be locked in order to prevent concurrent conflicting updates.""".stripMargin,
       queryText = """MATCH (t:Team {name: 'Malmo'}) RETURN t""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeUniqueIndexSeek"))
     )
@@ -699,7 +702,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Optional",
       text =
-        """xxx For use in optional match.""".stripMargin,
+        """The `Optional` operator is used to solve some <<query-optional-match, OPTIONAL MATCH>> queries.
+          |It will pull data from its source, simply passing it through if any data exists.
+          |However, if no data is returned by its source, `Optional` will yield a single row with all columns set to `null`.""".stripMargin,
       queryText = """MATCH (p:Person {name:'me'}) OPTIONAL MATCH (q:Person {name: 'Lulu'}) RETURN p, q""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Optional"))
     )
@@ -846,10 +851,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Apply",
       text =
-        """`Apply` works by performing a nested loop.
-          |Every row being produced by the left child operator of the `Apply` operator will be fed to the leaf
-          |operator on the right-hand side, and then `Apply` will yield the combined results.
-          |`Apply`, being a nested loop, can be seen as a warning that a better plan was not found.""".stripMargin,
+        """
+          |All the different `Apply` operators (listed below) share the same basic functionality: they perform a nested loop by taking a single row from the left-hand side, and using the <<query-plan-argument, Argument>> operator on the right-hand side, execute the operator tree on the right-hand side.
+          |The versions of the `Apply` operators differ in how the results are managed.
+          |The `Apply` operator (i.e. the standard version) takes the row produced by the right-hand side -- which at this point contains data from both the left-hand and right-hand sides -- and yields it..""".stripMargin,
       queryText =
         """MATCH (p:Person {name:'me'})
           |MATCH (q:Person {name: p.secondName})
@@ -862,10 +867,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Semi Apply",
       text =
-        """The `SemiApply` operator tests for the existence of a pattern predicate.
-          |`SemiApply` takes a row from its child operator and feeds it to the leaf operator on the right-hand side.
-          |If the right child operator yields at least one row, the row from the
-          |left child operator is yielded by the `SemiApply` operator.
+        """The `SemiApply` operator tests for the existence of a pattern predicate, and is a variation of the <<query-plan-apply, Apply>> operator.
+          |If the right-hand side operator yields at least one row, the row from the left-hand side operator is yielded by the `SemiApply` operator.
           |This makes `SemiApply` a filtering operator, used mostly for pattern predicates in queries.""".stripMargin,
       queryText =
         """MATCH (p:Person)
@@ -879,10 +882,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Anti Semi Apply",
       text =
-        """The `AntiSemiApply` operator tests for the absence of a pattern.
-          |`AntiSemiApply` takes a row from its child operator and feeds it to the leaf operator on the right-hand side.
-          |If the right child operator yields no rows, the row from the
-          |left child operator is yielded by the `AntiSemiApply` operator.
+        """The `AntiSemiApply` operator tests for the absence of a pattern, and is a variation of the <<query-plan-apply, Apply>> operator.
+          |If the right-hand side operator yields no rows, the row from the left-hand side operator is yielded by the `AntiSemiApply` operator.
           |This makes `AntiSemiApply` a filtering operator, used for pattern predicates in queries.""".stripMargin,
       queryText =
         """MATCH (me:Person {name: "me"}), (other:Person)
@@ -896,7 +897,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Let Semi Apply",
       text =
-        """The `LetSemiApply` operator tests for the existence of a pattern predicate.
+        """The `LetSemiApply` operator tests for the existence of a pattern predicate, and is a variation of the <<query-plan-apply, Apply>> operator.
           |When a query contains multiple pattern predicates separated with `OR`, `LetSemiApply` will be used to evaluate the first of these.
           |It will record the result of evaluating the predicate but will leave any filtering to another operator.
           |In the example, `LetSemiApply` will be used to check for the existence of the `FRIENDS_WITH`
@@ -913,8 +914,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Let Anti Semi Apply",
       text =
-        """The `LetAntiSemiApply` operator tests for the absence of a pattern.
-          |When a query contains multiple negated pattern predicates -- i.e. predicates separated with `OR`, where at least one predicate contains `NOT` -- `LetAntiSemiApply` will be used to evaluate the first of these.
+        """The `LetAntiSemiApply` operator tests for the absence of a pattern, and is a variation of the <<query-plan-apply, Apply>> operator.
+          |When a query contains multiple negated pattern predicates -- i.e. predicates separated with `OR`, where at
+          |least one predicate contains `NOT` -- `LetAntiSemiApply` will be used to evaluate the first of these.
           |It will record the result of evaluating the predicate but will leave any filtering to another operator.
           |In the example, `LetAntiSemiApply` will be used to check for the absence of
           |the `FRIENDS_WITH` relationship from each person.""".stripMargin,
@@ -930,7 +932,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Select Or Semi Apply",
       text =
-        """The `SelectOrSemiApply` operator tests for the existence of a pattern predicate and evaluates a predicate.
+        """The `SelectOrSemiApply` operator tests for the existence of a pattern predicate and evaluates a predicate,
+          |and is a variation of the <<query-plan-apply, Apply>> operator.
           |This operator allows for the mixing of normal predicates and pattern predicates
           |that check for the existence of a pattern.
           |First, the normal expression predicate is evaluated, and, only if it returns `false`, is the costly pattern predicate evaluated.""".stripMargin,
@@ -946,7 +949,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Select Or Anti Semi Apply",
       text =
-        """The `SelectOrAntiSemiApply` operator tests for the absence of a pattern predicate and evaluates a predicate.""".stripMargin,
+        """The `SelectOrAntiSemiApply` operator is used to evaluate `OR` between a predicate and a negative pattern predicate
+          |(i.e. a pattern predicate preceded with `NOT`), and is a variation of the <<query-plan-apply, Apply>> operator.
+          |If the predicate returns `true`, the pattern predicate is not tested.
+          |If the predicate returns `false` or `null`, `SelectOrAntiSemiApply` will instead test the pattern predicate.""".stripMargin,
       queryText =
         """MATCH (other:Person)
           |WHERE other.age > 25 OR NOT (other)-[:FRIENDS_WITH]->(:Person)
@@ -959,7 +965,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Conditional Apply",
       text =
-        """The `ConditionalApply` operator checks whether a variable is not `null`, and if so, the right child operator will be executed.""".stripMargin,
+        """The `ConditionalApply` operator checks whether a variable is not `null`, and if so, the right child operator will be executed.
+          |This operator is a variation of the <<query-plan-apply, Apply>> operator.
+        """.stripMargin,
       queryText =
         """MERGE (p:Person {name: 'Andres'})
           |ON MATCH SET p.exists = true""".stripMargin,
@@ -971,7 +979,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Anti Conditional Apply",
       text =
-        """The `AntiConditionalApply` operator checks whether a variable is `null`, and if so, the right child operator will be executed.""".stripMargin,
+        """The `AntiConditionalApply` operator checks whether a variable is `null`, and if so, the right child operator will be executed.
+          |This operator is a variation of the <<query-plan-apply, Apply>> operator.
+        """.stripMargin,
       queryText =
         """MERGE (p:Person {name: 'Andres'})
           |ON CREATE SET p.exists = true""".stripMargin,
@@ -1007,8 +1017,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Node Hash Join",
       text =
-        """Using a hash table, the `NodeHashJoin` operator joins the input coming from the left child operator with the input coming from the right child operator.
-          |`NodeHashJoin` only gets planned for larger cardinalities; for smaller cardinalities, `Expand` is used instead.""".stripMargin,
+        """
+          |The `NodeHashJoin` operator is a variation of the <<execution-plans-operators-hash-join-general, hash join>>.
+          |`NodeHashJoin` executes the hash join on node ids.
+          |As primitive types and arrays can be used, it can be done very efficiently.""".stripMargin,
       queryText =
         """MATCH (andy:Person {name:'Andreas'})-[:WORKS_IN]->(loc)<-[:WORKS_IN]-(matt:Person {name:'Mattis'})
           |RETURN loc.name""".stripMargin,
@@ -1037,7 +1049,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Foreach",
       text =
-        """The `Foreach` operator xxxx.""".stripMargin,
+        """The `Foreach` operator executes a nested loop between the left child operator and the right child operator.
+          | In an analogous manner to the <<query-plan-apply, Apply>> operator, it takes a row from the left-hand side and, using the <<query-plan-argument, Argument>> operator, provides it to the operator tree on the right-hand side.
+          | `Foreach` will yield all the rows coming in from the left-hand side; all results from the right-hand side are pulled in and discarded.""".stripMargin,
       queryText =
         """FOREACH (value IN [1,2,3] |
           |CREATE (:Person {age: value})
@@ -1046,11 +1060,26 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def emptyRow() {
+    profileQuery(
+      title = "Empty Row",
+      text =
+        """The `EmptyRow` operator returns a single row with no columns in it.""".stripMargin,
+      queryText =
+        """FOREACH (value IN [1,2,3] |
+          |CREATE (:Person {age: value})
+          |)""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("EmptyRow"))
+    )
+  }
+
   @Test def letSelectOrSemiApply() {
     profileQuery(
       title = "Let Select Or Semi Apply",
       text =
-        """The `LetSelectOrSemiApply` operator is planned for pattern predicates that are combined with other predicates using `OR`.""".stripMargin,
+        """The `LetSelectOrSemiApply` operator is planned for pattern predicates that are combined with other predicates using `OR`.
+          |This is a variation of the <<query-plan-apply, Apply>> operator.
+        """.stripMargin,
       queryText =
         """MATCH (other:Person)
           |WHERE (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location) OR other.age = 5
@@ -1063,7 +1092,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Let Select Or Anti Semi Apply",
       text =
-        """The `LetSelectOrAntiSemiApply` operator is planned for negated pattern predicates -- i.e. pattern predicates preceded with `NOT` -- that are combined with other predicates using `OR`.""".stripMargin,
+        """The `LetSelectOrAntiSemiApply` operator is planned for negated pattern predicates -- i.e. pattern predicates
+          |preceded with `NOT` -- that are combined with other predicates using `OR`.
+          |This operator is a variation of the <<query-plan-apply, Apply>> operator.
+        """.stripMargin,
       queryText =
         """MATCH (other:Person)
           |WHERE NOT (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location) OR other.age = 5
@@ -1077,8 +1109,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Node Outer Hash Join",
       text =
-        """Using a hash table, the `NodeOuterHashJoin` operator joins the input coming from the left child operator with the input coming from the right child operator.
-          |If the input from the left child operator does not have any matches coming from the right child operator, a `null` is produced for the variable on the right.""".stripMargin,
+        """The `NodeOuterHashJoin` operator is a variation of the <<execution-plans-operators-hash-join-general, hash join>>.
+          |Instead of discarding rows that are not found in the probe table, `NodeOuterHashJoin` will instead yield a single row with `null`.""".stripMargin,
       queryText =
         """MATCH (p:Person {name:'me'})
           |OPTIONAL MATCH (p)--(q:Person {name: p.surname})
@@ -1092,10 +1124,12 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Roll Up Apply",
       text =
-        """The `RollUpApply` operator xxx.""".stripMargin,
+        """The `RollUpApply` operator is used to execute an expression which takes as input a pattern, and returns a list with content from the matched pattern;
+          |for example, when using a pattern expression or pattern comprehension in a query.
+          |This operator is a variation of the <<query-plan-apply, Apply>> operator.""".stripMargin,
       queryText =
-        """MATCH (n)
-          |RETURN (n)-->()""".stripMargin,
+        """MATCH (p:Person)
+          |RETURN p.name, [ (p)-[:WORKS_IN]->(location) | location.name ] AS cities""".stripMargin,
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("RollUpApply"))
     )
   }
@@ -1104,7 +1138,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Value Hash Join",
       text =
-        """The `ValueHashJoin` operator xxx.""".stripMargin,
+        """The `ValueHashJoin` operator is a variation of the <<execution-plans-operators-hash-join-general, hash join>>.
+           This operator allows for arbitrary values to be used as the join key.
+           It is most frequently used to solve predicates of the form: `n.prop1 = m.prop2` (i.e. equality predicates between two property columns).
+        """.stripMargin,
       queryText =
         """MATCH (p:Person),(q:Person)
           |WHERE p.age = q.age
