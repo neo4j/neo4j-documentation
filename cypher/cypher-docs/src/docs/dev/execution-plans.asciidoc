@@ -3,12 +3,11 @@
 
 [abstract]
 --
-This section describes operators used as part of an execution plan to execute a query in the Cypher query language.
+This section describes the operators used as part of a Cypher query's execution plan.
 --
 
-Neo4j breaks down the work of executing a query into small pieces called operators.
-Each operator is responsible for a small part of the overall query.
-The operators are connected together in a pattern called a execution plan.
+The task of executing a query is decomposed into _operators_, each of which implements a single unit of work.
+The operators are combined into a structure called an _execution plan_.
 
 Each operator is annotated with statistics.
 
@@ -21,9 +20,9 @@ The compiler uses this estimate to choose a suitable execution plan.
 Each operator will ask the Neo4j storage engine to do work such as retrieving or updating data.
 A _database hit_ is an abstract unit of this storage engine work.
 
-See <<how-do-i-profile-a-query>> for how to view the execution plan for your query.
+See <<how-do-i-profile-a-query>> for how to view the execution plan for a query.
 
-For a deeper understanding of how each operator works, see the relevant section.
+For a deeper understanding of how each operator works, refer the relevant section.
 Please remember that the statistics of the actual database where the queries run on will decide the plan used.
 There is no guarantee that a specific query will always be solved with the same plan.
 
