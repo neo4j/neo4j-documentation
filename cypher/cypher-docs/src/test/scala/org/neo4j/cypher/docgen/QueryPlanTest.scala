@@ -451,7 +451,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Empty Result",
       text =
-        """The `EmptyResult` operator eagerly loads all data coming into the `EmptyResult` operator and discards it.""".stripMargin,
+        """The `EmptyResult` operator eagerly loads all incoming data and discards it.""".stripMargin,
       queryText = """CREATE (:Person)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("EmptyResult"))
     )
@@ -562,7 +562,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }.toList)
     profileQuery(title = "Node Index Scan",
                  text = """
-                          |The `NodeIndexScan` operator examines all values stored in an index, and returns all nodes with a particular label having a specified property.""".stripMargin,
+                          |The `NodeIndexScan` operator examines all values stored in an index, returning all nodes with a particular label having a specified property.""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE exists(l.name) RETURN l",
                  assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
     )
@@ -574,7 +574,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }.toList)
     profileQuery(title = "Node Index Contains Scan",
                  text = """
-                          |The `NodeIndexContainsScan` operator examines all values stored in an index, and searches for entries
+                          |The `NodeIndexContainsScan` operator examines all values stored in an index, searching for entries
                           | containing a specific string; for example, in queries including `CONTAINS`.
                           | Although this is slower than an index seek (since all entries need to be
                           | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
@@ -590,7 +590,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }.toList)
     profileQuery(title = "Node Index Ends With Scan",
       text = """
-               |The `NodeIndexEndsWithScan` operator examines all values stored in an index, and searches for entries
+               |The `NodeIndexEndsWithScan` operator examines all values stored in an index, searching for entries
                | ending in a specific string; for example, in queries containing `ENDS WITH`.
                | Although this is slower than an index seek (since all entries need to be
                | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
@@ -1064,7 +1064,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Empty Row",
       text =
-        """The `EmptyRow` operator returns a single row with no columns in it.""".stripMargin,
+        """The `EmptyRow` operator returns a single row with no columns.""".stripMargin,
       queryText =
         """FOREACH (value IN [1,2,3] |
           |CREATE (:Person {age: value})
