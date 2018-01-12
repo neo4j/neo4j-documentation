@@ -16,7 +16,7 @@ With this information, Neo4j can decide which access pattern leads to the best p
 
 The statistical information that Neo4j keeps is:
 
-. The number of nodes with a certain label.
+. The number of nodes having a certain label.
 . Selectivity per index.
 . The number of relationships by type.
 . The number of relationships by type, ending or starting from a node with a specific label.

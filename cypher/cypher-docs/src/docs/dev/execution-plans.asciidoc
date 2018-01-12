@@ -56,20 +56,20 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-assert-same-node, AssertSameNode>>                            | Used to ensure that no unique constraints are violated.  | |
 | <<query-plan-cartesian-product, CartesianProduct>>                 | Produces a cartesian product of the inputs from the left-hand and right-hand operators.  | |
 | <<query-plan-conditional-apply, ConditionalApply>>                         | Performs a nested loop. If a variable is not `null`, the right-hand side will be executed.  | |
-| <<query-plan-create-index, CreateIndex>>              | Creates an index on a property for all nodes that have a certain label.  | Y | Y
+| <<query-plan-create-index, CreateIndex>>              | Creates an index on a property for all nodes having a certain label.  | Y | Y
 | <<query-plan-create-node, CreateNode>>              | Creates a node.  | Y | Y
-| <<query-plan-create-node-property-existence-constraint, CreateNodePropertyExistenceConstraint>>     |  Creates an existence constraint on a property for all nodes that have a certain label.  | Y | Y
+| <<query-plan-create-node-property-existence-constraint, CreateNodePropertyExistenceConstraint>>     |  Creates an existence constraint on a property for all nodes having a certain label.  | Y | Y
 | <<query-plan-create-relationship, CreateRelationship>>              | Creates a relationship.  | | Y
 | <<query-plan-create-relationship-property-existence-constraint, CreateRelationshipPropertyExistenceConstraint>>     | Creates an existence constraint on a property for all relationships of a certain type.  | Y | Y
-| <<query-plan-create-unique-constraint, CreateUniqueConstraint>>                  | Creates a unique constraint on a property for all nodes that have a certain label.  | Y | Y
+| <<query-plan-create-unique-constraint, CreateUniqueConstraint>>                  | Creates a unique constraint on a property for all nodes having a certain label.  | Y | Y
 | <<query-plan-delete, Delete>>                                          | Deletes a node or relationship.  | | Y
 | <<query-plan-detach-delete, DetachDelete>>               | Deletes a node and its relationships.  | | Y
 | <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>  | Reads one or more relationships by id from the relationship store.  | Y |
 | <<query-plan-distinct, Distinct>>                                          | Drops duplicate rows from the incoming stream of rows.  | |
-| <<query-plan-drop-index, DropIndex>>              | Drops an index from a property for all nodes that have a certain label.  | Y | Y
-| <<query-plan-drop-node-property-existence-constraint, DropNodePropertyExistenceConstraint>>     | Drops an existence constraint from a property for all nodes that have a certain label.  | Y | Y
+| <<query-plan-drop-index, DropIndex>>              | Drops an index from a property for all nodes having a certain label.  | Y | Y
+| <<query-plan-drop-node-property-existence-constraint, DropNodePropertyExistenceConstraint>>     | Drops an existence constraint from a property for all nodes having a certain label.  | Y | Y
 | <<query-plan-drop-relationship-property-existence-constraint, DropRelationshipPropertyExistenceConstraint>>     | Drops an existence constraint from a property for all relationships of a certain type.  | Y | Y
-| <<query-plan-drop-unique-constraint, DropUniqueConstraint>>                  | Drops a unique constraint from a property for all nodes that have a certain label.  | Y | Y
+| <<query-plan-drop-unique-constraint, DropUniqueConstraint>>                  | Drops a unique constraint from a property for all nodes having a certain label.  | Y | Y
 | <<query-plan-eager, Eager>>                                                | For isolation purposes, `Eager` ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.  | |
 | <<query-plan-eager-aggregation, EagerAggregation>>                         | Evaluates a grouping expression. | |
 | <<query-plan-empty-result, EmptyResult>>                                   | Eagerly loads all incoming data and discards it. | |

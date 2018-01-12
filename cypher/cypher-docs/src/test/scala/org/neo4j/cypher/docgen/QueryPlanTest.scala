@@ -111,7 +111,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Unique Constraint",
       text =
-        """The `CreateUniqueConstraint` operator creates a unique constraint on a (label,property) pair.
+        """The `CreateUniqueConstraint` operator creates a unique constraint on a property for all nodes having a certain label.
           |The following query will create a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """CREATE CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateUniqueConstraint"))
@@ -126,7 +126,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Drop Unique Constraint",
       text =
-        """The `DropUniqueConstraint` operator removes a unique constraint from a (label,property) pair.
+        """The `DropUniqueConstraint` operator removes a unique constraint from a property for all nodes having a certain label.
           |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """DROP CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropUniqueConstraint"))
@@ -137,7 +137,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Node Property Existence Constraint",
       text =
-        """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint on a node property.
+        """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint on a property for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """CREATE CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
@@ -153,7 +153,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Drop Node Property Existence Constraint",
       text =
-        """The `DropNodePropertyExistenceConstraint` operator removes an existence constraint from a node property.
+        """The `DropNodePropertyExistenceConstraint` operator removes an existence constraint from a property for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """DROP CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
@@ -165,7 +165,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Relationship Property Existence Constraint",
       text =
-        """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint on a relationship property.
+        """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint on a property for all relationships of a certain type.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
@@ -181,7 +181,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Drop Relationship Property Existence Constraint",
       text =
-        """The `DropRelationshipPropertyExistenceConstraint` operator removes an existence constraint from a relationship property.
+        """The `DropRelationshipPropertyExistenceConstraint` operator removes an existence constraint from a property for all relationships of a certain type.
           |This will only appear in Enterprise Edition.""".stripMargin,
       queryText = """DROP CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropRelationshipPropertyExistenceConstraint"))
@@ -192,7 +192,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Index",
       text =
-        """The `CreateIndex` operator creates an index on a (label, property) pair.
+        """The `CreateIndex` operator creates an index on a property for all nodes having a certain label.
           |The following query will create an index on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """CREATE INDEX ON :Country(name)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateIndex"))
@@ -207,7 +207,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Drop Index",
       text =
-        """The `DropIndex` operator removes an index from a (label, property) pair.
+        """The `DropIndex` operator removes an index from a property for all nodes having a certain label.
           |The following query will drop an index on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """DROP INDEX ON :Country(name)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropIndex"))
