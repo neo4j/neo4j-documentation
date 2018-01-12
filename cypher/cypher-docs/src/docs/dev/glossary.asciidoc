@@ -23,14 +23,14 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-create,CREATE>>                    | Writing     |  Create nodes and relationships.
 |<<constraints-create-node-property-existence-constraint,CREATE CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>  | Schema   | Create a constraint ensuring that all nodes with a particular label have a certain property.
 |<<constraints-create-relationship-property-existence-constraint,CREATE CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>  | Schema   | Create a constraint ensuring that all relationship with a particular type have a certain property.
-|<<constraints-create-uniqueness-constraint,CREATE CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>  |  Schema | Create a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
+|<<constraints-create-unique-constraint,CREATE CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>  |  Schema | Create a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
 |<<schema-index-create-an-index,CREATE INDEX ON :Label(property)>>  | Schema  | Create an index on all nodes with a particular label and property.
 |<<query-create-unique,CREATE UNIQUE>>      | Reading/Writing     |  A mixture of `MATCH` and `CREATE`, matching what it can, and creating what is missing.
 |<<query-delete,DELETE>>                    | Writing     |  Delete graph elements — nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
 |<<query-delete,DETACH DELETE>>             | Writing     |  Delete a node or set of nodes. All associated relationships will automatically be deleted.
 |<<constraints-drop-node-property-existence-constraint,DROP CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>      | Schema   | Drop a constraint ensuring that all nodes with a particular label have a certain property.
 |<<constraints-drop-relationship-property-existence-constraint,DROP CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>      | Schema   | Drop a constraint ensuring that all relationship with a particular type have a certain property.
-|<<constraints-drop-uniqueness-constraint,DROP CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>       | Schema | Drop a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
+|<<constraints-drop-unique-constraint,DROP CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>       | Schema | Drop a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
 |<<schema-index-drop-an-index,DROP INDEX ON :Label(property)>>       | Schema | Drop an index on all nodes with a particular label and property.
 |<<query-foreach,FOREACH>>                  | Writing     |  Update data within a list, whether components of a path, or the result of aggregation.
 |<<query-limit,LIMIT>>                          | Reading sub-clause | A sub-clause used to constrain the number of rows in the output.

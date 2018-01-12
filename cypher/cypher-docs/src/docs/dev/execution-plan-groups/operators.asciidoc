@@ -2,7 +2,7 @@
 = Operators
 
 [abstract]
-All operators are listed here, grouped by relatedness. XXX
+All operators are listed here, grouped by the similarity of their characteristics.
 
 
 include::../ql/query-plan/all-nodes-scan.asciidoc[]
@@ -166,6 +166,8 @@ include::../ql/query-plan/set-node-property-from-map.asciidoc[]
 include::../ql/query-plan/set-relationship-property.asciidoc[]
 
 include::../ql/query-plan/set-relationship-property-from-map.asciidoc[]
+
+include::../ql/query-plan/set-property.asciidoc[]
 
 include::../ql/query-plan/create-unique-constraint.asciidoc[]
 

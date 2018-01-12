@@ -41,6 +41,10 @@ There is no guarantee that a specific query will always be solved with the same 
 
 This table comprises all the execution plan operators ordered lexicographically.
 
+* _Leaf_ operators, in most cases, locate the starting nodes and relationships required in order to execute the query.
+
+* _Updating_ operators are used in queries that update the graph.
+
 [options="header"]
 |===
 |Name                                                                       | Description | Leaf? | Updating?
@@ -49,7 +53,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-anti-semi-apply, AntiSemiApply>>                              | Performs a nested loop. Tests for the absence of a pattern predicate. | |
 | <<query-plan-apply, Apply>>                                                | Performs a nested loop. Yields rows from both the left-hand and right-hand side operators.  | |
 | <<query-plan-argument, Argument>>                                | Indicates the variable to be used as an argument to the right-hand side of an `Apply` operator.  | Y |
-| <<query-plan-assert-same-node, AssertSameNode>>                            | Used to ensure that no uniqueness constraints are violated.  | |
+| <<query-plan-assert-same-node, AssertSameNode>>                            | Used to ensure that no unique constraints are violated.  | |
 | <<query-plan-cartesian-product, CartesianProduct>>                 | Produces a cartesian product of the inputs from the left-hand and right-hand operators.  | |
 | <<query-plan-conditional-apply, ConditionalApply>>                         | Performs a nested loop. If a variable is not `null`, the right-hand side will be executed.  | |
 | <<query-plan-create-index, CreateIndex>>              | Creates an index on a property for all nodes that have a certain label.  | Y | Y
@@ -75,9 +79,9 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-filter, Filter>>                                              | Filters each row coming from the child operator, only passing through rows that evaluate the predicates to `true`. | |
 | <<query-plan-foreach, Foreach>>                                              | Performs a nested loop. Yields rows from the left-hand operator and discards rows from the right-hand operator. | |
 | <<query-plan-let-anti-semi-apply, LetAntiSemiApply>>                       | Performs a nested loop. Tests for the absence of a pattern predicate in queries containing multiple pattern predicates. | |
-| <<query-plan-let-select-or-semi-apply, LetSelectOrSemiApply>>              | Performs a nested loop. Tests for the existence of a pattern predicate that is combined with other predicates. | |
+| <<query-plan-let-select-or-semi-apply, LetSelectOrSemiApply>>              | Performs a nested loop. Tests for the presence of a pattern predicate that is combined with other predicates. | |
 | <<query-plan-let-select-or-anti-semi-apply, LetSelectOrAntiSemiApply>>     | Performs a nested loop. Tests for the absence of a pattern predicate that is combined with other predicates. | |
-| <<query-plan-let-semi-apply, LetSemiApply>>                                | Performs a nested loop. Tests for the existence of a pattern predicate in queries containing multiple pattern predicates. | |
+| <<query-plan-let-semi-apply, LetSemiApply>>                                | Performs a nested loop. Tests for the presence of a pattern predicate in queries containing multiple pattern predicates. | |
 | <<query-plan-limit, Limit>>                                                | Returns the first 'n' rows from the incoming input. | |
 | <<query-plan-load-csv, LoadCSV>>                                                  | Loads data from a CSV source into the query. | Y |
 | <<query-plan-lock, Lock>>                                                | Locks the start and end node when creating a relationship. | |
@@ -107,11 +111,12 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-remove-labels, RemoveLabels>>   | Deletes labels from a node. | | Y
 | <<query-plan-roll-up-apply, RollUpApply>>      | Performs a nested loop. Executes a pattern expression or pattern comprehension. | |
 | <<query-plan-select-or-anti-semi-apply, SelectOrAntiSemiApply>>            | Performs a nested loop. Tests for the absence of a pattern predicate if an expression predicate evaluates to `false`. | |
-| <<query-plan-select-or-semi-apply, SelectOrSemiApply>>                     | Performs a nested loop. Tests for the existence of a pattern predicate if an expression predicate evaluates to `false`. | |
-| <<query-plan-semi-apply, SemiApply>>                                       | Performs a nested loop. Tests for the existence of a pattern predicate. | |
+| <<query-plan-select-or-semi-apply, SelectOrSemiApply>>                     | Performs a nested loop. Tests for the presence of a pattern predicate if an expression predicate evaluates to `false`. | |
+| <<query-plan-semi-apply, SemiApply>>                                       | Performs a nested loop. Tests for the presence of a pattern predicate. | |
 | <<query-plan-set-labels, SetLabels>>                            | Sets labels on a node. | | Y
 | <<query-plan-set-node-property, SetNodeProperty>>          | Sets a property on a node. | | Y
 | <<query-plan-set-node-property-from-map, SetNodePropertyFromMap>>          | Sets properties from a map on a node. | | Y
+| <<query-plan-set-property, SetProperty>>          | Sets a property on an entity, where the entity is determined at runtime to be either a node or relationship. | | Y
 | <<query-plan-set-relationship-property, SetRelationshipProperty>>          | Sets a property on a relationship. | | Y
 | <<query-plan-set-relationship-property-from-map, SetRelationshipPropertyFromMap>>    | Sets properties from a map on a relationship. | | Y
 | <<query-plan-skip, Skip>>                                                  | Skips 'n' rows from the incoming rows. | |
@@ -127,10 +132,6 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-varlength-expand-into, VarLengthExpand(Into)>>                                   | Finds all variable-length relationships between two nodes. | |
 |===
 
-
-Leaf operators, in general, locate the starting nodes and relationships required in order to execute the query.
-
-Update operators are used in queries that update the graph.
 
 include::execution-plan-groups/operators.asciidoc[leveloffset=+1]
 

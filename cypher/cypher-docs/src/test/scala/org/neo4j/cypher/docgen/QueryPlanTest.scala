@@ -447,6 +447,20 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def setProperty() {
+    profileQuery(
+      title = "Set Property",
+      text =
+        """The `SetProperty` operator is used when setting a property on an entity, where the entity is determined at runtime to be either a node or relationship.""".stripMargin,
+      queryText =
+        """MATCH p = (a)-[r]->()
+          |WITH [a, r] AS something
+          |UNWIND something AS x
+          |SET x.prop = 42""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetProperty"))
+    )
+  }
+
   @Test def emptyResult() {
     profileQuery(
       title = "Empty Result",
@@ -867,7 +881,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Semi Apply",
       text =
-        """The `SemiApply` operator tests for the existence of a pattern predicate, and is a variation of the <<query-plan-apply, Apply>> operator.
+        """The `SemiApply` operator tests for the presence of a pattern predicate, and is a variation of the <<query-plan-apply, Apply>> operator.
           |If the right-hand side operator yields at least one row, the row from the left-hand side operator is yielded by the `SemiApply` operator.
           |This makes `SemiApply` a filtering operator, used mostly for pattern predicates in queries.""".stripMargin,
       queryText =
@@ -897,10 +911,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Let Semi Apply",
       text =
-        """The `LetSemiApply` operator tests for the existence of a pattern predicate, and is a variation of the <<query-plan-apply, Apply>> operator.
+        """The `LetSemiApply` operator tests for the presence of a pattern predicate, and is a variation of the <<query-plan-apply, Apply>> operator.
           |When a query contains multiple pattern predicates separated with `OR`, `LetSemiApply` will be used to evaluate the first of these.
           |It will record the result of evaluating the predicate but will leave any filtering to another operator.
-          |In the example, `LetSemiApply` will be used to check for the existence of the `FRIENDS_WITH`
+          |In the example, `LetSemiApply` will be used to check for the presence of the `FRIENDS_WITH`
           |relationship from each person.""".stripMargin,
       queryText =
         """MATCH (other:Person)
@@ -932,10 +946,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Select Or Semi Apply",
       text =
-        """The `SelectOrSemiApply` operator tests for the existence of a pattern predicate and evaluates a predicate,
+        """The `SelectOrSemiApply` operator tests for the presence of a pattern predicate and evaluates a predicate,
           |and is a variation of the <<query-plan-apply, Apply>> operator.
           |This operator allows for the mixing of normal predicates and pattern predicates
-          |that check for the existence of a pattern.
+          |that check for the presence of a pattern.
           |First, the normal expression predicate is evaluated, and, only if it returns `false`, is the costly pattern predicate evaluated.""".stripMargin,
       queryText =
         """MATCH (other:Person)
@@ -993,9 +1007,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Assert Same Node",
       text =
-        """The `AssertSameNode` operator is used to ensure that no uniqueness constraints are violated.
-          |The example looks for the existence of a team with the supplied name and id, and if one does not exist,
-          |it will be created. Owing to the existence of two uniqueness constraints
+        """The `AssertSameNode` operator is used to ensure that no unique constraints are violated.
+          |The example looks for the presence of a team with the supplied name and id, and if one does not exist,
+          |it will be created. Owing to the existence of two unique constraints
           |on `:Team(name)` and `:Team(id)`, any node that would be found by the `UniqueIndexSeek`
           |must be the very same node, or the constraints would be violated.
         """.stripMargin,
