@@ -7,7 +7,7 @@ This section describes the syntax of the Cypher query language.
 --
 
 * <<cypher-values, Values and types>>
-* <<cypher-naming, Naming rules and recommendations for node labels, relationship types, property names and variables>>
+* <<cypher-naming, Naming rules and recommendations>>
 * <<cypher-expressions, Expressions>>
  ** <<cypher-expressions-general, Expressions in general>>
  ** <<cypher-expressions-string-literals, Note on string literals>>

@@ -1,9 +1,9 @@
 [[cypher-naming]]
-= Naming rules and recommendations for node labels, relationship types, property names and variables
+= Naming rules and recommendations
+
+We describe here rules and recommendations for the naming of node labels, relationship types, property names and <<cypher-variables, variables>>.
 
 == Naming rules
-
-The following rules apply to the naming of node labels, relationship types, property names and <<cypher-variables, variables>>.
 
 * Must begin with an alphabetic letter.
 ** This includes "non-English" characters, such as `å`, `ä`, `ö`, `ü` etc.
