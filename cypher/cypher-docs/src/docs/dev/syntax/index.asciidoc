@@ -7,6 +7,7 @@ This section describes the syntax of the Cypher query language.
 --
 
 * <<cypher-values, Values and types>>
+* <<cypher-naming, Naming rules and recommendations for node labels, relationship types, property names and variables>>
 * <<cypher-expressions, Expressions>>
  ** <<cypher-expressions-general, Expressions in general>>
  ** <<cypher-expressions-string-literals, Note on string literals>>
@@ -60,6 +61,8 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-expressions-and-null, Expressions that return `null`>>
 
 include::values.asciidoc[leveloffset=+1]
+
+include::naming.asciidoc[leveloffset=+1]
 
 include::expressions.asciidoc[leveloffset=+1]
 
