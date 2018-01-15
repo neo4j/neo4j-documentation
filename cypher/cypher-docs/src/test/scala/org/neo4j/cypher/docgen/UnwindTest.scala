@@ -76,9 +76,17 @@ class UnwindTest extends DocumentingTestBase {
   @Test def empty_list() {
     testQuery(
       title = "Using `UNWIND` with an empty list",
-      text = "Using an empty list with `UNWIND` will produce no rows, irrespective of whether or not any rows existed beforehand, or whether or not other values are being projected. " +
-        "Essentially, `UNWIND []` reduces the number of rows to zero, and thus causes the query to cease its execution, returning no results. " +
-        "This has value in cases such as `UNWIND v`, where `v` is a variable from an earlier clause that may or may not be an empty list -- when it is an empty list, this will behave just as a `MATCH` that has no results.",
+      text = """Using an empty list with `UNWIND` will produce no rows, irrespective of whether or not any rows existed beforehand, or whether or not other values are being projected.
+          Essentially, `UNWIND []` reduces the number of rows to zero, and thus causes the query to cease its execution, returning no results.
+          This has value in cases such as `UNWIND v`, where `v` is a variable from an earlier clause that may or may not be an empty list -- when it is an empty list, this will behave just as a `MATCH` that has no results.
+          To avoid inadvertently using `UNWIND` on an empty list, `CASE` may be used to replace an empty list with a `null`:
+          `WITH [] AS list
+          UNWIND CASE
+            WHEN list = []
+            THEN [null]
+            ELSE list
+          END AS emptylist
+          RETURN emptylist`""".stripMargin,
       queryText =
         """UNWIND [] AS empty
            RETURN empty, 'literal_that_is_not_returned'""".stripMargin,
