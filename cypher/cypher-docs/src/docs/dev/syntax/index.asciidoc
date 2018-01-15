@@ -13,6 +13,7 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-expressions-string-literals, Note on string literals>>
  ** <<query-syntax-case, `CASE` Expressions>>
 * <<cypher-variables, Variables>>
+* <<cypher-reserved, Reserved keywords>>
 * <<cypher-parameters, Parameters>>
  ** <<cypher-parameters-string-literal, String literal>>
  ** <<cypher-parameters-regular-expression, Regular expression>>
@@ -67,6 +68,8 @@ include::naming.asciidoc[leveloffset=+1]
 include::expressions.asciidoc[leveloffset=+1]
 
 include::variables.asciidoc[leveloffset=+1]
+
+include::reserved.asciidoc[leveloffset=+1]
 
 include::parameters.asciidoc[leveloffset=+1]
 
