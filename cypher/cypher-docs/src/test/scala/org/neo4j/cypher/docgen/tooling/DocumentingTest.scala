@@ -102,7 +102,10 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
       case QueryRunResult(q, _, Right(content)) =>
         test(testName(q))({})
 
-      case ExecutionPlanRunResult(q, _, executionPlan) =>
+      case ExecutionPlanRunResult(q, _, Left(failure)) =>
+        test(testName(q))(throw failure)
+
+      case ExecutionPlanRunResult(q, _, Right(_)) =>
         test(testName(q))({})
 
       case _:GraphVizRunResult => // Nothing to report here, unless we got a failure
