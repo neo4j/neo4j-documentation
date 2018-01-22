@@ -82,7 +82,7 @@ trait DocBuilder {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
     }.get
-    queryScope.addContent(new ExecutionPlanPlaceHolder())
+    queryScope.addContent(new ExecutionPlanPlaceHolder(queryScope.assertions))
   }
 
   def profileExecutionPlan() = {
