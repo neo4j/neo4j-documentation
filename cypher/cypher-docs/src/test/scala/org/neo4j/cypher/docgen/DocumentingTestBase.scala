@@ -466,7 +466,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     } }
   }
 
-  protected def sampleAllIndicesAndWait(mode: IndexSamplingMode = IndexSamplingMode.TRIGGER_REBUILD_ALL, time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS) = {
+  protected def sampleAllIndexesAndWait(mode: IndexSamplingMode = IndexSamplingMode.TRIGGER_REBUILD_ALL, time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS) = {
     samplingController.sampleIndexes(mode)
     samplingController.awaitSamplingCompleted(time, unit)
   }

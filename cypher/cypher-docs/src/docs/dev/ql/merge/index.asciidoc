@@ -97,13 +97,13 @@ include::merge-on-a-relationship-between-an-existing-node-and-a-merged-node-deri
 [[query-merge-using-unique-constraints]]
 == Using unique constraints with `MERGE`
 
-Cypher prevents getting conflicting results from `MERGE` when using patterns that involve uniqueness constraints.
+Cypher prevents getting conflicting results from `MERGE` when using patterns that involve unique constraints.
 In this case, there must be at most one node that matches that pattern.
 
-For example, given two uniqueness constraints on `:Person(id)` and `:Person(ssn)`, a query such as `MERGE (n:Person {id: 12, ssn: 437})` will fail, if there are two different nodes (one with `id` 12 and one with `ssn` 437) or if there is only one node with only one of the properties.
+For example, given two unique constraints on `:Person(id)` and `:Person(ssn)`, a query such as `MERGE (n:Person {id: 12, ssn: 437})` will fail, if there are two different nodes (one with `id` 12 and one with `ssn` 437) or if there is only one node with only one of the properties.
 In other words, there must be exactly one node that matches the pattern, or no matching nodes.
 
-Note that the following examples assume the existence of uniqueness constraints that have been created using:
+Note that the following examples assume the existence of unique constraints that have been created using:
 
 include::includes/merge-setup-constraints.asciidoc[]
 

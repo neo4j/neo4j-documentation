@@ -24,8 +24,12 @@ import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.cypher.internal.compiler.v3_2.pipes.IndexSeekByRange
 import org.scalatest.Ignore
+import org.neo4j.test.{TestEnterpriseGraphDatabaseFactory}
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
+
+  override protected def newTestGraphDatabaseFactory() = new TestEnterpriseGraphDatabaseFactory()
+
   override val setupQueries = List(
     """CREATE (me:Person {name: 'me'})
        CREATE (andres:Person {name: 'Andres'})
@@ -55,7 +59,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
        CREATE (england:Country {name: 'England'})
        CREATE (field:Team {name: 'Field'})
-       CREATE (engineering:Team {name: 'Engineering'})
+       CREATE (engineering:Team {name: 'Engineering', id:42})
        CREATE (sales:Team {name: 'Sales'})
        CREATE (monads:Team {name: 'Team Monads'})
        CREATE (birds:Team {name: 'Team Enlightened Birdmen'})
@@ -88,7 +92,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
   override val setupConstraintQueries = List(
     "CREATE INDEX ON :Location(name)",
     "CREATE INDEX ON :Person(name)",
-    "CREATE CONSTRAINT ON (team:Team) ASSERT team.name is UNIQUE"
+    "CREATE CONSTRAINT ON (team:Team) ASSERT team.name is UNIQUE",
+    "CREATE CONSTRAINT ON (team:Team) ASSERT team.id is UNIQUE"
   )
 
   def section = "Query Plan"
@@ -97,21 +102,117 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "All Nodes Scan",
       text =
-        """Reads all nodes from the node store. The variable that will contain the nodes is seen in the arguments.
-          |If your query is using this operator, you are very likely to see performance problems on any non-trivial database.""".stripMargin,
+        """The `AllNodesScan` operator reads all nodes from the node store. The variable that will contain the nodes is seen in the arguments.
+          |Any query using this operator is likely to encounter performance problems on a non-trivial database.""".stripMargin,
       queryText = """MATCH (n) RETURN n""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("AllNodesScan"))
     )
   }
 
-  @Test def constraintOperation() {
+  @Test def createUniqueConstraint() {
     profileQuery(
-      title = "Constraint Operation",
+      title = "Create Unique Constraint",
       text =
-        """Creates a constraint on a (label,property) pair.
+        """The `CreateUniqueConstraint` operator creates a unique constraint on a property for all nodes having a certain label.
           |The following query will create a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """CREATE CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateUniqueConstraint"))
+    )
+  }
+
+  @Test def dropUniqueConstraint() {
+    executePreparationQueries {
+      List("CREATE CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE")
+    }
+
+    profileQuery(
+      title = "Drop Unique Constraint",
+      text =
+        """The `DropUniqueConstraint` operator removes a unique constraint from a property for all nodes having a certain label.
+          |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
+      queryText = """DROP CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropUniqueConstraint"))
+    )
+  }
+
+  @Test def createNodePropertyExistenceConstraint() {
+    profileQuery(
+      title = "Create Node Property Existence Constraint",
+      text =
+        """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint on a property for all nodes having a certain label.
+          |This will only appear in Enterprise Edition.
+        """.stripMargin,
+      queryText = """CREATE CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateNodePropertyExistenceConstraint"))
+    )
+  }
+
+  @Test def dropNodePropertyExistenceConstraint() {
+    executePreparationQueries {
+      List("CREATE CONSTRAINT ON (p:Person) ASSERT exists(p.name)")
+    }
+
+    profileQuery(
+      title = "Drop Node Property Existence Constraint",
+      text =
+        """The `DropNodePropertyExistenceConstraint` operator removes an existence constraint from a property for all nodes having a certain label.
+          |This will only appear in Enterprise Edition.
+        """.stripMargin,
+      queryText = """DROP CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropNodePropertyExistenceConstraint"))
+    )
+  }
+
+  @Test def createRelationshipPropertyExistenceConstraint() {
+    profileQuery(
+      title = "Create Relationship Property Existence Constraint",
+      text =
+        """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint on a property for all relationships of a certain type.
+          |This will only appear in Enterprise Edition.
+        """.stripMargin,
+      queryText = """CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateRelationshipPropertyExistenceConstraint"))
+    )
+  }
+
+  @Test def dropRelationshipPropertyExistenceConstraint() {
+    executePreparationQueries {
+      List("CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)")
+    }
+
+    profileQuery(
+      title = "Drop Relationship Property Existence Constraint",
+      text =
+        """The `DropRelationshipPropertyExistenceConstraint` operator removes an existence constraint from a property for all relationships of a certain type.
+          |This will only appear in Enterprise Edition.""".stripMargin,
+      queryText = """DROP CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropRelationshipPropertyExistenceConstraint"))
+    )
+  }
+
+  @Test def createIndex() {
+    profileQuery(
+      title = "Create Index",
+      text =
+        """The `CreateIndex` operator creates an index on a property for all nodes having a certain label.
+          |The following query will create an index on the `name` property of nodes with the `Country` label.""".stripMargin,
+      queryText = """CREATE INDEX ON :Country(name)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateIndex"))
+    )
+  }
+
+  @Test def dropIndex() {
+    executePreparationQueries {
+      List("CREATE INDEX ON :Country(name)")
+    }
+
+    profileQuery(
+      title = "Drop Index",
+      text =
+        """The `DropIndex` operator removes an index from a property for all nodes having a certain label.
+          |The following query will drop an index on the `name` property of nodes with the `Country` label.""".stripMargin,
+      queryText = """DROP INDEX ON :Country(name)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropIndex"))
     )
   }
 
@@ -119,7 +220,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Distinct",
       text =
-        """Removes duplicate rows from the incoming stream of rows.""".stripMargin,
+        """The `Distinct` operator removes duplicate rows from the incoming stream of rows.
+          |To ensure only distinct elements are returned, `Distinct` will pull in data lazily from its source and build up state.
+          |This may lead to increased memory pressure in the system.""".stripMargin,
       queryText = """MATCH (l:Location)<-[:WORKS_IN]-(p:Person) RETURN DISTINCT l""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Distinct"))
     )
@@ -129,7 +232,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Eager Aggregation",
       text =
-        """Eagerly loads underlying results and stores it in a hash-map, using the grouping keys as the keys for the map.""".stripMargin,
+        """The `EagerAggregation` operator evaluates a grouping expression and uses the result to group rows into different groupings.
+          |For each of these groupings, `EagerAggregation` will then evaluate all aggregation functions and return the result.
+          |To do this, `EagerAggregation`, as the name implies, needs to pull in all data eagerly from its source and build up state, which leads to increased memory pressure in the system.""".stripMargin,
       queryText = """MATCH (l:Location)<-[:WORKS_IN]-(p:Person) RETURN l.name AS location, collect(p.name) AS people""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("EagerAggregation"))
     )
@@ -139,9 +244,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Node Count From Count Store",
       text =
-        """Use the count store to answer questions about node counts.
-          | This is much faster than eager aggregation which achieves the same result by actually counting.
-          | However the count store only saves a limited range of combinations, so eager aggregation will still be used for more complex queries.
+        """The `NodeCountFromCountStore` operator uses the count store to answer questions about node counts.
+          | This is much faster than the `EagerAggregation` operator which achieves the same result by actually counting.
+          | However, as the count store only stores a limited range of combinations, `EagerAggregation` will still be used for more complex queries.
           | For example, we can get counts for all nodes, and nodes with a label, but not nodes with more than one label.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN count(p) AS people""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeCountFromCountStore"))
@@ -152,9 +257,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Relationship Count From Count Store",
       text =
-        """Use the count store to answer questions about relationship counts.
-          | This is much faster than eager aggregation which achieves the same result by actually counting.
-          | However the count store only saves a limited range of combinations, so eager aggregation will still be used for more complex queries.
+        """The `RelationshipCountFromCountStore` operator uses the count store to answer questions about relationship counts.
+          | This is much faster than the `EagerAggregation` operator which achieves the same result by actually counting.
+          | However, as the count store only stores a limited range of combinations, `EagerAggregation` will still be used for more complex queries.
           | For example, we can get counts for all relationships, relationships with a type, relationships with a label on one end, but not relationships with labels on both end nodes.""".stripMargin,
       queryText = """MATCH (p:Person)-[r:WORKS_IN]->() RETURN count(r) AS jobs""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("RelationshipCountFromCountStore"))
@@ -165,13 +270,27 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Eager",
       text =
-        """For isolation purposes this operator makes sure that operations that affect subsequent operations are executed fully for the whole dataset before continuing execution.
-           | Otherwise it could trigger endless loops, matching data again, that was just created.
+        """For isolation purposes, the `Eager` operator ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.
+           | Information from the stores is fetched in a lazy manner; i.e. the pattern matching might not be fully exhausted before updates are applied.
+           | To guarantee reasonable semantics, the query planner will insert `Eager` operators into the query plan to prevent updates from influencing pattern matching;
+           | this scenario is exemplified by the query below, where the `DELETE` clause influences the `MATCH` clause.
            | The `Eager` operator can cause high memory usage when importing data or migrating graph structures.
-           | In such cases split up your operations into simpler steps e.g. you can import nodes and relationships separately.
-           | Alternatively return the records to be updated and run an update statement afterwards.""".stripMargin,
+           | In such cases, the operations should be split into simpler steps; e.g. importing nodes and relationships separately.
+           | Alternatively, the records to be updated can be returned, followed by an update statement.""".stripMargin,
       queryText = """MATCH (a)-[r]-(b) DELETE r,a,b MERGE ()""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Eager"))
+    )
+  }
+
+  @Test def mergeInto() {
+    profileQuery(
+      title = "Merge Into",
+      text =
+        """When both the start and end node have already been found, the `Merge(Into)` operator is used either to find all connecting relationships or to create a new relationship between the two nodes.
+          |This operator is only used for the <<cypher-query-options, rule planner>>.
+        """.stripMargin,
+      queryText = """CYPHER planner=rule MATCH (p:Person {name: 'me'}), (f:Person {name: 'Andres'}) MERGE (p)-[:FRIENDS_WITH]->(f)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Merge(Into)"))
     )
   }
 
@@ -179,11 +298,156 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Node",
       text =
-        """Creates a node in the graph.""".stripMargin,
-      queryText = """CREATE (:Person {name: 'Alistair'})""",
-      assertions = (p) => {
-        assertThat(p.executionPlanDescription().toString, containsString("CreateNode"))
-      }
+        """The `CreateNode` operator is used to create a node.""".stripMargin,
+      queryText = """CREATE (:Person {name: 'Jack'})""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateNode"))
+    )
+  }
+
+  @Test def createRelationship() {
+    profileQuery(
+      title = "Create Relationship",
+      text =
+        """The `CreateRelationship` operator is used to create a relationship.""".stripMargin,
+      queryText =
+        """MATCH (a:Person {name: 'Max'}), (b:Person {name: 'Chris'})
+          |CREATE (a)-[:FRIENDS_WITH]->(b)""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateRelationship"))
+    )
+  }
+
+  @Test def delete() {
+    profileQuery(
+      title = "Delete",
+      text =
+        """The `Delete` operator is used to delete a node or a relationship.""".stripMargin,
+      queryText =
+        """MATCH (me:Person {name: 'me'})-[w:WORKS_IN {duration: 190}]->(london:Location {name: 'London'})
+          |DELETE w""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Delete"))
+    )
+  }
+
+  @Test def detachDelete() {
+    profileQuery(
+      title = "Detach Delete",
+      text =
+        """The `DetachDelete` operator is used in all queries containing the <<query-delete, DETACH DELETE>> clause, when deleting nodes and their relationships.""".stripMargin,
+      queryText =
+        """MATCH (p:Person)
+          |DETACH DELETE p""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DetachDelete"))
+    )
+  }
+
+  @Test def mergeCreateNode() {
+    profileQuery(
+      title = "Merge Create Node",
+      text =
+        """The `MergeCreateNode` operator is used when creating a node as a result of a <<query-merge, MERGE>> clause failing to find the node.""".stripMargin,
+      queryText =
+        """MERGE (:Person {name: 'Sally'})""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("MergeCreateNode"))
+    )
+  }
+
+  @Test def mergeCreateRelationship() {
+    profileQuery(
+      title = "Merge Create Relationship",
+      text =
+        """The `MergeCreateRelationship` operator is used when creating a relationship as a result of a <<query-merge, MERGE>> clause failing to find the relationship.""".stripMargin,
+      queryText =
+        """MATCH (s:Person {name: 'Sally'})
+          |MERGE (s)-[:FRIENDS_WITH]->(s)""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("MergeCreateRelationship"))
+    )
+  }
+
+  @Test def removeLabels() {
+    profileQuery(
+      title = "Remove Labels",
+      text =
+        """The `RemoveLabels` operator is used when deleting labels from a node.""".stripMargin,
+      queryText =
+        """MATCH (n)
+          |REMOVE n:Person""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("RemoveLabels"))
+    )
+  }
+
+  @Test def setLabels() {
+    profileQuery(
+      title = "Set Labels",
+      text =
+        """The `SetLabels` operator is used when setting labels on a node.""".stripMargin,
+      queryText =
+        """MATCH (n)
+          |SET n:Person""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetLabels"))
+    )
+  }
+
+  @Test def setNodePropertyFromMap() {
+    profileQuery(
+      title = "Set Node Property From Map",
+      text =
+        """The `SetNodePropertyFromMap` operator is used when setting properties from a map on a node.""".stripMargin,
+      queryText =
+        """MATCH (n)
+          |SET n = {weekday: 'Monday', meal: 'Lunch'}""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetNodePropertyFromMap"))
+    )
+  }
+
+  @Test def setRelationshipPropertyFromMap() {
+    profileQuery(
+      title = "Set Relationship Property From Map",
+      text =
+        """The `SetRelationshipPropertyFromMap` operator is used when setting properties from a map on a relationship.""".stripMargin,
+      queryText =
+        """MATCH (n)-[r]->(m)
+          |SET r = {weight: 5, unit: 'kg'}""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetRelationshipPropertyFromMap"))
+    )
+  }
+
+  /* @Test def setNodeProperty() { */
+  def setNodeProperty() {
+    profileQuery(
+      title = "Set Node Property",
+      text =
+        """The `SetNodeProperty` operator is used when setting a property on a node.""".stripMargin,
+      queryText =
+        """MATCH (n)
+          |SET n.checked = true""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetNodeProperty"))
+    )
+  }
+
+  /* @Test def setRelationshipProperty() { */
+  def setRelationshipProperty() {
+    profileQuery(
+      title = "Set Relationship Property",
+      text =
+        """The `SetRelationshipProperty` operator is used when setting a property on a relationship.""".stripMargin,
+      queryText =
+        """MATCH (n)-[r]->(m)
+          |SET r.weight = 100""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetRelationshipProperty"))
+    )
+  }
+
+  @Test def setProperty() {
+    profileQuery(
+      title = "Set Property",
+      text =
+        """The `SetProperty` operator is used when setting a property on an entity, where the entity is determined at runtime to be either a node or relationship.""".stripMargin,
+      queryText =
+        """MATCH p = (a)-[r]->()
+          |WITH [a, r] AS something
+          |UNWIND something AS x
+          |SET x.prop = 42""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetProperty"))
     )
   }
 
@@ -191,56 +455,118 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Empty Result",
       text =
-        """Eagerly loads everything coming in to the `EmptyResult` operator and discards it.""".stripMargin,
+        """The `EmptyResult` operator eagerly loads all incoming data and discards it.""".stripMargin,
       queryText = """CREATE (:Person)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("EmptyResult"))
     )
   }
 
+  @Test def produceResult() {
+    profileQuery(
+      title = "Produce Result",
+      text =
+        """The `ProduceResult` operator prepares the result so that it is consumable by the user, such as transforming internal values to user values.
+          |It is present in every single query that returns data to the user, and has little bearing on performance optimisation.""".stripMargin,
+      queryText = """MATCH (n) RETURN n""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProduceResult"))
+    )
+  }
+
   @Test def nodeByLabelScan() {
     profileQuery(
-      title = "Node by label scan",
-      text = """Using the label index, fetches all nodes with a specific label on them from the node label index.""".stripMargin,
+      title = "Node By Label Scan",
+      text = """The `NodeByLabelScan` operator fetches all nodes with a specific label from the node label index.""".stripMargin,
       queryText = """MATCH (person:Person) RETURN person""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LabelScan"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeByLabelScan"))
     )
   }
 
   @Test def nodeByIndexSeek() {
     profileQuery(
-      title = "Node index seek",
-      text = """Finds nodes using an index seek. The node variable and the index used is shown in the arguments of the operator.
-                |If the index is a unique index, the operator is called `NodeUniqueIndexSeek` instead.""".stripMargin,
+      title = "Node Index Seek",
+      text =
+        """The `NodeIndexSeek` operator finds nodes using an index seek.
+          |The node variable and the index used is shown in the arguments of the operator.
+          |If the index is a unique index, the operator is instead called <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>.""".stripMargin,
       queryText = """MATCH (location:Location {name: 'Malmo'}) RETURN location""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeek"))
     )
   }
 
-  @Test def nodeIndexRangeSeek() {
-    executePreparationQueries {
-      val a = (0 to 100).map { i => "CREATE (:Location)" }.toList
-      val b = (0 to 300).map { i => s"CREATE (:Location {name: '$i'})" }.toList
-      a ++ b
-    }
-
-    sampleAllIndicesAndWait()
-
-    profileQuery(title = "Node index range seek",
-                 text =
-                   """Finds nodes using an index seek where the value of the property matches a given prefix string.
-                     |This operator can be used for `STARTS WITH` and comparators such as `<`, `>`, `\<=` and `>=`""".stripMargin,
-                 queryText = "MATCH (l:Location) WHERE l.name STARTS WITH 'Lon' RETURN l",
-                 assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString(IndexSeekByRange.name))
+  @Test def nodeByUniqueIndexSeek() {
+    profileQuery(
+      title = "Node Unique Index Seek",
+      text = """The `NodeUniqueIndexSeek` operator finds nodes using an index seek within a unique index. The node variable and the index used is shown in the arguments of the operator.
+               |If the index is not unique, the operator is instead called <<query-plan-node-index-seek, NodeIndexSeek>>.
+               |If the index seek is used to solve a <<query-merge, MERGE>> clause, it will also be marked with `(Locking)`.
+               |This makes it clear that any nodes returned from the index will be locked in order to prevent concurrent conflicting updates.""".stripMargin,
+      queryText = """MATCH (t:Team {name: 'Malmo'}) RETURN t""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeUniqueIndexSeek"))
     )
   }
+
+  @Test def argument() {
+    profileQuery(
+      title = "Argument",
+      text = """The `Argument` operator indicates the variable to be used as an argument to the right-hand side of an <<query-plan-apply, Apply>> operator.""".stripMargin,
+      queryText = """MATCH (s:Person {name: 'me'}) MERGE (s)-[:FRIENDS_WITH]->(s)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Argument"))
+    )
+  }
+
+  @Test def loadCSV() {
+    profileQuery(
+      title = "Load CSV",
+      text =
+        """The `LoadCSV` operator loads data from a CSV source into the query.
+          |It is used whenever the <<query-load-csv, LOAD CSV>> clause is used in a query.""".stripMargin,
+      queryText = """LOAD CSV FROM 'https://neo4j.com/docs/cypher-refcard/3.3/csv/artists.csv' AS line RETURN line""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LoadCSV"))
+    )
+  }
+
+  @Test def nodeIndexRangeSeek() {
+    executePreparationQueries {
+      (0 to 300).map { i => s"CREATE (:Location {name: '$i'})" }.toList
+    }
+
+    sampleAllIndexesAndWait()
+
+    profileQuery(title = "Node Index Seek By Range",
+                 text =
+                   """The `NodeIndexSeekByRange` operator finds nodes using an index seek where the value of the property matches a given prefix string.
+                     |`NodeIndexSeekByRange` can be used for `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`.
+                     |If the index is a unique index, the operator is instead called `NodeUniqueIndexSeekByRange`.""".stripMargin,
+                 queryText = "MATCH (l:Location) WHERE l.name STARTS WITH 'Lon' RETURN l",
+                 assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeekByRange"))
+    )
+  }
+
+  @Test def nodeUniqueIndexRangeSeek() {
+    executePreparationQueries {
+      (0 to 300).map { i => s"CREATE (:Team {name: '$i'})" }.toList
+    }
+
+    sampleAllIndexesAndWait()
+
+    profileQuery(title = "Node Unique Index Seek By Range",
+      text =
+        """The `NodeUniqueIndexSeekByRange` operator finds nodes using an index seek within a unique index, where the value of the property matches a given prefix string.
+          |`NodeUniqueIndexSeekByRange` is used by `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`.
+          |If the index is not unique, the operator is instead called `NodeIndexSeekByRange`.""".stripMargin,
+      queryText = "MATCH (t:Team) WHERE t.name STARTS WITH 'Ma' RETURN t",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeUniqueIndexSeekByRange"))
+    )
+  }
+
 
   @Test def nodeIndexScan() {
     executePreparationQueries((0 to 250).map { i =>
       "CREATE (:Location)"
     }.toList)
-    profileQuery(title = "Node index scan",
+    profileQuery(title = "Node Index Scan",
                  text = """
-                          |An index scan goes through all values stored in an index, and can be used to find all nodes with a particular label having a specified property (e.g. `exists(n.prop)`).""".stripMargin,
+                          |The `NodeIndexScan` operator examines all values stored in an index, returning all nodes with a particular label having a specified property.""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE exists(l.name) RETURN l",
                  assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
     )
@@ -250,22 +576,39 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     executePreparationQueries((0 to 250).map { i =>
       "CREATE (:Location)"
     }.toList)
-    profileQuery(title = "Node index contains scan",
+    profileQuery(title = "Node Index Contains Scan",
                  text = """
-                          |An index contains scan goes through all values stored in an index, and searches for entries
-                          | containing a specific string. This is slower than an index seek, since all entries need to be
-                          | examined, but still faster than the indirection needed by a label scan and then a property store
+                          |The `NodeIndexContainsScan` operator examines all values stored in an index, searching for entries
+                          | containing a specific string; for example, in queries including `CONTAINS`.
+                          | Although this is slower than an index seek (since all entries need to be
+                          | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
                           | filter.""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE l.name CONTAINS 'al' RETURN l",
                  assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexContainsScan"))
     )
   }
 
+  @Test def nodeIndexEndsWithScan() {
+    executePreparationQueries((0 to 250).map { i =>
+      "CREATE (:Location)"
+    }.toList)
+    profileQuery(title = "Node Index Ends With Scan",
+      text = """
+               |The `NodeIndexEndsWithScan` operator examines all values stored in an index, searching for entries
+               | ending in a specific string; for example, in queries containing `ENDS WITH`.
+               | Although this is slower than an index seek (since all entries need to be
+               | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
+               | filter.""".stripMargin,
+      queryText = "MATCH (l:Location) WHERE l.name ENDS WITH 'al' RETURN l",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexEndsWithScan"))
+    )
+  }
+
   @Test def nodeByIdSeek() {
     profileQuery(
-      title = "Node by Id seek",
+      title = "Node By Id Seek",
       text =
-        """Reads one or more nodes by id from the node store.""".stripMargin,
+        """The `NodeByIdSeek` operator reads one or more nodes by id from the node store.""".stripMargin,
       queryText = """MATCH (n) WHERE id(n) = 0 RETURN n""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeByIdSeek"))
     )
@@ -275,7 +618,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Projection",
       text =
-        """For each row from its input, projection evaluates a set of expressions and produces a row with the results of the expressions.""".stripMargin,
+        """For each incoming row, the `Projection` operator evaluates a set of expressions and produces a row with the results of the expressions.""".stripMargin,
       queryText = """RETURN 'hello' AS greeting""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Projection"))
     )
@@ -285,7 +628,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Filter",
       text =
-        """Filters each row coming from the child operator, only passing through rows that evaluate the predicates to `true`.""".stripMargin,
+        """The `Filter` operator filters each row coming from the child operator, only passing through rows that evaluate the predicates to `true`.""".stripMargin,
       queryText = """MATCH (p:Person) WHERE p.name =~ '^a.*' RETURN p""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Filter"))
     )
@@ -295,7 +638,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Cartesian Product",
       text =
-        """Produces a cartesian product of the two inputs -- each row coming from the left child will be combined with all the rows from the right child operator.""".stripMargin,
+        """The `CartesianProduct` operator produces a cartesian product of the two inputs -- each row coming from the left child operator will be combined with all the rows from the right child operator.
+          |`CartesianProduct` generally exhibits bad performance and ought to be avoided if possible.
+        """.stripMargin,
       queryText = """MATCH (p:Person), (t:Team) RETURN p, t""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CartesianProduct"))
     )
@@ -305,9 +650,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Optional Expand All",
       text =
-        """Optional expand traverses relationships from a given node, and makes sure that predicates are evaluated before producing rows.
-          |
-          |If no matching relationships are found, a single row with `null` for the relationship and end node variable is produced.""".stripMargin,
+        """The `OptionalExpand(All)` operator is analogous to <<query-plan-expand-all, Expand(All)>>, apart from when no relationships match the direction, type and property predicates.
+          |In this situation, `OptionalExpand(all)` will return a single row with the relationship and end node set to `null`.
+          |""".stripMargin,
       queryText =
         """MATCH (p:Person)
            OPTIONAL MATCH (p)-[works_in:WORKS_IN]->(l) WHERE works_in.duration > 180
@@ -320,7 +665,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Sort",
       text =
-        """Sorts rows by a provided key.""".stripMargin,
+        """The `Sort` operator sorts rows by a provided key.
+          |In order to sort the data, all data from the source operator needs to be pulled in eagerly and kept in the query state, which will lead to increased memory pressure in the system.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN p ORDER BY p.name""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Sort"))
     )
@@ -330,7 +676,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Top",
       text =
-        """Returns the first 'n' rows sorted by a provided key. The physical operator is called `Top`. Instead of sorting the whole input, only the top X rows are kept.""".stripMargin,
+        """The `Top` operator returns the first 'n' rows sorted by a provided key. Instead of sorting the entire input, only the top 'n' rows are retained.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN p ORDER BY p.name LIMIT 2""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Top"))
     )
@@ -340,9 +686,41 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Limit",
       text =
-        """Returns the first 'n' rows from the incoming input.""".stripMargin,
+        """The `Limit` operator returns the first 'n' rows from the incoming input.""".stripMargin,
       queryText = """MATCH (p:Person) RETURN p LIMIT 3""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Limit"))
+    )
+  }
+
+  @Test def lock() {
+    profileQuery(
+      title = "Lock",
+      text =
+        """The `Lock` operator locks the start and end node when creating a relationship.""".stripMargin,
+      queryText = """MATCH (s:Person {name: 'me'}) MERGE (s)-[:FRIENDS_WITH]->(s)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Lock"))
+    )
+  }
+
+  @Test def optional() {
+    profileQuery(
+      title = "Optional",
+      text =
+        """The `Optional` operator is used to solve some <<query-optional-match, OPTIONAL MATCH>> queries.
+          |It will pull data from its source, simply passing it through if any data exists.
+          |However, if no data is returned by its source, `Optional` will yield a single row with all columns set to `null`.""".stripMargin,
+      queryText = """MATCH (p:Person {name:'me'}) OPTIONAL MATCH (q:Person {name: 'Lulu'}) RETURN p, q""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Optional"))
+    )
+  }
+
+  @Test def projectEndpoints() {
+    profileQuery(
+      title = "Project Endpoints",
+      text =
+        """The `ProjectEndpoints` operator projects the start and end node of a relationship.""".stripMargin,
+      queryText = """CREATE (n)-[p:KNOWS]->(m) WITH p AS r MATCH (u)-[r]->(v) RETURN u, v""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProjectEndpoints"))
     )
   }
 
@@ -350,7 +728,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Expand All",
       text =
-        """Given a start node, expand-all will follow incoming or outgoing relationships, depending on the pattern relationship. Can also handle variable length pattern relationships.""".stripMargin,
+        """Given a start node, and depending on the pattern relationship, the `Expand(All)` operator will traverse incoming or outgoing relationships.""".stripMargin,
       queryText = """MATCH (p:Person {name: 'me'})-[:FRIENDS_WITH]->(fof) RETURN fof""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Expand(All)"))
     )
@@ -360,9 +738,45 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Expand Into",
       text =
-        """When both the start and end node have already been found, expand-into is used to find all connecting relationships between the two nodes.""".stripMargin,
+        """When both the start and end node have already been found, the `Expand(Into)` operator is used to find all relationships connecting the two nodes.
+          |As both the start and end node of the relationship are already in scope, the node with the smallest degree will be used.
+          |This can make a noticeable difference when dense nodes appear as end points.""".stripMargin,
       queryText = """MATCH (p:Person {name: 'me'})-[:FRIENDS_WITH]->(fof)-->(p) RETURN fof""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Expand(Into)"))
+    )
+  }
+
+
+  @Test def optionalExpandInto() {
+    profileQuery(
+      title = "Optional Expand Into",
+      text =
+        """The `OptionalExpand(Into)` operator is analogous to <<query-plan-expand-into, Expand(Into)>>, apart from when no matching relationships are found.
+          |In this situation, `OptionalExpand(Into)` will return a single row with the relationship and end node set to `null`.
+          |As both the start and end node of the relationship are already in scope, the node with the smallest degree will be used.
+          |This can make a noticeable difference when dense nodes appear as end points.""".stripMargin,
+      queryText = """MATCH (p:Person)-[works_in:WORKS_IN]->(l) OPTIONAL MATCH (l)-->(p) RETURN p""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("OptionalExpand(Into)"))
+    )
+  }
+
+  @Test def varlengthExpandAll() {
+    profileQuery(
+      title = "VarLength Expand All",
+      text =
+        """Given a start node, the `VarLengthExpand(All)` operator will traverse variable-length relationships.""".stripMargin,
+      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(q:Person) RETURN p, q""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(All)"))
+    )
+  }
+
+  @Test def varlengthExpandInto() {
+    profileQuery(
+      title = "VarLength Expand Into",
+      text =
+        """When both the start and end node have already been found, the `VarLengthExpand(Into)` operator is used to find all variable-length relationships connecting the two nodes.""".stripMargin,
+      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(p:Person) RETURN p""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(Into)"))
     )
   }
 
@@ -370,7 +784,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Directed Relationship By Id Seek",
       text =
-        """Reads one or more relationships by id from the relationship store. Produces both the relationship and the nodes on either side.""".stripMargin,
+        """The `DirectedRelationshipByIdSeek` operator reads one or more relationships by id from the relationship store, and produces both the relationship and the nodes on either side.""".stripMargin,
       queryText =
         """MATCH (n1)-[r]->()
            WHERE id(r) = 0
@@ -384,8 +798,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Undirected Relationship By Id Seek",
       text =
-        """Reads one or more relationships by id from the relationship store.
-          |For each relationship, two rows are produced with start and end nodes arranged differently.""".stripMargin,
+        """The `UndirectedRelationshipByIdSeek` operator reads one or more relationships by id from the relationship store.
+          |As the direction is unspecified, two rows are produced for each relationship as a result of alternating the combination of the start and end node.""".stripMargin,
       queryText =
         """MATCH (n1)-[r]-()
            WHERE id(r) = 1
@@ -399,7 +813,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Skip",
       text =
-        """Skips 'n' rows from the incoming rows.
+        """The `Skip` operator skips 'n' rows from the incoming rows.
         """.stripMargin,
       queryText =
         """MATCH (p:Person)
@@ -415,7 +829,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Union",
       text =
-        "`Union` concatenates the results from the right plan after the results of the left plan.",
+        "The `Union` operator concatenates the results from the right child operator with the results from the left child operator.",
       queryText =
         """MATCH (p:Location)
            RETURN p.name
@@ -431,16 +845,319 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Unwind",
       text =
-        """Takes a list of values and returns one row per item in the list.""".stripMargin,
-      queryText = """UNWIND range(1, 5) as value return value;""",
+        """The `Unwind` operator returns one row per item in a list.""".stripMargin,
+      queryText = """UNWIND range(1, 5) as value return value""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Unwind"))
+    )
+  }
+
+  @Test def apply() {
+    profileQuery(
+      title = "Apply",
+      text =
+        """
+          |All the different `Apply` operators (listed below) share the same basic functionality: they perform a nested loop by taking a single row from the left-hand side, and using the <<query-plan-argument, Argument>> operator on the right-hand side, execute the operator tree on the right-hand side.
+          |The versions of the `Apply` operators differ in how the results are managed.
+          |The `Apply` operator (i.e. the standard version) takes the row produced by the right-hand side -- which at this point contains data from both the left-hand and right-hand sides -- and yields it..""".stripMargin,
+      queryText =
+        """MATCH (p:Person {name:'me'})
+          |MATCH (q:Person {name: p.secondName})
+          |RETURN p, q""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Apply"))
+    )
+  }
+
+  @Test def semiApply() {
+    profileQuery(
+      title = "Semi Apply",
+      text =
+        """The `SemiApply` operator tests for the presence of a pattern predicate, and is a variation of the <<query-plan-apply, Apply>> operator.
+          |If the right-hand side operator yields at least one row, the row from the left-hand side operator is yielded by the `SemiApply` operator.
+          |This makes `SemiApply` a filtering operator, used mostly for pattern predicates in queries.""".stripMargin,
+      queryText =
+        """MATCH (p:Person)
+          |WHERE (p)-[:FRIENDS_WITH]->(:Person)
+          |RETURN p.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SemiApply"))
+    )
+  }
+
+  @Test def antiSemiApply() {
+    profileQuery(
+      title = "Anti Semi Apply",
+      text =
+        """The `AntiSemiApply` operator tests for the absence of a pattern, and is a variation of the <<query-plan-apply, Apply>> operator.
+          |If the right-hand side operator yields no rows, the row from the left-hand side operator is yielded by the `AntiSemiApply` operator.
+          |This makes `AntiSemiApply` a filtering operator, used for pattern predicates in queries.""".stripMargin,
+      queryText =
+        """MATCH (me:Person {name: "me"}), (other:Person)
+          |WHERE NOT (me)-[:FRIENDS_WITH]->(other)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("AntiSemiApply"))
+    )
+  }
+
+  @Test def letSemiApply() {
+    profileQuery(
+      title = "Let Semi Apply",
+      text =
+        """The `LetSemiApply` operator tests for the presence of a pattern predicate, and is a variation of the <<query-plan-apply, Apply>> operator.
+          |When a query contains multiple pattern predicates separated with `OR`, `LetSemiApply` will be used to evaluate the first of these.
+          |It will record the result of evaluating the predicate but will leave any filtering to another operator.
+          |In the example, `LetSemiApply` will be used to check for the presence of the `FRIENDS_WITH`
+          |relationship from each person.""".stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LetSemiApply"))
+    )
+  }
+
+  @Test def letAntiSemiApply() {
+    profileQuery(
+      title = "Let Anti Semi Apply",
+      text =
+        """The `LetAntiSemiApply` operator tests for the absence of a pattern, and is a variation of the <<query-plan-apply, Apply>> operator.
+          |When a query contains multiple negated pattern predicates -- i.e. predicates separated with `OR`, where at
+          |least one predicate contains `NOT` -- `LetAntiSemiApply` will be used to evaluate the first of these.
+          |It will record the result of evaluating the predicate but will leave any filtering to another operator.
+          |In the example, `LetAntiSemiApply` will be used to check for the absence of
+          |the `FRIENDS_WITH` relationship from each person.""".stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE NOT ((other)-[:FRIENDS_WITH]->(:Person)) OR (other)-[:WORKS_IN]->(:Location)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LetAntiSemiApply"))
+    )
+  }
+
+  @Test def selectOrSemiApply() {
+    profileQuery(
+      title = "Select Or Semi Apply",
+      text =
+        """The `SelectOrSemiApply` operator tests for the presence of a pattern predicate and evaluates a predicate,
+          |and is a variation of the <<query-plan-apply, Apply>> operator.
+          |This operator allows for the mixing of normal predicates and pattern predicates
+          |that check for the presence of a pattern.
+          |First, the normal expression predicate is evaluated, and, only if it returns `false`, is the costly pattern predicate evaluated.""".stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE other.age > 25 OR (other)-[:FRIENDS_WITH]->(:Person)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SelectOrSemiApply"))
+    )
+  }
+
+  @Test def selectOrAntiSemiApply() {
+    profileQuery(
+      title = "Select Or Anti Semi Apply",
+      text =
+        """The `SelectOrAntiSemiApply` operator is used to evaluate `OR` between a predicate and a negative pattern predicate
+          |(i.e. a pattern predicate preceded with `NOT`), and is a variation of the <<query-plan-apply, Apply>> operator.
+          |If the predicate returns `true`, the pattern predicate is not tested.
+          |If the predicate returns `false` or `null`, `SelectOrAntiSemiApply` will instead test the pattern predicate.""".stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE other.age > 25 OR NOT (other)-[:FRIENDS_WITH]->(:Person)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SelectOrAntiSemiApply"))
+    )
+  }
+
+  @Test def conditionalApply() {
+    profileQuery(
+      title = "Conditional Apply",
+      text =
+        """The `ConditionalApply` operator checks whether a variable is not `null`, and if so, the right child operator will be executed.
+          |This operator is a variation of the <<query-plan-apply, Apply>> operator.
+        """.stripMargin,
+      queryText =
+        """MERGE (p:Person {name: 'Andres'})
+          |ON MATCH SET p.exists = true""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ConditionalApply"))
+    )
+  }
+
+  @Test def antiConditionalApply() {
+    profileQuery(
+      title = "Anti Conditional Apply",
+      text =
+        """The `AntiConditionalApply` operator checks whether a variable is `null`, and if so, the right child operator will be executed.
+          |This operator is a variation of the <<query-plan-apply, Apply>> operator.
+        """.stripMargin,
+      queryText =
+        """MERGE (p:Person {name: 'Andres'})
+          |ON CREATE SET p.exists = true""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("AntiConditionalApply"))
+    )
+  }
+
+  @Test def assertSameNode() {
+    profileQuery(
+      title = "Assert Same Node",
+      text =
+        """The `AssertSameNode` operator is used to ensure that no unique constraints are violated.
+          |The example looks for the presence of a team with the supplied name and id, and if one does not exist,
+          |it will be created. Owing to the existence of two unique constraints
+          |on `:Team(name)` and `:Team(id)`, any node that would be found by the `UniqueIndexSeek`
+          |must be the very same node, or the constraints would be violated.
+        """.stripMargin,
+      queryText =
+        """MERGE (t:Team {name: 'Engineering', id: 42})""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("AssertSameNode"))
+    )
+  }
+
+  @Test def nodeHashJoin() {
+    executePreparationQueries(
+      List(
+        """MATCH (london:Location {name: 'London'}), (person:Person {name: 'Pontus'})
+          FOREACH(x in range(0, 250) |
+            CREATE (person) -[: WORKS_IN] ->(london)
+            )""".stripMargin
+      )
+    )
+    profileQuery(
+      title = "Node Hash Join",
+      text =
+        """
+          |The `NodeHashJoin` operator is a variation of the <<execution-plans-operators-hash-join-general, hash join>>.
+          |`NodeHashJoin` executes the hash join on node ids.
+          |As primitive types and arrays can be used, it can be done very efficiently.""".stripMargin,
+      queryText =
+        """MATCH (andy:Person {name:'Andreas'})-[:WORKS_IN]->(loc)<-[:WORKS_IN]-(matt:Person {name:'Mattis'})
+          |RETURN loc.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeHashJoin"))
+    )
+  }
+
+  @Test def triadic() {
+    profileQuery(
+      title = "Triadic",
+      text =
+        """The `Triadic` operator is used to solve triangular queries, such as the very
+          |common 'find my friend-of-friends that are not already my friend'.
+          |It does so by putting all the friends into a set, and uses the set to check if the
+          |friend-of-friends are already connected to me.
+          |The example finds the names of all friends of my friends that are not already my friends.""".stripMargin,
+      queryText =
+        """MATCH (me:Person)-[:FRIENDS_WITH]-()-[:FRIENDS_WITH]-(other)
+          |WHERE NOT (me)-[:FRIENDS_WITH]-(other)
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Triadic"))
+    )
+  }
+
+  @Test def foreach() {
+    profileQuery(
+      title = "Foreach",
+      text =
+        """The `Foreach` operator executes a nested loop between the left child operator and the right child operator.
+          | In an analogous manner to the <<query-plan-apply, Apply>> operator, it takes a row from the left-hand side and, using the <<query-plan-argument, Argument>> operator, provides it to the operator tree on the right-hand side.
+          | `Foreach` will yield all the rows coming in from the left-hand side; all results from the right-hand side are pulled in and discarded.""".stripMargin,
+      queryText =
+        """FOREACH (value IN [1,2,3] |
+          |CREATE (:Person {age: value})
+          |)""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Foreach"))
+    )
+  }
+
+  @Test def emptyRow() {
+    profileQuery(
+      title = "Empty Row",
+      text =
+        """The `EmptyRow` operator returns a single row with no columns.""".stripMargin,
+      queryText =
+        """FOREACH (value IN [1,2,3] |
+          |CREATE (:Person {age: value})
+          |)""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("EmptyRow"))
+    )
+  }
+
+  @Test def letSelectOrSemiApply() {
+    profileQuery(
+      title = "Let Select Or Semi Apply",
+      text =
+        """The `LetSelectOrSemiApply` operator is planned for pattern predicates that are combined with other predicates using `OR`.
+          |This is a variation of the <<query-plan-apply, Apply>> operator.
+        """.stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location) OR other.age = 5
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LetSelectOrSemiApply"))
+    )
+  }
+
+  @Test def letSelectOrAntiSemiApply() {
+    profileQuery(
+      title = "Let Select Or Anti Semi Apply",
+      text =
+        """The `LetSelectOrAntiSemiApply` operator is planned for negated pattern predicates -- i.e. pattern predicates
+          |preceded with `NOT` -- that are combined with other predicates using `OR`.
+          |This operator is a variation of the <<query-plan-apply, Apply>> operator.
+        """.stripMargin,
+      queryText =
+        """MATCH (other:Person)
+          |WHERE NOT (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location) OR other.age = 5
+          |RETURN other.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LetSelectOrAntiSemiApply"))
+    )
+  }
+
+  //TODO get a query that works
+//  @Test def nodeOuterHashJoin() {
+//    profileQuery(
+//      title = "Node Outer Hash Join",
+//      text =
+//        """The `NodeOuterHashJoin` operator is a variation of the <<execution-plans-operators-hash-join-general, hash join>>.
+//          |Instead of discarding rows that are not found in the probe table, `NodeOuterHashJoin` will instead yield a single row with `null`.""".stripMargin,
+//      queryText =
+//        """MATCH (p:Person {name:'me'})
+//          |OPTIONAL MATCH (p)--(q:Person {name: p.surname})
+//          |USING JOIN ON p
+//          |RETURN p,q""".stripMargin,
+//      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeOuterHashJoin"))
+//    )
+//  }
+
+  @Test def rollUpApply() {
+    profileQuery(
+      title = "Roll Up Apply",
+      text =
+        """The `RollUpApply` operator is used to execute an expression which takes as input a pattern, and returns a list with content from the matched pattern;
+          |for example, when using a pattern expression or pattern comprehension in a query.
+          |This operator is a variation of the <<query-plan-apply, Apply>> operator.""".stripMargin,
+      queryText =
+        """MATCH (p:Person)
+          |RETURN p.name, [ (p)-[:WORKS_IN]->(location) | location.name ] AS cities""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("RollUpApply"))
+    )
+  }
+
+  @Test def valueHashJoin() {
+    profileQuery(
+      title = "Value Hash Join",
+      text =
+        """The `ValueHashJoin` operator is a variation of the <<execution-plans-operators-hash-join-general, hash join>>.
+           This operator allows for arbitrary values to be used as the join key.
+           It is most frequently used to solve predicates of the form: `n.prop1 = m.prop2` (i.e. equality predicates between two property columns).
+        """.stripMargin,
+      queryText =
+        """MATCH (p:Person),(q:Person)
+          |WHERE p.age = q.age
+          |RETURN p,q""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ValueHashJoin"))
     )
   }
 
   @Test def call(): Unit = {
     profileQuery(
-      title = "Call Procedure",
-      text = """Return all labels sorted by name""".stripMargin,
+      title = "Procedure Call",
+      text = """The `ProcedureCall` operator indicates an invocation to a procedure.""".stripMargin,
       queryText = """CALL db.labels() YIELD label RETURN * ORDER BY label""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProcedureCall"))
     )
