@@ -740,6 +740,26 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def varlengthExpandFullPruning() {
+    profileQuery(
+      title = "VarLength Expand Full Pruning",
+      text =
+        """xxxxx.""".stripMargin,
+      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *4..5]-(q:Person) RETURN DISTINCT p, q""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(FullPruning)"))
+    )
+  }
+
+  @Test def varlengthExpandPruning() {
+    profileQuery(
+      title = "VarLength Expand Pruning",
+      text =
+        """xxxs.""".stripMargin,
+      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(q:Person) RETURN DISTINCT p, q""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(Pruning)"))
+    )
+  }
+
   @Test def directedRelationshipById() {
     profileQuery(
       title = "Directed Relationship By Id Seek",
