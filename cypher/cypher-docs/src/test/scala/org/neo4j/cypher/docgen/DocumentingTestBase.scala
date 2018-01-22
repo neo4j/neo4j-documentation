@@ -470,7 +470,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   protected def indexingService = db.getDependencyResolver.resolveDependency(classOf[IndexingService])
 
-  protected def sampleAllIndicesAndWait(mode: IndexSamplingMode = IndexSamplingMode.TRIGGER_REBUILD_ALL, time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS) = {
+  protected def sampleAllIndexesAndWait(mode: IndexSamplingMode = IndexSamplingMode.TRIGGER_REBUILD_ALL, time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS) = {
     indexingService.triggerIndexSampling(mode)
     unit.sleep(time)
   }
