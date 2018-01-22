@@ -8,8 +8,8 @@ Unique node property constraints can be created, along with node and relationshi
 
 * <<query-constraint-introduction, Introduction>>
 * <<query-constraint-unique-nodes, Unique node property constraints>>
- ** <<constraints-create-uniqueness-constraint, Create uniqueness constraint>>
- ** <<constraints-drop-uniqueness-constraint, Drop uniqueness constraint>>
+ ** <<constraints-create-unique-constraint, Create unique constraint>>
+ ** <<constraints-drop-unique-constraint, Drop unique constraint>>
  ** <<constraints-create-a-node-that-complies-with-unique-property-constraints, Create a node that complies with unique property constraints>>
  ** <<constraints-create-a-node-that-violates-a-unique-property-constraint, Create a node that violates a unique property constraint>>
  ** <<constraints-failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes, Failure to create a unique property constraint due to conflicting nodes>>
@@ -34,6 +34,7 @@ Unique node property constraints can be created, along with node and relationshi
  ** <<constraints-create-a-node-that-complies-with-a-node-key, Create a node that complies with a Node Key>>
  ** <<constraints-create-a-node-that-violates-a-node-key, Create a node that violates a Node Key>>
  ** <<constraints-failure-to-create-a-node-key-due-to-existing-node, Failure to create a Node Key due to existing node>>
+
 
 
 [[query-constraint-introduction]]
@@ -77,9 +78,9 @@ Creating a constraint has the following implications on indexes:
 [[query-constraint-unique-nodes]]
 == Unique node property constraints
 
-include::create-uniqueness-constraint.asciidoc[leveloffset=+1]
+include::create-unique-constraint.asciidoc[leveloffset=+1]
 
-include::drop-uniqueness-constraint.asciidoc[leveloffset=+1]
+include::drop-unique-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-node-that-complies-with-unique-property-constraints.asciidoc[leveloffset=+1]
 

@@ -141,7 +141,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       )
     )
 
-    sampleAllIndicesAndWait()
+    sampleAllIndexesAndWait()
 
     profileQuery(
       title = "Use index with `IN`",
@@ -165,7 +165,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       a ++ b
     }
 
-    sampleAllIndicesAndWait()
+    sampleAllIndexesAndWait()
 
     profileQuery(
       title = "Use index with `STARTS WITH`",

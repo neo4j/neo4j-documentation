@@ -50,5 +50,5 @@ And here are examples of clauses that are used to update the graph:
 
 * `SET` (and `REMOVE`): Set values to properties and add labels on nodes using `SET` and use `REMOVE` to remove them.
 
-* `MERGE`: Match existing or create new nodes and patterns. This is especially useful together with uniqueness constraints.
+* `MERGE`: Match existing or create new nodes and patterns. This is especially useful together with unique constraints.
 
