@@ -461,14 +461,14 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def produceResult() {
+  @Test def produceResults() {
     profileQuery(
-      title = "Produce Result",
+      title = "Produce Results",
       text =
-        """The `ProduceResult` operator prepares the result so that it is consumable by the user, such as transforming internal values to user values.
+        """The `ProduceResults` operator prepares the result so that it is consumable by the user, such as transforming internal values to user values.
           |It is present in every single query that returns data to the user, and has little bearing on performance optimisation.""".stripMargin,
       queryText = """MATCH (n) RETURN n""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProduceResult"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProduceResults"))
     )
   }
 
@@ -692,13 +692,13 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def lock() {
+  @Test def lockNodes() {
     profileQuery(
-      title = "Lock",
+      title = "Lock Nodes",
       text =
-        """The `Lock` operator locks the start and end node when creating a relationship.""".stripMargin,
+        """The `LockNodes` operator locks the start and end node when creating a relationship.""".stripMargin,
       queryText = """MATCH (s:Person {name: 'me'}) MERGE (s)-[:FRIENDS_WITH]->(s)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Lock"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LockNodes"))
     )
   }
 
@@ -1032,11 +1032,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def triadic() {
+  @Test def triadicSelection() {
     profileQuery(
-      title = "Triadic",
+      title = "Triadic Selection",
       text =
-        """The `Triadic` operator is used to solve triangular queries, such as the very
+        """The `Triadic Selection` operator is used to solve triangular queries, such as the very
           |common 'find my friend-of-friends that are not already my friend'.
           |It does so by putting all the friends into a set, and uses the set to check if the
           |friend-of-friends are already connected to me.
@@ -1045,7 +1045,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """MATCH (me:Person)-[:FRIENDS_WITH]-()-[:FRIENDS_WITH]-(other)
           |WHERE NOT (me)-[:FRIENDS_WITH]-(other)
           |RETURN other.name""".stripMargin,
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Triadic"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("TriadicSelection"))
     )
   }
 

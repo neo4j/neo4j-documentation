@@ -71,7 +71,7 @@ include::../ql/query-plan/assert-same-node.asciidoc[]
 
 include::../ql/query-plan/empty-result.asciidoc[]
 
-include::../ql/query-plan/produce-result.asciidoc[]
+include::../ql/query-plan/produce-results.asciidoc[]
 
 include::../ql/query-plan/load-csv.asciidoc[]
 
@@ -100,7 +100,7 @@ include::../ql/query-plan/node-hash-join.asciidoc[]
 
 include::../ql/query-plan/value-hash-join.asciidoc[]
 
-include::../ql/query-plan/triadic.asciidoc[]
+include::../ql/query-plan/triadic-selection.asciidoc[]
 
 include::../ql/query-plan/cartesian-product.asciidoc[]
 
@@ -130,7 +130,7 @@ include::../ql/query-plan/union.asciidoc[]
 
 include::../ql/query-plan/unwind.asciidoc[]
 
-include::../ql/query-plan/lock.asciidoc[]
+include::../ql/query-plan/lock-nodes.asciidoc[]
 
 include::../ql/query-plan/optional.asciidoc[]
 
