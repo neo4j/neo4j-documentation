@@ -399,42 +399,14 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  /* @Test def setNodeProperty() { */
-  def setNodeProperty() {
-    profileQuery(
-      title = "Set Node Property",
-      text =
-        """The `SetNodeProperty` operator is used when setting a property on a node.""".stripMargin,
-      queryText =
-        """MATCH (n)
-          |SET n.checked = true""".stripMargin,
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetNodeProperty"))
-    )
-  }
-
-  /* @Test def setRelationshipProperty() { */
-  def setRelationshipProperty() {
-    profileQuery(
-      title = "Set Relationship Property",
-      text =
-        """The `SetRelationshipProperty` operator is used when setting a property on a relationship.""".stripMargin,
-      queryText =
-        """MATCH (n)-[r]->(m)
-          |SET r.weight = 100""".stripMargin,
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetRelationshipProperty"))
-    )
-  }
-
   @Test def setProperty() {
     profileQuery(
       title = "Set Property",
       text =
-        """The `SetProperty` operator is used when setting a property on an entity, where the entity is determined at runtime to be either a node or relationship.""".stripMargin,
+        """The `SetProperty` operator is used when setting a property on a node or relationship.""".stripMargin,
       queryText =
-        """MATCH p = (a)-[r]->()
-          |WITH [a, r] AS something
-          |UNWIND something AS x
-          |SET x.prop = 42""".stripMargin,
+        """MATCH (n)
+          |SET n.checked = true""".stripMargin,
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetProperty"))
     )
   }
