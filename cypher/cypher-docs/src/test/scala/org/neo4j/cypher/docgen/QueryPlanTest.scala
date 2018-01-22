@@ -996,7 +996,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Triadic Selection",
       text =
-        """The `Triadic Selection` operator is used to solve triangular queries, such as the very
+        """The `TriadicSelection` operator is used to solve triangular queries, such as the very
           |common 'find my friend-of-friends that are not already my friend'.
           |It does so by putting all the friends into a set, and uses the set to check if the
           |friend-of-friends are already connected to me.

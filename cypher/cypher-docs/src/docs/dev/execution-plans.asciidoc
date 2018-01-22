@@ -83,7 +83,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-let-semi-apply, LetSemiApply>>                                | Performs a nested loop. Tests for the presence of a pattern predicate in queries containing multiple pattern predicates. | |
 | <<query-plan-limit, Limit>>                                                | Returns the first 'n' rows from the incoming input. | |
 | <<query-plan-load-csv, LoadCSV>>                                                  | Loads data from a CSV source into the query. | Y |
-| <<query-plan-lock, LockNodes>>                                                | Locks the start and end node when creating a relationship. | |
+| <<query-plan-lock-nodes, LockNodes>>                                                | Locks the start and end node when creating a relationship. | |
 | <<query-plan-merge-create-node, MergeCreateNode>>            | Creates the node when failing to find the node. | Y | Y
 | <<query-plan-merge-create-relationship, MergeCreateRelationship>>            | Creates the relationship when failing to find the relationship. | | Y
 | <<query-plan-node-by-id-seek, NodeByIdSeek>>                               | Reads one or more nodes by id from the node store. | Y |
@@ -118,7 +118,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-skip, Skip>>                                                  | Skips 'n' rows from the incoming rows. | |
 | <<query-plan-sort, Sort>>                                                  | Sorts rows by a provided key. | |
 | <<query-plan-top, Top>>                                                    | Returns the first 'n' rows sorted by a provided key. | |
-| <<query-plan-triadic-selection, TriadicSelection>>                                            | Solve triangular queries, such as the very common 'find my friend-of-friends that are not already my friend'. | |
+| <<query-plan-triadic-selection, TriadicSelection>>                                            | Solves triangular queries, such as the very common 'find my friend-of-friends that are not already my friend'. | |
 | <<query-plan-undirected-relationship-by-id-seek, UndirectedRelationshipByIdSeek>> | Reads one or more relationships by id from the relationship store. | Y |
 | <<query-plan-union, Union>>                                                | Concatenates the results from the right-hand operator with the results from the left-hand operator. | |
 | <<query-plan-unwind, Unwind>>                                              | Returns one row per item in a list. | |
