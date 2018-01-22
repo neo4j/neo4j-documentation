@@ -84,7 +84,6 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-limit, Limit>>                                                | Returns the first 'n' rows from the incoming input. | |
 | <<query-plan-load-csv, LoadCSV>>                                                  | Loads data from a CSV source into the query. | Y |
 | <<query-plan-lock, LockNodes>>                                                | Locks the start and end node when creating a relationship. | |
-| <<query-plan-merge-into, Merge(Into)>>                                     | Either finds all relationships between two nodes or creates a new relationship between two nodes. | | Y
 | <<query-plan-merge-create-node, MergeCreateNode>>            | Creates the node when failing to find the node. | Y | Y
 | <<query-plan-merge-create-relationship, MergeCreateRelationship>>            | Creates the relationship when failing to find the relationship. | | Y
 | <<query-plan-node-by-id-seek, NodeByIdSeek>>                               | Reads one or more nodes by id from the node store. | Y |
@@ -125,7 +124,6 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-undirected-relationship-by-id-seek, UndirectedRelationshipByIdSeek>> | Reads one or more relationships by id from the relationship store. | Y |
 | <<query-plan-union, Union>>                                                | Concatenates the results from the right-hand operator with the results from the left-hand operator. | |
 | <<query-plan-unwind, Unwind>>                                              | Returns one row per item in a list. | |
-| <<query-plan-update-graph, UpdateGraph>>                                   | Updates the graph. | Y | Y
 | <<query-plan-value-hash-join, ValueHashJoin>>                       | Executes a hash join on arbitrary values. | |
 | <<query-plan-varlength-expand-all, VarLengthExpand(All)>>                                   | Traverses variable-length relationships from a given node. | |
 | <<query-plan-varlength-expand-into, VarLengthExpand(Into)>>                                   | Finds all variable-length relationships between two nodes. | |

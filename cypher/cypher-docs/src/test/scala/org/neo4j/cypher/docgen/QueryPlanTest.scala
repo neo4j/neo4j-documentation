@@ -282,18 +282,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def mergeInto() {
-    profileQuery(
-      title = "Merge Into",
-      text =
-        """When both the start and end node have already been found, the `Merge(Into)` operator is used either to find all connecting relationships or to create a new relationship between the two nodes.
-          |This operator is only used for the <<cypher-query-options, rule planner>>.
-        """.stripMargin,
-      queryText = """CYPHER planner=rule MATCH (p:Person {name: 'me'}), (f:Person {name: 'Andres'}) MERGE (p)-[:FRIENDS_WITH]->(f)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Merge(Into)"))
-    )
-  }
-
   @Test def createNode() {
     profileQuery(
       title = "Create Node",

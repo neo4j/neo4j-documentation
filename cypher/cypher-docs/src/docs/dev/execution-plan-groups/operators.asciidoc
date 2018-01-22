@@ -184,7 +184,3 @@ include::../ql/query-plan/drop-relationship-property-existence-constraint.asciid
 include::../ql/query-plan/create-index.asciidoc[]
 
 include::../ql/query-plan/drop-index.asciidoc[]
-
-include::../ql/query-plan/update-graph.asciidoc[]
-
-include::../ql/query-plan/merge-into.asciidoc[]
