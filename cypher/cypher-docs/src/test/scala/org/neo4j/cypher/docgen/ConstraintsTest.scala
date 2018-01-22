@@ -36,7 +36,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   @Test def create_unique_constraint() {
     testQuery(
-      title = "Create uniqueness constraint",
+      title = "Create unique constraint",
       text = "To create a constraint that makes sure that your database will never contain more than one node with a specific " +
         "label and one property value, use the `IS UNIQUE` syntax.",
       queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
@@ -49,7 +49,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Drop uniqueness constraint",
+      title = "Drop unique constraint",
       text = "By using `DROP CONSTRAINT`, you remove a constraint from the database.",
       queryText = "DROP CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
       optionalResultExplanation = "",
@@ -103,7 +103,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   @Test def create_node_property_existence_constraint() {
     testQuery(
       title = "Create node property existence constraint",
-      text = "To create a constraint that makes sure that all nodes with a certain label have a certain property, use the `ASSERT exists(variable.propertyName)` syntax.",
+      text = "To create a constraint that ensures that all nodes with a certain label have a certain property, use the `ASSERT exists(variable.propertyName)` syntax.",
       queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)",
       optionalResultExplanation = "",
       assertions = (p) => assertNodeConstraintExist("Book", "isbn")

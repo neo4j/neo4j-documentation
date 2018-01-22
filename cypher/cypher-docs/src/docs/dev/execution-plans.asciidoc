@@ -3,12 +3,11 @@
 
 [abstract]
 --
-This section describes operators used as part of an execution plan to execute a query in the Cypher query language.
+This section describes the operators used as part of a Cypher query's execution plan.
 --
 
-Neo4j breaks down the work of executing a query into small pieces called operators.
-Each operator is responsible for a small part of the overall query.
-The operators are connected together in a pattern called a execution plan.
+The task of executing a query is decomposed into _operators_, each of which implements a single unit of work.
+The operators are combined into a structure called an _execution plan_.
 
 Each operator is annotated with statistics.
 
@@ -21,19 +20,13 @@ The compiler uses this estimate to choose a suitable execution plan.
 Each operator will ask the Neo4j storage engine to do work such as retrieving or updating data.
 A _database hit_ is an abstract unit of this storage engine work.
 
-See <<how-do-i-profile-a-query>> for how to view the execution plan for your query.
+See <<how-do-i-profile-a-query>> for how to view the execution plan for a query.
 
-For a deeper understanding of how each operator works, see the relevant section.
-Operators are grouped into high-level categories.
+For a deeper understanding of how each operator works, refer the relevant section.
 Please remember that the statistics of the actual database where the queries run on will decide the plan used.
 There is no guarantee that a specific query will always be solved with the same plan.
 
-* <<execution-plan-operators-summary, Execution plan operators at a glance>>
-* <<execution-plans-starting-operators, Starting point operators>>
-* <<execution-plans-expand-operators, Expand operators>>
-* <<combining-operators, Combining operators>>
-* <<execution-plans-row-operators, Row operators>>
-* <<execution-plans-update-operators, Update operators>>
+* <<execution-plan-operators-summary, Execution plan operators>>
 * <<query-shortestpath-planning, Shortest path planning>>
 
 // The conditional leveloffsets below are "wrong" for the neo4j/neo4j
@@ -47,64 +40,99 @@ There is no guarantee that a specific query will always be solved with the same 
 
 This table comprises all the execution plan operators ordered lexicographically.
 
+* _Leaf_ operators, in most cases, locate the starting nodes and relationships required in order to execute the query.
+
+* _Updating_ operators are used in queries that update the graph.
+
 [options="header"]
 |===
-|Name                                                                       | Operator type          | Description
-| <<query-plan-all-nodes-scan, AllNodesScan>>                                | Starting point | Reads all nodes from the node store.
-| <<query-plan-anti-conditional-apply, AntiConditionalApply>>                | Combining | Checks whether a variable is `null`, and if so the right-hand side will be executed.
-| <<query-plan-anti-semi-apply, AntiSemiApply>>                              | Combining | Tests for the existence of a pattern predicate.
-| <<query-plan-apply, Apply>>                                                | Combining | `Apply` works by performing a nested loop.
-| <<query-plan-assert-same-node, AssertSameNode>>                            | Combining | This operator is used to ensure that no uniqueness constraints are violated.
-| <<query-plan-conditional-apply, ConditionalApply>>                         | Combining | Checks whether a variable is not `null`, and if so the right-hand side will be executed.
-| <<query-plan-constraint-operation, Constraint operation>>                  | Update | Creates a constraint on a (label,property) pair.
-| <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>  | Starting point | Reads one or more relationships by id from the relationship store.
-| <<query-plan-distinct, Distinct>>                                          | Row | Removes duplicate rows from the incoming stream of rows.
-| <<query-plan-eager, Eager>>                                                | Row | For isolation purposes, `Eager` ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.
-| <<query-plan-eager-aggregation, EagerAggregation>>                         | Row | Eagerly loads underlying results and stores it in a hashmap, using the grouping keys as the keys for the map.
-| <<query-plan-empty-result, EmptyResult>>                                   | Update | Eagerly loads everything coming in to the EmptyResult operator and discards it.
-| <<query-plan-expand-all, Expand(All) >>                                    | Expand | Given a start node, `Expand(All)` will follow incoming or outgoing relationships, depending on the pattern relationship.
-| <<query-plan-expand-into, Expand(Into)>>                                   | Expand | When both the start and end node have already been found, `Expand(Into)` is used to find all connecting relationships between the two nodes.
-| <<query-plan-filter, Filter>>                                              | Row | Filters each row coming from the child operator, only passing through rows that evaluate the predicates to `true`.
-| <<query-plan-let-anti-semi-apply, LetAntiSemiApply>>                       | Combining | Tests for the absence of a pattern predicate in queries containing multiple pattern predicates.
-| <<query-plan-let-semi-apply, LetSemiApply>>                                | Combining | Tests for the existence of a pattern predicate in queries containing multiple pattern predicates.
-| <<query-plan-limit, Limit>>                                                | Row | Returns the first 'n' rows from the incoming input.
-| <<query-plan-merge-into, Merge(Into)>>                                     | Update | When both the start and end node have already been found, `Merge(Into)` is used to find all connecting relationships or creating a new relationship between the two nodes.
-| <<query-plan-node-by-id-seek, NodeByIdSeek>>                               | Starting point | Reads one or more nodes by id from the node store.
-| <<query-plan-node-by-label-scan, NodeByLabelScan>>                         | Starting point | Using the label index, fetches all nodes with a specific label on them from the node label index.
-| <<query-plan-node-count-from-count-store, NodeCountFromCountStore>>        | Row | Uses the count store to answer questions about node counts.
-| <<query-plan-node-hash-join, NodeHashJoin>>                                | Combining | Using a hash table, a `NodeHashJoin` joins the input coming from the left with the input coming from the right.
-| <<query-plan-node-index-contains-scan, NodeIndexContainsScan>>             | Starting point | An index contains scan goes through all values stored in an index, and searches for entries containing a specific string.
-| <<query-plan-node-index-scan, NodeIndexScan>>                              | Starting point | An index scan goes through all values stored in an index, and can be used to find all nodes with a particular label having a specified property.
-| <<query-plan-node-index-seek, NodeIndexSeek>>                              | Starting point | Finds nodes using an index seek.
-| <<query-plan-node-index-range-seek, NodeIndexSeekByRange>>                 | Starting point | Finds nodes using an index seek where the value of the property matches the given prefix string.
-| <<query-plan-node-index-seek, NodeUniqueIndexSeek>>                        | Starting point | Finds nodes using an index seek within a unique index.
-| <<query-plan-optional-expand-all, OptionalExpand(All)>>                    | Expand | Traverses relationships from the given node, and ensures that predicates are evaluated before producing rows.
-| <<query-plan-call-procedure, ProcedureCall>>                               | Row | Calls a procedure.
-| <<query-plan-projection, Projection>>                                      | Row | For each row from its input, projection evaluates a set of expressions and produces a row with the results of the expressions.
-| <<query-plan-relationship-count-from-count-store, RelationshipCountFromCountStore>>    | Row | Uses the count store to answer questions about relationship counts.
-| <<query-plan-select-or-anti-semi-apply, SelectOrAntiSemiApply>>            | Combining | Tests for the absence of a pattern predicate and evaluates a predicate.
-| <<query-plan-select-or-semi-apply, SelectOrSemiApply>>                     | Combining | Tests for the existence of a pattern predicate and evaluates a predicate.
-| <<query-plan-semi-apply, SemiApply>>                                       | Combining | Tests for the existence of a pattern predicate.
-| <<query-plan-skip, Skip>>                                                  | Row | Skips 'n' rows from the incoming rows.
-| <<query-plan-sort, Sort>>                                                  | Row | Sorts rows by a provided key.
-| <<query-plan-top, Top>>                                                    | Row | Returns the first 'n' rows sorted by a provided key.
-| <<query-plan-triadic, Triadic>>                                            | Combining | `Triadic` is used to solve triangular queries, such as the very common 'find my friend-of-friends that are not already my friend'.
-| <<query-plan-undirected-relationship-by-id-seek, UndirectedRelationshipByIdSeek>> | Starting point | Reads one or more relationships by id from the relationship store.
-| <<query-plan-union, Union>>                                                | Row | Concatenates the results from the right plan after the results of the left plan.
-| <<query-plan-unwind, Unwind>>                                              | Row | Takes a list of values and returns one row per item in the list.
-| <<query-plan-update-graph, UpdateGraph>>                                   | Update | Applies updates to the graph.
+|Name                                                                       | Description | Leaf? | Updating?
+| <<query-plan-all-nodes-scan, AllNodesScan>>                                | Reads all nodes from the node store. | Y |
+| <<query-plan-anti-conditional-apply, AntiConditionalApply>>                | Performs a nested loop. If a variable is `null`, the right-hand side will be executed. | |
+| <<query-plan-anti-semi-apply, AntiSemiApply>>                              | Performs a nested loop. Tests for the absence of a pattern predicate. | |
+| <<query-plan-apply, Apply>>                                                | Performs a nested loop. Yields rows from both the left-hand and right-hand side operators.  | |
+| <<query-plan-argument, Argument>>                                | Indicates the variable to be used as an argument to the right-hand side of an `Apply` operator.  | Y |
+| <<query-plan-assert-same-node, AssertSameNode>>                            | Used to ensure that no unique constraints are violated.  | |
+| <<query-plan-cartesian-product, CartesianProduct>>                 | Produces a cartesian product of the inputs from the left-hand and right-hand operators.  | |
+| <<query-plan-conditional-apply, ConditionalApply>>                         | Performs a nested loop. If a variable is not `null`, the right-hand side will be executed.  | |
+| <<query-plan-create-index, CreateIndex>>              | Creates an index on a property for all nodes having a certain label.  | Y | Y
+| <<query-plan-create-node, CreateNode>>              | Creates a node.  | Y | Y
+| <<query-plan-create-node-property-existence-constraint, CreateNodePropertyExistenceConstraint>>     |  Creates an existence constraint on a property for all nodes having a certain label.  | Y | Y
+| <<query-plan-create-relationship, CreateRelationship>>              | Creates a relationship.  | | Y
+| <<query-plan-create-relationship-property-existence-constraint, CreateRelationshipPropertyExistenceConstraint>>     | Creates an existence constraint on a property for all relationships of a certain type.  | Y | Y
+| <<query-plan-create-unique-constraint, CreateUniqueConstraint>>                  | Creates a unique constraint on a property for all nodes having a certain label.  | Y | Y
+| <<query-plan-delete, Delete>>                                          | Deletes a node or relationship.  | | Y
+| <<query-plan-detach-delete, DetachDelete>>               | Deletes a node and its relationships.  | | Y
+| <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>  | Reads one or more relationships by id from the relationship store.  | Y |
+| <<query-plan-distinct, Distinct>>                                          | Drops duplicate rows from the incoming stream of rows.  | |
+| <<query-plan-drop-index, DropIndex>>              | Drops an index from a property for all nodes having a certain label.  | Y | Y
+| <<query-plan-drop-node-property-existence-constraint, DropNodePropertyExistenceConstraint>>     | Drops an existence constraint from a property for all nodes having a certain label.  | Y | Y
+| <<query-plan-drop-relationship-property-existence-constraint, DropRelationshipPropertyExistenceConstraint>>     | Drops an existence constraint from a property for all relationships of a certain type.  | Y | Y
+| <<query-plan-drop-unique-constraint, DropUniqueConstraint>>                  | Drops a unique constraint from a property for all nodes having a certain label.  | Y | Y
+| <<query-plan-eager, Eager>>                                                | For isolation purposes, `Eager` ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.  | |
+| <<query-plan-eager-aggregation, EagerAggregation>>                         | Evaluates a grouping expression. | |
+| <<query-plan-empty-result, EmptyResult>>                                   | Eagerly loads all incoming data and discards it. | |
+| <<query-plan-empty-row, EmptyRow>>                                   | Returns a single row with no columns. | Y |
+| <<query-plan-expand-all, Expand(All) >>                                    | Traverses incoming or outgoing relationships from a given node. | |
+| <<query-plan-expand-into, Expand(Into)>>                                   | Finds all relationships between two nodes. | |
+| <<query-plan-filter, Filter>>                                              | Filters each row coming from the child operator, only passing through rows that evaluate the predicates to `true`. | |
+| <<query-plan-foreach, Foreach>>                                              | Performs a nested loop. Yields rows from the left-hand operator and discards rows from the right-hand operator. | |
+| <<query-plan-let-anti-semi-apply, LetAntiSemiApply>>                       | Performs a nested loop. Tests for the absence of a pattern predicate in queries containing multiple pattern predicates. | |
+| <<query-plan-let-select-or-semi-apply, LetSelectOrSemiApply>>              | Performs a nested loop. Tests for the presence of a pattern predicate that is combined with other predicates. | |
+| <<query-plan-let-select-or-anti-semi-apply, LetSelectOrAntiSemiApply>>     | Performs a nested loop. Tests for the absence of a pattern predicate that is combined with other predicates. | |
+| <<query-plan-let-semi-apply, LetSemiApply>>                                | Performs a nested loop. Tests for the presence of a pattern predicate in queries containing multiple pattern predicates. | |
+| <<query-plan-limit, Limit>>                                                | Returns the first 'n' rows from the incoming input. | |
+| <<query-plan-load-csv, LoadCSV>>                                                  | Loads data from a CSV source into the query. | Y |
+| <<query-plan-lock, Lock>>                                                | Locks the start and end node when creating a relationship. | |
+| <<query-plan-merge-into, Merge(Into)>>                                     | Either finds all relationships between two nodes or creates a new relationship between two nodes. | | Y
+| <<query-plan-merge-create-node, MergeCreateNode>>            | Creates the node when failing to find the node. | Y | Y
+| <<query-plan-merge-create-relationship, MergeCreateRelationship>>            | Creates the relationship when failing to find the relationship. | | Y
+| <<query-plan-node-by-id-seek, NodeByIdSeek>>                               | Reads one or more nodes by id from the node store. | Y |
+| <<query-plan-node-by-label-scan, NodeByLabelScan>>                         | Fetches all nodes with a specific label from the node label index. | Y |
+| <<query-plan-node-count-from-count-store, NodeCountFromCountStore>>        | Uses the count store to answer questions about node counts. | Y |
+| <<query-plan-node-hash-join, NodeHashJoin>>                                | Executes a hash join on node ids. | |
+| <<query-plan-node-index-contains-scan, NodeIndexContainsScan>>             | Examines all values stored in an index, searching for entries containing a specific string. | Y |
+| <<query-plan-node-index-ends-with-scan, NodeIndexEndsWithScan>>        | Examines all values stored in an index, searching for entries ending in a specific string. | Y |
+| <<query-plan-node-index-scan, NodeIndexScan>>                              | Examines all values stored in an index, returning all nodes with a particular label having a specified property. | Y |
+| <<query-plan-node-index-seek, NodeIndexSeek>>                              | Finds nodes using an index seek. | Y |
+| <<query-plan-node-index-seek-by-range, NodeIndexSeekByRange>>                 | Finds nodes using an index seek where the value of the property matches the given prefix string. | Y |
+//| <<query-plan-node-outer-hash-join, NodeOuterHashJoin>>      | xxx. | |
+| <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>                        | Finds nodes using an index seek within a unique index. | Y |
+| <<query-plan-node-unique-index-seek-by-range, NodeUniqueIndexSeekByRange>>                 | Finds nodes using an index seek within a unique index where the value of the property matches the given prefix string. | Y |
+| <<query-plan-optional, Optional>>                    | Yields a single row with all columns set to `null` if no data is returned by its source. | |
+| <<query-plan-optional-expand-all, OptionalExpand(All)>>                    | Traverses relationships from a given node, producing a single row with the relationship and end node set to `null` if the predicates are not fulfilled. | |
+| <<query-plan-optional-expand-into, OptionalExpand(Into)>>                    | Traverses all relationships between two nodes, producing a single row with the relationship and end node set to `null` if no matching relationships are found (the start node will be the node with the smallest degree). | |
+| <<query-plan-procedure-call, ProcedureCall>>                               | Calls a procedure. | |
+| <<query-plan-produce-result, ProduceResult>>                                   | Prepares the result so that it is consumable by the user. | |
+| <<query-plan-project-endpoints, ProjectEndpoints>>                         | Projects the start and end node of a relationship. | |
+| <<query-plan-projection, Projection>>                                      | Evaluates a set of expressions, producing a row with the results thereof. | Y |
+| <<query-plan-relationship-count-from-count-store, RelationshipCountFromCountStore>>    | Uses the count store to answer questions about relationship counts. | Y |
+| <<query-plan-remove-labels, RemoveLabels>>   | Deletes labels from a node. | | Y
+| <<query-plan-roll-up-apply, RollUpApply>>      | Performs a nested loop. Executes a pattern expression or pattern comprehension. | |
+| <<query-plan-select-or-anti-semi-apply, SelectOrAntiSemiApply>>            | Performs a nested loop. Tests for the absence of a pattern predicate if an expression predicate evaluates to `false`. | |
+| <<query-plan-select-or-semi-apply, SelectOrSemiApply>>                     | Performs a nested loop. Tests for the presence of a pattern predicate if an expression predicate evaluates to `false`. | |
+| <<query-plan-semi-apply, SemiApply>>                                       | Performs a nested loop. Tests for the presence of a pattern predicate. | |
+| <<query-plan-set-labels, SetLabels>>                            | Sets labels on a node. | | Y
+| <<query-plan-set-node-property, SetNodeProperty>>          | Sets a property on a node. | | Y
+| <<query-plan-set-node-property-from-map, SetNodePropertyFromMap>>          | Sets properties from a map on a node. | | Y
+| <<query-plan-set-property, SetProperty>>          | Sets a property on an entity, where the entity is determined at runtime to be either a node or relationship. | | Y
+| <<query-plan-set-relationship-property, SetRelationshipProperty>>          | Sets a property on a relationship. | | Y
+| <<query-plan-set-relationship-property-from-map, SetRelationshipPropertyFromMap>>    | Sets properties from a map on a relationship. | | Y
+| <<query-plan-skip, Skip>>                                                  | Skips 'n' rows from the incoming rows. | |
+| <<query-plan-sort, Sort>>                                                  | Sorts rows by a provided key. | |
+| <<query-plan-top, Top>>                                                    | Returns the first 'n' rows sorted by a provided key. | |
+| <<query-plan-triadic, Triadic>>                                            | Solve triangular queries, such as the very common 'find my friend-of-friends that are not already my friend'. | |
+| <<query-plan-undirected-relationship-by-id-seek, UndirectedRelationshipByIdSeek>> | Reads one or more relationships by id from the relationship store. | Y |
+| <<query-plan-union, Union>>                                                | Concatenates the results from the right-hand operator with the results from the left-hand operator. | |
+| <<query-plan-unwind, Unwind>>                                              | Returns one row per item in a list. | |
+| <<query-plan-update-graph, UpdateGraph>>                                   | Updates the graph. | Y | Y
+| <<query-plan-value-hash-join, ValueHashJoin>>                       | Executes a hash join on arbitrary values. | |
+| <<query-plan-varlength-expand-all, VarLengthExpand(All)>>                                   | Traverses variable-length relationships from a given node. | |
+| <<query-plan-varlength-expand-into, VarLengthExpand(Into)>>                                   | Finds all variable-length relationships between two nodes. | |
 |===
 
 
-include::execution-plan-groups/starting-query.asciidoc[leveloffset=+1]
-
-include::execution-plan-groups/expand.asciidoc[leveloffset=+1]
-
-include::execution-plan-groups/combining-operators.adoc[leveloffset=+1]
-
-include::execution-plan-groups/row.asciidoc[leveloffset=+1]
-
-include::execution-plan-groups/update.asciidoc[leveloffset=+1]
+include::execution-plan-groups/operators.asciidoc[leveloffset=+1]
 
 include::execution-plan-groups/query-shortestpath-planning.adoc[leveloffset=+1]
 
