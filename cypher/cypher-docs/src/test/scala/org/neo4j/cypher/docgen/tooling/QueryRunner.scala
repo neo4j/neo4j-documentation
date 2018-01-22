@@ -69,7 +69,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
                     }
 
                   case (queryText: String, placeHolder: ExecutionPlanPlaceHolder) =>
-                    explainSingleQuery(db, queryText, placeHolder)
+                    explainSingleQuery(db, queryText, placeHolder.assertions, placeHolder)
 
                   case (queryText: String, placeHolder: ProfileExecutionPlanPlaceHolder) =>
                     profileSingleQuery(db, queryText, placeHolder.assertions, placeHolder)
@@ -132,14 +132,30 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
 
   private def explainSingleQuery(database: RestartableDatabase,
                                  queryText: String,
-                                 placeHolder: QueryResultPlaceHolder) = {
-    val planString = Try(database.execute(s"EXPLAIN $queryText")) match {
-      case Success(inner) =>
-        inner.executionPlanDescription().toString
-      case x =>
-        throw new InternalException(s"Did not see this one coming $x")
-    }
-    ExecutionPlanRunResult(queryText, placeHolder, ExecutionPlan(planString))
+                                 assertions: QueryAssertions,
+                                 placeHolder: QueryResultPlaceHolder): RunResult = {
+    val result: Either[Throwable, ExecutionPlan] =
+      try {
+        (assertions, Try(database.execute(s"EXPLAIN $queryText"))) match {
+          case (ResultAssertions(f), Success(inner)) =>
+            f(inner)
+            Right(ExecutionPlan(inner.executionPlanDescription().toString))
+
+          case (ResultAndDbAssertions(f), Success(inner)) =>
+            f(inner, database.getInnerDb)
+            Right(ExecutionPlan(inner.executionPlanDescription().toString))
+
+          case (NoAssertions, Success(inner)) =>
+            Right(ExecutionPlan(inner.executionPlanDescription().toString))
+
+          case x =>
+            throw new InternalException(s"Did not see this one coming $x")
+        }
+      } catch {
+        case e: Throwable =>
+          Left(e)
+      }
+    ExecutionPlanRunResult(queryText, placeHolder, result)
   }
 
   private def profileSingleQuery(database: RestartableDatabase,
@@ -162,7 +178,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
       case x =>
         throw new InternalException(s"Did not see this one coming $x")
     }
-    ExecutionPlanRunResult(queryText, placeHolder, ExecutionPlan(planString))
+    ExecutionPlanRunResult(queryText, placeHolder, Right(ExecutionPlan(planString)))
   }
 }
 
@@ -187,13 +203,13 @@ case class GraphVizRunResult(original: GraphVizPlaceHolder, graphViz: GraphViz) 
   override def newFailure = None
 }
 
-case class ExecutionPlanRunResult(queryText: String, original: QueryResultPlaceHolder, executionPlan: ExecutionPlan) extends RunResult {
+case class ExecutionPlanRunResult(queryText: String, original: QueryResultPlaceHolder, testResult: Either[Throwable, ExecutionPlan]) extends RunResult {
 
-  override def success = true
+  override def success: Boolean = testResult.isRight
 
-  override def newContent = Some(executionPlan)
+  override def newContent: Option[Content] = testResult.right.toOption
 
-  override def newFailure = None
+  override def newFailure: Option[Throwable] = testResult.left.toOption
 }
 
 case class TestRunResult(queryResults: Seq[RunResult]) {
