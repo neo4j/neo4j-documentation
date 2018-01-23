@@ -125,8 +125,8 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-value-hash-join, ValueHashJoin>>                       | Executes a hash join on arbitrary values. | |
 | <<query-plan-varlength-expand-all, VarLengthExpand(All)>>                                   | Traverses variable-length relationships from a given node. | |
 | <<query-plan-varlength-expand-into, VarLengthExpand(Into)>>                                   | Finds all variable-length relationships between two nodes. | |
-| <<query-plan-varlength-expand-full-pruning, VarLengthExpand(FullPruning)>>                                   | xx. | |
-| <<query-plan-varlength-expand-pruning, VarLengthExpand(Pruning)>>                                   | xx. | |
+| <<query-plan-varlength-expand-full-pruning, VarLengthExpand(FullPruning)>>                                   | Traverses variable-length relationships from a given node and only returns unique end nodes. | |
+| <<query-plan-varlength-expand-pruning, VarLengthExpand(Pruning)>>                                   | Traverses variable-length relationships from a given node and minimizes the number of duplicate end nodes returned. | |
 |===
 
 

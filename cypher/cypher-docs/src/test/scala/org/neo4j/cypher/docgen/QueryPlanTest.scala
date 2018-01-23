@@ -744,7 +744,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "VarLength Expand Full Pruning",
       text =
-        """xxxxx.""".stripMargin,
+        """The `VarLengthExpand(FullPruning)` operator is a more powerful variant of the <<query-plan-varlength-expand-pruning, `VarLengthExpand(Pruning)`>> operator.
+          |By building up more state,`VarLengthExpand(FullPruning)` is guaranteed to produce unique end nodes.
+        """.stripMargin,
       queryText = """MATCH (p:Person)-[:FRIENDS_WITH *4..5]-(q:Person) RETURN DISTINCT p, q""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(FullPruning)"))
     )
@@ -754,7 +756,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "VarLength Expand Pruning",
       text =
-        """xxxs.""".stripMargin,
+        """Given a start node, the `VarLengthExpand(Pruning)` operator will traverse variable-length relationships much like the <<query-plan-varlength-expand-all, `VarLengthExpand(All)`>> operator.
+          |However, as an optimization, some paths will not be explored if they are guaranteed to produce an end node that has already been found (by means of a previous path traversal).
+          |This will only be used in cases where the individual paths are not of interest.
+          |`VarLengthExpand(Pruning)` does not guarantee that all the end nodes will be unique (in contrast to <<query-plan-varlength-expand-full-pruning, `VarLengthExpand(FullPruning)`>>), but fewer duplicates will be produced than if <<query-plan-varlength-expand-all, `VarLengthExpand(All)`>> were used.""".stripMargin,
       queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(q:Person) RETURN DISTINCT p, q""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(Pruning)"))
     )
