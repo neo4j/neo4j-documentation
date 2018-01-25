@@ -738,7 +738,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def varlengthExpandFullPruning() {
+  /* @Test def varlengthExpandFullPruning() { */
+  def varlengthExpandFullPruning() {
     profileQuery(
       title = "VarLength Expand Full Pruning",
       text =
@@ -750,7 +751,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def varlengthExpandPruning() {
+  /* @Test def varlengthExpandPruning() { */
+  def varlengthExpandPruning() {
     profileQuery(
       title = "VarLength Expand Pruning",
       text =
