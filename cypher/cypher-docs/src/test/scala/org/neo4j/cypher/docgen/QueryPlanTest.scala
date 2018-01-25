@@ -282,18 +282,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def mergeInto() {
-    profileQuery(
-      title = "Merge Into",
-      text =
-        """When both the start and end node have already been found, the `Merge(Into)` operator is used either to find all connecting relationships or to create a new relationship between the two nodes.
-          |This operator is only used for the <<cypher-query-options, rule planner>>.
-        """.stripMargin,
-      queryText = """CYPHER planner=rule MATCH (p:Person {name: 'me'}), (f:Person {name: 'Andres'}) MERGE (p)-[:FRIENDS_WITH]->(f)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Merge(Into)"))
-    )
-  }
-
   @Test def createNode() {
     profileQuery(
       title = "Create Node",
@@ -411,42 +399,14 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  /* @Test def setNodeProperty() { */
-  def setNodeProperty() {
-    profileQuery(
-      title = "Set Node Property",
-      text =
-        """The `SetNodeProperty` operator is used when setting a property on a node.""".stripMargin,
-      queryText =
-        """MATCH (n)
-          |SET n.checked = true""".stripMargin,
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetNodeProperty"))
-    )
-  }
-
-  /* @Test def setRelationshipProperty() { */
-  def setRelationshipProperty() {
-    profileQuery(
-      title = "Set Relationship Property",
-      text =
-        """The `SetRelationshipProperty` operator is used when setting a property on a relationship.""".stripMargin,
-      queryText =
-        """MATCH (n)-[r]->(m)
-          |SET r.weight = 100""".stripMargin,
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetRelationshipProperty"))
-    )
-  }
-
   @Test def setProperty() {
     profileQuery(
       title = "Set Property",
       text =
-        """The `SetProperty` operator is used when setting a property on an entity, where the entity is determined at runtime to be either a node or relationship.""".stripMargin,
+        """The `SetProperty` operator is used when setting a property on a node or relationship.""".stripMargin,
       queryText =
-        """MATCH p = (a)-[r]->()
-          |WITH [a, r] AS something
-          |UNWIND something AS x
-          |SET x.prop = 42""".stripMargin,
+        """MATCH (n)
+          |SET n.checked = true""".stripMargin,
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetProperty"))
     )
   }
@@ -461,14 +421,14 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def produceResult() {
+  @Test def produceResults() {
     profileQuery(
-      title = "Produce Result",
+      title = "Produce Results",
       text =
-        """The `ProduceResult` operator prepares the result so that it is consumable by the user, such as transforming internal values to user values.
+        """The `ProduceResults` operator prepares the result so that it is consumable by the user, such as transforming internal values to user values.
           |It is present in every single query that returns data to the user, and has little bearing on performance optimisation.""".stripMargin,
       queryText = """MATCH (n) RETURN n""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProduceResult"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ProduceResults"))
     )
   }
 
@@ -692,13 +652,13 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def lock() {
+  @Test def lockNodes() {
     profileQuery(
-      title = "Lock",
+      title = "Lock Nodes",
       text =
-        """The `Lock` operator locks the start and end node when creating a relationship.""".stripMargin,
+        """The `LockNodes` operator locks the start and end node when creating a relationship.""".stripMargin,
       queryText = """MATCH (s:Person {name: 'me'}) MERGE (s)-[:FRIENDS_WITH]->(s)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Lock"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("LockNodes"))
     )
   }
 
@@ -777,6 +737,31 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """When both the start and end node have already been found, the `VarLengthExpand(Into)` operator is used to find all variable-length relationships connecting the two nodes.""".stripMargin,
       queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(p:Person) RETURN p""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(Into)"))
+    )
+  }
+
+  @Test def varlengthExpandFullPruning() {
+    profileQuery(
+      title = "VarLength Expand Full Pruning",
+      text =
+        """The `VarLengthExpand(FullPruning)` operator is a more powerful variant of the <<query-plan-varlength-expand-pruning, `VarLengthExpand(Pruning)`>> operator.
+          |By building up more state,`VarLengthExpand(FullPruning)` is guaranteed to produce unique end nodes.
+        """.stripMargin,
+      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *4..5]-(q:Person) RETURN DISTINCT p, q""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(FullPruning)"))
+    )
+  }
+
+  @Test def varlengthExpandPruning() {
+    profileQuery(
+      title = "VarLength Expand Pruning",
+      text =
+        """Given a start node, the `VarLengthExpand(Pruning)` operator will traverse variable-length relationships much like the <<query-plan-varlength-expand-all, `VarLengthExpand(All)`>> operator.
+          |However, as an optimization, some paths will not be explored if they are guaranteed to produce an end node that has already been found (by means of a previous path traversal).
+          |This will only be used in cases where the individual paths are not of interest.
+          |`VarLengthExpand(Pruning)` does not guarantee that all the end nodes will be unique (in contrast to <<query-plan-varlength-expand-full-pruning, `VarLengthExpand(FullPruning)`>>), but fewer duplicates will be produced than if <<query-plan-varlength-expand-all, `VarLengthExpand(All)`>> were used.""".stripMargin,
+      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(q:Person) RETURN DISTINCT p, q""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(Pruning)"))
     )
   }
 
@@ -1032,11 +1017,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def triadic() {
+  @Test def triadicSelection() {
     profileQuery(
-      title = "Triadic",
+      title = "Triadic Selection",
       text =
-        """The `Triadic` operator is used to solve triangular queries, such as the very
+        """The `TriadicSelection` operator is used to solve triangular queries, such as the very
           |common 'find my friend-of-friends that are not already my friend'.
           |It does so by putting all the friends into a set, and uses the set to check if the
           |friend-of-friends are already connected to me.
@@ -1045,7 +1030,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """MATCH (me:Person)-[:FRIENDS_WITH]-()-[:FRIENDS_WITH]-(other)
           |WHERE NOT (me)-[:FRIENDS_WITH]-(other)
           |RETURN other.name""".stripMargin,
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("Triadic"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("TriadicSelection"))
     )
   }
 
