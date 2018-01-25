@@ -163,6 +163,34 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def createNodeKeyConstraint() {
+    profileQuery(
+      title = "Create Node Key Constraint",
+      text =
+        """The `CreateNodeKeyConstraint` operator creates a Node Key which ensures that all nodes with a particular label have a set of defined properties whose combined value is unique, and where all properties in the set are present.
+          |This will only appear in Enterprise Edition.
+        """.stripMargin,
+      queryText = """CREATE CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateNodeKeyConstraint"))
+    )
+  }
+
+  @Test def dropNodePropertyExistenceConstraint2() {
+    executePreparationQueries {
+      List("CREATE CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY")
+    }
+
+    profileQuery(
+      title = "Drop Node Key Constraint",
+      text =
+        """The `DropNodeKeyConstraint` operator removes a Node Key from a set of properties for all nodes having a certain label.
+          |This will only appear in Enterprise Edition.
+        """.stripMargin,
+      queryText = """DROP CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropNodeKeyConstraint"))
+    )
+  }
+
   @Test def createRelationshipPropertyExistenceConstraint() {
     profileQuery(
       title = "Create Relationship Property Existence Constraint",
