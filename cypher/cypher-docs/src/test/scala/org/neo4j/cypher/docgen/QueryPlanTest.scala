@@ -1127,7 +1127,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def call(): Unit = {
+  @Test def call() {
     profileQuery(
       title = "Procedure Call",
       text = """The `ProcedureCall` operator indicates an invocation to a procedure.""".stripMargin,
