@@ -1081,22 +1081,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  //TODO get a query that works
-//  @Test def nodeOuterHashJoin() {
-//    profileQuery(
-//      title = "Node Outer Hash Join",
-//      text =
-//        """The `NodeOuterHashJoin` operator is a variation of the <<execution-plans-operators-hash-join-general, hash join>>.
-//          |Instead of discarding rows that are not found in the probe table, `NodeOuterHashJoin` will instead yield a single row with `null`.""".stripMargin,
-//      queryText =
-//        """MATCH (p:Person {name:'me'})
-//          |OPTIONAL MATCH (p)--(q:Person {name: p.surname})
-//          |USING JOIN ON p
-//          |RETURN p,q""".stripMargin,
-//      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeOuterHashJoin"))
-//    )
-//  }
-
   @Test def rollUpApply() {
     profileQuery(
       title = "Roll Up Apply",

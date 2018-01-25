@@ -93,12 +93,9 @@ In query plans, the build input is always the left operator, and the probe input
 There are two hash join operators:
 
 * <<query-plan-node-hash-join, NodeHashJoin>>
-//* <<query-plan-node-outer-hash-join, NodeOuterHashJoin>>
 * <<query-plan-value-hash-join, ValueHashJoin>>
 
 include::../ql/query-plan/node-hash-join.asciidoc[]
-
-//include::../ql/query-plan/node-outer-hash-join.asciidoc[]
 
 include::../ql/query-plan/value-hash-join.asciidoc[]
 
