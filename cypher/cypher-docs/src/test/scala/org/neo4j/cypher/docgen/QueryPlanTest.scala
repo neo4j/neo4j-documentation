@@ -163,6 +163,34 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def createNodeKeyConstraint() {
+    profileQuery(
+      title = "Create Node Key Constraint",
+      text =
+        """The `CreateNodeKeyConstraint` operator creates a Node Key which ensures that all nodes with a particular label have a set of defined properties whose combined value is unique, and where all properties in the set are present.
+          |This will only appear in Enterprise Edition.
+        """.stripMargin,
+      queryText = """CREATE CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateNodeKeyConstraint"))
+    )
+  }
+
+  @Test def dropNodePropertyExistenceConstraint2() {
+    executePreparationQueries {
+      List("CREATE CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY")
+    }
+
+    profileQuery(
+      title = "Drop Node Key Constraint",
+      text =
+        """The `DropNodeKeyConstraint` operator removes a Node Key from a set of properties for all nodes having a certain label.
+          |This will only appear in Enterprise Edition.
+        """.stripMargin,
+      queryText = """DROP CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropNodeKeyConstraint"))
+    )
+  }
+
   @Test def createRelationshipPropertyExistenceConstraint() {
     profileQuery(
       title = "Create Relationship Property Existence Constraint",
@@ -740,29 +768,15 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  /* @Test def varlengthExpandFullPruning() { */
-  def varlengthExpandFullPruning() {
-    profileQuery(
-      title = "VarLength Expand Full Pruning",
-      text =
-        """The `VarLengthExpand(FullPruning)` operator is a more powerful variant of the <<query-plan-varlength-expand-pruning, `VarLengthExpand(Pruning)`>> operator.
-          |By building up more state,`VarLengthExpand(FullPruning)` is guaranteed to produce unique end nodes.
-        """.stripMargin,
-      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *4..5]-(q:Person) RETURN DISTINCT p, q""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(FullPruning)"))
-    )
-  }
-
-  /* @Test def varlengthExpandPruning() { */
-  def varlengthExpandPruning() {
+  @Test def varlengthExpandPruning() {
     profileQuery(
       title = "VarLength Expand Pruning",
       text =
         """Given a start node, the `VarLengthExpand(Pruning)` operator will traverse variable-length relationships much like the <<query-plan-varlength-expand-all, `VarLengthExpand(All)`>> operator.
           |However, as an optimization, some paths will not be explored if they are guaranteed to produce an end node that has already been found (by means of a previous path traversal).
           |This will only be used in cases where the individual paths are not of interest.
-          |`VarLengthExpand(Pruning)` does not guarantee that all the end nodes will be unique (in contrast to <<query-plan-varlength-expand-full-pruning, `VarLengthExpand(FullPruning)`>>), but fewer duplicates will be produced than if <<query-plan-varlength-expand-all, `VarLengthExpand(All)`>> were used.""".stripMargin,
-      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *1..2]-(q:Person) RETURN DISTINCT p, q""",
+          |This operator guarantees that all the end nodes produced will be unique.""".stripMargin,
+      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *3..4]-(q:Person) RETURN DISTINCT p, q""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(Pruning)"))
     )
   }
@@ -1095,22 +1109,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  //TODO get a query that works
-//  @Test def nodeOuterHashJoin() {
-//    profileQuery(
-//      title = "Node Outer Hash Join",
-//      text =
-//        """The `NodeOuterHashJoin` operator is a variation of the <<execution-plans-operators-hash-join-general, hash join>>.
-//          |Instead of discarding rows that are not found in the probe table, `NodeOuterHashJoin` will instead yield a single row with `null`.""".stripMargin,
-//      queryText =
-//        """MATCH (p:Person {name:'me'})
-//          |OPTIONAL MATCH (p)--(q:Person {name: p.surname})
-//          |USING JOIN ON p
-//          |RETURN p,q""".stripMargin,
-//      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeOuterHashJoin"))
-//    )
-//  }
-
   @Test def rollUpApply() {
     profileQuery(
       title = "Roll Up Apply",
@@ -1141,7 +1139,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def call(): Unit = {
+  @Test def call() {
     profileQuery(
       title = "Procedure Call",
       text = """The `ProcedureCall` operator indicates an invocation to a procedure.""".stripMargin,
