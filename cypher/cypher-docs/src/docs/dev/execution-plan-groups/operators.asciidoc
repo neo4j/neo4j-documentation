@@ -71,6 +71,8 @@ include::../ql/query-plan/varlength-expand-pruning.asciidoc[]
 
 include::../ql/query-plan/assert-same-node.asciidoc[]
 
+include::../ql/query-plan/drop-result.asciidoc[]
+
 include::../ql/query-plan/empty-result.asciidoc[]
 
 include::../ql/query-plan/produce-results.asciidoc[]
