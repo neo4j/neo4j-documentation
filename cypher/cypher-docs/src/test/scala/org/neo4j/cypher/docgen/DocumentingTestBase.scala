@@ -68,6 +68,7 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
     .replace("(", "")
     .replace(")", "")
     .replace("`", "")
+    .replace("/", "-")
 
   def simpleName: String = this.getClass.getSimpleName.replaceAll("Test", "").toLowerCase
 
