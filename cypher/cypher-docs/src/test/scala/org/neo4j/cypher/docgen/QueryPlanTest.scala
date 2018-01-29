@@ -447,6 +447,17 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def dropResult() {
+    profileQuery(
+      title = "Drop Result",
+      text =
+        """The `DropResult` operator produces zero rows.
+          |It is applied when it can be deduced through static analysis that the result of an expression will be empty, such as when a predicate guaranteed to return `false` (e.g. `1 > 5`) is used in a query.""".stripMargin,
+      queryText = """MATCH (p) WHERE false RETURN p""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropResult"))
+    )
+  }
+
   @Test def produceResults() {
     profileQuery(
       title = "Produce Results",
@@ -1028,6 +1039,25 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """MATCH (andy:Person {name:'Andreas'})-[:WORKS_IN]->(loc)<-[:WORKS_IN]-(matt:Person {name:'Mattis'})
           |RETURN loc.name""".stripMargin,
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeHashJoin"))
+    )
+  }
+
+  @Test def nodeOuterHashJoin() {
+    profileQuery(
+      title = "Node Left/Right Outer Hash Join",
+      text =
+        """
+          |The `NodeLeftOuterHashJoin` and `NodeRightOuterHashJoin` operators are variations of the <<execution-plans-operators-hash-join-general, hash join>>.
+          |The query below can be planned with either a left or a right outer join.
+          |The decision depends on the cardinalities of the left-hand and right-hand sides; i.e. how many rows would be returned, respectively, for `(a:Person)` and `(a)-->(b:Person)`.
+          |If `(a:Person)` returns fewer results than `(a)-->(b:Person)`, a left outer join -- indicated by `NodeLeftOuterHashJoin` -- is planned.
+          |On the other hand, if `(a:Person)` returns more results than `(a)-->(b:Person)`, a right outer join -- indicated by `NodeRightOuterHashJoin` -- is planned instead.""".stripMargin,
+      queryText =
+        """MATCH (a:Person)
+          |OPTIONAL MATCH (a)-->(b:Person)
+          |USING JOIN ON a
+          |RETURN a.name, b.name""".stripMargin,
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("NodeRightOuterHashJoin"))
     )
   }
 

@@ -71,6 +71,8 @@ include::../ql/query-plan/varlength-expand-pruning.asciidoc[]
 
 include::../ql/query-plan/assert-same-node.asciidoc[]
 
+include::../ql/query-plan/drop-result.asciidoc[]
+
 include::../ql/query-plan/empty-result.asciidoc[]
 
 include::../ql/query-plan/produce-results.asciidoc[]
@@ -90,14 +92,18 @@ Once this is complete, the probe table is checked for each row coming from the p
 
 In query plans, the build input is always the left operator, and the probe input the right operator.
 
-There are two hash join operators:
+There are four hash join operators:
 
 * <<query-plan-node-hash-join, NodeHashJoin>>
 * <<query-plan-value-hash-join, ValueHashJoin>>
+* <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>
+* <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>
 
 include::../ql/query-plan/node-hash-join.asciidoc[]
 
 include::../ql/query-plan/value-hash-join.asciidoc[]
+
+include::../ql/query-plan/node-left-right-outer-hash-join.asciidoc[]
 
 include::../ql/query-plan/triadic-selection.asciidoc[]
 
