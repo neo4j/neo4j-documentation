@@ -416,6 +416,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   override def graph = db
   override def eengine = engine
 
+  def graphOps: GraphDatabaseService = db.getGraphDatabaseService
+
   def indexProps: List[String] = List()
 
   def dumpToFileWithResult(dir: File, writer: PrintWriter, title: String, query: String, returns: String, text: String,
@@ -502,9 +504,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     })
   }
 
-  def node(name: String): Node = db.getNodeById(nodeMap.getOrElse(name, throw new NotFoundException(name)))
+  def node(name: String): Node = graphOps.getNodeById(nodeMap.getOrElse(name, throw new NotFoundException(name)))
   def nodes(names: String*): List[Node] = names.map(node).toList
-  def rel(id: Long): Relationship = db.getRelationshipById(id)
+  def rel(id: Long): Relationship = graphOps.getRelationshipById(id)
 
   @After
   def tearDown() {

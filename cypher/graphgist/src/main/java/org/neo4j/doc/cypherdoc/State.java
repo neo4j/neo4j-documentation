@@ -20,7 +20,7 @@
 package org.neo4j.doc.cypherdoc;
 
 import org.neo4j.cypher.internal.compiler.v3_4.prettifier.Prettifier;
-import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService;
+import org.neo4j.graphdb.GraphDatabaseService;
 
 import java.io.File;
 import java.sql.Connection;
@@ -31,7 +31,7 @@ import java.util.Map;
 
 class State
 {
-    final GraphDatabaseCypherService database;
+    final GraphDatabaseService graphOps;
     final Connection sqlDatabase;
     final File parentDirectory;
     final String url;
@@ -43,9 +43,12 @@ class State
     Result latestSqlResult;
     Result testedSqlResult;
 
-    State( GraphDatabaseCypherService database, Connection sqlConnection, File parentDirectory, String url )
+    State( GraphDatabaseService graphOps,
+           Connection sqlConnection,
+           File parentDirectory,
+           String url )
     {
-        this.database = database;
+        this.graphOps = graphOps;
         this.sqlDatabase = sqlConnection;
         this.parentDirectory = parentDirectory;
         this.url = url.endsWith( "/" ) ? url : url + "/";

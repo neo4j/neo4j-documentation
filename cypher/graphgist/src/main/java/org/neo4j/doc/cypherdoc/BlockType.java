@@ -40,9 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.neo4j.kernel.api.KernelTransaction;
-import org.neo4j.kernel.api.security.AnonymousContext;
-import org.neo4j.kernel.impl.coreapi.InternalTransaction;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle;
 import org.neo4j.visualization.graphviz.GraphvizWriter;
@@ -303,13 +301,14 @@ enum BlockType
                 }
                 if ( exec )
                 {
-                    state.latestResult =
-                            new Result( fileQuery, state.database.getGraphDatabaseService().execute( "PROFILE " + fileQuery, state.parameters ), state.database );
+                    state.latestResult = new Result( fileQuery,
+                                                     state.graphOps.execute( "PROFILE " + fileQuery, state.parameters ),
+                                                     state.graphOps );
+
                     prettifiedStatements.add( state.prettify( webQuery ) );
-                    try ( InternalTransaction tx = state.database.beginTransaction( KernelTransaction.Type.explicit,
-                            AnonymousContext.read() ) )
+                    try ( Transaction tx = state.graphOps.beginTx() )
                     {
-                        state.database.getGraphDatabaseService().schema().awaitIndexesOnline( 10000, TimeUnit.SECONDS );
+                        state.graphOps.schema().awaitIndexesOnline( 10000, TimeUnit.SECONDS );
                         tx.success();
                     }
                 }
@@ -459,7 +458,7 @@ enum BlockType
         GraphvizWriter writer = new GraphvizWriter(
                 AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors() );
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try ( InternalTransaction tx = state.database.beginTransaction( KernelTransaction.Type.explicit, AnonymousContext.read() ) )
+        try ( Transaction tx = state.graphOps.beginTx() )
         {
             if ( resultOnly )
             {
@@ -467,7 +466,7 @@ enum BlockType
             }
             else
             {
-                writer.emit( out, Walker.fullGraph( state.database.getGraphDatabaseService() ) );
+                writer.emit( out, Walker.fullGraph( state.graphOps ) );
             }
             tx.success();
         }

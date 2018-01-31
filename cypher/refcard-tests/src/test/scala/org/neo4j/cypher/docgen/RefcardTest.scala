@@ -75,6 +75,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   override def graph = db
   override def eengine = engine
 
+  def graphOps: GraphDatabaseService = db.getGraphDatabaseService
+
   def title: String
   def linkId: String = null
   def section: String = "refcard"
@@ -132,9 +134,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     })
   }
 
-  def node(name: String): Node = db.getNodeById(nodes.getOrElse(name, throw new NotFoundException(name)))
+  def node(name: String): Node = graphOps.getNodeById(nodes.getOrElse(name, throw new NotFoundException(name)))
 
-  def rel(id: Long): Relationship = db.getRelationshipById(id)
+  def rel(id: Long): Relationship = graphOps.getRelationshipById(id)
 
   def text: String
 

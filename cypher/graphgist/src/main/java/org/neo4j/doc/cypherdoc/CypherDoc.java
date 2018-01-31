@@ -19,7 +19,7 @@
  */
 package org.neo4j.doc.cypherdoc;
 
-import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService;
+import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
@@ -71,8 +71,8 @@ public final class CypherDoc
         //TODO remove config when compiled plans are feature complete
         Map<Setting<?>, String> config = new HashMap<>();
         config.put( GraphDatabaseSettings.cypher_runtime, "INTERPRETED" );
-        GraphDatabaseCypherService database = new GraphDatabaseCypherService(
-                new TestGraphDatabaseFactory().setFileSystem( fs ).newImpermanentDatabase( config ) );
+        GraphDatabaseService graphOps =
+                new TestGraphDatabaseFactory().setFileSystem( fs ).newImpermanentDatabase( config );
 
         Connection conn = null;
         TestFailureException failure = null;
@@ -80,7 +80,7 @@ public final class CypherDoc
         {
             conn = DriverManager.getConnection( "jdbc:hsqldb:mem:graphgist;shutdown=true" );
             conn.setAutoCommit( true );
-            return executeBlocks( blocks, new State( database, conn, parentDirectory, url ) );
+            return executeBlocks( blocks, new State( graphOps, conn, parentDirectory, url ) );
         }
         catch ( TestFailureException exception )
         {
@@ -93,7 +93,7 @@ public final class CypherDoc
         }
         finally
         {
-            database.getGraphDatabaseService().shutdown();
+            graphOps.shutdown();
             if ( failure != null )
             {
                 dumpStoreFiles( fs, failure, "after-shutdown" );
