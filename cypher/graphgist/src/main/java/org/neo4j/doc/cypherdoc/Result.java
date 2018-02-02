@@ -19,7 +19,7 @@
  */
 package org.neo4j.doc.cypherdoc;
 
-import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService;
+import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.Relationship;
@@ -38,11 +38,11 @@ class Result
     final Set<Long> nodeIds = new HashSet<>();
     final Set<Long> relationshipIds = new HashSet<>();
 
-    public Result( String query, org.neo4j.graphdb.Result result, GraphDatabaseCypherService database )
+    public Result( String query, org.neo4j.graphdb.Result result, GraphDatabaseService graphOps )
     {
         this.query = query;
         text = result.resultAsString();
-        try ( Transaction tx = database.getGraphDatabaseService().beginTx() )
+        try ( Transaction tx = graphOps.beginTx() )
         {
             extract( result );
         }

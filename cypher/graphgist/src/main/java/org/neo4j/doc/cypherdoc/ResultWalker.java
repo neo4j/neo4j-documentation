@@ -35,12 +35,12 @@ public class ResultWalker
 
         for ( long nodeId : state.latestResult.nodeIds )
         {
-            nodes.add( state.database.getNodeById( nodeId ) );
+            nodes.add( state.graphOps.getNodeById( nodeId ) );
         }
 
         for ( long relationshipId : state.latestResult.relationshipIds )
         {
-            Relationship rel = state.database.getRelationshipById( relationshipId );
+            Relationship rel = state.graphOps.getRelationshipById( relationshipId );
             nodes.add( rel.getStartNode() );
             nodes.add( rel.getEndNode() );
         }

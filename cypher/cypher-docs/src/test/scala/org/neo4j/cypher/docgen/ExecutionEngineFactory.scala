@@ -32,7 +32,6 @@ object ExecutionEngineFactory {
   def createEnterpriseDbAndEngine(): (GraphDatabaseService, ExecutionEngine) = {
     val fs = new EphemeralFileSystemAbstraction
     val graph: GraphDatabaseService = new TestEnterpriseGraphDatabaseFactory().setFileSystem(fs).newImpermanentDatabase
-    val database = new GraphDatabaseCypherService(graph)
 
     (graph, createEnterpriseEngineFromDb(graph))
   }
