@@ -340,7 +340,7 @@ public class BlockTypeTest
         when( graph.execute( fileQuery.capture(), eq( Collections.emptyMap() ) ) )
                 .thenReturn( result );
 
-        state = spy( new State( graphOps, null, new File( "/dev/null" ), "http://myurl" ) );
+        state = spy( new State( graph, null, new File( "/dev/null" ), "http://myurl" ) );
         doReturn( "apa" ).when( state ).prettify( httpQuery.capture() );
         state.knownFiles.add( "my_file.csv" );
 
