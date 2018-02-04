@@ -153,9 +153,9 @@ public class PagedTraverserDocIT extends ExclusiveServerTestBase
         assertThat( entity.response()
                 .getLocation()
                 .toString(), containsString( "/db/data/node/" + theStartNode.getId() + "/paged/traverse/node/" ) );
-        assertEquals( "application/json; charset=UTF-8", entity.response()
+        assertEquals( "application/json; charset=utf-8", entity.response()
                 .getType()
-                .toString() );
+                .toString().toLowerCase() );
     }
 
     @Documented( "Paging through the results of a paged traverser.\n\n" +
