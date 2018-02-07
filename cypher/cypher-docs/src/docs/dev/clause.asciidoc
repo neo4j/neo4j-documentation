@@ -179,7 +179,8 @@ include::ql/set/index.asciidoc[leveloffset=+1]
 
 include::ql/remove/index.asciidoc[leveloffset=+1]
 
-include::ql/foreach/index.asciidoc[leveloffset=+1]
+include::ql/query-foreach.adoc[leveloffset=+1]
+
 
 //Reading/Writing
 include::ql/merge/index.asciidoc[leveloffset=+1]
