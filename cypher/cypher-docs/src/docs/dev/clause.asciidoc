@@ -173,7 +173,7 @@ include::ql/query-limit.adoc[leveloffset=+1]
 //Writing
 include::ql/create/index.asciidoc[leveloffset=+1]
 
-include::ql/delete/index.asciidoc[leveloffset=+1]
+include::ql/query-delete.adoc[leveloffset=+1]
 
 include::ql/set/index.asciidoc[leveloffset=+1]
 
