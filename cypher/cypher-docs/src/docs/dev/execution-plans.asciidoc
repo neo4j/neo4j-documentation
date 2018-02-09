@@ -174,11 +174,11 @@ We list below all the actions that trigger a database hit:
 
 
 * General actions
-* Get the name of a property key by its ID, or its ID by the key name
-* Find a node or relationship through an index seek or index scan
-* Find a path in a variable-length expand
-* Find a shortest path
-* Ask the count store for a value
+** Get the name of a property key by its ID, or its ID by the key name
+** Find a node or relationship through an index seek or index scan
+** Find a path in a variable-length expand
+** Find a shortest path
+** Ask the count store for a value
 
 
 * Schema actions
