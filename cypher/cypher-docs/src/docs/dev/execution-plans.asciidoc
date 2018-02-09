@@ -19,6 +19,7 @@ The compiler uses this estimate to choose a suitable execution plan.
 `DbHits`::
 Each operator will ask the Neo4j storage engine to do work such as retrieving or updating data.
 A _database hit_ is an abstract unit of this storage engine work.
+The actions triggering a database hit are listed <<execution-plans-dbhits, here>>.
 
 See <<how-do-i-profile-a-query>> for how to view the execution plan for a query.
 
@@ -36,7 +37,7 @@ There is no guarantee that a specific query will always be solved with the same 
 
 
 [[execution-plan-operators-summary]]
-**Execution plan operators at a glance**
+== Execution plan operators at a glance
 
 This table comprises all the execution plan operators ordered lexicographically.
 
@@ -132,7 +133,65 @@ This table comprises all the execution plan operators ordered lexicographically.
 |===
 
 
+[[execution-plans-dbhits]]
+== DbHits (Database hits)
+
+Each operator will send a request to the storage engine to do work such as retrieving or updating data.
+A _database hit_ is an abstract unit of this storage engine work.
+
+We list below all the actions that trigger a database hit:
+
+* Create actions
+** Create a node
+** Create a relationship
+** Create a new node label
+** Create a new relationship type
+** Create a new ID for property keys with the same name
+
+* Delete actions
+** Delete a node
+** Delete a relationship
+
+* Update actions
+** Set one or more labels on a node
+** Remove one or more labels from a node
+
+* Node-specific actions
+** Get a node by its ID
+** Get the degree of a node
+** Determine whether a node is dense
+** Determine whether a label is set on a node
+** Get the labels of a node
+** Get a property of a node
+** Get an existing node label
+** Get the name of a label by its ID, or its ID by its name
+
+* Relationship-specific actions
+** Get a relationship by its ID
+** Get a property of a relationship
+** Get an existing relationship type
+** Get a relationship type name by its ID, or its ID by its name
+
+
+* General actions
+* Get the name of a property key by its ID, or its ID by the key name
+* Find a node or relationship through an index seek or index scan
+* Find a path in a variable-length expand
+* Find a shortest path
+* Ask the count store for a value
+
+
+* Schema actions
+** Add an index
+** Drop an index
+** Get the reference of an index
+** Create a constraint
+** Drop a constraint
+
+* Call a procedure
+* Call a user-defined function
+
+
 include::execution-plan-groups/operators.asciidoc[leveloffset=+1]
 
 include::execution-plan-groups/query-shortestpath-planning.adoc[leveloffset=+1]
-
