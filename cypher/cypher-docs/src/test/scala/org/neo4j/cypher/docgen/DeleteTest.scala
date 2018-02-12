@@ -19,59 +19,81 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.junit.Test
 import org.neo4j.cypher.QueryStatisticsTestSupport
-import org.neo4j.graphdb.Label
-import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class DeleteTest extends DocumentingTestBase with QueryStatisticsTestSupport with SoftReset {
-  override def graphDescription = List("Andres KNOWS Tobias", "Andres KNOWS Peter")
+class DeleteTest extends DocumentingTest with QueryStatisticsTestSupport {
+  override def outputPath = "target/docs/dev/ql"
 
-  override val properties = Map(
-    "Andres" -> Map[String, Any]("name"->"Andres", "age" -> 36l),
-    "Tobias" -> Map[String, Any]("name"->"Tobias", "age" -> 25l),
-    "Peter"  -> Map[String, Any]("name"->"Peter",  "age" -> 34l)
-  )
+  override def doc = new DocBuilder {
+    doc("DELETE", "query-delete")
+    initQueries("""CREATE (a:Person {name: 'Andres', age: 36}),
+                  |       (p:Person {name: 'Tobias', age: 25}),
+                  |       (t:Person {name: 'Peter', age: 34}),
+                  |       (z:Person {name: 'UNKNOWN'}),
+                  |       (a)-[:KNOWS]->(t),
+                  |       (a)-[:KNOWS]->(p)""")
+    synopsis("The `DELETE` clause is used to delete graph elements -- nodes, relationships or paths.")
+    p(
+      """* <<query-delete-introduction, Introduction>>
+        |* <<delete-delete-single-node, Delete a single node>>
+        |* <<delete-delete-all-nodes-and-relationships, Delete all nodes and relationships>>
+        |* <<delete-delete-a-node-with-all-its-relationships, Delete a node with all its relationships>>
+        |* <<delete-delete-relationships-only, Delete relationships only>>""".stripMargin)
+    section("Introduction", "query-delete-introduction") {
+      p(
+        """For removing properties and labels, see <<query-remove>>.
+          |Remember that you cannot delete a node without also deleting relationships that start or end on said node.
+          |Either explicitly delete the relationships, or use `DETACH DELETE`.""".stripMargin)
+      p("""The examples start out with the following database:""".stripMargin)
+      graphViz()
+    }
+    section("Delete single node", "delete-delete-single-node") {
+      p(
+        """To delete a node, use the `DELETE` clause.""".stripMargin)
+      query(
+        """MATCH (n:Person {name: 'UNKNOWN'})
+          |DELETE n""".stripMargin, ResultAssertions((r) => {
+          assertStats(r, nodesDeleted = 1)
+        })) {
+        resultTable()
+      }
+    }
+    section("Delete all nodes and relationships", "delete-delete-all-nodes-and-relationships") {
+      p(
+        """This query isn't for deleting large amounts of data, but is useful when experimenting with small example data sets.""".stripMargin)
+      query(
+        """MATCH (n)
+          |DETACH DELETE n""".stripMargin, ResultAssertions((r) => {
+          assertStats(r, relationshipsDeleted = 2, nodesDeleted = 4)
+        })) {
+        resultTable()
+      }
+    }
+    section("Delete a node with all its relationships", "delete-delete-a-node-with-all-its-relationships") {
+      p(
+        """When you want to delete a node and any relationship going to or from it, use `DETACH DELETE`.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})
+          |DETACH DELETE n""".stripMargin, ResultAssertions((r) => {
+          assertStats(r, relationshipsDeleted = 2, nodesDeleted = 1)
+        })) {
+        resultTable()
+      }
+    }
+    section("Delete relationships only", "delete-delete-relationships-only") {
+      p(
+        """It is also possible to delete relationships only, leaving the node(s) otherwise unaffected.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})-[r:KNOWS]->()
+          |DELETE r""".stripMargin, ResultAssertions((r) => {
+          assertStats(r, relationshipsDeleted = 2, nodesDeleted = 0)
+        })) {
+        p("""This deletes all outgoing `KNOWS` relationships from the node with the name *'Andres'*.""".stripMargin)
+        resultTable()
+      }
+    }
 
-  override protected def getGraphvizStyle: GraphStyle =
-    AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
+  }.build()
 
-  def section = "Delete"
-
-  @Test def delete_single_node() {
-    prepareAndTestQuery(
-      title = "Delete single node",
-      text = "To delete a node, use the `DELETE` clause.",
-      queryText = "MATCH (n:Useless) DELETE n",
-      optionalResultExplanation = "",
-      prepare = db => db.inTx(db.createNode(Label.label("Useless"))),
-      assertions = p => assertStats(p, nodesDeleted = 1))
-  }
-
-  @Test def delete_all_nodes_and_all_relationships() {
-    testQuery(
-      title = "Delete all nodes and relationships",
-      text = "This query isn't for deleting large amounts of data, but is nice when playing around with small example data sets.",
-      queryText = "MATCH (n) DETACH DELETE n",
-      optionalResultExplanation = "",
-      assertions = (p) => assertStats(p, relationshipsDeleted = 2, nodesDeleted = 3))
-  }
-
-  @Test def force_delete_a_node() {
-    testQuery(
-      title = "Delete a node with all its relationships",
-      text = "When you want to delete a node and any relationship going to or from it, use `DETACH DELETE`.",
-      queryText = "MATCH (n {name: 'Andres'}) DETACH DELETE n",
-      optionalResultExplanation = "",
-      assertions = (p) => assertStats(p, relationshipsDeleted = 2, nodesDeleted = 1))
-  }
-
-  @Test def delete_a_relationship() {
-    testQuery(
-      title = "Delete relationships only",
-      text = "It is also possible to delete relationships only, leaving the node(s) otherwise unaffected.",
-      queryText = "MATCH (n {name: 'Andres'})-[r:KNOWS]->() DELETE r",
-      optionalResultExplanation = "This deletes all outgoing `KNOWS` relationships from the node with the name *'Andres'*.",
-      assertions = (p) => assertStats(p, relationshipsDeleted = 2, nodesDeleted = 0))
-  }
 }
