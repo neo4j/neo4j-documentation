@@ -24,12 +24,13 @@ import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.compiler.v3_1.executionplan.InternalExecutionResult
 import org.neo4j.cypher.internal.helpers.GraphIcing
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
+import org.neo4j.kernel.impl.proc.Procedures
 import org.neo4j.test.TestGraphDatabaseFactory
 
 import scala.util.Try
 
 /* I exist so my users can have a restartable database that is lazily created */
-class RestartableDatabase(init: Seq[String], factory: TestGraphDatabaseFactory = new TestGraphDatabaseFactory())
+class RestartableDatabase(init: RunnableInitialization, factory: TestGraphDatabaseFactory = new TestGraphDatabaseFactory())
  extends GraphIcing with ExecutionEngineHelper {
 
   var graph: GraphDatabaseCypherService = null
@@ -46,7 +47,7 @@ class RestartableDatabase(init: Seq[String], factory: TestGraphDatabaseFactory =
     if (graph == null) {
       graph = new GraphDatabaseCypherService(factory.newImpermanentDatabase())
       eengine = new ExecutionEngine(graph)
-      _failures = initialize(init)
+      _failures = initialize(init, graph)
     }
   }
 
@@ -82,9 +83,20 @@ class RestartableDatabase(init: Seq[String], factory: TestGraphDatabaseFactory =
     _markedForRestart = false
   }
 
-  private def initialize(init: Seq[String]): Seq[QueryRunResult] =
-    init.flatMap { q =>
-      val result = Try(execute(q, Seq.empty:_*))
+  private def initialize(init: RunnableInitialization, graph: GraphDatabaseCypherService): Seq[QueryRunResult] = {
+    // Register procedures and functions
+    val procedureRegistry = graph.getDependencyResolver.resolveDependency(classOf[Procedures])
+    init.procedures.map(procedureRegistry.registerProcedure)
+    init.userDefinedFunctions.map(procedureRegistry.registerFunction)
+    // NOTE: userDefinedAggregationFunctions not supported in 3.1
+
+    // Execute custom initialization code
+    init.initCode.foreach(_.apply(graph))
+
+    // Execute queries
+    init.initQueries.flatMap { q =>
+      val result = Try(execute(q, Seq.empty: _*))
       result.failed.toOption.map((e: Throwable) => QueryRunResult(q, new ErrorPlaceHolder(), Left(e)))
     }
+  }
 }
