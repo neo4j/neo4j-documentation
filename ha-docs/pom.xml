@@ -3,14 +3,14 @@
   <parent>
     <groupId>org.neo4j.doc</groupId>
     <artifactId>neo4j-manual-parent</artifactId>
-    <version>3.3.3-SNAPSHOT</version>
+    <version>3.3.4-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.neo4j.doc</groupId>
   <artifactId>neo4j-ha-docs</artifactId>
   <name>Neo4j - High Availability Docs</name>
-  <version>3.3.3-SNAPSHOT</version>
+  <version>3.3.4-SNAPSHOT</version>
 
   <properties>
     <bundle.namespace>org.neo4j.kernel.ha</bundle.namespace>
