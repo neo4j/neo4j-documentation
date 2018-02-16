@@ -26,7 +26,7 @@ class RunnableContentTest extends CypherFunSuite {
   test("graph viz includes all init queries, and the actual query when inside a Query object") {
     val graphVizPlaceHolder = new GraphVizPlaceHolder("")
     val tablePlaceHolder = new TablePlaceHolder(NoAssertions)
-    val queryObject = Query("5", NoAssertions, Seq("3", "4"), graphVizPlaceHolder ~ tablePlaceHolder)
+    val queryObject = Query("5", NoAssertions, Seq("3", "4"), graphVizPlaceHolder ~ tablePlaceHolder, Seq.empty)
     val doc = Document("title", "id", Seq("1","2"), queryObject)
 
     doc.contentWithQueries should equal(Seq(

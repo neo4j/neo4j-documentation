@@ -43,7 +43,7 @@ class RestartableDatabaseTest extends CypherFunSuite {
     val db = new RestartableDatabase(Seq.empty, databaseFactory)
 
     // when
-    db.execute("MATCH (n) RETURN n")
+    db.executeWithParams("MATCH (n) RETURN n")
     db.nowIsASafePointToRestartDatabase()
     db.execute("MATCH (n) RETURN n")
 
@@ -59,9 +59,9 @@ class RestartableDatabaseTest extends CypherFunSuite {
     val db = new RestartableDatabase(Seq.empty, databaseFactory)
 
     // when
-    db.execute("CREATE ()")
+    db.executeWithParams("CREATE ()")
     db.nowIsASafePointToRestartDatabase()
-    db.execute("CREATE ()")
+    db.executeWithParams("CREATE ()")
 
     // then
     verify(databaseFactory, times(2)).newImpermanentDatabase()
@@ -75,9 +75,9 @@ class RestartableDatabaseTest extends CypherFunSuite {
     val db = new RestartableDatabase(Seq.empty, databaseFactory)
 
     // when
-    intercept[CypherException](db.execute("THIS SHOULD FAIL"))
+    intercept[CypherException](db.executeWithParams("THIS SHOULD FAIL"))
     db.nowIsASafePointToRestartDatabase()
-    intercept[CypherException](db.execute("THIS SHOULD FAIL"))
+    intercept[CypherException](db.executeWithParams("THIS SHOULD FAIL"))
 
     // then
     verify(databaseFactory, times(2)).newImpermanentDatabase()

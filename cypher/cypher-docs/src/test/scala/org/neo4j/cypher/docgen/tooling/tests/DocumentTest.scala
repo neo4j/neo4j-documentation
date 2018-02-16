@@ -326,8 +326,8 @@ class DocumentQueryTest extends CypherFunSuite {
     val graphV: GraphVizPlaceHolder = new GraphVizPlaceHolder("")
     val doc = Document("title", "myId", Seq("1"), Section("h1", None, Seq("2"),
       Section("h2", None, Seq("3"),
-        Query("q", NoAssertions, Seq.empty, tableV)
-      ) ~ Query("q2", NoAssertions, Seq.empty, graphV)
+        Query("q", NoAssertions, Seq.empty, tableV, Seq.empty)
+      ) ~ Query("q2", NoAssertions, Seq.empty, graphV, Seq.empty)
     ))
 
     doc.contentWithQueries should equal(Seq(
@@ -339,12 +339,13 @@ class DocumentQueryTest extends CypherFunSuite {
   test("Simplest possible document with a query in it") {
     val query = "match (n) return n"
     val doc = Document("title", "myId", initQueries = Seq.empty,
-      Query(query, NoAssertions, Seq.empty, Paragraph("hello world")))
+      Query(query, NoAssertions, Seq.empty, Paragraph("hello world"), Seq.empty))
 
     val asciiDocResult = doc.asciiDoc
     asciiDocResult should equal(
       """[[myId]]
         |= title
+        |
         |
         |.Query
         |[source, cypher]

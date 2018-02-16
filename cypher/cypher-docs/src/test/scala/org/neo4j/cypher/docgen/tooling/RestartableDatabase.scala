@@ -64,10 +64,10 @@ class RestartableDatabase(init: Seq[String], factory: TestGraphDatabaseFactory =
     restart()
   }
 
-  def execute(q: String): InternalExecutionResult = {
+  def executeWithParams(q: String, params: (String, Any)*): InternalExecutionResult = {
     createAndStartIfNecessary()
     val executionResult: InternalExecutionResult = try {
-      execute(q, Seq.empty:_*)
+      execute(q, params:_*)
     } catch {
       case e: Throwable => _markedForRestart = true; throw e
     }

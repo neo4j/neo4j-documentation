@@ -77,7 +77,7 @@ class ContentAndResultMergerTest extends CypherFunSuite {
 
   test("doc with GraphVizBefore and Result Table within Query") {
     // given
-    val queryObj = Query(QUERY, NoAssertions, Seq.empty, TABLE_PLACEHOLDER ~ GRAPHVIZ_PLACEHOLDER)
+    val queryObj = Query(QUERY, NoAssertions, Seq.empty, TABLE_PLACEHOLDER ~ GRAPHVIZ_PLACEHOLDER, Seq.empty)
     val doc = Document("title", "myId", initQueries = Seq.empty, queryObj)
 
     val testResult = TestRunResult(Seq(
@@ -90,6 +90,6 @@ class ContentAndResultMergerTest extends CypherFunSuite {
 
     // then
     result should equal(
-      Document("title", "myId", initQueries = Seq.empty, Query(QUERY, NoAssertions, Seq.empty, TABLE_RESULT ~ GRAPHVIZ_RESULT)))
+      Document("title", "myId", initQueries = Seq.empty, Query(QUERY, NoAssertions, Seq.empty, TABLE_RESULT ~ GRAPHVIZ_RESULT, Seq.empty)))
   }
 }
