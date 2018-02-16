@@ -329,8 +329,8 @@ class DocumentQueryTest extends CypherFunSuite {
     val doc = Document("title", "myId", RunnableInitialization(initQueries = Seq("1")),
       Section("h1", None, RunnableInitialization(initQueries = Seq("2")),
       Section("h2", None, RunnableInitialization(initQueries = Seq("3")),
-        Query("q", NoAssertions, RunnableInitialization.empty, tableV)
-      ) ~ Query("q2", NoAssertions, RunnableInitialization.empty, graphV)
+        Query("q", NoAssertions, RunnableInitialization.empty, tableV, Seq.empty)
+      ) ~ Query("q2", NoAssertions, RunnableInitialization.empty, graphV, Seq.empty)
     ))
 
     doc.contentWithQueries should equal(Seq(
@@ -345,8 +345,8 @@ class DocumentQueryTest extends CypherFunSuite {
     val doc = Document("title", "myId", RunnableInitialization(initQueries = Seq("1"), userDefinedFunctions = Seq(classOf[Udf1])),
       Section("h1", None, RunnableInitialization(initQueries = Seq("2")),
       Section("h2", None, RunnableInitialization(initQueries = Seq("3"), userDefinedFunctions = Seq(classOf[Udf2])),
-        Query("q", NoAssertions, RunnableInitialization.empty, tableV)
-      ) ~ Query("q2", NoAssertions, RunnableInitialization.empty, graphV)
+        Query("q", NoAssertions, RunnableInitialization.empty, tableV, Seq.empty)
+      ) ~ Query("q2", NoAssertions, RunnableInitialization.empty, graphV, Seq.empty)
     ))
 
     doc.contentWithQueries should equal(Seq(
@@ -358,12 +358,13 @@ class DocumentQueryTest extends CypherFunSuite {
   test("Simplest possible document with a query in it") {
     val query = "match (n) return n"
     val doc = Document("title", "myId", init = RunnableInitialization.empty,
-      Query(query, NoAssertions, RunnableInitialization.empty, Paragraph("hello world")))
+      Query(query, NoAssertions, RunnableInitialization.empty, Paragraph("hello world"), Seq.empty))
 
     val asciiDocResult = doc.asciiDoc
     asciiDocResult should equal(
       """[[myId]]
         |= title
+        |
         |
         |.Query
         |[source, cypher]
