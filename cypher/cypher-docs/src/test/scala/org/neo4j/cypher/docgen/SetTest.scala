@@ -51,9 +51,10 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<set-set-multiple-labels-on-a-node, Set multiple labels on a node>>""".stripMargin)
     section("Introduction", "query-set-introduction") {
       p("""`SET` can also be used with maps from parameters to set properties.""")
-      note(
-        """Setting labels on a node is an idempotent operations -- if you try to set a label on a node that already has that label on it, nothing happens.
+      note {
+        p("""Setting labels on a node is an idempotent operations -- if you try to set a label on a node that already has that label on it, nothing happens.
           |The query statistics will tell you if something needed to be done or not.""".stripMargin)
+      }
       p("The examples use this graph as a starting point:")
       graphViz()
     }

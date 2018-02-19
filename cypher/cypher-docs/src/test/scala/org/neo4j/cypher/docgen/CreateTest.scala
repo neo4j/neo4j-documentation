@@ -47,8 +47,10 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<use-parameters-with-create, Use parameters with `CREATE`>>
         |** <<create-create-node-with-a-parameter-for-the-properties, Create node with a parameter for the properties>>
         |** <<create-create-multiple-nodes-with-a-parameter-for-their-properties, Create multiple nodes with a parameter for their properties>>""".stripMargin)
-    tip("""In the `CREATE` clause, patterns are used extensively.
+    tip{
+      p("""In the `CREATE` clause, patterns are used extensively.
           |Read <<cypher-patterns>> for an introduction.""".stripMargin)
+    }
     section("Create nodes", "create-nodes") {
       section("Create single node", "create-create-single-node") {
         p(

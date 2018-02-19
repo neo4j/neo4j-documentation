@@ -41,8 +41,9 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
     section("Introduction", "query-remove-introduction") {
       p(
         """For deleting nodes and relationships, see <<query-delete>>.""".stripMargin)
-      note("""Removing labels from a node is an idempotent operation: if you try to remove a label from a node that does not have that label on it, nothing happens.
-             |The query statistics will tell you if something needed to be done or not.""".stripMargin)
+      note{
+        p("""Removing labels from a node is an idempotent operation: if you try to remove a label from a node that does not have that label on it, nothing happens.
+             |The query statistics will tell you if something needed to be done or not.""".stripMargin) }
       p("""The examples use the following database:""".stripMargin)
       graphViz()
     }
