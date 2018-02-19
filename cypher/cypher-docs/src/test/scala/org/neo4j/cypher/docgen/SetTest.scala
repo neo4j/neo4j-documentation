@@ -19,125 +19,168 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.junit.Assert._
-import org.junit.Test
 import org.neo4j.cypher.QueryStatisticsTestSupport
-import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class SetTest extends DocumentingTestBase with QueryStatisticsTestSupport with SoftReset {
+class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
+  override def outputPath = "target/docs/dev/ql"
 
-  override protected def getGraphvizStyle: GraphStyle =
-    AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
+  override def doc = new DocBuilder {
+    doc("SET", "query-set")
+    initQueries(
+      """CREATE (a:Swedish {name: 'Andres', age: 36, hungry: true}),
+                (b {name: 'Stefan'}),
+                (c {name: 'Peter', age: 34}),
+                (d {name: 'Emil'}),
 
-  override def graphDescription = List(
-    "Andres:Swedish KNOWS Peter",
-    "Stefan KNOWS Andres",
-    "Emil KNOWS Peter")
-
-  override val properties = Map(
-    "Andres" -> Map[String, Any]("age" -> 36l, "hungry" -> true),
-    "Peter" -> Map[String, Any]("age" -> 34l))
-
-  def section = "Set"
-
-  @Test def set_property_on_node() {
-    testQuery(
-      title = "Set a property",
-      text = "To set a property on a node or relationship, use `SET`.",
-      queryText = "MATCH (n {name: 'Andres'}) SET n.surname = 'Taylor' RETURN n",
-      optionalResultExplanation = "The newly changed node is returned by the query.",
-      assertions = (p) => assert(node("Andres").getProperty("surname") === "Taylor"))
-  }
-
-  @Test def set_property_to_null() {
-    testQuery(
-      title = "Remove a property",
-      text = """Normally you remove a property by using `<<query-remove,REMOVE>>`, but it's sometimes handy to do
-it using the `SET` command. One example is if the property comes from a parameter.""",
-      queryText = "MATCH (n {name: 'Andres'}) SET n.name = null RETURN n",
-      optionalResultExplanation = "The node is returned by the query, and the name property is now missing.",
-      assertions = (p) => assertFalse(node("Andres").hasProperty("name")))
-  }
-
-  @Test def set_properties_from_other_graph_element() {
-    testQuery(
-      title = "Copying properties between nodes and relationships",
-      text =
-        """You can also use `SET` to copy all properties from one graph element to another. Remember that doing this
-will remove all other properties on the receiving graph element.""".stripMargin,
-      queryText = "MATCH (at {name: 'Andres'}), (pn {name: 'Peter'}) SET at = pn RETURN at, pn",
-      optionalResultExplanation = "The *'Andres'* node has had all its properties replaced by the properties in the *'Peter'* node.",
-      assertions = (p) => {
-        assert(node("Andres").getProperty("name") === "Peter")
-        assertFalse("Didn't expect the Andres node to have an hungry property", node("Andres").hasProperty("hungry"))
-      })
-  }
-
-  @Test def inclusive_set_properties_from_map() {
-    testQuery(
-      title = "Adding properties from maps",
-      text =
-        """When setting properties from a map (literal, parameter, or graph element), you can use the `+=` form of `SET`
-          |to only add properties, and not remove any of the existing properties on the graph element.
-        """.stripMargin,
-      queryText = "MATCH (peter {name: 'Peter'}) SET peter += {hungry: true, position: 'Entrepreneur'}",
-      optionalResultExplanation = "",
-      assertions = (p) => {
-        assert(node("Peter").getProperty("name") === "Peter")
-        assert(node("Peter").getProperty("hungry") === true)
-        assert(node("Peter").getProperty("position") === "Entrepreneur")
-      })
-  }
-
-  @Test def set_a_property_using_a_parameter() {
-    testQuery(
-      title = "Set a property using a parameter",
-      text = """
-Use a parameter to give the value of a property.
-""",
-      parameters = Map("surname" -> "Taylor"),
-      queryText = "MATCH (n {name: 'Andres'}) SET n.surname = $surname RETURN n",
-      optionalResultExplanation = "The *'Andres'* node has got a surname added.",
-      assertions = (p) => assertStats(p, nodesCreated = 0, propertiesWritten = 1))
-  }
-
-  @Test def set_all_properties_using_a_parameter() {
-    testQuery(
-      title = "Set all properties using a parameter",
-      text = """
-This will replace all existing properties on the node with the new set provided by the parameter.
-""",
-      parameters = Map("props" -> Map("name" -> "Andres", "position" -> "Developer")),
-      queryText = "MATCH (n {name: 'Andres'}) SET n = $props RETURN n",
-      optionalResultExplanation = "The *'Andres'* node has had all its properties replaced by the properties in the `props` parameter.",
-      assertions = (p) => assertStats(p, nodesCreated = 0, propertiesWritten = 4))
-  }
-
-  @Test def set_multiple_properties_in_one_set_clause() {
-    testQuery(
-      title = "Set multiple properties using one `SET` clause",
-      text = "If you want to set multiple properties in one go, simply separate them with a comma.",
-      queryText = "MATCH (n {name: 'Andres'}) SET n.position = 'Developer', n.surname = 'Taylor'",
-      optionalResultExplanation = "",
-      assertions = (p) => assertStats(p, nodesCreated = 0, propertiesWritten = 2))
-  }
-
-  @Test def set_single_label_on_a_node() {
-    testQuery(
-      title = "Set a label on a node",
-      text = "To set a label on a node, use `SET`.",
-      queryText = "MATCH (n {name: 'Stefan'}) SET n :German RETURN n",
-      optionalResultExplanation = "The newly labeled node is returned by the query.",
-      assertions = (p) => assert(getLabelsFromNode(p) === List("German")))
-  }
-
-  @Test def set_multiple_labels_on_a_node() {
-    testQuery(
-      title = "Set multiple labels on a node",
-      text = "To set multiple labels on a node, use `SET` and separate the different labels using `:`.",
-      queryText = "MATCH (n {name: 'Emil'}) SET n :Swedish:Bossman RETURN n",
-      optionalResultExplanation = "The newly labeled node is returned by the query.",
-      assertions = (p) => assert(getLabelsFromNode(p) === List("Swedish", "Bossman")))
-  }
-
+                (a)-[:KNOWS]->(c),
+                (b)-[:KNOWS]->(a),
+                (d)-[:KNOWS]->(c)
+      """.stripMargin)
+    synopsis("The `SET` clause is used to update labels on nodes and properties on nodes and relationships.")
+    p(
+      """* <<query-set-introduction,Introduction>>
+        |* <<set-set-a-property, Set a property>>
+        |* <<set-remove-a-property, Remove a property>>
+        |* <<set-copying-properties-between-nodes-and-relationships, Copying properties between nodes and relationships>>
+        |* <<set-adding-properties-from-maps, Adding properties from maps>>
+        |* <<set-set-a-property-using-a-parameter, Set a property using a parameter>>
+        |* <<set-set-all-properties-using-a-parameter, Set all properties using a parameter>>
+        |* <<set-set-multiple-properties-using-one-set-clause, Set multiple properties using one `SET` clause>>
+        |* <<set-set-a-label-on-a-node, Set a label on a node>>
+        |* <<set-set-multiple-labels-on-a-node, Set multiple labels on a node>>""".stripMargin)
+    section("Introduction", "query-set-introduction") {
+      p("""`SET` can also be used with maps from parameters to set properties.""")
+      note {
+        p("""Setting labels on a node is an idempotent operations -- if you try to set a label on a node that already has that label on it, nothing happens.
+          |The query statistics will tell you if something needed to be done or not.""".stripMargin)
+      }
+      p("The examples use this graph as a starting point:")
+      graphViz()
+    }
+    section("Set a property", "set-set-a-property") {
+      p(
+        """To set a property on a node or relationship, use `SET`.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})
+          |SET n.surname = 'Taylor'
+          |RETURN n.name, n.surname""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Andres", "n.surname" -> "Taylor")))
+          assertStats(r, propertiesWritten = 1, nodesCreated = 0)
+        })) {
+        p("The newly changed node is returned by the query.")
+        resultTable()
+      }
+    }
+    section("Remove a property", "set-remove-a-property") {
+      p(
+        """Normally you remove a property by using `<<query-remove,REMOVE>>`, but it's sometimes convenient to do it using the `SET` command.
+          |One example is if the property comes from a parameter.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})
+          |SET n.name = null
+          |RETURN n.name, n.age""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> null, "n.age" -> 36)))
+          assertStats(r, propertiesWritten = 1, nodesCreated = 0)
+        })) {
+        p("The node is returned by the query, and the name property is now missing.")
+        resultTable()
+      }
+    }
+    section("Copying properties between nodes and relationships", "set-copying-properties-between-nodes-and-relationships") {
+      p(
+        """You can also use `SET` to copy all properties from one graph element to another.
+          |Doing this will remove all other properties on the receiving graph element.""".stripMargin)
+      query(
+        """MATCH (at {name: 'Andres'}), (pn {name: 'Peter'})
+          |SET at = pn
+          |RETURN at.name, at.age, at.hungry, pn.name, pn.age""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("at.name" -> "Peter", "at.age" -> 34, "at.hungry" -> null, "pn.name" -> "Peter", "pn.age" -> 34)))
+          assertStats(r, propertiesWritten = 3, nodesCreated = 0)
+        })) {
+        p("The *'Andres'* node has had all its properties replaced by the properties in the *'Peter'* node.")
+        resultTable()
+      }
+    }
+    section("Adding properties from maps", "set-adding-properties-from-maps") {
+      p(
+        """When setting properties from a map (literal, parameter, or graph element), you can use the `+=` form of `SET` to only add properties, and not remove any of the existing properties on the graph element.""".stripMargin)
+      query(
+        """MATCH (p {name: 'Peter'})
+          |SET p += {hungry: true, position: 'Entrepreneur'}""".stripMargin, ResultAssertions((r) => {
+          assertStats(r, propertiesWritten = 2, nodesCreated = 0)
+        })) {
+        resultTable()
+      }
+    }
+    section("Set a property using a parameter", "set-set-a-property-using-a-parameter") {
+      p(
+        """Use a parameter to give the value of a property.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})
+          |SET n.surname = $surname
+          |RETURN n.name, n.surname""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Andres", "n.surname" -> "Taylor")))
+          assertStats(r, propertiesWritten = 1, nodesCreated = 0)
+        }),
+        ("surname", "Taylor")) {
+        p("The *'Andres'* node has got a surname added.")
+        resultTable()
+      }
+    }
+    section("Set all properties using a parameter", "set-set-all-properties-using-a-parameter") {
+      p(
+        """This will replace all existing properties on the node with the new set provided by the parameter.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})
+          |SET n = $props
+          |RETURN n.name, n.position, n.age, n.hungry""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Andres", "n.position" -> "Developer", "n.age" -> null, "n.hungry" -> null)))
+          assertStats(r, propertiesWritten = 4, nodesCreated = 0)
+        }),
+        ("props", Map("name" -> "Andres", "position" -> "Developer"))) {
+        p("The *'Andres'* node has had all its properties replaced by the properties in the `props` parameter.")
+        resultTable()
+      }
+    }
+    section("Set multiple properties using one `SET` clause", "set-set-multiple-properties-using-one-set-clause") {
+      p(
+        """If you want to set multiple properties in one go, simply separate them with a comma.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})
+          |SET n.position = 'Developer', n.surname = 'Taylor'""".stripMargin, ResultAssertions((r) => {
+          assertStats(r, propertiesWritten = 2, nodesCreated = 0)
+        })){
+        resultTable()
+      }
+    }
+    section("Set a label on a node", "set-set-a-label-on-a-node") {
+      p(
+        """To set a label on a node, use `SET`.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Stefan'})
+          |SET n :German
+          |RETURN n.name, labels(n) AS labels""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Stefan", "labels" -> List("German"))))
+          assertStats(r, propertiesWritten = 0, nodesCreated = 0, labelsAdded = 1)
+        })) {
+        p("The newly labeled node is returned by the query.")
+        resultTable()
+      }
+    }
+    section("Set multiple labels on a node", "set-set-multiple-labels-on-a-node") {
+      p(
+        """To set multiple labels on a node, use `SET` and separate the different labels using `:`.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Emil'})
+          |SET n :Swedish:Bossman
+          |RETURN n.name, labels(n) AS labels""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Emil", "labels" -> List("Swedish", "Bossman"))))
+          assertStats(r, propertiesWritten = 0, nodesCreated = 0, labelsAdded = 2)
+        })) {
+        p("The newly labeled node is returned by the query.")
+        resultTable()
+      }
+    }
+  }.build()
 }
