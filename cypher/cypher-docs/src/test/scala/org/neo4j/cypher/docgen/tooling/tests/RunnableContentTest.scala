@@ -26,12 +26,25 @@ class RunnableContentTest extends CypherFunSuite {
   test("graph viz includes all init queries, and the actual query when inside a Query object") {
     val graphVizPlaceHolder = new GraphVizPlaceHolder("")
     val tablePlaceHolder = new TablePlaceHolder(NoAssertions)
-    val queryObject = Query("5", NoAssertions, Seq("3", "4"), graphVizPlaceHolder ~ tablePlaceHolder)
-    val doc = Document("title", "id", Seq("1","2"), queryObject)
+    val queryObject = Query("5", NoAssertions, RunnableInitialization(initQueries = Seq("3", "4")), graphVizPlaceHolder ~ tablePlaceHolder)
+    val doc = Document("title", "id", RunnableInitialization(initQueries = Seq("1","2")), queryObject)
 
     doc.contentWithQueries should equal(Seq(
-      ContentWithInit(Seq("1", "2", "3", "4", "5"), graphVizPlaceHolder),
-      ContentWithInit(Seq("1", "2", "3", "4", "5"), tablePlaceHolder)
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3", "4")), Some("5"), graphVizPlaceHolder),
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3", "4")), Some("5"), tablePlaceHolder)
     ))
+  }
+
+  test("graph viz includes all init queries, and the actual query becomes the last init query when NOT inside a Query object") {
+    val graphVizPlaceHolder = new GraphVizPlaceHolder("")
+    val sectionObject = Section("", None, RunnableInitialization(initQueries = Seq("3", "4")), graphVizPlaceHolder)
+    val doc = Document("title", "id", RunnableInitialization(initQueries = Seq("1","2")), sectionObject)
+
+    doc.contentWithQueries should equal(Seq(
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3", "4")), None, graphVizPlaceHolder)
+    ))
+
+    doc.contentWithQueries.head.initKey should equal(RunnableInitialization(initQueries = Seq("1", "2", "3")))
+    doc.contentWithQueries.head.queryToPresent should equal("4")
   }
 }

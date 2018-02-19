@@ -21,17 +21,17 @@ package org.neo4j.cypher.docgen.tooling.tests
 
 import org.mockito.Mockito._
 import org.neo4j.cypher.CypherException
-import org.neo4j.cypher.docgen.tooling.RestartableDatabase
 import org.neo4j.cypher.internal.util.v3_4.test_helpers.CypherFunSuite
-import org.neo4j.test.TestGraphDatabaseFactory
+import org.neo4j.cypher.docgen.tooling.{RestartableDatabase, RunnableInitialization}
+import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
 
 class RestartableDatabaseTest extends CypherFunSuite {
   test("just creating a restartable database should not create any temp-dbs") {
     // given
-    val databaseFactory = mock[TestGraphDatabaseFactory]
+    val databaseFactory = mock[TestEnterpriseGraphDatabaseFactory]
 
     // when
-    new RestartableDatabase(Seq.empty, databaseFactory)
+    new RestartableDatabase(RunnableInitialization.empty, databaseFactory)
 
     // then
     verify(databaseFactory, never()).newImpermanentDatabase()
@@ -39,8 +39,8 @@ class RestartableDatabaseTest extends CypherFunSuite {
 
   test("running two read queries should only need one database") {
     // given
-    val databaseFactory = spy(new TestGraphDatabaseFactory())
-    val db = new RestartableDatabase(Seq.empty, databaseFactory)
+    val databaseFactory = spy(new TestEnterpriseGraphDatabaseFactory())
+    val db = new RestartableDatabase(RunnableInitialization.empty, databaseFactory)
 
     // when
     db.execute("MATCH (n) RETURN n")
@@ -55,8 +55,8 @@ class RestartableDatabaseTest extends CypherFunSuite {
 
   test("running two write queries should need two databases") {
     // given
-    val databaseFactory = spy(new TestGraphDatabaseFactory())
-    val db = new RestartableDatabase(Seq.empty, databaseFactory)
+    val databaseFactory = spy(new TestEnterpriseGraphDatabaseFactory())
+    val db = new RestartableDatabase(RunnableInitialization.empty, databaseFactory)
 
     // when
     db.execute("CREATE ()")
@@ -71,8 +71,8 @@ class RestartableDatabaseTest extends CypherFunSuite {
 
   test("running two queries that throw exception should need two databases") {
     // given
-    val databaseFactory = spy(new TestGraphDatabaseFactory())
-    val db = new RestartableDatabase(Seq.empty, databaseFactory)
+    val databaseFactory = spy(new TestEnterpriseGraphDatabaseFactory())
+    val db = new RestartableDatabase(RunnableInitialization.empty, databaseFactory)
 
     // when
     intercept[CypherException](db.execute("THIS SHOULD FAIL"))

@@ -243,17 +243,9 @@ include::query-functions-string.adoc[leveloffset=+1]
 
 include::query-functions-spatial.adoc[leveloffset=+1]
 
+// User-defined functions
 
-[[query-functions-udf]]
-== User-defined functions ==
-
-User-defined functions are written in Java, deployed into the database and are called in the same way as any other Cypher function.
-
-This example shows how you invoke a user-defined function called `join` from Cypher.
-
-include::call-a-user-defined-function.asciidoc[leveloffset=+1]
-
-For developing and deploying user-defined functions in Neo4j, see <<user-defined-functions, Extending Neo4j -> User-defined functions>>.
+include::query-functions-udf.adoc[leveloffset=+1]
 
 
 [[query-functions-user-defined-aggregation]]
