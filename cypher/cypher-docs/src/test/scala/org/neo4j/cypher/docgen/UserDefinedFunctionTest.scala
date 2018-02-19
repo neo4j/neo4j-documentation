@@ -19,35 +19,37 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.junit.Test
-import org.neo4j.cypher.QueryStatisticsTestSupport
-import org.neo4j.function.example.JoinFunction
-import org.neo4j.graphdb.Label
-import org.neo4j.kernel.impl.proc.Procedures
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class UserDefinedFunctionTest extends DocumentingTestBase with QueryStatisticsTestSupport with HardReset {
+class UserDefinedFunctionTest extends DocumentingTest {
 
-  override def section = "functions"
+  override def outputPath = "target/docs/dev/ql/functions"
 
-  override def hardReset() = {
-    super.hardReset()
-    db.getDependencyResolver.resolveDependency(classOf[Procedures]).registerFunction(classOf[JoinFunction])
-    db.inTx {
-      for (name <- List("John", "Paul", "George", "Ringo")) {
-        val node = db.createNode(Label.label("Member"))
-        node.setProperty("name", name)
+  override def doc = new DocBuilder {
+    doc("User-defined functions", "query-functions-udf")
+
+    registerUserDefinedFunctions(classOf[org.neo4j.function.example.JoinFunction])
+
+    initQueries(
+      """UNWIND ["John", "Paul", "George", "Ringo"] as name CREATE (:Member {name: name})""")
+
+    p("""
+        |User-defined functions are written in Java, deployed into the database and are called in the same way as any
+        |other Cypher function.""")
+
+    p("""
+        |This example shows how you invoke a user-defined function called `join` from Cypher.""")
+
+    section("Call a user-defined function") {
+      p("This calls the user-defined function `org.neo4j.procedure.example.join()`.")
+
+      query("MATCH (n:Member) RETURN org.neo4j.function.example.join(collect(n.name)) AS members", ResultAssertions((r) =>
+        assert(r.toList === List(Map("members" -> "John,Paul,George,Ringo"))))) {
+        resultTable()
       }
     }
-  }
+    p("""
+        |For developing and deploying user-defined functions in Neo4j, see <<user-defined-functions, Extending Neo4j -> User-defined functions>>.""")
 
-  @Test def call_a_udf() {
-    testQuery(
-      title = "Call a user-defined function",
-      text = "This calls the user-defined function `org.neo4j.procedure.example.join()`.",
-      queryText = "MATCH (n:Member) RETURN org.neo4j.function.example.join(collect(n.name)) AS members",
-      optionalResultExplanation = "",
-      assertions = (p) => {
-        assert(p.toList === List(Map("members" -> "John,Paul,George,Ringo")))
-      })
-  }
+  }.build()
 }

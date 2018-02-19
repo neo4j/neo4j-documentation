@@ -25,7 +25,7 @@ import org.neo4j.cypher.internal.frontend.v3_3.test_helpers.CypherFunSuite
 
 class DocumentAsciiDocTest extends CypherFunSuite {
   test("Simplest possible document") {
-    val doc = Document("title", "myId", initQueries = Seq.empty, Paragraph("lorem ipsum"))
+    val doc = Document("title", "myId", init = RunnableInitialization.empty, Paragraph("lorem ipsum"))
 
     doc.asciiDoc should equal(
       """[[myId]]
@@ -37,7 +37,7 @@ class DocumentAsciiDocTest extends CypherFunSuite {
   }
 
   test("Heading inside Document") {
-    val doc = Document("title", "myId", initQueries = Seq.empty, Heading("My heading") ~ Paragraph("lorem ipsum"))
+    val doc = Document("title", "myId", init = RunnableInitialization.empty, Heading("My heading") ~ Paragraph("lorem ipsum"))
 
     doc.asciiDoc should equal(
       """[[myId]]
@@ -50,7 +50,7 @@ class DocumentAsciiDocTest extends CypherFunSuite {
   }
 
   test("Abstract for Document") {
-    val doc = Document("title", "myId", initQueries = Seq.empty, Abstract("abstract intro"))
+    val doc = Document("title", "myId", init = RunnableInitialization.empty, Abstract("abstract intro"))
 
     doc.asciiDoc should equal(
       """[[myId]]
@@ -65,9 +65,9 @@ class DocumentAsciiDocTest extends CypherFunSuite {
   }
 
   test("Section inside Section") {
-    val doc = Document("title", "myId", initQueries = Seq.empty,
-      Section("outer", None, Seq.empty,
-        Paragraph("first") ~ Section("inner", None, Seq.empty, Paragraph("second"))
+    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+      Section("outer", None, RunnableInitialization.empty,
+        Paragraph("first") ~ Section("inner", None, RunnableInitialization.empty, Paragraph("second"))
       ))
 
     doc.asciiDoc should equal(
@@ -86,9 +86,9 @@ class DocumentAsciiDocTest extends CypherFunSuite {
   }
 
   test("Section with IDREF") {
-    val doc = Document("title", "myId", initQueries = Seq.empty,
-      Section("outer", Some("IDREF1"), Seq.empty,
-        Paragraph("first") ~ Section("inner", Some("IDREF2"), Seq.empty, Paragraph("second"))
+    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+      Section("outer", Some("IDREF1"), RunnableInitialization.empty,
+        Paragraph("first") ~ Section("inner", Some("IDREF2"), RunnableInitialization.empty, Paragraph("second"))
       ))
 
     doc.asciiDoc should equal(
@@ -109,7 +109,7 @@ class DocumentAsciiDocTest extends CypherFunSuite {
   }
 
   test("Tip with and without heading") {
-    val doc = Document("title", "myId", initQueries = Seq.empty,
+    val doc = Document("title", "myId", init = RunnableInitialization.empty,
       Tip(Paragraph("tip text")) ~
         Tip("custom heading", Paragraph("tip text again"))
     )
@@ -137,7 +137,7 @@ class DocumentAsciiDocTest extends CypherFunSuite {
   }
 
   test("Note with and without heading") {
-    val doc = Document("title", "myId", initQueries = Seq.empty,
+    val doc = Document("title", "myId", init = RunnableInitialization.empty,
       Note(Paragraph("tip text")) ~
         Note("custom heading", Paragraph("tip text again"))
     )
@@ -165,7 +165,7 @@ class DocumentAsciiDocTest extends CypherFunSuite {
   }
 
   test("Warning with and without heading") {
-    val doc = Document("title", "myId", initQueries = Seq.empty,
+    val doc = Document("title", "myId", init = RunnableInitialization.empty,
       Warning(Paragraph("tip text")) ~
         Warning("custom heading", Paragraph("tip text again"))
     )
@@ -193,7 +193,7 @@ class DocumentAsciiDocTest extends CypherFunSuite {
   }
 
   test("Caution with and without heading") {
-    val doc = Document("title", "myId", initQueries = Seq.empty,
+    val doc = Document("title", "myId", init = RunnableInitialization.empty,
       Caution(Paragraph("tip text")) ~
         Caution("custom heading", Paragraph("tip text again"))
     )
@@ -221,7 +221,7 @@ class DocumentAsciiDocTest extends CypherFunSuite {
   }
 
   test("Important with and without heading") {
-    val doc = Document("title", "myId", initQueries = Seq.empty,
+    val doc = Document("title", "myId", init = RunnableInitialization.empty,
       Important(Paragraph("tip text")) ~
         Important("custom heading", Paragraph("tip text again"))
     )
@@ -320,26 +320,45 @@ class DocumentAsciiDocTest extends CypherFunSuite {
 
 class DocumentQueryTest extends CypherFunSuite {
 
+  class Udf1
+  class Udf2
 
   test("finds all queries and the init-queries they need") {
     val tableV = new TablePlaceHolder(NoAssertions)
     val graphV: GraphVizPlaceHolder = new GraphVizPlaceHolder("")
-    val doc = Document("title", "myId", Seq("1"), Section("h1", None, Seq("2"),
-      Section("h2", None, Seq("3"),
-        Query("q", NoAssertions, Seq.empty, tableV)
-      ) ~ Query("q2", NoAssertions, Seq.empty, graphV)
+    val doc = Document("title", "myId", RunnableInitialization(initQueries = Seq("1")),
+      Section("h1", None, RunnableInitialization(initQueries = Seq("2")),
+      Section("h2", None, RunnableInitialization(initQueries = Seq("3")),
+        Query("q", NoAssertions, RunnableInitialization.empty, tableV)
+      ) ~ Query("q2", NoAssertions, RunnableInitialization.empty, graphV)
     ))
 
     doc.contentWithQueries should equal(Seq(
-      ContentWithInit(Seq("1", "2", "3", "q") , tableV),
-      ContentWithInit(Seq("1", "2", "q2"), graphV))
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3")), Some("q"), tableV),
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2")), Some("q2"), graphV))
+    )
+  }
+
+  test("finds all queries and the user defined functions they need") {
+    val tableV = new TablePlaceHolder(NoAssertions)
+    val graphV: GraphVizPlaceHolder = new GraphVizPlaceHolder("")
+    val doc = Document("title", "myId", RunnableInitialization(initQueries = Seq("1"), userDefinedFunctions = Seq(classOf[Udf1])),
+      Section("h1", None, RunnableInitialization(initQueries = Seq("2")),
+      Section("h2", None, RunnableInitialization(initQueries = Seq("3"), userDefinedFunctions = Seq(classOf[Udf2])),
+        Query("q", NoAssertions, RunnableInitialization.empty, tableV)
+      ) ~ Query("q2", NoAssertions, RunnableInitialization.empty, graphV)
+    ))
+
+    doc.contentWithQueries should equal(Seq(
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3"), userDefinedFunctions = Seq(classOf[Udf1], classOf[Udf2])), Some("q"), tableV),
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2"), userDefinedFunctions = Seq(classOf[Udf1])), Some("q2"), graphV))
     )
   }
 
   test("Simplest possible document with a query in it") {
     val query = "match (n) return n"
-    val doc = Document("title", "myId", initQueries = Seq.empty,
-      Query(query, NoAssertions, Seq.empty, Paragraph("hello world")))
+    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+      Query(query, NoAssertions, RunnableInitialization.empty, Paragraph("hello world")))
 
     val asciiDocResult = doc.asciiDoc
     asciiDocResult should equal(
