@@ -48,19 +48,19 @@ class QueryRunnerTest extends CypherFunSuite {
 
   test("init query failing is reported as such") {
     val failingQuery = "YOU SHALL NOT PASS"
-    val result = run(Seq(failingQuery), new GraphVizPlaceHolder(""))
+    val result = run(RunnableInitialization.empty, failingQuery, new GraphVizPlaceHolder(""))
 
     result.queryResults should have size 1
     result should haveATestFailureOfClass(failingQuery -> classOf[SyntaxException])
   }
 
   private def runQuery(query: String, assertions: QueryAssertions = NoAssertions): TestRunResult =
-    run(Seq(query), new TablePlaceHolder(assertions))
+    run(RunnableInitialization.empty, query, new TablePlaceHolder(assertions))
 
-  private def run(initQueries: Seq[String], content: QueryResultPlaceHolder): TestRunResult = {
+  private def run(init: RunnableInitialization, queryText: String, content: QueryResultPlaceHolder): TestRunResult = {
     val formatter = (_: GraphDatabaseQueryService, _: InternalTransaction) => (_: InternalExecutionResult) => NoContent
     val runner = new QueryRunner(formatter)
-    runner.runQueries(contentsWithInit = Seq(ContentWithInit(initQueries, content)), "title")
+    runner.runQueries(contentsWithInit = Seq(ContentWithInit(init, Some(queryText), content)), "title")
   }
 
   private def haveATestFailureOfClass[EXCEPTION <: Exception](queryAndClass: (String, Class[EXCEPTION])) =

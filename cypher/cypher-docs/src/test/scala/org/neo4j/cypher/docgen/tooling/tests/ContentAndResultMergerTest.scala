@@ -32,7 +32,7 @@ class ContentAndResultMergerTest extends CypherFunSuite {
 
   test("simple doc with query") {
     // given
-    val doc = Document("title", "myId", initQueries = Seq.empty, TABLE_PLACEHOLDER)
+    val doc = Document("title", "myId", init = RunnableInitialization.empty, TABLE_PLACEHOLDER)
 
     val testResult = TestRunResult(Seq(QueryRunResult(QUERY, TABLE_PLACEHOLDER, Right(TABLE_RESULT))))
 
@@ -41,12 +41,12 @@ class ContentAndResultMergerTest extends CypherFunSuite {
 
     // then
     result should equal(
-      Document("title", "myId", initQueries = Seq.empty, TABLE_RESULT))
+      Document("title", "myId", init = RunnableInitialization.empty, TABLE_RESULT))
   }
 
   test("simple doc with GraphVizBefore") {
     // given
-    val doc = Document("title", "myId", initQueries = Seq.empty, GRAPHVIZ_PLACEHOLDER)
+    val doc = Document("title", "myId", init = RunnableInitialization.empty, GRAPHVIZ_PLACEHOLDER)
 
     val testResult = TestRunResult(Seq(GraphVizRunResult(GRAPHVIZ_PLACEHOLDER, GRAPHVIZ_RESULT)))
 
@@ -55,12 +55,12 @@ class ContentAndResultMergerTest extends CypherFunSuite {
 
     // then
     result should equal(
-      Document("title", "myId", initQueries = Seq.empty, GRAPHVIZ_RESULT))
+      Document("title", "myId", init = RunnableInitialization.empty, GRAPHVIZ_RESULT))
   }
 
   test("doc with GraphVizBefore and Result Table without Query") {
     // given
-    val doc = Document("title", "myId", initQueries = Seq.empty, GRAPHVIZ_PLACEHOLDER ~ TABLE_PLACEHOLDER)
+    val doc = Document("title", "myId", init = RunnableInitialization.empty, GRAPHVIZ_PLACEHOLDER ~ TABLE_PLACEHOLDER)
 
     val testResult = TestRunResult(Seq(
       GraphVizRunResult(GRAPHVIZ_PLACEHOLDER, GRAPHVIZ_RESULT),
@@ -72,13 +72,13 @@ class ContentAndResultMergerTest extends CypherFunSuite {
 
     // then
     result should equal(
-      Document("title", "myId", initQueries = Seq.empty, GRAPHVIZ_RESULT ~ TABLE_RESULT))
+      Document("title", "myId", init = RunnableInitialization.empty, GRAPHVIZ_RESULT ~ TABLE_RESULT))
   }
 
   test("doc with GraphVizBefore and Result Table within Query") {
     // given
-    val queryObj = Query(QUERY, NoAssertions, Seq.empty, TABLE_PLACEHOLDER ~ GRAPHVIZ_PLACEHOLDER)
-    val doc = Document("title", "myId", initQueries = Seq.empty, queryObj)
+    val queryObj = Query(QUERY, NoAssertions, RunnableInitialization.empty, TABLE_PLACEHOLDER ~ GRAPHVIZ_PLACEHOLDER)
+    val doc = Document("title", "myId", init = RunnableInitialization.empty, queryObj)
 
     val testResult = TestRunResult(Seq(
       QueryRunResult(QUERY, TABLE_PLACEHOLDER, Right(TABLE_RESULT)),
@@ -90,6 +90,6 @@ class ContentAndResultMergerTest extends CypherFunSuite {
 
     // then
     result should equal(
-      Document("title", "myId", initQueries = Seq.empty, Query(QUERY, NoAssertions, Seq.empty, TABLE_RESULT ~ GRAPHVIZ_RESULT)))
+      Document("title", "myId", init = RunnableInitialization.empty, Query(QUERY, NoAssertions, RunnableInitialization.empty, TABLE_RESULT ~ GRAPHVIZ_RESULT)))
   }
 }
