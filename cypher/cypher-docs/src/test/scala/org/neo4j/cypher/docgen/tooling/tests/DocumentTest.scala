@@ -192,6 +192,34 @@ class DocumentAsciiDocTest extends CypherFunSuite {
         |""".stripMargin)
   }
 
+  test("Important section with and without heading") {
+    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+      Important(Paragraph("important text")) ~
+        Important("custom heading", Paragraph("important text again"))
+    )
+
+    doc.asciiDoc should equal(
+      """[[myId]]
+        |= title
+        |
+        |[IMPORTANT]
+        |====
+        |important text
+        |
+        |
+        |====
+        |
+        |[IMPORTANT]
+        |.custom heading
+        |====
+        |important text again
+        |
+        |
+        |====
+        |
+        |""".stripMargin)
+  }
+
   test("Caution with and without heading") {
     val doc = Document("title", "myId", init = RunnableInitialization.empty,
       Caution(Paragraph("tip text")) ~
@@ -371,6 +399,41 @@ class DocumentQueryTest extends CypherFunSuite {
         |----
         |MATCH (n)
         |RETURN n
+        |----
+        |
+        |hello world
+        |
+        |""".stripMargin)
+  }
+
+
+  test("Document with a query and parameters") {
+    val query = "MATCH (n) SET n.name = $name RETURN n.name"
+    val parameters = Seq[(String, Any)]("name" -> "John")
+    val doc = Document("title", "myId", init = RunnableInitialization.empty,
+      Query(query, NoAssertions, RunnableInitialization.empty, Paragraph("hello world"), parameters))
+
+    val asciiDocResult = doc.asciiDoc
+    asciiDocResult should equal(
+      """[[myId]]
+        |= title
+        |
+        |
+        |.Parameters
+        |[source,javascript]
+        |----
+        |{
+        |  "name" : "John"
+        |}
+        |----
+        |
+        |
+        |.Query
+        |[source, cypher]
+        |----
+        |MATCH (n)
+        |SET n.name = $name
+        |RETURN n.name
         |----
         |
         |hello world
