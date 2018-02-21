@@ -24,7 +24,7 @@ import org.neo4j.collection.RawIterator
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
-import org.neo4j.kernel.api.KernelAPI
+import org.neo4j.kernel.api.{KernelAPI, ResourceTracker}
 import org.neo4j.kernel.api.exceptions.ProcedureException
 import org.neo4j.kernel.api.proc.CallableProcedure.BasicProcedure
 import org.neo4j.kernel.api.proc.{Context, Neo4jTypes}
@@ -46,7 +46,7 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
       .out("result", Neo4jTypes.NTString)
 
     val proc = new BasicProcedure(builder.build) {
-      override def apply(ctx: Context, input: Array[AnyRef]): RawIterator[Array[AnyRef], ProcedureException] =
+      override def apply(ctx: Context, input: Array[AnyRef], resourceTracker: ResourceTracker): RawIterator[Array[AnyRef], ProcedureException] =
         RawIterator.of[Array[AnyRef], ProcedureException](input)
     }
     kernel.registerProcedure(proc)
