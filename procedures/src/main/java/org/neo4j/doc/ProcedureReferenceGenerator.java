@@ -63,7 +63,7 @@ public class ProcedureReferenceGenerator {
             out.printf("[role=enterprise-edition]%n");
         }
         out.printf(".%s%n", title);
-        out.printf("[options=header, cols=\"%s\"]%n", includeRolesColumn ? "a,a,a,m,a" : "a,a,a,m");
+        out.printf("[options=header, cols=\"%s\"]%n", includeRolesColumn ? "a,a,m,m,a" : "a,a,m,m");
         out.printf("|===%n");
         out.printf("|Name%n|Description%n|Signature%n|Mode");
         if (includeRolesColumn) {
