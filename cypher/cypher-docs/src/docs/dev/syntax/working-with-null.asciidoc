@@ -1,10 +1,11 @@
 [[cypher-working-with-null]]
 = Working with `null`
 
-* <<cypher-null-intro,Introduction to `null` in Cypher>>
-* <<cypher-null-logical-operators,Logical operations with `null`>>
-* <<cypher-null-in-operator,The `IN` operator and `null`>>
-* <<cypher-expressions-and-null,Expressions that return `null`>>
+* <<cypher-null-intro, Introduction to `null` in Cypher>>
+* <<cypher-null-logical-operators, Logical operations with `null`>>
+* <<cypher-null-in-operator, The `IN` operator and `null`>>
+* <<cypher-null-bracket-operator, The `[]` operator and `null`>>
+* <<cypher-expressions-and-null, Expressions that return `null`>>
 
 
 [[cypher-null-intro]]
@@ -36,7 +37,7 @@ include::boolean-operator-table.asciidoc[]
 The `IN` operator follows similar logic.
 If Cypher knows that something exists in a list, the result will be `true`.
 Any list that contains a `null` and doesn't have a matching element will return `null`.
-Otherwise, the result will be false.
+Otherwise, the result will be `false`.
 Here is a table with examples:
 
 [options="header", cols="^,^", width="60%"]
@@ -55,6 +56,20 @@ Here is a table with examples:
 Using `all`, `any`, `none`, and `single` follows a similar rule.
 If the result can be calculated definitely, `true` or `false` is returned.
 Otherwise `null` is produced.
+
+[[cypher-null-bracket-operator]]
+== The `[]` operator and `null`
+
+Accessing a list or a map with `null` will result in `null`:
+
+[options="header", cols="^,^", width="60%"]
+|====
+|Expression  | Result
+|[1, 2, 3][null] | `null`
+|[1, 2, 3, 4][null..2] | `null`
+|[1, 2, 3][1..null] | `null`
+|{age: 25}[null] | `null`
+|====
 
 
 [[cypher-expressions-and-null]]
