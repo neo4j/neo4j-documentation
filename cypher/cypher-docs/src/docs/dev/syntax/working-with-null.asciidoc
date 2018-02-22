@@ -65,10 +65,10 @@ Accessing a list or a map with `null` will result in `null`:
 [options="header", cols="^,^", width="60%"]
 |====
 |Expression  | Result
-|[1, 2, 3][null] | `null`
-|[1, 2, 3, 4][null..2] | `null`
-|[1, 2, 3][1..null] | `null`
-|{age: 25}[null] | `null`
+|[1, 2, 3][`null`] | `null`
+|[1, 2, 3, 4][`null`..2] | `null`
+|[1, 2, 3][1..`null`] | `null`
+|{age: 25}[`null`] | `null`
 |====
 
 Using parameters to pass in the bounds, such as `a[$lower..$upper]`, may result in a `null` for the lower or upper bound (or both).
