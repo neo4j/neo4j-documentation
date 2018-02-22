@@ -19,83 +19,57 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import org.junit.Before
-import org.neo4j.collection.RawIterator
-import org.neo4j.cypher.QueryStatisticsTestSupport
-import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.compiler.v3_1.executionplan.InternalExecutionResult
-import org.neo4j.kernel.api.{KernelAPI, ResourceTracker}
-import org.neo4j.kernel.api.exceptions.ProcedureException
-import org.neo4j.kernel.api.proc.CallableProcedure.BasicProcedure
-import org.neo4j.kernel.api.proc.{Context, Neo4jTypes}
-import org.neo4j.kernel.api.proc.ProcedureSignature._
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, Document, DocumentingTest, ResultAssertions}
 
-class CallTest extends RefcardTest with QueryStatisticsTestSupport {
+class CallTest extends DocumentingTest {
 
-  val graphDescription = List("ROOT KNOWS A:Person", "A KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
   val title = "CALL"
-  override val linkId = "clauses/call"
+  override def outputPath = "clauses/call"
 
-  @Before
-  override def init() {
-    super.init()
+  override def doc: Document = new DocBuilder {
+    doc("CALL", "calling-stored-procedures")
 
-    val kernel = db.getDependencyResolver.resolveDependency(classOf[KernelAPI])
-    val builder = procedureSignature(Array("java", "stored"), "procedureWithArgs")
-      .in("input", Neo4jTypes.NTString)
-      .out("result", Neo4jTypes.NTString)
+    registerProcedures(classOf[org.neo4j.procedure.example.EchoProcedure])
 
-    val proc = new BasicProcedure(builder.build) {
-      override def apply(ctx: Context, input: Array[AnyRef], resourceTracker: ResourceTracker): RawIterator[Array[AnyRef], ProcedureException] =
-        RawIterator.of[Array[AnyRef], ProcedureException](input)
-    }
-    kernel.registerProcedure(proc)
-  }
+    initQueries(
+      """CREATE (ROOT)
+        |CREATE (A:Person)
+        |CREATE (B:Person)
+        |CREATE (C:Person)
+        |CREATE (ROOT)-[:KNOWS]->(A)
+        |CREATE (A)-[:KNOWS]->(B)
+        |CREATE (B)-[:KNOWS]->(C)
+        |CREATE (C)-[:KNOWS]->(ROOT)""".stripMargin)
 
-  override def assert(name: String, result: InternalExecutionResult) {
-    name match {
-      case "labels" =>
-        assert(result.toList.size === 1)
-      case "arg" =>
-        assert(result.toList.size === 1)
-        assert(result.toList == List(Map("result" ->"foo")))
-      case "none" =>
-    }
-  }
+    query(
+      "CALL db.labels() YIELD label",
+      ResultAssertions( r => {
+        assert(r.toList.size === 1)
+        assert(r.toList == List(Map("label" ->"Person")))
+      })
+    ) { resultTable() }
 
-  override def parameters(name: String): Map[String, Any] =
-    name match {
-      case "parameters=arg" => Map("input" ->"foo")
-      case "" => Map.empty
-    }
+    p("""
+        |This shows a standalone call to the built-in procedure `db.labels` to list all labels used in the database.
+        |Note that required procedure arguments are given explicitly in brackets after the procedure name.""")
 
-  def text = """
-### assertion=labels
-//
+    query(
+      "CALL org.neo4j.procedure.example.echo('hi-o') YIELD echo",
+      ResultAssertions( r => assert(r.toList.size === 1))
+    ) { resultTable() }
 
-CALL db.labels() YIELD label
-###
+    p("""
+        |Standalone calls may omit `YIELD` and also provide arguments implicitly via statement parameters, e.g. a standalone call requiring one argument `input` may be run by passing the parameter map `{input: 'foo'}`.""")
 
-This shows a standalone call to the built-in procedure `db.labels` to list all labels used in the database.
-Note that required procedure arguments are given explicitly in brackets after the procedure name.
+    query(
+      """CALL db.labels() YIELD label
+        |RETURN count(label) AS count""".stripMargin,
+      ResultAssertions( r => assert(r.toList.size === 1))
+    ) { resultTable() }
 
-### assertion=arg parameters=arg
-//
-
-CALL java.stored.procedureWithArgs
-###
-
-Standalone calls may omit `YIELD` and also provide arguments implicitly via statement parameters, e.g. a standalone call requiring one argument `input` may be run by passing the parameter map `{input: 'foo'}`.
-
-### assertion=labels
-//
-
-CALL db.labels() YIELD label
-RETURN count(label) AS count
-###
-
-Calls the built-in procedure `db.labels` inside a larger query to count all labels used in the database.
-Calls inside a larger query always requires passing arguments and naming results explicitly with `YIELD`.
-"""
+    p("""
+         |Calls the built-in procedure `db.labels` inside a larger query to count all labels used in the database.
+         |Calls inside a larger query always requires passing arguments and naming results explicitly with `YIELD`.""")
+  }.build()
 }
 
