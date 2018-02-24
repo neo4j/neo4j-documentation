@@ -115,7 +115,7 @@ class OperatorsTest extends DocumentingTest {
         }
         p("See <<query-where-basic>> for more details on dynamic property access.")
         note {
-          p("""The behaviour of the `[]` operator with respect to `null` is detailed <<cypher-null-bracket-operator, here>>.""")
+          p("""The behavior of the `[]` operator with respect to `null` is detailed <<cypher-null-bracket-operator, here>>.""")
         }
       }
     }
@@ -255,7 +255,7 @@ class OperatorsTest extends DocumentingTest {
           |* checking if an element exists in a list: `IN`
           |* accessing an element(s) in a list using the subscript operator: `[]`""".stripMargin)
       note {
-        p("""The behaviour of the `IN` and `[]` operators with respect to `null` is detailed <<cypher-working-with-null, here>>.""")
+        p("""The behavior of the `IN` and `[]` operators with respect to `null` is detailed <<cypher-working-with-null, here>>.""")
       }
       section("Concatenating two lists using `+`", "syntax-concatenating-two-lists") {
         query(

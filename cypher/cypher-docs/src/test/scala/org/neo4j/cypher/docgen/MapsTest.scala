@@ -50,7 +50,7 @@ class MapsTest extends DocumentingTest {
     note{
       p(
         """Information regarding property access operators such as `.` and `[]` can be found <<query-operators-general, here>>.
-          |The behaviour of the `[]` operator with respect to `null` is detailed <<cypher-null-bracket-operator, here>>.""".stripMargin)
+          |The behavior of the `[]` operator with respect to `null` is detailed <<cypher-null-bracket-operator, here>>.""".stripMargin)
     }
     section("Literal maps", "cypher-literal-maps") {
       p(

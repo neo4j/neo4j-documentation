@@ -49,7 +49,7 @@ class ListsTest extends DocumentingTest {
     note{
       p(
         """Information regarding operators such as list concatenation (`+`), element existence checking (`IN`) and access (`[]`) can be found <<query-operators-list, here>>.
-          |The behaviour of the `IN` and `[]` operators with respect to `null` is detailed <<cypher-working-with-null, here>>.""".stripMargin)
+          |The behavior of the `IN` and `[]` operators with respect to `null` is detailed <<cypher-working-with-null, here>>.""".stripMargin)
     }
     section("Lists in general", "cypher-lists-general") {
       p(
