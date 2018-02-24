@@ -47,6 +47,11 @@ class MapsTest extends DocumentingTest {
         |** <<cypher-map-projection-examples, Examples of map projection>>""")
     p("The following graph is used for the examples below:")
     graphViz()
+    note{
+      p(
+        """Information regarding property access operators such as `.` and `[]` can be found <<query-operators-general, here>>.
+          |The behavior of the `[]` operator with respect to `null` is detailed <<cypher-null-bracket-operator, here>>.""".stripMargin)
+    }
     section("Literal maps", "cypher-literal-maps") {
       p(
         """From Cypher, you can also construct maps.
