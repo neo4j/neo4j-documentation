@@ -45,6 +45,11 @@ class ListsTest extends DocumentingTest {
       """* <<cypher-lists-general,Lists in general>>
         |* <<cypher-list-comprehension,List comprehension>>
         |* <<cypher-pattern-comprehension,Pattern comprehension>>""")
+    note{
+      p(
+        """Information regarding operators such as list concatenation (`+`), element existence checking (`IN`) and access (`[]`) can be found <<query-operators-list, here>>.
+          |The behavior of the `IN` and `[]` operators with respect to `null` is detailed <<cypher-working-with-null, here>>.""".stripMargin)
+    }
     section("Lists in general", "cypher-lists-general") {
       p(
         """A literal list is created by using brackets and separating the elements in the list with commas.""".stripMargin)
