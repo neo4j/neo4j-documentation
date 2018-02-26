@@ -63,9 +63,9 @@ public class ProcedureReferenceGenerator {
             out.printf("[role=enterprise-edition]%n");
         }
         out.printf(".%s%n", title);
-        out.printf("[options=header, cols=\"%s\"]%n", includeRolesColumn ? "a,a,m,a" : "a,a,m");
+        out.printf("[options=header, cols=\"%s\"]%n", includeRolesColumn ? "a,a,m,m,a" : "a,a,m,m");
         out.printf("|===%n");
-        out.printf("|Name%n|Description%n|Signature%n");
+        out.printf("|Name%n|Description%n|Signature%n|Mode");
         if (includeRolesColumn) {
             out.printf("|").printf(inlineEditionRole ? ENTERPRISE_FEATURE_ROLE_TEMPLATE : "%s", "Roles").printf("%n");
         }
@@ -118,10 +118,11 @@ public class ProcedureReferenceGenerator {
                         .comparing(Procedure::enterpriseOnly)
                         .thenComparing(Procedure::name)
         ).filter(filter).forEach(it -> {
-            out.printf("|%s |%s |%s",
+            out.printf("|%s |%s |%s |%s",
                     it.enterpriseOnly() ? String.format(inlineEditionRole ? ENTERPRISE_FEATURE_ROLE_TEMPLATE : "%s", it.name()) : it.name(),
                     it.description(),
-                    it.signature()
+                    it.signature(),
+                    it.mode()
             );
             if (includeRolesColumn) {
                 out.printf(" |%s", null == it.roles() ? "N/A" : String.format(inlineEditionRole ? ENTERPRISE_FEATURE_ROLE_TEMPLATE : "%s", String.join(", ", it.roles())));
@@ -134,12 +135,14 @@ public class ProcedureReferenceGenerator {
         private String name;
         private String signature;
         private String description;
+        private String mode;
         private List<String> roles;
         private Boolean enterpriseOnly;
         Procedure(Map<String, Object> row) {
             setName((String) row.get("name"));
             this.signature = (String) row.get("signature");
             this.description = (String) row.get("description");
+            this.mode = (String) row.get("mode");
             this.roles = (List<String>) row.get("roles");
             this.enterpriseOnly = false;
         }
@@ -155,6 +158,9 @@ public class ProcedureReferenceGenerator {
         }
         String description() {
             return description;
+        }
+        String mode() {
+            return mode;
         }
         List<String> roles() {
             return roles;
