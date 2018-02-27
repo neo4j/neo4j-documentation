@@ -19,26 +19,26 @@
  */
 package org.neo4j.doc.server;
 
-import java.io.IOException;
-import javax.ws.rs.core.MediaType;
-
 import org.junit.After;
 import org.junit.Test;
+
+import java.io.IOException;
+import javax.ws.rs.core.MediaType;
 
 import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RestRequest;
 import org.neo4j.helpers.ListenSocketAddress;
 import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.server.configuration.ServerSettings;
+import org.neo4j.server.rest.web.ScriptExecutionMode;
 import org.neo4j.server.scripting.javascript.GlobalJavascriptInitializer;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-
-import static org.neo4j.doc.server.helpers.CommunityServerBuilder.server;
 import static org.neo4j.doc.server.HTTP.POST;
+import static org.neo4j.doc.server.helpers.CommunityServerBuilder.server;
 
 public class ServerConfigDocIT extends ExclusiveServerTestBase
 {
@@ -202,7 +202,7 @@ public class ServerConfigDocIT extends ExclusiveServerTestBase
     {
         // NOTE: This has to be initialized to sandboxed, because it can only be initialized once per JVM session,
         // and all other tests depend on it being sandboxed.
-        GlobalJavascriptInitializer.initialize( GlobalJavascriptInitializer.Mode.SANDBOXED );
+        GlobalJavascriptInitializer.initialize( ScriptExecutionMode.SANDBOXED );
 
         server = server().withProperty( ServerSettings.script_sandboxing_enabled.name(), "false" )
                 .usingDataDir( folder.directory( name.getMethodName() ).getAbsolutePath() )
