@@ -34,6 +34,7 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.harness.EnterpriseTestServerBuilders;
 import org.neo4j.harness.ServerControls;
 import org.neo4j.harness.TestServerBuilder;
+import org.neo4j.kernel.configuration.Settings;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.server.ServerTestUtils;
 import org.neo4j.server.configuration.ServerSettings;
@@ -110,8 +111,10 @@ public class ExtensionTestingDocIT
     private TestServerBuilder getServerBuilder( ) throws IOException
     {
         TestServerBuilder serverBuilder = EnterpriseTestServerBuilders.newInProcessBuilder();
-        serverBuilder.withConfig( LegacySslPolicyConfig.certificates_directory.name(),
-                ServerTestUtils.getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) );
+        String path = ServerTestUtils.getRelativePath(
+                getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory );
+        serverBuilder.withConfig( LegacySslPolicyConfig.certificates_directory.name(), path )
+                     .withConfig( ServerSettings.script_enabled.name(), Settings.TRUE );
         return serverBuilder;
     }
 }
