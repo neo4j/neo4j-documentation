@@ -18,17 +18,16 @@
  */
 package org.neo4j.examples.server.unmanaged;
 
-import java.io.File;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Rule;
-import org.junit.Test;
-
 import org.neo4j.harness.junit.Neo4jRule;
+import org.neo4j.kernel.configuration.Settings;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
-import org.neo4j.server.ServerTestUtils;
 import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.test.server.HTTP;
 
@@ -36,7 +35,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.neo4j.server.ServerTestUtils.*;
+import static org.neo4j.server.ServerTestUtils.getRelativePath;
 import static org.neo4j.server.ServerTestUtils.getSharedTestTemporaryFolder;
 
 public class UnmanagedExtensionsDocIT
@@ -49,6 +48,7 @@ public class UnmanagedExtensionsDocIT
                     "MERGE (p)-[:ACTED_IN]->(m) " )
             .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
                     getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
+            .withConfig( ServerSettings.script_enabled.name(), Settings.TRUE )
             .withExtension( "/path/to/my/extension1", ColleaguesCypherExecutionResource.class )
             .withExtension( "/path/to/my/extension2", ColleaguesResource.class );
 
