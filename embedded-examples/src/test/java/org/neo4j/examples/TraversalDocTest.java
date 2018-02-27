@@ -34,11 +34,20 @@ import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippe
 
 public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
 {
+    private static final String JAVADOC_TRAVERSAL_DESCRIPTION_URI = "{neo4j-javadoc-base-uri}/org/neo4j/graphdb/traversal/TraversalDescription.html";
+    private static final String JAVADOC_TRAVERSER_URI = "{neo4j-javadoc-base-uri}/org/neo4j/graphdb/traversal/Traverser.html";
+    private static final String JAVADOC_EVALUATORS_URI = "{neo4j-javadoc-base-uri}/org/neo4j/graphdb/traversal/Evaluators.html";
+    private static final String JAVADOC_EVALUATOR_URI = "{neo4j-javadoc-base-uri}/org/neo4j/graphdb/traversal/Evaluator.html";
+    private static final String JAVADOC_PATH_URI = "{neo4j-javadoc-base-uri}/org/neo4j/graphdb/Path.html";
+    private static final String JAVADOC_NODE_URI = "{neo4j-javadoc-base-uri}/org/neo4j/graphdb/Node.html";
+    private static final String JAVADOC_TRAVERSER_NODES_URI = "{neo4j-javadoc-base-uri}/org/neo4j/graphdb/traversal/Traverser.html#nodes--";
+    private static final String JAVADOC_TRAVERSER_RELATIONSHIPS_URI = "{neo4j-javadoc-base-uri}/org/neo4j/graphdb/traversal/Traverser.html#relationships--";
+
     private static final String TRAVERSAL_DOC =
             "A\n" +
-            "link:javadocs/org/neo4j/graphdb/traversal/TraversalDescription.html[traversal description] is built using a\n" +
+            "link:" + JAVADOC_TRAVERSAL_DESCRIPTION_URI + "[traversal description] is built using a\n" +
             "fluent interface and such a description can then spawn\n" +
-            "link:javadocs/org/neo4j/graphdb/traversal/Traverser.html[traversers].\n" +
+            "link:" + JAVADOC_TRAVERSER_URI + "[traversers].\n" +
             "\n" +
             "@@graph\n" +
             "\n" +
@@ -54,7 +63,7 @@ public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
             "\n" +
             "@@knowslikesoutput\n" +
             "\n" +
-            "Since link:javadocs/org/neo4j/graphdb/traversal/TraversalDescription.html[`TraversalDescription`]s\n" +
+            "Since link:" + JAVADOC_TRAVERSAL_DESCRIPTION_URI + "[`TraversalDescription`]s\n" +
             "are immutable it is also useful to create template descriptions which holds common settings shared by different traversals.\n" +
             "For example, let's start with this traverser:\n" +
             "\n" +
@@ -82,13 +91,13 @@ public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
             "@@output4\n" +
             "\n" +
             "For various useful evaluators, see the\n" +
-            "link:javadocs/org/neo4j/graphdb/traversal/Evaluators.html[Evaluators] Java API\n" +
+            "link:" + JAVADOC_EVALUATORS_URI + "[Evaluators] Java API\n" +
             "or simply implement the\n" +
-            "link:javadocs/org/neo4j/graphdb/traversal/Evaluator.html[Evaluator] interface yourself.\n" +
+            "link:" + JAVADOC_EVALUATOR_URI + "[Evaluator] interface yourself.\n" +
             "\n" +
-            "If you're not interested in the link:javadocs/org/neo4j/graphdb/Path.html[`Path`]s,\n" +
-            "but the link:javadocs/org/neo4j/graphdb/Node.html[`Node`]s\n" +
-            "you can transform the traverser into an iterable of link:javadocs/org/neo4j/graphdb/traversal/Traverser.html#nodes--[nodes]\n" +
+            "If you're not interested in the link:" + JAVADOC_PATH_URI + "[`Path`]s,\n" +
+            "but the link:" + JAVADOC_NODE_URI + "[`Node`]s\n" +
+            "you can transform the traverser into an iterable of link:" + JAVADOC_TRAVERSER_NODES_URI + "[nodes]\n" +
             "like this:\n" +
             "\n" +
             "@@nodes\n" +
@@ -97,7 +106,7 @@ public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
             "\n" +
             "@@nodeoutput\n" +
             "\n" +
-            "link:javadocs/org/neo4j/graphdb/traversal/Traverser.html#relationships--[Relationships]\n" +
+            "link:" + JAVADOC_TRAVERSER_RELATIONSHIPS_URI + "[Relationships]\n" +
             "are fine as well, here's how to get them:\n" +
             "\n" +
             "@@relationships\n" +
