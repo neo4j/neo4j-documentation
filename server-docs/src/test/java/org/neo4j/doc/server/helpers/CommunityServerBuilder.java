@@ -49,6 +49,7 @@ import org.neo4j.server.database.LifecycleManagingDatabase;
 import org.neo4j.server.preflight.PreFlightTasks;
 import org.neo4j.server.rest.paging.LeaseManager;
 import org.neo4j.server.rest.web.DatabaseActions;
+import org.neo4j.server.rest.web.ScriptExecutionMode;
 import org.neo4j.test.ImpermanentGraphDatabase;
 import org.neo4j.time.Clocks;
 
@@ -310,7 +311,8 @@ public class CommunityServerBuilder
 
         return new DatabaseActions(
                 new LeaseManager( clockToUse ),
-                config.get( ServerSettings.script_sandboxing_enabled ), database.getGraph() );
+                ScriptExecutionMode.getConfiguredMode( config ),
+                database.getGraph() );
     }
 
     protected File buildBefore() throws IOException

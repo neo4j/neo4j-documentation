@@ -32,6 +32,7 @@ import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.ConstraintType;
 import org.neo4j.harness.junit.EnterpriseNeo4jRule;
 import org.neo4j.harness.junit.Neo4jRule;
+import org.neo4j.kernel.configuration.Settings;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.test.rule.SuppressOutput;
@@ -56,6 +57,7 @@ public class JUnitDocIT
             .withFixture( "CREATE (admin:Admin)" )
             .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
                     getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
+            .withConfig( ServerSettings.script_enabled.name(), Settings.TRUE )
             .withFixture( new Function<GraphDatabaseService,Void>()
             {
                 @Override
