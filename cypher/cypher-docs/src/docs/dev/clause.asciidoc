@@ -159,7 +159,7 @@ include::ql/query-return.adoc[leveloffset=+1]
 
 include::ql/query-with.adoc[leveloffset=+1]
 
-include::ql/unwind/index.asciidoc[leveloffset=+1]
+include::ql/query-unwind.adoc[leveloffset=+1]
 
 //Reading sub-clauses
 include::ql/query-where.adoc[leveloffset=+1]
@@ -171,13 +171,13 @@ include::ql/query-skip.adoc[leveloffset=+1]
 include::ql/query-limit.adoc[leveloffset=+1]
 
 //Writing
-include::ql/create/index.asciidoc[leveloffset=+1]
+include::ql/query-create.adoc[leveloffset=+1]
 
 include::ql/query-delete.adoc[leveloffset=+1]
 
-include::ql/set/index.asciidoc[leveloffset=+1]
+include::ql/query-set.adoc[leveloffset=+1]
 
-include::ql/remove/index.asciidoc[leveloffset=+1]
+include::ql/query-remove.adoc[leveloffset=+1]
 
 include::ql/query-foreach.adoc[leveloffset=+1]
 
