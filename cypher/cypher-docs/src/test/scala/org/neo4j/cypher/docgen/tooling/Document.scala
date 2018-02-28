@@ -25,7 +25,7 @@ import org.neo4j.cypher.internal.compiler.v3_2.prettifier.Prettifier
 import org.neo4j.cypher.internal.frontend.v3_2.InternalException
 import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunction
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
-import org.neo4j.cypher.internal.frontend.v3_1.helpers.Eagerly
+import org.neo4j.cypher.internal.frontend.v3_2.helpers.Eagerly
 import org.neo4j.kernel.GraphDatabaseQueryService
 import scala.collection.JavaConverters._
 
