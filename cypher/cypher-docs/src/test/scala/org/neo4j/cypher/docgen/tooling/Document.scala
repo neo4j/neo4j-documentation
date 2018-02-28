@@ -19,12 +19,16 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
+import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.internal.compiler.v3_2.executionplan.InternalExecutionResult
 import org.neo4j.cypher.internal.compiler.v3_2.prettifier.Prettifier
 import org.neo4j.cypher.internal.frontend.v3_2.InternalException
 import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunction
 import org.neo4j.cypher.javacompat.internal.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.frontend.v3_1.helpers.Eagerly
 import org.neo4j.kernel.GraphDatabaseQueryService
+import scala.collection.JavaConverters._
+
 
 case class ContentWithInit(init: RunnableInitialization, queryText: Option[String], queryResultPlaceHolder: QueryResultPlaceHolder) {
 
@@ -245,12 +249,14 @@ case class QueryResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: 
   private def escape(in: String): String = "+%s+".format(in)
 }
 
-case class Query(queryText: String, assertions: QueryAssertions, myInit: RunnableInitialization, content: Content) extends Content {
+case class Query(queryText: String, assertions: QueryAssertions, myInit: RunnableInitialization, content: Content, params: Seq[(String, Any)]) extends Content {
 
   val prettified = Prettifier(queryText)
+  val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
   override def asciiDoc(level: Int) = {
-    s""".Query
+    s"""$parameterText
+       |.Query
        |[source, cypher]
        |----
        |$prettified
@@ -261,6 +267,12 @@ case class Query(queryText: String, assertions: QueryAssertions, myInit: Runnabl
 
   override def runnableContent(init: RunnableInitialization, queryText: Option[String]) =
     content.runnableContent(init ++ myInit, queryText = Some(prettified))
+
+  private def mapMapValue(v: Any): Any = v match {
+    case v: Map[_, _] => Eagerly.immutableMapValues(v, mapMapValue).asJava
+    case seq: Seq[_]  => seq.map(mapMapValue).asJava
+    case v: Any       => v
+  }
 }
 
 case class ConsoleData(globalInitQueries: Seq[String], localInitQueries: Seq[String], query: String) extends Content with NoQueries {
@@ -328,7 +340,7 @@ trait QueryResultPlaceHolder {
 }
 
 // NOTE: These must _not_ be case classes, otherwise they will not be compared by identity
-class TablePlaceHolder(val assertions: QueryAssertions) extends Content with QueryResultPlaceHolder
+class TablePlaceHolder(val assertions: QueryAssertions, val params: (String, Any)*) extends Content with QueryResultPlaceHolder
 class GraphVizPlaceHolder(val options: String) extends Content with QueryResultPlaceHolder
 class ErrorPlaceHolder() extends Content with QueryResultPlaceHolder
 class ExecutionPlanPlaceHolder(val assertions: QueryAssertions) extends Content with QueryResultPlaceHolder

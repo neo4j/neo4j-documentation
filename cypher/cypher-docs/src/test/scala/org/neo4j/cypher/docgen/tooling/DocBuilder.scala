@@ -84,7 +84,7 @@ trait DocBuilder {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
     }.get
-    queryScope.addContent(new TablePlaceHolder(queryScope.assertions))
+    queryScope.addContent(new TablePlaceHolder(queryScope.assertions, queryScope.params:_*))
   }
 
   def executionPlan() = {
@@ -131,8 +131,8 @@ trait DocBuilder {
   def caution(f: => Unit) = inScope(AdmonitionScope(Caution.apply), f)
   def important(f: => Unit) = inScope(AdmonitionScope(Important.apply), f)
 
-  def query(q: String, assertions: QueryAssertions)(f: => Unit) =
-    inScope(QueryScope(q.stripMargin, assertions), {
+  def query(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(f: => Unit) =
+    inScope(QueryScope(q.stripMargin, assertions, parameters), {
       f
       consoleData() // Always append console data
     })
@@ -194,8 +194,8 @@ object DocBuilder {
     override def toContent = f(content)
   }
 
-  case class QueryScope(queryText: String, assertions: QueryAssertions) extends Scope {
-    override def toContent = Query(queryText, assertions, init, content)
+  case class QueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends Scope {
+    override def toContent = Query(queryText, assertions, init, content, params)
   }
 }
 
