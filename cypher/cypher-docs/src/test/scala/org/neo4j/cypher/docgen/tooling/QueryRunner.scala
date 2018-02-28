@@ -62,7 +62,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
 
                   case (queryText: String, gv: GraphVizPlaceHolder) =>
                     graphVizCounter = graphVizCounter + 1
-                    Try(db.execute(queryText)) match {
+                    Try(db.executeWithParams(queryText)) match {
                       case Success(inner) =>
                         GraphVizRunResult(gv, captureStateAsGraphViz(db.getInnerDb, title, graphVizCounter, gv.options))
                       case Failure(error) =>
@@ -95,7 +95,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
 
     val result: Either[Throwable, InternalTransaction => Content] =
       try {
-        val resultTry = Try(database.execute(queryText))
+        val resultTry = Try(database.executeWithParams(queryText, content.params:_*))
         (assertions, resultTry) match {
           // *** Success conditions
 
@@ -142,7 +142,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
                                  placeHolder: QueryResultPlaceHolder): RunResult = {
     val result: Either[Throwable, ExecutionPlan] =
       try {
-        (assertions, Try(database.execute(s"EXPLAIN $queryText"))) match {
+        (assertions, Try(database.executeWithParams(s"EXPLAIN $queryText"))) match {
           case (ResultAssertions(f), Success(inner)) =>
             f(inner)
             Right(ExecutionPlan(inner.executionPlanDescription().toString))
@@ -168,7 +168,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
                                  queryText: String,
                                  assertions: QueryAssertions,
                                  placeHolder: QueryResultPlaceHolder) = {
-    val profilingAttempt = Try(database.execute(s"PROFILE $queryText"))
+    val profilingAttempt = Try(database.executeWithParams(s"PROFILE $queryText"))
     val planString = (assertions, profilingAttempt) match {
       case (ResultAssertions(f), Success(result)) =>
         f(result)

@@ -19,56 +19,76 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.junit.Test
-import org.junit.Assert._
-import org.neo4j.visualization.graphviz.GraphStyle
-import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle
+import org.neo4j.cypher.QueryStatisticsTestSupport
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class RemoveTest extends DocumentingTestBase with SoftReset {
+class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
+  override def outputPath = "target/docs/dev/ql"
 
-  override protected def getGraphvizStyle: GraphStyle =
-    AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
+  override def doc = new DocBuilder {
+    doc("REMOVE", "query-remove")
+    initQueries("""CREATE (a:Swedish {name: 'Andres', age: 36}),
+                  |       (t:Swedish {name: 'Tobias', age: 25}),
+                  |       (p:German:Swedish {name: 'Peter', age: 34}),
+                  |       (a)-[:KNOWS]->(t),
+                  |       (a)-[:KNOWS]->(p)""")
+    synopsis("The `REMOVE` clause is used to remove properties and labels from graph elements.")
+    p(
+      """* <<query-remove-introduction, Introduction>>
+        |* <<remove-remove-a-property, Remove a property>>
+        |* <<remove-remove-a-label-from-a-node, Remove a label from a node>>
+        |* <<remove-removing-multiple-labels, Removing multiple labels>>""".stripMargin)
+    section("Introduction", "query-remove-introduction") {
+      p(
+        """For deleting nodes and relationships, see <<query-delete>>.""".stripMargin)
+      note{
+        p("""Removing labels from a node is an idempotent operation: if you try to remove a label from a node that does not have that label on it, nothing happens.
+             |The query statistics will tell you if something needed to be done or not.""".stripMargin) }
+      p("""The examples use the following database:""".stripMargin)
+      graphViz()
+    }
+    section("Remove a property", "remove-remove-a-property") {
+      p(
+        """Neo4j doesn't allow storing `null` in properties.
+          |Instead, if no value exists, the property is just not there.
+          |So, `REMOVE` is used to remove a property value from a node or a relationship.""".stripMargin)
+      query(
+        """MATCH (a {name: 'Andres'})
+          |REMOVE a.age
+          |RETURN a.name, a.age""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("a.name" -> "Andres", "a.age" -> null)))
+          assertStats(r, propertiesWritten = 1, nodesDeleted = 0)
+        })) {
+        p("""The node is returned, and no property `age` exists on it.""".stripMargin)
+        resultTable()
+      }
+    }
+    section("Remove a label from a node", "remove-remove-a-label-from-a-node") {
+      p(
+        """To remove labels, you use `REMOVE`.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Peter'})
+          |REMOVE n:German
+          |RETURN n.name, labels(n)""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Peter", "labels(n)" -> List("Swedish"))))
+          assertStats(r, labelsRemoved = 1, nodesDeleted = 0)
+        })) {
+        resultTable()
+      }
+    }
+    section("Removing multiple labels", "remove-removing-multiple-labels") {
+      p(
+        """To remove multiple labels, you use `REMOVE`.""".stripMargin)
+      query(
+        """MATCH (n {name: 'Peter'})
+          |REMOVE n:German:Swedish
+          |RETURN n.name, labels(n)""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Peter", "labels(n)" -> List.empty)))
+          assertStats(r, labelsRemoved = 2, nodesDeleted = 0)
+        })) {
+        resultTable()
+      }
+    }
+  }.build()
 
-  override def graphDescription = List(
-    "Andres:Swedish KNOWS Tobias:Swedish",
-    "Andres KNOWS Peter:German:Swedish"
-  )
-
-  override val properties = Map(
-    "Andres" -> Map("age" -> 36l),
-    "Tobias" -> Map("age" -> 25l),
-    "Peter" -> Map("age" -> 34l)
-  )
-
-  def section = "Remove"
-
-  @Test def remove_property() {
-    testQuery(
-      title = "Remove a property",
-      text = "Neo4j doesn't allow storing `null` in properties. Instead, if no value exists, the property is " +
-        "just not there. So, to remove a property value on a node or a relationship, is also done with `REMOVE`.",
-      queryText = "MATCH (andres {name: 'Andres'}) REMOVE andres.age RETURN andres",
-      optionalResultExplanation = "The node is returned, and no property `age` exists on it.",
-      assertions = (p) => assertFalse("Property was not removed as expected.", node("Andres").hasProperty("age")) )
-  }
-
-  @Test def remove_a_label_from_a_node() {
-    testQuery(
-      title = "Remove a label from a node",
-      text = "To remove labels, you use `REMOVE`.",
-      queryText = "MATCH (n {name: 'Peter'}) REMOVE n:German RETURN n",
-      optionalResultExplanation = "",
-      assertions = (p) => assert(getLabelsFromNode(p) === List("Swedish"))
-    )
-  }
-
-  @Test def remove_multiple_labels_from_a_node() {
-    testQuery(
-      title = "Removing multiple labels",
-      text = "To remove multiple labels, you use `REMOVE`.",
-      queryText = "MATCH (n {name: 'Peter'}) REMOVE n:German:Swedish RETURN n",
-      optionalResultExplanation = "",
-      assertions = (p) => assert(getLabelsFromNode(p).isEmpty)
-    )
-  }
 }
