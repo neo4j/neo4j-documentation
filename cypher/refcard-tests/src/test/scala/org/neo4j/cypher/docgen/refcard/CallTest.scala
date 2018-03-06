@@ -24,11 +24,12 @@ import org.neo4j.collection.RawIterator
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.internal.kernel.api.exceptions.ProcedureException
+import org.neo4j.internal.kernel.api.procs.Neo4jTypes
+import org.neo4j.internal.kernel.api.procs.ProcedureSignature._
 import org.neo4j.kernel.api.{InwardKernel, ResourceTracker}
-import org.neo4j.kernel.api.exceptions.ProcedureException
 import org.neo4j.kernel.api.proc.CallableProcedure.BasicProcedure
-import org.neo4j.kernel.api.proc.ProcedureSignature._
-import org.neo4j.kernel.api.proc.{Context, Neo4jTypes}
+import org.neo4j.kernel.api.proc.Context
 
 class CallTest extends RefcardTest with QueryStatisticsTestSupport {
 
