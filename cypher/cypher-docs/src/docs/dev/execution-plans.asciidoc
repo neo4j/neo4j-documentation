@@ -21,7 +21,7 @@ The compiler uses this estimate to choose a suitable execution plan.
 Each operator will ask the Neo4j storage engine to do work such as retrieving or updating data.
 A _database hit_ is an abstract unit of this storage engine work.
 
-To produce an efficient plan for a query, Neo4j requires information about the database, such as which indexes and constraints are present [add link to the Schema section here].
+To produce an efficient plan for a query, Neo4j requires information about the database, such as which indexes and constraints are present (see <<cypher-schema>>).
 Statistical information maintained by the database is also used to generate an efficient execution plan; i.e. the query engine uses this information to determine which access patterns will produce the best execution plan. 
 
 The statistical information maintained by Neo4j is:
@@ -31,7 +31,7 @@ The statistical information maintained by Neo4j is:
 . The number of relationships by type.
 . The number of relationships by type, ending with or starting from a node with a specific label.
 
-More information about how the statistics are kept up to date, as well as configuration options about managing query replanning can be found in the <<operations-manual#schema-statistics, Operations Manual -> Schema statistics>>
+More information about how the statistics are kept up to date, as well as configuration options about managing query replanning can be found in the <<operations-manual#schema-statistics, Operations Manual -> Statistics gathering>>
 
 See <<how-do-i-profile-a-query>> for how to view the execution plan for your query.
 
