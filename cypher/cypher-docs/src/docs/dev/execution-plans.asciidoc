@@ -21,6 +21,18 @@ Each operator will ask the Neo4j storage engine to do work such as retrieving or
 A _database hit_ is an abstract unit of this storage engine work.
 The actions triggering a database hit are listed <<execution-plans-dbhits, here>>.
 
+To produce an efficient plan for a query, Neo4j requires information about the database, such as which indexes and constraints are present (see <<cypher-schema>>).
+Statistical information maintained by the database is also used to generate an efficient execution plan; i.e. the query engine uses this information to determine which access patterns will produce the best execution plan. 
+
+The statistical information maintained by Neo4j is:
+
+. The number of nodes having a certain label.
+. Selectivity per index.
+. The number of relationships by type.
+. The number of relationships by type, ending with or starting from a node with a specific label.
+
+More information about how the statistics are kept up to date, as well as configuration options about managing query replanning can be found in the <<operations-manual#schema-statistics, Operations Manual -> Statistics gathering>>
+
 See <<how-do-i-profile-a-query>> for how to view the execution plan for a query.
 
 For a deeper understanding of how each operator works, refer the relevant section.
@@ -29,11 +41,6 @@ There is no guarantee that a specific query will always be solved with the same 
 
 * <<execution-plan-operators-summary, Execution plan operators>>
 * <<query-shortestpath-planning, Shortest path planning>>
-
-// The conditional leveloffsets below are "wrong" for the neo4j/neo4j
-// Asciidoc+DB45 docs build, but AsciiDoc is limited to a certain depth so it
-// is not possible to set them correctly. The downstream docs build is happy
-// with these values.
 
 
 [[execution-plan-operators-summary]]
