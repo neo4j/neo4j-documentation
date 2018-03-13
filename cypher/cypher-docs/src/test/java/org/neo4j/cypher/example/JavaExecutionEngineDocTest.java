@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.neo4j.doc.tools.AsciiDocGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -55,6 +56,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.neo4j.cypher.internal.javacompat.RegularExpressionMatcher.matchesPattern;
 import static org.neo4j.helpers.collection.Iterators.asIterable;
@@ -342,8 +344,10 @@ public class JavaExecutionEngineDocTest
 
         assertThat( result.columns(), hasItem( "n.name" ) );
         Iterator<Object> n_column = result.columnAs( "n.name" );
-        assertEquals( "Michaela", n_column.next() );
-        assertEquals( "Johan", n_column.next() );
+        Set<Object> results = Iterators.asSet( n_column );
+        assertTrue( results.remove( "Michaela" ) );
+        assertTrue( results.remove( "Johan" ) );
+        assertTrue( results.isEmpty() );
     }
 
     @Test
