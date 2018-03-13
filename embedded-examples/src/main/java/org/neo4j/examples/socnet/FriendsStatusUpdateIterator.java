@@ -19,15 +19,13 @@
 package org.neo4j.examples.socnet;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.neo4j.helpers.collection.PositionedIterator;
 
 class FriendsStatusUpdateIterator implements Iterator<StatusUpdate> {
-    private ArrayList<PositionedIterator<StatusUpdate>> statuses = new ArrayList<PositionedIterator<StatusUpdate>>();
+    private ArrayList<PositionedIterator<StatusUpdate>> statuses = new ArrayList<>();
     private StatusUpdateComparator comparator = new StatusUpdateComparator();
 
     public FriendsStatusUpdateIterator( Person person )
@@ -36,7 +34,7 @@ class FriendsStatusUpdateIterator implements Iterator<StatusUpdate> {
         {
             Iterator<StatusUpdate> iterator = friend.getStatus().iterator();
             if (iterator.hasNext()) {
-                statuses.add(new PositionedIterator<StatusUpdate>(iterator));
+                statuses.add( new PositionedIterator<>( iterator ));
             }
         }
 
@@ -74,7 +72,7 @@ class FriendsStatusUpdateIterator implements Iterator<StatusUpdate> {
 
     private void sort()
     {
-        Collections.sort( statuses, comparator );
+        statuses.sort( comparator );
     }
 
     public void remove()
