@@ -137,7 +137,15 @@ public class ConfigDocsGenerator {
         if (item.isDeprecated()) {
             out.printf( "|Deprecated a|%s%n", item.deprecationMessage() );
             if (item.hasReplacement()) {
-                out.printf("|Replaced by a|%s%n", settingReferenceForHTML(item.replacedBy()));
+                StringBuilder sb = new StringBuilder();
+                Matcher matcher = CONFIG_SETTING_PATTERN.matcher(item.replacedBy());
+                while (matcher.find()) {
+                    if (0 < sb.length()) {
+                        sb.append(", ");
+                    }
+                    sb.append(settingReferenceForHTML(matcher.group()));
+                }
+                out.printf("|Replaced by a|%s%n", sb.toString());
             }
         }
         if (item.isInternal()) {
