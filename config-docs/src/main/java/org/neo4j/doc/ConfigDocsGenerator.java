@@ -36,6 +36,7 @@ import org.neo4j.kernel.configuration.Config;
 public class ConfigDocsGenerator {
 
     private static final Pattern CONFIG_SETTING_PATTERN = Pattern.compile( "\\+?[a-z0-9]+((\\.|_)[a-z0-9]+)+\\+?" );
+    private static final Pattern ENDS_WITH_WORD_CHAR = Pattern.compile("\\w$");
     public static final String IFDEF_HTMLOUTPUT = String.format("ifndef::nonhtmloutput[]%n");
     public static final String IFDEF_NONHTMLOUTPUT = String.format("ifdef::nonhtmloutput[]%n");
     public static final String ENDIF = String.format("endif::nonhtmloutput[]%n%n");
@@ -121,8 +122,10 @@ public class ConfigDocsGenerator {
                         ".%s%n" +
                         "[cols=\"<1h,<4\"]%n" +
                         "|===%n" +
-                        "|Description a|%s%n" +
-                        "|Valid values a|%s%n",
+                        "|Description%n" +
+                        "a|%s%n" +
+                        "|Valid values%n" +
+                        "a|%s%n",
                 item.id(), item.name(),
                 item.description().orElse("No description available."), item.validationMessage() );
 
@@ -131,11 +134,15 @@ public class ConfigDocsGenerator {
         }
 
         if (item.hasDefault()) {
-            out.printf("|Default value m|%s%n", item.defaultValue() );
+            out.printf("|Default value%n" +
+                       "m|%s%n",
+                    item.defaultValue());
         }
 
         if (item.isDeprecated()) {
-            out.printf( "|Deprecated a|%s%n", item.deprecationMessage() );
+            out.printf( "|Deprecated%n" +
+                        "a|%s%n",
+                    item.deprecationMessage());
             if (item.hasReplacement()) {
                 StringBuilder sb = new StringBuilder();
                 Matcher matcher = CONFIG_SETTING_PATTERN.matcher(item.replacedBy());
@@ -145,15 +152,20 @@ public class ConfigDocsGenerator {
                     }
                     sb.append(settingReferenceForHTML(matcher.group()));
                 }
-                out.printf("|Replaced by a|%s%n", sb.toString());
+                out.printf("|Replaced by%n" +
+                           "a|%s%n",
+                        sb.toString());
             }
         }
         if (item.isInternal()) {
-            out.printf("|Internal a|%s is an internal, unsupported setting.%n", item.name());
+            out.printf("|Internal%n" +
+                       "a|%s is an internal, unsupported setting.%n",
+                    item.name());
         }
 
         out.printf("|===%n%n");
     }
+
     private String formatParagraph( String settingName, String paragraph, Function<String, String> renderReferenceToOtherSetting ) {
         return ensureEndsWithPeriod( transformSettingNames( paragraph, settingName, renderReferenceToOtherSetting ) );
     }
@@ -194,7 +206,7 @@ public class ConfigDocsGenerator {
     }
 
     private String ensureEndsWithPeriod(String message) {
-        if (!message.endsWith( "." ) && !message.endsWith( ". ")) {
+        if (ENDS_WITH_WORD_CHAR.matcher(message).find()) {
             message += ".";
         }
         return message;
