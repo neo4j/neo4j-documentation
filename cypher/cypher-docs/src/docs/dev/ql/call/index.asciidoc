@@ -64,9 +64,6 @@ classifier=sources
 tag=indexingProcedure
 ----
 
-[NOTE]
-This clause cannot be combined with other clauses.
-
 include::call-a-procedure-using-call.asciidoc[]
 
 include::call-a-procedure-using-a-quoted-namespace-and-name.asciidoc[]
