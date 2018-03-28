@@ -55,7 +55,7 @@ public class ConfigDocsGenerator {
                 .filter(filter)
                 .sorted((cv1, cv2) -> cv1.name().compareTo(cv2.name()))
                 .map(c -> new DocsConfigValue(
-                        idPrefix + c.name(),
+                        idFromName(idPrefix, c.name()),
                         c.name(),
                         c.description(),
                         c.deprecated(),
@@ -69,6 +69,10 @@ public class ConfigDocsGenerator {
         settingDescriptions.forEach(this::documentForAllOutputs);
         out.flush();
         return baos.toString();
+    }
+
+    private String idFromName(String idPrefix, String name) {
+        return idPrefix + name.replace('<', '-').replace('>', '-');
     }
 
     private Optional<String> valueAsString(ConfigValue configValue) {
