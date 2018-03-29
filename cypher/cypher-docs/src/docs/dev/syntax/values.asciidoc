@@ -24,6 +24,7 @@ Property types comprise:
    ** Float
 * String
 * Boolean
+* Point (spatial)
 
 NOTE: The adjective 'numeric' -- when used in the context of describing  Cypher functions or expressions -- indicates that any type of Number applies (Integer or Float).
 
