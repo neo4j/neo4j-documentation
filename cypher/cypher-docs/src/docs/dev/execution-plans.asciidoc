@@ -31,7 +31,7 @@ The statistical information maintained by Neo4j is:
 . The number of relationships by type.
 . The number of relationships by type, ending with or starting from a node with a specific label.
 
-More information about how the statistics are kept up to date, as well as configuration options about managing query replanning can be found in the <<operations-manual#schema-statistics, Operations Manual -> Statistics gathering>>
+More information about how the statistics are kept up to date, as well as configuration options about managing query replanning can be found in the <<operations-manual#statistics-execution-plans, Operations Manual -> Statistics and execution plans>>
 
 See <<how-do-i-profile-a-query>> for how to view the execution plan for a query.
 
