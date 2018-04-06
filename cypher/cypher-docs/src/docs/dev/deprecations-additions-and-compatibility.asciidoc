@@ -34,8 +34,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `{parameter}` | Syntax | Deprecated | Replaced by <<cypher-parameters, $parameter>>
 | <<functions-properties, properties()>>  | Function  | Added  |
 | <<query-call,CALL [\...YIELD]>>   | Clause  | Added  |
-| <<functions-point-cartesian,point() - Cartesian 2D>> | Function | Added |
-| <<functions-point,point() - WGS 84 2D>> | Function | Added |
+| <<functions-point-cartesian-2d,point() - Cartesian 2D>> | Function | Added |
+| <<functions-point-wgs84-2d,point() - WGS 84 2D>> | Function | Added |
 | <<functions-distance,distance()>> | Function | Added |
 | <<procedures, User-defined procedures>> | Functionality | Added |
 |  <<functions-tostring, toString()>>   | Function  | Extended | Now also allows Boolean values as input
@@ -97,7 +97,7 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 [options="header"]
 |===
 | Feature          | Type | Change | Details
-| Spatial point types | Functionality | Amendment | A point -- irrespective of which coordinate reference system is used -- can be stored as a property and is able to be backed by an index. Prior to this, a point was a virtual property only.
+| Spatial point types | Functionality | Amendment | A point -- irrespective of which Coordinate Reference System is used -- can be stored as a property and is able to be backed by an index. Prior to this, a point was a virtual property only.
 | <<functions-point-cartesian-3d,point() - Cartesian 3D>> | Function | Added |
 | <<functions-point-wgs84-3d,point() - WGS 84 3D>> | Function | Added |
 |===
