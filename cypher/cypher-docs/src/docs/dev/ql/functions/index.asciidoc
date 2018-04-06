@@ -203,8 +203,8 @@ These functions are used to specify points in a 2D coordinate system and to calc
 |===
 |Function                               |   Description
 |<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
-|<<functions-point-cartesian,point() - Cartesian 2D>>            | Returns a point object, given two coordinate values in the Cartesian coordinate system.
-|<<functions-point,point() - WGS 84>>            | Returns a point object, given two coordinate values in the WGS 84 coordinate system.
+|<<functions-point-cartesian,point() - Cartesian 2D>>            | Returns a 2D point object, given two coordinate values in the Cartesian coordinate system.
+|<<functions-point,point() - WGS 84 2D>>            | Returns a 2D point object, given two coordinate values in the WGS 84 coordinate system.
 |===
 
 //Predicate functions

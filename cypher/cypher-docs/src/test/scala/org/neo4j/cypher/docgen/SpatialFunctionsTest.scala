@@ -62,14 +62,14 @@ class SpatialFunctionsTest extends DocumentingTest {
         |
         |       (copenhagen)-[:TRAVEL_ROUTE]->(malmo)""")
     synopsis("These functions are used to specify points in a 2D coordinate system and to calculate the geodesic distance between two points.")
-    p("Two coordinate reference systems (CRS) are supported: (i) http://spatialreference.org/ref/epsg/4326/[WGS 84] and (ii) http://spatialreference.org/ref/sr-org/7203/[Cartesian 2D].")
+    p("Two coordinate reference systems (CRS) are supported: (i) http://spatialreference.org/ref/epsg/4326/[WGS 84 2D] and (ii) http://spatialreference.org/ref/sr-org/7203/[Cartesian 2D].")
     p("""_WGS 84_ is specified with a map containing coordinate values for either `longitude` and `latitude` (this is the default), or `x` and `y`.
         |_Cartesian_ is specified with a map containing only `x` and `y` coordinate values.""" stripMargin)
     p(
       """Functions:
         |
         |* <<functions-distance,distance()>>
-        |* <<functions-point,point() - WGS 84>>
+        |* <<functions-point,point() - WGS 84 2D>>
         |* <<functions-point-cartesian,point() - Cartesian 2D>>
       """.stripMargin)
     p("The following graph is used for some of the examples below.")
@@ -104,8 +104,8 @@ class SpatialFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("point() - WGS 84", "functions-point") {
-      p("`point()` returns a point in the _WGS 84_ coordinate system corresponding to the given coordinate values.")
+    section("point() - WGS 84 2D", "functions-point") {
+      p("`point(longitude|x, latitude|y)` returns a 2D point in the _WGS 84_ coordinate system corresponding to the given coordinate values.")
       function("point({longitude | x, latitude | y [, crs]})", "A Point.", ("A single map consisting of the following:", ""), ("longitude/x", "A numeric expression"), ("latitude/y", "A numeric expression"), ("crs", "The string 'WGS-84'"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.")
       query("RETURN point({longitude: 56.7, latitude: 12.78}) AS point", ResultAssertions((r) => {
@@ -123,7 +123,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       query("MATCH (p:Office)\nRETURN point({longitude: p.longitude, latitude: p.latitude}) AS officePoint", ResultAssertions((r) => {
         r.toList should equal(List(Map("officePoint" -> GeographicPoint(12.994341, 55.611784, CRS.WGS84))))
       })) {
-        p("A point representing the coordinates of the city of Malmo in the _WGS 84_ CRS is returned.")
+        p("A 2D point representing the coordinates of the city of Malmo in the _WGS 84_ CRS is returned.")
         resultTable()
       }
       query("RETURN point(null) AS p", ResultAssertions((r) => {
@@ -134,13 +134,13 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
     }
     section("point() - Cartesian 2D", "functions-point-cartesian") {
-      p("`point()` returns a point in the _Cartesian_ coordinate system corresponding to the given coordinate values.")
+      p("`point(x, y)` returns a 2D point in the _Cartesian_ coordinate system corresponding to the given coordinate values.")
       function("point({x, y [, crs]})", "A Point.", ("A single map consisting of the following:", ""), ("x", "A numeric expression"), ("y", "A numeric expression"), ("crs", "The string 'cartesian'"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.")
       query("RETURN point({x: 2.3, y: 4.5}) AS point", ResultAssertions((r) => {
         r.toList should equal(List(Map("point" -> CartesianPoint(2.3, 4.5, CRS.Cartesian))))
       })) {
-        p("A point with an `x` coordinate of `2.3` and a `y` coordinate of `4.5` in the _Cartesian_ CRS is returned")
+        p("A 2D point with an `x` coordinate of `2.3` and a `y` coordinate of `4.5` in the _Cartesian_ CRS is returned")
         resultTable()
       }
     }
