@@ -142,8 +142,8 @@ These comprise clauses used to manage the schema; further details can found in <
 [options="header"]
 |===
 |Clause                                             |   Description
-|<<query-constraints,CREATE \| DROP CONSTRAINT>>     | Create or drop a constraint pertaining to either a node label or relationship type, and a property.
-|<<query-schema-index,CREATE \| DROP INDEX>>         | Create or drop an index on all nodes with a particular label and property.
+|<<query-constraints,CREATE \| DROP CONSTRAINT>>     | Create or drop an index on all nodes with a particular label and property.
+|<<query-schema-index,CREATE \| DROP INDEX>>         | Create or drop a constraint pertaining to either a node label or relationship type, and a property.
 |===
 
 
