@@ -46,11 +46,11 @@ Calling a `VOID` procedure in the middle of a larger query will simply pass on e
 
 [NOTE]
 ====
-User-defined procedures can be developed and deployed to the database.
-See <<procedures>> for details.
+Neo4j comes with a number of built-in procedures.
+For a list of these, see <<operations-manual#ref-procedures, Operations Manual -> Built-in procedures>>.
 
-Neo4j also has a number of procedures built in.
-For a list of built-in procedures, see <<operations-manual#ref-procedures, Operations Manual -> Built-in procedures>>.
+Users can also develop custom procedures and deploy to the database.
+See <<procedures>> for details.
 ====
 
 The following examples show how to pass arguments to and yield result fields from a procedure call.
