@@ -46,6 +46,7 @@ class OperatorsTest extends DocumentingTest {
         |* <<query-operators-list, List operators>>
         | ** <<syntax-concatenating-two-lists, Concatenating two lists using `+`>>
         | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list, Using `IN` to check if a number is in a list>>
+        | ** <<syntax-using-in-for-more-complex-list-membership-operations, Using `IN` for more complex list membership operations>>
         | ** <<syntax-accessing-elements-in-a-list, Accessing elements in a list using the `[]` operator>>
         |* <<query-operators-property, Property operators>>
         |* <<cypher-comparison, Equality and comparison of values>>
@@ -251,8 +252,8 @@ class OperatorsTest extends DocumentingTest {
       p(
         """List operators comprise:
           |
-          |* concatenating lists: `+`
-          |* checking if an element exists in a list: `IN`
+          |* concatenating lists `l~1~` and `l~2~`: `[l~1~] + [l~2~]`
+          |* checking if an element `e` exists in a list `l`: `e IN [l]`
           |* accessing an element(s) in a list using the subscript operator: `[]`""".stripMargin)
       note {
         p("""The behavior of the `IN` and `[]` operators with respect to `null` is detailed <<cypher-working-with-null, here>>.""")
@@ -276,6 +277,41 @@ class OperatorsTest extends DocumentingTest {
           })) {
           resultTable()
         }
+      }
+      section("Using `IN` for more complex list membership operations", "syntax-using-in-for-more-complex-list-membership-operations") {
+        p(
+          """The general rule is that the `IN` operator will evaluate to `true` if the list given as the right-hand operand contains an element which has the same _type and contents (or value)_ as the left-hand operand.
+            |Lists are only comparable to other lists, and elements of a list `l` are compared pairwise in ascending order from the first element in `l` to the last element in `l`.""".stripMargin)
+        p("""The following query checks whether or not the list `[2, 1]` is an element of the list `[1, [2, 1], 3]`:""".stripMargin)
+        query(
+          """RETURN [2, 1] IN [1, [2, 1], 3] AS inList""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("inList" -> true)))
+          })) {
+          p(
+            """The query evaluates to `true` as the right-hand list contains, as an element, the list `[1, 2]` which is of the same type (a list) and contains the same contents (the numbers `2` and `1` in the given order) as the left-hand operand.
+              |If the left-hand operator had been `[1, 2]` instead of `[2, 1]`, the query would have returned `false`.
+            """.stripMargin)
+          resultTable()
+        }
+        p(
+          """At first glance, the contents of the left-hand operand and the right-hand operand _appear_ to be the same in the following query:""".stripMargin)
+        query(
+          """RETURN [1, 2] IN [1, 2] AS inList""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("inList" -> false)))
+          })) {
+          p("""However, `IN` evaluates to `false` as the right-hand operand does not contain an element that is of the same _type_ -- i.e. a _list_ -- as the left-hand-operand.""")
+          resultTable()
+        }
+        p(
+          """The following query can be used to ascertain whether or not a list `l~lhs~` -- obtained from, say, the <<functions-labels, labels()>> function -- contains at least one element that is also present in another list `l~rhs~`:""".stripMargin)
+        p("""[source, cypher]
+            |----
+            |MATCH (n)
+            |WHERE size([l IN labels(n) WHERE l IN ['Person', 'Employee'] | 1]) > 0
+            |RETURN count(n)
+            |----
+            |""")
+        p("""As long as `labels(n)` returns either `Person` or `Employee` (or both), the query will return a value greater than zero.""")
       }
       section("Accessing elements in a list using the `[]` operator", "syntax-accessing-elements-in-a-list") {
         query(
