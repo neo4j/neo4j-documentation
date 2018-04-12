@@ -43,7 +43,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   )
 
   override val setupConstraintQueries = List(
-    "CREATE INDEX ON :Person(firstname)"
+    "CREATE INDEX ON :Person(firstname)",
+    "CREATE INDEX ON :Person(location)"
   )
 
   def section = "Schema Index"
@@ -196,6 +197,22 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(2, p.size)
           assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
+      }
+    )
+  }
+
+  @Test def use_index_with_distance_query() {
+    executePreparationQueries(
+      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y}) } )").toList)
+    profileQuery(
+      title = "Use index when doing a spatial-distance search",
+      text =
+        "If a property with point values is indexed, the index can not only be used for range queries, but also for spatial distance searches.",
+      queryText = "MATCH (p:Person) WHERE distance(p.location, point({x: 1, y: 2})) < 2 RETURN p.location",
+      assertions = {
+        (p) =>
+          assertEquals(9, p.size)
+          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeekByRange"))
       }
     )
   }
