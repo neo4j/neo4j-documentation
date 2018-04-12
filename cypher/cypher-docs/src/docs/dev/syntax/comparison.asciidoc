@@ -32,12 +32,10 @@ The following points give some details on how the comparison is performed.
 * The special value `java.lang.Double.NaN` is regarded as being larger than all other numbers.
 * String values are compared for ordering using lexicographic order (e.g. `"x" < "xy"`).
 * Boolean values are compared for ordering such that `false < true`.
-* Point values can only be compared inside the same coordinate reference system. Otherwise
-  the result will be `null`. For two points `a` and `b` of the same coordinate reference system,
-  `a` is considered to be greater than `b`, if `a.x > b.x` and `a.y > b.y` (and `a.z > b.z` for 3D points).
-  `a` is considered less than `b`, if `a.x < b.x` and `a.y < b.y` (and `a.z < b.z` for 3D points).
-  If none if the above is true, the points are considered incomparable and any comparison operator between
-  them will return `null`.
+* Point values can only be compared within the same Coordinate Reference System (CRS) -- otherwise, the result will be `null`.
+For two points `a` and `b` within the same CRS, `a` is considered to be greater than `b` if `a.x > b.x` and `a.y > b.y` (and `a.z > b.z` for 3D points).
+`a` is considered less than `b` if `a.x < b.x` and `a.y < b.y` (and `a.z < b.z` for 3D points).
+If none if the above is true, the points are considered incomparable and any comparison operator between them will return `null`.
 * Comparing for ordering when one argument is `null` (e.g. `null < 3` is `null`).
 * It is an error to compare other types of values with each other for ordering.
 

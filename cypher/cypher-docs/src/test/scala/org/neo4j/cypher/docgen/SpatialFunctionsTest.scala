@@ -60,7 +60,7 @@ class SpatialFunctionsTest extends DocumentingTest {
 
   case class CartesianPoint2D(x: Double, y: Double, crs: CRS) extends TestPoint2D(x, y, crs)
 
-  case class CartesianPoint3D(x: Double, y: Double, z:Double, crs: CRS) extends TestPoint3D(x, y, z, crs)
+  case class CartesianPoint3D(x: Double, y: Double, z: Double, crs: CRS) extends TestPoint3D(x, y, z, crs)
 
   override def outputPath = "target/docs/dev/ql/functions"
 
@@ -104,27 +104,28 @@ class SpatialFunctionsTest extends DocumentingTest {
           |
           |* If the points are in the _Cartesian_ CRS category (2D or 3D), then the units of the returned distance will be the same as the units of the points, calculated using Pythagoras' theorem.
           |* If the points are in the _WGS-84_ CRS category (2D), then the units of the returned distance will be meters, based on the haversine formula over a spherical earth approximation.
-          |* If the points are in the _WGS-84_ CRS category (3D), then the units of the returned distance will be meters. The distance is calculated in two steps.
-          |  First, a haversine formula over a spherical earth is used, at the average height of the two points. To account for the difference in height,
-          |  Pythagoras' theorem is used, combining the first calculated spherical distance and the height difference. This formula works well for points close
-          |  to the earth's surface, i.e. it would describe the distance of a plane flight well. It is not well suited for greater heights, e.g. calculating
-          |  the distance between two satellites.
+          |* If the points are in the _WGS-84_ CRS category (3D), then the units of the returned distance will be meters.
+          |The distance is calculated in two steps.
+          |First, a haversine formula over a spherical earth is used, at the average height of the two points.
+          |To account for the difference in height, Pythagoras' theorem is used, combining the first calculated spherical distance and the height difference.
+          |This formula works well for points close to the earth's surface; for instance, it is well-suited for calculating the distance of an airplane flight.
+          |It is unsuitable for greater heights, however, such as when calculating the distance between two satellites.
         """.stripMargin)
       function("distance(point1, point2)", "A Float.", ("point1", "A point in either the WGS 84 or Cartesian CRS category."), ("point2", "A point in the same CRS as 'point1'."))
       considerations("`distance(null, null)`, `distance(null, point2)` and `distance(point1, null)` all return `null`.", "Attempting to use points with different Coordinate Reference Systems (such as WGS 84 2D and WGS 84 3D) will return `null`.")
       query(
         """WITH point({x: 2.3, y: 4.5, crs: 'cartesian'}) AS p1, point({x: 1.1, y: 5.4, crs: 'cartesian'}) AS p2
           |RETURN distance(p1,p2) AS dist""".stripMargin, ResultAssertions((r) => {
-        r.toList.head("dist").asInstanceOf[Double] should equal(1.5)
-      })) {
+          r.toList.head("dist").asInstanceOf[Double] should equal(1.5)
+        })) {
         p("The distance between two 2D points in the _Cartesian_ CRS category is returned.")
         resultTable()
       }
       query(
         """WITH point({longitude: 12.78, latitude: 56.7, height: 100}) as p1, point({latitude: 56.71, longitude: 12.79, height: 100}) as p2
-           |RETURN distance(p1,p2) as dist""".stripMargin, ResultAssertions((r) => {
-        Math.round(r.toList.head("dist").asInstanceOf[Double]) should equal(1270)
-      })) {
+          |RETURN distance(p1,p2) as dist""".stripMargin, ResultAssertions((r) => {
+          Math.round(r.toList.head("dist").asInstanceOf[Double]) should equal(1270)
+        })) {
         p("The distance between two 3D points in the _WGS 84_ CRS category is returned.")
         resultTable()
       }
@@ -163,8 +164,8 @@ class SpatialFunctionsTest extends DocumentingTest {
       query(
         """MATCH (p:Office)
           |RETURN point({longitude: p.longitude, latitude: p.latitude}) AS officePoint""".stripMargin, ResultAssertions((r) => {
-        r.toList should equal(List(Map("officePoint" -> GeographicPoint2D(12.994341, 55.611784, CRS.WGS84))))
-      })) {
+          r.toList should equal(List(Map("officePoint" -> GeographicPoint2D(12.994341, 55.611784, CRS.WGS84))))
+        })) {
         p("A 2D point representing the coordinates of the city of Malmo in the _WGS 84_ CRS category is returned.")
         resultTable()
       }
