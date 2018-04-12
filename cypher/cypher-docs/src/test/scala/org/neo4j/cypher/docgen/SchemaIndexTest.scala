@@ -56,7 +56,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "Note that the index is not immediately available, but will be created in the background.",
       queryText = "CREATE INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
-      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname")))
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("location"), List("firstname")), List(List("firstname"), List("location")))
     )
   }
 
@@ -67,7 +67,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       prepare = _ => executePreparationQueries(List("create index on :Person(firstname)")),
       queryText = "CALL db.indexes",
       optionalResultExplanation = "",
-      assertions = (p) => assertEquals(1, p.size)
+      assertions = (p) => assertEquals(2, p.size)
     )
   }
 
@@ -78,7 +78,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       prepare = _ => executePreparationQueries(List("create index on :Person(firstname)")),
       queryText = "DROP INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
-      assertions = (p) => assertIndexesOnLabels("Person", List())
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("location")), List(List("location")))
     )
   }
 
@@ -205,9 +205,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y}) } )").toList)
     profileQuery(
-      title = "Use index when doing a spatial-distance search",
+      title = "Use index when doing a spatial distance search",
       text =
-        "If a property with point values is indexed, the index can not only be used for range queries, but also for spatial distance searches.",
+        "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries.",
       queryText = "MATCH (p:Person) WHERE distance(p.location, point({x: 1, y: 2})) < 2 RETURN p.location",
       assertions = {
         (p) =>
@@ -217,8 +217,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  def assertIndexesOnLabels(label: String, expectedIndexes: List[List[String]]) {
-    assert(expectedIndexes === db.indexPropsForLabel(label))
+  //TODO this is inelegant. However, as we're deprecating DocumentingTestBase, this will all be rewritten very soon
+  def assertIndexesOnLabels(label: String, expectedIndexes: List[List[String]], expectedIndexesAlt: List[List[String]]) {
+    assert(expectedIndexes === db.indexPropsForLabel(label) || expectedIndexesAlt === db.indexPropsForLabel(label))
   }
 
   private def checkPlanDescription(result: InternalExecutionResult)(costString: String): Unit = {
