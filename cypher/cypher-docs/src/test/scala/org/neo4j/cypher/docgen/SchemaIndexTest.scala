@@ -205,7 +205,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y}) } )").toList)
     profileQuery(
-      title = "Use index when doing a spatial distance search",
+      title = "Use index when executing a spatial distance search",
       text =
         "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries.",
       queryText = "MATCH (p:Person) WHERE distance(p.location, point({x: 1, y: 2})) < 2 RETURN p.location",
