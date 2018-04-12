@@ -98,8 +98,9 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 |===
 | Feature          | Type | Change | Details
 | Spatial point types | Functionality | Amendment | A point -- irrespective of which Coordinate Reference System is used -- can be stored as a property and is able to be backed by an index. Prior to this, a point was a virtual property only.
-| <<functions-point-cartesian-3d,point() - Cartesian 3D>> | Function | Added |
-| <<functions-point-wgs84-3d,point() - WGS 84 3D>> | Function | Added |
+| <<functions-point-cartesian-3d, point() - Cartesian 3D>> | Function | Added |
+| <<functions-point-wgs84-3d, point() - WGS 84 3D>> | Function | Added |
+| <<functions-randomuuid, randomUUID()>> | Function | Added |
 |===
 
 [[cypher-compatibility]]

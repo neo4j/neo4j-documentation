@@ -152,6 +152,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-properties, properties()>>          | Scalar            | Returns a map containing all the properties of a node or relationship.
 |<<functions-radians, radians()>>               | Trigonometric     | Converts degrees to radians.
 |<<functions-rand, rand()>>                     | Numeric           | Returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. `[0, 1)`.
+|<<functions-randomuuid, randomUUID()>>         | Scalar            | Returns a string value corresponding to a randomly-generated UUID.
 |<<functions-range, range()>>                    | List              | Returns a list comprising all integer values within a specified range.
 |<<functions-reduce, reduce()>>                  | List              | Runs an expression against individual elements of a list, storing the result of the expression in an accumulator.
 |<<functions-relationships, relationships()>>    | List              | Returns a list containing all the relationships in a path.

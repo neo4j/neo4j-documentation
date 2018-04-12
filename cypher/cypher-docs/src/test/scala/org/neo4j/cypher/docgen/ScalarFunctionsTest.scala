@@ -19,6 +19,8 @@
  */
 package org.neo4j.cypher.docgen
 
+import java.util.UUID
+
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.graphdb.Node
 
@@ -54,22 +56,23 @@ class ScalarFunctionsTest extends DocumentingTest {
     p(
       """Functions:
         |
-        |* <<functions-coalesce,coalesce()>>
-        |* <<functions-endnode,endNode()>>
-        |* <<functions-head,head()>>
-        |* <<functions-id,id()>>
-        |* <<functions-last,last()>>
-        |* <<functions-length,length()>>
-        |* <<functions-properties,properties()>>
-        |* <<functions-size,size()>>
-        |* <<functions-size-of-pattern-expression,Size of pattern expression>>
-        |* <<functions-size-of-string,Size of string>>
-        |* <<functions-startnode,startNode()>>
-        |* <<functions-timestamp,timestamp()>>
-        |* <<functions-toboolean,toBoolean()>>
-        |* <<functions-tofloat,toFloat()>>
-        |* <<functions-tointeger,toInteger()>>
-        |* <<functions-type,type()>>""")
+        |* <<functions-coalesce, coalesce()>>
+        |* <<functions-endnode, endNode()>>
+        |* <<functions-head, head()>>
+        |* <<functions-id, id()>>
+        |* <<functions-last, last()>>
+        |* <<functions-length, length()>>
+        |* <<functions-properties, properties()>>
+        |* <<functions-randomuuid, randomUUID()>>
+        |* <<functions-size, size()>>
+        |* <<functions-size-of-pattern-expression, Size of pattern expression>>
+        |* <<functions-size-of-string, Size of string>>
+        |* <<functions-startnode, startNode()>>
+        |* <<functions-timestamp, timestamp()>>
+        |* <<functions-toboolean, toBoolean()>>
+        |* <<functions-tofloat, toFloat()>>
+        |* <<functions-tointeger, toInteger()>>
+        |* <<functions-type, type()>>""")
     graphViz()
     section("coalesce()", "functions-coalesce") {
       p(
@@ -169,6 +172,21 @@ class ScalarFunctionsTest extends DocumentingTest {
           r.toList should equal(List(Map("properties(p)" -> Map("name" -> "Stefan", "city" -> "Berlin"))))
         })) {
         resultTable()
+      }
+    }
+    section("randomUUID()", "functions-randomuuid") {
+      p(
+        """`randomUUID()` returns a randomly-generated UUID (Universally Unique Identifier, which is also known as a GUID, or _Globally Unique Identifier_).
+          |This is a 128-bit value with strong guarantees of uniqueness.
+        """.stripMargin)
+      function("randomUUID()", "A String.")
+      query(
+        """RETURN randomUUID() AS uuid""".stripMargin, ResultAssertions((r) => {
+          val uuid = r.columnAs[String]("uuid").next()
+          UUID.fromString(uuid) should be(a[UUID])
+        })) {
+        resultTable()
+        p("A randomly-generated UUID is returned.")
       }
     }
     section("size()", "functions-size") {
