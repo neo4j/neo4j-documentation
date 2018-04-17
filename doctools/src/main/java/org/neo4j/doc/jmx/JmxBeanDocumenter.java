@@ -55,7 +55,7 @@ public class JmxBeanDocumenter {
     private static final String IFDEF_HTMLOUTPUT = "ifndef::nonhtmloutput[]\n";
     private static final String IFDEF_NONHTMLOUTPUT = "ifdef::nonhtmloutput[]\n";
     private static final String ENDIF = "endif::nonhtmloutput[]\n";
-    private static final String JAVADOC_URL = "link:javadocs/";
+    private static final String JAVADOC_URL = "link:{neo4j-javadoc-base-uri}/";
     private static final Map<String, String> TYPES = new HashMap<String, String>() {{
         put("java.lang.String", "String");
         put("java.util.List", "List (java.util.List)");
