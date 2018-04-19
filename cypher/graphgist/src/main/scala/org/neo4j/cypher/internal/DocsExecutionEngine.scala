@@ -32,9 +32,9 @@ class DocsExecutionEngine(graph: GraphDatabaseQueryService, logProvider: LogProv
 
   @throws(classOf[SyntaxException])
   def internalExecute(query: String, params: JavaMap[String, AnyRef], context: TransactionalContext): InternalExecutionResult =
-    RewindableExecutionResult(execute(query, params, context))
+    RewindableExecutionResult(execute(query, params, context, false))
 
   @throws(classOf[SyntaxException])
   def internalProfile(query: String, params: JavaMap[String, AnyRef], context: TransactionalContext): InternalExecutionResult =
-    RewindableExecutionResult(profile(query, params, context))
+    RewindableExecutionResult(profile(query, params, context, false))
 }
