@@ -27,17 +27,12 @@ Property types comprise:
 * _Spatial types_:
    ** Point
 * _Temporal types_:
-
-[options="header"]
-|===================
-| Type | Date support | Time support | Timezone support
-| Date | X  | |
-| Time | | X | X
-| LocalTime | | X |
-| DateTime |  X | X | X
-| LocalDateTime | X | X |
-| <<structural-types-duration, Duration>> | - | - | -
-|===================
+   ** Date
+   ** Time
+   ** LocalTime
+   ** DateTime
+   ** LocalDateTime
+   ** Duration
 
 
 NOTE: The adjective 'numeric' -- when used in the context of describing  Cypher functions or expressions -- indicates that any type of Number applies (Integer or Float).
@@ -46,24 +41,6 @@ NOTE: Homogeneous lists of simple types can also be stored as properties, althou
 
 NOTE: Cypher also provides pass-through support for byte arrays, which can be stored as property values.
 Byte arrays are _not_ considered a first class data type by Cypher, so do not have a literal representation.
-
-[[structural-types-duration]]
-=== The Duration temporal type
-
-Duration represents a temporal amount, capturing the difference in time between two instants.
-
-IMPORTANT: Duration only captures the amount of time between two instants, and thus does not encapsulate a start time and end time.
-
-A Duration can be negative.
-
-In contrast to the other temporal types, Duration is not a _temporal instant_ type, which is a value expressing a point in time (an instant) with varying degrees of precision.
-
-A Duration captures the time difference in a variety of logical _units_.
-These units are categorized into three groups, where conversion of units is possible within a group but not between groups (other than through the application of the Duration to a point in time) as depicted in the following table:
-
-* Month-based units: `months`, `quarters`, `years`
-* Day-based units: `days`, `weeks`
-* Time-based units: `hours`, `minutes`, `seconds`, and sub-seconds (`milliseconds`, `microseconds`, `nanoseconds`)
 
 
 [[structural-types]]

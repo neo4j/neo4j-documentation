@@ -48,6 +48,14 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-pattern-relationship, Patterns for relationships>>
  ** <<cypher-pattern-varlength, Variable-length pattern matching>>
  ** <<cypher-pattern-path-variables, Assigning to path variables>>
+* <<cypher-temporal, Temporal (Date/Time) values>>
+ ** <<cypher-temporal-introduction, Introduction>>
+ ** <<cypher-temporal-timezones, Time zones>>
+ ** <<cypher-temporal-specifying-temporal-instants, Specifying temporal instants>>
+  *** <<cypher-temporal-specify-date, Specifying dates>>
+  *** <<cypher-temporal-specify-time, Specifying times>>
+  *** <<cypher-temporal-specify-time-zone, Specifying time zones>>
+ ** <<cypher-temporal-specifying-durations, Specifying durations>>
 * <<cypher-lists, Lists>>
  ** <<cypher-lists-general, Lists in general>>
  ** <<cypher-list-comprehension, List comprehension>>
@@ -83,6 +91,8 @@ include::comparison.asciidoc[leveloffset=+1]
 include::comments.asciidoc[leveloffset=+1]
 
 include::../ql/cypher-patterns.adoc[leveloffset=+1]
+
+include::../ql/cypher-temporal.adoc[leveloffset=+1]
 
 include::../ql/cypher-lists.adoc[leveloffset=+1]
 

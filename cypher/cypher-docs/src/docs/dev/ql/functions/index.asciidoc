@@ -15,6 +15,7 @@ This section contains information on all functions in the Cypher query language.
 * Mathematical functions - logarithmic [<<header-query-functions-logarithmic, Summary>>|<<query-functions-mathematical-logarithmic, Detail>>]
 * Mathematical functions - trigonometric [<<header-query-functions-trigonometric, Summary>>|<<query-functions-mathematical-trigonometric, Detail>>]
 * String functions [<<header-query-functions-string, Summary>>|<<query-functions-string, Detail>>]
+* Temporal functions [<<header-query-functions-temporal, Summary>>|<<query-functions-temporal, Detail>>]
 * Spatial functions [<<header-query-functions-spatial, Summary>>|<<query-functions-spatial, Detail>>]
 * <<query-functions-udf, User-defined functions>>
 
@@ -193,6 +194,144 @@ These functions are used to manipulate strings or to create a string representat
 |<<functions-toupper,toUpper()>>            | Returns the original string in uppercase.
 |<<functions-trim,trim()>>              | Returns the original string with leading and trailing whitespace removed.
 |===
+
+
+[[header-query-functions-temporal]]
+**<<query-functions-temporal, Temporal functions>>**
+
+Values of the <<property-types, temporal types>> -- Date, Time, LocalTime, DateTime, LocalDateTime and Duration -- can be created using the following functions:
+
+`xxx`
+
+`**should be bold**`
+
+`__ital1__`
+
+__`ita2`__
+
+
+`_ital3_`
+
+_`ita4`_
+
+
+//[options="header"]
+//|===
+//|Function                               |   Description
+//
+//==== Examples
+//Parsing a DateTime using the calendar date format:
+//
+//datetime("2015-06-24T12:50:35.556+0100")
+//Parsing a LocalDateTime using the ordinal date format:
+//
+//localdatetime("2015185T19:32:24")
+//Parsing a Date using the week date format:
+//
+//date("+2015-W13-4")
+//Parsing a Time:
+//
+//time("125035.556+0100")
+//Parsing a LocalTime:
+//
+//localtime("12:50:35.556")
+//Parsing a Duration:
+//
+//duration("P14DT16H12M") - 14 days, 16 hours, and 12 minutes
+//
+//duration("P5M1.5D") - 5 months, 1 day, and 12 hours
+//
+//duration("PT0.75M") - 45 seconds
+//
+//duration("P2.5W") - 2 weeks, 3 days, and 12 hours
+//
+//=== 2. getting the current temporal instant value
+//
+//For example getting the current DateTime in the current timezone would be:
+//
+//datetime()
+//When retrieving the current time, it is possible to specify the timezone to use as an option to the function. So this invocation would for example produce the current time of the day in California:
+//
+//time({timezone:"America/Los Angeles"})
+//
+//=== 3. specifying which clock to use (subfunctions)
+//
+//transaction - which produces the same instant whenever it is invoked within the same transaction - but may produce a different time for different transactions.
+//
+//statement - which produces the same instant whenever it is invoked within the same statement - but may produce a different time for different statements in the same transaction.
+//
+//realtime - which will produce the instant of the live clock of the system.
+//
+//current time, in order to retrieve the current time in that timezone. For example:
+//
+//RETURN date.realtime('America/Los_Angeles') AS today_in_LA
+//
+//=== 4. Constructing temporal instnt values
+//
+//datetime({year:1984, month:10, day:11,
+//          hour:21, minute:30,
+//          timezone:"Europe/Stockholm"})
+//
+//=== 5. creating temporal instant values from timestamps
+//
+//
+//In order to work with such data, Cypher provides functions for converting such a numeric timestamp to a DateTime value:
+//
+//datetime({epochSeconds: $seconds, nanosecond: $nanos}) - Creates a DateTime value at the specified number of seconds and nanoseconds from the UNIX epoch in the UTC timezone.
+//
+//datetime({epochMillis: $millis}) - Creates a DateTime value at the specified number of milliseconds from the UNIX epoch in the UTC timezone.
+//
+//=== 6. Constructing Duration values
+//
+//This would for example create a Duration representing a day and a half:
+//
+//duration({days:1, hours:12})
+//It is possible to have a duration where the amount of a smaller unit exceeds the threshold to a bigger unit, such as:
+//
+//duration({days:62, seconds:180000})
+//
+//Computing the Duration between two temporal instants
+//In some cases it might be desirable to compute the logical difference (in days, months, years, etc) between two temporal instant values, this is done through the use of the duration.between "sub-function" of duration:
+//
+//duration.between(date("1984-10-11"), date("2015-06-24"))
+//yields
+//
+//duration({years:30, months:8, days:13})
+//In order to compute the difference between two temporal instants in one specific unit, Cypher supports specifying the unit group as a "sub-function" of the duration function as well. These sub-functions take the name of the smallest unit in the unit group (where seconds is considered the smallest unit in its group, since the smaller units are fractional seconds). In combination with the unit accessors this allows computing the numeric difference in specific units, such as in this example:
+//
+//duration.inDays(date("2014-10-11"), date("2015-08-06")).weeks
+//yields
+//
+//42
+//
+//The supported duration sub-functions are:
+//
+//duration.between(a, b) - to compute the difference in multiple components between instant a and instant b.
+//
+//duration.inMonths(a, b) - to compute the difference in whole months (or quarters or years) between instant a and instant b.
+//
+//duration.inDays(a, b) - to compute the difference in whole days (or weeks) between instant a and instant b.
+//
+//duration.inSeconds(a, b) - to compute the difference in seconds (and fractions of seconds, or minutes or hours) between instant a and instant b.
+//
+//=== 7. Converting and composing temporal instant values
+//
+//Cypher provides a .truncate "sub-function" for each temporal instant type (i.e. datetime.truncate(…​), localdatetime.truncate(…​), date.truncate(…​), time.truncate(…​), and localtime.truncate(…​)).
+//
+//Example: date.truncate('millennium', datetime("2017-09-26T11:26:42+01")) yields date("2000-01-01")
+//
+//millennium
+//Select the temporal instant corresponding to the millenium of the given instant.
+//
+//century
+//Select the temporal instant corresponding to the century of the given instant.
+//
+//decade
+//Select the temporal instant corresponding to the decade of the given instant.
+//
+//....
+//
+//yyyyyyyyyy
 
 
 [[header-query-functions-spatial]]
