@@ -58,6 +58,7 @@ These functions return a single value.
 | <<functions-last,last()>>                                           | Returns the last element in a list.
 | <<functions-length,length()>>                                       | Returns the length of a path.
 | <<functions-properties,properties()>>                               | Returns a map containing all the properties of a node or relationship.
+| <<functions-randomuuid, randomUUID()>>                              | Returns a string value corresponding to a randomly-generated UUID.
 | <<functions-size,size()>>                                           | Returns the number of items in a list.
 | <<functions-size-of-pattern-expression,size() applied to pattern expression>> | Returns the number of sub-graphs matching the pattern expression.
 | <<functions-size-of-string,size() applied to string>>                         | Returns the number of Unicode characters in a string.
@@ -197,14 +198,16 @@ These functions are used to manipulate strings or to create a string representat
 [[header-query-functions-spatial]]
 **<<query-functions-spatial, Spatial functions>>**
 
-These functions are used to specify points in a 2D coordinate system and to calculate the geodesic distance between two points.
+These functions are used to specify 2D or 3D points in a Coordinate Reference System and to calculate the geodesic distance between two points.
 
 [options="header"]
 |===
 |Function                               |   Description
 |<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
-|<<functions-point-cartesian,point() - cartesian 2D>>            | Returns a point object, given two coordinate values in the cartesian coordinate system.
-|<<functions-point,point() - WGS 84>>            | Returns a point object, given two coordinate values in the WGS 84 coordinate system.
+|<<functions-point-cartesian-2d,point() - Cartesian 2D>>            | Returns a 2D point object, given two coordinate values in the Cartesian coordinate system.
+|<<functions-point-cartesian-3d,point() - Cartesian 3D>>    | Returns a 3D point object, given three coordinate values in the Cartesian coordinate system.
+|<<functions-point-wgs84-2d,point() - WGS 84 2D>>            | Returns a 2D point object, given two coordinate values in the WGS 84 coordinate system.
+|<<functions-point-wgs84-3d,point() - WGS 84 3D>> | Returns a 3D point object, given three coordinate values in the WGS 84 coordinate system.
 |===
 
 //Predicate functions

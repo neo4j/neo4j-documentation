@@ -12,6 +12,7 @@ New features get added to the language continuously, and occasionally, some feat
  ** <<cypher-deprecations-additions-removals-3.1, Version 3.1>>
  ** <<cypher-deprecations-additions-removals-3.2, Version 3.2>>
  ** <<cypher-deprecations-additions-removals-3.3, Version 3.3>>
+ ** <<cypher-deprecations-additions-removals-3.4, Version 3.4>>
 * <<cypher-compatibility, Compatibility>>
 * <<cypher-versions, Supported language versions>>
 
@@ -33,8 +34,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `{parameter}` | Syntax | Deprecated | Replaced by <<cypher-parameters, $parameter>>
 | <<functions-properties, properties()>>  | Function  | Added  |
 | <<query-call,CALL [\...YIELD]>>   | Clause  | Added  |
-| <<functions-point-cartesian,point() - cartesian 2D>> | Function | Added |
-| <<functions-point,point() - WGS 84>> | Function | Added |
+| <<functions-point-cartesian-2d,point() - Cartesian 2D>> | Function | Added |
+| <<functions-point-wgs84-2d,point() - WGS 84 2D>> | Function | Added |
 | <<functions-distance,distance()>> | Function | Added |
 | <<procedures, User-defined procedures>> | Functionality | Added |
 |  <<functions-tostring, toString()>>   | Function  | Extended | Now also allows Boolean values as input
@@ -91,6 +92,16 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 | <<functions-max, max()>>, <<functions-min, min()>> | Function  | Extended | Now also supports aggregation over sets containing lists of strings and/or numbers, as well as over sets containing strings, numbers, and lists of strings and/or numbers
 |===
 
+[[cypher-deprecations-additions-removals-3.4]]
+=== Version 3.4
+[options="header"]
+|===
+| Feature          | Type | Change | Details
+| Spatial point types | Functionality | Amendment | A point -- irrespective of which Coordinate Reference System is used -- can be stored as a property and is able to be backed by an index. Prior to this, a point was a virtual property only.
+| <<functions-point-cartesian-3d, point() - Cartesian 3D>> | Function | Added |
+| <<functions-point-wgs84-3d, point() - WGS 84 3D>> | Function | Added |
+| <<functions-randomuuid, randomUUID()>> | Function | Added |
+|===
 
 [[cypher-compatibility]]
 == Compatibility
@@ -120,11 +131,11 @@ RETURN n.name, n.age
 [[cypher-versions]]
 == Supported language versions
 
-Neo4j 3.3 supports the following versions of the Cypher language:
+Neo4j 3.4 supports the following versions of the Cypher language:
 
+* Neo4j Cypher 3.4
 * Neo4j Cypher 3.3
 * Neo4j Cypher 3.2
-* Neo4j Cypher 3.1
 * Neo4j Cypher 2.3
 
 [TIP]
