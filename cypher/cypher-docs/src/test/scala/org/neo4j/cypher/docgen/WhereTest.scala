@@ -296,7 +296,7 @@ class WhereTest extends DocumentingTest {
     }
     section("Missing properties and values", "missing-properties-and-values") {
       section("Default to `false` if property is missing", "default-to-false-missing-property") {
-        p("As missing properties evaluate to `null`, the comparision in the example will evaluate to `false` for nodes without the `belt` property.")
+        p("As missing properties evaluate to `null`, the comparison in the example will evaluate to `false` for nodes without the `belt` property.")
         query("MATCH (n)\nWHERE n.belt = 'white'\nRETURN n.name, n.age, n.belt", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Andres", "n.age" -> 36l, "n.belt" -> "white")))
         })) {

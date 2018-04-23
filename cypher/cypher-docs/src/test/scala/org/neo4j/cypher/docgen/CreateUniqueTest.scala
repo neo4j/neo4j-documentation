@@ -43,7 +43,7 @@ class CreateUniqueTest extends DocumentingTestBase with QueryStatisticsTestSuppo
       title = "Create relationship if it is missing",
       text = "`CREATE UNIQUE` is used to describe the pattern that should be found or created.",
       queryText = "MATCH (lft {name: 'A'}), (rgt) WHERE rgt.name in ['B', 'C'] CREATE UNIQUE (lft)-[r:KNOWS]->(rgt) RETURN r",
-      optionalResultExplanation = "The left node is matched agains the two right nodes. One relationship already exists and can be " +
+      optionalResultExplanation = "The left node is matched against the two right nodes. One relationship already exists and can be " +
         "matched, and the other relationship is created before it is returned.",
       assertions = (p) => assertStats(p, relationshipsCreated = 1))
   }
@@ -100,4 +100,3 @@ class CreateUniqueTest extends DocumentingTestBase with QueryStatisticsTestSuppo
       assertions = (p) => assertStats(p, relationshipsCreated = 1, nodesCreated = 1, labelsAdded = 1))
   }
 }
-
