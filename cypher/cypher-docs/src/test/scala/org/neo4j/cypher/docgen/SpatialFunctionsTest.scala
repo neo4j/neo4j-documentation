@@ -194,7 +194,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       query("RETURN point({x: 2.3, y: 4.5}) AS point", ResultAssertions((r) => {
         r.toList should equal(List(Map("point" -> CartesianPoint2D(2.3, 4.5, CRS.Cartesian))))
       })) {
-        p("A 2D point with an `x` coordinate of `2.3` and a `y` coordinate of `4.5` in the _Cartesian_ CRS category is returned")
+        p("A 2D point with an `x` coordinate of `2.3` and a `y` coordinate of `4.5` in the _Cartesian_ CRS category is returned.")
         resultTable()
       }
     }
@@ -205,7 +205,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       query("RETURN point({x: 2.3, y: 4.5, z: 2}) AS point", ResultAssertions((r) => {
         r.toList should equal(List(Map("point" -> CartesianPoint3D(2.3, 4.5, 2, CRS.Cartesian3D))))
       })) {
-        p("A 3D point with an `x` coordinate of `2.3`, a `y` coordinate of `4.5` and a `z` coordinate of `2` in the _Cartesian_ CRS category is returned")
+        p("A 3D point with an `x` coordinate of `2.3`, a `y` coordinate of `4.5` and a `z` coordinate of `2` in the _Cartesian_ CRS category is returned.")
         resultTable()
       }
     }
