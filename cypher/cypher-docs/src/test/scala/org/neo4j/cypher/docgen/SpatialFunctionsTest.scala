@@ -71,7 +71,7 @@ class SpatialFunctionsTest extends DocumentingTest {
         |       (malmo:Office {longitude: 12.994341, latitude: 55.611784, city: 'Malmo'}),
         |
         |       (copenhagen)-[:TRAVEL_ROUTE]->(malmo)""")
-    synopsis("These functions are used to specify 2D or 3D points in a Coordinate Reference System and to calculate the geodesic distance between two points.")
+    synopsis("These functions are used to specify 2D or 3D points in a Coordinate Reference System (CRS) and to calculate the geodesic distance between two points.")
     p(
       """Four Coordinate Reference Systems (CRS) are supported, each of which falls within one of two CRS categories; namely _WGS 84_ and _Cartesian_:
         |
@@ -100,7 +100,7 @@ class SpatialFunctionsTest extends DocumentingTest {
     graphViz()
     section("distance()", "functions-distance") {
       p(
-        """`distance()` returns a floating point number representing the geodesic distance between two points in the same Coordinate Reference System.
+        """`distance()` returns a floating point number representing the geodesic distance between two points in the same Coordinate Reference System (CRS).
           |
           |* If the points are in the _Cartesian_ CRS category (2D or 3D), then the units of the returned distance will be the same as the units of the points, calculated using Pythagoras' theorem.
           |* If the points are in the _WGS-84_ CRS category (2D), then the units of the returned distance will be meters, based on the haversine formula over a spherical earth approximation.
@@ -146,8 +146,8 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
     }
     section("point() - WGS 84 2D", "functions-point-wgs84-2d") {
-      p("`point(longitude|x, latitude|y)` returns a 2D point in the _WGS 84_ CRS category -- i.e. a point in the WGS 84 2D CRS -- corresponding to the given coordinate values.")
-      function("point({longitude | x, latitude | y [, crs]})", "A 2D point in _WGS 84_.", ("A single map consisting of the following:", ""), ("longitude/x", "A numeric expression that represents the longitude/x value in decimal degrees"), ("latitude/y", "A numeric expression that represents the latitude/y value in decimal degrees"), ("crs", "The string 'WGS-84'"))
+      p("`point(longitude|x, latitude|y)` returns a 2D point in the _WGS 84_ CRS category corresponding to the given coordinate values.")
+      function("point({longitude | x, latitude | y [, crs]})", "A 2D point in _WGS 84_.", ("A single map consisting of the following:", ""), ("longitude/x", "A numeric expression that represents the longitude/x value in decimal degrees"), ("latitude/y", "A numeric expression that represents the latitude/y value in decimal degrees"), ("crs", "'WGS-84'"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.")
       query("RETURN point({longitude: 56.7, latitude: 12.78}) AS point", ResultAssertions((r) => {
         r.toList should equal(List(Map("point" -> GeographicPoint2D(56.7, 12.78, CRS.WGS84))))
@@ -177,8 +177,8 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
     }
     section("point() - WGS 84 3D", "functions-point-wgs84-3d") {
-      p("`point(longitude|x, latitude|y, height|z)` returns a 3D point in the _WGS 84_ CRS category -- i.e. a point in the WGS 84 3D CRS -- corresponding to the given coordinate values.")
-      function("point({longitude | x, latitude | y, height | z, [, crs]})", "A 3D point in _WGS 84_.", ("A single map consisting of the following:", ""), ("longitude/x", "A numeric expression that represents the longitude/x value in decimal degrees"), ("latitude/y", "A numeric expression that represents the latitude/y value in decimal degrees"), ("height/z", "A numeric expression that represents the height/z value in meters"), ("crs", "The string 'WGS-84-3D'"))
+      p("`point(longitude|x, latitude|y, height|z)` returns a 3D point in the _WGS 84_ CRS category corresponding to the given coordinate values.")
+      function("point({longitude | x, latitude | y, height | z, [, crs]})", "A 3D point in _WGS 84_.", ("A single map consisting of the following:", ""), ("longitude/x", "A numeric expression that represents the longitude/x value in decimal degrees"), ("latitude/y", "A numeric expression that represents the latitude/y value in decimal degrees"), ("height/z", "A numeric expression that represents the height/z value in meters"), ("crs", "'WGS-84-3D'"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "If the `height/z` key and value is not provided, a 2D point in _WGS 84_ will be returned.")
       query("RETURN point({longitude: 56.7, latitude: 12.78, height: 8}) AS point", ResultAssertions((r) => {
         r.toList should equal(List(Map("point" -> GeographicPoint3D(56.7, 12.78, 8, CRS.WGS843D))))
@@ -188,8 +188,8 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
     }
     section("point() - Cartesian 2D", "functions-point-cartesian-2d") {
-      p("`point(x, y)` returns a 2D point in the _Cartesian_ CRS category -- i.e. a point in the Cartesian 2D CRS -- corresponding to the given coordinate values.")
-      function("point({x, y [, crs]})", "A 2D point in _Cartesian_.", ("A single map consisting of the following:", ""), ("x", "A numeric expression"), ("y", "A numeric expression"), ("crs", "The string 'cartesian'"))
+      p("`point(x, y)` returns a 2D point in the _Cartesian_ CRS category corresponding to the given coordinate values.")
+      function("point({x, y [, crs]})", "A 2D point in _Cartesian_.", ("A single map consisting of the following:", ""), ("x", "A numeric expression"), ("y", "A numeric expression"), ("crs", "'cartesian'"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.")
       query("RETURN point({x: 2.3, y: 4.5}) AS point", ResultAssertions((r) => {
         r.toList should equal(List(Map("point" -> CartesianPoint2D(2.3, 4.5, CRS.Cartesian))))
@@ -199,8 +199,8 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
     }
     section("point() - Cartesian 3D", "functions-point-cartesian-3d") {
-      p("`point(x, y, z)` returns a 3D point in the _Cartesian_ CRS category -- i.e. a point in the Cartesian 3D CRS -- corresponding to the given coordinate values.")
-      function("point({x, y, z, [, crs]})", "A 3D point in _Cartesian_.", ("A single map consisting of the following:", ""), ("x", "A numeric expression"), ("y", "A numeric expression"), ("z", "A numeric expression"), ("crs", "The string 'cartesian-3D'"))
+      p("`point(x, y, z)` returns a 3D point in the _Cartesian_ CRS category corresponding to the given coordinate values.")
+      function("point({x, y, z, [, crs]})", "A 3D point in _Cartesian_.", ("A single map consisting of the following:", ""), ("x", "A numeric expression"), ("y", "A numeric expression"), ("z", "A numeric expression"), ("crs", "'cartesian-3D'"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "If the `z` key and value is not provided, a 2D point in _Cartesian_ will be returned.")
       query("RETURN point({x: 2.3, y: 4.5, z: 2}) AS point", ResultAssertions((r) => {
         r.toList should equal(List(Map("point" -> CartesianPoint3D(2.3, 4.5, 2, CRS.Cartesian3D))))
