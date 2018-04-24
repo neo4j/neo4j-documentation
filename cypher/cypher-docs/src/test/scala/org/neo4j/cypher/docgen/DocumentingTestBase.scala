@@ -347,7 +347,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
             transaction,
             query,
             asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
-          )
+          ),
+          true
         )
         val rewindable = RewindableExecutionResult(result)
         db.inTx(assertions(rewindable))
@@ -375,7 +376,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                 transaction,
                 query,
                 asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
-              )
+              ),
+              true
             )
           )
         val expectedExceptionType = expectedException.get
@@ -463,7 +465,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
           innerTx,
           query,
           VirtualValues.EMPTY_MAP
-        )
+        ),
+        true
       )
     } }
   }

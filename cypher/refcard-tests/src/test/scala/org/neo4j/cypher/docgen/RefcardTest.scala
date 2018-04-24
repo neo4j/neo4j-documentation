@@ -112,7 +112,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
           tx,
           testQuery,
           ValueUtils.asMapValue(javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String,AnyRef]])
-        )
+        ),
+        true
       ), KernelTransaction.Type.`implicit` )
     result
   } catch {
