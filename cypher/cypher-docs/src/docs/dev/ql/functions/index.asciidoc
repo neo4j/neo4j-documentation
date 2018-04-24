@@ -206,7 +206,6 @@ Values of the <<property-types, temporal types>> -- Date, Time, LocalTime, DateT
 //|===
 //|Function                               |   Description
 //
-//==== Examples
 
 //Parsing a Duration:
 //

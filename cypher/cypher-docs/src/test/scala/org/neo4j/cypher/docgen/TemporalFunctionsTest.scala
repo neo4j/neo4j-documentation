@@ -136,9 +136,25 @@ class TemporalFunctionsTest extends DocumentingTest {
           p("""The date corresponding to `11 February 1984` is returned.""")
           resultTable()
         }
-      } //Parsing a Date using the week date format:
-      //
-      //date("+2015-W13-4")
+      }
+      section("date(): creating a _Date_ from a string", "functions-date-string") {
+        p(
+          """`date()` returns the _Date_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
+        function("date(temporalValue)", "A Date.", ("temporalValue", "A string representing a temporal value."))
+        considerations("`temporalValue` must comply with XXLINK.", "`date(null)` returns the current date.", "`temporalValue` must denote a valid date; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
+        query(
+          """UNWIND [date('2015-07-21'),
+            |   date('2015-07'),
+            |   date('201507'),
+            |   date('2015-W30-2'),
+            |   date('2015202'),
+            |   date('2015')] as theDate
+            |RETURN theDate""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+      }
     }
     section("_DateTime_ functions", "functions-datetime") {
       section("datetime(): getting the current _DateTime_", "functions-datetime-current") {
@@ -154,9 +170,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           })) {
           p("""The current date and time using the local time zone is returned.""")
           resultTable()
-        } //Parsing a DateTime using the calendar date format:
-        //
-        //datetime("2015-06-24T12:50:35.556+0100")
+        }
       }
       section("datetime(): creating a calendar (Year-Month-Day) _DateTime_", "functions-datetime-calendar") {
         p(
@@ -233,6 +247,26 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
+      section("datetime(): creating a _DateTime_ from a string", "functions-datetime-string") {
+        p(
+          """`datetime()` returns the _DateTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
+        function("datetime(temporalValue)", "A DateTime.", ("temporalValue", "A string representing a temporal value."))
+        considerations("`temporalValue` must comply with XXLINK.", "`datetime(null)` returns the current date and time.", "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
+        query(
+          """UNWIND [datetime('2015-07-21T21:40:32.142+0100'),
+            |   datetime('2015-W30-2T214032.142Z'),
+            |   datetime('2015T214032-0100'),
+            |   datetime('20150721T21:40-01:30'),
+            |   datetime('2015-W30T2140-02'),
+            |   datetime('2015202T21+18:00'),
+            |   datetime('2015-07-21T21:40:32.142[Europe/London]'),
+            |   datetime('2015-07-21T21:40:32.142-04[America/New_York]')] AS theDate
+            |RETURN theDate""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+      }
     }
     section("_LocalDateTime_ functions", "functions-localdatetime") {
       section("localdatetime(): getting the current _LocalDateTime_", "functions-localdatetime-current") {
@@ -246,9 +280,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           })) {
           p("""The current local date and time (i.e. in the local time zone) is returned.""")
           resultTable()
-        } //Parsing a LocalDateTime using the ordinal date format:
-        //
-        //localdatetime("2015185T19:32:24")
+        }
       }
       section("localdatetime(): creating a calendar (Year-Month-Day) _LocalDateTime_", "functions-localdatetime-calendar") {
         p(
@@ -310,6 +342,22 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
+      section("localdatetime(): creating a _LocalDateTime_ from a string", "functions-localdatetime-string") {
+        p(
+          """`localdatetime()` returns the _LocalDateTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
+        function("localdatetime(temporalValue)", "A LocalDateTime.", ("temporalValue", "A string representing a temporal value."))
+        considerations("`temporalValue` must comply with XXLINK.", "`localdatetime(null)` returns the current date and time.", "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
+        query(
+          """UNWIND [localdatetime('2015-07-21T21:40:32.142'),
+            |   localdatetime('2015-W30-2T214032.142'),
+            |   localdatetime('2015-202T21:40:32'),
+            |   localdatetime('2015202T21')] AS theDate
+            |RETURN theDate""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+      }
     }
     section("_LocalTime_ functions", "functions-localtime") {
       section("localtime(): getting the current _LocalTime_", "functions-localtime-current") {
@@ -323,9 +371,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           })) {
           p("""The current local time (i.e. in the local time zone) is returned.""")
           resultTable()
-        } //Parsing a LocalTime:
-        //
-        //localtime("12:50:35.556")
+        }
       }
       section("localtime(): creating a _LocalTime_", "functions-localtime-create") {
         p(
@@ -335,10 +381,26 @@ class TemporalFunctionsTest extends DocumentingTest {
         query(
           """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 789, millisecond: 123, microsecond: 456}),
             |   localtime({hour:12, minute:31, second:14}),
-            |   localtime({hour:12})] as theDate
-            |RETURN theDate""".stripMargin, ResultAssertions((r) => {
+            |   localtime({hour:12})] as theTime
+            |RETURN theTime""".stripMargin, ResultAssertions((r) => {
             // CYPHER_TODO
             // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
+          })) {
+          resultTable()
+        }
+      }
+      section("localtime(): creating a _LocalTime_ from a string", "functions-localtime-string") {
+        p(
+          """`localtime()` returns the _LocalTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
+        function("localtime(temporalValue)", "A LocalTime.", ("temporalValue", "A string representing a temporal value."))
+        considerations("`temporalValue` must comply with XXLINK.", "`localtime(null)` returns the current time.", "`temporalValue` must denote a valid time; i.e. a `temporalValue` denoting `13:46:64` is invalid.")
+        query(
+          """UNWIND [localtime('21:40:32.142'),
+            |   localtime('214032.142'),
+            |   localtime('21:40'),
+            |   localtime('21')] AS theTime
+            |RETURN theTime""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
           })) {
           resultTable()
         }
@@ -366,9 +428,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           })) {
           p("""The current time of day in California is returned.""")
           resultTable()
-        } //Parsing a Time:
-        //
-        //time("125035.556+0100")
+        }
       }
       section("time(): creating a _Time_", "functions-time-create") {
         p(
@@ -380,10 +440,30 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   time({hour:12, minute:31, second:14, nanosecond: 645876123}),
             |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
             |   time({hour:12, minute:31, timezone: '+01:00'}),
-            |   time({hour:12, timezone: '+01:00'})] AS theDate
-            |RETURN theDate""".stripMargin, ResultAssertions((r) => {
+            |   time({hour:12, timezone: '+01:00'})] AS theTime
+            |RETURN theTime""".stripMargin, ResultAssertions((r) => {
             // CYPHER_TODO
             // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
+          })) {
+          resultTable()
+        }
+      }
+      section("time(): creating a _Time_ from a string", "functions-time-string") {
+        p(
+          """`time()` returns the _Time_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
+        function("time(temporalValue)", "A Time.", ("temporalValue", "A string representing a temporal value."))
+        considerations("`temporalValue` must comply with XXLINK.", "`time(null)` returns the current time.", "`temporalValue` must denote a valid time; i.e. a `temporalValue` denoting `15:67` is invalid.")
+        query(
+          """UNWIND [time('21:40:32.142+0100'),
+            |   time('214032.142Z'),
+            |   time('21:40:32+01:00'),
+            |   time('214032-0100'),
+            |   time('21:40-01:30'),
+            |   time('2140-00:00'),
+            |   time('2140-02'),
+            |   time('22+18:00')] AS theTime
+            |RETURN theTime""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
           })) {
           resultTable()
         }
