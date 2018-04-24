@@ -201,40 +201,13 @@ These functions are used to manipulate strings or to create a string representat
 
 Values of the <<property-types, temporal types>> -- Date, Time, LocalTime, DateTime, LocalDateTime and Duration -- can be created using the following functions:
 
-`xxx`
-
-`**should be bold**`
-
-`__ital1__`
-
-__`ita2`__
-
-
-`_ital3_`
-
-_`ita4`_
-
 
 //[options="header"]
 //|===
 //|Function                               |   Description
 //
 //==== Examples
-//Parsing a DateTime using the calendar date format:
-//
-//datetime("2015-06-24T12:50:35.556+0100")
-//Parsing a LocalDateTime using the ordinal date format:
-//
-//localdatetime("2015185T19:32:24")
-//Parsing a Date using the week date format:
-//
-//date("+2015-W13-4")
-//Parsing a Time:
-//
-//time("125035.556+0100")
-//Parsing a LocalTime:
-//
-//localtime("12:50:35.556")
+
 //Parsing a Duration:
 //
 //duration("P14DT16H12M") - 14 days, 16 hours, and 12 minutes
@@ -245,14 +218,7 @@ _`ita4`_
 //
 //duration("P2.5W") - 2 weeks, 3 days, and 12 hours
 //
-//=== 2. getting the current temporal instant value
-//
-//For example getting the current DateTime in the current timezone would be:
-//
-//datetime()
-//When retrieving the current time, it is possible to specify the timezone to use as an option to the function. So this invocation would for example produce the current time of the day in California:
-//
-//time({timezone:"America/Los Angeles"})
+
 //
 //=== 3. specifying which clock to use (subfunctions)
 //
@@ -265,12 +231,6 @@ _`ita4`_
 //current time, in order to retrieve the current time in that timezone. For example:
 //
 //RETURN date.realtime('America/Los_Angeles') AS today_in_LA
-//
-//=== 4. Constructing temporal instnt values
-//
-//datetime({year:1984, month:10, day:11,
-//          hour:21, minute:30,
-//          timezone:"Europe/Stockholm"})
 //
 //=== 5. creating temporal instant values from timestamps
 //
@@ -380,6 +340,10 @@ include::query-functions-mathematical-trigonometric.adoc[leveloffset=+1]
 //String functions
 
 include::query-functions-string.adoc[leveloffset=+1]
+
+//Temporal functions
+
+include::query-functions-temporal.adoc[leveloffset=+1]
 
 //Spatial functions
 
