@@ -231,15 +231,7 @@ Values of the <<property-types, temporal types>> -- Date, Time, LocalTime, DateT
 //
 //RETURN date.realtime('America/Los_Angeles') AS today_in_LA
 //
-//=== 5. creating temporal instant values from timestamps
-//
-//
-//In order to work with such data, Cypher provides functions for converting such a numeric timestamp to a DateTime value:
-//
-//datetime({epochSeconds: $seconds, nanosecond: $nanos}) - Creates a DateTime value at the specified number of seconds and nanoseconds from the UNIX epoch in the UTC timezone.
-//
-//datetime({epochMillis: $millis}) - Creates a DateTime value at the specified number of milliseconds from the UNIX epoch in the UTC timezone.
-//
+
 //=== 6. Constructing Duration values
 //
 //This would for example create a Duration representing a day and a half:

@@ -45,22 +45,19 @@ class TemporalFunctionsTest extends DocumentingTest {
     }
     p(
       """
-        |* <<functions-date, _Date_ functions>>
-        | ** <<functions-date-current, date(): getting the current _Date_>>
-        | ** <<functions-date-calendar, date(): creating a calendar (Year-Month-Day) _Date_>>
-        | ** <<functions-date-week, date(): creating a week (Year-Week-Day) _Date_>>
-        | ** <<functions-date-quarter, date(): creating a quarter (Year-Quarter-Day) _Date_>>
-        | ** <<functions-date-ordinal, date(): creating an ordinal (Year-Day) _Date_>>
-        |* <<functions-datetime, _DateTime_ functions>>
-        | ** <<functions-datetime-current, datetime(): getting the current _DateTime_>>
-        | ** <<functions-datetime-calendar, datetime(): creating a calendar _DateTime_>>
-        |* <<functions-localdatetime, _LocalDateTime_ functions>>
-        | ** <<functions-localdatetime-current, localdatetime(): getting the current _LocalDateTime_>>
-        | ** <<functions-localdatetime-calendar, localdatetime(): creating a calendar _LocalDateTime_>>
-        |* <<functions-localtime, _LocalTime_ functions>>
-        | ** <<functions-localtime-current, localtime(): getting the current _LocalTime_>>
-        |* <<functions-time, _Time_ functions>>
-        | ** <<functions-time-current, time(): getting the current _Time_>>
+        |
+        |[options="header"]
+        ||===
+        || Function                   | Date | Time | LocalTime | DateTime | LocalDateTime
+        || Getting the current value  | <<functions-date-current, X>> | <<functions-time-current, X>> | <<functions-localtime-current, X>> | <<functions-datetime-current, X>> | <<functions-localdatetime-current, X>>
+        || Creating a calendar (Year-Month-Day) value | <<functions-date-calendar, X>> | | | <<functions-datetime-calendar, X>> | <<functions-localdatetime-calendar, X>>
+        || Creating a week (Year-Week-Day) value | <<functions-date-week, X>> | | | <<functions-datetime-week, X>> | <<functions-localdatetime-week, X>>
+        || Creating a quarter (Year-Quarter-Day) value | <<functions-date-quarter, X>> | | | <<functions-datetime-quarter, X>> | <<functions-localdatetime-quarter, X>>
+        || Creating an ordinal (Year-Day) value | <<functions-date-ordinal, X>> | | | <<functions-datetime-ordinal, X>> | <<functions-localdatetime-ordinal, X>>
+        || Creating a value from time components |  | <<functions-time-create, X>> | <<functions-localtime-create, X>> | |
+        || Creating a value from a string | <<functions-date-string, X>> | <<functions-time-string, X>> | <<functions-localtime-string, X>> | <<functions-datetime-string, X>> | <<functions-localdatetime-string, X>>
+        || Creating a value from a timestamp | | | | <<functions-datetime-timestamp, X>> |
+        ||===
         |
         |""")
     section("_Date_ functions", "functions-date") {
@@ -188,7 +185,6 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   datetime({year:1984, month:10, day:11, timezone: 'Europe/Stockholm'})] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             // CYPHER_TODO
-            // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
           })) {
           resultTable()
         }
@@ -225,7 +221,6 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   datetime({year:1984, quarter:3, dayOfQuarter: 45})] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             // CYPHER_TODO
-            // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
           })) {
           resultTable()
         }
@@ -242,7 +237,6 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   datetime({year:1984, ordinalDay:202})] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             // CYPHER_TODO
-            // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
           })) {
           resultTable()
         }
@@ -262,6 +256,26 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   datetime('2015-07-21T21:40:32.142[Europe/London]'),
             |   datetime('2015-07-21T21:40:32.142-04[America/New_York]')] AS theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+      }
+      section("datetime(): creating a _DateTime_ from a timestamp", "functions-datetime-timestamp") {
+        p(
+          """`datetime()` returns the _DateTime_ value at the specified number of _seconds_ or _milliseconds_ from the UNIX epoch in the UTC time zone.""".stripMargin)
+        p("Conversions to other temporal instant types from UNIX epoch representations can be achieved by transforming a _DateTime_ value to one of these types.")
+        p("Information about how to convert _DateTime_ values to UNIX epoch representations may be found <<XXX, here>>.")
+        function("datetime({ epochSeconds | epochMillis })", "A DateTime.", ("epochSeconds", "A numeric value representing the number of seconds from the UNIX epoch in the UTC time zone."), ("epochMillis", "A numeric value representing the number of milliseconds from the UNIX epoch in the UTC time zone."))
+        considerations("`epochSeconds`/`epochMillis` must denote a valid date and time; i.e. a value for either of these denoting a date of `30 February 2001` is invalid.", "`epochSeconds`/`epochMillis` may be used in conjunction with `nanosecond`")
+        query(
+          """RETURN datetime({epochSeconds:timestamp() / 1000, nanosecond: 23}) AS theDate""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+        query(
+          """RETURN datetime({epochMillis: 424797300000}) AS theDate""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
           })) {
           resultTable()
@@ -307,7 +321,6 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14})] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             // CYPHER_TODO
-            // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
           })) {
           resultTable()
         }
@@ -322,7 +335,6 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   localdatetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31})] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             // CYPHER_TODO
-            // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
           })) {
           resultTable()
         }
@@ -337,7 +349,6 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   localdatetime({year:1984, ordinalDay:202, hour:12})] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             // CYPHER_TODO
-            // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
           })) {
           resultTable()
         }
@@ -384,7 +395,6 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   localtime({hour:12})] as theTime
             |RETURN theTime""".stripMargin, ResultAssertions((r) => {
             // CYPHER_TODO
-            // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
           })) {
           resultTable()
         }
@@ -443,7 +453,6 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   time({hour:12, timezone: '+01:00'})] AS theTime
             |RETURN theTime""".stripMargin, ResultAssertions((r) => {
             // CYPHER_TODO
-            // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
           })) {
           resultTable()
         }
