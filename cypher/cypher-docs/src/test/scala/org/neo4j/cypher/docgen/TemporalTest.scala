@@ -42,7 +42,7 @@ class TemporalTest extends DocumentingTest {
           |
           |[options="header", cols="^,^,^,^", width="85%"]
           ||===
-          || Type | Date support | Time support | Timezone support
+          || Type | Date support | Time support | Time zone support
           || Date | X  | |
           || Time | | X | X
           || LocalTime | | X |
