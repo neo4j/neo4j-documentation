@@ -156,13 +156,22 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`datetime()` returns the current _DateTime_ value.
           |If no time zone parameter is specified, the local time zone will be used.
         """.stripMargin)
-      function("datetime()", "A DateTime.")
+      function("datetime([ {timezone} ])", "A DateTime.", ("A single map consisting of the following:", ""), ("timezone", "An expression that represents the time zone"))
+      considerations("If no parameters are provided, `datetime()` should be invoked (`datetime({})` is invalid).")
       query(
         """RETURN datetime() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
           val now = r.columnAs[ZonedDateTime]("currentDateTime").next()
           now should be(a[ZonedDateTime])
         })) {
         p("""The current date and time using the local time zone is returned.""")
+        resultTable()
+      }
+      query(
+        """RETURN datetime( {timezone: "America/Los Angeles"} ) AS currentDateTimeInLA""".stripMargin, ResultAssertions((r) => {
+          val now = r.columnAs[ZonedDateTime]("currentDateTimeInLA").next()
+          now should be(a[ZonedDateTime])
+        })) {
+        p("""The current date and time of day in California is returned.""")
         resultTable()
       }
     }
@@ -470,6 +479,17 @@ class TemporalFunctionsTest extends DocumentingTest {
   }.build()
 }
 
+
+//  for (s <- Seq("date", "localtime", "time", "localdatetime", "datetime")) {
+//  shouldReturnSomething(s"$s.transaction()")
+//  shouldReturnSomething(s"$s.statement()")
+//  shouldReturnSomething(s"$s.realtime()")
+//  shouldReturnSomething(s"$s.transaction('America/Los_Angeles')")
+//  shouldReturnSomething(s"$s.statement('America/Los_Angeles')")
+//  shouldReturnSomething(s"$s.realtime('America/Los_Angeles')")
+//  shouldReturnSomething(s"$s({timezone: '+01:00'})")
+
+//}
 
 //  test("should get current 'realtime' datetime") {
 //    val result = executeWith(supported, "RETURN datetime.realtime() as now")
