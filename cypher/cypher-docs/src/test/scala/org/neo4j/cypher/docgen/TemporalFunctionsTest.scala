@@ -35,62 +35,133 @@ class TemporalFunctionsTest extends DocumentingTest {
       p("""See also <<cypher-temporal>> and <<query-operators-temporal>>.""")
     }
     p(
-      """Each function bears the same name as the type, and construct the type they correspond to in one of four ways:
-        |
-        |* Capturing the current time
-        |* Composing the components of the type
-        |* Parsing a string representation of the temporal value
-        |* Selecting and composing components from another temporal value by
-        | ** either combining temporal values (such as combining a _Date_ with a _Time_ to create a _DateTime_), or
-        | ** selecting parts from a temporal value (such as selecting the _Date_ from a _DateTime_).""".stripMargin)
-    p(
       """
-        |.Temporal instant type creation functions
-        |[options="header"]
-        ||===
-        || Function                   | Date | Time | LocalTime | DateTime | LocalDateTime
-        || Getting the current value  | <<functions-date-current, X>> | <<functions-time-current, X>> | <<functions-localtime-current, X>> | <<functions-datetime-current, X>> | <<functions-localdatetime-current, X>>
-        || Creating a calendar (Year-Month-Day) value | <<functions-date-calendar, X>> | | | <<functions-datetime-calendar, X>> | <<functions-localdatetime-calendar, X>>
-        || Creating a week (Year-Week-Day) value | <<functions-date-week, X>> | | | <<functions-datetime-week, X>> | <<functions-localdatetime-week, X>>
-        || Creating a quarter (Year-Quarter-Day) value | <<functions-date-quarter, X>> | | | <<functions-datetime-quarter, X>> | <<functions-localdatetime-quarter, X>>
-        || Creating an ordinal (Year-Day) value | <<functions-date-ordinal, X>> | | | <<functions-datetime-ordinal, X>> | <<functions-localdatetime-ordinal, X>>
-        || Creating a value from time components |  | <<functions-time-create, X>> | <<functions-localtime-create, X>> | |
-        || Creating a value from a string | <<functions-date-string, X>> | <<functions-time-string, X>> | <<functions-localtime-string, X>> | <<functions-datetime-string, X>> | <<functions-localdatetime-string, X>>
-        || Creating a value from a timestamp | | | | <<functions-datetime-timestamp, X>> |
-        ||===
-        |
-        |""")
-    p(
-      """The functions which create temporal instant values based on the current instant use the _default_ clock as standard.
-        |**CYPHER_TODO: what is the default clock???**
-        |However, there are three different clocks available for more fine-grained control:
-        |
-        |* `transaction`: The same instant is produced for each invocation within the same transaction.
-        |A different time may be produced for different transactions.
-        |* `statement`: The same instant is produced for each invocation within the same statement.
-        |A different time may be produced for different statements within the same transaction.
-        |* `realtime`: The instant produced will be the live clock of the system.
-        |
+        |* <<functions-temporal-instant-type, Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)>>
+        |* <<functions-duration, _Duration_>>
       """.stripMargin)
-    p(
-      """
-        |The following table lists the different sub-functions for specifying the clock to be used when creating the current temporal instant value:
-        |
-        |[options="header"]
-        ||===
-        || Type                   | default | transaction | statement | realtime
-        || Date  | <<functions-date-current, date()>> | <<functions-date-current-transaction, date.transaction()>>  | <<functions-date-current-statement, date.statement()>> | <<functions-date-current-realtime, date.realtime()>>
-        || Time | <<functions-time-current, time()>> | <<functions-time-current-transaction, time.transaction()>> | <<functions-time-current-statement, time.statement()>> | <<functions-time-current-realtime, time.realtime()>>
-        || LocalTime | <<functions-localtime-current, localtime()>> | <<functions-localtime-current-transaction, localtime.transaction()>> | <<functions-localtime-current-statement, localtime.statement()>> | <<functions-localtime-current-realtime, localtime.realtime()>>
-        || DateTime | <<functions-datetime-current, datetime()>> | <<functions-datetime-current-transaction, datetime.transaction()>> | <<functions-datetime-current-statement, datetime.statement()>> | <<functions-datetime-current-realtime, datetime.realtime()>>
-        || LocalDateTime | <<functions-localdatetime-current, localdatetime()>> | <<functions-localdatetime-current-transaction, localdatetime.transaction()>> | <<functions-localdatetime-current-statement, localdatetime.statement()>> | <<functions-localdatetime-current-realtime, localdatetime.realtime()>>
-        ||===
-        |
-        |""")
-    note {
-      p("""All the temporal instant types -- including those that do not contain time zone information support such as _Date_, _LocalTime_ and _DateTime_ -- allow for a time zone to specified for the functions that retrieve the current instant.
+    section("Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)", "functions-temporal-instant-type") {
+      p(
+        """Each function bears the same name as the type, and construct the type they correspond to in one of four ways:
+          |
+          |* Capturing the current time
+          |* Composing the components of the type
+          |* Parsing a string representation of the temporal value
+          |* Selecting and composing components from another temporal value by
+          | ** either combining temporal values (such as combining a _Date_ with a _Time_ to create a _DateTime_), or
+          | ** selecting parts from a temporal value (such as selecting the _Date_ from a _DateTime_).""".stripMargin)
+      p(
+        """
+          |.Temporal instant type creation functions
+          |[options="header"]
+          ||===
+          || Function                   | Date | Time | LocalTime | DateTime | LocalDateTime
+          || Getting the current value  | <<functions-date-current, X>> | <<functions-time-current, X>> | <<functions-localtime-current, X>> | <<functions-datetime-current, X>> | <<functions-localdatetime-current, X>>
+          || Creating a calendar (Year-Month-Day) value | <<functions-date-calendar, X>> | | | <<functions-datetime-calendar, X>> | <<functions-localdatetime-calendar, X>>
+          || Creating a week (Year-Week-Day) value | <<functions-date-week, X>> | | | <<functions-datetime-week, X>> | <<functions-localdatetime-week, X>>
+          || Creating a quarter (Year-Quarter-Day) value | <<functions-date-quarter, X>> | | | <<functions-datetime-quarter, X>> | <<functions-localdatetime-quarter, X>>
+          || Creating an ordinal (Year-Day) value | <<functions-date-ordinal, X>> | | | <<functions-datetime-ordinal, X>> | <<functions-localdatetime-ordinal, X>>
+          || Creating a value from time components |  | <<functions-time-create, X>> | <<functions-localtime-create, X>> | |
+          || Creating a value from a string | <<functions-date-create-string, X>> | <<functions-time-create-string, X>> | <<functions-localtime-create-string, X>> | <<functions-datetime-create-string, X>> | <<functions-localdatetime-create-string, X>>
+          || Creating a value from a timestamp | | | | <<functions-datetime-timestamp, X>> |
+          ||===
+          |
+          |""")
+      p(
+        """The functions which create temporal instant values based on the current instant use the _default_ clock as standard.
+          |**CYPHER_TODO: what is the default clock???**
+          |However, there are three different clocks available for more fine-grained control:
+          |
+          |* `transaction`: The same instant is produced for each invocation within the same transaction.
+          |A different time may be produced for different transactions.
+          |* `statement`: The same instant is produced for each invocation within the same statement.
+          |A different time may be produced for different statements within the same transaction.
+          |* `realtime`: The instant produced will be the live clock of the system.
+          |
+      """.stripMargin)
+      p(
+        """
+          |The following table lists the different sub-functions for specifying the clock to be used when creating the current temporal instant value:
+          |
+          |[options="header"]
+          ||===
+          || Type                   | default | transaction | statement | realtime
+          || Date  | <<functions-date-current, date()>> | <<functions-date-current-transaction, date.transaction()>>  | <<functions-date-current-statement, date.statement()>> | <<functions-date-current-realtime, date.realtime()>>
+          || Time | <<functions-time-current, time()>> | <<functions-time-current-transaction, time.transaction()>> | <<functions-time-current-statement, time.statement()>> | <<functions-time-current-realtime, time.realtime()>>
+          || LocalTime | <<functions-localtime-current, localtime()>> | <<functions-localtime-current-transaction, localtime.transaction()>> | <<functions-localtime-current-statement, localtime.statement()>> | <<functions-localtime-current-realtime, localtime.realtime()>>
+          || DateTime | <<functions-datetime-current, datetime()>> | <<functions-datetime-current-transaction, datetime.transaction()>> | <<functions-datetime-current-statement, datetime.statement()>> | <<functions-datetime-current-realtime, datetime.realtime()>>
+          || LocalDateTime | <<functions-localdatetime-current, localdatetime()>> | <<functions-localdatetime-current-transaction, localdatetime.transaction()>> | <<functions-localdatetime-current-statement, localdatetime.statement()>> | <<functions-localdatetime-current-realtime, localdatetime.realtime()>>
+          ||===
+          |
+          |""")
+      note {
+        p(
+          """All the temporal instant types -- including those that do not contain time zone information support such as _Date_, _LocalTime_ and _DateTime_ -- allow for a time zone to specified for the functions that retrieve the current instant.
      This allows for the retrieval of the current instant in the specified time zone.
           |""")
+      }
+    }
+    section("_Duration_", "functions-duration") {
+      p(
+        """_Duration_ captures the time difference in a variety of logical _units_.
+          |These units are categorized into three groups, where conversion of units is possible within a group but not between groups (other than through the application of the duration value to a point in time) as depicted in the following table:
+          |
+          |* Month-based units: `months`, `quarters`, `years`
+          |* Day-based units: `days`, `weeks`
+          |* Time-based units: `hours`, `minutes`, `seconds`, and sub-seconds (`milliseconds`, `microseconds`, `nanoseconds`)""".stripMargin)
+      section("Creating a _Duration_ from duration components", "functions-duration-create-components") {
+        p(
+          """`duration()` can construct a _Duration_ from a map of its components in the same way as the temporal instant types.
+            |
+            |* `years`
+            |* `quarters`
+            |* `months`
+            |* `weeks`
+            |* `days`
+            |* `hours`
+            |* `minutes`
+            |* `seconds`
+            |* `milliseconds`
+            |* `microseconds`
+            |* `nanoseconds`
+            |
+        """.stripMargin)
+        function("duration([ {years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds} ])", "A Duration.", ("A single map consisting of the following:", ""), ("years", "A numeric expression."), ("quarters", "A numeric expression."), ("months", "A numeric expression."), ("weeks", "A numeric expression."), ("days", "A numeric expression."), ("hours", "A numeric expression."), ("minutes", "A numeric expression."), ("seconds", "A numeric expression."), ("milliseconds", "A numeric expression."), ("microseconds", "A numeric expression."), ("nanoseconds", "A numeric expression."))
+        considerations("At least one parameter must be provided (`duration()` and `duration({})` are invalid).", "There is no constraint on how many of the parameters are provided.", "It is possible to have a _Duration_ where the amount of a smaller unit (e.g. `seconds`) exceeds the threshold of a larger unit (e.g. `days`).", "The values of the parameters may be expressed as decimal fractions.", "The values of the parameters may be arbitrarily large.", "The values of the parameters may be negative.")
+        query(
+          """UNWIND [duration({days: 14, hours:16, minutes: 12}),
+            |   duration({months: 5, days: 1.5}),
+            |   duration({months: 0.75}),
+            |   duration({weeks: 2.5}),
+            |   duration({years: 12, months:5, days: 14, hours:16, minutes: 12, seconds: 70}),
+            |   duration({days: 14, seconds: 70, milliseconds: 1}),
+            |   duration({days: 14, seconds: 70, microseconds: 1}),
+            |   duration({days: 14, seconds: 70, nanoseconds: 1}),
+            |   duration({minutes: 1.5, seconds: 1})] AS d
+            |RETURN d""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+      }
+      section("Creating a _Duration_ from a string", "functions-duration-create-string") {
+        p(
+          """`duration()` returns the _Duration_ value obtained by parsing a string representation of a temporal amount.""".stripMargin)
+        function("duration(temporalAmount)", "A Duration.", ("temporalAmount", "A string representing a temporal amount."))
+        considerations("`temporalAmount` must comply with XXLINK.")
+        query(
+          """UNWIND [duration("P14DT16H12M"),
+            |   duration("P5M1.5D"),
+            |   duration("P0.75M"),
+            |   duration("PT0.75M"),
+            |   duration("P2.5W"),
+            |   duration("P12Y5M14DT16H12M70S"),
+            |   duration("P2012-02-02T14:37:21.545")] as d
+            |RETURN d""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+      }
     }
     section("date(): getting the current _Date_", "functions-date-current") {
       p(
@@ -223,7 +294,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("date(): creating a _Date_ from a string", "functions-date-string") {
+    section("date(): creating a _Date_ from a string", "functions-date-create-string") {
       p(
         """`date()` returns the _Date_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
       function("date(temporalValue)", "A Date.", ("temporalValue", "A string representing a temporal value."))
@@ -384,7 +455,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("datetime(): creating a _DateTime_ from a string", "functions-datetime-string") {
+    section("datetime(): creating a _DateTime_ from a string", "functions-datetime-create-string") {
       p(
         """`datetime()` returns the _DateTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
       function("datetime(temporalValue)", "A DateTime.", ("temporalValue", "A string representing a temporal value."))
@@ -551,7 +622,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("localdatetime(): creating a _LocalDateTime_ from a string", "functions-localdatetime-string") {
+    section("localdatetime(): creating a _LocalDateTime_ from a string", "functions-localdatetime-create-string") {
       p(
         """`localdatetime()` returns the _LocalDateTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
       function("localdatetime(temporalValue)", "A LocalDateTime.", ("temporalValue", "A string representing a temporal value."))
@@ -653,7 +724,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("localtime(): creating a _LocalTime_ from a string", "functions-localtime-string") {
+    section("localtime(): creating a _LocalTime_ from a string", "functions-localtime-create-string") {
       p(
         """`localtime()` returns the _LocalTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
       function("localtime(temporalValue)", "A LocalTime.", ("temporalValue", "A string representing a temporal value."))
@@ -756,7 +827,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("time(): creating a _Time_ from a string", "functions-time-string") {
+    section("time(): creating a _Time_ from a string", "functions-time-create-string") {
       p(
         """`time()` returns the _Time_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
       function("time(temporalValue)", "A Time.", ("temporalValue", "A string representing a temporal value."))

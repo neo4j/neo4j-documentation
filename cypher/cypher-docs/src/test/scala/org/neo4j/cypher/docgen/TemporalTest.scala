@@ -279,15 +279,6 @@ class TemporalTest extends DocumentingTest {
           ||===
           |
           |""")
-      p("""_Duration_ captures the time difference in a variety of logical _units_.
-          |These units are categorized into three groups, where conversion of units is possible within a group but not between groups (other than through the application of the duration value to a point in time) as depicted in the following table:
-          |
-          |* Month-based units: `months`, `quarters`, `years`
-          |* Day-based units: `days`, `weeks`
-          |* Time-based units: `hours`, `minutes`, `seconds`, and sub-seconds (`milliseconds`, `microseconds`, `nanoseconds`)""".stripMargin)
-
-
-
     }
   }.build()
 }

@@ -206,65 +206,6 @@ Values of the <<property-types, temporal types>> -- Date, Time, LocalTime, DateT
 //|===
 //|Function                               |   Description
 //
-
-//Parsing a Duration:
-//
-//duration("P14DT16H12M") - 14 days, 16 hours, and 12 minutes
-//
-//duration("P5M1.5D") - 5 months, 1 day, and 12 hours
-//
-//duration("PT0.75M") - 45 seconds
-//
-//duration("P2.5W") - 2 weeks, 3 days, and 12 hours
-//
-
-//
-//=== 3. specifying which clock to use (subfunctions)
-//
-//transaction - which produces the same instant whenever it is invoked within the same transaction - but may produce a different time for different transactions.
-//
-//statement - which produces the same instant whenever it is invoked within the same statement - but may produce a different time for different statements in the same transaction.
-//
-//realtime - which will produce the instant of the live clock of the system.
-//
-//current time, in order to retrieve the current time in that timezone. For example:
-//
-//RETURN date.realtime('America/Los_Angeles') AS today_in_LA
-//
-
-//=== 6. Constructing Duration values
-//
-//This would for example create a Duration representing a day and a half:
-//
-//duration({days:1, hours:12})
-//It is possible to have a duration where the amount of a smaller unit exceeds the threshold to a bigger unit, such as:
-//
-//duration({days:62, seconds:180000})
-//
-//Computing the Duration between two temporal instants
-//In some cases it might be desirable to compute the logical difference (in days, months, years, etc) between two temporal instant values, this is done through the use of the duration.between "sub-function" of duration:
-//
-//duration.between(date("1984-10-11"), date("2015-06-24"))
-//yields
-//
-//duration({years:30, months:8, days:13})
-//In order to compute the difference between two temporal instants in one specific unit, Cypher supports specifying the unit group as a "sub-function" of the duration function as well. These sub-functions take the name of the smallest unit in the unit group (where seconds is considered the smallest unit in its group, since the smaller units are fractional seconds). In combination with the unit accessors this allows computing the numeric difference in specific units, such as in this example:
-//
-//duration.inDays(date("2014-10-11"), date("2015-08-06")).weeks
-//yields
-//
-//42
-//
-//The supported duration sub-functions are:
-//
-//duration.between(a, b) - to compute the difference in multiple components between instant a and instant b.
-//
-//duration.inMonths(a, b) - to compute the difference in whole months (or quarters or years) between instant a and instant b.
-//
-//duration.inDays(a, b) - to compute the difference in whole days (or weeks) between instant a and instant b.
-//
-//duration.inSeconds(a, b) - to compute the difference in seconds (and fractions of seconds, or minutes or hours) between instant a and instant b.
-//
 //=== 7. Converting and composing temporal instant values
 //
 //Cypher provides a .truncate "sub-function" for each temporal instant type (i.e. datetime.truncate(…​), localdatetime.truncate(…​), date.truncate(…​), time.truncate(…​), and localtime.truncate(…​)).
@@ -280,9 +221,6 @@ Values of the <<property-types, temporal types>> -- Date, Time, LocalTime, DateT
 //decade
 //Select the temporal instant corresponding to the decade of the given instant.
 //
-//....
-//
-//yyyyyyyyyy
 
 
 [[header-query-functions-spatial]]
