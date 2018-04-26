@@ -179,15 +179,17 @@ class TemporalFunctionsTest extends DocumentingTest {
         section("duration.between()", "functions-duration-between") {
           p(
             """`duration.between()` returns the _Duration_ value equal to the difference between the two given instants.""".stripMargin)
-          function("duration.between(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning a temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning a temporal instant type (_Date_ etc) that represents the ending instant."))
+          function("duration.between(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
+          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.")
           query(
             """UNWIND [duration.between(date("1984-10-11"), date("2015-06-24")),
               |   duration.between(date("2015-06-24"), date("1984-10-11")),
               |   duration.between(date("1984-10-11"), datetime("2015-07-21T21:40:32.142+0100")),
               |   duration.between(localtime("14:30"), date("2015-06-24")),
               |   duration.between(time("14:30"), time("16:30+0100")),
-              |   duration.between(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142"))] AS d
-              |      RETURN d""".stripMargin, ResultAssertions((r) => {
+              |   duration.between(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142")),
+              |   duration.between(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), localdatetime({year: 2017, month: 10, day: 29, hour: 4}))] AS d
+              |RETURN d""".stripMargin, ResultAssertions((r) => {
               //CYPHER_TODO
             })) {
             resultTable()
@@ -196,7 +198,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         section("duration.inMonths()", "functions-duration-inmonths") {
           p(
             """`duration.inMonths()` returns the _Duration_ value equal to the difference in whole months, quarters or years between the two given instants.""".stripMargin)
-          function("duration.inMonths(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning a temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning a temporal instant type (_Date_ etc) that represents the ending instant."))
+          function("duration.inMonths(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
+          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.")
           query(
             """UNWIND [duration.inMonths(date("1984-10-11"), date("2015-06-24")),
               |   duration.inMonths(date("2015-06-24"), date("1984-10-11")),
@@ -213,7 +216,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         section("duration.inDays()", "functions-duration-indays") {
           p(
             """`duration.inDays()` returns the _Duration_ value equal to the difference in whole days or weeks between the two given instants.""".stripMargin)
-          function("duration.inDays(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning a temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning a temporal instant type (_Date_ etc) that represents the ending instant."))
+          function("duration.inDays(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
+          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.")
           query(
             """UNWIND [duration.inDays(date("1984-10-11"), date("2015-06-24")),
               |   duration.inDays(date("1984-10-11"), date("2015-06-24")),
@@ -229,7 +233,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         section("duration.inSeconds()", "functions-duration-indays") {
           p(
             """`duration.inSeconds()` returns the _Duration_ value equal to the difference in seconds and fractions of seconds, or minutes or hours, between the two given instants.""".stripMargin)
-          function("duration.inSeconds(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning a temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning a temporal instant type (_Date_ etc) that represents the ending instant."))
+          function("duration.inSeconds(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
+          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.")
           query(
             """UNWIND [duration.inSeconds(date("1984-10-11"), date("2015-06-24")),
               |   duration.inSeconds(localtime("14:30"), localtime("16:30")),
