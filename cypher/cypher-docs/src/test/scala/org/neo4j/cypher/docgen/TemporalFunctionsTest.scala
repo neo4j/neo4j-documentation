@@ -38,6 +38,13 @@ class TemporalFunctionsTest extends DocumentingTest {
       """
         |* <<functions-temporal-instant-type, Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)>>
         |* <<functions-duration, _Duration_>>
+        | ** <<functions-duration-create-components, Creating a _Duration_ from duration components>>
+        | ** <<functions-duration-create-string, Creating a _Duration_ from a string>>
+        | ** <<functions-duration-computing, Computing the _Duration_ between two temporal instants>>
+        |  *** <<functions-duration-between, duration.between()>>
+        |  *** <<functions-duration-inmonths, duration.inMonths()>>
+        |  *** <<functions-duration-indays, duration.inDays()>>
+        |  *** <<functions-duration-indays, duration.inSeconds()>>
       """.stripMargin)
     section("Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)", "functions-temporal-instant-type") {
       p(
@@ -134,8 +141,6 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   duration({weeks: 2.5}),
             |   duration({years: 12, months:5, days: 14, hours:16, minutes: 12, seconds: 70}),
             |   duration({days: 14, seconds: 70, milliseconds: 1}),
-            |   duration({days: 14, seconds: 70, microseconds: 1}),
-            |   duration({days: 14, seconds: 70, nanoseconds: 1}),
             |   duration({minutes: 1.5, seconds: 1})] AS d
             |RETURN d""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -155,11 +160,87 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   duration("PT0.75M"),
             |   duration("P2.5W"),
             |   duration("P12Y5M14DT16H12M70S"),
-            |   duration("P2012-02-02T14:37:21.545")] as d
+            |   duration("P2012-02-02T14:37:21.545")] AS d
             |RETURN d""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
           })) {
           resultTable()
+        }
+      }
+      section("Computing the _Duration_ between two temporal instants", "functions-duration-computing") {
+        p(
+          """`duration()` has sub-functions which compute the _logical difference_ (in days, months, etc) between two temporal instant values:
+            |
+            |* `duration.between(a, b)`: Computes the difference in multiple components between instant `a` and instant `b`.
+            |* `duration.inMonths(a, b)`: Computes the difference in whole months (or quarters or years) between instant `a` and instant `b`.
+            |* `duration.inDays(a, b)`: Computes the difference in whole days (or weeks) between instant `a` and instant `b`.
+            |* `duration.inSeconds(a, b)`: Computes the difference in seconds (and fractions of seconds, or minutes or hours) between instant `a` and instant `b`.
+            |""".stripMargin)
+        section("duration.between()", "functions-duration-between") {
+          p(
+            """`duration.between()` returns the _Duration_ value equal to the difference between the two given instants.""".stripMargin)
+          function("duration.between(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning a temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning a temporal instant type (_Date_ etc) that represents the ending instant."))
+          query(
+            """UNWIND [duration.between(date("1984-10-11"), date("2015-06-24")),
+              |   duration.between(date("2015-06-24"), date("1984-10-11")),
+              |   duration.between(date("1984-10-11"), datetime("2015-07-21T21:40:32.142+0100")),
+              |   duration.between(localtime("14:30"), date("2015-06-24")),
+              |   duration.between(time("14:30"), time("16:30+0100")),
+              |   duration.between(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142"))] AS d
+              |      RETURN d""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+        }
+        section("duration.inMonths()", "functions-duration-inmonths") {
+          p(
+            """`duration.inMonths()` returns the _Duration_ value equal to the difference in whole months, quarters or years between the two given instants.""".stripMargin)
+          function("duration.inMonths(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning a temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning a temporal instant type (_Date_ etc) that represents the ending instant."))
+          query(
+            """UNWIND [duration.inMonths(date("1984-10-11"), date("2015-06-24")),
+              |   duration.inMonths(date("2015-06-24"), date("1984-10-11")),
+              |   duration.inMonths(date("1984-10-11"), localdatetime("2016-07-21T21:45:22.142")),
+              |   duration.inMonths(date("1984-10-11"), datetime("2015-07-21T21:40:32.142+0100")),
+              |   duration.inMonths(time("14:30"), date("2015-06-24")),
+              |   duration.inMonths(datetime("2014-07-21T21:40:36.143+0200"), datetime("2015-07-21T21:40:32.142+0100"))] AS d
+              |RETURN d""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+        }
+        section("duration.inDays()", "functions-duration-indays") {
+          p(
+            """`duration.inDays()` returns the _Duration_ value equal to the difference in whole days or weeks between the two given instants.""".stripMargin)
+          function("duration.inDays(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning a temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning a temporal instant type (_Date_ etc) that represents the ending instant."))
+          query(
+            """UNWIND [duration.inDays(date("1984-10-11"), date("2015-06-24")),
+              |   duration.inDays(date("1984-10-11"), date("2015-06-24")),
+              |   duration.inDays(date("1984-10-11"), time("16:30+0100")),
+              |   duration.inDays(datetime("2014-07-21T21:40:36.143+0200"), date("2015-06-24")),
+              |   duration.inDays(datetime("2014-07-21T21:40:36.143+0200"), localdatetime("2016-07-21T21:45:22.142"))] AS d
+              |RETURN d""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+        }
+        section("duration.inSeconds()", "functions-duration-indays") {
+          p(
+            """`duration.inSeconds()` returns the _Duration_ value equal to the difference in seconds and fractions of seconds, or minutes or hours, between the two given instants.""".stripMargin)
+          function("duration.inSeconds(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning a temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning a temporal instant type (_Date_ etc) that represents the ending instant."))
+          query(
+            """UNWIND [duration.inSeconds(date("1984-10-11"), date("2015-06-24")),
+              |   duration.inSeconds(localtime("14:30"), localtime("16:30")),
+              |   duration.inSeconds(time("14:30"), date("2015-06-24")),
+              |   duration.inSeconds(datetime("2014-07-21T21:40:36.143+0200"), datetime("2015-07-21T21:40:32.142+0100")),
+              |   duration.inSeconds(datetime("2015-07-21T21:40:32.142+0100"), datetime("2014-07-21T21:40:36.143+0200"))] AS d
+              |RETURN d""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
         }
       }
     }
@@ -186,9 +267,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         p("""The current date in California is returned.""")
         resultTable()
       }
-      section("date.transaction(): getting the current _Date_ using the `transaction` clock", "functions-date-current-transaction") {
+      section("date.transaction()", "functions-date-current-transaction") {
         p(
-          """`date.transaction()` returns the current _Date_ value.
+          """`date.transaction()` returns the current _Date_ value using the `transaction` clock.
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
@@ -200,9 +281,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("date.statement(): getting the current _Date_ using the `statement` clock", "functions-date-current-statement") {
+      section("date.statement()", "functions-date-current-statement") {
         p(
-          """`date.statement()` returns the current _Date_ value.
+          """`date.statement()` returns the current _Date_ value using the `statement` clock.
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
@@ -214,9 +295,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("date.realtime(): getting the current _Date_ using the `realtime` clock", "functions-date-current-realtime") {
+      section("date.realtime()", "functions-date-current-realtime") {
         p(
-          """`date.realtime()` returns the current _Date_ value.
+          """`date.realtime()` returns the current _Date_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
         function("date.realtime([ timezone ])", "A Date.", ("timezone", "An expression that represents the time zone"))
@@ -335,9 +416,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         p("""The current date and time of day in California is returned.""")
         resultTable()
       }
-      section("datetime.transaction(): getting the current _DateTime_ using the `transaction` clock", "functions-datetime-current-transaction") {
+      section("datetime.transaction()", "functions-datetime-current-transaction") {
         p(
-          """`datetime.transaction()` returns the current _DateTime_ value.
+          """`datetime.transaction()` returns the current _DateTime_ value using the `transaction` clock.
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
@@ -355,9 +436,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("datetime.statement(): getting the current _DateTime_ using the `statement` clock", "functions-datetime-current-statement") {
+      section("datetime.statement()", "functions-datetime-current-statement") {
         p(
-          """`datetime.statement()` returns the current _DateTime_ value.
+          """`datetime.statement()` returns the current _DateTime_ value using the `statement` clock.
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
@@ -369,9 +450,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("datetime.realtime(): getting the current _DateTime_ using the `realtime` clock", "functions-datetime-current-realtime") {
+      section("datetime.realtime()", "functions-datetime-current-realtime") {
         p(
-          """`datetime.realtime()` returns the current _DateTime_ value.
+          """`datetime.realtime()` returns the current _DateTime_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
         function("datetime.realtime([ timezone ])", "A DateTime.", ("timezone", "An expression that represents the time zone"))
@@ -518,9 +599,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         p("""The current local date and time in California is returned.""")
         resultTable()
       }
-      section("localdatetime.transaction(): getting the current _LocalDateTime_ using the `transaction` clock", "functions-localdatetime-current-transaction") {
+      section("localdatetime.transaction()", "functions-localdatetime-current-transaction") {
         p(
-          """`localdatetime.transaction()` returns the current _LocalDateTime_ value.
+          """`localdatetime.transaction()` returns the current _LocalDateTime_ value using the `transaction` clock.
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
@@ -532,9 +613,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("localdatetime.statement(): getting the current _LocalDateTime_ using the `statement` clock", "functions-localdatetime-current-statement") {
+      section("localdatetime.statement()", "functions-localdatetime-current-statement") {
         p(
-          """`localdatetime.statement()` returns the current _LocalDateTime_ value.
+          """`localdatetime.statement()` returns the current _LocalDateTime_ value using the `statement` clock.
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
@@ -546,9 +627,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("localdatetime.realtime(): getting the current _LocalDateTime_ using the `realtime` clock", "functions-localdatetime-current-realtime") {
+      section("localdatetime.realtime()", "functions-localdatetime-current-realtime") {
         p(
-          """`localdatetime.realtime()` returns the current _LocalDateTime_ value.
+          """`localdatetime.realtime()` returns the current _LocalDateTime_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
         function("localdatetime.realtime([ timezone ])", "A LocalDateTime.", ("timezone", "An expression that represents the time zone"))
@@ -661,9 +742,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         p("""The current local time in California is returned.""")
         resultTable()
       }
-      section("localtime.transaction(): getting the current _LocalTime_ using the `transaction` clock", "functions-localtime-current-transaction") {
+      section("localtime.transaction()", "functions-localtime-current-transaction") {
         p(
-          """`localtime.transaction()` returns the current _LocalTime_ value.
+          """`localtime.transaction()` returns the current _LocalTime_ value using the `transaction` clock.
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
@@ -675,9 +756,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("localtime.statement(): getting the current _LocalTime_ using the `statement` clock", "functions-localtime-current-statement") {
+      section("localtime.statement()", "functions-localtime-current-statement") {
         p(
-          """`localtime.statement()` returns the current _LocalTime_ value.
+          """`localtime.statement()` returns the current _LocalTime_ value using the `statement` clock.
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
@@ -695,9 +776,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("localtime.realtime(): getting the current _LocalTime_ using the `realtime` clock", "functions-localtime-current-realtime") {
+      section("localtime.realtime()", "functions-localtime-current-realtime") {
         p(
-          """`localtime.realtime([ timezone ])` returns the current _LocalTime_ value.
+          """`localtime.realtime([ timezone ])` returns the current _LocalTime_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
         function("localtime.realtime()", "A LocalTime.", ("timezone", "An expression that represents the time zone"))
