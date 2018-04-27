@@ -296,6 +296,24 @@ class TemporalTest extends DocumentingTest {
             |DOCS-TODO-xx: For the _nanosecond_ part of the _epoch_ offset, the regular _nanosecond_ component (`instant.nanosecond`) can be used.
             |
             |""")
+        p("The following query shows how to extract the components of a _Date_ value:")
+        query(
+          """WITH date({year:1984, month:10, day:11}) As d
+            |RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.weekDay, d.dayOfQuarter""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+        p("The following query shows how to extract the components of a _DateTime_ value:")
+        query(
+          """WITH datetime({year:1984, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone:'Europe/Stockholm'}) as d
+            |RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.weekDay, d.dayOfQuarter,
+            |   d.hour, d.minute, d.second, d.millisecond, d.microsecond, d.nanosecond,
+            |   d.timezone, d.offset, d.offsetMinutes, d.epochSeconds, d.epochMillis""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
       }
     }
     section("Durations", "cypher-temporal-durations") {
@@ -330,6 +348,87 @@ class TemporalTest extends DocumentingTest {
             |
             |""")
       }
+      section("Accessing components of durations", "cypher-temporal-accessing-components-durations") {
+        p(
+          """The components of a _Duration_ are categorized into the following groups (which are named after the smallest (least significant) component in each group):
+            |
+            |[options="header"]
+            ||===
+            || Component group | Constituent components
+            || Months | _Years_, _Quarters_ and _Months_
+            || Days | _Weeks_ and _Days_
+            || Seconds | Time: _Hours_, _Minutes_, _Seconds_ and sub-seconds (_Milliseconds_, _Microseconds_ and _Nanoseconds_)
+            ||===
+            |
+            |
+          """)
+        p(
+          """Within each group, the components can be converted without any loss:
+            |
+            |* There are always `4` _quarters_ in `1` _year_.
+            |* There are always `12` _months_ in `1` _year_.
+            |* There are always `3` _months_ in `1` _quarter_.
+            |* There are always `7` _days_ in `1` _week_.
+            |* There are always `60` _minutes_ in `1` _hour_.
+            |* There are always `60` _seconds_ in `1` _minute_:
+            | ** This is true because Cypher uses https://www.cl.cam.ac.uk/~mgk25/time/utc-sls/[UTC-SLS], otherwise some _minutes_ would have consisted of `61` seconds.
+            |* There are always `1000` _milliseconds_ in `1` _second_.
+            |* There are always `1000` _microseconds_ in `1` _millisecond_.
+            |* There are always `1000` _nanoseconds_ in `1` _microsecond_.
+            |* There are not always `24` _hours_ in `1` _day_:
+            | ** When switching to/from daylight savings time, a _day_ can have `23` or `25` _hours_.
+            |* There are not always the same number of _days_ in a _month_:
+            | ** Some _months_ have `30` _days_, whilst others have `31` _days_.
+            | ** February has `28` or `29` _days_.
+            |* There are not always the same number of _days_ in a _year_:
+            | ** Leap _years_ have `366` _days_, whilst non-leap _years_ have `365` _days_.
+            |
+          """.stripMargin)
+        p(
+          """
+            |.Components of _Duration_ values and how they are truncated within their component group
+            |[options="header"]
+            ||===
+            || Component      | Component Group | Description | Type | Details
+            || `duration.years` | Months | The total number of _years_ | Integer | Each set of `4` _quarters_ is counted as `1` _year_; each set of `12` _months_ is counted as `1` _year_.
+            || `duration.months` | Months | The total number of _months_ | Integer | Each _year_ is counted as `12` _months_; each _quarter_ is counted as `3` _months_.
+            || `duration.days` | Days | The total number of _days_ | Integer | Each _week_ is counted as `7` _days_.
+            || `duration.hours` | Seconds | The total number of _hours_ | Integer | Each set of `60` _minutes_ is counted as `1` _hour_; each set of `3600` _seconds_ is counted as `1` _hour_.
+            || `duration.minutes` | Seconds | The total number of _minutes_ | Integer | Each _hour_ is counted as `60` _minutes_; each set of `60` _seconds_ is counted as `1` _minute_.
+            || `duration.seconds` | Seconds | The total number of _seconds_ | Integer | Each _hour_ is counted as `3600` _seconds_; each _minute_ is counted as `60` _seconds_.
+            || `duration.milliseconds` | Seconds | The total number of _milliseconds_ | Integer |
+            || `duration.microseconds` | Seconds | The total number of _microseconds_ | Integer |
+            || `duration.nanoseconds` | Seconds | The total number of _nanoseconds_ | Integer |
+            ||===
+            |
+            |""")
+        p(
+          """It is also possible to access the smaller (less significant) components of a component group bounded by the largest (most significant) component of the group:
+            |
+            |[options="header"]
+            ||===
+            || Component      | Component Group | Description | Type
+            || `duration.monthsOfYear` | Months | The number of _months_ in the group that do not make a whole _year_ | Integer
+            || `duration.minutesOfHour` | Seconds | The total number of _minutes_ in the group that do not make a whole _hour_ | Integer
+            || `duration.secondsOfMinute` | Seconds | The total number of _seconds_ in the group that do not make a whole _minute_ | Integer
+            || `duration.millisecondsOfSecond` | Seconds | The total number of _milliseconds_ in the group that do not make a whole _second_ | Integer
+            || `duration.microsecondsOfSecond` | Seconds | The total number of _microseconds_ in the group that do not make a whole _second_ | Integer
+            || `duration.nanosecondsOfSecond` | Seconds | The total number of _nanoseconds_ in the group that do not make a whole _second_ | Integer
+            ||===
+            |
+            |""")
+        p("The following query shows how to extract the components of a _Duration_ value:")
+        query(
+          """WITH duration({years: 1, months:4, days: 111, hours: 1, minutes: 1, seconds: 1, nanoseconds: 111111111}) AS d
+            |RETURN d.years, d.months, d.monthsOfYear, d.days, d.hours,
+            |   d.minutes, d.minutesOfHour, d.seconds, d.secondsOfMinute, d.milliseconds, d.millisecondsOfSecond, d.microseconds,
+            |   d.microsecondsOfSecond, d.nanoseconds, d.nanosecondsOfSecond""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+      }
+
     }
   }.build()
 }

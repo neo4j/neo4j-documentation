@@ -44,7 +44,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         |  *** <<functions-duration-between, duration.between()>>
         |  *** <<functions-duration-inmonths, duration.inMonths()>>
         |  *** <<functions-duration-indays, duration.inDays()>>
-        |  *** <<functions-duration-indays, duration.inSeconds()>>
+        |  *** <<functions-duration-inseconds, duration.inSeconds()>>
       """.stripMargin)
     section("Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)", "functions-temporal-instant-type") {
       p(
@@ -109,12 +109,7 @@ class TemporalFunctionsTest extends DocumentingTest {
     }
     section("_Duration_", "functions-duration") {
       p(
-        """_Duration_ captures the time difference in a variety of logical _units_.
-          |These units are categorized into three groups, where conversion of units is possible within a group but not between groups (other than through the application of the duration value to a point in time) as depicted in the following table:
-          |
-          |* Month-based units: `months`, `quarters`, `years`
-          |* Day-based units: `days`, `weeks`
-          |* Time-based units: `hours`, `minutes`, `seconds`, and sub-seconds (`milliseconds`, `microseconds`, `nanoseconds`)""".stripMargin)
+        """Information regarding specifying and accessing components of a _Duration_ value can be found <<cypher-temporal-durations, here>>.""".stripMargin)
       section("Creating a _Duration_ from duration components", "functions-duration-create-components") {
         p(
           """`duration()` can construct a _Duration_ from a map of its components in the same way as the temporal instant types.
@@ -230,7 +225,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("duration.inSeconds()", "functions-duration-indays") {
+        section("duration.inSeconds()", "functions-duration-inseconds") {
           p(
             """`duration.inSeconds()` returns the _Duration_ value equal to the difference in seconds and fractions of seconds, or minutes or hours, between the two given instants.""".stripMargin)
           function("duration.inSeconds(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
