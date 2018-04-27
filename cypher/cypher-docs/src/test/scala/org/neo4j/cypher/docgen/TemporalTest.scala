@@ -113,7 +113,7 @@ class TemporalTest extends DocumentingTest {
               |[options="header", width="85%"]
               ||===
               || Component | Format | Description
-              || Year  | `YYYY` | Specified with at least four digits (special rules apply in certain cases DOCS-TODO-DAGGER-SYMBOL)
+              || Year  | `YYYY` | Specified with at least four digits (<<cypher-temporal-year, special rules apply in certain cases>>)
               || Month |  `MM`  | Specified with a double digit number from `01` to `12`
               || Week  | `ww`   | Always prefixed with **`W`** and specified with a double digit number from `01` to `53`
               || Quarter | `q`  | Always prefixed with **`Q`** and specified with a single digit number from `1` to `4`
@@ -124,20 +124,22 @@ class TemporalTest extends DocumentingTest {
               ||===
               |
               |""")
-          p(
-            """
-              |DOCS-TODO-DAGGER-SYMBOL If the year is before `0000` or after `9999`, the following additional rules apply:
-              |
-              |* **`-`** must prefix any year before `0000`
-              |* **`+`** must prefix any year after `9999`
-              |* The year must be separated from the next component with the following characters:
-              | ** **`-`** if the next component is month or day of the year
-              | ** Either **`-`** or **`W`** if the next component is week of the year
-              | ** **`Q`** if the next component is quarter of the year
-              |
-              |If the year component is prefixed with either `-` or `+` (and is separated from the next component), `Year` is allowed to contain any number of digits.
-              |For all other cases -- i.e. the year is between `0000` and `9999` (inclusive) - `Year` must have exactly four digits (the year component is interpreted as a year of the Common Era (CE)).
-            """.stripMargin)
+            p(
+              """
+                |[[cypher-temporal-year]]
+                |
+                |If the year is before `0000` or after `9999`, the following additional rules apply:
+                |
+                |* **`-`** must prefix any year before `0000`
+                |* **`+`** must prefix any year after `9999`
+                |* The year must be separated from the next component with the following characters:
+                | ** **`-`** if the next component is month or day of the year
+                | ** Either **`-`** or **`W`** if the next component is week of the year
+                | ** **`Q`** if the next component is quarter of the year
+                |
+                |If the year component is prefixed with either `-` or `+` (and is separated from the next component), `Year` is allowed to contain any number of digits.
+                |For all other cases -- i.e. the year is between `0000` and `9999` (inclusive) - `Year` must have exactly four digits (the year component is interpreted as a year of the Common Era (CE)).
+              """.stripMargin)
           p(
             """The following formats are supported for specifying dates:
               |
@@ -177,10 +179,11 @@ class TemporalTest extends DocumentingTest {
               || Hour  | `HH` | Specified with a double digit number from `00` to `23`
               || Minute | `MM` | Specified with a double digit number from `00` to `59`
               || Second | `SS` | Specified with a double digit number from `00` to `59`
-              || fraction (Fractional second DOCS-TODO-SYMBOL) | `sss` | Specified with a triple digit number from `000` to `999`
+              || fraction (Fractional second ††) | `sss` | Specified with a triple digit number from `000` to `999`
               ||===
               |
-              |DOCS-TODO `Second` may have a _fractional seconds_ component (`fraction`) representing a sub-second component.
+              |
+              |†† `Second` may have a _fractional seconds_ component (`fraction`) representing a sub-second component.
               |This can be separated from `Second` using either a full stop (`.`) or a comma (`,`).
               |The decimal fraction is _in addition_ to the two digits of `Second`.
               |Cypher does not support leap seconds; https://www.cl.cam.ac.uk/~mgk25/time/utc-sls/[UTC-SLS] (_UTC with Smoothed Leap Seconds_) is used to manage the difference in time between UTC and TAI (_International Atomic Time_).
@@ -264,12 +267,12 @@ class TemporalTest extends DocumentingTest {
             |.Components of temporal instant values and where they are supported
             |[options="header"]
             ||===
-            || Component      | Description  | Type | Range   | Date | DateTime | LocalDateTime | Time | LocalTime
-            || `instant.year` | The `year` component represents the https://en.wikipedia.org/wiki/Astronomical_year_numbering[astronomical year number] of the instant DOCS-TODO-x | Integer | <<link to DOCS-TODO-DAGGER-SYMBOL>> | X | X | X |  |
+            || Component      | Description  | Type | Range/Format   | Date | DateTime | LocalDateTime | Time | LocalTime
+            || `instant.year` | The `year` component represents the https://en.wikipedia.org/wiki/Astronomical_year_numbering[astronomical year number] of the instant footnote:[This is in accordance with the https://en.wikipedia.org/wiki/Gregorian_calendar[Gregorian calendar]; i.e. years AD/CE start at year 1, and the year before that (year 1 BC/BCE) is 0, while year 2 BCE is -1 etc.] | Integer | At least 4 digits: <<cypher-temporal-year, extra rules>> | X | X | X |  |
             || `instant.quarter` |  The _quarter-of-the-year_ component | Integer | `1` to `4` | X | X | X |  |
             || `instant.month` | The _month-of-the-year_ component | Integer | `1` to `12` | X | X | X |  |
-            || `instant.week` | The _week-of-the-year_ component DOCS-TODO-y | Integer | `1` to `53` | X | X | X |  |
-            || `instant.weekYear` | The _year_ that the _week-of-year_ component belongs to DOCS-TODO-z | Integer | <<link to DOCS-TODO-DAGGER-SYMBOL>> | X | X | X |  |
+            || `instant.week` | The _week-of-the-year_ component footnote:[The https://en.wikipedia.org/wiki/ISO_week_date#First_week[first week of any year] is the week that contains the first Thursday of the year, and thus always contains January 4.] | Integer | `1` to `53` | X | X | X |  |
+            || `instant.weekYear` | The _year_ that the _week-of-year_ component belongs to footnote:[For dates from December 29, this could be the next year, and for dates until January 3 this could be the previous year, depending on how week 1 begins.] | Integer | At least 4 digits: <<cypher-temporal-year, extra rules>> | X | X | X |  |
             || `instant.day` |  The _day-of-the-month_ component | Integer | `1` to `31` | X | X | X |  |
             || `instant.ordinalDay` | The _day-of-the-year_ component  | Integer | `1` to `366` | X | X | X |  |
             || `instant.weekDay` | The _day-of-the-week_ component (the first day of the week is _Monday_) | Integer | `1` to `7` | X | X | X  | |
@@ -284,16 +287,8 @@ class TemporalTest extends DocumentingTest {
             || `instant.offsetMinutes` | The _timezone_ offset in minutes | String CYPHER-TODO | `±00` to `±59` |  | X |  | X |
             || `instant.offsetSeconds` | The _timezone_ offset in seconds | String CYPHER-TODO | `±00` to `±60` |  | X |  | X |
             || `instant.epochMillis` | The number of milliseconds between `1970-01-01T00:00:00+0000` and the instant | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |   | |
-            || `instant.epochSeconds` | The number of seconds between `1970-01-01T00:00:00+0000` and the instant DOCS-TODO-xx | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |  |   | |
+            || `instant.epochSeconds` | The number of seconds between `1970-01-01T00:00:00+0000` and the instant footnote:[For the _nanosecond_ part of the _epoch_ offset, the regular _nanosecond_ component (`instant.nanosecond`) can be used.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |  |   | |
             ||===
-            |
-            |DOCS-TODO-x: This is in accordance with the https://en.wikipedia.org/wiki/Gregorian_calendar[Gregorian calendar]; i.e. years AD/CE start at year 1, and the year before that (year 1 BC/BCE) is 0, while year 2 BCE is -1 etc.
-            |
-            |DOCS-TODO-y: The https://en.wikipedia.org/wiki/ISO_week_date#First_week[first week of any year] is the week that contains the first Thursday of the year, and thus always contains January 4.
-            |
-            |DOCS-TODO-z For dates from December 29, this could be the next year, and for dates until January 3 this could be the previous year, depending on how week 1 begins.
-            |
-            |DOCS-TODO-xx: For the _nanosecond_ part of the _epoch_ offset, the regular _nanosecond_ component (`instant.nanosecond`) can be used.
             |
             |""")
         p("The following query shows how to extract the components of a _Date_ value:")
