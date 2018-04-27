@@ -119,9 +119,9 @@ In Enterprise Edition, the query execution engine's fallback mechanism is to try
 [options="header"]
 |===
 | Option | Description | Default?
-| `runtime=interpreted` | This will force the query execution engine to use the interpreted runtime. | This is not used in Enterprise Edition unless explicitly asked for, and the only option for all queries in Community Edition (so it is not necessary to use this option in Community Edition).
-| `runtime=slotted` | This will cause the query execution engine to use the slotted runtime. | This is the default option for all queries which are not supported by _runtime=compiled_ in Enterprise Edition only.
-| `runtime=compiled` | This will cause the query execution engine to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the engine will fall back to the slotted runtime. | This is the default option for some queries in Enterprise Edition only.
+| `runtime=interpreted` | This will force the query execution engine to use the interpreted runtime. | This is not used in Enterprise Edition unless explicitly asked for. It is the only option for all queries in Community Edition--it is not necessary to specify this option in Community Edition.
+| `runtime=slotted` | This will cause the query execution engine to use the slotted runtime. | This is the default option for all queries which are not supported by _runtime=compiled_ in Enterprise Edition.
+| `runtime=compiled` | This will cause the query execution engine to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the engine will fall back to the slotted runtime. | This is the default option for some queries in Enterprise Edition.
 |===
 
 
