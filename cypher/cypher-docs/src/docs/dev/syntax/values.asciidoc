@@ -25,7 +25,6 @@ Property types comprise:
 * The spatial type Point
 * Temporal types: Date, Time, LocalTime, DateTime, LocalDateTime and Duration
 
-
 NOTE: The adjective 'numeric' -- when used in the context of describing  Cypher functions or expressions -- indicates that any type of Number applies (Integer or Float).
 
 NOTE: Homogeneous lists of simple types can also be stored as properties, although lists in general (see <<composite-types, Composite types>>) cannot be stored.
