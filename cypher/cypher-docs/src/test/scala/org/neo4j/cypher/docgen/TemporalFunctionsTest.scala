@@ -37,8 +37,9 @@ class TemporalFunctionsTest extends DocumentingTest {
     p(
       """
         |* <<functions-temporal-instant-type, Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)>>
-        | ** <<functions-temporal-create-overview, Creating temporal instant types>>
+        | ** <<functions-temporal-create-overview, An overview of temporal instant type creation>>
         | ** <<functions-temporal-clock-overview, Controlling which clock to use>>
+        | ** <<functions-temporal-truncate-overview, Truncating temporal values>>
         |* <<functions-duration, _Duration_>>
         | ** <<functions-duration-create-components, Creating a _Duration_ from duration components>>
         | ** <<functions-duration-create-string, Creating a _Duration_ from a string>>
@@ -49,7 +50,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         |  *** <<functions-duration-inseconds, duration.inSeconds()>>
       """.stripMargin)
     section("Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)", "functions-temporal-instant-type") {
-      section("Creating temporal instant types", "functions-temporal-create-overview") {
+      section("An overview of temporal instant type creation", "functions-temporal-create-overview") {
         p(
           """Each function bears the same name as the type, and construct the type they correspond to in one of four ways:
             |
@@ -113,6 +114,53 @@ class TemporalFunctionsTest extends DocumentingTest {
             || LocalTime | <<functions-localtime-current, localtime()>> | <<functions-localtime-current-transaction, localtime.transaction()>> | <<functions-localtime-current-statement, localtime.statement()>> | <<functions-localtime-current-realtime, localtime.realtime()>>
             || DateTime | <<functions-datetime-current, datetime()>> | <<functions-datetime-current-transaction, datetime.transaction()>> | <<functions-datetime-current-statement, datetime.statement()>> | <<functions-datetime-current-realtime, datetime.realtime()>>
             || LocalDateTime | <<functions-localdatetime-current, localdatetime()>> | <<functions-localdatetime-current-transaction, localdatetime.transaction()>> | <<functions-localdatetime-current-statement, localdatetime.statement()>> | <<functions-localdatetime-current-realtime, localdatetime.realtime()>>
+            ||===
+            |
+            |""")
+      }
+
+
+      section("Truncating temporal values", "functions-temporal-truncate-overview") {
+        p(
+          """xxxxxxxxTODO
+            |
+            |* `millennium`: Select the temporal instant corresponding to the _millenium_ of the given instant.
+            |* `century`: Select the temporal instant corresponding to the _century_ of the given instant.
+            |* `decade`: Select the temporal instant corresponding to the decade of the given instant.
+            |* `year`: Select the temporal instant corresponding to the year of the given instant.
+            |* `weekYear`: Select the temporal instant corresponding to the first day of the first week of the week-year of the given instant.
+            |* `quarter`: Select the temporal instant corresponding to the quarter of the year of the given instant.
+            |* `month`: Select the temporal instant corresponding to the month of the given instant.
+            |* `week`: Select the temporal instant corresponding to the week of the given instant.
+            |* `day`: Select the temporal instant corresponding to the month of the given instant.
+            |* `hour`: Select the temporal instant corresponding to the hour of the given instant.
+            |* `minute`: Select the temporal instant corresponding to the minute of the given instant.
+            |* `second`: Select the temporal instant corresponding to the second of the given instant.
+            |* `millisecond`: Select the temporal instant corresponding to the millisecond of the given instant.
+            |* `microsecond`: Select the temporal instant corresponding to the microsecond of the given instant.
+            |
+      """.stripMargin)
+        p(
+          """
+            |The following table lists the supported truncation units and the corresponding sub-functions:
+            |
+            |[options="header"]
+            ||===
+            || Unit                   | Date | Time | LocalTime | DateTime | LocalDateTime
+            || `millennium`  | <<functions-date-truncate-millennium, date.truncate('millennium', input)>> | | | <<functions-datetime-truncate-millennium, datetime.truncate('millennium',input)>> | <<functions-localdatetime-truncate-millennium, localdatetime.truncate('millennium',input)>>
+            || `century`  | <<functions-date-truncate-century, date.truncate('century', input)>> | | | <<functions-datetime-truncate-century, datetime.truncate('century', input)>> | <<functions-localdatetime-truncate-century, localdatetime.truncate('century',input)>>
+            || `decade`  | <<functions-date-truncate-decade, date.truncate('decade', input)>> | | | <<functions-datetime-truncate-decade, datetime.truncate('decade', input)>> | <<functions-localdatetime-truncate-decade, localdatetime.truncate('decade',input)>>
+            || `year`  | <<functions-date-truncate-year, date.truncate('year', input)>> | | | <<functions-datetime-truncate-year, datetime.truncate('year', input)>> | <<functions-localdatetime-truncate-year, localdatetime.truncate('year',input)>>
+            || `weekYear`  | <<functions-date-truncate-weekYear, date.truncate('weekYear', input)>> | | | <<functions-datetime-truncate-weekYear, datetime.truncate('weekYear', input)>> | <<functions-localdatetime-truncate-weekYear, localdatetime.truncate('weekYear',input)>>
+            || `quarter`  | <<functions-date-truncate-quarter, date.truncate('quarter', input)>> | | | <<functions-datetime-truncate-quarter, datetime.truncate('quarter', input)>> | <<functions-localdatetime-truncate-quarter, localdatetime.truncate('quarter',input)>>
+            || `month`  | <<functions-date-truncate-month, date.truncate('month', input)>> | | | <<functions-datetime-truncate-month, datetime.truncate('month', input)>> | <<functions-localdatetime-truncate-month, localdatetime.truncate('month',input)>>
+            || `week`  | <<functions-date-truncate-week, date.truncate('week', input)>> | | | <<functions-datetime-truncate-week, datetime.truncate('week', input)>> | <<functions-localdatetime-truncate-week, localdatetime.truncate('week',input)>>
+            || `day`  | <<functions-date-truncate-day, date.truncate('day', input)>> | <<functions-time-truncate-day, time.truncate('day', input)>> | <<functions-localtime-truncate-day, localtime.truncate('day', input)>> | <<functions-datetime-truncate-day, datetime.truncate('day', input)>> | <<functions-localdatetime-truncate-day, localdatetime.truncate('day',input)>>
+            || `hour`  | | <<functions-time-truncate-hour, time.truncate('hour', input)>> | <<functions-localtime-truncate-hour, localtime.truncate('hour', input)>> | <<functions-datetime-truncate-hour, datetime.truncate('hour', input)>> | <<functions-localdatetime-truncate-hour, localdatetime.truncate('hour',input)>>
+            || `minute`  | | <<functions-time-truncate-minute, time.truncate('minute', input)>> | <<functions-localtime-truncate-minute, localtime.truncate('minute', input)>> | <<functions-datetime-truncate-minute, datetime.truncate('minute', input)>> | <<functions-localdatetime-truncate-minute, localdatetime.truncate('minute',input)>>
+            || `second`  | | <<functions-time-truncate-second, time.truncate('second', input)>> | <<functions-localtime-truncate-second, localtime.truncate('second', input)>> | <<functions-datetime-truncate-second, datetime.truncate('second', input)>> | <<functions-localdatetime-truncate-second, localdatetime.truncate('second',input)>>
+            || `millisecond`  |  | <<functions-time-truncate-millisecond, time.truncate('millisecond', input)>> | <<functions-localtime-truncate-millisecond, localtime.truncate('millisecond', input)>> | <<functions-datetime-truncate-millisecond, datetime.truncate('millisecond', input)>> | <<functions-localdatetime-truncate-millisecond, localdatetime.truncate('millisecond',input)>>
+            || `microsecond`  | | <<functions-time-truncate-microsecond, time.truncate('microsecond', input)>> | <<functions-localtime-truncate-microsecond, localtime.truncate('microsecond', input)>> | <<functions-datetime-truncate-microsecond, datetime.truncate('microsecond', input)>> | <<functions-localdatetime-truncate-microsecond, localdatetime.truncate('microsecond',input)>>
             ||===
             |
             |""")
