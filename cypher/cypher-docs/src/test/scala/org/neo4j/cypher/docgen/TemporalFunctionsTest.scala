@@ -55,7 +55,11 @@ class TemporalFunctionsTest extends DocumentingTest {
           |* Parsing a string representation of the temporal value
           |* Selecting and composing components from another temporal value by
           | ** either combining temporal values (such as combining a _Date_ with a _Time_ to create a _DateTime_), or
-          | ** selecting parts from a temporal value (such as selecting the _Date_ from a _DateTime_).""".stripMargin)
+          | ** selecting parts from a temporal value (such as selecting the _Date_ from a _DateTime_); the _extractors_ -- groups of components which can be selected -- are:
+          |  *** `date` -- contains all components for a _Date_ (conceptually _year_, _month_ and _day_).
+          |  *** `time` -- contains all components for a _Time_ (_hour_, _minute_, _second_, and sub-seconds; namely _millisecond_, _microsecond_ and _nanosecond_). footnoteref:[TimezoneInfo,If the type being created xxxlink and the type from which the time component being selected from both contain `timezone` (and a `timezone` is not explicitly specified) the `timezone` is also selected.]
+          |  *** `datetime` -- selects all components, and is useful for overriding specific components. footnoteref:[TimezoneInfo]
+          | ** In effect, this allows for the _conversion_ between different temporal types, and allowing for 'missing' components to be specified.""".stripMargin)
       p(
         """
           |.Temporal instant type creation functions
@@ -68,11 +72,18 @@ class TemporalFunctionsTest extends DocumentingTest {
           || Creating a quarter (Year-Quarter-Day) value | <<functions-date-quarter, X>> | | | <<functions-datetime-quarter, X>> | <<functions-localdatetime-quarter, X>>
           || Creating an ordinal (Year-Day) value | <<functions-date-ordinal, X>> | | | <<functions-datetime-ordinal, X>> | <<functions-localdatetime-ordinal, X>>
           || Creating a value from time components |  | <<functions-time-create, X>> | <<functions-localtime-create, X>> | |
+          || Creating a value from other temporal values using extractors (i.e. converting between different types) | <<functions-date-temporal, X>> | <<functions-time-temporal, X>> | <<functions-localtime-temporal, X>> | <<functions-datetime-temporal, X>> | <<functions-localdatetime-temporal, X>>
           || Creating a value from a string | <<functions-date-create-string, X>> | <<functions-time-create-string, X>> | <<functions-localtime-create-string, X>> | <<functions-datetime-create-string, X>> | <<functions-localdatetime-create-string, X>>
           || Creating a value from a timestamp | | | | <<functions-datetime-timestamp, X>> |
           ||===
           |
           |""")
+      note {
+        p(
+          """All the temporal instant types -- including those that do not contain time zone information support such as _Date_, _LocalTime_ and _DateTime_ -- allow for a time zone to specified for the functions that retrieve the current instant.
+     This allows for the retrieval of the current instant in the specified time zone.
+          |""")
+      }
       p(
         """The functions which create temporal instant values based on the current instant use the _default_ clock as standard.
           |**CYPHER_TODO: what is the default clock???**
@@ -100,12 +111,6 @@ class TemporalFunctionsTest extends DocumentingTest {
           ||===
           |
           |""")
-      note {
-        p(
-          """All the temporal instant types -- including those that do not contain time zone information support such as _Date_, _LocalTime_ and _DateTime_ -- allow for a time zone to specified for the functions that retrieve the current instant.
-     This allows for the retrieval of the current instant in the specified time zone.
-          |""")
-      }
     }
     section("_Duration_", "functions-duration") {
       p(
@@ -393,6 +398,29 @@ class TemporalFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
+    section("date(): creating a _Date_ using other temporal values as components", "functions-date-temporal") {
+      p(
+        """`date()` returns the _Date_ value obtained by selecting and composing components from another temporal value.
+          |In essence, this allows a _DateTime_ or _LocalDateTime_ value to be converted to a _Date_, and for "missing" components to be provided.
+        """.stripMargin)
+      function("date({date [, year, month, day, week, dayOfWeek, quarter, dayOfQuarter, ordinalDay]})", "A Date.", ("date", "A _Date_ value."), ("year", "An expression consisting of at least four digits that specifies the year TODOLINK."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."))
+      considerations("If any of the optional parameters are provided, these will override the corresponding components of `date`.")
+      query(
+        """UNWIND [date({year:1984, month:11, day:11}),
+          |   localdatetime({year:1984, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123}),
+          |   datetime({year:1984, month:11, day:11, hour:12, timezone: '+01:00'})] as dd
+          |RETURN date(dd) AS d1,
+          |   date({date: dd}) AS d2,
+          |   date({date: dd, year: 28}) AS d3,
+          |   date({date: dd, day: 28}) AS d4,
+          |   date({date: dd, week: 1}) AS d5,
+          |   date({date: dd, ordinalDay: 28}) AS d6,
+          |   date({date: dd, quarter: 3}) AS d7""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+    }
     section("datetime(): getting the current _DateTime_", "functions-datetime-current") {
       p(
         """`datetime()` returns the current _DateTime_ value.
@@ -551,6 +579,69 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   datetime('2015-07-21T21:40:32.142[Europe/London]'),
           |   datetime('2015-07-21T21:40:32.142-04[America/New_York]')] AS theDate
           |RETURN theDate""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+    }
+    section("datetime(): creating a _DateTime_ using other temporal values as components", "functions-datetime-temporal") {
+      p(
+        """`datetime()` returns the _DateTime_ value obtained by selecting and composing components from another temporal value.
+          |In essence, this allows a _Date_, _LocalDateTime_, _Time_ or _LocalTime_ value to be converted to a _DateTime_, and for "missing" components to be provided.
+        """.stripMargin)
+      function("datetime({datetime [, year, ..., timezone]}) | datetime({date [, year, ..., timezone]}) | datetime({time [, year, ..., timezone]}) | datetime({date, time [, year, ..., timezone]})", "A DateTime.", ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at least four digits that specifies the year TODOLINK."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
+      considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.")
+      p("""The following query shows the various usages of `datetime({date [, year, ..., timezone]})`""")
+      query(
+        """UNWIND [date({year:1984, month:10, day:11}),
+          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
+          |RETURN datetime({date:dd, hour: 10, minute: 10, second: 10}) AS d1,
+          |   datetime({date:dd, hour: 10, minute: 10, second: 10, timezone:'+05:00'}) AS d2,
+          |   datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS d3,
+          |   datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10, timezone:'Pacific/Honolulu'}) AS d4""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("""The following query shows the various usages of `datetime({time [, year, ..., timezone]})`""")
+      query(
+        """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
+          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
+          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+          |   datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'})] AS tt
+          |RETURN datetime({year:1984, month:10, day:11, time:tt}) AS d1,
+          |   datetime({year:1984, month:10, day:11, time:tt, timezone:'+05:00'}) AS d2,
+          |   datetime({year:1984, month:10, day:11, time:tt, second: 42}) AS d3,
+          |   datetime({year:1984, month:10, day:11, time:tt, second: 42, timezone:'Pacific/Honolulu'}) AS d4""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("""The following query shows the various usages of `datetime({date, time [, year, ..., timezone]})`; i.e. combining a _Date_ and a _Time_ value to create a single _DateTime_ value:""")
+      query(
+        """UNWIND [date({year:1984, month:10, day:11}),
+          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
+          |UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
+          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'})] AS tt
+          |RETURN datetime({date:dd, time:tt}) as d1,
+          |   datetime({date:dd, time:tt, timezone:'+05:00'}) AS d2,
+          |   datetime({date:dd, time:tt, day: 28, second: 42}) AS d3,
+          |   datetime({date:dd, time:tt, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS d4""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("""The following query shows the various usages of `datetime({datetime [, year, ..., timezone]})`""")
+      query(
+        """UNWIND [localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+          |   datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'})] AS dd
+          |RETURN datetime(dd) AS d1,
+          |   datetime({datetime:dd}) AS d2,
+          |   datetime({datetime:dd, timezone:'+05:00'}) AS d3,
+          |   datetime({datetime:dd, day: 28, second: 42}) AS d4,
+          |   datetime({datetime:dd, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS d5""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -719,6 +810,61 @@ class TemporalFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
+    section("localdatetime(): creating a _LocalDateTime_ using other temporal values as components", "functions-localdatetime-temporal") {
+      p(
+        """`localdatetime()` returns the _LocalDateTime_ value obtained by selecting and composing components from another temporal value.
+          |In essence, this allows a _Date_, _DateTime_, _Time_ or _LocalTime_ value to be converted to a _LocalDateTime_, and for "missing" components to be provided.
+        """.stripMargin)
+      function("localdatetime({datetime [, year, ..., nanosecond]}) | localdatetime({date [, year, ..., nanosecond]}) | localdatetime({time [, year, ..., nanosecond]}) | localdatetime({date, time [, year, ..., nanosecond]})", "A LocalDateTime.", ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at least four digits that specifies the year TODOLINK."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
+      considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.")
+      p("""The following query shows the various usages of `localdatetime({date [, year, ..., nanosecond]})`""")
+      query(
+        """UNWIND [date({year:1984, month:10, day:11}),
+          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
+          |RETURN localdatetime({date:dd, hour: 10, minute: 10, second: 10}) AS d1,
+          |   localdatetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS d2""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("""The following query shows the various usages of `localdatetime({time [, year, ..., nanosecond]})`""")
+      query(
+        """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
+          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
+          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS tt
+          |RETURN localdatetime({year:1984, month:10, day:11, time:tt}) AS d1,
+          |   localdatetime({year:1984, month:10, day:11, time:tt, second: 42}) AS d2""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("""The following query shows the various usages of `localdatetime({date, time [, year, ..., nanosecond]})`; i.e. combining a _Date_ and a _Time_ value to create a single _LocalDateTime_ value:""")
+      query(
+        """UNWIND [date({year:1984, month:10, day:11}),
+          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
+          |UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
+          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'})] AS tt
+          |RETURN localdatetime({date:dd, time:tt}) AS d1,
+          |   localdatetime({date:dd, time:tt, day: 28, second: 42}) AS d2""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("""The following query shows the various usages of `localdatetime({datetime [, year, ..., nanosecond]})`""")
+      query(
+        """UNWIND [localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] as dd
+          |RETURN localdatetime(dd) as d1,
+          |   localdatetime({datetime:dd}) as d2,
+          |   localdatetime({datetime:dd, day: 28, second: 42}) as d3""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+    }
     section("localtime(): getting the current _LocalTime_", "functions-localtime-current") {
       p(
         """`localtime()` returns the current _LocalTime_ value.
@@ -816,6 +962,26 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   localtime('21:40'),
           |   localtime('21')] AS theTime
           |RETURN theTime""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+    }
+    section("localtime(): creating a _LocalTime_ using other temporal values as components", "functions-localtime-temporal") {
+      p(
+        """`localtime()` returns the _LocalTime_ value obtained by selecting and composing components from another temporal value.
+          |In essence, this allows a _DateTime_, _LocalDateTime_ or _Time_ value to be converted to a _LocalTime_, and for "missing" components to be provided.
+        """.stripMargin)
+      function("localtime({time [, hour, ..., nanosecond]})", "A LocalTime.", ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
+      considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.")
+      query(
+        """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
+          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
+          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
+          |RETURN localtime(dd) AS d1,
+          |   localtime({time:dd}) AS d2,
+          |   localtime({time:dd, second: 42}) AS d3""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -923,6 +1089,28 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   time('2140-02'),
           |   time('22+18:00')] AS theTime
           |RETURN theTime""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+    }
+    section("time(): creating a _Time_ using other temporal values as components", "functions-time-temporal") {
+      p(
+        """`time()` returns the _Time_ value obtained by selecting and composing components from another temporal value.
+          |In essence, this allows a _DateTime_, _LocalDateTime_ or _LocalTime_ value to be converted to a _Time_, and for "missing" components to be provided.
+        """.stripMargin)
+      function("time({time [, hour, ..., timezone]})", "A Time.", ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
+      considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.")
+      query(
+        """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
+          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
+          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+          |   datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'})] AS dd
+          |RETURN time(dd) AS d1,
+          |   time({time:dd}) AS d2,
+          |   time({time:dd, timezone:'+05:00'}) AS d3,
+          |   time({time:dd, second: 42}) AS d4,
+          |   time({time:dd, second: 42, timezone:'+05:00'}) AS d5""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
