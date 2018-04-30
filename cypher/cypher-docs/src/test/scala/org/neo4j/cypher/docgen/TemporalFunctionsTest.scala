@@ -37,6 +37,8 @@ class TemporalFunctionsTest extends DocumentingTest {
     p(
       """
         |* <<functions-temporal-instant-type, Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)>>
+        | ** <<functions-temporal-create-overview, Creating temporal instant types>>
+        | ** <<functions-temporal-clock-overview, Controlling which clock to use>>
         |* <<functions-duration, _Duration_>>
         | ** <<functions-duration-create-components, Creating a _Duration_ from duration components>>
         | ** <<functions-duration-create-string, Creating a _Duration_ from a string>>
@@ -47,70 +49,74 @@ class TemporalFunctionsTest extends DocumentingTest {
         |  *** <<functions-duration-inseconds, duration.inSeconds()>>
       """.stripMargin)
     section("Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)", "functions-temporal-instant-type") {
-      p(
-        """Each function bears the same name as the type, and construct the type they correspond to in one of four ways:
-          |
-          |* Capturing the current time
-          |* Composing the components of the type
-          |* Parsing a string representation of the temporal value
-          |* Selecting and composing components from another temporal value by
-          | ** either combining temporal values (such as combining a _Date_ with a _Time_ to create a _DateTime_), or
-          | ** selecting parts from a temporal value (such as selecting the _Date_ from a _DateTime_); the _extractors_ -- groups of components which can be selected -- are:
-          |  *** `date` -- contains all components for a _Date_ (conceptually _year_, _month_ and _day_).
-          |  *** `time` -- contains all components for a _Time_ (_hour_, _minute_, _second_, and sub-seconds; namely _millisecond_, _microsecond_ and _nanosecond_). footnoteref:[TimezoneInfo,If the type being created xxxlink and the type from which the time component being selected from both contain `timezone` (and a `timezone` is not explicitly specified) the `timezone` is also selected.]
-          |  *** `datetime` -- selects all components, and is useful for overriding specific components. footnoteref:[TimezoneInfo]
-          | ** In effect, this allows for the _conversion_ between different temporal types, and allowing for 'missing' components to be specified.""".stripMargin)
-      p(
-        """
-          |.Temporal instant type creation functions
-          |[options="header"]
-          ||===
-          || Function                   | Date | Time | LocalTime | DateTime | LocalDateTime
-          || Getting the current value  | <<functions-date-current, X>> | <<functions-time-current, X>> | <<functions-localtime-current, X>> | <<functions-datetime-current, X>> | <<functions-localdatetime-current, X>>
-          || Creating a calendar (Year-Month-Day) value | <<functions-date-calendar, X>> | | | <<functions-datetime-calendar, X>> | <<functions-localdatetime-calendar, X>>
-          || Creating a week (Year-Week-Day) value | <<functions-date-week, X>> | | | <<functions-datetime-week, X>> | <<functions-localdatetime-week, X>>
-          || Creating a quarter (Year-Quarter-Day) value | <<functions-date-quarter, X>> | | | <<functions-datetime-quarter, X>> | <<functions-localdatetime-quarter, X>>
-          || Creating an ordinal (Year-Day) value | <<functions-date-ordinal, X>> | | | <<functions-datetime-ordinal, X>> | <<functions-localdatetime-ordinal, X>>
-          || Creating a value from time components |  | <<functions-time-create, X>> | <<functions-localtime-create, X>> | |
-          || Creating a value from other temporal values using extractors (i.e. converting between different types) | <<functions-date-temporal, X>> | <<functions-time-temporal, X>> | <<functions-localtime-temporal, X>> | <<functions-datetime-temporal, X>> | <<functions-localdatetime-temporal, X>>
-          || Creating a value from a string | <<functions-date-create-string, X>> | <<functions-time-create-string, X>> | <<functions-localtime-create-string, X>> | <<functions-datetime-create-string, X>> | <<functions-localdatetime-create-string, X>>
-          || Creating a value from a timestamp | | | | <<functions-datetime-timestamp, X>> |
-          ||===
-          |
-          |""")
-      note {
+      section("Creating temporal instant types", "functions-temporal-create-overview") {
         p(
-          """All the temporal instant types -- including those that do not contain time zone information support such as _Date_, _LocalTime_ and _DateTime_ -- allow for a time zone to specified for the functions that retrieve the current instant.
+          """Each function bears the same name as the type, and construct the type they correspond to in one of four ways:
+            |
+            |* Capturing the current time
+            |* Composing the components of the type
+            |* Parsing a string representation of the temporal value
+            |* Selecting and composing components from another temporal value by
+            | ** either combining temporal values (such as combining a _Date_ with a _Time_ to create a _DateTime_), or
+            | ** selecting parts from a temporal value (such as selecting the _Date_ from a _DateTime_); the _extractors_ -- groups of components which can be selected -- are:
+            |  *** `date` -- contains all components for a _Date_ (conceptually _year_, _month_ and _day_).
+            |  *** `time` -- contains all components for a _Time_ (_hour_, _minute_, _second_, and sub-seconds; namely _millisecond_, _microsecond_ and _nanosecond_). footnoteref:[TimezoneInfo,If the type being created xxxlink and the type from which the time component being selected from both contain `timezone` (and a `timezone` is not explicitly specified) the `timezone` is also selected.]
+            |  *** `datetime` -- selects all components, and is useful for overriding specific components. footnoteref:[TimezoneInfo]
+            | ** In effect, this allows for the _conversion_ between different temporal types, and allowing for 'missing' components to be specified.""".stripMargin)
+        p(
+          """
+            |.Temporal instant type creation functions
+            |[options="header"]
+            ||===
+            || Function                   | Date | Time | LocalTime | DateTime | LocalDateTime
+            || Getting the current value  | <<functions-date-current, X>> | <<functions-time-current, X>> | <<functions-localtime-current, X>> | <<functions-datetime-current, X>> | <<functions-localdatetime-current, X>>
+            || Creating a calendar (Year-Month-Day) value | <<functions-date-calendar, X>> | | | <<functions-datetime-calendar, X>> | <<functions-localdatetime-calendar, X>>
+            || Creating a week (Year-Week-Day) value | <<functions-date-week, X>> | | | <<functions-datetime-week, X>> | <<functions-localdatetime-week, X>>
+            || Creating a quarter (Year-Quarter-Day) value | <<functions-date-quarter, X>> | | | <<functions-datetime-quarter, X>> | <<functions-localdatetime-quarter, X>>
+            || Creating an ordinal (Year-Day) value | <<functions-date-ordinal, X>> | | | <<functions-datetime-ordinal, X>> | <<functions-localdatetime-ordinal, X>>
+            || Creating a value from time components |  | <<functions-time-create, X>> | <<functions-localtime-create, X>> | |
+            || Creating a value from other temporal values using extractors (i.e. converting between different types) | <<functions-date-temporal, X>> | <<functions-time-temporal, X>> | <<functions-localtime-temporal, X>> | <<functions-datetime-temporal, X>> | <<functions-localdatetime-temporal, X>>
+            || Creating a value from a string | <<functions-date-create-string, X>> | <<functions-time-create-string, X>> | <<functions-localtime-create-string, X>> | <<functions-datetime-create-string, X>> | <<functions-localdatetime-create-string, X>>
+            || Creating a value from a timestamp | | | | <<functions-datetime-timestamp, X>> |
+            ||===
+            |
+            |""")
+        note {
+          p(
+            """All the temporal instant types -- including those that do not contain time zone information support such as _Date_, _LocalTime_ and _DateTime_ -- allow for a time zone to specified for the functions that retrieve the current instant.
      This allows for the retrieval of the current instant in the specified time zone.
           |""")
+        }
       }
-      p(
-        """The functions which create temporal instant values based on the current instant use the _default_ clock as standard.
-          |**CYPHER_TODO: what is the default clock???**
-          |However, there are three different clocks available for more fine-grained control:
-          |
-          |* `transaction`: The same instant is produced for each invocation within the same transaction.
-          |A different time may be produced for different transactions.
-          |* `statement`: The same instant is produced for each invocation within the same statement.
-          |A different time may be produced for different statements within the same transaction.
-          |* `realtime`: The instant produced will be the live clock of the system.
-          |
+      section("Controlling which clock to use", "functions-temporal-clock-overview") {
+        p(
+          """The functions which create temporal instant values based on the current instant use the _default_ clock as standard.
+            |**CYPHER_TODO: what is the default clock???**
+            |However, there are three different clocks available for more fine-grained control:
+            |
+            |* `transaction`: The same instant is produced for each invocation within the same transaction.
+            |A different time may be produced for different transactions.
+            |* `statement`: The same instant is produced for each invocation within the same statement.
+            |A different time may be produced for different statements within the same transaction.
+            |* `realtime`: The instant produced will be the live clock of the system.
+            |
       """.stripMargin)
-      p(
-        """
-          |The following table lists the different sub-functions for specifying the clock to be used when creating the current temporal instant value:
-          |
-          |[options="header"]
-          ||===
-          || Type                   | default | transaction | statement | realtime
-          || Date  | <<functions-date-current, date()>> | <<functions-date-current-transaction, date.transaction()>>  | <<functions-date-current-statement, date.statement()>> | <<functions-date-current-realtime, date.realtime()>>
-          || Time | <<functions-time-current, time()>> | <<functions-time-current-transaction, time.transaction()>> | <<functions-time-current-statement, time.statement()>> | <<functions-time-current-realtime, time.realtime()>>
-          || LocalTime | <<functions-localtime-current, localtime()>> | <<functions-localtime-current-transaction, localtime.transaction()>> | <<functions-localtime-current-statement, localtime.statement()>> | <<functions-localtime-current-realtime, localtime.realtime()>>
-          || DateTime | <<functions-datetime-current, datetime()>> | <<functions-datetime-current-transaction, datetime.transaction()>> | <<functions-datetime-current-statement, datetime.statement()>> | <<functions-datetime-current-realtime, datetime.realtime()>>
-          || LocalDateTime | <<functions-localdatetime-current, localdatetime()>> | <<functions-localdatetime-current-transaction, localdatetime.transaction()>> | <<functions-localdatetime-current-statement, localdatetime.statement()>> | <<functions-localdatetime-current-realtime, localdatetime.realtime()>>
-          ||===
-          |
-          |""")
+        p(
+          """
+            |The following table lists the different sub-functions for specifying the clock to be used when creating the current temporal instant value:
+            |
+            |[options="header"]
+            ||===
+            || Type                   | default | transaction | statement | realtime
+            || Date  | <<functions-date-current, date()>> | <<functions-date-current-transaction, date.transaction()>>  | <<functions-date-current-statement, date.statement()>> | <<functions-date-current-realtime, date.realtime()>>
+            || Time | <<functions-time-current, time()>> | <<functions-time-current-transaction, time.transaction()>> | <<functions-time-current-statement, time.statement()>> | <<functions-time-current-realtime, time.realtime()>>
+            || LocalTime | <<functions-localtime-current, localtime()>> | <<functions-localtime-current-transaction, localtime.transaction()>> | <<functions-localtime-current-statement, localtime.statement()>> | <<functions-localtime-current-realtime, localtime.realtime()>>
+            || DateTime | <<functions-datetime-current, datetime()>> | <<functions-datetime-current-transaction, datetime.transaction()>> | <<functions-datetime-current-statement, datetime.statement()>> | <<functions-datetime-current-realtime, datetime.realtime()>>
+            || LocalDateTime | <<functions-localdatetime-current, localdatetime()>> | <<functions-localdatetime-current-transaction, localdatetime.transaction()>> | <<functions-localdatetime-current-statement, localdatetime.statement()>> | <<functions-localdatetime-current-realtime, localdatetime.realtime()>>
+            ||===
+            |
+            |""")
+      }
     }
     section("_Duration_", "functions-duration") {
       p(
