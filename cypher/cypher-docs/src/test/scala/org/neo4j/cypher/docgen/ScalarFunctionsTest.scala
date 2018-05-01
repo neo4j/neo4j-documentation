@@ -50,6 +50,9 @@ class ScalarFunctionsTest extends DocumentingTest {
      However, it is recommended to use `length()` only for paths, and the `size()` function for strings, lists and pattern expressions.
      `length()` on those types may be deprecated in future.""")
     }
+    note{
+      p("""The `timestamp()` function returns the equivalent value of `datetime().epochMillis`.""")
+    }
     note {
       p("The function `toInt()` has been superseded by `toInteger()`, and will be removed in a future release.")
     }

@@ -287,7 +287,7 @@ class TemporalTest extends DocumentingTest {
             || `instant.offset` | The _timezone_ offset | String  | ` ±HHMM` |  | X |  | X |
             || `instant.offsetMinutes` | The _timezone_ offset in minutes | String CYPHER-TODO | `±00` to `±59` |  | X |  | X |
             || `instant.offsetSeconds` | The _timezone_ offset in seconds | String CYPHER-TODO | `±00` to `±60` |  | X |  | X |
-            || `instant.epochMillis` | The number of milliseconds between `1970-01-01T00:00:00+0000` and the instant | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |   | |
+            || `instant.epochMillis` | The number of milliseconds between `1970-01-01T00:00:00+0000` and the instant footnote:[`datetime().epochMillis` returns the equivalent value of the <<functions-timestamp, `timestamp()`>> function.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |   | |
             || `instant.epochSeconds` | The number of seconds between `1970-01-01T00:00:00+0000` and the instant footnote:[For the _nanosecond_ part of the _epoch_ offset, the regular _nanosecond_ component (`instant.nanosecond`) can be used.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |  |   | |
             ||===
             |
