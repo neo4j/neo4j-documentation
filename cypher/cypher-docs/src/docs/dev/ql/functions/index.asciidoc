@@ -199,28 +199,69 @@ These functions are used to manipulate strings or to create a string representat
 [[header-query-functions-temporal]]
 **<<query-functions-temporal, Temporal functions>>**
 
-Values of the <<property-types, temporal types>> -- Date, Time, LocalTime, DateTime, LocalDateTime and Duration -- can be created using the following functions:
+Values of the <<cypher-temporal, temporal types>> -- Date, Time, LocalTime, DateTime, LocalDateTime and Duration -- can be created manipulated using the following functions:
 
 
-//[options="header"]
-//|===
-//|Function                               |   Description
-//
-//=== 7. Converting and composing temporal instant values
-//
-//Cypher provides a .truncate "sub-function" for each temporal instant type (i.e. datetime.truncate(…​), localdatetime.truncate(…​), date.truncate(…​), time.truncate(…​), and localtime.truncate(…​)).
-//
-//Example: date.truncate('millennium', datetime("2017-09-26T11:26:42+01")) yields date("2000-01-01")
-//
-//millennium
-//Select the temporal instant corresponding to the millenium of the given instant.
-//
-//century
-//Select the temporal instant corresponding to the century of the given instant.
-//
-//decade
-//Select the temporal instant corresponding to the decade of the given instant.
-//
+[options="header"]
+|===
+|Function                               |   Description
+| <<functions-date-current, date()>> | Returns the current _Date_.
+| <<functions-date-current-transaction, date.transaction()>> | Returns the current _Date_ using the `transaction` clock.
+| <<functions-date-current-statement, date.statement()>> | Returns the current _Date_ using the `statement` clock.
+| <<functions-date-current-realtime, date.realtime()>> | Returns the current _Date_ using the `realtime` clock.
+| <<functions-date-calendar, date({year [, month, day]})>> | Returns a calendar (Year-Month-Day) _Date_.
+| <<functions-date-week, date({year [, week, dayOfWeek]})>> | Returns a week (Year-Week-Day) _Date_.
+| <<functions-date-quarter, date({year [, quarter, dayOfQuarter]})>> | Returns a quarter (Year-Quarter-Day) _Date_.
+| <<functions-date-ordinal, date({year [, ordinalDay]})>> | Returns an ordinal (Year-Day) _Date_.
+| <<functions-date-create-string, date(string)>> | Returns a _Date_ by parsing a string.
+| <<functions-date-temporal, date({map})>> | Returns a _Date_ from a map of another temporal value's components.
+| <<functions-date-truncate, date.truncate()>> | Returns a _Date_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+| <<functions-datetime-current, datetime()>> | Returns the current _DateTime_.
+| <<functions-datetime-current-transaction, datetime.transaction()>> | Returns the current _DateTime_ using the `transaction` clock.
+| <<functions-datetime-current-statement, datetime.statement()>> | Returns the current _DateTime_ using the `statement` clock.
+| <<functions-datetime-current-realtime, datetime.realtime()>> | Returns the current _DateTime_ using the `realtime` clock.
+| <<functions-datetime-calendar, datetime({year [, month, day, ...]})>> | Returns a calendar (Year-Month-Day) _DateTime_.
+| <<functions-datetime-week, datetime({year [, week, dayOfWeek, ...]})>> | Returns a week (Year-Week-Day) _DateTime_.
+| <<functions-datetime-quarter, datetime({year [, quarter, dayOfQuarter, ...]})>> | Returns a quarter (Year-Quarter-Day) _DateTime_.
+| <<functions-datetime-ordinal, datetime({year [, ordinalDay, ...]})>> | Returns an ordinal (Year-Day) _DateTime_.
+| <<functions-datetime-create-string, datetime(string)>> | Returns a _DateTime_ by parsing a string.
+| <<functions-datetime-temporal, datetime({map})>> | Returns a _DateTime_ from a map of another temporal value's components.
+| <<functions-datetime-timestamp, datetime({epochSeconds})>> | Returns a _DateTime_ from a timestamp.
+| <<functions-datetime-truncate, datetime.truncate()>> | Returns a _DateTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+| <<functions-localdatetime-current, localdatetime()>> | Returns the current _LocalDateTime_.
+| <<functions-localdatetime-current-transaction, localdatetime.transaction()>> | Returns the current _LocalDateTime_ using the `transaction` clock.
+| <<functions-localdatetime-current-statement, localdatetime.statement()>> | Returns the current _LocalDateTime_ using the `statement` clock.
+| <<functions-localdatetime-current-realtime, localdatetime.realtime()>> | Returns the current _LocalDateTime_ using the `realtime` clock.
+| <<functions-localdatetime-calendar, localdatetime({year [, month, day, ...]})>> | Returns a calendar (Year-Month-Day) _LocalDateTime_.
+| <<functions-localdatetime-week, localdatetime({year [, week, dayOfWeek, ...]})>> | Returns a week (Year-Week-Day) _LocalDateTime_.
+| <<functions-localdatetime-quarter, localdatetime({year [, quarter, dayOfQuarter, ...]})>> | Returns a quarter (Year-Quarter-Day) _DateTime_.
+| <<functions-localdatetime-ordinal, localdatetime({year [, ordinalDay, ...]})>> | Returns an ordinal (Year-Day) _LocalDateTime_.
+| <<functions-localdatetime-create-string, localdatetime(string)>> | Returns a _LocalDateTime_ by parsing a string.
+| <<functions-localdatetime-temporal, localdatetime({map})>> | Returns a _LocalDateTime_ from a map of another temporal value's components.
+| <<functions-localdatetime-truncate, localdatetime.truncate()>> | Returns a _LocalDateTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+| <<functions-localtime-current, localtime()>> | Returns the current _LocalTime_.
+| <<functions-localtime-current-transaction, localtime.transaction()>> | Returns the current _LocalTime_ using the `transaction` clock.
+| <<functions-localtime-current-statement, localtime.statement()>> | Returns the current _LocalTime_ using the `statement` clock.
+| <<functions-localtime-current-realtime, localtime.realtime()>> | Returns the current _LocalTime_ using the `realtime` clock.
+| <<functions-localtime-create, localtime({hour [, minute, second, ...]})>> | Returns a _LocalTime_ with the specified component values.
+| <<functions-localtime-create-string, localtime(string)>> | Returns a _LocalTime_ by parsing a string.
+| <<functions-localtime-temporal, localtime({time [, hour, ...]})>> | Returns a _LocalTime_ from a map of another temporal value's components.
+| <<functions-localtime-truncate, localtime.truncate()>> | Returns a _LocalTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+| <<functions-time-current, time()>> | Returns the current _Time_.
+| <<functions-time-current-transaction, time.transaction()>> | Returns the current _Time_ using the `transaction` clock.
+| <<functions-time-current-statement, time.statement()>> | Returns the current _Time_ using the `statement` clock.
+| <<functions-time-current-realtime, time.realtime()>> | Returns the current _Time_ using the `realtime` clock.
+| <<functions-time-create, time({hour [, minute, ...]})>> | Returns a _Time_ with the specified component values.
+| <<functions-time-create-string, time(string)>> | Returns a _Time_ by parsing a string.
+| <<functions-time-temporal, time({time [, hour, ..., timezone]})>> | Returns a _Time_ from a map of another temporal value's components.
+| <<functions-time-truncate, time.truncate()>> | Returns a _Time_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+| <<functions-duration-create-components, duration({map})>> | Returns a _Duration_ from a map of its components.
+| <<functions-duration-create-string, duration(string)>> | Returns a _Duration_ by parsing a string.
+| <<functions-duration-between, duration.between()>> | Returns a _Duration_ equal to the difference between two given instants.
+| <<functions-duration-inmonths, duration.inMonths()>> | Returns a _Duration_ equal to the difference in whole months, quarters or years between two given instants.
+| <<functions-duration-indays, duration.inDays()>> | Returns a _Duration_ equal to the difference in whole days or weeks between two given instants.
+| <<functions-duration-inseconds, duration.inSeconds()>> | Returns a _Duration_ equal to the difference in seconds and fractions of seconds, or minutes or hours, between two given instants.
+|===
 
 
 [[header-query-functions-spatial]]

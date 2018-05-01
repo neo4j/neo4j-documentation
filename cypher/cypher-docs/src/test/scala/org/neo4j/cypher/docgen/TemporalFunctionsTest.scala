@@ -30,7 +30,7 @@ class TemporalFunctionsTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("Temporal functions", "query-functions-temporal")
     synopsis(
-      """Cypher provides functions allowing for the creation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.""".stripMargin)
+      """Cypher provides functions allowing for the creation and manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.""".stripMargin)
     note {
       p("""See also <<cypher-temporal>> and <<query-operators-temporal>>.""")
     }
@@ -1082,7 +1082,7 @@ class TemporalFunctionsTest extends DocumentingTest {
     }
     section("localtime(): creating a _LocalTime_", "functions-localtime-create") {
       p(
-        """`localtime()` returns a _LocalDateTime_ value with the specified _hour_, _minute_, _second_, _millisecond_, _microsecond_ and _nanosecond_ component values.""".stripMargin)
+        """`localtime()` returns a _LocalTime_ value with the specified _hour_, _minute_, _second_, _millisecond_, _microsecond_ and _nanosecond_ component values.""".stripMargin)
       function("localtime({hour [, minute, second, millisecond, microsecond, nanosecond]})", "A LocalTime.", ("A single map consisting of the following:", ""), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
       considerations("The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `hour` and `minute`, but specifying `hour` and `second` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
       query(
@@ -1178,9 +1178,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         p("""The current time of day in California is returned.""")
         resultTable()
       }
-      section("time.transaction(): getting the current _Time_ using the `transaction` clock", "functions-time-current-transaction") {
+      section("time.transaction()", "functions-time-current-transaction") {
         p(
-          """`time.transaction()` returns the current _Time_ value.
+          """`time.transaction()` returns the current _Time_ value using the `transaction` clock.
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
@@ -1192,9 +1192,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("time.statement(): getting the current _Time_ using the `statement` clock", "functions-time-current-statement") {
+      section("time.statement()", "functions-time-current-statement") {
         p(
-          """`time.statement()` returns the current _Time_ value.
+          """`time.statement()` returns the current _Time_ value  using the `statement` clock.
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
@@ -1212,9 +1212,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("time.realtime(): getting the current _Time_ using the `realtime` clock", "functions-time-current-realtime") {
+      section("time.realtime()", "functions-time-current-realtime") {
         p(
-          """`time.realtime()` returns the current _Time_ value.
+          """`time.realtime()` returns the current _Time_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
         function("time.realtime([ timezone ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
