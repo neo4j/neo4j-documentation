@@ -273,9 +273,10 @@ class TemporalTest extends DocumentingTest {
             || `instant.month` | The _month-of-the-year_ component | Integer | `1` to `12` | X | X | X |  |
             || `instant.week` | The _week-of-the-year_ component footnote:[The https://en.wikipedia.org/wiki/ISO_week_date#First_week[first week of any year] is the week that contains the first Thursday of the year, and thus always contains January 4.] | Integer | `1` to `53` | X | X | X |  |
             || `instant.weekYear` | The _year_ that the _week-of-year_ component belongs to footnote:[For dates from December 29, this could be the next year, and for dates until January 3 this could be the previous year, depending on how week 1 begins.] | Integer | At least 4 digits: <<cypher-temporal-year, extra rules>> | X | X | X |  |
+            || `instant.dayOfQuarter` | The _day-of-the-quarter_ component  | Integer | `1` to `92` | X | X | X |  |
             || `instant.day` |  The _day-of-the-month_ component | Integer | `1` to `31` | X | X | X |  |
             || `instant.ordinalDay` | The _day-of-the-year_ component  | Integer | `1` to `366` | X | X | X |  |
-            || `instant.weekDay` | The _day-of-the-week_ component (the first day of the week is _Monday_) | Integer | `1` to `7` | X | X | X  | |
+            || `instant.dayOfWeek` | The _day-of-the-week_ component (the first day of the week is _Monday_) | Integer | `1` to `7` | X | X | X  | |
             || `instant.hour` |  The _hour_ component  | Integer | `0` to `23` |   | X  | X | X | X
             || `instant.minute` | The _minute_ component | Integer | `0` to `59` |  | X | X  | X | X
             || `instant.second` | The _second_ component | Integer | `0` to `60` |  | X | X  | X | X
@@ -294,7 +295,7 @@ class TemporalTest extends DocumentingTest {
         p("The following query shows how to extract the components of a _Date_ value:")
         query(
           """WITH date({year:1984, month:10, day:11}) As d
-            |RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.weekDay, d.dayOfQuarter""".stripMargin, ResultAssertions((r) => {
+            |RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.dayOfWeek, d.dayOfQuarter""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
           })) {
           resultTable()
@@ -302,7 +303,7 @@ class TemporalTest extends DocumentingTest {
         p("The following query shows how to extract the components of a _DateTime_ value:")
         query(
           """WITH datetime({year:1984, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone:'Europe/Stockholm'}) as d
-            |RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.weekDay, d.dayOfQuarter,
+            |RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.dayOfWeek, d.dayOfQuarter,
             |   d.hour, d.minute, d.second, d.millisecond, d.microsecond, d.nanosecond,
             |   d.timezone, d.offset, d.offsetMinutes, d.epochSeconds, d.epochMillis""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
