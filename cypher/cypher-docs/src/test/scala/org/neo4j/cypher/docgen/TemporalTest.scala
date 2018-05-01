@@ -314,6 +314,7 @@ class TemporalTest extends DocumentingTest {
     }
     section("Durations", "cypher-temporal-durations") {
       section("Specifying durations", "cypher-temporal-specifying-durations") {
+        p("""A _Duration_ represents a temporal amount, capturing the difference in time between two instants, and can be negative.""")
         p(
           """A _Duration_ may be specified using either a _unit based form_ or a _date-and-time based form_:
             |
