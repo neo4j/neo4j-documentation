@@ -30,7 +30,7 @@ class TemporalFunctionsTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("Temporal functions", "query-functions-temporal")
     synopsis(
-      """Cypher provides functions allowing for the creation of values for each temporal type -- Date, Time, LocalTime, DateTime, LocalDateTime and Duration.""".stripMargin)
+      """Cypher provides functions allowing for the creation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.""".stripMargin)
     note {
       p("""See also <<cypher-temporal>> and <<query-operators-temporal>>.""")
     }

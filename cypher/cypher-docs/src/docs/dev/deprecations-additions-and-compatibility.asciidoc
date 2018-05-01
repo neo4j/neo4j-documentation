@@ -101,8 +101,9 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 | <<functions-point-cartesian-3d, point() - Cartesian 3D>> | Function | Added |
 | <<functions-point-wgs84-3d, point() - WGS 84 3D>> | Function | Added |
 | <<functions-randomuuid, randomUUID()>> | Function | Added |
-| <<property-types, Temporal types>>  | Functionality | Added | Supports storing, indexing and working with the following temporal types: Date, Time, LocalTime, DateTime, LocalDateTime and Duration.
-|  <<functions-tostring, toString()>>   | Function  | Extended | Now also allows temporal values as input (i.e. values of type Date, Time, LocalTime, DateTime, LocalDateTime or Duration)
+| <<cypher-temporal, Temporal types>>  | Functionality | Added | Supports storing, indexing and working with the following temporal types: Date, Time, LocalTime, DateTime, LocalDateTime and Duration.
+| <<query-functions-temporal, Temporal functions>>  | Functionality | Added | Functions allowing for the creation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.
+|  <<functions-tostring, toString()>>   | Function  | Extended | Now also allows temporal values as input (i.e. values of type _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ or _Duration_).
 |===
 
 [[cypher-compatibility]]
