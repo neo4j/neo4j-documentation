@@ -190,7 +190,7 @@ These functions are used to manipulate strings or to create a string representat
 |<<functions-split,split()>>            | Returns a list of strings resulting from the splitting of the original string around matches of the given delimiter.
 |<<functions-substring,substring()>>    | Returns a substring of the original string, beginning  with a 0-based index start and length.
 |<<functions-tolower,toLower()>>            | Returns the original string in lowercase.
-|<<functions-tostring,toString()>>      | Converts an integer, float or boolean value to a string.
+|<<functions-tostring,toString()>>      | Converts an integer, float, boolean or temporal type (i.e. Date, Time, LocalTime, DateTime, LocalDateTime or Duration) value to a string.
 |<<functions-toupper,toUpper()>>            | Returns the original string in uppercase.
 |<<functions-trim,trim()>>              | Returns the original string with leading and trailing whitespace removed.
 |===

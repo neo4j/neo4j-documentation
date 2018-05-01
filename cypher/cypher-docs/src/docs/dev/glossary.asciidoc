@@ -182,7 +182,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-tofloat, toFloat()>>                | Scalar            | Converts an integer or string value to a floating point number.
 |<<functions-tointeger, toInteger()>>                    | Scalar            | Converts a floating point or string value to an integer value.
 |<<functions-tolower, toLower()>>                    | String            | Returns the original string in lowercase.
-|<<functions-tostring, toString()>>              | String            | Converts an integer, float or boolean value to a string.
+|<<functions-tostring, toString()>>              | String            | Converts an integer, float, boolean or temporal (i.e. Date, Time, LocalTime, DateTime, LocalDateTime or Duration) value to a string.
 |<<functions-toupper, toUpper()>>                    | String            | Returns the original string in uppercase.
 |<<functions-trim, trim()>>                      | String            | Returns the original string with leading and trailing whitespace removed.
 |<<functions-type, type()>>                      | Scalar            | Returns the string representation of the relationship type.

@@ -102,6 +102,7 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 | <<functions-point-wgs84-3d, point() - WGS 84 3D>> | Function | Added |
 | <<functions-randomuuid, randomUUID()>> | Function | Added |
 | <<property-types, Temporal types>>  | Functionality | Added | Supports storing, indexing and working with the following temporal types: Date, Time, LocalTime, DateTime, LocalDateTime and Duration.
+|  <<functions-tostring, toString()>>   | Function  | Extended | Now also allows temporal values as input (i.e. values of type Date, Time, LocalTime, DateTime, LocalDateTime or Duration)
 |===
 
 [[cypher-compatibility]]

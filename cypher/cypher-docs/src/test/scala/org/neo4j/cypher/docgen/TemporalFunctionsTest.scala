@@ -962,7 +962,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           |UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'})] AS tt
           |RETURN localdatetime({date:dd, time:tt}) AS dateTime,
-          |   localdatetime({date:dd, time:tt, day: 28, second: 42}) AS dateTime""".stripMargin, ResultAssertions((r) => {
+          |   localdatetime({date:dd, time:tt, day: 28, second: 42}) AS dateTimeDDSS""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
