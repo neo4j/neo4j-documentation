@@ -118,26 +118,30 @@ class TemporalFunctionsTest extends DocumentingTest {
             |
             |""")
       }
-
-
       section("Truncating temporal values", "functions-temporal-truncate-overview") {
         p(
-          """xxxxxxxxTODO
+          """A temporal instant value can be created by truncating another temporal instant value at the nearest preceding point in time at a specified component boundary (namely, a _truncation unit_).
+            |A temporal instant value created in this way will have all components which are less significant than the specified truncation unit set to their default values.""".stripMargin)
+        p(
+          """It is possible to supplement the truncated value by providing a map containing components which are less significant than the truncation unit.
+            |This will have the effect of overriding the default values which would otherwise have been set for these less significant components.
+            |
+            |The following truncation units are supported:
             |
             |* `millennium`: Select the temporal instant corresponding to the _millenium_ of the given instant.
             |* `century`: Select the temporal instant corresponding to the _century_ of the given instant.
-            |* `decade`: Select the temporal instant corresponding to the decade of the given instant.
-            |* `year`: Select the temporal instant corresponding to the year of the given instant.
-            |* `weekYear`: Select the temporal instant corresponding to the first day of the first week of the week-year of the given instant.
-            |* `quarter`: Select the temporal instant corresponding to the quarter of the year of the given instant.
-            |* `month`: Select the temporal instant corresponding to the month of the given instant.
-            |* `week`: Select the temporal instant corresponding to the week of the given instant.
-            |* `day`: Select the temporal instant corresponding to the month of the given instant.
-            |* `hour`: Select the temporal instant corresponding to the hour of the given instant.
-            |* `minute`: Select the temporal instant corresponding to the minute of the given instant.
-            |* `second`: Select the temporal instant corresponding to the second of the given instant.
-            |* `millisecond`: Select the temporal instant corresponding to the millisecond of the given instant.
-            |* `microsecond`: Select the temporal instant corresponding to the microsecond of the given instant.
+            |* `decade`: Select the temporal instant corresponding to the _decade_ of the given instant.
+            |* `year`: Select the temporal instant corresponding to the _year_ of the given instant.
+            |* `weekYear`: Select the temporal instant corresponding to the first day of the first week of the _week-year_ of the given instant.
+            |* `quarter`: Select the temporal instant corresponding to the _quarter of the year_ of the given instant.
+            |* `month`: Select the temporal instant corresponding to the _month_ of the given instant.
+            |* `week`: Select the temporal instant corresponding to the _week_ of the given instant.
+            |* `day`: Select the temporal instant corresponding to the _month_ of the given instant.
+            |* `hour`: Select the temporal instant corresponding to the _hour_ of the given instant.
+            |* `minute`: Select the temporal instant corresponding to the _minute_ of the given instant.
+            |* `second`: Select the temporal instant corresponding to the _second_ of the given instant.
+            |* `millisecond`: Select the temporal instant corresponding to the _millisecond_ of the given instant.
+            |* `microsecond`: Select the temporal instant corresponding to the _microsecond_ of the given instant.
             |
       """.stripMargin)
         p(
@@ -146,21 +150,21 @@ class TemporalFunctionsTest extends DocumentingTest {
             |
             |[options="header"]
             ||===
-            || Unit                   | Date | Time | LocalTime | DateTime | LocalDateTime
-            || `millennium`  | <<functions-date-truncate-millennium, date.truncate('millennium', input)>> | | | <<functions-datetime-truncate-millennium, datetime.truncate('millennium',input)>> | <<functions-localdatetime-truncate-millennium, localdatetime.truncate('millennium',input)>>
-            || `century`  | <<functions-date-truncate-century, date.truncate('century', input)>> | | | <<functions-datetime-truncate-century, datetime.truncate('century', input)>> | <<functions-localdatetime-truncate-century, localdatetime.truncate('century',input)>>
-            || `decade`  | <<functions-date-truncate-decade, date.truncate('decade', input)>> | | | <<functions-datetime-truncate-decade, datetime.truncate('decade', input)>> | <<functions-localdatetime-truncate-decade, localdatetime.truncate('decade',input)>>
-            || `year`  | <<functions-date-truncate-year, date.truncate('year', input)>> | | | <<functions-datetime-truncate-year, datetime.truncate('year', input)>> | <<functions-localdatetime-truncate-year, localdatetime.truncate('year',input)>>
-            || `weekYear`  | <<functions-date-truncate-weekYear, date.truncate('weekYear', input)>> | | | <<functions-datetime-truncate-weekYear, datetime.truncate('weekYear', input)>> | <<functions-localdatetime-truncate-weekYear, localdatetime.truncate('weekYear',input)>>
-            || `quarter`  | <<functions-date-truncate-quarter, date.truncate('quarter', input)>> | | | <<functions-datetime-truncate-quarter, datetime.truncate('quarter', input)>> | <<functions-localdatetime-truncate-quarter, localdatetime.truncate('quarter',input)>>
-            || `month`  | <<functions-date-truncate-month, date.truncate('month', input)>> | | | <<functions-datetime-truncate-month, datetime.truncate('month', input)>> | <<functions-localdatetime-truncate-month, localdatetime.truncate('month',input)>>
-            || `week`  | <<functions-date-truncate-week, date.truncate('week', input)>> | | | <<functions-datetime-truncate-week, datetime.truncate('week', input)>> | <<functions-localdatetime-truncate-week, localdatetime.truncate('week',input)>>
-            || `day`  | <<functions-date-truncate-day, date.truncate('day', input)>> | <<functions-time-truncate-day, time.truncate('day', input)>> | <<functions-localtime-truncate-day, localtime.truncate('day', input)>> | <<functions-datetime-truncate-day, datetime.truncate('day', input)>> | <<functions-localdatetime-truncate-day, localdatetime.truncate('day',input)>>
-            || `hour`  | | <<functions-time-truncate-hour, time.truncate('hour', input)>> | <<functions-localtime-truncate-hour, localtime.truncate('hour', input)>> | <<functions-datetime-truncate-hour, datetime.truncate('hour', input)>> | <<functions-localdatetime-truncate-hour, localdatetime.truncate('hour',input)>>
-            || `minute`  | | <<functions-time-truncate-minute, time.truncate('minute', input)>> | <<functions-localtime-truncate-minute, localtime.truncate('minute', input)>> | <<functions-datetime-truncate-minute, datetime.truncate('minute', input)>> | <<functions-localdatetime-truncate-minute, localdatetime.truncate('minute',input)>>
-            || `second`  | | <<functions-time-truncate-second, time.truncate('second', input)>> | <<functions-localtime-truncate-second, localtime.truncate('second', input)>> | <<functions-datetime-truncate-second, datetime.truncate('second', input)>> | <<functions-localdatetime-truncate-second, localdatetime.truncate('second',input)>>
-            || `millisecond`  |  | <<functions-time-truncate-millisecond, time.truncate('millisecond', input)>> | <<functions-localtime-truncate-millisecond, localtime.truncate('millisecond', input)>> | <<functions-datetime-truncate-millisecond, datetime.truncate('millisecond', input)>> | <<functions-localdatetime-truncate-millisecond, localdatetime.truncate('millisecond',input)>>
-            || `microsecond`  | | <<functions-time-truncate-microsecond, time.truncate('microsecond', input)>> | <<functions-localtime-truncate-microsecond, localtime.truncate('microsecond', input)>> | <<functions-datetime-truncate-microsecond, datetime.truncate('microsecond', input)>> | <<functions-localdatetime-truncate-microsecond, localdatetime.truncate('microsecond',input)>>
+            || Truncation unit                   | Date | Time | LocalTime | DateTime | LocalDateTime
+            || `millennium`  | <<functions-date-truncate, date.truncate('millennium', input)>> | | | <<functions-datetime-truncate, datetime.truncate('millennium', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('millennium', input)>>
+            || `century`  | <<functions-date-truncate, date.truncate('century', input)>> | | | <<functions-datetime-truncate, datetime.truncate('century', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('century', input)>>
+            || `decade`  | <<functions-date-truncate, date.truncate('decade', input)>> | | | <<functions-datetime-truncate, datetime.truncate('decade', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('decade', input)>>
+            || `year`  | <<functions-date-truncate, date.truncate('year', input)>> | | | <<functions-datetime-truncate, datetime.truncate('year', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('year', input)>>
+            || `weekYear`  | <<functions-date-truncate, date.truncate('weekYear', input)>> | | | <<functions-datetime-truncate, datetime.truncate('weekYear', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('weekYear', input)>>
+            || `quarter`  | <<functions-date-truncate, date.truncate('quarter', input)>> | | | <<functions-datetime-truncate, datetime.truncate('quarter', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('quarter', input)>>
+            || `month`  | <<functions-date-truncate, date.truncate('month', input)>> | | | <<functions-datetime-truncate, datetime.truncate('month', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('month', input)>>
+            || `week`  | <<functions-date-truncate, date.truncate('week', input)>> | | | <<functions-datetime-truncate, datetime.truncate('week', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('week', input)>>
+            || `day`  | <<functions-date-truncate, date.truncate('day', input)>> | <<functions-time-truncate, time.truncate('day', input)>> | <<functions-localtime-truncate, localtime.truncate('day', input)>> | <<functions-datetime-truncate, datetime.truncate('day', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('day', input)>>
+            || `hour`  | | <<functions-time-truncate, time.truncate('hour', input)>> | <<functions-localtime-truncate, localtime.truncate('hour', input)>> | <<functions-datetime-truncate, datetime.truncate('hour', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('hour',input)>>
+            || `minute`  | | <<functions-time-truncate, time.truncate('minute', input)>> | <<functions-localtime-truncate, localtime.truncate('minute', input)>> | <<functions-datetime-truncate, datetime.truncate('minute', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('minute', input)>>
+            || `second`  | | <<functions-time-truncate, time.truncate('second', input)>> | <<functions-localtime-truncate, localtime.truncate('second', input)>> | <<functions-datetime-truncate, datetime.truncate('second', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('second', input)>>
+            || `millisecond`  |  | <<functions-time-truncate, time.truncate('millisecond', input)>> | <<functions-localtime-truncate, localtime.truncate('millisecond', input)>> | <<functions-datetime-truncate, datetime.truncate('millisecond', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('millisecond', input)>>
+            || `microsecond`  | | <<functions-time-truncate, time.truncate('microsecond', input)>> | <<functions-localtime-truncate, localtime.truncate('microsecond', input)>> | <<functions-datetime-truncate, datetime.truncate('microsecond', input)>> | <<functions-localdatetime-truncate, localdatetime.truncate('microsecond', input)>>
             ||===
             |
             |""")
@@ -475,6 +479,33 @@ class TemporalFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
+    section("date.truncate(): truncating a _Date_", "functions-date-truncate") {
+      p(
+        """`date.truncate()` returns the _Date_ value obtained by truncating a specified temporal instant value at the nearest preceding point in time at the specified component boundary (which is denoted by the truncation unit passed as a parameter to the function).
+          |In other words, the _Date_ returned will have all components that are less significant than the specified truncation unit set to their default values.""".stripMargin)
+      p(
+        """It is possible to supplement the truncated value by providing a map containing components which are less significant than the truncation unit.
+          |This will have the effect of _overriding_ the default values which would otherwise have been set for these less significant components.
+          |For example, `day` -- with some value `x` -- may be provided when the truncation unit is `year` in order to ensure the returned value has the _day_ set to `x` instead of the default _day_ (which is `1`).
+        """.stripMargin)
+      function("date.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A Date.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
+      considerations("Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its default value xxxlink.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
+      query(
+        """WITH datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}) AS d
+          |RETURN date.truncate('millennium', d) AS truncMillenium,
+          |   date.truncate('century', d, {day:2}) AS truncCentury,
+          |   date.truncate('decade', d) AS truncDecade,
+          |   date.truncate('year', d, {day:2}) AS truncYear,
+          |   date.truncate('weekYear', d) AS truncWeekYear,
+          |   date.truncate('quarter', d) AS truncQuarter,
+          |   date.truncate('month', d) AS truncMonth,
+          |   date.truncate('week', d, {dayOfWeek:2}) AS truncDayOfWeek,
+          |   date.truncate('day', d) AS truncDay""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+    }
     section("datetime(): getting the current _DateTime_", "functions-datetime-current") {
       p(
         """`datetime()` returns the current _DateTime_ value.
@@ -721,6 +752,35 @@ class TemporalFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
+    section("datetime.truncate(): truncating a _DateTime_", "functions-datetime-truncate") {
+      p(
+        """`datetime.truncate()` returns the _DateTime_ value obtained by truncating a specified temporal instant value at the nearest preceding point in time at the specified component boundary (which is denoted by the truncation unit passed as a parameter to the function).
+          |In other words, the _DateTime_ returned will have all components that are less significant than the specified truncation unit set to their default values.""".stripMargin)
+      p(
+        """It is possible to supplement the truncated value by providing a map containing components which are less significant than the truncation unit.
+          |This will have the effect of _overriding_ the default values which would otherwise have been set for these less significant components.
+          |For example, `day` -- with some value `x` -- may be provided when the truncation unit is `year` in order to ensure the returned value has the _day_ set to `x` instead of the default _day_ (which is `1`).
+        """.stripMargin)
+      function("datetime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A DateTime.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
+      considerations("`temporalInstantValue` cannot be a _Date_ value if unit is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.", "If `temporalInstantValue` is one of {_Date_, _LocalDateTime_}, a _Date_ or _LocalDateTime_ value without a time zone can be truncated to a _DateTime_ value. When doing so, the resulting _DateTime_ will have the default time zone, unless a time zone has been specified explicitly through `mapOfComponents` as `{timezone: someValue}` to override the time zone of `temporalInstantValue`.", "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its default value xxxlink.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
+      query(
+        """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
+          |   localdatetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123})] AS d
+          |RETURN datetime.truncate('millennium', d, {timezone:'Europe/Stockholm'}) AS truncMillenium,
+          |   datetime.truncate('century', d, {timezone:'Europe/Stockholm'}) AS truncCentury,
+          |   datetime.truncate('decade', d) AS truncDecade,
+          |   datetime.truncate('year', d, {day:2}) AS truncYear,
+          |   datetime.truncate('weekYear', d) AS truncWeekYear,
+          |   datetime.truncate('quarter', d) AS truncQuarter,
+          |   datetime.truncate('month', d, {day:2}) AS truncMonth,
+          |   datetime.truncate('week', d, {dayOfWeek:2}) AS truncWeek,
+          |   datetime.truncate('day', d, {nanosecond:2}) AS truncDay,
+          |   datetime.truncate('hour', d) AS truncHour""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+    }
     section("localdatetime(): getting the current _LocalDateTime_", "functions-localdatetime-current") {
       p(
         """`localdatetime()` returns the current _LocalDateTime_ value.
@@ -919,6 +979,35 @@ class TemporalFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
+    section("localdatetime.truncate(): truncating a _LocalDateTime_", "functions-localdatetime-truncate") {
+      p(
+        """`localdatetime.truncate()` returns the _LocalDateTime_ value obtained by truncating a specified temporal instant value at the nearest preceding point in time at the specified component boundary (which is denoted by the truncation unit passed as a parameter to the function).
+          |In other words, the _LocalDateTime_ returned will have all components that are less significant than the specified truncation unit set to their default values.""".stripMargin)
+      p(
+        """It is possible to supplement the truncated value by providing a map containing components which are less significant than the truncation unit.
+          |This will have the effect of _overriding_ the default values which would otherwise have been set for these less significant components.
+          |For example, `day` -- with some value `x` -- may be provided when the truncation unit is `year` in order to ensure the returned value has the _day_ set to `x` instead of the default _day_ (which is `1`).
+        """.stripMargin)
+      function("localdatetime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A LocalDateTime.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
+      considerations("`temporalInstantValue` cannot be a _Date_ value if unit is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.", "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its default value xxxlink.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
+      query(
+        """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
+          |   localdatetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123})] AS d
+          |RETURN localdatetime.truncate('millennium', d) AS truncMillenium,
+          |   localdatetime.truncate('century', d, {day:2}) AS truncCentury,
+          |   localdatetime.truncate('decade', d) AS truncDecade,
+          |   localdatetime.truncate('year', d, {day:2}) AS truncYear,
+          |   localdatetime.truncate('weekYear', d) AS truncWeekYear,
+          |   localdatetime.truncate('quarter', d, {day:2}) AS truncQuarter,
+          |   localdatetime.truncate('month', d) AS truncMonth,
+          |   localdatetime.truncate('week', d, {dayOfWeek:2}) AS truncWeek,
+          |   localdatetime.truncate('minute', d, {nanosecond:2}) AS truncMinute,
+          |   localdatetime.truncate('second', d) AS truncSecond""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+    }
     section("localtime(): getting the current _LocalTime_", "functions-localtime-current") {
       p(
         """`localtime()` returns the current _LocalTime_ value.
@@ -1036,6 +1125,31 @@ class TemporalFunctionsTest extends DocumentingTest {
           |RETURN localtime(dd) AS d1,
           |   localtime({time:dd}) AS d2,
           |   localtime({time:dd, second: 42}) AS d3""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+    }
+    section("localtime.truncate(): truncating a _LocalTime_", "functions-localtime-truncate") {
+      p(
+        """`localtime.truncate()` returns the _LocalTime_ value obtained by truncating a specified temporal instant value at the nearest preceding point in time at the specified component boundary (which is denoted by the truncation unit passed as a parameter to the function).
+          |In other words, the _LocalTime_ returned will have all components that are less significant than the specified truncation unit set to their default values.""".stripMargin)
+      p(
+        """It is possible to supplement the truncated value by providing a map containing components which are less significant than the truncation unit.
+          |This will have the effect of _overriding_ the default values which would otherwise have been set for these less significant components.
+          |For example, `minute` -- with some value `x` -- may be provided when the truncation unit is `hour` in order to ensure the returned value has the _minute_ set to `x` instead of the default _minute_ (which is `1`).
+        """.stripMargin)
+      function("localtime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A LocalTime.", ("unit", "A string expression evaluating to one of the following: {`day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Time_, _LocalTime_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
+      considerations("Truncating time to day -- i.e. `unit` is 'day'  -- is supported, and yields midnight at the start of the day (`00:00`), regardless of the value of `temporalInstantValue`. However, the time zone of `temporalInstantValue` is retained.", "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'second', `mapOfComponents` cannot contain information pertaining to a _minute_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its default value xxxlink.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
+      query(
+        """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
+          |   time({hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '-01:00'})] AS d
+          |RETURN localtime.truncate('day', d) AS truncDay,
+          |   localtime.truncate('hour', d) AS truncHour,
+          |   localtime.truncate('minute', d, {nanosecond:2}) AS truncMinute,
+          |   localtime.truncate('second', d) AS truncSecond,
+          |   localtime.truncate('millisecond', d) AS truncMillisecond,
+          |   localtime.truncate('microsecond', d) AS truncMicrosecond""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -1165,6 +1279,34 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   time({time:dd, timezone:'+05:00'}) AS d3,
           |   time({time:dd, second: 42}) AS d4,
           |   time({time:dd, second: 42, timezone:'+05:00'}) AS d5""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+    }
+    section("time.truncate(): truncating a _Time_", "functions-time-truncate") {
+      p(
+        """`time.truncate()` returns the _Time_ value obtained by truncating a specified temporal instant value at the nearest preceding point in time at the specified component boundary (which is denoted by the truncation unit passed as a parameter to the function).
+          |In other words, the _Time_ returned will have all components that are less significant than the specified truncation unit set to their default values.""".stripMargin)
+      p(
+        """It is possible to supplement the truncated value by providing a map containing components which are less significant than the truncation unit.
+          |This will have the effect of _overriding_ the default values which would otherwise have been set for these less significant components.
+          |For example, `minute` -- with some value `x` -- may be provided when the truncation unit is `hour` in order to ensure the returned value has the _minute_ set to `x` instead of the default _minute_ (which is `1`).
+        """.stripMargin)
+      function("time.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A Time.", ("unit", "A string expression evaluating to one of the following: {`day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Time_, _LocalTime_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
+      considerations("Truncating time to day -- i.e. `unit` is 'day'  -- is supported, and yields midnight at the start of the day (`00:00`), regardless of the value of `temporalInstantValue`. However, the time zone of `temporalInstantValue` is retained.", "The time zone of `temporalInstantValue` may be overridden; for example, `time.truncate('minute', input, {timezone:'+0200'})`. ", "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'second', `mapOfComponents` cannot contain information pertaining to a _minute_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its default value xxxlink.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
+      query(
+        """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
+          |   localdatetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123}),
+          |   time({hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '-01:00'}),
+          |   localtime({hour:12, minute:31, second:14, nanosecond: 645876123})] AS d
+          |RETURN time.truncate('day', d) AS truncDay,
+          |   time.truncate('hour', d) AS truncHour,
+          |   time.truncate('minute', d) AS truncMinute,
+          |   time.truncate('second', d) AS truncSecond,
+          |   time.truncate('millisecond', d, {nanosecond:2}) AS truncMillisecond,
+          |   time.truncate('microsecond', d, {nanosecond:2}) AS truncMicrosecond
+          |""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
