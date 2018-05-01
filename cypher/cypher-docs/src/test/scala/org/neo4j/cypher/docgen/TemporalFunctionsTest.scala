@@ -312,7 +312,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`date()` returns the current _Date_ value.
           |If no time zone parameter is specified, the local time zone will be used.
         """.stripMargin)
-      function("date([ {timezone} ])", "A Date.", ("A single map consisting of the following:", ""), ("timezone", "An expression that represents the time zone"))
+      function("date([ {timezone} ])", "A Date.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
       considerations("If no parameters are provided, `date()` must be invoked (`date({})` is invalid).")
       query(
         """RETURN date() AS currentDate""".stripMargin, ResultAssertions((r) => {
@@ -336,7 +336,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
-        function("date.transaction([ timezone ])", "A Date.", ("timezone", "An expression that represents the time zone"))
+        function("date.transaction([ timezone ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN date.transaction() AS currentDate""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -350,7 +350,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
-        function("date.statement([ timezone ])", "A Date.", ("timezone", "An expression that represents the time zone"))
+        function("date.statement([ timezone ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN date.statement() AS currentDate""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -363,7 +363,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`date.realtime()` returns the current _Date_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
-        function("date.realtime([ timezone ])", "A Date.", ("timezone", "An expression that represents the time zone"))
+        function("date.realtime([ timezone ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN date.realtime() AS currentDate""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -461,19 +461,19 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`date()` returns the _Date_ value obtained by selecting and composing components from another temporal value.
           |In essence, this allows a _DateTime_ or _LocalDateTime_ value to be converted to a _Date_, and for "missing" components to be provided.
         """.stripMargin)
-      function("date({date [, year, month, day, week, dayOfWeek, quarter, dayOfQuarter, ordinalDay]})", "A Date.", ("date", "A _Date_ value."), ("year", "An expression consisting of at least four digits that specifies the year TODOLINK."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."))
+      function("date({date [, year, month, day, week, dayOfWeek, quarter, dayOfQuarter, ordinalDay]})", "A Date.", ("A single map consisting of the following:", ""), ("date", "A _Date_ value."), ("year", "An expression consisting of at least four digits that specifies the year TODOLINK."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `date`.")
       query(
         """UNWIND [date({year:1984, month:11, day:11}),
           |   localdatetime({year:1984, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123}),
           |   datetime({year:1984, month:11, day:11, hour:12, timezone: '+01:00'})] as dd
-          |RETURN date(dd) AS d1,
-          |   date({date: dd}) AS d2,
-          |   date({date: dd, year: 28}) AS d3,
-          |   date({date: dd, day: 28}) AS d4,
-          |   date({date: dd, week: 1}) AS d5,
-          |   date({date: dd, ordinalDay: 28}) AS d6,
-          |   date({date: dd, quarter: 3}) AS d7""".stripMargin, ResultAssertions((r) => {
+          |RETURN date(dd) AS theDate,
+          |   date({date: dd}) AS dateOnly,
+          |   date({date: dd, year: 28}) AS dateYear,
+          |   date({date: dd, day: 28}) AS dateDay,
+          |   date({date: dd, week: 1}) AS dateWeek,
+          |   date({date: dd, ordinalDay: 28}) AS dateOrdinalDay,
+          |   date({date: dd, quarter: 3}) AS dateQuarter""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -511,7 +511,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`datetime()` returns the current _DateTime_ value.
           |If no time zone parameter is specified, the local time zone will be used.
         """.stripMargin)
-      function("datetime([ {timezone} ])", "A DateTime.", ("A single map consisting of the following:", ""), ("timezone", "An expression that represents the time zone"))
+      function("datetime([ {timezone} ])", "A DateTime.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
       considerations("If no parameters are provided, `datetime()` must be invoked (`datetime({})` is invalid).")
       query(
         """RETURN datetime() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
@@ -535,7 +535,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
-        function("datetime.transaction([ timezone ])", "A DateTime.", ("timezone", "An expression that represents the time zone"))
+        function("datetime.transaction([ timezone ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN datetime.transaction() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -555,7 +555,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
-        function("datetime.statement([ timezone ])", "A DateTime.", ("timezone", "An expression that represents the time zone"))
+        function("datetime.statement([ timezone ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN datetime.statement() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -568,7 +568,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`datetime.realtime()` returns the current _DateTime_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
-        function("datetime.realtime([ timezone ])", "A DateTime.", ("timezone", "An expression that represents the time zone"))
+        function("datetime.realtime([ timezone ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN datetime.realtime() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -674,17 +674,17 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`datetime()` returns the _DateTime_ value obtained by selecting and composing components from another temporal value.
           |In essence, this allows a _Date_, _LocalDateTime_, _Time_ or _LocalTime_ value to be converted to a _DateTime_, and for "missing" components to be provided.
         """.stripMargin)
-      function("datetime({datetime [, year, ..., timezone]}) | datetime({date [, year, ..., timezone]}) | datetime({time [, year, ..., timezone]}) | datetime({date, time [, year, ..., timezone]})", "A DateTime.", ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at least four digits that specifies the year TODOLINK."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
+      function("datetime({datetime [, year, ..., timezone]}) | datetime({date [, year, ..., timezone]}) | datetime({time [, year, ..., timezone]}) | datetime({date, time [, year, ..., timezone]})", "A DateTime.", ("A single map consisting of the following:", ""), ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at least four digits that specifies the year TODOLINK."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.")
       p("""The following query shows the various usages of `datetime({date [, year, ..., timezone]})`""")
       query(
         """UNWIND [date({year:1984, month:10, day:11}),
           |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
-          |RETURN datetime({date:dd, hour: 10, minute: 10, second: 10}) AS d1,
-          |   datetime({date:dd, hour: 10, minute: 10, second: 10, timezone:'+05:00'}) AS d2,
-          |   datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS d3,
-          |   datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10, timezone:'Pacific/Honolulu'}) AS d4""".stripMargin, ResultAssertions((r) => {
+          |RETURN datetime({date:dd, hour: 10, minute: 10, second: 10}) AS dateHHMMSS,
+          |   datetime({date:dd, hour: 10, minute: 10, second: 10, timezone:'+05:00'}) AS dateHHMMSSTimezone,
+          |   datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS dateDDHHMMSS,
+          |   datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10, timezone:'Pacific/Honolulu'}) AS dateDDHHMMSSTimezone""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -695,10 +695,10 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
           |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'})] AS tt
-          |RETURN datetime({year:1984, month:10, day:11, time:tt}) AS d1,
-          |   datetime({year:1984, month:10, day:11, time:tt, timezone:'+05:00'}) AS d2,
-          |   datetime({year:1984, month:10, day:11, time:tt, second: 42}) AS d3,
-          |   datetime({year:1984, month:10, day:11, time:tt, second: 42, timezone:'Pacific/Honolulu'}) AS d4""".stripMargin, ResultAssertions((r) => {
+          |RETURN datetime({year:1984, month:10, day:11, time:tt}) AS YYYYMMDDTime,
+          |   datetime({year:1984, month:10, day:11, time:tt, timezone:'+05:00'}) AS YYYYMMDDTimeTimezone,
+          |   datetime({year:1984, month:10, day:11, time:tt, second: 42}) AS YYYYMMDDTimeSS,
+          |   datetime({year:1984, month:10, day:11, time:tt, second: 42, timezone:'Pacific/Honolulu'}) AS YYYYMMDDTimeSSTimezone""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -710,10 +710,10 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
           |UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'})] AS tt
-          |RETURN datetime({date:dd, time:tt}) as d1,
-          |   datetime({date:dd, time:tt, timezone:'+05:00'}) AS d2,
-          |   datetime({date:dd, time:tt, day: 28, second: 42}) AS d3,
-          |   datetime({date:dd, time:tt, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS d4""".stripMargin, ResultAssertions((r) => {
+          |RETURN datetime({date:dd, time:tt}) as dateTime,
+          |   datetime({date:dd, time:tt, timezone:'+05:00'}) AS dateTimeTimezone,
+          |   datetime({date:dd, time:tt, day: 28, second: 42}) AS dateTimeDDSS,
+          |   datetime({date:dd, time:tt, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS dateTimeDDSSTimezone""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -722,11 +722,11 @@ class TemporalFunctionsTest extends DocumentingTest {
       query(
         """UNWIND [localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'})] AS dd
-          |RETURN datetime(dd) AS d1,
-          |   datetime({datetime:dd}) AS d2,
-          |   datetime({datetime:dd, timezone:'+05:00'}) AS d3,
-          |   datetime({datetime:dd, day: 28, second: 42}) AS d4,
-          |   datetime({datetime:dd, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS d5""".stripMargin, ResultAssertions((r) => {
+          |RETURN datetime(dd) AS theDate,
+          |   datetime({datetime:dd}) AS datetime,
+          |   datetime({datetime:dd, timezone:'+05:00'}) AS datetimeTimezone,
+          |   datetime({datetime:dd, day: 28, second: 42}) AS datetimeDDSS,
+          |   datetime({datetime:dd, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS datetimeDDSSTimezone""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -737,7 +737,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`datetime()` returns the _DateTime_ value at the specified number of _seconds_ or _milliseconds_ from the UNIX epoch in the UTC time zone.""".stripMargin)
       p("Conversions to other temporal instant types from UNIX epoch representations can be achieved by transforming a _DateTime_ value to one of these types.")
       p("Information about how to convert _DateTime_ values to UNIX epoch representations may be found <<XXX, here>>.")
-      function("datetime({ epochSeconds | epochMillis })", "A DateTime.", ("epochSeconds", "A numeric value representing the number of seconds from the UNIX epoch in the UTC time zone."), ("epochMillis", "A numeric value representing the number of milliseconds from the UNIX epoch in the UTC time zone."))
+      function("datetime({ epochSeconds | epochMillis })", "A DateTime.", ("A single map consisting of the following:", ""), ("epochSeconds", "A numeric value representing the number of seconds from the UNIX epoch in the UTC time zone."), ("epochMillis", "A numeric value representing the number of milliseconds from the UNIX epoch in the UTC time zone."))
       considerations("`epochSeconds`/`epochMillis` must denote a valid date and time; i.e. a value for either of these denoting a date of `30 February 2001` is invalid.", "`epochSeconds`/`epochMillis` may be used in conjunction with `nanosecond`")
       query(
         """RETURN datetime({epochSeconds:timestamp() / 1000, nanosecond: 23}) AS theDate""".stripMargin, ResultAssertions((r) => {
@@ -786,7 +786,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`localdatetime()` returns the current _LocalDateTime_ value.
           |If no time zone parameter is specified, the local time zone will be used.
         """.stripMargin)
-      function("localdatetime([ {timezone} ])", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("timezone", "An expression that represents the time zone"))
+      function("localdatetime([ {timezone} ])", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
       considerations("If no parameters are provided, `localdatetime()` must be invoked (`localdatetime({})` is invalid).")
       query(
         """RETURN localdatetime() AS now""".stripMargin, ResultAssertions((r) => {
@@ -810,7 +810,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
-        function("localdatetime.transaction([ timezone ])", "A LocalDateTime.", ("timezone", "An expression that represents the time zone"))
+        function("localdatetime.transaction([ timezone ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localdatetime.transaction() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -824,7 +824,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
-        function("localdatetime.statement([ timezone ])", "A LocalDateTime.", ("timezone", "An expression that represents the time zone"))
+        function("localdatetime.statement([ timezone ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localdatetime.statement() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -837,7 +837,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`localdatetime.realtime()` returns the current _LocalDateTime_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
-        function("localdatetime.realtime([ timezone ])", "A LocalDateTime.", ("timezone", "An expression that represents the time zone"))
+        function("localdatetime.realtime([ timezone ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localdatetime.realtime() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -929,15 +929,15 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`localdatetime()` returns the _LocalDateTime_ value obtained by selecting and composing components from another temporal value.
           |In essence, this allows a _Date_, _DateTime_, _Time_ or _LocalTime_ value to be converted to a _LocalDateTime_, and for "missing" components to be provided.
         """.stripMargin)
-      function("localdatetime({datetime [, year, ..., nanosecond]}) | localdatetime({date [, year, ..., nanosecond]}) | localdatetime({time [, year, ..., nanosecond]}) | localdatetime({date, time [, year, ..., nanosecond]})", "A LocalDateTime.", ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at least four digits that specifies the year TODOLINK."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
+      function("localdatetime({datetime [, year, ..., nanosecond]}) | localdatetime({date [, year, ..., nanosecond]}) | localdatetime({time [, year, ..., nanosecond]}) | localdatetime({date, time [, year, ..., nanosecond]})", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at least four digits that specifies the year TODOLINK."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.")
       p("""The following query shows the various usages of `localdatetime({date [, year, ..., nanosecond]})`""")
       query(
         """UNWIND [date({year:1984, month:10, day:11}),
           |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
-          |RETURN localdatetime({date:dd, hour: 10, minute: 10, second: 10}) AS d1,
-          |   localdatetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS d2""".stripMargin, ResultAssertions((r) => {
+          |RETURN localdatetime({date:dd, hour: 10, minute: 10, second: 10}) AS dateHHMMSS,
+          |   localdatetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS dateDDHHMMSS""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -948,8 +948,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
           |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS tt
-          |RETURN localdatetime({year:1984, month:10, day:11, time:tt}) AS d1,
-          |   localdatetime({year:1984, month:10, day:11, time:tt, second: 42}) AS d2""".stripMargin, ResultAssertions((r) => {
+          |RETURN localdatetime({year:1984, month:10, day:11, time:tt}) AS YYYYMMDDTime,
+          |   localdatetime({year:1984, month:10, day:11, time:tt, second: 42}) AS YYYYMMDDTimeSS""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -961,8 +961,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
           |UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'})] AS tt
-          |RETURN localdatetime({date:dd, time:tt}) AS d1,
-          |   localdatetime({date:dd, time:tt, day: 28, second: 42}) AS d2""".stripMargin, ResultAssertions((r) => {
+          |RETURN localdatetime({date:dd, time:tt}) AS dateTime,
+          |   localdatetime({date:dd, time:tt, day: 28, second: 42}) AS dateTime""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -971,9 +971,9 @@ class TemporalFunctionsTest extends DocumentingTest {
       query(
         """UNWIND [localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] as dd
-          |RETURN localdatetime(dd) as d1,
-          |   localdatetime({datetime:dd}) as d2,
-          |   localdatetime({datetime:dd, day: 28, second: 42}) as d3""".stripMargin, ResultAssertions((r) => {
+          |RETURN localdatetime(dd) as theDateTime,
+          |   localdatetime({datetime:dd}) as datetime,
+          |   localdatetime({datetime:dd, day: 28, second: 42}) as datetimeDDSS""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -1013,7 +1013,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`localtime()` returns the current _LocalTime_ value.
           |If no time zone parameter is specified, the local time zone will be used.
         """.stripMargin)
-      function("localtime([ {timezone} ])", "A LocalTime.", ("A single map consisting of the following:", ""), ("timezone", "An expression that represents the time zone"))
+      function("localtime([ {timezone} ])", "A LocalTime.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
       considerations("If no parameters are provided, `localtime()` must be invoked (`localtime({})` is invalid).")
       query(
         """RETURN localtime() AS now""".stripMargin, ResultAssertions((r) => {
@@ -1037,7 +1037,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
-        function("localtime.transaction([ timezone ])", "A LocalTime.", ("timezone", "An expression that represents the time zone"))
+        function("localtime.transaction([ timezone ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localtime.transaction() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1051,7 +1051,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
-        function("localtime.statement([ timezone ])", "A LocalTime.", ("timezone", "An expression that represents the time zone"))
+        function("localtime.statement([ timezone ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localtime.statement() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1067,10 +1067,10 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
       section("localtime.realtime()", "functions-localtime-current-realtime") {
         p(
-          """`localtime.realtime([ timezone ])` returns the current _LocalTime_ value using the `realtime` clock.
+          """`localtime.realtime()` returns the current _LocalTime_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
-        function("localtime.realtime()", "A LocalTime.", ("timezone", "An expression that represents the time zone"))
+        function("localtime.realtime([ timezone ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localtime.realtime() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1115,16 +1115,16 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`localtime()` returns the _LocalTime_ value obtained by selecting and composing components from another temporal value.
           |In essence, this allows a _DateTime_, _LocalDateTime_ or _Time_ value to be converted to a _LocalTime_, and for "missing" components to be provided.
         """.stripMargin)
-      function("localtime({time [, hour, ..., nanosecond]})", "A LocalTime.", ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
+      function("localtime({time [, hour, ..., nanosecond]})", "A LocalTime.", ("A single map consisting of the following:", ""), ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.")
       query(
         """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
           |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
-          |RETURN localtime(dd) AS d1,
-          |   localtime({time:dd}) AS d2,
-          |   localtime({time:dd, second: 42}) AS d3""".stripMargin, ResultAssertions((r) => {
+          |RETURN localtime(dd) AS theTime,
+          |   localtime({time:dd}) AS timeOnly,
+          |   localtime({time:dd, second: 42}) AS timeSS""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
@@ -1159,7 +1159,7 @@ class TemporalFunctionsTest extends DocumentingTest {
       p(
         """`time()` returns the current _Time_ value.
           |If no time zone parameter is specified, the local time zone will be used.""".stripMargin)
-      function("time([ {timezone} ])", "A Time.", ("A single map consisting of the following:", ""), ("timezone", "An expression that represents the time zone"))
+      function("time([ {timezone} ])", "A Time.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
       considerations("If no parameters are provided, `time()` must be invoked (`time({})` is invalid).")
       query(
         """RETURN time() AS currentTime""".stripMargin, ResultAssertions((r) => {
@@ -1183,7 +1183,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
-        function("time.transaction([ timezone ])", "A Time.", ("timezone", "An expression that represents the time zone"))
+        function("time.transaction([ timezone ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN time.transaction() AS currentTime""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1197,7 +1197,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
-        function("time.statement([ timezone ])", "A Time.", ("timezone", "An expression that represents the time zone"))
+        function("time.statement([ timezone ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN time.statement() AS currentTime""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1216,7 +1216,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`time.realtime()` returns the current _Time_ value.
             |This value will be the live clock of the system.
           """.stripMargin)
-        function("time.realtime([ timezone ])", "A Time.", ("timezone", "An expression that represents the time zone"))
+        function("time.realtime([ timezone ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN time.realtime() AS currentTime""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1267,18 +1267,18 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`time()` returns the _Time_ value obtained by selecting and composing components from another temporal value.
           |In essence, this allows a _DateTime_, _LocalDateTime_ or _LocalTime_ value to be converted to a _Time_, and for "missing" components to be provided.
         """.stripMargin)
-      function("time({time [, hour, ..., timezone]})", "A Time.", ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
+      function("time({time [, hour, ..., timezone]})", "A Time.", ("A single map consisting of the following:", ""), ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.")
       query(
         """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
           |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'})] AS dd
-          |RETURN time(dd) AS d1,
-          |   time({time:dd}) AS d2,
-          |   time({time:dd, timezone:'+05:00'}) AS d3,
-          |   time({time:dd, second: 42}) AS d4,
-          |   time({time:dd, second: 42, timezone:'+05:00'}) AS d5""".stripMargin, ResultAssertions((r) => {
+          |RETURN time(dd) AS theTime,
+          |   time({time:dd}) AS timeOnly,
+          |   time({time:dd, timezone:'+05:00'}) AS timeTimezone,
+          |   time({time:dd, second: 42}) AS timeSS,
+          |   time({time:dd, second: 42, timezone:'+05:00'}) AS timeSSTimezone""".stripMargin, ResultAssertions((r) => {
           //CYPHER_TODO
         })) {
         resultTable()
