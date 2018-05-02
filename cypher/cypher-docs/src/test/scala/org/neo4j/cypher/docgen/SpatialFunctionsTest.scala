@@ -107,7 +107,7 @@ class SpatialFunctionsTest extends DocumentingTest {
           |* If the points are in the _WGS-84_ CRS (3D), then the units of the returned distance will be meters.
           |The distance is calculated in two steps.
           |First, a haversine formula over a spherical earth is used, at the average height of the two points.
-          |To account for the difference in height, Pythagoras' theorem is used, combining the first calculated spherical distance and the height difference.
+          |To account for the difference in height, Pythagoras' theorem is used, combining the previously calculated spherical distance with the height difference.
           |This formula works well for points close to the earth's surface; for instance, it is well-suited for calculating the distance of an airplane flight.
           |It is unsuitable for greater heights, however, such as when calculating the distance between two satellites.
         """.stripMargin)
@@ -179,7 +179,7 @@ class SpatialFunctionsTest extends DocumentingTest {
     section("point() - WGS 84 3D", "functions-point-wgs84-3d") {
       p("`point(longitude|x, latitude|y, height|z, crs|srid)` returns a 3D point in the _WGS 84_ CRS corresponding to the given coordinate values.")
       function("point({longitude | x, latitude | y, height | z, [, crs][, srid]})", "A 3D point in _WGS 84_.", ("A single map consisting of the following:", ""), ("longitude/x", "A numeric expression that represents the longitude/x value in decimal degrees"), ("latitude/y", "A numeric expression that represents the latitude/y value in decimal degrees"), ("height/z", "A numeric expression that represents the height/z value in meters"), ("crs", "'WGS-84-3D'"), ("srid", "4979"))
-      considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "If the `height/z` key and value is not provided, a 2D point in _WGS 84_ will be returned.", "If the coordinates are specified using `latitude` and `longitude`, the `crs` or `srid` fields are optional and inferred to be `'WGS-84-3D'` (srid=4979).", "If the coordinates are specified using `x` and `y`, then either the `crs` or `srid` fields are required if a geographic CRS is desired.")
+      considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "If the `height/z` key and value is not provided, a 2D point in the _WGS 84_ CRS will be returned.", "If the coordinates are specified using `latitude` and `longitude`, the `crs` or `srid` fields are optional and inferred to be `'WGS-84-3D'` (srid=4979).", "If the coordinates are specified using `x` and `y`, then either the `crs` or `srid` fields are required if a geographic CRS is desired.")
       query("RETURN point({longitude: 56.7, latitude: 12.78, height: 8}) AS point", ResultAssertions((r) => {
         r.toList should equal(List(Map("point" -> GeographicPoint3D(56.7, 12.78, 8, CRS.WGS843D))))
       })) {
@@ -201,7 +201,7 @@ class SpatialFunctionsTest extends DocumentingTest {
     section("point() - Cartesian 3D", "functions-point-cartesian-3d") {
       p("`point(x, y, z)` returns a 3D point in the _Cartesian_ CRS corresponding to the given coordinate values.")
       function("point({x, y, z, [, crs][, srid]})", "A 3D point in _Cartesian_.", ("A single map consisting of the following:", ""), ("x", "A numeric expression"), ("y", "A numeric expression"), ("z", "A numeric expression"), ("crs", "'cartesian-3D'"), ("srid", "9157"))
-      considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "If the `z` key and value is not provided, a 2D point in _Cartesian_ will be returned.", "The `crs` or `srid` fields are optional and only required if the desired CRS is not `Cartesian-3D`.")
+      considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "If the `z` key and value is not provided, a 2D point in the _Cartesian_ CRS will be returned.", "The `crs` or `srid` fields are optional and only required if the desired CRS is not `Cartesian-3D`.")
       query("RETURN point({x: 2.3, y: 4.5, z: 2}) AS point", ResultAssertions((r) => {
         r.toList should equal(List(Map("point" -> CartesianPoint3D(2.3, 4.5, 2, CRS.Cartesian3D))))
       })) {
