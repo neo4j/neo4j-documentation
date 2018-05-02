@@ -335,6 +335,8 @@ class TemporalTest extends DocumentingTest {
         p(
           """The following table lists the component identifiers for the unit based form:
             |
+            |[[cypher-temporal-duration-component]]
+            |
             |[options="header", width="85%"]
             ||===
             || Component identifier | Description

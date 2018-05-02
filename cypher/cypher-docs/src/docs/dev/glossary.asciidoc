@@ -68,12 +68,16 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |Operator                                                   | Category          | Description
 | <<query-operators-mathematical, %>>                      | Mathematical  | Modulo division
 | <<query-operators-mathematical, *>>                      | Mathematical  | Multiplication
+| <<query-operators-temporal, *>>                      | Temporal  | Multiplying a duration with a number
 | <<query-operators-mathematical, +>>                      | Mathematical  | Addition
 | <<query-operators-string, +>>                            | String        | Concatenation
 | <<query-operators-list, +>>                              | List          | Concatenation
+| <<query-operators-temporal, +>>                            | Temporal        | Adding two durations, or a duration and a temporal instant
 | <<query-operators-mathematical, \->>                      | Mathematical  | Subtraction or unary minus
+| <<query-operators-temporal, \->>                            | Temporal        | Subtracting a duration from a temporal instant or from another duration
 | <<query-operators-general, .>>                             | General      | Property access
 | <<query-operators-mathematical, />>                      | Mathematical  | Division
+| <<query-operators-temporal, />>                      | Temporal  | Dividing a duration by a number
 | <<query-operators-comparison, <>>                        | Comparison    | Less than
 | <<query-operators-comparison, \<\=>>                       | Comparison    | Less than or equal to
 | <<query-operators-comparison, <> >>                       | Comparison    | Inequality

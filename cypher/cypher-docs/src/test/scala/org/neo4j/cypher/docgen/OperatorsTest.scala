@@ -43,6 +43,10 @@ class OperatorsTest extends DocumentingTest {
         | ** <<syntax-using-boolean-operators-to-filter-numbers, Using boolean operators to filter numbers>>
         |* <<query-operators-string, String operators>>
         | ** <<syntax-using-a-regular-expression-to-filter-words, Using a regular expression with `=~` to filter words>>
+        |* <<query-operators-temporal, Temporal operators>>
+        | ** <<syntax-add-subtract-duration-to-temporal-instant, Adding and subtracting a _Duration_ to or from a temporal instant>>
+        | ** <<syntax-add-subtract-duration-to-duration, Adding and subtracting a _Duration_ to or from another _Duration_>>
+        | ** <<syntax-multiply-divide-duration-number, Multiplying and dividing a _Duration_ with or by a number>>
         |* <<query-operators-list, List operators>>
         | ** <<syntax-concatenating-two-lists, Concatenating two lists using `+`>>
         | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list, Using `IN` to check if a number is in a list>>
@@ -57,15 +61,16 @@ class OperatorsTest extends DocumentingTest {
         """
           |[subs=none]
           ||===
-           || <<query-operators-general, General operators>> | `DISTINCT`, `.` for property access, `[]` for dynamic property access
-           || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
-           || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
-           || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
-           || <<query-operators-boolean, Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
-           || <<query-operators-string, String operators>>   | `+` for concatenation, `=~` for regex matching
-           || <<query-operators-list, List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s)
-           ||===
-           |""")
+          || <<query-operators-general, General operators>> | `DISTINCT`, `.` for property access, `[]` for dynamic property access
+          || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
+          || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
+          || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
+          || <<query-operators-boolean, Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
+          || <<query-operators-string, String operators>>   | `+` for concatenation, `=~` for regex matching
+          || <<query-operators-temporal, Temporal operators>>   | `+` and `-` for operations between durations and temporal instants/durations, `*` and `/` for operations between durations and numbers
+          || <<query-operators-list, List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s)
+          ||===
+          |""")
     }
     section("General operators", "query-operators-general") {
       p(
@@ -160,8 +165,9 @@ class OperatorsTest extends DocumentingTest {
           |* greater than or equal to: `>=`
           |* `IS NULL`
           |* `IS NOT NULL`""".stripMargin)
-      section ("String-specific comparison operators comprise:", "query-operator-comparison-string-specific") {
-        p("""* `STARTS WITH`: perform case-sensitive prefix searching on strings
+      section("String-specific comparison operators comprise:", "query-operator-comparison-string-specific") {
+        p(
+          """* `STARTS WITH`: perform case-sensitive prefix searching on strings
             |* `ENDS WITH`: perform case-sensitive suffix searching on strings
             |* `CONTAINS`: perform case-sensitive inclusion searching in strings""")
       }
@@ -176,13 +182,14 @@ class OperatorsTest extends DocumentingTest {
       }
       p("""See <<cypher-comparison>> for more details on the behavior of comparison operators, and <<query-where-ranges>> for more examples showing how these may be used.""")
       section("Using `STARTS WITH` to filter names", "syntax-using-starts-with-to-filter-names") {
-        query("""WITH ['John', 'Mark', 'Jonathan', 'Bill'] AS somenames
+        query(
+          """WITH ['John', 'Mark', 'Jonathan', 'Bill'] AS somenames
          UNWIND somenames AS names
          WITH names AS candidate
          WHERE candidate STARTS WITH 'Jo'
          RETURN candidate""", ResultAssertions((r) => {
-          r.toList should equal(List(Map("candidate" -> "John"), Map("candidate" -> "Jonathan")))
-        })) {
+            r.toList should equal(List(Map("candidate" -> "John"), Map("candidate" -> "Jonathan")))
+          })) {
           resultTable()
         }
       }
@@ -196,7 +203,8 @@ class OperatorsTest extends DocumentingTest {
           |* disjunction: `OR`,
           |* exclusive disjunction: `XOR`
           |* negation: `NOT`""".stripMargin)
-      p("""Here is the truth table for `AND`, `OR`, `XOR` and `NOT`.
+      p(
+        """Here is the truth table for `AND`, `OR`, `XOR` and `NOT`.
           |
           |[options="header", cols="^,^,^,^,^,^", width="85%"]
           ||===
@@ -244,8 +252,93 @@ class OperatorsTest extends DocumentingTest {
           resultTable()
         }
       }
-      p("""Further information and examples regarding the use of regular expressions in filtering can be found in <<query-where-regex>>.
+      p(
+        """Further information and examples regarding the use of regular expressions in filtering can be found in <<query-where-regex>>.
           |In addition, refer to <<query-operator-comparison-string-specific>> for details on string-specific comparison operators.""")
+    }
+    section("Temporal operators", "query-operators-temporal") {
+      p(
+        """Temporal operators comprise:
+          |
+          |* adding a <<cypher-temporal-durations, _Duration_>> to either a <<cypher-temporal-instants, temporal instant>> or another _Duration_: `+`
+          |* subtracting a _Duration_ from either a temporal instant or another _Duration_: `-`
+          |* multiplying a _Duration_ with a number: `*`
+          |* dividing a _Duration_ by a number: `/`
+          |
+          |The following table shows -- for each combination of operation and operand type -- the type of the value returned from the application of each temporal operator:
+          |
+          |[options="header"]
+          ||===
+          || Operator | Left-hand operand | Right-hand operand | Type of result
+          || <<syntax-add-subtract-duration-to-temporal-instant, `+`>>      | _Duration_/Temporal instant  | Temporal instant/_Duration_ | The type of the temporal instant
+          || <<syntax-add-subtract-duration-to-temporal-instant, `-`>>      | Temporal instant  | _Duration_ | The type of the temporal instant
+          || <<syntax-add-subtract-duration-to-duration, `+`>>      | _Duration_        | _Duration_ | _Duration_
+          || <<syntax-add-subtract-duration-to-duration, `-`>>      | _Duration_        | _Duration_ | _Duration_
+          || <<syntax-multiply-divide-duration-number, `*`>>      | _Duration_        | <<property-types, Number>> | _Duration_
+          || <<syntax-multiply-divide-duration-number, `/`>>      | _Duration_        | <<property-types, Number>> | _Duration_
+          ||===
+          |
+        """)
+      section("Adding and subtracting a _Duration_ to or from a temporal instant", "syntax-add-subtract-duration-to-temporal-instant") {
+        query(
+          """WITH datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 1, timezone: '+01:00'}) AS aDateTime
+            |UNWIND [duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 2}),
+            |   duration({months:1, days: -14, hours: 16, minutes: -12, seconds: 70}),
+            |   duration({years: 12.5, months: 5.5, days: 14.5, hours: 16.5, minutes: 12.5, seconds: 70.5, nanoseconds: 3})] AS aDuration
+            |RETURN aDateTime + aDuration, aDateTime - aDuration""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+        p(
+          """<<cypher-temporal-duration-component, Components of a _Duration_>> that do not apply to the temporal instant are ignored.
+            |For example, when adding a _Duration_ to a _Date_, the _hours_, _minutes_, _seconds_ and _milliseconds_ of the _Duration_ are ignored (_Time_ behaves in an analogous manner):
+          """.stripMargin)
+        query(
+          """WITH date({year:1984, month:10, day:11}) AS aDate
+            |UNWIND [duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 2}),
+            |   duration({months:1, days: -14, hours: 16, minutes: -12, seconds: 70}),
+            |   duration({years: 12.5, months: 5.5, days: 14.5, hours: 16.5, minutes: 12.5, seconds: 70.5, nanoseconds: 3})] AS aDuration
+            |RETURN aDate + aDuration, aDate - aDuration""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+        p(
+          """Adding two durations to a temporal instant is not an associative operation.
+            |This is because non-existing dates are truncated to the nearest existing date:""".stripMargin)
+        query(
+          """RETURN (date("2011-01-31") + duration("P1M")) + duration("P12M") AS date1,
+            |   date("2011-01-31") + (duration("P1M") + duration("P12M")) AS date2
+          """.stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO date1: date({year:2012, month:2, day:28}); date2: date({year:2012, month:2, day:29})
+          })) {
+          resultTable()
+        }
+      }
+      section("Adding and subtracting a _Duration_ to or from another _Duration_", "syntax-add-subtract-duration-to-duration") {
+        query(
+          """WITH [duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 1}),
+            |   duration({months:1, days: -14, hours: 16, minutes: -12, seconds: 70})] AS list
+            |UNWIND list AS duration1
+            |UNWIND list AS duration2
+            |RETURN duration1 + duration2, duration1 - duration2""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+      }
+      section("Multiplying and dividing a _Duration_ with or by a number", "syntax-multiply-divide-duration-number") {
+        p("""These operations are interpreted simply as component-wise operations with overflow to smaller units based on an average length of units in the case of division (and multiplication with fractions).""".stripMargin)
+        query(
+          """WITH duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 1}) AS aDuration
+            |UNWIND [1, 2, 0.5] as aNumber
+            |RETURN aDuration * aNumber, aDuration/aNumber""".stripMargin, ResultAssertions((r) => {
+            //CYPHER_TODO
+          })) {
+          resultTable()
+        }
+      }
     }
     section("List operators", "query-operators-list") {
       p(
