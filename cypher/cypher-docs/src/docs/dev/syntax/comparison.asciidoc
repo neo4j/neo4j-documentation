@@ -36,6 +36,24 @@ The following points give some details on how the comparison is performed.
 For two points `a` and `b` within the same CRS, `a` is considered to be greater than `b` if `a.x > b.x` and `a.y > b.y` (and `a.z > b.z` for 3D points).
 `a` is considered less than `b` if `a.x < b.x` and `a.y < b.y` (and `a.z < b.z` for 3D points).
 If none if the above is true, the points are considered incomparable and any comparison operator between them will return `null`.
+* *Comparison* of temporal values:
+ ** <<cypher-temporal-instants, Temporal instant values>> are comparable within the same type.
+ An instant is considered less than another instant if it occurs before that instant in time, and it is considered greater than if it occurs after.
+ ** Instant values that occur at the same point in time -- but that have a different time zone -- are not considered equal, and must therefore be ordered in some predictable way.
+ Cypher prescribes that, after the primary order of point in time, instant values be ordered by effective time zone offset, from west (negative offset from UTC) to east (positive offset from UTC).
+ This has the effect that times that represent the same point in time will be ordered with the time with the earliest local time first.
+ If two instant values represent the same point in time, and have the same time zone offset, but a different named time zone (this is possible for _DateTime_ only, since _Time_ only has an offset), these values are not considered equal, and ordered by the time zone identifier, alphabetically, as its third ordering component.
+ ** <<cypher-temporal-durations, _Duration_>> values cannot be compared, since the length of a _day_, _month_ or _year_ is not known without knowing which _day_, _month_ or _year_ it is.
+ Since _Duration_ values are not comparable, the result of applying a comparison operator between two _Duration_ values is `null`.
+ If the type, point in time, offset, and time zone name are all equal, then the values are equal, and any difference in order is impossible to observe.
+* *Ordering* of temporal values:
+ ** `ORDER BY` requires all values to be orderable.
+ Comparable values should be ordered in the same order as implied by their comparison order.
+ Temporal instant values are first ordered by type, and then by comparison order within the type.
+ Since no complete comparison order can be defined for _Duration_ values, we define an order for `ORDER BY` specifically for _Duration_:
+ *** _Duration_ values are ordered by normalising all components as if all years were `365.2425` days long (`PT8765H49M12S`), all months were `30.436875` (`1/12` year) days long (`PT730H29M06S`), and all days were `24` hours long footnote:[The `365.2425` days per year comes from the frequency of leap years.
+ A leap year occurs on a year with an ordinal number divisible by `4`, that is not divisible by `100`, unless it divisible by `400`.
+ This means that over `400` years there are `((365 * 4 + 1) * 25 - 1) * 4 + 1 = 146097` days, which means an average of `365.2425` days per year.].
 * Comparing for ordering when one argument is `null` (e.g. `null < 3` is `null`).
 * It is an error to compare other types of values with each other for ordering.
 
