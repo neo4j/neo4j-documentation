@@ -51,11 +51,15 @@ This section describes the syntax of the Cypher query language.
 * <<cypher-temporal, Temporal (Date/Time) values>>
  ** <<cypher-temporal-introduction, Introduction>>
  ** <<cypher-temporal-timezones, Time zones>>
- ** <<cypher-temporal-specifying-temporal-instants, Specifying temporal instants>>
-  *** <<cypher-temporal-specify-date, Specifying dates>>
-  *** <<cypher-temporal-specify-time, Specifying times>>
-  *** <<cypher-temporal-specify-time-zone, Specifying time zones>>
- ** <<cypher-temporal-specifying-durations, Specifying durations>>
+ ** <<cypher-temporal-instants, Temporal instants>>
+  *** <<cypher-temporal-specifying-temporal-instants, Specifying temporal instants>>
+   **** <<cypher-temporal-specify-date, Specifying dates>>
+   **** <<cypher-temporal-specify-time, Specifying times>>
+   **** <<cypher-temporal-specify-time-zone, Specifying time zones>>
+  *** <<cypher-temporal-accessing-components-temporal-instants, Accessing components of temporal instants>>
+ ** <<cypher-temporal-durations, Durations>>
+  *** <<cypher-temporal-specifying-durations, Specifying durations>>
+  *** <<cypher-temporal-accessing-components-durations, Accessing components of durations>>
 * <<cypher-lists, Lists>>
  ** <<cypher-lists-general, Lists in general>>
  ** <<cypher-list-comprehension, List comprehension>>

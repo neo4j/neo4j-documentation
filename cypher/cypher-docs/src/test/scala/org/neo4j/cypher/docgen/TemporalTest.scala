@@ -40,6 +40,10 @@ class TemporalTest extends DocumentingTest {
         | ** <<cypher-temporal-specifying-durations, Specifying durations>>
         | ** <<cypher-temporal-accessing-components-durations, Accessing components of durations>>
       """.stripMargin)
+    note{
+      p("""Refer to <<query-functions-temporal>> for information regarding temporal _functions_ allowing for the creation and manipulation of temporal values.""")
+      p("""Refer to <<query-operators-temporal>> for information regarding temporal _operators_.""")
+    }
     section("Introduction", "cypher-temporal-introduction") {
       p(
         """The following table depicts the temporal value types and supported components:
