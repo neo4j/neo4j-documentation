@@ -19,21 +19,11 @@ These fall into several categories which will be described in detail in the foll
 
 Property types comprise:
 
-* _Number_, an abstract type, which has the following subtypes:
-   ** Integer
-   ** Float
+* _Number_, an abstract type, which has the subtypes Integer and Float
 * String
 * Boolean
-* _Spatial types_:
-   ** Point
-* _Temporal types_:
-   ** Date
-   ** Time
-   ** LocalTime
-   ** DateTime
-   ** LocalDateTime
-   ** Duration
-
+* The spatial type Point
+* Temporal types: Date, Time, LocalTime, DateTime, LocalDateTime and Duration
 
 NOTE: The adjective 'numeric' -- when used in the context of describing  Cypher functions or expressions -- indicates that any type of Number applies (Integer or Float).
 
