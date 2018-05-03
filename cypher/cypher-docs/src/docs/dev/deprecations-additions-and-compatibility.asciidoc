@@ -135,7 +135,6 @@ Neo4j 3.4 supports the following versions of the Cypher language:
 
 * Neo4j Cypher 3.4
 * Neo4j Cypher 3.3
-* Neo4j Cypher 3.2
 * Neo4j Cypher 2.3
 
 [TIP]
