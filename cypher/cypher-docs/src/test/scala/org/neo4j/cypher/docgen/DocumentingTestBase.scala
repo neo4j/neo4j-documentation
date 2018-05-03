@@ -27,10 +27,10 @@ import java.util.concurrent.TimeUnit
 import org.junit.{After, Before}
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
-import org.neo4j.cypher.internal.compiler.v3_4.prettifier.Prettifier
+import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
 import org.neo4j.cypher.internal.runtime.{InternalExecutionResult, RuntimeJavaValueConverter, isGraphKernelResultValue}
-import org.neo4j.cypher.internal.util.v3_4.Eagerly
+import org.neo4j.cypher.internal.util.v3_5.Eagerly
 import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult}
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
 import org.neo4j.doc.tools.AsciiDocGenerator

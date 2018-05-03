@@ -19,7 +19,7 @@
  */
 package org.neo4j.doc.cypherdoc;
 
-import org.neo4j.cypher.internal.compiler.v3_4.prettifier.Prettifier;
+import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier;
 import org.neo4j.graphdb.GraphDatabaseService;
 
 import java.io.File;
