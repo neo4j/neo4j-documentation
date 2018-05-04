@@ -93,8 +93,7 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
       section("Controlling which clock to use", "functions-temporal-clock-overview") {
         p(
-          """The functions which create temporal instant values based on the current instant use the _default_ clock as standard.
-            |**CYPHER_TODO: what is the default clock???**
+          """The functions which create temporal instant values based on the current instant use the `statement` clock as default.
             |However, there are three different clocks available for more fine-grained control:
             |
             |* `transaction`: The same instant is produced for each invocation within the same transaction.

@@ -76,7 +76,8 @@ class TemporalTest extends DocumentingTest {
       p(
         """Time zones are represented in one of two ways: either (i) as an offset from UTC, or (ii) as a logical identifier of a _named time zone_ (these are based on the https://www.iana.org/time-zones[IANA time zone database]).
           |In either case the time is stored as UTC internally, and the time zone offset is only applied when the time is presented.
-          |This means that temporal instants can be ordered without taking time zone into account.""".stripMargin)
+          |This means that temporal instants can be ordered without taking time zone into account.
+          |If, however, two times are identical in UTC, then they are ordered by timezone.""".stripMargin)
       p(
         """When creating a time using a named time zone, the offset from UTC is computed from the rules in the time zone database to create a time instant in UTC, and to ensure the named time zone is a valid one.
         """.stripMargin)
