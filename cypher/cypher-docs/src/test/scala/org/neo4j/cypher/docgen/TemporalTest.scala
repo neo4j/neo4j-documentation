@@ -35,12 +35,15 @@ class TemporalTest extends DocumentingTest {
         |  *** <<cypher-temporal-specify-date, Specifying dates>>
         |  *** <<cypher-temporal-specify-time, Specifying times>>
         |  *** <<cypher-temporal-specify-time-zone, Specifying time zones>>
+        |  *** <<cypher-temporal-specify-instant-examples, Examples>>
         | ** <<cypher-temporal-accessing-components-temporal-instants, Accessing components of temporal instants>>
         |* <<cypher-temporal-durations, Durations>>
         | ** <<cypher-temporal-specifying-durations, Specifying durations>>
+        |  *** <<cypher-temporal-specify-duration-examples, Examples>>
         | ** <<cypher-temporal-accessing-components-durations, Accessing components of durations>>
+        |* <<cypher-temporal-examples, Examples>>
       """.stripMargin)
-    note{
+    note {
       p("""Refer to <<query-functions-temporal>> for information regarding temporal _functions_ allowing for the creation and manipulation of temporal values.""")
       p("""Refer to <<query-operators-temporal>> for information regarding temporal _operators_.""")
       p("""Refer to <<cypher-ordering>> for information regarding the comparison and ordering of temporal values.""")
@@ -130,22 +133,22 @@ class TemporalTest extends DocumentingTest {
               ||===
               |
               |""")
-            p(
-              """
-                |[[cypher-temporal-year]]
-                |
-                |If the year is before `0000` or after `9999`, the following additional rules apply:
-                |
-                |* **`-`** must prefix any year before `0000`
-                |* **`+`** must prefix any year after `9999`
-                |* The year must be separated from the next component with the following characters:
-                | ** **`-`** if the next component is month or day of the year
-                | ** Either **`-`** or **`W`** if the next component is week of the year
-                | ** **`Q`** if the next component is quarter of the year
-                |
-                |If the year component is prefixed with either `-` or `+` (and is separated from the next component), `Year` is allowed to contain any number of digits.
-                |For all other cases -- i.e. the year is between `0000` and `9999` (inclusive) - `Year` must have exactly four digits (the year component is interpreted as a year of the Common Era (CE)).
-              """.stripMargin)
+          p(
+            """
+              |[[cypher-temporal-year]]
+              |
+              |If the year is before `0000` or after `9999`, the following additional rules apply:
+              |
+              |* **`-`** must prefix any year before `0000`
+              |* **`+`** must prefix any year after `9999`
+              |* The year must be separated from the next component with the following characters:
+              | ** **`-`** if the next component is month or day of the year
+              | ** Either **`-`** or **`W`** if the next component is week of the year
+              | ** **`Q`** if the next component is quarter of the year
+              |
+              |If the year component is prefixed with either `-` or `+` (and is separated from the next component), `Year` is allowed to contain any number of digits.
+              |For all other cases -- i.e. the year is between `0000` and `9999` (inclusive) - `Year` must have exactly four digits (the year component is interpreted as a year of the Common Era (CE)).
+            """.stripMargin)
           p(
             """The following formats are supported for specifying dates:
               |
@@ -265,6 +268,47 @@ class TemporalTest extends DocumentingTest {
               |^2^Supported for _Time_.
               |""")
         }
+        section("Examples", "cypher-temporal-specify-instant-examples") {
+          p(
+            """We show below examples of parsing temporal instant values using various formats.
+              |For more details, refer to <<functions-temporal-create-overview>>.
+            """.stripMargin)
+          p("Parsing a _DateTime_ using the _calendar date_ format:")
+          query(
+            """RETURN datetime('2015-06-24T12:50:35.556+0100')""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+          p("Parsing a _LocalDateTime_ using the _ordinal date_ format:")
+          query(
+            """RETURN localdatetime('2015185T19:32:24')""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+          p("Parsing a _Date_ using the _week date_ format:")
+          query(
+            """RETURN  date('+2015-W13-4')""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+          p("Parsing a _Time_:")
+          query(
+            """RETURN time('125035.556+0100')""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+          p("Parsing a _LocalTime_:")
+          query(
+            """RETURN localtime('12:50:35.556')""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+        }
       }
       section("Accessing components of temporal instants", "cypher-temporal-accessing-components-temporal-instants") {
         p("Components of temporal instant values can be accessed as properties.")
@@ -352,6 +396,40 @@ class TemporalTest extends DocumentingTest {
             ||===
             |
             |""")
+        section("Examples", "cypher-temporal-specify-duration-examples") {
+          p(
+            """We show below examples of parsing _Duration_ values.
+              |For more details, refer to <<functions-duration-create-string>>.
+            """.stripMargin)
+          p("Return a _Duration_ of `14` _days_, `16` _hours_ and `12` _minutes_:")
+          query(
+            """RETURN duration('P14DT16H12M')""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+          p("Return a _Duration_ of `5` _months_, `1` _day_ and `12` _hours_:")
+          query(
+            """RETURN duration('P5M1.5D')""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+          p("Return a _Duration_ of `45` seconds:")
+          query(
+            """RETURN duration('PT0.75M')""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+          p("Return a _Duration_ of `2` _weeks_, `3` _days_ and `12` _hours_:")
+          query(
+            """RETURN duration('P2.5W')""".stripMargin, ResultAssertions((r) => {
+              //CYPHER_TODO
+            })) {
+            resultTable()
+          }
+        }
       }
       section("Accessing components of durations", "cypher-temporal-accessing-components-durations") {
         p(
@@ -433,7 +511,96 @@ class TemporalTest extends DocumentingTest {
           resultTable()
         }
       }
-
+    }
+    section("Examples", "cypher-temporal-examples") {
+      p(
+        """We show in this section queries illustrating the use of some of the temporal functions and operators.
+          |Refer to <<query-functions-temporal>> and <<query-operators-temporal>> for more details.
+        """.stripMargin)
+      p("Create a _Duration_ representing `1.5` _days_:")
+      query(
+        """RETURN duration({days: 1, hours: 12})""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("Computing the _Duration_ between two temporal instants")
+      query(
+        """RETURN duration.between(date('1984-10-11'), date('2015-06-24'))""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO //should be /duration({years:30, months:8, days:13})
+        })) {
+        resultTable()
+      }
+      p("Compute the number of days between two _Date_ values:")
+      query(
+        """RETURN duration.inDays(date('2014-10-11'), date('2015-08-06'))""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("Get the _Date_ of `Thursday` in the current week:")
+      query(
+        """RETURN date.truncate('week', date(), {dayOfWeek: 4})""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("Get the last _day_ of the next month:")
+      query(
+        """RETURN date.truncate('month', date() + duration('P2M')) - duration('P1D')""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("Adding a _Duration_ to a _Date_:")
+      query(
+        """RETURN time('13:42:19') + duration({days: 1, hours: 12})""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO //should be time({hour:1, minute:42, second:19})
+        })) {
+        resultTable()
+      }
+      p("Adding two _Duration_ values:")
+      query(
+        """RETURN duration({days: 2, hours: 7}) + duration({months: 1, hours: 18})""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO should be duration({months:1, days:2, hours:25})
+        })) {
+        resultTable()
+      }
+      p("Multiplying a _Duration_ by a number:")
+      query(
+        """RETURN duration({hours: 5, minutes: 21}) * 14""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO //should be duration({hours:70, minutes:294})
+        })) {
+        resultTable()
+      }
+      p("Dividing a _Duration_ by a number:")
+      query(
+        """RETURN duration({hours: 3, minutes: 16}) / 2""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO //should be duration({hours:1, minutes:38})
+        })) {
+        resultTable()
+      }
+      p("Examine whether two instants are less than one day apart:")
+      query(
+        """WITH datetime('2015-07-21T21:40:32.142+0100') AS date1, datetime('2015-07-21T17:12:56.333+0100') AS date2
+          |RETURN
+          |   CASE WHEN date1 < date2
+          |      THEN date1 + duration("P1D") > date2
+          |   ELSE
+          |      date2 + duration("P1D") > date1
+          |   END
+          |""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
+      p("Return the abbreviated name of the current month:")
+      query(
+        """RETURN ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date().month-1] AS month""".stripMargin, ResultAssertions((r) => {
+          //CYPHER_TODO
+        })) {
+        resultTable()
+      }
     }
   }.build()
 }

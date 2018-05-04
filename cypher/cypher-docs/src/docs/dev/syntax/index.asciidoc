@@ -57,10 +57,13 @@ This section describes the syntax of the Cypher query language.
    **** <<cypher-temporal-specify-date, Specifying dates>>
    **** <<cypher-temporal-specify-time, Specifying times>>
    **** <<cypher-temporal-specify-time-zone, Specifying time zones>>
+   **** <<cypher-temporal-specify-instant-examples, Examples>>
   *** <<cypher-temporal-accessing-components-temporal-instants, Accessing components of temporal instants>>
  ** <<cypher-temporal-durations, Durations>>
   *** <<cypher-temporal-specifying-durations, Specifying durations>>
+   **** <<cypher-temporal-specify-duration-examples, Examples>>
   *** <<cypher-temporal-accessing-components-durations, Accessing components of durations>>
+ ** <<cypher-temporal-examples, Examples>>
 * <<cypher-spatial, Spatial values>>
  ** <<cypher-spatial-introduction, Introduction>>
  ** <<cypher-spatial-crs, Coordinate Reference Systems>>

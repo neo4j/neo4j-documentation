@@ -63,7 +63,6 @@ The following points give some details on how the comparison is performed.
  A leap year occurs on a year with an ordinal number divisible by `4`, that is not divisible by `100`, unless it divisible by `400`.
  This means that over `400` years there are `((365 * 4 + 1) * 25 - 1) * 4 + 1 = 146097` days, which means an average of `365.2425` days per year.].
 * Comparing for ordering when one argument is `null` (e.g. `null < 3` is `null`).
-* It is an error to compare other types of values with each other for ordering.
 
 
 [[cypher-operations-chaining]]
