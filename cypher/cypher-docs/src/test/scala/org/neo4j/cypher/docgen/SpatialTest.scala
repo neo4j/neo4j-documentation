@@ -251,11 +251,13 @@ class SpatialTest extends DocumentingTest {
     section("Spatial index", "cypher-spatial-index") {
       p(
         """
-          |If there is a <<schema-index-create-a-single-property-index,schema indexe>> on a particular `:Label(property)` combination, and a spatial point
-          |is assigned that property on a node with that label, the node will be indexed in a spatial index. The type of index is a space filling curve in
-          |2D or 3D over an underlying generalized B+Tree. This allows for both <<schema-index-use-a-single-property-index-with-where-using-equality, equality>>
-          |and <<schema-index-use-index-with-where-using-range-comparisons, range>> queries using exactly the same syntax and behaviour as for other types.
-          |In addition queries using the `distance` function can, under the right conditions, also use the index, as described in the section
+          |If there is a <<schema-index-create-a-single-property-index,schema index>> on a particular `:Label(property)` combination, and a spatial point
+          |is assigned to that property on a node with that label, the node will be indexed in a spatial index. For spatial indexing, Neo4j use
+          |space filling curves in 2D or 3D over an underlying generalized B+Tree. Points will be stored in up to four different trees, one for each of the
+          |<<cypher-spatial-crs, four coordinate reference systems>>.
+          |This allows for both <<schema-index-use-a-single-property-index-with-where-using-equality, equality>>
+          |and <<schema-index-use-index-with-where-using-range-comparisons, range>> queries using exactly the same syntax and behaviour as for other property types.
+          |In addition, queries using the `distance` function can, under the right conditions, also use the index, as described in the section
           |<<schema-index-use-index-when-executing-a-spatial-distance-search, 'Use index when executing a spatial distance search'>>
         """.stripMargin)
     }

@@ -288,7 +288,7 @@ class OperatorsTest extends DocumentingTest {
             |UNWIND [duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 2}),
             |   duration({months:1, days: -14, hours: 16, minutes: -12, seconds: 70}),
             |   duration({years: 12.5, months: 5.5, days: 14.5, hours: 16.5, minutes: 12.5, seconds: 70.5, nanoseconds: 3})] AS aDuration
-            |RETURN aDateTime + aDuration, aDateTime - aDuration""".stripMargin, ResultAssertions((r) => {
+            |RETURN aDateTime, aDuration, aDateTime + aDuration, aDateTime - aDuration""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
           })) {
           resultTable()
@@ -302,7 +302,7 @@ class OperatorsTest extends DocumentingTest {
             |UNWIND [duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 2}),
             |   duration({months:1, days: -14, hours: 16, minutes: -12, seconds: 70}),
             |   duration({years: 12.5, months: 5.5, days: 14.5, hours: 16.5, minutes: 12.5, seconds: 70.5, nanoseconds: 3})] AS aDuration
-            |RETURN aDate + aDuration, aDate - aDuration""".stripMargin, ResultAssertions((r) => {
+            |RETURN aDate, aDuration, aDate + aDuration, aDate - aDuration""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
           })) {
           resultTable()
@@ -325,7 +325,7 @@ class OperatorsTest extends DocumentingTest {
             |   duration({months:1, days: -14, hours: 16, minutes: -12, seconds: 70})] AS list
             |UNWIND list AS duration1
             |UNWIND list AS duration2
-            |RETURN duration1 + duration2, duration1 - duration2""".stripMargin, ResultAssertions((r) => {
+            |RETURN duration1, duration2, duration1 + duration2, duration1 - duration2""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
           })) {
           resultTable()
@@ -336,7 +336,7 @@ class OperatorsTest extends DocumentingTest {
         query(
           """WITH duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 1}) AS aDuration
             |UNWIND [1, 2, 0.5] as aNumber
-            |RETURN aDuration * aNumber, aDuration/aNumber""".stripMargin, ResultAssertions((r) => {
+            |RETURN aDuration, aNumber, aDuration * aNumber, aDuration/aNumber""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
           })) {
           resultTable()
