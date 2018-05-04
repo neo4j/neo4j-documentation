@@ -179,7 +179,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     }
     section("randomUUID()", "functions-randomuuid") {
       p(
-        """`randomUUID()` returns a randomly-generated UUID (Universally Unique Identifier, which is also known as a GUID, or _Globally Unique Identifier_).
+        """`randomUUID()` returns a randomly-generated Universally Unique Identifier (UUID), also known as a Globally Unique Identifier (GUID).
           |This is a 128-bit value with strong guarantees of uniqueness.
         """.stripMargin)
       function("randomUUID()", "A String.")

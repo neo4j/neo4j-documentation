@@ -24,6 +24,7 @@ Cypher includes data definition language (DDL) statements for manipulating the s
  ** <<schema-index-use-index-with-in,Use index with `IN`>>
  ** <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
  ** <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>
+ ** <<schema-index-use-index-when-executing-a-spatial-distance-search, Use index when executing a spatial distance search>>
  ** <<explicit-indexes-procedures, Use built-in procedures to manage and use explicit indexes>>
 * <<query-constraints, Constraints>>
  ** <<query-constraint-unique-nodes, Unique node property constraints>>

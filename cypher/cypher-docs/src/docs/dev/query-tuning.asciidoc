@@ -53,10 +53,9 @@ Here we detail the available versions:
 [options="header"]
 |===
 | Query option | Description | Default?
-| `2.3` | This will force the query to use Neo4j Cypher 2.3.  |
-| `3.1` | This will force the query to use Neo4j Cypher 3.1. |
-| `3.2` | This will force the query to use Neo4j Cypher 3.2. |
-| `3.3` | This will force the query to use Neo4j Cypher 3.3. As this is the default version, it is not necessary to use this option explicitly. | X
+| `2.3` | This will force the query to use Neo4j Cypher 2.3. |
+| `3.3` | This will force the query to use Neo4j Cypher 3.3. |
+| `3.4` | This will force the query to use Neo4j Cypher 3.4. As this is the default version, it is not necessary to use this option explicitly. | X
 |===
 
 
@@ -120,9 +119,9 @@ In Enterprise Edition, the query execution engine's fallback mechanism is to try
 [options="header"]
 |===
 | Option | Description | Default?
-| `runtime=interpreted` | This will force the query execution engine to use the interpreted runtime. | This is the default option for some queries in Enterprise Edition, and the only option for all queries in Community Edition (so it is not necessary to use this option in Community Edition).
-| `runtime=slotted` | This will cause the query execution engine to use the slotted runtime. | This is the default option for some queries in Enterprise Edition only.
-| `runtime=compiled` | This will cause the query execution engine to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the engine will fall back to the slotted runtime. | This is the default option for some queries in Enterprise Edition only.
+| `runtime=interpreted` | This will force the query execution engine to use the interpreted runtime. | This is not used in Enterprise Edition unless explicitly asked for. It is the only option for all queries in Community Edition--it is not necessary to specify this option in Community Edition.
+| `runtime=slotted` | This will cause the query execution engine to use the slotted runtime. | This is the default option for all queries which are not supported by _runtime=compiled_ in Enterprise Edition.
+| `runtime=compiled` | This will cause the query execution engine to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the engine will fall back to the slotted runtime. | This is the default option for some queries in Enterprise Edition.
 |===
 
 
