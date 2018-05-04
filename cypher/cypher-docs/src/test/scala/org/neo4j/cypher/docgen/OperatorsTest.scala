@@ -271,12 +271,14 @@ class OperatorsTest extends DocumentingTest {
           |[options="header"]
           ||===
           || Operator | Left-hand operand | Right-hand operand | Type of result
-          || <<syntax-add-subtract-duration-to-temporal-instant, `+`>>      | _Duration_/Temporal instant  | Temporal instant/_Duration_ | The type of the temporal instant
-          || <<syntax-add-subtract-duration-to-temporal-instant, `-`>>      | Temporal instant  | _Duration_ | The type of the temporal instant
-          || <<syntax-add-subtract-duration-to-duration, `+`>>      | _Duration_        | _Duration_ | _Duration_
-          || <<syntax-add-subtract-duration-to-duration, `-`>>      | _Duration_        | _Duration_ | _Duration_
-          || <<syntax-multiply-divide-duration-number, `*`>>      | _Duration_        | <<property-types, Number>> | _Duration_
-          || <<syntax-multiply-divide-duration-number, `/`>>      | _Duration_        | <<property-types, Number>> | _Duration_
+          || <<syntax-add-subtract-duration-to-temporal-instant, `+`>> | Temporal instant           | _Duration_                 | The type of the temporal instant
+          || <<syntax-add-subtract-duration-to-temporal-instant, `+`>> | _Duration_                 | Temporal instant           | The type of the temporal instant
+          || <<syntax-add-subtract-duration-to-temporal-instant, `-`>> | Temporal instant           | _Duration_                 | The type of the temporal instant
+          || <<syntax-add-subtract-duration-to-duration, `+`>>         | _Duration_                 | _Duration_                 | _Duration_
+          || <<syntax-add-subtract-duration-to-duration, `-`>>         | _Duration_                 | _Duration_                 | _Duration_
+          || <<syntax-multiply-divide-duration-number, `*`>>           | _Duration_                 | <<property-types, Number>> | _Duration_
+          || <<syntax-multiply-divide-duration-number, `*`>>           | <<property-types, Number>> | _Duration_                 | _Duration_
+          || <<syntax-multiply-divide-duration-number, `/`>>           | _Duration_                 | <<property-types, Number>> | _Duration_
           ||===
           |
         """)

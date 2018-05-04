@@ -90,11 +90,11 @@ class SpatialFunctionsTest extends DocumentingTest {
           |* If the points are in the _Cartesian_ CRS (2D or 3D), then the units of the returned distance will be the same as the units of the points, calculated using Pythagoras' theorem.
           |* If the points are in the _WGS-84_ CRS (2D), then the units of the returned distance will be meters, based on the haversine formula over a spherical earth approximation.
           |* If the points are in the _WGS-84_ CRS (3D), then the units of the returned distance will be meters.
-          |The distance is calculated in two steps.
-          |First, a haversine formula over a spherical earth is used, at the average height of the two points.
-          |To account for the difference in height, Pythagoras' theorem is used, combining the previously calculated spherical distance with the height difference.
-          |This formula works well for points close to the earth's surface; for instance, it is well-suited for calculating the distance of an airplane flight.
-          |It is unsuitable for greater heights, however, such as when calculating the distance between two satellites.
+          | ** The distance is calculated in two steps.
+          |  *** First, a haversine formula over a spherical earth is used, at the average height of the two points.
+          |  *** To account for the difference in height, Pythagoras' theorem is used, combining the previously calculated spherical distance with the height difference.
+          | ** This formula works well for points close to the earth's surface; for instance, it is well-suited for calculating the distance of an airplane flight.
+          |It is less suitable for greater heights, however, such as when calculating the distance between two satellites.
         """.stripMargin)
       function("distance(point1, point2)", "A Float.", ("point1", "A point in either a geographic or cartesian coordinate system."), ("point2", "A point in the same CRS as 'point1'."))
       considerations("`distance(null, null)`, `distance(null, point2)` and `distance(point1, null)` all return `null`.", "Attempting to use points with different Coordinate Reference Systems (such as WGS 84 2D and WGS 84 3D) will return `null`.")

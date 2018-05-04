@@ -32,10 +32,17 @@ The following points give some details on how the comparison is performed.
 * The special value `java.lang.Double.NaN` is regarded as being larger than all other numbers.
 * String values are compared for ordering using lexicographic order (e.g. `"x" < "xy"`).
 * Boolean values are compared for ordering such that `false < true`.
-* Point values can only be compared within the same Coordinate Reference System (CRS) -- otherwise, the result will be `null`.
-For two points `a` and `b` within the same CRS, `a` is considered to be greater than `b` if `a.x > b.x` and `a.y > b.y` (and `a.z > b.z` for 3D points).
-`a` is considered less than `b` if `a.x < b.x` and `a.y < b.y` (and `a.z < b.z` for 3D points).
-If none if the above is true, the points are considered incomparable and any comparison operator between them will return `null`.
+* *Comparison* of spatial values:
+ ** Point values can only be compared within the same Coordinate Reference System (CRS) -- otherwise, the result will be `null`.
+ ** For two points `a` and `b` within the same CRS, `a` is considered to be greater than `b` if `a.x > b.x` and `a.y > b.y` (and `a.z > b.z` for 3D points).
+ ** `a` is considered less than `b` if `a.x < b.x` and `a.y < b.y` (and `a.z < b.z` for 3D points).
+ ** If none if the above is true, the points are considered incomparable and any comparison operator between them will return `null`.
+* *Ordering* of spatial values:
+ ** `ORDER BY` requires all values to be orderable.
+ ** Points are ordered after arrays and before temporal types.
+ ** Points of different CRS are ordered by the CRS code (the value of SRID field). For the currently supported set of <<cypher-spatial-crs, Coordinate Reference Systems>> this means the order: 4326, 4979, 7302, 9157
+ ** Points of the same CRS are ordered by each coordinate value in turn, `x` first, then `y` and finally `z`.
+ ** Note that this order is different to the order returned by the spatial index, which will be the order of the space filling curve.
 * *Comparison* of temporal values:
  ** <<cypher-temporal-instants, Temporal instant values>> are comparable within the same type.
  An instant is considered less than another instant if it occurs before that instant in time, and it is considered greater than if it occurs after.
@@ -48,9 +55,10 @@ If none if the above is true, the points are considered incomparable and any com
  If the type, point in time, offset, and time zone name are all equal, then the values are equal, and any difference in order is impossible to observe.
 * *Ordering* of temporal values:
  ** `ORDER BY` requires all values to be orderable.
- Comparable values should be ordered in the same order as implied by their comparison order.
- Temporal instant values are first ordered by type, and then by comparison order within the type.
- Since no complete comparison order can be defined for _Duration_ values, we define an order for `ORDER BY` specifically for _Duration_:
+ ** Temporal instances are ordered after spatial instances and before strings.
+ ** Comparable values should be ordered in the same order as implied by their comparison order.
+ ** Temporal instant values are first ordered by type, and then by comparison order within the type.
+ ** Since no complete comparison order can be defined for _Duration_ values, we define an order for `ORDER BY` specifically for _Duration_:
  *** _Duration_ values are ordered by normalising all components as if all years were `365.2425` days long (`PT8765H49M12S`), all months were `30.436875` (`1/12` year) days long (`PT730H29M06S`), and all days were `24` hours long footnote:[The `365.2425` days per year comes from the frequency of leap years.
  A leap year occurs on a year with an ordinal number divisible by `4`, that is not divisible by `100`, unless it divisible by `400`.
  This means that over `400` years there are `((365 * 4 + 1) * 25 - 1) * 4 + 1 = 146097` days, which means an average of `365.2425` days per year.].

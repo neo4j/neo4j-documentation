@@ -61,6 +61,15 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-temporal-durations, Durations>>
   *** <<cypher-temporal-specifying-durations, Specifying durations>>
   *** <<cypher-temporal-accessing-components-durations, Accessing components of durations>>
+* <<cypher-spatial, Spatial values>>
+ ** <<cypher-spatial-introduction, Introduction>>
+ ** <<cypher-spatial-crs, Coordinate Reference Systems>>
+  *** <<cypher-spatial-crs-geographic, Geographic coordinate reference systems>>
+  *** <<cypher-spatial-crs-cartesian, Cartesian coordinate reference systems>>
+ ** <<cypher-spatial-instants, Spatial instants>>
+  *** <<cypher-spatial-specifying-spatial-instants, Specifying points>>
+  *** <<cypher-spatial-accessing-components-spatial-instants, Accessing components of points>>
+ ** <<cypher-spatial-index, Spatial index>>
 * <<cypher-lists, Lists>>
  ** <<cypher-lists-general, Lists in general>>
  ** <<cypher-list-comprehension, List comprehension>>
@@ -68,7 +77,6 @@ This section describes the syntax of the Cypher query language.
 * <<cypher-maps, Maps>>
  ** <<cypher-literal-maps, Literal maps>>
  ** <<cypher-map-projection, Map projection>>
-* <<cypher-spatial, Spatial values>>
 * <<cypher-working-with-null, Working with `null`>>
  ** <<cypher-null-intro, Introduction to `null` in Cypher>>
  ** <<cypher-null-logical-operators, Logical operations with `null`>>
