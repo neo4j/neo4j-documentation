@@ -73,21 +73,6 @@ class SpatialFunctionsTest extends DocumentingTest {
         |       (copenhagen)-[:TRAVEL_ROUTE]->(malmo)""")
     synopsis("These functions are used to specify 2D or 3D points in a Coordinate Reference System and to calculate the geodesic distance between two points.")
     p(
-      """Four Coordinate Reference Systems (CRS) are supported, each of which falls within one of two types: _geographic coordinates_ modeling points on the earth, or _cartesian coordinates_ modeling points in euclidean space:
-        |
-        |* http://spatialreference.org/ref/epsg/4326/[WGS 84 2D] - A 2D geographic point in the _WGS 84_ CRS is specified with a map containing coordinate values for either of the following:
-        | ** `longitude` and `latitude` (if these are specified, and the `crs` is not, then the `crs` is assumed to be `WGS-84`)
-        | ** `x` and `y` (in this case the `crs` must be specified, or will be assumed to be `Cartesian`)
-        |* http://spatialreference.org/ref/epsg/4979/[WGS 84 3D] - A 3D geographic point in the _WGS 84_ CRS is specified with a map containing coordinate values for either of the following:
-        | ** `longitude`, `latitude` and either `height` or `z` (if these are specified, and the `crs` is not, then the `crs` is assumed to be `WGS-84-3D`)
-        | ** `x`, `y` and `z` (in this case the `crs` must be specified, or will be assumed to be `Cartesian-3D`)
-        |* http://spatialreference.org/ref/sr-org/7203/[Cartesian 2D]
-        | ** A 2D point in the _Cartesian_ CRS is specified with a map containing `x` and `y` coordinate values
-        |* http://spatialreference.org/ref/sr-org/9157/[Cartesian 3D]
-        | ** A 3D point in the _Cartesian_ CRS is specified with a map containing `x`, `y` and `z` coordinate values
-        |""".stripMargin)
-    p("Data within different coordinate systems are entirely incomparable, and cannot be implicitly converted from one to the other. This is true even if they are both cartesian or both geographic. For example, if you search for 3D points using a 2D range, you will get no results.")
-    p(
       """Functions:
         |
         |* <<functions-distance,distance()>>

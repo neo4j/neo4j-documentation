@@ -68,6 +68,7 @@ This section describes the syntax of the Cypher query language.
 * <<cypher-maps, Maps>>
  ** <<cypher-literal-maps, Literal maps>>
  ** <<cypher-map-projection, Map projection>>
+* <<cypher-spatial, Spatial values>>
 * <<cypher-working-with-null, Working with `null`>>
  ** <<cypher-null-intro, Introduction to `null` in Cypher>>
  ** <<cypher-null-logical-operators, Logical operations with `null`>>
@@ -102,6 +103,8 @@ include::../ql/cypher-temporal.adoc[leveloffset=+1]
 include::../ql/cypher-lists.adoc[leveloffset=+1]
 
 include::../ql/cypher-maps.adoc[leveloffset=+1]
+
+include::../ql/cypher-spatial.adoc[leveloffset=+1]
 
 include::working-with-null.asciidoc[leveloffset=+1]
 
