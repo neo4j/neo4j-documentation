@@ -67,7 +67,7 @@ This section describes the syntax of the Cypher query language.
   *** <<cypher-spatial-crs-geographic, Geographic coordinate reference systems>>
   *** <<cypher-spatial-crs-cartesian, Cartesian coordinate reference systems>>
  ** <<cypher-spatial-instants, Spatial instants>>
-  *** <<cypher-spatial-specifying-spatial-instants, Specifying points>>
+  *** <<cypher-spatial-specifying-spatial-instants, Creating points>>
   *** <<cypher-spatial-accessing-components-spatial-instants, Accessing components of points>>
  ** <<cypher-spatial-index, Spatial index>>
 * <<cypher-lists, Lists>>
