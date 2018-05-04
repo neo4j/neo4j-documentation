@@ -23,10 +23,10 @@ import java.io._
 import java.net.InetSocketAddress
 
 import org.neo4j.cypher.GraphIcing
-import org.neo4j.cypher.internal.compatibility.v3_4.runtime.CypherSerializer
+import org.neo4j.cypher.internal.CypherSerializer
 import org.neo4j.cypher.internal.runtime.interpreted.TransactionBoundQueryContext.IndexSearchMonitor
 import org.neo4j.cypher.internal.runtime.interpreted.{TransactionBoundQueryContext, TransactionalContextWrapper}
-import org.neo4j.cypher.internal.util.v3_4.test_helpers.CypherFunSuite
+import org.neo4j.cypher.internal.util.v3_5.test_helpers.CypherFunSuite
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
