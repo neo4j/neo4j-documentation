@@ -19,11 +19,19 @@
  */
 package org.neo4j.cypher.docgen
 
+import java.time.{ZoneId, ZoneOffset}
+import java.util.function.Supplier
+
 import org.neo4j.cypher.docgen.tooling._
+import org.neo4j.values.storable.{DateTimeValue, DateValue, DurationValue}
 
 class OperatorsTest extends DocumentingTest {
 
   override def outputPath = "target/docs/dev/ql/"
+
+  private val defaultZoneSupplier: Supplier[ZoneId] = new Supplier[ZoneId] {
+    override def get(): ZoneId = ZoneOffset.UTC
+  }
 
   override def doc = new DocBuilder {
     doc("Operators", "query-operators")
@@ -285,25 +293,45 @@ class OperatorsTest extends DocumentingTest {
       section("Adding and subtracting a _Duration_ to or from a temporal instant", "syntax-add-subtract-duration-to-temporal-instant") {
         query(
           """WITH datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 1, timezone: '+01:00'}) AS aDateTime
-            |UNWIND [duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 2}),
-            |   duration({months:1, days: -14, hours: 16, minutes: -12, seconds: 70}),
-            |   duration({years: 12.5, months: 5.5, days: 14.5, hours: 16.5, minutes: 12.5, seconds: 70.5, nanoseconds: 3})] AS aDuration
+            |UNWIND [duration({years: 12, nanoseconds: 2}),
+            |        duration({days: -14}),
+            |        duration({days: 14.5})] AS aDuration
             |RETURN aDateTime, aDuration, aDateTime + aDuration, aDateTime - aDuration""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            r.toList should equal(List(
+              Map(
+                "aDateTime - aDuration" -> DateTimeValue.parse("1972-10-11T12:31:13.999999999+01:00", defaultZoneSupplier).asObjectCopy(),
+                "aDateTime + aDuration" -> DateTimeValue.parse("1996-10-11T12:31:14.000000003+01:00", defaultZoneSupplier).asObjectCopy(),
+                "aDateTime" -> DateTimeValue.parse("1984-10-11T12:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
+                "aDuration" -> DurationValue.parse("P12YT0.000000002S")),
+              Map(
+                "aDateTime - aDuration" -> DateTimeValue.parse("1984-10-25T12:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
+                "aDateTime + aDuration" -> DateTimeValue.parse("1984-09-27T12:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
+                "aDateTime" -> DateTimeValue.parse("1984-10-11T12:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
+                "aDuration" -> DurationValue.parse("P-14D")),
+              Map(
+                "aDateTime - aDuration" -> DateTimeValue.parse("1984-09-27T00:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
+                "aDateTime + aDuration" -> DateTimeValue.parse("1984-10-26T00:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
+                "aDateTime" -> DateTimeValue.parse("1984-10-11T12:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
+                "aDuration" -> DurationValue.parse("P14DT12H"))
+            ))
           })) {
           resultTable()
         }
         p(
           """<<cypher-temporal-duration-component, Components of a _Duration_>> that do not apply to the temporal instant are ignored.
-            |For example, when adding a _Duration_ to a _Date_, the _hours_, _minutes_, _seconds_ and _milliseconds_ of the _Duration_ are ignored (_Time_ behaves in an analogous manner):
+            |For example, when adding a _Duration_ to a _Date_, the _hours_, _minutes_, _seconds_ and _nanoseconds_ of the _Duration_ are ignored (_Time_ behaves in an analogous manner):
           """.stripMargin)
         query(
-          """WITH date({year:1984, month:10, day:11}) AS aDate
-            |UNWIND [duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 2}),
-            |   duration({months:1, days: -14, hours: 16, minutes: -12, seconds: 70}),
-            |   duration({years: 12.5, months: 5.5, days: 14.5, hours: 16.5, minutes: 12.5, seconds: 70.5, nanoseconds: 3})] AS aDuration
+          """WITH date({year:1984, month:10, day:11}) AS aDate,
+            |     duration({years: 12, nanoseconds: 2}) AS aDuration
             |RETURN aDate, aDuration, aDate + aDuration, aDate - aDuration""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            r.toList should equal(List(
+              Map(
+                "aDate - aDuration" -> DateValue.parse("1972-10-11").asObjectCopy(),
+                "aDate + aDuration" -> DateValue.parse("1996-10-11").asObjectCopy(),
+                "aDuration" -> DurationValue.parse("P12YT0.000000002S"),
+                "aDate" -> DateValue.parse("1984-10-11").asObjectCopy())
+            ))
           })) {
           resultTable()
         }
@@ -314,19 +342,27 @@ class OperatorsTest extends DocumentingTest {
           """RETURN (date("2011-01-31") + duration("P1M")) + duration("P12M") AS date1,
             |   date("2011-01-31") + (duration("P1M") + duration("P12M")) AS date2
           """.stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO date1: date({year:2012, month:2, day:28}); date2: date({year:2012, month:2, day:29})
+            r.toList should equal(List(
+              Map(
+                "date1" -> DateValue.parse("2012-02-28").asObjectCopy(),
+                "date2" -> DateValue.parse("2012-02-29").asObjectCopy())
+            ))
           })) {
           resultTable()
         }
       }
       section("Adding and subtracting a _Duration_ to or from another _Duration_", "syntax-add-subtract-duration-to-duration") {
         query(
-          """WITH [duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 1}),
-            |   duration({months:1, days: -14, hours: 16, minutes: -12, seconds: 70})] AS list
-            |UNWIND list AS duration1
-            |UNWIND list AS duration2
+          """WITH duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 1}) as duration1,
+            |     duration({months:1, days: -14, hours: 16, minutes: -12, seconds: 70}) AS duration2
             |RETURN duration1, duration2, duration1 + duration2, duration1 - duration2""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            r.toList should equal(List(
+              Map(
+                "duration1" -> DurationValue.parse("P12Y5M14DT16H13M10.000000001S"),
+                "duration2" -> DurationValue.parse("P1M-14DT15H49M10S"),
+                "duration1 + duration2" -> DurationValue.parse("P12Y6MT32H2M20.000000001S"),
+                "duration1 - duration2" -> DurationValue.parse("P12Y4M28DT24M0.000000001S"))
+            ))
           })) {
           resultTable()
         }
@@ -334,10 +370,14 @@ class OperatorsTest extends DocumentingTest {
       section("Multiplying and dividing a _Duration_ with or by a number", "syntax-multiply-divide-duration-number") {
         p("""These operations are interpreted simply as component-wise operations with overflow to smaller units based on an average length of units in the case of division (and multiplication with fractions).""".stripMargin)
         query(
-          """WITH duration({years: 12, months: 5, days: 14, hours: 16, minutes: 12, seconds: 70, nanoseconds: 1}) AS aDuration
-            |UNWIND [1, 2, 0.5] as aNumber
-            |RETURN aDuration, aNumber, aDuration * aNumber, aDuration/aNumber""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+          """WITH duration({days: 14, minutes: 12, seconds: 70, nanoseconds: 1}) AS aDuration
+            |RETURN aDuration, aDuration * 2, aDuration / 3""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(
+              Map(
+                "aDuration" -> DurationValue.parse("P14DT13M10.000000001S"),
+                "aDuration * 2" -> DurationValue.parse("P28DT26M20.000000002S"),
+                "aDuration / 3" -> DurationValue.parse("P4DT16H4M23.333333333S"))
+            ))
           })) {
           resultTable()
         }
