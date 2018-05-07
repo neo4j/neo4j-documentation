@@ -22,6 +22,7 @@ package org.neo4j.cypher.docgen
 import java.time._
 
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
+import org.neo4j.values.storable.DurationValue
 
 class TemporalFunctionsTest extends DocumentingTest {
 
@@ -73,9 +74,9 @@ class TemporalFunctionsTest extends DocumentingTest {
             ||===
             || Function                   | Date | Time | LocalTime | DateTime | LocalDateTime
             || Getting the current value  | <<functions-date-current, X>> | <<functions-time-current, X>> | <<functions-localtime-current, X>> | <<functions-datetime-current, X>> | <<functions-localdatetime-current, X>>
-            || Creating a calendar (Year-Month-Day) value | <<functions-date-calendar, X>> | | | <<functions-datetime-calendar, X>> | <<functions-localdatetime-calendar, X>>
-            || Creating a week (Year-Week-Day) value | <<functions-date-week, X>> | | | <<functions-datetime-week, X>> | <<functions-localdatetime-week, X>>
-            || Creating a quarter (Year-Quarter-Day) value | <<functions-date-quarter, X>> | | | <<functions-datetime-quarter, X>> | <<functions-localdatetime-quarter, X>>
+            || Creating a calendar-based (Year-Month-Day) value | <<functions-date-calendar, X>> | | | <<functions-datetime-calendar, X>> | <<functions-localdatetime-calendar, X>>
+            || Creating a week-based (Year-Week-Day) value | <<functions-date-week, X>> | | | <<functions-datetime-week, X>> | <<functions-localdatetime-week, X>>
+            || Creating a quarter-based (Year-Quarter-Day) value | <<functions-date-quarter, X>> | | | <<functions-datetime-quarter, X>> | <<functions-localdatetime-quarter, X>>
             || Creating an ordinal (Year-Day) value | <<functions-date-ordinal, X>> | | | <<functions-datetime-ordinal, X>> | <<functions-localdatetime-ordinal, X>>
             || Creating a value from time components |  | <<functions-time-create, X>> | <<functions-localtime-create, X>> | |
             || Creating a value from other temporal values using extractors (i.e. converting between different types) | <<functions-date-temporal, X>> | <<functions-time-temporal, X>> | <<functions-localtime-temporal, X>> | <<functions-datetime-temporal, X>> | <<functions-localdatetime-temporal, X>>
@@ -194,15 +195,23 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("duration([ {years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds} ])", "A Duration.", ("A single map consisting of the following:", ""), ("years", "A numeric expression."), ("quarters", "A numeric expression."), ("months", "A numeric expression."), ("weeks", "A numeric expression."), ("days", "A numeric expression."), ("hours", "A numeric expression."), ("minutes", "A numeric expression."), ("seconds", "A numeric expression."), ("milliseconds", "A numeric expression."), ("microseconds", "A numeric expression."), ("nanoseconds", "A numeric expression."))
         considerations("At least one parameter must be provided (`duration()` and `duration({})` are invalid).", "There is no constraint on how many of the parameters are provided.", "It is possible to have a _Duration_ where the amount of a smaller unit (e.g. `seconds`) exceeds the threshold of a larger unit (e.g. `days`).", "The values of the parameters may be expressed as decimal fractions.", "The values of the parameters may be arbitrarily large.", "The values of the parameters may be negative.")
         query(
-          """UNWIND [duration({days: 14, hours:16, minutes: 12}),
+          """UNWIND [
+            |   duration({days: 14, hours:16, minutes: 12}),
             |   duration({months: 5, days: 1.5}),
             |   duration({months: 0.75}),
             |   duration({weeks: 2.5}),
-            |   duration({years: 12, months:5, days: 14, hours:16, minutes: 12, seconds: 70}),
-            |   duration({days: 14, seconds: 70, milliseconds: 1}),
-            |   duration({minutes: 1.5, seconds: 1})] AS d
-            |RETURN d""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            |   duration({minutes: 1.5, seconds: 1, milliseconds: 123, microseconds: 456, nanoseconds: 789}),
+            |   duration({minutes: 1.5, seconds: 1, nanoseconds: 123456789})
+            |   ] AS aDuration
+            |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(
+              Map("aDuration" -> DurationValue.parse("P14DT16H12M")),
+              Map("aDuration" -> DurationValue.parse("P5M1DT12H")),
+              Map("aDuration" -> DurationValue.parse("P22DT19H51M49.5S")),
+              Map("aDuration" -> DurationValue.parse("P17DT12H")),
+              Map("aDuration" -> DurationValue.parse("PT1M31.123456789S")),
+              Map("aDuration" -> DurationValue.parse("PT1M31.123456789S"))
+            ))
           })) {
           resultTable()
         }
@@ -213,15 +222,21 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("duration(temporalAmount)", "A Duration.", ("temporalAmount", "A string representing a temporal amount."))
         considerations("`temporalAmount` must comply with either the <<cypher-temporal-specifying-durations, unit based form or date-and-time based form defined for _Durations_>>.")
         query(
-          """UNWIND [duration("P14DT16H12M"),
+          """UNWIND [
+            |   duration("P14DT16H12M"),
             |   duration("P5M1.5D"),
             |   duration("P0.75M"),
             |   duration("PT0.75M"),
-            |   duration("P2.5W"),
-            |   duration("P12Y5M14DT16H12M70S"),
-            |   duration("P2012-02-02T14:37:21.545")] AS d
-            |RETURN d""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            |   duration("P2012-02-02T14:37:21.545")
+            |   ] AS aDuration
+            |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(
+              Map("aDuration" -> DurationValue.parse("P14DT16H12M")),
+              Map("aDuration" -> DurationValue.parse("P5M1DT12H")),
+              Map("aDuration" -> DurationValue.parse("P22DT19H51M49.5S")),
+              Map("aDuration" -> DurationValue.parse("PT45S")),
+              Map("aDuration" -> DurationValue.parse("P2012Y2M2DT14H37M21.545S"))
+            ))
           })) {
           resultTable()
         }
@@ -230,26 +245,39 @@ class TemporalFunctionsTest extends DocumentingTest {
         p(
           """`duration()` has sub-functions which compute the _logical difference_ (in days, months, etc) between two temporal instant values:
             |
-            |* `duration.between(a, b)`: Computes the difference in multiple components between instant `a` and instant `b`.
-            |* `duration.inMonths(a, b)`: Computes the difference in whole months (or quarters or years) between instant `a` and instant `b`.
-            |* `duration.inDays(a, b)`: Computes the difference in whole days (or weeks) between instant `a` and instant `b`.
-            |* `duration.inSeconds(a, b)`: Computes the difference in seconds (and fractions of seconds, or minutes or hours) between instant `a` and instant `b`.
+            |* `duration.between(a, b)`: Computes the difference in multiple components between instant `a` and instant `b`. This captures month, days, seconds and sub-seconds differences separately.
+            |* `duration.inMonths(a, b)`: Computes the difference in whole months (or quarters or years) between instant `a` and instant `b`. This captures the difference as the total amount of months. Any difference smaller than a whole month is disregarded.
+            |* `duration.inDays(a, b)`: Computes the difference in whole days (or weeks) between instant `a` and instant `b`. This captures the difference as the total amount of days.  Any difference smaller than a whole day is disregarded.
+            |* `duration.inSeconds(a, b)`: Computes the difference in seconds (and fractions of seconds, or minutes or hours) between instant `a` and instant `b`. This captures the difference as the total amount of seconds.
             |""".stripMargin)
         section("duration.between()", "functions-duration-between") {
           p(
             """`duration.between()` returns the _Duration_ value equal to the difference between the two given instants.""".stripMargin)
           function("duration.between(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
-          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.")
+          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.",
+            "If `instant~1~` has a time component but `instant~2~` has not, it will assume the time component of `instant~2~` to be at midnight, and vice versa.",
+            "If `instant~1~` has a time zone component but `instant~2~` has not, it will assume the time zone component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.",
+            "If `instant~1~` has a date component but `instant~2~` has not, it will assume the date component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.")
           query(
-            """UNWIND [duration.between(date("1984-10-11"), date("2015-06-24")),
-              |   duration.between(date("2015-06-24"), date("1984-10-11")),
-              |   duration.between(date("1984-10-11"), datetime("2015-07-21T21:40:32.142+0100")),
-              |   duration.between(localtime("14:30"), date("2015-06-24")),
-              |   duration.between(time("14:30"), time("16:30+0100")),
+            """UNWIND [
+              |   duration.between(date("1984-10-11"), date("1985-11-25")),
+              |   duration.between(date("1985-11-25"), date("1984-10-11")),
+              |   duration.between(date("1984-10-11"), datetime("1984-10-12T21:40:32.142+0100")),
+              |   duration.between(date("2015-06-24"), localtime("14:30")),
+              |   duration.between(localtime("14:30"), time("16:30+0100")),
               |   duration.between(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142")),
-              |   duration.between(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), localdatetime({year: 2017, month: 10, day: 29, hour: 4}))] AS d
-              |RETURN d""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+              |   duration.between(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
+              |   ] AS aDuration
+              |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(
+                Map("aDuration" -> DurationValue.parse("P1Y1M14D")),
+                Map("aDuration" -> DurationValue.parse("P-1Y-1M-14D")),
+                Map("aDuration" -> DurationValue.parse("P1DT21H40M32.142S")),
+                Map("aDuration" -> DurationValue.parse("PT14H30M")),
+                Map("aDuration" -> DurationValue.parse("PT2H")),
+                Map("aDuration" -> DurationValue.parse("P1YT4M50S")),
+                Map("aDuration" -> DurationValue.parse("PT1H"))
+              ))
             })) {
             resultTable()
           }
@@ -258,16 +286,29 @@ class TemporalFunctionsTest extends DocumentingTest {
           p(
             """`duration.inMonths()` returns the _Duration_ value equal to the difference in whole months, quarters or years between the two given instants.""".stripMargin)
           function("duration.inMonths(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
-          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.")
+          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.",
+            "If `instant~1~` has a time component but `instant~2~` has not, it will assume the time component of `instant~2~` to be at midnight, and vice versa.",
+            "If `instant~1~` has a time zone component but `instant~2~` has not, it will assume the time zone component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.",
+            "If `instant~1~` has a date component but `instant~2~` has not, it will assume the date component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.")
+
           query(
-            """UNWIND [duration.inMonths(date("1984-10-11"), date("2015-06-24")),
-              |   duration.inMonths(date("2015-06-24"), date("1984-10-11")),
-              |   duration.inMonths(date("1984-10-11"), localdatetime("2016-07-21T21:45:22.142")),
-              |   duration.inMonths(date("1984-10-11"), datetime("2015-07-21T21:40:32.142+0100")),
-              |   duration.inMonths(time("14:30"), date("2015-06-24")),
-              |   duration.inMonths(datetime("2014-07-21T21:40:36.143+0200"), datetime("2015-07-21T21:40:32.142+0100"))] AS d
-              |RETURN d""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """UNWIND [
+              |   duration.inMonths(date("1984-10-11"), date("1985-11-25")),
+              |   duration.inMonths(date("1985-11-25"), date("1984-10-11")),
+              |   duration.inMonths(date("1984-10-11"), datetime("1984-10-12T21:40:32.142+0100")),
+              |   duration.inMonths(date("2015-06-24"), localtime("14:30")),
+              |   duration.inMonths(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142")),
+              |   duration.inMonths(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
+              |   ] AS aDuration
+              |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(
+                Map("aDuration" -> DurationValue.parse("P1Y1M")),
+                Map("aDuration" -> DurationValue.parse("P-1Y-1M")),
+                Map("aDuration" -> DurationValue.parse("PT0S")),
+                Map("aDuration" -> DurationValue.parse("PT0S")),
+                Map("aDuration" -> DurationValue.parse("P1Y")),
+                Map("aDuration" -> DurationValue.parse("PT0S"))
+              ))
             })) {
             resultTable()
           }
@@ -276,15 +317,28 @@ class TemporalFunctionsTest extends DocumentingTest {
           p(
             """`duration.inDays()` returns the _Duration_ value equal to the difference in whole days or weeks between the two given instants.""".stripMargin)
           function("duration.inDays(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
-          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.")
+          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.",
+            "If `instant~1~` has a time component but `instant~2~` has not, it will assume the time component of `instant~2~` to be at midnight, and vice versa.",
+            "If `instant~1~` has a time zone component but `instant~2~` has not, it will assume the time zone component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.",
+            "If `instant~1~` has a date component but `instant~2~` has not, it will assume the date component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.")
           query(
-            """UNWIND [duration.inDays(date("1984-10-11"), date("2015-06-24")),
-              |   duration.inDays(date("1984-10-11"), date("2015-06-24")),
-              |   duration.inDays(date("1984-10-11"), time("16:30+0100")),
-              |   duration.inDays(datetime("2014-07-21T21:40:36.143+0200"), date("2015-06-24")),
-              |   duration.inDays(datetime("2014-07-21T21:40:36.143+0200"), localdatetime("2016-07-21T21:45:22.142"))] AS d
-              |RETURN d""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """UNWIND [
+              |   duration.inDays(date("1984-10-11"), date("1985-11-25")),
+              |   duration.inDays(date("1985-11-25"), date("1984-10-11")),
+              |   duration.inDays(date("1984-10-11"), datetime("1984-10-12T21:40:32.142+0100")),
+              |   duration.inDays(date("2015-06-24"), localtime("14:30")),
+              |   duration.inDays(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142")),
+              |   duration.inDays(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
+              |   ] AS aDuration
+              |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(
+                Map("aDuration" -> DurationValue.parse("P410D")),
+                Map("aDuration" -> DurationValue.parse("P-410D")),
+                Map("aDuration" -> DurationValue.parse("P1D")),
+                Map("aDuration" -> DurationValue.parse("PT0S")),
+                Map("aDuration" -> DurationValue.parse("P366D")),
+                Map("aDuration" -> DurationValue.parse("PT0S"))
+              ))
             })) {
             resultTable()
           }
@@ -293,15 +347,26 @@ class TemporalFunctionsTest extends DocumentingTest {
           p(
             """`duration.inSeconds()` returns the _Duration_ value equal to the difference in seconds and fractions of seconds, or minutes or hours, between the two given instants.""".stripMargin)
           function("duration.inSeconds(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
-          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.")
+          considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.",
+            "If `instant~1~` has a time component but `instant~2~` has not, it will assume the time component of `instant~2~` to be at midnight, and vice versa.",
+            "If `instant~1~` has a time zone component but `instant~2~` has not, it will assume the time zone component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.",
+            "If `instant~1~` has a date component but `instant~2~` has not, it will assume the date component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.")
           query(
-            """UNWIND [duration.inSeconds(date("1984-10-11"), date("2015-06-24")),
-              |   duration.inSeconds(localtime("14:30"), localtime("16:30")),
-              |   duration.inSeconds(time("14:30"), date("2015-06-24")),
-              |   duration.inSeconds(datetime("2014-07-21T21:40:36.143+0200"), datetime("2015-07-21T21:40:32.142+0100")),
-              |   duration.inSeconds(datetime("2015-07-21T21:40:32.142+0100"), datetime("2014-07-21T21:40:36.143+0200"))] AS d
-              |RETURN d""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """UNWIND [
+              |   duration.inSeconds(date("1984-10-11"), date("1984-10-12")),
+              |   duration.inSeconds(date("1984-10-12"), date("1984-10-11")),
+              |   duration.inSeconds(date("1984-10-11"), datetime("1984-10-12T01:00:32.142+0100")),
+              |   duration.inSeconds(date("2015-06-24"), localtime("14:30")),
+              |   duration.inSeconds(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
+              |   ] AS aDuration
+              |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(
+                Map("aDuration" -> DurationValue.parse("PT24H")),
+                Map("aDuration" -> DurationValue.parse("PT-24H")),
+                Map("aDuration" -> DurationValue.parse("PT25H32.142S")),
+                Map("aDuration" -> DurationValue.parse("PT14H30M")),
+                Map("aDuration" -> DurationValue.parse("PT1H"))
+              ))
             })) {
             resultTable()
           }
