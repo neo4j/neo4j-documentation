@@ -20,15 +20,20 @@
 package org.neo4j.cypher.docgen
 
 import java.time._
+import java.util.function.Supplier
 
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
-import org.neo4j.values.storable.{DateValue, DurationValue}
+import org.neo4j.values.storable.{DateTimeValue, DateValue, DurationValue}
 
 class TemporalFunctionsTest extends DocumentingTest {
 
   override def outputPath = "target/docs/dev/ql/functions"
 
   override def doc = new DocBuilder {
+    val defaultZoneSupplier: Supplier[ZoneId] = new Supplier[ZoneId] {
+      override def get(): ZoneId = ZoneOffset.UTC
+    }
+
     doc("Temporal functions", "query-functions-temporal")
     synopsis(
       """Cypher provides functions allowing for the creation and manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.""".stripMargin)
@@ -402,7 +407,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
-        function("date.transaction([ timezone ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("date.transaction([ {timezone} ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN date.transaction() AS currentDate""".stripMargin, ResultAssertions((r) => {
             val now = r.columnAs[LocalDate]("currentDate").next()
@@ -417,7 +422,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
-        function("date.statement([ timezone ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("date.statement([ {timezone} ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN date.statement() AS currentDate""".stripMargin, ResultAssertions((r) => {
             val now = r.columnAs[LocalDate]("currentDate").next()
@@ -431,7 +436,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`date.realtime()` returns the current _Date_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
-        function("date.realtime([ timezone ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("date.realtime([ {timezone} ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN date.realtime() AS currentDate""".stripMargin, ResultAssertions((r) => {
             val now = r.columnAs[LocalDate]("currentDate").next()
@@ -596,7 +601,7 @@ class TemporalFunctionsTest extends DocumentingTest {
     section("datetime(): getting the current _DateTime_", "functions-datetime-current") {
       p(
         """`datetime()` returns the current _DateTime_ value.
-          |If no time zone parameter is specified, the local time zone will be used.
+          |If no time zone parameter is specified, the default time zone will be used.
         """.stripMargin)
       function("datetime([ {timezone} ])", "A DateTime.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
       considerations("If no parameters are provided, `datetime()` must be invoked (`datetime({})` is invalid).")
@@ -622,16 +627,18 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
-        function("datetime.transaction([ timezone ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("datetime.transaction([ {timezone} ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN datetime.transaction() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[ZonedDateTime]("currentDateTime").next()
+            now should be(a[ZonedDateTime])
           })) {
           resultTable()
         }
         query(
           """RETURN datetime.transaction('America/Los Angeles') AS currentDateTimeInLA""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[ZonedDateTime]("currentDateTimeInLA").next()
+            now should be(a[ZonedDateTime])
           })) {
           resultTable()
         }
@@ -642,10 +649,11 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
-        function("datetime.statement([ timezone ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("datetime.statement([ {timezone} ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN datetime.statement() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[ZonedDateTime]("currentDateTime").next()
+            now should be(a[ZonedDateTime])
           })) {
           resultTable()
         }
@@ -655,10 +663,11 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`datetime.realtime()` returns the current _DateTime_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
-        function("datetime.realtime([ timezone ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("datetime.realtime([ {timezone} ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN datetime.realtime() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[ZonedDateTime]("currentDateTime").next()
+            now should be(a[ZonedDateTime])
           })) {
           resultTable()
         }
@@ -679,7 +688,16 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'}),
           |   datetime({year:1984, month:10, day:11, timezone: 'Europe/Stockholm'})] as theDate
           |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          // CYPHER_TODO
+          r.toList should equal(List(
+            Map("theDate" -> DateTimeValue.parse("1984-10-11T12:31:14.123456789Z", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-10-11T12:31:14.645+01:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-10-11T12:31:14.645876123+01:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-10-11T12:31:14+01:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-10-11T12:31:14Z", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-10-11T12:31+01:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-10-11T12:00+01:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-10-11T00:00+01:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -698,8 +716,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   datetime({year:1984, week:10, dayOfWeek:3, hour:12, timezone: '+01:00'}),
           |   datetime({year:1984, week:10, dayOfWeek:3, timezone: 'Europe/Stockholm'})] as theDate
           |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          // CYPHER_TODO
-          // starting off...r.toList should equal(List(Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 123456789, ZoneId.of("Z")))), Map("theDate" -> ZonedDateTime.of(1984, 10, 11, 12, 31, 14, 645, ZoneId.ofOffset("UTC", ZoneOffset.ofHours(1)))))
+          r.toList should equal(List(
+            Map("theDate" -> DateTimeValue.parse("1984-03-07T12:31:14.645Z", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-03-07T12:31:14.645876+01:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-03-07T12:31:14.645876123+01:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-03-07T12:31:14+01:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-03-07T12:31:14Z", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-03-07T12:00+01:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-03-07T00:00+01:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -715,7 +740,12 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, timezone: 'Europe/Stockholm'}),
           |   datetime({year:1984, quarter:3, dayOfQuarter: 45})] as theDate
           |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          // CYPHER_TODO
+          r.toList should equal(List(
+            Map("theDate" -> DateTimeValue.parse("1984-08-14T12:31:14.645876Z", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-08-14T12:31:14+01:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-08-14T12:00+02:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-08-14T00:00Z", defaultZoneSupplier).asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -731,7 +761,12 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   datetime({year:1984, ordinalDay:202, timezone: 'Europe/Stockholm'}),
           |   datetime({year:1984, ordinalDay:202})] as theDate
           |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          // CYPHER_TODO
+          r.toList should equal(List(
+            Map("theDate" -> DateTimeValue.parse("1984-07-20T12:31:14.645Z", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-07-20T12:31:14+01:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-07-20T00:00+02:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("1984-07-20T00:00Z", defaultZoneSupplier).asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -751,7 +786,16 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   datetime('2015-07-21T21:40:32.142[Europe/London]'),
           |   datetime('2015-07-21T21:40:32.142-04[America/New_York]')] AS theDate
           |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(
+            Map("theDate" -> DateTimeValue.parse("2015-07-21T21:40:32.142+0100", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("2015-W30-2T214032.142Z", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("2015T214032-0100", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("20150721T21:40-01:30", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("2015-W30T2140-02", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("2015202T21+18:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("2015-07-21T21:40:32.142[Europe/London]", defaultZoneSupplier).asObjectCopy()),
+            Map("theDate" -> DateTimeValue.parse("2015-07-21T21:40:32.142-04[America/New_York]", defaultZoneSupplier).asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -762,31 +806,37 @@ class TemporalFunctionsTest extends DocumentingTest {
           |In essence, this allows a _Date_, _LocalDateTime_, _Time_ or _LocalTime_ value to be converted to a _DateTime_, and for "missing" components to be provided.
         """.stripMargin)
       function("datetime({datetime [, year, ..., timezone]}) | datetime({date [, year, ..., timezone]}) | datetime({time [, year, ..., timezone]}) | datetime({date, time [, year, ..., timezone]})", "A DateTime.", ("A single map consisting of the following:", ""), ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
-      considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.")
+      considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.",
+        "Selecting a _Time_ or _DateTime_ value in the `time` component also selects its timezone. If instead a _LocalTime_ or _LocalDateTime_ is selecting, the default timezone is used. In any case, the timezone can be overridden explicitly.")
       p("""The following query shows the various usages of `datetime({date [, year, ..., timezone]})`""")
       query(
-        """UNWIND [date({year:1984, month:10, day:11}),
-          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
+        """WITH date({year:1984, month:10, day:11}) AS dd
           |RETURN datetime({date:dd, hour: 10, minute: 10, second: 10}) AS dateHHMMSS,
           |   datetime({date:dd, hour: 10, minute: 10, second: 10, timezone:'+05:00'}) AS dateHHMMSSTimezone,
           |   datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS dateDDHHMMSS,
           |   datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10, timezone:'Pacific/Honolulu'}) AS dateDDHHMMSSTimezone""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(Map(
+            "dateHHMMSS" -> DateTimeValue.parse("1984-10-11T10:10:10Z", defaultZoneSupplier).asObjectCopy(),
+            "dateHHMMSSTimezone" -> DateTimeValue.parse("1984-10-11T10:10:10+05:00", defaultZoneSupplier).asObjectCopy(),
+            "dateDDHHMMSS" -> DateTimeValue.parse("1984-10-28T10:10:10Z", defaultZoneSupplier).asObjectCopy(),
+            "dateDDHHMMSSTimezone" -> DateTimeValue.parse("1984-10-28T10:10:10[Pacific/Honolulu]", defaultZoneSupplier).asObjectCopy()
+          )))
         })) {
         resultTable()
       }
       p("""The following query shows the various usages of `datetime({time [, year, ..., timezone]})`""")
       query(
-        """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
-          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
-          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'})] AS tt
+        """WITH time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}) AS tt
           |RETURN datetime({year:1984, month:10, day:11, time:tt}) AS YYYYMMDDTime,
           |   datetime({year:1984, month:10, day:11, time:tt, timezone:'+05:00'}) AS YYYYMMDDTimeTimezone,
           |   datetime({year:1984, month:10, day:11, time:tt, second: 42}) AS YYYYMMDDTimeSS,
           |   datetime({year:1984, month:10, day:11, time:tt, second: 42, timezone:'Pacific/Honolulu'}) AS YYYYMMDDTimeSSTimezone""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(Map(
+            "YYYYMMDDTime" -> DateTimeValue.parse("1984-10-11T12:31:14.645876+01:00", defaultZoneSupplier).asObjectCopy(),
+            "YYYYMMDDTimeTimezone" -> DateTimeValue.parse("1984-10-11T16:31:14.645876+05:00", defaultZoneSupplier).asObjectCopy(),
+            "YYYYMMDDTimeSS" -> DateTimeValue.parse("1984-10-11T12:31:42.645876+01:00", defaultZoneSupplier).asObjectCopy(),
+            "YYYYMMDDTimeSSTimezone" -> DateTimeValue.parse("1984-10-11T01:31:42.645876-10:00[Pacific/Honolulu]", defaultZoneSupplier).asObjectCopy()
+          )))
         })) {
         resultTable()
       }
@@ -896,7 +946,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
-        function("localdatetime.transaction([ timezone ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("localdatetime.transaction([ {timezone} ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localdatetime.transaction() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -910,7 +960,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
-        function("localdatetime.statement([ timezone ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("localdatetime.statement([ {timezone} ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localdatetime.statement() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -923,7 +973,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`localdatetime.realtime()` returns the current _LocalDateTime_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
-        function("localdatetime.realtime([ timezone ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("localdatetime.realtime([ {timezone} ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localdatetime.realtime() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1123,7 +1173,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
-        function("localtime.transaction([ timezone ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("localtime.transaction([ {timezone} ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localtime.transaction() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1137,7 +1187,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
-        function("localtime.statement([ timezone ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("localtime.statement([ {timezone} ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localtime.statement() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1156,7 +1206,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`localtime.realtime()` returns the current _LocalTime_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
-        function("localtime.realtime([ timezone ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("localtime.realtime([ {timezone} ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localtime.realtime() AS now""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1269,7 +1319,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same transaction.
             |However, a different value may be produced for different transactions.
           """.stripMargin)
-        function("time.transaction([ timezone ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("time.transaction([ {timezone} ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN time.transaction() AS currentTime""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1283,7 +1333,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |This value will be the same for each invocation within the same statement.
             |However, a different value may be produced for different statements within the same transaction.
           """.stripMargin)
-        function("time.statement([ timezone ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("time.statement([ {timezone} ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN time.statement() AS currentTime""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1302,7 +1352,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`time.realtime()` returns the current _Time_ value using the `realtime` clock.
             |This value will be the live clock of the system.
           """.stripMargin)
-        function("time.realtime([ timezone ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("time.realtime([ {timezone} ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN time.realtime() AS currentTime""".stripMargin, ResultAssertions((r) => {
             //CYPHER_TODO
@@ -1354,7 +1404,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           |In essence, this allows a _DateTime_, _LocalDateTime_ or _LocalTime_ value to be converted to a _Time_, and for "missing" components to be provided.
         """.stripMargin)
       function("time({time [, hour, ..., timezone]})", "A Time.", ("A single map consisting of the following:", ""), ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
-      considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.")
+      considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.",
+        "Selecting a _Time_ or _DateTime_ value in the `time` component also selects its timezone. If instead a _LocalTime_ or _LocalDateTime_ is selecting, the default timezone is used. In any case, the timezone can be overridden explicitly.")
       query(
         """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
