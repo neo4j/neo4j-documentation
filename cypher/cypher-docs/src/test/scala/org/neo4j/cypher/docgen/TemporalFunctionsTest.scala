@@ -22,7 +22,7 @@ package org.neo4j.cypher.docgen
 import java.time._
 
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
-import org.neo4j.values.storable.DurationValue
+import org.neo4j.values.storable.{DateValue, DurationValue}
 
 class TemporalFunctionsTest extends DocumentingTest {
 
@@ -405,7 +405,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("date.transaction([ timezone ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN date.transaction() AS currentDate""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalDate]("currentDate").next()
+            now should be(a[LocalDate])
           })) {
           resultTable()
         }
@@ -419,7 +420,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("date.statement([ timezone ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN date.statement() AS currentDate""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalDate]("currentDate").next()
+            now should be(a[LocalDate])
           })) {
           resultTable()
         }
@@ -432,13 +434,15 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("date.realtime([ timezone ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN date.realtime() AS currentDate""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalDate]("currentDate").next()
+            now should be(a[LocalDate])
           })) {
           resultTable()
         }
         query(
           """RETURN date.realtime('America/Los Angeles') AS currentDateInLA""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalDate]("currentDateInLA").next()
+            now should be(a[LocalDate])
           })) {
           resultTable()
         }
@@ -510,14 +514,22 @@ class TemporalFunctionsTest extends DocumentingTest {
       function("date(temporalValue)", "A Date.", ("temporalValue", "A string representing a temporal value."))
       considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>>.", "`date(null)` returns the current date.", "`temporalValue` must denote a valid date; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
       query(
-        """UNWIND [date('2015-07-21'),
+        """UNWIND [
+          |   date('2015-07-21'),
           |   date('2015-07'),
           |   date('201507'),
           |   date('2015-W30-2'),
           |   date('2015202'),
           |   date('2015')] as theDate
           |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(
+            Map("theDate" -> DateValue.parse("2015-07-21").asObjectCopy()),
+            Map("theDate" -> DateValue.parse("2015-07").asObjectCopy()),
+            Map("theDate" -> DateValue.parse("201507").asObjectCopy()),
+            Map("theDate" -> DateValue.parse("2015-W30-2").asObjectCopy()),
+            Map("theDate" -> DateValue.parse("2015202").asObjectCopy()),
+            Map("theDate" -> DateValue.parse("2015").asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -531,16 +543,15 @@ class TemporalFunctionsTest extends DocumentingTest {
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `date`.")
       query(
         """UNWIND [date({year:1984, month:11, day:11}),
-          |   localdatetime({year:1984, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123}),
+          |   localdatetime({year:1984, month:11, day:11, hour:12, minute:31, second:14}),
           |   datetime({year:1984, month:11, day:11, hour:12, timezone: '+01:00'})] as dd
-          |RETURN date(dd) AS theDate,
-          |   date({date: dd}) AS dateOnly,
-          |   date({date: dd, year: 28}) AS dateYear,
-          |   date({date: dd, day: 28}) AS dateDay,
-          |   date({date: dd, week: 1}) AS dateWeek,
-          |   date({date: dd, ordinalDay: 28}) AS dateOrdinalDay,
-          |   date({date: dd, quarter: 3}) AS dateQuarter""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          |RETURN date({date: dd}) AS dateOnly,
+          |   date({date: dd, day: 28}) AS dateDay""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(
+            Map("dateOnly" -> DateValue.parse("1984-11-11").asObjectCopy(), "dateDay" -> DateValue.parse("1984-11-28").asObjectCopy()),
+            Map("dateOnly" -> DateValue.parse("1984-11-11").asObjectCopy(), "dateDay" -> DateValue.parse("1984-11-28").asObjectCopy()),
+            Map("dateOnly" -> DateValue.parse("1984-11-11").asObjectCopy(), "dateDay" -> DateValue.parse("1984-11-28").asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -557,17 +568,27 @@ class TemporalFunctionsTest extends DocumentingTest {
       function("date.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A Date.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
       considerations("Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
       query(
-        """WITH datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}) AS d
+        """WITH datetime({year:2017, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}) AS d
           |RETURN date.truncate('millennium', d) AS truncMillenium,
-          |   date.truncate('century', d, {day:2}) AS truncCentury,
+          |   date.truncate('century', d) AS truncCentury,
           |   date.truncate('decade', d) AS truncDecade,
-          |   date.truncate('year', d, {day:2}) AS truncYear,
+          |   date.truncate('year', d, {day:5}) AS truncYear,
           |   date.truncate('weekYear', d) AS truncWeekYear,
           |   date.truncate('quarter', d) AS truncQuarter,
           |   date.truncate('month', d) AS truncMonth,
-          |   date.truncate('week', d, {dayOfWeek:2}) AS truncDayOfWeek,
+          |   date.truncate('week', d, {dayOfWeek:2}) AS truncWeek,
           |   date.truncate('day', d) AS truncDay""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(Map(
+            "truncMillenium" -> DateValue.parse("2000-01-01").asObjectCopy(),
+            "truncCentury" -> DateValue.parse("2000-01-01").asObjectCopy(),
+            "truncDecade" -> DateValue.parse("2010-01-01").asObjectCopy(),
+            "truncYear" -> DateValue.parse("2017-01-05").asObjectCopy(),
+            "truncWeekYear" -> DateValue.parse("2017-01-02").asObjectCopy(),
+            "truncQuarter" -> DateValue.parse("2017-10-01").asObjectCopy(),
+            "truncMonth" -> DateValue.parse("2017-11-01").asObjectCopy(),
+            "truncWeek" -> DateValue.parse("2017-11-07").asObjectCopy(),
+            "truncDay" -> DateValue.parse("2017-11-11").asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -826,7 +847,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           |This will have the effect of _overriding_ the default values which would otherwise have been set for these less significant components.
           |For example, `day` -- with some value `x` -- may be provided when the truncation unit is `year` in order to ensure the returned value has the _day_ set to `x` instead of the default _day_ (which is `1`).
         """.stripMargin)
-      function("datetime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A DateTime.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
+      function("datetime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A DateTime.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`. The key `timezone` is also allowed to override or attach a timezone during truncation."))
       considerations("`temporalInstantValue` cannot be a _Date_ value if unit is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.", "If `temporalInstantValue` is one of {_Date_, _LocalDateTime_}, a _Date_ or _LocalDateTime_ value without a time zone can be truncated to a _DateTime_ value. When doing so, the resulting _DateTime_ will have the default time zone, unless a time zone has been specified explicitly through `mapOfComponents` as `{timezone: someValue}` to override the time zone of `temporalInstantValue`.", "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
       query(
         """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
@@ -1358,7 +1379,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           |This will have the effect of _overriding_ the default values which would otherwise have been set for these less significant components.
           |For example, `minute` -- with some value `x` -- may be provided when the truncation unit is `hour` in order to ensure the returned value has the _minute_ set to `x` instead of the default _minute_ (which is `1`).
         """.stripMargin)
-      function("time.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A Time.", ("unit", "A string expression evaluating to one of the following: {`day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Time_, _LocalTime_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
+      function("time.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A Time.", ("unit", "A string expression evaluating to one of the following: {`day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Time_, _LocalTime_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`. The key `timezone` is also allowed to override or attach a timezone during truncation."))
       considerations("Truncating time to day -- i.e. `unit` is 'day'  -- is supported, and yields midnight at the start of the day (`00:00`), regardless of the value of `temporalInstantValue`. However, the time zone of `temporalInstantValue` is retained.", "The time zone of `temporalInstantValue` may be overridden; for example, `time.truncate('minute', input, {timezone:'+0200'})`. ", "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'second', `mapOfComponents` cannot contain information pertaining to a _minute_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
       query(
         """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
