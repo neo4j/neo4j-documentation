@@ -162,11 +162,16 @@ class StringFunctionsTest extends DocumentingTest {
       function("toString(expression)", "A String.", ("expression", "An expression that returns a number, a boolean, or a string."))
       considerations("`toString(null)` returns `null`", "If `expression` is a string, it will be returned unchanged.")
       query(
-        """RETURN toString(11.5), toString('already a string'), toString(true), toString(date({year:1984, month:10, day:11})) AS dateString,
-          |   toString(datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: 'Europe/Stockholm'})) AS datetimeString,
+        """RETURN toString(11.5), toString('already a string'), toString(true),
+          |   toString(date({year:1984, month:10, day:11})) AS dateString,
+          |   toString(datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 341, timezone: 'Europe/Stockholm'})) AS datetimeString,
           |   toString(duration({minutes: 12, seconds: -60})) AS durationString""".stripMargin, ResultAssertions((r) => {
-          //r.toList should equal(List(Map("toString(11.5)" -> "11.5", "toString('already a string')" -> "already a string", "toString(TRUE )" -> "true")))
-          //CYPHER_TODO
+          r.toList should equal(List(Map(
+            "toString(11.5)" -> "11.5", "toString('already a string')" -> "already a string", "toString(TRUE )" -> "true",
+            "dateString" -> "1984-10-11",
+            "datetimeString" -> "1984-10-11T12:31:14.341+01:00[Europe/Stockholm]",
+            "durationString" -> "PT11M")
+          ))
         })) {
         resultTable()
       }
