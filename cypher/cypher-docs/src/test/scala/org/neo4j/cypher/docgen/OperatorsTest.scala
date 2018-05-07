@@ -19,19 +19,12 @@
  */
 package org.neo4j.cypher.docgen
 
-import java.time.{ZoneId, ZoneOffset}
-import java.util.function.Supplier
-
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.values.storable.{DateTimeValue, DateValue, DurationValue}
+import org.neo4j.values.storable.{DateValue, DurationValue, LocalDateTimeValue}
 
 class OperatorsTest extends DocumentingTest {
 
   override def outputPath = "target/docs/dev/ql/"
-
-  private val defaultZoneSupplier: Supplier[ZoneId] = new Supplier[ZoneId] {
-    override def get(): ZoneId = ZoneOffset.UTC
-  }
 
   override def doc = new DocBuilder {
     doc("Operators", "query-operators")
@@ -292,27 +285,13 @@ class OperatorsTest extends DocumentingTest {
         """)
       section("Adding and subtracting a _Duration_ to or from a temporal instant", "syntax-add-subtract-duration-to-temporal-instant") {
         query(
-          """WITH datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 1, timezone: '+01:00'}) AS aDateTime
-            |UNWIND [duration({years: 12, nanoseconds: 2}),
-            |        duration({days: -14}),
-            |        duration({days: 14.5})] AS aDuration
-            |RETURN aDateTime, aDuration, aDateTime + aDuration, aDateTime - aDuration""".stripMargin, ResultAssertions((r) => {
+          """WITH localdatetime({year:1984, month:10, day:11, hour:12, minute:31, second:14}) AS aDateTime,
+            |     duration({years: 12, nanoseconds: 2}) AS aDuration
+            |RETURN aDateTime + aDuration, aDateTime - aDuration""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map(
-                "aDateTime - aDuration" -> DateTimeValue.parse("1972-10-11T12:31:13.999999999+01:00", defaultZoneSupplier).asObjectCopy(),
-                "aDateTime + aDuration" -> DateTimeValue.parse("1996-10-11T12:31:14.000000003+01:00", defaultZoneSupplier).asObjectCopy(),
-                "aDateTime" -> DateTimeValue.parse("1984-10-11T12:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
-                "aDuration" -> DurationValue.parse("P12YT0.000000002S")),
-              Map(
-                "aDateTime - aDuration" -> DateTimeValue.parse("1984-10-25T12:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
-                "aDateTime + aDuration" -> DateTimeValue.parse("1984-09-27T12:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
-                "aDateTime" -> DateTimeValue.parse("1984-10-11T12:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
-                "aDuration" -> DurationValue.parse("P-14D")),
-              Map(
-                "aDateTime - aDuration" -> DateTimeValue.parse("1984-09-27T00:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
-                "aDateTime + aDuration" -> DateTimeValue.parse("1984-10-26T00:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
-                "aDateTime" -> DateTimeValue.parse("1984-10-11T12:31:14.000000001+01:00", defaultZoneSupplier).asObjectCopy(),
-                "aDuration" -> DurationValue.parse("P14DT12H"))
+                "aDateTime - aDuration" -> LocalDateTimeValue.parse("1972-10-11T12:31:13.999999998").asObjectCopy(),
+                "aDateTime + aDuration" -> LocalDateTimeValue.parse("1996-10-11T12:31:14.000000002").asObjectCopy())
             ))
           })) {
           resultTable()
@@ -324,13 +303,11 @@ class OperatorsTest extends DocumentingTest {
         query(
           """WITH date({year:1984, month:10, day:11}) AS aDate,
             |     duration({years: 12, nanoseconds: 2}) AS aDuration
-            |RETURN aDate, aDuration, aDate + aDuration, aDate - aDuration""".stripMargin, ResultAssertions((r) => {
+            |RETURN aDate + aDuration, aDate - aDuration""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map(
                 "aDate - aDuration" -> DateValue.parse("1972-10-11").asObjectCopy(),
-                "aDate + aDuration" -> DateValue.parse("1996-10-11").asObjectCopy(),
-                "aDuration" -> DurationValue.parse("P12YT0.000000002S"),
-                "aDate" -> DateValue.parse("1984-10-11").asObjectCopy())
+                "aDate + aDuration" -> DateValue.parse("1996-10-11").asObjectCopy())
             ))
           })) {
           resultTable()
