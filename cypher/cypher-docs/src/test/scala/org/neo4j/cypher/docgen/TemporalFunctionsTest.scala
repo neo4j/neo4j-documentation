@@ -678,7 +678,16 @@ class TemporalFunctionsTest extends DocumentingTest {
       p(
         """`datetime()` returns a _DateTime_ value with the specified _year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ and _timezone_ component values.""".stripMargin)
       function("datetime({year [, month, day, hour, minute, second, millisecond, microsecond, nanosecond, timezone]})", "A DateTime.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
-      considerations("The _month_ component will default to `1` if `month` is omitted.", "The _day of the month_ component will default to `1` if `day` is omitted.", "The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "The _timezone_ component will default to the `UTC` time zone if `timezone` is omitted.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `year`, `month`, `day`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `month` and `day`, but specifying `year`, `month`, `day` and `minute` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
+      considerations("The _month_ component will default to `1` if `month` is omitted.",
+        "The _day of the month_ component will default to `1` if `day` is omitted.",
+        "The _hour_ component will default to `0` if `hour` is omitted.",
+        "The _minute_ component will default to `0` if `minute` is omitted.",
+        "The _second_ component will default to `0` if `second` is omitted.",
+        "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.",
+        "The _timezone_ component will default to the configured default time zone if `timezone` is omitted.",
+        "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.",
+        "The least significant components in the set `year`, `month`, `day`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `month` and `day`, but specifying `year`, `month`, `day` and `minute` is not permitted.",
+        "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
       query(
         """UNWIND [datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 123, microsecond: 456, nanosecond: 789}),
           |   datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 645, timezone: '+01:00'}),
@@ -707,7 +716,16 @@ class TemporalFunctionsTest extends DocumentingTest {
       p(
         """`datetime()` returns a _DateTime_ value with the specified _year_, _week_, _dayOfWeek_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ and _timezone_ component values.""".stripMargin)
       function("datetime({year [, week, dayOfWeek, hour, minute, second, millisecond, microsecond, nanosecond, timezone]})", "A DateTime.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
-      considerations("The _week_ component will default to `1` if `week` is omitted.", "The _day of the week_ component will default to `1` if `dayOfWeek` is omitted.", "The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "The _timezone_ component will default to the `UTC` time zone if `timezone` is omitted.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `year`, `week`, `dayOfWeek`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `week` and `dayOfWeek`, but specifying `year`, `week`, `dayOfWeek` and `minute` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
+      considerations("The _week_ component will default to `1` if `week` is omitted.",
+        "The _day of the week_ component will default to `1` if `dayOfWeek` is omitted.",
+        "The _hour_ component will default to `0` if `hour` is omitted.",
+        "The _minute_ component will default to `0` if `minute` is omitted.",
+        "The _second_ component will default to `0` if `second` is omitted.",
+        "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.",
+        "The _timezone_ component will default to the configured default time zone if `timezone` is omitted.",
+        "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.",
+        "The least significant components in the set `year`, `week`, `dayOfWeek`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `week` and `dayOfWeek`, but specifying `year`, `week`, `dayOfWeek` and `minute` is not permitted.",
+        "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
       query(
         """UNWIND [datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
           |   datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
@@ -734,7 +752,16 @@ class TemporalFunctionsTest extends DocumentingTest {
       p(
         """`datetime()` returns a _DateTime_ value with the specified _year_, _quarter_, _dayOfQuarter_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ and _timezone_ component values.""".stripMargin)
       function("datetime({year [, quarter, dayOfQuarter, hour, minute, second, millisecond, microsecond, nanosecond, timezone]})", "A DateTime.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
-      considerations("The _quarter_ component will default to `1` if `quarter` is omitted.", "The _day of the quarter_ component will default to `1` if `dayOfQuarter` is omitted.", "The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "The _timezone_ component will default to the `UTC` time zone if `timezone` is omitted.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `year`, `quarter`, `dayOfQuarter`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `quarter` and `dayOfQuarter`, but specifying `year`, `quarter`, `dayOfQuarter` and `minute` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
+      considerations("The _quarter_ component will default to `1` if `quarter` is omitted.",
+        "The _day of the quarter_ component will default to `1` if `dayOfQuarter` is omitted.",
+        "The _hour_ component will default to `0` if `hour` is omitted.",
+        "The _minute_ component will default to `0` if `minute` is omitted.",
+        "The _second_ component will default to `0` if `second` is omitted.",
+        "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.",
+        "The _timezone_ component will default to the configured default time zone if `timezone` is omitted.",
+        "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.",
+        "The least significant components in the set `year`, `quarter`, `dayOfQuarter`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `quarter` and `dayOfQuarter`, but specifying `year`, `quarter`, `dayOfQuarter` and `minute` is not permitted.",
+        "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
       query(
         """UNWIND [datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31, second:14, microsecond: 645876}),
           |   datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31, second:14, timezone: '+01:00'}),
@@ -755,7 +782,15 @@ class TemporalFunctionsTest extends DocumentingTest {
       p(
         """`datetime()` returns a _DateTime_ value with the specified _year_, _ordinalDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ and _timezone_ component values.""".stripMargin)
       function("datetime({year [, ordinalDay, hour, minute, second, millisecond, microsecond, nanosecond, timezone]})", "A DateTime.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
-      considerations("The _ordinal day of the year_ component will default to `1` if `ordinalDay` is omitted.", "The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "The _timezone_ component will default to the `UTC` time zone if `timezone` is omitted.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `year`, `ordinalDay`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year` and `ordinalDay`, but specifying `year`, `ordinalDay` and `minute` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
+      considerations("The _ordinal day of the year_ component will default to `1` if `ordinalDay` is omitted.",
+        "The _hour_ component will default to `0` if `hour` is omitted.",
+        "The _minute_ component will default to `0` if `minute` is omitted.",
+        "The _second_ component will default to `0` if `second` is omitted.",
+        "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.",
+        "The _timezone_ component will default to the configured default time zone if `timezone` is omitted.",
+        "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.",
+        "The least significant components in the set `year`, `ordinalDay`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year` and `ordinalDay`, but specifying `year`, `ordinalDay` and `minute` is not permitted.",
+        "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
       query(
         """UNWIND [datetime({year:1984, ordinalDay:202, hour:12, minute:31, second:14, millisecond: 645}),
           |   datetime({year:1984, ordinalDay:202, hour:12, minute:31, second:14, timezone: '+01:00'}),
@@ -776,7 +811,10 @@ class TemporalFunctionsTest extends DocumentingTest {
       p(
         """`datetime()` returns the _DateTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
       function("datetime(temporalValue)", "A DateTime.", ("temporalValue", "A string representing a temporal value."))
-      considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>>, <<cypher-temporal-specify-time, times>> and <<cypher-temporal-specify-time-zone, time zones>>.", "`datetime(null)` returns the current date and time.", "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
+      considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>>, <<cypher-temporal-specify-time, times>> and <<cypher-temporal-specify-time-zone, time zones>>.",
+        "`datetime(null)` returns the current date and time.",
+        "The _timezone_ component will default to the configured default time zone if it is omitted.",
+        "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
       query(
         """UNWIND [datetime('2015-07-21T21:40:32.142+0100'),
           |   datetime('2015-W30-2T214032.142Z'),
@@ -909,8 +947,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         """.stripMargin)
       function("datetime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A DateTime.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`. The key `timezone` is also allowed to override or attach a timezone during truncation."))
       considerations("`temporalInstantValue` cannot be a _Date_ value if unit is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.",
-        "If `temporalInstantValue` is one of {_Date_, _LocalDateTime_}, a _Date_ or _LocalDateTime_ value without a time zone can be truncated to a _DateTime_ value. When doing so, the resulting _DateTime_ will have the default time zone, unless a time zone has been specified explicitly through `mapOfComponents` as `{timezone: someValue}` to override the time zone of `temporalInstantValue`.",
+        "The time zone of `temporalInstantValue` may be overridden; for example, `datetime.truncate('minute', input, {timezone:'+0200'})`. ",
         "If `temporalInstantValue` is one of {_Time_, _DateTime_}, a value with a time zone, and the timezone is overridden, no time conversion happens.",
+        "If `temporalInstantValue` is one of {_LocalDateTime_, _Date_}, a value without a time zone, and the timezone is not overridden, the configured default time zone will be used.",
         "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.",
         "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
         "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
@@ -1368,7 +1407,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("time.transaction([ {timezone} ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN time.transaction() AS currentTime""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[OffsetTime]("currentTime").next()
+            now should be(a[OffsetTime])
           })) {
           resultTable()
         }
@@ -1382,13 +1422,15 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("time.statement([ {timezone} ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN time.statement() AS currentTime""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[OffsetTime]("currentTime").next()
+            now should be(a[OffsetTime])
           })) {
           resultTable()
         }
         query(
           """RETURN time.statement('America/Los Angeles') AS currentTimeInLA""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[OffsetTime]("currentTimeInLA").next()
+            now should be(a[OffsetTime])
           })) {
           resultTable()
         }
@@ -1401,7 +1443,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("time.realtime([ {timezone} ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN time.realtime() AS currentTime""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[OffsetTime]("currentTime").next()
+            now should be(a[OffsetTime])
           })) {
           resultTable()
         }
@@ -1411,15 +1454,25 @@ class TemporalFunctionsTest extends DocumentingTest {
       p(
         """`time()` returns a _Time_ value with the specified _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ and _timezone_ component values.""".stripMargin)
       function("time({hour [, minute, second, millisecond, microsecond, nanosecond, timezone]})", "A Time.", ("A single map consisting of the following:", ""), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
-      considerations("The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "The _timezone_ component will default to the `UTC` time zone if `timezone` is omitted.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `hour` and `minute`, but specifying `hour` and `second` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
+      considerations("The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.",
+        "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.",
+        "The _timezone_ component will default to the configured default time zone if `timezone` is omitted.",
+        "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.",
+        "The least significant components in the set `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `hour` and `minute`, but specifying `hour` and `second` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
       query(
-        """UNWIND [time({hour:12, minute:31, second:14, nanosecond: 789, millisecond: 123, microsecond: 456}),
+        """UNWIND [time({hour:12, minute:31, second:14, millisecond: 123, microsecond: 456, nanosecond: 789}),
           |   time({hour:12, minute:31, second:14, nanosecond: 645876123}),
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
           |   time({hour:12, minute:31, timezone: '+01:00'}),
           |   time({hour:12, timezone: '+01:00'})] AS theTime
           |RETURN theTime""".stripMargin, ResultAssertions((r) => {
-          // CYPHER_TODO
+          r.toList should equal(List(
+            Map("theTime" -> TimeValue.parse("12:31:14.123456789Z", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("12:31:14.645876123Z", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("12:31:14.645876+01:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("12:31+01:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("12:00+01:00", defaultZoneSupplier).asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -1428,7 +1481,10 @@ class TemporalFunctionsTest extends DocumentingTest {
       p(
         """`time()` returns the _Time_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
       function("time(temporalValue)", "A Time.", ("temporalValue", "A string representing a temporal value."))
-      considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-time, times>> and <<cypher-temporal-specify-time-zone, time zones>>.", "`time(null)` returns the current time.", "`temporalValue` must denote a valid time; i.e. a `temporalValue` denoting `15:67` is invalid.")
+      considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-time, times>> and <<cypher-temporal-specify-time-zone, time zones>>.",
+        "The _timezone_ component will default to the configured default time zone if it is omitted.",
+        "`time(null)` returns the current time.",
+        "`temporalValue` must denote a valid time; i.e. a `temporalValue` denoting `15:67` is invalid.")
       query(
         """UNWIND [time('21:40:32.142+0100'),
           |   time('214032.142Z'),
@@ -1439,7 +1495,16 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   time('2140-02'),
           |   time('22+18:00')] AS theTime
           |RETURN theTime""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(
+            Map("theTime" -> TimeValue.parse("21:40:32.142+0100", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("214032.142Z", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("21:40:32+01:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("214032-0100", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("21:40-01:30", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("2140-00:00", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("2140-02", defaultZoneSupplier).asObjectCopy()),
+            Map("theTime" -> TimeValue.parse("22+18:00", defaultZoneSupplier).asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -1455,16 +1520,17 @@ class TemporalFunctionsTest extends DocumentingTest {
         "Selecting a _Time_ or _DateTime_ value in the `time` component also selects its timezone. If instead a _LocalTime_ or _LocalDateTime_ is selecting, the default timezone is used. In any case, the timezone can be overridden explicitly.",
         "Selecting a _DateTime_ or _Time_ in the `time` component and overwriting the time zone will adjust the local time to keep the same point in time.")
       query(
-        """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
-          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
-          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'})] AS dd
-          |RETURN time(dd) AS theTime,
-          |   time({time:dd}) AS timeOnly,
-          |   time({time:dd, timezone:'+05:00'}) AS timeTimezone,
-          |   time({time:dd, second: 42}) AS timeSS,
-          |   time({time:dd, second: 42, timezone:'+05:00'}) AS timeSSTimezone""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+        """WITH localtime({hour:12, minute:31, second:14, microsecond: 645876}) AS tt
+          |RETURN time({time:tt}) AS timeOnly,
+          |   time({time:tt, timezone:'+05:00'}) AS timeTimezone,
+          |   time({time:tt, second: 42}) AS timeSS,
+          |   time({time:tt, second: 42, timezone:'+05:00'}) AS timeSSTimezone""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "timeOnly" -> TimeValue.parse("12:31:14.645876", defaultZoneSupplier).asObjectCopy(),
+            "timeTimezone" -> TimeValue.parse("12:31:14.645876+05:00", defaultZoneSupplier).asObjectCopy(),
+            "timeSS" -> TimeValue.parse("12:31:42.645876Z", defaultZoneSupplier).asObjectCopy(),
+            "timeSSTimezone" -> TimeValue.parse("12:31:42.645876+05:00", defaultZoneSupplier).asObjectCopy()
+          )))
         })) {
         resultTable()
       }
@@ -1482,22 +1548,27 @@ class TemporalFunctionsTest extends DocumentingTest {
       considerations("Truncating time to day -- i.e. `unit` is 'day'  -- is supported, and yields midnight at the start of the day (`00:00`), regardless of the value of `temporalInstantValue`. However, the time zone of `temporalInstantValue` is retained.",
         "The time zone of `temporalInstantValue` may be overridden; for example, `time.truncate('minute', input, {timezone:'+0200'})`. ",
         "If `temporalInstantValue` is one of {_Time_, _DateTime_}, a value with a time zone, and the timezone is overridden, no time conversion happens.",
+        "If `temporalInstantValue` is one of {_LocalTime_, _LocalDateTime_, _Date_}, a value without a time zone, and the timezone is not overridden, the configured default time zone will be used.",
         "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'second', `mapOfComponents` cannot contain information pertaining to a _minute_.",
         "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
         "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
       query(
-        """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
-          |   localdatetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123}),
-          |   time({hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '-01:00'}),
-          |   localtime({hour:12, minute:31, second:14, nanosecond: 645876123})] AS d
-          |RETURN time.truncate('day', d) AS truncDay,
-          |   time.truncate('hour', d) AS truncHour,
-          |   time.truncate('minute', d) AS truncMinute,
-          |   time.truncate('second', d) AS truncSecond,
-          |   time.truncate('millisecond', d, {nanosecond:2}) AS truncMillisecond,
-          |   time.truncate('microsecond', d, {nanosecond:2}) AS truncMicrosecond
+        """WITH time({hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '-01:00'}) AS t
+          |RETURN time.truncate('day', t) AS truncDay,
+          |   time.truncate('hour', t) AS truncHour,
+          |   time.truncate('minute', t) AS truncMinute,
+          |   time.truncate('second', t) AS truncSecond,
+          |   time.truncate('millisecond', t, {nanosecond:2}) AS truncMillisecond,
+          |   time.truncate('microsecond', t) AS truncMicrosecond
           |""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(Map(
+            "truncDay" -> TimeValue.parse("00:00-01:00", defaultZoneSupplier).asObjectCopy(),
+            "truncHour" -> TimeValue.parse("12:00-01:00", defaultZoneSupplier).asObjectCopy(),
+            "truncMinute" -> TimeValue.parse("12:31-01:00", defaultZoneSupplier).asObjectCopy(),
+            "truncSecond" -> TimeValue.parse("12:31:14-01:00", defaultZoneSupplier).asObjectCopy(),
+            "truncMillisecond" -> TimeValue.parse("12:31:14.645000002-01:00", defaultZoneSupplier).asObjectCopy(),
+            "truncMicrosecond" -> TimeValue.parse("12:31:14.645876-01:00", defaultZoneSupplier).asObjectCopy()
+          )))
         })) {
         resultTable()
       }
