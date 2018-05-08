@@ -19,12 +19,21 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
+import java.time.temporal.ChronoField
+import java.time.{LocalDate, Period, ZoneId, ZoneOffset}
+import java.util.function.Supplier
+
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, NoAssertions, ResultAssertions}
+import org.neo4j.values.storable._
 
 class TemporalTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/"
 
   override def doc = new DocBuilder {
+    val defaultZoneSupplier: Supplier[ZoneId] = new Supplier[ZoneId] {
+      override def get(): ZoneId = ZoneOffset.UTC
+    }
+
     doc("Temporal (Date/Time) values", "cypher-temporal")
     synopsis("Cypher has built-in support for handling temporal values, and the underlying database supports storing these temporal values as properties on nodes and relationships.")
     p(
@@ -275,36 +284,36 @@ class TemporalTest extends DocumentingTest {
             """.stripMargin)
           p("Parsing a _DateTime_ using the _calendar date_ format:")
           query(
-            """RETURN datetime('2015-06-24T12:50:35.556+0100')""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """RETURN datetime('2015-06-24T12:50:35.556+0100') AS theDateTime""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(Map("theDateTime" -> DateTimeValue.parse("2015-06-24T12:50:35.556+0100", defaultZoneSupplier).asObjectCopy())))
             })) {
             resultTable()
           }
           p("Parsing a _LocalDateTime_ using the _ordinal date_ format:")
           query(
-            """RETURN localdatetime('2015185T19:32:24')""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """RETURN localdatetime('2015185T19:32:24') as theLocalDateTime""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(Map("theLocalDateTime" -> LocalDateTimeValue.parse("2015185T19:32:24").asObjectCopy())))
             })) {
             resultTable()
           }
           p("Parsing a _Date_ using the _week date_ format:")
           query(
-            """RETURN  date('+2015-W13-4')""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """RETURN date('+2015-W13-4') AS theDate""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(Map("theDate" -> DateValue.parse("+2015-W13-4").asObjectCopy())))
             })) {
             resultTable()
           }
           p("Parsing a _Time_:")
           query(
-            """RETURN time('125035.556+0100')""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """RETURN time('125035.556+0100') AS theTime""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(Map("theTime" -> TimeValue.parse("125035.556+0100", defaultZoneSupplier).asObjectCopy())))
             })) {
             resultTable()
           }
           p("Parsing a _LocalTime_:")
           query(
-            """RETURN localtime('12:50:35.556')""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """RETURN localtime('12:50:35.556') AS theLocalTime""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(Map("theLocalTime" -> LocalTimeValue.parse("12:50:35.556").asObjectCopy())))
             })) {
             resultTable()
           }
@@ -335,8 +344,8 @@ class TemporalTest extends DocumentingTest {
             || `instant.nanosecond` | The _nanosecond_ component | Integer | `0` to `999999999` |  | X | X | X | X
             || `instant.timezone` | The _timezone_ component | String | <<cypher-temporal-specify-time-zone, Depending on how the time zone was specified, this is either a time zone name or an offset from UTC in the format `±HHMM`>> |  | X |   | X |
             || `instant.offset` | The _timezone_ offset | String  | ` ±HHMM` |  | X |  | X |
-            || `instant.offsetMinutes` | The _timezone_ offset in minutes | String CYPHER-TODO | `±00` to `±59` |  | X |  | X |
-            || `instant.offsetSeconds` | The _timezone_ offset in seconds | String CYPHER-TODO | `±00` to `±60` |  | X |  | X |
+            || `instant.offsetMinutes` | The _timezone_ offset in minutes | Integer | `-1080` to `+1080` |  | X |  | X |
+            || `instant.offsetSeconds` | The _timezone_ offset in seconds | Integer | `-64800` to `+64800` |  | X |  | X |
             || `instant.epochMillis` | The number of milliseconds between `1970-01-01T00:00:00+0000` and the instant footnote:[`datetime().epochMillis` returns the equivalent value of the <<functions-timestamp, `timestamp()`>> function.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |   | |
             || `instant.epochSeconds` | The number of seconds between `1970-01-01T00:00:00+0000` and the instant footnote:[For the _nanosecond_ part of the _epoch_ offset, the regular _nanosecond_ component (`instant.nanosecond`) can be used.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |  |   | |
             ||===
@@ -346,7 +355,17 @@ class TemporalTest extends DocumentingTest {
         query(
           """WITH date({year:1984, month:10, day:11}) As d
             |RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.dayOfWeek, d.dayOfQuarter""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            r.toList should equal(List(Map(
+              "d.year" -> 1984,
+              "d.weekYear" -> 1984,
+              "d.quarter" -> 4,
+              "d.month" -> 10,
+              "d.week" -> 41,
+              "d.day" -> 11,
+              "d.ordinalDay" -> 285,
+              "d.dayOfWeek" -> 4,
+              "d.dayOfQuarter" -> 11
+            )))
           })) {
           resultTable()
         }
@@ -356,7 +375,28 @@ class TemporalTest extends DocumentingTest {
             |RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.dayOfWeek, d.dayOfQuarter,
             |   d.hour, d.minute, d.second, d.millisecond, d.microsecond, d.nanosecond,
             |   d.timezone, d.offset, d.offsetMinutes, d.epochSeconds, d.epochMillis""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            r.toList should equal(List(Map(
+              "d.second" -> 14,
+              "d.hour" -> 12,
+              "d.microsecond" -> 645876,
+              "d.weekYear" -> 1984,
+              "d.offsetMinutes" -> 60,
+              "d.quarter" -> 4,
+              "d.year" -> 1984,
+              "d.week" -> 45,
+              "d.offset" -> "+01:00",
+              "d.day" -> 11,
+              "d.millisecond" -> 645,
+              "d.minute" -> 31,
+              "d.dayOfWeek" -> 7,
+              "d.timezone" -> "Europe/Stockholm",
+              "d.dayOfQuarter" -> 42,
+              "d.epochSeconds" -> 469020674,
+              "d.ordinalDay" -> 316,
+              "d.epochMillis" -> 469020674645L,
+              "d.month" -> 11,
+              "d.nanosecond" -> 645876123
+            )))
           })) {
           resultTable()
         }
@@ -403,29 +443,29 @@ class TemporalTest extends DocumentingTest {
             """.stripMargin)
           p("Return a _Duration_ of `14` _days_, `16` _hours_ and `12` _minutes_:")
           query(
-            """RETURN duration('P14DT16H12M')""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """RETURN duration('P14DT16H12M') AS theDuration""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(Map("theDuration" -> DurationValue.parse("P14DT16H12M"))))
             })) {
             resultTable()
           }
           p("Return a _Duration_ of `5` _months_, `1` _day_ and `12` _hours_:")
           query(
-            """RETURN duration('P5M1.5D')""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """RETURN duration('P5M1.5D') AS theDuration""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(Map("theDuration" -> DurationValue.parse("P5M1.5D"))))
             })) {
             resultTable()
           }
           p("Return a _Duration_ of `45` seconds:")
           query(
-            """RETURN duration('PT0.75M')""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """RETURN duration('PT0.75M') AS theDuration""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(Map("theDuration" -> DurationValue.parse("PT0.75M"))))
             })) {
             resultTable()
           }
           p("Return a _Duration_ of `2` _weeks_, `3` _days_ and `12` _hours_:")
           query(
-            """RETURN duration('P2.5W')""".stripMargin, ResultAssertions((r) => {
-              //CYPHER_TODO
+            """RETURN duration('P2.5W') AS theDuration""".stripMargin, ResultAssertions((r) => {
+              r.toList should equal(List(Map("theDuration" -> DurationValue.parse("P2.5W"))))
             })) {
             resultTable()
           }
@@ -506,7 +546,24 @@ class TemporalTest extends DocumentingTest {
             |RETURN d.years, d.months, d.monthsOfYear, d.days, d.hours,
             |   d.minutes, d.minutesOfHour, d.seconds, d.secondsOfMinute, d.milliseconds, d.millisecondsOfSecond, d.microseconds,
             |   d.microsecondsOfSecond, d.nanoseconds, d.nanosecondsOfSecond""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            r.toList should equal(List(Map(
+              "d.nanosecondsOfSecond" -> 111111111,
+              "d.milliseconds" -> 3661111,
+              "d.secondsOfMinute" -> 1,
+              "d.millisecondsOfSecond" -> 111,
+              "d.minutesOfHour" -> 1,
+              "d.days" -> 111,
+              "d.microseconds" -> 3661111111L,
+              "d.nanoseconds" -> 3661111111111L,
+              "d.microsecondsOfSecond" -> 111111,
+              "d.years" -> 1,
+              "d.months" -> 16,
+              "d.minutes" -> 61,
+              "d.hours" -> 1,
+              "d.seconds" -> 3661,
+              "d.monthsOfYear" -> 4
+            )))
+
           })) {
           resultTable()
         }
@@ -519,64 +576,64 @@ class TemporalTest extends DocumentingTest {
         """.stripMargin)
       p("Create a _Duration_ representing `1.5` _days_:")
       query(
-        """RETURN duration({days: 1, hours: 12})""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+        """RETURN duration({days: 1, hours: 12}) AS theDuration""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theDuration" -> DurationValue.parse("P1DT12H"))))
         })) {
         resultTable()
       }
       p("Computing the _Duration_ between two temporal instants")
       query(
-        """RETURN duration.between(date('1984-10-11'), date('2015-06-24'))""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO //should be /duration({years:30, months:8, days:13})
+        """RETURN duration.between(date('1984-10-11'), date('2015-06-24')) AS theDuration""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theDuration" -> DurationValue.parse("P30Y8M13D"))))
         })) {
         resultTable()
       }
       p("Compute the number of days between two _Date_ values:")
       query(
-        """RETURN duration.inDays(date('2014-10-11'), date('2015-08-06'))""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+        """RETURN duration.inDays(date('2014-10-11'), date('2015-08-06')) AS theDuration""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theDuration" -> DurationValue.parse("P299D"))))
         })) {
         resultTable()
       }
       p("Get the _Date_ of `Thursday` in the current week:")
       query(
-        """RETURN date.truncate('week', date(), {dayOfWeek: 4})""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+        """RETURN date.truncate('week', date(), {dayOfWeek: 4}) as thursday""".stripMargin, ResultAssertions((r) => {
+          r.toList.head("thursday").asInstanceOf[LocalDate].get(ChronoField.DAY_OF_WEEK) should equal(4)
         })) {
         resultTable()
       }
       p("Get the last _day_ of the next month:")
       query(
-        """RETURN date.truncate('month', date() + duration('P2M')) - duration('P1D')""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+        """RETURN date.truncate('month', date() + duration('P2M')) - duration('P1D') AS lastDay""".stripMargin, ResultAssertions((r) => {
+          r.toList.head("lastDay").asInstanceOf[LocalDate].plus(Period.ofDays(1)).get(ChronoField.DAY_OF_MONTH) should equal(1)
         })) {
         resultTable()
       }
       p("Adding a _Duration_ to a _Date_:")
       query(
-        """RETURN time('13:42:19') + duration({days: 1, hours: 12})""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO //should be time({hour:1, minute:42, second:19})
+        """RETURN time('13:42:19') + duration({days: 1, hours: 12}) AS theTime""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theTime" -> TimeValue.parse("01:42:19", defaultZoneSupplier).asObjectCopy())))
         })) {
         resultTable()
       }
       p("Adding two _Duration_ values:")
       query(
-        """RETURN duration({days: 2, hours: 7}) + duration({months: 1, hours: 18})""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO should be duration({months:1, days:2, hours:25})
+        """RETURN duration({days: 2, hours: 7}) + duration({months: 1, hours: 18}) AS theDuration""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theDuration" -> DurationValue.parse("P1M2DT25H"))))
         })) {
         resultTable()
       }
       p("Multiplying a _Duration_ by a number:")
       query(
-        """RETURN duration({hours: 5, minutes: 21}) * 14""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO //should be duration({hours:70, minutes:294})
+        """RETURN duration({hours: 5, minutes: 21}) * 14 AS theDuration""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theDuration" -> DurationValue.parse("PT74H54M"))))
         })) {
         resultTable()
       }
       p("Dividing a _Duration_ by a number:")
       query(
-        """RETURN duration({hours: 3, minutes: 16}) / 2""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO //should be duration({hours:1, minutes:38})
+        """RETURN duration({hours: 3, minutes: 16}) / 2 AS theDuration""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theDuration" -> DurationValue.parse("PT1H38M"))))
         })) {
         resultTable()
       }
@@ -589,16 +646,15 @@ class TemporalTest extends DocumentingTest {
           |   ELSE
           |      date2 + duration("P1D") > date1
           |   END
+          |   AS lessThanOneDayApart
           |""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(Map("lessThanOneDayApart" -> true)))
         })) {
         resultTable()
       }
       p("Return the abbreviated name of the current month:")
       query(
-        """RETURN ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date().month-1] AS month""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
-        })) {
+        """RETURN ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date().month-1] AS month""".stripMargin, NoAssertions) {
         resultTable()
       }
     }
