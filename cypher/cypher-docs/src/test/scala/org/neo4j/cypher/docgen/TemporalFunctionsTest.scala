@@ -23,7 +23,7 @@ import java.time._
 import java.util.function.Supplier
 
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
-import org.neo4j.values.storable.{DateTimeValue, DateValue, DurationValue, Values}
+import org.neo4j.values.storable._
 
 class TemporalFunctionsTest extends DocumentingTest {
 
@@ -966,7 +966,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("localdatetime.transaction([ {timezone} ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localdatetime.transaction() AS now""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalDateTime]("now").next()
+            now should be(a[LocalDateTime])
           })) {
           resultTable()
         }
@@ -980,7 +981,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("localdatetime.statement([ {timezone} ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localdatetime.statement() AS now""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalDateTime]("now").next()
+            now should be(a[LocalDateTime])
           })) {
           resultTable()
         }
@@ -993,13 +995,15 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("localdatetime.realtime([ {timezone} ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localdatetime.realtime() AS now""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalDateTime]("now").next()
+            now should be(a[LocalDateTime])
           })) {
           resultTable()
         }
         query(
           """RETURN localdatetime.realtime('America/Los Angeles') AS nowInLA""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalDateTime]("nowInLA").next()
+            now should be(a[LocalDateTime])
           })) {
           resultTable()
         }
@@ -1011,10 +1015,8 @@ class TemporalFunctionsTest extends DocumentingTest {
       function("localdatetime({year [, month, day, hour, minute, second, millisecond, microsecond, nanosecond]})", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
       considerations("The _month_ component will default to `1` if `month` is omitted.", "The _day of the month_ component will default to `1` if `day` is omitted.", "The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `year`, `month`, `day`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `month` and `day`, but specifying `year`, `month`, `day` and `minute` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
       query(
-        """UNWIND [localdatetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 789, millisecond: 123, microsecond: 456}),
-          |   localdatetime({year:1984, month:10, day:11, hour:12, minute:31})] as theDate
-          |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          // CYPHER_TODO
+        """RETURN localdatetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 123, microsecond: 456, nanosecond: 789}) AS theDate""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theDate" -> LocalDateTimeValue.parse("1984-10-11T12:31:14.123456789").asObjectCopy())))
         })) {
         resultTable()
       }
@@ -1025,10 +1027,8 @@ class TemporalFunctionsTest extends DocumentingTest {
       function("localdatetime({year [, week, dayOfWeek, hour, minute, second, millisecond, microsecond, nanosecond]})", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
       considerations("The _week_ component will default to `1` if `week` is omitted.", "The _day of the week_ component will default to `1` if `dayOfWeek` is omitted.", "The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `year`, `week`, `dayOfWeek`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `week` and `dayOfWeek`, but specifying `year`, `week`, `dayOfWeek` and `minute` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
       query(
-        """UNWIND [localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14})] as theDate
-          |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          // CYPHER_TODO
+        """RETURN localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}) AS theDate""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theDate" -> LocalDateTimeValue.parse("1984-03-07T12:31:14.645").asObjectCopy())))
         })) {
         resultTable()
       }
@@ -1039,10 +1039,8 @@ class TemporalFunctionsTest extends DocumentingTest {
       function("localdatetime({year [, quarter, dayOfQuarter, hour, minute, second, millisecond, microsecond, nanosecond]})", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
       considerations("The _quarter_ component will default to `1` if `quarter` is omitted.", "The _day of the quarter_ component will default to `1` if `dayOfQuarter` is omitted.", "The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `year`, `quarter`, `dayOfQuarter`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `quarter` and `dayOfQuarter`, but specifying `year`, `quarter`, `dayOfQuarter` and `minute` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
       query(
-        """UNWIND [localdatetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31, second:14, nanosecond: 645876123}),
-          |   localdatetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31})] as theDate
-          |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          // CYPHER_TODO
+        """RETURN localdatetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31, second:14, nanosecond: 645876123}) AS theDate""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theDate" -> LocalDateTimeValue.parse("1984-08-14T12:31:14.645876123").asObjectCopy())))
         })) {
         resultTable()
       }
@@ -1053,10 +1051,8 @@ class TemporalFunctionsTest extends DocumentingTest {
       function("localdatetime({year [, ordinalDay, hour, minute, second, millisecond, microsecond, nanosecond]})", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
       considerations("The _ordinal day of the year_ component will default to `1` if `ordinalDay` is omitted.", "The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `year`, `ordinalDay`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year` and `ordinalDay`, but specifying `year`, `ordinalDay` and `minute` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
       query(
-        """UNWIND [localdatetime({year:1984, ordinalDay:202, hour:12, minute:31, second:14, microsecond: 645876}),
-          |   localdatetime({year:1984, ordinalDay:202, hour:12})] as theDate
-          |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          // CYPHER_TODO
+        """RETURN localdatetime({year:1984, ordinalDay:202, hour:12, minute:31, second:14, microsecond: 645876}) AS theDate""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("theDate" -> LocalDateTimeValue.parse("1984-07-20T12:31:14.645876").asObjectCopy())))
         })) {
         resultTable()
       }
@@ -1065,14 +1061,20 @@ class TemporalFunctionsTest extends DocumentingTest {
       p(
         """`localdatetime()` returns the _LocalDateTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
       function("localdatetime(temporalValue)", "A LocalDateTime.", ("temporalValue", "A string representing a temporal value."))
-      considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>> and <<cypher-temporal-specify-time, times>>.", "`localdatetime(null)` returns the current date and time.", "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
+      considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>> and <<cypher-temporal-specify-time, times>>.", "`localdatetime(null)` returns the current date and time.",
+        "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
       query(
         """UNWIND [localdatetime('2015-07-21T21:40:32.142'),
           |   localdatetime('2015-W30-2T214032.142'),
           |   localdatetime('2015-202T21:40:32'),
           |   localdatetime('2015202T21')] AS theDate
           |RETURN theDate""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(
+            Map("theDate" -> LocalDateTimeValue.parse("2015-07-21T21:40:32.142").asObjectCopy()),
+            Map("theDate" -> LocalDateTimeValue.parse("2015-W30-2T214032.142").asObjectCopy()),
+            Map("theDate" -> LocalDateTimeValue.parse("2015-202T21:40:32").asObjectCopy()),
+            Map("theDate" -> LocalDateTimeValue.parse("2015202T21").asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -1084,51 +1086,53 @@ class TemporalFunctionsTest extends DocumentingTest {
         """.stripMargin)
       function("localdatetime({datetime [, year, ..., nanosecond]}) | localdatetime({date [, year, ..., nanosecond]}) | localdatetime({time [, year, ..., nanosecond]}) | localdatetime({date, time [, year, ..., nanosecond]})", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.",
-        "Instead of `localdatetime({datetime: dd})` it is allowed to simply write `datetime(dd)`.")
+        "Instead of `localdatetime({datetime: dd})` it is allowed to simply write `localdatetime(dd)`.")
       p("""The following query shows the various usages of `localdatetime({date [, year, ..., nanosecond]})`""")
       query(
-        """UNWIND [date({year:1984, month:10, day:11}),
-          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
+        """WITH date({year:1984, month:10, day:11}) AS dd
           |RETURN localdatetime({date:dd, hour: 10, minute: 10, second: 10}) AS dateHHMMSS,
-          |   localdatetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS dateDDHHMMSS""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          |       localdatetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS dateDDHHMMSS""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "dateHHMMSS" -> LocalDateTimeValue.parse("1984-10-11T10:10:10").asObjectCopy(),
+            "dateDDHHMMSS" -> LocalDateTimeValue.parse("1984-10-28T10:10:10").asObjectCopy()
+          )))
         })) {
         resultTable()
       }
       p("""The following query shows the various usages of `localdatetime({time [, year, ..., nanosecond]})`""")
       query(
-        """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
-          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
-          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS tt
+        """WITH time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}) AS tt
           |RETURN localdatetime({year:1984, month:10, day:11, time:tt}) AS YYYYMMDDTime,
-          |   localdatetime({year:1984, month:10, day:11, time:tt, second: 42}) AS YYYYMMDDTimeSS""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          |       localdatetime({year:1984, month:10, day:11, time:tt, second: 42}) AS YYYYMMDDTimeSS""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "YYYYMMDDTime" -> LocalDateTimeValue.parse("1984-10-11T12:31:14.645876").asObjectCopy(),
+            "YYYYMMDDTimeSS" -> LocalDateTimeValue.parse("1984-10-11T12:31:42.645876").asObjectCopy()
+          )))
         })) {
         resultTable()
       }
       p("""The following query shows the various usages of `localdatetime({date, time [, year, ..., nanosecond]})`; i.e. combining a _Date_ and a _Time_ value to create a single _LocalDateTime_ value:""")
       query(
-        """UNWIND [date({year:1984, month:10, day:11}),
-          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
-          |UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
-          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'})] AS tt
+        """WITH date({year:1984, month:10, day:11}) AS dd,
+          |     time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}) AS tt
           |RETURN localdatetime({date:dd, time:tt}) AS dateTime,
-          |   localdatetime({date:dd, time:tt, day: 28, second: 42}) AS dateTimeDDSS""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          |       localdatetime({date:dd, time:tt, day: 28, second: 42}) AS dateTimeDDSS""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "dateTime" -> LocalDateTimeValue.parse("1984-10-11T12:31:14.645876").asObjectCopy(),
+            "dateTimeDDSS" -> LocalDateTimeValue.parse("1984-10-28T12:31:42.645876").asObjectCopy()
+          )))
         })) {
         resultTable()
       }
       p("""The following query shows the various usages of `localdatetime({datetime [, year, ..., nanosecond]})`""")
       query(
-        """UNWIND [localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] as dd
-          |RETURN localdatetime(dd) as theDateTime,
-          |   localdatetime({datetime:dd}) as datetime,
-          |   localdatetime({datetime:dd, day: 28, second: 42}) as datetimeDDSS""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+        """WITH datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'}) as dd
+          |RETURN localdatetime({datetime:dd}) as dateTime,
+          |       localdatetime({datetime:dd, day: 28, second: 42}) as dateTimeDDSS""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "dateTime" -> LocalDateTimeValue.parse("1984-10-11T12:00").asObjectCopy(),
+            "dateTimeDDSS" -> LocalDateTimeValue.parse("1984-10-28T12:00:42").asObjectCopy()
+          )))
         })) {
         resultTable()
       }
@@ -1143,21 +1147,26 @@ class TemporalFunctionsTest extends DocumentingTest {
           |For example, `day` -- with some value `x` -- may be provided when the truncation unit is `year` in order to ensure the returned value has the _day_ set to `x` instead of the default _day_ (which is `1`).
         """.stripMargin)
       function("localdatetime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A LocalDateTime.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
-      considerations("`temporalInstantValue` cannot be a _Date_ value if unit is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.", "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
+      considerations("`temporalInstantValue` cannot be a _Date_ value if unit is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.",
+        "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.",
+        "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
+        "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
       query(
-        """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
-          |   localdatetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123})] AS d
+        """WITH localdatetime({year:2017, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123}) AS d
           |RETURN localdatetime.truncate('millennium', d) AS truncMillenium,
-          |   localdatetime.truncate('century', d, {day:2}) AS truncCentury,
-          |   localdatetime.truncate('decade', d) AS truncDecade,
           |   localdatetime.truncate('year', d, {day:2}) AS truncYear,
-          |   localdatetime.truncate('weekYear', d) AS truncWeekYear,
-          |   localdatetime.truncate('quarter', d, {day:2}) AS truncQuarter,
           |   localdatetime.truncate('month', d) AS truncMonth,
-          |   localdatetime.truncate('week', d, {dayOfWeek:2}) AS truncWeek,
-          |   localdatetime.truncate('minute', d, {nanosecond:2}) AS truncMinute,
+          |   localdatetime.truncate('day', d) AS truncDay,
+          |   localdatetime.truncate('hour', d, {nanosecond:2}) AS truncHour,
           |   localdatetime.truncate('second', d) AS truncSecond""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(Map(
+            "truncMillenium" -> LocalDateTimeValue.parse("2000-01-01T00:00").asObjectCopy(),
+            "truncYear" -> LocalDateTimeValue.parse("2017-01-02T00:00").asObjectCopy(),
+            "truncMonth" -> LocalDateTimeValue.parse("2017-11-01T00:00").asObjectCopy(),
+            "truncDay" -> LocalDateTimeValue.parse("2017-11-11T00:00").asObjectCopy(),
+            "truncHour" -> LocalDateTimeValue.parse("2017-11-11T12:00:00.000000002").asObjectCopy(),
+            "truncSecond" -> LocalDateTimeValue.parse("2017-11-11T12:31:14").asObjectCopy()
+          )))
         })) {
         resultTable()
       }
