@@ -23,7 +23,7 @@ import java.time._
 import java.util.function.Supplier
 
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
-import org.neo4j.values.storable.{DateTimeValue, DateValue, DurationValue}
+import org.neo4j.values.storable.{DateTimeValue, DateValue, DurationValue, Values}
 
 class TemporalFunctionsTest extends DocumentingTest {
 
@@ -545,7 +545,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           |In essence, this allows a _DateTime_ or _LocalDateTime_ value to be converted to a _Date_, and for "missing" components to be provided.
         """.stripMargin)
       function("date({date [, year, month, day, week, dayOfWeek, quarter, dayOfQuarter, ordinalDay]})", "A Date.", ("A single map consisting of the following:", ""), ("date", "A _Date_ value."), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."))
-      considerations("If any of the optional parameters are provided, these will override the corresponding components of `date`.")
+      considerations("If any of the optional parameters are provided, these will override the corresponding components of `date`.",
+        "Instead of `date({date: dd})` it is allowed to simply write `date(dd)`.")
       query(
         """UNWIND [date({year:1984, month:11, day:11}),
           |   localdatetime({year:1984, month:11, day:11, hour:12, minute:31, second:14}),
@@ -807,7 +808,10 @@ class TemporalFunctionsTest extends DocumentingTest {
         """.stripMargin)
       function("datetime({datetime [, year, ..., timezone]}) | datetime({date [, year, ..., timezone]}) | datetime({time [, year, ..., timezone]}) | datetime({date, time [, year, ..., timezone]})", "A DateTime.", ("A single map consisting of the following:", ""), ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.",
-        "Selecting a _Time_ or _DateTime_ value in the `time` component also selects its timezone. If instead a _LocalTime_ or _LocalDateTime_ is selecting, the default timezone is used. In any case, the timezone can be overridden explicitly.")
+        "Instead of `datetime({datetime: dd})` it is allowed to simply write `datetime(dd)`.",
+        "Selecting a _Time_ or _DateTime_ value in the `time` component also selects its timezone. If instead a _LocalTime_ or _LocalDateTime_ is selecting, the default timezone is used. In any case, the timezone can be overridden explicitly.",
+        "Selecting a _DateTime_ in the `datetime` component and overwriting the time zone will adjust the local time to keep the same point in time.",
+        "Selecting a _DateTime_ or _Time_ in the `time` component and overwriting the time zone will adjust the local time to keep the same point in time.")
       p("""The following query shows the various usages of `datetime({date [, year, ..., timezone]})`""")
       query(
         """WITH date({year:1984, month:10, day:11}) AS dd
@@ -842,29 +846,34 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
       p("""The following query shows the various usages of `datetime({date, time [, year, ..., timezone]})`; i.e. combining a _Date_ and a _Time_ value to create a single _DateTime_ value:""")
       query(
-        """UNWIND [date({year:1984, month:10, day:11}),
-          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
-          |UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
-          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'})] AS tt
+        """WITH date({year:1984, month:10, day:11}) AS dd,
+          |     localtime({hour:12, minute:31, second:14, millisecond: 645}) AS tt
           |RETURN datetime({date:dd, time:tt}) as dateTime,
           |   datetime({date:dd, time:tt, timezone:'+05:00'}) AS dateTimeTimezone,
           |   datetime({date:dd, time:tt, day: 28, second: 42}) AS dateTimeDDSS,
           |   datetime({date:dd, time:tt, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS dateTimeDDSSTimezone""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(Map(
+            "dateTime" -> DateTimeValue.parse("1984-10-11T12:31:14.645Z", defaultZoneSupplier).asObjectCopy(),
+            "dateTimeTimezone" -> DateTimeValue.parse("1984-10-11T12:31:14.645+05:00", defaultZoneSupplier).asObjectCopy(),
+            "dateTimeDDSS" -> DateTimeValue.parse("1984-10-28T12:31:42.645Z", defaultZoneSupplier).asObjectCopy(),
+            "dateTimeDDSSTimezone" -> DateTimeValue.parse("1984-10-28T12:31:42.645-10:00[Pacific/Honolulu]", defaultZoneSupplier).asObjectCopy()
+          )))
         })) {
         resultTable()
       }
       p("""The following query shows the various usages of `datetime({datetime [, year, ..., timezone]})`""")
       query(
-        """UNWIND [localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'})] AS dd
-          |RETURN datetime(dd) AS theDate,
-          |   datetime({datetime:dd}) AS datetime,
-          |   datetime({datetime:dd, timezone:'+05:00'}) AS datetimeTimezone,
-          |   datetime({datetime:dd, day: 28, second: 42}) AS datetimeDDSS,
-          |   datetime({datetime:dd, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS datetimeDDSSTimezone""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+        """WITH datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'}) AS dd
+          |RETURN datetime({datetime:dd}) AS dateTime,
+          |   datetime({datetime:dd, timezone:'+05:00'}) AS dateTimeTimezone,
+          |   datetime({datetime:dd, day: 28, second: 42}) AS dateTimeDDSS,
+          |   datetime({datetime:dd, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS dateTimeDDSSTimezone""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "dateTime" -> DateTimeValue.parse("1984-10-11T12:00+01:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy(),
+            "dateTimeTimezone" -> DateTimeValue.parse("1984-10-11T16:00+05:00", defaultZoneSupplier).asObjectCopy(),
+            "dateTimeDDSS" -> DateTimeValue.parse("1984-10-28T12:00:42+01:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy(),
+            "dateTimeDDSSTimezone" -> DateTimeValue.parse("1984-10-28T01:00:42-10:00[Pacific/Honolulu]", defaultZoneSupplier).asObjectCopy()
+          )))
         })) {
         resultTable()
       }
@@ -874,16 +883,17 @@ class TemporalFunctionsTest extends DocumentingTest {
         """`datetime()` returns the _DateTime_ value at the specified number of _seconds_ or _milliseconds_ from the UNIX epoch in the UTC time zone.""".stripMargin)
       p("Conversions to other temporal instant types from UNIX epoch representations can be achieved by transforming a _DateTime_ value to one of these types.")
       function("datetime({ epochSeconds | epochMillis })", "A DateTime.", ("A single map consisting of the following:", ""), ("epochSeconds", "A numeric value representing the number of seconds from the UNIX epoch in the UTC time zone."), ("epochMillis", "A numeric value representing the number of milliseconds from the UNIX epoch in the UTC time zone."))
-      considerations("`epochSeconds`/`epochMillis` must denote a valid date and time; i.e. a value for either of these denoting a date of `30 February 2001` is invalid.", "`epochSeconds`/`epochMillis` may be used in conjunction with `nanosecond`")
+      considerations("`epochSeconds`/`epochMillis` may be used in conjunction with `nanosecond`")
       query(
         """RETURN datetime({epochSeconds:timestamp() / 1000, nanosecond: 23}) AS theDate""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          val now = r.columnAs[ZonedDateTime]("theDate").next()
+          now should be(a[ZonedDateTime])
         })) {
         resultTable()
       }
       query(
         """RETURN datetime({epochMillis: 424797300000}) AS theDate""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(Map("theDate" -> DateTimeValue.ofEpochMillis(Values.longValue(424797300000L)).asObjectCopy() )))
         })) {
         resultTable()
       }
@@ -898,21 +908,28 @@ class TemporalFunctionsTest extends DocumentingTest {
           |For example, `day` -- with some value `x` -- may be provided when the truncation unit is `year` in order to ensure the returned value has the _day_ set to `x` instead of the default _day_ (which is `1`).
         """.stripMargin)
       function("datetime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A DateTime.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`. The key `timezone` is also allowed to override or attach a timezone during truncation."))
-      considerations("`temporalInstantValue` cannot be a _Date_ value if unit is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.", "If `temporalInstantValue` is one of {_Date_, _LocalDateTime_}, a _Date_ or _LocalDateTime_ value without a time zone can be truncated to a _DateTime_ value. When doing so, the resulting _DateTime_ will have the default time zone, unless a time zone has been specified explicitly through `mapOfComponents` as `{timezone: someValue}` to override the time zone of `temporalInstantValue`.", "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
+      considerations("`temporalInstantValue` cannot be a _Date_ value if unit is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.",
+        "If `temporalInstantValue` is one of {_Date_, _LocalDateTime_}, a _Date_ or _LocalDateTime_ value without a time zone can be truncated to a _DateTime_ value. When doing so, the resulting _DateTime_ will have the default time zone, unless a time zone has been specified explicitly through `mapOfComponents` as `{timezone: someValue}` to override the time zone of `temporalInstantValue`.",
+        "If `temporalInstantValue` is one of {_Time_, _DateTime_}, a value with a time zone, and the timezone is overridden, no time conversion happens.",
+        "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.",
+        "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
+        "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
       query(
-        """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
-          |   localdatetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123})] AS d
+        """WITH datetime({year:2017, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+03:00'}) AS d
           |RETURN datetime.truncate('millennium', d, {timezone:'Europe/Stockholm'}) AS truncMillenium,
-          |   datetime.truncate('century', d, {timezone:'Europe/Stockholm'}) AS truncCentury,
-          |   datetime.truncate('decade', d) AS truncDecade,
-          |   datetime.truncate('year', d, {day:2}) AS truncYear,
-          |   datetime.truncate('weekYear', d) AS truncWeekYear,
-          |   datetime.truncate('quarter', d) AS truncQuarter,
-          |   datetime.truncate('month', d, {day:2}) AS truncMonth,
-          |   datetime.truncate('week', d, {dayOfWeek:2}) AS truncWeek,
-          |   datetime.truncate('day', d, {nanosecond:2}) AS truncDay,
-          |   datetime.truncate('hour', d) AS truncHour""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          |   datetime.truncate('year', d, {day:5}) AS truncYear,
+          |   datetime.truncate('month', d) AS truncMonth,
+          |   datetime.truncate('day', d, {millisecond:2}) AS truncDay,
+          |   datetime.truncate('hour', d) AS truncHour,
+          |   datetime.truncate('second', d) AS truncSecond""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "truncMillenium" -> DateTimeValue.parse("2000-01-01T00:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy(),
+            "truncYear" -> DateTimeValue.parse("2017-01-05T00:00+03:00", defaultZoneSupplier).asObjectCopy(),
+            "truncMonth" -> DateTimeValue.parse("2017-11-01T00:00+03:00", defaultZoneSupplier).asObjectCopy(),
+            "truncDay" -> DateTimeValue.parse("2017-11-11T00:00:00.002+03:00", defaultZoneSupplier).asObjectCopy(),
+            "truncHour" -> DateTimeValue.parse("2017-11-11T12:00+03:00", defaultZoneSupplier).asObjectCopy(),
+            "truncSecond" -> DateTimeValue.parse("2017-11-11T12:31:14+03:00", defaultZoneSupplier).asObjectCopy()
+          )))
         })) {
         resultTable()
       }
@@ -1066,7 +1083,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           |In essence, this allows a _Date_, _DateTime_, _Time_ or _LocalTime_ value to be converted to a _LocalDateTime_, and for "missing" components to be provided.
         """.stripMargin)
       function("localdatetime({datetime [, year, ..., nanosecond]}) | localdatetime({date [, year, ..., nanosecond]}) | localdatetime({time [, year, ..., nanosecond]}) | localdatetime({date, time [, year, ..., nanosecond]})", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
-      considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.")
+      considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.",
+        "Instead of `localdatetime({datetime: dd})` it is allowed to simply write `datetime(dd)`.")
       p("""The following query shows the various usages of `localdatetime({date [, year, ..., nanosecond]})`""")
       query(
         """UNWIND [date({year:1984, month:10, day:11}),
@@ -1252,7 +1270,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           |In essence, this allows a _DateTime_, _LocalDateTime_ or _Time_ value to be converted to a _LocalTime_, and for "missing" components to be provided.
         """.stripMargin)
       function("localtime({time [, hour, ..., nanosecond]})", "A LocalTime.", ("A single map consisting of the following:", ""), ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
-      considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.")
+      considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.",
+        "Instead of `localtime({time: tt})` it is allowed to simply write `localtime(tt)`.")
       query(
         """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
@@ -1405,7 +1424,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         """.stripMargin)
       function("time({time [, hour, ..., timezone]})", "A Time.", ("A single map consisting of the following:", ""), ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.",
-        "Selecting a _Time_ or _DateTime_ value in the `time` component also selects its timezone. If instead a _LocalTime_ or _LocalDateTime_ is selecting, the default timezone is used. In any case, the timezone can be overridden explicitly.")
+        "Instead of `time({time: tt})` it is allowed to simply write `time(tt)`.",
+        "Selecting a _Time_ or _DateTime_ value in the `time` component also selects its timezone. If instead a _LocalTime_ or _LocalDateTime_ is selecting, the default timezone is used. In any case, the timezone can be overridden explicitly.",
+        "Selecting a _DateTime_ or _Time_ in the `time` component and overwriting the time zone will adjust the local time to keep the same point in time.")
       query(
         """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
           |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
@@ -1431,7 +1452,12 @@ class TemporalFunctionsTest extends DocumentingTest {
           |For example, `minute` -- with some value `x` -- may be provided when the truncation unit is `hour` in order to ensure the returned value has the _minute_ set to `x` instead of the default _minute_ (which is `1`).
         """.stripMargin)
       function("time.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A Time.", ("unit", "A string expression evaluating to one of the following: {`day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Time_, _LocalTime_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`. The key `timezone` is also allowed to override or attach a timezone during truncation."))
-      considerations("Truncating time to day -- i.e. `unit` is 'day'  -- is supported, and yields midnight at the start of the day (`00:00`), regardless of the value of `temporalInstantValue`. However, the time zone of `temporalInstantValue` is retained.", "The time zone of `temporalInstantValue` may be overridden; for example, `time.truncate('minute', input, {timezone:'+0200'})`. ", "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'second', `mapOfComponents` cannot contain information pertaining to a _minute_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
+      considerations("Truncating time to day -- i.e. `unit` is 'day'  -- is supported, and yields midnight at the start of the day (`00:00`), regardless of the value of `temporalInstantValue`. However, the time zone of `temporalInstantValue` is retained.",
+        "The time zone of `temporalInstantValue` may be overridden; for example, `time.truncate('minute', input, {timezone:'+0200'})`. ",
+        "If `temporalInstantValue` is one of {_Time_, _DateTime_}, a value with a time zone, and the timezone is overridden, no time conversion happens.",
+        "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'second', `mapOfComponents` cannot contain information pertaining to a _minute_.",
+        "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
+        "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
       query(
         """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
           |   localdatetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123}),
