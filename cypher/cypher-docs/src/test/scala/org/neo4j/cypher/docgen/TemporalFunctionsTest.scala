@@ -1203,7 +1203,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("localtime.transaction([ {timezone} ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localtime.transaction() AS now""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalTime]("now").next()
+            now should be(a[LocalTime])
           })) {
           resultTable()
         }
@@ -1217,13 +1218,15 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("localtime.statement([ {timezone} ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localtime.statement() AS now""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalTime]("now").next()
+            now should be(a[LocalTime])
           })) {
           resultTable()
         }
         query(
           """RETURN localtime.statement('America/Los Angeles') AS nowInLA""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalTime]("nowInLA").next()
+            now should be(a[LocalTime])
           })) {
           resultTable()
         }
@@ -1236,7 +1239,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("localtime.realtime([ {timezone} ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         query(
           """RETURN localtime.realtime() AS now""".stripMargin, ResultAssertions((r) => {
-            //CYPHER_TODO
+            val now = r.columnAs[LocalTime]("now").next()
+            now should be(a[LocalTime])
           })) {
           resultTable()
         }
@@ -1252,7 +1256,11 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   localtime({hour:12, minute:31, second:14}),
           |   localtime({hour:12})] as theTime
           |RETURN theTime""".stripMargin, ResultAssertions((r) => {
-          // CYPHER_TODO
+          r.toList should equal(List(
+            Map("theTime" -> LocalTimeValue.parse("12:31:14.123456789").asObjectCopy()),
+            Map("theTime" -> LocalTimeValue.parse("12:31:14").asObjectCopy()),
+            Map("theTime" -> LocalTimeValue.parse("12:00").asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -1268,7 +1276,12 @@ class TemporalFunctionsTest extends DocumentingTest {
           |   localtime('21:40'),
           |   localtime('21')] AS theTime
           |RETURN theTime""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+          r.toList should equal(List(
+            Map("theTime" -> LocalTimeValue.parse("21:40:32.142").asObjectCopy()),
+            Map("theTime" -> LocalTimeValue.parse("214032.142").asObjectCopy()),
+            Map("theTime" -> LocalTimeValue.parse("21:40").asObjectCopy()),
+            Map("theTime" -> LocalTimeValue.parse("21").asObjectCopy())
+          ))
         })) {
         resultTable()
       }
@@ -1282,14 +1295,13 @@ class TemporalFunctionsTest extends DocumentingTest {
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.",
         "Instead of `localtime({time: tt})` it is allowed to simply write `localtime(tt)`.")
       query(
-        """UNWIND [localtime({hour:12, minute:31, second:14, nanosecond: 645876123}),
-          |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
-          |   localdatetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-          |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'})] AS dd
-          |RETURN localtime(dd) AS theTime,
-          |   localtime({time:dd}) AS timeOnly,
-          |   localtime({time:dd, second: 42}) AS timeSS""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+        """WITH time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}) AS tt
+          |RETURN localtime({time:tt}) AS timeOnly,
+          |       localtime({time:tt, second: 42}) AS timeSS""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "timeOnly" -> LocalTimeValue.parse("12:31:14.645876").asObjectCopy(),
+            "timeSS" -> LocalTimeValue.parse("12:31:42.645876").asObjectCopy()
+          )))
         })) {
         resultTable()
       }
@@ -1306,15 +1318,21 @@ class TemporalFunctionsTest extends DocumentingTest {
       function("localtime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A LocalTime.", ("unit", "A string expression evaluating to one of the following: {`day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Time_, _LocalTime_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
       considerations("Truncating time to day -- i.e. `unit` is 'day'  -- is supported, and yields midnight at the start of the day (`00:00`), regardless of the value of `temporalInstantValue`. However, the time zone of `temporalInstantValue` is retained.", "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'second', `mapOfComponents` cannot contain information pertaining to a _minute_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.", "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
       query(
-        """UNWIND [datetime({year:2017, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}),
-          |   time({hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '-01:00'})] AS d
-          |RETURN localtime.truncate('day', d) AS truncDay,
-          |   localtime.truncate('hour', d) AS truncHour,
-          |   localtime.truncate('minute', d, {nanosecond:2}) AS truncMinute,
-          |   localtime.truncate('second', d) AS truncSecond,
-          |   localtime.truncate('millisecond', d) AS truncMillisecond,
-          |   localtime.truncate('microsecond', d) AS truncMicrosecond""".stripMargin, ResultAssertions((r) => {
-          //CYPHER_TODO
+        """WITH time({hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '-01:00'}) AS t
+          |RETURN localtime.truncate('day', t) AS truncDay,
+          |   localtime.truncate('hour', t) AS truncHour,
+          |   localtime.truncate('minute', t, {millisecond:2}) AS truncMinute,
+          |   localtime.truncate('second', t) AS truncSecond,
+          |   localtime.truncate('millisecond', t) AS truncMillisecond,
+          |   localtime.truncate('microsecond', t) AS truncMicrosecond""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "truncDay" -> LocalTimeValue.parse("00:00").asObjectCopy(),
+            "truncHour" -> LocalTimeValue.parse("12:00").asObjectCopy(),
+            "truncMinute" -> LocalTimeValue.parse("12:31:00.002").asObjectCopy(),
+            "truncSecond" -> LocalTimeValue.parse("12:31:14").asObjectCopy(),
+            "truncMillisecond" -> LocalTimeValue.parse("12:31:14.645").asObjectCopy(),
+            "truncMicrosecond" -> LocalTimeValue.parse("12:31:14.645876").asObjectCopy()
+          )))
         })) {
         resultTable()
       }
