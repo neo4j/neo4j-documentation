@@ -15,6 +15,7 @@ This section contains information on all functions in the Cypher query language.
 * Mathematical functions - logarithmic [<<header-query-functions-logarithmic, Summary>>|<<query-functions-mathematical-logarithmic, Detail>>]
 * Mathematical functions - trigonometric [<<header-query-functions-trigonometric, Summary>>|<<query-functions-mathematical-trigonometric, Detail>>]
 * String functions [<<header-query-functions-string, Summary>>|<<query-functions-string, Detail>>]
+* Temporal functions [<<header-query-functions-temporal, Summary>>|<<query-functions-temporal, Detail>>]
 * Spatial functions [<<header-query-functions-spatial, Summary>>|<<query-functions-spatial, Detail>>]
 * <<query-functions-udf, User-defined functions>>
 
@@ -189,16 +190,84 @@ These functions are used to manipulate strings or to create a string representat
 |<<functions-split,split()>>            | Returns a list of strings resulting from the splitting of the original string around matches of the given delimiter.
 |<<functions-substring,substring()>>    | Returns a substring of the original string, beginning  with a 0-based index start and length.
 |<<functions-tolower,toLower()>>            | Returns the original string in lowercase.
-|<<functions-tostring,toString()>>      | Converts an integer, float or boolean value to a string.
+|<<functions-tostring,toString()>>      | Converts an integer, float, boolean or temporal type (i.e. Date, Time, LocalTime, DateTime, LocalDateTime or Duration) value to a string.
 |<<functions-toupper,toUpper()>>            | Returns the original string in uppercase.
 |<<functions-trim,trim()>>              | Returns the original string with leading and trailing whitespace removed.
+|===
+
+
+[[header-query-functions-temporal]]
+**<<query-functions-temporal, Temporal functions>>**
+
+Values of the <<cypher-temporal, temporal types>> -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_ -- can be created manipulated using the following functions:
+
+
+[options="header"]
+|===
+|Function                               |   Description
+| <<functions-date-current, date()>> | Returns the current _Date_.
+| <<functions-date-current-transaction, date.transaction()>> | Returns the current _Date_ using the `transaction` clock.
+| <<functions-date-current-statement, date.statement()>> | Returns the current _Date_ using the `statement` clock.
+| <<functions-date-current-realtime, date.realtime()>> | Returns the current _Date_ using the `realtime` clock.
+| <<functions-date-calendar, date({year [, month, day]})>> | Returns a calendar (Year-Month-Day) _Date_.
+| <<functions-date-week, date({year [, week, dayOfWeek]})>> | Returns a week (Year-Week-Day) _Date_.
+| <<functions-date-quarter, date({year [, quarter, dayOfQuarter]})>> | Returns a quarter (Year-Quarter-Day) _Date_.
+| <<functions-date-ordinal, date({year [, ordinalDay]})>> | Returns an ordinal (Year-Day) _Date_.
+| <<functions-date-create-string, date(string)>> | Returns a _Date_ by parsing a string.
+| <<functions-date-temporal, date({map})>> | Returns a _Date_ from a map of another temporal value's components.
+| <<functions-date-truncate, date.truncate()>> | Returns a _Date_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+| <<functions-datetime-current, datetime()>> | Returns the current _DateTime_.
+| <<functions-datetime-current-transaction, datetime.transaction()>> | Returns the current _DateTime_ using the `transaction` clock.
+| <<functions-datetime-current-statement, datetime.statement()>> | Returns the current _DateTime_ using the `statement` clock.
+| <<functions-datetime-current-realtime, datetime.realtime()>> | Returns the current _DateTime_ using the `realtime` clock.
+| <<functions-datetime-calendar, datetime({year [, month, day, ...]})>> | Returns a calendar (Year-Month-Day) _DateTime_.
+| <<functions-datetime-week, datetime({year [, week, dayOfWeek, ...]})>> | Returns a week (Year-Week-Day) _DateTime_.
+| <<functions-datetime-quarter, datetime({year [, quarter, dayOfQuarter, ...]})>> | Returns a quarter (Year-Quarter-Day) _DateTime_.
+| <<functions-datetime-ordinal, datetime({year [, ordinalDay, ...]})>> | Returns an ordinal (Year-Day) _DateTime_.
+| <<functions-datetime-create-string, datetime(string)>> | Returns a _DateTime_ by parsing a string.
+| <<functions-datetime-temporal, datetime({map})>> | Returns a _DateTime_ from a map of another temporal value's components.
+| <<functions-datetime-timestamp, datetime({epochSeconds})>> | Returns a _DateTime_ from a timestamp.
+| <<functions-datetime-truncate, datetime.truncate()>> | Returns a _DateTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+| <<functions-localdatetime-current, localdatetime()>> | Returns the current _LocalDateTime_.
+| <<functions-localdatetime-current-transaction, localdatetime.transaction()>> | Returns the current _LocalDateTime_ using the `transaction` clock.
+| <<functions-localdatetime-current-statement, localdatetime.statement()>> | Returns the current _LocalDateTime_ using the `statement` clock.
+| <<functions-localdatetime-current-realtime, localdatetime.realtime()>> | Returns the current _LocalDateTime_ using the `realtime` clock.
+| <<functions-localdatetime-calendar, localdatetime({year [, month, day, ...]})>> | Returns a calendar (Year-Month-Day) _LocalDateTime_.
+| <<functions-localdatetime-week, localdatetime({year [, week, dayOfWeek, ...]})>> | Returns a week (Year-Week-Day) _LocalDateTime_.
+| <<functions-localdatetime-quarter, localdatetime({year [, quarter, dayOfQuarter, ...]})>> | Returns a quarter (Year-Quarter-Day) _DateTime_.
+| <<functions-localdatetime-ordinal, localdatetime({year [, ordinalDay, ...]})>> | Returns an ordinal (Year-Day) _LocalDateTime_.
+| <<functions-localdatetime-create-string, localdatetime(string)>> | Returns a _LocalDateTime_ by parsing a string.
+| <<functions-localdatetime-temporal, localdatetime({map})>> | Returns a _LocalDateTime_ from a map of another temporal value's components.
+| <<functions-localdatetime-truncate, localdatetime.truncate()>> | Returns a _LocalDateTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+| <<functions-localtime-current, localtime()>> | Returns the current _LocalTime_.
+| <<functions-localtime-current-transaction, localtime.transaction()>> | Returns the current _LocalTime_ using the `transaction` clock.
+| <<functions-localtime-current-statement, localtime.statement()>> | Returns the current _LocalTime_ using the `statement` clock.
+| <<functions-localtime-current-realtime, localtime.realtime()>> | Returns the current _LocalTime_ using the `realtime` clock.
+| <<functions-localtime-create, localtime({hour [, minute, second, ...]})>> | Returns a _LocalTime_ with the specified component values.
+| <<functions-localtime-create-string, localtime(string)>> | Returns a _LocalTime_ by parsing a string.
+| <<functions-localtime-temporal, localtime({time [, hour, ...]})>> | Returns a _LocalTime_ from a map of another temporal value's components.
+| <<functions-localtime-truncate, localtime.truncate()>> | Returns a _LocalTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+| <<functions-time-current, time()>> | Returns the current _Time_.
+| <<functions-time-current-transaction, time.transaction()>> | Returns the current _Time_ using the `transaction` clock.
+| <<functions-time-current-statement, time.statement()>> | Returns the current _Time_ using the `statement` clock.
+| <<functions-time-current-realtime, time.realtime()>> | Returns the current _Time_ using the `realtime` clock.
+| <<functions-time-create, time({hour [, minute, ...]})>> | Returns a _Time_ with the specified component values.
+| <<functions-time-create-string, time(string)>> | Returns a _Time_ by parsing a string.
+| <<functions-time-temporal, time({time [, hour, ..., timezone]})>> | Returns a _Time_ from a map of another temporal value's components.
+| <<functions-time-truncate, time.truncate()>> | Returns a _Time_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+| <<functions-duration-create-components, duration({map})>> | Returns a _Duration_ from a map of its components.
+| <<functions-duration-create-string, duration(string)>> | Returns a _Duration_ by parsing a string.
+| <<functions-duration-between, duration.between()>> | Returns a _Duration_ equal to the difference between two given instants.
+| <<functions-duration-inmonths, duration.inMonths()>> | Returns a _Duration_ equal to the difference in whole months, quarters or years between two given instants.
+| <<functions-duration-indays, duration.inDays()>> | Returns a _Duration_ equal to the difference in whole days or weeks between two given instants.
+| <<functions-duration-inseconds, duration.inSeconds()>> | Returns a _Duration_ equal to the difference in seconds and fractions of seconds, or minutes or hours, between two given instants.
 |===
 
 
 [[header-query-functions-spatial]]
 **<<query-functions-spatial, Spatial functions>>**
 
-These functions are used to specify 2D or 3D points in a Coordinate Reference System and to calculate the geodesic distance between two points.
+These functions are used to specify 2D or 3D points in a geographic or cartesian Coordinate Reference System and to calculate the geodesic distance between two points.
 
 [options="header"]
 |===
@@ -206,8 +275,8 @@ These functions are used to specify 2D or 3D points in a Coordinate Reference Sy
 |<<functions-distance,distance()>>      | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
 |<<functions-point-cartesian-2d,point() - Cartesian 2D>>            | Returns a 2D point object, given two coordinate values in the Cartesian coordinate system.
 |<<functions-point-cartesian-3d,point() - Cartesian 3D>>    | Returns a 3D point object, given three coordinate values in the Cartesian coordinate system.
-|<<functions-point-wgs84-2d,point() - WGS 84 2D>>            | Returns a 2D point object, given two coordinate values in the WGS 84 coordinate system.
-|<<functions-point-wgs84-3d,point() - WGS 84 3D>> | Returns a 3D point object, given three coordinate values in the WGS 84 coordinate system.
+|<<functions-point-wgs84-2d,point() - WGS 84 2D>>            | Returns a 2D point object, given two coordinate values in the WGS 84 geographic coordinate system.
+|<<functions-point-wgs84-3d,point() - WGS 84 3D>> | Returns a 3D point object, given three coordinate values in the WGS 84 geographic coordinate system.
 |===
 
 //Predicate functions
@@ -241,6 +310,10 @@ include::query-functions-mathematical-trigonometric.adoc[leveloffset=+1]
 //String functions
 
 include::query-functions-string.adoc[leveloffset=+1]
+
+//Temporal functions
+
+include::query-functions-temporal.adoc[leveloffset=+1]
 
 //Spatial functions
 

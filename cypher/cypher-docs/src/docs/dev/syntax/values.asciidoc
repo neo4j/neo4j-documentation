@@ -19,12 +19,11 @@ These fall into several categories which will be described in detail in the foll
 
 Property types comprise:
 
-* _Number_, an abstract type, which has the following subtypes:
-   ** Integer
-   ** Float
+* Number, an abstract type, which has the subtypes _Integer_ and _Float_
 * String
 * Boolean
-* Point (spatial)
+* The spatial type _Point_
+* Temporal types: _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_
 
 NOTE: The adjective 'numeric' -- when used in the context of describing  Cypher functions or expressions -- indicates that any type of Number applies (Integer or Float).
 
@@ -32,6 +31,7 @@ NOTE: Homogeneous lists of simple types can also be stored as properties, althou
 
 NOTE: Cypher also provides pass-through support for byte arrays, which can be stored as property values.
 Byte arrays are _not_ considered a first class data type by Cypher, so do not have a literal representation.
+
 
 [[structural-types]]
 == Structural types
