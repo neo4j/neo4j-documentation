@@ -105,6 +105,15 @@ class TemporalTest extends DocumentingTest {
         """.stripMargin)
       p(
         """The named time zone form uses the time zone rules of the time zone database to manage _daylight savings time_ (DST).""".stripMargin)
+      p(
+        """The default time zone of the database can be configured using the configuration option <<operations-manual#config_db.temporal.timezone, `db.temporal.timezone`>>.
+          |This configuration option influences the creation of temporal types for the following functions:
+          |
+          |* Getting the current date and time without specifying a time zone.
+          |* Creating a temporal type from its components without specifying a time zone.
+          |* Creating a temporal type by parsing a string without specifying a time zone.
+          |* Creating a temporal type by combining or selecting values that do not have a time zone component, and without specifying a time zone.
+          |* Truncating a temporal value that does not have a time zone component, and without specifying a time zone.""".stripMargin)
     }
     section("Temporal instants", "cypher-temporal-instants") {
       section("Specifying temporal instants", "cypher-temporal-specifying-temporal-instants") {
