@@ -251,18 +251,18 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`duration()` has sub-functions which compute the _logical difference_ (in days, months, etc) between two temporal instant values:
             |
             |* `duration.between(a, b)`: Computes the difference in multiple components between instant `a` and instant `b`. This captures month, days, seconds and sub-seconds differences separately.
-            |* `duration.inMonths(a, b)`: Computes the difference in whole months (or quarters or years) between instant `a` and instant `b`. This captures the difference as the total amount of months. Any difference smaller than a whole month is disregarded.
-            |* `duration.inDays(a, b)`: Computes the difference in whole days (or weeks) between instant `a` and instant `b`. This captures the difference as the total amount of days.  Any difference smaller than a whole day is disregarded.
-            |* `duration.inSeconds(a, b)`: Computes the difference in seconds (and fractions of seconds, or minutes or hours) between instant `a` and instant `b`. This captures the difference as the total amount of seconds.
+            |* `duration.inMonths(a, b)`: Computes the difference in whole months (or quarters or years) between instant `a` and instant `b`. This captures the difference as the total number of months. Any difference smaller than a whole month is disregarded.
+            |* `duration.inDays(a, b)`: Computes the difference in whole days (or weeks) between instant `a` and instant `b`. This captures the difference as the total number of days.  Any difference smaller than a whole day is disregarded.
+            |* `duration.inSeconds(a, b)`: Computes the difference in seconds (and fractions of seconds, or minutes or hours) between instant `a` and instant `b`. This captures the difference as the total number of seconds.
             |""".stripMargin)
         section("duration.between()", "functions-duration-between") {
           p(
             """`duration.between()` returns the _Duration_ value equal to the difference between the two given instants.""".stripMargin)
           function("duration.between(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
           considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.",
-            "If `instant~1~` has a time component but `instant~2~` has not, it will assume the time component of `instant~2~` to be at midnight, and vice versa.",
-            "If `instant~1~` has a time zone component but `instant~2~` has not, it will assume the time zone component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.",
-            "If `instant~1~` has a date component but `instant~2~` has not, it will assume the date component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.")
+            "If `instant~1~` has a time component and `instant~2~` does not, the time component of `instant~2~` is assumed to be midnight, and vice versa.",
+            "If `instant~1~` has a time zone component and `instant~2~` does not, the time zone component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
+            "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.")
           query(
             """UNWIND [
               |   duration.between(date("1984-10-11"), date("1985-11-25")),
@@ -292,9 +292,9 @@ class TemporalFunctionsTest extends DocumentingTest {
             """`duration.inMonths()` returns the _Duration_ value equal to the difference in whole months, quarters or years between the two given instants.""".stripMargin)
           function("duration.inMonths(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
           considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.",
-            "If `instant~1~` has a time component but `instant~2~` has not, it will assume the time component of `instant~2~` to be at midnight, and vice versa.",
-            "If `instant~1~` has a time zone component but `instant~2~` has not, it will assume the time zone component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.",
-            "If `instant~1~` has a date component but `instant~2~` has not, it will assume the date component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.")
+            "If `instant~1~` has a time component and `instant~2~` does not, the time component of `instant~2~` is assumed to be midnight, and vice versa.",
+            "If `instant~1~` has a time zone component and `instant~2~` does not, the time zone component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
+            "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.")
 
           query(
             """UNWIND [
@@ -323,9 +323,9 @@ class TemporalFunctionsTest extends DocumentingTest {
             """`duration.inDays()` returns the _Duration_ value equal to the difference in whole days or weeks between the two given instants.""".stripMargin)
           function("duration.inDays(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
           considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.",
-            "If `instant~1~` has a time component but `instant~2~` has not, it will assume the time component of `instant~2~` to be at midnight, and vice versa.",
-            "If `instant~1~` has a time zone component but `instant~2~` has not, it will assume the time zone component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.",
-            "If `instant~1~` has a date component but `instant~2~` has not, it will assume the date component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.")
+            "If `instant~1~` has a time component and `instant~2~` does not, the time component of `instant~2~` is assumed to be midnight, and vice versa.",
+            "If `instant~1~` has a time zone component and `instant~2~` does not, the time zone component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
+            "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.")
           query(
             """UNWIND [
               |   duration.inDays(date("1984-10-11"), date("1985-11-25")),
@@ -353,9 +353,9 @@ class TemporalFunctionsTest extends DocumentingTest {
             """`duration.inSeconds()` returns the _Duration_ value equal to the difference in seconds and fractions of seconds, or minutes or hours, between the two given instants.""".stripMargin)
           function("duration.inSeconds(instant~1~, instant~2~)", "A Duration.", ("instant~1~", "An expression returning any temporal instant type (_Date_ etc) that represents the starting instant."), ("instant~2~", "An expression returning any temporal instant type (_Date_ etc) that represents the ending instant."))
           considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.",
-            "If `instant~1~` has a time component but `instant~2~` has not, it will assume the time component of `instant~2~` to be at midnight, and vice versa.",
-            "If `instant~1~` has a time zone component but `instant~2~` has not, it will assume the time zone component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.",
-            "If `instant~1~` has a date component but `instant~2~` has not, it will assume the date component of `instant~2~` to be the same as the one of `instant~1~`, and vice versa.")
+            "If `instant~1~` has a time component and `instant~2~` does not, the time component of `instant~2~` is assumed to be midnight, and vice versa.",
+            "If `instant~1~` has a time zone component and `instant~2~` does not, the time zone component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
+            "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.")
           query(
             """UNWIND [
               |   duration.inSeconds(date("1984-10-11"), date("1984-10-12")),
@@ -546,7 +546,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         """.stripMargin)
       function("date({date [, year, month, day, week, dayOfWeek, quarter, dayOfQuarter, ordinalDay]})", "A Date.", ("A single map consisting of the following:", ""), ("date", "A _Date_ value."), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `date`.",
-        "Instead of `date({date: dd})` it is allowed to simply write `date(dd)`.")
+        "`date(dd)` may be written instead of `date({date: dd})`.")
       query(
         """UNWIND [date({year:1984, month:11, day:11}),
           |   localdatetime({year:1984, month:11, day:11, hour:12, minute:31, second:14}),
@@ -846,10 +846,10 @@ class TemporalFunctionsTest extends DocumentingTest {
         """.stripMargin)
       function("datetime({datetime [, year, ..., timezone]}) | datetime({date [, year, ..., timezone]}) | datetime({time [, year, ..., timezone]}) | datetime({date, time [, year, ..., timezone]})", "A DateTime.", ("A single map consisting of the following:", ""), ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.",
-        "Instead of `datetime({datetime: dd})` it is allowed to simply write `datetime(dd)`.",
-        "Selecting a _Time_ or _DateTime_ value in the `time` component also selects its timezone. If instead a _LocalTime_ or _LocalDateTime_ is selecting, the default timezone is used. In any case, the timezone can be overridden explicitly.",
-        "Selecting a _DateTime_ in the `datetime` component and overwriting the time zone will adjust the local time to keep the same point in time.",
-        "Selecting a _DateTime_ or _Time_ in the `time` component and overwriting the time zone will adjust the local time to keep the same point in time.")
+        "`datetime(dd)` may be written instead of `datetime({datetime: dd})`.",
+        "Selecting a _Time_ or _DateTime_ value as the `time` component also selects its time zone. If a _LocalTime_ or _LocalDateTime_ is selected instead, the default time zone is used. In any case, the time zone can be overridden explicitly.",
+        "Selecting a _DateTime_ as the `datetime` component and overwriting the time zone will adjust the local time to keep the same point in time.",
+        "Selecting a _DateTime_ or _Time_ as the `time` component and overwriting the time zone will adjust the local time to keep the same point in time.")
       p("""The following query shows the various usages of `datetime({date [, year, ..., timezone]})`""")
       query(
         """WITH date({year:1984, month:10, day:11}) AS dd
@@ -945,11 +945,11 @@ class TemporalFunctionsTest extends DocumentingTest {
           |This will have the effect of _overriding_ the default values which would otherwise have been set for these less significant components.
           |For example, `day` -- with some value `x` -- may be provided when the truncation unit is `year` in order to ensure the returned value has the _day_ set to `x` instead of the default _day_ (which is `1`).
         """.stripMargin)
-      function("datetime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A DateTime.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`. The key `timezone` is also allowed to override or attach a timezone during truncation."))
-      considerations("`temporalInstantValue` cannot be a _Date_ value if unit is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.",
+      function("datetime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A DateTime.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`. During truncation, a time zone can be attached or overridden using the key `timezone`."))
+      considerations("`temporalInstantValue` cannot be a _Date_ value if `unit` is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.",
         "The time zone of `temporalInstantValue` may be overridden; for example, `datetime.truncate('minute', input, {timezone:'+0200'})`. ",
-        "If `temporalInstantValue` is one of {_Time_, _DateTime_}, a value with a time zone, and the timezone is overridden, no time conversion happens.",
-        "If `temporalInstantValue` is one of {_LocalDateTime_, _Date_}, a value without a time zone, and the timezone is not overridden, the configured default time zone will be used.",
+        "If `temporalInstantValue` is one of {_Time_, _DateTime_} -- a value with a time zone -- and the time zone is overridden, no time conversion occurs.",
+        "If `temporalInstantValue` is one of {_LocalDateTime_, _Date_} -- a value without a time zone -- and the time zone is not overridden, the configured default time zone will be used.",
         "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.",
         "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
         "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
@@ -1125,7 +1125,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         """.stripMargin)
       function("localdatetime({datetime [, year, ..., nanosecond]}) | localdatetime({date [, year, ..., nanosecond]}) | localdatetime({time [, year, ..., nanosecond]}) | localdatetime({date, time [, year, ..., nanosecond]})", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("datetime", "A _DateTime_ value."), ("date", "A _Date_ value."), ("time", "A _Time_ value."), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.",
-        "Instead of `localdatetime({datetime: dd})` it is allowed to simply write `localdatetime(dd)`.")
+        "`localdatetime(dd)` may be written instead of `localdatetime({datetime: dd})`.")
       p("""The following query shows the various usages of `localdatetime({date [, year, ..., nanosecond]})`""")
       query(
         """WITH date({year:1984, month:10, day:11}) AS dd
@@ -1186,7 +1186,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           |For example, `day` -- with some value `x` -- may be provided when the truncation unit is `year` in order to ensure the returned value has the _day_ set to `x` instead of the default _day_ (which is `1`).
         """.stripMargin)
       function("localdatetime.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A LocalDateTime.", ("unit", "A string expression evaluating to one of the following: {`millennium`, `century`, `decade`, `year`, `weekYear`, `quarter`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Date_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`."))
-      considerations("`temporalInstantValue` cannot be a _Date_ value if unit is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.",
+      considerations("`temporalInstantValue` cannot be a _Date_ value if `unit` is one of {`hour`, `minute`, `second`, `millisecond`, `microsecond`}.",
         "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'day', `mapOfComponents` cannot contain information pertaining to a _month_.",
         "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
         "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
@@ -1332,7 +1332,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         """.stripMargin)
       function("localtime({time [, hour, ..., nanosecond]})", "A LocalTime.", ("A single map consisting of the following:", ""), ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.",
-        "Instead of `localtime({time: tt})` it is allowed to simply write `localtime(tt)`.")
+        "`localtime(tt)` may be written instead of `localtime({time: tt})`.")
       query(
         """WITH time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}) AS tt
           |RETURN localtime({time:tt}) AS timeOnly,
@@ -1516,9 +1516,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         """.stripMargin)
       function("time({time [, hour, ..., timezone]})", "A Time.", ("A single map consisting of the following:", ""), ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."), ("timezone", "An expression that specifies the time zone."))
       considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.",
-        "Instead of `time({time: tt})` it is allowed to simply write `time(tt)`.",
-        "Selecting a _Time_ or _DateTime_ value in the `time` component also selects its timezone. If instead a _LocalTime_ or _LocalDateTime_ is selecting, the default timezone is used. In any case, the timezone can be overridden explicitly.",
-        "Selecting a _DateTime_ or _Time_ in the `time` component and overwriting the time zone will adjust the local time to keep the same point in time.")
+        "`time(tt)` may be written instead of `time({time: tt})`.",
+        "Selecting a _Time_ or _DateTime_ value as the `time` component also selects its time zone. If a _LocalTime_ or _LocalDateTime_ is selected instead, the default time zone is used. In any case, the time zone can be overridden explicitly.",
+        "Selecting a _DateTime_ or _Time_ as the `time` component and overwriting the time zone will adjust the local time to keep the same point in time.")
       query(
         """WITH localtime({hour:12, minute:31, second:14, microsecond: 645876}) AS tt
           |RETURN time({time:tt}) AS timeOnly,
@@ -1544,11 +1544,11 @@ class TemporalFunctionsTest extends DocumentingTest {
           |This will have the effect of _overriding_ the default values which would otherwise have been set for these less significant components.
           |For example, `minute` -- with some value `x` -- may be provided when the truncation unit is `hour` in order to ensure the returned value has the _minute_ set to `x` instead of the default _minute_ (which is `1`).
         """.stripMargin)
-      function("time.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A Time.", ("unit", "A string expression evaluating to one of the following: {`day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Time_, _LocalTime_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`. The key `timezone` is also allowed to override or attach a timezone during truncation."))
+      function("time.truncate(unit, temporalInstantValue [, mapOfComponents ])", "A Time.", ("unit", "A string expression evaluating to one of the following: {`day`, `hour`, `minute`, `second`, `millisecond`, `microsecond`}."), ("temporalInstantValue", "An expression of one of the following types: {_DateTime_, _LocalDateTime_, _Time_, _LocalTime_}."), ("mapOfComponents", "An expression evaluating to a map containing components less significant than `unit`. During truncation, a time zone can be attached or overridden using the key `timezone`."))
       considerations("Truncating time to day -- i.e. `unit` is 'day'  -- is supported, and yields midnight at the start of the day (`00:00`), regardless of the value of `temporalInstantValue`. However, the time zone of `temporalInstantValue` is retained.",
         "The time zone of `temporalInstantValue` may be overridden; for example, `time.truncate('minute', input, {timezone:'+0200'})`. ",
-        "If `temporalInstantValue` is one of {_Time_, _DateTime_}, a value with a time zone, and the timezone is overridden, no time conversion happens.",
-        "If `temporalInstantValue` is one of {_LocalTime_, _LocalDateTime_, _Date_}, a value without a time zone, and the timezone is not overridden, the configured default time zone will be used.",
+        "If `temporalInstantValue` is one of {_Time_, _DateTime_} -- a value with a time zone -- and the time zone is overridden, no time conversion occurs.",
+        "If `temporalInstantValue` is one of {_LocalTime_, _LocalDateTime_, _Date_} -- a value without a time zone -- and the time zone is not overridden, the configured default time zone will be used.",
         "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'second', `mapOfComponents` cannot contain information pertaining to a _minute_.",
         "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
         "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.")
