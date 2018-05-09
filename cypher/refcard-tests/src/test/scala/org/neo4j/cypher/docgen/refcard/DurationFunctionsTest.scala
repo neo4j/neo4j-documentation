@@ -40,7 +40,23 @@ class DurationFunctionsTest extends RefcardTest with QueryStatisticsTestSupport 
         assertStats(result, nodesCreated = 0)
         val results = result.toList
         assert(results.size === 1)
-        assert(results.head === Map("duration(\"PT30S\") * 10" -> DurationValue.parse("PT5M")))
+        assert(results.head.values.head === DurationValue.parse("PT5M"))
+      case "returns-date" =>
+        assertStats(result, nodesCreated = 0)
+        val results = result.toList
+        assert(results.size === 1)
+        assert(results.head.values.head === LocalDate.parse("2016-02-02"))
+      case "returns-duration-accessors1" =>
+        assertStats(result, nodesCreated = 0)
+        val results = result.toList
+        assert(results.size === 1)
+        assert(results.head === Map("d.years" -> 1, "d.months" -> 14, "d.days" -> 10, "d.hours" -> 12, "d.minutes" -> 765))
+      case "returns-duration-accessors2" =>
+        assertStats(result, nodesCreated = 0)
+        val results = result.toList
+        assert(results.size === 1)
+        assert(results.head === Map("d.years" -> 1, "d.monthsOfYear" -> 2, "d.days" -> 10, "d.hours" -> 12, "d.minutesOfHour" -> 45))
+
     }
   }
 
@@ -72,7 +88,7 @@ duration.between($date1,$date2)
 
 Returns a duration between two temporal instances.
 
-###assertion=returns-one
+###assertion=returns-duration-accessors1
 
 
 WITH duration("P1Y2M10DT12H45M") AS d
@@ -81,7 +97,7 @@ RETURN d.years, d.months, d.days, d.hours, d.minutes
 
 Returns 1 year, 14 months, 10 days, 12 hours and 765 minutes.
 
-###assertion=returns-one
+###assertion=returns-duration-accessors2
 
 
 WITH duration("P1Y2M10DT12H45M") AS d
@@ -90,7 +106,7 @@ RETURN d.years, d.monthsOfYear, d.days, d.hours, d.minutesOfHour
 
 Returns 1 year, 2 months, 10 days, 12 hours and 45 minutes.
 
-###assertion=returns-one
+###assertion=returns-date
 RETURN
 
 date("2015-01-01") + duration("P1Y1M1D")
