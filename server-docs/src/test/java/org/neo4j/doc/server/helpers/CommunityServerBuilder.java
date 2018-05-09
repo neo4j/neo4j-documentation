@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
-import org.neo4j.dbms.DatabaseManagementSystemSettings;
 import org.neo4j.doc.server.ServerTestUtils;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.helpers.ListenSocketAddress;
@@ -47,9 +46,7 @@ import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.server.database.Database;
 import org.neo4j.server.database.LifecycleManagingDatabase;
 import org.neo4j.server.preflight.PreFlightTasks;
-import org.neo4j.server.rest.paging.LeaseManager;
 import org.neo4j.server.rest.web.DatabaseActions;
-import org.neo4j.server.rest.web.ScriptExecutionMode;
 import org.neo4j.test.ImpermanentGraphDatabase;
 import org.neo4j.time.Clocks;
 
@@ -309,10 +306,7 @@ public class CommunityServerBuilder
     {
         Clock clockToUse = (clock != null) ? clock : Clocks.systemClock();
 
-        return new DatabaseActions(
-                new LeaseManager( clockToUse ),
-                ScriptExecutionMode.getConfiguredMode( config ),
-                database.getGraph() );
+        return new DatabaseActions( database.getGraph() );
     }
 
     protected File buildBefore() throws IOException
