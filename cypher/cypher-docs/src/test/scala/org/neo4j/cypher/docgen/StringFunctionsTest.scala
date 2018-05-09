@@ -29,10 +29,15 @@ class StringFunctionsTest extends DocumentingTest {
     doc("String functions", "query-functions-string")
     synopsis(
       """These functions all operate on string expressions only, and will return an error if used on any other values.
-        |The exception to this rule is `toString()`, which also accepts numbers and booleans.""".stripMargin)
+        |The exception to this rule is `toString()`, which also accepts numbers, booleans and temporal values (i.e. _Date_, _Time_. _LocalTime_, _DateTime_, _LocalDateTime_  or _Duration_ values). """.stripMargin)
     p("Functions taking a string as input all operate on _Unicode characters_ rather than on a standard `char[]`. For example, `size(s)`, where `s` is a character in the Chinese alphabet, will return *1*.")
     note {
       p("""The functions `lower()` and `upper()` have been superseded by `toLower()` and `toUpper()`, respectively, and will be removed in a future release.""")
+    }
+    note {
+      p(
+        """When `toString()` is applied to a temporal value, it returns a string representation suitable for parsing by the corresponding <<query-functions-temporal, temporal functions>>.
+          |This string will therefore be formatted according to the https://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format.""".stripMargin)
     }
     p("""See also <<query-operators-string>>.""")
     p(
@@ -157,8 +162,16 @@ class StringFunctionsTest extends DocumentingTest {
       function("toString(expression)", "A String.", ("expression", "An expression that returns a number, a boolean, or a string."))
       considerations("`toString(null)` returns `null`", "If `expression` is a string, it will be returned unchanged.")
       query(
-        """RETURN toString(11.5), toString('already a string'), toString(true)""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("toString(11.5)" -> "11.5", "toString('already a string')" -> "already a string", "toString(TRUE )" -> "true")))
+        """RETURN toString(11.5), toString('already a string'), toString(true),
+          |   toString(date({year:1984, month:10, day:11})) AS dateString,
+          |   toString(datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 341, timezone: 'Europe/Stockholm'})) AS datetimeString,
+          |   toString(duration({minutes: 12, seconds: -60})) AS durationString""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "toString(11.5)" -> "11.5", "toString('already a string')" -> "already a string", "toString(TRUE )" -> "true",
+            "dateString" -> "1984-10-11",
+            "datetimeString" -> "1984-10-11T12:31:14.341+01:00[Europe/Stockholm]",
+            "durationString" -> "PT11M")
+          ))
         })) {
         resultTable()
       }

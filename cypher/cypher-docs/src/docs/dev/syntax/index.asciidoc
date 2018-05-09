@@ -34,6 +34,7 @@ This section describes the syntax of the Cypher query language.
  ** <<query-operators-comparison, Comparison operators>>
  ** <<query-operators-boolean, Boolean operators>>
  ** <<query-operators-string, String operators>>
+ ** <<query-operators-temporal, Temporal operators>>
  ** <<query-operators-list, List operators>>
  ** <<query-operators-property, Property operators>>
  ** <<cypher-comparison, Equality and comparison of values>>
@@ -48,6 +49,30 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-pattern-relationship, Patterns for relationships>>
  ** <<cypher-pattern-varlength, Variable-length pattern matching>>
  ** <<cypher-pattern-path-variables, Assigning to path variables>>
+* <<cypher-temporal, Temporal (Date/Time) values>>
+ ** <<cypher-temporal-introduction, Introduction>>
+ ** <<cypher-temporal-timezones, Time zones>>
+ ** <<cypher-temporal-instants, Temporal instants>>
+  *** <<cypher-temporal-specifying-temporal-instants, Specifying temporal instants>>
+   **** <<cypher-temporal-specify-date, Specifying dates>>
+   **** <<cypher-temporal-specify-time, Specifying times>>
+   **** <<cypher-temporal-specify-time-zone, Specifying time zones>>
+   **** <<cypher-temporal-specify-instant-examples, Examples>>
+  *** <<cypher-temporal-accessing-components-temporal-instants, Accessing components of temporal instants>>
+ ** <<cypher-temporal-durations, Durations>>
+  *** <<cypher-temporal-specifying-durations, Specifying durations>>
+   **** <<cypher-temporal-specify-duration-examples, Examples>>
+  *** <<cypher-temporal-accessing-components-durations, Accessing components of durations>>
+ ** <<cypher-temporal-examples, Examples>>
+* <<cypher-spatial, Spatial values>>
+ ** <<cypher-spatial-introduction, Introduction>>
+ ** <<cypher-spatial-crs, Coordinate Reference Systems>>
+  *** <<cypher-spatial-crs-geographic, Geographic coordinate reference systems>>
+  *** <<cypher-spatial-crs-cartesian, Cartesian coordinate reference systems>>
+ ** <<cypher-spatial-instants, Spatial instants>>
+  *** <<cypher-spatial-specifying-spatial-instants, Creating points>>
+  *** <<cypher-spatial-accessing-components-spatial-instants, Accessing components of points>>
+ ** <<cypher-spatial-index, Spatial index>>
 * <<cypher-lists, Lists>>
  ** <<cypher-lists-general, Lists in general>>
  ** <<cypher-list-comprehension, List comprehension>>
@@ -84,9 +109,13 @@ include::comments.asciidoc[leveloffset=+1]
 
 include::../ql/cypher-patterns.adoc[leveloffset=+1]
 
+include::../ql/cypher-temporal.adoc[leveloffset=+1]
+
 include::../ql/cypher-lists.adoc[leveloffset=+1]
 
 include::../ql/cypher-maps.adoc[leveloffset=+1]
+
+include::../ql/cypher-spatial.adoc[leveloffset=+1]
 
 include::working-with-null.asciidoc[leveloffset=+1]
 
