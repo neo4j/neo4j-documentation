@@ -78,11 +78,11 @@ Returns a point in a 3D geographic coordinate system, with latitude and longitud
 ###assertion=returns-one parameters=distance
 RETURN
 
-distance(point({x: $x1, y: $y1}), point({x: $x2, y: $2}))
+distance(point({x: $x1, y: $y1}), point({x: $x2, y: $y2}))
 ###
 
 Returns a floating point number representing the linear distance between two points.
-The units will be the same as those of the points, and it will work for both 2D and 3D cartesian points.
+The returned units will be the same as those of the point coordinates, and it will work for both 2D and 3D cartesian points.
 
 ###assertion=returns-one parameters=distance
 RETURN
