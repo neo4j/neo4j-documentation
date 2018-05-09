@@ -39,7 +39,7 @@ class SpatialFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   override def parameters(name: String): Map[String, Any] =
     name match {
       case "parameters=point" =>
-        Map("x" -> 2.3, "y" -> 4.5)
+        Map("x" -> 2.3, "y" -> 4.5, "z" -> 6.7)
       case "parameters=distance" =>
         Map("x1" -> 2.3, "y1" -> 4.5, "x2" -> 1.3, "y2" -> 3.5)
       case "" =>
@@ -52,12 +52,33 @@ RETURN
 
 point({x: {x}, y: {y}})
 ###
-Returns a point in a 2D coordinate system.
+Returns a point in a 2D cartesian coordinate system.
+
+###assertion=returns-one parameters=point
+RETURN
+
+point({latitude: {y}, longitude: {x}})
+###
+Returns a point in a 2D geographic coordinate system.
+
+###assertion=returns-one parameters=point
+RETURN
+
+point({x: {x}, y: {y}, z: {z}})
+###
+Returns a point in a 3D cartesian coordinate system.
+
+###assertion=returns-one parameters=point
+RETURN
+
+point({latitude: {y}, longitude: {x}, height: {z}})
+###
+Returns a point in a 3D geographic coordinate system.
 
 ###assertion=returns-one parameters=distance
 RETURN
 
-distance(point({x: {x1}, y: {y1}}), point({x: {x2}, y: {y2}}))
+distance(point({latitude: {y1}, longitude: {x1}}), point({latitude: {y2}, longitude: {x2}}))
 ###
 
 Returns a floating point number representing the geodesic distance between two points.
