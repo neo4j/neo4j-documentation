@@ -59,7 +59,7 @@ RETURN
 
 point({latitude: $y, longitude: $x})
 ###
-Returns a point in a 2D geographic coordinate system.
+Returns a point in a 2D geographic coordinate system, with coordinates specified in decimal degrees.
 
 ###assertion=returns-one parameters=point
 RETURN
@@ -73,7 +73,16 @@ RETURN
 
 point({latitude: $y, longitude: $x, height: $z})
 ###
-Returns a point in a 3D geographic coordinate system.
+Returns a point in a 3D geographic coordinate system, with latitude and longitude in decimal degrees, and height in meters.
+
+###assertion=returns-one parameters=distance
+RETURN
+
+distance(point({x: $x1, y: $y1}), point({x: $x2, y: $2}))
+###
+
+Returns a floating point number representing the linear distance between two points.
+The units will be the same as those of the points, and it will work for both 2D and 3D cartesian points.
 
 ###assertion=returns-one parameters=distance
 RETURN
@@ -81,6 +90,6 @@ RETURN
 distance(point({latitude: $y1, longitude: $x1}), point({latitude: $y2, longitude: $x2}))
 ###
 
-Returns a floating point number representing the geodesic distance between two points.
+Returns the geodesic distance between two points in meters. It can be used for 3D geographic points as well.
 """
 }
