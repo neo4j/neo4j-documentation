@@ -50,35 +50,35 @@ class SpatialFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
 ###assertion=returns-one parameters=point
 RETURN
 
-point({x: {x}, y: {y}})
+point({x: $x, y: $y})
 ###
 Returns a point in a 2D cartesian coordinate system.
 
 ###assertion=returns-one parameters=point
 RETURN
 
-point({latitude: {y}, longitude: {x}})
+point({latitude: $y, longitude: $x})
 ###
 Returns a point in a 2D geographic coordinate system.
 
 ###assertion=returns-one parameters=point
 RETURN
 
-point({x: {x}, y: {y}, z: {z}})
+point({x: $x, y: $y, z: $z})
 ###
 Returns a point in a 3D cartesian coordinate system.
 
 ###assertion=returns-one parameters=point
 RETURN
 
-point({latitude: {y}, longitude: {x}, height: {z}})
+point({latitude: $y, longitude: $x, height: $z})
 ###
 Returns a point in a 3D geographic coordinate system.
 
 ###assertion=returns-one parameters=distance
 RETURN
 
-distance(point({latitude: {y1}, longitude: {x1}}), point({latitude: {y2}, longitude: {x2}}))
+distance(point({latitude: $y1, longitude: $x1}), point({latitude: $y2, longitude: $x2}))
 ###
 
 Returns a floating point number representing the geodesic distance between two points.
