@@ -69,7 +69,7 @@ RETURN
 localtime("12:45:30.25")
 ###
 
-Returns a time with no timezone.
+Returns a time with no time zone.
 
 ###assertion=returns-one
 RETURN
@@ -77,7 +77,7 @@ RETURN
 time("12:45:30.25+01:00")
 ###
 
-Returns a time in a specified timezone.
+Returns a time in a specified time zone.
 
 ###assertion=returns-one
 RETURN
@@ -85,7 +85,7 @@ RETURN
 localdatetime("2018-04-05T12:34:00")
 ###
 
-Returns a datetime with no timezone.
+Returns a datetime with no time zone.
 
 ###assertion=returns-one
 RETURN
@@ -93,7 +93,7 @@ RETURN
 datetime("2018-04-05T12:34:00[Europe/Berlin]")
 ###
 
-Returns a datetime in the specified timezone.
+Returns a datetime in the specified time zone.
 
 ###assertion=returns-one parameters=date
 RETURN
