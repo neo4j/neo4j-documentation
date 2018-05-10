@@ -64,6 +64,7 @@ This section describes the syntax of the Cypher query language.
    **** <<cypher-temporal-specify-duration-examples, Examples>>
   *** <<cypher-temporal-accessing-components-durations, Accessing components of durations>>
  ** <<cypher-temporal-examples, Examples>>
+ ** <<cypher-temporal-index, Temporal indexing>>
 * <<cypher-spatial, Spatial values>>
  ** <<cypher-spatial-introduction, Introduction>>
  ** <<cypher-spatial-crs, Coordinate Reference Systems>>

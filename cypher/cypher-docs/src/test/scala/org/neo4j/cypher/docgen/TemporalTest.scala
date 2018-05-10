@@ -51,6 +51,7 @@ class TemporalTest extends DocumentingTest {
         |  *** <<cypher-temporal-specify-duration-examples, Examples>>
         | ** <<cypher-temporal-accessing-components-durations, Accessing components of durations>>
         |* <<cypher-temporal-examples, Examples>>
+        |* <<cypher-temporal-index, Temporal indexing>>
       """.stripMargin)
     note {
       p("""Refer to <<query-functions-temporal>> for information regarding temporal _functions_ allowing for the creation and manipulation of temporal values.""")
@@ -662,6 +663,12 @@ class TemporalTest extends DocumentingTest {
         """RETURN ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date().month-1] AS month""".stripMargin, NoAssertions) {
         resultTable()
       }
+    }
+    section("Temporal indexing", "cypher-temporal-index") {
+      p(
+        """All temporal types can be indexed, and thereby support exact lookups for equality predicates.
+           Indexes for temporal instant types additionally support range lookups.
+        """.stripMargin)
     }
   }.build()
 }
