@@ -84,7 +84,7 @@ class TemporalTest extends DocumentingTest {
     }
     section("Time zones", "cypher-temporal-timezones") {
       p(
-        """Time zones are represented either an offset from UTC, or as a logical identifier of a _named time zone_ (these are based on the https://www.iana.org/time-zones[IANA time zone database]).
+        """Time zones are represented either as an offset from UTC, or as a logical identifier of a _named time zone_ (these are based on the https://www.iana.org/time-zones[IANA time zone database]).
           |In either case the time is stored as UTC internally, and the time zone offset is only applied when the time is presented.
           |This means that temporal instants can be ordered without taking time zone into account.
           |If, however, two times are identical in UTC, then they are ordered by timezone.""".stripMargin)
@@ -479,7 +479,7 @@ class TemporalTest extends DocumentingTest {
       }
       section("Accessing components of durations", "cypher-temporal-accessing-components-durations") {
         p(
-          """A _Duration_ can have several components. 
+          """A _Duration_ can have several components.
             |These are categorized into the following groups:
             |
             |[options="header"]
