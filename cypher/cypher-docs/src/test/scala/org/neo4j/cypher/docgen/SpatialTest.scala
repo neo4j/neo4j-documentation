@@ -190,7 +190,7 @@ class SpatialTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Accessing components of points", "cypher-spatial-accessing-components-spatial-instantss"){
+      section("Accessing components of points", "cypher-spatial-accessing-components-spatial-instants"){
         p(
           """
             |Just as we construct points using a map syntax, we can also access components as properties of the instance.
