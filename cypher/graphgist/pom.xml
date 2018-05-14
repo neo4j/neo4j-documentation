@@ -13,7 +13,7 @@
   <description>Cypher tutorial documentation tool.</description>
 
   <properties>
-    <license-text.header>GPL-3-header.txt</license-text.header>
+    <license-text.header>../../build/GPL-3-header.txt</license-text.header>
     <neo4j.version>${project.version}</neo4j.version>
     <doclint-groups>none</doclint-groups>
   </properties>

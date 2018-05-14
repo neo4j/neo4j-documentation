@@ -1,8 +1,8 @@
 /*
- * Licensed to Neo Technology under one or more contributor
+ * Licensed to Neo4j under one or more contributor
  * license agreements. See the NOTICE file distributed with
  * this work for additional information regarding copyright
- * ownership. Neo Technology licenses this file to you under
+ * ownership. Neo4j licenses this file to you under
  * the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.neo4j.examples.socnet;
 
 import org.neo4j.graphdb.RelationshipType;
