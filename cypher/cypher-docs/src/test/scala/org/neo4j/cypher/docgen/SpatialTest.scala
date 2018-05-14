@@ -190,7 +190,7 @@ class SpatialTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Accessing components of points", "cypher-spatial-accessing-components-spatial-instantss"){
+      section("Accessing components of points", "cypher-spatial-accessing-components-spatial-instants"){
         p(
           """
             |Just as we construct points using a map syntax, we can also access components as properties of the instance.
@@ -252,7 +252,7 @@ class SpatialTest extends DocumentingTest {
       p(
         """
           |If there is a <<schema-index-create-a-single-property-index,schema index>> on a particular `:Label(property)` combination, and a spatial point
-          |is assigned to that property on a node with that label, the node will be indexed in a spatial index. For spatial indexing, Neo4j use
+          |is assigned to that property on a node with that label, the node will be indexed in a spatial index. For spatial indexing, Neo4j uses
           |space filling curves in 2D or 3D over an underlying generalized B+Tree. Points will be stored in up to four different trees, one for each of the
           |<<cypher-spatial-crs, four coordinate reference systems>>.
           |This allows for both <<schema-index-use-a-single-property-index-with-where-using-equality, equality>>
