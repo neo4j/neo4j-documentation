@@ -51,6 +51,7 @@ class TemporalTest extends DocumentingTest {
         |  *** <<cypher-temporal-specify-duration-examples, Examples>>
         | ** <<cypher-temporal-accessing-components-durations, Accessing components of durations>>
         |* <<cypher-temporal-examples, Examples>>
+        |* <<cypher-temporal-index, Temporal indexing>>
       """.stripMargin)
     note {
       p("""Refer to <<query-functions-temporal>> for information regarding temporal _functions_ allowing for the creation and manipulation of temporal values.""")
@@ -75,18 +76,16 @@ class TemporalTest extends DocumentingTest {
           |""")
       p(
         """_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_ are _temporal instant_ types.
-          |A temporal instant value expresses a point in time -- an instant -- with varying degrees of precision.
+          |A temporal instant value expresses a point in time with varying degrees of precision.
         """.stripMargin)
       p(
         """By contrast, _Duration_ is not a temporal instant type.
-          |A _Duration_ represents a temporal amount, capturing the difference in time between two instants, and can be negative.""".stripMargin)
-      important {
-        p("Duration only captures the amount of time between two instants, and thus does not encapsulate a start time and end time.")
-      }
+          |A _Duration_ represents a temporal amount, capturing the difference in time between two instants, and can be negative.
+          |Duration only captures the amount of time between two instants, and thus does not encapsulate a start time and end time.""".stripMargin)
     }
     section("Time zones", "cypher-temporal-timezones") {
       p(
-        """Time zones are represented in one of two ways: either (i) as an offset from UTC, or (ii) as a logical identifier of a _named time zone_ (these are based on the https://www.iana.org/time-zones[IANA time zone database]).
+        """Time zones are represented either as an offset from UTC, or as a logical identifier of a _named time zone_ (these are based on the https://www.iana.org/time-zones[IANA time zone database]).
           |In either case the time is stored as UTC internally, and the time zone offset is only applied when the time is presented.
           |This means that temporal instants can be ordered without taking time zone into account.
           |If, however, two times are identical in UTC, then they are ordered by timezone.""".stripMargin)
@@ -94,7 +93,9 @@ class TemporalTest extends DocumentingTest {
         """When creating a time using a named time zone, the offset from UTC is computed from the rules in the time zone database to create a time instant in UTC, and to ensure the named time zone is a valid one.
         """.stripMargin)
       p(
-        """If the rules for a time zone changes in the time zone database after the creation of a temporal instant -- for example, alterations to the rules for daylight savings time in a certain area -- the presented time could differ from the originally-entered time insofar as the local timezone is concerned.
+        """It is possible for time zone rules to change in the IANA time zone database.
+          |For example, there could be alterations to the rules for daylight savings time in a certain area.
+          |If this occurs after the creation of a temporal instant, the presented time could differ from the originally-entered time, insofar as the local timezone is concerned.
           |However, the absolute time in UTC would remain the same.""".stripMargin)
       p(
         """There are three ways of specifying a time zone in Cypher:
@@ -104,7 +105,7 @@ class TemporalTest extends DocumentingTest {
           |* Specifying both the offset and the time zone name (with the requirement that these match)
         """.stripMargin)
       p(
-        """The named time zone form uses the time zone rules of the time zone database to manage _daylight savings time_ (DST).""".stripMargin)
+        """The named time zone form uses the rules of the IANA time zone database to manage _daylight savings time_ (DST).""".stripMargin)
       p(
         """The default time zone of the database can be configured using the configuration option <<operations-manual#config_db.temporal.timezone, `db.temporal.timezone`>>.
           |This configuration option influences the creation of temporal types for the following functions:
@@ -118,8 +119,9 @@ class TemporalTest extends DocumentingTest {
     section("Temporal instants", "cypher-temporal-instants") {
       section("Specifying temporal instants", "cypher-temporal-specifying-temporal-instants") {
         p(
-          """A temporal instant consists of three parts: the `date`, the `time` and the `timezone`.
-            |These parts may then be combined to produce the various temporal value types (literal characters are denoted **`thus`**):
+          """A temporal instant consists of three parts; the `date`, the `time`, and the `timezone`.
+            |These parts may then be combined to produce the various temporal value types.
+            |Literal characters are denoted in **`bold`**.
             |
             |[options="header", width="85%"]
             ||===
@@ -164,8 +166,9 @@ class TemporalTest extends DocumentingTest {
               | ** Either **`-`** or **`W`** if the next component is week of the year
               | ** **`Q`** if the next component is quarter of the year
               |
-              |If the year component is prefixed with either `-` or `+` (and is separated from the next component), `Year` is allowed to contain any number of digits.
-              |For all other cases -- i.e. the year is between `0000` and `9999` (inclusive) - `Year` must have exactly four digits (the year component is interpreted as a year of the Common Era (CE)).
+              |If the year component is prefixed with either `-` or `+`, and is separated from the next component, `Year` is allowed to contain up to nine digits.
+              |Thus, the allowed range of years is between -999,999,999 and +999,999,999.
+              |For all other cases, i.e. the year is between `0000` and `9999` (inclusive), `Year` must have exactly four digits (the year component is interpreted as a year of the Common Era (CE)).
             """.stripMargin)
           p(
             """The following formats are supported for specifying dates:
@@ -203,16 +206,16 @@ class TemporalTest extends DocumentingTest {
               |[options="header", width="85%"]
               ||===
               || Component | Format | Description
-              || Hour  | `HH` | Specified with a double digit number from `00` to `23`
-              || Minute | `MM` | Specified with a double digit number from `00` to `59`
-              || Second | `SS` | Specified with a double digit number from `00` to `59`
-              || fraction (Fractional second ††) | `sss` | Specified with a triple digit number from `000` to `999`
+              || `Hour`  | `HH` | Specified with a double digit number from `00` to `23`
+              || `Minute` | `MM` | Specified with a double digit number from `00` to `59`
+              || `Second` | `SS` | Specified with a double digit number from `00` to `59`
+              || `fraction` | `sssssssss` | Specified with a number from `0` to `999999999`. It is not required to specify trailing zeros.
+              |  `fraction` is an optional, sub-second component of `Second`.
+              |This can be separated from `Second` using either a full stop (`.`) or a comma (`,`).
+              |The `fraction` is in addition to the two digits of `Second`.
               ||===
               |
               |
-              |†† `Second` may have a _fractional seconds_ component (`fraction`) representing a sub-second component.
-              |This can be separated from `Second` using either a full stop (`.`) or a comma (`,`).
-              |The decimal fraction is _in addition_ to the two digits of `Second`.
               |Cypher does not support leap seconds; https://www.cl.cam.ac.uk/~mgk25/time/utc-sls/[UTC-SLS] (_UTC with Smoothed Leap Seconds_) is used to manage the difference in time between UTC and TAI (_International Atomic Time_).
               |""")
           p(
@@ -221,8 +224,8 @@ class TemporalTest extends DocumentingTest {
               |[options="header", width="85%"]
               ||===
               || Format | Description | Example | Interpretation of example
-              || `HH:MM:SS.ss`  | `Hour:Minute:Second.fraction` | `21:40:32.142` | `21:40:32.142`
-              || `HHMMSS.sss`  | `Hour:Minute:Second.fraction` | `214032.142` | `21:40:32.142`
+              || `HH:MM:SS.sssssssss`  | `Hour:Minute:Second.fraction` | `21:40:32.142` | `21:40:32.142`
+              || `HHMMSS.sssssssss`  | `Hour:Minute:Second.fraction` | `214032.142` | `21:40:32.142`
               || `HH:MM:SS`  | `Hour:Minute:Second` | `21:40:32` | `21:40:32.000`
               || `HHMMSS`   | `Hour:Minute:Second` | `214032` | `21:40:32.000`
               || `HH:MM` | `Hour:Minute` | `21:40` | `21:40:00.000`
@@ -234,15 +237,15 @@ class TemporalTest extends DocumentingTest {
           p(
             """The least significant components can be omitted.
               |For example, a time may be specified with `Hour` and `Minute`, leaving out `Second` and `fraction`.
-              |On the other hand, specifying a time with `Hour` and `Second` -- leaving out `Minute` -- is not possible.
+              |On the other hand, specifying a time with `Hour` and `Second`, while leaving out `Minute`, is not possible.
             """.stripMargin)
         }
         section("Specifying time zones", "cypher-temporal-specify-time-zone") {
           p(
-            """The <<cypher-temporal-timezones, time zone>> is specified in one of the following ways:
+            """The time zone is specified in one of the following ways:
               |
               |* As an offset from UTC
-              |* Using the "**z**" shorthand for the UTC (`±00:00`) time zone
+              |* Using the **`Z`** shorthand for the UTC (`±00:00`) time zone
               |
           """.stripMargin)
           p(
@@ -250,8 +253,8 @@ class TemporalTest extends DocumentingTest {
             |When specifying a time zone as an offset from UTC, the rules below apply:
             |
             |* The time zone always starts with either a plus (`+`) or minus (`-`) sign.
-            | ** Positive offsets -- time zones beginning with `+` -- denote time zones east of UTC.
-            | ** Negative offsets -- time zones beginning with `-` -- denote time zones west of UTC.
+            | ** Positive offsets, i.e. time zones beginning with `+`, denote time zones east of UTC.
+            | ** Negative offsets, i.e. time zones beginning with `-`, denote time zones west of UTC.
 
             |* A double-digit hour offset follows the `+`/`-` sign.
             |* An optional double-digit minute offset follows the hour offset, optionally separated by a colon (`:`).
@@ -270,20 +273,17 @@ class TemporalTest extends DocumentingTest {
               |
               |[options="header", width="85%"]
               ||===
-              || Format | Description | Example
-              || **`Z`**^1,2^  | UTC | `Z` (UTC)
-              || `±HH:MM`^1,2^ | `Hour:Minute` | `+09:30` (ACST)
-              || `±HH:MM[ZoneName]`^1^ | `Hour:Minute[ZoneName]` | `+08:45[Australia/Eucla]` (CWST)
-              || `±HHMM`^1,2^ | `Hour:Minute` | `+0100` (CET)
-              || `±HHMM[ZoneName]`^1^ | `Hour:Minute[ZoneName]` | `+0200[Africa/Johannesburg]` (SAST)
-              || `±HH`^1,2^ | `Hour` | `-08` (PST)
-              || `±HH[ZoneName]`^1^ | `Hour[ZoneName]` | `+08[Asia/Singapore]` (SST)
-              || `[ZoneName]`^1^  | `[ZoneName]` | `[America/Regina]` (CST)
+              || Format | Description | Example | Supported for `DateTime` | Supported for `Time`
+              || **`Z`** | UTC | `Z` | X | X
+              || `±HH:MM` | `Hour:Minute` | `+09:30` | X | X
+              || `±HH:MM[ZoneName]` | `Hour:Minute[ZoneName]` | `+08:45[Australia/Eucla]` | X |
+              || `±HHMM` | `Hour:Minute` | `+0100` | X | X
+              || `±HHMM[ZoneName]` | `Hour:Minute[ZoneName]` | `+0200[Africa/Johannesburg]` | X |
+              || `±HH` | `Hour` | `-08` | X | X
+              || `±HH[ZoneName]` | `Hour[ZoneName]` | `+08[Asia/Singapore]` | X |
+              || `[ZoneName]` | `[ZoneName]` | `[America/Regina]` | X |
               ||===
               |
-              |^1^Supported for _DateTime_.
-              |
-              |^2^Supported for _Time_.
               |""")
         }
         section("Examples", "cypher-temporal-specify-instant-examples") {
@@ -336,11 +336,11 @@ class TemporalTest extends DocumentingTest {
             |[options="header"]
             ||===
             || Component      | Description  | Type | Range/Format   | Date | DateTime | LocalDateTime | Time | LocalTime
-            || `instant.year` | The `year` component represents the https://en.wikipedia.org/wiki/Astronomical_year_numbering[astronomical year number] of the instant footnote:[This is in accordance with the https://en.wikipedia.org/wiki/Gregorian_calendar[Gregorian calendar]; i.e. years AD/CE start at year 1, and the year before that (year 1 BC/BCE) is 0, while year 2 BCE is -1 etc.] | Integer | At least 4 digits: <<cypher-temporal-year, extra rules>> | X | X | X |  |
+            || `instant.year` | The `year` component represents the https://en.wikipedia.org/wiki/Astronomical_year_numbering[astronomical year number] of the instant footnote:[This is in accordance with the https://en.wikipedia.org/wiki/Gregorian_calendar[Gregorian calendar]; i.e. years AD/CE start at year 1, and the year before that (year 1 BC/BCE) is 0, while year 2 BCE is -1 etc.] | Integer | At least 4 digits. For more information, see the <<cypher-temporal-year, rules for using the `Year` component>> | X | X | X |  |
             || `instant.quarter` |  The _quarter-of-the-year_ component | Integer | `1` to `4` | X | X | X |  |
             || `instant.month` | The _month-of-the-year_ component | Integer | `1` to `12` | X | X | X |  |
             || `instant.week` | The _week-of-the-year_ component footnote:[The https://en.wikipedia.org/wiki/ISO_week_date#First_week[first week of any year] is the week that contains the first Thursday of the year, and thus always contains January 4.] | Integer | `1` to `53` | X | X | X |  |
-            || `instant.weekYear` | The _year_ that the _week-of-year_ component belongs to footnote:[For dates from December 29, this could be the next year, and for dates until January 3 this could be the previous year, depending on how week 1 begins.] | Integer | At least 4 digits: <<cypher-temporal-year, extra rules>> | X | X | X |  |
+            || `instant.weekYear` | The _year_ that the _week-of-year_ component belongs to footnote:[For dates from December 29, this could be the next year, and for dates until January 3 this could be the previous year, depending on how week 1 begins.] | Integer | At least 4 digits. For more information, see the <<cypher-temporal-year, rules for using the `Year` component>> | X | X | X |  |
             || `instant.dayOfQuarter` | The _day-of-the-quarter_ component  | Integer | `1` to `92` | X | X | X |  |
             || `instant.day` |  The _day-of-the-month_ component | Integer | `1` to `31` | X | X | X |  |
             || `instant.ordinalDay` | The _day-of-the-year_ component  | Integer | `1` to `366` | X | X | X |  |
@@ -351,8 +351,8 @@ class TemporalTest extends DocumentingTest {
             || `instant.millisecond` |  The _millisecond_ component | Integer  | `0` to `999` |  | X | X | X | X
             || `instant.microsecond` | The _microsecond_ component  | Integer | `0` to `999999` |  | X | X  | X | X
             || `instant.nanosecond` | The _nanosecond_ component | Integer | `0` to `999999999` |  | X | X | X | X
-            || `instant.timezone` | The _timezone_ component | String | <<cypher-temporal-specify-time-zone, Depending on how the time zone was specified, this is either a time zone name or an offset from UTC in the format `±HHMM`>> |  | X |   | X |
-            || `instant.offset` | The _timezone_ offset | String  | ` ±HHMM` |  | X |  | X |
+            || `instant.timezone` | The _timezone_ component | String | Depending on how the <<cypher-temporal-specify-time-zone, time zone was specified>>, this is either a time zone name or an offset from UTC in the format `±HHMM` |  | X |   | X |
+            || `instant.offset` | The _timezone_ offset | String  | `±HHMM` |  | X |  | X |
             || `instant.offsetMinutes` | The _timezone_ offset in minutes | Integer | `-1080` to `+1080` |  | X |  | X |
             || `instant.offsetSeconds` | The _timezone_ offset in seconds | Integer | `-64800` to `+64800` |  | X |  | X |
             || `instant.epochMillis` | The number of milliseconds between `1970-01-01T00:00:00+0000` and the instant footnote:[`datetime().epochMillis` returns the equivalent value of the <<functions-timestamp, `timestamp()`>> function.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |   | |
@@ -415,39 +415,38 @@ class TemporalTest extends DocumentingTest {
       section("Specifying durations", "cypher-temporal-specifying-durations") {
         p("""A _Duration_ represents a temporal amount, capturing the difference in time between two instants, and can be negative.""")
         p(
-          """A _Duration_ may be specified using either a _unit based form_ or a _date-and-time based form_:
+          """The specification of a _Duration_ is prefixed with a **`P`**, and can use either a _unit-based form_ or a _date-and-time-based form_:
             |
-            |* Unit based form: **`P`**`[n`**`Y`**`][n`**`M`**`][n`**`W`**`][n`**`D`**`][`**`T`**`[n`**`H`**`][n`**`M`**`][n`**`S`**`]]`
+            |* Unit-based form: **`P`**`[n`**`Y`**`][n`**`M`**`][n`**`W`**`][n`**`D`**`][`**`T`**`[n`**`H`**`][n`**`M`**`][n`**`S`**`]]`
             | ** The square brackets (`[]`) denote an optional component (components with a zero value may be omitted).
             | ** The `n` denotes a numeric value which can be arbitrarily large.
             | ** The value of the last -- and least significant -- component may contain a decimal fraction.
             | ** Each component must be suffixed by a component identifier denoting the unit.
-            | ** As the unit based form uses **`M`** as a suffix for both months and minutes, time parts must always be preceded with **`T`**, even when no components of the date part are given.
-            |* Date-and-time based form: **`P`**`<date>`**`T`**`<time>`
-            | ** Unlike the unit based form, this form requires each component to be within the bounds of a valid _LocalDateTime_.
+            | ** The unit-based form uses **`M`** as a suffix for both months and minutes. Therefore, time parts must always be preceded with **`T`**, even when no components of the date part are given.
+            |* Date-and-time-based form: **`P`**`<date>`**`T`**`<time>`
+            | ** Unlike the unit-based form, this form requires each component to be within the bounds of a valid _LocalDateTime_.
             |""".stripMargin)
-        p("""Both formats mandates the prefix **`P`** (which stands for "period").""")
         p(
-          """The following table lists the component identifiers for the unit based form:
+          """The following table lists the component identifiers for the unit-based form:
             |
             |[[cypher-temporal-duration-component]]
             |
             |[options="header", width="85%"]
             ||===
-            || Component identifier | Description
-            || **`Y`** | Years
-            || **`M`** (before the **`T`**) | Months
-            || **`W`** | Weeks
-            || **`D`** | Days
-            || **`H`** | Hours
-            || **`M`** (after the **`T`**) | Minutes
-            || **`S`** | Seconds
+            || Component identifier | Description | Comments
+            || **`Y`** | Years |
+            || **`M`** | Months | Must be specified before **`T`**
+            || **`W`** | Weeks |
+            || **`D`** | Days |
+            || **`H`** | Hours |
+            || **`M`** | Minutes | Must be specified after **`T`**
+            || **`S`** | Seconds |
             ||===
             |
             |""")
         section("Examples", "cypher-temporal-specify-duration-examples") {
           p(
-            """We show below examples of parsing _Duration_ values.
+            """The following examples demonstrate various methods of parsing _Duration_ values.
               |For more details, refer to <<functions-duration-create-string>>.
             """.stripMargin)
           p("Return a _Duration_ of `14` _days_, `16` _hours_ and `12` _minutes_:")
@@ -482,14 +481,15 @@ class TemporalTest extends DocumentingTest {
       }
       section("Accessing components of durations", "cypher-temporal-accessing-components-durations") {
         p(
-          """The components of a _Duration_ are categorized into the following groups (which are named after the smallest (least significant) component in each group):
+          """A _Duration_ can have several components.
+            |These are categorized into the following groups:
             |
             |[options="header"]
             ||===
             || Component group | Constituent components
             || Months | _Years_, _Quarters_ and _Months_
             || Days | _Weeks_ and _Days_
-            || Seconds | Time: _Hours_, _Minutes_, _Seconds_ and sub-seconds (_Milliseconds_, _Microseconds_ and _Nanoseconds_)
+            || Seconds | _Hours_, _Minutes_, _Seconds_, _Milliseconds_, _Microseconds_ and _Nanoseconds_
             ||===
             |
             |
@@ -502,18 +502,16 @@ class TemporalTest extends DocumentingTest {
             |* There are always `3` _months_ in `1` _quarter_.
             |* There are always `7` _days_ in `1` _week_.
             |* There are always `60` _minutes_ in `1` _hour_.
-            |* There are always `60` _seconds_ in `1` _minute_:
-            | ** This is true because Cypher uses https://www.cl.cam.ac.uk/~mgk25/time/utc-sls/[UTC-SLS], otherwise some _minutes_ would have consisted of `61` seconds.
+            |* There are always `60` _seconds_ in `1` _minute_ (Cypher uses https://www.cl.cam.ac.uk/~mgk25/time/utc-sls/[UTC-SLS] when handling leap seconds).
             |* There are always `1000` _milliseconds_ in `1` _second_.
             |* There are always `1000` _microseconds_ in `1` _millisecond_.
             |* There are always `1000` _nanoseconds_ in `1` _microsecond_.
-            |* There are not always `24` _hours_ in `1` _day_:
-            | ** When switching to/from daylight savings time, a _day_ can have `23` or `25` _hours_.
-            |* There are not always the same number of _days_ in a _month_:
-            | ** Some _months_ have `30` _days_, whilst others have `31` _days_.
-            | ** February has `28` or `29` _days_.
-            |* There are not always the same number of _days_ in a _year_:
-            | ** Leap _years_ have `366` _days_, whilst non-leap _years_ have `365` _days_.
+            |
+            |Please note that:
+            |
+            |* There are not always `24` _hours_ in `1` _day_; when switching to/from daylight savings time, a _day_ can have `23` or `25` _hours_.
+            |* There are not always the same number of _days_ in a _month_.
+            |* Due to leap years, there are not always the same number of _days_ in a _year_.
             |
           """.stripMargin)
         p(
@@ -580,17 +578,17 @@ class TemporalTest extends DocumentingTest {
     }
     section("Examples", "cypher-temporal-examples") {
       p(
-        """We show in this section queries illustrating the use of some of the temporal functions and operators.
+        """The following examples illustrate the use of some of the temporal functions and operators.
           |Refer to <<query-functions-temporal>> and <<query-operators-temporal>> for more details.
         """.stripMargin)
-      p("Create a _Duration_ representing `1.5` _days_:")
+      p("Create a _Duration_ representing 1.5 _days_:")
       query(
         """RETURN duration({days: 1, hours: 12}) AS theDuration""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("theDuration" -> DurationValue.parse("P1DT12H"))))
         })) {
         resultTable()
       }
-      p("Computing the _Duration_ between two temporal instants")
+      p("Compute the _Duration_ between two temporal instants:")
       query(
         """RETURN duration.between(date('1984-10-11'), date('2015-06-24')) AS theDuration""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("theDuration" -> DurationValue.parse("P30Y8M13D"))))
@@ -604,42 +602,42 @@ class TemporalTest extends DocumentingTest {
         })) {
         resultTable()
       }
-      p("Get the _Date_ of `Thursday` in the current week:")
+      p("Get the _Date_ of Thursday in the current week:")
       query(
         """RETURN date.truncate('week', date(), {dayOfWeek: 4}) as thursday""".stripMargin, ResultAssertions((r) => {
           r.toList.head("thursday").asInstanceOf[LocalDate].get(ChronoField.DAY_OF_WEEK) should equal(4)
         })) {
         resultTable()
       }
-      p("Get the last _day_ of the next month:")
+      p("Get the _Date_ of the last day of the next month:")
       query(
         """RETURN date.truncate('month', date() + duration('P2M')) - duration('P1D') AS lastDay""".stripMargin, ResultAssertions((r) => {
           r.toList.head("lastDay").asInstanceOf[LocalDate].plus(Period.ofDays(1)).get(ChronoField.DAY_OF_MONTH) should equal(1)
         })) {
         resultTable()
       }
-      p("Adding a _Duration_ to a _Date_:")
+      p("Add a _Duration_ to a _Date_:")
       query(
         """RETURN time('13:42:19') + duration({days: 1, hours: 12}) AS theTime""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("theTime" -> TimeValue.parse("01:42:19", defaultZoneSupplier).asObjectCopy())))
         })) {
         resultTable()
       }
-      p("Adding two _Duration_ values:")
+      p("Add two _Duration_ values:")
       query(
         """RETURN duration({days: 2, hours: 7}) + duration({months: 1, hours: 18}) AS theDuration""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("theDuration" -> DurationValue.parse("P1M2DT25H"))))
         })) {
         resultTable()
       }
-      p("Multiplying a _Duration_ by a number:")
+      p("Multiply a _Duration_ by a number:")
       query(
         """RETURN duration({hours: 5, minutes: 21}) * 14 AS theDuration""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("theDuration" -> DurationValue.parse("PT74H54M"))))
         })) {
         resultTable()
       }
-      p("Dividing a _Duration_ by a number:")
+      p("Divide a _Duration_ by a number:")
       query(
         """RETURN duration({hours: 3, minutes: 16}) / 2 AS theDuration""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("theDuration" -> DurationValue.parse("PT1H38M"))))
@@ -666,6 +664,12 @@ class TemporalTest extends DocumentingTest {
         """RETURN ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date().month-1] AS month""".stripMargin, NoAssertions) {
         resultTable()
       }
+    }
+    section("Temporal indexing", "cypher-temporal-index") {
+      p(
+        """All temporal types can be indexed, and thereby support exact lookups for equality predicates.
+           Indexes for temporal instant types additionally support range lookups.
+        """.stripMargin)
     }
   }.build()
 }

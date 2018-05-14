@@ -294,7 +294,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.",
             "If `instant~1~` has a time component and `instant~2~` does not, the time component of `instant~2~` is assumed to be midnight, and vice versa.",
             "If `instant~1~` has a time zone component and `instant~2~` does not, the time zone component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
-            "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.")
+            "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
+            "Any difference smaller than a whole month is disregarded.")
 
           query(
             """UNWIND [
@@ -325,7 +326,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           considerations("If `instant~2~` occurs earlier than `instant~1~`, the resulting _Duration_ will be negative.",
             "If `instant~1~` has a time component and `instant~2~` does not, the time component of `instant~2~` is assumed to be midnight, and vice versa.",
             "If `instant~1~` has a time zone component and `instant~2~` does not, the time zone component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
-            "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.")
+            "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
+            "Any difference smaller than a whole day is disregarded.")
           query(
             """UNWIND [
               |   duration.inDays(date("1984-10-11"), date("1985-11-25")),
