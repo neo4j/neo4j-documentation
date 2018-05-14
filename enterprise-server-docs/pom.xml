@@ -18,7 +18,7 @@
     <bundle.namespace>org.neo4j.server</bundle.namespace>
     <short-name>server</short-name>
     <version-package>server.impl</version-package>
-    <license-text.header>GPL-3-header.txt</license-text.header>
+    <license-text.header>../build/GPL-3-header.txt</license-text.header>
     <licensing.prepend.text>notice-gpl-prefix.txt</licensing.prepend.text>
     <docs-plugin.filter>true</docs-plugin.filter>
 

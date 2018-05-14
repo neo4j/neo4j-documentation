@@ -24,7 +24,7 @@
     <short-name>neo4j-examples</short-name>
     <version-package>examples</version-package>
     <bundle.namespace>org.neo4j.examples</bundle.namespace>
-    <license-text.header>ApacheLicense-2.0-header.txt</license-text.header>
+    <license-text.header>../build/ApacheLicense-2.0-header.txt</license-text.header>
     <docs-plugin.filter>true</docs-plugin.filter>
     <licensing.prepend.text>notice-gpl-prefix.txt</licensing.prepend.text>
   </properties>
