@@ -166,7 +166,8 @@ class TemporalTest extends DocumentingTest {
               | ** Either **`-`** or **`W`** if the next component is week of the year
               | ** **`Q`** if the next component is quarter of the year
               |
-              |If the year component is prefixed with either `-` or `+`, and is separated from the next component, `Year` is allowed to contain any number of digits.
+              |If the year component is prefixed with either `-` or `+`, and is separated from the next component, `Year` is allowed to contain up to nine digits.
+              |Thus, the allowed range of years is between -999,999,999 and +999,999,999.
               |For all other cases, i.e. the year is between `0000` and `9999` (inclusive), `Year` must have exactly four digits (the year component is interpreted as a year of the Common Era (CE)).
             """.stripMargin)
           p(
@@ -208,7 +209,7 @@ class TemporalTest extends DocumentingTest {
               || `Hour`  | `HH` | Specified with a double digit number from `00` to `23`
               || `Minute` | `MM` | Specified with a double digit number from `00` to `59`
               || `Second` | `SS` | Specified with a double digit number from `00` to `59`
-              || `fraction` | `sss` | Specified with a triple digit number from `000` to `999`.
+              || `fraction` | `sssssssss` | Specified with a number from `0` to `999999999`. It is not required to specify trailing zeros.
               |  `fraction` is an optional, sub-second component of `Second`.
               |This can be separated from `Second` using either a full stop (`.`) or a comma (`,`).
               |The `fraction` is in addition to the two digits of `Second`.
@@ -223,8 +224,8 @@ class TemporalTest extends DocumentingTest {
               |[options="header", width="85%"]
               ||===
               || Format | Description | Example | Interpretation of example
-              || `HH:MM:SS.sss`  | `Hour:Minute:Second.fraction` | `21:40:32.142` | `21:40:32.142`
-              || `HHMMSS.sss`  | `Hour:Minute:Second.fraction` | `214032.142` | `21:40:32.142`
+              || `HH:MM:SS.sssssssss`  | `Hour:Minute:Second.fraction` | `21:40:32.142` | `21:40:32.142`
+              || `HHMMSS.sssssssss`  | `Hour:Minute:Second.fraction` | `214032.142` | `21:40:32.142`
               || `HH:MM:SS`  | `Hour:Minute:Second` | `21:40:32` | `21:40:32.000`
               || `HHMMSS`   | `Hour:Minute:Second` | `214032` | `21:40:32.000`
               || `HH:MM` | `Hour:Minute` | `21:40` | `21:40:00.000`
