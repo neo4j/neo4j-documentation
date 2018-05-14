@@ -253,8 +253,8 @@ class TemporalTest extends DocumentingTest {
             |When specifying a time zone as an offset from UTC, the rules below apply:
             |
             |* The time zone always starts with either a plus (`+`) or minus (`-`) sign.
-            | ** Positive offsets, or time zones beginning with `+`, denote time zones east of UTC.
-            | ** Negative offsets, or time zones beginning with `-`, denote time zones west of UTC.
+            | ** Positive offsets, i.e. time zones beginning with `+`, denote time zones east of UTC.
+            | ** Negative offsets, i.e. time zones beginning with `-`, denote time zones west of UTC.
 
             |* A double-digit hour offset follows the `+`/`-` sign.
             |* An optional double-digit minute offset follows the hour offset, optionally separated by a colon (`:`).
@@ -420,7 +420,7 @@ class TemporalTest extends DocumentingTest {
             |* Unit-based form: **`P`**`[n`**`Y`**`][n`**`M`**`][n`**`W`**`][n`**`D`**`][`**`T`**`[n`**`H`**`][n`**`M`**`][n`**`S`**`]]`
             | ** The square brackets (`[]`) denote an optional component (components with a zero value may be omitted).
             | ** The `n` denotes a numeric value which can be arbitrarily large.
-            | ** The value of the last, and least significant, component may contain a decimal fraction.
+            | ** The value of the last -- and least significant -- component may contain a decimal fraction.
             | ** Each component must be suffixed by a component identifier denoting the unit.
             | ** The unit-based form uses **`M`** as a suffix for both months and minutes. Therefore, time parts must always be preceded with **`T`**, even when no components of the date part are given.
             |* Date-and-time-based form: **`P`**`<date>`**`T`**`<time>`
