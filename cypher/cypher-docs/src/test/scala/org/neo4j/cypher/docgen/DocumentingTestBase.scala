@@ -47,7 +47,7 @@ import org.neo4j.kernel.impl.core.ThreadToStatementContextBridge
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
-import org.neo4j.kernel.impl.util.ValueUtils.asMapValue
+import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.test.{GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.values.virtual.VirtualValues
@@ -333,9 +333,10 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       case planner if expectedException.isEmpty =>
         val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
         val transaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
+        val parametersValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
         val result = engine.execute(
           s"$planner $query",
-          parameters,
+          parametersValue,
           contextFactory.newContext(
             new BoltConnectionInfo("username",
               "neo4j-java-bolt-driver",
@@ -344,7 +345,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
             ),
             transaction,
             query,
-            asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
+            parametersValue
           )
         )
         val rewindable = RewindableExecutionResult(result)
@@ -360,10 +361,11 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       case s =>
         val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
         val transaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
+        val parametersValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
         val e = intercept[CypherException](
             engine.execute(
               s"$s $query",
-              parameters,
+              parametersValue,
               contextFactory.newContext(
                 new BoltConnectionInfo("username",
                   "neo4j-java-bolt-driver",
@@ -372,7 +374,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                 ),
                 transaction,
                 query,
-                asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
+                parametersValue
               )
             )
           )
@@ -452,7 +454,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
     queries.foreach { query => {
       val innerTx = db.beginTransaction( Type.`implicit`, tx.securityContext() )
-      engine.execute( query, Map.empty[String, Object],
+      engine.execute( query, VirtualValues.EMPTY_MAP,
         contextFactory.newContext(
           new BoltConnectionInfo(
             "username",

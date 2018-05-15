@@ -100,8 +100,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     allQueriesWriter.append(fullQuerySnippet).append("\n\n")
 
     val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
+    val parameterValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String,AnyRef]])
     val result = db.withTx(
-      tx => engine.execute(testQuery, params,
+      tx => engine.execute(testQuery, parameterValue,
         contextFactory.newContext(
           new BoltConnectionInfo(
             "username",
@@ -111,7 +112,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
           ),
           tx,
           testQuery,
-          ValueUtils.asMapValue(javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String,AnyRef]])
+          parameterValue
         )
       ), Transaction.Type.`implicit` )
     result
