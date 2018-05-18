@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen.tooling.tests
 
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.cypher.internal.util.v3_5.test_helpers.CypherFunSuite
+import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
 
 class RunnableContentTest extends CypherFunSuite {
   test("graph viz includes all init queries, and the actual query when inside a Query object") {

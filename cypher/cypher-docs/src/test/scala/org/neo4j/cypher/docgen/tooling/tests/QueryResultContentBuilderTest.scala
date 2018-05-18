@@ -23,8 +23,8 @@ import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
-import org.neo4j.cypher.internal.util.v3_5.test_helpers.CypherFunSuite
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
+import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
 import org.scalatest.BeforeAndAfterAll
 
 class QueryResultContentBuilderTest extends CypherFunSuite with GraphIcing with ExecutionEngineHelper with BeforeAndAfterAll {
