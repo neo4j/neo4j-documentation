@@ -26,12 +26,12 @@ import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.internal.CypherSerializer
 import org.neo4j.cypher.internal.runtime.interpreted.TransactionBoundQueryContext.IndexSearchMonitor
 import org.neo4j.cypher.internal.runtime.interpreted.{TransactionBoundQueryContext, TransactionalContextWrapper}
-import org.neo4j.cypher.internal.util.v3_5.test_helpers.CypherFunSuite
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.values.virtual.VirtualValues.EMPTY_MAP
+import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
 import org.scalatest.{Assertions, Matchers}
 
 /**
