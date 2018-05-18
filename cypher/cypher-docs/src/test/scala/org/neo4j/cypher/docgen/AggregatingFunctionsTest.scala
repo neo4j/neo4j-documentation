@@ -86,7 +86,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       """.stripMargin)
     p("The following graph is used for the examples below:")
     graphViz()
-    section("avg()", "functions-avg") {
+    section("avg() - Numeric values", "functions-avg") {
       p(
         "`avg()` returns the average of a set of numeric values.")
       function("avg(expression)", "Either an Integer or a Float, depending on the values returned by `expression` and whether or not the calculation overflows.", ("expression", "An expression returning a set of numeric values."))
@@ -101,12 +101,12 @@ class AggregatingFunctionsTest extends DocumentingTest {
     section("avg() - Durations", "functions-avg-duration") {
       p(
         "`avg()` returns the average of a set of Durations.")
-      function("avg(expression)", "A Duration.", ("expression", "An expression returning a set of durations."))
+      function("avg(expression)", "A Duration.", ("expression", "An expression returning a set of Durations."))
       considerations("Any `null` values are excluded from the calculation.", "`avg(null)` returns `null`.")
       query("UNWIND [duration('P2DT3H'), duration('PT1H45S')] AS dur RETURN avg(dur)", ResultAssertions(r => {
-        r.toList.head("avg(dur)") should equal(DurationValue.duration(0, 1, 2 * 60 + 22, 500000000))
+        r.toList.head("avg(dur)") should equal(DurationValue.duration(0, 1, 2 * 3600 + 22, 500000000))
       })) {
-        p("The average of the two supplied durations is returned.")
+        p("The average of the two supplied Durations is returned.")
         resultTable()
       }
     }
@@ -307,13 +307,13 @@ class AggregatingFunctionsTest extends DocumentingTest {
       }
     }
     section("sum() - Durations", "functions-sum-duration") {
-      p("`sum()` returns the sum of a set of durations.")
-      function("sum(expression)", "A duration.", ("expression", "An expression returning a set of durations."))
+      p("`sum()` returns the sum of a set of Durations.")
+      function("sum(expression)", "A Duration.", ("expression", "An expression returning a set of Durations."))
       considerations("Any `null` values are excluded from the calculation.")
       query("UNWIND [duration('P2DT3H'), duration('PT1H45S')] AS dur RETURN sum(dur)", ResultAssertions(r => {
-        r.toList.head("sum(dur)") should equal(DurationValue.duration(0, 3, 4 * 60 + 45, 0))
+        r.toList.head("sum(dur)") should equal(DurationValue.duration(0, 2, 4 * 3600 + 45, 0))
       })) {
-        p("The sum of the two supplied durations is returned.")
+        p("The sum of the two supplied Durations is returned.")
         resultTable()
       }
     }
