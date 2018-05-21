@@ -30,7 +30,7 @@ import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
 import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
 import org.neo4j.cypher.internal.runtime.{InternalExecutionResult, RuntimeJavaValueConverter, isGraphKernelResultValue}
-import org.neo4j.cypher.internal.util.v3_5.Eagerly
+import org.opencypher.v9_0.util.Eagerly
 import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult}
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
 import org.neo4j.doc.tools.AsciiDocGenerator

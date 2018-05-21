@@ -24,7 +24,7 @@ import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.internal.runtime.InternalExecutionResult
-import org.neo4j.cypher.internal.util.v3_5.{Eagerly, InternalException}
+import org.opencypher.v9_0.util.{Eagerly, InternalException}
 import org.neo4j.kernel.GraphDatabaseQueryService
 
 import scala.collection.JavaConverters._
