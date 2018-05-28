@@ -42,20 +42,20 @@ object ExecutionEngineFactory {
   def createEnterpriseEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
     createEngineFromDb(graph,
       (queryService, monitors, logProvider) => {
-        val inner = new CommunityCompatibilityFactory(queryService, monitors, logProvider)
-        new EnterpriseCompatibilityFactory(inner, queryService, monitors, logProvider)
+        val inner = new CommunityCompilerFactory(queryService, monitors, logProvider)
+        new EnterpriseCompilerFactory(inner, queryService, monitors, logProvider)
       })
   }
 
   def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
     createEngineFromDb(graph,
       (queryService, monitors, logProvider) => {
-        new CommunityCompatibilityFactory(queryService, monitors, logProvider)
+        new CommunityCompilerFactory(queryService, monitors, logProvider)
       })
   }
 
   private def createEngineFromDb(graph: GraphDatabaseService,
-                                 newCompatibilityFactory: (GraphDatabaseCypherService, Monitors, LogProvider) => CompatibilityFactory
+                                 newCompatibilityFactory: (GraphDatabaseCypherService, Monitors, LogProvider) => CompilerFactory
                                 ): ExecutionEngine = {
     val queryService = new GraphDatabaseCypherService(graph)
     val graphAPI = graph.asInstanceOf[GraphDatabaseAPI]
