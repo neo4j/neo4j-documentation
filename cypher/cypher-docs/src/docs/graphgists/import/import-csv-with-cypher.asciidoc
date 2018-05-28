@@ -13,7 +13,7 @@ CSV files can be stored on the database server and are then accessible using a `
 Alternatively, `LOAD CSV` also supports accessing CSV files via `HTTPS`, `HTTP`, and `FTP`.
 `LOAD CSV` will follow `HTTP` redirects but for security reasons it will not follow redirects that changes the protocol, for example if the redirect is going from `HTTPS` to `HTTP`.
 
-For more details, see <<query-load-csv>>.
+For more details, see <<cypher-manual#query-load-csv>>.
 
 Using the following Cypher queries, we'll create a node for each person, a node for each movie and a relationship between the two with a property denoting the role.
 We're also keeping track of the country in which each movie was made.
@@ -50,7 +50,7 @@ We're using `MERGE` to create nodes that represent countries.
 Using `MERGE` avoids creating duplicate country nodes in the case where multiple movies have been made in the same country.
 
 [IMPORTANT]
-When using `MERGE` or `MATCH` with `LOAD CSV` we need to make sure we have an index (see <<query-schema-index>>) or a unique constraint (see <<query-constraints>>) on the property we're merging.
+When using `MERGE` or `MATCH` with `LOAD CSV` we need to make sure we have an index (see <<cypher-manual#query-schema-index>>) or a unique constraint (see <<cypher-manual#query-constraints>>) on the property we're merging.
 This will ensure the query executes in a performant way.
 
 Before running our query to connect movies and countries we'll create an index for the name property on the `Country` label to ensure the query runs as fast as it can:
@@ -105,7 +105,7 @@ CREATE CONSTRAINT ON (movie:Movie) ASSERT movie.id IS UNIQUE
 
 Now importing the relationships is a matter of finding the nodes and then creating relationships between them.
 
-For this query we'll use `USING PERIODIC COMMIT` (see <<query-using-periodic-commit-hint>>) which is helpful for queries that operate on large CSV files.
+For this query we'll use `USING PERIODIC COMMIT` (see <<cypher-manual#query-using-periodic-commit-hint>>) which is helpful for queries that operate on large CSV files.
 This hint tells Neo4j that the query might build up inordinate amounts of transaction state, and so needs to be periodically committed.
 In this case we also set the limit to `500` rows per commit.
 
