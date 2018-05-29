@@ -54,13 +54,13 @@ Neo4j comes with a number of built-in procedures.
 For a list of these, see <<operations-manual#ref-procedures, Operations Manual -> Built-in procedures>>.
 
 Users can also develop custom procedures and deploy to the database.
-See <<procedures>> for details.
+See <<java-reference#extending-neo4j-procedures>> for details.
 ====
 
 The following examples show how to pass arguments to and yield result fields from a procedure call.
 All examples use the following procedure:
 
-[snippet,java]
+[snippet, java]
 ----
 component=neo4j-cypher-docs
 source=org/neo4j/procedure/example/IndexingProcedure.java

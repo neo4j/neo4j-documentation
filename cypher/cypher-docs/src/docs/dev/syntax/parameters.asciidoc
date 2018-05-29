@@ -37,7 +37,7 @@ Parameters cannot be used for the following constructs, as these form part of th
 
 Parameters may consist of letters and numbers, and any combination of these, but cannot start with a number or a currency symbol.
 
-For details on using parameters via the Neo4j REST API, see <<rest-api-transactional>>.
+For details on using parameters via the Neo4j REST API, see <<http-api#http-api-transactional>>.
 // For details on parameters when using the Neo4j embedded Java API, see <<tutorials-cypher-parameters-java>>.
 
 We provide below a comprehensive list of examples of parameter usage.
