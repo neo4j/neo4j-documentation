@@ -19,9 +19,9 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.graphdb.{Relationship, Path, Node}
 import org.junit.Assert._
+import org.neo4j.cypher.docgen.tooling._
+import org.neo4j.values.storable.DurationValue
 
 class AggregatingFunctionsTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/functions"
@@ -71,7 +71,8 @@ class AggregatingFunctionsTest extends DocumentingTest {
     p(
       """Functions:
         |
-        |* <<functions-avg,avg()>>
+        |* <<functions-avg,avg() - Numeric values>>
+        |* <<functions-avg-duration,avg() - Durations>>
         |* <<functions-collect,collect()>>
         |* <<functions-count,count()>>
         |* <<functions-max,max()>>
@@ -80,11 +81,12 @@ class AggregatingFunctionsTest extends DocumentingTest {
         |* <<functions-percentiledisc,percentileDisc()>>
         |* <<functions-stdev,stDev()>>
         |* <<functions-stdevp,stDevP()>>
-        |* <<functions-sum,sum()>>
+        |* <<functions-sum,sum() - Numeric values>>
+        |* <<functions-sum-duration,sum() - Durations>>
       """.stripMargin)
     p("The following graph is used for the examples below:")
     graphViz()
-    section("avg()", "functions-avg") {
+    section("avg() - Numeric values", "functions-avg") {
       p(
         "`avg()` returns the average of a set of numeric values.")
       function("avg(expression)", "Either an Integer or a Float, depending on the values returned by `expression` and whether or not the calculation overflows.", ("expression", "An expression returning a set of numeric values."))
@@ -93,6 +95,18 @@ class AggregatingFunctionsTest extends DocumentingTest {
         r.toList.head("avg(n.age)") should equal(30L)
       })) {
         p("The average of all the values in the property `age` is returned.")
+        resultTable()
+      }
+    }
+    section("avg() - Durations", "functions-avg-duration") {
+      p(
+        "`avg()` returns the average of a set of Durations.")
+      function("avg(expression)", "A Duration.", ("expression", "An expression returning a set of Durations."))
+      considerations("Any `null` values are excluded from the calculation.", "`avg(null)` returns `null`.")
+      query("UNWIND [duration('P2DT3H'), duration('PT1H45S')] AS dur RETURN avg(dur)", ResultAssertions(r => {
+        r.toList.head("avg(dur)") should equal(DurationValue.duration(0, 1, 2 * 3600 + 22, 500000000))
+      })) {
+        p("The average of the two supplied Durations is returned.")
         resultTable()
       }
     }
@@ -281,7 +295,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("sum()", "functions-sum") {
+    section("sum() - Numeric values", "functions-sum") {
       p("`sum()` returns the sum of a set of numeric values.")
       function("sum(expression)", "Either an Integer or a Float, depending on the values returned by `expression`.", ("expression", "An expression returning a set of numeric values."))
       considerations("Any `null` values are excluded from the calculation.", "`sum(null)` returns `0`.")
@@ -289,6 +303,17 @@ class AggregatingFunctionsTest extends DocumentingTest {
         r.toList.head("sum(n.age)") should equal(90L)
       })) {
         p("The sum of all the values in the property `age` is returned.")
+        resultTable()
+      }
+    }
+    section("sum() - Durations", "functions-sum-duration") {
+      p("`sum()` returns the sum of a set of Durations.")
+      function("sum(expression)", "A Duration.", ("expression", "An expression returning a set of Durations."))
+      considerations("Any `null` values are excluded from the calculation.")
+      query("UNWIND [duration('P2DT3H'), duration('PT1H45S')] AS dur RETURN sum(dur)", ResultAssertions(r => {
+        r.toList.head("sum(dur)") should equal(DurationValue.duration(0, 2, 4 * 3600 + 45, 0))
+      })) {
+        p("The sum of the two supplied Durations is returned.")
         resultTable()
       }
     }

@@ -80,7 +80,8 @@ These functions take multiple values as arguments, and calculate and return an a
 [options="header"]
 |===
 |Function                                       | Description
-|<<functions-avg,avg()>>                        | Returns the average of a set of numeric values.
+|<<functions-avg,avg() - Numeric values>>       | Returns the average of a set of numeric values.
+|<<functions-avg-duration,avg() - Durations>>   | Returns the average of a set of Durations.
 |<<functions-collect,collect()>>                | Returns a list containing the values returned by an expression.
 |<<functions-count,count()>>                    | Returns the number of values or rows.
 |<<functions-max,max()>>                        | Returns the maximum value in a set of values.
@@ -89,7 +90,8 @@ These functions take multiple values as arguments, and calculate and return an a
 |<<functions-percentiledisc,percentileDisc()>>  | Returns the nearest value to the given percentile over a group using a rounding method.
 |<<functions-stdev,stDev()>>                    | Returns the standard deviation for the given value over a group for a sample of a population.
 |<<functions-stdevp,stDevP()>>                  | Returns the standard deviation for the given value over a group for an entire population.
-|<<functions-sum,sum()>>                        | Returns the sum of a set of numeric values.
+|<<functions-sum,sum() - Numeric values>>       | Returns the sum of a set of numeric values.
+|<<functions-sum-duration,sum() - Durations>>   | Returns the sum of a set of Durations.
 |===
 
 
