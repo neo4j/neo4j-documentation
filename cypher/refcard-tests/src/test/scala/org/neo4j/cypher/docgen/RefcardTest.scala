@@ -184,10 +184,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     writer.println()
     writer.println("[options=\"header\"]")
     writer.println("|====")
+    writer.print("| " + title)
     if (linkId != null) {
-      writer.println("| link:{developer-manual-base-uri}/cypher/" + linkId + "[" + title + "]")
-    } else {
-      writer.println("|" + title)
+      writer.println(" doclink:{cypher-manual-base-uri}/" + linkId + "[]")
     }
     for (i <- 0 until queryLines.length by 2) {
       writer.print("a|[source, cypher")
