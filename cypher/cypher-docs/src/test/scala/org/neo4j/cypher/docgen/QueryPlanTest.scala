@@ -308,25 +308,16 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def createNode() {
+  @Test def create() {
     profileQuery(
-      title = "Create Node",
+      title = "Create Nodes / Relationships",
       text =
-        """The `CreateNode` operator is used to create a node.""".stripMargin,
-      queryText = """CREATE (:Person {name: 'Jack'})""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateNode"))
-    )
-  }
-
-  @Test def createRelationship() {
-    profileQuery(
-      title = "Create Relationship",
-      text =
-        """The `CreateRelationship` operator is used to create a relationship.""".stripMargin,
+        """The `Create` operator is used to create nodes and relationships.""".stripMargin,
       queryText =
-        """MATCH (a:Person {name: 'Max'}), (b:Person {name: 'Chris'})
-          |CREATE (a)-[:FRIENDS_WITH]->(b)""".stripMargin,
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateRelationship"))
+        """CREATE (max:Person {name: 'Max'}), (chris:Person {name: 'Chris'})
+          |CREATE (max)-[:FRIENDS_WITH]->(chris)""".stripMargin,
+
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("Create"))
     )
   }
 
