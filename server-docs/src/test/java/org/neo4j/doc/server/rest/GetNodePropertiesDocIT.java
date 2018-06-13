@@ -51,17 +51,6 @@ public class GetNodePropertiesDocIT extends AbstractRestFunctionalDocTestBase
         functionalTestHelper = new FunctionalTestHelper( server() );
     }
 
-    @Documented( "Get properties for node." )
-    @Test
-    public void shouldGet200ForProperties() throws JsonParseException {
-        String entity = JsonHelper.createJsonFrom(Collections.singletonMap("foo", "bar"));
-        JaxRsResponse createResponse = req.post(functionalTestHelper.dataUri() + "node/", entity);
-        gen.get()
-                .expectedStatus(200)
-                .get(createResponse.getLocation()
-                        .toString() + "/properties");
-    }
-
     @Test
     public void shouldGetContentLengthHeaderForRetrievingProperties() throws JsonParseException
     {
@@ -124,23 +113,6 @@ public class GetNodePropertiesDocIT extends AbstractRestFunctionalDocTestBase
         final JaxRsResponse createResponse = req.post(functionalTestHelper.dataUri() + "node/", "");
         JaxRsResponse response = req.get(getPropertyUri(createResponse.getLocation().toString(), "foo"));
         assertEquals(404, response.getStatus());
-    }
-
-    @Documented( "Get property for node.\n" +
-                 "\n" +
-                 "Get a single node property from a node." )
-    @Test
-    public void shouldGet200ForProperty() throws JsonParseException
-    {
-        String entity = JsonHelper.createJsonFrom(Collections.singletonMap("foo", "bar"));
-        JaxRsResponse createResponse = req.post(functionalTestHelper.dataUri() + "node/", entity);
-        JaxRsResponse response = req.get(getPropertyUri(createResponse.getLocation().toString(), "foo"));
-        assertEquals(200, response.getStatus());
-
-        gen.get()
-                .expectedStatus( 200 )
-                .get(getPropertyUri(createResponse.getLocation()
-                        .toString(), "foo"));
     }
 
     @Test

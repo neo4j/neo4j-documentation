@@ -61,19 +61,6 @@ public class RemoveNodePropertiesDocIT extends AbstractRestFunctionalDocTestBase
         response.close();
     }
 
-    @Documented( "Delete all properties from node." )
-    @Test
-    public void shouldReturn204WhenAllPropertiesAreRemoved()
-    {
-        long nodeId = helper.createNode();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put( "jim", "tobias" );
-        helper.setNodeProperties( nodeId, map );
-        gen.get().description( startGraph( "delete all prps from node" ) )
-                .expectedStatus( 204 )
-                .delete( functionalTestHelper.nodePropertiesUri( nodeId ) );
-    }
-
     @Test
     public void shouldReturn404WhenPropertiesSentToANodeWhichDoesNotExist() {
         JaxRsResponse response = RestRequest.req().delete(getPropertiesUri(999999));
@@ -84,21 +71,6 @@ public class RemoveNodePropertiesDocIT extends AbstractRestFunctionalDocTestBase
     private JaxRsResponse removeNodePropertiesOnServer(final long nodeId)
     {
         return RestRequest.req().delete(getPropertiesUri(nodeId));
-    }
-
-    @Documented( "To delete a single property\n" +
-                 "from a node, see the example below" )
-    @Test
-    public void delete_a_named_property_from_a_node()
-    {
-        long nodeId = helper.createNode();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put( "name", "tobias" );
-        helper.setNodeProperties( nodeId, map );
-        gen.get()
-        .expectedStatus( 204 )
-        .description( startGraph( "delete named property start" ))
-        .delete( functionalTestHelper.nodePropertyUri( nodeId, "name") );
     }
 
     @Test

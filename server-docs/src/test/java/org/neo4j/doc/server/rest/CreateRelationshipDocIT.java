@@ -38,50 +38,6 @@ import static org.junit.Assert.assertTrue;
 
 public class CreateRelationshipDocIT extends AbstractRestFunctionalDocTestBase
 {
-    @Test
-    @Graph( "Joe knows Sara" )
-    @Documented( "Upon successful creation of a relationship, the new relationship is returned." )
-    @Title( "Create a relationship with properties" )
-    public void create_a_relationship_with_properties() throws Exception
-    {
-        String jsonString = "{\"to\" : \""
-                            + getDataUri()
-                            + "node/"
-                            + getNode( "Sara" ).getId()
-                            + "\", \"type\" : \"LOVES\", \"data\" : {\"foo\" : \"bar\"}}";
-        Node i = getNode( "Joe" );
-        gen.get().description( startGraph( "Add relationship with properties before" ) );
-        gen.get().expectedStatus(
-                Status.CREATED.getStatusCode() ).payload( jsonString ).post(
-                getNodeUri( i ) + "/relationships" );
-        try ( Transaction tx = graphdb().beginTx() )
-        {
-            assertTrue( i.hasRelationship( RelationshipType.withName( "LOVES" ) ) );
-        }
-    }
-
-    @Test
-    @Documented( "Upon successful creation of a relationship, the new relationship is returned." )
-    @Title( "Create relationship" )
-    @Graph( "Joe knows Sara" )
-    public void create_relationship() throws Exception
-    {
-        String jsonString = "{\"to\" : \""
-                            + getDataUri()
-                            + "node/"
-                            + getNode( "Sara" ).getId()
-                            + "\", \"type\" : \"LOVES\"}";
-        Node i = getNode( "Joe" );
-        String entity = gen.get().expectedStatus(
-                Status.CREATED.getStatusCode() ).payload( jsonString )
-                .description( startGraph( "create relationship" ) )
-                .post( getNodeUri( i ) + "/relationships" ).entity();
-        try ( Transaction tx = graphdb().beginTx() )
-        {
-            assertTrue( i.hasRelationship( RelationshipType.withName( "LOVES" ) ) );
-        }
-        assertProperRelationshipRepresentation( JsonHelper.jsonToMap( entity ) );
-    }
 
     @Test
     @Graph( "Joe knows Sara" )

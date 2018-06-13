@@ -104,35 +104,6 @@ public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
         helper = functionalTestHelper.getGraphDbHelper();
     }
 
-    @Test
-    public void create_node() throws Exception
-    {
-        JaxRsResponse response = gen.get()
-                .expectedStatus( 201 )
-                .expectedHeader( "Location" )
-                .post( functionalTestHelper.nodeUri() )
-                .response();
-        assertTrue( response.getLocation()
-                .toString()
-                .matches( NODE_URI_PATTERN ) );
-    }
-
-    @Test
-    public void create_node_with_properties() throws Exception
-    {
-        JaxRsResponse response = gen.get()
-                .payload( "{\"foo\" : \"bar\"}" )
-                .expectedStatus( 201 )
-                .expectedHeader( "Location" )
-                .expectedHeader( "Content-Length" )
-                .post( functionalTestHelper.nodeUri() )
-                .response();
-        assertTrue( response.getLocation()
-                .toString()
-                .matches( NODE_URI_PATTERN ) );
-        checkGeneratedFiles();
-    }
-
     private void checkGeneratedFiles()
     {
         String requestDocs, responseDocs, graphDocs;
@@ -177,19 +148,6 @@ public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
                 .post( functionalTestHelper.nodeUri() )
                 .response().getEntity();
         assertThat( response, containsString( "[ 1, 2, 3 ]" ) );
-    }
-
-    @Documented( "Property values can not be null.\n" +
-                 "\n" +
-                 "This example shows the response you get when trying to set a property to +null+." )
-    @Test
-    public void shouldGet400WhenSupplyingNullValueForAProperty() throws Exception
-    {
-        gen.get()
-                .noGraph()
-                .payload( "{\"foo\":null}" )
-                .expectedStatus( 400 )
-                .post( functionalTestHelper.nodeUri() );
     }
 
     @Test
@@ -256,16 +214,6 @@ public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
 
     }
 
-    @Documented( "Delete node." )
-    @Test
-    public void shouldRespondWith204WhenNodeDeleted() throws Exception
-    {
-        long node = helper.createNode();
-        gen.get().description( startGraph( "delete node" ) )
-                .expectedStatus( 204 )
-                .delete( functionalTestHelper.dataUri() + "node/" + node );
-    }
-
     @Test
     public void shouldRespondWith404AndSensibleEntityBodyWhenNodeToBeDeletedCannotBeFound() throws Exception
     {
@@ -275,28 +223,6 @@ public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
         Map<String, Object> jsonMap = JsonHelper.jsonToMap( response.getEntity() );
         assertThat( jsonMap, hasKey( "message" ) );
         assertNotNull( jsonMap.get( "message" ) );
-    }
-
-    @Documented( "Nodes with relationships cannot be deleted.\n" +
-                 "\n" +
-                 "The relationships on a node has to be deleted before the node can be\n" +
-                 "deleted.\n" +
-                 " \n" +
-                 "TIP: You can use `DETACH DELETE` in Cypher to delete nodes and their relationships in one go." )
-    @Test
-    public void shouldRespondWith409AndSensibleEntityBodyWhenNodeCannotBeDeleted() throws Exception
-    {
-        long id = helper.createNode();
-        helper.createRelationship( "LOVES", id, helper.createNode() );
-        JaxRsResponse response = sendDeleteRequestToServer(id);
-        assertEquals( 409, response.getStatus() );
-        Map<String, Object> jsonMap = JsonHelper.jsonToMap( response.getEntity() );
-        assertThat( jsonMap, hasKey( "message" ) );
-        assertNotNull( jsonMap.get( "message" ) );
-
-        gen.get().description( startGraph( "nodes with rels can not be deleted" ) ).noGraph()
-                .expectedStatus( 409 )
-                .delete( functionalTestHelper.dataUri() + "node/" + id );
     }
 
     @Test

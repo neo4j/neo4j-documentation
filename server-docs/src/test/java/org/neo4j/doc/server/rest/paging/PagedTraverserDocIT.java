@@ -131,62 +131,6 @@ public class PagedTraverserDocIT extends ExclusiveServerTestBase
                         + "/paged/traverse/{returnType}{?pageSize,leaseTime}" ) );
     }
 
-    @Documented( "Creating a paged traverser.\n\n" +
-                 "Paged traversers are created by ++POST++-ing a\n" +
-                 "traversal description to the link identified by the +paged_traverser+ key\n" +
-                 "in a node representation. When creating a paged traverser, the same\n" +
-                 "options apply as for a regular traverser, meaning that +node+, +path+,\n" +
-                 "or +fullpath+, can be targeted." )
-    @Test
-    public void shouldPostATraverserWithDefaultOptionsAndReceiveTheFirstPageOfResults() throws Exception
-    {
-        theStartNode = createLinkedList( SHORT_LIST_LENGTH, server.getDatabase() );
-
-        ResponseEntity entity = gen.get()
-                .expectedType( MediaType.valueOf( "application/json; charset=UTF-8" ) )
-                .expectedHeader( "Location" )
-                .expectedStatus( 201 )
-                .payload( traverserDescription() )
-                .payloadType( MediaType.APPLICATION_JSON_TYPE )
-                .post( functionalTestHelper.nodeUri( theStartNode.getId() ) + "/paged/traverse/node" );
-        assertEquals( 201, entity.response()
-                .getStatus() );
-        assertThat( entity.response()
-                .getLocation()
-                .toString(), containsString( "/db/data/node/" + theStartNode.getId() + "/paged/traverse/node/" ) );
-        assertEquals( "application/json; charset=utf-8", entity.response()
-                .getType()
-                .toString().toLowerCase() );
-    }
-
-    @Documented( "Paging through the results of a paged traverser.\n\n" +
-                 "Paged traversers hold state on the server, and allow clients to page through the results of a traversal.\n" +
-                 "To progress to the next page of traversal results, the client issues a HTTP `GET` request on the paged traversal URI which causes the traversal to fill the next page (or partially fill it if insufficient results are available).\n \n" +
-                 "Note that if a traverser expires through inactivity it will cause a 404 response on the next `GET` request.\n" +
-                 "Traversers' leases are renewed on every successful access for the same amount of time as originally specified.\n\n" +
-                 "When the paged traverser reaches the end of its results, the client can expect a 404 response as the traverser is disposed by the server." )
-    @Test
-    public void shouldBeAbleToTraverseAllThePagesWithDefaultPageSize()
-    {
-        theStartNode = createLinkedList( LONG_LIST_LENGTH, server.getDatabase() );
-
-        URI traverserLocation = createPagedTraverser().getLocation();
-
-        int enoughPagesToExpireTheTraverser = 3;
-        for ( int i = 0; i < enoughPagesToExpireTheTraverser; i++ )
-        {
-
-            gen.get()
-                    .expectedType( MediaType.APPLICATION_JSON_TYPE )
-                    .expectedStatus( 200 )
-                    .payload( traverserDescription() )
-                    .get( traverserLocation.toString() );
-        }
-
-        JaxRsResponse response = new RestRequest( traverserLocation ).get();
-        assertEquals( 404, response.getStatus() );
-    }
-
     @Test
     public void shouldExpireTheTraverserAfterDefaultTimeoutAndGetA404Response()
     {
@@ -201,47 +145,6 @@ public class PagedTraverserDocIT extends ExclusiveServerTestBase
         JaxRsResponse getResponse = new RestRequest( postResponse.getLocation() ).get();
 
         assertEquals( 404, getResponse.getStatus() );
-    }
-
-    @Documented( "Paged traverser page size.\n\n" +
-                 "The default page size is 50 items, but\n" +
-                 "depending on the application larger or smaller pages sizes might be\n" +
-                 "appropriate. This can be set by adding a +pageSize+ query parameter." )
-    @Test
-    public void shouldBeAbleToTraverseAllThePagesWithNonDefaultPageSize()
-    {
-        theStartNode = createLinkedList( SHORT_LIST_LENGTH, server.getDatabase() );
-
-        URI traverserLocation = createPagedTraverserWithPageSize( 1 ).getLocation();
-
-        int enoughPagesToExpireTheTraverser = 12;
-        for ( int i = 0; i < enoughPagesToExpireTheTraverser; i++ )
-        {
-
-            JaxRsResponse response = new RestRequest( traverserLocation ).get();
-            assertEquals( 200, response.getStatus() );
-        }
-
-        JaxRsResponse response = new RestRequest( traverserLocation ).get();
-        assertEquals( 404, response.getStatus() );
-    }
-
-    @Documented( "Paged traverser timeout.\n\n" +
-                 "The default timeout for a paged traverser is 60\n" +
-                 "seconds, but depending on the application larger or smaller timeouts\n" +
-                 "might be appropriate. This can be set by adding a +leaseTime+ query\n" +
-                 "parameter with the number of seconds the paged traverser should last." )
-    @Test
-    public void shouldExpireTraverserWithNonDefaultTimeout()
-    {
-        theStartNode = createLinkedList( SHORT_LIST_LENGTH, server.getDatabase() );
-
-        URI traverserLocation = createPagedTraverserWithTimeoutInMinutes( 10 ).getLocation();
-
-        clock.forward( 11, TimeUnit.MINUTES );
-
-        JaxRsResponse response = new RestRequest( traverserLocation ).get();
-        assertEquals( 404, response.getStatus() );
     }
 
     @Test

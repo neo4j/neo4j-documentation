@@ -109,19 +109,6 @@ public class RetrieveNodeDocIT extends AbstractRestFunctionalDocTestBase
         }
     }
 
-    @Documented( "Get node.\n" +
-                 "\n" +
-                 "Note that the response contains URI/templates for the available\n" +
-                 "operations for getting properties and relationships." )
-    @Test
-    public void shouldGet200WhenRetrievingNode() throws Exception
-    {
-        String uri = nodeUri.toString();
-        gen.get()
-                .expectedStatus( 200 )
-                .get( uri );
-    }
-
     @Documented( "Get node -- compact.\n" +
                  "\n" +
                  "Specifying the subformat in the requests media type yields a more compact\n" +
@@ -163,15 +150,6 @@ public class RetrieveNodeDocIT extends AbstractRestFunctionalDocTestBase
         Map<String, Object> map = JsonHelper.jsonToMap( response.getEntity() );
         assertTrue( map.containsKey( "self" ) );
         response.close();
-    }
-
-    @Documented( "Get non-existent node." )
-    @Test
-    public void shouldGet404WhenRetrievingNonExistentNode() throws Exception
-    {
-        gen.get()
-                .expectedStatus( 404 )
-                .get( nodeUri + "00000" );
     }
 
     private JaxRsResponse retrieveNodeFromService( final String uri )

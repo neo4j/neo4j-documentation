@@ -139,18 +139,6 @@ public class RetrieveRelationshipsFromNodeDocIT extends AbstractRestFunctionalDo
         }
     }
 
-    @Documented( "Get all relationships." )
-    @Test
-    public void shouldRespondWith200AndListOfRelationshipRepresentationsWhenGettingAllRelationshipsForANode()
-            throws JsonParseException
-    {
-        String entity = gen.get()
-                .expectedStatus( 200 )
-                .get( functionalTestHelper.nodeUri() + "/" + nodeWithRelationships + "/relationships" + "/all" )
-                .entity();
-        verifyRelReps( 3, entity );
-    }
-
     @Test
     public void shouldRespondWith200AndListOfRelationshipRepresentationsWhenGettingAllRelationshipsForANodeStreaming()
             throws JsonParseException
@@ -159,46 +147,6 @@ public class RetrieveRelationshipsFromNodeDocIT extends AbstractRestFunctionalDo
                 .withHeader(StreamingJsonFormat.STREAM_HEADER,"true")
                 .expectedStatus(200)
                 .get( functionalTestHelper.nodeUri() + "/" + nodeWithRelationships + "/relationships" + "/all" )
-                .entity();
-        verifyRelReps( 3, entity );
-    }
-
-    @Documented( "Get incoming relationships." )
-    @Test
-    public void shouldRespondWith200AndListOfRelationshipRepresentationsWhenGettingIncomingRelationshipsForANode()
-            throws JsonParseException
-    {
-        String entity = gen.get()
-                .expectedStatus( 200 )
-                .get( functionalTestHelper.nodeUri() + "/" + nodeWithRelationships + "/relationships" + "/in" )
-                .entity();
-        verifyRelReps( 1, entity );
-    }
-
-    @Documented( "Get outgoing relationships." )
-    @Test
-    public void shouldRespondWith200AndListOfRelationshipRepresentationsWhenGettingOutgoingRelationshipsForANode()
-            throws JsonParseException
-    {
-        String entity = gen.get()
-                .expectedStatus( 200 )
-                .get( functionalTestHelper.nodeUri() + "/" + nodeWithRelationships + "/relationships" + "/out" )
-                .entity();
-        verifyRelReps( 2, entity );
-    }
-
-    @Documented( "Get typed relationships.\n" +
-                 "\n" +
-                 "Note that the \"+&+\" needs to be encoded like \"+%26+\" for example when\n" +
-                 "using http://curl.haxx.se/[cURL] from the terminal." )
-    @Test
-    public void shouldRespondWith200AndListOfRelationshipRepresentationsWhenGettingAllTypedRelationshipsForANode()
-            throws JsonParseException
-    {
-        String entity = gen.get()
-                .expectedStatus( 200 )
-                .get( functionalTestHelper.nodeUri() + "/" + nodeWithRelationships + "/relationships"
-                        + "/all/LIKES&HATES" )
                 .entity();
         verifyRelReps( 3, entity );
     }
@@ -223,18 +171,6 @@ public class RetrieveRelationshipsFromNodeDocIT extends AbstractRestFunctionalDo
         assertThat( response.getType().toString(), containsString( MediaType.APPLICATION_JSON ) );
         verifyRelReps( 1, response.getEntity() );
         response.close();
-    }
-
-    @Documented( "Get relationships on a node without relationships." )
-    @Test
-    public void shouldRespondWith200AndEmptyListOfRelationshipRepresentationsWhenGettingAllRelationshipsForANodeWithoutRelationships()
-            throws JsonParseException
-    {
-        String entity = gen.get()
-                .expectedStatus( 200 )
-                .get( functionalTestHelper.nodeUri() + "/" + nodeWithoutRelationships + "/relationships" + "/all" )
-                .entity();
-        verifyRelReps( 0, entity );
     }
 
     @Test

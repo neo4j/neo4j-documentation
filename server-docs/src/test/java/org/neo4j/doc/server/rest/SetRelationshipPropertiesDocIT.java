@@ -58,23 +58,6 @@ public class SetRelationshipPropertiesDocIT extends AbstractRestFunctionalDocTes
         badUri = new URI( functionalTestHelper.relationshipPropertiesUri( relationshipId + 1 * 99999 ) );
     }
 
-    @Documented( "Update relationship properties." )
-    @Test
-    @Graph
-    public void shouldReturn204WhenPropertiesAreUpdated() throws JsonParseException
-    {
-        data.get();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put( "jim", "tobias" );
-        gen.get().description( startGraph( "update relationship properties" ) )
-                .payload( JsonHelper.createJsonFrom( map ) )
-                .expectedStatus( 204 )
-                .put( propertiesUri.toString() );
-        JaxRsResponse response = updatePropertiesOnServer(map);
-        assertEquals( 204, response.getStatus() );
-        response.close();
-    }
-
     @Test
     public void shouldReturn400WhenSendinIncompatibleJsonProperties() throws JsonParseException
     {

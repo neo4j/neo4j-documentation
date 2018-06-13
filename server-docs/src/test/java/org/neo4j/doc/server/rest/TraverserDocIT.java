@@ -61,30 +61,6 @@ public class TraverserDocIT extends AbstractRestFunctionalTestBase
                 getTraverseUriNodes( getNode( "I" ) ) ).entity());
     }
 
-    /**
-     * In order to return relationships,
-     * simply specify the return type as part of the URL.
-     */
-    @Test
-    @Graph( {"I know you", "I own car"} )
-    public void return_relationships_from_a_traversal()
-    {
-        assertSize( 2, gen().expectedStatus( 200 ).payload( "{\"order\":\"breadth_first\",\"uniqueness\":\"none\",\"return_filter\":{\"language\":\"builtin\",\"name\":\"all\"}}" ).post(
-                getTraverseUriRelationships( getNode( "I" ) ) ).entity());
-    }
-
-    /**
-     * In order to return paths from a traversal,
-     * specify the +Path+ return type as part of the URL.
-     */
-    @Test
-    @Graph( {"I know you", "I own car"} )
-    public void return_paths_from_a_traversal()
-    {
-        assertSize( 3, gen().expectedStatus( 200 ).payload( "{\"order\":\"breadth_first\",\"uniqueness\":\"none\",\"return_filter\":{\"language\":\"builtin\",\"name\":\"all\"}}" ).post(
-                getTraverseUriPaths( getNode( "I" ) ) ).entity());
-    }
-
     private String getTraverseUriRelationships( Node node )
     {
         return getNodeUri( node) + "/traverse/relationship";
@@ -127,57 +103,6 @@ public class TraverserDocIT extends AbstractRestFunctionalTestBase
             assertTrue( uri + " not found", expected.remove( uri ) );
         }
         assertTrue( "Expected not empty:" + expected, expected.isEmpty() );
-    }
-
-    @Documented( "Traversal using a return filter.\n" +
-                 "\n" +
-                 "In this example, the +none+ prune evaluator is used and a return filter\n" +
-                 "is supplied in order to return all names containing \"t\".\n" +
-                 "The result is to be returned as nodes and the max depth is\n" +
-                 "set to 3." )
-    @Graph( {"Root knows Mattias", "Root knows Johan", "Johan knows Emil", "Emil knows Peter", "Emil knows Tobias", "Tobias loves Sara"} )
-    @Test
-    public void shouldGetExpectedHitsWhenTraversingWithDescription()
-            throws JsonParseException
-    {
-        Node start = getNode( "Root" );
-        List<Map<String, Object>> rels = new ArrayList<>();
-        rels.add( map( "type", "knows", "direction", "all" ) );
-        rels.add( map( "type", "loves", "direction", "all" ) );
-        String description = createJsonFrom( map(
-                "order",
-                "breadth_first",
-                "uniqueness",
-                "node_global",
-                "prune_evaluator",
-                map( "language", "javascript", "body", "position.length() > 10" ),
-                "return_filter",
-                map( "language", "javascript", "body",
-                        "position.endNode().getProperty('name').toLowerCase().contains('t')" ),
-                "relationships", rels, "max_depth", 3 ) );
-        String entity = gen().expectedStatus( 200 ).payload( description ).post(
-                getTraverseUriNodes( start ) ).entity();
-        expectNodes( entity, getNodes( "Root", "Mattias", "Peter", "Tobias" ) );
-    }
-
-    @Documented( "Traversal returning nodes below a certain depth.\n" +
-                 "\n" +
-                 "Here, all nodes at a traversal depth below 3 are returned." )
-    @Graph( {"Root knows Mattias", "Root knows Johan", "Johan knows Emil", "Emil knows Peter", "Emil knows Tobias", "Tobias loves Sara"} )
-    @Test
-    public void shouldGetExpectedHitsWhenTraversingAtDepth()
-            throws JsonParseException
-    {
-        Node start = getNode( "Root" );
-        String description = createJsonFrom( map(
-                "prune_evaluator",
-                map( "language", "builtin", "name", "none" ),
-                "return_filter",
-                map( "language", "javascript", "body",
-                        "position.length()<3;" ) ) );
-        String entity = gen().expectedStatus( 200 ).payload( description ).post(
-                getTraverseUriNodes( start ) ).entity();
-        expectNodes( entity, getNodes( "Root", "Mattias", "Johan", "Emil" ) );
     }
 
     @Test
