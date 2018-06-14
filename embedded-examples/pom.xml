@@ -34,8 +34,6 @@
       <groupId>org.neo4j</groupId>
       <artifactId>neo4j</artifactId>
       <version>${project.version}</version>
-      <!-- In this context, keep this artifact as type pom -->
-      <type>pom</type>
       <exclusions>
         <exclusion>
           <artifactId>neo4j-udc</artifactId>
@@ -49,6 +47,12 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.neo4j.community</groupId>
+      <artifactId>it-test-support</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-migrationsupport</artifactId>

@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
+import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
 import org.neo4j.kernel.configuration.Config;
-import org.neo4j.kernel.impl.factory.GraphDatabaseFacadeFactory;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
 import org.neo4j.server.CommunityNeoServer;
