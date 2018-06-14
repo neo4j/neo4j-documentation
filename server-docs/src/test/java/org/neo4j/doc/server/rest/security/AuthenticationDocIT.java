@@ -47,7 +47,7 @@ public class AuthenticationDocIT extends CommunityServerTestBase
     @Before
     public void setUp()
     {
-        gen.get().setSection( "dev/rest-api" );
+        gen.get().setSection( "http-api/authentication" );
     }
 
     @Test

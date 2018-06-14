@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.dummy.doc.web.service.DummyThirdPartyWebService;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -50,6 +51,11 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
 
     @Rule
     public TestData<RESTDocsGenerator> gen = TestData.producedThrough( RESTDocsGenerator.PRODUCER );
+
+    @Before
+    public void setUp() {
+        gen.get().setSection("rest-api/security");
+    }
 
     @After
     public void stopServer()
@@ -88,7 +94,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
         gen.get().addTestSourceSnippets( PermanentlyFailingSecurityRule.class,
                 "failingRule" );
         functionalTestHelper = new FunctionalTestHelper( server );
-        gen.get().setSection( "ops" );
+//        gen.get().setSection( "ops" );
         JaxRsResponse response = gen.get().expectedStatus( 401 ).expectedHeader(
                 "WWW-Authenticate" ).post( functionalTestHelper.nodeUri() ).response();
 
@@ -188,7 +194,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
         gen.get().addTestSourceSnippets( PermanentlyFailingSecurityRuleWithWildcardPath.class,
                 "failingRuleWithWildcardPath" );
 
-        gen.get().setSection("ops");
+//        gen.get().setSection("ops");
 
         functionalTestHelper = new FunctionalTestHelper( server );
 
@@ -233,7 +239,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
                         ".PermanentlyFailingSecurityRuleWithComplexWildcardPath\n----\n");
         gen.get().addTestSourceSnippets( PermanentlyFailingSecurityRuleWithComplexWildcardPath.class,
                 "failingRuleWithComplexWildcardPath" );
-        gen.get().setSection( "ops" );
+//        gen.get().setSection( "ops" );
 
         functionalTestHelper = new FunctionalTestHelper( server );
 

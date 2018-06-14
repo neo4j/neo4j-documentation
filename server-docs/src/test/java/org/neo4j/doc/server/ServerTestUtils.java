@@ -31,7 +31,6 @@ import java.nio.file.Files;
 import java.util.Map;
 import java.util.Properties;
 
-import org.neo4j.dbms.DatabaseManagementSystemSettings;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.kernel.configuration.Settings;

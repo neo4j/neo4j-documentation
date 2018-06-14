@@ -54,7 +54,7 @@ public class UsersDocIT extends ExclusiveServerTestBase
     @Before
     public void setUp()
     {
-        gen.get().setSection( "dev/rest-api" );
+        gen.get().setSection( "rest-api/user-management" );
     }
 
     @Test
@@ -126,21 +126,6 @@ public class UsersDocIT extends ExclusiveServerTestBase
 
         // Then the old password should not be invalid
         assertEquals( 401, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) ).POST( dataURL() ).status() );
-    }
-
-    @Test
-    public void cantChangeToCurrentPassword() throws Exception
-    {
-        // Given
-        startServer( true );
-
-        // When
-        HTTP.Response res = HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) ).POST(
-                server.baseUri().resolve( "/user/neo4j/password" ).toString(),
-                HTTP.RawPayload.quotedJson( "{'password':'neo4j'}" ) );
-
-        // Then
-        assertThat( res.status(), equalTo( 422 ) );
     }
 
     @After

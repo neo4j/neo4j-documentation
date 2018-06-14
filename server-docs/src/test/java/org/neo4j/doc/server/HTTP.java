@@ -267,7 +267,7 @@ public class HTTP
             {
                 for ( String headerEntry : header.getValue() )
                 {
-                    sb.append( header.getKey() + ": " ).append( headerEntry ).append( "\n" );
+                    sb.append(header.getKey()).append(": " ).append(headerEntry).append( "\n" );
                 }
             }
             sb.append( "\n" );
