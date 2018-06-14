@@ -150,20 +150,6 @@ public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
         assertThat( response, containsString( "[ 1, 2, 3 ]" ) );
     }
 
-    @Test
-    public void shouldGet400WhenCreatingNodeMalformedProperties() throws Exception
-    {
-        JaxRsResponse response = sendCreateRequestToServer("this:::isNot::JSON}");
-        assertEquals( 400, response.getStatus() );
-    }
-
-    @Test
-    public void shouldGet400WhenCreatingNodeUnsupportedNestedPropertyValues() throws Exception
-    {
-        JaxRsResponse response = sendCreateRequestToServer("{\"foo\" : {\"bar\" : \"baz\"}}");
-        assertEquals( 400, response.getStatus() );
-    }
-
     private JaxRsResponse sendCreateRequestToServer(final String json)
     {
         return RestRequest.req().post( functionalTestHelper.dataUri() + "node/" , json );
@@ -172,99 +158,6 @@ public class ManageNodeDocIT extends AbstractRestFunctionalDocTestBase
     private JaxRsResponse sendCreateRequestToServer()
     {
         return RestRequest.req().post( functionalTestHelper.dataUri() + "node/" , null, MediaType.APPLICATION_JSON_TYPE );
-    }
-
-    @Test
-    public void shouldGetValidLocationHeaderWhenCreatingNode() throws Exception
-    {
-        JaxRsResponse response = sendCreateRequestToServer();
-        assertNotNull( response.getLocation() );
-        assertTrue( response.getLocation()
-                .toString()
-                .startsWith( functionalTestHelper.dataUri() + "node/" ) );
-    }
-
-    @Test
-    public void shouldGetASingleContentLengthHeaderWhenCreatingANode()
-    {
-        JaxRsResponse response = sendCreateRequestToServer();
-        List<String> contentLentgthHeaders = response.getHeaders()
-                .get( "Content-Length" );
-        assertNotNull( contentLentgthHeaders );
-        assertEquals( 1, contentLentgthHeaders.size() );
-    }
-
-    @Test
-    public void shouldBeJSONContentTypeOnResponse()
-    {
-        JaxRsResponse response = sendCreateRequestToServer();
-        assertThat( response.getType().toString(), containsString( MediaType.APPLICATION_JSON ) );
-    }
-
-    @Test
-    public void shouldGetValidNodeRepresentationWhenCreatingNode() throws Exception
-    {
-        JaxRsResponse response = sendCreateRequestToServer();
-        String entity = response.getEntity();
-
-        Map<String, Object> map = JsonHelper.jsonToMap( entity );
-
-        assertNotNull( map );
-        assertTrue( map.containsKey( "self" ) );
-
-    }
-
-    @Test
-    public void shouldRespondWith404AndSensibleEntityBodyWhenNodeToBeDeletedCannotBeFound() throws Exception
-    {
-        JaxRsResponse response = sendDeleteRequestToServer(NON_EXISTENT_NODE_ID);
-        assertEquals( 404, response.getStatus() );
-
-        Map<String, Object> jsonMap = JsonHelper.jsonToMap( response.getEntity() );
-        assertThat( jsonMap, hasKey( "message" ) );
-        assertNotNull( jsonMap.get( "message" ) );
-    }
-
-    @Test
-    public void shouldRespondWith400IfInvalidJsonSentAsNodePropertiesDuringNodeCreation() throws URISyntaxException
-    {
-        String mangledJsonArray = "{\"myprop\":[1,2,\"three\"]}";
-        JaxRsResponse response = sendCreateRequestToServer(mangledJsonArray);
-        assertEquals( 400, response.getStatus() );
-        assertEquals( "text/plain", response.getType()
-                .toString() );
-        assertThat( response.getEntity(), containsString( mangledJsonArray ) );
-    }
-
-    @Test
-    public void shouldRespondWith400IfInvalidJsonSentAsNodeProperty() throws URISyntaxException {
-        URI nodeLocation = sendCreateRequestToServer().getLocation();
-
-        String mangledJsonArray = "[1,2,\"three\"]";
-        JaxRsResponse response = RestRequest.req().put(nodeLocation.toString() + "/properties/myprop", mangledJsonArray);
-        assertEquals(400, response.getStatus());
-        assertEquals("text/plain", response.getType()
-                .toString());
-        assertThat( response.getEntity(), containsString(mangledJsonArray));
-        response.close();
-    }
-
-    @Test
-    public void shouldRespondWith400IfInvalidJsonSentAsNodeProperties() throws URISyntaxException {
-        URI nodeLocation = sendCreateRequestToServer().getLocation();
-
-        String mangledJsonProperties = "{\"a\":\"b\", \"c\":[1,2,\"three\"]}";
-        JaxRsResponse response = RestRequest.req().put(nodeLocation.toString() + "/properties", mangledJsonProperties);
-        assertEquals(400, response.getStatus());
-        assertEquals("text/plain", response.getType()
-                .toString());
-        assertThat( response.getEntity(), containsString(mangledJsonProperties));
-        response.close();
-    }
-
-    private JaxRsResponse sendDeleteRequestToServer(final long id) throws Exception
-    {
-        return RestRequest.req().delete(functionalTestHelper.dataUri() + "node/" + id);
     }
 
     /*
