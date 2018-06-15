@@ -121,17 +121,26 @@ public class DocsConfigValue implements SettingDescription {
         Function<String, String> f = ( str ) -> str == null ? null : format.apply(str);
         return new DocsConfigValue(
                 id, name,
-                description.isPresent() ? Optional.of(f.apply(description.get())) : description,
+                description.isPresent() ? Optional.of(escapeTableDelimiters(f.apply(description.get()))) : description,
                 deprecated,
 
                 // I don't like this, but validationdescription contains a lot of
                 // technical terms, and the formatters barf on it. Leave it out for now,
                 // which is what the old impl did, and improve the formatters at some point
-                valueDescription,
+                escapeTableDelimiters(valueDescription),
                 defaultValue,
                 internal,
                 replacement,
                 dynamic);
+    }
+
+    /**
+     * Escape pipe/bar character in input since it is used to delimit fields in the table.
+     * @param text Setting description or valid values description.
+     * @return The same with pipe characters replaced with "{vbar}", which renders well without breaking tables.
+     */
+    private String escapeTableDelimiters(String text) {
+        return text.replace("|", "{vbar}");
     }
 
     @Override
