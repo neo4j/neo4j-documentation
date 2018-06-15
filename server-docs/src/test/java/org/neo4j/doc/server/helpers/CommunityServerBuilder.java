@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
-import org.neo4j.dbms.DatabaseManagementSystemSettings;
 import org.neo4j.doc.server.ServerTestUtils;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.helpers.ListenSocketAddress;
