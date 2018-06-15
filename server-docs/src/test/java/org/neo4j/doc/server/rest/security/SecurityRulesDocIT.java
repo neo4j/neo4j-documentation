@@ -54,7 +54,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
 
     @Before
     public void setUp() {
-        gen.get().setSection("rest-api/security");
+        gen.get().setSection("http-api/security");
     }
 
     @After

@@ -54,7 +54,7 @@ public class UsersDocIT extends ExclusiveServerTestBase
     @Before
     public void setUp()
     {
-        gen.get().setSection( "rest-api/user-management" );
+        gen.get().setSection( "http-api/authentication" );
     }
 
     @Test

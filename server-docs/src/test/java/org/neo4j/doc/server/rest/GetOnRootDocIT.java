@@ -42,7 +42,7 @@ public class GetOnRootDocIT extends AbstractRestFunctionalTestBase
 
     @Before
     public void setUp() {
-        gen.get().setSection("rest-api");
+        gen.get().setSection("http-api");
     }
 
     @Title("Get service root")
