@@ -39,7 +39,7 @@ public class RestRequest {
     private static final Client DEFAULT_CLIENT = Client.create();
     private final Client client;
     private MediaType accept = MediaType.APPLICATION_JSON_TYPE;
-    private Map<String, String> headers=new HashMap<String, String>();
+    private Map<String, String> headers=new HashMap<>();
 
     public RestRequest( URI baseUri ) {
         this( baseUri, null, null );

@@ -101,31 +101,25 @@ public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
     private int createSimpleDatabase( final GraphDatabaseAPI graph )
     {
         final int numberOfNodes = 10;
-        new Transactor( graph, new UnitOfWork()
-        {
-
-            @Override
-            public void doWork()
+        new Transactor( graph, () -> {
+            for ( int i = 0; i < numberOfNodes; i++ )
             {
-                for ( int i = 0; i < numberOfNodes; i++ )
-                {
-                    graph.createNode();
-                }
+                graph.createNode();
+            }
 
-                for ( Node n1 : graph.getAllNodes() )
+            for ( Node n1 : graph.getAllNodes() )
+            {
+                for ( Node n2 : graph.getAllNodes() )
                 {
-                    for ( Node n2 : graph.getAllNodes() )
+                    if ( n1.equals( n2 ) )
                     {
-                        if ( n1.equals( n2 ) )
-                        {
-                            continue;
-                        }
-
-                        n1.createRelationshipTo( n2, RelationshipType.withName( "REL" ) );
+                        continue;
                     }
+
+                    n1.createRelationshipTo( n2, RelationshipType.withName( "REL" ) );
                 }
             }
-        } ).execute();
+        }).execute();
 
         return numberOfNodes;
     }

@@ -43,14 +43,9 @@ public class ExclusiveServerTestBase
     public static void ensureServerNotRunning() throws Exception
     {
         System.setProperty( "org.neo4j.useInsecureCertificateGeneration", "true" );
-        suppressAll().call( new Callable<Void>()
-        {
-            @Override
-            public Void call() throws Exception
-            {
-                ServerHolder.ensureNotRunning();
-                return null;
-            }
-        } );
+        suppressAll().call((Callable<Void>) () -> {
+            ServerHolder.ensureNotRunning();
+            return null;
+        });
     }
 }

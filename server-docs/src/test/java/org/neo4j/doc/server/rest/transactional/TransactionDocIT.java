@@ -19,6 +19,7 @@
  */
 package org.neo4j.doc.server.rest.transactional;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -51,6 +52,11 @@ import static org.neo4j.doc.server.HTTP.POST;
 
 public class TransactionDocIT extends AbstractRestFunctionalTestBase
 {
+    @Before
+    public void setUp() {
+        gen.get().setSection("http-api/transactional");
+    }
+
     @Test
     @Documented( "Begin a transaction\n" +
                  "\n" +

@@ -8,7 +8,6 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.neo4j.doc</groupId>
   <artifactId>neo4j-server-docs</artifactId>
   <version>3.5.0-SNAPSHOT</version>
   <name>Neo4j - Server Docs</name>
@@ -202,7 +201,7 @@
               <target>
                 <java classname="org.neo4j.doc.server.rest.transactional.error.ErrorDocumentationGenerator"
                       classpathref="maven.test.classpath" failonerror="true">
-                  <arg value="${project.build.directory}/docs/dev/rest-api"/>
+                  <arg value="${project.build.directory}/docs/status-codes"/>
                 </java>
               </target>
             </configuration>

@@ -19,6 +19,7 @@
  */
 package org.neo4j.doc.server.rest;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
@@ -38,6 +39,12 @@ import static org.junit.Assert.assertTrue;
 
 public class GetOnRootDocIT extends AbstractRestFunctionalTestBase
 {
+
+    @Before
+    public void setUp() {
+        gen.get().setSection("http-api");
+    }
+
     @Title("Get service root")
     @Documented( "The service root is your starting point to discover the REST API. It contains the basic starting " +
                  "points for the database, and some version and extension information." )
