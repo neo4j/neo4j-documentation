@@ -3,7 +3,7 @@
 
 [abstract]
 --
-This chapter is an introduction to the Cypher query language.
+This section provides an introduction to the Cypher query language.
 --
 
 include::introduction.asciidoc[leveloffset=+1]
