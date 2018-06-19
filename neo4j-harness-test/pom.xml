@@ -2,23 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.neo4j.doc</groupId>
     <artifactId>neo4j-manual-parent</artifactId>
     <version>3.4.2-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.neo4j.test</groupId>
   <artifactId>neo4j-harness-test</artifactId>
-  <version>3.4.2-SNAPSHOT</version>
-
-  <packaging>jar</packaging>
-
   <name>Neo4j - Test Harness Documentation tests</name>
   <description>Tests for Neo4j Test Harness.</description>
   <url>http://components.neo4j.org/${project.artifactId}/${project.version}</url>
+  <packaging>jar</packaging>
 
   <properties>
     <license-text.header>../build/ApacheLicense-2.0-header.txt</license-text.header>
