@@ -367,6 +367,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   private def hasNodeKeyConstraint(labelName: String, propNames: Seq[String]): Boolean = {
     val constraints = db.schema().getConstraints( Label.label(labelName) ).asScala
-    !constraints.isEmpty && constraints.head.getPropertyKeys().asScala.toList == propNames.toList
+    constraints.nonEmpty && constraints.head.getPropertyKeys().asScala.toList == propNames.toList
   }
 }

@@ -164,7 +164,7 @@ public class Person
             rankedFriends.add( new RankedPerson( friend, rank ) );
         }
 
-        Collections.sort( rankedFriends, new RankedComparer() );
+        rankedFriends.sort(new RankedComparer());
         trimTo( rankedFriends, numberOfFriendsToReturn );
 
         return onlyFriend( rankedFriends );

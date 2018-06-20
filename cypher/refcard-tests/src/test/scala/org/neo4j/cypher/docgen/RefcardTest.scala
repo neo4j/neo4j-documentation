@@ -141,7 +141,6 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   def text: String
 
   def expandQuery(query: String, queryPart: String, dir: File, possibleAssertion: Seq[String], parametersChoice: String) = {
-    val name = title.toLowerCase.replace(" ", "-")
     runQuery(query, possibleAssertion, parametersChoice)
 
     queryPart
@@ -227,7 +226,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   private def includeQueries(query: String, dir: File) = {
     val startText = includeGraphviz(query, dir)
-    val regex = ("(?s)###(.*?)###").r
+    val regex = "(?s)###(.*?)###".r
     val queries = (regex findAllIn startText).toList
 
     var producedText = startText

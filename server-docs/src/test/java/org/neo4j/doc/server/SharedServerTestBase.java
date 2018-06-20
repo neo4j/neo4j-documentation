@@ -34,7 +34,7 @@ import static org.neo4j.test.rule.SuppressOutput.suppressAll;
 
 public class SharedServerTestBase
 {
-    private static boolean useExternal = Boolean.valueOf( System.getProperty( "neo-server.external", "false" ) );
+    private static final boolean useExternal = Boolean.valueOf( System.getProperty( "neo-server.external", "false" ) );
 
     protected static NeoServer server()
     {

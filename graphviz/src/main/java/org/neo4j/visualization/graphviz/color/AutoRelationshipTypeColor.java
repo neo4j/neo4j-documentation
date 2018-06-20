@@ -35,7 +35,7 @@ public class AutoRelationshipTypeColor extends RelationshipTypeColor
      */
     public AutoRelationshipTypeColor()
     {
-        this.colors = new DefaultColorMapping<String>();
+        this.colors = new DefaultColorMapping<>();
     }
 
     /**
@@ -47,7 +47,7 @@ public class AutoRelationshipTypeColor extends RelationshipTypeColor
     public AutoRelationshipTypeColor( ColorMapper<RelationshipType> rtcm )
     {
         this.rtcm = rtcm;
-        this.colors = new DefaultColorMapping<String>( rtcm.getColors() );
+        this.colors = new DefaultColorMapping<>(rtcm.getColors());
     }
 
     @Override

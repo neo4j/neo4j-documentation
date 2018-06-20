@@ -92,9 +92,8 @@ public class AbstractPluginTestBase extends AbstractRestFunctionalTestBase
         {
             requestBuilder.payload( body );
         }
-        String result = requestBuilder
+        return requestBuilder
                 .post( uri )
                 .entity();
-        return result;
     }
 }

@@ -262,17 +262,13 @@ public interface StyleParameter
         public final void configure( StyleConfiguration configuration )
         {
             ParameterGetter<Node> getter = ( node, key ) -> {
-                if ( key.equals( "color" ) )
-                {
-                    return getColor( node );
-                }
-                else if ( key.equals( "fontcolor" ) )
-                {
-                    return getFontColor( node );
-                }
-                else
-                {
-                    return getFillColor( node );
+                switch (key) {
+                    case "color":
+                        return getColor(node);
+                    case "fontcolor":
+                        return getFontColor(node);
+                    default:
+                        return getFillColor(node);
                 }
             };
             configuration.setDefaultNodeProperty( "style", "filled" );
@@ -322,7 +318,7 @@ public interface StyleParameter
     {
         public void configure( StyleConfiguration configuration )
         {
-            configuration.setRelationshipReverseOrderPredicate( item -> reversedOrder( item ) );
+            configuration.setRelationshipReverseOrderPredicate(this::reversedOrder);
         }
 
         protected abstract boolean reversedOrder( Relationship edge );
@@ -330,7 +326,7 @@ public interface StyleParameter
     /** Reverse the logical order of relationships with specific types. */
     final class ReverseOrderRelationshipTypes extends ReverseRelationshipOrder
     {
-        private final Set<String> reversedTypes = new HashSet<String>();
+        private final Set<String> reversedTypes = new HashSet<>();
 
         public ReverseOrderRelationshipTypes( RelationshipType... types )
         {

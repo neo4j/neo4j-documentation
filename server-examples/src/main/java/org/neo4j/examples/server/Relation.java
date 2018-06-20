@@ -30,10 +30,10 @@ public class Relation
     {
         StringBuilder sb = new StringBuilder();
         sb.append( "{ " );
-        sb.append( " \"type\" : \"" + type + "\"" );
+        sb.append(" \"type\" : \"").append(type).append("\"");
         if ( direction != null )
         {
-            sb.append( ", \"direction\" : \"" + direction + "\"" );
+            sb.append(", \"direction\" : \"").append(direction).append("\"");
         }
         sb.append( " }" );
         return sb.toString();

@@ -134,7 +134,7 @@ public enum PropertyType
         return getTypeFor( propertyValue.getClass() );
     }
 
-    static PropertyType getTypeFor( Class<? extends Object> type )
+    static PropertyType getTypeFor( Class<?> type )
     {
         PropertyType result = typeMap.get( type );
         if ( result != null )
@@ -203,7 +203,7 @@ public enum PropertyType
      */
     public final String typeName;
 
-    private PropertyType( Class<?> scalarType, String descriptor,
+    PropertyType( Class<?> scalarType, String descriptor,
         Class<?>... types )
     {
         this.typeName = descriptor;
@@ -214,7 +214,7 @@ public enum PropertyType
     private static final Map<Class<?>, PropertyType> typeMap;
     static
     {
-        Map<Class<?>, PropertyType> types = new HashMap<Class<?>, PropertyType>();
+        Map<Class<?>, PropertyType> types = new HashMap<>();
         for ( PropertyType type : values() )
         {
             for ( Class<?> cls : type.types )

@@ -121,7 +121,7 @@ public class DocsConfigValue implements SettingDescription {
         Function<String, String> f = ( str ) -> str == null ? null : format.apply(str);
         return new DocsConfigValue(
                 id, name,
-                description.isPresent() ? Optional.of(escapeTableDelimiters(f.apply(description.get()))) : description,
+                description.map(s -> escapeTableDelimiters(f.apply(s))),
                 deprecated,
 
                 // I don't like this, but validationdescription contains a lot of

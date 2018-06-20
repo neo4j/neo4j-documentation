@@ -31,7 +31,7 @@ import static org.junit.Assert.assertNotNull;
 public class StartWithConfigurationDocTest
 {
     @Rule
-    public TestDirectory testDirectory = TestDirectory.testDirectory();
+    public final TestDirectory testDirectory = TestDirectory.testDirectory();
 
     @Test
     public void loadFromFile()

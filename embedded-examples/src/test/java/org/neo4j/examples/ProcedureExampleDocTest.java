@@ -40,7 +40,7 @@ import static org.neo4j.helpers.collection.MapUtil.map;
 public class ProcedureExampleDocTest
 {
     @Rule
-    public TemporaryFolder plugins = new TemporaryFolder();
+    public final TemporaryFolder plugins = new TemporaryFolder();
 
     @Rule
     public ExpectedException exception = ExpectedException.none();

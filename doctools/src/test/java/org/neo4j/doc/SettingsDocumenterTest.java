@@ -238,7 +238,7 @@ public class SettingsDocumenterTest
         ) ));
     }
 
-    public interface SimpleSettings
+    private interface SimpleSettings
     {
         @Description("Public nodefault")
         Setting<String> public_nodefault = setting( "public.nodefault", STRING, NO_DEFAULT );
@@ -261,9 +261,9 @@ public class SettingsDocumenterTest
         @Description( "Animal type" )
         public final Setting<String> type;
 
-        protected final GroupSettingSupport group;
+        final GroupSettingSupport group;
 
-        protected Animal( String key, String typeDefault )
+        Animal(String key, String typeDefault)
         {
             group = new GroupSettingSupport( Animal.class, key );
             type = group.scope( setting( "type", STRING, typeDefault ) );
@@ -281,7 +281,7 @@ public class SettingsDocumenterTest
             this("(key)");
         }
 
-        public Giraffe(String key)
+        Giraffe(String key)
         {
             super(key, /* type=*/"giraffe");
             number_of_spots = group.scope( setting( "spot_count", INTEGER, "12" ));

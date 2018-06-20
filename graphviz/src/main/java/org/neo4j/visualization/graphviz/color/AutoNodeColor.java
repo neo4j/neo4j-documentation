@@ -41,26 +41,26 @@ public class AutoNodeColor extends StyleParameter.NodeColor
     public AutoNodeColor()
     {
         NodeColorConfig.DEFAULT.configure( this );
-        this.colors = new DefaultColorMapping<Set<String>>();
+        this.colors = new DefaultColorMapping<>();
     }
 
     public AutoNodeColor( ColorMapper<Node> ncm )
     {
         NodeColorConfig.DEFAULT.configure( this );
-        this.colors = new DefaultColorMapping<Set<String>>( ncm.getColors() );
+        this.colors = new DefaultColorMapping<>(ncm.getColors());
         this.ncm = ncm;
     }
 
     public AutoNodeColor( NodeColorConfig config )
     {
         config.configure( this );
-        this.colors = new DefaultColorMapping<Set<String>>();
+        this.colors = new DefaultColorMapping<>();
     }
 
     public AutoNodeColor( NodeColorConfig config, ColorMapper<Node> ncm )
     {
         config.configure( this );
-        this.colors = new DefaultColorMapping<Set<String>>( ncm.getColors() );
+        this.colors = new DefaultColorMapping<>(ncm.getColors());
         this.ncm = ncm;
     }
 
@@ -75,7 +75,7 @@ public class AutoNodeColor extends StyleParameter.NodeColor
                 return colors.getColor( color );
             }
         }
-        Set<String> relationshipTypeAndDirections = new HashSet<String>();
+        Set<String> relationshipTypeAndDirections = new HashSet<>();
         for ( Direction direction : directions )
         {
             if ( differentiateOnDirectionOnly )

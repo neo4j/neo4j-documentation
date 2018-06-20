@@ -30,7 +30,6 @@ import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.helpers.ServerHelper;
 import org.neo4j.doc.server.helpers.Transactor;
-import org.neo4j.doc.server.helpers.UnitOfWork;
 import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RestRequest;
 import org.neo4j.graphdb.Node;
@@ -70,7 +69,6 @@ public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
 
         JaxRsResponse response = new RestRequest().get( functionalTestHelper.managementUri() );
         assertEquals( 200, response.getStatus() );
-        response.close();
     }
 
     @Test

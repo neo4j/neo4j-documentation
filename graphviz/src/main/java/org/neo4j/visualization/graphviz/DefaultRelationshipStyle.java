@@ -46,12 +46,12 @@ class DefaultRelationshipStyle implements RelationshipStyle
             startId = endId;
             endId = tmp;
         }
-        stream.append( "  N" + startId + " -> N" + endId + " [\n" );
+        stream.append("  N").append(String.valueOf(startId)).append(" -> N").append(String.valueOf(endId)).append(" [\n");
         config.emit( relationship, stream );
         if ( reversed ) stream.append( "    dir = back\n" );
         if ( config.displayRelationshipLabel )
         {
-            stream.append( "    label = \"" + config.escapeLabel(config.getTitle( relationship )) + "\\n" );
+            stream.append("    label = \"").append(config.escapeLabel(config.getTitle(relationship))).append("\\n");
         }
     }
 

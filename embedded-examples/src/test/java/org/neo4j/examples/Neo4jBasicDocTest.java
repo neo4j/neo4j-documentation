@@ -83,7 +83,7 @@ public class Neo4jBasicDocTest
     public void shouldCreateNode()
     {
         // START SNIPPET: unitTest
-        Node n = null;
+        Node n;
         try ( Transaction tx = graphDb.beginTx() )
         {
             n = graphDb.createNode();

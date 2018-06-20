@@ -78,7 +78,7 @@ public class CommunityServerBuilder
 
     private Clock clock = null;
     private String[] autoIndexedNodeKeys = null;
-    private final String[] autoIndexedRelationshipKeys = null;
+    private String[] autoIndexedRelationshipKeys = null;
     private String[] securityRuleClassNames;
     private boolean persistent;
     private boolean httpsEnabled = false;

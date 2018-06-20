@@ -52,7 +52,7 @@ public class PathFindingDocTest
     private static GraphDatabaseService graphDb;
     private Transaction tx;
 
-    private static enum ExampleTypes implements RelationshipType
+    private enum ExampleTypes implements RelationshipType
     {
         MY_TYPE
     }

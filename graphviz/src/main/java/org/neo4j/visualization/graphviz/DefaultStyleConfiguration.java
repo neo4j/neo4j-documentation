@@ -64,8 +64,8 @@ class DefaultStyleConfiguration implements StyleConfiguration
     private final Map<String, String> header;
     private final Map<String, String> nodeHeader;
     private final Map<String, String> edgeHeader;
-    private final Map<String, ParameterGetter<? super Node>> nodeParams = new HashMap<String, ParameterGetter<? super Node>>();
-    private final Map<String, ParameterGetter<? super Relationship>> edgeParams = new HashMap<String, ParameterGetter<? super Relationship>>();
+    private final Map<String, ParameterGetter<? super Node>> nodeParams = new HashMap<>();
+    private final Map<String, ParameterGetter<? super Relationship>> edgeParams = new HashMap<>();
     private PropertyFilter nodeFilter = null;
     private PropertyFilter edgeFilter = null;
     private TitleGetter<? super Node> nodeTitle = null;
@@ -113,7 +113,7 @@ class DefaultStyleConfiguration implements StyleConfiguration
             String value = params.get( key ).getParameterValue( container, key );
             if ( value != null )
             {
-                stream.append( "    " + key + " = \"" + value + "\"\n" );
+                stream.append("    ").append(key).append(" = \"").append(value).append("\"\n");
             }
         }
     }
@@ -171,12 +171,16 @@ class DefaultStyleConfiguration implements StyleConfiguration
     {
         if ( nodeFormat != null )
         {
-            stream.append( nodeFormat.format( key, type, value ) + "\\l" );
+            stream.append(nodeFormat.format(key, type, value)).append("\\l");
         }
         else
         {
-            stream.append( PropertyType.STRING.format(key) + " = " + PropertyType.format( value ) + " : "
-                + type.typeName + "\\l" );
+            stream.append(PropertyType.STRING.format(key))
+                  .append(" = ")
+                  .append(PropertyType.format(value))
+                  .append(" : ")
+                  .append(type.typeName)
+                  .append("\\l");
         }
     }
 
@@ -185,12 +189,16 @@ class DefaultStyleConfiguration implements StyleConfiguration
     {
         if ( edgeFormat != null )
         {
-            stream.append( edgeFormat.format( key, type, value ) + "\\l" );
+            stream.append(edgeFormat.format(key, type, value)).append("\\l");
         }
         else
         {
-            stream.append( PropertyType.STRING.format(key) + " = " + PropertyType.format( value ) + " : "
-                + type.typeName + "\\l" );
+            stream.append(PropertyType.STRING.format(key))
+                  .append(" = ")
+                  .append(PropertyType.format(value))
+                  .append(" : ")
+                  .append(type.typeName)
+                  .append("\\l");
         }
     }
 

@@ -78,7 +78,7 @@ import static org.neo4j.test.mockito.matcher.Neo4jMatchers.inTx;
 public class ImdbDocTest
 {
     @Rule
-    public TestDirectory testDirectory = TestDirectory.testDirectory();
+    public final TestDirectory testDirectory = TestDirectory.testDirectory();
     private static GraphDatabaseService graphDb;
     private Transaction tx;
 
@@ -90,7 +90,7 @@ public class ImdbDocTest
      */
     private static class System
     {
-        static PrintStream out = new PrintStream( new OutputStream()
+        static final PrintStream out = new PrintStream(new OutputStream()
         {
             @Override
             public void write( int b ) throws IOException

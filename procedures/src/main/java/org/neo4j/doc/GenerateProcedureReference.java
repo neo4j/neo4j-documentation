@@ -70,12 +70,9 @@ public class GenerateProcedureReference {
             } else {
                 System.out.println(doc);
             }
-        } catch (NoSuchElementException nse) {
-            nse.printStackTrace();
-            throw nse;
-        } catch (NoSuchFileException nsf) {
-            nsf.printStackTrace();
-            throw nsf;
+        } catch (NoSuchElementException | NoSuchFileException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 

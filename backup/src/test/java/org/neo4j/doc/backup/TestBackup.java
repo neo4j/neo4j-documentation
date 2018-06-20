@@ -20,7 +20,7 @@
  * More information is also available at:
  * https://neo4j.com/licensing/
  */
-package org.neo4j.backup;
+package org.neo4j.doc.backup;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,6 +31,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.neo4j.backup.EmbeddedServer;
+import org.neo4j.backup.OnlineBackup;
+import org.neo4j.backup.ServerInterface;
+import org.neo4j.kernel.impl.enterprise.configuration.OnlineBackupSettings;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -57,7 +61,7 @@ import static org.junit.Assert.assertTrue;
 public class TestBackup
 {
     @Rule
-    public TestDirectory testDir = TestDirectory.testDirectory();
+    public final TestDirectory testDir = TestDirectory.testDirectory();
 
     private File serverPath;
     private File otherServerPath;
@@ -92,7 +96,7 @@ public class TestBackup
 
         // START SNIPPET: onlineBackup
         OnlineBackup backup = OnlineBackup.from( "127.0.0.1" );
-        backup.full( backupPath.getPath() );
+        backup.backup( backupPath );
         assertTrue( "Should be consistent", backup.isConsistent() );
         // END SNIPPET: onlineBackup
         assertEquals( initialDataSetRepresentation, getDbRepresentation() );
@@ -101,7 +105,7 @@ public class TestBackup
         DbRepresentation furtherRepresentation = addMoreData( serverPath );
         server = startServer( serverPath );
         // START SNIPPET: onlineBackup
-        backup.incremental( backupPath.getPath() );
+        backup.backup( backupPath );
         // END SNIPPET: onlineBackup
         assertTrue( "Should be consistent", backup.isConsistent() );
         assertEquals( furtherRepresentation, getDbRepresentation() );

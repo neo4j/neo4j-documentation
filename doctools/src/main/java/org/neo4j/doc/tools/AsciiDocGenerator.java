@@ -50,9 +50,9 @@ public abstract class AsciiDocGenerator
     protected String section;
     protected String description = null;
     protected GraphDatabaseService graph;
-    protected static final String SNIPPET_MARKER = "@@";
-    protected Map<String, String> snippets = new HashMap<String, String>();
-    private static final Map<String, Integer> counters = new HashMap<String, Integer>();
+    private static final String SNIPPET_MARKER = "@@";
+    private final Map<String, String> snippets = new HashMap<>();
+    private static final Map<String, Integer> counters = new HashMap<>();
 
     public AsciiDocGenerator( final String title, final String section )
     {

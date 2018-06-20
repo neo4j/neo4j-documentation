@@ -54,7 +54,7 @@ import static org.junit.Assert.assertThat;
 public class BatchInsertDocTest
 {
     @Rule
-    public DefaultFileSystemRule fileSystemRule = new DefaultFileSystemRule();
+    public final DefaultFileSystemRule fileSystemRule = new DefaultFileSystemRule();
     private FileSystemAbstraction fileSystem;
 
     @Before

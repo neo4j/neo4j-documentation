@@ -72,40 +72,31 @@ public class GetOnRootDocIT extends AbstractRestFunctionalTestBase
             response = RestRequest.req().get(
                     (String) map.get( "reference_node" ) );
             assertEquals( 200, response.getStatus() );
-            response.close();
         }
         response = RestRequest.req().get( (String) map.get( "node_index" ) );
         assertTrue( response.getStatus() == 200 || response.getStatus() == 204 );
-        response.close();
 
         response = RestRequest.req().get(
                 (String) map.get( "relationship_index" ) );
         assertTrue( response.getStatus() == 200 || response.getStatus() == 204 );
-        response.close();
 
         response = RestRequest.req().get( (String) map.get( "extensions_info" ) );
         assertEquals( 200, response.getStatus() );
-        response.close();
 
         response = RestRequest.req().post( (String) map.get( "batch" ), "[]" );
         assertEquals( 200, response.getStatus() );
-        response.close();
 
         response = RestRequest.req().post( (String) map.get( "cypher" ), "{\"query\":\"CREATE (n) RETURN n\"}" );
         assertEquals( 200, response.getStatus() );
-        response.close();
 
         response = RestRequest.req().get( (String) map.get( "indexes" ) );
         assertEquals( 200, response.getStatus() );
-        response.close();
 
         response = RestRequest.req().get( (String) map.get( "constraints" ) );
         assertEquals( 200, response.getStatus() );
-        response.close();
 
         response = RestRequest.req().get( (String) map.get( "node_labels" ) );
         assertEquals( 200, response.getStatus() );
-        response.close();
     }
 
     @Documented( "All responses from the REST API can be transmitted as JSON streams, resulting in\n" +

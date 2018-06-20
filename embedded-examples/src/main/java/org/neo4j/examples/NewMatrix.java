@@ -69,7 +69,7 @@ public class NewMatrix
         graphDb.shutdown();
     }
 
-    public void createNodespace()
+    private void createNodespace()
     {
         try ( Transaction tx = graphDb.beginTx() )
         {
@@ -203,14 +203,6 @@ public class NewMatrix
         // Registers a shutdown hook for the Neo4j instance so that it
         // shuts down nicely when the VM exits (even if you "Ctrl-C" the
         // running example before it's completed)
-        Runtime.getRuntime()
-                .addShutdownHook( new Thread()
-                {
-                    @Override
-                    public void run()
-                    {
-                        graphDb.shutdown();
-                    }
-                } );
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> graphDb.shutdown()));
     }
 }

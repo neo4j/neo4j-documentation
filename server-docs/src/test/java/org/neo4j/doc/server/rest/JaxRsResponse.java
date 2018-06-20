@@ -119,11 +119,6 @@ public class JaxRsResponse extends Response
         return location;
     }
 
-    public void close()
-    {
-
-    }
-
     public static JaxRsResponse extractFrom(ClientResponse clientResponse) {
         return new JaxRsResponse(clientResponse);
     }

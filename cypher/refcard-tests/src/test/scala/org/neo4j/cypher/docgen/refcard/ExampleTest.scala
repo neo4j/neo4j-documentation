@@ -25,7 +25,7 @@ import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.internal.runtime.InternalExecutionResult
 
 @Ignore
-class ExamplesTest extends RefcardTest with QueryStatisticsTestSupport {
+class ExampleTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT:Person FRIEND A:Person", "A:Person FRIEND B:Person", "B:Person FRIEND C:Person", "C:Person FRIEND ROOT:Person")
   val title = "Query Structure"
 

@@ -515,7 +515,7 @@ public class RESTDocsGenerator extends AsciiDocGenerator
         data.description = replaceSnippets( data.description, dir, name );
         try ( Writer fw = AsciiDocGenerator.getFW( dir, filename ) )
         {
-            String longSection = section.replaceAll( "\\(|\\)", "" )+"-" + name.replaceAll( "\\(|\\)", "" );
+            String longSection = section.replaceAll( "[()]", "" )+"-" + name.replaceAll( "[()]", "" );
             if(longSection.indexOf( "/" )>0)
             {
                 longSection = longSection.substring( longSection.indexOf( "/" )+1 );

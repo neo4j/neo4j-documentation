@@ -124,7 +124,7 @@ public class PagedTraverserDocIT extends ExclusiveServerTestBase
 
         Map<String, Object> jsonMap = JsonHelper.jsonToMap( response.getEntity() );
 
-        assertNotNull( jsonMap.containsKey( PAGED_TRAVERSE_LINK_REL ) );
+        assertNotNull( jsonMap.get( PAGED_TRAVERSE_LINK_REL ) );
         assertThat( String.valueOf( jsonMap.get( PAGED_TRAVERSE_LINK_REL ) ),
                 containsString( "/db/data/node/" + String.valueOf( theStartNode.getId() )
                         + "/paged/traverse/{returnType}{?pageSize,leaseTime}" ) );

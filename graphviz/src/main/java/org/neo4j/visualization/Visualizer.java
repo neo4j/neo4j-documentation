@@ -36,8 +36,8 @@ import org.neo4j.walk.Visitor;
 public class Visualizer<E extends Throwable> implements Visitor<Void, E>
 {
     private final GraphRenderer<E> renderer;
-    private Set<Relationship> visitedRelationships = new HashSet<Relationship>();
-    private Set<Node> visitedNodes = new HashSet<Node>();
+    private final Set<Relationship> visitedRelationships = new HashSet<>();
+    private final Set<Node> visitedNodes = new HashSet<>();
 
     /**
      * Creates a new visualizer.
@@ -74,7 +74,7 @@ public class Visualizer<E extends Throwable> implements Visitor<Void, E>
 
     public Visitor<Void, E> visitSubgraph( String name ) throws E
     {
-        return new Visualizer<E>( renderer.renderSubgraph( name ) );
+        return new Visualizer<>(renderer.renderSubgraph(name));
     }
 
     private void renderProperties( PropertyRenderer<E> propertyRenderer,

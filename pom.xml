@@ -109,15 +109,15 @@
                     <executions>
                         <execution>
                             <id>enforce-licensing-oss</id>
-                            <phase/>
+                            <phase>none</phase>
                         </execution>
                         <execution>
                             <id>enforce-licensing-com</id>
-                            <phase/>
+                            <phase>none</phase>
                         </execution>
                         <execution>
                             <id>list-all-licenses</id>
-                            <phase/>
+                            <phase>none</phase>
                         </execution>
                     </executions>
                 </plugin>

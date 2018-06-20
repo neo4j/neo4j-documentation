@@ -42,14 +42,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assume.assumeFalse;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 public class BlockTypeTest
@@ -58,7 +57,7 @@ public class BlockTypeTest
     private State state;
 
     @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    public final ExpectedException expectedException = ExpectedException.none();
 
     private static final String TEST_BLOCK_START = "[source, querytest]";
     private static final String TEST_BLOCK_MARKER = "----";
@@ -94,7 +93,7 @@ public class BlockTypeTest
     @Test
     public void oneLineTitle()
     {
-        Block block = Block.getBlock( Arrays.asList( "= Title here =" ) );
+        Block block = Block.getBlock(singletonList("= Title here ="));
         assertThat( block.type, sameInstance( BlockType.TITLE ) );
         String output = block.process( state );
         assertThat( output, containsString( "[[cypherdoc-title-here]]" ) );
@@ -104,7 +103,7 @@ public class BlockTypeTest
     @Test
     public void titleWithCharsToIgnore()
     {
-        Block block = Block.getBlock( Arrays.asList( "= Title, here?! =" ) );
+        Block block = Block.getBlock(singletonList("= Title, here?! ="));
         assertThat( block.type, sameInstance( BlockType.TITLE ) );
         String output = block.process( state );
         assertThat( output, containsString( "[[cypherdoc-title-here]]" ) );
@@ -114,7 +113,7 @@ public class BlockTypeTest
     @Test
     public void ignore_second_level_heading()
     {
-        Block block = Block.getBlock( Arrays.asList( "== Title here" ) );
+        Block block = Block.getBlock(singletonList("== Title here"));
         assertThat( block.type, sameInstance( BlockType.TEXT ) );
         String output = block.process( state );
         assertThat( output, containsString( "== Title here" ) );
@@ -139,7 +138,7 @@ public class BlockTypeTest
         block = Block.getBlock( Arrays.asList( TEST_BLOCK_START, TEST_BLOCK_MARKER, "Adam", TEST_BLOCK_MARKER ) );
         assertThat( block.type, sameInstance( BlockType.QUERYTEST ) );
         block.process( state );
-        block = Block.getBlock( Arrays.asList( "// table" ) );
+        block = Block.getBlock(singletonList("// table"));
         assertThat( block.type, sameInstance( BlockType.TABLE ) );
         String output = block.process( state );
         assertThat(
@@ -204,7 +203,7 @@ public class BlockTypeTest
 
         // when
         queryBlock.process( state );
-        String tableResult = Block.getBlock( Arrays.asList( "//table" ) ).process( state );
+        String tableResult = Block.getBlock(singletonList("//table")).process( state );
 
         // then
         assertThat( tableResult, containsString( "true" ) );
@@ -215,7 +214,7 @@ public class BlockTypeTest
     public void graph()
     {
         graphOps.execute( "CREATE (n:Person {name: 'Adam'});" );
-        Block block = Block.getBlock( Arrays.asList( "// graph:xyz" ) );
+        Block block = Block.getBlock(singletonList("// graph:xyz"));
         assertThat( block.type, sameInstance( BlockType.GRAPH ) );
         String output;
         output = block.process( state );
@@ -231,7 +230,7 @@ public class BlockTypeTest
     {
         // given
         Block query = Block.getBlock( RETURN_ONE_QUERY );
-        Block graphResult = Block.getBlock( Arrays.asList( "//graph_result" ) );
+        Block graphResult = Block.getBlock(singletonList("//graph_result"));
 
         // when
         query.process( state );
@@ -248,7 +247,7 @@ public class BlockTypeTest
     {
         // given
         Block query = Block.getBlock( TWO_NODES_ONE_REL );
-        Block graphResult = Block.getBlock( Arrays.asList( "//graph_result" ) );
+        Block graphResult = Block.getBlock(singletonList("//graph_result"));
 
         // when
         query.process( state );
@@ -269,7 +268,7 @@ public class BlockTypeTest
     public void graphWithoutId()
     {
         graphOps.execute( "CREATE (n:Person {name: 'Adam'});" );
-        Block block = Block.getBlock( Arrays.asList( "//graph" ) );
+        Block block = Block.getBlock(singletonList("//graph"));
         assertThat( block.type, sameInstance( BlockType.GRAPH ) );
         String output;
         output = block.process( state );
@@ -283,7 +282,7 @@ public class BlockTypeTest
     @Test
     public void console()
     {
-        Block block = Block.getBlock( Arrays.asList( "// console" ) );
+        Block block = Block.getBlock(singletonList("// console"));
         assertThat( block.type, sameInstance( BlockType.CONSOLE ) );
         String output = block.process( state );
         assertThat(
@@ -296,7 +295,7 @@ public class BlockTypeTest
     @Test
     public void text()
     {
-        Block block = Block.getBlock( Arrays.asList( "NOTE: just random asciidoc." ) );
+        Block block = Block.getBlock(singletonList("NOTE: just random asciidoc."));
         assertThat( block.type, sameInstance( BlockType.TEXT ) );
         String output = block.process( state );
         assertThat( output, equalTo( "NOTE: just random asciidoc." + CypherDoc.EOL ) );
@@ -306,7 +305,7 @@ public class BlockTypeTest
     public void should_match_file_declaration()
     {
         // given
-        Block block = Block.getBlock( Arrays.asList( "//file:movies.csv" ) );
+        Block block = Block.getBlock(singletonList("//file:movies.csv"));
 
         // when
         String output = block.process( state );

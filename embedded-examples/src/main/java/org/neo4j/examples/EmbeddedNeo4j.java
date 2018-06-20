@@ -44,7 +44,7 @@ public class EmbeddedNeo4j
     // END SNIPPET: vars
 
     // START SNIPPET: createReltype
-    private static enum RelTypes implements RelationshipType
+    private enum RelTypes implements RelationshipType
     {
         KNOWS
     }

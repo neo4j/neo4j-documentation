@@ -73,12 +73,9 @@ public class ConfigDocsTool {
             } else {
                 System.out.println(doc);
             }
-        } catch (NoSuchElementException nse) {
-            nse.printStackTrace();
-            throw nse;
-        } catch (NoSuchFileException nsf) {
-            nsf.printStackTrace();
-            throw nsf;
+        } catch (NoSuchElementException | NoSuchFileException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -119,7 +116,7 @@ public class ConfigDocsTool {
                     return Stream.of(v -> v.name().startsWith(e.getValue()));
                 // Include only dynamic settings
                 case "dynamic-only":
-                    return Stream.of(v -> v.dynamic());
+                    return Stream.of(ConfigValue::dynamic);
                 default:
                     return Stream.empty();
             }
