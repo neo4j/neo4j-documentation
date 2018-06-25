@@ -35,8 +35,8 @@ import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.neo4j.server.ServerTestUtils.getRelativePath;
-import static org.neo4j.server.ServerTestUtils.getSharedTestTemporaryFolder;
+import static org.neo4j.doc.server.ServerTestUtils.getRelativePath;
+import static org.neo4j.doc.server.ServerTestUtils.getSharedTestTemporaryFolder;
 
 public class UnmanagedExtensionsDocIT
 {

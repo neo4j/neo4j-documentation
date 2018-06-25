@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>test-framework</artifactId>
+    <name>Neo4j Documentation Test Framework</name>
+    <description>Test Framework for Neo4j Documentation Tests</description>
 
     <properties>
         <license-text.header>../build/ApacheLicense-2.0-header.txt</license-text.header>
