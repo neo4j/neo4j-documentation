@@ -29,8 +29,8 @@ import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.repr.StreamingFormat;
-import org.neo4j.test.GraphDescription.Graph;
-import org.neo4j.test.TestData.Title;
+import org.neo4j.doc.test.GraphDescription.Graph;
+import org.neo4j.doc.test.TestData.Title;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static org.junit.Assert.assertEquals;

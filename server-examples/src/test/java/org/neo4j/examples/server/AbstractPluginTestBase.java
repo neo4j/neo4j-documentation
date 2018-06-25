@@ -24,6 +24,7 @@ import java.util.Map;
 import org.junit.BeforeClass;
 
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
+import org.neo4j.doc.server.rest.AbstractRestFunctionalTestBase;
 import org.neo4j.server.helpers.FunctionalTestHelper;
 import org.neo4j.server.plugins.PluginFunctionalTestHelper;
 import org.neo4j.server.plugins.PluginFunctionalTestHelper.RegExp;
@@ -34,7 +35,9 @@ import org.neo4j.server.rest.domain.JsonParseException;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-public class AbstractPluginTestBase extends AbstractRestFunctionalTestBase
+public class AbstractPluginTestBase
+//        extends org.neo4j.examples.server.tmp.AbstractRestFunctionalTestBase
+        extends AbstractRestFunctionalTestBase
 {
     protected static FunctionalTestHelper functionalTestHelper;
     protected static GraphDbHelper helper;

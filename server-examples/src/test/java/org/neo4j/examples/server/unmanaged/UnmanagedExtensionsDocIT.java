@@ -29,7 +29,7 @@ import org.neo4j.harness.junit.Neo4jRule;
 import org.neo4j.kernel.configuration.Settings;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.server.configuration.ServerSettings;
-import org.neo4j.test.server.HTTP;
+import org.neo4j.doc.server.HTTP;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;

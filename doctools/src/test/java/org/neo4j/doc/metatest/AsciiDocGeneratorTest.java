@@ -28,7 +28,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.neo4j.test.rule.TestDirectory;
+import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 
 import static org.junit.Assert.assertEquals;

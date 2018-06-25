@@ -62,9 +62,18 @@ public class HTTP
         CLIENT = Client.create( defaultClientConfig );
     }
 
+    private HTTP()
+    {
+    }
+
     public static Builder withHeaders( String... kvPairs )
     {
         return BUILDER.withHeaders( kvPairs );
+    }
+
+    public static Builder withBaseUri( URI baseUri )
+    {
+        return BUILDER.withBaseUri( baseUri.toString() );
     }
 
     public static Response POST( String uri )
@@ -99,7 +108,7 @@ public class HTTP
 
         private Builder()
         {
-            this( Collections.<String, String>emptyMap(), "" );
+            this( Collections.emptyMap(), "" );
         }
 
         private Builder( Map<String, String> headers, String baseUri )
@@ -121,6 +130,11 @@ public class HTTP
             return new Builder( combined, baseUri );
         }
 
+        public Builder withBaseUri( String baseUri )
+        {
+            return new Builder( headers, baseUri );
+        }
+
         public Response POST( String uri )
         {
             return request( "POST", uri );
@@ -134,6 +148,11 @@ public class HTTP
         public Response POST( String uri, RawPayload payload )
         {
             return request( "POST", uri, payload );
+        }
+
+        public Response DELETE( String uri )
+        {
+            return request( "DELETE", uri );
         }
 
         public Response GET( String uri )
@@ -280,6 +299,11 @@ public class HTTP
     public static class RawPayload
     {
         private final String payload;
+
+        public static RawPayload rawPayload( String payload )
+        {
+            return new RawPayload( payload );
+        }
 
         public static RawPayload quotedJson( String json )
         {

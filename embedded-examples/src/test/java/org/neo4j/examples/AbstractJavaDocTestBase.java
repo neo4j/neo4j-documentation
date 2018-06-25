@@ -28,9 +28,9 @@ import java.util.Map;
 import org.neo4j.doc.tools.JavaTestDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
-import org.neo4j.test.GraphDescription;
-import org.neo4j.test.GraphHolder;
-import org.neo4j.test.TestData;
+import org.neo4j.doc.test.GraphDescription;
+import org.neo4j.doc.test.GraphHolder;
+import org.neo4j.doc.test.TestData;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
 import static org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;

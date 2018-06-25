@@ -49,7 +49,7 @@ import org.neo4j.server.preflight.PreFlightTasks;
 import org.neo4j.server.rest.paging.LeaseManager;
 import org.neo4j.server.rest.web.DatabaseActions;
 import org.neo4j.server.rest.web.ScriptExecutionMode;
-import org.neo4j.test.ImpermanentGraphDatabase;
+import org.neo4j.doc.test.ImpermanentGraphDatabase;
 import org.neo4j.time.Clocks;
 
 import static org.neo4j.doc.server.ServerTestUtils.asOneLine;

@@ -23,8 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.neo4j.test.TestData.Producer;
-import org.neo4j.test.GraphDefinition;
+import org.neo4j.doc.test.TestData.Producer;
+import org.neo4j.doc.test.GraphDefinition;
 
 /**
  * This class is supporting the generation of ASCIIDOC documentation

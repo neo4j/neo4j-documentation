@@ -52,6 +52,7 @@
         <module>graphviz</module>
         <module>procedures</module>
         <module>jmx</module>
+        <module>test-framework</module>
     </modules>
 
     <scm>

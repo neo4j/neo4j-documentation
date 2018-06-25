@@ -29,7 +29,7 @@ import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.graphdb.traversal.Uniqueness;
 import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.test.GraphDescription.Graph;
+import org.neo4j.doc.test.GraphDescription.Graph;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createGraphVizWithNodeId;

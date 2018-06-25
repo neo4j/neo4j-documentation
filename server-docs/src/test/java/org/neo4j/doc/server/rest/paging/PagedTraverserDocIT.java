@@ -48,7 +48,7 @@ import org.neo4j.doc.server.rest.RestRequest;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.web.ScriptExecutionMode;
 import org.neo4j.server.scripting.javascript.GlobalJavascriptInitializer;
-import org.neo4j.test.TestData;
+import org.neo4j.doc.test.TestData;
 import org.neo4j.doc.server.ExclusiveServerTestBase;
 import org.neo4j.time.Clocks;
 import org.neo4j.time.FakeClock;
@@ -57,7 +57,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.neo4j.test.rule.SuppressOutput.suppressAll;
+import static org.neo4j.doc.test.rule.SuppressOutput.suppressAll;
 
 public class PagedTraverserDocIT extends ExclusiveServerTestBase
 {

@@ -21,7 +21,7 @@ package org.neo4j.examples;
 import org.junit.Test;
 
 import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.test.GraphDescription.Graph;
+import org.neo4j.doc.test.GraphDescription.Graph;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
