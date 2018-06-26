@@ -33,7 +33,7 @@ import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
-import static org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
+import static org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
 
 public abstract class AbstractJavaDocTestBase implements GraphHolder
 {

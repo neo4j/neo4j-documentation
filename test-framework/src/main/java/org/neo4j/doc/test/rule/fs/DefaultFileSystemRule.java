@@ -16,17 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.neo4j.examples;
+package org.neo4j.doc.test.rule.fs;
 
-import org.junit.BeforeClass;
+import org.neo4j.io.fs.DefaultFileSystemAbstraction;
 
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
-
-public class ImpermanentGraphJavaDocTestBase extends AbstractJavaDocTestBase
+public class DefaultFileSystemRule extends FileSystemRule<DefaultFileSystemAbstraction>
 {
-    @BeforeClass
-    public static void init()
+    public DefaultFileSystemRule()
     {
-        db = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase();
+        super( new DefaultFileSystemAbstraction() );
     }
 }

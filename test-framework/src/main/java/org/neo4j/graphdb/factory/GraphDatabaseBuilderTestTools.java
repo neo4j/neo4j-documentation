@@ -16,17 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.neo4j.examples;
+package org.neo4j.graphdb.factory;
 
-import org.junit.BeforeClass;
+import org.neo4j.kernel.configuration.Config;
 
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
-
-public class ImpermanentGraphJavaDocTestBase extends AbstractJavaDocTestBase
+public class GraphDatabaseBuilderTestTools
 {
-    @BeforeClass
-    public static void init()
+    private GraphDatabaseBuilderTestTools()
     {
-        db = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase();
+    }
+
+    /**
+     * Create a copy of the current settings of the given {@link GraphDatabaseBuilder}, and return them as a
+     * {@link Config} object.
+     */
+    public static Config createConfigCopy( GraphDatabaseBuilder builder )
+    {
+        return Config.defaults( builder.getRawConfig() );
     }
 }

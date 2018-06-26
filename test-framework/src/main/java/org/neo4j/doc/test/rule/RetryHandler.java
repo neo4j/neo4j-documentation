@@ -16,17 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.neo4j.examples;
+package org.neo4j.doc.test.rule;
 
-import org.junit.BeforeClass;
-
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
-
-public class ImpermanentGraphJavaDocTestBase extends AbstractJavaDocTestBase
+/**
+ * Deciding what type of failures to retry transaction on.
+ */
+@FunctionalInterface
+public interface RetryHandler
 {
-    @BeforeClass
-    public static void init()
-    {
-        db = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase();
-    }
+    /**
+     * Never retry.
+     */
+    RetryHandler NO_RETRY = t -> false;
+
+    boolean retryOn( Throwable t );
 }
