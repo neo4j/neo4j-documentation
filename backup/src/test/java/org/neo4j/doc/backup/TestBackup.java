@@ -31,9 +31,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.neo4j.backup.EmbeddedServer;
 import org.neo4j.backup.OnlineBackup;
-import org.neo4j.backup.ServerInterface;
 import org.neo4j.kernel.impl.enterprise.configuration.OnlineBackupSettings;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -51,9 +49,9 @@ import org.neo4j.kernel.impl.factory.DatabaseInfo;
 import org.neo4j.kernel.impl.factory.GraphDatabaseFacadeFactory;
 import org.neo4j.kernel.impl.store.format.standard.StandardV3_0;
 import org.neo4j.kernel.impl.transaction.TransactionHeaderInformationFactory;
-import org.neo4j.test.DbRepresentation;
-import org.neo4j.test.TestGraphDatabaseFactory;
-import org.neo4j.test.rule.TestDirectory;
+import org.neo4j.doc.test.DbRepresentation;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.rule.TestDirectory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

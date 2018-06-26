@@ -51,8 +51,8 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.Iterables;
-import org.neo4j.test.TestGraphDatabaseFactory;
-import org.neo4j.test.rule.TestDirectory;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.tooling.ImportTool.Options;
 
 import static org.junit.Assert.assertEquals;
