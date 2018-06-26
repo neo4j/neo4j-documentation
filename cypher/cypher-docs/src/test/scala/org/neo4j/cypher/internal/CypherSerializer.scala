@@ -48,7 +48,7 @@ trait CypherSerializer {
       case r: Relationship => (qtx.relationshipOps, r.getId, qtx.relationshipOps.isDeletedInThisTx(r.getId))
     }
 
-    val keyValStrings = if (deleted) Iterator("deleted")
+    val keyValStrings = if (deleted) Array("deleted")
     else ops.propertyKeyIds(id).
       map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId).asObject(), qtx))
 
