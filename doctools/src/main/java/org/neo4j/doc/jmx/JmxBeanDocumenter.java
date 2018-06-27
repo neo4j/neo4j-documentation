@@ -116,17 +116,21 @@ public class JmxBeanDocumenter {
             name += "/" + name0;
         }
 
-        MBeanAttributeInfo[] attributes = info.getAttributes();
+        List<MBeanAttributeInfo> attributes = Arrays.asList(info.getAttributes());
+        if (name.equalsIgnoreCase("Configuration")) {
+            attributes = attributes.stream().filter(it -> !it.getName().startsWith("unsupported")).collect(Collectors.toList());
+        }
+
         out.printf("[[%s]]%n", id);
-        if (attributes.length > 0) {
+        if (attributes.size() > 0) {
             out.printf(".MBean %s (%s) Attributes%n", name, bean.getClassName());
             attributesTable(description, out, attributes, false);
             attributesTable(description, out, attributes, true);
             out.println();
         }
 
-        MBeanOperationInfo[] operations = info.getOperations();
-        if (operations.length > 0) {
+        List<MBeanOperationInfo> operations = Arrays.asList(info.getOperations());
+        if (operations.size() > 0) {
             out.printf(".MBean %s (%s) Operations%n", name, bean.getClassName());
             operationsTable(out, operations, false);
             operationsTable(out, operations, true);
@@ -134,13 +138,13 @@ public class JmxBeanDocumenter {
         }
     }
 
-    private void attributesTable(String description, PrintStream out, MBeanAttributeInfo[] attributes, boolean nonHtml) {
+    private void attributesTable(String description, PrintStream out, List<MBeanAttributeInfo> attributes, boolean nonHtml) {
         out.print(nonHtmlCondition(nonHtml));
         out.println("[options=\"header\", cols=\"20m,36,20m,7,7\"]");
         out.println("|===");
         out.println("|Name|Description|Type|Read|Write");
         out.printf("5.1+^e|%s%n", description);
-        Arrays.stream(attributes)
+        attributes.stream()
                 .sorted(Comparator.comparing(it -> it.getName().toLowerCase()))
                 .forEach(it -> attributeRow(out, it, nonHtml));
         out.println("|===");
@@ -159,12 +163,12 @@ public class JmxBeanDocumenter {
                 attrInfo.isWritable() ? "yes" : "no");
     }
 
-    private void operationsTable(PrintStream out, MBeanOperationInfo[] operations, boolean nonHtml) {
+    private void operationsTable(PrintStream out, List<MBeanOperationInfo> operations, boolean nonHtml) {
         out.print(nonHtmlCondition(nonHtml));
         out.println("[options=\"header\", cols=\"23m,37,20m,20m\"]");
         out.println("|===");
         out.println("|Name|Description|ReturnType|Signature");
-        Arrays.stream(operations)
+        operations.stream()
                 .sorted(Comparator.comparing(it -> it.getName().toLowerCase()))
                 .forEach(it -> operationRow(out, it, nonHtml));
         out.println("|===");
@@ -201,8 +205,7 @@ public class JmxBeanDocumenter {
             if (type.startsWith("[L")) {
                 return type.substring(2, type.length() - 1) + "[]";
             } else {
-                throw new IllegalArgumentException(
-                        "Don't know how to parse this type: " + type);
+                throw new IllegalArgumentException("Don't know how to parse this type: " + type);
             }
         }
         return type;
@@ -213,8 +216,7 @@ public class JmxBeanDocumenter {
         if ("javax.management.openmbean.CompositeData[]".equals(type)) {
             Object originalType = descriptor.getFieldValue("originalType");
             if (originalType != null) {
-                newType = getLinkedType(getType((String) originalType),
-                        nonHtml);
+                newType = getLinkedType(getType((String) originalType), nonHtml);
                 if (nonHtml) {
                     newType += " as CompositeData[]";
                 } else {
