@@ -27,6 +27,7 @@ import org.neo4j.cypher.internal.DocsExecutionEngine;
 import org.neo4j.cypher.internal.EnterpriseCompatibilityFactory;
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService;
 import org.neo4j.cypher.internal.runtime.InternalExecutionResult;
+import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory;
 import org.neo4j.graphdb.DependencyResolver;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
@@ -43,7 +44,6 @@ import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.kernel.monitoring.Monitors;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
-import org.neo4j.test.TestEnterpriseGraphDatabaseFactory;
 
 import java.net.InetSocketAddress;
 import java.util.Collections;

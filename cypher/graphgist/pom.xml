@@ -16,7 +16,6 @@
 
     <properties>
         <license-text.header>../../build/GPL-3-header.txt</license-text.header>
-        <neo4j.version>${project.version}</neo4j.version>
         <doclint-groups>none</doclint-groups>
     </properties>
 
@@ -32,40 +31,29 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-kernel</artifactId>
-            <type>test-jar</type>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-enterprise-kernel</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-enterprise-cypher</artifactId>
-            <scope>test</scope>
             <version>${neo4j.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-io</artifactId>
-            <type>test-jar</type>
-            <scope>compile</scope>
+            <groupId>org.neo4j.doc</groupId>
+            <artifactId>test-framework-enterprise</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-graphviz</artifactId>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cypher</artifactId>
+            <version>${neo4j.version}</version>
             <type>test-jar</type>
             <scope>compile</scope>
         </dependency>

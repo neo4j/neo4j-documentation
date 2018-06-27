@@ -21,9 +21,9 @@ package org.neo4j.cypher.docgen.tooling.tests
 
 import org.mockito.Mockito._
 import org.neo4j.cypher.CypherException
-import org.neo4j.cypher.internal.util.v3_4.test_helpers.CypherFunSuite
 import org.neo4j.cypher.docgen.tooling.{RestartableDatabase, RunnableInitialization}
-import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
+import org.neo4j.cypher.internal.util.v3_4.test_helpers.CypherFunSuite
+import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 
 class RestartableDatabaseTest extends CypherFunSuite {
   test("just creating a restartable database should not create any temp-dbs") {

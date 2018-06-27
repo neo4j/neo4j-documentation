@@ -22,7 +22,7 @@ package org.neo4j.cypher.docgen
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
-import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
+import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
 

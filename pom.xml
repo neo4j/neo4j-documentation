@@ -53,6 +53,7 @@
         <module>jmx</module>
         <module>test-framework</module>
         <module>server-test-utils</module>
+        <module>test-framework-enterprise</module>
     </modules>
 
     <scm>

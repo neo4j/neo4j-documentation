@@ -105,6 +105,12 @@
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
+            <artifactId>test-framework-enterprise</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-graphviz</artifactId>
             <scope>test</scope>
         </dependency>
@@ -131,13 +137,6 @@
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>openCypher-frontend-1</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cypher-runtime-util</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
@@ -147,19 +146,6 @@
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cypher-runtime-util</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-enterprise-kernel</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-enterprise-kernel</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -26,11 +26,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.Schema;
 import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
-import org.neo4j.test.TestGraphDatabaseFactory;
 
 import java.io.File;
 import java.sql.Connection;
