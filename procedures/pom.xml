@@ -21,17 +21,17 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-enterprise</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-bolt</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
         </dependency>
     </dependencies>
 

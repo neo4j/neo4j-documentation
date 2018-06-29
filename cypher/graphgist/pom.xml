@@ -27,18 +27,7 @@
             <version>${scala.version}</version>
         </dependency>
 
-        <!-- neo4j -->
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-enterprise-cypher</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
-
+        <!-- neo4j-documentation -->
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>test-framework-enterprise</artifactId>
@@ -49,6 +38,18 @@
             <artifactId>neo4j-graphviz</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- neo4j -->
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-enterprise-cypher</artifactId>
+            <version>${neo4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
@@ -96,9 +97,6 @@
                                     <mainClass>org.neo4j.doc.cypherdoc.Main</mainClass>
                                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                 </manifest>
-                                <manifestEntries>
-                                    <Url>${project.organization.url}</Url>
-                                </manifestEntries>
                             </archive>
                         </configuration>
                     </execution>

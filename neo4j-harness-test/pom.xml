@@ -21,14 +21,7 @@
         <license-text.header>../build/ApacheLicense-2.0-header.txt</license-text.header>
         <docs-plugin.skip>true</docs-plugin.skip>
         <licensing.prepend.text>notice-gpl-prefix.txt</licensing.prepend.text>
-        <neo4j.version>${project.version}</neo4j.version>
     </properties>
-
-    <scm>
-        <connection>scm:git:git://github.com/neo4j/neo4j.git</connection>
-        <developerConnection>scm:git:git@github.com:neo4j/neo4j.git</developerConnection>
-        <url>https://github.com/neo4j/neo4j</url>
-    </scm>
 
     <licenses>
         <license>

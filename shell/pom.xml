@@ -18,15 +18,16 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-shell</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-kernel</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-doc-tools</artifactId>
@@ -43,6 +44,7 @@
             <groupId>org.neo4j.doc</groupId>
             <artifactId>test-framework</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

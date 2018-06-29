@@ -20,16 +20,17 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-kernel</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
         </dependency>
 
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-import-tool</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>test-framework</artifactId>
@@ -38,7 +39,7 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-dbms</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

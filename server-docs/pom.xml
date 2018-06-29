@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.neo4j.app</groupId>
             <artifactId>neo4j-server</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -52,7 +52,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
                 <!--$NO-MVN-MAN-VER$-->
                 <executions>
                     <execution>

@@ -23,13 +23,14 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cluster</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-ha</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-doc-tools</artifactId>

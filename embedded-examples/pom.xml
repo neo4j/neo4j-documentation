@@ -13,13 +13,6 @@
     <artifactId>neo4j-examples</artifactId>
     <name>Neo4j - Examples</name>
     <description>Neo4j Embedded Examples</description>
-    <url>http://components.neo4j.org/${project.artifactId}/${project.version}/</url>
-
-    <scm>
-        <connection>scm:git:git://github.com/neo4j/neo4j.git</connection>
-        <developerConnection>scm:git:git@github.com:neo4j/neo4j.git</developerConnection>
-        <url>https://github.com/neo4j/neo4j</url>
-    </scm>
 
     <properties>
         <short-name>neo4j-examples</short-name>
@@ -30,11 +23,23 @@
         <licensing.prepend.text>notice-gpl-prefix.txt</licensing.prepend.text>
     </properties>
 
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <comments>
+                Note that this license is for the project itself,
+                and not for its dependencies. See the included NOTICE.txt
+                file for further details.
+            </comments>
+        </license>
+    </licenses>
+
     <dependencies>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <!-- In this context, keep this artifact as type pom -->
             <type>pom</type>
             <exclusions>
@@ -47,12 +52,12 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-slf4j</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-shell</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
         </dependency>
 
         <dependency>
@@ -80,18 +85,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <licenses>
-        <license>
-            <name>Apache License Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <comments>
-                Note that this license is for the project itself,
-                and not for its dependencies. See the included NOTICE.txt
-                file for further details.
-            </comments>
-        </license>
-    </licenses>
 
     <build>
         <plugins>
