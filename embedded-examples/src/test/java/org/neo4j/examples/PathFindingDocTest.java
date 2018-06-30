@@ -41,7 +41,7 @@ import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.test.rule.EmbeddedDatabaseRule;
+import org.neo4j.doc.test.rule.EmbeddedDatabaseRule;
 
 import static org.junit.Assert.assertEquals;
 
@@ -52,7 +52,7 @@ public class PathFindingDocTest
     private static GraphDatabaseService graphDb;
     private Transaction tx;
 
-    private static enum ExampleTypes implements RelationshipType
+    private enum ExampleTypes implements RelationshipType
     {
         MY_TYPE
     }

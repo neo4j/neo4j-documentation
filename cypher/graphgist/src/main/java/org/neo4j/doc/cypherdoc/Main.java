@@ -36,7 +36,7 @@ public class Main
     private static final String[] EXTENSIONS = new String[] { ".asciidoc", ".adoc" };
     private static final FileFilter fileFilter = new FileFilter(){
         public boolean accept( File file ) {
-            return Arrays.asList( EXTENSIONS ).stream().anyMatch( ext -> file.getAbsolutePath().endsWith( ext ));
+            return Arrays.stream( EXTENSIONS ).anyMatch(ext -> file.getAbsolutePath().endsWith( ext ));
         }
     };
 
@@ -110,10 +110,9 @@ public class Main
         }
     }
 
-    private static Path getDestinationDir( String arg ) throws IOException
+    private static Path getDestinationDir( String name ) throws IOException
     {
-        String name = arg;
-        Path file = Paths.get( name );
+        Path file = Paths.get(name);
         if ( Files.exists(file) && file.isAbsolute() )
         {
             throw new IllegalArgumentException(

@@ -45,13 +45,13 @@ public class ConfigurationParser
     @SuppressWarnings( "unchecked" )
     public ConfigurationParser( File configFile, String... format )
     {
-        this( Iterators.asIterable( new CombiningIterator<String>( Arrays.asList(
-                new LineIterator( configFile ), new ArrayIterator<String>( format ) ) ) ) );
+        this( Iterators.asIterable(new CombiningIterator<>(Arrays.asList(
+                new LineIterator(configFile), new ArrayIterator<>(format))) ) );
     }
 
     public ConfigurationParser( String... format )
     {
-        this( Iterators.asIterable( new ArrayIterator<String>( format ) ) );
+        this( Iterators.asIterable(new ArrayIterator<>(format) ) );
     }
 
     public ConfigurationParser( Iterable<String> format )
@@ -121,7 +121,7 @@ public class ConfigurationParser
         }
     }
 
-    private final List<StyleParameter> styles = new ArrayList<StyleParameter>();
+    private final List<StyleParameter> styles = new ArrayList<>();
 
     public final StyleParameter[] styles( StyleParameter... params )
     {

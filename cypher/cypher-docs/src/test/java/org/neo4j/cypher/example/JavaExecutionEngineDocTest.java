@@ -50,6 +50,7 @@ import org.neo4j.test.TestGraphDatabaseFactory;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -133,7 +134,7 @@ public class JavaExecutionEngineDocTest
 
     public static String parametersToAsciidoc( final Object params ) throws IOException
     {
-        StringBuffer sb = new StringBuffer( 2048 );
+        StringBuilder sb = new StringBuilder( 2048 );
         String prettifiedJson = WRITER.writeValueAsString( params );
         sb.append( "\n.Parameters\n[source,javascript]\n----\n" )
                 .append( prettifiedJson )
@@ -144,7 +145,7 @@ public class JavaExecutionEngineDocTest
     private void dumpToFile( final String id, final String query, final Object params ) throws Exception
     {
         QueryExecutionEngine engine = ((GraphDatabaseAPI) db).getDependencyResolver().resolveDependency( QueryExecutionEngine.class );
-        StringBuffer sb = new StringBuffer( 2048 );
+        StringBuilder sb = new StringBuilder( 2048 );
         String prettifiedJson = WRITER.writeValueAsString( params );
         sb.append( "\n.Parameters\n[source,javascript]\n----\n" )
                 .append( prettifiedJson )
@@ -249,7 +250,7 @@ public class JavaExecutionEngineDocTest
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithStringLiteralAsParameter
 
-        assertEquals( asList( johanNode ), this.<Node>toList( result, "n" ) );
+        assertEquals(singletonList(johanNode), this.<Node>toList( result, "n" ) );
         dumpToFile( "exampleWithStringLiteralAsParameter", query, params );
     }
 
@@ -263,7 +264,7 @@ public class JavaExecutionEngineDocTest
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithShortSyntaxStringLiteralAsParameter
 
-        assertEquals( asList( johanNode ), this.<Node>toList( result, "n" ) );
+        assertEquals(singletonList(johanNode), this.<Node>toList( result, "n" ) );
         dumpToFile( "exampleWithShortSyntaxStringLiteralAsParameter", query, params );
     }
 
@@ -278,7 +279,7 @@ public class JavaExecutionEngineDocTest
             String query = "START n=node:people(name = $value) RETURN n";
             Result result = db.execute( query, params );
             // END SNIPPET: exampleWithParameterForIndexValue
-            assertEquals( asList( michaelaNode ), this.<Node>toList( result, "n" ) );
+            assertEquals(singletonList(michaelaNode), this.<Node>toList( result, "n" ) );
             dumpToFile( "exampleWithParameterForIndexValue", query, params );
         }
     }
@@ -294,7 +295,7 @@ public class JavaExecutionEngineDocTest
             String query = "START n=node:people($query) RETURN n";
             Result result = db.execute( query, params );
             // END SNIPPET: exampleWithParametersForQuery
-            assertEquals( asList( andreasNode ), this.<Node>toList( result, "n" ) );
+            assertEquals(singletonList(andreasNode), this.<Node>toList( result, "n" ) );
             dumpToFile( "exampleWithParametersForQuery", query, params );
         }
     }

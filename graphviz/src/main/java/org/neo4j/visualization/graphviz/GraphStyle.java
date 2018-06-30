@@ -185,9 +185,9 @@ public class GraphStyle
             nodeHeader.put( "shape", "Mrecord" );
         }
 
-        final Map<String, String> nodeHeader = new HashMap<String, String>();
-        final Map<String, String> edgeHeader = new HashMap<String, String>();
-        final Map<String, String> graphHeader = new HashMap<String, String>();
+        final Map<String, String> nodeHeader = new HashMap<>();
+        final Map<String, String> edgeHeader = new HashMap<>();
+        final Map<String, String> graphHeader = new HashMap<>();
 
         private void assertMember( Map<String, String> header,
             Properties properties, String prefix, String key, String def )
@@ -214,7 +214,7 @@ public class GraphStyle
     {
         for ( String key : header.keySet() )
         {
-            stream.append( "    " + key + " = \"" + header.get( key ) + "\"\n" );
+            stream.append("    ").append(key).append(" = \"").append(header.get(key)).append("\"\n");
         }
     }
 

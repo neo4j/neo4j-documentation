@@ -32,7 +32,7 @@ public class TraversalDefinition
     private int maxDepth = 1;
     private String returnFilter = ALL;
     private String order = DEPTH_FIRST;
-    private List<Relation> relationships = new ArrayList<Relation>();
+    private List<Relation> relationships = new ArrayList<>();
 
     public void setOrder( String order )
     {
@@ -63,9 +63,9 @@ public class TraversalDefinition
     {
         StringBuilder sb = new StringBuilder();
         sb.append( "{ " );
-        sb.append( " \"order\" : \"" + order + "\"" );
+        sb.append(" \"order\" : \"").append(order).append("\"");
         sb.append( ", " );
-        sb.append( " \"uniqueness\" : \"" + uniqueness + "\"" );
+        sb.append(" \"uniqueness\" : \"").append(uniqueness).append("\"");
         sb.append( ", " );
         if ( relationships.size() > 0 )
         {

@@ -191,7 +191,7 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
             |CREATE (n) SET n = map""".stripMargin, ResultAssertions((r) => {
             assertStats(r, nodesCreated = 2, propertiesWritten = 4)
           }),
-          ("props" -> List(Map("name" -> "Andres", "position" -> "Developer"), Map("name" -> "Michael", "position" -> "Developer")))) {
+          "props" -> List(Map("name" -> "Andres", "position" -> "Developer"), Map("name" -> "Michael", "position" -> "Developer"))) {
           resultTable()
         }
       }

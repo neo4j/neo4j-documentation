@@ -61,14 +61,7 @@ public class Neo4jInstance {
     }
 
     private static void registerShutdownHook(final GraphDatabaseService graphDb) {
-        Runtime.getRuntime().addShutdownHook( new Thread()
-        {
-            @Override
-            public void run()
-            {
-                graphDb.shutdown();
-            }
-        } );
+        Runtime.getRuntime().addShutdownHook(new Thread(graphDb::shutdown));
     }
 
 }

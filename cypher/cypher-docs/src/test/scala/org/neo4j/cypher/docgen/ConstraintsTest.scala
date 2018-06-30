@@ -21,8 +21,8 @@ package org.neo4j.cypher.docgen
 
 import org.junit.Test
 import org.neo4j.cypher.{ConstraintValidationException, CypherExecutionException}
+import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 import org.neo4j.graphdb.{Label, RelationshipType}
-import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
 
 import scala.collection.JavaConverters._
 
@@ -367,6 +367,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   private def hasNodeKeyConstraint(labelName: String, propNames: Seq[String]): Boolean = {
     val constraints = db.schema().getConstraints( Label.label(labelName) ).asScala
-    !constraints.isEmpty && constraints.head.getPropertyKeys().asScala.toList == propNames.toList
+    constraints.nonEmpty && constraints.head.getPropertyKeys().asScala.toList == propNames.toList
   }
 }

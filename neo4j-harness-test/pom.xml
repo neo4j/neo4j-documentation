@@ -2,78 +2,74 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.neo4j.doc</groupId>
-    <artifactId>neo4j-manual-parent</artifactId>
-    <version>3.4.2-SNAPSHOT</version>
-    <relativePath>..</relativePath>
-  </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.neo4j.doc</groupId>
+        <artifactId>neo4j-manual-parent</artifactId>
+        <version>3.4.2-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
 
-  <groupId>org.neo4j.test</groupId>
-  <artifactId>neo4j-harness-test</artifactId>
-  <name>Neo4j - Test Harness Documentation tests</name>
-  <description>Tests for Neo4j Test Harness.</description>
-  <url>http://components.neo4j.org/${project.artifactId}/${project.version}</url>
-  <packaging>jar</packaging>
+    <groupId>org.neo4j.test</groupId>
+    <artifactId>neo4j-harness-test</artifactId>
+    <name>Neo4j - Test Harness Documentation tests</name>
+    <description>Tests for Neo4j Test Harness.</description>
+    <url>http://components.neo4j.org/${project.artifactId}/${project.version}</url>
+    <packaging>jar</packaging>
 
-  <properties>
-    <license-text.header>../build/ApacheLicense-2.0-header.txt</license-text.header>
-    <docs-plugin.skip>true</docs-plugin.skip>
-    <licensing.prepend.text>notice-gpl-prefix.txt</licensing.prepend.text>
-    <neo4j.version>${project.version}</neo4j.version>
-  </properties>
+    <properties>
+        <license-text.header>../build/ApacheLicense-2.0-header.txt</license-text.header>
+        <docs-plugin.skip>true</docs-plugin.skip>
+        <licensing.prepend.text>notice-gpl-prefix.txt</licensing.prepend.text>
+    </properties>
 
-  <scm>
-    <connection>scm:git:git://github.com/neo4j/neo4j.git</connection>
-    <developerConnection>scm:git:git@github.com:neo4j/neo4j.git</developerConnection>
-    <url>https://github.com/neo4j/neo4j</url>
-  </scm>
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <comments>
+                Note that this license is for the project itself,
+                and not for its dependencies. See the included NOTICE.txt
+                file for further details.
+            </comments>
+        </license>
+    </licenses>
 
-  <licenses>
-    <license>
-      <name>Apache License Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <comments>
-        Note that this license is for the project itself,
-        and not for its dependencies. See the included NOTICE.txt
-        file for further details.
-        </comments>
-    </license>
-  </licenses>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <forkCount>1</forkCount>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <configuration>
-          <forkCount>1</forkCount>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>server-api</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
 
-  <dependencies>
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
+            <artifactId>server-test-utils</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.test</groupId>
+            <artifactId>neo4j-harness</artifactId>
+            <version>${neo4j.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>org.neo4j</groupId>
-      <artifactId>server-api</artifactId>
-      <version>${neo4j.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <!-- <version>4.12</version> -->
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.neo4j.test</groupId>
-      <artifactId>neo4j-harness</artifactId>
-      <version>${neo4j.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-  </dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

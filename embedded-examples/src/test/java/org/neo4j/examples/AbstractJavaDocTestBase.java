@@ -28,20 +28,20 @@ import java.util.Map;
 import org.neo4j.doc.tools.JavaTestDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
-import org.neo4j.test.GraphDescription;
-import org.neo4j.test.GraphHolder;
-import org.neo4j.test.TestData;
+import org.neo4j.doc.test.GraphDescription;
+import org.neo4j.doc.test.GraphHolder;
+import org.neo4j.doc.test.TestData;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
-import static org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
+import static org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
 
 public abstract class AbstractJavaDocTestBase implements GraphHolder
 {
     @Rule
-    public TestData<JavaTestDocsGenerator> gen = TestData.producedThrough( JavaTestDocsGenerator.PRODUCER );
+    public final TestData<JavaTestDocsGenerator> gen = TestData.producedThrough( JavaTestDocsGenerator.PRODUCER );
 
     @Rule
-    public TestData<Map<String, Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this, true ) );
+    public final TestData<Map<String, Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this, true ) );
 
     protected static GraphDatabaseService db;
 

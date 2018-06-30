@@ -17,21 +17,13 @@
 
     <properties>
         <short-name>manual</short-name>
-        <docs.sources>${project.build.directory}/docs</docs.sources>
-        <docs.sourcecode>${project.build.directory}/sources</docs.sourcecode>
-        <docs.test-sources>${project.build.directory}/test-sources</docs.test-sources>
-        <docs.images>${project.build.outputDirectory}/images</docs.images>
-        <neo4j.version>${project.version}</neo4j.version>
+        <outputDir.docs>${project.build.directory}/docs</outputDir.docs>
+        <outputDir.sources>${project.build.directory}/sources</outputDir.sources>
+        <outputDir.test-sources>${project.build.directory}/test-sources</outputDir.test-sources>
+        <outputDir.images>${project.build.outputDirectory}/images</outputDir.images>
         <attach-docs-phase>none</attach-docs-phase>
         <attach-test-jar-phase>none</attach-test-jar-phase>
-        <additional-document-attributes></additional-document-attributes>
     </properties>
-
-    <scm>
-        <connection>scm:git:git://github.com/neo4j/neo4j.git</connection>
-        <developerConnection>scm:git:git@github.com:neo4j/neo4j.git</developerConnection>
-        <url>https://github.com/neo4j/neo4j</url>
-    </scm>
 
     <licenses>
         <license>
@@ -161,15 +153,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.neo4j.doc</groupId>
-            <artifactId>neo4j-server-enterprise-docs</artifactId>
+            <groupId>org.neo4j.test</groupId>
+            <artifactId>neo4j-harness-test</artifactId>
             <version>${neo4j.version}</version>
-            <classifier>docs</classifier>
+            <classifier>test-sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.test</groupId>
-            <artifactId>neo4j-harness-test</artifactId>
+            <artifactId>neo4j-harness-enterprise-test</artifactId>
             <version>${neo4j.version}</version>
             <classifier>test-sources</classifier>
             <scope>provided</scope>
@@ -317,7 +309,7 @@
                             <stripVersion>true</stripVersion>
                             <excludes>META-INF,META-INF/**</excludes>
                             <type>jar</type>
-                            <outputDirectory>${docs.sources}</outputDirectory>
+                            <outputDirectory>${outputDir.docs}</outputDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -332,10 +324,10 @@
                             <excludeTransitive>true</excludeTransitive>
                             <useSubDirectoryPerArtifact>true</useSubDirectoryPerArtifact>
                             <stripVersion>true</stripVersion>
-                            <excludes>META-INF,META-INF/**,org/neo4j/kernel/impl/storemigration/legacystore/**</excludes>
+                            <excludes>META-INF,META-INF/**</excludes>
                             <type>jar</type>
-                            <outputDirectory>${docs.test-sources}</outputDirectory>
-                            <includeArtifactIds>neo4j-cypher-docs,neo4j-examples,neo4j-harness-test,neo4j-server-docs,neo4j-lucene-index-docs,neo4j-backup-docs,neo4j-kernel-docs</includeArtifactIds>
+                            <outputDirectory>${outputDir.test-sources}</outputDirectory>
+                            <includeArtifactIds>neo4j-cypher-docs,neo4j-examples,neo4j-harness-test,neo4j-harness-enterprise-test,neo4j-server-docs,neo4j-lucene-index-docs,neo4j-backup-docs,neo4j-kernel-docs</includeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>
@@ -352,7 +344,7 @@
                             <stripVersion>true</stripVersion>
                             <excludes>META-INF,META-INF/**</excludes>
                             <type>jar</type>
-                            <outputDirectory>${docs.sourcecode}</outputDirectory>
+                            <outputDirectory>${outputDir.sources}</outputDirectory>
                             <includeArtifactIds>neo4j-examples,neo4j-server-examples,neo4j-cypher-docs</includeArtifactIds>
                         </configuration>
                     </execution>

@@ -27,9 +27,9 @@ import java.util.List;
  */
 public class AsciiDocListGenerator
 {
-    private String listId;
-    private String title;
-    private boolean shortenDescription;
+    private final String listId;
+    private final String title;
+    private final boolean shortenDescription;
 
     public AsciiDocListGenerator( String listId, String title, boolean shortenDescription )
     {

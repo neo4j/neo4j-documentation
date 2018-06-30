@@ -38,7 +38,7 @@ public class SimpleNodeStyle extends DefaultNodeStyle
     public void emitNodeStart( Appendable stream, Node node )
             throws IOException
     {
-        stream.append( "  N" + node.getId() + " [\n" );
+        stream.append("  N").append(String.valueOf(node.getId())).append(" [\n");
         config.emit( node, stream );
         stream.append( "    label = \"" );
         Iterator<Label> labels = node.getLabels().iterator();

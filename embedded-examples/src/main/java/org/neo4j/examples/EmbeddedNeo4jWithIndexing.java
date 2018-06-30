@@ -102,13 +102,6 @@ public class EmbeddedNeo4jWithIndexing
         // Registers a shutdown hook for the Neo4j and index service instances
         // so that it shuts down nicely when the VM exits (even if you
         // "Ctrl-C" the running example before it's completed)
-        Runtime.getRuntime().addShutdownHook( new Thread()
-        {
-            @Override
-            public void run()
-            {
-                shutdown();
-            }
-        } );
+        Runtime.getRuntime().addShutdownHook(new Thread(EmbeddedNeo4jWithIndexing::shutdown));
     }
 }

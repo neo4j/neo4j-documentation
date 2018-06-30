@@ -17,7 +17,6 @@
 
     <properties>
         <license-text.header>../build/GPL-3-header.txt</license-text.header>
-        <neo4j.version>${project.version}</neo4j.version>
         <scala.version>2.11.8</scala.version>
         <scala.binary.version>2.11</scala.binary.version>
         <hsqldb.version>2.3.2</hsqldb.version>
@@ -126,6 +125,13 @@
             </dependency>
 
             <dependency>
+                <groupId>org.neo4j.doc</groupId>
+                <artifactId>neo4j-graphviz</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.neo4j</groupId>
                 <artifactId>neo4j</artifactId>
                 <version>${neo4j.version}</version>
@@ -136,30 +142,23 @@
                 <version>${neo4j.version}</version>
                 <type>test-jar</type>
             </dependency>
-
             <dependency>
                 <groupId>org.neo4j</groupId>
                 <artifactId>neo4j-kernel</artifactId>
-                <version>${project.version}</version>
+                <version>${neo4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.neo4j</groupId>
                 <artifactId>neo4j-kernel</artifactId>
-                <version>${project.version}</version>
+                <version>${neo4j.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.neo4j</groupId>
                 <artifactId>neo4j-io</artifactId>
-                <version>${project.version}</version>
+                <version>${neo4j.version}</version>
                 <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.neo4j.doc</groupId>
-                <artifactId>neo4j-graphviz</artifactId>
-                <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
 

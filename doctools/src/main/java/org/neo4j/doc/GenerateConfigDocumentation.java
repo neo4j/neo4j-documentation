@@ -56,7 +56,7 @@ public class GenerateConfigDocumentation
         }
     }
 
-    private static Function<String,Class<?>> classFromString = (Function<String,Class<?>>) ( className ) -> {
+    private static final Function<String,Class<?>> classFromString = (Function<String,Class<?>>) ( className ) -> {
         try
         {
             return Class.forName( className );

@@ -14,7 +14,6 @@
     <artifactId>neo4j-harness-enterprise-test</artifactId>
     <name>Neo4j - Test Harness Enterprise Documentation tests</name>
     <description>Tests for Neo4j Test Harness Enterprise.</description>
-    <url>http://components.neo4j.org/${project.artifactId}/${project.version}</url>
     <packaging>jar</packaging>
 
     <properties>
@@ -23,10 +22,6 @@
         <licensing.prepend.text>notice-agpl-prefix.txt</licensing.prepend.text>
         <neo4j.version>${project.version}</neo4j.version>
     </properties>
-
-    <scm>
-        <url>https://github.com/neo4j/neo4j/</url>
-    </scm>
 
     <licenses>
         <license>
@@ -59,17 +54,10 @@
     </build>
 
     <dependencies>
-
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>server-api</artifactId>
             <version>${neo4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -78,6 +66,23 @@
             <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
+            <artifactId>test-framework</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
+            <artifactId>server-test-utils</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

@@ -132,7 +132,7 @@ class TestFailureException extends RuntimeException
 
     private static class DumpedSnapshot extends Snapshot
     {
-        public DumpedSnapshot( String path )
+        DumpedSnapshot(String path)
         {
             super( path );
         }

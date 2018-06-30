@@ -28,7 +28,7 @@ import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.test.GraphDescription.Graph;
+import org.neo4j.doc.test.GraphDescription.Graph;
 
 import static org.junit.Assert.assertTrue;
 import static org.neo4j.graphdb.Direction.INCOMING;

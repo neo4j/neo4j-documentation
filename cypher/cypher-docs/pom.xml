@@ -13,14 +13,15 @@
     <artifactId>neo4j-cypher-docs</artifactId>
     <name>Neo4j - Cypher Documentation</name>
     <description>Neo4j query language documentation</description>
-    <url>http://components.neo4j.org/${project.artifactId}/${project.version}</url>
     <packaging>jar</packaging>
 
-    <scm>
-        <connection>scm:git:git://github.com/neo4j/neo4j.git</connection>
-        <developerConnection>scm:git:git@github.com:neo4j/neo4j.git</developerConnection>
-        <url>https://github.com/neo4j/neo4j</url>
-    </scm>
+    <properties>
+        <license-text.header>../../build/GPL-3-header.txt</license-text.header>
+        <version-package>cypher.internal.docs</version-package>
+        <docs-plugin.skip>false</docs-plugin.skip>
+        <attach-docs-phase>verify</attach-docs-phase>
+        <remote-csv-upload>{csv-dir}</remote-csv-upload>
+    </properties>
 
     <licenses>
         <license>
@@ -42,22 +43,11 @@
         </license>
     </licenses>
 
-    <properties>
-        <license-text.header>../../build/GPL-3-header.txt</license-text.header>
-        <version-package>cypher.internal.docs</version-package>
-        <docs-plugin.skip>false</docs-plugin.skip>
-        <attach-docs-phase>verify</attach-docs-phase>
-        <remote-csv-upload>{csv-dir}</remote-csv-upload>
-        <scala.version>2.11.8</scala.version>
-        <scala.binary.version>2.11</scala.binary.version>
-    </properties>
-
     <dependencies>
 
         <!-- shared versions are defined in the parent pom -->
 
         <!-- scala -->
-
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
@@ -65,7 +55,6 @@
         </dependency>
 
         <!-- scala test dependencies -->
-
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_2.11</artifactId>
@@ -78,11 +67,31 @@
             </exclusions>
         </dependency>
 
-        <!-- neo4j -->
+        <!-- neo4j-documentation -->
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
+            <artifactId>neo4j-doc-tools</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
+            <artifactId>test-framework-enterprise</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
+            <artifactId>neo4j-graphviz</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
 
+        <!-- neo4j -->
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-kernel</artifactId>
+            <version>${neo4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
@@ -97,82 +106,48 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.neo4j.doc</groupId>
-            <artifactId>neo4j-doc-tools</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-            <type>test-jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j.doc</groupId>
-            <artifactId>neo4j-graphviz</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!-- neo4j-cypher -->
-
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cypher</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-enterprise-cypher</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cypher</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>openCypher-frontend-1</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cypher-runtime-util</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cypher-runtime-util</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-enterprise-kernel</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-enterprise-kernel</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
+            <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cypher-util-3.4</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
 
         <!-- other -->
-
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
@@ -246,7 +221,6 @@
                     <configuration>
                         <systemPropertyVariables>
                             <remote-csv-upload>${remote-csv-upload}/</remote-csv-upload>
-                            <dbms.pagecache.memory.default.override>8m</dbms.pagecache.memory.default.override>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

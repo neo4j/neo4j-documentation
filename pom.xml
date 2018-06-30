@@ -3,11 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.neo4j</groupId>
-        <artifactId>parent</artifactId>
-        <version>3.4.2-SNAPSHOT</version>
-    </parent>
 
     <groupId>org.neo4j.doc</groupId>
     <artifactId>neo4j-manual-parent</artifactId>
@@ -16,8 +11,12 @@
     <name>Neo4j - Reference Manual Build</name>
     <description>Neo4j Reference Manual Build.</description>
     <packaging>pom</packaging>
+    <url>https://neo4j.com/</url>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <neo4j.version>${project.version}</neo4j.version>
         <generate-config-docs-phase>prepare-package</generate-config-docs-phase>
         <attach-java-test-sources-phase>package</attach-java-test-sources-phase>
@@ -29,6 +28,7 @@
             -Dorg.neo4j.kernel.impl.api.KernelStatement.trackStatements=false
         </test.runner.jvm.settings.additional>
         <license-text.header>build/AGPL-3-header.txt</license-text.header>
+        <jersey.version>1.19.3</jersey.version>
     </properties>
 
     <modules>
@@ -41,7 +41,6 @@
         <module>server-examples</module>
         <module>import-tool</module>
         <module>server-docs</module>
-        <module>enterprise-server-docs</module>
         <module>shell</module>
         <module>kernel</module>
         <module>lucene</module>
@@ -52,12 +51,15 @@
         <module>graphviz</module>
         <module>procedures</module>
         <module>jmx</module>
+        <module>test-framework</module>
+        <module>server-test-utils</module>
+        <module>test-framework-enterprise</module>
     </modules>
 
     <scm>
-        <connection>scm:git:git://github.com/neo4j/neo4j.git</connection>
-        <developerConnection>scm:git:git@github.com:neo4j/neo4j.git</developerConnection>
-        <url>https://github.com/neo4j/neo4j</url>
+        <connection>scm:git:git://github.com/neo4j/neo4j-documentation.git</connection>
+        <developerConnection>scm:git:git@github.com:neo4j/neo4j-documentation.git</developerConnection>
+        <url>https://github.com/neo4j/neo4j-documentation</url>
     </scm>
 
     <licenses>
@@ -70,14 +72,17 @@
     <build>
         <pluginManagement>
             <plugins>
+
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>1.6.0</version>
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.21.0</version>
                     <configuration>
                         <systemPropertyVariables>
                             <dbms.pagecache.memory.default.override>8m</dbms.pagecache.memory.default.override>
@@ -92,9 +97,11 @@
                         </includes>
                     </configuration>
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.21.0</version>
                     <configuration>
                         <includes>
                             <include>**/DocIT*.java</include>
@@ -102,24 +109,121 @@
                             <include>**/*DocITCase.java</include>
                         </includes>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.neo4j.build.plugins</groupId>
-                    <artifactId>licensing-maven-plugin</artifactId>
                     <executions>
                         <execution>
-                            <id>enforce-licensing-oss</id>
-                            <phase/>
+                            <id>integration-test</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                            </goals>
                         </execution>
                         <execution>
-                            <id>enforce-licensing-com</id>
-                            <phase/>
-                        </execution>
-                        <execution>
-                            <id>list-all-licenses</id>
-                            <phase/>
+                            <id>verify</id>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
                         </execution>
                     </executions>
+                </plugin>
+
+                <!-- Jar file packaging settings -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                    <executions>
+                        <!-- Augment default jar with url -->
+                        <execution>
+                            <id>default-jar</id>
+                            <configuration>
+                                <archive>
+                                    <manifest>
+                                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                    </manifest>
+                                    <manifestEntries>
+                                        <Url>${project.organization.url}</Url>
+                                        <Automatic-Module-Name>${moduleName}</Automatic-Module-Name>
+                                    </manifestEntries>
+                                </archive>
+                            </configuration>
+                        </execution>
+                        <!-- Create test jar -->
+                        <execution>
+                            <id>create-test-jar</id>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                        <!-- Create javadoc jar, will be empty if javadoc generation is skipped -->
+                        <execution>
+                            <id>create-javadoc-jar</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                            <configuration>
+                                <classifier>javadoc</classifier>
+                                <classesDirectory>${project.build.directory}/apidocs/</classesDirectory>
+                                <includes>
+                                    <include>**/**</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>javadoc.sh</exclude>
+                                    <exclude>javadoc.bat</exclude>
+                                    <exclude>options</exclude>
+                                    <exclude>packages</exclude>
+                                    <exclude>argfile</exclude>
+                                    <exclude>files</exclude>
+                                </excludes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>3.0</version>
+                    <executions>
+                        <execution>
+                            <id>check-licenses</id>
+                            <!-- fail as early as possible -->
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <strictCheck>true</strictCheck>
+                        <header>${license-text.header}</header>
+                        <includes>
+                            <include>src/**/*.java</include>
+                            <include>src/**/*.js</include>
+                            <include>src/**/*.scala</include>
+                            <include>src/**/*.xml</include>
+                            <include>src/**/*.feature</include>
+                            <include>src/**/*.g4</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/cypher-shell/*</exclude>
+                        </excludes>
+                        <mapping>
+                            <java>SLASHSTAR_STYLE</java>
+                            <scala>SLASHSTAR_STYLE</scala>
+                            <feature>SCRIPT_STYLE</feature>
+                            <g4>SLASHSTAR_STYLE</g4>
+                        </mapping>
+                        <properties>
+                            <currentYear>${currentYear}</currentYear>
+                        </properties>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.neo4j.build</groupId>
+                            <artifactId>build-resources</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
 
                 <plugin>
@@ -144,12 +248,60 @@
                     </dependencies>
                 </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.7.0</version>
+                    <configuration>
+                        <showDeprecation>true</showDeprecation>
+                        <showWarnings>true</showWarnings>
+                        <compilerArgument>${java9.exports}</compilerArgument>
+                    </configuration>
+                </plugin>
+
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.7</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+
             </plugins>
         </pluginManagement>
 
         <plugins>
             <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-java-test-sources</id>
@@ -163,10 +315,36 @@
 
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
                     <configLocation>build/checkstyle.xml</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>8.8</version>
+                    </dependency>
+                    <!-- <dependency> -->
+                    <!--     <groupId>org.neo4j.build</groupId> -->
+                    <!--     <artifactId>build-resources</artifactId> -->
+                    <!--     <version>${project.version}</version> -->
+                    <!-- </dependency> -->
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.neo4j.build.plugins</groupId>
                 <artifactId>docs-maven-plugin</artifactId>
@@ -180,6 +358,82 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-core</artifactId>
+                <version>1.3</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-library</artifactId>
+                <version>1.3</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>2.18.3</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-core</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-client</artifactId>
+                <version>${jersey.version}</version>
+                <exclusions>
+                <exclusion>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>jsr311-api</artifactId>
+                </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.11</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>1.9.13</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>annotations</artifactId>
+                <version>3.0.1</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
 

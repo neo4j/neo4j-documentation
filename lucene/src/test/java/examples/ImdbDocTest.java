@@ -55,12 +55,12 @@ import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.graphdb.index.RelationshipIndex;
 import org.neo4j.helpers.collection.MapUtil;
-import org.neo4j.index.Neo4jTestCase;
+import org.neo4j.doc.test.index.Neo4jTestCase;
 import org.neo4j.index.lucene.QueryContext;
 import org.neo4j.index.lucene.ValueContext;
 import org.neo4j.index.lucene.unsafe.batchinsert.LuceneBatchInserterIndexProvider;
-import org.neo4j.test.TestGraphDatabaseFactory;
-import org.neo4j.test.rule.TestDirectory;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserterIndex;
 import org.neo4j.unsafe.batchinsert.BatchInserterIndexProvider;
@@ -72,13 +72,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.neo4j.test.mockito.matcher.Neo4jMatchers.hasProperty;
-import static org.neo4j.test.mockito.matcher.Neo4jMatchers.inTx;
+import static org.neo4j.doc.test.mockito.matcher.Neo4jMatchers.hasProperty;
+import static org.neo4j.doc.test.mockito.matcher.Neo4jMatchers.inTx;
 
-public class ImdbDocTest
-{
+public class ImdbDocTest {
+
     @Rule
-    public TestDirectory testDirectory = TestDirectory.testDirectory();
+    public final TestDirectory testDirectory = TestDirectory.testDirectory();
     private static GraphDatabaseService graphDb;
     private Transaction tx;
 
@@ -88,9 +88,8 @@ public class ImdbDocTest
      * when executed, actually printing anything to System.out. So we fool it by creating this
      * inner class with the same name and looks which it uses instead.
      */
-    private static class System
-    {
-        static PrintStream out = new PrintStream( new OutputStream()
+    private static class System {
+        static final PrintStream out = new PrintStream(new OutputStream()
         {
             @Override
             public void write( int b ) throws IOException
@@ -100,11 +99,9 @@ public class ImdbDocTest
     }
 
     @BeforeClass
-    public static void setUpDb()
-    {
+    public static void setUpDb() {
         graphDb = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase();
-        try ( Transaction tx = graphDb.beginTx() )
-        {
+        try ( Transaction tx = graphDb.beginTx() ) {
             // START SNIPPET: createIndexes
             IndexManager index = graphDb.index();
             Index<Node> actors = index.forNodes( "actors" );

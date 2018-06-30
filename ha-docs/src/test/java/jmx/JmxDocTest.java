@@ -32,8 +32,8 @@ import org.neo4j.doc.jmx.JmxBeanDocumenter;
 import org.neo4j.doc.util.FileUtil;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
-import org.neo4j.graphdb.factory.TestHighlyAvailableGraphDatabaseFactory;
-import org.neo4j.test.rule.TestDirectory;
+import org.neo4j.graphdb.factory.HighlyAvailableGraphDatabaseFactory;
+import org.neo4j.doc.test.rule.TestDirectory;
 
 import javax.management.ObjectInstance;
 import java.io.File;
@@ -66,7 +66,7 @@ public class JmxDocTest {
     @BeforeClass
     public static void startDb() throws Exception {
         File storeDir = test.graphDbDir();
-        GraphDatabaseBuilder builder = new TestHighlyAvailableGraphDatabaseFactory().newEmbeddedDatabaseBuilder(storeDir);
+        GraphDatabaseBuilder builder = new HighlyAvailableGraphDatabaseFactory().newEmbeddedDatabaseBuilder(storeDir);
         db = builder.setConfig(ClusterSettings.server_id, "1")
                 .setConfig(setting("jmx.port", STRING, NO_DEFAULT), "9913")
                 .setConfig(ClusterSettings.initial_hosts, ":5001")

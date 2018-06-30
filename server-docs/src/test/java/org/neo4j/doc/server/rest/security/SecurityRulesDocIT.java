@@ -34,8 +34,8 @@ import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
-import org.neo4j.test.TestData;
-import org.neo4j.test.TestData.Title;
+import org.neo4j.doc.test.TestData;
+import org.neo4j.doc.test.TestData.Title;
 import org.neo4j.doc.server.ExclusiveServerTestBase;
 
 import static org.hamcrest.Matchers.containsString;
