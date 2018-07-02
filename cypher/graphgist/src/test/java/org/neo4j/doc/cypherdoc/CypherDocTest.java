@@ -19,6 +19,10 @@
  */
 package org.neo4j.doc.cypherdoc;
 
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -28,9 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -40,14 +41,14 @@ import static org.junit.Assert.fail;
 public class CypherDocTest
 {
     @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    public final ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void fullDocumentBlockParsing() throws IOException
     {
         String content = readFileToString( resourceFile( "/hello-world.asciidoc" ) );
         List<Block> blocks = CypherDoc.parseBlocks( content );
-        List<BlockType> types = new ArrayList<BlockType>();
+        List<BlockType> types = new ArrayList<>();
         for ( Block block : blocks )
         {
             types.add( block.type );

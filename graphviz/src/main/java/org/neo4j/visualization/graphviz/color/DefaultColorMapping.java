@@ -35,9 +35,9 @@ import java.util.Map;
  */
 public class DefaultColorMapping<E>
 {
-    private final List<String> availableColors = new ArrayList<String>();
+    private final List<String> availableColors = new ArrayList<>();
     private int usedAvailableColors = 0;
-    private final Map<E, String> colorMappings = new HashMap<E, String>();
+    private final Map<E, String> colorMappings = new HashMap<>();
 
     /**
      * Map colors using the full set of colors in {@link Color}.

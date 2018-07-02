@@ -19,14 +19,16 @@
  */
 package org.neo4j.doc.metatest;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.neo4j.test.rule.TestDirectory;
+import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 
 import static org.junit.Assert.assertEquals;
@@ -35,42 +37,51 @@ import static org.junit.Assert.assertTrue;
 public class AsciiDocGeneratorTest
 {
     @Rule
-    public TestDirectory testDirectory = TestDirectory.testDirectory( getClass() );
+    public final TestDirectory testDirectory = TestDirectory.testDirectory(getClass());
 
     private File sectionDirectory;
 
     @Before
-    public void setup()
-    {
-        sectionDirectory = new File( testDirectory.directory( "testasciidocs" ), "testsection" );
+    public void setup() {
+        sectionDirectory = new File(testDirectory.directory("testasciidocs"), "testsection");
     }
 
     @Test
     public void dumpToSeparateFile() throws IOException
     {
-        String reference = AsciiDocGenerator.dumpToSeparateFile( sectionDirectory, "test1", ".title1\ntest1-content" );
-        assertEquals( ".title1\ninclude::includes/test1.asciidoc[]\n", reference );
-        File includeDir = new File( sectionDirectory, "includes" );
-        File includeFile = new File( includeDir, "test1.asciidoc" );
-        assertTrue( includeFile.canRead() );
-        String fileContent = TestJavaTestDocsGenerator.readFileAsString( includeFile );
-        assertEquals( "test1-content", fileContent );
+        String reference = AsciiDocGenerator.dumpToSeparateFile(sectionDirectory, "test1", ".title1\ntest1-content");
+        assertEquals(".title1\ninclude::includes/test1.asciidoc[]\n", reference);
+        File includeDir = new File(sectionDirectory, "includes");
+        File includeFile = new File(includeDir, "test1.asciidoc");
+        assertTrue(includeFile.canRead());
+        String fileContent = readFileAsString(includeFile);
+        assertEquals("test1-content", fileContent);
     }
 
     @Test
     public void dumpToSeparateFileWithType() throws IOException
     {
         String reference = AsciiDocGenerator.dumpToSeparateFileWithType( sectionDirectory, "console", "test2-content" );
-        assertEquals( "include::includes/console-1.asciidoc[]\n", reference );
-        File includeDir = new File( sectionDirectory, "includes" );
-        File includeFile = new File( includeDir, "console-1.asciidoc" );
-        String fileContent = TestJavaTestDocsGenerator.readFileAsString( includeFile );
-        assertEquals( "test2-content", fileContent );
+        assertEquals("include::includes/console-1.asciidoc[]\n", reference);
+        File includeDir = new File(sectionDirectory, "includes");
+        File includeFile = new File(includeDir, "console-1.asciidoc");
+        String fileContent = readFileAsString(includeFile);
+        assertEquals("test2-content", fileContent);
 
         // make sure the next console doesn't overwrite the first one
-        AsciiDocGenerator.dumpToSeparateFileWithType( sectionDirectory, "console", "test3-content" );
-        includeFile = new File( includeDir, "console-2.asciidoc" );
-        fileContent = TestJavaTestDocsGenerator.readFileAsString( includeFile );
-        assertEquals( "test3-content", fileContent );
+        AsciiDocGenerator.dumpToSeparateFileWithType(sectionDirectory, "console", "test3-content");
+        includeFile = new File(includeDir, "console-2.asciidoc");
+        fileContent = readFileAsString(includeFile);
+        assertEquals("test3-content", fileContent);
     }
+
+    private String readFileAsString(File file) throws java.io.IOException {
+        byte[] buffer = new byte[(int) file.length()];
+        try (BufferedInputStream f = new BufferedInputStream(new FileInputStream(file)))
+        {
+            f.read(buffer);
+            return new String(buffer);
+        }
+    }
+
 }

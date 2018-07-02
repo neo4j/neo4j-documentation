@@ -49,7 +49,7 @@ public class Neo4jShell
     private static final String USERNAME_KEY = "username";
     private static GraphDatabaseService graphDb;
 
-    private static enum RelTypes implements RelationshipType
+    private enum RelTypes implements RelationshipType
     {
         USERS_REFERENCE, USER, KNOWS,
     }
@@ -116,7 +116,7 @@ public class Neo4jShell
             usersReferenceNode.setProperty( "reference", "users" );
             references.add( usersReferenceNode, "reference", "users" );
             // Create some users and index their names with the IndexService
-            List<Node> users = new ArrayList<Node>();
+            List<Node> users = new ArrayList<>();
             for ( int id = 0; id < 100; id++ )
             {
                 Node userNode = createUser( formUserName( id ) );
@@ -125,7 +125,7 @@ public class Neo4jShell
                 if ( id > 10 )
                 {
                     int numberOfFriends = random.nextInt( 5 );
-                    Set<Node> knows = new HashSet<Node>();
+                    Set<Node> knows = new HashSet<>();
                     for ( int i = 0; i < numberOfFriends; i++ )
                     {
                         Node friend = users
@@ -190,14 +190,7 @@ public class Neo4jShell
         // Registers a shutdown hook for the Neo4j instance so that it
         // shuts down nicely when the VM exits (even if you "Ctrl-C" the
         // running example before it's completed)
-        Runtime.getRuntime().addShutdownHook( new Thread()
-        {
-            @Override
-            public void run()
-            {
-                shutdown();
-            }
-        } );
+        Runtime.getRuntime().addShutdownHook(new Thread(Neo4jShell::shutdown));
     }
 
     private static String formUserName( final int id )

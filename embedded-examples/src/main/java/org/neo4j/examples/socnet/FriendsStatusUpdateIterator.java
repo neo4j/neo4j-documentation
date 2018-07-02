@@ -25,8 +25,8 @@ import java.util.NoSuchElementException;
 
 
 class FriendsStatusUpdateIterator implements Iterator<StatusUpdate> {
-    private ArrayList<PositionedIterator<StatusUpdate>> statuses = new ArrayList<>();
-    private StatusUpdateComparator comparator = new StatusUpdateComparator();
+    private final ArrayList<PositionedIterator<StatusUpdate>> statuses = new ArrayList<>();
+    private final StatusUpdateComparator comparator = new StatusUpdateComparator();
 
     public FriendsStatusUpdateIterator( Person person )
     {

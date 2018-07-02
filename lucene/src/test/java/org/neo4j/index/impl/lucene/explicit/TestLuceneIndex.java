@@ -28,7 +28,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.helpers.collection.MapUtil;
 
-import static org.neo4j.index.Neo4jTestCase.assertContains;
+import static org.neo4j.doc.test.index.Neo4jTestCase.assertContains;
 
 public class TestLuceneIndex extends AbstractLuceneIndexTest {
 

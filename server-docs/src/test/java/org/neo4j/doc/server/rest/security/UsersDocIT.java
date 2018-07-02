@@ -37,7 +37,7 @@ import org.neo4j.doc.server.rest.RESTDocsGenerator;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.string.UTF8;
-import org.neo4j.test.TestData;
+import org.neo4j.doc.test.TestData;
 import org.neo4j.doc.server.ExclusiveServerTestBase;
 import org.neo4j.doc.server.HTTP;
 

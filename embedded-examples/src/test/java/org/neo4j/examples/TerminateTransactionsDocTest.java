@@ -30,7 +30,7 @@ import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippe
 public class TerminateTransactionsDocTest
 {
     private static TerminateTransactions terminateTransactions;
-    private static JavaDocsGenerator gen = new JavaDocsGenerator( "terminate-tx-java", "dev" );
+    private static final JavaDocsGenerator gen = new JavaDocsGenerator( "terminate-tx-java", "dev" );
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception

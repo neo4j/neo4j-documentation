@@ -113,7 +113,7 @@ public class Documenter
         this.title = title;
         try
         {
-            this.client = new SameJvmClient( new HashMap<String, Serializable>(), server,
+            this.client = new SameJvmClient(new HashMap<>(), server,
                     new CollectingOutput(), InterruptSignalHandler.getHandler() );
         }
         catch ( Exception e )

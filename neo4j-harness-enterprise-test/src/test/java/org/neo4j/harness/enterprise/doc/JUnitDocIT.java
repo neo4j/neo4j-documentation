@@ -33,8 +33,8 @@ import org.neo4j.graphdb.schema.ConstraintType;
 import org.neo4j.harness.junit.EnterpriseNeo4jRule;
 import org.neo4j.harness.junit.Neo4jRule;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
-import org.neo4j.test.rule.SuppressOutput;
-import org.neo4j.test.server.HTTP;
+import org.neo4j.doc.test.rule.SuppressOutput;
+import org.neo4j.doc.server.HTTP;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

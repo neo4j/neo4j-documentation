@@ -39,10 +39,9 @@ class DefaultNodeStyle implements NodeStyle
     public void emitNodeStart( Appendable stream, Node node )
             throws IOException
     {
-        stream.append( "  N" + node.getId() + " [\n" );
+        stream.append("  N").append(String.valueOf(node.getId())).append(" [\n");
         config.emit( node, stream );
-        stream.append( "    label = \"{"
-                       + config.escapeLabel( config.getTitle( node ) ) );
+        stream.append("    label = \"{").append(config.escapeLabel(config.getTitle(node)));
         Iterator<Label> labels = node.getLabels().iterator();
         if ( labels.hasNext() )
         {

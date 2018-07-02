@@ -21,6 +21,7 @@ package org.neo4j.doc;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -166,7 +167,7 @@ public class SettingsDescription
 
     public Stream<SettingDescription> settings()
     {
-        return settings.stream().sorted( (a,b) -> a.name().compareTo( b.name() ) );
+        return settings.stream().sorted(Comparator.comparing(SettingDescription::name));
     }
 
     public String id()

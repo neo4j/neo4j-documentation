@@ -20,7 +20,7 @@ package org.neo4j.examples;
 
 import org.junit.BeforeClass;
 
-import org.neo4j.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
 
 public class ImpermanentGraphJavaDocTestBase extends AbstractJavaDocTestBase
 {

@@ -30,15 +30,16 @@ import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
 import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
 import org.neo4j.cypher.internal.runtime.{InternalExecutionResult, RuntimeJavaValueConverter, isGraphKernelResultValue}
-import org.opencypher.v9_0.util.Eagerly
 import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult}
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
+import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
+import org.neo4j.doc.test.{GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.factory.GraphDatabaseSettings
 import org.neo4j.graphdb.index.Index
-import org.neo4j.internal.kernel.api.security.SecurityContext
 import org.neo4j.internal.kernel.api.Transaction.Type
+import org.neo4j.internal.kernel.api.security.SecurityContext
 import org.neo4j.kernel.configuration.Settings
 import org.neo4j.kernel.impl.api.KernelStatement
 import org.neo4j.kernel.impl.api.index.IndexingService
@@ -48,12 +49,11 @@ import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLock
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.kernel.impl.util.ValueUtils
-import org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
-import org.neo4j.test.{GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.values.virtual.VirtualValues
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.neo4j.visualization.graphviz.{AsciiDocStyle, GraphStyle, GraphvizWriter}
 import org.neo4j.walk.Walker
+import org.opencypher.v9_0.util.Eagerly
 import org.scalatest.junit.JUnitSuite
 
 import scala.collection.JavaConverters._

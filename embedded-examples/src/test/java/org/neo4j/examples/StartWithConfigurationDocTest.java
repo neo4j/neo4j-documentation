@@ -24,14 +24,14 @@ import org.junit.Test;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
-import org.neo4j.test.rule.TestDirectory;
+import org.neo4j.doc.test.rule.TestDirectory;
 
 import static org.junit.Assert.assertNotNull;
 
 public class StartWithConfigurationDocTest
 {
     @Rule
-    public TestDirectory testDirectory = TestDirectory.testDirectory();
+    public final TestDirectory testDirectory = TestDirectory.testDirectory();
 
     @Test
     public void loadFromFile()

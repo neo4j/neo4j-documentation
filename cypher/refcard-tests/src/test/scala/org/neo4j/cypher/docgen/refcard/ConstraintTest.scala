@@ -22,7 +22,7 @@ package org.neo4j.cypher.docgen.refcard
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.internal.runtime.InternalExecutionResult
-import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
+import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")

@@ -323,7 +323,7 @@ class WhereTest extends DocumentingTest {
             |This is done just like SQL does it, using `IS NULL`.
             |Also like SQL, the negative is `IS NOT NULL`, although `NOT(IS NULL x)` also works.""".stripMargin)
         query("MATCH (person)\nWHERE person.name = 'Peter' AND person.belt IS NULL\nRETURN person.name, person.age, person.belt", ResultAssertions((r) => {
-          r.toList should equal(List((Map("person.name" -> "Peter", "person.age" -> 35l, "person.belt" -> null))))
+          r.toList should equal(List(Map("person.name" -> "Peter", "person.age" -> 35l, "person.belt" -> null)))
         })) {
           p("The name and age values for nodes that have name *'Peter'* but no belt property are returned.")
           resultTable()

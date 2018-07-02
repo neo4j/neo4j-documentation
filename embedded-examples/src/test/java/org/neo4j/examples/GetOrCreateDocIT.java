@@ -35,8 +35,8 @@ import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.UniqueFactory;
-import org.neo4j.test.TestGraphDatabaseFactory;
-import org.neo4j.test.rule.TestDirectory;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.rule.TestDirectory;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
@@ -45,7 +45,7 @@ import static org.junit.Assert.assertNotNull;
 public class GetOrCreateDocIT extends AbstractJavaDocTestBase
 {
     @ClassRule
-    public static TestDirectory testDirectory = TestDirectory.testDirectory();
+    public static final TestDirectory testDirectory = TestDirectory.testDirectory();
 
     @BeforeClass
     public static void init()

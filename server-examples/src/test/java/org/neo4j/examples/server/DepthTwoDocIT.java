@@ -29,7 +29,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
-import org.neo4j.test.GraphDescription.Graph;
+import org.neo4j.doc.test.GraphDescription.Graph;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;

@@ -183,9 +183,9 @@ include::ql/query-foreach.adoc[leveloffset=+1]
 
 
 //Reading/Writing
-include::ql/merge/index.asciidoc[leveloffset=+1]
+include::ql/query-merge.adoc[leveloffset=+1]
 
-include::ql/call/index.asciidoc[leveloffset=+1]
+include::ql/query-call.adoc[leveloffset=+1]
 
 include::ql/create-unique/index.asciidoc[leveloffset=+1]
 

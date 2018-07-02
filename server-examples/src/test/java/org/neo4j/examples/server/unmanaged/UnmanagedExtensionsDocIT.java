@@ -25,16 +25,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.neo4j.doc.server.HTTP;
 import org.neo4j.harness.junit.Neo4jRule;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
-import org.neo4j.test.server.HTTP;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.neo4j.server.ServerTestUtils.getRelativePath;
-import static org.neo4j.server.ServerTestUtils.getSharedTestTemporaryFolder;
+import static org.neo4j.doc.server.ServerTestUtils.getRelativePath;
+import static org.neo4j.doc.server.ServerTestUtils.getSharedTestTemporaryFolder;
 
 public class UnmanagedExtensionsDocIT
 {

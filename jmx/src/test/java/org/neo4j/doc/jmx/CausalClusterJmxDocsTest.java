@@ -22,27 +22,33 @@
  */
 package org.neo4j.doc.jmx;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.neo4j.causalclustering.discovery.Cluster;
-import org.neo4j.causalclustering.discovery.CoreClusterMember;
 import org.neo4j.doc.AsciiDocListGenerator;
+import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.doc.util.FileUtil;
-import org.neo4j.test.causalclustering.ClusterRule;
+import org.neo4j.kernel.configuration.Config;
+import org.neo4j.logging.NullLogProvider;
+import org.neo4j.server.enterprise.OpenEnterpriseNeoServer;
 
 import javax.management.ObjectInstance;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.neo4j.kernel.configuration.Settings.NO_DEFAULT;
-import static org.neo4j.kernel.configuration.Settings.STRING;
-import static org.neo4j.kernel.configuration.Settings.setting;
+import static org.neo4j.graphdb.facade.GraphDatabaseDependencies.newDependencies;
 
 public class CausalClusterJmxDocsTest {
 
@@ -51,35 +57,82 @@ public class CausalClusterJmxDocsTest {
     private final Path outPath = Paths.get("target", "docs", "ops");
 
     @Rule
-    public final ClusterRule clusterRule = new ClusterRule();
+    public TestDirectory testDirectory = TestDirectory.testDirectory();
 
     private JmxBeanDocumenter jmxBeanDocumenter;
     private FileUtil fileUtil;
-    private Cluster cluster;
+    private List<OpenEnterpriseNeoServer> servers;
+
+    /**
+     * @param ids The IDs for all servers. Used to build a value for `initial_discovery_members`.
+     * @param id  The ID for the server being configured. Used to set unique port numbers and database directory.
+     * @return A {@link Config.Builder config builder} which can be further augmented before built and used.
+     */
+    private Config.Builder config(Integer[] ids, int id) {
+        String initialDiscoveryMembers = String.join(",", Arrays.stream(ids).map(it -> String.format("localhost:500%d", it)).collect(Collectors.toList()));
+        return Config.builder()
+                .withServerDefaults()
+                .withSetting("dbms.mode", "CORE")
+                .withSetting("causal_clustering.initial_discovery_members", initialDiscoveryMembers)
+                .withSetting("causal_clustering.minimum_core_cluster_size_at_formation", "2")
+                .withSetting("causal_clustering.discovery_listen_address", ":500" + Integer.toString(id))
+                .withSetting("causal_clustering.transaction_listen_address", ":600" + Integer.toString(id))
+                .withSetting("causal_clustering.raft_listen_address", ":700" + Integer.toString(id))
+                .withSetting("dbms.backup.enabled", "false")
+                .withSetting("dbms.connector.bolt.listen_address", ":" + Integer.toString(7687 + id))
+                .withSetting("dbms.connector.http.listen_address", ":" + Integer.toString(7474 + id))
+                .withSetting("dbms.connector.https.listen_address", ":" + Integer.toString(7484 + id))
+                .withSetting("dbms.directories.data", testDirectory.directory("server" + Integer.toString(id)).getAbsolutePath());
+    }
+
+    private OpenEnterpriseNeoServer server(Config config) {
+        NullLogProvider logProvider = NullLogProvider.getInstance();
+        return new OpenEnterpriseNeoServer(config, newDependencies().userLogProvider(logProvider), logProvider);
+    }
 
     @Before
-    public void init() {
-        this.jmxBeanDocumenter = new JmxBeanDocumenter();
-        this.fileUtil = new FileUtil(outPath, "jmx-%s.adoc");
+    public void init() throws InterruptedException, ExecutionException {
+        jmxBeanDocumenter = new JmxBeanDocumenter();
+        fileUtil = new FileUtil(outPath, "jmx-%s.adoc");
+
+        // Configure two Core Servers; one with JMX enabled, one without.
+        Integer[] serverIds = new Integer[]{0, 1};
+        servers = new ArrayList<>();
+        servers.add(server(config(serverIds, 0)
+                        .withSetting("jmx.port", "9913")
+                        .build()
+                )
+        );
+        servers.add(server(config(serverIds, 1)
+                        .withSetting("unsupported.dbms.jmx_module.enabled", "false")
+                        .build()
+                )
+        );
+
+        // OpenEnterpriseNeoServer#start() is blocking, so use an ExecutorService.
+        // This is could probably be a little prettier.
+        ExecutorService es = Executors.newCachedThreadPool();
+        List<? extends Future<?>> futures = servers.stream().map(server -> es.submit(() -> {
+            try {
+                server.start();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        })).collect(Collectors.toList());
+        for (Future<?> future : futures) {
+            future.get();
+        }
+        es.shutdown();
+        es.awaitTermination(5, TimeUnit.MINUTES);
+    }
+
+    @After
+    public void exit() {
+        servers.forEach(OpenEnterpriseNeoServer::stop);
     }
 
     @Test
     public void shouldFindCausalClusteringJmxBeans() throws Exception {
-        // given
-        cluster = clusterRule
-                .withNumberOfCoreMembers(2)
-                .withInstanceCoreParam(setting("jmx.port", STRING, NO_DEFAULT), id -> Integer.toString(9913 + id))
-                .startCluster();
-        CoreClusterMember coreClusterMember = cluster.getCoreMemberById(0);
-
-        // when
-        String core0JmxPort = coreClusterMember.settingValue("jmx.port");
-        String core1JmxPort = cluster.getCoreMemberById(1).settingValue("jmx.port");
-
-        // then
-        assertEquals("9913", core0JmxPort);
-        assertNotEquals("9913", core1JmxPort);
-
         // when
         List<ObjectInstance> objectInstances = jmxBeanDocumenter.query(QUERY).stream()
                 .sorted(Comparator.comparing(o -> o.getObjectName().getKeyProperty("name").toLowerCase()))

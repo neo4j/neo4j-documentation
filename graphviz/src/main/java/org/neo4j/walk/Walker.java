@@ -54,7 +54,7 @@ public abstract class Walker
 
     public static Walker crosscut( Iterable<Node> traverser, final RelationshipType... types )
     {
-        final Set<Node> nodes = new HashSet<Node>();
+        final Set<Node> nodes = new HashSet<>();
         for ( Node node : traverser )
         {
             nodes.add( node );

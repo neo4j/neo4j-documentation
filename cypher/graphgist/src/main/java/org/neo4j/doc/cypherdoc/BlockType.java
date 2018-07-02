@@ -286,8 +286,8 @@ enum BlockType
             boolean exec = !(firstLine.contains( "noexec" ) || firstLine.contains( "hideexec" ));
             List<String> statements = getQueriesBlockContent( block );
             List<String> prettifiedStatements = new ArrayList<>();
-            String webQuery = null;
-            String fileQuery = null;
+            String webQuery;
+            String fileQuery;
             for ( String query : statements )
             {
                 webQuery = query;
@@ -498,10 +498,7 @@ enum BlockType
         if ( block.size() >= 3 )
         {
             String first = block.get( 0 );
-            if ( first.startsWith( "[" + type + "]" ) )
-            {
-                return true;
-            }
+            return first.startsWith("[" + type + "]");
         }
         return false;
     }
@@ -526,10 +523,7 @@ enum BlockType
         if ( block.size() > 4 && first.startsWith( "[[" ) )
         {
             String second = block.get( 1 );
-            if ( second.contains( "source" ) && second.contains( language ) )
-            {
-                return true;
-            }
+            return second.contains("source") && second.contains(language);
         }
         return false;
     }

@@ -19,6 +19,7 @@
  */
 package org.neo4j.doc.server;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +28,6 @@ import org.junit.Test;
 
 import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.server.configuration.ServerSettings;
-
-import static java.util.Arrays.asList;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -54,7 +53,7 @@ public class TransactionTimeoutDocIT extends ExclusiveServerTestBase
         server = server().withProperty( ServerSettings.transaction_idle_timeout.name(), "1" ).build();
         server.start();
 
-        String tx = HTTP.POST( txURI(), asList( map( "statement", "CREATE (n)" ) ) ).location();
+        String tx = HTTP.POST( txURI(), Collections.singletonList(map("statement", "CREATE (n)"))).location();
 
         // When
         Thread.sleep( 1000 * 5 );

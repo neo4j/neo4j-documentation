@@ -98,7 +98,7 @@ public class OrderedPath
     public TraversalDescription findPaths()
     {
         // START SNIPPET: walkOrderedPath
-        final ArrayList<RelationshipType> orderedPathContext = new ArrayList<RelationshipType>();
+        final ArrayList<RelationshipType> orderedPathContext = new ArrayList<>();
         orderedPathContext.add( REL1 );
         orderedPathContext.add( withName( "REL2" ) );
         orderedPathContext.add( withName( "REL3" ) );

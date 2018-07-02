@@ -24,7 +24,7 @@ import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.internal.runtime.InternalExecutionResult
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
-import org.neo4j.test.{TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
+import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 import org.neo4j.kernel.impl.proc.Procedures
 
 import scala.util.Try

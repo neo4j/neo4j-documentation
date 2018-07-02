@@ -21,9 +21,9 @@ package org.neo4j.cypher.internal.javacompat;
 
 import java.lang.annotation.Annotation;
 
-import org.neo4j.test.GraphDescription.Graph;
-import org.neo4j.test.GraphDescription.NODE;
-import org.neo4j.test.GraphDescription.REL;
+import org.neo4j.doc.test.GraphDescription.Graph;
+import org.neo4j.doc.test.GraphDescription.NODE;
+import org.neo4j.doc.test.GraphDescription.REL;
 
 
 public class GraphImpl implements Graph

@@ -37,7 +37,7 @@ public class CalculateShortestPath
 {
     private static final File databaseDirectory = new File( "target/neo4j-shortest-path" );
     private static final String NAME_KEY = "name";
-    private static RelationshipType KNOWS = RelationshipType.withName( "KNOWS" );
+    private static final RelationshipType KNOWS = RelationshipType.withName( "KNOWS" );
 
     private static GraphDatabaseService graphDb;
     private static Index<Node> indexService;
@@ -111,14 +111,7 @@ public class CalculateShortestPath
         // Registers a shutdown hook for the Neo4j instance so that it
         // shuts down nicely when the VM exits (even if you "Ctrl-C" the
         // running example before it's completed)
-        Runtime.getRuntime().addShutdownHook( new Thread()
-        {
-            @Override
-            public void run()
-            {
-                graphDb.shutdown();
-            }
-        } );
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> graphDb.shutdown()));
     }
 
     private static void deleteFileOrDirectory( File file )

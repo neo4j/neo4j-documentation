@@ -25,7 +25,7 @@ import javax.management.ObjectName;
 import org.junit.Test;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.jmx.JmxUtils;
-import org.neo4j.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;

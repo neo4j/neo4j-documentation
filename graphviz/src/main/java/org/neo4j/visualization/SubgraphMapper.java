@@ -33,7 +33,7 @@ public interface SubgraphMapper
 {
     String getSubgraphFor( Node node );
 
-    public abstract class SubgraphMappingWalker extends Walker
+    abstract class SubgraphMappingWalker extends Walker
     {
         private final SubgraphMapper mapper;
 
@@ -49,20 +49,20 @@ public interface SubgraphMapper
         private synchronized void initialize()
         {
             if ( subgraphs != null ) return;
-            Map<Node, String> mappings = new HashMap<Node, String>();
-            subgraphs = new HashMap<String, Collection<Node>>();
-            generic = new ArrayList<Node>();
+            Map<Node, String> mappings = new HashMap<>();
+            subgraphs = new HashMap<>();
+            generic = new ArrayList<>();
             for ( Node node : nodes() )
             {
                 if ( mappings.containsKey( node ) ) continue;
                 String subgraph = subgraphFor( node );
                 if ( !subgraphs.containsKey( subgraph ) && subgraph != null )
                 {
-                    subgraphs.put( subgraph, new ArrayList<Node>() );
+                    subgraphs.put( subgraph, new ArrayList<>() );
                 }
                 mappings.put( node, subgraph );
             }
-            relationships = new ArrayList<Relationship>();
+            relationships = new ArrayList<>();
             for ( Relationship rel : relationships() )
             {
                 if ( mappings.containsKey( rel.getStartNode() )

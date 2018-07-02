@@ -22,7 +22,7 @@ package org.neo4j.cypher.docgen.tooling.tests
 import org.mockito.Mockito._
 import org.neo4j.cypher.CypherException
 import org.neo4j.cypher.docgen.tooling.{RestartableDatabase, RunnableInitialization}
-import org.neo4j.test.TestEnterpriseGraphDatabaseFactory
+import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
 
 class RestartableDatabaseTest extends CypherFunSuite {

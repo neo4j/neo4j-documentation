@@ -25,6 +25,18 @@ package examples;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.neo4j.doc.test.rule.fs.DefaultFileSystemRule;
+import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.helpers.collection.MapUtil;
+import org.neo4j.io.fs.FileSystemAbstraction;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
+import org.neo4j.unsafe.batchinsert.BatchInserters;
 
 import java.io.File;
 import java.io.FileReader;
@@ -35,26 +47,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.helpers.collection.MapUtil;
-import org.neo4j.io.fs.FileSystemAbstraction;
-import org.neo4j.test.rule.fs.DefaultFileSystemRule;
-import org.neo4j.unsafe.batchinsert.BatchInserter;
-import org.neo4j.unsafe.batchinsert.BatchInserters;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class BatchInsertDocTest
 {
     @Rule
-    public DefaultFileSystemRule fileSystemRule = new DefaultFileSystemRule();
+    public final DefaultFileSystemRule fileSystemRule = new DefaultFileSystemRule();
     private FileSystemAbstraction fileSystem;
 
     @Before

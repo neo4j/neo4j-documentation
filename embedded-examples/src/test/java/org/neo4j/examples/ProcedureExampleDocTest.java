@@ -30,8 +30,8 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
-import org.neo4j.kernel.impl.proc.JarBuilder;
-import org.neo4j.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.kernel.impl.proc.JarBuilder;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -40,7 +40,7 @@ import static org.neo4j.helpers.collection.MapUtil.map;
 public class ProcedureExampleDocTest
 {
     @Rule
-    public TemporaryFolder plugins = new TemporaryFolder();
+    public final TemporaryFolder plugins = new TemporaryFolder();
 
     @Rule
     public ExpectedException exception = ExpectedException.none();

@@ -21,6 +21,7 @@ package org.neo4j.doc;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.time.Duration;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class ConfigDocsGenerator {
         out = new PrintStream( baos );
         settingDescriptions = config.getConfigValues().values().stream()
                 .filter(filter)
-                .sorted((cv1, cv2) -> cv1.name().compareTo(cv2.name()))
+                .sorted(Comparator.comparing(ConfigValue::name))
                 .map(c -> new DocsConfigValue(
                         idFromName(idPrefix, c.name()),
                         c.name(),

@@ -36,8 +36,8 @@ import org.neo4j.harness.TestServerBuilder;
 import org.neo4j.harness.TestServerBuilders;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.server.ServerTestUtils;
-import org.neo4j.test.rule.SuppressOutput;
-import org.neo4j.test.server.HTTP;
+import org.neo4j.doc.test.rule.SuppressOutput;
+import org.neo4j.doc.server.HTTP;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.helpers.collection.Iterators.count;
