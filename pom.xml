@@ -290,6 +290,12 @@
                     <version>2.7</version>
                 </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+
             </plugins>
         </pluginManagement>
 
@@ -308,6 +314,13 @@
                         <phase>${attach-java-test-sources-phase}</phase>
                         <goals>
                             <goal>test-jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
                         </goals>
                     </execution>
                 </executions>

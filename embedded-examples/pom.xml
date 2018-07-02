@@ -10,6 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
 
+    <groupId>org.neo4j.examples</groupId>
     <artifactId>neo4j-examples</artifactId>
     <name>Neo4j - Examples</name>
     <description>Neo4j Embedded Examples</description>
