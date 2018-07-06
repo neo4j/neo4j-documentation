@@ -21,15 +21,14 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.junit.Before
 import org.neo4j.collection.RawIterator
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 import org.neo4j.internal.kernel.api.exceptions.ProcedureException
 import org.neo4j.internal.kernel.api.procs.Neo4jTypes
 import org.neo4j.internal.kernel.api.procs.ProcedureSignature._
-import org.neo4j.kernel.api.{InwardKernel, ResourceTracker}
 import org.neo4j.kernel.api.proc.CallableProcedure.BasicProcedure
 import org.neo4j.kernel.api.proc.Context
+import org.neo4j.kernel.api.{InwardKernel, ResourceTracker}
 
 class CallTest extends RefcardTest with QueryStatisticsTestSupport {
 
@@ -53,7 +52,7 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
     kernel.registerProcedure(proc)
   }
 
-  override def assert(name: String, result: InternalExecutionResult) {
+  override def assert(name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "labels" =>
         assert(result.toList.size === 1)

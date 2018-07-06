@@ -19,9 +19,8 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 
 class CaseTest extends RefcardTest with QueryStatisticsTestSupport {
   def graphDescription = List(
@@ -29,14 +28,14 @@ class CaseTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "CASE"
   override val linkId = "syntax/expressions"
 
-  override def assert(name: String, result: InternalExecutionResult) {
+  override def assert(name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "simple" =>
         assertStats(result, nodesCreated = 0)
-        assert(!result.dumpToString().contains("3"))
+        assert(result.head("result") != 3)
       case "generic" =>
         assertStats(result, nodesCreated = 0)
-        assert(!result.dumpToString().contains("3"))
+        assert(result.head("result") != 3)
     }
   }
 

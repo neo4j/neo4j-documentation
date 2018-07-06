@@ -26,10 +26,11 @@ import java.nio.charset.StandardCharsets
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
 import org.neo4j.cypher._
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
-import org.neo4j.cypher.internal.runtime.{InternalExecutionResult, RuntimeJavaValueConverter, isGraphKernelResultValue}
-import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult}
+import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.index.Index
@@ -80,7 +81,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   def title: String
   def linkId: String = null
   def section: String = "refcard"
-  def assert(name: String, result: InternalExecutionResult)
+  def assert(name: String, result: DocsExecutionResult): Unit
   def parameters(name: String): Map[String, Any] = Map()
   def graphDescription: List[String]
   def indexProps: List[String] = List()
@@ -89,7 +90,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   var filePaths: Map[String, String] = Map.empty
   var urls: Map[String, String] = Map.empty
 
-  def executeQuery(queryText: String, params: Map[String, Any])(implicit engine: ExecutionEngine): Result = try {
+  def executeQuery(queryText: String, params: Map[String, Any])(implicit engine: ExecutionEngine): DocsExecutionResult = try {
     val query = replaceNodeIds(queryText)
 
     assert(filePaths.size == urls.size)
@@ -101,9 +102,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
     val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
     val parameterValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String,AnyRef]])
-    val result = db.withTx(
-      tx => engine.execute(testQuery, parameterValue,
-        contextFactory.newContext(
+    val docsResult = db.withTx(
+      tx => {
+        val txContext = contextFactory.newContext(
           new BoltConnectionInfo(
             "username",
             "neo4j-java-bolt-driver",
@@ -114,8 +115,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
           testQuery,
           parameterValue
         )
-      ), Transaction.Type.`implicit` )
-    result
+        DocsExecutionResult(engine.execute(testQuery, parameterValue, txContext), txContext)
+      }, Transaction.Type.`implicit` )
+    docsResult
   } catch {
     case e: CypherException => throw new InternalException(queryText, e)
   }
@@ -147,13 +149,13 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     queryPart
   }
 
-  def runQuery(query: String, possibleAssertion: Seq[String], parametersChoice: String): InternalExecutionResult = {
+  def runQuery(query: String, possibleAssertion: Seq[String], parametersChoice: String): DocsExecutionResult = {
     val result =
       db.inTx {
         if (parametersChoice == null) {
-          RewindableExecutionResult(executeQuery(query, Map.empty))
+          executeQuery(query, Map.empty)
         } else {
-          RewindableExecutionResult(executeQuery(query, parameters(parametersChoice)))
+          executeQuery(query, parameters(parametersChoice))
         }
       }
 

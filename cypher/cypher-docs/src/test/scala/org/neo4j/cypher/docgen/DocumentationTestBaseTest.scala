@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen
 
 import org.junit.Assert._
 import org.junit.Test
-import org.neo4j.cypher.QueryStatisticsTestSupport
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Node
 import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
 import scala.io

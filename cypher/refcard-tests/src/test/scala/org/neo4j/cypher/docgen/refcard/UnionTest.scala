@@ -19,9 +19,8 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 
 class UnionTest extends RefcardTest with QueryStatisticsTestSupport {
   def graphDescription = List(
@@ -29,7 +28,7 @@ class UnionTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "UNION"
   override val linkId = "clauses/union"
 
-  override def assert(name: String, result: InternalExecutionResult) {
+  override def assert(name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "one" =>
         assertStats(result)
