@@ -83,8 +83,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <artifactId>neo4j-cypher-docs</artifactId>
             <groupId>org.neo4j.doc</groupId>
+            <artifactId>neo4j-cypher-docs</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>
@@ -96,24 +96,24 @@
 
         <!-- neo4j-cypher -->
         <dependency>
-            <artifactId>neo4j-cypher</artifactId>
             <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-cypher</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.neo4j</groupId>
             <artifactId>neo4j-enterprise-cypher</artifactId>
-            <groupId>org.neo4j</groupId>
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>
-            <artifactId>neo4j-cypher</artifactId>
             <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-cypher</artifactId>
             <version>${neo4j.version}</version>
             <type>test-jar</type>
         </dependency>
         <dependency>
-            <artifactId>neo4j-cypher-docs</artifactId>
             <groupId>org.neo4j.doc</groupId>
+            <artifactId>neo4j-cypher-docs</artifactId>
             <version>${neo4j.version}</version>
             <type>test-jar</type>
         </dependency>
@@ -142,7 +142,7 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-enterprise-kernel</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
 
