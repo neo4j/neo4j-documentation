@@ -19,35 +19,32 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.junit.Test
-import org.neo4j.cypher.QueryStatisticsTestSupport
-import org.neo4j.function.example.LongestString
-import org.neo4j.graphdb.Label
-import org.neo4j.kernel.impl.proc.Procedures
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class UserDefinedAggregationFunctionTest extends DocumentingTestBase with QueryStatisticsTestSupport with HardReset {
+class UserDefinedAggregationFunctionTestNew extends DocumentingTest {
 
-  override def section = "functions"
+  override def outputPath = "target/docs/dev/ql/functions"
 
-  override def hardReset() = {
-    super.hardReset()
-    db.getDependencyResolver.resolveDependency(classOf[Procedures]).registerAggregationFunction(classOf[LongestString])
-    db.inTx {
-      for (name <- List("John", "Paul", "George", "Ringo")) {
-        val node = db.createNode(Label.label("Member"))
-        node.setProperty("name", name)
+  override def doc = new DocBuilder {
+    doc("User-defined aggregation functions", "query-functions-user-defined-aggregation")
+    registerUserDefinedAggregationFunctions(classOf[org.neo4j.function.example.LongestString])
+    initQueries(
+      """UNWIND ['John', 'Paul', 'George', 'Ringe'] AS beatle
+        |CREATE (:Member {name: beatle})""".stripMargin)
+    synopsis("User-defined aggregation functions are written in Java, deployed into the database and are called in the same way as any other Cypher function.")
+    p("This example shows how you invoke a user-defined aggregation function called `longestString` from Cypher.")
+
+    section("Call a user-defined aggregation function", "functions-call-a-user-defined-aggregation-function") {
+      p("This calls the user-defined function `org.neo4j.function.example.longestString()`.")
+      query(
+        """MATCH (n:Member)
+          |RETURN org.neo4j.function.example.longestString(n.name) AS member""".stripMargin,
+        ResultAssertions((r) => {
+          assert(r.toList === List(Map("member" -> "George")))
+        })) {
+        resultTable()
       }
     }
-  }
+  }.build()
 
-  @Test def call_a_user_defined_aggregation_function() {
-    testQuery(
-      title = "Call a user-defined aggregation function",
-      text = "This calls the user-defined function `org.neo4j.procedure.example.longestString()`.",
-      queryText = "MATCH (n:Member) RETURN org.neo4j.function.example.longestString(n.name) AS member",
-      optionalResultExplanation = "",
-      assertions = (p) => {
-        assert(p.toList === List(Map("member" -> "George")))
-      })
-  }
 }

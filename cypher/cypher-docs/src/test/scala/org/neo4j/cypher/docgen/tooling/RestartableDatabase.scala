@@ -87,9 +87,9 @@ class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseG
   private def initialize(init: RunnableInitialization, graph: GraphDatabaseCypherService): Seq[QueryRunResult] = {
     // Register procedures and functions
     val procedureRegistry = graph.getDependencyResolver.resolveDependency(classOf[Procedures])
-    init.procedures.map(procedureRegistry.registerProcedure)
-    init.userDefinedFunctions.map(procedureRegistry.registerFunction)
-    // NOTE: userDefinedAggregationFunctions not supported in 3.1
+    init.procedures.foreach(procedureRegistry.registerProcedure)
+    init.userDefinedFunctions.foreach(procedureRegistry.registerFunction)
+    init.userDefinedAggregationFunctions.foreach(procedureRegistry.registerAggregationFunction)
 
     // Execute custom initialization code
     init.initCode.foreach(_.apply(graph))
