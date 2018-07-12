@@ -42,7 +42,11 @@ class TemporalFunctionsTest extends DocumentingTest {
     }
     p(
       """
-        |* <<functions-temporal-instant-type, Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)>>
+        |<<functions-temporal-instant-type, Temporal instant types: _Date_, _Time_, _LocalTime_, _DateTime_, and _LocalDateTime_>>:
+        |
+        |* <<functions-temporal-create-overview, An overview of temporal instant type creation>>
+        |* <<functions-temporal-clock-overview, Controlling which clock to use>>
+        |* <<functions-temporal-truncate-overview, Truncating temporal values>>
       """.stripMargin)
       p(
         """
@@ -104,7 +108,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         |* <<functions-time-temporal, Creating a _Time_ using other temporal values as components>>
         |* <<functions-time-truncate, Truncating a _Time_>>
       """.stripMargin)
-    section("Temporal instant types (_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_)", "functions-temporal-instant-type") {
+    section("Temporal instant types: _Date_, _Time_, _LocalTime_, _DateTime_, and _LocalDateTime_", "functions-temporal-instant-type") {
       section("An overview of temporal instant type creation", "functions-temporal-create-overview") {
         p(
           """Each function bears the same name as the type, and construct the type they correspond to in one of four ways:
