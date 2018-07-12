@@ -42,7 +42,7 @@ class TemporalFunctionsTest extends DocumentingTest {
     }
     p(
       """
-        |<<functions-temporal-instant-type, Temporal instant types>>:
+        |<<functions-temporal-instant-type, Temporal instant types>>
         |
         |* <<functions-temporal-create-overview, An overview of temporal instant type creation>>
         |* <<functions-temporal-clock-overview, Controlling which clock to use>>
@@ -50,63 +50,48 @@ class TemporalFunctionsTest extends DocumentingTest {
       """.stripMargin)
       p(
         """
-        |<<functions-date, date()>>:
+        |Functions:
         |
-        |* <<functions-date-current, Getting the current _Date_>>
-        |* <<functions-date-calendar, Creating a calendar (Year-Month-Day) _Date_>>
-        |* <<functions-date-week, Creating a week (Year-Week-Day) _Date_>>
-        |* <<functions-date-quarter, Creating a quarter (Year-Quarter-Day) _Date_>>
-        |* <<functions-date-ordinal, Creating an ordinal (Year-Day) _Date_>>
-        |* <<functions-date-create-string, Creating a _Date_ from a string>>
-        |* <<functions-date-temporal, Creating a _Date_ using other temporal values as components>>
-        |* <<functions-date-truncate, Truncating a _Date_>>
-      """.stripMargin)
-      p(
-        """
-        |<<functions-datetime, datetime()>>:
-        |
-        |* <<functions-datetime-current, Getting the current _DateTime_>>
-        |* <<functions-datetime-calendar, Creating a calendar (Year-Month-Day) _DateTime_>>
-        |* <<functions-datetime-week, Creating a week (Year-Week-Day) _DateTime_>>
-        |* <<functions-datetime-quarter, Creating a quarter (Year-Quarter-Day) _DateTime_>>
-        |* <<functions-datetime-ordinal, Creating an ordinal (Year-Day) _DateTime_>>
-        |* <<functions-datetime-create-string, Creating a _DateTime_ from a string>>
-        |* <<functions-datetime-temporal, Creating a _DateTime_ using other temporal values as components>>
-        |* <<functions-datetime-timestamp, Creating a _DateTime_ from a timestamp>>
-        |* <<functions-datetime-truncate, Truncating a _DateTime_>>
-      """.stripMargin)
-      p(
-        """
-        |<<functions-localdatetime, localdatetime()>>:
-        |
-        |* <<functions-localdatetime-current, Getting the current _LocalDateTime_>>
-        |* <<functions-localdatetime-calendar, Creating a calendar (Year-Month-Day) _LocalDateTime_>>
-        |* <<functions-localdatetime-week, Creating a week (Year-Week-Day) _LocalDateTime_>>
-        |* <<functions-localdatetime-quarter, Creating a quarter (Year-Quarter-Day) _DateTime_>>
-        |* <<functions-localdatetime-ordinal, Creating an ordinal (Year-Day) _LocalDateTime_>>
-        |* <<functions-localdatetime-create-string, Creating a _LocalDateTime_ from a string>>
-        |* <<functions-localdatetime-temporal, Creating a _LocalDateTime_ using other temporal values as components>>
-        |* <<functions-localdatetime-truncate, Truncating a _LocalDateTime_>>
-      """.stripMargin)
-      p(
-        """
-        |<<functions-localtime, localtime()>>:
-        |
-        |* <<functions-localtime-current, Getting the current _LocalTime_>>
-        |* <<functions-localtime-create, Creating a _LocalTime_>>
-        |* <<functions-localtime-create-string, Creating a _LocalTime_ from a string>>
-        |* <<functions-localtime-temporal, Creating a _LocalTime_ using other temporal values as components>>
-        |* <<functions-localtime-truncate, Truncating a _LocalTime_>>
-      """.stripMargin)
-      p(
-        """
-        |<<functions-time, time()>>:
-        |
-        |* <<functions-time-current, Getting the current _Time_>>
-        |* <<functions-time-create, Creating a _Time_>>
-        |* <<functions-time-create-string, Creating a _Time_ from a string>>
-        |* <<functions-time-temporal, Creating a _Time_ using other temporal values as components>>
-        |* <<functions-time-truncate, Truncating a _Time_>>
+        |* <<functions-date, date()>>
+        |** <<functions-date-current, Getting the current _Date_>>
+        |** <<functions-date-calendar, Creating a calendar (Year-Month-Day) _Date_>>
+        |** <<functions-date-week, Creating a week (Year-Week-Day) _Date_>>
+        |** <<functions-date-quarter, Creating a quarter (Year-Quarter-Day) _Date_>>
+        |** <<functions-date-ordinal, Creating an ordinal (Year-Day) _Date_>>
+        |** <<functions-date-create-string, Creating a _Date_ from a string>>
+        |** <<functions-date-temporal, Creating a _Date_ using other temporal values as components>>
+        |** <<functions-date-truncate, Truncating a _Date_>>
+        |* <<functions-datetime, datetime()>>
+        |** <<functions-datetime-current, Getting the current _DateTime_>>
+        |** <<functions-datetime-calendar, Creating a calendar (Year-Month-Day) _DateTime_>>
+        |** <<functions-datetime-week, Creating a week (Year-Week-Day) _DateTime_>>
+        |** <<functions-datetime-quarter, Creating a quarter (Year-Quarter-Day) _DateTime_>>
+        |** <<functions-datetime-ordinal, Creating an ordinal (Year-Day) _DateTime_>>
+        |** <<functions-datetime-create-string, Creating a _DateTime_ from a string>>
+        |** <<functions-datetime-temporal, Creating a _DateTime_ using other temporal values as components>>
+        |** <<functions-datetime-timestamp, Creating a _DateTime_ from a timestamp>>
+        |** <<functions-datetime-truncate, Truncating a _DateTime_>>
+        |* <<functions-localdatetime, localdatetime()>>
+        |** <<functions-localdatetime-current, Getting the current _LocalDateTime_>>
+        |** <<functions-localdatetime-calendar, Creating a calendar (Year-Month-Day) _LocalDateTime_>>
+        |** <<functions-localdatetime-week, Creating a week (Year-Week-Day) _LocalDateTime_>>
+        |** <<functions-localdatetime-quarter, Creating a quarter (Year-Quarter-Day) _DateTime_>>
+        |** <<functions-localdatetime-ordinal, Creating an ordinal (Year-Day) _LocalDateTime_>>
+        |** <<functions-localdatetime-create-string, Creating a _LocalDateTime_ from a string>>
+        |** <<functions-localdatetime-temporal, Creating a _LocalDateTime_ using other temporal values as components>>
+        |** <<functions-localdatetime-truncate, Truncating a _LocalDateTime_>>
+        |* <<functions-localtime, localtime()>>
+        |** <<functions-localtime-current, Getting the current _LocalTime_>>
+        |** <<functions-localtime-create, Creating a _LocalTime_>>
+        |** <<functions-localtime-create-string, Creating a _LocalTime_ from a string>>
+        |** <<functions-localtime-temporal, Creating a _LocalTime_ using other temporal values as components>>
+        |** <<functions-localtime-truncate, Truncating a _LocalTime_>>
+        |* <<functions-time, time()>>
+        |** <<functions-time-current, Getting the current _Time_>>
+        |** <<functions-time-create, Creating a _Time_>>
+        |** <<functions-time-create-string, Creating a _Time_ from a string>>
+        |** <<functions-time-temporal, Creating a _Time_ using other temporal values as components>>
+        |** <<functions-time-truncate, Truncating a _Time_>>
       """.stripMargin)
     section("Temporal instant types", "functions-temporal-instant-type") {
       section("An overview of temporal instant type creation", "functions-temporal-create-overview") {
