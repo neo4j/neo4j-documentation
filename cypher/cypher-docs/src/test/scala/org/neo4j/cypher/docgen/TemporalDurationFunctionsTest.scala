@@ -41,8 +41,6 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
       p("""See also <<cypher-temporal>> and <<query-operators-temporal>>.""")
     }
       p(
-        """Information regarding specifying and accessing components of a _Duration_ value can be found <<cypher-temporal-durations, here>>.""".stripMargin)
-      p(
         """
         |duration():
         |
@@ -50,6 +48,8 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
         |* <<functions-duration-create-string, Creating a _Duration_ from a string>>
         |* <<functions-duration-computing, Computing the _Duration_ between two temporal instants>>
       """.stripMargin)
+      p(
+        """Information regarding specifying and accessing components of a _Duration_ value can be found <<cypher-temporal-durations, here>>.""".stripMargin)
     section("Creating a _Duration_ from duration components", "functions-duration-create-components") {
       p(
         """`duration()` can construct a _Duration_ from a map of its components in the same way as the temporal instant types.
