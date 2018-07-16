@@ -72,7 +72,7 @@ class UsingTest extends DocumentingTest {
       p("""Index hints are used to specify which index, if any, the planner should use as a starting point.
           |This can be beneficial in cases where the index statistics are not accurate for the specific values that
           |the query at hand is known to use, which would result in the planner picking a non-optimal index.
-          |To supply an index hint, use `USING INDEX variable:Label(property)` after the applicable `MATCH` clause.""")
+          |To supply an index hint, use `USING INDEX variable:Label(property)` or `USING INDEX SEEK variable:Label(property)` after the applicable `MATCH` clause.""")
       p("""It is possible to supply several index hints, but keep in mind that several starting points
           |will require the use of a potentially expensive join later in the query plan.""")
       section("Query using an index hint") {
@@ -82,6 +82,16 @@ class UsingTest extends DocumentingTest {
             |slightly better for this query.""")
         query(s"$matchString USING INDEX liskov:Scientist(name) RETURN liskov.born AS $columnName",
               assertIntegersReturned(1939)) {
+          p("Returns the year *'Barbara Liskov'* was born.")
+          profileExecutionPlan()
+        }
+      }
+      section("Query using an index seek hint") {
+        p(
+          """Similar to the index (scan) hint, but an index seek will be used rather than an index scan.
+            |Index seeks require no post filtering, they are most efficient when a relatively small number of nodes have the specified value on the queried property.""")
+        query(s"$matchString USING INDEX SEEK liskov:Scientist(name) RETURN liskov.born AS $columnName",
+          assertIntegersReturned(1939)) {
           p("Returns the year *'Barbara Liskov'* was born.")
           profileExecutionPlan()
         }
