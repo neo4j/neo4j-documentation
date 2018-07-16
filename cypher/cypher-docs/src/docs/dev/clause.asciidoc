@@ -74,6 +74,7 @@ More details regarding the usage of these -- and query tuning in general -- can 
 |===
 |Hint                                       | Description
 |<<query-using-index-hint,USING INDEX>>       | Index hints are used to specify which index, if any, the planner should use as a starting point.
+|<<query-using-index-hint, USING INDEX SEEK>>  | Index seek hint instructs the planner to use an index seek for this clause.
 |<<query-using-scan-hint,USING SCAN>>         | Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
 |<<query-using-join-hint,USING JOIN>>         | Join hints are used to enforce a join operation at specified points.
 |===
