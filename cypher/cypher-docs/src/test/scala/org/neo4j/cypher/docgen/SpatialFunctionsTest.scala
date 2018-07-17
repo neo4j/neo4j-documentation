@@ -131,7 +131,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
     }
     section("point() - WGS 84 2D", "functions-point-wgs84-2d") {
-      p("`point(longitude|x, latitude|y, crs|srid)` returns a 2D point in the _WGS 84_ CRS corresponding to the given coordinate values.")
+      p("`point({longitude | x, latitude | y [, crs][, srid]})` returns a 2D point in the _WGS 84_ CRS corresponding to the given coordinate values.")
       function("point({longitude | x, latitude | y [, crs][, srid]})", "A 2D point in _WGS 84_.", ("A single map consisting of the following:", ""), ("longitude/x", "A numeric expression that represents the longitude/x value in decimal degrees"), ("latitude/y", "A numeric expression that represents the latitude/y value in decimal degrees"), ("crs", "The optional string 'WGS-84'"), ("srid", "The optional number 4326"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "If the coordinates are specified using `latitude` and `longitude`, the `crs` or `srid` fields are optional and inferred to be `'WGS-84'` (srid=4326).", "If the coordinates are specified using `x` and `y`, then either the `crs` or `srid` field is required if a geographic CRS is desired.")
       query("RETURN point({longitude: 56.7, latitude: 12.78}) AS point", ResultAssertions((r) => {
@@ -162,7 +162,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
     }
     section("point() - WGS 84 3D", "functions-point-wgs84-3d") {
-      p("`point(longitude|x, latitude|y, height|z, crs|srid)` returns a 3D point in the _WGS 84_ CRS corresponding to the given coordinate values.")
+      p("`point({longitude | x, latitude | y, height | z, [, crs][, srid]})` returns a 3D point in the _WGS 84_ CRS corresponding to the given coordinate values.")
       function("point({longitude | x, latitude | y, height | z, [, crs][, srid]})", "A 3D point in _WGS 84_.", ("A single map consisting of the following:", ""), ("longitude/x", "A numeric expression that represents the longitude/x value in decimal degrees"), ("latitude/y", "A numeric expression that represents the latitude/y value in decimal degrees"), ("height/z", "A numeric expression that represents the height/z value in meters"), ("crs", "The optional string 'WGS-84-3D'"), ("srid", "The optional number 4979"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "If the `height/z` key and value is not provided, a 2D point in the _WGS 84_ CRS will be returned.", "If the coordinates are specified using `latitude` and `longitude`, the `crs` or `srid` fields are optional and inferred to be `'WGS-84-3D'` (srid=4979).", "If the coordinates are specified using `x` and `y`, then either the `crs` or `srid` field is required if a geographic CRS is desired.")
       query("RETURN point({longitude: 56.7, latitude: 12.78, height: 8}) AS point", ResultAssertions((r) => {
@@ -173,7 +173,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
     }
     section("point() - Cartesian 2D", "functions-point-cartesian-2d") {
-      p("`point(x, y)` returns a 2D point in the _Cartesian_ CRS corresponding to the given coordinate values.")
+      p("`point({x, y [, crs][, srid]})` returns a 2D point in the _Cartesian_ CRS corresponding to the given coordinate values.")
       function("point({x, y [, crs][, srid]})", "A 2D point in _Cartesian_.", ("A single map consisting of the following:", ""), ("x", "A numeric expression"), ("y", "A numeric expression"), ("crs", "The optional string 'cartesian'"), ("srid", "The optional number 7203"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "The `crs` or `srid` fields are optional and default to the _Cartesian_ CRS (which means `srid:7203`).")
       query("RETURN point({x: 2.3, y: 4.5}) AS point", ResultAssertions((r) => {
@@ -184,7 +184,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
     }
     section("point() - Cartesian 3D", "functions-point-cartesian-3d") {
-      p("`point(x, y, z)` returns a 3D point in the _Cartesian_ CRS corresponding to the given coordinate values.")
+      p("`point({x, y, z, [, crs][, srid]})` returns a 3D point in the _Cartesian_ CRS corresponding to the given coordinate values.")
       function("point({x, y, z, [, crs][, srid]})", "A 3D point in _Cartesian_.", ("A single map consisting of the following:", ""), ("x", "A numeric expression"), ("y", "A numeric expression"), ("z", "A numeric expression"), ("crs", "The optional string 'cartesian-3D'"), ("srid", "The optional number 9157"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "If the `z` key and value is not provided, a 2D point in the _Cartesian_ CRS will be returned.", "The `crs` or `srid` fields are optional and default to the _3D Cartesian_ CRS (which means `srid:9157`).")
       query("RETURN point({x: 2.3, y: 4.5, z: 2}) AS point", ResultAssertions((r) => {
