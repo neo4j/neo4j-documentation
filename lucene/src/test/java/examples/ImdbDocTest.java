@@ -44,23 +44,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.index.Neo4jTestCase;
+import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.graphdb.index.RelationshipIndex;
 import org.neo4j.helpers.collection.MapUtil;
-import org.neo4j.doc.test.index.Neo4jTestCase;
 import org.neo4j.index.lucene.QueryContext;
 import org.neo4j.index.lucene.ValueContext;
 import org.neo4j.index.lucene.unsafe.batchinsert.LuceneBatchInserterIndexProvider;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
-import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserterIndex;
 import org.neo4j.unsafe.batchinsert.BatchInserterIndexProvider;
@@ -616,7 +617,8 @@ public class ImdbDocTest {
     @Test
     public void batchInsert() throws Exception
     {
-        File file = new File( "target/neo4jdb-batchinsert" );
+        String database = "neo4jdb-batchinsert";
+        File file = new File( "target/" + database );
         Neo4jTestCase.deleteFileOrDirectory( file );
         // START SNIPPET: batchInsert
         BatchInserter inserter = BatchInserters.inserter( file );
@@ -638,7 +640,8 @@ public class ImdbDocTest {
         inserter.shutdown();
         // END SNIPPET: batchInsert
 
-        GraphDatabaseService db = new TestGraphDatabaseFactory().newEmbeddedDatabase( file );
+        GraphDatabaseService db = new TestGraphDatabaseFactory().newEmbeddedDatabaseBuilder( file.getParentFile() )
+                .setConfig( GraphDatabaseSettings.active_database, database ).newGraphDatabase();
         try ( Transaction tx = db.beginTx() )
         {
             Index<Node> index = db.index().forNodes( "actors" );

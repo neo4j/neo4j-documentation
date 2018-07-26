@@ -26,17 +26,16 @@ import java.io.File;
 import java.util.Map;
 
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
+import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactoryState;
-import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
+import org.neo4j.graphdb.factory.module.PlatformModule;
 import org.neo4j.kernel.configuration.Config;
 import org.neo4j.kernel.impl.enterprise.EnterpriseEditionModule;
 import org.neo4j.kernel.impl.factory.DatabaseInfo;
 import org.neo4j.kernel.impl.factory.Edition;
-import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
-import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
-import org.neo4j.graphdb.factory.module.PlatformModule;
 import org.neo4j.kernel.impl.logging.LogService;
 import org.neo4j.kernel.impl.logging.SimpleLogService;
 import org.neo4j.logging.LogProvider;
@@ -59,10 +58,9 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
             {
                 @Override
                 protected PlatformModule createPlatform( File storeDir, Config config,
-                                                         Dependencies dependencies,
-                                                         GraphDatabaseFacade graphDatabaseFacade )
+                                                         Dependencies dependencies )
                 {
-                    return new PlatformModule( storeDir, config, databaseInfo, dependencies, graphDatabaseFacade )
+                    return new PlatformModule( storeDir, config, databaseInfo, dependencies )
                     {
                         @Override
                         protected LogService createLogService( LogProvider userLogProvider )

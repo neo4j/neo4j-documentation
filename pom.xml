@@ -29,6 +29,7 @@
         </test.runner.jvm.settings.additional>
         <license-text.header>build/AGPL-3-header.txt</license-text.header>
         <jersey.version>1.19.3</jersey.version>
+        <java9.exports/>
     </properties>
 
     <modules>

@@ -25,18 +25,6 @@ package examples;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.neo4j.doc.test.rule.fs.DefaultFileSystemRule;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.helpers.collection.MapUtil;
-import org.neo4j.io.fs.FileSystemAbstraction;
-import org.neo4j.unsafe.batchinsert.BatchInserter;
-import org.neo4j.unsafe.batchinsert.BatchInserters;
 
 import java.io.File;
 import java.io.FileReader;
@@ -46,6 +34,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import org.neo4j.doc.test.rule.fs.DefaultFileSystemRule;
+import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.GraphDatabaseSettings;
+import org.neo4j.helpers.collection.MapUtil;
+import org.neo4j.io.fs.FileSystemAbstraction;
+import org.neo4j.unsafe.batchinsert.BatchInserter;
+import org.neo4j.unsafe.batchinsert.BatchInserters;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -68,7 +70,8 @@ public class BatchInsertDocTest
     public void insert() throws Exception
     {
         // Make sure our scratch directory is clean
-        File tempStoreDir = clean( "target/batchinserter-example" ).getAbsoluteFile();
+        String database = "batchinserter-example";
+        File tempStoreDir = clean( "target/" + database ).getAbsoluteFile();
 
         // START SNIPPET: insert
         BatchInserter inserter = null;
@@ -102,7 +105,8 @@ public class BatchInsertDocTest
         // try it out from a normal db
         GraphDatabaseService db =
                 new GraphDatabaseFactory()
-                        .newEmbeddedDatabaseBuilder( new File("target/batchinserter-example") )
+                        .newEmbeddedDatabaseBuilder( new File("target") )
+                        .setConfig( GraphDatabaseSettings.active_database, database )
                         .newGraphDatabase();
         try ( Transaction tx = db.beginTx() )
         {

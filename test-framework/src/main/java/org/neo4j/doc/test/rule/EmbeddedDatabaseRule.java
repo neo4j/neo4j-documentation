@@ -21,8 +21,6 @@ package org.neo4j.doc.test.rule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import java.io.File;
-
 import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
@@ -47,12 +45,6 @@ public class EmbeddedDatabaseRule extends DatabaseRule
     public EmbeddedDatabaseRule startLazily()
     {
         return (EmbeddedDatabaseRule) super.startLazily();
-    }
-
-    @Override
-    public File getStoreDir()
-    {
-        return testDirectory.graphDbDir();
     }
 
     @Override
