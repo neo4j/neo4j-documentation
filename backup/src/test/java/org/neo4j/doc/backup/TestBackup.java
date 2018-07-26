@@ -32,7 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.neo4j.backup.OnlineBackup;
-import org.neo4j.kernel.impl.enterprise.configuration.OnlineBackupSettings;
+import org.neo4j.doc.test.DbRepresentation;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -46,12 +48,10 @@ import org.neo4j.graphdb.index.Index;
 import org.neo4j.kernel.configuration.Config;
 import org.neo4j.kernel.configuration.Settings;
 import org.neo4j.kernel.impl.api.TransactionHeaderInformation;
+import org.neo4j.kernel.impl.enterprise.configuration.OnlineBackupSettings;
 import org.neo4j.kernel.impl.factory.DatabaseInfo;
 import org.neo4j.kernel.impl.store.format.standard.StandardV3_0;
 import org.neo4j.kernel.impl.transaction.TransactionHeaderInformationFactory;
-import org.neo4j.doc.test.DbRepresentation;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
-import org.neo4j.doc.test.rule.TestDirectory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -213,6 +213,8 @@ public class TestBackup
 
     private DbRepresentation getDbRepresentation()
     {
-        return DbRepresentation.of( backupPath, getFormatConfig() );
+        Config config = getFormatConfig();
+        config.augment( GraphDatabaseSettings.active_database, backupPath.getName() );
+        return DbRepresentation.of( backupPath.getParentFile(), config );
     }
 }

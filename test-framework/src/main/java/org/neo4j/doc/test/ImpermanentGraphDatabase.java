@@ -35,7 +35,6 @@ import org.neo4j.io.fs.FileSystemAbstraction;
 import org.neo4j.kernel.configuration.Config;
 import org.neo4j.kernel.extension.KernelExtensionFactory;
 import org.neo4j.kernel.impl.factory.DatabaseInfo;
-import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
 import org.neo4j.kernel.impl.logging.LogService;
 import org.neo4j.kernel.impl.logging.SimpleLogService;
 import org.neo4j.kernel.internal.locker.StoreLocker;
@@ -147,11 +146,9 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
         new GraphDatabaseFacadeFactory( DatabaseInfo.COMMUNITY, CommunityEditionModule::new )
         {
             @Override
-            protected PlatformModule createPlatform( File storeDir, Config config, Dependencies dependencies,
-                                                     GraphDatabaseFacade graphDatabaseFacade )
+            protected PlatformModule createPlatform( File storeDir, Config config, Dependencies dependencies )
             {
-                return new ImpermanentPlatformModule( storeDir, config, databaseInfo, dependencies,
-                        graphDatabaseFacade );
+                return new ImpermanentPlatformModule( storeDir, config, databaseInfo, dependencies );
             }
         }.initFacade( storeDir, params, dependencies, this );
     }
@@ -174,7 +171,7 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
     {
         if ( TRACK_UNCLOSED_DATABASE_INSTANCES )
         {
-            startedButNotYetClosed.remove( getStoreDir() );
+            startedButNotYetClosed.remove( databaseDirectory() );
         }
 
         super.shutdown();
@@ -190,10 +187,9 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
     protected static class ImpermanentPlatformModule extends PlatformModule
     {
         public ImpermanentPlatformModule( File storeDir, Config config, DatabaseInfo databaseInfo,
-                                          Dependencies dependencies,
-                                          GraphDatabaseFacade graphDatabaseFacade )
+                                          Dependencies dependencies )
         {
-            super( storeDir, withForcedInMemoryConfiguration(config), databaseInfo, dependencies, graphDatabaseFacade );
+            super( storeDir, withForcedInMemoryConfiguration(config), databaseInfo, dependencies );
         }
 
         @Override
