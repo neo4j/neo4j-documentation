@@ -15,7 +15,8 @@ This section contains information on all functions in the Cypher query language.
 * Mathematical functions - logarithmic [<<header-query-functions-logarithmic, Summary>>|<<query-functions-mathematical-logarithmic, Detail>>]
 * Mathematical functions - trigonometric [<<header-query-functions-trigonometric, Summary>>|<<query-functions-mathematical-trigonometric, Detail>>]
 * String functions [<<header-query-functions-string, Summary>>|<<query-functions-string, Detail>>]
-* Temporal functions [<<header-query-functions-temporal, Summary>>|<<query-functions-temporal, Detail>>]
+* Temporal functions - instant types [<<header-query-functions-temporal, Summary>>|<<query-functions-temporal, Detail>>]
+* Temporal functions - duration [<<header-query-functions-temporal-duration, Summary>>|<<functions-duration, Detail>>]
 * Spatial functions [<<header-query-functions-spatial, Summary>>|<<query-functions-spatial, Detail>>]
 * <<query-functions-udf, User-defined functions>>
 
@@ -199,9 +200,9 @@ These functions are used to manipulate strings or to create a string representat
 
 
 [[header-query-functions-temporal]]
-**<<query-functions-temporal, Temporal functions>>**
+**<<query-functions-temporal, Temporal functions - instant types>>**
 
-Values of the <<cypher-temporal, temporal types>> -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_ -- can be created manipulated using the following functions:
+Values of the <<cypher-temporal, temporal types>> -- _Date_, _Time_, _LocalTime_, _DateTime_, and _LocalDateTime_ -- can be created manipulated using the following functions:
 
 
 [options="header"]
@@ -257,6 +258,17 @@ Values of the <<cypher-temporal, temporal types>> -- _Date_, _Time_, _LocalTime_
 | <<functions-time-create-string, time(string)>> | Returns a _Time_ by parsing a string.
 | <<functions-time-temporal, time({time [, hour, ..., timezone]})>> | Returns a _Time_ from a map of another temporal value's components.
 | <<functions-time-truncate, time.truncate()>> | Returns a _Time_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
+|===
+
+[[header-query-functions-temporal-duration]]
+**<<query-functions-temporal, Temporal functions - duration>>**
+
+Duration values of the <<cypher-temporal, temporal types>> can be created manipulated using the following functions:
+
+
+[options="header"]
+|===
+|Function                               |   Description
 | <<functions-duration-create-components, duration({map})>> | Returns a _Duration_ from a map of its components.
 | <<functions-duration-create-string, duration(string)>> | Returns a _Duration_ by parsing a string.
 | <<functions-duration-between, duration.between()>> | Returns a _Duration_ equal to the difference between two given instants.
@@ -313,9 +325,13 @@ include::query-functions-mathematical-trigonometric.adoc[leveloffset=+1]
 
 include::query-functions-string.adoc[leveloffset=+1]
 
-//Temporal functions
+//Temporal functions - instant types
 
 include::query-functions-temporal.adoc[leveloffset=+1]
+
+//Temporal functions - duration
+
+include::functions-duration.adoc[leveloffset=+1]
 
 //Spatial functions
 
