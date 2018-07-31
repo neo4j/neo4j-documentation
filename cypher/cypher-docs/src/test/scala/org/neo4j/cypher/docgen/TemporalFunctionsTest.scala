@@ -94,6 +94,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         |** <<functions-time-truncate, Truncating a _Time_>>
       """.stripMargin)
     section("Temporal instant types", "functions-temporal-instant-type") {
+      synopsis("""An introduction to temporal instant types, including creation functions, clocks, and truncation.""".stripMargin)
       section("An overview of temporal instant type creation", "functions-temporal-create-overview") {
         p(
           """Each function bears the same name as the type, and construct the type they correspond to in one of four ways:
