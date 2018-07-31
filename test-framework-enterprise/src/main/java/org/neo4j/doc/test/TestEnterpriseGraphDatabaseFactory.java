@@ -49,37 +49,41 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
     protected GraphDatabaseBuilder.DatabaseCreator createDatabaseCreator( File storeDir,
                                                                           GraphDatabaseFactoryState state )
     {
-        return params ->
+        return new GraphDatabaseBuilder.DatabaseCreator()
         {
-            Config config = Config.builder()
-                    .withSettings( params )
-                    .withSetting( GraphDatabaseSettings.ephemeral, "false" ).build();
-            return new GraphDatabaseFacadeFactory( DatabaseInfo.ENTERPRISE, EnterpriseEditionModule::new )
+            @Override
+            public GraphDatabaseService newDatabase( Map<String,String> params )
             {
-                @Override
-                protected PlatformModule createPlatform( File storeDir, Config config,
-                                                         Dependencies dependencies )
+                Config config = Config.builder()
+                        .withSettings( params )
+                        .withSetting( GraphDatabaseSettings.ephemeral, "false" ).build();
+                return new GraphDatabaseFacadeFactory( DatabaseInfo.ENTERPRISE, EnterpriseEditionModule::new )
                 {
-                    return new PlatformModule( storeDir, config, databaseInfo, dependencies )
+                    @Override
+                    protected PlatformModule createPlatform( File storeDir, Config config,
+                            Dependencies dependencies )
                     {
-                        @Override
-                        protected LogService createLogService( LogProvider userLogProvider )
+                        return new PlatformModule( storeDir, config, databaseInfo, dependencies )
                         {
-                            if ( state instanceof TestGraphDatabaseFactoryState )
+                            @Override
+                            protected LogService createLogService( LogProvider userLogProvider )
                             {
-                                LogProvider logProvider =
-                                        ((TestGraphDatabaseFactoryState) state).getInternalLogProvider();
-                                if ( logProvider != null )
+                                if ( state instanceof TestGraphDatabaseFactoryState )
                                 {
-                                    return new SimpleLogService( logProvider, logProvider );
+                                    LogProvider logProvider =
+                                            ((TestGraphDatabaseFactoryState) state).getInternalLogProvider();
+                                    if ( logProvider != null )
+                                    {
+                                        return new SimpleLogService( logProvider, logProvider );
+                                    }
                                 }
+                                return super.createLogService( userLogProvider );
                             }
-                            return super.createLogService( userLogProvider );
-                        }
-                    };
-                }
-            }.newFacade( storeDir, config,
-                    GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) );
+                        };
+                    }
+                }.newFacade( storeDir, config,
+                        GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) );
+            }
         };
     }
 
