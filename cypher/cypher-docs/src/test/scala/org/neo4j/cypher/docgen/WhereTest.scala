@@ -46,9 +46,9 @@ class WhereTest extends DocumentingTest {
         | ** <<filter-on-dynamic-property, Filter on dynamically-computed property>>
         | ** <<property-existence-checking, Property existence checking>>
         |* <<query-where-string, String matching>>
-        | ** <<match-string-start, Match the beginning of a string>>
-        | ** <<match-string-end, Match the ending of a string>>
-        | ** <<match-string-contains, Match anywhere within a string>>
+        | ** <<match-string-start, Prefix search using `STARTS WITH`>>
+        | ** <<match-string-end, Suffix search using `ENDS WITH`>>
+        | ** <<match-string-contains, Substring search using `CONTAINS`>>
         | ** <<match-string-negation, String matching negation>>
         |* <<query-where-regex, Regular expressions>>
         | ** <<matching-using-regular-expressions, Matching using regular expressions>>
@@ -150,8 +150,9 @@ class WhereTest extends DocumentingTest {
       p(
         """The start and end of strings can be matched using `STARTS WITH` and `ENDS WITH`.
           |To match regardless of location in a string, use `CONTAINS`.
-          |The matching is _case-sensitive_.""".stripMargin)
-      section("Match the beginning of a string", "match-string-start") {
+          |The matching is _case-sensitive_.
+          |Attempting to use these operators on values which are not strings will return `null`.""".stripMargin)
+      section("Prefix search using `STARTS WITH`", "match-string-start") {
         p("The `STARTS WITH` operator is used to perform case-sensitive matching on the start of strings.")
         query("MATCH (n)\nWHERE n.name STARTS WITH 'Pet'\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Peter", "n.age" -> 35l)))
@@ -160,7 +161,7 @@ class WhereTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Match the ending of a string", "match-string-end") {
+      section("Suffix search using `ENDS WITH`", "match-string-end") {
         p("The `ENDS WITH` operator is used to perform case-sensitive matching on the end of strings.")
         query("MATCH (n)\nWHERE n.name ENDS WITH 'ter'\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Peter", "n.age" -> 35l)))
@@ -169,7 +170,7 @@ class WhereTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Match anywhere within a string", "match-string-contains") {
+      section("Substring search using `CONTAINS`", "match-string-contains") {
         p("The `CONTAINS` operator is used to perform case-sensitive matching regardless of location in strings.")
         query("MATCH (n)\nWHERE n.name CONTAINS 'ete'\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Peter", "n.age" -> 35l)))
