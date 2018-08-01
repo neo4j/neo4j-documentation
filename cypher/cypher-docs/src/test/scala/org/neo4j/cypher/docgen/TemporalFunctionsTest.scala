@@ -1269,6 +1269,15 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
     }
     section("Time: `time()`", "functions-time") {
+      synopsis("""Details for using the `time()` function.""".stripMargin)
+      p(
+        """
+          |* <<functions-time-current, Getting the current _Time_>>
+          |* <<functions-time-create, Creating a _Time_>>
+          |* <<functions-time-create-string, Creating a _Time_ from a string>>
+          |* <<functions-time-temporal, Creating a _Time_ using other temporal values as components>>
+          |* <<functions-time-truncate, Truncating a _Time_>>
+        """.stripMargin)
       section("Getting the current _Time_", "functions-time-current") {
         p(
           """`time()` returns the current _Time_ value.
