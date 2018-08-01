@@ -1092,6 +1092,15 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
     }
     section("LocalTime: `localtime()`", "functions-localtime") {
+      synopsis("""Details for using the `localtime()` function.""".stripMargin)
+      p(
+        """
+          |* <<functions-localtime-current, Getting the current _LocalTime_>>
+          |* <<functions-localtime-create, Creating a _LocalTime_>>
+          |* <<functions-localtime-create-string, Creating a _LocalTime_ from a string>>
+          |* <<functions-localtime-temporal, Creating a _LocalTime_ using other temporal values as components>>
+          |* <<functions-localtime-truncate, Truncating a _LocalTime_>>
+        """.stripMargin)
       section("Getting the current _LocalTime_", "functions-localtime-current") {
         p(
           """`localtime()` returns the current _LocalTime_ value.
