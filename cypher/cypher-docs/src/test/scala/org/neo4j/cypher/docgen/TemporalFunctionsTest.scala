@@ -217,6 +217,18 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
     }
     section("Date: `date()`", "functions-date") {
+      synopsis("""Details for using the `date()` function.""".stripMargin)
+      p(
+        """
+          |* <<functions-date-current, Getting the current _Date_>>
+          |* <<functions-date-calendar, Creating a calendar (Year-Month-Day) _Date_>>
+          |* <<functions-date-week, Creating a week (Year-Week-Day) _Date_>>
+          |* <<functions-date-quarter, Creating a quarter (Year-Quarter-Day) _Date_>>
+          |* <<functions-date-ordinal, Creating an ordinal (Year-Day) _Date_>>
+          |* <<functions-date-create-string, Creating a _Date_ from a string>>
+          |* <<functions-date-temporal, Creating a _Date_ using other temporal values as components>>
+          |* <<functions-date-truncate, Truncating a _Date_>>
+        """.stripMargin)
       section("Getting the current _Date_", "functions-date-current") {
         p(
           """`date()` returns the current _Date_ value.
