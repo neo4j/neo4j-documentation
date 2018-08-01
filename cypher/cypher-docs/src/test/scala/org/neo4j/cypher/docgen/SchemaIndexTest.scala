@@ -100,8 +100,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_where_using_equality_single_property() {
     profileQuery(
-      title = "Use a single-property index with `WHERE` using equality",
+      title = "Use a single-property index with `WHERE` containing one or more equality predicates",
       text = "A query containing equality comparisons of a single indexed property in the `WHERE` clause is backed automatically by the index. " +
+        "It is also possible for a query with multiple `OR` predicates to use multiple indexes, if indexes exist on the properties. " +
+        "For example, if indexes exist on both `:Label(p1)` and `:Label(p2)`, `MATCH (n:Label) WHERE n.p1 = 1 OR n.p2 = 2 RETURN n` would use both indexes."  +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname = 'Andres' RETURN person",
       assertions = {

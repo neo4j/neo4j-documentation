@@ -18,7 +18,7 @@ Cypher includes data definition language (DDL) statements for manipulating the s
  ** <<schema-index-drop-a-single-property-index, Drop a single-property index>>
  ** <<drop-a-composite-index, Drop a composite index>>
  ** <<schema-index-use-index, Use index>>
- ** <<schema-index-use-a-single-property-index-with-where-using-equality, Use a single-property index with `WHERE` using equality>>
+ ** <<schema-index-use-a-single-property-index-with-where-containing-one-or-more-equality-predicates, Use a single-property index with `WHERE` containing one or more equality predicates>>
  ** <<use-a-composite-index-with-where-using-equality, Use a composite index with `WHERE` using equality>>
  ** <<schema-index-use-index-with-where-using-range-comparisons, Use index with `WHERE` using range comparisons>>
  ** <<schema-index-use-index-with-in,Use index with `IN`>>
