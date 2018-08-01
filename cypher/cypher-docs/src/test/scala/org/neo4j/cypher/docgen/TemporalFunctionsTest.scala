@@ -841,6 +841,18 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
     }
     section("LocalDateTime: `localdatetime()`", "functions-localdatetime") {
+      synopsis("""Details for using the `localdatetime()` function.""".stripMargin)
+      p(
+        """
+          |* <<functions-localdatetime-current, Getting the current _LocalDateTime_>>
+          |* <<functions-localdatetime-calendar, Creating a calendar (Year-Month-Day) _LocalDateTime_>>
+          |* <<functions-localdatetime-week, Creating a week (Year-Week-Day) _LocalDateTime_>>
+          |* <<functions-localdatetime-quarter, Creating a quarter (Year-Quarter-Day) _LocalDateTime_>>
+          |* <<functions-localdatetime-ordinal, Creating an ordinal (Year-Day) _LocalDateTime_>>
+          |* <<functions-localdatetime-create-string, Creating a _LocalDateTime_ from a string>>
+          |* <<functions-localdatetime-temporal, Creating a _LocalDateTime_ using other temporal values as components>>
+          |* <<functions-localdatetime-truncate, Truncating a _LocalDateTime_>>
+        """.stripMargin)
       section("Getting the current _LocalDateTime_", "functions-localdatetime-current") {
         p(
           """`localdatetime()` returns the current _LocalDateTime_ value.
