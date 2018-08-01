@@ -13,7 +13,7 @@ This section explains how to work with indexes in Neo4j and Cypher.
 * <<schema-index-drop-a-single-property-index, Drop a single-property index>>
 * <<drop-a-composite-index, Drop a composite index>>
 * <<schema-index-use-index, Use index>>
-* <<schema-index-use-a-single-property-index-with-where-using-equality, Use a single-property index with `WHERE` using equality>>
+* <<schema-index-use-a-single-property-index-with-where-containing-one-or-more-equality-predicates, Use a single-property index with `WHERE` containing one or more equality predicates>>
 * <<use-a-composite-index-with-where-using-equality, Use a composite index with `WHERE` using equality>>
 * <<schema-index-range-comparisons-using-where-single-property-index, Use index with `WHERE` using range comparisons>>
 * <<schema-index-multiple-range-comparisons-using-where-single-property-index, Use index with `WHERE` using multiple range comparisons>>
@@ -86,7 +86,7 @@ DROP INDEX ON :Person(firstname, surname)
 
 include::use-index.asciidoc[]
 
-include::use-a-single-property-index-with-where-using-equality.asciidoc[]
+include::use-a-single-property-index-with-where-containing-one-or-more-equality-predicates.asciidoc[]
 
 
 [[use-a-composite-index-with-where-using-equality]]
