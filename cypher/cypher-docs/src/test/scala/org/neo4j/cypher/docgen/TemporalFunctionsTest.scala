@@ -452,6 +452,19 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
     }
     section("DateTime: `datetime()`", "functions-datetime") {
+      synopsis("""Details for using the `datetime()` function.""".stripMargin)
+      p(
+        """
+          |* <<functions-datetime-current, Getting the current _DateTime_>>
+          |* <<functions-datetime-calendar, Creating a calendar (Year-Month-Day) _DateTime_>>
+          |* <<functions-datetime-week, Creating a week (Year-Week-Day) _DateTime_>>
+          |* <<functions-datetime-quarter, Creating a quarter (Year-Quarter-Day) _DateTime_>>
+          |* <<functions-datetime-ordinal, Creating an ordinal (Year-Day) _DateTime_>>
+          |* <<functions-datetime-create-string, Creating a _DateTime_ from a string>>
+          |* <<functions-datetime-temporal, Creating a _DateTime_ using other temporal values as components>>
+          |* <<functions-datetime-timestamp, Creating a _DateTime_ from a timestamp>>
+          |* <<functions-datetime-truncate, Truncating a _DateTime_>>
+        """.stripMargin)
       section("Getting the current _DateTime_", "functions-datetime-current") {
         p(
           """`datetime()` returns the current _DateTime_ value.
