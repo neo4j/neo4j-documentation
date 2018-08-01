@@ -6,17 +6,17 @@
 This section describes query tuning for the Cypher query language.
 --
 
-Neo4j works very hard to execute queries as fast as possible.
+Neo4j aims to execute queries as fast as possible.
 
 However, when optimizing for maximum query execution performance, it may be helpful to rephrase queries using knowledge about the domain and the application.
 
 The overall goal of manual query performance optimization is to ensure that only necessary data is retrieved from the graph.
-At least data should get filtered out as early as possible in order to reduce the amount of work that has to be done at later stages of query execution.
-This also goes for what gets returned: avoid returning whole nodes and relationships -- instead, pick the data you need and return only that.
+At the very least, data should get filtered out as early as possible in order to reduce the amount of work that has to be done in the later stages of query execution.
+This also applies to what gets returned: returning whole nodes and relationships ought to be avoided in favour of selecting and returning only the data that is needed.
 You should also make sure to set an upper limit on variable length patterns, so they don't cover larger portions of the dataset than needed.
 
-Each Cypher query gets optimized and transformed into an execution plan by the Cypher execution engine.
-To minimize the resources used for this, make sure to use parameters instead of literals when possible.
+Each Cypher query gets optimized and transformed into an <<execution-plan-introduction, execution plan>> by the Cypher execution engine.
+To minimize the resources used for this, try to use parameters instead of literals when possible.
 This allows Cypher to re-use your queries instead of having to parse and build new execution plans.
 
 To read more about the execution plan operators mentioned in this chapter, see <<execution-plans>>.

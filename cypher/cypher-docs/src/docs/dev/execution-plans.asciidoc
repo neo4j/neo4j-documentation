@@ -6,7 +6,7 @@
 This section describes the characteristics of a query's execution plan, along with details about each of the operators.
 --
 
-* <<execution-plan-operators-introduction, Introduction>>
+* <<execution-plan-introduction, Introduction>>
 * <<execution-plan-operators-summary, Execution plan operators>>
 * <<execution-plans-dbhits, DbHits (Database hits)>>
 * <<query-shortestpath-planning, Shortest path planning>>
@@ -47,9 +47,10 @@ The statistical information maintained by Neo4j is:
 
 More information about how the statistics are kept up to date, as well as configuration options about managing query replanning and caching can be found in the <<operations-manual#statistics-execution-plans, Operations Manual -> Statistics and execution plans>>
 
-See <<how-do-i-profile-a-query>> for how to view the execution plan for a query.
+<<query-tuning>> describes how to tune Cypher queries.
+In particular, see <<how-do-i-profile-a-query>> for how to view the execution plan for a query and <<query-using>> for how to use planner _hints_ to influence the decisions of the planner when building an execution plan for a query.
 
-For a deeper understanding of how each operator works, refer to the relevant section.
+For a deeper understanding of how each operator works, refer to the relevant section in <<execution-plan-operators-summary, this table>>.
 Please remember that the statistics of the actual database where the queries run on will decide the plan used.
 There is no guarantee that a specific query will always be solved with the same plan.
 
