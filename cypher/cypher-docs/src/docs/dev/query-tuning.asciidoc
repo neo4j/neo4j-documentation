@@ -63,7 +63,7 @@ Here we detail the available versions:
 [[cypher-planner]]
 === Cypher planner
 
-Each query is turned into an execution plan by something called the _execution planner_.
+Each query is turned into an <<execution-plan-introduction, execution plan>> by the _execution planner_.
 The execution plan tells Neo4j which operations to perform when executing the query.
 
 Neo4j uses a _cost_-based execution planning strategy (known as the 'cost' planner): the statistics service in Neo4j is used to assign a cost to alternative plans and picks the cheapest one.
