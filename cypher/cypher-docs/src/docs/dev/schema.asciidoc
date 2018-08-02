@@ -24,6 +24,7 @@ Cypher includes data definition language (DDL) statements for manipulating the s
  ** <<schema-index-multiple-range-comparisons-using-where-single-property-index, Use index with `WHERE` using multiple range comparisons>>
  ** <<schema-index-list-membership-check-using-in-single-property-index, List membership using `IN` (single-property index)>>
  ** <<schema-index-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>
+ ** <<schema-index-suffix-search-using-ends-with-single-property-index, Suffix search using `ENDS WITH` (single-property index)>>
  ** <<schema-index-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
  ** <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search>>
  ** <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search>>

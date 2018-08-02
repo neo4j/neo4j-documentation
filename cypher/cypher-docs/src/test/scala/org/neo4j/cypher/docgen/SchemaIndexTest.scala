@@ -202,6 +202,30 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
+  @Test def use_index_with_ends_with() {
+    executePreparationQueries {
+      val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
+      val b = (0 to 300).map { i => s"CREATE (:Person {firstname: '$i'})" }.toList
+      a ++ b
+    }
+
+    sampleAllIndexesAndWait()
+
+    profileQuery(
+      title = "Suffix search using `ENDS WITH` (single-property index)",
+      text =
+        "The `ENDS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
+          "All values stored in the `Person(firstname)` index will be searched, and entries ending with `'rk'` will be returned. " +
+          "Composite indexes are currently not able to support `STARTS WITH`, `ENDS WITH` and `CONTAINS`. ",
+      queryText = "MATCH (person:Person) WHERE person.firstname ENDS WITH 'rk' RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexEndsWithScan"))
+      }
+    )
+  }
+
   @Test def use_index_with_exists_property() {
     // Need to make index preferable in terms of cost
     executePreparationQueries((0 to 250).map { i =>
