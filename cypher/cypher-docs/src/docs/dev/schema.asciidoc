@@ -13,13 +13,13 @@ Cypher includes data definition language (DDL) statements for manipulating the s
 
 * <<query-schema-index,Indexes>>
  ** <<schema-index-create-a-single-property-index, Create a single-property index>>
- ** <<create-a-composite-index, Create a composite index>>
+ ** <<schema-index-create-a-composite-index, Create a composite index>>
  ** <<schema-index-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
  ** <<schema-index-drop-a-single-property-index, Drop a single-property index>>
- ** <<drop-a-composite-index, Drop a composite index>>
+ ** <<schema-index-drop-a-composite-index, Drop a composite index>>
  ** <<schema-index-use-index, Use index>>
  ** <<schema-index-equality-check-using-where-single-property-index, Equality check using `WHERE` (single-property index)>>
- ** <<use-a-composite-index-with-where-using-equality, Equality check using `WHERE` (composite index)>>
+ ** <<schema-index-equality-check-using-where-composite-index, Equality check using `WHERE` (composite index)>>
  ** <<schema-index-range-comparisons-using-where-single-property-index, Range comparisons using `WHERE` (single-property index)>>
  ** <<schema-index-list-membership-check-using-in-single-property-index, List membership using `IN` (single-property index)>>
  ** <<schema-index-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>

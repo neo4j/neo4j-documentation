@@ -28,7 +28,6 @@ import org.neo4j.cypher.internal.compatibility.v3_3.runtime.pipes.IndexSeekByRan
 import org.neo4j.cypher.internal.compatibility.v3_3.runtime.planDescription.InternalPlanDescription.Arguments.Planner
 import org.neo4j.cypher.internal.compiler.v3_3.{DPPlannerName, IDPPlannerName}
 import org.neo4j.cypher.internal.helpers.GraphIcing
-import org.neo4j.cypher.internal.v3_3.logical.plans.NodeIndexEndsWithScan
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
 
@@ -40,8 +39,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   )
 
   override val properties = Map(
-    "andres" -> Map("firstname" -> "Andres", "surname" -> "Taylor"),
-    "mark" -> Map("firstname" -> "Mark", "surname" -> "Needham")
+    "andres" -> Map("firstname" -> "Andres", "surname" -> "Taylor", "age" -> 40, "country" -> "Sweden"),
+    "mark" -> Map("firstname" -> "Mark", "surname" -> "Needham", "age" -> 35, "country" -> "UK")
   )
 
   override val setupConstraintQueries = List(
@@ -58,6 +57,21 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       queryText = "CREATE INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
       assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname")))
+    )
+  }
+
+  @Test def create_index_on_a_label_composite_property() {
+    testQuery(
+      title = "Create a composite index",
+      text = "An index on multiple properties for all nodes that have a particular label -- i.e. a composite index -- can be created with `CREATE INDEX ON :Label(prop1, ..., propN)`. " +
+      "Only nodes labeled with the specified label and which contain all the properties in the index definition will be added to the index. " +
+      "The following statement will create a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
+      queryText = "CREATE INDEX ON :Person(age, country)",
+      optionalResultExplanation = "Assume we execute the query `CREATE (a:Person {firstname: 'Bill', age: 34, country: 'USA'}), (b:Person {firstname: 'Sue', age: 39})`. " +
+        "Node `a` has both an `age` and a `country` property, and so it will be added to the composite index. " +
+        "However, as node `b` has no `country` property, it will not be added to the composite index. " +
+        "Note that the composite index is not immediately available, but will be created in the background. ",
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname"), List("age", "country")))
     )
   }
 
@@ -80,6 +94,18 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       queryText = "DROP INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
       assertions = (p) => assertIndexesOnLabels("Person", List())
+    )
+  }
+
+  @Test def drop_index_on_a_label_composite_property() {
+    prepareAndTestQuery(
+      title = "Drop a composite index",
+      text = "A composite index on all nodes that have a label and multiple property combination can be dropped with `DROP INDEX ON :Label(prop1, ..., propN)`. " +
+      "The following statement will drop a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
+      prepare = _ => executePreparationQueries(List("create index on :Person(age, country)")),
+      queryText = "DROP INDEX ON :Person(age, country)",
+      optionalResultExplanation = "",
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname")))
     )
   }
 
@@ -107,6 +133,27 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "For example, if indexes exist on both `:Label(p1)` and `:Label(p2)`, `MATCH (n:Label) WHERE n.p1 = 1 OR n.p2 = 2 RETURN n` will use both indexes. "  +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname = 'Andres' RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+
+          checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_index_with_where_using_equality_composite() {
+    prepareAndTestQuery(
+      title = "Equality check using `WHERE` (composite index)",
+      text = "A query containing equality comparisons for all the properties of a composite index will automatically be backed by the same index. " +
+        "The following query will use the composite index defined <<schema-index-create-a-composite-index, earlier>>: ",
+      prepare = _ => executePreparationQueries(List("CREATE INDEX ON :Person(age, country)")),
+      queryText = "MATCH (n:Person) WHERE n.age = 35 AND n.country = 'UK' RETURN n",
+      optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, as the query does not contain an equality predicate on the `country` property. " +
+      "It will only be backed by an index on the `Person` label and `age` property defined thus: `:Person(age)`; i.e. a single-property index. " +
+      "Moreover, unlike single-property indexes, composite indexes currently do not support queries containing the following types of predicates on properties in the index: " +
+      "existence check: `exists(n.prop)`; range search: `n.prop > value`; prefix search: `STARTS WITH`; suffix search: `ENDS WITH`; and substring search: `CONTAINS`. " +
+      "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
