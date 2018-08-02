@@ -113,8 +113,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Use index",
       text = "There is usually no need to specify which indexes to use in a query, Cypher will figure that out by itself. " +
-        "For example the query below will use the `Person(firstname)` index, if it exists. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+        "For example the query below will use the `Person(firstname)` index, if it exists. ",
       queryText = "MATCH (person:Person {firstname: 'Andres'}) RETURN person",
       assertions = {
         (p) =>
@@ -130,8 +129,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Equality check using `WHERE` (single-property index)",
       text = "A query containing equality comparisons of a single indexed property in the `WHERE` clause is backed automatically by the index. " +
         "It is also possible for a query with multiple `OR` predicates to use multiple indexes, if indexes exist on the properties. " +
-        "For example, if indexes exist on both `:Label(p1)` and `:Label(p2)`, `MATCH (n:Label) WHERE n.p1 = 1 OR n.p2 = 2 RETURN n` will use both indexes. "  +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+        "For example, if indexes exist on both `:Label(p1)` and `:Label(p2)`, `MATCH (n:Label) WHERE n.p1 = 1 OR n.p2 = 2 RETURN n` will use both indexes. ",
       queryText = "MATCH (person:Person) WHERE person.firstname = 'Andres' RETURN person",
       assertions = {
         (p) =>
@@ -152,8 +150,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, as the query does not contain an equality predicate on the `country` property. " +
       "It will only be backed by an index on the `Person` label and `age` property defined thus: `:Person(age)`; i.e. a single-property index. " +
       "Moreover, unlike single-property indexes, composite indexes currently do not support queries containing the following types of predicates on properties in the index: " +
-      "existence check: `exists(n.prop)`; range search: `n.prop > value`; prefix search: `STARTS WITH`; suffix search: `ENDS WITH`; and substring search: `CONTAINS`. " +
-      "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+      "existence check: `exists(n.prop)`; range search: `n.prop > value`; prefix search: `STARTS WITH`; suffix search: `ENDS WITH`; and substring search: `CONTAINS`. ",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -171,8 +168,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Range comparisons using `WHERE` (single-property index)",
       text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
-        "Composite indexes are currently not able to support range comparisons. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+        "Composite indexes are currently not able to support range comparisons. ",
       queryText = "MATCH (person:Person) WHERE person.firstname > 'B' RETURN person",
       assertions = {
         (p) =>
@@ -197,8 +193,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "List membership check using `IN` (single-property index)",
       text =
-        "The `IN` predicate on `person.firstname` in the following query will use the single-property index `Person(firstname)` if it exists. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+        "The `IN` predicate on `person.firstname` in the following query will use the single-property index `Person(firstname)` if it exists. ",
       queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andres', 'Mark'] RETURN person",
       assertions = {
         (p) =>
@@ -225,8 +220,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "List membership check using `IN` (composite index)",
       text =
-        "The `IN` predicates on `person.age` and `person.country` in the following query will use the composite index `Person(age, country)` if it exists. " +
-          "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+        "The `IN` predicates on `person.age` and `person.country` in the following query will use the composite index `Person(age, country)` if it exists. ",
       queryText = "MATCH (person:Person) WHERE person.age IN [10, 20, 35] AND person.country IN ['Sweden', 'USA', 'UK'] RETURN person",
       assertions = {
         (p) =>
