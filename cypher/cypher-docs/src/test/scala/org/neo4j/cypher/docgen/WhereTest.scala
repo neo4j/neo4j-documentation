@@ -80,6 +80,10 @@ class WhereTest extends DocumentingTest {
           """In the case of multiple `MATCH` / `OPTIONAL MATCH` clauses, the predicate in `WHERE` is always a part of the patterns in the directly preceding `MATCH` / `OPTIONAL MATCH`.
             |Both results and performance may be impacted if the `WHERE` is put inside the wrong `MATCH` clause.""".stripMargin)
       }
+      note {
+        p(
+          """<<query-schema-index, Indexes>>` may be used to optimize queries using `WHERE` in a variety of cases.""".stripMargin)
+      }
       p("The following graph is used for the examples below:")
       graphViz()
     }
