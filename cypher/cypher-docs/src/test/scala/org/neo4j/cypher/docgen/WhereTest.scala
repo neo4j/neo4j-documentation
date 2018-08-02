@@ -152,8 +152,8 @@ class WhereTest extends DocumentingTest {
     }
     section("String matching", "query-where-string") {
       p(
-        """The start and end of strings can be matched using `STARTS WITH` and `ENDS WITH`.
-          |To match regardless of location in a string, use `CONTAINS`.
+        """The prefix and suffix of a string can be matched using `STARTS WITH` and `ENDS WITH`.
+          |To undertake a substring search - i.e. match regardless of location within a string - use `CONTAINS`.
           |The matching is _case-sensitive_.
           |Attempting to use these operators on values which are not strings will return `null`.""".stripMargin)
       section("Prefix search using `STARTS WITH`", "match-string-start") {
