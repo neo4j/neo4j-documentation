@@ -18,6 +18,7 @@ This section explains how to work with indexes in Neo4j and Cypher.
 * <<schema-index-range-comparisons-using-where-single-property-index, Range comparisons using `WHERE` (single-property index)>>
 * <<schema-index-multiple-range-comparisons-using-where-single-property-index, Use index with `WHERE` using multiple range comparisons>>
 * <<schema-index-list-membership-check-using-in-single-property-index, List membership check using `IN` (single-property index)>>
+* <<schema-index-list-membership-check-using-in-composite-index, List membership check using `IN` (composite index)>>
 * <<schema-index-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>
 * <<schema-index-suffix-search-using-ends-with-single-property-index, Suffix search using `ENDS WITH` (single-property index)>>
 * <<schema-index-substring-search-using-contains-single-property-index, Substring search using `CONTAINS` (single-property index)>>
@@ -63,6 +64,8 @@ include::range-comparisons-using-where-single-property-index.asciidoc[]
 include::multiple-range-comparisons-using-where-single-property-index.asciidoc[]
 
 include::list-membership-check-using-in-single-property-index.asciidoc[]
+
+include::list-membership-check-using-in-composite-index.asciidoc[]
 
 include::prefix-search-using-starts-with-single-property-index.asciidoc[]
 

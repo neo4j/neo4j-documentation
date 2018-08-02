@@ -202,7 +202,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_index_with_in() {
+  @Test def use_single_property_index_with_in() {
 
     executePreparationQueries(
       List(
@@ -216,11 +216,40 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "List membership check using `IN` (single-property index)",
       text =
-        "The `IN` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists.",
+        "The `IN` predicate on `person.firstname` in the following query will use the single-property index `Person(firstname)` if it exists. " +
+        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andres', 'Mark'] RETURN person",
       assertions = {
         (p) =>
           assertEquals(2, p.size)
+
+          checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_composite_index_with_in() {
+
+    executePreparationQueries(List("CREATE INDEX ON :Person(age, country)"))
+
+    executePreparationQueries(
+      List(
+        "FOREACH (x IN range(0, 100) | CREATE (:Person) )",
+        "FOREACH (x IN range(0, 400) | CREATE (:Person {age: x, country: x}) )"
+      )
+    )
+
+    sampleAllIndexesAndWait()
+
+    profileQuery(
+      title = "List membership check using `IN` (composite index)",
+      text =
+        "The `IN` predicates on `person.age` and `person.country` in the following query will use the composite index `Person(age, country)` if it exists. " +
+          "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+      queryText = "MATCH (person:Person) WHERE person.age IN [10, 20, 35] AND person.country IN ['Sweden', 'USA', 'UK'] RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
       }
