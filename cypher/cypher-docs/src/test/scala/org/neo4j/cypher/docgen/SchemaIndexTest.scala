@@ -216,7 +216,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text =
         "The `ENDS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
           "All values stored in the `Person(firstname)` index will be searched, and entries ending with `'rk'` will be returned. " +
-          "This means that although the search will not be optimized to the extent of queries using `=`, `<>`, `IN` or `STARTS WITH`, it is still faster than not using an index in the first place. " +
+          "This means that although the search will not be optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place. " +
           "Composite indexes are currently not able to support `ENDS WITH`. ",
       queryText = "MATCH (person:Person) WHERE person.firstname ENDS WITH 'rk' RETURN person",
       assertions = {
@@ -241,7 +241,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text =
         "The `CONTAINS` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
           "All values stored in the `Person(firstname)` index will be searched, and entries containing `'r'` will be returned. " +
-          "This means that although the search will not be optimized to the extent of queries using `=`, `<>`, `IN` or `STARTS WITH`, it is still faster than not using an index in the first place. " +
+          "This means that although the search will not be optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place. " +
           "Composite indexes are currently not able to support `CONTAINS`. ",
       queryText = "MATCH (person:Person) WHERE person.firstname CONTAINS 'r' RETURN person",
       assertions = {
