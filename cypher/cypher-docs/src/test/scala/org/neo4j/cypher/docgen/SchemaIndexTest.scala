@@ -100,10 +100,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_where_using_equality_single_property() {
     profileQuery(
-      title = "Use a single-property index with `WHERE` containing one or more equality predicates",
+      title = "Equality check using `WHERE` (single-property index)",
       text = "A query containing equality comparisons of a single indexed property in the `WHERE` clause is backed automatically by the index. " +
         "It is also possible for a query with multiple `OR` predicates to use multiple indexes, if indexes exist on the properties. " +
-        "For example, if indexes exist on both `:Label(p1)` and `:Label(p2)`, `MATCH (n:Label) WHERE n.p1 = 1 OR n.p2 = 2 RETURN n` would use both indexes."  +
+        "For example, if indexes exist on both `:Label(p1)` and `:Label(p2)`, `MATCH (n:Label) WHERE n.p1 = 1 OR n.p2 = 2 RETURN n` will use both indexes. "  +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname = 'Andres' RETURN person",
       assertions = {
@@ -121,7 +121,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Use index with `WHERE` using range comparisons",
+      title = "Range comparisons using `WHERE` (single-property index)",
       text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
         "Composite indexes are currently not able to support range comparisons. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
@@ -147,7 +147,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     sampleAllIndexesAndWait()
 
     profileQuery(
-      title = "Use index with `IN`",
+      title = "List membership check using `IN` (single-property index)",
       text =
         "The `IN` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
         "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
@@ -171,7 +171,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     sampleAllIndexesAndWait()
 
     profileQuery(
-      title = "Use index with `STARTS WITH`",
+      title = "Prefix search using `STARTS WITH` (single-property index)",
       text =
         "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
           "Composite indexes are currently not able to support `STARTS WITH`, `ENDS WITH` and `CONTAINS`. ",
@@ -190,7 +190,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Use index when checking for the existence of a property",
+      title = "Existence check using `exists` (single-property index)",
       text =
         "The `exists(p.firstname)` predicate in the following query will use the `Person(firstname)` index, if it exists. " +
           "Composite indexes are currently not able to support the `exists` predicate. ",

@@ -8,17 +8,17 @@ This section explains how to work with indexes in Neo4j and Cypher.
 
 * <<query-schema-index-introduction, Introduction>>
 * <<schema-index-create-a-single-property-index, Create a single-property index>>
-* <<schema-index-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
 * <<create-a-composite-index, Create a composite index>>
+* <<schema-index-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
 * <<schema-index-drop-a-single-property-index, Drop a single-property index>>
 * <<drop-a-composite-index, Drop a composite index>>
 * <<schema-index-use-index, Use index>>
-* <<schema-index-use-a-single-property-index-with-where-containing-one-or-more-equality-predicates, Use a single-property index with `WHERE` containing one or more equality predicates>>
-* <<use-a-composite-index-with-where-using-equality, Use a composite index with `WHERE` using equality>>
-* <<schema-index-use-index-with-where-using-range-comparisons, Use index with `WHERE` using range comparisons>>
-* <<schema-index-use-index-with-in, Use index with `IN`>>
-* <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
-* <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>
+* <<schema-index-equality-check-using-where-single-property-index, Equality check using `WHERE` (single-property index)>>
+* <<use-a-composite-index-with-where-using-equality, Equality check using `WHERE` (composite index)>>
+* <<schema-index-range-comparisons-using-where-single-property-index, Range comparisons using `WHERE` (single-property index)>>
+* <<schema-index-list-membership-check-using-in-single-property-index, List membership check using `IN` (single-property index)>>
+* <<schema-index-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>
+* <<schema-index-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
 * <<explicit-indexes-procedures, Use built-in procedures to manage and use explicit indexes>>
 
 
@@ -39,7 +39,6 @@ Neo4j will automatically pick up and start using the index once it has been crea
 
 include::create-a-single-property-index.asciidoc[]
 
-include::get-a-list-of-all-indexes-in-the-database.asciidoc[]
 
 [[create-a-composite-index]]
 == Create a composite index
@@ -67,6 +66,8 @@ However, as node `b` has no `surname` property, it will not be added to the comp
 
 Note that the composite index is not immediately available, but will be created in the background.
 
+include::get-a-list-of-all-indexes-in-the-database.asciidoc[]
+
 include::drop-a-single-property-index.asciidoc[]
 
 [[drop-a-composite-index]]
@@ -83,11 +84,11 @@ DROP INDEX ON :Person(firstname, surname)
 
 include::use-index.asciidoc[]
 
-include::use-a-single-property-index-with-where-containing-one-or-more-equality-predicates.asciidoc[]
+include::equality-check-using-where-single-property-index.asciidoc[]
 
 
 [[use-a-composite-index-with-where-using-equality]]
-== Use a composite index with `WHERE` using equality
+== Equality check using `WHERE` (composite index)
 
 A query containing equality comparisons for all the properties of a composite index will automatically be backed by the same index.
 
@@ -145,12 +146,12 @@ RETURN n
 If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.
 
 
-include::use-index-with-where-using-range-comparisons.asciidoc[]
+include::range-comparisons-using-where-single-property-index.asciidoc[]
 
-include::use-index-with-in.asciidoc[]
+include::list-membership-check-using-in-single-property-index.asciidoc[]
 
-include::use-index-with-starts-with.asciidoc[]
+include::prefix-search-using-starts-with-single-property-index.asciidoc[]
 
-include::use-index-when-checking-for-the-existence-of-a-property.asciidoc[]
+include::existence-check-using-exists-single-property-index.asciidoc[]
 
 include::explicit-index-procedures.adoc[leveloffset=+1]
