@@ -41,6 +41,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
     p(
       """* <<query-set-introduction,Introduction>>
         |* <<set-set-a-property, Set a property>>
+        |* <<set-update-a-property, Update a property>>
         |* <<set-remove-a-property, Remove a property>>
         |* <<set-copying-properties-between-nodes-and-relationships, Copying properties between nodes and relationships>>
         |* <<set-set-a-property-using-a-parameter, Set a property using a parameter>>
@@ -69,6 +70,21 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
           assertStats(r, propertiesWritten = 1, nodesCreated = 0)
         })) {
         p("The newly-changed node is returned by the query.")
+        resultTable()
+      }
+    }
+    section("Update a property", "set-update-a-property") {
+      p(
+        """`SET` can be used to update a property on a node or relationship.
+          |This query forces a change of type in the `age` property: """.stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})
+          |SET n.age = toString(n.age)
+          |RETURN n.name, n.age""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Andres", "n.age" -> "36")))
+          assertStats(r, propertiesWritten = 1, nodesCreated = 0)
+        })) {
+        p("The `age` property has been converted to the string `'36'`.")
         resultTable()
       }
     }
