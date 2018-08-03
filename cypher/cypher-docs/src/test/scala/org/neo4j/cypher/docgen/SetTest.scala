@@ -43,9 +43,9 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<set-set-a-property, Set a property>>
         |* <<set-remove-a-property, Remove a property>>
         |* <<set-copying-properties-between-nodes-and-relationships, Copying properties between nodes and relationships>>
-        |* <<set-adding-properties-from-maps, Adding properties from maps>>
         |* <<set-set-a-property-using-a-parameter, Set a property using a parameter>>
         |* <<set-set-all-properties-using-a-parameter, Set all properties using a parameter>>
+        |* <<set-adding-properties-from-maps, Adding properties from maps using `+=`>>
         |* <<set-set-multiple-properties-using-one-set-clause, Set multiple properties using one `SET` clause>>
         |* <<set-set-a-label-on-a-node, Set a label on a node>>
         |* <<set-set-multiple-labels-on-a-node, Set multiple labels on a node>>""".stripMargin)
@@ -102,17 +102,6 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Adding properties from maps", "set-adding-properties-from-maps") {
-      p(
-        """When setting properties from a map (literal, parameter, or graph element), you can use the `+=` form of `SET` to only add properties, and not remove any of the existing properties on the graph element.""".stripMargin)
-      query(
-        """MATCH (p {name: 'Peter'})
-          |SET p += {hungry: true, position: 'Entrepreneur'}""".stripMargin, ResultAssertions((r) => {
-          assertStats(r, propertiesWritten = 2, nodesCreated = 0)
-        })) {
-        resultTable()
-      }
-    }
     section("Set a property using a parameter", "set-set-a-property-using-a-parameter") {
       p(
         """Use a parameter to give the value of a property.""".stripMargin)
@@ -140,6 +129,17 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         }),
         ("props", Map("name" -> "Andres", "position" -> "Developer"))) {
         p("The *'Andres'* node has had all its properties replaced by the properties in the `props` parameter.")
+        resultTable()
+      }
+    }
+    section("Adding properties from maps using `+=`", "set-adding-properties-from-maps") {
+      p(
+        """When setting properties from a map (literal, parameter, or graph element), you can use the `+=` form of `SET` to only add properties, and not remove any of the existing properties on the graph element.""".stripMargin)
+      query(
+        """MATCH (p {name: 'Peter'})
+          |SET p += {hungry: true, position: 'Entrepreneur'}""".stripMargin, ResultAssertions((r) => {
+          assertStats(r, propertiesWritten = 2, nodesCreated = 0)
+        })) {
         resultTable()
       }
     }
