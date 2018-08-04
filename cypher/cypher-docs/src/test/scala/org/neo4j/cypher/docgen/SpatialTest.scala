@@ -37,6 +37,7 @@ class SpatialTest extends DocumentingTest {
         | ** <<cypher-spatial-specifying-spatial-instants, Creating points>>
         | ** <<cypher-spatial-accessing-components-spatial-instants, Accessing components of points>>
         |* <<cypher-spatial-index, Spatial index>>
+        |* <<cypher-comparability-orderability, Comparability and Orderability>>
         |""".stripMargin)
     note{
       p("""Refer to <<query-functions-spatial>> for information regarding spatial _functions_ allowing for the creation and manipulation of spatial values.""")
@@ -262,6 +263,58 @@ class SpatialTest extends DocumentingTest {
           |In addition, queries using the `distance` function can, under the right conditions, also use the index, as described in the section
           |<<schema-index-use-index-when-executing-a-spatial-distance-search, 'Use index when executing a spatial distance search'>>.
         """.stripMargin)
+    }
+    section("Comparability and Orderability", "cypher-comparability-orderability") {
+      p(
+        """
+          |Points with different CRS are not comparable. This means that any function operating on two points of different type will return null.
+          |This is true of the distance function as well as inequality comparisons. If these are used in predicate, they will cause the associate match
+          |to return no results.
+        """.stripMargin
+      )
+      query(
+        """WITH point({x:3, y:0}) AS p2d, point({x:0, y:4, z:1}) as p3d
+          |RETURN distance(p2d,p3d), p2d < p3d, p2d = p3d, p2d <> p3d, distance(p2d,point({x:p3d.x, y:p3d.y}))""".stripMargin, ResultAssertions((r) => {
+          r.hasNext should be(true)
+          val record = r.next()
+          withClue("Expect the invalid distance function to return null") {
+            (record("distance(p2d,p3d)") == null) should be(true)
+          }
+          withClue("Expect the inequality test to return null") {
+            (record("p2d < p3d") == null) should be(true)
+          }
+          withClue("Expect the equality test to return false") {
+            (record("p2d = p3d") == false) should be(true)
+          }
+          withClue("Expect the negative equality test to return true") {
+            (record("p2d <> p3d") == true) should be(true)
+          }
+        })) {
+        resultTable()
+      }
+      p(
+        """
+          |However, all types are orderable. The Point types will be ordered after Numbers and before Temporal types.
+          |Points with different CRS with be ordered by their SRID numbers. For the current set of 4 CRS, this means
+          |the order is WGS84, WGS84-3D, Cartesian, Cartesian-3D.
+        """.stripMargin
+      )
+      query(
+        """UNWIND [point({x:3, y:0}), point({x:0, y:4, z:1}), point({srid:4326, x:12, y:56}), point({srid:4979, x:12, y:56, z:1000})] AS point
+          |RETURN point ORDER BY point""".stripMargin, ResultAssertions((r) => {
+          r.hasNext should be(true)
+          val points = r.toList.map { p =>
+            p("point").asInstanceOf[Point].getCRS.getCode
+          }
+          withClue("Expected four points") {
+            points.length should be(4)
+          }
+          withClue("Expected ascending SRID order") {
+            points should be(Seq(4326, 4979, 7203, 9157))
+          }
+        })) {
+        resultTable()
+      }
     }
   }.build()
 }
