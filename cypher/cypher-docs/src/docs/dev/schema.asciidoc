@@ -21,7 +21,7 @@ Cypher includes data definition language (DDL) statements for manipulating the s
  ** <<schema-index-use-a-single-property-index-with-where-using-equality, Use a single-property index with `WHERE` using equality>>
  ** <<use-a-composite-index-with-where-using-equality, Use a composite index with `WHERE` using equality>>
  ** <<schema-index-use-index-with-where-using-range-comparisons, Use index with `WHERE` using range comparisons>>
- ** <<schema-index-use-index-with-where-using--multiple-range-comparisons, Use index with `WHERE` using multiple range comparisons>>
+ ** <<schema-index-use-index-with-where-using-multiple-range-comparisons, Use index with `WHERE` using multiple range comparisons>>
  ** <<schema-index-use-index-with-in,Use index with `IN`>>
  ** <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
  ** <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>

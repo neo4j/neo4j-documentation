@@ -257,8 +257,10 @@ class SpatialTest extends DocumentingTest {
           |<<cypher-spatial-crs, four coordinate reference systems>>.
           |This allows for both <<schema-index-use-a-single-property-index-with-where-using-equality, equality>>
           |and <<schema-index-use-index-with-where-using-range-comparisons, range>> queries using exactly the same syntax and behaviour as for other property types.
+          |If two range predicates are used, setting minimum and maximum points, this will effectively result in a
+          |<<schema-index-use-index-when-executing-a-spatial-bounding-box-search, 'bounding box query'>>.
           |In addition, queries using the `distance` function can, under the right conditions, also use the index, as described in the section
-          |<<schema-index-use-index-when-executing-a-spatial-distance-search, 'Use index when executing a spatial distance search'>>
+          |<<schema-index-use-index-when-executing-a-spatial-distance-search, 'Use index when executing a spatial distance search'>>.
         """.stripMargin)
     }
   }.build()

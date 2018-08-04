@@ -16,7 +16,7 @@ This section explains how to work with indexes in Neo4j and Cypher.
 * <<schema-index-use-a-single-property-index-with-where-using-equality, Use a single-property index with `WHERE` using equality>>
 * <<use-a-composite-index-with-where-using-equality, Use a composite index with `WHERE` using equality>>
 * <<schema-index-use-index-with-where-using-range-comparisons, Use index with `WHERE` using range comparisons>>
-* <<schema-index-use-index-with-where-using--multiple-range-comparisons, Use index with `WHERE` using multiple range comparisons>>
+* <<schema-index-use-index-with-where-using-multiple-range-comparisons, Use index with `WHERE` using multiple range comparisons>>
 * <<schema-index-use-index-with-in, Use index with `IN`>>
 * <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
 * <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>
@@ -150,6 +150,8 @@ If you want Cypher to use specific indexes, you can enforce it using hints. See 
 
 include::use-index-with-where-using-range-comparisons.asciidoc[]
 
+include::use-index-with-where-using-multiple-range-comparisons.asciidoc[]
+
 include::use-index-with-in.asciidoc[]
 
 include::use-index-with-starts-with.asciidoc[]
@@ -157,5 +159,7 @@ include::use-index-with-starts-with.asciidoc[]
 include::use-index-when-checking-for-the-existence-of-a-property.asciidoc[]
 
 include::use-index-when-executing-a-spatial-distance-search.asciidoc[]
+
+include::use-index-when-executing-a-spatial-bounding-box-search.asciidoc[]
 
 include::explicit-index-procedures.adoc[leveloffset=+1]
