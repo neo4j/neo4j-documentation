@@ -29,7 +29,7 @@ class OperatorsTest extends DocumentingTest {
     doc("Operators", "query-operators")
     p(
       """* <<query-operators-summary, Operators at a glance>>
-        |* <<query-operators-general, General operators>>
+        |* <<query-operators-aggregation, Aggregation operators>>
         | ** <<syntax-using-the-distinct-operator, Using the `DISTINCT` operator>>
         |* <<query-operators-property, Property operators>>
         | ** <<syntax-accessing-the-property-of-a-nested-literal-map, Accessing properties of a nested literal map using the `.` operator>>
@@ -59,7 +59,7 @@ class OperatorsTest extends DocumentingTest {
         """
           |[subs=none]
           ||===
-           || <<query-operators-general, General operators>> | `DISTINCT`
+           || <<query-operators-aggregation, Aggregation operators>> | `DISTINCT`
            || <<query-operators-property, Property operators>> | `.` for property access, `[]` for dynamic property access
            || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
            || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
@@ -70,9 +70,9 @@ class OperatorsTest extends DocumentingTest {
            ||===
            |""")
     }
-    section("General operators", "query-operators-general") {
+    section("Aggregation operators", "query-operators-aggregation") {
       p(
-        """The general operators comprise:
+        """The aggregation operators comprise:
           |
           |* remove duplicates values: `DISTINCT`""".stripMargin)
       section("Using the `DISTINCT` operator", "syntax-using-the-distinct-operator") {

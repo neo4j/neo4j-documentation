@@ -29,7 +29,7 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-parameters-index-query-explicit, Index query (explicit indexes)>>
 * <<query-operators, Operators>>
  ** <<query-operators-summary, Operators at a glance>>
- ** <<query-operators-general, General operators>>
+ ** <<query-operators-aggregation, Aggregation operators>>
  ** <<query-operators-mathematical, Mathematical operators>>
  ** <<query-operators-comparison, Comparison operators>>
  ** <<query-operators-boolean, Boolean operators>>
