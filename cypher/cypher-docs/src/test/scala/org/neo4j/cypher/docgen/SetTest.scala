@@ -44,7 +44,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<set-update-a-property, Update a property>>
         |* <<set-remove-a-property, Remove a property>>
         |* <<set-copying-properties-between-nodes-and-relationships, Copying properties between nodes and relationships>>
-        |* <<set-adding-properties-from-maps, Adding properties from maps using `+=`>>
+        |* <<set-setting-properties-from-maps, Setting properties from maps using `+=`>>
         |* <<set-set-multiple-properties-using-one-set-clause, Set multiple properties using one `SET` clause>>
         |* <<set-set-a-property-using-a-parameter, Set a property using a parameter>>
         |* <<set-set-all-properties-using-a-parameter, Set all properties using a parameter>>
@@ -130,7 +130,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Adding properties from maps using `+=`", "set-adding-properties-from-maps") {
+    section("Setting properties from maps using `+=`", "set-setting-properties-from-maps") {
       p(
         """The property mutation operator `+=` can be used with `SET` to set properties from a map in a granular fashion:
           |
