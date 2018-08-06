@@ -190,12 +190,6 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-
-
-    //section("Remove all TODO all properties using a map and `=`", "set-replace-properties-using-map") {
-
-    //}
-
     section("Set multiple properties using one `SET` clause", "set-set-multiple-properties-using-one-set-clause") {
       p(
         """Set multiple properties at once by separating them with a comma:""".stripMargin)
