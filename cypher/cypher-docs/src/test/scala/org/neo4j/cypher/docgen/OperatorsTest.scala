@@ -31,6 +31,7 @@ class OperatorsTest extends DocumentingTest {
       """* <<query-operators-summary, Operators at a glance>>
         |* <<query-operators-general, General operators>>
         | ** <<syntax-using-the-distinct-operator, Using the `DISTINCT` operator>>
+        |* <<query-operators-property, Property operators>>
         | ** <<syntax-accessing-the-property-of-a-nested-literal-map, Accessing properties of a nested literal map using the `.` operator>>
         | ** <<syntax-filtering-on-a-dynamically-computed-property-key, Filtering on a dynamically-computed property key using the `[]` operator>>
         |* <<query-operators-mathematical, Mathematical operators>>
@@ -58,7 +59,8 @@ class OperatorsTest extends DocumentingTest {
         """
           |[subs=none]
           ||===
-           || <<query-operators-general, General operators>> | `DISTINCT`, `.` for property access, `[]` for dynamic property access
+           || <<query-operators-general, General operators>> | `DISTINCT`
+           || <<query-operators-property, Property operators>> | `.` for property access, `[]` for dynamic property access
            || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
            || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
            || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
@@ -72,7 +74,28 @@ class OperatorsTest extends DocumentingTest {
       p(
         """The general operators comprise:
           |
-          |* remove duplicates values: `DISTINCT`
+          |* remove duplicates values: `DISTINCT`""".stripMargin)
+      section("Using the `DISTINCT` operator", "syntax-using-the-distinct-operator") {
+        p("Retrieve the unique eye colors from `Person` nodes.")
+        query(
+          """CREATE (a:Person {name: 'Anne', eyeColor: 'blue'}),
+                        (b:Person {name: 'Bill', eyeColor: 'brown'}),
+                        (c:Person {name: 'Carol', eyeColor: 'blue'})
+                        WITH [a, b, c] AS ps
+                  UNWIND ps AS p
+                  RETURN DISTINCT p.eyeColor""", ResultAssertions((r) => {
+            r.toList should equal(List(Map("p.eyeColor" -> "blue"), Map("p.eyeColor" -> "brown")))
+          })) {
+          p("Even though both *'Anne'* and *'Carol'* have blue eyes, *'blue'* is only returned once.")
+          resultTable()
+        }
+        p("`DISTINCT` is commonly used in conjunction with <<query-functions-aggregating,aggregating functions>>.")
+      }
+    }
+    section("Property operators", "query-operators-property") {
+      p(
+        """The property operators comprise:
+          |
           |* access the property of a node, relationship or literal map using the dot operator: `.`
           |* dynamic property access using the subscript operator: `[]`""".stripMargin)
       section("Using the `DISTINCT` operator", "syntax-using-the-distinct-operator") {
