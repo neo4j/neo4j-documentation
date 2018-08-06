@@ -45,6 +45,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<set-remove-a-property, Remove a property>>
         |* <<set-copying-properties-between-nodes-and-relationships, Copy properties between nodes and relationships>>
         |* <<set-replace-properties-using-map, Replace all properties using a map and `=`>>
+        |* <<set-remove-properties-using-empty-map, Remove all properties using an empty map and `=`>>
         |* <<set-setting-properties-using-map, Set specific properties using a map and `+=`>>
         |* <<set-set-multiple-properties-using-one-set-clause, Set multiple properties using one `SET` clause>>
         |* <<set-set-a-property-using-a-parameter, Set a property using a parameter>>
@@ -145,6 +146,20 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
+    section("Remove all properties using an empty map and `=`", "set-remove-properties-using-empty-map") {
+      p(
+        """All existing properties can be removed from a graph element by using `SET` with `=` and an empty map as the right operand: """.stripMargin)
+      query(
+        """MATCH (p {name: 'Peter'})
+          |SET p = {}
+          |RETURN p.name, p.age""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("p.name" -> null, "p.age" -> null)))
+          assertStats(r, propertiesWritten = 2, nodesCreated = 0)
+        })) {
+        p("This query removed all the existing properties -- namely, `name` and `age` -- from the *'Peter'* node.")
+        resultTable()
+      }
+    }
     section("Set specific properties using a map and `+=`", "set-setting-properties-using-map") {
       p(
         """The property mutation operator `+=` can be used with `SET` to set properties from a map in a granular fashion:
@@ -162,7 +177,25 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("This query left the `name` property unchanged, updated the `age` property from `34` to `38`, and added the `hungry` and `position` properties to the *'Peter'* node.")
         resultTable()
       }
+      p(
+        """<<set-remove-properties-using-empty-map, In contrast to the property replacement operator `=`>>, providing an empty map as the right operand to `+=` will not remove any existing properties from a graph element.
+          |In line with the semantics detailed above, passing in an empty map with `+=` will have no effect: """.stripMargin)
+      query(
+        """MATCH (p {name: 'Peter'})
+          |SET p += {}
+          |RETURN p.name, p.age""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("p.name" -> "Peter", "p.age" -> 34)))
+          assertStats(r, propertiesWritten = 0, nodesCreated = 0)
+        })) {
+        resultTable()
+      }
     }
+
+
+    //section("Remove all TODO all properties using a map and `=`", "set-replace-properties-using-map") {
+
+    //}
+
     section("Set multiple properties using one `SET` clause", "set-set-multiple-properties-using-one-set-clause") {
       p(
         """Set multiple properties at once by separating them with a comma:""".stripMargin)

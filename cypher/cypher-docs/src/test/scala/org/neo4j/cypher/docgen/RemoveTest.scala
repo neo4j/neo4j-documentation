@@ -36,6 +36,7 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
     p(
       """* <<query-remove-introduction, Introduction>>
         |* <<remove-remove-a-property, Remove a property>>
+        |* <<remove-remove-all-properties, Remove all properties>>
         |* <<remove-remove-a-label-from-a-node, Remove a label from a node>>
         |* <<remove-removing-multiple-labels, Removing multiple labels>>""".stripMargin)
     section("Introduction", "query-remove-introduction") {
@@ -62,6 +63,11 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("""The node is returned, and no property `age` exists on it.""".stripMargin)
         resultTable()
       }
+    }
+    section("Remove all properties", "remove-remove-all-properties") {
+      p(
+        """`REMOVE` cannot be used to remove all existing properties from a graph element.
+          |Instead, using <<set-remove-properties-using-empty-map, `SET` with `=` and an empty map as the right operand>> will clear all properties from a node or element. """.stripMargin)
     }
     section("Remove a label from a node", "remove-remove-a-label-from-a-node") {
       p(
