@@ -38,7 +38,7 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<remove-remove-a-property, Remove a property>>
         |* <<remove-remove-all-properties, Remove all properties>>
         |* <<remove-remove-a-label-from-a-node, Remove a label from a node>>
-        |* <<remove-removing-multiple-labels, Removing multiple labels>>""".stripMargin)
+        |* <<remove-remove-multiple-labels, Remove multiple labels from a node>>""".stripMargin)
     section("Introduction", "query-remove-introduction") {
       p(
         """For deleting nodes and relationships, see <<query-delete>>.""".stripMargin)
@@ -82,7 +82,7 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Removing multiple labels", "remove-removing-multiple-labels") {
+    section("Remove multiple labels from a node", "remove-remove-multiple-labels") {
       p(
         """To remove multiple labels, you use `REMOVE`.""".stripMargin)
       query(
