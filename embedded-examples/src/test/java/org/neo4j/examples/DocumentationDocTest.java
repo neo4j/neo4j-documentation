@@ -73,7 +73,7 @@ public class DocumentationDocTest extends ImpermanentGraphJavaDocTestBase
         gen.get().addTestSourceSnippets( this.getClass(), "sampleDocumentation" );
         gen.get()
                 .addGithubTestSourceLink( "github", this.getClass(),
-                        "community/embedded-examples" );
+                        "embedded-examples" );
 
         gen.get().addSnippet( "output",
                 createOutputSnippet( "Hello graphy world!" ) );
