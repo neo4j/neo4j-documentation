@@ -72,6 +72,18 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("The newly-changed node is returned by the query.")
         resultTable()
       }
+      p(
+        """It is possible to set a property on a graph element using more complex expressions.
+          |For instance, in contrast to specifying the node directly, the following query shows how to set a property for a node selected by an expression: """.stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})
+          |SET (CASE WHEN n.age = 36 THEN n END).worksIn = 'Malmo'
+          |RETURN n.name, n.worksIn""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Andres", "n.worksIn" -> "Malmo")))
+          assertStats(r, propertiesWritten = 1, nodesCreated = 0)
+        })) {
+        resultTable()
+      }
     }
     section("Update a property", "set-update-a-property") {
       p(
