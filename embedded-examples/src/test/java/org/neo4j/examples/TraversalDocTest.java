@@ -154,7 +154,7 @@ public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
             gen.get().addSourceSnippets( example.getClass(), "knowslikestraverser",
                     "sourceRels", "basetraverser", "depth3", "depth4",
                     "nodes", "relationships" );
-            gen.get().addGithubSourceLink( "github", example.getClass(), "community/embedded-examples" );
+            gen.get().addGithubSourceLink( "github", example.getClass(), "embedded-examples" );
         }
     }
 
