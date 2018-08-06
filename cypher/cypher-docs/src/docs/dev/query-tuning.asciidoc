@@ -15,7 +15,7 @@ At the very least, data should get filtered out as early as possible in order to
 This also applies to what gets returned: returning whole nodes and relationships ought to be avoided in favour of selecting and returning only the data that is needed.
 You should also make sure to set an upper limit on variable length patterns, so they don't cover larger portions of the dataset than needed.
 
-Each Cypher query gets optimized and transformed into an <<execution-plan-introduction, execution plan>> by the Cypher execution engine.
+Each Cypher query gets optimized and transformed into an <<execution-plan-introduction, execution plan>> by the Cypher query planner.
 To minimize the resources used for this, try to use parameters instead of literals when possible.
 This allows Cypher to re-use your queries instead of having to parse and build new execution plans.
 
@@ -61,9 +61,9 @@ Here we detail the available versions:
 
 
 [[cypher-planner]]
-=== Cypher planner
+=== Cypher query planner
 
-Each query is turned into an <<execution-plan-introduction, execution plan>> by the _execution planner_.
+Each query is turned into an <<execution-plan-introduction, execution plan>> by the Cypher _query planner_.
 The execution plan tells Neo4j which operations to perform when executing the query.
 
 Neo4j uses a _cost_-based execution planning strategy (known as the 'cost' planner): the statistics service in Neo4j is used to assign a cost to alternative plans and picks the cheapest one.
@@ -92,7 +92,7 @@ These index decisions are only valid until the schema changes, so adding or remo
 [[cypher-runtime]]
 === Cypher runtime
 
-Using the execution plan, the query is executed -- and records returned -- by the query engine, or _runtime_.
+Using the execution plan, the query is executed -- and records returned -- by the Cypher query planner, or _runtime_.
 Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used, there are three different runtimes available:
 
 Interpreted::
@@ -116,14 +116,14 @@ While this should lead to superior performance in most cases (over both the inte
 The compiled runtime is only available in Neo4j Enterprise Edition.
 
 [NOTE]
-In Enterprise Edition, the query execution engine's fallback mechanism is to try the compiled runtime first, and if it does not support the query, to then try the slotted runtime, and if that also does not support the query, to finally fall back to the interpreted runtime, which supports all queries.
+In Enterprise Edition, the Cypher query planner's fallback mechanism is to try the compiled runtime first, and if it does not support the query, to then try the slotted runtime, and if that also does not support the query, to finally fall back to the interpreted runtime, which supports all queries.
 
 [options="header"]
 |===
 | Option | Description | Default?
-| `runtime=interpreted` | This will force the query execution engine to use the interpreted runtime. | This is the default option for some queries in Enterprise Edition, and the only option for all queries in Community Edition (so it is not necessary to use this option in Community Edition).
-| `runtime=slotted` | This will cause the query execution engine to use the slotted runtime if it supports the query, and fall back to using the interpreted runtime if it does not. | This is the default option for some queries in Enterprise Edition only.
-| `runtime=compiled` | This will cause the query execution engine to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the engine will fall back to the slotted runtime, and, failing that, to the interpreted runtime. | This is the default option for some queries in Enterprise Edition only.
+| `runtime=interpreted` | This will force the query planner to use the interpreted runtime. | This is the default option for some queries in Enterprise Edition, and the only option for all queries in Community Edition (so it is not necessary to use this option in Community Edition).
+| `runtime=slotted` | This will cause the query planner to use the slotted runtime if it supports the query, and fall back to using the interpreted runtime if it does not. | This is the default option for some queries in Enterprise Edition only.
+| `runtime=compiled` | This will cause the query planner to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the planner will fall back to the slotted runtime, and, failing that, to the interpreted runtime. | This is the default option for some queries in Enterprise Edition only.
 |===
 
 
