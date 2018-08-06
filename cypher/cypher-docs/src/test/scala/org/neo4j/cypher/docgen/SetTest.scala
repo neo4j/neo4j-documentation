@@ -43,8 +43,9 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<set-set-a-property, Set a property>>
         |* <<set-update-a-property, Update a property>>
         |* <<set-remove-a-property, Remove a property>>
-        |* <<set-copying-properties-between-nodes-and-relationships, Copying properties between nodes and relationships>>
-        |* <<set-setting-properties-from-maps, Setting properties from maps using `+=`>>
+        |* <<set-copying-properties-between-nodes-and-relationships, Copy properties between nodes and relationships>>
+        |* <<set-replace-properties-using-map, Replace all properties using a map and `=`>>
+        |* <<set-setting-properties-using-map, Set specific properties using a map and `+=`>>
         |* <<set-set-multiple-properties-using-one-set-clause, Set multiple properties using one `SET` clause>>
         |* <<set-set-a-property-using-a-parameter, Set a property using a parameter>>
         |* <<set-set-all-properties-using-a-parameter, Set all properties using a parameter>>
@@ -115,7 +116,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Copying properties between nodes and relationships", "set-copying-properties-between-nodes-and-relationships") {
+    section("Copy properties between nodes and relationships", "set-copying-properties-between-nodes-and-relationships") {
       p(
         """`SET` can be used to copy all properties from one graph element to another.
           |This will remove _all_ other properties on the graph element being copied to.""".stripMargin)
@@ -130,7 +131,21 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Setting properties from maps using `+=`", "set-setting-properties-from-maps") {
+    section("Replace all properties using a map and `=`", "set-replace-properties-using-map") {
+      p(
+        """The property replacement operator `=` can be used with `SET` to replace all existing properties on a graph element with those provided by a map: """.stripMargin)
+      query(
+        """MATCH (p {name: 'Peter'})
+          |SET p = {name: 'Peter Smith', position: 'Entrepreneur'}
+          |RETURN p.name, p.age, p.position""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("p.name" -> "Peter Smith", "p.age" -> null, "p.position" -> "Entrepreneur")))
+          assertStats(r, propertiesWritten = 3, nodesCreated = 0)
+        })) {
+        p("This query updated the `name` property from `Peter` to `Peter Smith`, deleted the `age` property, and added the `position` property to the *'Peter'* node.")
+        resultTable()
+      }
+    }
+    section("Set specific properties using a map and `+=`", "set-setting-properties-using-map") {
       p(
         """The property mutation operator `+=` can be used with `SET` to set properties from a map in a granular fashion:
           |
