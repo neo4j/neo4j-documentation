@@ -44,10 +44,10 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<set-update-a-property, Update a property>>
         |* <<set-remove-a-property, Remove a property>>
         |* <<set-copying-properties-between-nodes-and-relationships, Copying properties between nodes and relationships>>
-        |* <<set-set-a-property-using-a-parameter, Set a property using a parameter>>
-        |* <<set-set-all-properties-using-a-parameter, Set all properties using a parameter>>
         |* <<set-adding-properties-from-maps, Adding properties from maps using `+=`>>
         |* <<set-set-multiple-properties-using-one-set-clause, Set multiple properties using one `SET` clause>>
+        |* <<set-set-a-property-using-a-parameter, Set a property using a parameter>>
+        |* <<set-set-all-properties-using-a-parameter, Set all properties using a parameter>>
         |* <<set-set-a-label-on-a-node, Set a label on a node>>
         |* <<set-set-multiple-labels-on-a-node, Set multiple labels on a node>>""".stripMargin)
     section("Introduction", "query-set-introduction") {
@@ -130,6 +130,35 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
+    section("Adding properties from maps using `+=`", "set-adding-properties-from-maps") {
+      p(
+        """The property mutation operator `+=` can be used with `SET` to set properties from a map in a granular fashion:
+          |
+          |* Any properties in the map that are not on the graph element will be _added_ to the graph element.
+          |* Any properties not in the map that are on the graph element will be left as is; i.e. not removed from the graph element.
+          |* Any properties that are in both the map and the graph element will be _replaced_ in the graph element.""".stripMargin)
+      query(
+        """MATCH (p {name: 'Peter'})
+          |SET p += {age: 38, hungry: true, position: 'Entrepreneur'}
+          |RETURN p.name, p.age, p.hungry, p.position""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("p.name" -> "Peter", "p.age" -> 38, "p.hungry" -> true, "p.position" -> "Entrepreneur")))
+          assertStats(r, propertiesWritten = 3, nodesCreated = 0)
+        })) {
+        p("This query left the `name` property unchanged, updated the `age` property from `34` to `38`, and added the `hungry` and `position` properties to the *'Peter'* node.")
+        resultTable()
+      }
+    }
+    section("Set multiple properties using one `SET` clause", "set-set-multiple-properties-using-one-set-clause") {
+      p(
+        """Set multiple properties at once by separating them with a comma:""".stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})
+          |SET n.position = 'Developer', n.surname = 'Taylor'""".stripMargin, ResultAssertions((r) => {
+          assertStats(r, propertiesWritten = 2, nodesCreated = 0)
+        })){
+        resultTable()
+      }
+    }
     section("Set a property using a parameter", "set-set-a-property-using-a-parameter") {
       p(
         """Use a parameter to set the value of a property:""".stripMargin)
@@ -157,35 +186,6 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         }),
         ("props", Map("name" -> "Andres", "position" -> "Developer"))) {
         p("The *'Andres'* node has had all its properties replaced by the properties in the `props` parameter.")
-        resultTable()
-      }
-    }
-    section("Adding properties from maps using `+=`", "set-adding-properties-from-maps") {
-      p(
-        """The property mutation operator `+=` can be used with `SET` to set properties from a map in a granular fashion:
-          |
-          |* Any properties in the map that are not on the graph element will be _added_ to the graph element.
-          |* Any properties not in the map that are on the graph element will be left as is; i.e. not removed from the graph element.
-          |* Any properties that are in both the map and the graph element will be _replaced_ in the graph element.""".stripMargin)
-      query(
-        """MATCH (p {name: 'Peter'})
-          |SET p += {age: 38, hungry: true, position: 'Entrepreneur'}
-          |RETURN p.name, p.age, p.hungry, p.position""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("p.name" -> "Peter", "p.age" -> 38, "p.hungry" -> true, "p.position" -> "Entrepreneur")))
-          assertStats(r, propertiesWritten = 3, nodesCreated = 0)
-        })) {
-        p("This query left the `name` property unchanged, updated the `age` property from `34` to `38`, and added the `hungry` and `position` properties to the *'Peter'* node.")
-        resultTable()
-      }
-    }
-    section("Set multiple properties using one `SET` clause", "set-set-multiple-properties-using-one-set-clause") {
-      p(
-        """Set multiple properties at once by separating them with a comma:""".stripMargin)
-      query(
-        """MATCH (n {name: 'Andres'})
-          |SET n.position = 'Developer', n.surname = 'Taylor'""".stripMargin, ResultAssertions((r) => {
-          assertStats(r, propertiesWritten = 2, nodesCreated = 0)
-        })){
         resultTable()
       }
     }
