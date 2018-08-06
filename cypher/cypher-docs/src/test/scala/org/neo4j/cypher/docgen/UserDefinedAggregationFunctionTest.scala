@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class UserDefinedAggregationFunctionTestNew extends DocumentingTest {
+class UserDefinedAggregationFunctionTest extends DocumentingTest {
 
   override def outputPath = "target/docs/dev/ql/functions"
 

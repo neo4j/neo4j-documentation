@@ -331,6 +331,6 @@ User-defined aggregation functions are written in Java, deployed into the databa
 
 This example shows how you invoke a user-defined aggregation function called `longestString` from Cypher.
 
-include::call-a-user-defined-aggregation-function.asciidoc[leveloffset=+1]
+include::query-functions-user-defined-aggregation.adoc[leveloffset=+1]
 
 For developing and deploying user-defined aggregation functions in Neo4j, see <<user-defined-aggregation-functions, Extending Neo4j -> User-defined aggregation functions>>.
