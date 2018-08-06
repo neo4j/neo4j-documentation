@@ -162,7 +162,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Set specific properties using a map and `+=`", "set-setting-properties-using-map") {
       p(
-        """The property mutation operator `+=` can be used with `SET` to set properties from a map in a granular fashion:
+        """The property mutation operator `+=` can be used with `SET` to set properties from a map in a fine-grained fashion:
           |
           |* Any properties in the map that are not on the graph element will be _added_ to the graph element.
           |* Any properties not in the map that are on the graph element will be left as is; i.e. not removed from the graph element.

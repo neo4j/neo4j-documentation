@@ -1,10 +1,10 @@
-[[query-operators-property]]
-== Property operators
+[[query-operators-property-deprecated]]
+== Deprecated property operators
 
 [NOTE]
 Since version 2.0, the previously supported property operators `?` and `!` have been removed.
 This syntax is no longer supported.
 Missing properties are now returned as `null`.
-Please use `(NOT(exists(<ident>.prop)) OR <ident>.prop=<value>)` if you really need the old behavior of the `?` operator.
--- Also, the use of `?` for optional relationships has been removed in favor of the newly-introduced `OPTIONAL MATCH` clause.
+Use `(NOT(exists(<ident>.prop)) OR <ident>.prop=<value>)` if the old behavior of the `?` operator is required.
+In addition, the use of `?` for optional relationships has been removed in favor of the `OPTIONAL MATCH` clause.
 

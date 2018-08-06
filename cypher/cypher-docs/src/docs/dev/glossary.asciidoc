@@ -72,6 +72,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operators-mathematical, +>>                      | Mathematical  | Addition
 | <<query-operators-string, +>>                            | String        | Concatenation
 | <<query-operators-list, +>>                              | List          | Concatenation
+| <<query-operators-property, +\=>>                        | Property    | Property mutation
 | <<query-operators-mathematical, \->>                      | Mathematical  | Subtraction or unary minus
 | <<query-operators-property, .>>                             | Property      | Property access
 | <<query-operators-mathematical, />>                      | Mathematical  | Division
@@ -79,6 +80,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operators-comparison, \<\=>>                       | Comparison    | Less than or equal to
 | <<query-operators-comparison, <> >>                       | Comparison    | Inequality
 | <<query-operators-comparison, \=>>                        | Comparison    | Equality
+| <<query-operators-property, \=>>                        | Property    | Property replacement
 | <<query-operators-string, =~>>                           | String        | Regular expression match
 | <<query-operators-comparison, > >>                        | Comparison    | Greater than
 | <<query-operators-comparison, >\=>>                       | Comparison    | Greater than or equal to

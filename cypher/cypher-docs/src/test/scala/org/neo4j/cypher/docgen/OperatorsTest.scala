@@ -19,9 +19,10 @@
  */
 package org.neo4j.cypher.docgen
 
+import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling._
 
-class OperatorsTest extends DocumentingTest {
+class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
 
   override def outputPath = "target/docs/dev/ql/"
 
@@ -34,6 +35,8 @@ class OperatorsTest extends DocumentingTest {
         |* <<query-operators-property, Property operators>>
         | ** <<syntax-accessing-the-property-of-a-nested-literal-map, Accessing properties of a nested literal map using the `.` operator>>
         | ** <<syntax-filtering-on-a-dynamically-computed-property-key, Filtering on a dynamically-computed property key using the `[]` operator>>
+        | ** <<syntax-property-replacement-operator, Replacing all properties of a graph element using the `=` operator>>
+        | ** <<syntax-property-mutation-operator, Setting specific properties of a graph element using the `+=` operator>>
         |* <<query-operators-mathematical, Mathematical operators>>
         | ** <<syntax-using-the-exponentiation-operator, Using the exponentiation operator `^`>>
         | ** <<syntax-using-the-unary-minus-operator, Using the unary minus operator `-`>>
@@ -49,7 +52,7 @@ class OperatorsTest extends DocumentingTest {
         | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list, Using `IN` to check if a number is in a list>>
         | ** <<syntax-using-in-for-more-complex-list-membership-operations, Using `IN` for more complex list membership operations>>
         | ** <<syntax-accessing-elements-in-a-list, Accessing elements in a list using the `[]` operator>>
-        |* <<query-operators-property, Property operators>>
+        |* <<query-operators-property-deprecated, Deprecated property operators>>
         |* <<cypher-comparison, Equality and comparison of values>>
         |* <<cypher-ordering, Ordering and comparison of values>>
         |* <<cypher-operations-chaining, Chaining comparison operations>>
@@ -60,7 +63,7 @@ class OperatorsTest extends DocumentingTest {
           |[subs=none]
           ||===
            || <<query-operators-aggregation, Aggregation operators>> | `DISTINCT`
-           || <<query-operators-property, Property operators>> | `.` for property access, `[]` for dynamic property access
+           || <<query-operators-property, Property operators>> | `.` for property access, `[]` for dynamic property access, `=` for replacing all properties of a graph element, `+=` for setting specific properties of a graph element
            || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
            || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
            || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
@@ -97,23 +100,9 @@ class OperatorsTest extends DocumentingTest {
         """The property operators comprise:
           |
           |* access the property of a node, relationship or literal map using the dot operator: `.`
-          |* dynamic property access using the subscript operator: `[]`""".stripMargin)
-      section("Using the `DISTINCT` operator", "syntax-using-the-distinct-operator") {
-        p("Retrieve the unique eye colors from `Person` nodes.")
-        query(
-          """CREATE (a:Person {name: 'Anne', eyeColor: 'blue'}),
-                        (b:Person {name: 'Bill', eyeColor: 'brown'}),
-                        (c:Person {name: 'Carol', eyeColor: 'blue'})
-                        WITH [a, b, c] AS ps
-                  UNWIND ps AS p
-                  RETURN DISTINCT p.eyeColor""", ResultAssertions((r) => {
-            r.toList should equal(List(Map("p.eyeColor" -> "blue"), Map("p.eyeColor" -> "brown")))
-          })) {
-          p("Even though both *'Anne'* and *'Carol'* have blue eyes, *'blue'* is only returned once.")
-          resultTable()
-        }
-        p("`DISTINCT` is commonly used in conjunction with <<query-functions-aggregating,aggregating functions>>.")
-      }
+          |* dynamic property access using the subscript operator: `[]`
+          |* property replacement `=` for replacing all properties of a graph element
+          |* property mutation operator `+=` for setting specific properties of a graph element""".stripMargin)
       section("Accessing properties of a nested literal map using the `.` operator", "syntax-accessing-the-property-of-a-nested-literal-map") {
         query(
           """WITH {person: {name: 'Anne', age: 25}} AS p
@@ -141,6 +130,36 @@ class OperatorsTest extends DocumentingTest {
         note {
           p("""The behavior of the `[]` operator with respect to `null` is detailed <<cypher-null-bracket-operator, here>>.""")
         }
+      }
+      section("Replacing all properties of a graph element using the `=` operator", "syntax-property-replacement-operator") {
+        query(
+          """CREATE (a:Person {name: 'Jane', age: 20})
+            |WITH a
+            |MATCH (p:Person {name: 'Jane'})
+            |SET p = {name: 'Ellen', livesIn: 'London'}
+            |RETURN p.name, p.age, p.livesIn""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("p.name" -> "Ellen", "p.age" -> null, "p.livesIn" -> "London")))
+            assertStats(r, propertiesWritten = 5, nodesCreated = 1, labelsAdded = 1)
+          })) {
+          p("""All the existing properties on the node are replaced by those provided in the map; i.e. the `name` property is updated from `Jane` to `Ellen`, the `age` property is deleted, and the `livesIn` property is added.""")
+          resultTable()
+        }
+        p("See <<set-replace-properties-using-map>> for more details on using the property replacement operator `=`.")
+      }
+      section("Setting specific properties of a graph element using the `+=` operator", "syntax-property-mutation-operator") {
+        query(
+          """CREATE (a:Person {name: 'Jane', age: 20})
+            |WITH a
+            |MATCH (p:Person {name: 'Jane'})
+            |SET p += {name: 'Ellen', livesIn: 'London'}
+            |RETURN p.name, p.age, p.livesIn""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("p.name" -> "Ellen", "p.age" -> 20, "p.livesIn" -> "London")))
+            assertStats(r, propertiesWritten = 4, nodesCreated = 1, labelsAdded = 1)
+          })) {
+          p("""The properties on the node are updated as follows by those provided in the map: the `name` property is updated from `Jane` to `Ellen`, the `age` property is left untouched, and the `livesIn` property is added.""")
+          resultTable()
+        }
+        p("See <<set-setting-properties-using-map>> for more details on using the property mutation operator `+=`.")
       }
     }
     section("Mathematical operators", "query-operators-mathematical") {
