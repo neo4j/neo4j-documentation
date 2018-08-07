@@ -74,7 +74,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operators-list, +>>                              | List          | Concatenation
 | <<query-operators-property, +\=>>                        | Property    | Property mutation
 | <<query-operators-mathematical, \->>                      | Mathematical  | Subtraction or unary minus
-| <<query-operators-map, .>>                             | Map      | Static property access
+| <<query-operators-map, .>>                             | Map      | Static value access by key
 | <<query-operators-property, .>>                             | Property      | Static property access
 | <<query-operators-mathematical, />>                      | Mathematical  | Division
 | <<query-operators-comparison, <>>                        | Comparison    | Less than
@@ -96,7 +96,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operators-boolean, OR>>                          | Boolean       | Disjunction
 | <<query-operator-comparison-string-specific, STARTS WITH>>   | String comparison | Case-sensitive prefix search
 | <<query-operators-boolean, XOR>>                         | Boolean     | Exclusive disjunction
-| <<query-operators-map, []>>                            | Map        | Subscript (dynamic property access)
+| <<query-operators-map, []>>                            | Map        | Subscript (dynamic value access by key)
 | <<query-operators-property, []>>                            | Property        | Subscript (dynamic property access)
 | <<query-operators-list, []>>                            | List        | Subscript (accessing element(s) in a list)
 | <<query-operators-mathematical, ^>>                      | Mathematical  | Exponentiation

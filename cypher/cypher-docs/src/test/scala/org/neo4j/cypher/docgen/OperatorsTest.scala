@@ -48,8 +48,8 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<query-operators-string, String operators>>
         | ** <<syntax-using-a-regular-expression-to-filter-words, Using a regular expression with `=~` to filter words>>
         |* <<query-operators-map, Map operators>>
-        | ** <<syntax-accessing-the-property-of-a-nested-map, Statically accessing a property of a nested map using the `.` operator">>
-        | ** <<syntax-accessing-dynamic-map-parameter, Dynamically accessing a property of a map using the `[]` operator and a parameter>>
+        | ** <<syntax-accessing-the-value-of-a-nested-map, Statically accessing the value of a nested map by key using the `.` operator">>
+        | ** <<syntax-accessing-dynamic-map-parameter, Dynamically accessing the value of a map by key using the `[]` operator and a parameter>>
         |* <<query-operators-list, List operators>>
         | ** <<syntax-concatenating-two-lists, Concatenating two lists using `+`>>
         | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list, Using `IN` to check if a number is in a list>>
@@ -73,7 +73,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
            || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
            || <<query-operators-boolean, Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
            || <<query-operators-string, String operators>>   | `+` for concatenation, `=~` for regex matching
-           || <<query-operators-map, Map operators>>       |  `.` for static property access, `[]` for dynamic property access
+           || <<query-operators-map, Map operators>>       |  `.` for static value access by key, `[]` for dynamic value access by key
            || <<query-operators-list, List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s) dynamically
            ||===
            |""")
@@ -301,13 +301,13 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
     section("Map operators", "query-operators-map") {
       p(
         """The map operators comprise:
-          |* statically access a property of a map using the dot operator: `.`
-          |* dynamically access a property of a map using the subscript operator: `[]`
+          |* statically access the value of a map by key using the dot operator: `.`
+          |* dynamically access the value of a map by key using the subscript operator: `[]`
           |""".stripMargin)
       note {
         p("""The behavior of the `[]` operator with respect to `null` is detailed in <<cypher-null-bracket-operator>>.""")
       }
-      section("Statically accessing a property of a nested map using the `.` operator", "syntax-accessing-the-property-of-a-nested-map") {
+      section("Statically accessing the value of a nested map by key using the `.` operator", "syntax-accessing-the-value-of-a-nested-map") {
         query(
           """WITH {person: {name: 'Anne', age: 25}} AS p
             |RETURN  p.person.name""".stripMargin, ResultAssertions((r) => {
@@ -316,9 +316,9 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           resultTable()
         }
       }
-      section("Dynamically accessing a property of a map using the `[]` operator and a parameter", "syntax-accessing-dynamic-map-parameter") {
+      section("Dynamically accessing the value of a map by key using the `[]` operator and a parameter", "syntax-accessing-dynamic-map-parameter") {
         p(
-          """A parameter may be used to specify the key of the property to access:""".stripMargin)
+          """A parameter may be used to specify the key of the value to access:""".stripMargin)
         query(
           """WITH {name: 'Anne', age: 25} AS a
             |RETURN a[$myKey] AS result""".stripMargin, ResultAssertions((r) => {
