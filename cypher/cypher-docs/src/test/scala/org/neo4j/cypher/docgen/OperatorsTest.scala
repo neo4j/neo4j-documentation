@@ -33,10 +33,10 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<query-operators-aggregation, Aggregation operators>>
         | ** <<syntax-using-the-distinct-operator, Using the `DISTINCT` operator>>
         |* <<query-operators-property, Property operators>>
-        | ** <<syntax-accessing-the-property-of-a-nested-literal-map, Accessing properties of a nested literal map using the `.` operator>>
+        | ** <<syntax-accessing-the-property-of-a-graph-element, Statically accessing a property of a graph element using the `.` operator>>
         | ** <<syntax-filtering-on-a-dynamically-computed-property-key, Filtering on a dynamically-computed property key using the `[]` operator>>
         | ** <<syntax-property-replacement-operator, Replacing all properties of a graph element using the `=` operator>>
-        | ** <<syntax-property-mutation-operator, Setting specific properties of a graph element using the `+=` operator>>
+        | ** <<syntax-property-mutation-operator, Mutating specific properties of a graph element using the `+=` operator>>
         |* <<query-operators-mathematical, Mathematical operators>>
         | ** <<syntax-using-the-exponentiation-operator, Using the exponentiation operator `^`>>
         | ** <<syntax-using-the-unary-minus-operator, Using the unary minus operator `-`>>
@@ -47,11 +47,15 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         | ** <<syntax-using-boolean-operators-to-filter-numbers, Using boolean operators to filter numbers>>
         |* <<query-operators-string, String operators>>
         | ** <<syntax-using-a-regular-expression-to-filter-words, Using a regular expression with `=~` to filter words>>
+        |* <<query-operators-map, Map operators>>
+        | ** <<syntax-accessing-the-property-of-a-nested-map, Statically accessing a property of a nested map using the `.` operator">>
+        | ** <<syntax-accessing-dynamic-map-parameter, Dynamically accessing a property of a map using the `[]` operator and a parameter>>
         |* <<query-operators-list, List operators>>
         | ** <<syntax-concatenating-two-lists, Concatenating two lists using `+`>>
         | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list, Using `IN` to check if a number is in a list>>
         | ** <<syntax-using-in-for-more-complex-list-membership-operations, Using `IN` for more complex list membership operations>>
         | ** <<syntax-accessing-elements-in-a-list, Accessing elements in a list using the `[]` operator>>
+        | ** <<syntax-accessing-element-in-a-list-parameter, Dynamically accessing an element in a list using the `[]` operator and a parameter>>
         |* <<query-operators-property-deprecated, Deprecated property operators>>
         |* <<cypher-comparison, Equality and comparison of values>>
         |* <<cypher-ordering, Ordering and comparison of values>>
@@ -63,13 +67,14 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           |[subs=none]
           ||===
            || <<query-operators-aggregation, Aggregation operators>> | `DISTINCT`
-           || <<query-operators-property, Property operators>> | `.` for property access, `[]` for dynamic property access, `=` for replacing all properties of a graph element, `+=` for setting specific properties of a graph element
+           || <<query-operators-property, Property operators>> | `.` for static property access, `[]` for dynamic property access, `=` for replacing all properties of a graph element, `+=` for mutating specific properties of a graph element
            || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
            || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
            || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
            || <<query-operators-boolean, Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
            || <<query-operators-string, String operators>>   | `+` for concatenation, `=~` for regex matching
-           || <<query-operators-list, List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s)
+           || <<query-operators-map, Map operators>>       |  `.` for static property access, `[]` for dynamic property access
+           || <<query-operators-list, List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s) dynamically
            ||===
            |""")
     }
@@ -97,17 +102,20 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Property operators", "query-operators-property") {
       p(
-        """The property operators comprise:
+        """The property operators pertain to a node or a relationship (graph element), and comprise:
           |
-          |* access the property of a node, relationship or literal map using the dot operator: `.`
-          |* dynamic property access using the subscript operator: `[]`
+          |* statically access the property of a graph element using the dot operator: `.`
+          |* dynamically access the property of a graph element using the subscript operator: `[]`
           |* property replacement `=` for replacing all properties of a graph element
           |* property mutation operator `+=` for setting specific properties of a graph element""".stripMargin)
-      section("Accessing properties of a nested literal map using the `.` operator", "syntax-accessing-the-property-of-a-nested-literal-map") {
+      section("Statically accessing a property of a graph element using the `.` operator", "syntax-accessing-the-property-of-a-graph-element") {
         query(
-          """WITH {person: {name: 'Anne', age: 25}} AS p
-            |RETURN  p.person.name""".stripMargin, ResultAssertions((r) => {
-            r.toList should equal(List(Map("p.person.name" -> "Anne")))
+          """CREATE (a:Person {name: 'Jane', livesIn: 'London'}),
+            | (b:Person {name: 'Tom', livesIn: 'Copenhagen'})
+            |WITH a, b
+            |MATCH (p:Person)
+            |RETURN  p.name""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("p.name" -> "Jane"), Map("p.name" -> "Tom")))
           })) {
           resultTable()
         }
@@ -146,7 +154,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
         p("See <<set-replace-properties-using-map>> for more details on using the property replacement operator `=`.")
       }
-      section("Setting specific properties of a graph element using the `+=` operator", "syntax-property-mutation-operator") {
+      section("Mutating specific properties of a graph element using the `+=` operator", "syntax-property-mutation-operator") {
         query(
           """CREATE (a:Person {name: 'Jane', age: 20})
             |WITH a
@@ -271,7 +279,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("String operators", "query-operators-string") {
       p(
-        """String operators comprise:
+        """The string operators comprise:
           |
           |* concatenating strings: `+`
           |* matching a regular expression: `=~`""".stripMargin)
@@ -290,13 +298,45 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
       p("""Further information and examples regarding the use of regular expressions in filtering can be found in <<query-where-regex>>.
           |In addition, refer to <<query-operator-comparison-string-specific>> for details on string-specific comparison operators.""")
     }
+    section("Map operators", "query-operators-map") {
+      p(
+        """The map operators comprise:
+          |* statically access a property of a map using the dot operator: `.`
+          |* dynamically access a property of a map using the subscript operator: `[]`
+          |""".stripMargin)
+      note {
+        p("""The behavior of the `[]` operator with respect to `null` is detailed in <<cypher-null-bracket-operator>>.""")
+      }
+      section("Statically accessing a property of a nested map using the `.` operator", "syntax-accessing-the-property-of-a-nested-map") {
+        query(
+          """WITH {person: {name: 'Anne', age: 25}} AS p
+            |RETURN  p.person.name""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("p.person.name" -> "Anne")))
+          })) {
+          resultTable()
+        }
+      }
+      section("Dynamically accessing a property of a map using the `[]` operator and a parameter", "syntax-accessing-dynamic-map-parameter") {
+        p(
+          """A parameter may be used to specify the key of the property to access:""".stripMargin)
+        query(
+          """WITH {name: 'Anne', age: 25} AS a
+            |RETURN a[$myKey] AS result""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("result" -> "Anne")))
+          }),
+          ("myKey", "name")) {
+          resultTable()
+        }
+      }
+      p("More details on maps can be found in <<cypher-maps>>.")
+    }
     section("List operators", "query-operators-list") {
       p(
-        """List operators comprise:
+        """The list operators comprise:
           |
           |* concatenating lists `l~1~` and `l~2~`: `[l~1~] + [l~2~]`
           |* checking if an element `e` exists in a list `l`: `e IN [l]`
-          |* accessing an element(s) in a list using the subscript operator: `[]`""".stripMargin)
+          |* dynamically accessing an element(s) in a list using the subscript operator: `[]`""".stripMargin)
       note {
         p("""The behavior of the `IN` and `[]` operators with respect to `null` is detailed <<cypher-working-with-null, here>>.""")
       }
@@ -362,6 +402,18 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
             r.toList should equal(List(Map("result" -> List("John", "Bill"))))
           })) {
           p("""The square brackets will extract the elements from the start index `1`, and up to (but excluding) the end index `3`.""")
+          resultTable()
+        }
+      }
+      section("Dynamically accessing an element in a list using the `[]` operator and a parameter", "syntax-accessing-element-in-a-list-parameter") {
+        p(
+          """A parameter may be used to specify the index of the element to access:""".stripMargin)
+        query(
+          """WITH ['Anne', 'John', 'Bill', 'Diane', 'Eve'] AS names
+            |RETURN names[$myIndex] AS result""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("result" -> "John")))
+          }),
+          ("myIndex", 1L)) {
           resultTable()
         }
       }

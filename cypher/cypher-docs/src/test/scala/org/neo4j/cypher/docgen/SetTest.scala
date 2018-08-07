@@ -46,7 +46,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<set-copying-properties-between-nodes-and-relationships, Copy properties between nodes and relationships>>
         |* <<set-replace-properties-using-map, Replace all properties using a map and `=`>>
         |* <<set-remove-properties-using-empty-map, Remove all properties using an empty map and `=`>>
-        |* <<set-setting-properties-using-map, Set specific properties using a map and `+=`>>
+        |* <<set-setting-properties-using-map, Mutate specific properties using a map and `+=`>>
         |* <<set-set-multiple-properties-using-one-set-clause, Set multiple properties using one `SET` clause>>
         |* <<set-set-a-property-using-a-parameter, Set a property using a parameter>>
         |* <<set-set-all-properties-using-a-parameter, Set all properties using a parameter>>
@@ -84,6 +84,20 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
           r.toList should equal(List(Map("n.name" -> "Andres", "n.worksIn" -> "Malmo")))
           assertStats(r, propertiesWritten = 1, nodesCreated = 0)
         })) {
+        resultTable()
+      }
+      p(
+        """No action will be taken if the node expression evaluates to `null`, as shown in this example: """.stripMargin)
+      query(
+        """MATCH (n {name: 'Andres'})
+          |SET (CASE WHEN n.age = 55 THEN n END).worksIn = 'Malmo'
+          |RETURN n.name, n.worksIn""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Andres", "n.worksIn" -> null)))
+          assertStats(r, propertiesWritten = 0)
+        })) {
+        p(
+          """As no node matches the `CASE` expression, the expression returns a `null`.
+            |As a consequence, no updates occur, and therefore no `worksIn` property is set.""".stripMargin)
         resultTable()
       }
     }
@@ -160,13 +174,14 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Set specific properties using a map and `+=`", "set-setting-properties-using-map") {
+    section("Mutate specific properties using a map and `+=`", "set-setting-properties-using-map") {
       p(
-        """The property mutation operator `+=` can be used with `SET` to set properties from a map in a fine-grained fashion:
+        """The property mutation operator `+=` can be used with `SET` to mutate properties from a map in a fine-grained fashion:
           |
           |* Any properties in the map that are not on the graph element will be _added_ to the graph element.
           |* Any properties not in the map that are on the graph element will be left as is; i.e. not removed from the graph element.
-          |* Any properties that are in both the map and the graph element will be _replaced_ in the graph element.""".stripMargin)
+          |* Any properties that are in both the map and the graph element will be _replaced_ in the graph element.
+          |However, if any property in the map is `null`, it will be _removed_ from the graph element.""".stripMargin)
       query(
         """MATCH (p {name: 'Peter'})
           |SET p += {age: 38, hungry: true, position: 'Entrepreneur'}
