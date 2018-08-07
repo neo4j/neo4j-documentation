@@ -28,7 +28,7 @@ This section explains how to work with indexes in Neo4j and Cypher.
 [[query-schema-index-introduction]]
 == Introduction
 
-A database index is a redundant copy of the data in the database for the purpose of making more efficient the retrieval of the aforementioned data.
+A database index is a redundant copy of some of the data in the database for the purpose of making searches of related data more efficient.
 This comes at the cost of additional storage space and slower writes, so deciding what to index and what not to index is an important and often non-trivial task.
 
 Cypher enables the creation of indexes on one or more properties for all nodes that have a given label:
@@ -38,8 +38,7 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
   Differences in the usage patterns between composite and single-property indexes are detailed in the examples below.
 
 [NOTE]
-Use <<query-using, hints>> to force Cypher to use specific indexes.
-
+<<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).
 
 Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
