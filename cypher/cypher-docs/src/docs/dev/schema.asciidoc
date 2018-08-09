@@ -20,13 +20,13 @@ Cypher includes data definition language (DDL) statements for manipulating the s
  ** <<schema-index-use-index, Use index>>
  ** <<schema-index-use-a-single-property-index-with-where-using-equality, Use a single-property index with `WHERE` using equality>>
  ** <<use-a-composite-index-with-where-using-equality, Use a composite index with `WHERE` using equality>>
- ** <<schema-index-use-index-with-where-using-range-comparisons, Use index with `WHERE` using range comparisons>>
- ** <<schema-index-use-index-with-where-using-multiple-range-comparisons, Use index with `WHERE` using multiple range comparisons>>
+ ** <<schema-index-range-comparisons-using-where-single-property-index, Use index with `WHERE` using range comparisons>>
+ ** <<schema-index-multiple-range-comparisons-using-where-single-property-index, Use index with `WHERE` using multiple range comparisons>>
  ** <<schema-index-use-index-with-in,Use index with `IN`>>
  ** <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
  ** <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>
- ** <<schema-index-use-index-when-executing-a-spatial-distance-search, Use index when executing a spatial distance search>>
- ** <<schema-index-use-index-when-executing-a-spatial-bounding-box-search, Use index when executing a spatial bounding box search>>
+ ** <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search>>
+ ** <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search>>
  ** <<explicit-indexes-procedures, Use built-in procedures to manage and use explicit indexes>>
 * <<query-constraints, Constraints>>
  ** <<query-constraint-unique-nodes, Unique node property constraints>>
