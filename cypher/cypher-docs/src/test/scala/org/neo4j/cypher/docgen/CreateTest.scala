@@ -100,7 +100,7 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
         p(
           """When creating a new node with labels, you can add properties at the same time.""".stripMargin)
         query(
-          """CREATE (n:Person {name: 'Andres', title: 'Developer'})""".stripMargin, ResultAssertions((r) => {
+          """CREATE (n:Person {name: 'Andy', title: 'Developer'})""".stripMargin, ResultAssertions((r) => {
             assertStats(r, nodesCreated = 1, labelsAdded = 1, propertiesWritten = 2)
           })) {
           p("Nothing is returned from this query.")
@@ -111,9 +111,9 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
         p(
           """Creating a single node is done by issuing the following query:""".stripMargin)
         query(
-          """CREATE (a {name: 'Andres'})
+          """CREATE (a {name: 'Andy'})
             |RETURN a.name""".stripMargin, ResultAssertions((r) => {
-            r.toList should equal(List(Map("a.name" -> "Andres")))
+            r.toList should equal(List(Map("a.name" -> "Andy")))
             assertStats(r, propertiesWritten = 1, nodesCreated = 1)
           })) {
           p("The newly-created node is returned.")
@@ -160,7 +160,7 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """When you use `CREATE` and a pattern, all parts of the pattern that are not already in scope at this time will be created.""".stripMargin)
       query(
-        """CREATE p = (andres {name:'Andres'})-[:WORKS_AT]->(neo)<-[:WORKS_AT]-(michael {name: 'Michael'})
+        """CREATE p = (andy {name:'Andy'})-[:WORKS_AT]->(neo)<-[:WORKS_AT]-(michael {name: 'Michael'})
           |RETURN p""".stripMargin, ResultAssertions((r) => {
           assertStats(r, nodesCreated = 3, relationshipsCreated = 2, propertiesWritten = 2)
         })) {
@@ -179,7 +179,7 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
             |RETURN n""".stripMargin, ResultAssertions((r) => {
             assertStats(r, nodesCreated = 1, labelsAdded = 1, propertiesWritten = 2)
           }),
-          ("props", Map("name" -> "Andres", "position" -> "Developer"))) {
+          ("props", Map("name" -> "Andy", "position" -> "Developer"))) {
           resultTable()
         }
       }

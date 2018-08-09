@@ -30,7 +30,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   override val setupQueries = List(
     """CREATE (me:Person {name: 'me'})
-       CREATE (andres:Person {name: 'Andres'})
+       CREATE (andy:Person {name: 'Andy'})
        CREATE (andreas:Person {name: 'Andreas'})
        CREATE (mattias:Person {name: 'Mattias'})
        CREATE (lovis:Person {name: 'Lovis'})
@@ -69,7 +69,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
        CREATE (me)-[:WORKS_IN {duration: 190}]->(london)
        CREATE (andreas)-[:WORKS_IN {duration: 187}]->(london)
-       CREATE (andres)-[:WORKS_IN {duration: 150}]->(london)
+       CREATE (andy)-[:WORKS_IN {duration: 150}]->(london)
        CREATE (mattias)-[:WORKS_IN {duration: 230}]->(london)
        CREATE (lovis)-[:WORKS_IN {duration: 230}]->(sf)
        CREATE (pontus)-[:WORKS_IN {duration: 230}]->(malmo)
@@ -83,8 +83,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
        CREATE (steven)-[:WORKS_IN {duration: 230}]->(malmo)
        CREATE (chris)-[:WORKS_IN {duration: 230}]->(madrid)
        CREATE (london)-[:IN]->(england)
-       CREATE (me)-[:FRIENDS_WITH]->(andres)
-       CREATE (andres)-[:FRIENDS_WITH]->(andreas)
+       CREATE (me)-[:FRIENDS_WITH]->(andy)
+       CREATE (andy)-[:FRIENDS_WITH]->(andreas)
     """.stripMargin)
 
   override val setupConstraintQueries = List(
@@ -983,7 +983,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |This operator is a variation of the <<query-plan-apply, Apply>> operator.
         """.stripMargin,
       queryText =
-        """MERGE (p:Person {name: 'Andres'})
+        """MERGE (p:Person {name: 'Andy'})
           |ON MATCH SET p.exists = true""".stripMargin,
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("ConditionalApply"))
     )
@@ -997,7 +997,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |This operator is a variation of the <<query-plan-apply, Apply>> operator.
         """.stripMargin,
       queryText =
-        """MERGE (p:Person {name: 'Andres'})
+        """MERGE (p:Person {name: 'Andy'})
           |ON CREATE SET p.exists = true""".stripMargin,
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("AntiConditionalApply"))
     )

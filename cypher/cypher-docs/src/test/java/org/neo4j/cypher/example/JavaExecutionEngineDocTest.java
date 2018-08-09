@@ -386,7 +386,7 @@ public class JavaExecutionEngineDocTest
     {
         // START SNIPPET: create_node_from_map
         Map<String, Object> props = new HashMap<>();
-        props.put( "name", "Andres" );
+        props.put( "name", "Andy" );
         props.put( "position", "Developer" );
 
         Map<String, Object> params = new HashMap<>();
@@ -396,7 +396,7 @@ public class JavaExecutionEngineDocTest
         // END SNIPPET: create_node_from_map
         dumpToFile( "create_node_from_map", query, params );
 
-        Result result = db.execute( "MATCH (n) WHERE n.name = 'Andres' AND n.position = 'Developer' RETURN n" );
+        Result result = db.execute( "MATCH (n) WHERE n.name = 'Andy' AND n.position = 'Developer' RETURN n" );
         assertThat( count( result ), is( 1L ) );
     }
 
@@ -405,7 +405,7 @@ public class JavaExecutionEngineDocTest
     {
         // START SNIPPET: create_multiple_nodes_from_map
         Map<String, Object> n1 = new HashMap<>();
-        n1.put( "name", "Andres" );
+        n1.put( "name", "Andy" );
         n1.put( "position", "Developer" );
         n1.put( "awesome", true );
 
@@ -422,7 +422,7 @@ public class JavaExecutionEngineDocTest
         // END SNIPPET: create_multiple_nodes_from_map
         dumpToFile( "create_multiple_nodes_from_map", query, params );
 
-        Result result = db.execute( "MATCH (n:Person) WHERE n.name IN ['Andres', 'Michael'] AND n.position = 'Developer' RETURN n" );
+        Result result = db.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
         assertThat( count( result ), is( 2L ) );
 
         result = db.execute( "MATCH (n:Person) WHERE n.children = 3 RETURN n" );
@@ -439,7 +439,7 @@ public class JavaExecutionEngineDocTest
         {
             // START SNIPPET: set_properties_on_a_node_from_a_map
             Map<String, Object> n1 = new HashMap<>();
-            n1.put( "name", "Andres" );
+            n1.put( "name", "Andy" );
             n1.put( "position", "Developer" );
 
             Map<String, Object> params = new HashMap<>();
@@ -450,8 +450,8 @@ public class JavaExecutionEngineDocTest
             // END SNIPPET: set_properties_on_a_node_from_a_map
             dumpToFile( "set_properties_on_a_node_from_a_map", query, params );
 
-            db.execute( "MATCH (n:Person) WHERE n.name IN ['Andres', 'Michael'] AND n.position = 'Developer' RETURN n" );
-            assertThat( michaelaNode.getProperty( "name" ).toString(), is( "Andres" ) );
+            db.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
+            assertThat( michaelaNode.getProperty( "name" ).toString(), is( "Andy" ) );
         }
     }
 
@@ -459,7 +459,7 @@ public class JavaExecutionEngineDocTest
     public void create_node_using_create_unique_with_java_maps() throws Exception
     {
         Map<String, Object> props = new HashMap<>();
-        props.put( "name", "Andres" );
+        props.put( "name", "Andy" );
         props.put( "position", "Developer" );
 
         Map<String, Object> params = new HashMap<>();
@@ -476,7 +476,7 @@ public class JavaExecutionEngineDocTest
     public void should_be_able_to_handle_two_params_without_named_nodes() throws Exception
     {
         Map<String, Object> props1 = new HashMap<>();
-        props1.put( "name", "Andres" );
+        props1.put( "name", "Andy" );
         props1.put( "position", "Developer" );
 
         Map<String, Object> props2 = new HashMap<>();

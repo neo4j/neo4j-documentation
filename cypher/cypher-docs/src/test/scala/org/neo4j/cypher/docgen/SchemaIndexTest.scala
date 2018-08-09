@@ -34,11 +34,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   override val setupQueries = (1 to 20 map (_ => """CREATE (:Person)""")).toList
 
   override def graphDescription = List(
-    "andres:Person KNOWS john:Person"
+    "andy:Person KNOWS john:Person"
   )
 
   override val properties = Map(
-    "andres" -> Map("firstname" -> "Andres", "surname" -> "Taylor", "age" -> 40, "country" -> "Sweden", "highScore" -> 12345),
+    "andy" -> Map("firstname" -> "Andy", "surname" -> "Jones", "age" -> 40, "country" -> "Sweden", "highScore" -> 12345),
     "john" -> Map("firstname" -> "John", "surname" -> "Smith", "age" -> 35, "country" -> "UK", "highScore" -> 54321)
   )
 
@@ -115,7 +115,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Use index",
       text = "There is usually no need to specify which indexes to use in a query, Cypher will figure that out by itself. " +
         "For example the query below will use the `Person(firstname)` index, if it exists. ",
-      queryText = "MATCH (person:Person {firstname: 'Andres'}) RETURN person",
+      queryText = "MATCH (person:Person {firstname: 'Andy'}) RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -131,7 +131,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "A query containing equality comparisons of a single indexed property in the `WHERE` clause is backed automatically by the index. " +
         "It is also possible for a query with multiple `OR` predicates to use multiple indexes, if indexes exist on the properties. " +
         "For example, if indexes exist on both `:Label(p1)` and `:Label(p2)`, `MATCH (n:Label) WHERE n.p1 = 1 OR n.p2 = 2 RETURN n` will use both indexes. ",
-      queryText = "MATCH (person:Person) WHERE person.firstname = 'Andres' RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.firstname = 'Andy' RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -214,7 +214,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "List membership check using `IN` (single-property index)",
       text =
         "The `IN` predicate on `person.firstname` in the following query will use the single-property index `Person(firstname)` if it exists. ",
-      queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andres', 'John'] RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andy', 'John'] RETURN person",
       assertions = {
         (p) =>
           assertEquals(2, p.size)

@@ -27,7 +27,7 @@ class DeleteTest extends DocumentingTest with QueryStatisticsTestSupport {
 
   override def doc = new DocBuilder {
     doc("DELETE", "query-delete")
-    initQueries("""CREATE (a:Person {name: 'Andres', age: 36}),
+    initQueries("""CREATE (a:Person {name: 'Andy', age: 36}),
                   |       (p:Person {name: 'Tobias', age: 25}),
                   |       (t:Person {name: 'Peter', age: 34}),
                   |       (z:Person {name: 'UNKNOWN'}),
@@ -74,7 +74,7 @@ class DeleteTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """When you want to delete a node and any relationship going to or from it, use `DETACH DELETE`.""".stripMargin)
       query(
-        """MATCH (n {name: 'Andres'})
+        """MATCH (n {name: 'Andy'})
           |DETACH DELETE n""".stripMargin, ResultAssertions((r) => {
           assertStats(r, relationshipsDeleted = 2, nodesDeleted = 1)
         })) {
@@ -85,11 +85,11 @@ class DeleteTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """It is also possible to delete relationships only, leaving the node(s) otherwise unaffected.""".stripMargin)
       query(
-        """MATCH (n {name: 'Andres'})-[r:KNOWS]->()
+        """MATCH (n {name: 'Andy'})-[r:KNOWS]->()
           |DELETE r""".stripMargin, ResultAssertions((r) => {
           assertStats(r, relationshipsDeleted = 2, nodesDeleted = 0)
         })) {
-        p("""This deletes all outgoing `KNOWS` relationships from the node with the name *'Andres'*.""".stripMargin)
+        p("""This deletes all outgoing `KNOWS` relationships from the node with the name *'Andy'*.""".stripMargin)
         resultTable()
       }
     }

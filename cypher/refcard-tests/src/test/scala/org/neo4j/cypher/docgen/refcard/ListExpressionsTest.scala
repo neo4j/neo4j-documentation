@@ -56,7 +56,7 @@ class ListExpressionsTest extends RefcardTest with QueryStatisticsTestSupport {
     }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("prop" -> "Andrés"),
+    "A" -> Map("prop" -> "Andy"),
     "B" -> Map("prop" -> "Tobias"),
     "C" -> Map("prop" -> "Chris"))
 
