@@ -258,7 +258,7 @@ class SpatialTest extends DocumentingTest {
           |<<cypher-spatial-crs, four coordinate reference systems>>.
           |This allows for both <<schema-index-use-a-single-property-index-with-where-using-equality, equality>>
           |and <<schema-index-use-index-with-where-using-range-comparisons, range>> queries using exactly the same syntax and behaviour as for other property types.
-          |If two range predicates are used, setting minimum and maximum points, this will effectively result in a
+          |If two range predicates are used, which define minimum and maximum points, this will effectively result in a
           |<<schema-index-use-index-when-executing-a-spatial-bounding-box-search, 'bounding box query'>>.
           |In addition, queries using the `distance` function can, under the right conditions, also use the index, as described in the section
           |<<schema-index-use-index-when-executing-a-spatial-distance-search, 'Use index when executing a spatial distance search'>>.
@@ -267,13 +267,14 @@ class SpatialTest extends DocumentingTest {
     section("Comparability and Orderability", "cypher-comparability-orderability") {
       p(
         """
-          |Points with different CRS are not comparable. This means that any function operating on two points of different type will return null.
-          |This is true of the distance function as well as inequality comparisons. If these are used in predicate, they will cause the associate match
-          |to return no results.
+          |Points with different CRS are not comparable.
+          |This means that any function operating on two points of different types will return `null`.
+          |This is true of the <<functions-distance, distance function>> as well as inequality comparisons.
+          |If these are used in a predicate, they will cause the associated `MATCH` to return no results.
         """.stripMargin
       )
       query(
-        """WITH point({x:3, y:0}) AS p2d, point({x:0, y:4, z:1}) as p3d
+        """WITH point({x:3, y:0}) AS p2d, point({x:0, y:4, z:1}) AS p3d
           |RETURN distance(p2d,p3d), p2d < p3d, p2d = p3d, p2d <> p3d, distance(p2d,point({x:p3d.x, y:p3d.y}))""".stripMargin, ResultAssertions((r) => {
           r.hasNext should be(true)
           val record = r.next()
@@ -294,9 +295,10 @@ class SpatialTest extends DocumentingTest {
       }
       p(
         """
-          |However, all types are orderable. The Point types will be ordered after Numbers and before Temporal types.
-          |Points with different CRS with be ordered by their SRID numbers. For the current set of 4 CRS, this means
-          |the order is WGS84, WGS84-3D, Cartesian, Cartesian-3D.
+          |However, all types are orderable.
+          |The Point types will be ordered after Numbers and before Temporal types.
+          |Points with different CRS with be ordered by their SRID numbers.
+          |For the current set of four <<cypher-spatial-crs, CRS>>, this means the order is WGS84, WGS84-3D, Cartesian, Cartesian-3D.
         """.stripMargin
       )
       query(

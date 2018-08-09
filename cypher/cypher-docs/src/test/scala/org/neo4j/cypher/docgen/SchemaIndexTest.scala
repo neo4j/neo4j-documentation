@@ -120,10 +120,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Use index with `WHERE` using range comparisons",
+      title = "Range comparisons using `WHERE` (single-property index)",
       text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
-        "Composite indexes are currently not able to support range comparisons. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+        "Composite indexes are currently not able to support range comparisons.",
       queryText = "MATCH (person:Person) WHERE person.firstname > 'B' RETURN person",
       assertions = {
         (p) =>
@@ -140,10 +139,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Use index with `WHERE` using multiple range comparisons",
-      text = "When the `WHERE` clause contains multiple inequality (range) comparisons for the same property these can be combined " +
-        "in a single index range seek. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+      title = "Multiple range comparisons using `WHERE` (single-property index)",
+      text = "When the `WHERE` clause contains multiple inequality (range) comparisons for the same property, these can be combined " +
+        "in a single index range seek.",
       queryText = "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 RETURN person",
       assertions = {
         (p) =>
@@ -168,8 +166,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Use index with `IN`",
       text =
-        "The `IN` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+        "The `IN` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists.",
       queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andres', 'Mark'] RETURN person",
       assertions = {
         (p) =>
@@ -226,7 +223,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y}) } )").toList)
     profileQuery(
-      title = "Use index when executing a spatial distance search",
+      title = "Spatial distance searches (single-property index)",
       text =
         "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries.",
       queryText = "MATCH (p:Person) WHERE distance(p.location, point({x: 1, y: 2})) < 2 RETURN p.location",
@@ -246,7 +243,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       )
     )
     profileQuery(
-      title = "Use index when executing a spatial bounding box search",
+      title = "Spatial bounding box searches (single-property index)",
       text = "The ability to do index seeks on bounded ranges works even with the 2D and 3D spatial `Point` types.",
       queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.location < point({x: 2, y: 6}) RETURN person",
       assertions = {
