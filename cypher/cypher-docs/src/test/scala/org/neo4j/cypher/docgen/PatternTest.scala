@@ -31,7 +31,7 @@ class PatternTest extends DocumentingTest {
                 |(b {name: 'Becky'}),
                 |(c {name: 'Cesar'}),
                 |(d {name: 'Dilshad'}),
-                |(e {name: 'Emil'}),
+                |(e {name: 'George'}),
                 |(f {name: 'Filipa'}),
                 |
                 |(a)-[:KNOWS]->(b),

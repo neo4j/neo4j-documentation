@@ -31,7 +31,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
       """CREATE (a:Swedish {name: 'Andres', age: 36, hungry: true}),
                 (b {name: 'Stefan'}),
                 (c {name: 'Peter', age: 34}),
-                (d {name: 'Emil'}),
+                (d {name: 'George'}),
 
                 (a)-[:KNOWS]->(c),
                 (b)-[:KNOWS]->(a),
@@ -172,10 +172,10 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """To set multiple labels on a node, use `SET` and separate the different labels using `:`.""".stripMargin)
       query(
-        """MATCH (n {name: 'Emil'})
+        """MATCH (n {name: 'George'})
           |SET n:Swedish:Bossman
           |RETURN n.name, labels(n) AS labels""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.name" -> "Emil", "labels" -> List("Swedish", "Bossman"))))
+          r.toList should equal(List(Map("n.name" -> "George", "labels" -> List("Swedish", "Bossman"))))
           assertStats(r, propertiesWritten = 0, nodesCreated = 0, labelsAdded = 2)
         })) {
         p("The newly labeled node is returned by the query.")
