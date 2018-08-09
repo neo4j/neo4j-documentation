@@ -37,7 +37,7 @@ class DocumentationTestBaseTest extends DocumentingTestBase with QueryStatistics
     "B" -> Map("name" -> "Bossman"),
     "C" -> Map("name" -> "Ceasar"),
     "D" -> Map("name" -> "David"),
-    "E" -> Map("name" -> "Emil"))
+    "E" -> Map("name" -> "George"))
 
   def section = "InternalTesting"
 
@@ -62,7 +62,7 @@ class DocumentationTestBaseTest extends DocumentingTestBase with QueryStatistics
     graphSource.close()
     assert(graphLines.contains("Anders"))
     assert(graphLines.contains("David"))
-    assert(graphLines.contains("Emil"))
+    assert(graphLines.contains("George"))
     assert(graphLines.contains("Bossman"))
     assert(graphLines.contains("Ceasar"))
     assert(graphLines.contains("KNOWS"))
