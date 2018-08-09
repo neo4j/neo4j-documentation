@@ -35,12 +35,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   override val setupQueries = (1 to 20 map (_ => """CREATE (:Person)""")).toList
 
   override def graphDescription = List(
-    "andres:Person KNOWS mark:Person"
+    "andres:Person KNOWS john:Person"
   )
 
   override val properties = Map(
     "andres" -> Map("firstname" -> "Andres", "surname" -> "Taylor", "age" -> 40, "country" -> "Sweden"),
-    "mark" -> Map("firstname" -> "Mark", "surname" -> "Needham", "age" -> 35, "country" -> "UK")
+    "john" -> Map("firstname" -> "John", "surname" -> "Smith", "age" -> 35, "country" -> "UK")
   )
 
   override val setupConstraintQueries = List(
@@ -194,7 +194,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "List membership check using `IN` (single-property index)",
       text =
         "The `IN` predicate on `person.firstname` in the following query will use the single-property index `Person(firstname)` if it exists. ",
-      queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andres', 'Mark'] RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andres', 'John'] RETURN person",
       assertions = {
         (p) =>
           assertEquals(2, p.size)
@@ -267,10 +267,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Suffix search using `ENDS WITH` (single-property index)",
       text =
         "The `ENDS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
-          "All values stored in the `Person(firstname)` index will be searched, and entries ending with `'rk'` will be returned. " +
+          "All values stored in the `Person(firstname)` index will be searched, and entries ending with `'hn'` will be returned. " +
           "This means that although the search will not be optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place. " +
           "Composite indexes are currently not able to support `ENDS WITH`. ",
-      queryText = "MATCH (person:Person) WHERE person.firstname ENDS WITH 'rk' RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.firstname ENDS WITH 'hn' RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -292,13 +292,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Substring search using `CONTAINS` (single-property index)",
       text =
         "The `CONTAINS` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
-          "All values stored in the `Person(firstname)` index will be searched, and entries containing `'r'` will be returned. " +
+          "All values stored in the `Person(firstname)` index will be searched, and entries containing `'h'` will be returned. " +
           "This means that although the search will not be optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place. " +
           "Composite indexes are currently not able to support `CONTAINS`. ",
-      queryText = "MATCH (person:Person) WHERE person.firstname CONTAINS 'r' RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.firstname CONTAINS 'h' RETURN person",
       assertions = {
         (p) =>
-          assertEquals(2, p.size)
+          assertEquals(1, p.size)
           assertThat(p.executionPlanDescription().toString, containsString("NodeIndexContainsScan"))
       }
     )
