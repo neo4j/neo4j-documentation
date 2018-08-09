@@ -62,7 +62,7 @@ class FunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
     }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("property" -> "Andrés"),
+    "A" -> Map("property" -> "Andy"),
     "B" -> Map("property" -> "Tobias"),
     "C" -> Map("property" -> "Chris"))
 

@@ -127,7 +127,7 @@ class PatternTest extends DocumentingTest {
           |E.g. a node with two properties on it would look like:""")
       p("""[source, cypher]
           |----
-          |(a {name: 'Andres', sport: 'Brazilian Ju-Jitsu'})
+          |(a {name: 'Andy', sport: 'Brazilian Ju-Jitsu'})
           |----
           |""")
       p("""A relationship with expectations on it is given by:""")

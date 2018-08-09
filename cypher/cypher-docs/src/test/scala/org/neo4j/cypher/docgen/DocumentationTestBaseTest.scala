@@ -77,7 +77,7 @@ Use `UNWIND` to create multiple nodes from a parameter.
 """,
       parameters =
         Map("props" -> List(
-          Map("name" -> "Andres", "position" -> "Developer"),
+          Map("name" -> "Andy", "position" -> "Developer"),
           Map("name" -> "Michael", "position" -> "Developer")))
       ,
       queryText = "UNWIND $props AS properties CREATE (n) SET n = properties RETURN n",
