@@ -38,13 +38,14 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   )
 
   override val properties = Map(
-    "andres" -> Map("firstname" -> "Andres", "surname" -> "Taylor"),
-    "mark" -> Map("firstname" -> "Mark", "surname" -> "Needham")
+    "andres" -> Map("firstname" -> "Andres", "surname" -> "Taylor", "highScore" -> 12345),
+    "mark" -> Map("firstname" -> "Mark", "surname" -> "Needham", "highScore" -> 54321)
   )
 
   override val setupConstraintQueries = List(
     "CREATE INDEX ON :Person(firstname)",
-    "CREATE INDEX ON :Person(location)"
+    "CREATE INDEX ON :Person(location)",
+    "CREATE INDEX ON :Person(highScore)"
   )
 
   def section = "Schema Index"
@@ -56,7 +57,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "Note that the index is not immediately available, but will be created in the background.",
       queryText = "CREATE INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
-      assertions = (p) => assertIndexesOnLabels("Person", List(List("location"), List("firstname")), List(List("firstname"), List("location")))
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("location"), List("firstname"), List("highScore")))
     )
   }
 
@@ -67,7 +68,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       prepare = _ => executePreparationQueries(List("create index on :Person(firstname)")),
       queryText = "CALL db.indexes",
       optionalResultExplanation = "",
-      assertions = (p) => assertEquals(2, p.size)
+      assertions = (p) => assertEquals(3, p.size)
     )
   }
 
@@ -78,7 +79,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       prepare = _ => executePreparationQueries(List("create index on :Person(firstname)")),
       queryText = "DROP INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
-      assertions = (p) => assertIndexesOnLabels("Person", List(List("location")), List(List("location")))
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("location"), List("highScore")))
     )
   }
 
@@ -119,11 +120,29 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Use index with `WHERE` using range comparisons",
+      title = "Range comparisons using `WHERE` (single-property index)",
       text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
-        "Composite indexes are currently not able to support range comparisons. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+        "Composite indexes are currently not able to support range comparisons.",
       queryText = "MATCH (person:Person) WHERE person.firstname > 'B' RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+
+          checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_index_with_where_using_multiple_range_comparisons() {
+    // Need to make index preferable in terms of cost
+    executePreparationQueries((0 to 300).map { i =>
+      "CREATE (:Person)"
+    }.toList)
+    profileQuery(
+      title = "Multiple range comparisons using `WHERE` (single-property index)",
+      text = "When the `WHERE` clause contains multiple inequality (range) comparisons for the same property, these can be combined " +
+        "in a single index range seek.",
+      queryText = "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -147,8 +166,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Use index with `IN`",
       text =
-        "The `IN` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+        "The `IN` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists.",
       queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andres', 'Mark'] RETURN person",
       assertions = {
         (p) =>
@@ -205,7 +223,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y}) } )").toList)
     profileQuery(
-      title = "Use index when executing a spatial distance search",
+      title = "Spatial distance searches (single-property index)",
       text =
         "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries.",
       queryText = "MATCH (p:Person) WHERE distance(p.location, point({x: 1, y: 2})) < 2 RETURN p.location",
@@ -217,9 +235,29 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  //TODO this is inelegant. However, as we're deprecating DocumentingTestBase, this will all be rewritten very soon
-  def assertIndexesOnLabels(label: String, expectedIndexes: List[List[String]], expectedIndexesAlt: List[List[String]]) {
-    assert(expectedIndexes === db.indexPropsForLabel(label) || expectedIndexesAlt === db.indexPropsForLabel(label))
+  @Test def use_index_with_bbox_query() {
+    executePreparationQueries(
+      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y})})").toList ++ List(
+        "MATCH (n:Person {firstname: 'Andres'}) SET n.location = point({x: 1.2345, y: 5.4321})",
+        "MATCH (n:Person {firstname: 'Mark'}) SET n.location = point({y: 1.2345, x: 5.4321})"
+      )
+    )
+    profileQuery(
+      title = "Spatial bounding box searches (single-property index)",
+      text = "The ability to do index seeks on bounded ranges works even with the 2D and 3D spatial `Point` types.",
+      queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.location < point({x: 2, y: 6}) RETURN person",
+      assertions = {
+        (p) =>
+          // TODO: There is a bug in 3.4 spatial where the two other corners are incorrectly matched
+          assertEquals(3, p.size)
+
+          checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  def assertIndexesOnLabels(label: String, expectedIndexes: List[List[String]]) {
+    assert(db.indexPropsForLabel(label).toSet === expectedIndexes.toSet)
   }
 
   private def checkPlanDescription(result: InternalExecutionResult)(costString: String): Unit = {
