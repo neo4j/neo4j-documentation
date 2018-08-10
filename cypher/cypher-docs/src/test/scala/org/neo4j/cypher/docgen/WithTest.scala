@@ -31,7 +31,7 @@ class WithTest extends DocumentingTest {
                 (b {name: 'Bossman'}),
                 (c {name: 'Ceasar'}),
                 (d {name: 'David'}),
-                (e {name: 'Emil'}),
+                (e {name: 'George'}),
 
                 (a)-[:KNOWS]->(b),
                 (a)-[:BLOCKS]->(c),
@@ -88,7 +88,7 @@ class WithTest extends DocumentingTest {
           |ORDER BY n.name DESC
           |LIMIT 3
           |RETURN collect(n.name)""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("collect(n.name)" -> List("Emil", "David", "Ceasar"))))
+          r.toList should equal(List(Map("collect(n.name)" -> List("George", "David", "Ceasar"))))
         })) {
         p("A list of the names of people in reverse order, limited to 3, is returned in a list.")
         resultTable()

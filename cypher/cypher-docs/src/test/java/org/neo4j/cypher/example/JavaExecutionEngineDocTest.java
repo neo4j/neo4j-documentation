@@ -69,7 +69,7 @@ public class JavaExecutionEngineDocTest
     private static final ObjectWriter WRITER = MAPPER.writerWithDefaultPrettyPrinter();
     private static final File docsTargetDir = new File( "target/docs/dev/syntax" );
     private GraphDatabaseService db;
-    private Node andreasNode;
+    private Node bobNode;
     private Node johanNode;
     private Node michaelaNode;
 
@@ -102,14 +102,14 @@ public class JavaExecutionEngineDocTest
         try ( Transaction tx = db.beginTx() )
         {
             michaelaNode =  db.createNode( Label.label( "Person" ) );
-            andreasNode = db.createNode( Label.label( "Person" ) );
+            bobNode = db.createNode( Label.label( "Person" ) );
             johanNode =  db.createNode( Label.label( "Person" ) );
-            andreasNode.setProperty( "name", "Andreas" );
+            bobNode.setProperty( "name", "Bob" );
             johanNode.setProperty( "name", "Johan" );
             michaelaNode.setProperty( "name", "Michaela" );
 
             //this is explicit index functionality
-            index( andreasNode );
+            index( bobNode );
             index( johanNode );
             index( michaelaNode );
 
@@ -169,13 +169,13 @@ public class JavaExecutionEngineDocTest
     @Test
     public void shouldBeAbleToEmitJavaIterables() throws Exception
     {
-        makeFriends( michaelaNode, andreasNode );
+        makeFriends( michaelaNode, bobNode );
         makeFriends( michaelaNode, johanNode );
 
         Result result = db.execute( "MATCH (n)-->(friend) WHERE id(n) = 0 RETURN collect(friend)" );
 
         Iterable<Node> friends = (Iterable<Node>) result.columnAs( "collect(friend)" ).next();
-        assertThat( friends, hasItems( andreasNode, johanNode ) );
+        assertThat( friends, hasItems( bobNode, johanNode ) );
         assertThat( friends, instanceOf( Iterable.class ) );
     }
 
@@ -229,7 +229,7 @@ public class JavaExecutionEngineDocTest
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithParameterForMultipleNodeIds
 
-        assertEquals( asList( "Michaela", "Andreas", "Johan" ), this.<String>toList( result, "n.name" ) );
+        assertEquals( asList( "Michaela", "Bob", "Johan" ), this.<String>toList( result, "n.name" ) );
         dumpToFile( "exampleWithParameterForMultipleNodeIds", query, params );
     }
 
@@ -291,11 +291,11 @@ public class JavaExecutionEngineDocTest
         {
             // START SNIPPET: exampleWithParametersForQuery
             Map<String, Object> params = new HashMap<>();
-            params.put( "query", "name:Andreas" );
+            params.put( "query", "name:Bob" );
             String query = "START n=node:people($query) RETURN n";
             Result result = db.execute( query, params );
             // END SNIPPET: exampleWithParametersForQuery
-            assertEquals(singletonList(andreasNode), this.<Node>toList( result, "n" ) );
+            assertEquals( singletonList( bobNode ), this.<Node>toList( result, "n" ) );
             dumpToFile( "exampleWithParametersForQuery", query, params );
         }
     }
@@ -305,14 +305,14 @@ public class JavaExecutionEngineDocTest
     {
         // START SNIPPET: exampleWithParameterForNodeObject
         Map<String, Object> params = new HashMap<>();
-        params.put( "node", andreasNode );
+        params.put( "node", bobNode );
         String query = "MATCH (n:Person) WHERE n = $node RETURN n.name";
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithParameterForNodeObject
 
         assertThat( result.columns(), hasItem( "n.name" ) );
         Iterator<Object> n_column = result.columnAs( "n.name" );
-        assertEquals( "Andreas", n_column.next() );
+        assertEquals( "Bob", n_column.next() );
     }
 
     @Test
@@ -328,7 +328,7 @@ public class JavaExecutionEngineDocTest
 
         assertThat( result.columns(), hasItem( "n.name" ) );
         Iterator<Object> n_column = result.columnAs( "n.name" );
-        assertEquals( "Andreas", n_column.next() );
+        assertEquals( "Bob", n_column.next() );
         dumpToFile( "exampleWithParameterForSkipLimit", query, params );
     }
 
@@ -386,7 +386,7 @@ public class JavaExecutionEngineDocTest
     {
         // START SNIPPET: create_node_from_map
         Map<String, Object> props = new HashMap<>();
-        props.put( "name", "Andres" );
+        props.put( "name", "Andy" );
         props.put( "position", "Developer" );
 
         Map<String, Object> params = new HashMap<>();
@@ -396,7 +396,7 @@ public class JavaExecutionEngineDocTest
         // END SNIPPET: create_node_from_map
         dumpToFile( "create_node_from_map", query, params );
 
-        Result result = db.execute( "MATCH (n) WHERE n.name = 'Andres' AND n.position = 'Developer' RETURN n" );
+        Result result = db.execute( "MATCH (n) WHERE n.name = 'Andy' AND n.position = 'Developer' RETURN n" );
         assertThat( count( result ), is( 1L ) );
     }
 
@@ -405,7 +405,7 @@ public class JavaExecutionEngineDocTest
     {
         // START SNIPPET: create_multiple_nodes_from_map
         Map<String, Object> n1 = new HashMap<>();
-        n1.put( "name", "Andres" );
+        n1.put( "name", "Andy" );
         n1.put( "position", "Developer" );
         n1.put( "awesome", true );
 
@@ -422,7 +422,7 @@ public class JavaExecutionEngineDocTest
         // END SNIPPET: create_multiple_nodes_from_map
         dumpToFile( "create_multiple_nodes_from_map", query, params );
 
-        Result result = db.execute( "MATCH (n:Person) WHERE n.name IN ['Andres', 'Michael'] AND n.position = 'Developer' RETURN n" );
+        Result result = db.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
         assertThat( count( result ), is( 2L ) );
 
         result = db.execute( "MATCH (n:Person) WHERE n.children = 3 RETURN n" );
@@ -439,7 +439,7 @@ public class JavaExecutionEngineDocTest
         {
             // START SNIPPET: set_properties_on_a_node_from_a_map
             Map<String, Object> n1 = new HashMap<>();
-            n1.put( "name", "Andres" );
+            n1.put( "name", "Andy" );
             n1.put( "position", "Developer" );
 
             Map<String, Object> params = new HashMap<>();
@@ -450,8 +450,8 @@ public class JavaExecutionEngineDocTest
             // END SNIPPET: set_properties_on_a_node_from_a_map
             dumpToFile( "set_properties_on_a_node_from_a_map", query, params );
 
-            db.execute( "MATCH (n:Person) WHERE n.name IN ['Andres', 'Michael'] AND n.position = 'Developer' RETURN n" );
-            assertThat( michaelaNode.getProperty( "name" ).toString(), is( "Andres" ) );
+            db.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
+            assertThat( michaelaNode.getProperty( "name" ).toString(), is( "Andy" ) );
         }
     }
 
@@ -459,7 +459,7 @@ public class JavaExecutionEngineDocTest
     public void create_node_using_create_unique_with_java_maps() throws Exception
     {
         Map<String, Object> props = new HashMap<>();
-        props.put( "name", "Andres" );
+        props.put( "name", "Andy" );
         props.put( "position", "Developer" );
 
         Map<String, Object> params = new HashMap<>();
@@ -476,7 +476,7 @@ public class JavaExecutionEngineDocTest
     public void should_be_able_to_handle_two_params_without_named_nodes() throws Exception
     {
         Map<String, Object> props1 = new HashMap<>();
-        props1.put( "name", "Andres" );
+        props1.put( "name", "Andy" );
         props1.put( "position", "Developer" );
 
         Map<String, Object> props2 = new HashMap<>();

@@ -33,9 +33,8 @@ Unique node property constraints can be created, along with node and relationshi
  ** <<constraints-drop-a-node-key, Drop a Node Key>>
  ** <<constraints-create-a-node-that-complies-with-a-node-key, Create a node that complies with a Node Key>>
  ** <<constraints-create-a-node-that-violates-a-node-key, Create a node that violates a Node Key>>
+ ** <<constraints-removing-a-node-key-constrained-property, Removing a `NODE KEY`-constrained property>>
  ** <<constraints-failure-to-create-a-node-key-due-to-existing-node, Failure to create a Node Key due to existing node>>
-
-
 
 [[query-constraint-introduction]]
 == Introduction
@@ -133,6 +132,6 @@ include::create-a-node-that-complies-with-a-node-key.asciidoc[leveloffset=+1]
 
 include::create-a-node-that-violates-a-node-key.asciidoc[leveloffset=+1]
 
-//include::removing-a-node-key-constrained-property.asciidoc[leveloffset=+1]
+include::removing-a-node-key-constrained-property.asciidoc[leveloffset=+1]
 
 include::failure-to-create-a-node-key-due-to-existing-node.asciidoc[leveloffset=+1]
