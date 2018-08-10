@@ -66,7 +66,7 @@ public class JavaExecutionEngineDocTest
     private static final ObjectWriter WRITER = MAPPER.writerWithDefaultPrettyPrinter();
     private static final File docsTargetDir = new File( "target/docs/dev/syntax" );
     private GraphDatabaseService db;
-    private Node andreasNode;
+    private Node bobNode;
     private Node johanNode;
     private Node michaelaNode;
 
@@ -99,14 +99,14 @@ public class JavaExecutionEngineDocTest
         try ( Transaction tx = db.beginTx() )
         {
             michaelaNode =  db.createNode( Label.label( "Person" ) );
-            andreasNode = db.createNode( Label.label( "Person" ) );
+            bobNode = db.createNode( Label.label( "Person" ) );
             johanNode =  db.createNode( Label.label( "Person" ) );
-            andreasNode.setProperty( "name", "Andreas" );
+            bobNode.setProperty( "name", "Bob" );
             johanNode.setProperty( "name", "Johan" );
             michaelaNode.setProperty( "name", "Michaela" );
 
             //this is explicit index functionality
-            index( andreasNode );
+            index( bobNode );
             index( johanNode );
             index( michaelaNode );
 
@@ -166,13 +166,13 @@ public class JavaExecutionEngineDocTest
     @Test
     public void shouldBeAbleToEmitJavaIterables() throws Exception
     {
-        makeFriends( michaelaNode, andreasNode );
+        makeFriends( michaelaNode, bobNode );
         makeFriends( michaelaNode, johanNode );
 
         Result result = db.execute( "MATCH (n)-->(friend) WHERE id(n) = 0 RETURN collect(friend)" );
 
         Iterable<Node> friends = (Iterable<Node>) result.columnAs( "collect(friend)" ).next();
-        assertThat( friends, hasItems( andreasNode, johanNode ) );
+        assertThat( friends, hasItems( bobNode, johanNode ) );
         assertThat( friends, instanceOf( Iterable.class ) );
     }
 
@@ -226,7 +226,7 @@ public class JavaExecutionEngineDocTest
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithParameterForMultipleNodeIds
 
-        assertEquals( asList( "Michaela", "Andreas", "Johan" ), this.<String>toList( result, "n.name" ) );
+        assertEquals( asList( "Michaela", "Bob", "Johan" ), this.<String>toList( result, "n.name" ) );
         dumpToFile( "exampleWithParameterForMultipleNodeIds", query, params );
     }
 
@@ -288,11 +288,11 @@ public class JavaExecutionEngineDocTest
         {
             // START SNIPPET: exampleWithParametersForQuery
             Map<String, Object> params = new HashMap<>();
-            params.put( "query", "name:Andreas" );
+            params.put( "query", "name:Bob" );
             String query = "START n=node:people($query) RETURN n";
             Result result = db.execute( query, params );
             // END SNIPPET: exampleWithParametersForQuery
-            assertEquals( asList( andreasNode ), this.<Node>toList( result, "n" ) );
+            assertEquals( asList( bobNode ), this.<Node>toList( result, "n" ) );
             dumpToFile( "exampleWithParametersForQuery", query, params );
         }
     }
@@ -302,14 +302,14 @@ public class JavaExecutionEngineDocTest
     {
         // START SNIPPET: exampleWithParameterForNodeObject
         Map<String, Object> params = new HashMap<>();
-        params.put( "node", andreasNode );
+        params.put( "node", bobNode );
         String query = "MATCH (n:Person) WHERE n = $node RETURN n.name";
         Result result = db.execute( query, params );
         // END SNIPPET: exampleWithParameterForNodeObject
 
         assertThat( result.columns(), hasItem( "n.name" ) );
         Iterator<Object> n_column = result.columnAs( "n.name" );
-        assertEquals( "Andreas", n_column.next() );
+        assertEquals( "Bob", n_column.next() );
     }
 
     @Test
@@ -325,7 +325,7 @@ public class JavaExecutionEngineDocTest
 
         assertThat( result.columns(), hasItem( "n.name" ) );
         Iterator<Object> n_column = result.columnAs( "n.name" );
-        assertEquals( "Andreas", n_column.next() );
+        assertEquals( "Bob", n_column.next() );
         dumpToFile( "exampleWithParameterForSkipLimit", query, params );
     }
 
