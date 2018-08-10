@@ -28,10 +28,10 @@ class WhereTest extends DocumentingTest {
     doc("WHERE", "query-where")
     initQueries(
       """CREATE (andy:Swedish {name: 'Andy', age: 36, belt: 'white'}),
-        |       (tobias {name: 'Tobias', age: 25, address: 'Sweden/Malmo'}),
+        |       (timothy {name: 'Timothy', age: 25, address: 'Sweden/Malmo'}),
         |       (peter {name: 'Peter', age: 35, email: 'peter_n@example.com'}),
         |
-        |       (andy)-[:KNOWS {since: 2012}]->(tobias),
+        |       (andy)-[:KNOWS {since: 2012}]->(timothy),
         |       (andy)-[:KNOWS {since: 1999}]->(peter)
       """.stripMargin)
     synopsis("`WHERE` adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.")
@@ -94,9 +94,9 @@ class WhereTest extends DocumentingTest {
             |See <<cypher-working-with-null>> for more information on how this works with `null`.""".stripMargin)
         query(
           """MATCH (n)
-            |WHERE n.name = 'Peter' XOR (n.age < 30 AND n.name = 'Tobias') OR NOT (n.name = 'Tobias' OR n.name = 'Peter')
+            |WHERE n.name = 'Peter' XOR (n.age < 30 AND n.name = 'Timothy') OR NOT (n.name = 'Timothy' OR n.name = 'Peter')
             |RETURN n.name, n.age""".stripMargin, ResultAssertions((r) => {
-            r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l), Map("n.name" -> "Tobias", "n.age" -> 25l), Map("n.name" -> "Peter", "n.age" -> 35l)))
+            r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l), Map("n.name" -> "Timothy", "n.age" -> 25l), Map("n.name" -> "Peter", "n.age" -> 35l)))
           })) {
           resultTable()
         }
@@ -113,9 +113,9 @@ class WhereTest extends DocumentingTest {
       section("Filter on node property", "filter-on-node-property") {
         p("To filter on a node property, write your clause after the `WHERE` keyword.")
         query("MATCH (n)\nWHERE n.age < 30\nRETURN n.name, n.age", ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.name" -> "Tobias", "n.age" -> 25l)))
+          r.toList should equal(List(Map("n.name" -> "Timothy", "n.age" -> 25l)))
         })) {
-          p("The name and age values for the *'Tobias'* node are returned because he is less than 30 years of age.")
+          p("The name and age values for the *'Timothy'* node are returned because he is less than 30 years of age.")
           resultTable()
         }
       }
@@ -131,9 +131,9 @@ class WhereTest extends DocumentingTest {
       section("Filter on dynamically-computed node property", "filter-on-dynamic-property") {
         p("To filter on a property using a dynamically computed name, use square bracket syntax.")
         query("WITH 'AGE' as propname\nMATCH (n)\nWHERE n[toLower(propname)] < 30\nRETURN n.name, n.age", ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.name" -> "Tobias", "n.age" -> 25l)))
+          r.toList should equal(List(Map("n.name" -> "Timothy", "n.age" -> 25l)))
         })) {
-          p("The name and age values for the *'Tobias'* node are returned because he is less than 30 years of age.")
+          p("The name and age values for the *'Timothy'* node are returned because he is less than 30 years of age.")
           resultTable()
         }
       }
@@ -201,10 +201,10 @@ class WhereTest extends DocumentingTest {
           |Flags are given at the beginning of the regular expression, for example `MATCH (n) WHERE n.name =~ '(?i)Lon.*' RETURN n` will return nodes with name 'London' or with name 'LonDoN'.""".stripMargin)
       section("Matching using regular expressions", "matching-using-regular-expressions") {
         p("You can match on regular expressions by using `=~ 'regexp'`, like this:")
-        query("MATCH (n)\nWHERE n.name =~ 'Tob.*'\nRETURN n.name, n.age", ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.name" -> "Tobias", "n.age" -> 25l)))
+        query("MATCH (n)\nWHERE n.name =~ 'Tim.*'\nRETURN n.name, n.age", ResultAssertions((r) => {
+          r.toList should equal(List(Map("n.name" -> "Timothy", "n.age" -> 25l)))
         })) {
-          p("The name and age for the *'Tobias'* node are returned because his name starts with *'Tob'*.")
+          p("The name and age for the *'Timothy'* node are returned because his name starts with *'Tim'*.")
           resultTable()
         }
       }
@@ -248,19 +248,19 @@ class WhereTest extends DocumentingTest {
             |`MATCH (a)-[*]->(b)` is very different from `WHERE (a)-[*]->(b)`.
             |The first will produce a subgraph for every path it can find between `a` and `b`, whereas the latter will eliminate any matched subgraphs where `a` and `b` do not have a directed relationship chain between them.""".stripMargin)
         query(
-          """MATCH (tobias {name: 'Tobias'}), (others)
-            |WHERE others.name IN ['Andy', 'Peter'] AND (tobias)<--(others)
+          """MATCH (timothy {name: 'Timothy'}), (others)
+            |WHERE others.name IN ['Andy', 'Peter'] AND (timothy)<--(others)
             |RETURN others.name, others.age""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map("others.name" -> "Andy", "others.age" -> 36l)))
           })) {
-          p("The name and age for nodes that have an outgoing relationship to the *'Tobias'* node are returned.")
+          p("The name and age for nodes that have an outgoing relationship to the *'Timothy'* node are returned.")
           resultTable()
         }
       }
       section("Filter on patterns using `NOT`", "filter-on-patterns-using-not") {
         p("The `NOT` operator can be used to exclude a pattern.")
         query("MATCH (persons), (peter {name: 'Peter'})\nWHERE NOT (persons)-->(peter)\nRETURN persons.name, persons.age", ResultAssertions((r) => {
-          r.toList should equal(List(Map("persons.name" -> "Tobias", "persons.age" -> 25l), Map("persons.name" -> "Peter", "persons.age" -> 35l)))
+          r.toList should equal(List(Map("persons.name" -> "Timothy", "persons.age" -> 25l), Map("persons.name" -> "Peter", "persons.age" -> 35l)))
         })) {
           p("Name and age values for nodes that do not have an outgoing relationship to the *'Peter'* node are returned.")
           resultTable()
@@ -268,10 +268,10 @@ class WhereTest extends DocumentingTest {
       }
       section("Filter on patterns with properties", "filter-on-patterns-with-properties") {
         p("You can also add properties to your patterns:")
-        query("MATCH (n)\nWHERE (n)-[:KNOWS]-({name: 'Tobias'})\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("MATCH (n)\nWHERE (n)-[:KNOWS]-({name: 'Timothy'})\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l)))
         })) {
-          p("Finds all name and age values for nodes that have a `KNOWS` relationship to a node with the name *'Tobias'*.")
+          p("Finds all name and age values for nodes that have a `KNOWS` relationship to a node with the name *'Timothy'*.")
           resultTable()
         }
       }
@@ -291,8 +291,8 @@ class WhereTest extends DocumentingTest {
     section("Lists", "query-where-lists") {
       section("`IN` operator", "where-in-operator") {
         p("To check if an element exists in a list, you can use the `IN` operator.")
-        query("MATCH (a)\nWHERE a.name IN ['Peter', 'Tobias']\nRETURN a.name, a.age", ResultAssertions((r) => {
-          r.toList should equal(List(Map("a.name" -> "Tobias", "a.age" -> 25l), Map("a.name" -> "Peter", "a.age" -> 35l)))
+        query("MATCH (a)\nWHERE a.name IN ['Peter', 'Timothy']\nRETURN a.name, a.age", ResultAssertions((r) => {
+          r.toList should equal(List(Map("a.name" -> "Timothy", "a.age" -> 25l), Map("a.name" -> "Peter", "a.age" -> 35l)))
         })) {
           p("This query shows how to check if a property exists in a literal list.")
           resultTable()
@@ -316,7 +316,7 @@ class WhereTest extends DocumentingTest {
             |WHERE n.belt = 'white' OR n.belt IS NULL
             |RETURN n.name, n.age, n.belt
             |ORDER BY n.name""".stripMargin, ResultAssertions((r) => {
-            r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l, "n.belt" -> "white"), Map("n.name" -> "Peter", "n.age" -> 35l, "n.belt" -> null), Map("n.name" -> "Tobias", "n.age" -> 25l, "n.belt" -> null)))
+            r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l, "n.belt" -> "white"), Map("n.name" -> "Peter", "n.age" -> 35l, "n.belt" -> null), Map("n.name" -> "Timothy", "n.age" -> 25l, "n.belt" -> null)))
           })) {
           p("This returns all values for all nodes, even those without the belt property.")
           resultTable()
@@ -339,7 +339,7 @@ class WhereTest extends DocumentingTest {
       section("Simple range", "simple-range") {
         p("""To check for an element being inside a specific range, use the inequality operators `<`, `\<=`, `>=`, `>`.""".stripMargin)
         query("MATCH (a)\nWHERE a.name >= 'Peter'\nRETURN a.name, a.age", ResultAssertions((r) => {
-          r.toList should equal(List(Map("a.name" -> "Tobias", "a.age" -> 25l), Map("a.name" -> "Peter", "a.age" -> 35l)))
+          r.toList should equal(List(Map("a.name" -> "Timothy", "a.age" -> 25l), Map("a.name" -> "Peter", "a.age" -> 35l)))
         })) {
           p("The name and age values of nodes having a name property lexicographically greater than or equal to *'Peter'* are returned.")
           resultTable()
@@ -347,10 +347,10 @@ class WhereTest extends DocumentingTest {
       }
       section("Composite range", "composite-range") {
         p("Several inequalities can be used to construct a range.")
-        query("MATCH (a)\nWHERE a.name > 'Andy' AND a.name < 'Tobias'\nRETURN a.name, a.age", ResultAssertions((r) => {
+        query("MATCH (a)\nWHERE a.name > 'Andy' AND a.name < 'Timothy'\nRETURN a.name, a.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("a.name" -> "Peter", "a.age" -> 35l)))
         })) {
-          p("The name and age values of nodes having a name property lexicographically between *'Andy'* and *'Tobias'* are returned.")
+          p("The name and age values of nodes having a name property lexicographically between *'Andy'* and *'Timothy'* are returned.")
           resultTable()
         }
       }

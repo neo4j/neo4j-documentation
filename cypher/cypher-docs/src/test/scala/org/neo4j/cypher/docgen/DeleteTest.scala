@@ -28,7 +28,7 @@ class DeleteTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def doc = new DocBuilder {
     doc("DELETE", "query-delete")
     initQueries("""CREATE (a:Person {name: 'Andy', age: 36}),
-                  |       (p:Person {name: 'Tobias', age: 25}),
+                  |       (p:Person {name: 'Timothy', age: 25}),
                   |       (t:Person {name: 'Peter', age: 34}),
                   |       (z:Person {name: 'UNKNOWN'}),
                   |       (a)-[:KNOWS]->(t),
