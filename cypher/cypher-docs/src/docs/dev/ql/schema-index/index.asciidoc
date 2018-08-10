@@ -64,17 +64,13 @@ include::equality-check-using-where-composite-index.asciidoc[]
 
 include::range-comparisons-using-where-single-property-index.asciidoc[]
 
+include::multiple-range-comparisons-using-where-single-property-index.asciidoc[]
+
 include::list-membership-check-using-in-single-property-index.asciidoc[]
 
 include::list-membership-check-using-in-composite-index.asciidoc[]
 
-<<<<<<< HEAD
-include::range-comparisons-using-where-single-property-index.asciidoc[]
-
-include::multiple-range-comparisons-using-where-single-property-index.asciidoc[]
-=======
 include::prefix-search-using-starts-with-single-property-index.asciidoc[]
->>>>>>> petra/3.3-Schema-Revamp
 
 include::suffix-search-using-ends-with-single-property-index.asciidoc[]
 
