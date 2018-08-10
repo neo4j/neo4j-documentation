@@ -27,8 +27,8 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
 
   override def doc = new DocBuilder {
     doc("REMOVE", "query-remove")
-    initQueries("""CREATE (a:Swedish {name: 'Andres', age: 36}),
-                  |       (t:Swedish {name: 'Tobias', age: 25}),
+    initQueries("""CREATE (a:Swedish {name: 'Andy', age: 36}),
+                  |       (t:Swedish {name: 'Timothy', age: 25}),
                   |       (p:German:Swedish {name: 'Peter', age: 34}),
                   |       (a)-[:KNOWS]->(t),
                   |       (a)-[:KNOWS]->(p)""")
@@ -54,10 +54,10 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
           |Instead, if no value exists, the property is just not there.
           |So, `REMOVE` is used to remove a property value from a node or a relationship.""".stripMargin)
       query(
-        """MATCH (a {name: 'Andres'})
+        """MATCH (a {name: 'Andy'})
           |REMOVE a.age
           |RETURN a.name, a.age""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("a.name" -> "Andres", "a.age" -> null)))
+          r.toList should equal(List(Map("a.name" -> "Andy", "a.age" -> null)))
           assertStats(r, propertiesWritten = 1, nodesDeleted = 0)
         })) {
         p("""The node is returned, and no property `age` exists on it.""".stripMargin)

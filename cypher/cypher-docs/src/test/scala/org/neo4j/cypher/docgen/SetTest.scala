@@ -28,7 +28,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def doc = new DocBuilder {
     doc("SET", "query-set")
     initQueries(
-      """CREATE (a:Swedish {name: 'Andres', age: 36, hungry: true}),
+      """CREATE (a:Swedish {name: 'Andy', age: 36, hungry: true}),
                 (b {name: 'Stefan'}),
                 (c {name: 'Peter', age: 34}),
                 (d {name: 'Emil'}),
@@ -65,10 +65,10 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """Use `SET` to set a property on a node or relationship:""".stripMargin)
       query(
-        """MATCH (n {name: 'Andres'})
+        """MATCH (n {name: 'Andy'})
           |SET n.surname = 'Taylor'
           |RETURN n.name, n.surname""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.name" -> "Andres", "n.surname" -> "Taylor")))
+          r.toList should equal(List(Map("n.name" -> "Andy", "n.surname" -> "Taylor")))
           assertStats(r, propertiesWritten = 1, nodesCreated = 0)
         })) {
         p("The newly-changed node is returned by the query.")
@@ -78,10 +78,10 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         """It is possible to set a property on a graph element using more complex expressions.
           |For instance, in contrast to specifying the node directly, the following query shows how to set a property for a node selected by an expression: """.stripMargin)
       query(
-        """MATCH (n {name: 'Andres'})
+        """MATCH (n {name: 'Andy'})
           |SET (CASE WHEN n.age = 36 THEN n END).worksIn = 'Malmo'
           |RETURN n.name, n.worksIn""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.name" -> "Andres", "n.worksIn" -> "Malmo")))
+          r.toList should equal(List(Map("n.name" -> "Andy", "n.worksIn" -> "Malmo")))
           assertStats(r, propertiesWritten = 1, nodesCreated = 0)
         })) {
         resultTable()
@@ -89,10 +89,10 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """No action will be taken if the node expression evaluates to `null`, as shown in this example: """.stripMargin)
       query(
-        """MATCH (n {name: 'Andres'})
+        """MATCH (n {name: 'Andy'})
           |SET (CASE WHEN n.age = 55 THEN n END).worksIn = 'Malmo'
           |RETURN n.name, n.worksIn""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.name" -> "Andres", "n.worksIn" -> null)))
+          r.toList should equal(List(Map("n.name" -> "Andy", "n.worksIn" -> null)))
           assertStats(r, propertiesWritten = 0)
         })) {
         p(
@@ -106,10 +106,10 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         """`SET` can be used to update a property on a node or relationship.
           |This query forces a change of type in the `age` property: """.stripMargin)
       query(
-        """MATCH (n {name: 'Andres'})
+        """MATCH (n {name: 'Andy'})
           |SET n.age = toString(n.age)
           |RETURN n.name, n.age""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.name" -> "Andres", "n.age" -> "36")))
+          r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> "36")))
           assertStats(r, propertiesWritten = 1, nodesCreated = 0)
         })) {
         p("The `age` property has been converted to the string `'36'`.")
@@ -121,7 +121,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         """Although `<<query-remove, REMOVE>>` is normally used to remove a property, it's sometimes convenient to do it using the `SET` command.
           |A case in point is if the property is provided by a parameter.""".stripMargin)
       query(
-        """MATCH (n {name: 'Andres'})
+        """MATCH (n {name: 'Andy'})
           |SET n.name = null
           |RETURN n.name, n.age""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> null, "n.age" -> 36)))
@@ -136,13 +136,13 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         """`SET` can be used to copy all properties from one graph element to another.
           |This will remove _all_ other properties on the graph element being copied to.""".stripMargin)
       query(
-        """MATCH (at {name: 'Andres'}), (pn {name: 'Peter'})
+        """MATCH (at {name: 'Andy'}), (pn {name: 'Peter'})
           |SET at = pn
           |RETURN at.name, at.age, at.hungry, pn.name, pn.age""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("at.name" -> "Peter", "at.age" -> 34, "at.hungry" -> null, "pn.name" -> "Peter", "pn.age" -> 34)))
           assertStats(r, propertiesWritten = 3, nodesCreated = 0)
         })) {
-        p("The *'Andres'* node has had all its properties replaced by the properties of the *'Peter'* node.")
+        p("The *'Andy'* node has had all its properties replaced by the properties of the *'Peter'* node.")
         resultTable()
       }
     }
@@ -209,7 +209,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """Set multiple properties at once by separating them with a comma:""".stripMargin)
       query(
-        """MATCH (n {name: 'Andres'})
+        """MATCH (n {name: 'Andy'})
           |SET n.position = 'Developer', n.surname = 'Taylor'""".stripMargin, ResultAssertions((r) => {
           assertStats(r, propertiesWritten = 2, nodesCreated = 0)
         })){
@@ -220,14 +220,14 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """Use a parameter to set the value of a property:""".stripMargin)
       query(
-        """MATCH (n {name: 'Andres'})
+        """MATCH (n {name: 'Andy'})
           |SET n.surname = $surname
           |RETURN n.name, n.surname""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.name" -> "Andres", "n.surname" -> "Taylor")))
+          r.toList should equal(List(Map("n.name" -> "Andy", "n.surname" -> "Taylor")))
           assertStats(r, propertiesWritten = 1, nodesCreated = 0)
         }),
         ("surname", "Taylor")) {
-        p("A `surname` property has been added to the *'Andres'* node.")
+        p("A `surname` property has been added to the *'Andy'* node.")
         resultTable()
       }
     }
@@ -235,14 +235,14 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """This will replace all existing properties on the node with the new set provided by the parameter.""".stripMargin)
       query(
-        """MATCH (n {name: 'Andres'})
+        """MATCH (n {name: 'Andy'})
           |SET n = $props
           |RETURN n.name, n.position, n.age, n.hungry""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.name" -> "Andres", "n.position" -> "Developer", "n.age" -> null, "n.hungry" -> null)))
+          r.toList should equal(List(Map("n.name" -> "Andy", "n.position" -> "Developer", "n.age" -> null, "n.hungry" -> null)))
           assertStats(r, propertiesWritten = 4, nodesCreated = 0)
         }),
-        ("props", Map("name" -> "Andres", "position" -> "Developer"))) {
-        p("The *'Andres'* node has had all its properties replaced by the properties in the `props` parameter.")
+        ("props", Map("name" -> "Andy", "position" -> "Developer"))) {
+        p("The *'Andy'* node has had all its properties replaced by the properties in the `props` parameter.")
         resultTable()
       }
     }
