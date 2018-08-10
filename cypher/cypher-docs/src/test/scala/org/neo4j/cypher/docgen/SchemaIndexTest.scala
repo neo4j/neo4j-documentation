@@ -72,7 +72,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "Node `a` has both an `age` and a `country` property, and so it will be added to the composite index. " +
         "However, as node `b` has no `country` property, it will not be added to the composite index. " +
         "Note that the composite index is not immediately available, but will be created in the background. ",
-      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname"), List("age", "country")))
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname"), List("location"), List("highScore"), List("age", "country"), List("location")))
     )
   }
 
@@ -106,7 +106,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       prepare = _ => executePreparationQueries(List("create index on :Person(age, country)")),
       queryText = "DROP INDEX ON :Person(age, country)",
       optionalResultExplanation = "",
-      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname")))
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname"), List("location"), List("highScore")))
     )
   }
 
@@ -361,8 +361,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def use_index_with_bbox_query() {
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y})})").toList ++ List(
-        "MATCH (n:Person {firstname: 'Andres'}) SET n.location = point({x: 1.2345, y: 5.4321})",
-        "MATCH (n:Person {firstname: 'Mark'}) SET n.location = point({y: 1.2345, x: 5.4321})"
+        "MATCH (n:Person {firstname: 'Andy'}) SET n.location = point({x: 1.2345, y: 5.4321})",
+        "MATCH (n:Person {firstname: 'John'}) SET n.location = point({y: 1.2345, x: 5.4321})"
       )
     )
     profileQuery(
