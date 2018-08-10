@@ -8,27 +8,30 @@ This section explains how to work with indexes in Neo4j and Cypher.
 
 * <<query-schema-index-introduction, Introduction>>
 * <<schema-index-create-a-single-property-index, Create a single-property index>>
+* <<schema-index-create-a-composite-index, Create a composite index>>
 * <<schema-index-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
-* <<create-a-composite-index, Create a composite index>>
 * <<schema-index-drop-a-single-property-index, Drop a single-property index>>
-* <<drop-a-composite-index, Drop a composite index>>
+* <<schema-index-drop-a-composite-index, Drop a composite index>>
 * <<schema-index-use-index, Use index>>
-* <<schema-index-use-a-single-property-index-with-where-using-equality, Use a single-property index with `WHERE` using equality>>
-* <<use-a-composite-index-with-where-using-equality, Use a composite index with `WHERE` using equality>>
-* <<schema-index-range-comparisons-using-where-single-property-index, Use index with `WHERE` using range comparisons>>
-* <<schema-index-multiple-range-comparisons-using-where-single-property-index, Use index with `WHERE` using multiple range comparisons>>
-* <<schema-index-use-index-with-in, Use index with `IN`>>
-* <<schema-index-use-index-with-starts-with, Use index with `STARTS WITH`>>
-* <<schema-index-use-index-when-checking-for-the-existence-of-a-property, Use index when checking for the existence of a property>>
-* <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search>>
-* <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search>>
+ ** <<schema-index-equality-check-using-where-single-property-index, Equality check using `WHERE` (single-property index)>>
+ ** <<schema-index-equality-check-using-where-composite-index, Equality check using `WHERE` (composite index)>>
+ ** <<schema-index-range-comparisons-using-where-single-property-index, Range comparisons using `WHERE` (single-property index)>>
+ ** <<schema-index-multiple-range-comparisons-using-where-single-property-index, Multiple range comparisons using `WHERE` (single-property index)>>
+ ** <<schema-index-list-membership-check-using-in-single-property-index, List membership using `IN` (single-property index)>>
+ ** <<schema-index-list-membership-check-using-in-composite-index, List membership check using `IN` (composite index)>>
+ ** <<schema-index-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>
+ ** <<schema-index-suffix-search-using-ends-with-single-property-index, Suffix search using `ENDS WITH` (single-property index)>>
+ ** <<schema-index-substring-search-using-contains-single-property-index, Substring search using `CONTAINS` (single-property index)>>
+ ** <<schema-index-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
+ ** <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search>>
+ ** <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search>>
 * <<explicit-indexes-procedures, Use built-in procedures to manage and use explicit indexes>>
 
 
 [[query-schema-index-introduction]]
 == Introduction
 
-A database index is a redundant copy of information in the database for the purpose of making retrieving said data more efficient.
+A database index is a redundant copy of some of the data in the database for the purpose of making searches of related data more efficient.
 This comes at the cost of additional storage space and slower writes, so deciding what to index and what not to index is an important and often non-trivial task.
 
 Cypher enables the creation of indexes on one or more properties for all nodes that have a given label:
@@ -37,126 +40,47 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
 * An index that is created on more than one property for any given label is called a _composite index_.
   Differences in the usage patterns between composite and single-property indexes are detailed in the examples below.
 
+[NOTE]
+<<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).
+
 Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
 
 include::create-a-single-property-index.asciidoc[]
 
+include::create-a-composite-index.asciidoc[]
+
 include::get-a-list-of-all-indexes-in-the-database.asciidoc[]
-
-[[create-a-composite-index]]
-== Create a composite index
-
-An index on multiple properties for all nodes that have a particular label -- i.e. a composite index -- can be created with `CREATE INDEX ON :Label(prop1, ..., propN)`.
-Only nodes labeled with the specified label and which contain all the properties in the index definition will be added to the index.
-
-The following statement will create a composite index on all nodes labeled with `Person` and which have both a `firstname` and `surname` property:
-
-[source, cypher]
-----
-CREATE INDEX ON :Person(firstname, surname)
-----
-
-Now, assume the following query is run:
-
-[source, cypher]
-----
-CREATE (a:Person {firstname: 'Bill', surname: 'Johnson', age: 34}),
-(b:Person {firstname: 'Sue', age: 39}
-----
-
-Node `a` has both a `firstname` and a `surname` property, and so it will be added to the composite index.
-However, as node `b` has no `surname` property, it will not be added to the composite index.
-
-Note that the composite index is not immediately available, but will be created in the background.
 
 include::drop-a-single-property-index.asciidoc[]
 
-[[drop-a-composite-index]]
-== Drop a composite index
-
-A composite index on all nodes that have a label and multiple property combination can be dropped  with `DROP INDEX ON :Label(prop1, ..., propN)`.
-
-The following statement will drop a composite index on all nodes labeled with `Person` and which have both a `firstname` and `surname` property:
-
-[source, cypher]
-----
-DROP INDEX ON :Person(firstname, surname)
-----
+include::drop-a-composite-index.asciidoc[]
 
 include::use-index.asciidoc[]
 
-include::use-a-single-property-index-with-where-using-equality.asciidoc[]
+include::equality-check-using-where-single-property-index.asciidoc[]
 
-
-[[use-a-composite-index-with-where-using-equality]]
-== Use a composite index with `WHERE` using equality
-
-A query containing equality comparisons for all the properties of a composite index will automatically be backed by the same index.
-
-For instance, assume the following composite index has been created:
-
-[source, cypher]
-----
-CREATE INDEX ON :Person(firstname, surname)
-----
-
-The following query will use the composite index:
-
-[source, cypher]
-----
-MATCH (n:Person)
-WHERE n.firstname = 'Bill' AND n.surname = 'Johnson'
-RETURN n
-----
-
-However, this query will not be backed by the composite index, as the query does not contain an equality predicate on the `surname` property:
-
-[source, cypher]
-----
-MATCH (n:Person)
-WHERE n.firstname = 'Bill'
-RETURN n
-----
-
-The query above will only be backed by an index on the `Person` label and `firstname` property defined thus: `:Person(firstname)`; i.e. a single-property index.
-
-Moreover, unlike single-property indexes, composite indexes currently do not support queries containing the following types of predicates on properties in the index:
-
-* Existence: `exists(n.prop)`
-* Range: `n.prop > value`
-* `STARTS WITH`
-* `ENDS WITH`
-* `CONTAINS`
-
-Therefore, the following queries will not be able to be backed by the composite index defined earlier:
-
-[source, cypher]
-----
-MATCH (n:Person)
-WHERE n.firstname = 'Bill' AND exists(n.surname)
-RETURN n
-----
-
-[source, cypher]
-----
-MATCH (n:Person)
-WHERE n.firstname = 'Bill' AND n.surname STARTS WITH 'Jo'
-RETURN n
-----
-
-If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.
-
+include::equality-check-using-where-composite-index.asciidoc[]
 
 include::range-comparisons-using-where-single-property-index.asciidoc[]
 
+include::list-membership-check-using-in-single-property-index.asciidoc[]
+
+include::list-membership-check-using-in-composite-index.asciidoc[]
+
+<<<<<<< HEAD
+include::range-comparisons-using-where-single-property-index.asciidoc[]
+
 include::multiple-range-comparisons-using-where-single-property-index.asciidoc[]
+=======
+include::prefix-search-using-starts-with-single-property-index.asciidoc[]
+>>>>>>> petra/3.3-Schema-Revamp
 
-include::use-index-with-in.asciidoc[]
+include::suffix-search-using-ends-with-single-property-index.asciidoc[]
 
-include::use-index-with-starts-with.asciidoc[]
+include::substring-search-using-contains-single-property-index.asciidoc[]
 
-include::use-index-when-checking-for-the-existence-of-a-property.asciidoc[]
+include::existence-check-using-exists-single-property-index.asciidoc[]
 
 include::spatial-distance-searches-single-property-index.asciidoc[]
 
