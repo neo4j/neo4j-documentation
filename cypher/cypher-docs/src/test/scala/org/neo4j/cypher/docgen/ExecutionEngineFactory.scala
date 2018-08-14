@@ -23,6 +23,8 @@ import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, Monitor
 import org.neo4j.cypher.internal._
 import org.neo4j.cypher.internal.tracing.TimingCompilationTracer
 import org.neo4j.cypher.internal.ExecutionEngine
+import org.neo4j.cypher.internal.compatibility.CypherRuntimeConfiguration
+import org.neo4j.cypher.internal.compiler.v3_5.CypherPlannerConfiguration
 import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction
@@ -42,21 +44,21 @@ object ExecutionEngineFactory {
 
   def createEnterpriseEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
     createEngineFromDb(graph,
-      (queryService, monitors, logProvider) => {
-        val inner = new CommunityCompilerFactory(queryService, monitors, logProvider)
-        new EnterpriseCompilerFactory(inner, queryService, monitors, logProvider)
+      (queryService, monitors, logProvider, plannerConfig, runtimeConfig) => {
+        val inner = new CommunityCompilerFactory(queryService, monitors, logProvider, plannerConfig, runtimeConfig)
+        new EnterpriseCompilerFactory(inner, queryService, monitors, logProvider, plannerConfig, runtimeConfig)
       })
   }
 
   def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
     createEngineFromDb(graph,
-      (queryService, monitors, logProvider) => {
-        new CommunityCompilerFactory(queryService, monitors, logProvider)
+      (queryService, monitors, logProvider, plannerConfig, runtimeConfig) => {
+        new CommunityCompilerFactory(queryService, monitors, logProvider, plannerConfig, runtimeConfig)
       })
   }
 
   private def createEngineFromDb(graph: GraphDatabaseService,
-                                 newCompatibilityFactory: (GraphDatabaseCypherService, Monitors, LogProvider) => CompilerFactory
+                                 newCompatibilityFactory: (GraphDatabaseCypherService, Monitors, LogProvider, CypherPlannerConfiguration, CypherRuntimeConfiguration) => CompilerFactory
                                 ): ExecutionEngine = {
     val queryService = new GraphDatabaseCypherService(graph)
     val graphAPI = graph.asInstanceOf[GraphDatabaseAPI]
@@ -64,8 +66,12 @@ object ExecutionEngineFactory {
     val logService = resolver.resolveDependency(classOf[LogService])
     val monitors = resolver.resolveDependency(classOf[Monitors])
     val logProvider = logService.getInternalLogProvider
+    val config = resolver.resolveDependency(classOf[Config])
+    val cypherConfig = CypherConfiguration.fromConfig(config)
+    val plannerConfig = cypherConfig.toCypherPlannerConfiguration(config)
+    val runtimeConfig = cypherConfig.toCypherRuntimeConfiguration
 
-    val compatibilityFactory = newCompatibilityFactory(queryService, monitors, logProvider)
+    val compatibilityFactory = newCompatibilityFactory(queryService, monitors, logProvider, plannerConfig, runtimeConfig)
 
     val cacheTracer = new MonitoringCacheTracer(monitors.newMonitor(classOf[StringCacheMonitor]))
     val cypherConfiguration = CypherConfiguration.fromConfig(resolver.resolveDependency(classOf[Config]))
