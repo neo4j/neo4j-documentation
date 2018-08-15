@@ -46,7 +46,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
 
   override val properties: Map[String, Map[String, Any]] = Map(
     "A" -> Map("name" -> "Alice"),
-    "B" -> Map("name" -> "Tobias"))
+    "B" -> Map("name" -> "Timothy"))
 
   override def parameters(name: String): Map[String, Any] =
     name match {

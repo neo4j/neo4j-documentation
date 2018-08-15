@@ -55,16 +55,16 @@ class PredicatesTest extends RefcardTest with QueryStatisticsTestSupport {
       case "parameters=anothername" =>
         Map("value" -> "Stefan")
       case "parameters=regex" =>
-        Map("regex" -> "Tob.*")
+        Map("regex" -> "Tim.*")
       case "parameters=names" =>
-        Map("value1" -> "Peter", "value2" -> "Tobias")
+        Map("value1" -> "Peter", "value2" -> "Timothy")
       case "" =>
         Map()
     }
 
   override val properties: Map[String, Map[String, Any]] = Map(
     "A" -> Map("property" -> "Stefan", "number" -> 5),
-    "B" -> Map("property" -> "Tobias"),
+    "B" -> Map("property" -> "Timothy"),
     "C" -> Map("property" -> "Chris"))
 
   def text = """
@@ -165,7 +165,7 @@ Properties may also be accessed using a dynamically computed property name.
 MATCH (n)
 WHERE
 
-n.property STARTS WITH 'Tob' OR
+n.property STARTS WITH 'Tim' OR
 n.property ENDS WITH 'n' OR
 n.property CONTAINS 'goodie'
 
@@ -177,7 +177,7 @@ String matching.
 MATCH (n)
 WHERE exists(n.property) AND
 
-n.property =~ 'Tob.*'
+n.property =~ 'Tim.*'
 
 RETURN n###
 

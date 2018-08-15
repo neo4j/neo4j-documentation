@@ -35,12 +35,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   override val setupQueries = (1 to 20 map (_ => """CREATE (:Person)""")).toList
 
   override def graphDescription = List(
-    "andres:Person KNOWS mark:Person"
+    "andy:Person KNOWS john:Person"
   )
 
   override val properties = Map(
-    "andres" -> Map("firstname" -> "Andres", "surname" -> "Taylor"),
-    "mark" -> Map("firstname" -> "Mark", "surname" -> "Needham")
+    "andy" -> Map("firstname" -> "Andy", "surname" -> "Jones", "age" -> 40, "country" -> "Sweden"),
+    "john" -> Map("firstname" -> "John", "surname" -> "Smith", "age" -> 35, "country" -> "UK")
   )
 
   override val setupConstraintQueries = List(
@@ -57,6 +57,21 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       queryText = "CREATE INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
       assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname")))
+    )
+  }
+
+  @Test def create_index_on_a_label_composite_property() {
+    testQuery(
+      title = "Create a composite index",
+      text = "An index on multiple properties for all nodes that have a particular label -- i.e. a composite index -- can be created with `CREATE INDEX ON :Label(prop1, ..., propN)`. " +
+      "Only nodes labeled with the specified label and which contain all the properties in the index definition will be added to the index. " +
+      "The following statement will create a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
+      queryText = "CREATE INDEX ON :Person(age, country)",
+      optionalResultExplanation = "Assume we execute the query `CREATE (a:Person {firstname: 'Bill', age: 34, country: 'USA'}), (b:Person {firstname: 'Sue', age: 39})`. " +
+        "Node `a` has both an `age` and a `country` property, and so it will be added to the composite index. " +
+        "However, as node `b` has no `country` property, it will not be added to the composite index. " +
+        "Note that the composite index is not immediately available, but will be created in the background. ",
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname"), List("age", "country")))
     )
   }
 
@@ -82,13 +97,24 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
+  @Test def drop_index_on_a_label_composite_property() {
+    prepareAndTestQuery(
+      title = "Drop a composite index",
+      text = "A composite index on all nodes that have a label and multiple property combination can be dropped with `DROP INDEX ON :Label(prop1, ..., propN)`. " +
+      "The following statement will drop a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
+      prepare = _ => executePreparationQueries(List("create index on :Person(age, country)")),
+      queryText = "DROP INDEX ON :Person(age, country)",
+      optionalResultExplanation = "",
+      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname")))
+    )
+  }
+
   @Test def use_index() {
     profileQuery(
       title = "Use index",
       text = "There is usually no need to specify which indexes to use in a query, Cypher will figure that out by itself. " +
-        "For example the query below will use the `Person(firstname)` index, if it exists. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
-      queryText = "MATCH (person:Person {firstname: 'Andres'}) RETURN person",
+        "For example the query below will use the `Person(firstname)` index, if it exists. ",
+      queryText = "MATCH (person:Person {firstname: 'Andy'}) RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -100,10 +126,31 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_where_using_equality_single_property() {
     profileQuery(
-      title = "Use a single-property index with `WHERE` using equality",
+      title = "Equality check using `WHERE` (single-property index)",
       text = "A query containing equality comparisons of a single indexed property in the `WHERE` clause is backed automatically by the index. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
-      queryText = "MATCH (person:Person) WHERE person.firstname = 'Andres' RETURN person",
+        "It is also possible for a query with multiple `OR` predicates to use multiple indexes, if indexes exist on the properties. " +
+        "For example, if indexes exist on both `:Label(p1)` and `:Label(p2)`, `MATCH (n:Label) WHERE n.p1 = 1 OR n.p2 = 2 RETURN n` will use both indexes. ",
+      queryText = "MATCH (person:Person) WHERE person.firstname = 'Andy' RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+
+          checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_index_with_where_using_equality_composite() {
+    prepareAndTestQuery(
+      title = "Equality check using `WHERE` (composite index)",
+      text = "A query containing equality comparisons for all the properties of a composite index will automatically be backed by the same index. " +
+        "The following query will use the composite index defined <<schema-index-create-a-composite-index, earlier>>: ",
+      prepare = _ => executePreparationQueries(List("CREATE INDEX ON :Person(age, country)")),
+      queryText = "MATCH (n:Person) WHERE n.age = 35 AND n.country = 'UK' RETURN n",
+      optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, as the query does not contain an equality predicate on the `country` property. " +
+      "It will only be backed by an index on the `Person` label and `age` property defined thus: `:Person(age)`; i.e. a single-property index. " +
+      "Moreover, unlike single-property indexes, composite indexes currently do not support queries containing the following types of predicates on properties in the index: " +
+      "existence check: `exists(n.prop)`; range search: `n.prop > value`; prefix search: `STARTS WITH`; suffix search: `ENDS WITH`; and substring search: `CONTAINS`. ",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -119,10 +166,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Use index with `WHERE` using range comparisons",
+      title = "Range comparisons using `WHERE` (single-property index)",
       text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
-        "Composite indexes are currently not able to support range comparisons. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
+        "Composite indexes are currently not able to support range comparisons. ",
       queryText = "MATCH (person:Person) WHERE person.firstname > 'B' RETURN person",
       assertions = {
         (p) =>
@@ -133,7 +179,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_index_with_in() {
+  @Test def use_single_property_index_with_in() {
 
     executePreparationQueries(
       List(
@@ -145,14 +191,40 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     sampleAllIndexesAndWait()
 
     profileQuery(
-      title = "Use index with `IN`",
+      title = "List membership check using `IN` (single-property index)",
       text =
-        "The `IN` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
-        "If you want Cypher to use specific indexes, you can enforce it using hints. See <<query-using>>.",
-      queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andres', 'Mark'] RETURN person",
+        "The `IN` predicate on `person.firstname` in the following query will use the single-property index `Person(firstname)` if it exists. ",
+      queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andy', 'John'] RETURN person",
       assertions = {
         (p) =>
           assertEquals(2, p.size)
+
+          checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_composite_index_with_in() {
+
+    executePreparationQueries(List("CREATE INDEX ON :Person(age, country)"))
+
+    executePreparationQueries(
+      List(
+        "FOREACH (x IN range(0, 100) | CREATE (:Person) )",
+        "FOREACH (x IN range(0, 400) | CREATE (:Person {age: x, country: x}) )"
+      )
+    )
+
+    sampleAllIndexesAndWait()
+
+    profileQuery(
+      title = "List membership check using `IN` (composite index)",
+      text =
+        "The `IN` predicates on `person.age` and `person.country` in the following query will use the composite index `Person(age, country)` if it exists. ",
+      queryText = "MATCH (person:Person) WHERE person.age IN [10, 20, 35] AND person.country IN ['Sweden', 'USA', 'UK'] RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
       }
@@ -169,15 +241,65 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     sampleAllIndexesAndWait()
 
     profileQuery(
-      title = "Use index with `STARTS WITH`",
+      title = "Prefix search using `STARTS WITH` (single-property index)",
       text =
         "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
-          "Composite indexes are currently not able to support `STARTS WITH`, `ENDS WITH` and `CONTAINS`. ",
+          "Composite indexes are currently not able to support `STARTS WITH`. ",
       queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
           assertThat(p.executionPlanDescription().toString, containsString(IndexSeekByRange.name))
+      }
+    )
+  }
+
+  @Test def use_index_with_ends_with() {
+    executePreparationQueries {
+      val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
+      val b = (0 to 300).map { i => s"CREATE (:Person {firstname: '$i'})" }.toList
+      a ++ b
+    }
+
+    sampleAllIndexesAndWait()
+
+    profileQuery(
+      title = "Suffix search using `ENDS WITH` (single-property index)",
+      text =
+        "The `ENDS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
+          "All values stored in the `Person(firstname)` index will be searched, and entries ending with `'hn'` will be returned. " +
+          "This means that although the search will not be optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place. " +
+          "Composite indexes are currently not able to support `ENDS WITH`. ",
+      queryText = "MATCH (person:Person) WHERE person.firstname ENDS WITH 'hn' RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexEndsWithScan"))
+      }
+    )
+  }
+
+  @Test def use_index_with_contains() {
+    executePreparationQueries {
+      val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
+      val b = (0 to 300).map { i => s"CREATE (:Person {firstname: '$i'})" }.toList
+      a ++ b
+    }
+
+    sampleAllIndexesAndWait()
+
+    profileQuery(
+      title = "Substring search using `CONTAINS` (single-property index)",
+      text =
+        "The `CONTAINS` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
+          "All values stored in the `Person(firstname)` index will be searched, and entries containing `'h'` will be returned. " +
+          "This means that although the search will not be optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place. " +
+          "Composite indexes are currently not able to support `CONTAINS`. ",
+      queryText = "MATCH (person:Person) WHERE person.firstname CONTAINS 'h' RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexContainsScan"))
       }
     )
   }
@@ -188,7 +310,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Use index when checking for the existence of a property",
+      title = "Existence check using `exists` (single-property index)",
       text =
         "The `exists(p.firstname)` predicate in the following query will use the `Person(firstname)` index, if it exists. " +
           "Composite indexes are currently not able to support the `exists` predicate. ",
