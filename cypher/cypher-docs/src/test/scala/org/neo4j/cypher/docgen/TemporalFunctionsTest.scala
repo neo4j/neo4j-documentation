@@ -94,6 +94,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         |** <<functions-time-truncate, Truncating a _Time_>>
       """.stripMargin)
     section("Temporal instant types", "functions-temporal-instant-type") {
+      synopsis("""An introduction to temporal instant types, including descriptions of creation functions, clocks, and truncation.""".stripMargin)
       section("An overview of temporal instant type creation", "functions-temporal-create-overview") {
         p(
           """Each function bears the same name as the type, and construct the type they correspond to in one of four ways:
@@ -216,6 +217,18 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
     }
     section("Date: `date()`", "functions-date") {
+      synopsis("""Details for using the `date()` function.""".stripMargin)
+      p(
+        """
+          |* <<functions-date-current, Getting the current _Date_>>
+          |* <<functions-date-calendar, Creating a calendar (Year-Month-Day) _Date_>>
+          |* <<functions-date-week, Creating a week (Year-Week-Day) _Date_>>
+          |* <<functions-date-quarter, Creating a quarter (Year-Quarter-Day) _Date_>>
+          |* <<functions-date-ordinal, Creating an ordinal (Year-Day) _Date_>>
+          |* <<functions-date-create-string, Creating a _Date_ from a string>>
+          |* <<functions-date-temporal, Creating a _Date_ using other temporal values as components>>
+          |* <<functions-date-truncate, Truncating a _Date_>>
+        """.stripMargin)
       section("Getting the current _Date_", "functions-date-current") {
         p(
           """`date()` returns the current _Date_ value.
@@ -439,6 +452,19 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
     }
     section("DateTime: `datetime()`", "functions-datetime") {
+      synopsis("""Details for using the `datetime()` function.""".stripMargin)
+      p(
+        """
+          |* <<functions-datetime-current, Getting the current _DateTime_>>
+          |* <<functions-datetime-calendar, Creating a calendar (Year-Month-Day) _DateTime_>>
+          |* <<functions-datetime-week, Creating a week (Year-Week-Day) _DateTime_>>
+          |* <<functions-datetime-quarter, Creating a quarter (Year-Quarter-Day) _DateTime_>>
+          |* <<functions-datetime-ordinal, Creating an ordinal (Year-Day) _DateTime_>>
+          |* <<functions-datetime-create-string, Creating a _DateTime_ from a string>>
+          |* <<functions-datetime-temporal, Creating a _DateTime_ using other temporal values as components>>
+          |* <<functions-datetime-timestamp, Creating a _DateTime_ from a timestamp>>
+          |* <<functions-datetime-truncate, Truncating a _DateTime_>>
+        """.stripMargin)
       section("Getting the current _DateTime_", "functions-datetime-current") {
         p(
           """`datetime()` returns the current _DateTime_ value.
@@ -815,6 +841,18 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
     }
     section("LocalDateTime: `localdatetime()`", "functions-localdatetime") {
+      synopsis("""Details for using the `localdatetime()` function.""".stripMargin)
+      p(
+        """
+          |* <<functions-localdatetime-current, Getting the current _LocalDateTime_>>
+          |* <<functions-localdatetime-calendar, Creating a calendar (Year-Month-Day) _LocalDateTime_>>
+          |* <<functions-localdatetime-week, Creating a week (Year-Week-Day) _LocalDateTime_>>
+          |* <<functions-localdatetime-quarter, Creating a quarter (Year-Quarter-Day) _LocalDateTime_>>
+          |* <<functions-localdatetime-ordinal, Creating an ordinal (Year-Day) _LocalDateTime_>>
+          |* <<functions-localdatetime-create-string, Creating a _LocalDateTime_ from a string>>
+          |* <<functions-localdatetime-temporal, Creating a _LocalDateTime_ using other temporal values as components>>
+          |* <<functions-localdatetime-truncate, Truncating a _LocalDateTime_>>
+        """.stripMargin)
       section("Getting the current _LocalDateTime_", "functions-localdatetime-current") {
         p(
           """`localdatetime()` returns the current _LocalDateTime_ value.
@@ -1054,6 +1092,15 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
     }
     section("LocalTime: `localtime()`", "functions-localtime") {
+      synopsis("""Details for using the `localtime()` function.""".stripMargin)
+      p(
+        """
+          |* <<functions-localtime-current, Getting the current _LocalTime_>>
+          |* <<functions-localtime-create, Creating a _LocalTime_>>
+          |* <<functions-localtime-create-string, Creating a _LocalTime_ from a string>>
+          |* <<functions-localtime-temporal, Creating a _LocalTime_ using other temporal values as components>>
+          |* <<functions-localtime-truncate, Truncating a _LocalTime_>>
+        """.stripMargin)
       section("Getting the current _LocalTime_", "functions-localtime-current") {
         p(
           """`localtime()` returns the current _LocalTime_ value.
@@ -1222,6 +1269,15 @@ class TemporalFunctionsTest extends DocumentingTest {
       }
     }
     section("Time: `time()`", "functions-time") {
+      synopsis("""Details for using the `time()` function.""".stripMargin)
+      p(
+        """
+          |* <<functions-time-current, Getting the current _Time_>>
+          |* <<functions-time-create, Creating a _Time_>>
+          |* <<functions-time-create-string, Creating a _Time_ from a string>>
+          |* <<functions-time-temporal, Creating a _Time_ using other temporal values as components>>
+          |* <<functions-time-truncate, Truncating a _Time_>>
+        """.stripMargin)
       section("Getting the current _Time_", "functions-time-current") {
         p(
           """`time()` returns the current _Time_ value.
