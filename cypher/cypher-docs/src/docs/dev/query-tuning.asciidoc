@@ -63,7 +63,7 @@ Here we detail the available versions:
 [[cypher-planner]]
 === Cypher query planner
 
-Each query is turned into an <<execution-plan-introduction, execution plan>> by the Cypher _query planner_.
+Each query is turned into an <<execution-plan-introduction, execution plan>> by the Cypher query planner.
 The execution plan tells Neo4j which operations to perform when executing the query.
 
 Neo4j uses a _cost_-based execution planning strategy (known as the 'cost' planner): the statistics service in Neo4j is used to assign a cost to alternative plans and picks the cheapest one.
@@ -93,30 +93,29 @@ These index decisions are only valid until the schema changes, so adding or remo
 === Cypher runtime
 
 Using the execution plan, the query is executed -- and records returned -- by the Cypher query planner, or _runtime_.
-Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used, there are three different runtimes available:
+Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used, there are three different runtimes available.
+In Enterprise Edition, the Cypher query planner selects runtime with fallbacks as follows:
 
-Interpreted::
+* Try the compiled runtime first.
+* If the compiled runtime does not support the query, then fall back to use the slotted runtime.
+* Finally, if the slotted runtime does not support the query, fall back to the interpreted runtime.
+  The interpreted runtime supports all queries.
+
+.Interpreted
 In this runtime, the operators in the execution plan are chained together in a tree, where each non-leaf operator feeds from one or two child operators.
 The tree thus comprises nested iterators, and the records are streamed in a pipelined manner from the top iterator, which pulls from the next iterator and so on.
 
-Slotted::
+[enterprise-edition]
+.Slotted
 This is very similar to the interpreted runtime, except that there are additional optimizations regarding the way in which the records are streamed through the iterators.
 This results in improvements to both the performance and memory usage of the query.
-In effect, this can be thought of as a the 'faster interpreted' runtime.
+In effect, this can be thought of as the 'faster interpreted' runtime.
 This is still under development and does not support all possible operators or queries.
 
-[NOTE]
-The slotted runtime is only available in Neo4j Enterprise Edition.
-
-Compiled::
+[enterprise-edition]
+.Compiled
 Algorithms are employed to intelligently group the operators in the execution plan in order to generate new combinations and orders of execution which are optimised for performance and memory usage.
 While this should lead to superior performance in most cases (over both the interpreted and slotted runtimes), it is still under development and does not support all possible operators or queries (the slotted runtime has a higher coverage of operators and queries).
-
-[NOTE]
-The compiled runtime is only available in Neo4j Enterprise Edition.
-
-[NOTE]
-In Enterprise Edition, the Cypher query planner's fallback mechanism is to try the compiled runtime first, and if it does not support the query, to then try the slotted runtime, and if that also does not support the query, to finally fall back to the interpreted runtime, which supports all queries.
 
 [options="header"]
 |===
