@@ -46,8 +46,8 @@ class ForeachTest extends RefcardTest with QueryStatisticsTestSupport {
     }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("prop" -> "Andrés"),
-    "B" -> Map("prop" -> "Tobias"),
+    "A" -> Map("prop" -> "Andy"),
+    "B" -> Map("prop" -> "Timothy"),
     "C" -> Map("prop" -> "Chris")
   )
 

@@ -42,12 +42,12 @@ class WithTest extends RefcardTest with QueryStatisticsTestSupport {
   override def parameters(name: String): Map[String, Any] =
     name match {
       case "parameters=name" =>
-        Map("name" -> "Andreas")
+        Map("name" -> "Bob")
       case _ => Map()
     }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("name" -> "Andreas"),
+    "A" -> Map("name" -> "Bob"),
     "B" -> Map("value" -> 20),
     "C" -> Map("value" -> 30))
 
