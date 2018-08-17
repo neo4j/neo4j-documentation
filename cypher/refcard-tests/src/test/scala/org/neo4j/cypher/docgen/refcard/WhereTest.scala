@@ -43,8 +43,8 @@ class WhereTest extends RefcardTest with QueryStatisticsTestSupport {
     }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("property" -> "Andrés"),
-    "B" -> Map("property" -> "Tobias"),
+    "A" -> Map("property" -> "Andy"),
+    "B" -> Map("property" -> "Timothy"),
     "C" -> Map("property" -> "Chris"))
 
   def text = """

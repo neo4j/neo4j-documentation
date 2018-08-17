@@ -256,7 +256,7 @@ class SpatialTest extends DocumentingTest {
           |is assigned to that property on a node with that label, the node will be indexed in a spatial index. For spatial indexing, Neo4j uses
           |space filling curves in 2D or 3D over an underlying generalized B+Tree. Points will be stored in up to four different trees, one for each of the
           |<<cypher-spatial-crs, four coordinate reference systems>>.
-          |This allows for both <<schema-index-use-a-single-property-index-with-where-using-equality, equality>>
+          |This allows for both <<schema-index-equality-check-using-where-single-property-index, equality>>
           |and <<schema-index-range-comparisons-using-where-single-property-index, range>> queries using exactly the same syntax and behaviour as for other property types.
           |If two range predicates are used, which define minimum and maximum points, this will effectively result in a
           |<<schema-index-spatial-bounding-box-searches-single-property-index, bounding box query>>.

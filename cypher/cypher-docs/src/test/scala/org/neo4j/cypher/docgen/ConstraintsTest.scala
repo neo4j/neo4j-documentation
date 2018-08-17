@@ -304,18 +304,17 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  //TODO reinstate when "Composite lookups not yet supported" bug is fixed
-//  @Test def break_node_key_constraint_by_removing_property() {
-//    generateConsole = false
-//    execute("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")
-//    execute("CREATE (p:Person {firstname: 'John', surname: 'Wood'})")
-//    testFailingQuery[ConstraintValidationException](
-//      title = "Removing a `NODE KEY` constrained property",
-//      text = "Trying to remove the `surname` property from an existing node `Person`, given a `NODE KEY` constraint on `:Person(firstname, surname)`.",
-//      queryText = "MATCH (p:Person {firstname: 'John', surname: 'Wood'}) REMOVE p.surname",
-//      optionalResultExplanation = "In this case the property is not removed."
-//    )
-//  }
+  @Test def break_node_key_constraint_by_removing_property() {
+    generateConsole = false
+    execute("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")
+    execute("CREATE (p:Person {firstname: 'John', surname: 'Wood'})")
+    testFailingQuery[ConstraintValidationException](
+      title = "Removing a `NODE KEY`-constrained property",
+      text = "Trying to remove the `surname` property from an existing node `Person`, given a `NODE KEY` constraint on `:Person(firstname, surname)`.",
+      queryText = "MATCH (p:Person {firstname: 'John', surname: 'Wood'}) REMOVE p.surname",
+      optionalResultExplanation = "In this case the property is not removed."
+    )
+  }
 
   @Test def fail_to_create_node_key_constraint() {
     generateConsole = false
