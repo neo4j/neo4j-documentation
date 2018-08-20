@@ -67,7 +67,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
     p(
       """The `DISTINCT` operator works in conjunction with aggregation.
         |It is used to make all values unique before running them through an aggregate function.
-        |More information about `DISTINCT` may be found <<query-operators-general,here>>.""")
+        |More information about `DISTINCT` may be found <<query-operators-aggregation,here>>.""")
     p(
       """Functions:
         |

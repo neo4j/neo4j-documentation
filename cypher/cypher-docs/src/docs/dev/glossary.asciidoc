@@ -72,19 +72,22 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operators-mathematical, +>>                      | Mathematical  | Addition
 | <<query-operators-string, +>>                            | String        | Concatenation
 | <<query-operators-list, +>>                              | List          | Concatenation
+| <<query-operators-property, +\=>>                        | Property    | Property mutation
 | <<query-operators-mathematical, \->>                      | Mathematical  | Subtraction or unary minus
-| <<query-operators-general, .>>                             | General      | Property access
+| <<query-operators-map, .>>                             | Map      | Static value access by key
+| <<query-operators-property, .>>                             | Property      | Static property access
 | <<query-operators-mathematical, />>                      | Mathematical  | Division
 | <<query-operators-comparison, <>>                        | Comparison    | Less than
 | <<query-operators-comparison, \<\=>>                       | Comparison    | Less than or equal to
 | <<query-operators-comparison, <> >>                       | Comparison    | Inequality
 | <<query-operators-comparison, \=>>                        | Comparison    | Equality
+| <<query-operators-property, \=>>                        | Property    | Property replacement
 | <<query-operators-string, =~>>                           | String        | Regular expression match
 | <<query-operators-comparison, > >>                        | Comparison    | Greater than
 | <<query-operators-comparison, >\=>>                       | Comparison    | Greater than or equal to
 | <<query-operators-boolean, AND>>                         | Boolean       | Conjunction
 | <<query-operator-comparison-string-specific, CONTAINS>>  | String comparison | Case-sensitive inclusion search
-| <<query-operators-general, DISTINCT>>           | General           | Duplicate removal
+| <<query-operators-aggregation, DISTINCT>>           | Aggregation           | Duplicate removal
 | <<query-operator-comparison-string-specific, ENDS WITH>> | String comparison | Case-sensitive suffix search
 | <<query-operators-list, IN>>                             | List          | List element existence check
 | <<query-operators-comparison, IS NOT NULL>>              | Comparison    | Non-`null` check
@@ -93,7 +96,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<query-operators-boolean, OR>>                          | Boolean       | Disjunction
 | <<query-operator-comparison-string-specific, STARTS WITH>>   | String comparison | Case-sensitive prefix search
 | <<query-operators-boolean, XOR>>                         | Boolean     | Exclusive disjunction
-| <<query-operators-general, []>>                            | General        | Subscript (dynamic property access)
+| <<query-operators-map, []>>                            | Map        | Subscript (dynamic value access by key)
+| <<query-operators-property, []>>                            | Property        | Subscript (dynamic property access)
 | <<query-operators-list, []>>                            | List        | Subscript (accessing element(s) in a list)
 | <<query-operators-mathematical, ^>>                      | Mathematical  | Exponentiation
 |===
