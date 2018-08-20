@@ -94,7 +94,7 @@ These index decisions are only valid until the schema changes, so adding or remo
 
 Using the execution plan, the query is executed -- and records returned -- by the Cypher query planner, or _runtime_.
 Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used, there are three different runtimes available.
-In Enterprise Edition, the Cypher query planner selects runtime with fallbacks as follows:
+In Enterprise Edition, the Cypher query planner selects the runtime, falling back to alternative runtimes as follows:
 
 * Try the compiled runtime first.
 * If the compiled runtime does not support the query, then fall back to use the slotted runtime.

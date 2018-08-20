@@ -19,8 +19,8 @@ The task of executing a query is decomposed into _operators_, each of which impl
 The operators are combined into a tree-like structure called an _execution plan_.
 Each operator in the execution plan is represented as a node in the tree.
 Each operator takes as input zero or more rows, and produces as output zero or more rows.
-The output from one operator becomes the input for the next operator.
-Operators that join two branches in the tree combines input from two incoming streams and produce a single output.
+This means that the output from one operator becomes the input for the next operator.
+Operators that join two branches in the tree combine input from two incoming streams and produce a single output.
 
 .Evaluation model
 Evaluation of the execution plan begins at the leaf nodes of the tree.
@@ -45,8 +45,6 @@ Each operator is annotated with statistics.
 `Rows`::
 The number of rows that the operator produced.
 This is only available if the query was profiled.
-`EstimatedRows`::
-This is the estimated number of rows -- i.e. the approximate number of rows based on the available statistical information -- that is expected to be produced by the operator.
 `EstimatedRows`::
 This is the estimated number of rows that is expected to be produced by the operator.
 The estimate is an approximate number based on the available statistical information.
