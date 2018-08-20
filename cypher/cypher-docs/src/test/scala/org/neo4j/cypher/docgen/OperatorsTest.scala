@@ -33,10 +33,10 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<query-operators-aggregation, Aggregation operators>>
         | ** <<syntax-using-the-distinct-operator, Using the `DISTINCT` operator>>
         |* <<query-operators-property, Property operators>>
-        | ** <<syntax-accessing-the-property-of-a-graph-element, Statically accessing a property of a graph element using the `.` operator>>
+        | ** <<syntax-accessing-the-property-of-a-node-or-relationship, Statically accessing a property of a node or relationship using the `.` operator>>
         | ** <<syntax-filtering-on-a-dynamically-computed-property-key, Filtering on a dynamically-computed property key using the `[]` operator>>
-        | ** <<syntax-property-replacement-operator, Replacing all properties of a graph element using the `=` operator>>
-        | ** <<syntax-property-mutation-operator, Mutating specific properties of a graph element using the `+=` operator>>
+        | ** <<syntax-property-replacement-operator, Replacing all properties of a node or relationship using the `=` operator>>
+        | ** <<syntax-property-mutation-operator, Mutating specific properties of a node or relationship using the `+=` operator>>
         |* <<query-operators-mathematical, Mathematical operators>>
         | ** <<syntax-using-the-exponentiation-operator, Using the exponentiation operator `^`>>
         | ** <<syntax-using-the-unary-minus-operator, Using the unary minus operator `-`>>
@@ -67,7 +67,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           |[subs=none]
           ||===
            || <<query-operators-aggregation, Aggregation operators>> | `DISTINCT`
-           || <<query-operators-property, Property operators>> | `.` for static property access, `[]` for dynamic property access, `=` for replacing all properties of a graph element, `+=` for mutating specific properties of a graph element
+           || <<query-operators-property, Property operators>> | `.` for static property access, `[]` for dynamic property access, `=` for replacing all properties, `+=` for mutating specific properties
            || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
            || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
            || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
@@ -102,13 +102,13 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Property operators", "query-operators-property") {
       p(
-        """The property operators pertain to a node or a relationship (graph element), and comprise:
+        """The property operators pertain to a node or a relationship, and comprise:
           |
-          |* statically access the property of a graph element using the dot operator: `.`
-          |* dynamically access the property of a graph element using the subscript operator: `[]`
-          |* property replacement `=` for replacing all properties of a graph element
-          |* property mutation operator `+=` for setting specific properties of a graph element""".stripMargin)
-      section("Statically accessing a property of a graph element using the `.` operator", "syntax-accessing-the-property-of-a-graph-element") {
+          |* statically access the property of a node or relationship using the dot operator: `.`
+          |* dynamically access the property of a node or relationship using the subscript operator: `[]`
+          |* property replacement `=` for replacing all properties of a node or relationship
+          |* property mutation operator `+=` for setting specific properties of a node or relationship""".stripMargin)
+      section("Statically accessing a property of a node or relationship using the `.` operator", "syntax-accessing-the-property-of-a-node-or-relationship") {
         query(
           """CREATE (a:Person {name: 'Jane', livesIn: 'London'}),
             | (b:Person {name: 'Tom', livesIn: 'Copenhagen'})
@@ -139,7 +139,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           p("""The behavior of the `[]` operator with respect to `null` is detailed <<cypher-null-bracket-operator, here>>.""")
         }
       }
-      section("Replacing all properties of a graph element using the `=` operator", "syntax-property-replacement-operator") {
+      section("Replacing all properties of a node or relationship using the `=` operator", "syntax-property-replacement-operator") {
         query(
           """CREATE (a:Person {name: 'Jane', age: 20})
             |WITH a
@@ -154,7 +154,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
         p("See <<set-replace-properties-using-map>> for more details on using the property replacement operator `=`.")
       }
-      section("Mutating specific properties of a graph element using the `+=` operator", "syntax-property-mutation-operator") {
+      section("Mutating specific properties of a node or relationship using the `+=` operator", "syntax-property-mutation-operator") {
         query(
           """CREATE (a:Person {name: 'Jane', age: 20})
             |WITH a

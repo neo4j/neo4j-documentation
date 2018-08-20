@@ -53,7 +53,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<set-set-a-label-on-a-node, Set a label on a node>>
         |* <<set-set-multiple-labels-on-a-node, Set multiple labels on a node>>""".stripMargin)
     section("Introduction", "query-set-introduction") {
-      p("""`SET` can be used with a map -- provided as a literal, or a parameter, or graph element -- to set properties.""")
+      p("""`SET` can be used with a map -- provided as a literal, a parameter, or a node or relationship -- to set properties.""")
       note {
         p("""Setting labels on a node is an idempotent operation -- nothing will occur if an attempt is made to set a label on a node that already has that label.
           |The query statistics will state whether any updates actually took place.""".stripMargin)
@@ -75,7 +75,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
       p(
-        """It is possible to set a property on a graph element using more complex expressions.
+        """It is possible to set a property on a node or relationship using more complex expressions.
           |For instance, in contrast to specifying the node directly, the following query shows how to set a property for a node selected by an expression: """.stripMargin)
       query(
         """MATCH (n {name: 'Andy'})
@@ -133,8 +133,8 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Copy properties between nodes and relationships", "set-copying-properties-between-nodes-and-relationships") {
       p(
-        """`SET` can be used to copy all properties from one graph element to another.
-          |This will remove _all_ other properties on the graph element being copied to.""".stripMargin)
+        """`SET` can be used to copy all properties from one node or relationship to another.
+          |This will remove _all_ other properties on the node or relationship being copied to.""".stripMargin)
       query(
         """MATCH (at {name: 'Andy'}), (pn {name: 'Peter'})
           |SET at = pn
@@ -148,7 +148,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Replace all properties using a map and `=`", "set-replace-properties-using-map") {
       p(
-        """The property replacement operator `=` can be used with `SET` to replace all existing properties on a graph element with those provided by a map: """.stripMargin)
+        """The property replacement operator `=` can be used with `SET` to replace all existing properties on a node or relationship with those provided by a map: """.stripMargin)
       query(
         """MATCH (p {name: 'Peter'})
           |SET p = {name: 'Peter Smith', position: 'Entrepreneur'}
@@ -162,7 +162,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Remove all properties using an empty map and `=`", "set-remove-properties-using-empty-map") {
       p(
-        """All existing properties can be removed from a graph element by using `SET` with `=` and an empty map as the right operand: """.stripMargin)
+        """All existing properties can be removed from a node or relationship by using `SET` with `=` and an empty map as the right operand: """.stripMargin)
       query(
         """MATCH (p {name: 'Peter'})
           |SET p = {}
@@ -178,10 +178,10 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """The property mutation operator `+=` can be used with `SET` to mutate properties from a map in a fine-grained fashion:
           |
-          |* Any properties in the map that are not on the graph element will be _added_ to the graph element.
-          |* Any properties not in the map that are on the graph element will be left as is; i.e. not removed from the graph element.
-          |* Any properties that are in both the map and the graph element will be _replaced_ in the graph element.
-          |However, if any property in the map is `null`, it will be _removed_ from the graph element.""".stripMargin)
+          |* Any properties in the map that are not on the node or relationship will be _added_.
+          |* Any properties not in the map that are on the node or relationship will be left as is.
+          |* Any properties that are in both the map and the node or relationship will be _replaced_ in the node or relationship.
+          |However, if any property in the map is `null`, it will be _removed_ from the node or relationship.""".stripMargin)
       query(
         """MATCH (p {name: 'Peter'})
           |SET p += {age: 38, hungry: true, position: 'Entrepreneur'}
@@ -193,7 +193,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
       p(
-        """<<set-remove-properties-using-empty-map, In contrast to the property replacement operator `=`>>, providing an empty map as the right operand to `+=` will not remove any existing properties from a graph element.
+        """<<set-remove-properties-using-empty-map, In contrast to the property replacement operator `=`>>, providing an empty map as the right operand to `+=` will not remove any existing properties from a node or relationship.
           |In line with the semantics detailed above, passing in an empty map with `+=` will have no effect: """.stripMargin)
       query(
         """MATCH (p {name: 'Peter'})

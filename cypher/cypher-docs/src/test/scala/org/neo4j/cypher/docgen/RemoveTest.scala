@@ -32,7 +32,7 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
                   |       (p:German:Swedish {name: 'Peter', age: 34}),
                   |       (a)-[:KNOWS]->(t),
                   |       (a)-[:KNOWS]->(p)""")
-    synopsis("The `REMOVE` clause is used to remove properties and labels from graph elements.")
+    synopsis("The `REMOVE` clause is used to remove properties from nodes and relationships, and to remove labels from nodes.")
     p(
       """* <<query-remove-introduction, Introduction>>
         |* <<remove-remove-a-property, Remove a property>>
@@ -66,8 +66,8 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Remove all properties", "remove-remove-all-properties") {
       p(
-        """`REMOVE` cannot be used to remove all existing properties from a graph element.
-          |Instead, using <<set-remove-properties-using-empty-map, `SET` with `=` and an empty map as the right operand>> will clear all properties from a node or element. """.stripMargin)
+        """`REMOVE` cannot be used to remove all existing properties from a node or relationship.
+          |Instead, using <<set-remove-properties-using-empty-map, `SET` with `=` and an empty map as the right operand>> will clear all properties from the node or relationship.""".stripMargin)
     }
     section("Remove a label from a node", "remove-remove-a-label-from-a-node") {
       p(
