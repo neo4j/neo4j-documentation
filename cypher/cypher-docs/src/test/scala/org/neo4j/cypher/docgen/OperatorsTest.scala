@@ -56,7 +56,6 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         | ** <<syntax-using-in-for-more-complex-list-membership-operations, Using `IN` for more complex list membership operations>>
         | ** <<syntax-accessing-elements-in-a-list, Accessing elements in a list using the `[]` operator>>
         | ** <<syntax-accessing-element-in-a-list-parameter, Dynamically accessing an element in a list using the `[]` operator and a parameter>>
-        |* <<query-operators-property-deprecated, Deprecated property operators>>
         |* <<cypher-comparison, Equality and comparison of values>>
         |* <<cypher-ordering, Ordering and comparison of values>>
         |* <<cypher-operations-chaining, Chaining comparison operations>>
