@@ -19,10 +19,11 @@
  */
 package org.neo4j.cypher.docgen
 
+import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.values.storable.{DateValue, DurationValue, LocalDateTimeValue}
 
-class OperatorsTest extends DocumentingTest {
+class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
 
   override def outputPath = "target/docs/dev/ql/"
 
@@ -30,10 +31,13 @@ class OperatorsTest extends DocumentingTest {
     doc("Operators", "query-operators")
     p(
       """* <<query-operators-summary, Operators at a glance>>
-        |* <<query-operators-general, General operators>>
+        |* <<query-operators-aggregation, Aggregation operators>>
         | ** <<syntax-using-the-distinct-operator, Using the `DISTINCT` operator>>
-        | ** <<syntax-accessing-the-property-of-a-nested-literal-map, Accessing properties of a nested literal map using the `.` operator>>
+        |* <<query-operators-property, Property operators>>
+        | ** <<syntax-accessing-the-property-of-a-node-or-relationship, Statically accessing a property of a node or relationship using the `.` operator>>
         | ** <<syntax-filtering-on-a-dynamically-computed-property-key, Filtering on a dynamically-computed property key using the `[]` operator>>
+        | ** <<syntax-property-replacement-operator, Replacing all properties of a node or relationship using the `=` operator>>
+        | ** <<syntax-property-mutation-operator, Mutating specific properties of a node or relationship using the `+=` operator>>
         |* <<query-operators-mathematical, Mathematical operators>>
         | ** <<syntax-using-the-exponentiation-operator, Using the exponentiation operator `^`>>
         | ** <<syntax-using-the-unary-minus-operator, Using the unary minus operator `-`>>
@@ -48,12 +52,15 @@ class OperatorsTest extends DocumentingTest {
         | ** <<syntax-add-subtract-duration-to-temporal-instant, Adding and subtracting a _Duration_ to or from a temporal instant>>
         | ** <<syntax-add-subtract-duration-to-duration, Adding and subtracting a _Duration_ to or from another _Duration_>>
         | ** <<syntax-multiply-divide-duration-number, Multiplying and dividing a _Duration_ with or by a number>>
+        |* <<query-operators-map, Map operators>>
+        | ** <<syntax-accessing-the-value-of-a-nested-map, Statically accessing the value of a nested map by key using the `.` operator">>
+        | ** <<syntax-accessing-dynamic-map-parameter, Dynamically accessing the value of a map by key using the `[]` operator and a parameter>>
         |* <<query-operators-list, List operators>>
         | ** <<syntax-concatenating-two-lists, Concatenating two lists using `+`>>
         | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list, Using `IN` to check if a number is in a list>>
         | ** <<syntax-using-in-for-more-complex-list-membership-operations, Using `IN` for more complex list membership operations>>
         | ** <<syntax-accessing-elements-in-a-list, Accessing elements in a list using the `[]` operator>>
-        |* <<query-operators-property, Property operators>>
+        | ** <<syntax-accessing-element-in-a-list-parameter, Dynamically accessing an element in a list using the `[]` operator and a parameter>>
         |* <<cypher-comparison, Equality and comparison of values>>
         |* <<cypher-ordering, Ordering and comparison of values>>
         |* <<cypher-operations-chaining, Chaining comparison operations>>
@@ -63,24 +70,24 @@ class OperatorsTest extends DocumentingTest {
         """
           |[subs=none]
           ||===
-          || <<query-operators-general, General operators>> | `DISTINCT`, `.` for property access, `[]` for dynamic property access
+          || <<query-operators-aggregation, Aggregation operators>> | `DISTINCT`
+          || <<query-operators-property, Property operators>> | `.` for static property access, `[]` for dynamic property access, `=` for replacing all properties, `+=` for mutating specific properties
           || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
           || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
           || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
           || <<query-operators-boolean, Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
           || <<query-operators-string, String operators>>   | `+` for concatenation, `=~` for regex matching
           || <<query-operators-temporal, Temporal operators>>   | `+` and `-` for operations between durations and temporal instants/durations, `*` and `/` for operations between durations and numbers
-          || <<query-operators-list, List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s)
+          || <<query-operators-map, Map operators>>       |  `.` for static value access by key, `[]` for dynamic value access by key
+          || <<query-operators-list, List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s) dynamically
           ||===
           |""")
     }
-    section("General operators", "query-operators-general") {
+    section("Aggregation operators", "query-operators-aggregation") {
       p(
-        """The general operators comprise:
+        """The aggregation operators comprise:
           |
-          |* remove duplicates values: `DISTINCT`
-          |* access the property of a node, relationship or literal map using the dot operator: `.`
-          |* dynamic property access using the subscript operator: `[]`""".stripMargin)
+          |* remove duplicates values: `DISTINCT`""".stripMargin)
       section("Using the `DISTINCT` operator", "syntax-using-the-distinct-operator") {
         p("Retrieve the unique eye colors from `Person` nodes.")
         query(
@@ -97,11 +104,23 @@ class OperatorsTest extends DocumentingTest {
         }
         p("`DISTINCT` is commonly used in conjunction with <<query-functions-aggregating,aggregating functions>>.")
       }
-      section("Accessing properties of a nested literal map using the `.` operator", "syntax-accessing-the-property-of-a-nested-literal-map") {
+    }
+    section("Property operators", "query-operators-property") {
+      p(
+        """The property operators pertain to a node or a relationship, and comprise:
+          |
+          |* statically access the property of a node or relationship using the dot operator: `.`
+          |* dynamically access the property of a node or relationship using the subscript operator: `[]`
+          |* property replacement `=` for replacing all properties of a node or relationship
+          |* property mutation operator `+=` for setting specific properties of a node or relationship""".stripMargin)
+      section("Statically accessing a property of a node or relationship using the `.` operator", "syntax-accessing-the-property-of-a-node-or-relationship") {
         query(
-          """WITH {person: {name: 'Anne', age: 25}} AS p
-            |RETURN  p.person.name""".stripMargin, ResultAssertions((r) => {
-            r.toList should equal(List(Map("p.person.name" -> "Anne")))
+          """CREATE (a:Person {name: 'Jane', livesIn: 'London'}),
+            | (b:Person {name: 'Tom', livesIn: 'Copenhagen'})
+            |WITH a, b
+            |MATCH (p:Person)
+            |RETURN  p.name""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("p.name" -> "Jane"), Map("p.name" -> "Tom")))
           })) {
           resultTable()
         }
@@ -124,6 +143,36 @@ class OperatorsTest extends DocumentingTest {
         note {
           p("""The behavior of the `[]` operator with respect to `null` is detailed <<cypher-null-bracket-operator, here>>.""")
         }
+      }
+      section("Replacing all properties of a node or relationship using the `=` operator", "syntax-property-replacement-operator") {
+        query(
+          """CREATE (a:Person {name: 'Jane', age: 20})
+            |WITH a
+            |MATCH (p:Person {name: 'Jane'})
+            |SET p = {name: 'Ellen', livesIn: 'London'}
+            |RETURN p.name, p.age, p.livesIn""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("p.name" -> "Ellen", "p.age" -> null, "p.livesIn" -> "London")))
+            assertStats(r, propertiesWritten = 5, nodesCreated = 1, labelsAdded = 1)
+          })) {
+          p("""All the existing properties on the node are replaced by those provided in the map; i.e. the `name` property is updated from `Jane` to `Ellen`, the `age` property is deleted, and the `livesIn` property is added.""")
+          resultTable()
+        }
+        p("See <<set-replace-properties-using-map>> for more details on using the property replacement operator `=`.")
+      }
+      section("Mutating specific properties of a node or relationship using the `+=` operator", "syntax-property-mutation-operator") {
+        query(
+          """CREATE (a:Person {name: 'Jane', age: 20})
+            |WITH a
+            |MATCH (p:Person {name: 'Jane'})
+            |SET p += {name: 'Ellen', livesIn: 'London'}
+            |RETURN p.name, p.age, p.livesIn""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("p.name" -> "Ellen", "p.age" -> 20, "p.livesIn" -> "London")))
+            assertStats(r, propertiesWritten = 4, nodesCreated = 1, labelsAdded = 1)
+          })) {
+          p("""The properties on the node are updated as follows by those provided in the map: the `name` property is updated from `Jane` to `Ellen`, the `age` property is left untouched, and the `livesIn` property is added.""")
+          resultTable()
+        }
+        p("See <<set-setting-properties-using-map>> for more details on using the property mutation operator `+=`.")
       }
     }
     section("Mathematical operators", "query-operators-mathematical") {
@@ -238,7 +287,7 @@ class OperatorsTest extends DocumentingTest {
     }
     section("String operators", "query-operators-string") {
       p(
-        """String operators comprise:
+        """The string operators comprise:
           |
           |* concatenating strings: `+`
           |* matching a regular expression: `=~`""".stripMargin)
@@ -360,13 +409,45 @@ class OperatorsTest extends DocumentingTest {
         }
       }
     }
+    section("Map operators", "query-operators-map") {
+      p(
+        """The map operators comprise:
+          |* statically access the value of a map by key using the dot operator: `.`
+          |* dynamically access the value of a map by key using the subscript operator: `[]`
+          |""".stripMargin)
+      note {
+        p("""The behavior of the `[]` operator with respect to `null` is detailed in <<cypher-null-bracket-operator>>.""")
+      }
+      section("Statically accessing the value of a nested map by key using the `.` operator", "syntax-accessing-the-value-of-a-nested-map") {
+        query(
+          """WITH {person: {name: 'Anne', age: 25}} AS p
+            |RETURN  p.person.name""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("p.person.name" -> "Anne")))
+          })) {
+          resultTable()
+        }
+      }
+      section("Dynamically accessing the value of a map by key using the `[]` operator and a parameter", "syntax-accessing-dynamic-map-parameter") {
+        p(
+          """A parameter may be used to specify the key of the value to access:""".stripMargin)
+        query(
+          """WITH {name: 'Anne', age: 25} AS a
+            |RETURN a[$myKey] AS result""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("result" -> "Anne")))
+          }),
+          ("myKey", "name")) {
+          resultTable()
+        }
+      }
+      p("More details on maps can be found in <<cypher-maps>>.")
+    }
     section("List operators", "query-operators-list") {
       p(
-        """List operators comprise:
+        """The list operators comprise:
           |
           |* concatenating lists `l~1~` and `l~2~`: `[l~1~] + [l~2~]`
           |* checking if an element `e` exists in a list `l`: `e IN [l]`
-          |* accessing an element(s) in a list using the subscript operator: `[]`""".stripMargin)
+          |* dynamically accessing an element(s) in a list using the subscript operator: `[]`""".stripMargin)
       note {
         p("""The behavior of the `IN` and `[]` operators with respect to `null` is detailed <<cypher-working-with-null, here>>.""")
       }
@@ -432,6 +513,18 @@ class OperatorsTest extends DocumentingTest {
             r.toList should equal(List(Map("result" -> List("John", "Bill"))))
           })) {
           p("""The square brackets will extract the elements from the start index `1`, and up to (but excluding) the end index `3`.""")
+          resultTable()
+        }
+      }
+      section("Dynamically accessing an element in a list using the `[]` operator and a parameter", "syntax-accessing-element-in-a-list-parameter") {
+        p(
+          """A parameter may be used to specify the index of the element to access:""".stripMargin)
+        query(
+          """WITH ['Anne', 'John', 'Bill', 'Diane', 'Eve'] AS names
+            |RETURN names[$myIndex] AS result""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("result" -> "John")))
+          }),
+          ("myIndex", 1L)) {
           resultTable()
         }
       }

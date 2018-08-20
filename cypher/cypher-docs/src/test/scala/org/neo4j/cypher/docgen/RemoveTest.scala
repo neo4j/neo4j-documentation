@@ -32,12 +32,13 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
                   |       (p:German:Swedish {name: 'Peter', age: 34}),
                   |       (a)-[:KNOWS]->(t),
                   |       (a)-[:KNOWS]->(p)""")
-    synopsis("The `REMOVE` clause is used to remove properties and labels from graph elements.")
+    synopsis("The `REMOVE` clause is used to remove properties from nodes and relationships, and to remove labels from nodes.")
     p(
       """* <<query-remove-introduction, Introduction>>
         |* <<remove-remove-a-property, Remove a property>>
+        |* <<remove-remove-all-properties, Remove all properties>>
         |* <<remove-remove-a-label-from-a-node, Remove a label from a node>>
-        |* <<remove-removing-multiple-labels, Removing multiple labels>>""".stripMargin)
+        |* <<remove-remove-multiple-labels, Remove multiple labels from a node>>""".stripMargin)
     section("Introduction", "query-remove-introduction") {
       p(
         """For deleting nodes and relationships, see <<query-delete>>.""".stripMargin)
@@ -63,6 +64,11 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
+    section("Remove all properties", "remove-remove-all-properties") {
+      p(
+        """`REMOVE` cannot be used to remove all existing properties from a node or relationship.
+          |Instead, using <<set-remove-properties-using-empty-map, `SET` with `=` and an empty map as the right operand>> will clear all properties from the node or relationship.""".stripMargin)
+    }
     section("Remove a label from a node", "remove-remove-a-label-from-a-node") {
       p(
         """To remove labels, you use `REMOVE`.""".stripMargin)
@@ -76,7 +82,7 @@ class RemoveTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Removing multiple labels", "remove-removing-multiple-labels") {
+    section("Remove multiple labels from a node", "remove-remove-multiple-labels") {
       p(
         """To remove multiple labels, you use `REMOVE`.""".stripMargin)
       query(
