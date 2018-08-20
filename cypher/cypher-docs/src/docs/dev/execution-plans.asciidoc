@@ -140,8 +140,8 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-node-index-scan, NodeIndexScan>>                              | Examines all values stored in an index, returning all nodes with a particular label having a specified property. | Y | |
 | <<query-plan-node-index-seek, NodeIndexSeek>>                              | Finds nodes using an index seek. | Y | |
 | <<query-plan-node-index-seek-by-range, NodeIndexSeekByRange>>                 | Finds nodes using an index seek where the value of the property matches the given prefix string. | Y | |
-| <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>                 | Executes a left outer hash join. |  |  |
-| <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>                 | Executes a right outer hash join. |  |  |
+| <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>                 | Executes a left outer hash join. |  |  | Eager
+| <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>                 | Executes a right outer hash join. |  |  | Eager
 | <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>                        | Finds nodes using an index seek within a unique index. | Y | |
 | <<query-plan-node-unique-index-seek-by-range, NodeUniqueIndexSeekByRange>>                 | Finds nodes using an index seek within a unique index where the value of the property matches the given prefix string. | Y | |
 | <<query-plan-optional, Optional>>                    | Yields a single row with all columns set to `null` if no data is returned by its source. | | |
