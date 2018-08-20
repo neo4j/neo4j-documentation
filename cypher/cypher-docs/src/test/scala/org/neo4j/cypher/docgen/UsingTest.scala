@@ -52,7 +52,7 @@ class UsingTest extends DocumentingTest {
       p("""When executing a query, Neo4j needs to decide where in the query graph to start matching.
           |This is done by looking at the `MATCH` clause and the `WHERE` conditions and using that information to find useful indexes, or other starting points.""")
       p("""However, the selected index might not always be the best choice.
-          |Sometimes multiple indexes are possible candidates, and the query planner picks the wrong one from a performance point of view.
+          |Sometimes multiple indexes are possible candidates, and the query planner picks the suboptimal one from a performance point of view.
           |Moreover, in some circumstances (albeit rarely) it is better not to use an index at all.""")
       p("""Neo4j can be forced to use a specific starting point through the `USING` keyword. This is called giving a planner hint.
           |There are four types of planner hints: index hints, scan hints, join hints, and the `PERIODIC COMMIT` query hint.""")
