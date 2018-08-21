@@ -19,7 +19,7 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
 import org.junit.Test
 import java.io.File

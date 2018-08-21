@@ -19,16 +19,15 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 
 class RemoveTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A:Person", "A LINK B", "B LINK C", "C LINK ROOT")
   val title = "REMOVE"
   override val linkId = "clauses/remove"
 
-  override def assert(name: String, result: InternalExecutionResult) {
+  override def assert(name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "remove-label" =>
         assertStats(result, labelsRemoved = 1)

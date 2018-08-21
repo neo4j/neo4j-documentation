@@ -20,16 +20,15 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.junit.Ignore
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 
 @Ignore
 class ExampleTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT:Person FRIEND A:Person", "A:Person FRIEND B:Person", "B:Person FRIEND C:Person", "C:Person FRIEND ROOT:Person")
   val title = "Query Structure"
 
-  override def assert(name: String, result: InternalExecutionResult) {
+  override def assert(name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "friends" =>
         assertStats(result, nodesCreated = 0)

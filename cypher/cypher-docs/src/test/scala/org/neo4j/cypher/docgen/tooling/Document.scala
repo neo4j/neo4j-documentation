@@ -23,9 +23,8 @@ import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunc
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
-import org.opencypher.v9_0.util.{Eagerly, InternalException}
 import org.neo4j.kernel.GraphDatabaseQueryService
+import org.opencypher.v9_0.util.{Eagerly, InternalException}
 
 import scala.collection.JavaConverters._
 
@@ -324,9 +323,9 @@ case class Section(heading: String, id: Option[String], init: RunnableInitializa
 
 sealed trait QueryAssertions
 
-case class ResultAssertions(f: InternalExecutionResult => Unit) extends QueryAssertions
+case class ResultAssertions(f: DocsExecutionResult => Unit) extends QueryAssertions
 
-case class ResultAndDbAssertions(f: (InternalExecutionResult, GraphDatabaseQueryService) => Unit) extends QueryAssertions
+case class ResultAndDbAssertions(f: (DocsExecutionResult, GraphDatabaseQueryService) => Unit) extends QueryAssertions
 
 case object NoAssertions extends QueryAssertions
 

@@ -21,16 +21,15 @@ package org.neo4j.cypher.docgen.refcard
 
 import java.util.concurrent.TimeUnit
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 
 class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "INDEX"
   override val linkId = "schema/index"
 
-  override def assert(name: String, result: InternalExecutionResult) {
+  override def assert(name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "create-index" =>
         assert(result.toList.size === 0)

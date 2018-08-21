@@ -19,6 +19,7 @@
  */
 package org.neo4j.doc.cypherdoc;
 
+import org.neo4j.cypher.internal.result.string.ResultStringBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
@@ -26,7 +27,7 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,11 +42,17 @@ class Result
     public Result( String query, org.neo4j.graphdb.Result result, GraphDatabaseService graphOps )
     {
         this.query = query;
-        text = result.resultAsString();
         try ( Transaction tx = graphOps.beginTx() )
         {
-            extract( result );
+            ResultVisitor visitor = new ResultVisitor( result.columns() );
+            result.accept( visitor );
+            text = visitor.resultStringBuilder.result( result.getQueryStatistics() );
         }
+        catch ( Exception e )
+        {
+            throw new RuntimeException( e );
+        }
+
         String profileText;
         try
         {
@@ -65,11 +72,29 @@ class Result
         this.profile = "";
     }
 
-    private void extract( Iterator<?> source )
-    {
-        while ( source.hasNext() )
+    class ResultVisitor implements org.neo4j.graphdb.Result.ResultVisitor<Exception> {
+
+        final String[] columns;
+        final ResultStringBuilder resultStringBuilder;
+
+        ResultVisitor( List<String> columns )
         {
-            Object item = source.next();
+            this.columns = columns.toArray( new String[0] );
+            this.resultStringBuilder = ResultStringBuilder.apply( this.columns );
+        }
+
+        @Override
+        public boolean visit( org.neo4j.graphdb.Result.ResultRow row )
+        {
+            for ( String column : columns )
+            {
+                extractEntityIds( row.get( column ) );
+            }
+            return resultStringBuilder.visit( row );
+        }
+
+        private void extractEntityIds( Object item )
+        {
             if ( item instanceof Node )
             {
                 Node node = (Node) item;
@@ -96,11 +121,11 @@ class Result
             }
             else if ( item instanceof Map<?,?> )
             {
-                extract( ((Map<?,?>) item).values().iterator() );
+                extractEntityIds( ((Map<?,?>) item).values().iterator() );
             }
             else if ( item instanceof Iterable<?> )
             {
-                extract( ((Iterable<?>) item).iterator() );
+                extractEntityIds( ((Iterable<?>) item).iterator() );
             }
         }
     }

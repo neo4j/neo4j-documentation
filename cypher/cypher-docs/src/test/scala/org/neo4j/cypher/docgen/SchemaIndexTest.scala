@@ -22,8 +22,8 @@ package org.neo4j.cypher.docgen
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.internal.planner.v3_5.spi.{DPPlannerName, IDPPlannerName}
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
 import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
 import org.neo4j.cypher.internal.runtime.planDescription.InternalPlanDescription.Arguments.Planner
 import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
@@ -384,7 +384,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     assert(db.indexPropsForLabel(label).toSet === expectedIndexes.toSet)
   }
 
-  private def checkPlanDescription(result: InternalExecutionResult)(costString: String): Unit = {
+  private def checkPlanDescription(result: DocsExecutionResult)(costString: String): Unit = {
     val planDescription = result.executionPlanDescription()
     val plannerArgument = planDescription.arguments.find(a => a.name == "planner")
 

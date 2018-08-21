@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen.tooling.tests
 
 import org.neo4j.cypher.SyntaxException
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
@@ -58,7 +58,7 @@ class QueryRunnerTest extends CypherFunSuite {
     run(RunnableInitialization.empty, query, new TablePlaceHolder(assertions))
 
   private def run(init: RunnableInitialization, queryText: String, content: QueryResultPlaceHolder): TestRunResult = {
-    val formatter = (_: GraphDatabaseQueryService, _: InternalTransaction) => (_: InternalExecutionResult) => NoContent
+    val formatter = (_: GraphDatabaseQueryService, _: InternalTransaction) => (_: DocsExecutionResult) => NoContent
     val runner = new QueryRunner(formatter)
     runner.runQueries(contentsWithInit = Seq(ContentWithInit(init, Some(queryText), content)), "title")
   }

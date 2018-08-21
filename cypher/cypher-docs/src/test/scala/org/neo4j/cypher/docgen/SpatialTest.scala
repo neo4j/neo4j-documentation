@@ -100,10 +100,8 @@ class SpatialTest extends DocumentingTest {
         query(
           """WITH point({latitude:toFloat('13.43'), longitude:toFloat('56.21')}) AS p1, point({latitude:toFloat('13.10'), longitude:toFloat('56.41')}) as p2
             |RETURN toInt(distance(p1,p2)/1000) as km""".stripMargin, ResultAssertions((r) => {
-            r.hasNext should be(true)
-            val record = r.next()
             withClue("Expect the distance function to return an integer value") {
-              record("km") should be(42)
+              r.head("km") should be(42)
             }
           })) {
           resultTable()
@@ -131,13 +129,11 @@ class SpatialTest extends DocumentingTest {
         query(
           """WITH point({x:3, y:0}) AS p2d, point({x:0, y:4, z:1}) as p3d
             |RETURN distance(p2d,p3d) as bad, distance(p2d,point({x:p3d.x, y:p3d.y})) as good""".stripMargin, ResultAssertions((r) => {
-            r.hasNext should be(true)
-            val record = r.next()
             withClue("Expect the invalid distance function to return null") {
-              (record("bad") == null) should be(true)
+              (r.head("bad") == null) should be(true)
             }
             withClue("Expect the valid distance function to contain the right value") {
-              record("good") should be(5)
+              r.head("good") should be(5)
             }
           })) {
           resultTable()
@@ -177,13 +173,11 @@ class SpatialTest extends DocumentingTest {
           """RETURN
             |       point({x:3, y:0}) AS cartesian_2d, point({x:0, y:4, z:1}) as cartesian_3d,
             |       point({latitude: 12, longitude: 56}) AS geo_2d, point({latitude: 12, longitude: 56, height: 1000}) as geo_3d""".stripMargin, ResultAssertions((r) => {
-            r.hasNext should be(true)
-            val record = r.next()
             Map("cartesian_3d" -> 9157, "cartesian_2d" -> 7203, "geo_3d" -> 4979, "geo_2d" -> 4326).foreach { entry =>
               val field = entry._1
               val srid = entry._2
               withClue("Expect the point '$field' to have the SRID $srid") {
-                val p = record(field).asInstanceOf[Point]
+                val p = r.head(field).asInstanceOf[Point]
                 p.getCRS.getCode should be(srid)
               }
             }
@@ -217,13 +211,11 @@ class SpatialTest extends DocumentingTest {
         query(
           """WITH point({x:3, y:4}) AS p
             |RETURN p.x, p.y, p.crs, p.srid""".stripMargin, ResultAssertions((r) => {
-            r.hasNext should be(true)
-            val record = r.next()
             withClue("Expect the components to have the right values") {
-              record("p.crs") should be("cartesian")
-              record("p.srid") should be(7203)
-              record("p.x") should be(3)
-              record("p.y") should be(4)
+              r.head("p.crs") should be("cartesian")
+              r.head("p.srid") should be(7203)
+              r.head("p.x") should be(3)
+              r.head("p.y") should be(4)
             }
           })) {
           resultTable()
@@ -232,17 +224,15 @@ class SpatialTest extends DocumentingTest {
         query(
           """WITH point({latitude:3, longitude:4, height: 4321}) AS p
             |RETURN p.latitude, p.longitude, p.height, p.x, p.y, p.z, p.crs, p.srid""".stripMargin, ResultAssertions((r) => {
-            r.hasNext should be(true)
-            val record = r.next()
             withClue("Expect the components to have the right values") {
-              record("p.crs") should be("wgs-84-3d")
-              record("p.srid") should be(4979)
-              record("p.x") should be(4)
-              record("p.y") should be(3)
-              record("p.z") should be(4321)
-              record("p.latitude") should be(record("p.y"))
-              record("p.longitude") should be(record("p.x"))
-              record("p.height") should be(record("p.z"))
+              r.head("p.crs") should be("wgs-84-3d")
+              r.head("p.srid") should be(4979)
+              r.head("p.x") should be(4)
+              r.head("p.y") should be(3)
+              r.head("p.z") should be(4321)
+              r.head("p.latitude") should be(r.head("p.y"))
+              r.head("p.longitude") should be(r.head("p.x"))
+              r.head("p.height") should be(r.head("p.z"))
             }
           })) {
           resultTable()
@@ -275,9 +265,9 @@ class SpatialTest extends DocumentingTest {
       )
       query(
         """WITH point({x:3, y:0}) AS p2d, point({x:0, y:4, z:1}) AS p3d
-          |RETURN distance(p2d,p3d), p2d < p3d, p2d = p3d, p2d <> p3d, distance(p2d,point({x:p3d.x, y:p3d.y}))""".stripMargin, ResultAssertions((r) => {
-          r.hasNext should be(true)
-          val record = r.next()
+          |RETURN distance(p2d,p3d), p2d < p3d, p2d = p3d, p2d <> p3d, distance(p2d,point({x:p3d.x, y:p3d.y}))""".stripMargin, ResultAssertions(r => {
+          r.nonEmpty should be(true)
+          val record = r.head
           withClue("Expect the invalid distance function to return null") {
             (record("distance(p2d,p3d)") == null) should be(true)
           }
@@ -303,8 +293,8 @@ class SpatialTest extends DocumentingTest {
       )
       query(
         """UNWIND [point({x:3, y:0}), point({x:0, y:4, z:1}), point({srid:4326, x:12, y:56}), point({srid:4979, x:12, y:56, z:1000})] AS point
-          |RETURN point ORDER BY point""".stripMargin, ResultAssertions((r) => {
-          r.hasNext should be(true)
+          |RETURN point ORDER BY point""".stripMargin, ResultAssertions(r => {
+          r.nonEmpty should be(true)
           val points = r.toList.map { p =>
             p("point").asInstanceOf[Point].getCRS.getCode
           }

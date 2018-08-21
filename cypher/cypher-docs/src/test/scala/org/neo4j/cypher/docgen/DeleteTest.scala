@@ -19,7 +19,7 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
 class DeleteTest extends DocumentingTest with QueryStatisticsTestSupport {

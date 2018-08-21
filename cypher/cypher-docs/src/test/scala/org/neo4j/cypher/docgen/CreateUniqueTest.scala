@@ -19,7 +19,7 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.junit.Test
 import org.neo4j.visualization.graphviz.GraphStyle
 import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle
@@ -79,7 +79,7 @@ class CreateUniqueTest extends DocumentingTestBase with QueryStatisticsTestSuppo
       assertions = (p) => assertStats(p, relationshipsCreated = 1, nodesCreated = 1, propertiesWritten = 1))
   }
 
-  @Test def commad_separated_pattern() {
+  @Test def command_separated_pattern() {
     testQuery(
       title = "Describe complex pattern",
       text = "The pattern described by `CREATE UNIQUE` can be separated by commas, just like in `MATCH` and `CREATE`.",

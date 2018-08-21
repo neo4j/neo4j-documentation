@@ -25,12 +25,13 @@ import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 import org.junit.{After, Before}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
+import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
-import org.neo4j.cypher.internal.runtime.{InternalExecutionResult, RuntimeJavaValueConverter, isGraphKernelResultValue}
-import org.neo4j.cypher.internal.{ExecutionEngine, RewindableExecutionResult}
+import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
 import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.doc.test.{GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
@@ -162,12 +163,19 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
 }
 
 abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper with ResetStrategy {
-  def testQuery(title: String, text: String, queryText: String, optionalResultExplanation: String = null,
-                parameters: Map[String, Any] = Map.empty, planners: Seq[String] = Seq.empty,
-                assertions: InternalExecutionResult => Unit) {
+
+  private val javaValues = new RuntimeJavaValueConverter(isGraphKernelResultValue)
+
+  def testQuery(title: String,
+                text: String,
+                queryText: String,
+                optionalResultExplanation: String = null,
+                parameters: Map[String, Any] = Map.empty,
+                planners: Seq[String] = Seq.empty,
+                assertions: DocsExecutionResult => Unit): Unit = {
+
     internalTestQuery(title, text, queryText, optionalResultExplanation, None, None, parameters, planners, assertions)
   }
-  private val javaValues = new RuntimeJavaValueConverter(isGraphKernelResultValue)
 
   def testFailingQuery[T <: CypherException: ClassTag](title: String, text: String, queryText: String, optionalResultExplanation: String = null) {
     val classTag = implicitly[ClassTag[T]]
@@ -175,11 +183,11 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   }
 
   def prepareAndTestQuery(title: String, text: String, queryText: String, optionalResultExplanation: String = "",
-                          prepare: GraphDatabaseCypherService => Unit, assertions: InternalExecutionResult => Unit) {
+                          prepare: GraphDatabaseCypherService => Unit, assertions: DocsExecutionResult => Unit) {
     internalTestQuery(title, text, queryText, optionalResultExplanation, None, Some(prepare), Map.empty, Seq.empty, assertions)
   }
 
-  def profileQuery(title: String, text: String, queryText: String, realQuery: Option[String] = None, assertions: InternalExecutionResult => Unit) {
+  def profileQuery(title: String, text: String, queryText: String, realQuery: Option[String] = None, assertions: DocsExecutionResult => Unit) {
     internalProfileQuery(title, text, queryText, realQuery, None, None, assertions)
   }
 
@@ -189,7 +197,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                                    realQuery: Option[String],
                                    expectedException: Option[ClassTag[_ <: CypherException]],
                                    prepare: Option[GraphDatabaseCypherService => Unit],
-                                   assertions: InternalExecutionResult => Unit) {
+                                   assertions: DocsExecutionResult => Unit) {
     preparationQueries = List()
 
     dumpSetupConstraintsQueries(setupConstraintQueries, dir)
@@ -208,7 +216,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     }
 
     try {
-      val result = profile(query)
+      val txContext = graph.transactionalContext(query = query -> Map())
+      val result = DocsExecutionResult(eengine.profile(query, VirtualValues.EMPTY_MAP, txContext), txContext)
 
       if (expectedException.isDefined) {
         fail(s"Expected the test to throw an exception: $expectedException")
@@ -258,7 +267,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                                 prepare: Option[GraphDatabaseCypherService => Unit],
                                 parameters: Map[String, Any],
                                 planners: Seq[String],
-                                assertions: InternalExecutionResult => Unit)
+                                assertions: DocsExecutionResult => Unit)
   {
     preparationQueries = List()
     //dumpGraphViz(dir, graphvizOptions.trim)
@@ -320,23 +329,22 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     db.inTx { db.schema().awaitIndexesOnline(2, TimeUnit.SECONDS) }
   }
 
-  private def executeWithAllPlannersAndAssert(query: String, assertions: InternalExecutionResult => Unit,
+  private def executeWithAllPlannersAndAssert(query: String,
+                                              assertions: DocsExecutionResult => Unit,
                                               expectedException: Option[ClassTag[_ <: CypherException]],
                                               expectedCaught: CypherException => Unit,
                                               parameters: Map[String, Any],
                                               providedPlanners: Seq[String],
-                                              prepareFunction: => Unit) = {
+                                              prepareFunction: => Unit): Option[String] = {
     // COST planner is default. Can't specify it without getting exception thrown if it's unavailable.
     val planners = if (providedPlanners.isEmpty) Seq("") else providedPlanners
 
     val results = planners.flatMap {
       case planner if expectedException.isEmpty =>
-        val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
-        val transaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
         val parametersValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
-        val result = engine.execute(
-          s"$planner $query",
-          parametersValue,
+
+        val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
+        def txContext(transaction: InternalTransaction) =
           contextFactory.newContext(
             new BoltConnectionInfo("username",
               "neo4j-java-bolt-driver",
@@ -347,16 +355,45 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
             query,
             parametersValue
           )
-        )
-        val rewindable = RewindableExecutionResult(result)
-        db.inTx(assertions(rewindable))
-        val dump = rewindable.dumpToString()
+
+        /*
+        Note on transaction handling here:
+
+        We have to execute the query in an implicit top-level transaction, because otherwise PERIODIC COMMIT
+        does not work. Depending on the kind of query, the query might be completely executed and materialized
+        under the hood by the cypher execution engine before returning from execute, and in some cases
+        `executeTransaction` is also closed.
+
+        For this reason we create a second `extractResultTransaction` to use while building the [[DocsExecutionResult]].
+        If `executionTransaction` was closed by execute this will create a new real transaction, but in most cases it's
+        simply going to become a `PlaceBoTransaction` inside `executeTransaction`, giving no overhead. We need to
+        guarantee a transaction during result building in case the [[ResultStringBuilder]] needs to fetch e.g. node properties.
+
+        After building the docsResult, both `executeTransaction` and `extractResultTransaction` are closed.
+
+        We now create one final transaction is which to execute assertions, by doing
+
+          `db.inTx(assertions(docsResult))`
+
+        This transaction is necessary for Core API access in assertion code.
+         */
+        val executeTransaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
+        val result = engine.execute(s"$planner $query", parametersValue, txContext(executeTransaction))
+
+        val extractResultTransaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
+        val docsResult =
+          try {
+            DocsExecutionResult(result, txContext(extractResultTransaction))
+          } finally extractResultTransaction.close()
+
+        db.inTx(assertions(docsResult))
+        val resultAsString = docsResult.resultAsString
         if (graphvizExecutedAfter && planner == planners.head) {
           dumpGraphViz(dir, graphvizOptions.trim)
         }
         reset()
         prepareFunction
-        Some(dump)
+        Some(resultAsString)
 
       case s =>
         val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
@@ -495,7 +532,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     }
   }
 
-  protected def getLabelsFromNode(p: InternalExecutionResult): Iterable[String] = p.columnAs[Node]("n").next().labels
+  protected def getLabelsFromNode(p: DocsExecutionResult): Iterable[String] = p.columnAs[Node]("n").next().labels
 
   def indexProperties[T <: PropertyContainer](n: T, index: Index[T]) {
     indexProps.foreach((property) => {

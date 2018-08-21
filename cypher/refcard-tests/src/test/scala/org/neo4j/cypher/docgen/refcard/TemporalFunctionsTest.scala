@@ -21,16 +21,15 @@ package org.neo4j.cypher.docgen.refcard
 
 import java.time._
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 
 class TemporalFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A")
   val title = "Temporal Functions"
   override val linkId = "functions/temporal"
 
-  override def assert(name: String, result: InternalExecutionResult) {
+  override def assert(name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "returns-one" =>
         assertStats(result, nodesCreated = 0)

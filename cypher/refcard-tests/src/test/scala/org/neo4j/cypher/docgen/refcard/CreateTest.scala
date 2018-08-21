@@ -19,16 +19,15 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 
 class CreateTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A", "A LINK B", "B LINK C", "C LINK ROOT")
   val title = "CREATE"
   override val linkId = "clauses/create"
 
-  override def assert(name: String, result: InternalExecutionResult) {
+  override def assert(name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "create-node" =>
         assertStats(result, nodesCreated = 1, propertiesWritten = 1)
@@ -41,7 +40,7 @@ class CreateTest extends RefcardTest with QueryStatisticsTestSupport {
         assert(result.toList.size === 2)
       case "create-rel" =>
         assertStats(result, relationshipsCreated = 1)
-        assert(result.dumpToString.contains("KNOWS"))
+        assert(result.toList.size === 1)
       case "create-rel-prop" =>
         assertStats(result, relationshipsCreated = 1, propertiesWritten = 1)
         assert(result.toList.size === 1)

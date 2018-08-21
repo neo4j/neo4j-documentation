@@ -22,7 +22,6 @@ package org.neo4j.cypher.docgen.tooling
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 import org.neo4j.kernel.impl.proc.Procedures
@@ -66,10 +65,11 @@ class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseG
     restart()
   }
 
-  def executeWithParams(q: String, params: (String, Any)*): InternalExecutionResult = {
+  def executeWithParams(q: String, params: (String, Any)*): DocsExecutionResult = {
     createAndStartIfNecessary()
-    val executionResult: InternalExecutionResult = try {
-      execute(q, params:_*)
+    val executionResult: DocsExecutionResult = try {
+      val txContext = graph.transactionalContext(query = q -> params.toMap)
+      DocsExecutionResult(eengine.execute(q, asMapValue(params.toMap), txContext), txContext)
     } catch {
       case e: Throwable => _markedForRestart = true; throw e
     }

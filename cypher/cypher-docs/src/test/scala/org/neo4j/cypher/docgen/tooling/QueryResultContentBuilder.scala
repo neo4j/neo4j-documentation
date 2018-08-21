@@ -19,24 +19,21 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
-
-
 /**
  * This class is responsible for replacing the Content tags asking for query results
  * with the actual results from running the queries, formatted according to the normal
  * textual output of ExecutionResultDumper
  */
 class QueryResultContentBuilder(valueFormatter: Any => String)
-  extends (InternalExecutionResult => Content) {
+  extends (DocsExecutionResult => Content) {
 
-  override def apply(result: InternalExecutionResult): Content = {
+  override def apply(result: DocsExecutionResult): Content = {
 
     val columns = result.columns
     var rowCount = 0
 
     /* Need to do .toList here, to see the results. The iterator has been emptied,
-     but it is a RewindableExecutionResult we have here that can still provide
+     but it is a DocsExecutionResult we have here that can still provide
      the backing List. Yeah, it's a hack, but it allows us to both assert on the
      results and produce text output */
     val rows = result.toList.map { resultRow =>

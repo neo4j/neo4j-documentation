@@ -20,12 +20,11 @@
 package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.GraphIcing
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
-import org.opencypher.v9_0.util.InternalException
 import org.neo4j.internal.kernel.api.Transaction.Type
 import org.neo4j.internal.kernel.api.security.SecurityContext.AUTH_DISABLED
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
+import org.opencypher.v9_0.util.InternalException
 
 import scala.collection.immutable.Iterable
 import scala.util.{Failure, Success, Try}
@@ -39,7 +38,7 @@ import scala.util.{Failure, Success, Try}
  * we drop the database and create a new one. This way we can make sure that two queries don't affect each other more than
  * necessary.
  */
-class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) => InternalExecutionResult => Content) extends GraphIcing {
+class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) => DocsExecutionResult => Content) extends GraphIcing {
 
   def runQueries(contentsWithInit: Seq[ContentWithInit], title: String): TestRunResult = {
 
@@ -91,7 +90,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
   }
 
   private def runSingleQuery(database: RestartableDatabase, queryText: String, assertions: QueryAssertions, content: TablePlaceHolder): QueryRunResult = {
-    val format: (InternalTransaction) => (InternalExecutionResult) => Content = (tx: InternalTransaction) => formatter(database.getInnerDb, tx)(_)
+    val format: (InternalTransaction) => (DocsExecutionResult) => Content = (tx: InternalTransaction) => formatter(database.getInnerDb, tx)(_)
 
     val result: Either[Throwable, InternalTransaction => Content] =
       try {

@@ -114,7 +114,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `CreateUniqueConstraint` operator creates a unique constraint on a property for all nodes having a certain label.
           |The following query will create a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """CREATE CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateUniqueConstraint"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateUniquePropertyConstraint"))
     )
   }
 
@@ -129,7 +129,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `DropUniqueConstraint` operator removes a unique constraint from a property for all nodes having a certain label.
           |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """DROP CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropUniqueConstraint"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropUniquePropertyConstraint"))
     )
   }
 

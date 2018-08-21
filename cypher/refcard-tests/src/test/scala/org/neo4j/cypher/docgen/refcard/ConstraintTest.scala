@@ -19,9 +19,8 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.internal.runtime.InternalExecutionResult
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -31,7 +30,7 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
 
   override protected def newTestGraphDatabaseFactory() = new TestEnterpriseGraphDatabaseFactory()
 
-  override def assert(name: String, result: InternalExecutionResult) {
+  override def assert(name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "create-unique-property-constraint" =>
         assertStats(result, uniqueConstraintsAdded = 1)

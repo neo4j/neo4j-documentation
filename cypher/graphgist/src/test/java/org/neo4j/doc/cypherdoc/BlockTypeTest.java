@@ -333,6 +333,7 @@ public class BlockTypeTest
         when( graph.beginTx() ).thenReturn( mock( Transaction.class ) );
         Block block = new Block( myQuery, BlockType.CYPHER );
         org.neo4j.graphdb.Result result = mock( org.neo4j.graphdb.Result.class );
+        when( result.getQueryStatistics() ).thenReturn( mock( org.neo4j.graphdb.QueryStatistics.class ) );
         ArgumentCaptor<String> fileQuery = ArgumentCaptor.forClass( String.class );
         ArgumentCaptor<String> httpQuery = ArgumentCaptor.forClass( String.class );
 
