@@ -53,6 +53,7 @@ public class TraversalExample
         TraversalExample example = new TraversalExample( database );
         Node joe = example.createData();
         example.run( joe );
+        database.shutdown();
     }
 
     public TraversalExample( GraphDatabaseService db )

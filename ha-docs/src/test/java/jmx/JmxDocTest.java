@@ -26,16 +26,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.neo4j.cluster.ClusterSettings;
-import org.neo4j.doc.AsciiDocListGenerator;
-import org.neo4j.doc.jmx.JmxBeanDocumenter;
-import org.neo4j.doc.util.FileUtil;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
-import org.neo4j.graphdb.factory.HighlyAvailableGraphDatabaseFactory;
-import org.neo4j.doc.test.rule.TestDirectory;
 
-import javax.management.ObjectInstance;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,6 +34,16 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.management.ObjectInstance;
+
+import org.neo4j.cluster.ClusterSettings;
+import org.neo4j.doc.AsciiDocListGenerator;
+import org.neo4j.doc.jmx.JmxBeanDocumenter;
+import org.neo4j.doc.test.rule.TestDirectory;
+import org.neo4j.doc.util.FileUtil;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
+import org.neo4j.graphdb.factory.HighlyAvailableGraphDatabaseFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.kernel.configuration.Settings.NO_DEFAULT;
@@ -65,7 +66,7 @@ public class JmxDocTest {
 
     @BeforeClass
     public static void startDb() throws Exception {
-        File storeDir = test.graphDbDir();
+        File storeDir = test.databaseDir();
         GraphDatabaseBuilder builder = new HighlyAvailableGraphDatabaseFactory().newEmbeddedDatabaseBuilder(storeDir);
         db = builder.setConfig(ClusterSettings.server_id, "1")
                 .setConfig(setting("jmx.port", STRING, NO_DEFAULT), "9913")

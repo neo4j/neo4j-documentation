@@ -21,10 +21,10 @@ package org.neo4j.examples;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
-import org.neo4j.doc.test.rule.TestDirectory;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -39,7 +39,7 @@ public class StartWithConfigurationDocTest
         String pathToConfig = "src/test/resources/";
         // START SNIPPET: startDbWithConfig
         GraphDatabaseService graphDb = new GraphDatabaseFactory()
-            .newEmbeddedDatabaseBuilder( testDirectory.graphDbDir() )
+            .newEmbeddedDatabaseBuilder( testDirectory.databaseDir() )
             .loadPropertiesFromFile( pathToConfig + "neo4j.conf" )
             .newGraphDatabase();
         // END SNIPPET: startDbWithConfig
@@ -52,7 +52,7 @@ public class StartWithConfigurationDocTest
     {
         // START SNIPPET: startDbWithMapConfig
         GraphDatabaseService graphDb = new GraphDatabaseFactory()
-            .newEmbeddedDatabaseBuilder( testDirectory.graphDbDir() )
+            .newEmbeddedDatabaseBuilder( testDirectory.databaseDir() )
             .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
             .setConfig( GraphDatabaseSettings.string_block_size, "60" )
             .setConfig( GraphDatabaseSettings.array_block_size, "300" )
