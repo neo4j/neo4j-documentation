@@ -19,7 +19,6 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.values.storable.{DateValue, DurationValue, LocalDateTimeValue}
 
