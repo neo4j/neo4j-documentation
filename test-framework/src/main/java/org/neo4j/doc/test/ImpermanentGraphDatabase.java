@@ -171,7 +171,7 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
     {
         if ( TRACK_UNCLOSED_DATABASE_INSTANCES )
         {
-            startedButNotYetClosed.remove( databaseDirectory() );
+            startedButNotYetClosed.remove( databaseLayout() );
         }
 
         super.shutdown();
@@ -195,7 +195,7 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
         @Override
         protected StoreLocker createStoreLocker()
         {
-            return new StoreLocker( fileSystem, storeDir );
+            return new StoreLocker( fileSystem, storeLayout );
         }
 
         @Override

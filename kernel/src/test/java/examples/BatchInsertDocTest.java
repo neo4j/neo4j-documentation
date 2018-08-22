@@ -43,7 +43,6 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.helpers.collection.MapUtil;
 import org.neo4j.io.fs.FileSystemAbstraction;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
@@ -105,8 +104,7 @@ public class BatchInsertDocTest
         // try it out from a normal db
         GraphDatabaseService db =
                 new GraphDatabaseFactory()
-                        .newEmbeddedDatabaseBuilder( new File("target") )
-                        .setConfig( GraphDatabaseSettings.active_database, database )
+                        .newEmbeddedDatabaseBuilder( tempStoreDir )
                         .newGraphDatabase();
         try ( Transaction tx = db.beginTx() )
         {

@@ -1,37 +1,41 @@
 /*
- * Licensed to Neo4j under one or more contributor
- * license agreements. See the NOTICE file distributed with
- * this work for additional information regarding copyright
- * ownership. Neo4j licenses this file to you under
- * the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) 2002-2018 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This file is part of Neo4j.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.neo4j.doc.test.rule;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URISyntaxException;
-
-import org.neo4j.io.fs.DefaultFileSystemAbstraction;
-import org.neo4j.io.fs.FileSystemAbstraction;
-import org.neo4j.util.VisibleForTesting;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.UncheckedIOException;
+import java.net.URISyntaxException;
+
+import org.neo4j.io.fs.DefaultFileSystemAbstraction;
+import org.neo4j.io.fs.FileSystemAbstraction;
+import org.neo4j.io.layout.DatabaseLayout;
+import org.neo4j.io.layout.StoreLayout;
+import org.neo4j.util.VisibleForTesting;
 
 import static java.lang.String.format;
 
@@ -47,7 +51,7 @@ import static java.lang.String.format;
  *     @Test
  *     public void shouldDoSomething()
  *     {
- *       File storeDir = dir.graphDbDir();
+ *       File storeDir = dir.databaseDir();
  *       // do stuff with store dir
  *     }
  *   }
@@ -55,13 +59,15 @@ import static java.lang.String.format;
  */
 public class TestDirectory extends ExternalResource
 {
-    public static final String DATABASE_DIRECTORY = "graph-db";
+    private static final String DEFAULT_DATABASE_DIRECTORY = "graph.db";
 
     private final FileSystemAbstraction fileSystem;
     private File testClassBaseFolder;
     private Class<?> owningTest;
     private boolean keepDirectoryAfterSuccessfulTest;
     private File testDirectory;
+    private StoreLayout storeLayout;
+    private DatabaseLayout defaultDatabaseLayout;
 
     private TestDirectory( FileSystemAbstraction fileSystem )
     {
@@ -145,10 +151,7 @@ public class TestDirectory extends ExternalResource
     public File directory( String name )
     {
         File dir = new File( directory(), name );
-        if ( !fileSystem.fileExists( dir ) )
-        {
-            fileSystem.mkdir( dir );
-        }
+        createDirectory( dir );
         return dir;
     }
 
@@ -157,14 +160,56 @@ public class TestDirectory extends ExternalResource
         return new File( directory(), name );
     }
 
-    public File graphDbDir()
+    public File databaseDir()
     {
-        return directory( DATABASE_DIRECTORY );
+        return databaseLayout().databaseDirectory();
     }
 
-    public File makeGraphDbDir() throws IOException
+    public StoreLayout storeLayout()
     {
-        return cleanDirectory( DATABASE_DIRECTORY );
+        return storeLayout;
+    }
+
+    public DatabaseLayout databaseLayout()
+    {
+        createDirectory( defaultDatabaseLayout.databaseDirectory() );
+        return defaultDatabaseLayout;
+    }
+
+    public DatabaseLayout databaseLayout( File storeDir )
+    {
+        DatabaseLayout databaseLayout = StoreLayout.of( storeDir ).databaseLayout( DEFAULT_DATABASE_DIRECTORY );
+        createDirectory( databaseLayout.databaseDirectory() );
+        return databaseLayout;
+    }
+
+    public DatabaseLayout databaseLayout( String name )
+    {
+        DatabaseLayout databaseLayout = storeLayout.databaseLayout( name );
+        createDirectory( databaseLayout.databaseDirectory() );
+        return databaseLayout;
+    }
+
+    public File storeDir()
+    {
+        return storeLayout.storeDirectory();
+    }
+
+    public File storeDir( String storeDirName )
+    {
+        return directory( storeDirName );
+    }
+
+    public File databaseDir( File storeDirectory )
+    {
+        File databaseDirectory = databaseLayout( storeDirectory ).databaseDirectory();
+        createDirectory( databaseDirectory );
+        return databaseDirectory;
+    }
+
+    public File databaseDir( String customStoreDirectoryName )
+    {
+        return databaseDir( storeDir( customStoreDirectoryName ) );
     }
 
     public void cleanup() throws IOException
@@ -176,7 +221,7 @@ public class TestDirectory extends ExternalResource
     public String toString()
     {
         String testDirectoryName = testDirectory == null ? "<uninitialized>" : testDirectory.toString();
-        return format( "%s[%s]", getClass().getSimpleName(), testDirectoryName );
+        return format( "%s[\"%s\"]", getClass().getSimpleName(), testDirectoryName );
     }
 
     public File cleanDirectory( String name ) throws IOException
@@ -193,6 +238,8 @@ public class TestDirectory extends ExternalResource
                 fileSystem.deleteRecursively( testDirectory );
             }
             testDirectory = null;
+            storeLayout = null;
+            defaultDatabaseLayout = null;
         }
         finally
         {
@@ -211,6 +258,8 @@ public class TestDirectory extends ExternalResource
             test = "static";
         }
         testDirectory = prepareDirectoryForTest( test );
+        storeLayout = StoreLayout.of( testDirectory );
+        defaultDatabaseLayout = storeLayout.databaseLayout( DEFAULT_DATABASE_DIRECTORY );
     }
 
     public File prepareDirectoryForTest( String test ) throws IOException
@@ -230,6 +279,18 @@ public class TestDirectory extends ExternalResource
     private void directoryForDescription( Description description ) throws IOException
     {
         prepareDirectory( description.getTestClass(), description.getMethodName() );
+    }
+
+    private void createDirectory( File databaseDirectory )
+    {
+        try
+        {
+            fileSystem.mkdirs( databaseDirectory );
+        }
+        catch ( IOException e )
+        {
+            throw new UncheckedIOException( "Failed to create directory: " + databaseDirectory, e );
+        }
     }
 
     private static File clean( FileSystemAbstraction fs, File dir ) throws IOException
@@ -253,7 +314,7 @@ public class TestDirectory extends ExternalResource
 
     private static File testDataDirectoryOf( Class<?> owningTest )
     {
-        File testData = new File( locateTarget( owningTest ), "test-data" );
+        File testData = new File( locateTarget( owningTest ), "test data" );
         return new File( testData, shorten( owningTest.getName() ) ).getAbsoluteFile();
     }
 
@@ -275,7 +336,7 @@ public class TestDirectory extends ExternalResource
     private void register( String test, String dir )
     {
         try ( PrintStream printStream =
-                      new PrintStream( fileSystem.openAsOutputStream( new File( ensureBase(), ".register" ), true ) ) )
+                new PrintStream( fileSystem.openAsOutputStream( new File( ensureBase(), ".register" ), true ) ) )
         {
             printStream.println( format( "%s=%s\n", dir, test ) );
         }

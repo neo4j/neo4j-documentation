@@ -24,7 +24,7 @@ import org.junit.runners.model.Statement;
 import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-
+import org.neo4j.io.layout.DatabaseLayout;
 
 /**
  * JUnit @Rule for configuring, creating and managing an EmbeddedGraphDatabase instance.
@@ -41,6 +41,11 @@ public class EmbeddedDatabaseRule extends DatabaseRule
         this.testDirectory = TestDirectory.testDirectory();
     }
 
+    public EmbeddedDatabaseRule( TestDirectory testDirectory )
+    {
+        this.testDirectory = testDirectory;
+    }
+
     @Override
     public EmbeddedDatabaseRule startLazily()
     {
@@ -48,9 +53,9 @@ public class EmbeddedDatabaseRule extends DatabaseRule
     }
 
     @Override
-    public String getStoreDirAbsolutePath()
+    public DatabaseLayout databaseLayout()
     {
-        return testDirectory.graphDbDir().getAbsolutePath();
+        return testDirectory.databaseLayout();
     }
 
     @Override
@@ -62,7 +67,7 @@ public class EmbeddedDatabaseRule extends DatabaseRule
     @Override
     protected GraphDatabaseBuilder newBuilder( GraphDatabaseFactory factory )
     {
-        return factory.newEmbeddedDatabaseBuilder( testDirectory.graphDbDir() );
+        return factory.newEmbeddedDatabaseBuilder( testDirectory.databaseDir() );
     }
 
     @Override
@@ -71,15 +76,5 @@ public class EmbeddedDatabaseRule extends DatabaseRule
         return testDirectory.apply( super.apply( base, description ), description );
     }
 
-    /**
-     * Get the inner {@link TestDirectory} instance that is used to prepare the store directory for this database.
-     * <p>
-     * <strong>Note:</strong> There is no need to add a {@link org.junit.Rule} annotation on this {@link TestDirectory}
-     * instance.
-     */
-    public TestDirectory getTestDirectory()
-    {
-        return testDirectory;
-    }
 }
 
