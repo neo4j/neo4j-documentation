@@ -19,27 +19,46 @@
  */
 package org.neo4j.cypher.internal.compatibility.v3_4.runtime
 
-import org.neo4j.cypher.internal.runtime.QueryContext
-import org.neo4j.cypher.internal.runtime.interpreted.IsList
-import org.neo4j.cypher.internal.runtime.interpreted.commands.values.KeyToken
-import org.neo4j.graphdb.{Node, PropertyContainer, Relationship}
+import java.time._
+import java.time.temporal.TemporalAmount
+
+import org.neo4j.cypher.internal.runtime.{JavaListWrapper, QueryContext}
+import org.neo4j.graphdb.{Node, Path, PropertyContainer, Relationship}
+import org.neo4j.graphdb.spatial.Point
 
 import scala.collection.Map
 
 trait CypherSerializer {
 
   import scala.collection.JavaConverters._
+
+  /*
+  Be explicit to force the decision how to represent each type.
+  Don't use internal types.
+   */
   protected def serialize(a: Any, qtx: QueryContext): String = a match {
-    case x: Node         => x.toString + serializeProperties(x, qtx)
-    case x: Relationship => ":" + x.getType.name() + "[" + x.getId + "]" + serializeProperties(x, qtx)
-    case x: Any if x.isInstanceOf[Map[_, _]] => makeString(x.asInstanceOf[Map[String, Any]], qtx)
-    case x: Any if x.isInstanceOf[java.util.Map[_, _]] => makeString(x.asInstanceOf[java.util.Map[String, Any]].asScala, qtx)
-    case IsList(coll)    => coll.asArray().map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
-    case x: String       => "\"" + x + "\""
-    case v: KeyToken     => v.name
-    case Some(x)         => x.toString
-    case null            => "<null>"
-    case x               => x.toString
+    case x: Node                  => x.toString + serializeProperties(x, qtx)
+    case x: Relationship          => ":" + x.getType.name() + "[" + x.getId + "]" + serializeProperties(x, qtx)
+    case x: Path                  => x.toString
+    case x: Map[_, _]             => makeString(x.asInstanceOf[Map[String, Any]], qtx)
+    case x: java.util.Map[_, _]   => makeString(x.asInstanceOf[java.util.Map[String, Any]].asScala, qtx)
+    case x: JavaListWrapper[_]    => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
+    case x: Array[_]              => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
+    case x: String                => "\"" + x + "\""
+    case x: Integer               => x.toString
+    case x: Long                  => x.toString
+    case x: Double                => x.toString
+    case x: Boolean               => x.toString
+    case x: TemporalAmount        => x.toString
+    case x: LocalDate             => x.toString
+    case x: LocalDateTime         => x.toString
+    case x: LocalTime             => x.toString
+    case x: OffsetTime            => x.toString
+    case x: ZonedDateTime         => x.toString
+    case x: Point                 => x.toString
+    case null                     => "<null>"
+    case Some(x)                  => serialize(x, qtx)
+    case x                        => throw new IllegalArgumentException(s"Type ${x.getClass} must be explcitly handled.")
   }
 
   protected def serializeProperties(x: PropertyContainer, qtx: QueryContext): String = {
