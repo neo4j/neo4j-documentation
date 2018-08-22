@@ -22,15 +22,13 @@ package org.neo4j.cypher.internal.compatibility.v3_4.runtime
 import java.time._
 import java.time.temporal.TemporalAmount
 
-import org.neo4j.cypher.internal.runtime.{JavaListWrapper, QueryContext}
+import org.neo4j.cypher.internal.runtime.QueryContext
 import org.neo4j.graphdb.{Node, Path, PropertyContainer, Relationship}
 import org.neo4j.graphdb.spatial.Point
 
 import scala.collection.Map
 
 trait CypherSerializer {
-
-  import scala.collection.JavaConverters._
 
   /*
   Be explicit to force the decision how to represent each type.
@@ -41,8 +39,7 @@ trait CypherSerializer {
     case x: Relationship          => ":" + x.getType.name() + "[" + x.getId + "]" + serializeProperties(x, qtx)
     case x: Path                  => x.toString
     case x: Map[_, _]             => makeString(x.asInstanceOf[Map[String, Any]], qtx)
-    case x: java.util.Map[_, _]   => makeString(x.asInstanceOf[java.util.Map[String, Any]].asScala, qtx)
-    case x: JavaListWrapper[_]    => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
+    case x: Seq[_]                => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
     case x: Array[_]              => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
     case x: String                => "\"" + x + "\""
     case x: Integer               => x.toString
@@ -57,8 +54,7 @@ trait CypherSerializer {
     case x: ZonedDateTime         => x.toString
     case x: Point                 => x.toString
     case null                     => "<null>"
-    case Some(x)                  => serialize(x, qtx)
-    case x                        => throw new IllegalArgumentException(s"Type ${x.getClass} must be explcitly handled.")
+    case x                        => throw new IllegalArgumentException(s"Type ${x.getClass} must be explicitly handled.")
   }
 
   protected def serializeProperties(x: PropertyContainer, qtx: QueryContext): String = {
