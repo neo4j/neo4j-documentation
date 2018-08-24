@@ -14,7 +14,7 @@
 
 [NOTE]
 Most expressions in Cypher evaluate to `null` if any of their inner expressions are `null`.
-Notable exceptions are operators `IS NULL` and `IS NOT NULL`.
+Notable exceptions are the operators `IS NULL` and `IS NOT NULL`.
 
 An expression in Cypher can be:
 
