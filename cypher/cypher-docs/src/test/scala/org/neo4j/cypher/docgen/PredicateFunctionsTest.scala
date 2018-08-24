@@ -28,11 +28,13 @@ class PredicateFunctionsTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("Predicate functions", "query-functions-predicate")
     initQueries(
-      """CREATE (alice {name:'Alice', age: 38, eyes: 'brown'}),
+      """CREATE
+        |       (alice {name:'Alice', age: 38, eyes: 'brown'}),
         |       (bob {name: 'Bob', age: 25, eyes: 'blue'}),
         |       (charlie {name: 'Charlie', age: 53, eyes: 'green'}),
         |       (daniel {name: 'Daniel', age: 54, eyes: 'brown'}),
         |       (eskil {name: 'Eskil', age: 41, eyes: 'blue', array: ['one', 'two', 'three']}),
+        |       (frank {age: 61, eyes: 'brown'}),
         |
         |       (alice)-[:KNOWS]->(bob),
         |       (alice)-[:KNOWS]->(charlie),
@@ -40,7 +42,7 @@ class PredicateFunctionsTest extends DocumentingTest {
         |       (charlie)-[:KNOWS]->(daniel),
         |       (bob)-[:MARRIED]->(eskil)""")
     synopsis(
-      """Predicates are boolean functions that return true or false for a given set of input.
+      """Predicates are boolean functions that return true or false for a given set of non-null input.
         |They are most commonly used to filter out subgraphs in the `WHERE` part of a query.""".stripMargin)
     p(
       """Functions:
@@ -52,13 +54,14 @@ class PredicateFunctionsTest extends DocumentingTest {
         |* <<functions-single,single()>>""")
     graphViz()
     section("all()", "functions-all") {
-      p("`all()` returns true if the predicate holds for all elements in the given list.")
+      p("`all()` returns true if the predicate holds for all elements in the given list." +
+        " `null` is returned if the list is `null` or all of its elements are `null`.")
       function("all(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (a)-[*1..3]->(b)
           |WHERE a.name = 'Alice' AND b.name = 'Daniel'
           |AND all(x IN nodes(p) WHERE x.age > 30)
-          |RETURN p""".stripMargin, ResultAssertions((r) => {
+          |RETURN p""".stripMargin, ResultAssertions(r => {
           r.toList.length should equal(1)
         })) {
         p("All nodes in the returned paths will have an `age` property of at least *'30'*.")
@@ -66,13 +69,14 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("any()", "functions-any") {
-      p("`any()` returns true if the predicate holds for at least one element in the given list.")
+      p("`any()` returns true if the predicate holds for at least one element in the given list." +
+        " `null` is returned if the list is `null` or all of its elements are `null`.")
       function("any(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH (a)
           |WHERE a.name = 'Eskil'
           |AND any(x IN a.array WHERE x = 'one')
-          |RETURN a.name, a.array""".stripMargin, ResultAssertions((r) => {
+          |RETURN a.name, a.array""".stripMargin, ResultAssertions(r => {
           r.toList.length should equal(1)
           r.columnAs[String]("a.name").toList.head should equal("Eskil")
         })) {
@@ -81,25 +85,40 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("exists()", "functions-exists") {
-      p("`exists()` returns true if a match for the given pattern exists in the graph, or if the specified property exists in the node, relationship or map.")
+      p("`exists()` returns true if a match for the given pattern exists in the graph, or if the specified property exists in the node, relationship or map." +
+        " `null` is returned if the input argument is `null`.")
       function("exists(pattern-or-property)", "A Boolean.", ("pattern-or-property", "A pattern or a property (in the form 'variable.prop')."))
       query(
         """MATCH (n)
           |WHERE exists(n.name)
-          |RETURN n.name AS name, exists((n)-[:MARRIED]->()) AS is_married""".stripMargin, ResultAssertions((r) => {
+          |RETURN n.name AS name, exists((n)-[:MARRIED]->()) AS is_married""".stripMargin, ResultAssertions(r => {
           r.toList should equal(List(Map("name" -> "Alice", "is_married" -> false), Map("name" -> "Bob", "is_married" -> true), Map("name" -> "Charlie", "is_married" -> false), Map("name" -> "Daniel", "is_married" -> false), Map("name" -> "Eskil", "is_married" -> false)))
         })) {
         p("The names of all nodes with the `name` property are returned, along with a boolean `true` / `false` indicating if they are married.")
         resultTable()
       }
+      query(
+        """MATCH (a), (b)
+          |WHERE exists(a.name) AND NOT exists(b.name)
+          |OPTIONAL MATCH (c:DoesNotExist)
+          |RETURN a.name AS a_name, b.name AS b_name, exists(b.name) AS b_has_name, c.name AS c_name, exists(c.name) AS c_has_name
+          |ORDER BY a_name, b_name, c_name LIMIT 1""".stripMargin, ResultAssertions(r => {
+          r.toList should equal(List(
+            Map("a_name" -> "Alice", "b_name" -> null, "b_has_name" -> false, "c_name" -> null, "c_has_name" -> null)))
+        })) {
+        p("Three nodes are returned: one with a name property, one without a name property, and one that does not exist (e.g., is `null`)." +
+          " This query exemplifies the behavior of `exists()` when operating on `null` nodes.")
+        resultTable()
+      }
     }
     section("none()", "functions-none") {
-      p("`none()` returns true if the predicate holds for no element in the given list.")
+      p("`none()` returns true if the predicate holds for no element in the given list." +
+        " `null` is returned if the list is `null` or all of its elements are `null`.")
       function("none(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (n)-[*1..3]->(b)
           |WHERE n.name = 'Alice'
-          |AND none(x IN nodes(p) WHERE x.age = 25) RETURN p""".stripMargin, ResultAssertions((r) => {
+          |AND none(x IN nodes(p) WHERE x.age = 25) RETURN p""".stripMargin, ResultAssertions(r => {
           r.toList.length should equal(2)
         })) {
         p("No node in the returned paths has an `age` property set to *'25'*.")
@@ -107,13 +126,14 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("single()", "functions-single") {
-      p("`single()` returns true if the predicate holds for exactly one of the elements in the given list.")
+      p("`single()` returns true if the predicate holds for exactly one of the elements in the given list." +
+        " `null` is returned if the list is `null` or all of its elements are `null`.")
       function("single(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (n)-->(b)
           |WHERE n.name = 'Alice'
           |AND single(var IN nodes(p) WHERE var.eyes = 'blue')
-          |RETURN p""".stripMargin, ResultAssertions((r) => {
+          |RETURN p""".stripMargin, ResultAssertions(r => {
           r.toList.length should equal(1)
         })) {
         p("Exactly one node in every returned path has the `eyes` property set to *'blue'*.")

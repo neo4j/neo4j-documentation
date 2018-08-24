@@ -22,11 +22,10 @@ This section contains information on all functions in the Cypher query language.
 
 Related information may be found in <<query-operators>>.
 
-Most functions in Cypher will return `null` if an input parameter is `null`.
-
-[NOTE]
-Functions taking a string as input all operate on _Unicode characters_ rather than on a standard `char[]`.
-For example, `size(s)`, where `s` is a character in the Chinese alphabet, will return *1*.
+.Please note
+* Functions in Cypher return `null` if an input parameter is `null`.
+* Functions taking a string as input all operate on _Unicode characters_ rather than on a standard `char[]`.
+  For example, `size(s)`, where `s` is a character in the Chinese alphabet, will return *1*.
 
 
 [[header-query-predicates]]
