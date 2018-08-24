@@ -22,7 +22,8 @@ This section contains information on all functions in the Cypher query language.
 
 Related information may be found in <<query-operators>>.
 
-Most functions in Cypher will return `null` if an input parameter is `null`.
+[NOTE]
+Functions in Cypher return `null` if an input parameter is `null`.
 
 [NOTE]
 Functions taking a string as input all operate on _Unicode characters_ rather than on a standard `char[]`.

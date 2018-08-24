@@ -12,6 +12,10 @@
 [[cypher-expressions-general]]
 == Expressions in general
 
+[NOTE]
+Most expressions in Cypher evaluate to `null` if any of their inner expressions are `null`.
+Notable exceptions are operators `IS NULL` and `IS NOT NULL`.
+
 An expression in Cypher can be:
 
 * A decimal (integer or double) literal: `13`, `-40000`, `3.14`, `6.022E23`.

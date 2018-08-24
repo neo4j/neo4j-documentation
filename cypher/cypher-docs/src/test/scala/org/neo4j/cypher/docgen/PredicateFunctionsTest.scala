@@ -40,7 +40,7 @@ class PredicateFunctionsTest extends DocumentingTest {
         |       (charlie)-[:KNOWS]->(daniel),
         |       (bob)-[:MARRIED]->(eskil)""")
     synopsis(
-      """Predicates are boolean functions that return true or false for a given set of input.
+      """Predicates are boolean functions that return true or false for a given set of non-null input.
         |They are most commonly used to filter out subgraphs in the `WHERE` part of a query.""".stripMargin)
     p(
       """Functions:
@@ -52,7 +52,8 @@ class PredicateFunctionsTest extends DocumentingTest {
         |* <<functions-single,single()>>""")
     graphViz()
     section("all()", "functions-all") {
-      p("`all()` returns true if the predicate holds for all elements in the given list.")
+      p("`all()` returns true if the predicate holds for all elements in the given list." +
+        " Returns `null` if the list is `null` or all of its elements are `null`.")
       function("all(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (a)-[*1..3]->(b)
@@ -66,7 +67,8 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("any()", "functions-any") {
-      p("`any()` returns true if the predicate holds for at least one element in the given list.")
+      p("`any()` returns true if the predicate holds for at least one element in the given list." +
+        " Returns `null` if the list is `null` or all of its elements are `null`.")
       function("any(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH (a)
@@ -81,7 +83,8 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("exists()", "functions-exists") {
-      p("`exists()` returns true if a match for the given pattern exists in the graph, or if the specified property exists in the node, relationship or map.")
+      p("`exists()` returns true if a match for the given pattern exists in the graph, or if the specified property exists in the node, relationship or map." +
+        " Returns `null` if the input argument is `null`.")
       function("exists(pattern-or-property)", "A Boolean.", ("pattern-or-property", "A pattern or a property (in the form 'variable.prop')."))
       query(
         """MATCH (n)
@@ -94,7 +97,8 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("none()", "functions-none") {
-      p("`none()` returns true if the predicate holds for no element in the given list.")
+      p("`none()` returns true if the predicate holds for no element in the given list." +
+        " Returns `null` if the list is `null` or all of its elements are `null`.")
       function("none(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (n)-[*1..3]->(b)
@@ -107,7 +111,8 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("single()", "functions-single") {
-      p("`single()` returns true if the predicate holds for exactly one of the elements in the given list.")
+      p("`single()` returns true if the predicate holds for exactly one of the elements in the given list." +
+        " Returns `null` if the list is `null` or all of its elements are `null`.")
       function("single(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (n)-->(b)
