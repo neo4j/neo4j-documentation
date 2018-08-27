@@ -372,9 +372,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.location < point({x: 2, y: 6}) RETURN person",
       assertions = {
         (p) =>
-          // TODO: There is a bug in 3.4 spatial where the two other corners are incorrectly matched
-          assertEquals(3, p.size)
-
+          assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
       }
     )
