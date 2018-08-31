@@ -54,6 +54,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<query-operators-map, Map operators>>
         | ** <<syntax-accessing-the-value-of-a-nested-map, Statically accessing the value of a nested map by key using the `.` operator">>
         | ** <<syntax-accessing-dynamic-map-parameter, Dynamically accessing the value of a map by key using the `[]` operator and a parameter>>
+        | ** <<syntax-using-in-with-nested-list-subscripting, Using `IN` with `[]` on a nested list>>
         |* <<query-operators-list, List operators>>
         | ** <<syntax-concatenating-two-lists, Concatenating two lists using `+`>>
         | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list, Using `IN` to check if a number is in a list>>
@@ -411,6 +412,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
     section("Map operators", "query-operators-map") {
       p(
         """The map operators comprise:
+          |
           |* statically access the value of a map by key using the dot operator: `.`
           |* dynamically access the value of a map by key using the subscript operator: `[]`
           |""".stripMargin)
@@ -522,6 +524,18 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           """WITH ['Anne', 'John', 'Bill', 'Diane', 'Eve'] AS names
             |RETURN names[$myIndex] AS result""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map("result" -> "John")))
+          }),
+          ("myIndex", 1L)) {
+          resultTable()
+        }
+      }
+      section("Using `IN` with `[]` on a nested list", "syntax-using-in-with-nested-list-subscripting") {
+        p(
+          """`IN` can be used in conjunction with `[]` to test whether an element exists in a nested list:""".stripMargin)
+        query(
+          """WITH [[1, 2, 3]] AS l
+            |RETURN 3 IN l[0] AS result""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("result" -> true)))
           }),
           ("myIndex", 1L)) {
           resultTable()
