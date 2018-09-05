@@ -29,10 +29,10 @@ import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction
 import org.neo4j.kernel.configuration.Config
-import org.neo4j.kernel.impl.logging.LogService
 import org.neo4j.kernel.internal.GraphDatabaseAPI
 import org.neo4j.kernel.monitoring.Monitors
 import org.neo4j.logging.LogProvider
+import org.neo4j.logging.internal.LogService
 
 object ExecutionEngineFactory {
   def createEnterpriseDbAndEngine(): (GraphDatabaseService, ExecutionEngine) = {
