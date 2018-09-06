@@ -129,8 +129,8 @@ task prepare(type: Copy, dependsOn: configurations.default) {
 
 task docbook(dependsOn: prepare) {
     description 'Build Neo4j Cypher Manual Docbook output.'
-    ext.sourceDir = "${paths.source}/asciidoc"
-    def sourceFile = new File("${sourceDir}/index.adoc")
+    ext.sourceDir = prepare.outDir
+    def sourceFile = new File("${sourceDir}/dev/index.asciidoc")
     def imagesDir = "${paths.assets}/images".toString()
     def outputDir = "${buildDir}/docbook/${versions.doc.neo4j}"
     def importDir = prepare.outDir
@@ -266,7 +266,7 @@ html {
 
 task copyHtmlResources(type: Copy) {
     description 'Copy resources for the chunked Cypher Manual'
-    from ("${paths.resources}") {
+    from ("${paths.assets}") {
         include 'images/**'
         include 'javascript/**'
         include 'css/**'
