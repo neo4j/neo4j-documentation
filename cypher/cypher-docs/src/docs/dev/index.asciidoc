@@ -1,12 +1,42 @@
-[[cypher]]
-= Cypher
+[[cypher-manual]]
+= The Neo4j Cypher Manual v{neo4j-version}
+:sectnums:
+:toclevels: 1
+
+:neo4j-buildnumber: {neo4j-version}
+
+ifdef::backend-html5[(C) {copyright}]
+ifndef::backend-pdf[]
+
+License: link:{common-license-page-uri}[Creative Commons 4.0]
+endif::[]
+ifdef::backend-pdf[]
+(C) {copyright}
+
+License: <<license, Creative Commons 4.0>>
+endif::[]
 
 [abstract]
 --
-This chapter contains the complete and authoritative documentation for the Cypher query language.
+This is the Cypher manual for Neo4j version {neo4j-version}, authored by the Neo4j Team.
 --
 
-// tag::cypher-manual-wip[]
+The main parts of the manual are:
+
+* <<cypher-intro>> -- Introducing the Cypher query language.
+* <<query-syntax>> -- Learn Cypher query syntax.
+* <<query-clause>> -- Reference of Cypher query clauses.
+* <<query-function>> -- Reference of Cypher query functions.
+* <<cypher-schema>> -- Working with indexes and constraints in Cypher.
+* <<query-tuning>> -- Learn to analyze queries and tune them for performance.
+* <<execution-plans>> -- Cypher execution plans and operators.
+* <<cypher-deprecations-additions-removals-compatibility>> -- An overview of language developments across versions.
+* <<cypher-glossary>> -- A glossary of Cypher keywords, with links to other parts of the Cypher manual.
+
+
+_Who should read this?_
+
+This manual is written for the developer of a Neo4j client application.
 
 include::general/index.asciidoc[leveloffset=+1]
 
@@ -26,4 +56,7 @@ include::deprecations-additions-and-compatibility.asciidoc[leveloffset=+1]
 
 include::glossary.asciidoc[leveloffset=+1]
 
-// end::cypher-manual-wip[]
+
+ifdef::backend-pdf[]
+include::license.adoc[leveloffset=+1]
+endif::[]
