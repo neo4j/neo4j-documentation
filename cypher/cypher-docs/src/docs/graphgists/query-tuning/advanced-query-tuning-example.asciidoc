@@ -75,13 +75,14 @@ RETURN p.name ORDER BY p.name
 
 We are asking for the results in ascending alphabetical order. The new native index happens to store the String properties in ascending alphabetical order, and Cypher knows this.
 In Neo4j 3.4 and earlier, Cypher would plan a `Sort` operation to eagerly sort the results, which means building a collection in memory and running a sort algorithm on it.
-For large result sets this can be both expensive in memory and time. In Neo4j 3.5, if you are using the native index, Cypher will recognise that the index already returns data in the correct order, and skip the `Sort` operation.
+For large result sets this can be expensive in both memory and time. In Neo4j 3.5, if you are using the native index, Cypher will recognise that the index already returns data in the correct order, and skip the `Sort` operation.
 
 To demonstrate this effect, let's remove the predicate so that Cypher no longer knows the type of the property, and the database can no longer guarantee the order.
 If we profile the query we will see the `Sort` operation:
 
 [source, cypher]
 ----
+PROFILE
 MATCH (p:Person)
 RETURN p.name ORDER BY p.name
 ----
@@ -92,9 +93,20 @@ Now if we add a predicate that gives us the property type information, we will s
 
 [source, cypher]
 ----
+PROFILE
 MATCH (p:Person) WHERE p.name >= 'a'
 RETURN p.name ORDER BY p.name
 ----
 
 //profile
 
+Predicates that can be used to enable this optimization are:
+
+* Range (eg. `WHERE n.uid > 1000 AND n.uid < 2000`)
+* Prefix (eg. `WHERE n.name STARTS WITH 'Tom'`)
+
+Predicates that will not work:
+
+* Existence (eg. `WHERE exists(n.email)`) because no property type information is given
+* Substring (eg. `WHERE n.name CONTAINS 'a'`) because string order is defined from the start of the string
+* Suffix (eg. `WHERE n.name ENDS WITH 'Cruise'`) because string order is defined from the start of the string
