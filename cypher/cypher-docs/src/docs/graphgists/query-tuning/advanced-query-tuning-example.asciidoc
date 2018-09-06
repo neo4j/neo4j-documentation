@@ -1,6 +1,9 @@
 = Advanced query tuning example
 
-As with the basic query tuning example <<cypherdoc-basic-query-tuning-example>> we'll use a movies data set to demonstrate how to do more advanced query tuning.
+As with the <<cypherdoc-basic-query-tuning-example,basic query tuning example>> we'll use a movies data set to demonstrate how to do some more advanced query tuning.
+This time we'll create the index up-front. If you want to see the effect of adding an index, refer back to the <<cypherdoc-basic-query-tuning-example,basic query tuning example>>.
+In this example we want to demonstrate the impact the new native indexes can have on query performance under certain conditions.
+In order to benefit from some recent enhancements added to Neo4j 3.5, it is useful to understand when _index-backed property lookup_ and _index-backed order-by_ will come into play.
 
 //file:movies.csv
 //file:actors.csv
@@ -33,3 +36,65 @@ MERGE (p:Person {name: line.name})
 ON CREATE SET p.born = toInteger(line.born)
 MERGE (p)-[:DIRECTED]->(m)
 ----
+
+[source, cypher]
+----
+CREATE INDEX ON :Person(name)
+----
+
+Now that we have a model of movies, actors and directors we can ask a question like 'find actors with the name Tom':
+
+[source, cypher]
+----
+MATCH (p:Actor) WHERE p.name STARTS WITH 'Tom'
+RETURN p.name
+----
+
+We have asked the database to return all the actors with the first name 'Tom'. There are three of them 'Tom Cruise', 'Tom Skerritt' and 'Tom Hanks'.
+In previous versions of Neo4j, the final clause `RETURN p.name` would cause the database to go to the node `p` and lookup its properties and return the property `name`.
+In Neo4j 3.5 we can now support string properties in the native index, and this index is capable of returning the indexed property value together with the indexed nodes.
+This allows Cypher to avoid the second call to the database to find the property, which can save time on very large queries.
+
+It is important to note, however, that not all property types are supported, because not all have been ported to the new native index.
+In addition some property types, like the spatial type 'Point' is indexed in an index that is designed to be approximate and cannot return the values.
+For this reason Cypher needs to know the property type in order to benefit from this feature.
+In the query above, the fact that we have a predicate comparing the `p.name` to the String `'Tom'` is enough for Cypher to know the query is only interested in String properties, and we can skip the property lookup.
+
+Note also that if you have pre-existing indexes that were build on lucene, upgrading to Neo4j 3.5 is not sufficient to use the new index.
+It is necessary to drop and re-create the index in order to port it to the native index.
+
+Now consider the following refinement to the query:
+
+[source, cypher]
+----
+MATCH (p:Actor) WHERE p.name STARTS WITH 'Tom'
+RETURN p.name ORDER BY p.name
+----
+
+//table
+
+We are asking for the results in ascending alphabetical order. The new native index happens to store the String properties in ascending alphabetical order, and Cypher knows this.
+In Neo4j 3.4 and earlier, Cypher would plan a `Sort` operation to eagerly sort the results, which means building a collection in memory and running a sort algorithm on it.
+For large result sets this can be both expensive in memory and time. In Neo4j 3.5, if you are using the native index, Cypher will recognise that the index already returns data in the correct order, and skip the `Sort` operation.
+
+To demonstrate this effect, let's remove the predicate so that Cypher no longer knows the type of the property, and the database can no longer guarantee the order.
+If we profile the query we will see the `Sort` operation:
+
+[source, cypher]
+----
+MATCH (p:Actor)
+RETURN p.name ORDER BY p.name
+----
+
+//profile
+
+Now if we add a predicate that gives us the property type information, we will see the `Sort` operation is no longer there:
+
+[source, cypher]
+----
+MATCH (p:Actor) WHERE p.name >= 'a'
+RETURN p.name ORDER BY p.name
+----
+
+//profile
+

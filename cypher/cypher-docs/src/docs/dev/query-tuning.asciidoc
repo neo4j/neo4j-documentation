@@ -24,6 +24,8 @@ To read more about the execution plan operators mentioned in this chapter, see <
 * <<cypher-query-options,Cypher query options>>
 * <<how-do-i-profile-a-query,Profiling a query>>
 * <<cypherdoc-basic-query-tuning-example,Basic query tuning example>>
+* <<cypher-index-values-order,Index Values and Order>>
+** <<cypherdoc-advanced-query-tuning-example,Advanced query tuning example>>
 * <<query-using,Planner hints and the `USING` keyword>>
 ** <<query-using-introduction,Introduction>>
 ** <<query-using-index-hint,Index hints>>
@@ -148,3 +150,25 @@ The same goes for labels, where declaring labels on both the start and end nodes
 include::../parsed-graphgists/query-tuning/basic-query-tuning-example.asciidoc[leveloffset=+1]
 
 include::ql/query-using.adoc[leveloffset=+1]
+
+
+[[cypher-index-values-order]]
+== Index Values and Order
+
+[abstract]
+--
+This section describes some more subtle optimizations based on new native index capabilities
+--
+
+One of the most important and useful ways of optimizing Cypher queries involves creating appropriate indexes.
+This is described in more detail in the section on '<<query-schema-index,Indexes>>', and demonstrated in the <<cypherdoc-basic-query-tuning-example,basic query tuning example>>.
+In summary an index will be based on the combination of a `Label` and a `property`.
+Any Cypher query that searches for Nodes with a specific label and some predicate on the property (equality, range or existence) will be planned to use
+the index if the cost planner deems that to be the most efficient solution.
+
+In order to benefit from some recent enhancements added to Neo4j 3.5, it is useful to understand when _index-backed property lookup_ and _index-backed order-by_ will come into play.
+In versions of Neo4j prior to 3.5, the fact that the index contains the property value, and the results are returned in a specific order, was not used improve the performance of any later part of the query that might depend on the property value or result order.
+
+Let's explain how to use these features with a more <<cypherdoc-basic-query-tuning-example,advanced query tuning example>>.
+
+include::../parsed-graphgists/query-tuning/advanced-query-tuning-example.asciidoc[leveloffset=+1]
