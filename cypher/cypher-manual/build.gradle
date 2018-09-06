@@ -1,0 +1,340 @@
+buildscript {
+    ext {
+        asciidoctorjVersion = '1.5.4.1'
+        asciidoctorGroovyDslVersion = '1.0.0.Alpha2'
+    }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.asciidoctor:asciidoctorj:$asciidoctorjVersion"
+        classpath "org.asciidoctor:asciidoctorj-groovy-dsl:$asciidoctorGroovyDslVersion"
+        classpath 'net.sf.docbook:docbook-xsl:1.79.1:ns-resources@zip'
+        classpath fileTree(dir: "${projectDir}/lib", include: '*.jar')
+        classpath files("docbook/catalog/")
+    }
+}
+
+plugins {
+    id 'base'
+    id 'org.neo4j.doc.build.saxon' version '1.0-alpha01'
+    id 'org.neo4j.doc.build.docbook' version '1.0-alpha05'
+}
+
+repositories {
+    mavenLocal()
+}
+
+configurations {
+    olinkdb {
+        description 'Dependency scope for resolving olink targets'
+    }
+    content {
+        description 'Cypher docs content'
+    }
+}
+
+ext.versions = [
+    'cypher'    : "3.5.0-SNAPSHOT",
+    'doc'       : [
+        'neo4j' : "3.5-preview",
+    ],
+    'codeMirror': '5.36.0'
+]
+dependencies {
+    olinkdb "org.neo4j.doc:cypher-manual:${versions.doc.neo4j}:olinkdb@jar"
+    olinkdb "org.neo4j.doc:http-api:${versions.doc.neo4j}:olinkdb@jar"
+    olinkdb "org.neo4j.doc:java-reference:${versions.doc.neo4j}:olinkdb@jar"
+    olinkdb "org.neo4j.doc:operations-manual:${versions.doc.neo4j}:olinkdb@jar"
+    olinkdb "org.neo4j.doc:quick-start-guide:${versions.doc.neo4j}:olinkdb@jar"
+    olinkdb "org.neo4j.doc:rest-docs:${versions.doc.neo4j}:olinkdb@jar"
+    content "org.neo4j.doc:neo4j-cypher-docs:${versions.cypher}:docs@jar"
+}
+
+def traceDocbook = hasProperty('traceDocbook') ? true : false
+
+ext {
+    traceDocbook = traceDocbook
+
+    olinkdb = "$buildDir/olinkdb/olinkdb.xml"
+    docId = project.name
+
+    paths = [
+        'source' : "$projectDir/src/main",
+        'assets' : "$projectDir/src/main/resources",
+        'bin'    : "$projectDir/bin",
+    ]
+
+    docsBaseUri = "https://neo4j.com/docs"
+    docsCrossReferenceBaseUris = [
+            'cypher-manual-base-uri'     : "${docsBaseUri}/cypher-manual/${versions.doc.neo4j}",
+            'driver-manual-base-uri'     : "${docsBaseUri}/driver-manual/current",
+            'operations-manual-base-uri' : "${docsBaseUri}/operations-manual/${versions.doc.neo4j}",
+            'java-reference-base-uri'    : "${docsBaseUri}/java-reference/${versions.doc.neo4j}",
+            'rest-docs-base-uri'         : "${docsBaseUri}/rest-docs/${versions.doc.neo4j}",
+            'ogm-manual-base-uri'        : "${docsBaseUri}/ogm-manual/current",
+            'graph-algorithms-base-uri'  : "${docsBaseUri}/graph-algorithms/current",
+            'kerberos-add-on-base-uri'   : "${docsBaseUri}/add-on/kerberos/current"
+    ]
+    docsCrossReferenceBaseUris['neo4j-javadoc-base-uri'] = "${docsCrossReferenceBaseUris['java-reference-base-uri']}/javadocs"
+    docsLibraryHeaderConfig =
+            """
+            Operations_Manual=${docsCrossReferenceBaseUris['operations-manual-base-uri']}/
+            Cypher_Manual=${docsCrossReferenceBaseUris['cypher-manual-base-uri']}/
+            Driver_Manual=${docsCrossReferenceBaseUris['driver-manual-base-uri']}/
+            OGM_Manual=${docsCrossReferenceBaseUris['ogm-manual-base-uri']}/
+            Graph_Algorithms=${docsCrossReferenceBaseUris['graph-algorithms-base-uri']}/
+            Java_Reference=${docsCrossReferenceBaseUris['java-reference-base-uri']}/
+            """
+    copyrightYear = "${new Date().format('yyyy')}"
+    commonAsciidoctorAttributes = [
+            'copyright-year'                   : copyrightYear,
+            'copyright'                        : "${copyrightYear} Neo4j, Inc.",
+            'common-license-page-uri'          : "${docsBaseUri}/license/",
+            'neo4j-version'                    : versions.doc.neo4j,
+            'doctype'                          : 'book',
+            'icons'                            : 'font',
+            'imagesdir'                        : './images',
+            'attribute-missing'                : 'warn',
+            'codemirror-version'               : versions.codeMirror,
+    ] + docsCrossReferenceBaseUris
+
+    // a wrapper closure around executing a string
+    // can take either a string or a list of strings (for arguments with spaces)
+    runCommand = { strList ->
+        assert ( strList instanceof String ||
+            ( strList instanceof List && strList.each{ it instanceof String } ) \
+    )
+        def proc = strList.execute()
+        proc.out.close()
+        proc.waitFor()
+        if (proc.exitValue()) {
+            println "gave the following error: "
+            println "[ERROR] ${proc.getErrorStream()}"
+        }
+        assert !proc.exitValue()
+    }
+
+}
+
+task prepare(type: Copy, dependsOn: configurations.default) {
+    description "Prepare to build Cypher Manual"
+    ext.outDir = "$buildDir/cypher-docs"
+    outputs.dir outDir
+    from {
+        zipTree(configurations.content.files {it.name == 'neo4j-cypher-docs'}[0])
+    }
+    into outDir
+}
+
+task docbook(dependsOn: prepare) {
+    description 'Build Neo4j Cypher Manual Docbook output.'
+    ext.sourceDir = "${paths.source}/asciidoc"
+    def sourceFile = new File("${sourceDir}/index.adoc")
+    def imagesDir = "${paths.assets}/images".toString()
+    def outputDir = "${buildDir}/docbook/${versions.doc.neo4j}"
+    def importDir = prepare.outDir
+    def templateDir = "${paths.assets}/templates/docbook"
+    ext.apa = outputDir
+    inputs.dir sourceDir
+    outputs.dir outputDir
+    doLast {
+        def attrs = project.ext.commonAsciidoctorAttributes + [
+            'importdir'          : importDir,
+            'docinfo1'           : '',
+            'csv-dir'            : "${docsCrossReferenceBaseUris['cypher-manual-base-uri']}/csv",
+        ]
+        attrs['imagesdir'] = imagesDir
+        attrs['stylesheet'] = 'github.css'
+        attrs['stylesdir'] = '../css'
+        attrs['linkcss'] = ''
+        def opts = org.asciidoctor.OptionsBuilder.options()
+                .backend('docbook5')
+                .safe(org.asciidoctor.SafeMode.UNSAFE)
+                .toDir(new File(outputDir))
+                .templateDir(new File(templateDir))
+                .mkDirs(true)
+                .attributes(attrs)
+        def asciidoctor = getAsciidoctor(sourceDir, imagesDir)
+        asciidoctor.convertFile(sourceFile, opts.get())
+    }
+    doLast {
+        copy {
+            from("${importDir}/dev/ql/load-csv/csv-files") {
+                include '*.csv'
+            }
+            from("${importDir}/graphgists") {
+                include 'import/*.csv'
+                include 'intro/*.csv'
+                include 'query-tuning/*.csv'
+            }
+            into("${outputDir}/csv")
+        }
+        copy {
+            from(projectDir) {
+                include 'images/**'
+            }
+            into outputDir
+        }
+    }
+    finalizedBy preprocess
+}
+
+preprocess {
+    description 'Fix things in the DocBook XML before further processing.'
+    dependsOn docbook
+    def sourceFile = "${docbook.apa}/index.xml"
+    doFirst {
+        def cmd = ["${projectDir}/bin/post-process.sh", sourceFile, "${projectDir}/bin/post-process.sed"]
+        runCommand(cmd)
+    }
+    input sourceFile
+    outFile sourceFile
+    parameters([
+        "book-id": docId
+    ])
+}
+
+html {
+    dependsOn preprocess
+    description 'Build Neo4j Cypher Manual to multi-page HTML based on TOC.'
+    doFirst { println "[+] Building Cypher Manual multi-page HTML" }
+    ext.inputDir = docbook.apa
+    ext.inputFile = "${inputDir}/index.xml"
+    ext.sourceDir = "${paths.source}/docbook"
+    ext.contentMap = "${sourceDir}/content-map.xml"
+    ext.outputDir = "${buildDir}/html/${versions.doc.neo4j}"
+    def css = [
+        '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
+        '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css',
+        '//fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,300italic',
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/codemirror.min.css",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/theme/neo.min.css",
+        'css/extra.css',
+        'css/chunked-base.css',
+        'css/console.css',
+    ].join(" ")
+    def scripts = [
+        '//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js',
+        '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/codemirror.min.js",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/addon/runmode/runmode.min.js",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/mode/javascript/javascript.min.js",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/mode/shell/shell.min.js",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/mode/powershell/powershell.min.js",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/mode/python/python.min.js",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/mode/xml/xml.min.js",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/mode/clike/clike.min.js",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/mode/cypher/cypher.min.js",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/mode/properties/properties.min.js",
+        "//cdnjs.cloudflare.com/ajax/libs/codemirror/$versions.codeMirror/mode/groovy/groovy.min.js",
+        'javascript/colorize.js',
+        'javascript/tabs-for-chunked.js',
+        'javascript/mp-nav.js',
+        'javascript/versionswitcher.js',
+        'javascript/version.js',
+        '//s3-eu-west-1.amazonaws.com/alpha.neohq.net/docs/new-manual/assets/search.js',
+    ].join(" ")
+
+    // Task configuration
+    inputs.dir inputDir
+    input inputFile
+
+    // Stylesheet parameters
+    parameters([
+        "base.dir": "${outputDir}",
+        "html.ext": ".html",
+        "make.clean.html": "1",
+        "chunker.output.method": "html",
+        "chunker.output.encoding": "UTF-8",
+        "chunker.output.indent": "yes",
+        "use.id.as.dirname": "1",
+        "html.stylesheet": "${css}",
+        "html.script": "${scripts}",
+        "neo.newsearch": "1",
+        "toc-filename": "${outputDir}/toc.html",
+        "generate.toc": "''",
+        "chunk.toc": "${contentMap}",
+        "header.rule": "0",
+        "neo.documentation.library.links": docsLibraryHeaderConfig,
+        "target.database.document": "file://${olinkdb}",
+        "current.docid": docId,
+    ])
+
+    finalizedBy { copyHtmlResources }
+}
+
+task copyHtmlResources(type: Copy) {
+    description 'Copy resources for the chunked Cypher Manual'
+    from ("${paths.resources}") {
+        include 'images/**'
+        include 'javascript/**'
+        include 'css/**'
+    }
+    from ("${buildDir}/docbook/${versions.doc.neo4j}") {
+        include "csv/**"
+    }
+    into html.outputDir
+}
+
+task packageHtml(type: Tar, dependsOn: html) {
+    baseName project.name
+    version versions.doc.neo4j
+    extension 'tar.gz'
+    compression Compression.GZIP
+    from {
+        html.outputDir
+    }
+    into {
+        "${baseName}/${versions.doc.neo4j}"
+    }
+    destinationDir file("$rootProject.buildDir/distributions")
+}
+
+
+def getAsciidoctor(sourceDir, imagesDir) {
+
+    org.asciidoctor.groovydsl.AsciidoctorExtensions.extensions {
+
+        block(name: 'dot', contexts: [':listing']) {
+            parent, reader, attributes ->
+                def indata = reader.readLines().join("\n");
+                def svgfile = attributes[2]
+                def svgfilepath = "${sourceDir}/${imagesDir}/${svgfile}"
+                def cmd = ["${paths.bin}/extensions/filters/dot/dot.sh", indata, "dummy", svgfilepath]
+                if (attributes[3] != null) {
+                    cmd.add(attributes[3])
+                }
+                if (attributes[4] != null) {
+                    cmd.add(attributes[4])
+                }
+                runCommand(cmd)
+                attributes['target'] = svgfile
+                attributes['alt'] = 'alt'
+                createBlock(parent, 'image', [], attributes, [:])
+        }
+
+        block(name: 'queryresult', contexts: [':listing']) {
+            parent, reader, attributes ->
+                createBlock(parent, 'listing', reader.readLines(), attributes + ['role': 'queryresult'], [:])
+        }
+
+        block(name: 'console', contexts: [':listing']) {
+            parent, reader, attributes ->
+                    null
+        }
+
+    }
+    project.ext.adoc = org.asciidoctor.Asciidoctor.Factory.create()
+    adoc.rubyExtensionRegistry()
+        .loadClass(new FileInputStream(file("${paths.bin}/extensions/deprecation_admonition.rb")))
+        .block("DEPRECATED", "DeprecationAdmonition")
+
+    project.ext.adoc
+}
+
+task apa {
+    println project.name
+}
+
+// vim: set fdm=expr:
