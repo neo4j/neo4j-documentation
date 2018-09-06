@@ -46,7 +46,7 @@ Now that we have a model of movies, actors and directors we can ask a question l
 
 [source, cypher]
 ----
-MATCH (p:Actor) WHERE p.name STARTS WITH 'Tom'
+MATCH (p:Person) WHERE p.name STARTS WITH 'Tom'
 RETURN p.name
 ----
 
@@ -67,7 +67,7 @@ Now consider the following refinement to the query:
 
 [source, cypher]
 ----
-MATCH (p:Actor) WHERE p.name STARTS WITH 'Tom'
+MATCH (p:Person) WHERE p.name STARTS WITH 'Tom'
 RETURN p.name ORDER BY p.name
 ----
 
@@ -82,7 +82,7 @@ If we profile the query we will see the `Sort` operation:
 
 [source, cypher]
 ----
-MATCH (p:Actor)
+MATCH (p:Person)
 RETURN p.name ORDER BY p.name
 ----
 
@@ -92,7 +92,7 @@ Now if we add a predicate that gives us the property type information, we will s
 
 [source, cypher]
 ----
-MATCH (p:Actor) WHERE p.name >= 'a'
+MATCH (p:Person) WHERE p.name >= 'a'
 RETURN p.name ORDER BY p.name
 ----
 
