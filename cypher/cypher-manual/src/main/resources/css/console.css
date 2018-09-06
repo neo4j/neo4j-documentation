@@ -1,0 +1,31 @@
+p.cypherconsole {
+    display: none;
+}
+
+#content div.query-outer-wrapper div.btn-group {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+div.query-outer-wrapper #console {
+  height: 23em;
+}
+
+#console {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+}
+
+iframe.console, #console {
+    height: 23em;
+    display: block;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+/* p.cypherdoc-console, iframe.console { */
+/*   height: 23em; */
+/* } */
