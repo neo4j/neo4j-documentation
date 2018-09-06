@@ -41,12 +41,6 @@
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>neo4j-udc</artifactId>
-                    <groupId>org.neo4j</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
