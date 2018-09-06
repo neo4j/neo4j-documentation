@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<d:toc xmlns:d="http://docbook.org/ns/docbook" xmlns="http://www.w3.org/1999/xhtml" role="chunk-toc">
+  <d:tocentry linkend="cypher-manual"><?dbhtml filename="index.html"?>
+    <d:tocentry linkend="cypher-intro"><?dbhtml filename="introduction/index.html"?>
+      <!-- <d:tocentry linkend="cypher-introduction"><?dbhtml filename="cypher-intro/cypher-introduction/index.html"?> -->
+      <!-- </d:tocentry> -->
+      <d:tocentry linkend="query-updating"><?dbhtml filename="introduction/query-the-graph/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-transactions"><?dbhtml filename="introduction/transactions/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypherdoc-uniqueness"><?dbhtml filename="introduction/uniqueness/index.html"?>
+      </d:tocentry>
+    </d:tocentry>
+    <d:tocentry linkend="query-syntax"><?dbhtml filename="syntax/index.html"?>
+      <d:tocentry linkend="cypher-values"><?dbhtml filename="syntax/values/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-naming"><?dbhtml filename="syntax/naming/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-expressions"><?dbhtml filename="syntax/expressions/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-variables"><?dbhtml filename="syntax/variables/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-reserved"><?dbhtml filename="syntax/reserved/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-parameters"><?dbhtml filename="syntax/parameters/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-operators"><?dbhtml filename="syntax/operators/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-comments"><?dbhtml filename="syntax/comments/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-patterns"><?dbhtml filename="syntax/patterns/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-temporal"><?dbhtml filename="syntax/temporal/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-lists"><?dbhtml filename="syntax/lists/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-maps"><?dbhtml filename="syntax/maps/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-spatial"><?dbhtml filename="syntax/spatial/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypher-working-with-null"><?dbhtml filename="syntax/working-with-null/index.html"?>
+      </d:tocentry>
+    </d:tocentry>
+    <d:tocentry linkend="query-clause"><?dbhtml filename="clauses/index.html"?>
+      <d:tocentry linkend="query-match"><?dbhtml filename="clauses/match/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-optional-match"><?dbhtml filename="clauses/optional-match/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-start"><?dbhtml filename="clauses/start/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-return"><?dbhtml filename="clauses/return/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-with"><?dbhtml filename="clauses/with/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-unwind"><?dbhtml filename="clauses/unwind/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-where"><?dbhtml filename="clauses/where/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-order"><?dbhtml filename="clauses/order-by/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-skip"><?dbhtml filename="clauses/skip/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-limit"><?dbhtml filename="clauses/limit/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-create"><?dbhtml filename="clauses/create/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-delete"><?dbhtml filename="clauses/delete/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-set"><?dbhtml filename="clauses/set/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-remove"><?dbhtml filename="clauses/remove/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-foreach"><?dbhtml filename="clauses/foreach/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-merge"><?dbhtml filename="clauses/merge/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-call"><?dbhtml filename="clauses/call/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-create-unique"><?dbhtml filename="clauses/create-unique/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-union"><?dbhtml filename="clauses/union/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-load-csv"><?dbhtml filename="clauses/load-csv/index.html"?>
+      </d:tocentry>
+    </d:tocentry>
+    <d:tocentry linkend="query-function"><?dbhtml filename="functions/index.html"?>
+      <d:tocentry linkend="query-functions-predicate"><?dbhtml filename="functions/predicate/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-functions-scalar"><?dbhtml filename="functions/scalar/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-functions-aggregating"><?dbhtml filename="functions/aggregating/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-functions-list"><?dbhtml filename="functions/list/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-functions-mathematical-numeric"><?dbhtml filename="functions/mathematical/numeric/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-functions-mathematical-logarithmic"><?dbhtml filename="functions/mathematical/logarithmic/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-functions-mathematical-trigonometric"><?dbhtml filename="functions/mathematical/trigonometric/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-functions-string"><?dbhtml filename="functions/string/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-functions-temporal"><?dbhtml filename="functions/temporal/index.html"?>
+        <d:tocentry linkend="functions-temporal-instant-type"><?dbhtml filename="functions/temporal/instant/index.html"?>
+        </d:tocentry>
+        <d:tocentry linkend="functions-date"><?dbhtml filename="functions/temporal/date/index.html"?>
+        </d:tocentry>
+        <d:tocentry linkend="functions-datetime"><?dbhtml filename="functions/temporal/datetime/index.html"?>
+        </d:tocentry>
+        <d:tocentry linkend="functions-localdatetime"><?dbhtml filename="functions/temporal/localdatetime/index.html"?>
+        </d:tocentry>
+        <d:tocentry linkend="functions-localtime"><?dbhtml filename="functions/temporal/localtime/index.html"?>
+        </d:tocentry>
+        <d:tocentry linkend="functions-time"><?dbhtml filename="functions/temporal/time/index.html"?>
+        </d:tocentry>
+      </d:tocentry>
+      <d:tocentry linkend="functions-duration"><?dbhtml filename="functions/temporal/duration/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-functions-spatial"><?dbhtml filename="functions/spatial/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-functions-udf"><?dbhtml filename="functions/user-defined/index.html"?>
+      </d:tocentry>
+    </d:tocentry>
+    <d:tocentry linkend="cypher-schema"><?dbhtml filename="schema/index.html"?>
+      <d:tocentry linkend="query-schema-index"><?dbhtml filename="schema/index/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-constraints"><?dbhtml filename="schema/constraints/index.html"?>
+      </d:tocentry>
+    </d:tocentry>
+    <d:tocentry linkend="query-tuning"><?dbhtml filename="query-tuning/index.html"?>
+      <d:tocentry linkend="cypher-query-options"><?dbhtml filename="query-tuning/query-options/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="how-do-i-profile-a-query"><?dbhtml filename="query-tuning/how-do-i-profile-a-query/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="cypherdoc-basic-query-tuning-example"><?dbhtml filename="query-tuning/basic-query-tuning-example/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-using"><?dbhtml filename="query-tuning/using/index.html"?>
+      </d:tocentry>
+    </d:tocentry>
+    <d:tocentry linkend="execution-plans"><?dbhtml filename="execution-plans/index.html"?>
+      <d:tocentry linkend="execution-plans-operators"><?dbhtml filename="execution-plans/operators/index.html"?>
+      </d:tocentry>
+      <d:tocentry linkend="query-shortestpath-planning"><?dbhtml filename="execution-plans/shortestpath-planning/index.html"?>
+      </d:tocentry>
+    </d:tocentry>
+    <d:tocentry linkend="cypher-deprecations-additions-removals-compatibility"><?dbhtml filename="deprecations-additions-removals-compatibility/index.html"?>
+    </d:tocentry>
+    <d:tocentry linkend="cypher-glossary"><?dbhtml filename="keyword-glossary/index.html"?>
+    </d:tocentry>
+  </d:tocentry>
+</d:toc>
+<!-- vim: set ts=2 sw=2: -->
