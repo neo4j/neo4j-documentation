@@ -42,33 +42,52 @@ MERGE (p)-[:DIRECTED]->(m)
 CREATE INDEX ON :Person(name)
 ----
 
-Now that we have a model of movies, actors and directors we can ask a question like 'find actors with the name Tom':
+[source, cypher]
+----
+CALL db.awaitIndexes
+----
 
 [source, cypher]
 ----
-MATCH (p:Person) WHERE p.name STARTS WITH 'Tom'
-RETURN p.name
+CALL db.indexes
 ----
 
-We have asked the database to return all the actors with the first name 'Tom'. There are three of them 'Tom Cruise', 'Tom Skerritt' and 'Tom Hanks'.
-In previous versions of Neo4j, the final clause `RETURN p.name` would cause the database to go to the node `p` and lookup its properties and return the property `name`.
+//table
+
+== Index-backed property-lookup
+
+Now that we have a model of movies, actors and directors we can ask a question like 'find persons with the name Tom that acted in a movie':
+
+[source, cypher]
+----
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie) USING INDEX p:Person(name) WHERE p.name STARTS WITH 'Tom'
+RETURN p.name, count(m)
+----
+
+//table
+
+We have asked the database to return all the actors with the first name 'Tom'. There are three of them _'Tom Cruise'_, _'Tom Skerritt'_ and _'Tom Hanks'_.
+In previous versions of Neo4j, the final clause `RETURN p.name` would cause the database to take the node `p` and lookup its properties and return the value of the property `name`.
 In Neo4j 3.5 we can now support string properties in the native index, and this index is capable of returning the indexed property value together with the indexed nodes.
 This allows Cypher to avoid the second call to the database to find the property, which can save time on very large queries.
 
 It is important to note, however, that not all property types are supported, because not all have been ported to the new native index.
-In addition some property types, like the spatial type 'Point' is indexed in an index that is designed to be approximate and cannot return the values.
+In addition some property types, like the spatial type `Point`, are indexed in an index that is designed to be approximate and cannot return the values.
 For this reason Cypher needs to know the property type in order to benefit from this feature.
-In the query above, the fact that we have a predicate comparing the `p.name` to the String `'Tom'` is enough for Cypher to know the query is only interested in String properties, and we can skip the property lookup.
+In the query above, the fact that we have a predicate comparing `p.name` to the String `'Tom'` is enough for Cypher to know the query is only interested in `String` properties, and we can skip the property lookup.
 
-Note also that if you have pre-existing indexes that were build on lucene, upgrading to Neo4j 3.5 is not sufficient to use the new index.
+Note also that if you have pre-existing indexes that were build on lucene, upgrading to Neo4j 3.5 is _not sufficient_ to use the new index.
 It is necessary to drop and re-create the index in order to port it to the native index.
+Read more about this in the <<operations-manual#index-configuration-upgrade-considerations, Operations Manual -> Index Configuration Upgrade Considerations>>.
+
+== Index-backed order-by
 
 Now consider the following refinement to the query:
 
 [source, cypher]
 ----
-MATCH (p:Person) WHERE p.name STARTS WITH 'Tom'
-RETURN p.name ORDER BY p.name
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie) USING INDEX p:Person(name) WHERE p.name STARTS WITH 'Tom'
+RETURN p.name, count(m) ORDER BY p.name
 ----
 
 //table
@@ -83,8 +102,8 @@ If we profile the query we will see the `Sort` operation:
 [source, cypher]
 ----
 PROFILE
-MATCH (p:Person)
-RETURN p.name ORDER BY p.name
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie) USING INDEX p:Person(name) WHERE exists(p.name)
+RETURN p.name, count(m) ORDER BY p.name
 ----
 
 //profile
@@ -94,11 +113,13 @@ Now if we add a predicate that gives us the property type information, we will s
 [source, cypher]
 ----
 PROFILE
-MATCH (p:Person) WHERE p.name >= 'a'
-RETURN p.name ORDER BY p.name
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie) USING INDEX p:Person(name) WHERE p.name >= 'a'
+RETURN p.name, count(m) ORDER BY p.name
 ----
 
 //profile
+
+== Restrictions
 
 Predicates that can be used to enable this optimization are:
 
@@ -110,3 +131,9 @@ Predicates that will not work:
 * Existence (eg. `WHERE exists(n.email)`) because no property type information is given
 * Substring (eg. `WHERE n.name CONTAINS 'a'`) because string order is defined from the start of the string
 * Suffix (eg. `WHERE n.name ENDS WITH 'Cruise'`) because string order is defined from the start of the string
+
+For information on native index support see the _Operations Manual_:
+
+* <<operations-manual#index-configuration-native-index, Property types supported by the native index>>
+* <<operations-manual#index-configuration-index-providers, Index providers and property types>>
+* <<operations-manual#index-configuration-upgrade-considerations, Index configuration upgrade considerations>>
