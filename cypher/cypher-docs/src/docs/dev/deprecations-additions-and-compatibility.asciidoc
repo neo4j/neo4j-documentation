@@ -107,6 +107,13 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 |  <<functions-tostring, toString()>>   | Function  | Extended | Now also allows temporal values as input (i.e. values of type _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ or _Duration_).
 |===
 
+[[cypher-deprecations-additions-removals-3.5]]
+=== Version 3.5
+[options="header"]
+|===
+| Feature          | Type | Change | Details
+|===
+
 [[cypher-compatibility]]
 == Compatibility
 
@@ -135,10 +142,10 @@ RETURN n.name, n.age
 [[cypher-versions]]
 == Supported language versions
 
-Neo4j 3.4 supports the following versions of the Cypher language:
+Neo4j 3.5 supports the following versions of the Cypher language:
 
+* Neo4j Cypher 3.5
 * Neo4j Cypher 3.4
-* Neo4j Cypher 3.3
 * Neo4j Cypher 2.3
 
 [TIP]
