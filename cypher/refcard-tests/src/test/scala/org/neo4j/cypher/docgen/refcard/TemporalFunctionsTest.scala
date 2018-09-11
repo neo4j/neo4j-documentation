@@ -94,6 +94,13 @@ datetime("2018-04-05T12:34:00[Europe/Berlin]")
 
 Returns a datetime in the specified time zone.
 
+###assertion=returns-one
+RETURN
+
+datetime({epochMillis: 3360000})
+###
+Transforms 3360000 as a UNIX Epoch time into a normal datetime.
+
 ###assertion=returns-one parameters=date
 RETURN
 
