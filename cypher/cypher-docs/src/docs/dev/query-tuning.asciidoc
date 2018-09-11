@@ -105,14 +105,14 @@ In Enterprise Edition, the Cypher query planner selects the runtime, falling bac
 In this runtime, the operators in the execution plan are chained together in a tree, where each non-leaf operator feeds from one or two child operators.
 The tree thus comprises nested iterators, and the records are streamed in a pipelined manner from the top iterator, which pulls from the next iterator and so on.
 
-[enterprise-edition]
+[role=enterprise-edition]
 .Slotted
 This is very similar to the interpreted runtime, except that there are additional optimizations regarding the way in which the records are streamed through the iterators.
 This results in improvements to both the performance and memory usage of the query.
 In effect, this can be thought of as the 'faster interpreted' runtime.
 This is still under development and does not support all possible operators or queries.
 
-[enterprise-edition]
+[role=enterprise-edition]
 .Compiled
 Algorithms are employed to intelligently group the operators in the execution plan in order to generate new combinations and orders of execution which are optimised for performance and memory usage.
 While this should lead to superior performance in most cases (over both the interpreted and slotted runtimes), it is still under development and does not support all possible operators or queries (the slotted runtime has a higher coverage of operators and queries).
@@ -121,8 +121,8 @@ While this should lead to superior performance in most cases (over both the inte
 |===
 | Option | Description | Default?
 | `runtime=interpreted` | This will force the query planner to use the interpreted runtime. | This is the default option for some queries in Enterprise Edition, and the only option for all queries in Community Edition (so it is not necessary to use this option in Community Edition).
-| `runtime=slotted` | This will cause the query planner to use the slotted runtime if it supports the query, and fall back to using the interpreted runtime if it does not. | This is the default option for some queries in Enterprise Edition only.
-| `runtime=compiled` | This will cause the query planner to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the planner will fall back to the slotted runtime, and, failing that, to the interpreted runtime. | This is the default option for some queries in Enterprise Edition only.
+| `runtime=slotted` | This will cause the query planner to use the slotted runtime if it supports the query, and fall back to using the interpreted runtime if it does not. | [enterprise-edition]#This is the default option for some queries in Enterprise Edition only.#
+| `runtime=compiled` | This will cause the query planner to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the planner will fall back to the slotted runtime, and, failing that, to the interpreted runtime. | [enterprise-edition]#This is the default option for some queries in Enterprise Edition only.#
 |===
 
 
