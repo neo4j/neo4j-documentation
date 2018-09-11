@@ -412,6 +412,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
     section("Map operators", "query-operators-map") {
       p(
         """The map operators comprise:
+          |
           |* statically access the value of a map by key using the dot operator: `.`
           |* dynamically access the value of a map by key using the subscript operator: `[]`
           |""".stripMargin)
