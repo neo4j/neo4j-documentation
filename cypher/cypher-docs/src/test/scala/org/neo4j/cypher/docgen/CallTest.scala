@@ -75,7 +75,7 @@ class CallTest extends DocumentingTest {
             |For a list of these, see <<operations-manual#ref-procedures, Operations Manual -> Built-in procedures>>.""")
         p(
           """Users can also develop custom procedures and deploy to the database.
-            |See <<procedures>> for details.""")
+            |See <<java-reference#extending-neo4j-procedures>> for details.""")
       }
       p("""The following examples show how to pass arguments to and yield result fields from a procedure call.
           |All examples use the following procedure:""")
