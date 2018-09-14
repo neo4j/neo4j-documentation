@@ -1,6 +1,6 @@
 [role=enterprise-edition]
-[[fulltext-schema-index]]
-= Fulltext Schema Indexes
+[[schema-index-fulltext]]
+= Fulltext schema index
 
 [abstract]
 --
@@ -13,8 +13,8 @@ The legacy _auto indexes_, for instances, are only written to by transactions th
 The auto indexes are not populated with existing data when they are created.
 Likewise, they will also miss updates that occur if they are temporarily disabled or misconfigured.
 
-[[create-and-configure]]
-== Creating and Configuring Fulltext Schema Indexes
+[[schema-index-fulltext-create-and-configure]]
+== Create and configure fulltext schema indexes
 
 Fulltext schema indexes are created with the `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex`.
 The indexes must each be given a unique name when created, which is used to reference the specific index in question, when querying or dropping an index.
@@ -103,8 +103,8 @@ Had it not been for the relationship index, one would have had to add artificial
 1+d|0 rows
 |===
 
-[[querying]]
-== Querying Fulltext Schema Indexes
+[[schema-index-fulltext-query]]
+== Query fulltext schema indexes
 
 Fulltext indexes will, in addition to any exact matches, also return _approximate_ matches to a given query.
 Both the property values that are indexed, and the queries to the index, are processed through the analyzer such that the index can find that don't _exactly_ matches.

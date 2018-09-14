@@ -1,10 +1,11 @@
+[role=deprecated]
 [[explicit-indexes-procedures]]
-= Use built-in procedures to manage and use explicit indexes
+= Manage and use explicit indexes
 
 Explicit indexes are alternative data structures, in which a user can explicitly maintain search and seek data for nodes and relationships.
 These data structures are special-purpose and the procedures are primarily provided for users who have legacy deployments depending on such structures.
 
-[WARNING]
+[DEPRECATED]
 --
 The explicit indexing features in Neo4j are deprecated for removal in the next major release.
 Consider using <<query-schema-index,schema indexes>>, or the <<fulltext-schema-index,fulltext schema indexes>>, instead.
