@@ -26,6 +26,7 @@ This section explains how to work with indexes in Neo4j and Cypher.
 ** <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search>>
 ** <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search>>
 * <<schema-index-fulltext, Fulltext schema index>>
+* <<schema-index-fulltext-introduction, Introduction>>
 ** <<schema-index-fulltext-create-and-configure, Create and configure fulltext schema indexes>>
 ** <<schema-index-fulltext-query, Query fulltext schema indexes>>
 * <<explicit-indexes-procedures, Use built-in procedures to manage and use explicit indexes>>

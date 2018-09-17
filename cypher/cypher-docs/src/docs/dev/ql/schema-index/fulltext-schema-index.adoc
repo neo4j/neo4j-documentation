@@ -7,11 +7,42 @@
 The fulltext schema indexes can be used to index nodes and relationships by string properties, and query by either exact or fuzzy matching.
 --
 
-Neo4j has had fulltext indexing capability for a long time via the explicit indexes, but these have a number of drawbacks, which are solved by the fulltext schema indexes.
-For instance, the fulltext schema indexes are automatically populated with existing data from the store when they are created.
-The legacy _auto indexes_, for instances, are only written to by transactions that occur while they are enabled.
-The auto indexes are not populated with existing data when they are created.
-Likewise, they will also miss updates that occur if they are temporarily disabled or misconfigured.
+
+[[schema-index-fulltext-introduction]]
+== Introduction
+
+Fulltext schema indexes are powered by the http://lucene.apache.org/[Apache Lucene] indexing and search library.
+A fulltext schema index allows you to write queries that matches within the _contents_ of indexed string properties.
+For instance, the regular schema indexes described in previous sections can only do exact matching or prefix matches on strings.
+A fulltext index will instead tokenize the indexed string values, so it can match _terms_ anywhere within the strings.
+How the indexed strings are tokenized and broken into terms, is determined by what analyzer the fulltext schema index is configured with.
+For instance, the _swedish_ analyzer knows how to tokenize and stem Swedish words, and will avoid indexing Swedish stop words.
+
+Fulltext schema indexes:
+
+* support the indexing of both nodes and relationships.
+* support configuring custom analyzers, including analyzers that are not included with Lucene itself.
+* can be queried using the Lucene query language.
+* can return the _score_ for each result from a query.
+* are kept up to date automatically, as nodes and relationships are added, removed, and modified.
+* will automatically populate newly created indexes with the existing data in a store.
+* can be checked by the consistency checker, and they can be rebuilt if there is a problem with them.
+* are a projection of the store, and can only index nodes and relationships by the contents of their properties.
+* can support any number of documents in a single index.
+* are created, dropped, and updated transactionally, and is automatically replicated throughout a cluster.
+* can be accessed via Cypher procedures.
+* can be configured to be _eventually consistent_, in which index updating is moved from the commit path to a background thread.
+Using this feature, it is possible to work around the slow Lucene writes from the performance critical commit process, thus removing the main bottlenecks for Neo4j write performance.
+
+For information on how to configure fulltext schema indexes, refer to <<operations-manual#index-configuration-fulltext,  Operations Manual -> Fulltext schema indexes>>.
+
+[NOTE]
+--
+Fulltext schema indexes replace the _explicit_ indexes, which are deprecated and will be discontinued in the next major release.
+It is therefore recommended migrate to fulltext schema indexes.
+A full description of the differences between fulltext schema indexes and explicit indexes is available in <<operations-manual#index-configuration-fulltext-deprecation-of-explicit, Operations Manual -> Deprecation of explicit indexes>>.
+--
+
 
 [[schema-index-fulltext-create-and-configure]]
 == Create and configure fulltext schema indexes
