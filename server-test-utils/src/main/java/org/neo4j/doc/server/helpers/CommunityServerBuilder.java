@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.neo4j.doc.server.ServerTestUtils;
+import org.neo4j.doc.test.ImpermanentGraphDatabase;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
@@ -42,16 +43,15 @@ import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
 import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.server.configuration.ServerSettings;
+import org.neo4j.server.database.CommunityGraphFactory;
 import org.neo4j.server.database.Database;
-import org.neo4j.server.database.LifecycleManagingDatabase;
+import org.neo4j.server.database.GraphFactory;
 import org.neo4j.server.preflight.PreFlightTasks;
 import org.neo4j.server.rest.web.DatabaseActions;
-import org.neo4j.doc.test.ImpermanentGraphDatabase;
 import org.neo4j.time.Clocks;
 
 import static org.neo4j.doc.server.ServerTestUtils.asOneLine;
 import static org.neo4j.helpers.collection.MapUtil.stringMap;
-import static org.neo4j.server.database.LifecycleManagingDatabase.lifecycleManagingDatabase;
 
 public class CommunityServerBuilder
 {
@@ -66,7 +66,8 @@ public class CommunityServerBuilder
     private final HashMap<String, String> thirdPartyPackages = new HashMap<>();
     private final Properties arbitraryProperties = new Properties();
 
-    private static LifecycleManagingDatabase.GraphFactory  IN_MEMORY_DB = ( config, dependencies ) -> {
+    private static GraphFactory IN_MEMORY_DB = ( config, dependencies ) ->
+    {
         File storeDir = config.get( GraphDatabaseSettings.database_path );
         Map<String, String> params = config.getRaw();
         params.put( GraphDatabaseSettings.ephemeral.name(), "true" );
@@ -333,8 +334,7 @@ public class CommunityServerBuilder
         private TestCommunityNeoServer( Config config, Optional<File> configFile, GraphDatabaseFacadeFactory
                 .Dependencies dependencies, LogProvider logProvider )
         {
-            super( config, lifecycleManagingDatabase( persistent ? COMMUNITY_FACTORY : IN_MEMORY_DB ), dependencies,
-                    logProvider );
+            super( config, persistent ? new CommunityGraphFactory() : IN_MEMORY_DB, dependencies, logProvider );
             this.configFile = configFile;
         }
 
