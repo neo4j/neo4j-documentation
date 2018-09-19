@@ -109,7 +109,7 @@ public class CommunityServerBuilder
     protected CommunityNeoServer build( Optional<File> configFile, Config config,
             GraphDatabaseFacadeFactory.Dependencies dependencies )
     {
-        return new TestCommunityNeoServer( config, configFile, dependencies, logProvider );
+        return new TestCommunityNeoServer( config, configFile, dependencies );
     }
 
     public File createConfigFiles() throws IOException
@@ -332,9 +332,9 @@ public class CommunityServerBuilder
         private final Optional<File> configFile;
 
         private TestCommunityNeoServer( Config config, Optional<File> configFile, GraphDatabaseFacadeFactory
-                .Dependencies dependencies, LogProvider logProvider )
+                .Dependencies dependencies )
         {
-            super( config, persistent ? new CommunityGraphFactory() : IN_MEMORY_DB, dependencies, logProvider );
+            super( config, persistent ? new CommunityGraphFactory() : IN_MEMORY_DB, dependencies );
             this.configFile = configFile;
         }
 

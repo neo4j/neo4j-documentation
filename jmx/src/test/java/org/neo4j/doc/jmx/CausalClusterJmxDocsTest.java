@@ -87,7 +87,7 @@ public class CausalClusterJmxDocsTest {
 
     private OpenEnterpriseNeoServer server(Config config) {
         NullLogProvider logProvider = NullLogProvider.getInstance();
-        return new OpenEnterpriseNeoServer(config, newDependencies().userLogProvider(logProvider), logProvider);
+        return new OpenEnterpriseNeoServer(config, newDependencies().userLogProvider(logProvider));
     }
 
     @Before
