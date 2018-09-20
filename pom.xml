@@ -15,6 +15,9 @@
   <packaging>pom</packaging>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
     <generate-config-docs-phase>prepare-package</generate-config-docs-phase>
     <attach-java-sources-phase>package</attach-java-sources-phase>
     <attach-java-test-sources-phase>package</attach-java-test-sources-phase>
