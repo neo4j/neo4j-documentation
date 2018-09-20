@@ -32,15 +32,19 @@ class CsvFile(fileName: String, delimiter: Char = ',')(implicit csvFilesDir: Fil
   import CsvFile._
 
   def withContents(lines: Seq[String]*): String = {
-    val csvFile = withContentsF(lines:_*)
+    val csvFile = withContentsF(false, lines:_*)
     urify(csvFile)
   }
 
   def withContentsF(lines: Seq[String]*): File = {
+    withContentsF(false, lines:_*)
+  }
+
+  def withContentsF(quoted: Boolean, lines: Seq[String]*): File = {
     val csvFile = new File(csvFilesDir, fileName)
     val writer = new PrintWriter(csvFile, StandardCharsets.UTF_8.name())
     lines.foreach(line => {
-      writer.println(line.map(s => '"' + s + '"').mkString(delimiter.toString))
+      writer.println(line.map(s => if (quoted) '"' + s + '"' else s).mkString(delimiter.toString))
     })
     writer.flush()
     writer.close()
