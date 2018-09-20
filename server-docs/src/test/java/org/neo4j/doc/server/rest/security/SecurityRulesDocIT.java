@@ -153,9 +153,9 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
     @Test
     @Title( "Using wildcards to target security rules" )
     @Documented( "In this example, a security rule is registered to deny access to all URIs to the server by listing the rule(s) class(es) in _neo4j.conf_.\n" +
-                 "In this case, the rule is registered using a wildcard URI path (where `*` characters can be used to signify any part of the path).\n" +
-                 "For example `/users*` means the rule will be bound to any resources under the `/users` root path.\n" +
-                 "Similarly `/users*type*` will bind the rule to resources matching URIs like `/users/fred/type/premium`.\n" +
+                 "In this case, the rule is registered using a wildcard URI path (where `{asterisk}` characters can be used to signify any part of the path).\n" +
+                 "For example `/users{asterisk}` means the rule will be bound to any resources under the `/users` root path.\n" +
+                 "Similarly `/users{asterisk}type{asterisk}` will bind the rule to resources matching URIs like `/users/fred/type/premium`.\n" +
                  "\n" +
                  "@@config\n" +
                  "\n" +
