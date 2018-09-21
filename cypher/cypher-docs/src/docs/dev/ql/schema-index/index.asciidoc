@@ -25,7 +25,11 @@ This section explains how to work with indexes in Neo4j and Cypher.
 ** <<schema-index-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
 ** <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search>>
 ** <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search>>
-* <<explicit-indexes-procedures, Use built-in procedures to manage and use explicit indexes>>
+* <<schema-index-fulltext, Fulltext schema index>>
+** <<schema-index-fulltext-introduction, Introduction>>
+** <<schema-index-fulltext-create-and-configure, Create and configure fulltext schema indexes>>
+** <<schema-index-fulltext-query, Query fulltext schema indexes>>
+* <<explicit-indexes-procedures, Manage and use explicit indexes>>
 
 
 [[query-schema-index-introduction]]
@@ -81,5 +85,7 @@ include::existence-check-using-exists-single-property-index.asciidoc[]
 include::spatial-distance-searches-single-property-index.asciidoc[]
 
 include::spatial-bounding-box-searches-single-property-index.asciidoc[]
+
+include::fulltext-schema-index.adoc[leveloffset=+1]
 
 include::explicit-index-procedures.adoc[leveloffset=+1]
