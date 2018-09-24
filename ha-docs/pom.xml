@@ -21,12 +21,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.neo4j</groupId>
+            <groupId>com.neo4j</groupId>
             <artifactId>neo4j-cluster</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.neo4j</groupId>
+            <groupId>com.neo4j</groupId>
             <artifactId>neo4j-ha</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
