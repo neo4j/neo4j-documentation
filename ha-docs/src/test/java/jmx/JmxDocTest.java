@@ -87,8 +87,7 @@ public class JmxDocTest {
 
         assertEquals("Sanity checking the number of beans found;", EXPECTED_NUMBER_OF_BEANS, objectInstances.size());
         jmxBeanDocumenter.document(
-                QUERY,
-                it -> INCLUDES.contains(it.getObjectName().getKeyProperty(BEAN_NAME)),
+                objectInstances,
                 fileUtil,
                 new AsciiDocListGenerator("ha-only-jmx-list", "MBeans exposed by Neo4j in High Availability mode", false)
         );
