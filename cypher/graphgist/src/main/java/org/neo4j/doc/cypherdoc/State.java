@@ -19,7 +19,7 @@
  */
 package org.neo4j.doc.cypherdoc;
 
-import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier;
+import org.neo4j.cypher.docgen.tooling.Prettifier;
 import org.neo4j.graphdb.GraphDatabaseService;
 
 import java.io.File;
@@ -54,8 +54,8 @@ class State
         this.url = url.endsWith( "/" ) ? url : url + "/";
     }
 
-    public String prettify( String query )
+    String prettify( String query )
     {
-        return Prettifier.apply( query );
+        return Prettifier.apply( query, false );
     }
 }

@@ -28,6 +28,7 @@ import javax.ws.rs.core.Response.Status;
 import org.junit.Before;
 import org.junit.Rule;
 
+import org.neo4j.cypher.docgen.tooling.Prettifier;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.doc.server.SharedServerTestBase;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -83,7 +84,7 @@ public class AbstractRestFunctionalTestBase extends SharedServerTestBase impleme
         String script = createScript(scriptTemplate);
         String queryString = "{\"query\": \"" + script + "\",\"params\":{" + parameterString + "}}";
 
-        String snippet = org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier$.MODULE$.apply(script);
+        String snippet = Prettifier.apply(script, false);
         gen().expectedStatus(status.getStatusCode())
                 .payload(queryString)
                 .description(AsciidocHelper.createAsciiDocSnippet("cypher", snippet));

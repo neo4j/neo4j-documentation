@@ -29,6 +29,11 @@
         <!-- neo4j-documentation -->
         <dependency>
             <groupId>org.neo4j.doc</groupId>
+            <artifactId>neo4j-cypher-docs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
             <artifactId>test-framework-enterprise</artifactId>
             <version>${project.version}</version>
         </dependency>

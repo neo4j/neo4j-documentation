@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier;
+import org.neo4j.cypher.docgen.tooling.Prettifier;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -45,8 +45,6 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.Iterators;
-import org.neo4j.kernel.impl.query.QueryExecutionEngine;
-import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.test.TestGraphDatabaseFactory;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
@@ -150,7 +148,7 @@ public class JavaExecutionEngineDocTest
         sb.append( "\n.Parameters\n[source,javascript]\n----\n" )
                 .append( prettifiedJson )
                 .append( "\n----\n\n.Query\n" )
-                .append( AsciidocHelper.createAsciiDocSnippet( "cypher", Prettifier.apply( query ) ) );
+                .append( AsciidocHelper.createAsciiDocSnippet( "cypher", Prettifier.apply( query, false ) ) );
         AsciiDocGenerator.dumpToSeparateFile( docsTargetDir, id, sb.toString() );
     }
 
@@ -492,15 +490,6 @@ public class JavaExecutionEngineDocTest
                        "RETURN p";
         Result result = db.execute( query, params );
         assertThat( count( result ), is( 1L ) );
-    }
-
-    @Test
-    public void prettifier_makes_pretty() throws Exception
-    {
-        String given = "MATCH (n)-->() RETURN n";
-        String expected = String.format("MATCH (n)-->()%nRETURN n");
-
-        assertEquals(expected, Prettifier.apply(given));
     }
 
     @Test
