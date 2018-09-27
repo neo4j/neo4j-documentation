@@ -143,8 +143,7 @@ public class CausalClusterJmxDocsTest {
         assertEquals("Sanity checking the number of beans found;", EXPECTED_NUMBER_OF_BEANS, objectInstances.size());
 
         jmxBeanDocumenter.document(
-                QUERY,
-                it -> true,
+                objectInstances,
                 fileUtil,
                 new AsciiDocListGenerator("jmx-list", "MBeans exposed by Neo4j", false)
         );
