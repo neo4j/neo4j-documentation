@@ -44,7 +44,7 @@ import static org.neo4j.kernel.configuration.Settings.setting;
 public class CausalClusterJmxDocsTest {
 
     private static final String QUERY = "org.neo4j:instance=kernel#0,*";
-    private static final int EXPECTED_NUMBER_OF_BEANS = 12;
+    private static final int EXPECTED_NUMBER_OF_BEANS = 11;
     private final Path outPath = Paths.get("target", "docs", "ops");
 
     @Rule
@@ -79,6 +79,7 @@ public class CausalClusterJmxDocsTest {
 
         // when
         List<ObjectInstance> objectInstances = jmxBeanDocumenter.query(QUERY).stream()
+                .filter(o -> !o.getObjectName().getKeyProperty("name").equals("Configuration"))
                 .sorted(Comparator.comparing(o -> o.getObjectName().getKeyProperty("name").toLowerCase()))
                 .collect(Collectors.toList());
 
