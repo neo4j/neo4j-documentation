@@ -68,11 +68,7 @@ public class JmxBeanDocumenter {
         this.mBeanServer = ManagementFactory.getPlatformMBeanServer();
     }
 
-    public void document(String query, Predicate<ObjectInstance> filter, FileUtil fileUtil, AsciiDocListGenerator asciiDocListGenerator) throws IntrospectionException, InstanceNotFoundException, ReflectionException, IOException, MalformedObjectNameException {
-        List<ObjectInstance> objectInstances = query(query).stream()
-                .filter(filter)
-                .sorted(Comparator.comparing(o -> o.getObjectName().getKeyProperty("name").toLowerCase()))
-                .collect(Collectors.toList());
+    public void document(List<ObjectInstance> objectInstances, FileUtil fileUtil, AsciiDocListGenerator asciiDocListGenerator) throws IntrospectionException, InstanceNotFoundException, ReflectionException, IOException {
         List<SettingDescription> settingDescriptions = new ArrayList<>();
         for (ObjectInstance objectInstance : objectInstances) {
             ObjectName objectName = objectInstance.getObjectName();
