@@ -76,6 +76,12 @@
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
+            <artifactId>neo4j-cypher-prettifier</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
             <artifactId>test-framework-enterprise</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
@@ -175,11 +181,6 @@
             <version>9.0.20180925</version>
             <type>test-jar</type>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.opencypher</groupId>
-            <artifactId>parser-9.0</artifactId>
-            <version>9.0.20180925</version>
         </dependency>
 
         <!-- other -->

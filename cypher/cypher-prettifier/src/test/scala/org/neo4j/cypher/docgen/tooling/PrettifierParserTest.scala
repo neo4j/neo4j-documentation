@@ -17,16 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.cypher.docgen.tooling.tests
+package org.neo4j.cypher.docgen.tooling
 
-import org.neo4j.cypher.docgen.tooling.AnyText
-import org.neo4j.cypher.docgen.tooling.BreakingKeywords
-import org.neo4j.cypher.docgen.tooling.EscapedText
-import org.neo4j.cypher.docgen.tooling.GroupToken
-import org.neo4j.cypher.docgen.tooling.NewlineToken
-import org.neo4j.cypher.docgen.tooling.NonBreakingKeywords
-import org.neo4j.cypher.docgen.tooling.PrettifierParser
-import org.neo4j.cypher.docgen.tooling.SyntaxToken
 import org.parboiled.scala.Rule1
 
 class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxToken]] {

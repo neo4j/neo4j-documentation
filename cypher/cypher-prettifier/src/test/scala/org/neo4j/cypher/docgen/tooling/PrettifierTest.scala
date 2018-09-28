@@ -17,10 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.cypher.docgen.tooling.tests
+package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.GraphIcing
-import org.neo4j.cypher.docgen.tooling.Prettifier
 import org.scalatest.Assertions
 import org.scalatest.FunSuiteLike
 import org.scalatest.Matchers
