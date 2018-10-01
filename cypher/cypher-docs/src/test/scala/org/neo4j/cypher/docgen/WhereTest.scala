@@ -310,7 +310,7 @@ class WhereTest extends DocumentingTest {
         }
       }
       section("Default to `true` if property is missing", "default-to-true-missing-property") {
-        p("If you want to compare a property on a graph element, but only if it exists, you can compare the property against both the value you are looking for and `null`, like:")
+        p("If you want to compare a property on a node or relationship, but only if it exists, you can compare the property against both the value you are looking for and `null`, like:")
         query(
           """MATCH (n)
             |WHERE n.belt = 'white' OR n.belt IS NULL
