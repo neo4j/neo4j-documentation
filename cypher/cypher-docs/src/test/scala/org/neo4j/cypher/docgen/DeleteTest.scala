@@ -33,7 +33,7 @@ class DeleteTest extends DocumentingTest with QueryStatisticsTestSupport {
                   |       (z:Person {name: 'UNKNOWN'}),
                   |       (a)-[:KNOWS]->(t),
                   |       (a)-[:KNOWS]->(p)""")
-    synopsis("The `DELETE` clause is used to delete graph elements -- nodes, relationships or paths.")
+    synopsis("The `DELETE` clause is used to delete nodes, relationships or paths.")
     p(
       """* <<query-delete-introduction, Introduction>>
         |* <<delete-delete-single-node, Delete a single node>>

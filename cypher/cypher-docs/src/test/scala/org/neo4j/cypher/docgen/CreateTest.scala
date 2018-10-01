@@ -31,7 +31,7 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
       """CREATE (a:Person {name: 'A'}),
                 (b:Person {name: 'B'})
       """.stripMargin)
-    synopsis("The `CREATE` clause is used to create graph elements -- nodes and relationships.")
+    synopsis("The `CREATE` clause is used to create nodes and relationships.")
     p(
       """* <<create-nodes, Create nodes>>
         |** <<create-create-single-node, Create single node>>
