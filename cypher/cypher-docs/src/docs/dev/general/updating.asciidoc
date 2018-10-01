@@ -57,6 +57,4 @@ After all the parts of the query comes one final `RETURN` clause.
 `RETURN` is not part of any query part -- it is a period symbol at the end of a query.
 The `RETURN` clause has three sub-clauses that come with it: `SKIP`/`LIMIT` and `ORDER BY`.
 
-If you return graph elements from a query that has just deleted them -- beware, you are holding a pointer that is no longer valid.
-Operations on that node are undefined.
-
+If you return nodes or relationships from a query that has just deleted them -- beware, you are holding a pointer that is no longer valid.

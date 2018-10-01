@@ -89,7 +89,7 @@ These comprise clauses that write the data to the database.
 |===
 |Clause                                     |   Description
 |<<query-create,CREATE>>                    |   Create nodes and relationships.
-|<<query-delete,DELETE>>                    |   Delete graph elements — nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
+|<<query-delete,DELETE>>                    |   Delete nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
 |<<query-delete,DETACH DELETE>>             |   Delete a node or set of nodes. All associated relationships will automatically be deleted.
 |<<query-set,SET>>                          |   Update labels on nodes and properties on nodes and relationships.
 |<<query-remove,REMOVE>>                    |   Remove properties and labels from nodes and relationships.

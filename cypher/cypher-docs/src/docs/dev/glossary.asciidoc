@@ -27,7 +27,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<constraints-create-unique-constraint, CREATE CONSTRAINT ON (n:Label) ASSERT n.property IS UNIQUE>>  |  Schema | Create a constraint ensuring the uniqueness of the combination of node label and property value for a particular property key across all nodes.
 |<<schema-index-create-a-single-property-index, CREATE INDEX ON :Label(property)>>  | Schema  | Create an index on all nodes with a particular label and a single property; i.e. create a single-property index.
 |<<schema-index-create-a-composite-index, CREATE INDEX ON :Label(prop1, ..., propN)>>  | Schema  | Create an index on all nodes with a particular label and multiple properties; i.e. create a composite index.
-|<<query-delete, DELETE>>                    | Writing     |  Delete graph elements — nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
+|<<query-delete, DELETE>>                    | Writing     |  Delete nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
 |<<query-delete, DETACH DELETE>>             | Writing     |  Delete a node or set of nodes. All associated relationships will automatically be deleted.
 |<<constraints-drop-node-property-existence-constraint, DROP CONSTRAINT ON (n:Label) ASSERT exists(n.property)>>      | Schema   | Drop a constraint ensuring that all nodes with a particular label have a certain property.
 |<<constraints-drop-relationship-property-existence-constraint, DROP CONSTRAINT ON ()-[r:REL_TYPE]-() ASSERT exists(r.property)>>      | Schema   | Drop a constraint ensuring that all relationship with a particular type have a certain property.
