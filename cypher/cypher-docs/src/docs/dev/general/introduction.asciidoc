@@ -3,11 +3,10 @@
 
 Cypher is a declarative graph query language that allows for expressive and efficient querying and updating of the graph.
 It is designed to be suitable for both developers and operations professionals.
-Cypher is simple but powerful:
-Very complicated database queries can easily be expressed, which allows you to focus on your domain instead of getting lost in database access.
+Cypher is designed to be simple, yet powerful; highly complicated database queries can be easily expressed, enabling you to focus on your domain, instead of getting lost in database access.
 
 Cypher is inspired by a number of different approaches and builds on established practices for expressive querying.
-Many of the keywords, for example `WHERE` and `ORDER BY`, are inspired by http://en.wikipedia.org/wiki/SQL[SQL].
+Many of the keywords, such as `WHERE` and `ORDER BY`, are inspired by http://en.wikipedia.org/wiki/SQL[SQL].
 Pattern matching borrows expression approaches from http://en.wikipedia.org/wiki/SPARQL[SPARQL].
 Some of the list semantics are borrowed from languages such as Haskell and Python.
 Cypher's constructs, based on English prose and neat iconography, make queries easy both to write, and to read.
