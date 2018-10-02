@@ -32,9 +32,13 @@ Unique node property constraints can be created, as well as node and relationshi
 [[query-constraint-introduction]]
 == Introduction
 
+The following constraint types are available:
+
+*Unique property constraints*::
 You can use unique property constraints to ensure that property values are unique for all nodes with a specific label.
 Unique constraints do not mean that all nodes have to have a unique value for the properties -- nodes without the property are not subject to this rule.
 
+*[enterprise-edition]#Property existence constraints#*::
 You can use property existence constraints to ensure that a property exists for all nodes with a specific label or for all relationships with a specific type.
 All queries that try to create new nodes or relationships without the property, or queries that try to remove the mandatory property will now fail.
 
@@ -65,6 +69,7 @@ include::create-a-node-that-breaks-a-unique-property-constraint.asciidoc[levelof
 include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes.asciidoc[leveloffset=+1]
 
 
+[role=enterprise-edition]
 [[query-constraint-prop-exist-nodes]]
 == Node property existence constraints
 
@@ -81,6 +86,7 @@ include::removing-an-existence-constrained-node-property.asciidoc[leveloffset=+1
 include::failure-to-create-a-node-property-existence-constraint-due-to-existing-node.asciidoc[leveloffset=+1]
 
 
+[role=enterprise-edition]
 [[query-constraint-prop-exist-rels]]
 == Relationship property existence constraints
 
