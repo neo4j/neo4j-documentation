@@ -64,11 +64,6 @@
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-shell</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cluster</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
@@ -177,7 +172,6 @@
                                     <arg value="org.neo4j.metrics.MetricsSettings" />
                                     <arg value="org.neo4j.backup.OnlineBackupSettings" />
                                     <arg value="org.neo4j.ext.udc.UdcSettings" />
-                                    <arg value="org.neo4j.shell.ShellSettings" />
                                     <arg value="org.neo4j.cluster.ClusterSettings" />
                                     <arg value="org.neo4j.kernel.ha.HaSettings" />
                                     <arg value="org.neo4j.causalclustering.core.CausalClusteringSettings" />

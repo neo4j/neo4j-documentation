@@ -47,11 +47,6 @@
             <artifactId>neo4j-slf4j</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-shell</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
