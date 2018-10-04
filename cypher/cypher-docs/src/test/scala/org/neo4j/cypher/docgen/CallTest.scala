@@ -79,12 +79,9 @@ class CallTest extends DocumentingTest {
       }
       p("""The following examples show how to pass arguments to and yield result fields from a procedure call.
           |All examples use the following procedure:""")
-      p("""[snippet,java]
+      p("""[source, java]
           |----
-          |component=neo4j-cypher-docs
-          |source=org/neo4j/procedure/example/IndexingProcedure.java
-          |classifier=sources
-          |tag=indexingProcedure
+          |include::{importdir}/org/neo4j/procedure/example/IndexingProcedure.java[tags=indexingProcedure]
           |----""")
     }
 

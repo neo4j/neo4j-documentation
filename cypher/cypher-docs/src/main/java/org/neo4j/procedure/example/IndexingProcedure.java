@@ -26,7 +26,7 @@ import org.neo4j.procedure.Mode;
 import org.neo4j.procedure.Name;
 import org.neo4j.procedure.Procedure;
 
-// START SNIPPET: indexingProcedure
+// tag::indexingProcedure[]
 public class IndexingProcedure
 {
     @Context
@@ -50,4 +50,4 @@ public class IndexingProcedure
           .add( node, propKey, node.getProperty( propKey ) );
     }
 }
-// END SNIPPET: indexingProcedure
+// end::indexingProcedure[]
