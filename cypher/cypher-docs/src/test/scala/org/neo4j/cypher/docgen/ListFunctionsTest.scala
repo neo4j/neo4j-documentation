@@ -44,6 +44,7 @@ class ListFunctionsTest extends DocumentingTest {
     p("Further details and examples of lists may be found in <<cypher-lists>> and <<query-operators-list>>.")
     note {
       p("The function `rels()` has been superseded by `relationships()`, and will be removed in a future release.")
+      p("The functions `extract()` and `filter()` have been deprecated and will be removed in a future release. Consider using a list comprehension (e.g. `[x IN xs WHERE predicate | extraction]`) instead.")
     }
     p(
       """Functions:

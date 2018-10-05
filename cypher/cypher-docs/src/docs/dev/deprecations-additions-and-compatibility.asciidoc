@@ -112,6 +112,7 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 [options="header"]
 |===
 | Feature          | Type | Change | Details
+| `CYPHER runtime=compiled` (Compiled runtime)    | Functionality | Deprecated | The compiled runtime will be discontinued on the next major release. It might still be used for default queries in order to not cause regressions, but explicitly requesting it will not be possible.
 |===
 
 [[cypher-compatibility]]

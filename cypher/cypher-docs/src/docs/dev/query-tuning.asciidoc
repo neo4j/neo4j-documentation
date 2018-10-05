@@ -69,15 +69,18 @@ The execution plan tells Neo4j which operations to perform when executing the qu
 
 Neo4j uses a _cost_-based execution planning strategy (known as the 'cost' planner): the statistics service in Neo4j is used to assign a cost to alternative plans and picks the cheapest one.
 
+[role=deprecated]
+.Cypher rule planner
 All versions of Neo4j prior to Neo4j 3.2 also included a rule-based planner, which used rules to produce execution plans.
 This planner considered available indexes, but did not use statistical information to guide the query compilation.
 The rule planner was removed in Neo4j 3.2 owing to inferior query execution performance when compared with the cost planner.
+It can still be used, but doing so will fallback to the Neo4j 3.1 rule planner.
 
 
 [options="header"]
 |===
 | Option         | Description | Default?
-| `planner=rule` | This will force the query to use the rule planner, and will therefore cause the query to fall back to using Cypher 3.1.  |
+| `planner=rule` | [deprecated]#This will force the query to use the rule planner, and will therefore cause the query to fall back to using Cypher 3.1.#  |
 | `planner=cost` | Neo4j {neo4j-version} uses the cost planner for _all_ queries, and therefore it is not necessary to use this option explicitly. | X
 |===
 
@@ -93,7 +96,7 @@ These index decisions are only valid until the schema changes, so adding or remo
 [[cypher-runtime]]
 === Cypher runtime
 
-Using the execution plan, the query is executed -- and records returned -- by the Cypher query planner, or _runtime_.
+Using the execution plan, the query is executed -- and records returned -- by the Cypher _runtime_.
 Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used, there are three different runtimes available.
 In Enterprise Edition, the Cypher query planner selects the runtime, falling back to alternative runtimes as follows:
 
@@ -122,7 +125,7 @@ While this should lead to superior performance in most cases (over both the inte
 | Option | Description | Default?
 | `runtime=interpreted` | This will force the query planner to use the interpreted runtime. | This is not used in Enterprise Edition unless explicitly asked for. It is the only option for all queries in Community Edition--it is not necessary to specify this option in Community Edition.
 | `runtime=slotted` | This will cause the query planner to use the slotted runtime. | [enterprise-edition]#This is the default option for all queries which are not supported by `runtime=compiled` in Enterprise Edition.#
-| `runtime=compiled` | This will cause the query planner to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the planner will fall back to the slotted runtime. | [enterprise-edition]#This is the default option for some queries in Enterprise Edition.#
+| `runtime=compiled` | [deprecated]#This will cause the query planner to use the compiled runtime if it supports the query. If the compiled runtime does not support the query, the planner will fall back to the slotted runtime.# | [enterprise-edition]#This is the default option for some queries in Enterprise Edition.#
 |===
 
 

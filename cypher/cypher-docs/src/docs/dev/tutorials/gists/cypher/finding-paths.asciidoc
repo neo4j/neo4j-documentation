@@ -110,8 +110,7 @@ But that's a lot of data, we just want to look at the names and titles of the no
 [source, cypher]
 ----
 MATCH p = (:Actor {name: 'Keanu Reeves'})-[:ACTS_IN*0..5]-(:Actor {name: 'Carrie-Anne Moss'})
-RETURN extract(n IN nodes(p) |
-         coalesce(n.title,n.name)) AS `names and titles`,
+RETURN [n IN nodes(p) | coalesce(n.title,n.name)] AS `names and titles`,
        length(p)
 ORDER BY length(p)
 LIMIT 10;
