@@ -40,23 +40,30 @@ Unique node property constraints can be created, along with node and relationshi
 [[query-constraint-introduction]]
 == Introduction
 
+The following constraint types are available:
+
+*Unique property constraints*::
 Unique property constraints ensure that property values are unique for all nodes with a specific label.
 Unique constraints do not mean that all nodes have to have a unique value for the properties -- nodes without the property are not subject to this rule.
 
+*[enterprise-edition]#Property existence constraints#*::
 Property existence constraints ensure that a property exists for all nodes with a specific label or for all relationships with a specific type.
 All queries that try to create new nodes or relationships without the property, or queries that try to remove the mandatory property will now fail.
 
+*[enterprise-edition]#Node Keys#*::
 Node Keys ensure that, for a given label and set of properties:
-
++
 [lowerroman]
 . All the properties exist on all the nodes with that label.
 . The combination of the property values is unique.
 
++
 Queries attempting to do any of the following will fail:
 
 * Create new nodes without all the properties or where the combination of property values is not unique.
 * Remove one of the mandatory properties.
 * Update the properties so that the combination of property values is no longer unique.
+
 
 [NOTE]
 Property existence constraints and Node Keys are only available in Neo4j Enterprise Edition.
@@ -91,6 +98,7 @@ include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes
 include::get-a-list-of-all-constraints-in-the-database.asciidoc[]
 
 
+[role=enterprise-edition]
 [[query-constraint-prop-exist-nodes]]
 == Node property existence constraints
 
@@ -107,6 +115,7 @@ include::removing-an-existence-constrained-node-property.asciidoc[leveloffset=+1
 include::failure-to-create-a-node-property-existence-constraint-due-to-existing-node.asciidoc[leveloffset=+1]
 
 
+[role=enterprise-edition]
 [[query-constraint-prop-exist-rels]]
 == Relationship property existence constraints
 
@@ -123,6 +132,7 @@ include::removing-an-existence-constrained-relationship-property.asciidoc[levelo
 include::failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship.asciidoc[leveloffset=+1]
 
 
+[role=enterprise-edition]
 [[query-constraint-node-key]]
 == Node Keys
 
