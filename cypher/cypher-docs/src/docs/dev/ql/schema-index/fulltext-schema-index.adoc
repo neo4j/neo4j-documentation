@@ -1,4 +1,3 @@
-[role=enterprise-edition]
 [[schema-index-fulltext]]
 = Fulltext schema index
 
