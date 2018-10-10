@@ -44,6 +44,7 @@ class ListFunctionsTest extends DocumentingTest {
     p("Further details and examples of lists may be found in <<cypher-lists>> and <<query-operators-list>>.")
     note {
       p("The function `rels()` has been superseded by `relationships()`, and will be removed in a future release.")
+      p("The functions `extract()` and `filter()` have been deprecated and will be removed in a future release. Consider using a <<cypher-list-comprehension, list comprehension>> (e.g. `[x IN xs WHERE predicate | extraction]`) instead.")
     }
     p(
       """Functions:
@@ -62,7 +63,7 @@ class ListFunctionsTest extends DocumentingTest {
     section("extract()", "functions-extract") {
       p(
         """`extract()` returns a list `l~result~` containing the values resulting from an expression which has been applied to each element in a list `list`.
-           |This function is analogous to the `map` method in functional languages such as Lisp and Scala.""".stripMargin)
+          |This function is analogous to the `map` method in functional languages such as Lisp and Scala. Note that this function has been deprecated, consider using a <<cypher-list-comprehension, list comprehension>> (e.g. `[variable IN list | expression]`) instead.""".stripMargin)
       function("extract(variable IN list | expression)", "A list containing heterogeneous elements; the types of the elements are determined by `expression`.", ("list", "An expression that returns a list."), ("variable", "The closure will have a variable introduced in its context. We decide here which variable to use."), ("expression", "This expression will run once per value in `list`, and add it to the list which is returned by `extract()`."))
       considerations("Any `null` values in `list` are preserved.")
       p(
@@ -82,7 +83,7 @@ class ListFunctionsTest extends DocumentingTest {
       }
     }
     section("filter()", "functions-filter") {
-      p("""`filter()` returns a list `l~result~` containing all the elements from a list `list` that comply with the given predicate.""")
+      p("""`filter()` returns a list `l~result~` containing all the elements from a list `list` that comply with the given predicate. Note that this function has been deprecated, consider using a <<cypher-list-comprehension, list comprehension>> (e.g. `[variable IN list WHERE predicate]`) instead.""")
       function("filter(variable IN list WHERE predicate)", "A list containing heterogeneous elements; the types of the elements are determined by the elements in `list`.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from the predicate."), ("predicate", "A predicate that is tested against all elements in `list`."))
       query(
         """MATCH (a)
