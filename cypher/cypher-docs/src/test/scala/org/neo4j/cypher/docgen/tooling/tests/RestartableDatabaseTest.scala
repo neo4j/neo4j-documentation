@@ -21,11 +21,21 @@ package org.neo4j.cypher.docgen.tooling.tests
 
 import org.mockito.Mockito._
 import org.neo4j.cypher.CypherException
+import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.docgen.tooling.{RestartableDatabase, RunnableInitialization}
 import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
-import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
+import org.scalatest.Assertions
+import org.scalatest.FunSuiteLike
+import org.scalatest.Matchers
+import org.scalatest.Suite
+import org.scalatest.mock.MockitoSugar
 
-class RestartableDatabaseTest extends CypherFunSuite {
+class RestartableDatabaseTest extends Suite
+                              with FunSuiteLike
+                              with Assertions
+                              with Matchers
+                              with MockitoSugar
+                              with GraphIcing  {
   test("just creating a restartable database should not create any temp-dbs") {
     // given
     val databaseFactory = mock[TestEnterpriseGraphDatabaseFactory]

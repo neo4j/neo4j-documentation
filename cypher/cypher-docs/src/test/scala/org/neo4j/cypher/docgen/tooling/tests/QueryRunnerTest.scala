@@ -19,17 +19,24 @@
  */
 package org.neo4j.cypher.docgen.tooling.tests
 
+import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.SyntaxException
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
-import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
+import org.scalatest.Assertions
+import org.scalatest.FunSuiteLike
+import org.scalatest.Matchers
+import org.scalatest.Suite
 import org.scalatest.exceptions.TestFailedException
 import org.scalatest.matchers.{MatchResult, Matcher}
 
-
-class QueryRunnerTest extends CypherFunSuite {
+class QueryRunnerTest extends Suite
+                      with FunSuiteLike
+                      with Assertions
+                      with Matchers
+                      with GraphIcing  {
   test("invalid query fails") {
     val query = "MATCH n RETURN x"
     val result = runQuery(query)

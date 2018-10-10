@@ -21,7 +21,6 @@ package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunction
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
-import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.opencypher.v9_0.util.{Eagerly, InternalException}
@@ -248,9 +247,9 @@ case class QueryResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: 
   private def escape(in: String): String = "+%s+".format(in)
 }
 
-case class Query(queryText: String, assertions: QueryAssertions, myInit: RunnableInitialization, content: Content, params: Seq[(String, Any)]) extends Content {
+case class Query(queryText: String, assertions: QueryAssertions, myInit: RunnableInitialization, content: Content, params: Seq[(String, Any)], keepMyNewlines: Boolean = false) extends Content {
 
-  val prettified = Prettifier(queryText)
+  val prettified = Prettifier(queryText, keepMyNewlines)
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
   override def asciiDoc(level: Int) = {

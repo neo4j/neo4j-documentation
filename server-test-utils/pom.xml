@@ -25,6 +25,11 @@
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
+            <artifactId>neo4j-cypher-prettifier</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
             <artifactId>test-framework</artifactId>
             <version>${project.version}</version>
         </dependency>

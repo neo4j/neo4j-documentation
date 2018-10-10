@@ -19,10 +19,18 @@
  */
 package org.neo4j.cypher.docgen.tooling.tests
 
+import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.docgen.tooling._
-import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
+import org.scalatest.Assertions
+import org.scalatest.FunSuiteLike
+import org.scalatest.Matchers
+import org.scalatest.Suite
 
-class ContentAndResultMergerTest extends CypherFunSuite {
+class ContentAndResultMergerTest extends Suite
+                                 with FunSuiteLike
+                                 with Assertions
+                                 with Matchers
+                                 with GraphIcing {
 
   val GRAPHVIZ_RESULT = GraphViz("APA")
   val TABLE_RESULT = Paragraph("14")

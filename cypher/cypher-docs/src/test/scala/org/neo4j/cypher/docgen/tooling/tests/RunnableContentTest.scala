@@ -19,10 +19,18 @@
  */
 package org.neo4j.cypher.docgen.tooling.tests
 
+import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.docgen.tooling._
-import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
+import org.scalatest.Assertions
+import org.scalatest.FunSuiteLike
+import org.scalatest.Matchers
+import org.scalatest.Suite
 
-class RunnableContentTest extends CypherFunSuite {
+class RunnableContentTest extends Suite
+                          with FunSuiteLike
+                          with Assertions
+                          with Matchers
+                          with GraphIcing  {
   test("graph viz includes all init queries, and the actual query when inside a Query object") {
     val graphVizPlaceHolder = new GraphVizPlaceHolder("")
     val tablePlaceHolder = new TablePlaceHolder(NoAssertions)

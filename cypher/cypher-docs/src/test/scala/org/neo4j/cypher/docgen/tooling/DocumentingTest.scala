@@ -25,14 +25,18 @@ import java.net.InetSocketAddress
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.internal.CypherSerializer
 import org.neo4j.cypher.internal.runtime.interpreted.TransactionBoundQueryContext.IndexSearchMonitor
-import org.neo4j.cypher.internal.runtime.interpreted.{TransactionBoundQueryContext, TransactionalContextWrapper}
+import org.neo4j.cypher.internal.runtime.interpreted.TransactionBoundQueryContext
+import org.neo4j.cypher.internal.runtime.interpreted.TransactionalContextWrapper
 import org.neo4j.kernel.GraphDatabaseQueryService
-import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
+import org.neo4j.kernel.impl.coreapi.InternalTransaction
+import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.values.virtual.VirtualValues.EMPTY_MAP
-import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
-import org.scalatest.{Assertions, Matchers}
+import org.scalatest.FunSuiteLike
+import org.scalatest.Suite
+import org.scalatest.Assertions
+import org.scalatest.Matchers
 
 /**
  * Base class for documentation classes
@@ -51,7 +55,11 @@ import org.scalatest.{Assertions, Matchers}
  * Finally, if all the tests were successful, the results are written out to
  * disk as a single AsciiDoc file.
  */
-trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with GraphIcing {
+trait DocumentingTest extends Suite
+                      with FunSuiteLike
+                      with Assertions
+                      with Matchers
+                      with GraphIcing {
   /**
    * Make sure this is implemented as a def and not a val. Since we are using it in the trait constructor,
    * and that runs before the class constructor, if it is a val, it will not have been initialised when we need it

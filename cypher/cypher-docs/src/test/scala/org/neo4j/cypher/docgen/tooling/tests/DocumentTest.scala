@@ -19,11 +19,19 @@
  */
 package org.neo4j.cypher.docgen.tooling.tests
 
+import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.docgen.tooling.Admonitions._
 import org.neo4j.cypher.docgen.tooling._
-import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
+import org.scalatest.Assertions
+import org.scalatest.FunSuiteLike
+import org.scalatest.Matchers
+import org.scalatest.Suite
 
-class DocumentAsciiDocTest extends CypherFunSuite {
+class DocumentAsciiDocTest extends Suite
+                           with FunSuiteLike
+                           with Assertions
+                           with Matchers
+                           with GraphIcing  {
   test("Simplest possible document") {
     val doc = Document("title", "myId", init = RunnableInitialization.empty, Paragraph("lorem ipsum"))
 
@@ -346,7 +354,11 @@ class DocumentAsciiDocTest extends CypherFunSuite {
   }
 }
 
-class DocumentQueryTest extends CypherFunSuite {
+class DocumentQueryTest extends Suite
+                        with FunSuiteLike
+                        with Assertions
+                        with Matchers
+                        with GraphIcing  {
 
   class Udf1
   class Udf2

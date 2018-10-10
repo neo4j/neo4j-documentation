@@ -26,10 +26,10 @@ import java.util.concurrent.TimeUnit
 
 import org.junit.{After, Before}
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.Prettifier
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.compiler.v3_5.prettifier.Prettifier
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
@@ -88,9 +88,9 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
   }
 
   def asciidocSubstitutions: String = null
-  def createCypherSnippet(query: String) = {
+  def createCypherSnippet(query: String): String = {
     val escapedQuery = query.trim().replace("\\", "\\\\")
-    val prettifiedQuery = Prettifier(escapedQuery)
+    val prettifiedQuery = Prettifier(escapedQuery, keepMyNewlines = false)
     if (asciidocSubstitutions != null) {
       AsciidocHelper.createCypherSnippetFromPreformattedQueryWithCustomSubstitutions(prettifiedQuery, true, asciidocSubstitutions)
     } else {
@@ -99,7 +99,7 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
   }
 
   def prepareFormatting(query: String): String = {
-    val str = Prettifier(query.trim())
+    val str = Prettifier(query.trim(), keepMyNewlines = false)
     if ((str takeRight 1) == ";") {
       str
     } else {
