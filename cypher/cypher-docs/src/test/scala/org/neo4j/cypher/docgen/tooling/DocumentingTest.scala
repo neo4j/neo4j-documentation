@@ -33,8 +33,7 @@ import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.values.virtual.VirtualValues.EMPTY_MAP
-import org.scalatest.FunSuiteLike
-import org.scalatest.Suite
+import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
 import org.scalatest.Assertions
 import org.scalatest.Matchers
 
@@ -55,11 +54,7 @@ import org.scalatest.Matchers
  * Finally, if all the tests were successful, the results are written out to
  * disk as a single AsciiDoc file.
  */
-trait DocumentingTest extends Suite
-                      with FunSuiteLike
-                      with Assertions
-                      with Matchers
-                      with GraphIcing {
+trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with GraphIcing {
   /**
    * Make sure this is implemented as a def and not a val. Since we are using it in the trait constructor,
    * and that runs before the class constructor, if it is a val, it will not have been initialised when we need it

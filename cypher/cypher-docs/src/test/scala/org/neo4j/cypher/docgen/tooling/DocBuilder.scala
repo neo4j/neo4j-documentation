@@ -132,7 +132,7 @@ trait DocBuilder {
   def important(f: => Unit) = inScope(AdmonitionScope(Important.apply), f)
 
   def query(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(f: => Unit): Unit =
-    inScope(QueryScope(q.stripMargin, assertions, parameters), {
+    inScope(AutoformattedQueryScope(q.stripMargin, assertions, parameters), {
       f
       consoleData() // Always append console data
     })
@@ -200,11 +200,17 @@ object DocBuilder {
     override def toContent = f(content)
   }
 
-  case class QueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends Scope {
+  trait QueryScope extends Scope {
+    def queryText: String
+    def assertions: QueryAssertions
+    def params: Seq[(String, Any)]
+  }
+
+  case class AutoformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
     override def toContent = Query(queryText, assertions, init, content, params)
   }
 
-  case class PreformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends Scope {
+  case class PreformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
     override def toContent = Query(queryText, assertions, init, content, params, keepMyNewlines = true)
   }
 }
