@@ -26,8 +26,7 @@ import java.nio.charset.StandardCharsets
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
 import org.neo4j.cypher._
-import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
-import org.neo4j.cypher.docgen.tooling.Prettifier
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
@@ -106,6 +105,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       tx => {
         val txContext = contextFactory.newContext(
           new BoltConnectionInfo(
+            "bolt-1",
             "username",
             "neo4j-java-bolt-driver",
             new InetSocketAddress("127.0.0.1", 56789),

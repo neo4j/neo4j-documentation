@@ -25,17 +25,14 @@ import java.net.InetSocketAddress
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.internal.CypherSerializer
 import org.neo4j.cypher.internal.runtime.interpreted.TransactionBoundQueryContext.IndexSearchMonitor
-import org.neo4j.cypher.internal.runtime.interpreted.TransactionBoundQueryContext
-import org.neo4j.cypher.internal.runtime.interpreted.TransactionalContextWrapper
+import org.neo4j.cypher.internal.runtime.interpreted.{TransactionBoundQueryContext, TransactionalContextWrapper}
 import org.neo4j.kernel.GraphDatabaseQueryService
-import org.neo4j.kernel.impl.coreapi.InternalTransaction
-import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker
+import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.values.virtual.VirtualValues.EMPTY_MAP
 import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
-import org.scalatest.Assertions
-import org.scalatest.Matchers
+import org.scalatest.{Assertions, Matchers}
 
 /**
  * Base class for documentation classes
@@ -132,6 +129,7 @@ class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) ext
     val transactionalContext = TransactionalContextWrapper(
       contextFactory.newContext(
         new BoltConnectionInfo(
+          "bolt-1",
           "username",
           "neo4j-java-bolt-driver",
           new InetSocketAddress("127.0.0.1", 56789),

@@ -25,8 +25,7 @@ import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 import org.junit.{After, Before}
-import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
-import org.neo4j.cypher.docgen.tooling.Prettifier
+import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
 import org.neo4j.cypher.internal.ExecutionEngine
@@ -346,7 +345,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
         def txContext(transaction: InternalTransaction) =
           contextFactory.newContext(
-            new BoltConnectionInfo("username",
+            new BoltConnectionInfo(
+              "bolt-1",
+              "username",
               "neo4j-java-bolt-driver",
               new InetSocketAddress("127.0.0.1", 56789),
               new InetSocketAddress("127.0.0.1", 7687)
@@ -404,7 +405,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
               s"$s $query",
               parametersValue,
               contextFactory.newContext(
-                new BoltConnectionInfo("username",
+                new BoltConnectionInfo(
+                  "bolt-1",
+                  "username",
                   "neo4j-java-bolt-driver",
                   new InetSocketAddress("127.0.0.1", 56789),
                   new InetSocketAddress("127.0.0.1", 7687)
@@ -494,6 +497,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       engine.execute( query, VirtualValues.EMPTY_MAP,
         contextFactory.newContext(
           new BoltConnectionInfo(
+            "bolt-1",
             "username",
             "neo4j-java-bolt-driver",
             new InetSocketAddress("127.0.0.1", 56789),
