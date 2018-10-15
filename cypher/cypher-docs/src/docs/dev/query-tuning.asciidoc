@@ -55,8 +55,8 @@ Here we detail the available versions:
 |===
 | Query option | Description | Default?
 | `2.3` | This will force the query to use Neo4j Cypher 2.3. |
-| `3.3` | This will force the query to use Neo4j Cypher 3.3. |
-| `3.4` | This will force the query to use Neo4j Cypher 3.4. As this is the default version, it is not necessary to use this option explicitly. | X
+| `3.4` | This will force the query to use Neo4j Cypher 3.4. |
+| `3.5` | This will force the query to use Neo4j Cypher 3.5. As this is the default version, it is not necessary to use this option explicitly. | X
 |===
 
 
