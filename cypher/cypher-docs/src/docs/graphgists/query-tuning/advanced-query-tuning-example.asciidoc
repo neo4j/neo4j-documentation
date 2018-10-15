@@ -1,4 +1,23 @@
-= Advanced query tuning example
+[[cypher-index-values-order]]
+= Index Values and Order
+
+[abstract]
+--
+This section describes some more subtle optimizations based on new native index capabilities
+--
+
+One of the most important and useful ways of optimizing Cypher queries involves creating appropriate indexes.
+This is described in more detail in the section on '<<query-schema-index,Indexes>>', and demonstrated in the <<cypherdoc-basic-query-tuning-example,basic query tuning example>>.
+In summary an index will be based on the combination of a `Label` and a `property`.
+Any Cypher query that searches for nodes with a specific label and some predicate on the property (equality, range or existence) will be planned to use
+the index if the cost planner deems that to be the most efficient solution.
+
+In order to benefit from some recent enhancements added to Neo4j 3.5, it is useful to understand when _index-backed property lookup_ and _index-backed order-by_ will come into play.
+In versions of Neo4j prior to 3.5, the fact that the index contains the property value, and the results are returned in a specific order, was not used improve the performance of any later part of the query that might depend on the property value or result order.
+
+Let's explain how to use these features with a more advanced query tuning example.
+
+== Advanced query tuning example
 
 As with the <<cypherdoc-basic-query-tuning-example,basic query tuning example>> we'll use a movies data set to demonstrate how to do some more advanced query tuning.
 This time we'll create the index up-front. If you want to see the effect of adding an index, refer back to the <<cypherdoc-basic-query-tuning-example,basic query tuning example>>.
@@ -54,7 +73,7 @@ CALL db.indexes
 
 //table
 
-== Index-backed property-lookup
+=== Index-backed property-lookup
 
 Now that we have a model of movies, actors and directors we can ask a question like 'find persons with the name Tom that acted in a movie':
 
@@ -67,20 +86,58 @@ RETURN p.name, count(m)
 //table
 
 We have asked the database to return all the actors with the first name 'Tom'. There are three of them _'Tom Cruise'_, _'Tom Skerritt'_ and _'Tom Hanks'_.
-In previous versions of Neo4j, the final clause `RETURN p.name` would cause the database to take the node `p` and lookup its properties and return the value of the property `name`.
-In Neo4j 3.5 we can now support string properties in the native index, and this index is capable of returning the indexed property value together with the indexed nodes.
-This allows Cypher to avoid the second call to the database to find the property, which can save time on very large queries.
+In previous versions of Neo4j, the final clause `RETURN p.name` would cause the database to take the node `p` and lookup its properties and return the value
+of the property `name`.
+In Neo4j 3.5 we can now leverage the fact that indexes store the property values and. In this case, it means that the names can be looked up directly from
+the index. This allows Cypher to avoid the second call to the database to find the property, which can save time on very large queries. If we profile the
+above query, we see that the `NodeIndexScan` in the Variables column contains `cached[p.name]`, which means that `p.name` is retrieved from the index.
+We can also see that the `Projection` has no DB Hits, which means it does not have to access the database again.
+
+[source, cypher]
+----
+PROFILE
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie) USING INDEX p:Person(name) WHERE p.name STARTS WITH 'Tom'
+RETURN p.name, count(m)
+----
+
+//profile
+
+If we change the query, such that it cannot use an index any more, we will see that there will be no `cached[p.name]` in the Variables, and that the
+`Projection` now has DB Hits, since it accesses the database again to retrieve the name.
+
+[source, cypher]
+----
+PROFILE
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+RETURN p.name, count(m)
+----
+
+//profile
+
 
 It is important to note, however, that not all property types are supported, because not all have been ported to the new native index.
 In addition some property types, like the spatial type `Point`, are indexed in an index that is designed to be approximate and cannot return the values.
-For this reason Cypher needs to know the property type in order to benefit from this feature.
-In the query above, the fact that we have a predicate comparing `p.name` to the String `'Tom'` is enough for Cypher to know the query is only interested in `String` properties, and we can skip the property lookup.
+For non-native indexes and the spatial type `Point`, there will still be a second DB access to retrieve those values. In indexes with mixed values,
+only those values that cannot be lookup up from the index will trigger another database access, while the other values will not.
 
 Note also that if you have pre-existing indexes that were build on lucene, upgrading to Neo4j 3.5 is _not sufficient_ to use the new index.
 It is necessary to drop and re-create the index in order to port it to the native index.
-Read more about this in the <<operations-manual#index-configuration-upgrade-considerations, Operations Manual -> Index Configuration Upgrade Considerations>>.
+For information on native index support see the _Operations Manual_:
 
-== Index-backed order-by
+* <<operations-manual#index-configuration-native-indexes, Property types supported by the native index>>
+* <<operations-manual#index-configuration-index-providers, Index providers and property types>>
+* <<operations-manual#index-configuration-upgrade-considerations, Index configuration upgrade considerations>>
+
+Predicates that can be used to enable this optimization are:
+
+* Existance (`WHERE exists(n.name)`)
+* Equality (e.g. `WHERE n.name = 'Tom Hanks'`)
+* Range (eg. `WHERE n.uid > 1000 AND n.uid < 2000`)
+* Prefix (eg. `WHERE n.name STARTS WITH 'Tom'`)
+* Suffix (eg. `WHERE n.name ENDS WITH 'Hanks'`)
+* Substring (eg. `WHERE n.name CONTAINS 'a'`)
+
+=== Index-backed order-by
 
 Now consider the following refinement to the query:
 
@@ -93,11 +150,15 @@ RETURN p.name, count(m) ORDER BY p.name
 //table
 
 We are asking for the results in ascending alphabetical order. The new native index happens to store the String properties in ascending alphabetical order, and Cypher knows this.
-In Neo4j 3.4 and earlier, Cypher would plan a `Sort` operation to eagerly sort the results, which means building a collection in memory and running a sort algorithm on it.
-For large result sets this can be expensive in both memory and time. In Neo4j 3.5, if you are using the native index, Cypher will recognise that the index already returns data in the correct order, and skip the `Sort` operation.
+In Neo4j 3.4 and earlier, Cypher would plan a `Sort` operation to sort the results, which means building a collection in memory and running a sort algorithm on it.
+For large result sets this can be expensive in both memory and time. In Neo4j 3.5, if you are using the native index, Cypher will recognise that the index already
+returns data in the correct order, and skip the `Sort` operation.
 
-To demonstrate this effect, let's remove the predicate so that Cypher no longer knows the type of the property, and the database can no longer guarantee the order.
-If we profile the query we will see the `Sort` operation:
+However, indexes storing values of the spatial type `Point` and non-native indexes do not store the values in the correct order. That means, Cypher needs a
+predicate that fixes the type of the property to some type that is guaranteed to be in the right order.
+
+To demonstrate this effect, let's remove the String prefix predicate so that Cypher no longer knows the type of the property, and replace it with an existance
+predicate. Now the database can no longer guarantee the order. If we profile the query we will see the `Sort` operation:
 
 [source, cypher]
 ----
@@ -108,32 +169,34 @@ RETURN p.name, count(m) ORDER BY p.name
 
 //profile
 
-Now if we add a predicate that gives us the property type information, we will see the `Sort` operation is no longer there:
+We can also see a new column in the profile, that was added in Neo4j 3.5: `Order`. This column describes the order of rows after each operator. We see that
+the order is undefined until the Sort operator. Now if we add back the predicate that gives us the property type information,
+we will see the `Sort` operation is no longer there:
 
 [source, cypher]
 ----
 PROFILE
-MATCH (p:Person)-[:ACTED_IN]->(m:Movie) USING INDEX p:Person(name) WHERE p.name >= 'a'
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie) USING INDEX p:Person(name) WHERE p.name STARTS WITH 'Tom'
 RETURN p.name, count(m) ORDER BY p.name
 ----
 
 //profile
 
-== Restrictions
+We also see that the `Order` column contains `p.name ASC` from the beginning, meaning that the rows are ordered by `p.name` in ascending order.
 
+Index-backed order-by can just as well be used for queries that expect their results is descending order, but with slightly lower performance.
+
+==== Restrictions
+
+The optimization can only work on new native indexes and only if we are returning no values of the spatial type `Point`.
 Predicates that can be used to enable this optimization are:
 
+* Equality (e.g. `WHERE n.name = 'Tom Hanks'`)
 * Range (eg. `WHERE n.uid > 1000 AND n.uid < 2000`)
 * Prefix (eg. `WHERE n.name STARTS WITH 'Tom'`)
+* Suffix (eg. `WHERE n.name ENDS WITH 'Hanks'`)
+* Substring (eg. `WHERE n.name CONTAINS 'a'`)
 
 Predicates that will not work:
 
 * Existence (eg. `WHERE exists(n.email)`) because no property type information is given
-* Substring (eg. `WHERE n.name CONTAINS 'a'`) because string order is defined from the start of the string
-* Suffix (eg. `WHERE n.name ENDS WITH 'Cruise'`) because string order is defined from the start of the string
-
-For information on native index support see the _Operations Manual_:
-
-* <<operations-manual#index-configuration-native-indexes, Property types supported by the native index>>
-* <<operations-manual#index-configuration-index-providers, Index providers and property types>>
-* <<operations-manual#index-configuration-upgrade-considerations, Index configuration upgrade considerations>>
