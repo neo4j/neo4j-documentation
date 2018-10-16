@@ -173,12 +173,12 @@
         <dependency>
             <groupId>org.opencypher</groupId>
             <artifactId>util-9.0</artifactId>
-            <version>9.0.20180925</version>
+            <version>9.0.20181012</version>
         </dependency>
         <dependency>
             <groupId>org.opencypher</groupId>
             <artifactId>util-9.0</artifactId>
-            <version>9.0.20180925</version>
+            <version>9.0.20181012</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
