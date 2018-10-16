@@ -151,6 +151,6 @@ The same goes for labels, where declaring labels on both the start and end nodes
 
 include::../parsed-graphgists/query-tuning/basic-query-tuning-example.asciidoc[leveloffset=+1]
 
-include::ql/query-using.adoc[leveloffset=+1]
-
 include::../parsed-graphgists/query-tuning/advanced-query-tuning-example.asciidoc[leveloffset=+1]
+
+include::ql/query-using.adoc[leveloffset=+1]
