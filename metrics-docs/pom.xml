@@ -39,14 +39,27 @@
                   <arg value="org.neo4j.metrics.source.db.LogRotationMetrics" />
                   <arg value="org.neo4j.metrics.source.db.BoltMetrics" />
                   <arg value="org.neo4j.metrics.source.server.ServerMetrics" />
+                </java>
+                <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
+                      classpathref="maven.test.classpath" failonerror="true">
+                  <arg value="--output=${project.build.directory}/docs/ops/jvm-metrics.asciidoc" />
+                  <!-- keep this one separate as it's a bit special compared to the others -->
+                  <arg value="org.neo4j.metrics.source.jvm.JvmMetrics" />
+                </java>
+                <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
+                      classpathref="maven.test.classpath" failonerror="true">
+                  <arg value="--output=${project.build.directory}/docs/ops/cc-metrics.asciidoc" />
+                  <arg value="org.neo4j.metrics.source.causalclustering.CoreMetrics" />
+                  <arg value="org.neo4j.metrics.source.causalclustering.ReadReplicaMetrics" />
+                </java>
+                <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
+                      classpathref="maven.test.classpath" failonerror="true">
+                  <arg value="--output=${project.build.directory}/docs/ops/ha-metrics.asciidoc" />
                   <arg value="org.neo4j.metrics.source.cluster.NetworkMetrics" />
                   <arg value="org.neo4j.metrics.source.cluster.ClusterMetrics" />
-                  <arg value="org.neo4j.metrics.source.causalclustering.CoreMetrics" />
+               </java>
 
-                  <!-- keep this one last as it's a bit special compared to the others -->
-                  <arg value="org.neo4j.metrics.source.jvm.JvmMetrics" />
 
-                </java>
               </target>
             </configuration>
             <goals><goal>run</goal></goals>
