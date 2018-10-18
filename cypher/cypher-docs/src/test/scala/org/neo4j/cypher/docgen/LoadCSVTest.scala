@@ -56,7 +56,7 @@ class LoadCSVTest extends DocumentingTestBase with QueryStatisticsTestSupport wi
     Seq("4", "The Cardigans", "1992")
   )
 
-  private val artistsWithEscapeChar = new CsvFile("artists-with-escaped-char.csv").withContentsF(
+  private val artistsWithEscapeChar = new CsvFile("artists-with-escaped-char.csv").withContentsF(quoted = true,
     Seq("1", "The \"\"Symbol\"\"", "1992")
   )
 
