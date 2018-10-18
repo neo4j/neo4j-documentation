@@ -16,8 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-// START SNIPPET: sampleDocumentation
-// START SNIPPET: _sampleDocumentation
+// tag::sampleDocumentation[]
+// tag::_sampleDocumentation[]
 package org.neo4j.examples;
 
 import java.io.File;
@@ -59,12 +59,12 @@ public class TraversalExample
     public TraversalExample( GraphDatabaseService db )
     {
         this.db = db;
-        // START SNIPPET: basetraverser
+        // tag::basetraverser[]
         friendsTraversal = db.traversalDescription()
                 .depthFirst()
                 .relationships( Rels.KNOWS )
                 .uniqueness( Uniqueness.RELATIONSHIP_GLOBAL );
-        // END SNIPPET: basetraverser
+        // end::basetraverser[]
     }
 
     private Node createData()
@@ -105,7 +105,7 @@ public class TraversalExample
     public String knowsLikesTraverser( Node node )
     {
         String output = "";
-        // START SNIPPET: knowslikestraverser
+        // tag::knowslikestraverser[]
         for ( Path position : db.traversalDescription()
                 .depthFirst()
                 .relationships( Rels.KNOWS )
@@ -115,40 +115,40 @@ public class TraversalExample
         {
             output += position + "\n";
         }
-        // END SNIPPET: knowslikestraverser
+        // end::knowslikestraverser[]
         return output;
     }
 
     public String traverseBaseTraverser( Node node )
     {
         String output = "";
-        // START SNIPPET: traversebasetraverser
+        // tag::traversebasetraverser[]
         for ( Path path : friendsTraversal.traverse( node ) )
         {
             output += path + "\n";
         }
-        // END SNIPPET: traversebasetraverser
+        // end::traversebasetraverser[]
         return output;
     }
 
     public String depth3( Node node )
     {
         String output = "";
-        // START SNIPPET: depth3
+        // tag::depth3[]
         for ( Path path : friendsTraversal
                 .evaluator( Evaluators.toDepth( 3 ) )
                 .traverse( node ) )
         {
             output += path + "\n";
         }
-        // END SNIPPET: depth3
+        // end::depth3[]
         return output;
     }
 
     public String depth4( Node node )
     {
         String output = "";
-        // START SNIPPET: depth4
+        // tag::depth4[]
         for ( Path path : friendsTraversal
                 .evaluator( Evaluators.fromDepth( 2 ) )
                 .evaluator( Evaluators.toDepth( 4 ) )
@@ -156,42 +156,42 @@ public class TraversalExample
         {
             output += path + "\n";
         }
-        // END SNIPPET: depth4
+        // end::depth4[]
         return output;
     }
 
     public String nodes( Node node )
     {
         String output = "";
-        // START SNIPPET: nodes
+        // tag::nodes[]
         for ( Node currentNode : friendsTraversal
                 .traverse( node )
                 .nodes() )
         {
             output += currentNode.getProperty( "name" ) + "\n";
         }
-        // END SNIPPET: nodes
+        // end::nodes[]
         return output;
     }
 
     public String relationships( Node node )
     {
         String output = "";
-        // START SNIPPET: relationships
+        // tag::relationships[]
         for ( Relationship relationship : friendsTraversal
                 .traverse( node )
                 .relationships() )
         {
             output += relationship.getType().name() + "\n";
         }
-        // END SNIPPET: relationships
+        // end::relationships[]
         return output;
     }
 
-    // START SNIPPET: sourceRels
+    // tag::sourceRels[]
     private enum Rels implements RelationshipType
     {
         LIKES, KNOWS
     }
-    // END SNIPPET: sourceRels
+    // end::sourceRels[]
 }

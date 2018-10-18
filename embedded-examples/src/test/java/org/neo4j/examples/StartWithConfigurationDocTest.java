@@ -37,12 +37,12 @@ public class StartWithConfigurationDocTest
     public void loadFromFile()
     {
         String pathToConfig = "src/test/resources/";
-        // START SNIPPET: startDbWithConfig
+        // tag::startDbWithConfig[]
         GraphDatabaseService graphDb = new GraphDatabaseFactory()
             .newEmbeddedDatabaseBuilder( testDirectory.databaseDir() )
             .loadPropertiesFromFile( pathToConfig + "neo4j.conf" )
             .newGraphDatabase();
-        // END SNIPPET: startDbWithConfig
+        // end::startDbWithConfig[]
         assertNotNull( graphDb );
         graphDb.shutdown();
     }
@@ -50,14 +50,14 @@ public class StartWithConfigurationDocTest
     @Test
     public void loadFromHashmap()
     {
-        // START SNIPPET: startDbWithMapConfig
+        // tag::startDbWithMapConfig[]
         GraphDatabaseService graphDb = new GraphDatabaseFactory()
             .newEmbeddedDatabaseBuilder( testDirectory.databaseDir() )
             .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
             .setConfig( GraphDatabaseSettings.string_block_size, "60" )
             .setConfig( GraphDatabaseSettings.array_block_size, "300" )
             .newGraphDatabase();
-        // END SNIPPET: startDbWithMapConfig
+        // end::startDbWithMapConfig[]
         assertNotNull( graphDb );
         graphDb.shutdown();
     }

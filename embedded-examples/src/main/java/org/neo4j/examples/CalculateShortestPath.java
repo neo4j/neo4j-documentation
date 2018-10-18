@@ -71,13 +71,13 @@ public class CalculateShortestPath
             // So let's find the shortest path between Neo and Agent Smith
             Node neo = getOrCreateNode( "Neo" );
             Node agentSmith = getOrCreateNode( "Agent Smith" );
-            // START SNIPPET: shortestPathUsage
+            // tag::shortestPathUsage[]
             PathFinder<Path> finder = GraphAlgoFactory.shortestPath(
                     PathExpanders.forTypeAndDirection( KNOWS, Direction.BOTH ), 4 );
             Path foundPath = finder.findSinglePath( neo, agentSmith );
             System.out.println( "Path from Neo to Agent Smith: "
                                 + Paths.simplePathToString( foundPath, NAME_KEY ) );
-            // END SNIPPET: shortestPathUsage
+            // end::shortestPathUsage[]
         }
 
         System.out.println( "Shutting down database ..." );

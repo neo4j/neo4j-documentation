@@ -45,7 +45,7 @@ import org.neo4j.graphdb.Transaction;
 import static org.neo4j.graphdb.Direction.INCOMING;
 import static org.neo4j.graphdb.Direction.OUTGOING;
 
-//START SNIPPET: ColleaguesResource
+// tag::ColleaguesResource[]
 @Path("/colleagues")
 public class ColleaguesResource
 {
@@ -107,4 +107,4 @@ public class ColleaguesResource
         return Response.ok().entity( stream ).type( MediaType.APPLICATION_JSON ).build();
     }
 }
-// END SNIPPET: ColleaguesResource
+// end::ColleaguesResource[]

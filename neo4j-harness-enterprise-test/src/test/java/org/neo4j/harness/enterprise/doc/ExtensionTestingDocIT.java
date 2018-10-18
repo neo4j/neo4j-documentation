@@ -48,7 +48,7 @@ public class ExtensionTestingDocIT
     @Rule
     public SuppressOutput suppressOutput = SuppressOutput.suppressAll();
 
-    // START SNIPPET: testEnterpriseExtension
+    // tag::testEnterpriseExtension[]
     @Path("/")
     public static class MyUnmanagedExtension
     {
@@ -104,7 +104,7 @@ public class ExtensionTestingDocIT
             assertEquals( 1, count( result ) );
         }
     }
-    // END SNIPPET: testEnterpriseExtension
+    // end::testEnterpriseExtension[]
 
     private TestServerBuilder getServerBuilder( ) throws IOException
     {

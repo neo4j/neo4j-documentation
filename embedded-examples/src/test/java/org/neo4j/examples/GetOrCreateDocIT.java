@@ -263,7 +263,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
 
     public Node getOrCreateUserPessimistically( String username, GraphDatabaseService graphDb, Node lockNode )
     {
-        // START SNIPPET: pessimisticLocking
+        // tag::pessimisticLocking[]
         try ( Transaction tx = graphDb.beginTx() )
         {
             Index<Node> usersIndex = graphDb.index().forNodes( "users" );
@@ -284,24 +284,24 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
             tx.success();
             return userNode;
         }
-        // END SNIPPET: pessimisticLocking
+        // end::pessimisticLocking[]
     }
 
     public static Node createLockNode( GraphDatabaseService graphDb )
     {
-        // START SNIPPET: prepareLockNode
+        // tag::prepareLockNode[]
         try ( Transaction tx = graphDb.beginTx() )
         {
             final Node lockNode = graphDb.createNode();
             tx.success();
             return lockNode;
         }
-        // END SNIPPET: prepareLockNode
+        // end::prepareLockNode[]
     }
 
     private UniqueFactory<Node> createUniqueFactory( GraphDatabaseService graphDb )
     {
-        // START SNIPPET: prepareUniqueFactory
+        // tag::prepareUniqueFactory[]
         try ( Transaction tx = graphDb.beginTx() )
         {
             UniqueFactory.UniqueNodeFactory result = new UniqueFactory.UniqueNodeFactory( graphDb, "users" )
@@ -316,25 +316,25 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
             tx.success();
             return result;
         }
-        // END SNIPPET: prepareUniqueFactory
+        // end::prepareUniqueFactory[]
     }
 
     public Node getOrCreateUserWithUniqueFactory( String username, GraphDatabaseService graphDb,
                                                   UniqueFactory<Node> factory )
     {
-        // START SNIPPET: getOrCreateWithFactory
+        // tag::getOrCreateWithFactory[]
         try ( Transaction tx = graphDb.beginTx() )
         {
             Node node = factory.getOrCreate( "name", username );
             tx.success();
             return node;
         }
-        // END SNIPPET: getOrCreateWithFactory
+        // end::getOrCreateWithFactory[]
     }
 
     private Node getOrCreateWithCypher( String username, GraphDatabaseService graphDb )
     {
-        // START SNIPPET: getOrCreateWithCypher
+        // tag::getOrCreateWithCypher[]
         Node result = null;
         ResourceIterator<Node> resultIterator = null;
         try ( Transaction tx = graphDb.beginTx() )
@@ -347,7 +347,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
             tx.success();
             return result;
         }
-        // END SNIPPET: getOrCreateWithCypher
+        // end::getOrCreateWithCypher[]
         finally
         {
             if ( resultIterator != null )
@@ -364,7 +364,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
 
     private GraphDatabaseService createConstraint( GraphDatabaseService graphdb )
     {
-        // START SNIPPET: prepareConstraint
+        // tag::prepareConstraint[]
         try ( Transaction tx = graphdb.beginTx() )
         {
             graphdb.schema()
@@ -373,7 +373,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
                     .create();
             tx.success();
         }
-        // END SNIPPET: prepareConstraint
+        // end::prepareConstraint[]
         return graphdb;
     }
 

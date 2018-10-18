@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.neo4j.server.rest.security.ForbiddingSecurityRule;
 import org.neo4j.server.rest.security.SecurityFilter;
 
-//START SNIPPET: forbiddenRule
+//tag::forbiddenRule[]
 public class PermanentlyForbiddenSecurityRule implements ForbiddingSecurityRule
 {
 
@@ -54,4 +54,4 @@ public class PermanentlyForbiddenSecurityRule implements ForbiddingSecurityRule
         return SecurityFilter.basicAuthenticationResponse(REALM);
     }
 }
-// END SNIPPET: forbiddenRule
+// end::forbiddenRule[]

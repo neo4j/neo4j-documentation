@@ -60,7 +60,7 @@ public class OrderedPath
     {
         try ( Transaction tx = db.beginTx() )
         {
-            // START SNIPPET: createGraph
+            // tag::createGraph[]
             Node A = db.createNode();
             Node B = db.createNode();
             Node C = db.createNode();
@@ -70,7 +70,7 @@ public class OrderedPath
             C.createRelationshipTo( D, REL3 );
             A.createRelationshipTo( B, REL1 );
             B.createRelationshipTo( C, REL2 );
-            // END SNIPPET: createGraph
+            // end::createGraph[]
             A.setProperty( "name", "A" );
             B.setProperty( "name", "B" );
             C.setProperty( "name", "C" );
@@ -97,7 +97,7 @@ public class OrderedPath
 
     public TraversalDescription findPaths()
     {
-        // START SNIPPET: walkOrderedPath
+        // tag::walkOrderedPath[]
         final ArrayList<RelationshipType> orderedPathContext = new ArrayList<>();
         orderedPathContext.add( REL1 );
         orderedPathContext.add( withName( "REL2" ) );
@@ -121,7 +121,7 @@ public class OrderedPath
                     }
                 } )
                 .uniqueness( Uniqueness.NODE_PATH );
-        // END SNIPPET: walkOrderedPath
+        // end::walkOrderedPath[]
         return td;
     }
 
@@ -130,20 +130,20 @@ public class OrderedPath
         try ( Transaction transaction = db.beginTx() )
         {
             String output = "";
-            // START SNIPPET: printPath
+            // tag::printPath[]
             Traverser traverser = td.traverse( A );
             PathPrinter pathPrinter = new PathPrinter( "name" );
             for ( Path path : traverser )
             {
                 output += Paths.pathToString( path, pathPrinter );
             }
-            // END SNIPPET: printPath
+            // end::printPath[]
             output += "\n";
             return output;
         }
     }
 
-    // START SNIPPET: pathPrinter
+    // tag::pathPrinter[]
     static class PathPrinter implements Paths.PathDescriptor<Path>
     {
         private final String nodePropertyKey;
@@ -174,5 +174,5 @@ public class OrderedPath
             return prefix + "[" + relationship.getType().name() + "]" + suffix;
         }
     }
-    // END SNIPPET: pathPrinter
+    // end::pathPrinter[]
 }

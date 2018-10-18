@@ -31,7 +31,7 @@ import org.neo4j.server.plugins.PluginTarget;
 import org.neo4j.server.plugins.ServerPlugin;
 import org.neo4j.server.plugins.Source;
 
-// START SNIPPET: GetAll
+// tag::GetAll[]
 @Description( "An extension to the Neo4j Server for getting all nodes or relationships" )
 public class GetAll extends ServerPlugin
 {
@@ -68,4 +68,4 @@ public class GetAll extends ServerPlugin
         return rels;
     }
 }
-// END SNIPPET: GetAll
+// end::GetAll[]

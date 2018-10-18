@@ -58,10 +58,10 @@ public class EmbeddedNeo4jWithCustomLogging
 
         Object output = new Object();
 
-        // START SNIPPET: startDbWithLogProvider
+        // tag::startDbWithLogProvider[]
         LogProvider logProvider = new MyCustomLogProvider( output );
         graphDb = new GraphDatabaseFactory().setUserLogProvider( logProvider ).newEmbeddedDatabase( databaseDirectory );
-        // END SNIPPET: startDbWithLogProvider
+        // end::startDbWithLogProvider[]
 
         shutdown();
     }

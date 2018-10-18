@@ -28,7 +28,7 @@ import org.neo4j.procedure.Context;
 
 public class ProcedureExample
 {
-    // START SNIPPET: procedureExample
+    // tag::procedureExample[]
     @Context
     public GraphDatabaseService db;
 
@@ -44,9 +44,9 @@ public class ProcedureExample
                 .filter( (node) -> node.getDegree() > threshold )
                 .map( DenseNode::new );
     }
-    // END SNIPPET: procedureExample
+    // end::procedureExample[]
 
-    // START SNIPPET: outputRecordExample
+    // tag::outputRecordExample[]
     /**
      * Output record for {@link #findDenseNodes(long)}.
      */
@@ -61,5 +61,5 @@ public class ProcedureExample
             this.degree = node.getDegree();
         }
     }
-    // END SNIPPET: outputRecordExample
+    // end::outputRecordExample[]
 }

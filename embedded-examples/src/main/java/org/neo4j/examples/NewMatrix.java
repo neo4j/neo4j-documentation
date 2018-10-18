@@ -135,7 +135,7 @@ public class NewMatrix
         try ( Transaction tx = graphDb.beginTx() )
         {
             Node neoNode = getNeoNode();
-            // START SNIPPET: friends-usage
+            // tag::friends-usage[]
             int numberOfFriends = 0;
             String output = neoNode.getProperty( "name" ) + "'s friends:\n";
             Traverser friendsTraverser = getFriends( neoNode );
@@ -147,12 +147,12 @@ public class NewMatrix
                 numberOfFriends++;
             }
             output += "Number of friends found: " + numberOfFriends + "\n";
-            // END SNIPPET: friends-usage
+            // end::friends-usage[]
             return output;
         }
     }
 
-    // START SNIPPET: get-friends
+    // tag::get-friends[]
     private Traverser getFriends(
             final Node person )
     {
@@ -162,13 +162,13 @@ public class NewMatrix
                 .evaluator( Evaluators.excludeStartPosition() );
         return td.traverse( person );
     }
-    // END SNIPPET: get-friends
+    // end::get-friends[]
 
     public String printMatrixHackers()
     {
         try ( Transaction tx = graphDb.beginTx() )
         {
-            // START SNIPPET: find--hackers-usage
+            // tag::find--hackers-usage[]
             String output = "Hackers:\n";
             int numberOfHackers = 0;
             Traverser traverser = findHackers( getNeoNode() );
@@ -180,12 +180,12 @@ public class NewMatrix
                 numberOfHackers++;
             }
             output += "Number of hackers found: " + numberOfHackers + "\n";
-            // END SNIPPET: find--hackers-usage
+            // end::find--hackers-usage[]
             return output;
         }
     }
 
-    // START SNIPPET: find-hackers
+    // tag::find-hackers[]
     private Traverser findHackers( final Node startNode )
     {
         TraversalDescription td = graphDb.traversalDescription()
@@ -196,7 +196,7 @@ public class NewMatrix
                         Evaluators.includeWhereLastRelationshipTypeIs( RelTypes.CODED_BY ) );
         return td.traverse( startNode );
     }
-    // END SNIPPET: find-hackers
+    // end::find-hackers[]
 
     private void registerShutdownHook()
     {

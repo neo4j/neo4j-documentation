@@ -50,7 +50,7 @@ public class Person
 {
     static final String NAME = "name";
 
-    // START SNIPPET: the-node
+    // tag::the-node[]
     private final Node underlyingNode;
 
     Person( Node personNode )
@@ -63,17 +63,17 @@ public class Person
         return underlyingNode;
     }
 
-    // END SNIPPET: the-node
+    // end::the-node[]
 
-    // START SNIPPET: delegate-to-the-node
+    // tag::delegate-to-the-node[]
     public String getName()
     {
         return (String)underlyingNode.getProperty( NAME );
     }
 
-    // END SNIPPET: delegate-to-the-node
+    // end::delegate-to-the-node[]
 
-    // START SNIPPET: override
+    // tag::override[]
     @Override
     public int hashCode()
     {
@@ -93,7 +93,7 @@ public class Person
         return "Person[" + getName() + "]";
     }
 
-    // END SNIPPET: override
+    // end::override[]
 
     public void addFriend( Person otherPerson )
     {
@@ -179,11 +179,11 @@ public class Person
             return Collections.emptyList();
         }
 
-        // START SNIPPET: getStatusTraversal
+        // tag::getStatusTraversal[]
         TraversalDescription traversal = graphDb().traversalDescription()
                 .depthFirst()
                 .relationships( NEXT );
-        // END SNIPPET: getStatusTraversal
+        // end::getStatusTraversal[]
 
         return new IterableWrapper<StatusUpdate, Path>(
                 traversal.traverse( firstStatus.getEndNode() ) )

@@ -85,7 +85,7 @@ public class UniquenessOfPathsDocTest extends ImpermanentGraphJavaDocTestBase
         gen.get().addSnippet( "graph", createGraphVizWithNodeId("Descendants example graph", graphdb(), gen.get().getTitle()) );
         gen.get();
         gen.get().addTestSourceSnippets( this.getClass(), "traverser", "traverseNodeGlobal" );
-        // START SNIPPET: traverser
+        // tag::traverser[]
         final Node target = data.get().get( "Principal1" );
         TraversalDescription td = db.traversalDescription()
                 .uniqueness( Uniqueness.NODE_PATH )
@@ -100,7 +100,7 @@ public class UniquenessOfPathsDocTest extends ImpermanentGraphJavaDocTestBase
         } );
 
         Traverser results = td.traverse( start );
-        // END SNIPPET: traverser
+        // end::traverser[]
         String output = "";
         int count = 0;
         //we should get two paths back, through Pet1 and Pet3
@@ -115,10 +115,10 @@ public class UniquenessOfPathsDocTest extends ImpermanentGraphJavaDocTestBase
         gen.get().addSnippet( "output", createOutputSnippet( output ) );
         assertEquals( 2, count );
 
-        // START SNIPPET: traverseNodeGlobal
+        // tag::traverseNodeGlobal[]
         TraversalDescription nodeGlobalTd = td.uniqueness( Uniqueness.NODE_GLOBAL );
         results = nodeGlobalTd.traverse( start );
-        // END SNIPPET: traverseNodeGlobal
+        // end::traverseNodeGlobal[]
         String output2 = "";
         count = 0;
         // we should get two paths back, through Pet1 and Pet3

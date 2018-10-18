@@ -34,12 +34,12 @@ public class PermanentlyFailingSecurityRuleWithWildcardPath implements SecurityR
         return false;
     }
 
-    //START SNIPPET: failingRuleWithWildcardPath
+    //tag::failingRuleWithWildcardPath[]
     public String forUriPath()
     {
         return "/protected/*";
     }
-    // END SNIPPET: failingRuleWithWildcardPath
+    // end::failingRuleWithWildcardPath[]
 
     public String wwwAuthenticateHeader()
     {

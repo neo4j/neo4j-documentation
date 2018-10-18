@@ -41,7 +41,7 @@ import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.MapUtil;
 
-//START SNIPPET: ColleaguesCypherExecutionResource
+// tag::ColleaguesCypherExecutionResource[]
 @Path("/colleagues-cypher-execution")
 public class ColleaguesCypherExecutionResource
 {
@@ -96,4 +96,4 @@ public class ColleaguesCypherExecutionResource
         return "MATCH (p:Person {name: $personName })-[:ACTED_IN]->()<-[:ACTED_IN]-(colleague) RETURN colleague";
     }
 }
-// END SNIPPET: ColleaguesCypherExecutionResource
+// end::ColleaguesCypherExecutionResource[]

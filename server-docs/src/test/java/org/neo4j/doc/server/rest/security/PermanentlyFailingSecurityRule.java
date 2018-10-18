@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.neo4j.server.rest.security.SecurityFilter;
 import org.neo4j.server.rest.security.SecurityRule;
 
-//START SNIPPET: failingRule
+//tag::failingRule[]
 public class PermanentlyFailingSecurityRule implements SecurityRule
 {
 
@@ -49,4 +49,4 @@ public class PermanentlyFailingSecurityRule implements SecurityRule
         return SecurityFilter.basicAuthenticationResponse(REALM);
     }
 }
-// END SNIPPET: failingRule
+// end::failingRule[]

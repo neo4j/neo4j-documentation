@@ -92,19 +92,19 @@ public class TestBackup
         DbRepresentation initialDataSetRepresentation = createInitialDataSet( serverPath );
         ServerInterface server = startServer( serverPath );
 
-        // START SNIPPET: onlineBackup
+        // tag::onlineBackup[]
         OnlineBackup backup = OnlineBackup.from( "127.0.0.1" );
         backup.backup( backupPath );
         assertTrue( "Should be consistent", backup.isConsistent() );
-        // END SNIPPET: onlineBackup
+        // end::onlineBackup[]
         assertEquals( initialDataSetRepresentation, getDbRepresentation() );
         shutdownServer( server );
 
         DbRepresentation furtherRepresentation = addMoreData( serverPath );
         server = startServer( serverPath );
-        // START SNIPPET: onlineBackup
+        // tag::onlineBackup[]
         backup.backup( backupPath );
-        // END SNIPPET: onlineBackup
+        // end::onlineBackup[]
         assertTrue( "Should be consistent", backup.isConsistent() );
         assertEquals( furtherRepresentation, getDbRepresentation() );
         shutdownServer( server );

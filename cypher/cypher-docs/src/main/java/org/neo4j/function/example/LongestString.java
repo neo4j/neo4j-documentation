@@ -25,7 +25,7 @@ import org.neo4j.procedure.UserAggregationFunction;
 import org.neo4j.procedure.UserAggregationResult;
 import org.neo4j.procedure.UserAggregationUpdate;
 
-// START SNIPPET: longestString
+// tag::longestString[]
 public class LongestString
 {
     @UserAggregationFunction
@@ -58,4 +58,4 @@ public class LongestString
         }
     }
 }
-// END SNIPPET: longestString
+// end::longestString[]
