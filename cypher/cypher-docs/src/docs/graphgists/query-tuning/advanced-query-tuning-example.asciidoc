@@ -120,8 +120,8 @@ RETURN p.name, count(m)
 
 It is important to note, however, that not all property types are supported, because not all have been ported to the new native index.
 In addition some property types, like the spatial type `Point`, are indexed in an index that is designed to be approximate and cannot return the values.
-For non-native indexes and the spatial type `Point`, there will still be a second DB access to retrieve those values. In indexes with mixed values,
-only those values that cannot be lookup up from the index will trigger another database access, while the other values will not.
+For non-native indexes and the spatial type `Point`, there will still be a second DB access to retrieve those values.
+In indexes with mixed values, only those values that cannot be looked up from the index will trigger another database access action, while the other values will not.
 
 Note also that if you have pre-existing indexes that were build on lucene, upgrading to Neo4j 3.5 is _not sufficient_ to use the new index.
 It is necessary to drop and re-create the index in order to port it to the native index.
@@ -154,8 +154,8 @@ RETURN p.name, count(m) ORDER BY p.name
 
 We are asking for the results in ascending alphabetical order. The new native index happens to store the String properties in ascending alphabetical order, and Cypher knows this.
 In Neo4j 3.4 and earlier, Cypher would plan a `Sort` operation to sort the results, which means building a collection in memory and running a sort algorithm on it.
-For large result sets this can be expensive in terms of both memory and time. In Neo4j 3.5, if you are using the native index, Cypher will recognise that the index already
-returns data in the correct order, and skip the `Sort` operation.
+For large result sets this can be expensive in terms of both memory and time.
+In Neo4j 3.5, if you are using the native index, Cypher will recognise that the index already returns data in the correct order, and skip the `Sort` operation.
 
 However, indexes storing values of the spatial type `Point` and non-native indexes cannot be relied on to return the values in the correct order.
 This means that for Cypher to enable this optimization, the query needs a predicate that limits the type of the property to some type that is guaranteed to be in the right order.
