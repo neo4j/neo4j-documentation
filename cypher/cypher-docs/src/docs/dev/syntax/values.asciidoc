@@ -25,12 +25,30 @@ Property types comprise:
 * The spatial type _Point_
 * Temporal types: _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_
 
-NOTE: The adjective 'numeric' -- when used in the context of describing  Cypher functions or expressions -- indicates that any type of Number applies (Integer or Float).
+The adjective _numeric_, when used in the context of describing  Cypher functions or expressions, indicates that any type of Number applies (Integer or Float).
 
-NOTE: Homogeneous lists of simple types can also be stored as properties, although lists in general (see <<composite-types, Composite types>>) cannot be stored.
+Homogeneous lists of simple types can also be stored as properties, although lists in general (see <<composite-types, Composite types>>) cannot be stored.
 
-NOTE: Cypher also provides pass-through support for byte arrays, which can be stored as property values.
+Cypher also provides pass-through support for byte arrays, which can be stored as property values.
 Byte arrays are _not_ considered a first class data type by Cypher, so do not have a literal representation.
+
+
+[[property-types-sip-note]]
+.Sorting of special characters
+[NOTE]
+--
+Strings that contain characters that do not belong to the https://en.wikipedia.org/wiki/Plane_(Unicode)#Basic_Multilingual_Plane[_Basic Multilingual Plane_] (_BMP_) can have inconsistent or non-deterministic ordering in Neo4j.
+BMP is a subset of all characters defined in Unicode.
+Expressed simply, it contains all common characters from all common languages.
+
+The most significant characters _not_ in BMP are those belonging to the https://en.wikipedia.org/wiki/Plane_(Unicode)#Supplementary_Multilingual_Plane[_Supplementary Multilingual Plane_] or the https://en.wikipedia.org/wiki/Plane_(Unicode)#Supplementary_Ideographic_Plane[_Supplementary Ideographic Plane_].
+Examples are:
+
+* Historic scripts and symbols and notation used within certain fields such as: Egyptian hieroglyphs, modern musical notation, mathematical alphanumerics.
+* Emojis and other pictographic sets.
+* Game symbols for playing cards, Mah Jongg, and dominoes.
+* CJK Ideograph that were not included in earlier character encoding standards. 
+--
 
 
 [[structural-types]]

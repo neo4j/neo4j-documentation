@@ -60,6 +60,9 @@ class OrderByTest extends DocumentingTest {
         """.stripMargin)
       graphViz()
     }
+    
+    note(p("Strings that contain special characters can have inconsistent or non-deterministic ordering in Neo4j. For details, see <<property-types-sip-note>>."))
+
     section("Order nodes by property", "order-nodes-by-property") {
       p(
         """`ORDER BY` is used to sort the output.""".stripMargin)
