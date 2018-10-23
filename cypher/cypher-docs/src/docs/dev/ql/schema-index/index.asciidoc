@@ -36,6 +36,16 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
 Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
 
+[NOTE]
+.Limitations of string indexes
+====
+String indexes have a size limit of 32766 bytes.
+Common characters, such as letters, digits and some symbols, translate into one byte per character.
+Non-Latin characters may occupy more than one byte per character.
+Therefore, for example, a string that contains 100 characters or less may be longer than 100 bytes if it contains multi-byte characters.
+More specifically, the relevant length in bytes of a string is when encoded with https://en.wikipedia.org/wiki/UTF-8[UTF8].
+====
+
 include::create-a-single-property-index.asciidoc[]
 
 include::get-a-list-of-all-indexes-in-the-database.asciidoc[]
