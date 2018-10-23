@@ -44,11 +44,17 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
 * An index that is created on more than one property for any given label is called a _composite index_.
   Differences in the usage patterns between composite and single-property indexes are detailed in the examples below.
 
+Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
+Neo4j will automatically pick up and start using the index once it has been created and brought online.
+
 [NOTE]
 <<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).
 
-Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
-Neo4j will automatically pick up and start using the index once it has been created and brought online.
+[NOTE]
+.Index configuration and limitations
+====
+For information on index configuration and limitations, refer to <<operations-manual#index-configuration, Operations Manual -> Index configuration>>.
+====
 
 include::create-a-single-property-index.asciidoc[]
 
