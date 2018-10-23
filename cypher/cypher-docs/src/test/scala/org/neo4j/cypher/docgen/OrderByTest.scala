@@ -58,6 +58,12 @@ class OrderByTest extends DocumentingTest {
         """Lastly, it is not allowed to use aggregating expressions in the `ORDER BY` sub-clause if they are not also listed in the projecting clause.
            This last rule is to make sure that `ORDER BY` does not change the results, only the order of them.
         """.stripMargin)
+      p(
+        """The performance of Cypher queries using `ORDER BY` on node properties can be influenced by the existence and use of an index for finding the nodes.
+          | If the index can provide the nodes in the order requested in the query, Cypher can avoid the use of an expensive `Sort` operation.
+          | Read more about this capability in the section on <<cypher-index-values-order,Index Values and Order>>.
+        """.stripMargin
+      )
       graphViz()
     }
     
