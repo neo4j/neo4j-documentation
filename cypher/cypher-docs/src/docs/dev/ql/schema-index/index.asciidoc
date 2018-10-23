@@ -37,11 +37,24 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
 * An index that is created on more than one property for any given label is called a _composite index_.
   Differences in the usage patterns between composite and single-property indexes are detailed in the examples below.
 
+Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
+Neo4j will automatically pick up and start using the index once it has been created and brought online.
+
 [NOTE]
 <<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).
 
-Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
-Neo4j will automatically pick up and start using the index once it has been created and brought online.
+[NOTE]
+.Limitations of string indexes
+====
+String indexes have a key size limit of 32766 bytes.
+In a composite index, this limit is applicable to each individual property. 
+This means that a composite index key can hold values that together are larger than 32766 bytes but no single value can be larger.
+
+Common characters, such as letters, digits and some symbols, translate into one byte per character.
+Non-Latin characters may occupy more than one byte per character.
+Therefore, for example, a string that contains 100 characters or less may be longer than 100 bytes if it contains multi-byte characters.
+More specifically, the relevant length in bytes of a string is when encoded with https://en.wikipedia.org/wiki/UTF-8[UTF8].
+====
 
 include::create-a-single-property-index.asciidoc[]
 
