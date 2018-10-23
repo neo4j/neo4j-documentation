@@ -39,7 +39,7 @@ Neo4j will automatically pick up and start using the index once it has been crea
 [NOTE]
 .Limitations of string indexes
 ====
-https://lucene.apache.org/[Apache Lucene], which is used as the back-end for indexes, has a string size limit of 32766 bytes.
+String indexes have a size limit of 32766 bytes.
 Common characters, such as letters, digits and some symbols, translate into one byte per character.
 Non-Latin characters may occupy more than one byte per character.
 Therefore, for example, a string that contains 100 characters or less may be longer than 100 bytes if it contains multi-byte characters.
