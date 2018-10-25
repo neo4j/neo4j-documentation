@@ -8,5 +8,5 @@ There's an included Java example which shows a 'low-level' approach to using the
 
 :leveloffset: 2
 
-include::{importdir}/neo4j-server-examples-docs-jar/dev/server-java-rest-client.asciidoc[]
+include::{import-neo4j-cypher-docs-docs}/dev/server-java-rest-client.asciidoc[]
 

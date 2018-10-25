@@ -13,7 +13,7 @@ include::examples/acl-structures-in-graphs.asciidoc[]
 
 :leveloffset: 1
 
-include::{importdir}/neo4j-cypher-docs-docs-jar/dev/ql/cookbook/index.asciidoc[]
+include::{import-neo4j-cypher-docs-sources}/dev/ql/cookbook/index.asciidoc[]
 
 :leveloffset: 2
 
