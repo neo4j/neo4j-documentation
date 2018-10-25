@@ -20,7 +20,6 @@
         <license-text.header>../build/ApacheLicense-2.0-header.txt</license-text.header>
         <docs-plugin.skip>true</docs-plugin.skip>
         <licensing.prepend.text>notice-agpl-prefix.txt</licensing.prepend.text>
-        <neo4j.version>${project.version}</neo4j.version>
     </properties>
 
     <licenses>
