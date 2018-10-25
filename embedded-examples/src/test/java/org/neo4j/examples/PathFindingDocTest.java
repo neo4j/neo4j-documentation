@@ -79,7 +79,7 @@ public class PathFindingDocTest
     @Test
     public void shortestPathExample()
     {
-        // START SNIPPET: shortestPathUsage
+        // tag::shortestPathUsage[]
         Node startNode = graphDb.createNode();
         Node middleNode1 = graphDb.createNode();
         Node middleNode2 = graphDb.createNode();
@@ -96,7 +96,7 @@ public class PathFindingDocTest
         PathFinder<Path> finder = GraphAlgoFactory.shortestPath(
             PathExpanders.forTypeAndDirection( ExampleTypes.MY_TYPE, Direction.OUTGOING ), 15 );
         Iterable<Path> paths = finder.findAllPaths( startNode, endNode );
-        // END SNIPPET: shortestPathUsage
+        // end::shortestPathUsage[]
         Path path = paths.iterator().next();
         assertEquals( 2, path.length() );
         assertEquals( startNode, path.startNode() );
@@ -126,7 +126,7 @@ public class PathFindingDocTest
 
     public WeightedPath findCheapestPathWithDijkstra( final Node nodeA, final Node nodeB )
     {
-        // START SNIPPET: dijkstraUsage
+        // tag::dijkstraUsage[]
         PathFinder<WeightedPath> finder = GraphAlgoFactory.dijkstra(
             PathExpanders.forTypeAndDirection( ExampleTypes.MY_TYPE, Direction.BOTH ), "cost" );
 
@@ -134,7 +134,7 @@ public class PathFindingDocTest
 
         // Get the weight for the found path
         path.weight();
-        // END SNIPPET: dijkstraUsage
+        // end::dijkstraUsage[]
         return path;
     }
 
@@ -165,7 +165,7 @@ public class PathFindingDocTest
     @Test
     public void astarExample()
     {
-        // START SNIPPET: astarUsage
+        // tag::astarUsage[]
         Node nodeA = createNode( "name", "A", "x", 0d, "y", 0d );
         Node nodeB = createNode( "name", "B", "x", 7d, "y", 0d );
         Node nodeC = createNode( "name", "C", "x", 2d, "y", 1d );
@@ -188,7 +188,7 @@ public class PathFindingDocTest
                 PathExpanders.allTypesAndDirections(),
                 CommonEvaluators.doubleCostEvaluator( "length" ), estimateEvaluator );
         WeightedPath path = astar.findSinglePath( nodeA, nodeB );
-        // END SNIPPET: astarUsage
+        // end::astarUsage[]
     }
 
     public static void deleteFileOrDirectory( File file )

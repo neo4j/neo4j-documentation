@@ -177,7 +177,7 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
                 .addTestSourceSnippets( this.getClass(), "get-admins",
                         "get-user-memberships", "get-groups", "get-members", "read-traverser" );
         System.out.println( "All admins:" );
-        // START SNIPPET: get-admins
+        // tag::get-admins[]
         Node admins = getNodeByName( "Admins" );
         TraversalDescription traversalDescription = db.traversalDescription()
                 .breadthFirst()
@@ -185,7 +185,7 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
                 .relationships( RoleRels.PART_OF, Direction.INCOMING )
                 .relationships( RoleRels.MEMBER_OF, Direction.INCOMING );
         Traverser traverser = traversalDescription.traverse( admins );
-        // END SNIPPET: get-admins
+        // end::get-admins[]
 
         try ( Transaction ignore = graphdb().beginTx() )
         {
@@ -198,7 +198,7 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
             gen.get().addSnippet( "o-query-get-admins", createQueryResultSnippet( result ) );
 
             //Jale's memberships
-            // START SNIPPET: get-user-memberships
+            // tag::get-user-memberships[]
             Node jale = getNodeByName( "Jale" );
             traversalDescription = db.traversalDescription()
                     .depthFirst()
@@ -206,7 +206,7 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
                     .relationships( RoleRels.MEMBER_OF, Direction.OUTGOING )
                     .relationships( RoleRels.PART_OF, Direction.OUTGOING );
             traverser = traversalDescription.traverse( jale );
-            // END SNIPPET: get-user-memberships
+            // end::get-user-memberships[]
 
             gen.get().addSnippet( "o-get-user-memberships", createOutputSnippet( traverserToString( traverser ) ) );
             query = "match ({name: 'Jale'})-[:MEMBER_OF]->()-[:PART_OF*0..]->(group) return group.name";
@@ -219,7 +219,7 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
                             createQueryResultSnippet( result ) );
 
             // get all groups
-            // START SNIPPET: get-groups
+            // tag::get-groups[]
             Node referenceNode = getNodeByName( "Reference_Node") ;
             traversalDescription = db.traversalDescription()
                     .breadthFirst()
@@ -227,7 +227,7 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
                     .relationships( RoleRels.ROOT, Direction.INCOMING )
                     .relationships( RoleRels.PART_OF, Direction.INCOMING );
             traverser = traversalDescription.traverse( referenceNode );
-            // END SNIPPET: get-groups
+            // end::get-groups[]
 
             gen.get().addSnippet( "o-get-groups", createOutputSnippet( traverserToString( traverser ) ) );
             query = "match ({name: 'Reference_Node'})<-[:ROOT]->()<-[:PART_OF*0..]-(group) return group.name";
@@ -240,13 +240,13 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
                             createQueryResultSnippet( result ) );
 
             //get all members
-            // START SNIPPET: get-members
+            // tag::get-members[]
             traversalDescription = db.traversalDescription()
                     .breadthFirst()
                     .evaluator(
                             Evaluators.includeWhereLastRelationshipTypeIs( RoleRels.MEMBER_OF ) );
             traverser = traversalDescription.traverse( referenceNode );
-            // END SNIPPET: get-members
+            // end::get-members[]
 
             gen.get().addSnippet( "o-get-members", createOutputSnippet( traverserToString( traverser ) ) );
             query = "match ({name: 'Reference_Node'})<-[:ROOT]->(root), p=(root)<-[PART_OF*0..]-()<-[:MEMBER_OF]-(user) " +
@@ -270,7 +270,7 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
 
     private String traverserToString( Traverser traverser )
     {
-        // START SNIPPET: read-traverser
+        // tag::read-traverser[]
         String output = "";
         for ( Path path : traverser )
         {
@@ -278,7 +278,7 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
             output += "Found: " + node.getProperty( NAME ) + " at depth: "
                       + ( path.length() - 1 ) + "\n";
         }
-        // END SNIPPET: read-traverser
+        // end::read-traverser[]
         return output;
     }
 

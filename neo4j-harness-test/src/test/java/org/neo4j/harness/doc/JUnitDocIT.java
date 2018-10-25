@@ -43,7 +43,7 @@ public class JUnitDocIT
     @Rule
     public SuppressOutput suppressOutput = SuppressOutput.suppressAll();
 
-    // START SNIPPET: useJUnitRule
+    // tag::useJUnitRule[]
     @Rule
     public Neo4jRule neo4j = new Neo4jRule()
             .withFixture( "CREATE (admin:Admin)" )
@@ -81,6 +81,6 @@ public class JUnitDocIT
             tx.success();
         }
     }
-    // END SNIPPET: useJUnitRule
+    // end::useJUnitRule[]
 
 }

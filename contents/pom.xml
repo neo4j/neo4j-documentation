@@ -36,168 +36,161 @@
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-ha-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-metrics-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-backup-docs</artifactId>
-            <version>${neo4j.version}</version>
-            <classifier>docs</classifier>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j.doc</groupId>
-            <artifactId>neo4j-backup-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>test-sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-lucene-index-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-lucene-index-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>test-sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-kernel-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-kernel-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>test-sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-cypher-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-cypher-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>test-sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-cypher-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.examples</groupId>
             <artifactId>neo4j-examples</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.examples</groupId>
             <artifactId>neo4j-examples</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.examples</groupId>
             <artifactId>neo4j-examples</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>test-sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-server-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-server-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>test-sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.test</groupId>
             <artifactId>neo4j-harness-test</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>test-sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.test</groupId>
             <artifactId>neo4j-harness-enterprise-test</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>test-sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.examples</groupId>
             <artifactId>neo4j-server-examples</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.examples</groupId>
             <artifactId>neo4j-server-examples</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>sources</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-import-tool-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-config-docs</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>procedure-documentation</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.neo4j.doc</groupId>
             <artifactId>jmx-documentation</artifactId>
-            <version>${neo4j.version}</version>
+            <version>${project.version}</version>
             <classifier>docs</classifier>
             <scope>provided</scope>
         </dependency>

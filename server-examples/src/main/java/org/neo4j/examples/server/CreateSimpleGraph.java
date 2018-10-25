@@ -35,31 +35,31 @@ public class CreateSimpleGraph
     {
         checkDatabaseIsRunning();
 
-        // START SNIPPET: nodesAndProps
+        // tag::nodesAndProps[]
         URI firstNode = createNode();
         addProperty( firstNode, "name", "Joe Strummer" );
         URI secondNode = createNode();
         addProperty( secondNode, "band", "The Clash" );
-        // END SNIPPET: nodesAndProps
+        // end::nodesAndProps[]
 
-        // START SNIPPET: addRel
+        // tag::addRel[]
         URI relationshipUri = addRelationship( firstNode, secondNode, "singer",
                 "{ \"from\" : \"1976\", \"until\" : \"1986\" }" );
-        // END SNIPPET: addRel
+        // end::addRel[]
 
-        // START SNIPPET: addMetaToRel
+        // tag::addMetaToRel[]
         addMetadataToProperty( relationshipUri, "stars", "5" );
-        // END SNIPPET: addMetaToRel
+        // end::addMetaToRel[]
 
-        // START SNIPPET: queryForSingers
+        // tag::queryForSingers[]
         findSingersInBands( firstNode );
-        // END SNIPPET: queryForSingers
+        // end::queryForSingers[]
 
         sendTransactionalCypherQuery( "MATCH (n) WHERE has(n.name) RETURN n.name AS name" );
     }
 
     private static void sendTransactionalCypherQuery(String query) {
-        // START SNIPPET: queryAllNodes
+        // tag::queryAllNodes[]
         final String txUri = SERVER_ROOT_URI + "transaction/commit";
         WebResource resource = Client.create().resource( txUri );
 
@@ -77,13 +77,13 @@ public class CreateSimpleGraph
                 response.getEntity( String.class ) ) );
 
         response.close();
-        // END SNIPPET: queryAllNodes
+        // end::queryAllNodes[]
     }
 
     private static void findSingersInBands( URI startNode )
             throws URISyntaxException
     {
-        // START SNIPPET: traversalDesc
+        // tag::traversalDesc[]
         // TraversalDefinition turns into JSON to send to the Server
         TraversalDefinition t = new TraversalDefinition();
         t.setOrder( TraversalDefinition.DEPTH_FIRST );
@@ -91,9 +91,9 @@ public class CreateSimpleGraph
         t.setMaxDepth( 10 );
         t.setReturnFilter( TraversalDefinition.ALL );
         t.setRelationships( new Relation( "singer", Relation.OUT ) );
-        // END SNIPPET: traversalDesc
+        // end::traversalDesc[]
 
-        // START SNIPPET: traverse
+        // tag::traverse[]
         URI traverserUri = new URI( startNode.toString() + "/traverse/node" );
         WebResource resource = Client.create()
                 .resource( traverserUri );
@@ -109,10 +109,10 @@ public class CreateSimpleGraph
                 jsonTraverserPayload, traverserUri, response.getStatus(),
                 response.getEntity( String.class ) ) );
         response.close();
-        // END SNIPPET: traverse
+        // end::traverse[]
     }
 
-    // START SNIPPET: insideAddMetaToProp
+    // tag::insideAddMetaToProp[]
     private static void addMetadataToProperty( URI relationshipUri,
             String name, String value ) throws URISyntaxException
     {
@@ -131,7 +131,7 @@ public class CreateSimpleGraph
         response.close();
     }
 
-    // END SNIPPET: insideAddMetaToProp
+    // end::insideAddMetaToProp[]
 
     private static String toJsonNameValuePairCollection( String name,
             String value )
@@ -141,7 +141,7 @@ public class CreateSimpleGraph
 
     private static URI createNode()
     {
-        // START SNIPPET: createNode
+        // tag::createNode[]
         final String nodeEntryPointUri = SERVER_ROOT_URI + "node";
         // http://localhost:7474/db/data/node
 
@@ -160,10 +160,10 @@ public class CreateSimpleGraph
         response.close();
 
         return location;
-        // END SNIPPET: createNode
+        // end::createNode[]
     }
 
-    // START SNIPPET: insideAddRel
+    // tag::insideAddRel[]
     private static URI addRelationship( URI startNode, URI endNode,
             String relationshipType, String jsonAttributes )
             throws URISyntaxException
@@ -188,7 +188,7 @@ public class CreateSimpleGraph
         response.close();
         return location;
     }
-    // END SNIPPET: insideAddRel
+    // end::insideAddRel[]
 
     private static String generateJsonRelationship( URI endNode,
             String relationshipType, String... jsonAttributes )
@@ -224,7 +224,7 @@ public class CreateSimpleGraph
     private static void addProperty( URI nodeUri, String propertyName,
             String propertyValue )
     {
-        // START SNIPPET: addProp
+        // tag::addProp[]
         String propertyUri = nodeUri.toString() + "/properties/" + propertyName;
         // http://localhost:7474/db/data/node/{node_id}/properties/{property_name}
 
@@ -238,12 +238,12 @@ public class CreateSimpleGraph
         System.out.println( String.format( "PUT to [%s], status code [%d]",
                 propertyUri, response.getStatus() ) );
         response.close();
-        // END SNIPPET: addProp
+        // end::addProp[]
     }
 
     private static void checkDatabaseIsRunning()
     {
-        // START SNIPPET: checkServer
+        // tag::checkServer[]
         WebResource resource = Client.create()
                 .resource( SERVER_ROOT_URI );
         ClientResponse response = resource.get( ClientResponse.class );
@@ -251,6 +251,6 @@ public class CreateSimpleGraph
         System.out.println( String.format( "GET on [%s], status code [%d]",
                 SERVER_ROOT_URI, response.getStatus() ) );
         response.close();
-        // END SNIPPET: checkServer
+        // end::checkServer[]
     }
 }

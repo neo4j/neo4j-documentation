@@ -62,7 +62,7 @@ All examples use the following procedure:
 
 [source, java]
 ----
-include::{importdir}/sources/org/neo4j/procedure/example/IndexingProcedure.java[tags=indexingProcedure]
+include::{import-neo4j-cypher-docs-sources}/sources/org/neo4j/procedure/example/IndexingProcedure.java[tags=indexingProcedure]
 ----
 
 include::call-a-procedure-using-call.asciidoc[]

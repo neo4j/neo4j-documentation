@@ -44,12 +44,12 @@ public class EmbeddedNeo4jWithNewIndexing
         System.out.println( "Starting database ..." );
         FileUtils.deleteRecursively( databaseDirectory );
 
-        // START SNIPPET: startDb
+        // tag::startDb[]
         GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
-        // END SNIPPET: startDb
+        // end::startDb[]
 
         {
-            // START SNIPPET: createIndex
+            // tag::createIndex[]
             IndexDefinition indexDefinition;
             try ( Transaction tx = graphDb.beginTx() )
             {
@@ -59,26 +59,26 @@ public class EmbeddedNeo4jWithNewIndexing
                         .create();
                 tx.success();
             }
-            // END SNIPPET: createIndex
-            // START SNIPPET: wait
+            // end::createIndex[]
+            // tag::wait[]
             try ( Transaction tx = graphDb.beginTx() )
             {
                 Schema schema = graphDb.schema();
                 schema.awaitIndexOnline( indexDefinition, 10, TimeUnit.SECONDS );
             }
-            // END SNIPPET: wait
-            // START SNIPPET: progress
+            // end::wait[]
+            // tag::progress[]
             try ( Transaction tx = graphDb.beginTx() )
             {
                 Schema schema = graphDb.schema();
                 System.out.println( String.format( "Percent complete: %1.0f%%",
                         schema.getIndexPopulationProgress( indexDefinition ).getCompletedPercentage() ) );
             }
-            // END SNIPPET: progress
+            // end::progress[]
         }
 
         {
-            // START SNIPPET: addUsers
+            // tag::addUsers[]
             try ( Transaction tx = graphDb.beginTx() )
             {
                 Label label = Label.label( "User" );
@@ -92,11 +92,11 @@ public class EmbeddedNeo4jWithNewIndexing
                 System.out.println( "Users created" );
                 tx.success();
             }
-            // END SNIPPET: addUsers
+            // end::addUsers[]
         }
 
         {
-            // START SNIPPET: findUsers
+            // tag::findUsers[]
             Label label = Label.label( "User" );
             int idToFind = 45;
             String nameToFind = "user" + idToFind + "@neo4j.org";
@@ -118,11 +118,11 @@ public class EmbeddedNeo4jWithNewIndexing
                     }
                 }
             }
-            // END SNIPPET: findUsers
+            // end::findUsers[]
         }
 
         {
-            // START SNIPPET: resourceIterator
+            // tag::resourceIterator[]
             Label label = Label.label( "User" );
             int idToFind = 45;
             String nameToFind = "user" + idToFind + "@neo4j.org";
@@ -136,11 +136,11 @@ public class EmbeddedNeo4jWithNewIndexing
                 }
                 users.close();
             }
-            // END SNIPPET: resourceIterator
+            // end::resourceIterator[]
         }
 
         {
-            // START SNIPPET: updateUsers
+            // tag::updateUsers[]
             try ( Transaction tx = graphDb.beginTx() )
             {
                 Label label = Label.label( "User" );
@@ -153,11 +153,11 @@ public class EmbeddedNeo4jWithNewIndexing
                 }
                 tx.success();
             }
-            // END SNIPPET: updateUsers
+            // end::updateUsers[]
         }
 
         {
-            // START SNIPPET: deleteUsers
+            // tag::deleteUsers[]
             try ( Transaction tx = graphDb.beginTx() )
             {
                 Label label = Label.label( "User" );
@@ -170,11 +170,11 @@ public class EmbeddedNeo4jWithNewIndexing
                 }
                 tx.success();
             }
-            // END SNIPPET: deleteUsers
+            // end::deleteUsers[]
         }
 
         {
-            // START SNIPPET: dropIndex
+            // tag::dropIndex[]
             try ( Transaction tx = graphDb.beginTx() )
             {
                 Label label = Label.label( "User" );
@@ -187,12 +187,12 @@ public class EmbeddedNeo4jWithNewIndexing
 
                 tx.success();
             }
-            // END SNIPPET: dropIndex
+            // end::dropIndex[]
         }
 
         System.out.println( "Shutting down database ..." );
-        // START SNIPPET: shutdownDb
+        // tag::shutdownDb[]
         graphDb.shutdown();
-        // END SNIPPET: shutdownDb
+        // end::shutdownDb[]
     }
 }

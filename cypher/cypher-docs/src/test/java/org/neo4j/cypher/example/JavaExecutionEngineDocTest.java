@@ -155,13 +155,13 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleQuery() throws Exception
     {
-// START SNIPPET: JavaQuery
+// tag::JavaQuery[]
         Result result = db.execute( "MATCH (n) WHERE id(n) = 0 AND 1 = 1 RETURN n" );
 
         assertThat( result.columns(), hasItem( "n" ) );
         Iterator<Node> n_column = result.columnAs( "n" );
         assertThat( asIterable( n_column ), hasItem( db.getNodeById( 0 ) ) );
-// END SNIPPET: JavaQuery
+// end::JavaQuery[]
     }
 
     @Test
@@ -204,12 +204,12 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithParameterForNodeId() throws Exception
     {
-        // START SNIPPET: exampleWithParameterForNodeId
+        // tag::exampleWithParameterForNodeId[]
         Map<String, Object> params = new HashMap<>();
         params.put( "id", 0 );
         String query = "MATCH (n) WHERE id(n) = $id RETURN n.name";
         Result result = db.execute( query, params );
-        // END SNIPPET: exampleWithParameterForNodeId
+        // end::exampleWithParameterForNodeId[]
 
         assertThat( result.columns(), hasItem( "n.name" ) );
         Iterator<Object> n_column = result.columnAs( "n.name" );
@@ -220,12 +220,12 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithParameterForMultipleNodeIds() throws Exception
     {
-        // START SNIPPET: exampleWithParameterForMultipleNodeIds
+        // tag::exampleWithParameterForMultipleNodeIds[]
         Map<String, Object> params = new HashMap<>();
         params.put( "ids", Arrays.asList( 0, 1, 2 ) );
         String query = "MATCH (n) WHERE id(n) IN $ids RETURN n.name";
         Result result = db.execute( query, params );
-        // END SNIPPET: exampleWithParameterForMultipleNodeIds
+        // end::exampleWithParameterForMultipleNodeIds[]
 
         assertEquals( asList( "Michaela", "Bob", "Johan" ), this.<String>toList( result, "n.name" ) );
         dumpToFile( "exampleWithParameterForMultipleNodeIds", query, params );
@@ -241,12 +241,12 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithStringLiteralAsParameter() throws Exception
     {
-        // START SNIPPET: exampleWithStringLiteralAsParameter
+        // tag::exampleWithStringLiteralAsParameter[]
         Map<String, Object> params = new HashMap<>();
         params.put( "name", "Johan" );
         String query = "MATCH (n:Person) WHERE n.name = $name RETURN n";
         Result result = db.execute( query, params );
-        // END SNIPPET: exampleWithStringLiteralAsParameter
+        // end::exampleWithStringLiteralAsParameter[]
 
         assertEquals(singletonList(johanNode), this.<Node>toList( result, "n" ) );
         dumpToFile( "exampleWithStringLiteralAsParameter", query, params );
@@ -255,12 +255,12 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithShortSyntaxStringLiteralAsParameter() throws Exception
     {
-        // START SNIPPET: exampleWithShortSyntaxStringLiteralAsParameter
+        // tag::exampleWithShortSyntaxStringLiteralAsParameter[]
         Map<String, Object> params = new HashMap<>();
         params.put( "name", "Johan" );
         String query = "MATCH (n:Person {name: $name}) RETURN n";
         Result result = db.execute( query, params );
-        // END SNIPPET: exampleWithShortSyntaxStringLiteralAsParameter
+        // end::exampleWithShortSyntaxStringLiteralAsParameter[]
 
         assertEquals(singletonList(johanNode), this.<Node>toList( result, "n" ) );
         dumpToFile( "exampleWithShortSyntaxStringLiteralAsParameter", query, params );
@@ -271,12 +271,12 @@ public class JavaExecutionEngineDocTest
     {
         try ( Transaction ignored = db.beginTx() )
         {
-            // START SNIPPET: exampleWithParameterForIndexValue
+            // tag::exampleWithParameterForIndexValue[]
             Map<String, Object> params = new HashMap<>();
             params.put( "value", "Michaela" );
             String query = "START n=node:people(name = $value) RETURN n";
             Result result = db.execute( query, params );
-            // END SNIPPET: exampleWithParameterForIndexValue
+            // end::exampleWithParameterForIndexValue[]
             assertEquals(singletonList(michaelaNode), this.<Node>toList( result, "n" ) );
             dumpToFile( "exampleWithParameterForIndexValue", query, params );
         }
@@ -287,12 +287,12 @@ public class JavaExecutionEngineDocTest
     {
         try ( Transaction ignored = db.beginTx() )
         {
-            // START SNIPPET: exampleWithParametersForQuery
+            // tag::exampleWithParametersForQuery[]
             Map<String, Object> params = new HashMap<>();
             params.put( "query", "name:Bob" );
             String query = "START n=node:people($query) RETURN n";
             Result result = db.execute( query, params );
-            // END SNIPPET: exampleWithParametersForQuery
+            // end::exampleWithParametersForQuery[]
             assertEquals( asList( bobNode ), this.<Node>toList( result, "n" ) );
             dumpToFile( "exampleWithParametersForQuery", query, params );
         }
@@ -301,12 +301,12 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithParameterForNodeObject() throws Exception
     {
-        // START SNIPPET: exampleWithParameterForNodeObject
+        // tag::exampleWithParameterForNodeObject[]
         Map<String, Object> params = new HashMap<>();
         params.put( "node", bobNode );
         String query = "MATCH (n:Person) WHERE n = $node RETURN n.name";
         Result result = db.execute( query, params );
-        // END SNIPPET: exampleWithParameterForNodeObject
+        // end::exampleWithParameterForNodeObject[]
 
         assertThat( result.columns(), hasItem( "n.name" ) );
         Iterator<Object> n_column = result.columnAs( "n.name" );
@@ -316,13 +316,13 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithParameterForSkipAndLimit() throws Exception
     {
-        // START SNIPPET: exampleWithParameterForSkipLimit
+        // tag::exampleWithParameterForSkipLimit[]
         Map<String, Object> params = new HashMap<>();
         params.put( "s", 1 );
         params.put( "l", 1 );
         String query = "MATCH (n:Person) RETURN n.name SKIP $s LIMIT $l";
         Result result = db.execute( query, params );
-        // END SNIPPET: exampleWithParameterForSkipLimit
+        // end::exampleWithParameterForSkipLimit[]
 
         assertThat( result.columns(), hasItem( "n.name" ) );
         Iterator<Object> n_column = result.columnAs( "n.name" );
@@ -333,12 +333,12 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithParameterRegularExpression() throws Exception
     {
-        // START SNIPPET: exampleWithParameterRegularExpression
+        // tag::exampleWithParameterRegularExpression[]
         Map<String, Object> params = new HashMap<>();
         params.put( "regex", ".*h.*" );
         String query = "MATCH (n:Person) WHERE n.name =~ $regex RETURN n.name";
         Result result = db.execute( query, params );
-        // END SNIPPET: exampleWithParameterRegularExpression
+        // end::exampleWithParameterRegularExpression[]
         dumpToFile( "exampleWithParameterRegularExpression", query, params );
 
         assertThat( result.columns(), hasItem( "n.name" ) );
@@ -352,12 +352,12 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithParameterCSCIStringPatternMatching() throws Exception
     {
-        // START SNIPPET: exampleWithParameterCSCIStringPatternMatching
+        // tag::exampleWithParameterCSCIStringPatternMatching[]
         Map<String, Object> params = new HashMap<>();
         params.put( "name", "Michael" );
         String query = "MATCH (n:Person) WHERE n.name STARTS WITH $name RETURN n.name";
         Result result = db.execute( query, params );
-        // END SNIPPET: exampleWithParameterCSCIStringPatternMatching
+        // end::exampleWithParameterCSCIStringPatternMatching[]
         dumpToFile( "exampleWithParameterCSCIStringPatternMatching", query, params );
 
         assertThat( result.columns(), hasItem( "n.name" ) );
@@ -368,12 +368,12 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithParameterProcedureCall() throws Exception
     {
-        // START SNIPPET: exampleWithParameterProcedureCall
+        // tag::exampleWithParameterProcedureCall[]
         Map<String, Object> params = new HashMap<>();
         params.put( "indexname", ":Person(name)" );
         String query = "CALL db.resampleIndex($indexname)";
         Result result = db.execute( query, params );
-        // END SNIPPET: exampleWithParameterProcedureCall
+        // end::exampleWithParameterProcedureCall[]
         dumpToFile( "exampleWithParameterProcedureCall", query, params );
 
         assert result.columns().isEmpty();
@@ -382,7 +382,7 @@ public class JavaExecutionEngineDocTest
     @Test
     public void create_node_from_map() throws Exception
     {
-        // START SNIPPET: create_node_from_map
+        // tag::create_node_from_map[]
         Map<String, Object> props = new HashMap<>();
         props.put( "name", "Andy" );
         props.put( "position", "Developer" );
@@ -391,7 +391,7 @@ public class JavaExecutionEngineDocTest
         params.put( "props", props );
         String query = "CREATE ($props)";
         db.execute( query, params );
-        // END SNIPPET: create_node_from_map
+        // end::create_node_from_map[]
         dumpToFile( "create_node_from_map", query, params );
 
         Result result = db.execute( "MATCH (n) WHERE n.name = 'Andy' AND n.position = 'Developer' RETURN n" );
@@ -401,7 +401,7 @@ public class JavaExecutionEngineDocTest
     @Test
     public void create_multiple_nodes_from_map() throws Exception
     {
-        // START SNIPPET: create_multiple_nodes_from_map
+        // tag::create_multiple_nodes_from_map[]
         Map<String, Object> n1 = new HashMap<>();
         n1.put( "name", "Andy" );
         n1.put( "position", "Developer" );
@@ -417,7 +417,7 @@ public class JavaExecutionEngineDocTest
         params.put( "props", maps );
         String query = "UNWIND $props AS properties CREATE (n:Person) SET n = properties RETURN n";
         db.execute( query, params );
-        // END SNIPPET: create_multiple_nodes_from_map
+        // end::create_multiple_nodes_from_map[]
         dumpToFile( "create_multiple_nodes_from_map", query, params );
 
         Result result = db.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
@@ -435,7 +435,7 @@ public class JavaExecutionEngineDocTest
     {
         try(Transaction tx = db.beginTx())
         {
-            // START SNIPPET: set_properties_on_a_node_from_a_map
+            // tag::set_properties_on_a_node_from_a_map[]
             Map<String, Object> n1 = new HashMap<>();
             n1.put( "name", "Andy" );
             n1.put( "position", "Developer" );
@@ -445,7 +445,7 @@ public class JavaExecutionEngineDocTest
 
             String query = "MATCH (n:Person) WHERE n.name='Michaela' SET n = $props";
             db.execute( query, params );
-            // END SNIPPET: set_properties_on_a_node_from_a_map
+            // end::set_properties_on_a_node_from_a_map[]
             dumpToFile( "set_properties_on_a_node_from_a_map", query, params );
 
             db.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
@@ -495,7 +495,7 @@ public class JavaExecutionEngineDocTest
     @Test
     public void explain_returns_plan() throws Exception
     {
-        // START SNIPPET: explain_returns_plan
+        // tag::explain_returns_plan[]
         Result result = db.execute( "EXPLAIN CREATE (user:User {name: $name}) RETURN user" );
 
         assert result.getQueryExecutionType().isExplained();
@@ -503,7 +503,7 @@ public class JavaExecutionEngineDocTest
         assert !result.hasNext();
         assert !result.getQueryStatistics().containsUpdates();
         assert !result.getExecutionPlanDescription().hasProfilerStatistics();
-        // END SNIPPET: explain_returns_plan
+        // end::explain_returns_plan[]
     }
 
     private void makeFriends( Node a, Node b )

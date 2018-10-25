@@ -72,7 +72,7 @@ public class BatchInsertDocTest
         String database = "batchinserter-example";
         File tempStoreDir = clean( "target/" + database ).getAbsoluteFile();
 
-        // START SNIPPET: insert
+        // tag::insert[]
         BatchInserter inserter = null;
         try
         {
@@ -99,7 +99,7 @@ public class BatchInsertDocTest
                 inserter.shutdown();
             }
         }
-        // END SNIPPET: insert
+        // end::insert[]
 
         // try it out from a normal db
         GraphDatabaseService db =
@@ -132,14 +132,14 @@ public class BatchInsertDocTest
     {
         clean( "target/batchinserter-example-config" );
 
-        // START SNIPPET: configuredInsert
+        // tag::configuredInsert[]
         Map<String, String> config = new HashMap<>();
         config.put( "dbms.memory.pagecache.size", "512m" );
         BatchInserter inserter = BatchInserters.inserter(
                 new File( "target/batchinserter-example-config" ).getAbsoluteFile(), config );
         // Insert data here ... and then shut down:
         inserter.shutdown();
-        // END SNIPPET: configuredInsert
+        // end::configuredInsert[]
     }
 
     @Test
@@ -152,7 +152,7 @@ public class BatchInsertDocTest
             fw.append( "dbms.memory.pagecache.size=8m" );
         }
 
-        // START SNIPPET: configFileInsert
+        // tag::configFileInsert[]
         try ( FileReader input = new FileReader( new File( "target/docs/batchinsert-config" ).getAbsoluteFile() ) )
         {
             Map<String, String> config = MapUtil.load( input );
@@ -161,7 +161,7 @@ public class BatchInsertDocTest
             // Insert data here ... and then shut down:
             inserter.shutdown();
         }
-        // END SNIPPET: configFileInsert
+        // end::configFileInsert[]
     }
 
     private File clean( String fileName ) throws IOException

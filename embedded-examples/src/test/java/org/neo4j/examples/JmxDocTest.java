@@ -65,7 +65,7 @@ public class JmxDocTest
         }
     }
 
-    // START SNIPPET: getStartTime
+    // tag::getStartTime[]
     private static Date getStartTimeFromManagementBean(
             GraphDatabaseService graphDbService )
     {
@@ -73,5 +73,5 @@ public class JmxDocTest
         Date date = JmxUtils.getAttribute( objectName, "KernelStartTime" );
         return date;
     }
-    // END SNIPPET: getStartTime
+    // end::getStartTime[]
 }

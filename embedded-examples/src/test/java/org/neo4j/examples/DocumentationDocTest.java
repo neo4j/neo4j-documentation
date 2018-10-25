@@ -16,8 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-// START SNIPPET: sampleDocumentation
-// START SNIPPET: _sampleDocumentation
+// tag::sampleDocumentation[]
+// tag::_sampleDocumentation[]
 package org.neo4j.examples;
 
 import org.junit.Test;
@@ -89,5 +89,5 @@ public class DocumentationDocTest extends ImpermanentGraphJavaDocTestBase
                                      + ") return n" ) );
     }
 }
-// END SNIPPET: _sampleDocumentation
-// END SNIPPET: sampleDocumentation
+// end::_sampleDocumentation[]
+// end::sampleDocumentation[]

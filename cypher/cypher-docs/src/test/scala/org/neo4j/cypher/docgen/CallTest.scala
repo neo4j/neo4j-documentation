@@ -81,7 +81,7 @@ class CallTest extends DocumentingTest {
           |All examples use the following procedure:""")
       p("""[source, java]
           |----
-          |include::{importdir}/sources/org/neo4j/procedure/example/IndexingProcedure.java[tags=indexingProcedure]
+          |include::{import-neo4j-cypher-docs-sources}/org/neo4j/procedure/example/IndexingProcedure.java[tags=indexingProcedure]
           |----""")
     }
 

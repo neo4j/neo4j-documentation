@@ -30,7 +30,7 @@ import javax.ws.rs.core.Response.Status;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.string.UTF8;
 
-//START SNIPPET: HelloWorldResource
+// tag::HelloWorldResource[]
 @Path( "/helloworld" )
 public class HelloWorldResource
 {
@@ -50,4 +50,4 @@ public class HelloWorldResource
         return Response.status( Status.OK ).entity( UTF8.encode( "Hello World, nodeId=" + nodeId ) ).build();
     }
 }
-// END SNIPPET: HelloWorldResource
+// end::HelloWorldResource[]

@@ -35,10 +35,10 @@ public class EmbeddedNeo4jWithSLF4JLogging
     {
         FileUtils.deleteRecursively( databaseDirectory );
 
-        // START SNIPPET: startDbWithSlf4jLogProvider
+        // tag::startDbWithSlf4jLogProvider[]
         graphDb = new GraphDatabaseFactory().setUserLogProvider( new Slf4jLogProvider() )
                 .newEmbeddedDatabase( databaseDirectory );
-        // END SNIPPET: startDbWithSlf4jLogProvider
+        // end::startDbWithSlf4jLogProvider[]
 
         shutdown();
     }

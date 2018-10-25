@@ -35,7 +35,7 @@ public class EmbeddedNeo4jWithBolt
         System.out.println( "Starting database ..." );
         FileUtils.deleteRecursively( DB_PATH );
 
-        // START SNIPPET: startDb
+        // tag::startDb[]
         GraphDatabaseSettings.BoltConnector bolt = GraphDatabaseSettings.boltConnector( "0" );
 
         GraphDatabaseService graphDb = new GraphDatabaseFactory()
@@ -44,7 +44,7 @@ public class EmbeddedNeo4jWithBolt
                 .setConfig( bolt.enabled, "true" )
                 .setConfig( bolt.address, "localhost:7687" )
                 .newGraphDatabase();
-        // END SNIPPET: startDb
+        // end::startDb[]
 
         graphDb.shutdown();
     }

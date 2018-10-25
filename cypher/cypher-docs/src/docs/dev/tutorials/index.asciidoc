@@ -10,7 +10,7 @@ It takes you from Hello World to advanced usage of graphs.
 
 :leveloffset: 1
 
-include::{importdir}/neo4j-cypher-docs-docs-jar/intro/index.adoc[]
+include::{import-neo4j-cypher-docs-docs}/intro/index.adoc[]
 
 :leveloffset: 1
 
@@ -18,7 +18,7 @@ include::{importdir}/neo4j-cypher-docs-docs-jar/intro/index.adoc[]
 
 :leveloffset: 1
 
-include::{importdir}/neo4j-cypher-docs-docs-jar/intro/use-in-application.adoc[]
+include::{import-neo4j-cypher-docs-docs}/intro/use-in-application.adoc[]
 
 :leveloffset: 1
 

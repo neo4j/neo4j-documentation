@@ -36,19 +36,19 @@ public class EmbeddedNeo4j
 
     public String greeting;
 
-    // START SNIPPET: vars
+    // tag::vars[]
     GraphDatabaseService graphDb;
     Node firstNode;
     Node secondNode;
     Relationship relationship;
-    // END SNIPPET: vars
+    // end::vars[]
 
-    // START SNIPPET: createReltype
+    // tag::createReltype[]
     private enum RelTypes implements RelationshipType
     {
         KNOWS
     }
-    // END SNIPPET: createReltype
+    // end::createReltype[]
 
     public static void main( final String[] args ) throws IOException
     {
@@ -62,17 +62,17 @@ public class EmbeddedNeo4j
     {
         FileUtils.deleteRecursively( databaseDirectory );
 
-        // START SNIPPET: startDb
+        // tag::startDb[]
         graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
         registerShutdownHook( graphDb );
-        // END SNIPPET: startDb
+        // end::startDb[]
 
-        // START SNIPPET: transaction
+        // tag::transaction[]
         try ( Transaction tx = graphDb.beginTx() )
         {
             // Database operations go here
-            // END SNIPPET: transaction
-            // START SNIPPET: addData
+            // end::transaction[]
+            // tag::addData[]
             firstNode = graphDb.createNode();
             firstNode.setProperty( "message", "Hello, " );
             secondNode = graphDb.createNode();
@@ -80,34 +80,34 @@ public class EmbeddedNeo4j
 
             relationship = firstNode.createRelationshipTo( secondNode, RelTypes.KNOWS );
             relationship.setProperty( "message", "brave Neo4j " );
-            // END SNIPPET: addData
+            // end::addData[]
 
-            // START SNIPPET: readData
+            // tag::readData[]
             System.out.print( firstNode.getProperty( "message" ) );
             System.out.print( relationship.getProperty( "message" ) );
             System.out.print( secondNode.getProperty( "message" ) );
-            // END SNIPPET: readData
+            // end::readData[]
 
             greeting = ( (String) firstNode.getProperty( "message" ) )
                        + ( (String) relationship.getProperty( "message" ) )
                        + ( (String) secondNode.getProperty( "message" ) );
 
-            // START SNIPPET: transaction
+            // tag::transaction[]
             tx.success();
         }
-        // END SNIPPET: transaction
+        // end::transaction[]
     }
 
     void removeData()
     {
         try ( Transaction tx = graphDb.beginTx() )
         {
-            // START SNIPPET: removingData
+            // tag::removingData[]
             // let's remove the data
             firstNode.getSingleRelationship( RelTypes.KNOWS, Direction.OUTGOING ).delete();
             firstNode.delete();
             secondNode.delete();
-            // END SNIPPET: removingData
+            // end::removingData[]
 
             tx.success();
         }
@@ -117,12 +117,12 @@ public class EmbeddedNeo4j
     {
         System.out.println();
         System.out.println( "Shutting down database ..." );
-        // START SNIPPET: shutdownServer
+        // tag::shutdownServer[]
         graphDb.shutdown();
-        // END SNIPPET: shutdownServer
+        // end::shutdownServer[]
     }
 
-    // START SNIPPET: shutdownHook
+    // tag::shutdownHook[]
     private static void registerShutdownHook( final GraphDatabaseService graphDb )
     {
         // Registers a shutdown hook for the Neo4j instance so that it
@@ -137,5 +137,5 @@ public class EmbeddedNeo4j
             }
         } );
     }
-    // END SNIPPET: shutdownHook
+    // end::shutdownHook[]
 }

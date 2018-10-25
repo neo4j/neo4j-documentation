@@ -46,11 +46,11 @@ public class TerminateTransactions
     {
         FileUtils.deleteRecursively( databaseDirectory );
 
-        // START SNIPPET: startDb
+        // tag::startDb[]
         GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
-        // END SNIPPET: startDb
+        // end::startDb[]
 
-        // START SNIPPET: mkTree
+        // tag::mkTree[]
         RelationshipType relType = RelationshipType.withName( "CHILD" );
         Queue<Node> nodes = new LinkedList<>();
         int depth = 1;
@@ -60,11 +60,11 @@ public class TerminateTransactions
             Node rootNode = graphDb.createNode();
             nodes.add( rootNode );
 
-            // END SNIPPET: mkTree
+            // end::mkTree[]
             Terminator terminator = new Terminator(tx);
             terminator.terminateAfter( 1000 );
 
-            // START SNIPPET: mkTree
+            // tag::mkTree[]
             for (; true; depth++) {
                 int nodesToExpand = nodes.size();
                 for (int i = 0; i < nodesToExpand; ++i) {
@@ -85,12 +85,12 @@ public class TerminateTransactions
         {
             return String.format( "Created tree up to depth %s in 1 sec", depth );
         }
-        // END SNIPPET: mkTree
+        // end::mkTree[]
         finally
         {
-            // START SNIPPET: shutdownDb
+            // tag::shutdownDb[]
             graphDb.shutdown();
-            // END SNIPPET: shutdownDb
+            // end::shutdownDb[]
         }
     }
 
@@ -123,9 +123,9 @@ public class TerminateTransactions
                     }
                     while ( (System.currentTimeMillis() - startTime) < millis );
 
-                    // START SNIPPET: terminateTx
+                    // tag::terminateTx[]
                     tx.terminate();
-                    // END SNIPPET: terminateTx
+                    // end::terminateTx[]
                 }
             } );
         }

@@ -36,7 +36,7 @@ import org.neo4j.server.plugins.PluginTarget;
 import org.neo4j.server.plugins.ServerPlugin;
 import org.neo4j.server.plugins.Source;
 
-// START SNIPPET: ShortestPath
+// tag::ShortestPath[]
 public class ShortestPath extends ServerPlugin
 {
     @Description( "Find the shortest path between two nodes." )
@@ -71,4 +71,4 @@ public class ShortestPath extends ServerPlugin
         return paths;
     }
 }
-// END SNIPPET: ShortestPath
+// end::ShortestPath[]

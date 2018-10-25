@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.neo4j.community</groupId>
             <artifactId>it-test-support</artifactId>
-            <version>${project.version}</version>
+            <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

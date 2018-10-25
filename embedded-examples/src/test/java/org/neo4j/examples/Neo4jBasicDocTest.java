@@ -46,43 +46,43 @@ public class Neo4jBasicDocTest
     /**
      * Create temporary database for each unit test.
      */
-    // START SNIPPET: beforeTest
+    // tag::beforeTest[]
     @Before
     public void prepareTestDatabase()
     {
         graphDb = new TestGraphDatabaseFactory().newImpermanentDatabase( testDirectory.directory() );
     }
-    // END SNIPPET: beforeTest
+    // end::beforeTest[]
 
     /**
      * Shutdown the database.
      */
-    // START SNIPPET: afterTest
+    // tag::afterTest[]
     @After
     public void destroyTestDatabase()
     {
         graphDb.shutdown();
     }
-    // END SNIPPET: afterTest
+    // end::afterTest[]
 
     @Test
     public void startWithConfiguration()
     {
-        // START SNIPPET: startDbWithConfig
+        // tag::startDbWithConfig[]
         GraphDatabaseService db = new TestGraphDatabaseFactory()
             .newImpermanentDatabaseBuilder()
             .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
             .setConfig( GraphDatabaseSettings.string_block_size, "60" )
             .setConfig( GraphDatabaseSettings.array_block_size, "300" )
             .newGraphDatabase();
-        // END SNIPPET: startDbWithConfig
+        // end::startDbWithConfig[]
         db.shutdown();
     }
 
     @Test
     public void shouldCreateNode()
     {
-        // START SNIPPET: unitTest
+        // tag::unitTest[]
         Node n;
         try ( Transaction tx = graphDb.beginTx() )
         {
@@ -102,6 +102,6 @@ public class Neo4jBasicDocTest
             assertThat( foundNode.getId(), is( n.getId() ) );
             assertThat( (String) foundNode.getProperty( "name" ), is( "Nancy" ) );
         }
-        // END SNIPPET: unitTest
+        // end::unitTest[]
     }
 }

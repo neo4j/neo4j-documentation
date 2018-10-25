@@ -53,7 +53,7 @@ public class JavaQuery
     {
         clearDbPath();
 
-        // START SNIPPET: addData
+        // tag::addData[]
         GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
 
         try ( Transaction tx = db.beginTx())
@@ -62,9 +62,9 @@ public class JavaQuery
             myNode.setProperty( "name", "my node" );
             tx.success();
         }
-        // END SNIPPET: addData
+        // end::addData[]
 
-        // START SNIPPET: execute
+        // tag::execute[]
         try ( Transaction ignored = db.beginTx();
               Result result = db.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ) )
         {
@@ -78,22 +78,22 @@ public class JavaQuery
                 rows += "\n";
             }
         }
-        // END SNIPPET: execute
+        // end::execute[]
         // the result is now empty, get a new one
         try ( Transaction ignored = db.beginTx();
               Result result = db.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ) )
         {
-            // START SNIPPET: items
+            // tag::items[]
             Iterator<Node> n_column = result.columnAs( "n" );
             for ( Node node : Iterators.asIterable( n_column ) )
             {
                 nodeResult = node + ": " + node.getProperty( "name" );
             }
-            // END SNIPPET: items
+            // end::items[]
 
-            // START SNIPPET: columns
+            // tag::columns[]
             List<String> columns = result.columns();
-            // END SNIPPET: columns
+            // end::columns[]
             columnsString = columns.toString();
             resultString = db.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ).resultAsString();
         }

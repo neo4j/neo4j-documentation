@@ -49,23 +49,23 @@ public class DeadlockDocTest
     {
         GraphDatabaseService graphDatabaseService = rule.getGraphDatabaseAPI();
 
-        // START SNIPPET: template
+        // tag::template[]
         TransactionTemplate template = new TransactionTemplate(  ).retries( 5 ).backoff( 3, TimeUnit.SECONDS );
-        // END SNIPPET: template
+        // end::template[]
 
-        // START SNIPPET: usage-template
+        // tag::usage-template[]
         Object result = template.with(graphDatabaseService).execute( transaction -> {
             Object result1 = null;
             return result1;
         } );
-        // END SNIPPET: usage-template
+        // end::usage-template[]
     }
 
     private Object transactionWithRetry()
     {
         GraphDatabaseService graphDatabaseService = rule.getGraphDatabaseAPI();
 
-        // START SNIPPET: retry
+        // tag::retry[]
         Throwable txEx = null;
         int RETRIES = 5;
         int BACKOFF = 3000;
@@ -118,7 +118,7 @@ public class DeadlockDocTest
         {
             throw new TransactionFailureException( "Failed", txEx );
         }
-        // END SNIPPET: retry
+        // end::retry[]
     }
 
     private Object doStuff( Transaction tx )

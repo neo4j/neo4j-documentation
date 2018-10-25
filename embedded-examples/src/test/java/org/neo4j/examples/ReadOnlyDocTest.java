@@ -53,11 +53,11 @@ public class ReadOnlyDocTest
             FileUtils.deleteRecursively( dir );
         }
         new GraphDatabaseFactory().newEmbeddedDatabase( dir ).shutdown();
-        // START SNIPPET: createReadOnlyInstance
+        // tag::createReadOnlyInstance[]
         graphDb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( dir )
                 .setConfig( GraphDatabaseSettings.read_only, "true" )
                 .newGraphDatabase();
-        // END SNIPPET: createReadOnlyInstance
+        // end::createReadOnlyInstance[]
     }
 
     /**

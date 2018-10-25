@@ -103,14 +103,14 @@ public class ImdbDocTest {
     public static void setUpDb() {
         graphDb = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase();
         try ( Transaction tx = graphDb.beginTx() ) {
-            // START SNIPPET: createIndexes
+            // tag::createIndexes[]
             IndexManager index = graphDb.index();
             Index<Node> actors = index.forNodes( "actors" );
             Index<Node> movies = index.forNodes( "movies" );
             RelationshipIndex roles = index.forRelationships( "roles" );
-            // END SNIPPET: createIndexes
+            // end::createIndexes[]
 
-            // START SNIPPET: createNodes
+            // tag::createNodes[]
             // Actors
             Node reeves = graphDb.createNode();
             reeves.setProperty( "name", "Keanu Reeves" );
@@ -137,9 +137,9 @@ public class ImdbDocTest {
             malena.setProperty( "year", 2000 );
             movies.add( malena, "title", malena.getProperty( "title" ) );
             movies.add( malena, "year", malena.getProperty( "year" ) );
-            // END SNIPPET: createNodes
+            // end::createNodes[]
 
-            // START SNIPPET: createRelationships
+            // tag::createRelationships[]
             // we need a relationship type
             RelationshipType ACTS_IN = RelationshipType.withName( "ACTS_IN" );
             // create relationships
@@ -155,7 +155,7 @@ public class ImdbDocTest {
             Relationship role4 = bellucci.createRelationshipTo( malena, ACTS_IN );
             role4.setProperty( "name", "Malèna Scordia" );
             roles.add( role4, "name", role4.getProperty( "name" ) );
-            // END SNIPPET: createRelationships
+            // end::createRelationships[]
 
             tx.success();
         }
@@ -198,10 +198,10 @@ public class ImdbDocTest {
     @Test
     public void checkIfIndexExists()
     {
-        // START SNIPPET: checkIfExists
+        // tag::checkIfExists[]
         IndexManager index = graphDb.index();
         boolean indexExists = index.existsForNodes( "actors" );
-        // END SNIPPET: checkIfExists
+        // end::checkIfExists[]
         assertTrue( indexExists );
     }
 
@@ -212,11 +212,11 @@ public class ImdbDocTest {
         GraphDatabaseService graphDb = new TestGraphDatabaseFactory().newImpermanentDatabase( storeDir );
         try ( Transaction tx = graphDb.beginTx() )
         {
-            // START SNIPPET: delete
+            // tag::delete[]
             IndexManager index = graphDb.index();
             Index<Node> actors = index.forNodes( "actors" );
             actors.delete();
-            // END SNIPPET: delete
+            // end::delete[]
             tx.success();
         }
         assertFalse( indexExists( graphDb ) );
@@ -239,10 +239,10 @@ public class ImdbDocTest {
         Node bellucci = actors.get( "name", "Monica Bellucci" ).getSingle();
         assertNotNull( bellucci );
 
-        // START SNIPPET: removeNodeFromIndex
+        // tag::removeNodeFromIndex[]
         // completely remove bellucci from the actors index
         actors.remove( bellucci );
-        // END SNIPPET: removeNodeFromIndex
+        // end::removeNodeFromIndex[]
 
         Node node = actors.get( "name", "Monica Bellucci" ).getSingle();
         assertEquals( null, node );
@@ -251,10 +251,10 @@ public class ImdbDocTest {
 
         rollbackTx();
 
-        // START SNIPPET: removeNodeFromIndex
+        // tag::removeNodeFromIndex[]
         // remove any "name" entry of bellucci from the actors index
         actors.remove( bellucci, "name" );
-        // END SNIPPET: removeNodeFromIndex
+        // end::removeNodeFromIndex[]
 
         node = actors.get( "name", "Monica Bellucci" ).getSingle();
         assertEquals( null, node );
@@ -263,10 +263,10 @@ public class ImdbDocTest {
 
         rollbackTx();
 
-        // START SNIPPET: removeNodeFromIndex
+        // tag::removeNodeFromIndex[]
         // remove the "name" -> "La Bellucci" entry of bellucci
         actors.remove( bellucci, "name", "La Bellucci" );
-        // END SNIPPET: removeNodeFromIndex
+        // end::removeNodeFromIndex[]
 
         node = actors.get( "name", "La Bellucci" ).getSingle();
         assertEquals( null, node );
@@ -280,25 +280,25 @@ public class ImdbDocTest {
         IndexManager index = graphDb.index();
         Index<Node> actors = index.forNodes( "actors" );
 
-        // START SNIPPET: update
+        // tag::update[]
         // create a node with a property
         // so we have something to update later on
         Node fishburn = graphDb.createNode();
         fishburn.setProperty( "name", "Fishburn" );
         // index it
         actors.add( fishburn, "name", fishburn.getProperty( "name" ) );
-        // END SNIPPET: update
+        // end::update[]
 
         Node node = actors.get( "name", "Fishburn" ).getSingle();
         assertEquals( fishburn, node );
 
-        // START SNIPPET: update
+        // tag::update[]
         // update the index entry
         // when the property value changes
         actors.remove( fishburn, "name", fishburn.getProperty( "name" ) );
         fishburn.setProperty( "name", "Laurence Fishburn" );
         actors.add( fishburn, "name", fishburn.getProperty( "name" ) );
-        // END SNIPPET: update
+        // end::update[]
 
         node = actors.get( "name", "Fishburn" ).getSingle();
         assertEquals( null, node );
@@ -311,10 +311,10 @@ public class ImdbDocTest {
     {
         Index<Node> actors = graphDb.index().forNodes( "actors" );
 
-        // START SNIPPET: getSingleNode
+        // tag::getSingleNode[]
         IndexHits<Node> hits = actors.get( "name", "Keanu Reeves" );
         Node reeves = hits.getSingle();
-        // END SNIPPET: getSingleNode
+        // end::getSingleNode[]
 
         assertEquals( "Keanu Reeves", reeves.getProperty( "name" ) );
     }
@@ -324,11 +324,11 @@ public class ImdbDocTest {
     {
         RelationshipIndex roles = graphDb.index().forRelationships( "roles" );
 
-        // START SNIPPET: getSingleRelationship
+        // tag::getSingleRelationship[]
         Relationship persephone = roles.get( "name", "Persephone" ).getSingle();
         Node actor = persephone.getStartNode();
         Node movie = persephone.getEndNode();
-        // END SNIPPET: getSingleRelationship
+        // end::getSingleRelationship[]
 
         assertEquals( "Monica Bellucci", actor.getProperty( "name" ) );
         assertEquals( "The Matrix Reloaded", movie.getProperty( "title" ) );
@@ -342,16 +342,16 @@ public class ImdbDocTest {
         };
         List<String> foundActors = new ArrayList<>();
 
-        // START SNIPPET: getRelationships
+        // tag::getRelationships[]
         for ( Relationship role : roles.get( "name", "Neo" ) )
         {
             // this will give us Reeves twice
             Node reeves = role.getStartNode();
-            // END SNIPPET: getRelationships
+            // end::getRelationships[]
             foundActors.add( (String) reeves.getProperty( "name" ) );
-            // START SNIPPET: getRelationships
+            // tag::getRelationships[]
         }
-        // END SNIPPET: getRelationships
+        // end::getRelationships[]
 
         assertEquals( expectedActors, foundActors );
     }
@@ -377,85 +377,85 @@ public class ImdbDocTest {
             }
         };
 
-        // START SNIPPET: actorsQuery
+        // tag::actorsQuery[]
         for ( Node actor : actors.query( "name", "*e*" ) )
         {
             // This will return Reeves and Bellucci
-            // END SNIPPET: actorsQuery
+            // end::actorsQuery[]
             found.add( (String) actor.getProperty( "name" ) );
-            // START SNIPPET: actorsQuery
+            // tag::actorsQuery[]
         }
-        // END SNIPPET: actorsQuery
+        // end::actorsQuery[]
         assertEquals( expectedActors, found );
         found.clear();
 
-        // START SNIPPET: matrixQuery
+        // tag::matrixQuery[]
         for ( Node movie : movies.query( "title:*Matrix* AND year:1999" ) )
         {
             // This will return "The Matrix" from 1999 only.
-            // END SNIPPET: matrixQuery
+            // end::matrixQuery[]
             found.add( (String) movie.getProperty( "title" ) );
-            // START SNIPPET: matrixQuery
+            // tag::matrixQuery[]
         }
-        // END SNIPPET: matrixQuery
+        // end::matrixQuery[]
         assertEquals( expectedMovies, found );
 
-        // START SNIPPET: matrixSingleQuery
+        // tag::matrixSingleQuery[]
         Node matrix = movies.query( "title:*Matrix* AND year:2003" ).getSingle();
-        // END SNIPPET: matrixSingleQuery
+        // end::matrixSingleQuery[]
         assertEquals( "The Matrix Reloaded", matrix.getProperty( "title" ) );
 
-        // START SNIPPET: queryWithScore
+        // tag::queryWithScore[]
         IndexHits<Node> hits = movies.query( "title", "The*" );
         for ( Node movie : hits )
         {
             System.out.println( movie.getProperty( "title" ) + " " + hits.currentScore() );
-            // END SNIPPET: queryWithScore
+            // end::queryWithScore[]
             assertTrue( ((String) movie.getProperty( "title" )).startsWith( "The" ) );
-            // START SNIPPET: queryWithScore
+            // tag::queryWithScore[]
         }
-        // END SNIPPET: queryWithScore
+        // end::queryWithScore[]
         assertEquals( 2, hits.size() );
 
-        // START SNIPPET: queryWithRelevance
+        // tag::queryWithRelevance[]
         hits = movies.query( "title", new QueryContext( "The*" ).sortByScore() );
-        // END SNIPPET: queryWithRelevance
+        // end::queryWithRelevance[]
         float previous = Float.MAX_VALUE;
-        // START SNIPPET: queryWithRelevance
+        // tag::queryWithRelevance[]
         for ( Node movie : hits )
         {
             // hits sorted by relevance (score)
-            // END SNIPPET: queryWithRelevance
+            // end::queryWithRelevance[]
             assertTrue( hits.currentScore() <= previous );
             previous = hits.currentScore();
-            // START SNIPPET: queryWithRelevance
+            // tag::queryWithRelevance[]
         }
-        // END SNIPPET: queryWithRelevance
+        // end::queryWithRelevance[]
         assertEquals( 2, hits.size() );
 
-        // START SNIPPET: termQuery
+        // tag::termQuery[]
         // a TermQuery will give exact matches
         Node actor = actors.query( new TermQuery( new Term( "name", "Keanu Reeves" ) ) ).getSingle();
-        // END SNIPPET: termQuery
+        // end:termQuery[]
         assertEquals( "Keanu Reeves", actor.getProperty( "name" ) );
 
         Node theMatrix = movies.get( "title", "The Matrix" ).getSingle();
         Node theMatrixReloaded = movies.get( "title", "The Matrix Reloaded" ).getSingle();
         Node malena = movies.get( "title", "Malèna" ).getSingle();
 
-        // START SNIPPET: wildcardTermQuery
+        // tag::wildcardTermQuery[]
         hits = movies.query( new WildcardQuery( new Term( "title", "The Matrix*" ) ) );
         for ( Node movie : hits )
         {
             System.out.println( movie.getProperty( "title" ) );
-            // END SNIPPET: wildcardTermQuery
+            // end::wildcardTermQuery[]
             assertTrue( ((String) movie.getProperty( "title" )).startsWith( "The Matrix" ) );
-            // START SNIPPET: wildcardTermQuery
+            // tag::wildcardTermQuery[]
         }
-        // END SNIPPET: wildcardTermQuery
+        // end::wildcardTermQuery[]
         assertEquals( 2, hits.size() );
 
-        // START SNIPPET: numericRange
+        // tag::numericRange[]
         movies.add( theMatrix, "year-numeric", new ValueContext( 1999 ).indexNumeric() );
         movies.add( theMatrixReloaded, "year-numeric", new ValueContext( 2003 ).indexNumeric() );
         movies.add( malena, "year-numeric", new ValueContext( 2000 ).indexNumeric() );
@@ -463,14 +463,14 @@ public class ImdbDocTest {
         int from = 1997;
         int to = 1999;
         hits = movies.query( QueryContext.numericRange( "year-numeric", from, to ) );
-        // END SNIPPET: numericRange
+        // end::numericRange[]
         assertEquals( theMatrix, hits.getSingle() );
 
-        // START SNIPPET: sortedNumericRange
+        // tag::sortedNumericRange[]
         hits = movies.query(
                 QueryContext.numericRange( "year-numeric", from, null )
                         .sortNumeric( "year-numeric", false ) );
-        // END SNIPPET: sortedNumericRange
+        // end::sortedNumericRange[]
         List<String> sortedMovies = new ArrayList<>();
         List<String> expectedSortedMovies = new ArrayList<String>()
         {
@@ -486,14 +486,14 @@ public class ImdbDocTest {
         }
         assertEquals( expectedSortedMovies, sortedMovies );
 
-        // START SNIPPET: exclusiveRange
+        // tag::exclusiveRange[]
         movies.add( theMatrix, "score", new ValueContext( 8.7 ).indexNumeric() );
         movies.add( theMatrixReloaded, "score", new ValueContext( 7.1 ).indexNumeric() );
         movies.add( malena, "score", new ValueContext( 7.4 ).indexNumeric() );
 
         // include 8.0, exclude 9.0
         hits = movies.query( QueryContext.numericRange( "score", 8.0, 9.0, true, false ) );
-        // END SNIPPET: exclusiveRange
+        // end::exclusiveRange[]
         found.clear();
         for ( Node hit : hits )
         {
@@ -501,36 +501,36 @@ public class ImdbDocTest {
         }
         assertEquals( expectedMovies, found );
 
-        // START SNIPPET: compoundQueries
+        // tag::compoundQueries[]
         hits = movies.query( "title:*Matrix* AND year:1999" );
-        // END SNIPPET: compoundQueries
+        // end::compoundQueries[]
 
         assertEquals( theMatrix, hits.getSingle() );
 
-        // START SNIPPET: defaultOperator
+        // tag::defaultOperator[]
         QueryContext query = new QueryContext( "title:*Matrix* year:1999" )
                 .defaultOperator( Operator.AND );
         hits = movies.query( query );
-        // END SNIPPET: defaultOperator
+        // end::defaultOperator[]
         // with OR the result would be 2 hits
         assertEquals( 1, hits.size() );
 
-        // START SNIPPET: sortedResult
+        // tag::sortedResult[]
         hits = movies.query( "title", new QueryContext( "*" ).sort( "title" ) );
         for ( Node hit : hits )
         {
             // all movies with a title in the index, ordered by title
         }
-        // END SNIPPET: sortedResult
+        // end::sortedResult[]
         assertEquals( 3, hits.size() );
-        // START SNIPPET: sortedResult
+        // tag::sortedResult[]
         // or
         hits = movies.query( new QueryContext( "title:*" ).sort( "year", "title" ) );
         for ( Node hit : hits )
         {
             // all movies with a title in the index, ordered by year, then title
         }
-        // END SNIPPET: sortedResult
+        // end::sortedResult[]
         assertEquals( 3, hits.size() );
     }
 
@@ -545,31 +545,31 @@ public class ImdbDocTest {
         Node reeves = actors.get( "name", "Keanu Reeves" ).getSingle();
         Node theMatrix = movies.get( "title", "The Matrix" ).getSingle();
 
-        // START SNIPPET: queryForRelationships
+        // tag::queryForRelationships[]
         // find relationships filtering on start node
         // using exact matches
         IndexHits<Relationship> reevesAsNeoHits;
         reevesAsNeoHits = roles.get( "name", "Neo", reeves, null );
         Relationship reevesAsNeo = reevesAsNeoHits.iterator().next();
         reevesAsNeoHits.close();
-        // END SNIPPET: queryForRelationships
+        // end::queryForRelationships[]
         assertEquals( "Neo", reevesAsNeo.getProperty( "name" ) );
         Node actor = reevesAsNeo.getStartNode();
         assertEquals( reeves, actor );
 
-        // START SNIPPET: queryForRelationships
+        // tag::queryForRelationships[]
         // find relationships filtering on end node
         // using a query
         IndexHits<Relationship> matrixNeoHits;
         matrixNeoHits = roles.query( "name", "*eo", null, theMatrix );
         Relationship matrixNeo = matrixNeoHits.iterator().next();
         matrixNeoHits.close();
-        // END SNIPPET: queryForRelationships
+        // end::queryForRelationships[]
         assertEquals( "Neo", matrixNeo.getProperty( "name" ) );
         actor = matrixNeo.getStartNode();
         assertEquals( reeves, actor );
 
-        // START SNIPPET: queryForRelationshipType
+        // tag::queryForRelationshipType[]
         // find relationships filtering on end node
         // using a relationship type.
         // this is how to add it to the index:
@@ -585,7 +585,7 @@ public class ImdbDocTest {
             IndexHits<Relationship> typeHits = roles.query( "type:ACTS_IN AND name:Neo", null, theMatrix );
             Relationship typeNeo = typeHits.iterator().next();
             typeHits.close();
-            // END SNIPPET: queryForRelationshipType
+            // end::queryForRelationshipType[]
             assertThat(typeNeo, inTx( graphDb, hasProperty( "name" ).withValue( "Neo" ) ));
             actor = matrixNeo.getStartNode();
             assertEquals( reeves, actor );
@@ -595,22 +595,22 @@ public class ImdbDocTest {
     @Test
     public void fulltext()
     {
-        // START SNIPPET: fulltext
+        // tag::fulltext[]
         IndexManager index = graphDb.index();
         Index<Node> fulltextMovies = index.forNodes( "movies-fulltext",
                 MapUtil.stringMap( IndexManager.PROVIDER, "lucene", "type", "fulltext" ) );
-        // END SNIPPET: fulltext
+        // end::fulltext[]
 
         Index<Node> movies = index.forNodes( "movies" );
         Node theMatrix = movies.get( "title", "The Matrix" ).getSingle();
         Node theMatrixReloaded = movies.get( "title", "The Matrix Reloaded" ).getSingle();
 
-        // START SNIPPET: fulltext
+        // tag::fulltext[]
         fulltextMovies.add( theMatrix, "title", "The Matrix" );
         fulltextMovies.add( theMatrixReloaded, "title", "The Matrix Reloaded" );
         // search in the fulltext index
         Node found = fulltextMovies.query( "title", "reloAdEd" ).getSingle();
-        // END SNIPPET: fulltext
+        // end::fulltext[]
         assertEquals( theMatrixReloaded, found );
     }
 
@@ -620,7 +620,7 @@ public class ImdbDocTest {
         String database = "neo4jdb-batchinsert";
         File file = new File( "target/" + database );
         Neo4jTestCase.deleteFileOrDirectory( file );
-        // START SNIPPET: batchInsert
+        // tag::batchInsert[]
         BatchInserter inserter = BatchInserters.inserter( file );
         BatchInserterIndexProvider indexProvider =
                 new LuceneBatchInserterIndexProvider( inserter );
@@ -638,7 +638,7 @@ public class ImdbDocTest {
         // Make sure to shut down the index provider as well
         indexProvider.shutdown();
         inserter.shutdown();
-        // END SNIPPET: batchInsert
+        // end::batchInsert[]
 
         GraphDatabaseService db = new TestGraphDatabaseFactory().newEmbeddedDatabaseBuilder( file.getParentFile() )
                 .setConfig( GraphDatabaseSettings.active_database, database ).newGraphDatabase();
