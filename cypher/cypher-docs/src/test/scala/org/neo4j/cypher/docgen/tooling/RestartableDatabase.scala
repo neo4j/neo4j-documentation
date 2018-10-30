@@ -69,7 +69,7 @@ class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseG
     createAndStartIfNecessary()
     val executionResult: DocsExecutionResult = try {
       val txContext = graph.transactionalContext(query = q -> params.toMap)
-      DocsExecutionResult(eengine.execute(q, asMapValue(params.toMap), txContext), txContext)
+      DocsExecutionResult(eengine.execute(q, ExecutionEngineHelper.asMapValue(params.toMap), txContext), txContext)
     } catch {
       case e: Throwable => _markedForRestart = true; throw e
     }
