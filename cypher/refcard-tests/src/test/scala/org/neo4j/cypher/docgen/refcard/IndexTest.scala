@@ -44,13 +44,15 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("name" -> "Alice"),
-    "B" -> Map("name" -> "Timothy"))
+    "A" -> Map("name" -> "Alice", "age" -> 18 ),
+    "B" -> Map("name" -> "Timothy", "age" -> 22 ))
 
   override def parameters(name: String): Map[String, Any] =
     name match {
       case "parameters=aname" =>
         Map("value" -> "Alice")
+      case "parameters=nameandage" =>
+        Map("value" -> "Alice" , "value2" -> 18 )
       case _ =>
         Map()
     }
@@ -63,6 +65,14 @@ CREATE INDEX ON :Person(name)
 ###
 
 Create an index on the label `Person` and property `name`.
+
+###assertion=create-index
+//
+
+CREATE INDEX ON :Person(name, age)
+###
+
+Create a composite index on the label `Person` and the properties `name` and `age`.
 
 ###assertion=match parameters=aname
 //
@@ -85,6 +95,18 @@ RETURN n
 ###
 
 An index can automatically be used for the `IN` list checks.
+
+###assertion=match parameters=nameandage
+//
+
+MATCH (n:Person)
+WHERE n.name = $value and n.age = $value2
+RETURN n
+###
+
+A composite index can be automatically used for equality comparison of both properties.
+Note that a predicate on only one of the properties
+will not be backed by the composite index.
 
 ###assertion=match parameters=aname
 //
