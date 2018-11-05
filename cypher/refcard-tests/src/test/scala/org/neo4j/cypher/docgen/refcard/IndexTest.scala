@@ -101,12 +101,12 @@ An index can automatically be used for the `IN` list checks.
 
 MATCH (n:Person)
 WHERE n.name = $value and n.age = $value2
+
 RETURN n
 ###
 
 A composite index can be automatically used for equality comparison of both properties.
-Note that a predicate on only one of the properties
-will not be backed by the composite index.
+Note that there needs to be predicates on all properties of the composite index for it to be used.
 
 ###assertion=match parameters=aname
 //
