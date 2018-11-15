@@ -60,7 +60,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.neo4j.test</groupId>
+            <groupId>com.neo4j.test</groupId>
             <artifactId>neo4j-harness-enterprise</artifactId>
             <version>${neo4j.version}</version>
             <scope>test</scope>

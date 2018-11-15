@@ -112,7 +112,7 @@
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.neo4j</groupId>
+            <groupId>com.neo4j</groupId>
             <artifactId>neo4j-enterprise-cypher</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
@@ -152,7 +152,7 @@
 
         <!-- neo4j -->
         <dependency>
-            <groupId>org.neo4j</groupId>
+            <groupId>com.neo4j</groupId>
             <artifactId>neo4j-enterprise-kernel</artifactId>
             <version>${neo4j.version}</version>
             <scope>test</scope>

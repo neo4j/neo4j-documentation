@@ -16,7 +16,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.neo4j</groupId>
+            <groupId>com.neo4j</groupId>
             <artifactId>neo4j-backup</artifactId>
             <version>${neo4j.version}</version>
             <scope>test</scope>

@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.neo4j.app</groupId>
+            <groupId>com.neo4j.app</groupId>
             <artifactId>neo4j-server-enterprise</artifactId>
             <version>${neo4j.version}</version>
             <scope>test</scope>
