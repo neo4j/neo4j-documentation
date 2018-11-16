@@ -147,10 +147,7 @@ include::../ql/query-plan/empty-row.asciidoc[]
 
 include::../ql/query-plan/procedure-call.asciidoc[]
 
-
-include::../ql/query-plan/create-node.asciidoc[]
-
-include::../ql/query-plan/create-relationship.asciidoc[]
+include::../ql/query-plan/create-nodes---relationships.asciidoc[]
 
 include::../ql/query-plan/delete.asciidoc[]
 

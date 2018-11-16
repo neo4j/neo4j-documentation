@@ -350,4 +350,4 @@ This example shows how you invoke a user-defined aggregation function called `lo
 
 include::query-functions-user-defined-aggregation.adoc[leveloffset=+1]
 
-For developing and deploying user-defined aggregation functions in Neo4j, see <<user-defined-aggregation-functions, Extending Neo4j -> User-defined aggregation functions>>.
+For developing and deploying user-defined aggregation functions in Neo4j, see <<java-reference#extending-neo4j-aggregation-functions, Extending Neo4j -> User-defined aggregation functions>>.

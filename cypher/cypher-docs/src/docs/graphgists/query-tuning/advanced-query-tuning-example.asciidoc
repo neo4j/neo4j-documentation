@@ -127,7 +127,7 @@ Note also that if you have pre-existing indexes that were build on lucene, upgra
 It is necessary to drop and re-create the index in order to port it to the native index.
 For information on native index support see the _Operations Manual_:
 
-* <<operations-manual#index-configuration-native-indexes, Property types supported by the native index>>
+* <<operations-manual#index-configuration-schema-indexes, Property types supported by the native index>>
 * <<operations-manual#index-configuration-index-providers, Index providers and property types>>
 * <<operations-manual#index-configuration-upgrade-considerations, Index configuration upgrade considerations>>
 

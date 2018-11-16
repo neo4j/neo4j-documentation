@@ -49,7 +49,7 @@ class UserDefinedFunctionTest extends DocumentingTest {
       }
     }
     p("""
-        |For developing and deploying user-defined functions in Neo4j, see <<java-reference#extending-neo4j-cypher-functions, Extending Neo4j -> User-defined functions>>.""")
+        |For developing and deploying user-defined functions in Neo4j, see <<java-reference#extending-neo4j-functions, Extending Neo4j -> User-defined functions>>.""")
 
   }.build()
 }

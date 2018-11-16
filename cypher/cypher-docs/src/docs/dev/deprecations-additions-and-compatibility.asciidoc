@@ -54,7 +54,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | <<functions-toboolean,toBoolean()>> | Function | Added |
 | <<cypher-map-projection, Map projection>> | Syntax | Added |
 | <<cypher-pattern-comprehension, Pattern comprehension>> | Syntax | Added |
-| <<java-reference#extending-neo4j-cypher-functions, User-defined functions>> | Functionality | Added |
+| <<java-reference#extending-neo4j-functions, User-defined functions>> | Functionality | Added |
 | <<query-call, CALL\...YIELD\...WHERE>>   | Clause  | Extended  | Records returned by `YIELD` may be filtered further using `WHERE`
 |===
 
@@ -71,7 +71,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `MATCH (n)-[:A\|:B\|:C {foo: 'bar'}]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[:A\|B\|C {foo: 'bar'}]-() RETURN n`
 | `MATCH (n)-[x:A\|:B\|:C]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[x:A\|B\|C]-() RETURN n`
 | `MATCH (n)-[x:A\|:B\|:C*]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[x:A\|B\|C*]-() RETURN n`
-| <<java-reference#extending-neo4j-cypher-aggregation-functions, User-defined aggregation functions>> | Functionality | Added |
+| <<java-reference#extending-neo4j-aggregation-functions, User-defined aggregation functions>> | Functionality | Added |
 | <<query-schema-index-introduction, Composite indexes>> | Index | Added |
 | <<query-constraint-node-key, Node Key>> | Index | Added | Neo4j Enterprise Edition only
 | `CYPHER runtime=compiled` (Compiled runtime) | Functionality | Added | Neo4j Enterprise Edition only
