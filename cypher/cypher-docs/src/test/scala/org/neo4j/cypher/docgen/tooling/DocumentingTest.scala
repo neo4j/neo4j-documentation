@@ -127,15 +127,7 @@ class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) ext
   def apply(x: Any): String = {
 
     val transactionalContext = TransactionalContextWrapper(
-      contextFactory.newContext(
-        new BoltConnectionInfo(
-          "bolt-1",
-          "username",
-          "neo4j-java-bolt-driver",
-          new InetSocketAddress("127.0.0.1", 56789),
-          new InetSocketAddress("127.0.0.1", 7687)
-        ),
-        tx, "QUERY", EMPTY_MAP )
+      contextFactory.newContext(tx, "QUERY", EMPTY_MAP )
     )
     val QUIET_MONITOR:IndexSearchMonitor = null // this is ok because we're only serializing using this TBQC
     val ctx = new TransactionBoundQueryContext(transactionalContext)(QUIET_MONITOR)

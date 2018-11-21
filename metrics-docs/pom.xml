@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.neo4j.doc</groupId>
         <artifactId>neo4j-manual-parent</artifactId>
-        <version>4.0</version>
+        <version>4.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -48,12 +48,6 @@
                                     <arg value="org.neo4j.metrics.source.causalclustering.CoreMetrics" />
                                     <arg value="org.neo4j.metrics.source.causalclustering.ReadReplicaMetrics" />
                                 </java>
-                                <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
-                                      classpathref="maven.test.classpath" failonerror="true">
-                                    <arg value="--output=${project.build.directory}/docs/ops/ha-metrics.asciidoc" />
-                                    <arg value="org.neo4j.metrics.source.cluster.NetworkMetrics" />
-                                    <arg value="org.neo4j.metrics.source.cluster.ClusterMetrics" />
-                                </java>
                             </target>
                         </configuration>
                         <goals><goal>run</goal></goals>
@@ -79,12 +73,6 @@
         </dependency>
         <dependency>
             <groupId>com.neo4j</groupId>
-            <artifactId>neo4j-ha</artifactId>
-            <version>${neo4j.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.neo4j</groupId>
             <artifactId>neo4j-causal-clustering</artifactId>
             <version>${neo4j.version}</version>
             <scope>provided</scope>
@@ -98,18 +86,6 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-io</artifactId>
-            <version>${neo4j.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.neo4j</groupId>
-            <artifactId>neo4j-com</artifactId>
-            <version>${neo4j.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.neo4j</groupId>
-            <artifactId>neo4j-cluster</artifactId>
             <version>${neo4j.version}</version>
             <scope>provided</scope>
         </dependency>

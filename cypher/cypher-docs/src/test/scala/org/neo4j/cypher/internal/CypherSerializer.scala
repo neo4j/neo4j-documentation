@@ -64,8 +64,8 @@ trait CypherSerializer {
     }
 
     val keyValStrings = if (deleted) Array("deleted")
-    else ops.propertyKeyIds(id).
-      map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId).asObject(), qtx))
+    else ops.propertyKeyIds(id, null, null).
+      map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, null, null).asObject(), qtx))
 
     keyValStrings.mkString("{", ",", "}")
   }
