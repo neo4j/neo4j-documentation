@@ -23,8 +23,8 @@ import java.io.IOException;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.io.fs.FileUtils;
+import org.neo4j.kernel.configuration.BoltConnector;
 
 public class EmbeddedNeo4jWithBolt
 {
@@ -36,7 +36,7 @@ public class EmbeddedNeo4jWithBolt
         FileUtils.deleteRecursively( DB_PATH );
 
         // tag::startDb[]
-        GraphDatabaseSettings.BoltConnector bolt = GraphDatabaseSettings.boltConnector( "0" );
+        BoltConnector bolt = new BoltConnector( "0" );
 
         GraphDatabaseService graphDb = new GraphDatabaseFactory()
                 .newEmbeddedDatabaseBuilder( DB_PATH )
