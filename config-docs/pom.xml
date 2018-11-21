@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.neo4j.doc</groupId>
         <artifactId>neo4j-manual-parent</artifactId>
-        <version>4.0</version>
+        <version>4.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -64,17 +64,7 @@
         </dependency>
         <dependency>
             <groupId>com.neo4j</groupId>
-            <artifactId>neo4j-cluster</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.neo4j</groupId>
             <artifactId>neo4j-causal-clustering</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.neo4j</groupId>
-            <artifactId>neo4j-ha</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>
@@ -132,16 +122,6 @@
                                     <arg file="${project.build.directory}/docs/ops/deprecated-settings.adoc" />
                                 </java>
 
-                                <!-- Enumerated HA settings -->
-                                <java classname="org.neo4j.doc.ConfigDocsTool"
-                                      classpathref="maven.compile.classpath" failonerror="true">
-                                    <arg value="--id=settings-reference-ha-settings" />
-                                    <arg value="--title=HA settings" />
-                                    <arg value="--id-prefix=ha-setting_" />
-                                    <arg value="--names=dbms.mode,ha.server_id,ha.host.coordination,ha.initial_hosts,ha.host.data,ha.join_timeout" />
-                                    <arg file="${project.build.directory}/docs/ops/ha-settings.adoc" />
-                                </java>
-
                                 <!-- All Causal Clustering settings by prefix -->
                                 <java classname="org.neo4j.doc.ConfigDocsTool"
                                       classpathref="maven.compile.classpath" failonerror="true">
@@ -170,10 +150,7 @@
                                     <arg value="org.neo4j.graphdb.factory.GraphDatabaseSettings" />
                                     <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
                                     <arg value="org.neo4j.metrics.MetricsSettings" />
-                                    <arg value="org.neo4j.backup.OnlineBackupSettings" />
                                     <arg value="org.neo4j.ext.udc.UdcSettings" />
-                                    <arg value="org.neo4j.cluster.ClusterSettings" />
-                                    <arg value="org.neo4j.kernel.ha.HaSettings" />
                                     <arg value="org.neo4j.causalclustering.core.CausalClusteringSettings" />
                                     <arg value="org.neo4j.consistency.ConsistencyCheckSettings" />
                                     <arg value="org.neo4j.server.enterprise.EnterpriseServerSettings" />

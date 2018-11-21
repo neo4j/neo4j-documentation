@@ -103,18 +103,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     val parameterValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String,AnyRef]])
     val docsResult = db.withTx(
       tx => {
-        val txContext = contextFactory.newContext(
-          new BoltConnectionInfo(
-            "bolt-1",
-            "username",
-            "neo4j-java-bolt-driver",
-            new InetSocketAddress("127.0.0.1", 56789),
-            new InetSocketAddress("127.0.0.1", 7687)
-          ),
-          tx,
-          testQuery,
-          parameterValue
-        )
+        val txContext = contextFactory.newContext(tx, testQuery, parameterValue)
         DocsExecutionResult(engine.execute(testQuery, parameterValue, txContext), txContext)
       }, Transaction.Type.`implicit` )
     docsResult

@@ -40,7 +40,7 @@ import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.StringSearchMode;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.graphdb.event.KernelEventHandler;
+import org.neo4j.graphdb.event.DatabaseEventHandler;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
@@ -49,6 +49,7 @@ import org.neo4j.graphdb.schema.Schema;
 import org.neo4j.graphdb.security.URLAccessValidationError;
 import org.neo4j.graphdb.traversal.BidirectionalTraversalDescription;
 import org.neo4j.graphdb.traversal.TraversalDescription;
+import org.neo4j.internal.kernel.api.connectioninfo.ClientConnectionInfo;
 import org.neo4j.internal.kernel.api.security.LoginContext;
 import org.neo4j.io.fs.FileSystemAbstraction;
 import org.neo4j.io.layout.DatabaseLayout;
@@ -203,10 +204,16 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
     }
 
     @Override
-    public InternalTransaction beginTransaction( KernelTransaction.Type type, LoginContext loginContext, long timeout,
+    public InternalTransaction beginTransaction( KernelTransaction.Type type, LoginContext loginContext, ClientConnectionInfo clientInfo, long timeout,
                                                  TimeUnit unit )
     {
-        return getGraphDatabaseAPI().beginTransaction( type, loginContext, timeout, unit );
+        return getGraphDatabaseAPI().beginTransaction( type, loginContext, clientInfo, timeout, unit );
+    }
+
+    @Override
+    public InternalTransaction beginTransaction( org.neo4j.internal.kernel.api.Transaction.Type type, LoginContext loginContext, ClientConnectionInfo clientInfo )
+    {
+        return getGraphDatabaseAPI().beginTransaction( type, loginContext, clientInfo );
     }
 
     @Override
@@ -580,13 +587,13 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
     }
 
     @Override
-    public KernelEventHandler registerKernelEventHandler( KernelEventHandler handler )
+    public DatabaseEventHandler registerKernelEventHandler( DatabaseEventHandler handler )
     {
         return database.registerKernelEventHandler( handler );
     }
 
     @Override
-    public KernelEventHandler unregisterKernelEventHandler( KernelEventHandler handler )
+    public DatabaseEventHandler unregisterKernelEventHandler( DatabaseEventHandler handler )
     {
         return database.unregisterKernelEventHandler( handler );
     }

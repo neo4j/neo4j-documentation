@@ -18,10 +18,10 @@
  */
 package org.neo4j.doc.test.rule;
 
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.logging.LogProvider;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
 
 /**
  * JUnit @Rule for configuring, creating and managing an ImpermanentGraphDatabase instance.

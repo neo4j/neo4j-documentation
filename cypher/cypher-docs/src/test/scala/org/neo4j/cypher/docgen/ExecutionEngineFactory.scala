@@ -24,7 +24,7 @@ import org.neo4j.cypher.internal._
 import org.neo4j.cypher.internal.tracing.TimingCompilationTracer
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.compatibility.CypherRuntimeConfiguration
-import org.neo4j.cypher.internal.compiler.v3_5.CypherPlannerConfiguration
+import org.neo4j.cypher.internal.compiler.v4_0.CypherPlannerConfiguration
 import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction

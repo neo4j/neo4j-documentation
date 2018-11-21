@@ -345,13 +345,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
         def txContext(transaction: InternalTransaction) =
           contextFactory.newContext(
-            new BoltConnectionInfo(
-              "bolt-1",
-              "username",
-              "neo4j-java-bolt-driver",
-              new InetSocketAddress("127.0.0.1", 56789),
-              new InetSocketAddress("127.0.0.1", 7687)
-            ),
             transaction,
             query,
             parametersValue
@@ -405,13 +398,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
               s"$s $query",
               parametersValue,
               contextFactory.newContext(
-                new BoltConnectionInfo(
-                  "bolt-1",
-                  "username",
-                  "neo4j-java-bolt-driver",
-                  new InetSocketAddress("127.0.0.1", 56789),
-                  new InetSocketAddress("127.0.0.1", 7687)
-                ),
                 transaction,
                 query,
                 parametersValue
@@ -496,13 +482,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       val innerTx = db.beginTransaction( Type.`implicit`, tx.securityContext() )
       engine.execute( query, VirtualValues.EMPTY_MAP,
         contextFactory.newContext(
-          new BoltConnectionInfo(
-            "bolt-1",
-            "username",
-            "neo4j-java-bolt-driver",
-            new InetSocketAddress("127.0.0.1", 56789),
-            new InetSocketAddress("127.0.0.1", 7687)
-          ),
           innerTx,
           query,
           VirtualValues.EMPTY_MAP
