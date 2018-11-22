@@ -267,38 +267,6 @@ public class JavaExecutionEngineDocTest
     }
 
     @Test
-    public void exampleWithParameterForIndexValue() throws Exception
-    {
-        try ( Transaction ignored = db.beginTx() )
-        {
-            // tag::exampleWithParameterForIndexValue[]
-            Map<String, Object> params = new HashMap<>();
-            params.put( "value", "Michaela" );
-            String query = "START n=node:people(name = $value) RETURN n";
-            Result result = db.execute( query, params );
-            // end::exampleWithParameterForIndexValue[]
-            assertEquals(singletonList(michaelaNode), this.<Node>toList( result, "n" ) );
-            dumpToFile( "exampleWithParameterForIndexValue", query, params );
-        }
-    }
-
-    @Test
-    public void exampleWithParametersForQuery() throws Exception
-    {
-        try ( Transaction ignored = db.beginTx() )
-        {
-            // tag::exampleWithParametersForQuery[]
-            Map<String, Object> params = new HashMap<>();
-            params.put( "query", "name:Bob" );
-            String query = "START n=node:people($query) RETURN n";
-            Result result = db.execute( query, params );
-            // end::exampleWithParametersForQuery[]
-            assertEquals( asList( bobNode ), this.<Node>toList( result, "n" ) );
-            dumpToFile( "exampleWithParametersForQuery", query, params );
-        }
-    }
-
-    @Test
     public void exampleWithParameterForNodeObject() throws Exception
     {
         // tag::exampleWithParameterForNodeObject[]

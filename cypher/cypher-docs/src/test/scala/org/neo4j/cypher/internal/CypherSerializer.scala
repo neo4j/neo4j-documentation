@@ -58,14 +58,23 @@ trait CypherSerializer {
   }
 
   protected def serializeProperties(x: PropertyContainer, qtx: QueryContext): String = {
-    val (ops, id, deleted) = x match {
-      case n: Node => (qtx.nodeOps, n.getId, qtx.nodeOps.isDeletedInThisTx(n.getId))
-      case r: Relationship => (qtx.relationshipOps, r.getId, qtx.relationshipOps.isDeletedInThisTx(r.getId))
+    val cursors = qtx.transactionalContext.cursors
+    val property = cursors.allocatePropertyCursor
+    val (propertyText, id, deleted) = x match {
+      case n: Node =>
+        val ops = qtx.nodeOps
+        val node = cursors.allocateNodeCursor()
+        ((id: Long) => ops.propertyKeyIds(id, node, property).map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, node, property).asObject(), qtx)),
+          n.getId, qtx.nodeOps.isDeletedInThisTx(n.getId))
+      case r: Relationship =>
+        val ops = qtx.relationshipOps
+        val rel = cursors.allocateRelationshipScanCursor()
+        ((id: Long) => ops.propertyKeyIds(id, rel, property).map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, rel, property).asObject(), qtx)),
+          r.getId, qtx.relationshipOps.isDeletedInThisTx(r.getId))
     }
 
     val keyValStrings = if (deleted) Array("deleted")
-    else ops.propertyKeyIds(id, null, null).
-      map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, null, null).asObject(), qtx))
+    else propertyText(id)
 
     keyValStrings.mkString("{", ",", "}")
   }

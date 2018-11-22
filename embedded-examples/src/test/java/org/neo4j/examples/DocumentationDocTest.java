@@ -71,22 +71,11 @@ public class DocumentationDocTest extends ImpermanentGraphJavaDocTestBase
         // initialize the graph with the annotation data
         data.get();
         gen.get().addTestSourceSnippets( this.getClass(), "sampleDocumentation" );
-        gen.get()
-                .addGithubTestSourceLink( "github", this.getClass(),
-                        "embedded-examples" );
-
-        gen.get().addSnippet( "output",
-                createOutputSnippet( "Hello graphy world!" ) );
-
-        gen.get().addSnippet(
-                "graph",
-                createGraphVizWithNodeId( "Hello World Graph", graphdb(),
-                        gen.get().getTitle() ) );
-        // A cypher snippet referring to the generated graph in the start clause
-        gen.get().addSnippet(
-                "cypher",
-                createCypherSnippet( "start n = node(" + data.get().get( "I" ).getId()
-                                     + ") return n" ) );
+        gen.get().addGithubTestSourceLink( "github", this.getClass(), "embedded-examples" );
+        gen.get().addSnippet( "output", createOutputSnippet( "Hello graphy world!" ) );
+        gen.get().addSnippet( "graph", createGraphVizWithNodeId( "Hello World Graph", graphdb(), gen.get().getTitle() ) );
+        // A cypher snippet referring to the generated graph
+        gen.get().addSnippet( "cypher", createCypherSnippet( "MATCH (n) WHERE id(n) = " + data.get().get( "I" ).getId() + " RETURN n" ) );
     }
 }
 // end::_sampleDocumentation[]

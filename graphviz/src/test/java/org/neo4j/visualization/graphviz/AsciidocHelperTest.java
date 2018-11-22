@@ -33,8 +33,7 @@ public class AsciidocHelperTest
     @Test
     public void test()
     {
-        String cypher = "start n=node(0) " +
-                "match " +
+        String cypher = "MATCH (n) WHERE id(n)=0 WITH n MATCH " +
                 "x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, " +
                 "x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, " +
                 "x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n, x-n " +
