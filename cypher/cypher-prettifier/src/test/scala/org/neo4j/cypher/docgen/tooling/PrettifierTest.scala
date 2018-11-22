@@ -89,17 +89,6 @@ class PrettifierTest extends Suite
     )
   }
 
-  test("should not break CREATE UNIQUE") {
-    actual("start me=node(3) match p1 = me-[*2]-friendOfFriend create p2 = me-[:MARRIED_TO]-(wife { name: \"Gunhild\" }) create unique p3 = wife-[:KNOWS]-friendOfFriend return p1,p2,p3") should equal(
-      expected(
-        "START me=node(3)%n" +
-          "MATCH p1 = me-[*2]-friendOfFriend%n" +
-          "CREATE p2 = me-[:MARRIED_TO]-(wife { name: \"Gunhild\" })%n" +
-          "CREATE UNIQUE p3 = wife-[:KNOWS]-friendOfFriend%n" +
-          "RETURN p1,p2,p3"
-      ))
-  }
-
   test("should not break WHERE in comprehensions") {
     actual("return [x in range(0,10) where x + 2 = 0 | x^3] as result") should equal(
       expected("RETURN [x IN range(0,10) WHERE x + 2 = 0 | x^3] AS result")

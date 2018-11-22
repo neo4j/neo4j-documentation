@@ -46,7 +46,7 @@ class ForeachTest extends DocumentingTest with QueryStatisticsTestSupport {
       p("""The variable context within the `FOREACH` parenthesis is separate from the one outside it.
           |This means that if you `CREATE` a node variable within a `FOREACH`, you will _not_ be able to use it outside of the foreach statement, unless you match to find it.""".stripMargin)
       p(
-        """Within the `FOREACH` parentheses, you can do any of the updating commands -- `CREATE`, `CREATE UNIQUE`, `MERGE`, `DELETE`, and `FOREACH`.""".stripMargin)
+        """Within the `FOREACH` parentheses, you can do any of the updating commands -- `CREATE`, `MERGE`, `DELETE`, and `FOREACH`.""".stripMargin)
       p("""If you want to execute an additional `MATCH` for each element in a list then `UNWIND` (see <<query-unwind>>) would be a more appropriate command.""".stripMargin)
       graphViz()
     }
