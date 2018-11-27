@@ -53,7 +53,7 @@ import org.neo4j.values.virtual.VirtualValues
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.neo4j.visualization.graphviz.{AsciiDocStyle, GraphStyle, GraphvizWriter}
 import org.neo4j.walk.Walker
-import org.opencypher.v9_0.util.Eagerly
+import org.neo4j.cypher.internal.v3_5.util.Eagerly
 import org.scalatest.junit.JUnitSuite
 
 import scala.collection.JavaConverters._
