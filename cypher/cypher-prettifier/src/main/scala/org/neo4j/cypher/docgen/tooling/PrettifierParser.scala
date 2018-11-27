@@ -19,10 +19,10 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import org.opencypher.v9_0.parser.Base
-import org.opencypher.v9_0.parser.Strings
-import org.opencypher.v9_0.parser.WSChar
-import org.opencypher.v9_0.util.SyntaxException
+import org.neo4j.cypher.internal.v3_5.parser.Base
+import org.neo4j.cypher.internal.v3_5.parser.Strings
+import org.neo4j.cypher.internal.v3_5.parser.WSChar
+import org.neo4j.cypher.internal.v3_5.util.SyntaxException
 import org.parboiled.scala._
 
 class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base with Strings {

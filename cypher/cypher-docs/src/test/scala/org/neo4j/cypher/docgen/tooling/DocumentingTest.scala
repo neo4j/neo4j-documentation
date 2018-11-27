@@ -31,7 +31,7 @@ import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLock
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.values.virtual.VirtualValues.EMPTY_MAP
-import org.opencypher.v9_0.util.test_helpers.CypherFunSuite
+import org.neo4j.cypher.internal.v3_5.util.test_helpers.CypherFunSuite
 import org.scalatest.{Assertions, Matchers}
 
 /**

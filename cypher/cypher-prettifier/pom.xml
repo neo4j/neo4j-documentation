@@ -75,16 +75,21 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.opencypher</groupId>
-            <artifactId>util-9.0</artifactId>
-            <version>9.0.20181012</version>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-util-3.5</artifactId>
+            <version>${neo4j.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.opencypher</groupId>
-            <artifactId>parser-9.0</artifactId>
-            <version>9.0.20181012</version>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-parser-3.5</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-util-3.5</artifactId>
+            <version>${neo4j.version}</version>
         </dependency>
     </dependencies>
 
