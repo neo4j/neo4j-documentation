@@ -20,8 +20,8 @@
 package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.GraphIcing
-import org.opencypher.v9_0.parser.BufferPosition
-import org.opencypher.v9_0.parser.InvalidInputErrorFormatter
+import org.neo4j.cypher.internal.v4_0.parser.BufferPosition
+import org.neo4j.cypher.internal.v4_0.parser.InvalidInputErrorFormatter
 import org.parboiled.errors.InvalidInputError
 import org.parboiled.scala._
 import org.scalatest.Assertions

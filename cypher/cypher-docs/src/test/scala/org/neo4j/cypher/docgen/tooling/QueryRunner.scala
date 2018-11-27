@@ -24,7 +24,7 @@ import org.neo4j.internal.kernel.api.Transaction.Type
 import org.neo4j.internal.kernel.api.security.SecurityContext.AUTH_DISABLED
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
-import org.opencypher.v9_0.util.InternalException
+import org.neo4j.cypher.internal.v4_0.util.InternalException
 
 import scala.collection.immutable.Iterable
 import scala.util.{Failure, Success, Try}

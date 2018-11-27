@@ -19,8 +19,8 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import org.opencypher.v9_0.util.Rewritable._
-import org.opencypher.v9_0.util.{Rewriter, bottomUp}
+import org.neo4j.cypher.internal.v4_0.util.Rewritable._
+import org.neo4j.cypher.internal.v4_0.util.{Rewriter, bottomUp}
 
 /**
  * Takes the document tree and the execution results and rewrites the
