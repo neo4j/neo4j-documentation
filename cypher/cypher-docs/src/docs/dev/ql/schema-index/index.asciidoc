@@ -25,6 +25,7 @@ This section explains how to work with indexes in Neo4j and Cypher.
 ** <<schema-index-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
 ** <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search>>
 ** <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search>>
+** <<schema-index-single-vs-composite-index, Comparison between single-property and composite index>>
 * <<schema-index-fulltext, Fulltext schema index>>
 ** <<schema-index-fulltext-introduction, Introduction>>
 ** <<schema-index-fulltext-create-and-configure, Create and configure fulltext schema indexes>>
@@ -42,7 +43,8 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
 
 * An index that is created on a single property for any given label is called a _single-property index_.
 * An index that is created on more than one property for any given label is called a _composite index_.
-  Differences in the usage patterns between composite and single-property indexes are detailed in the examples below.
+  Differences in the usage patterns between composite and single-property indexes are described in <<schema-index-single-vs-composite-index>> and detailed in
+  the examples below.
 
 Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
@@ -91,6 +93,17 @@ include::existence-check-using-exists-single-property-index.asciidoc[]
 include::spatial-distance-searches-single-property-index.asciidoc[]
 
 include::spatial-bounding-box-searches-single-property-index.asciidoc[]
+
+[[schema-index-single-vs-composite-index]]
+=== Comparison between single-property and composite index
+
+Unlike single-property indexes, composite indexes currently only support equality check: `n.prop = value` and list membership check: `n.prop IN list`.
+Queries containing the following types of predicates on properties in the index are not supported: existence check: `exists(n.prop)`;
+range search: `n.prop > value`; prefix search: `STARTS WITH`; suffix search: `ENDS WITH`; and substring search: `CONTAINS`.
+
+Composite indexes are not replacements for single indexes, and do not fall back to looking up by some smaller subset of the properties when it is not possible
+to use any supported lookup for all properties that make up the composite index. To get the fallback behaviour, both single-property and composite indexes are
+needed.
 
 include::fulltext-schema-index.adoc[leveloffset=+1]
 

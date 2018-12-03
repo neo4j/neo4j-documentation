@@ -29,6 +29,7 @@ Cypher includes data definition language (DDL) statements for manipulating the s
 *** <<schema-index-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
 *** <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search>>
 *** <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search>>
+*** <<schema-index-single-vs-composite-index, Comparison between single-property and composite index>>
 ** <<schema-index-fulltext, Fulltext schema index>>
 *** <<schema-index-fulltext-introduction, Introduction>>
 *** <<schema-index-fulltext-create-and-configure, Create and configure fulltext schema indexes>>
