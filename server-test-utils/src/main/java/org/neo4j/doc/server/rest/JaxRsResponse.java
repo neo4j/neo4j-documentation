@@ -18,18 +18,27 @@
  */
 package org.neo4j.doc.server.rest;
 
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.core.util.StringKeyObjectValueIgnoreCaseMultivaluedMap;
 import org.junit.Test;
+
+import java.lang.annotation.Annotation;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
 
 import org.neo4j.logging.NullLogProvider;
 import org.neo4j.server.database.Database;
@@ -47,7 +56,7 @@ public class JaxRsResponse extends Response
 
     private final int status;
     private final MultivaluedMap<String,Object> metaData;
-    private final MultivaluedMap<String, String> headers;
+    private final MultivaluedMap<String,Object> headers;
     private final URI location;
     private String data;
     private MediaType type;
@@ -79,9 +88,104 @@ public class JaxRsResponse extends Response
     }
 
     @Override
+    public <T> T readEntity( Class<T> entityType )
+    {
+        return null;
+    }
+
+    @Override
+    public <T> T readEntity( GenericType<T> entityType )
+    {
+        return null;
+    }
+
+    @Override
+    public <T> T readEntity( Class<T> entityType, Annotation[] annotations )
+    {
+        return null;
+    }
+
+    @Override
+    public <T> T readEntity( GenericType<T> entityType, Annotation[] annotations )
+    {
+        return null;
+    }
+
+    @Override
+    public boolean hasEntity()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean bufferEntity()
+    {
+        return false;
+    }
+
+    @Override
+    public void close()
+    {
+    }
+
+    @Override
+    public MediaType getMediaType()
+    {
+        return null;
+    }
+
+    @Override
+    public Locale getLanguage()
+    {
+        return null;
+    }
+
+    @Override
+    public int getLength()
+    {
+        return 0;
+    }
+
+    @Override
+    public Set<String> getAllowedMethods()
+    {
+        return null;
+    }
+
+    @Override
+    public Map<String,NewCookie> getCookies()
+    {
+        return null;
+    }
+
+    @Override
+    public EntityTag getEntityTag()
+    {
+        return null;
+    }
+
+    @Override
+    public Date getDate()
+    {
+        return null;
+    }
+
+    @Override
+    public Date getLastModified()
+    {
+        return null;
+    }
+
+    @Override
     public int getStatus()
     {
         return status;
+    }
+
+    @Override
+    public StatusType getStatusInfo()
+    {
+        return null;
     }
 
     @Override
@@ -103,19 +207,65 @@ public class JaxRsResponse extends Response
         return metadata;
     }
 
-    public MultivaluedMap<String, String> getHeaders()
+    @Override
+    public MultivaluedMap<String,Object> getHeaders()
     {
         return headers;
     }
 
-    private MultivaluedMap<String, String> extractHeaders(ClientResponse jettyResponse) {
-        return jettyResponse.getHeaders();
+    @Override
+    public MultivaluedMap<String,String> getStringHeaders()
+    {
+        return null;
+    }
+
+    @Override
+    public String getHeaderString( String name )
+    {
+        return null;
+    }
+
+    private MultivaluedMap<String,Object> extractHeaders( ClientResponse jettyResponse )
+    {
+        MultivaluedHashMap<String,Object> result = new MultivaluedHashMap<>();
+
+        MultivaluedMap<String,String> headers = jettyResponse.getHeaders();
+        for ( Map.Entry<String,List<String>> entry : headers.entrySet() )
+        {
+            result.put( entry.getKey(), new ArrayList<>( entry.getValue() ) );
+        }
+
+        return result;
     }
 
     // new URI( getHeaders().get( HttpHeaders.LOCATION ).get(0));
     public URI getLocation()
     {
         return location;
+    }
+
+    @Override
+    public Set<Link> getLinks()
+    {
+        return null;
+    }
+
+    @Override
+    public boolean hasLink( String relation )
+    {
+        return false;
+    }
+
+    @Override
+    public Link getLink( String relation )
+    {
+        return null;
+    }
+
+    @Override
+    public Link.Builder getLinkBuilder( String relation )
+    {
+        return null;
     }
 
     public static JaxRsResponse extractFrom(ClientResponse clientResponse) {

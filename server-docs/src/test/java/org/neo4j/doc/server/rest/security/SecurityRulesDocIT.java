@@ -19,24 +19,24 @@
  */
 package org.neo4j.doc.server.rest.security;
 
-import java.net.URI;
-import javax.ws.rs.core.MediaType;
-
 import org.dummy.doc.web.service.DummyThirdPartyWebService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.server.CommunityNeoServer;
+import java.net.URI;
+import javax.ws.rs.core.MediaType;
+
+import org.neo4j.doc.server.ExclusiveServerTestBase;
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
 import org.neo4j.doc.test.TestData;
 import org.neo4j.doc.test.TestData.Title;
-import org.neo4j.doc.server.ExclusiveServerTestBase;
+import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.server.CommunityNeoServer;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
@@ -98,7 +98,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
         JaxRsResponse response = gen.get().expectedStatus( 401 ).expectedHeader(
                 "WWW-Authenticate" ).post( functionalTestHelper.nodeUri() ).response();
 
-        assertThat( response.getHeaders().getFirst( "WWW-Authenticate" ),
+        assertThat( (String) response.getHeaders().getFirst( "WWW-Authenticate" ),
                 containsString( "Basic realm=\""
                         + PermanentlyFailingSecurityRule.REALM + "\"" ) );
     }
@@ -118,7 +118,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
         JaxRsResponse response = gen.get().expectedStatus( 401 ).expectedHeader(
                 "WWW-Authenticate" ).post( functionalTestHelper.nodeUri() ).response();
 
-        assertThat( response.getHeaders().getFirst( "WWW-Authenticate" ),
+        assertThat( (String) response.getHeaders().getFirst( "WWW-Authenticate" ),
                 containsString( "Basic realm=\""
                         + PermanentlyFailingSecurityRule.REALM + "\"" ) );
     }
