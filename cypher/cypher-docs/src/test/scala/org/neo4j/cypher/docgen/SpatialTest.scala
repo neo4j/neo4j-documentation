@@ -99,7 +99,7 @@ class SpatialTest extends DocumentingTest {
           """.stripMargin)
         query(
           """WITH point({latitude:toFloat('13.43'), longitude:toFloat('56.21')}) AS p1, point({latitude:toFloat('13.10'), longitude:toFloat('56.41')}) as p2
-            |RETURN toInt(distance(p1,p2)/1000) as km""".stripMargin, ResultAssertions((r) => {
+            |RETURN toInteger(distance(p1,p2)/1000) as km""".stripMargin, ResultAssertions((r) => {
             withClue("Expect the distance function to return an integer value") {
               r.head("km") should be(42)
             }
