@@ -44,13 +44,6 @@
             <groupId>org.neo4j.doc</groupId>
             <artifactId>neo4j-lucene-index-docs</artifactId>
             <version>${project.version}</version>
-            <classifier>docs</classifier>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j.doc</groupId>
-            <artifactId>neo4j-lucene-index-docs</artifactId>
-            <version>${project.version}</version>
             <classifier>test-sources</classifier>
             <scope>provided</scope>
         </dependency>
@@ -299,7 +292,7 @@
                             <excludes>META-INF,META-INF/**</excludes>
                             <type>jar</type>
                             <outputDirectory>${outputDir.test-sources}</outputDirectory>
-                            <includeArtifactIds>neo4j-cypher-docs,neo4j-examples,neo4j-harness-test,neo4j-harness-enterprise-test,neo4j-server-docs,neo4j-lucene-index-docs,neo4j-backup-docs,neo4j-kernel-docs</includeArtifactIds>
+                            <includeArtifactIds>neo4j-cypher-docs,neo4j-examples,neo4j-harness-test,neo4j-harness-enterprise-test,neo4j-server-docs,neo4j-backup-docs,neo4j-kernel-docs</includeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>

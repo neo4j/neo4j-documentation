@@ -27,12 +27,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.index.Index;
-import org.neo4j.helpers.collection.Iterables;
 import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Transaction;
+import org.neo4j.helpers.collection.Iterables;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -55,8 +53,7 @@ public class SocnetTest
         graphDb = new TestGraphDatabaseFactory().newImpermanentDatabase();
         try ( Transaction tx = graphDb.beginTx() )
         {
-            Index<Node> index = graphDb.index().forNodes( "nodes" );
-            personRepository = new PersonRepository( graphDb, index );
+            personRepository = new PersonRepository( graphDb );
             createPersons();
             setupFriendsBetweenPeople( 10 );
             tx.success();

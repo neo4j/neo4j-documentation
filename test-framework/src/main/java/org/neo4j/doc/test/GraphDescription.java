@@ -37,13 +37,12 @@ import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.index.AutoIndexer;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
-import static org.neo4j.graphdb.Label.label;
 import static org.neo4j.doc.test.GraphDescription.PropType.ERROR;
 import static org.neo4j.doc.test.GraphDescription.PropType.STRING;
+import static org.neo4j.graphdb.Label.label;
 
 public class GraphDescription implements GraphDefinition {
     @Inherited
@@ -198,10 +197,8 @@ public class GraphDescription implements GraphDefinition {
     public Map<String, Node> create(GraphDatabaseService graphdb) {
         Map<String, Node> result = new HashMap<>();
         try (Transaction tx = graphdb.beginTx()) {
-            graphdb.index().getRelationshipAutoIndexer().setEnabled(autoIndexRelationships);
             for (NODE def : nodes) {
-                Node node = init(graphdb.createNode(), def.setNameProperty() ? def.name() : null, def.properties(),
-                        graphdb.index().getNodeAutoIndexer(), autoIndexNodes);
+                Node node = init(graphdb.createNode(), def.setNameProperty() ? def.name() : null, def.properties());
                 for (LABEL label : def.labels()) {
                     node.addLabel(label(label.value()));
                 }
@@ -210,19 +207,15 @@ public class GraphDescription implements GraphDefinition {
             for (REL def : rels) {
                 init(result.get(def.start()).createRelationshipTo(result.get(def.end()),
                         RelationshipType.withName(def.type())), def.setNameProperty() ? def.name() : null,
-                        def.properties(), graphdb.index().getRelationshipAutoIndexer(), autoIndexRelationships);
+                        def.properties());
             }
             tx.success();
         }
         return result;
     }
 
-    private static <T extends PropertyContainer> T init(T entity, String name, PROP[] properties, AutoIndexer<T> autoindex, boolean auto) {
-        autoindex.setEnabled(auto);
+    private static <T extends PropertyContainer> T init( T entity, String name, PROP[] properties ) {
         for (PROP prop : properties) {
-            if (auto) {
-                autoindex.startAutoIndexingProperty(prop.key());
-            }
             PropType tpe = prop.type();
             switch (tpe) {
                 case ARRAY:
@@ -233,9 +226,6 @@ public class GraphDescription implements GraphDefinition {
             }
         }
         if (name != null) {
-            if (auto) {
-                autoindex.startAutoIndexingProperty("name");
-            }
             entity.setProperty("name", name);
         }
 

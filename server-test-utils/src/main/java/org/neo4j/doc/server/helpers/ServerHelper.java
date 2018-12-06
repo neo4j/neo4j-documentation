@@ -18,16 +18,15 @@
  */
 package org.neo4j.doc.server.helpers;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 
-import org.apache.commons.io.FileUtils;
-
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
@@ -134,7 +133,6 @@ public class ServerHelper
         public void doWork()
         {
             deleteAllNodesAndRelationships();
-            deleteAllIndexes();
         }
 
         private void deleteAllNodesAndRelationships()
@@ -149,51 +147,6 @@ public class ServerHelper
                 }
                 n.delete();
             }
-        }
-
-        private void deleteAllIndexes()
-        {
-            IndexManager indexManager = db.index();
-
-            for ( String indexName : indexManager.nodeIndexNames() )
-            {
-                try
-                {
-                    db.index()
-                      .forNodes( indexName )
-                      .delete();
-                }
-                catch ( UnsupportedOperationException e )
-                {
-                    // Encountered a read-only index.
-                }
-            }
-
-            for ( String indexName : indexManager.relationshipIndexNames() )
-            {
-                try
-                {
-                    db.index()
-                      .forRelationships( indexName )
-                      .delete();
-                }
-                catch ( UnsupportedOperationException e )
-                {
-                    // Encountered a read-only index.
-                }
-            }
-
-            for ( String k : indexManager.getNodeAutoIndexer().getAutoIndexedProperties() )
-            {
-                indexManager.getNodeAutoIndexer().stopAutoIndexingProperty( k );
-            }
-            indexManager.getNodeAutoIndexer().setEnabled( false );
-
-            for ( String k : indexManager.getRelationshipAutoIndexer().getAutoIndexedProperties() )
-            {
-                indexManager.getRelationshipAutoIndexer().stopAutoIndexingProperty( k );
-            }
-            indexManager.getRelationshipAutoIndexer().setEnabled( false );
         }
     }
 
