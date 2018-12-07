@@ -153,7 +153,7 @@
         <!-- neo4j -->
         <dependency>
             <groupId>com.neo4j</groupId>
-            <artifactId>neo4j-enterprise-kernel</artifactId>
+            <artifactId>neo4j-commercial-kernel</artifactId>
             <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
