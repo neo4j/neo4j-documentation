@@ -44,7 +44,6 @@ import org.neo4j.graphdb.event.DatabaseEventHandler;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.graphdb.schema.Schema;
 import org.neo4j.graphdb.security.URLAccessValidationError;
 import org.neo4j.graphdb.traversal.BidirectionalTraversalDescription;
@@ -238,12 +237,6 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
     public Node getNodeById( long id )
     {
         return getGraphDatabaseAPI().getNodeById( id );
-    }
-
-    @Override
-    public IndexManager index()
-    {
-        return getGraphDatabaseAPI().index();
     }
 
     @Override
@@ -587,15 +580,15 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
     }
 
     @Override
-    public DatabaseEventHandler registerKernelEventHandler( DatabaseEventHandler handler )
+    public DatabaseEventHandler registerDatabaseEventHandler( DatabaseEventHandler handler )
     {
-        return database.registerKernelEventHandler( handler );
+        return database.registerDatabaseEventHandler( handler );
     }
 
     @Override
-    public DatabaseEventHandler unregisterKernelEventHandler( DatabaseEventHandler handler )
+    public DatabaseEventHandler unregisterDatabaseEventHandler( DatabaseEventHandler handler )
     {
-        return database.unregisterKernelEventHandler( handler );
+        return database.unregisterDatabaseEventHandler( handler );
     }
 
     @Override

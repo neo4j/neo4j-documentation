@@ -20,7 +20,6 @@
 package org.neo4j.cypher.docgen
 
 import java.io.{ByteArrayOutputStream, File, PrintWriter, StringWriter}
-import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
@@ -31,29 +30,25 @@ import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
+import org.neo4j.cypher.internal.v4_0.util.Eagerly
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
 import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.doc.test.{GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.graphdb._
-import org.neo4j.graphdb.factory.GraphDatabaseSettings
-import org.neo4j.graphdb.index.Index
 import org.neo4j.internal.kernel.api.Transaction.Type
 import org.neo4j.internal.kernel.api.security.SecurityContext
-import org.neo4j.kernel.configuration.Settings
 import org.neo4j.kernel.impl.api.KernelStatement
 import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.core.ThreadToStatementContextBridge
 import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
-import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.values.virtual.VirtualValues
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.neo4j.visualization.graphviz.{AsciiDocStyle, GraphStyle, GraphvizWriter}
 import org.neo4j.walk.Walker
-import org.neo4j.cypher.internal.v4_0.util.Eagerly
 import org.scalatest.junit.JUnitSuite
 
 import scala.collection.JavaConverters._
@@ -418,8 +413,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   var db: GraphDatabaseCypherService = _
   var engine: ExecutionEngine = _
   var nodeMap: Map[String, Long] = _
-  var nodeIndex: Index[Node] = _
-  var relIndex: Index[Relationship] = _
   val properties: Map[String, Map[String, Any]] = Map()
   var generateConsole: Boolean = true
   var generateInitialGraphForConsole: Boolean = true
@@ -517,15 +510,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   protected def getLabelsFromNode(p: DocsExecutionResult): Iterable[String] = p.columnAs[Node]("n").next().labels
 
-  def indexProperties[T <: PropertyContainer](n: T, index: Index[T]) {
-    indexProps.foreach((property) => {
-      if (n.hasProperty(property)) {
-        val value = n.getProperty(property)
-        index.add(n, property, value)
-      }
-    })
-  }
-
   def node(name: String): Node = graphOps.getNodeById(nodeMap.getOrElse(name, throw new NotFoundException(name)))
   def nodes(names: String*): List[Node] = names.map(node).toList
   def rel(id: Long): Relationship = graphOps.getRelationshipById(id)
@@ -545,8 +529,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   override def hardReset() {
     tearDown()
     val database: GraphDatabaseService = newTestGraphDatabaseFactory().newImpermanentDatabaseBuilder().
-      setConfig(GraphDatabaseSettings.node_keys_indexable, "name").
-      setConfig(GraphDatabaseSettings.node_auto_indexing, Settings.TRUE).
       newGraphDatabase()
     db = new GraphDatabaseCypherService(database)
 
@@ -561,8 +543,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     db.withTx( tx => {
       db.schema().awaitIndexesOnline(10, TimeUnit.SECONDS)
 
-      nodeIndex = db.index().forNodes("nodes")
-      relIndex = db.index().forRelationships("rels")
       val g = new GraphImpl(graphDescription.toArray[String])
       val description = GraphDescription.create(g)
 
@@ -572,11 +552,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       }.toMap
 
       executeQueries(tx, setupQueries)
-
-      db.getAllNodes().asScala.foreach((n) => {
-        indexProperties(n, nodeIndex)
-        n.getRelationships(Direction.OUTGOING).asScala.foreach(indexProperties(_, relIndex))
-      })
 
       asNodeMap(properties) foreach {
         case (n: Node, seq: Map[String, Any]) =>

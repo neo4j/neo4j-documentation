@@ -35,8 +35,6 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.index.Index;
-import org.neo4j.graphdb.index.UniqueFactory;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
@@ -60,31 +58,6 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
         void assertUserExistsUniquely( GraphDatabaseService graphDb, Transaction tx, String username )
         {
             assertUserExistsUniquelyInGraphDb( graphDb, tx, username );
-        }
-    }
-
-    class PessimisticGetOrCreate extends GetOrCreate<Node>
-    {
-        @Override
-        public Node getOrCreateUser( String username, GraphDatabaseService graphDb, Node lockNode )
-        {
-            return getOrCreateUserPessimistically( username, graphDb, lockNode );
-        }
-    }
-
-    class UniqueFactoryGetOrCreate extends GetOrCreate<UniqueFactory<Node>>
-    {
-        @Override
-        public Node getOrCreateUser( String username, GraphDatabaseService graphDb, UniqueFactory<Node> uniqueFactory )
-        {
-            return getOrCreateUserWithUniqueFactory( username, graphDb, uniqueFactory );
-        }
-
-        @Override
-        void assertUserExistsUniquely( GraphDatabaseService graphDb, Transaction tx, String username )
-        {
-            super.assertUserExistsUniquely( graphDb, tx, username );    //To change body of overridden methods use
-            assertUserExistsUniquelyInIndex( graphDb, tx, username );
         }
     }
 
@@ -224,32 +197,6 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
     }
 
     @Test
-    public void testPessimisticLocking()
-    {
-        new ThreadRunner<Node>( new PessimisticGetOrCreate(), "chris" )
-        {
-            @Override
-            Node createDependency()
-            {
-                return createLockNode( graphdb() );
-            }
-        }.run();
-    }
-
-    @Test
-    public void getOrCreateWithUniqueFactory() throws Exception
-    {
-        new ThreadRunner<UniqueFactory<Node>>( new UniqueFactoryGetOrCreate(), "davide" ) {
-
-            @Override
-            UniqueFactory<Node> createDependency()
-            {
-                return createUniqueFactory( graphdb() );
-            }
-        }.run();
-    }
-
-    @Test
     public void getOrCreateUsingCypher() throws Exception
     {
         new ThreadRunner<GraphDatabaseService>( new CypherGetOrCreate(), "cypher") {
@@ -259,77 +206,6 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
                 return createConstraint( graphdb() );
             }
         }.run();
-    }
-
-    public Node getOrCreateUserPessimistically( String username, GraphDatabaseService graphDb, Node lockNode )
-    {
-        // tag::pessimisticLocking[]
-        try ( Transaction tx = graphDb.beginTx() )
-        {
-            Index<Node> usersIndex = graphDb.index().forNodes( "users" );
-            Node userNode = usersIndex.get( "name", username ).getSingle();
-            if ( userNode != null )
-            {
-                return userNode;
-            }
-
-            tx.acquireWriteLock( lockNode );
-            userNode = usersIndex.get( "name", username ).getSingle();
-            if ( userNode == null )
-            {
-                userNode = graphDb.createNode( Label.label( "User" ) );
-                usersIndex.add( userNode, "name", username );
-                userNode.setProperty( "name", username );
-            }
-            tx.success();
-            return userNode;
-        }
-        // end::pessimisticLocking[]
-    }
-
-    public static Node createLockNode( GraphDatabaseService graphDb )
-    {
-        // tag::prepareLockNode[]
-        try ( Transaction tx = graphDb.beginTx() )
-        {
-            final Node lockNode = graphDb.createNode();
-            tx.success();
-            return lockNode;
-        }
-        // end::prepareLockNode[]
-    }
-
-    private UniqueFactory<Node> createUniqueFactory( GraphDatabaseService graphDb )
-    {
-        // tag::prepareUniqueFactory[]
-        try ( Transaction tx = graphDb.beginTx() )
-        {
-            UniqueFactory.UniqueNodeFactory result = new UniqueFactory.UniqueNodeFactory( graphDb, "users" )
-            {
-                @Override
-                protected void initialize( Node created, Map<String, Object> properties )
-                {
-                    created.addLabel( Label.label( "User" ) );
-                    created.setProperty( "name", properties.get( "name" ) );
-                }
-            };
-            tx.success();
-            return result;
-        }
-        // end::prepareUniqueFactory[]
-    }
-
-    public Node getOrCreateUserWithUniqueFactory( String username, GraphDatabaseService graphDb,
-                                                  UniqueFactory<Node> factory )
-    {
-        // tag::getOrCreateWithFactory[]
-        try ( Transaction tx = graphDb.beginTx() )
-        {
-            Node node = factory.getOrCreate( "name", username );
-            tx.success();
-            return node;
-        }
-        // end::getOrCreateWithFactory[]
     }
 
     private Node getOrCreateWithCypher( String username, GraphDatabaseService graphDb )
@@ -375,15 +251,6 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
         }
         // end::prepareConstraint[]
         return graphdb;
-    }
-
-    private static void assertUserExistsUniquelyInIndex( GraphDatabaseService graph, Transaction tx, String username )
-    {
-        assertNotNull( format( "User '%s' not created.", username ), graph.index()
-                .forNodes( "users" )
-                .get( "name", username )
-                .getSingle() );
-        tx.success();
     }
 
     private static void assertUserExistsUniquelyInGraphDb( GraphDatabaseService graph, Transaction tx, String username )

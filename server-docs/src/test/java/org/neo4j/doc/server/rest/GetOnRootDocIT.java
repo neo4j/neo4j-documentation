@@ -24,18 +24,17 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import org.neo4j.kernel.internal.Version;
-import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
-import org.neo4j.server.rest.domain.JsonHelper;
-import org.neo4j.server.rest.repr.StreamingFormat;
 import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.doc.test.TestData.Title;
+import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.kernel.internal.Version;
+import org.neo4j.server.rest.domain.JsonHelper;
+import org.neo4j.server.rest.repr.StreamingFormat;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class GetOnRootDocIT extends AbstractRestFunctionalTestBase
 {
@@ -73,12 +72,6 @@ public class GetOnRootDocIT extends AbstractRestFunctionalTestBase
                     (String) map.get( "reference_node" ) );
             assertEquals( 200, response.getStatus() );
         }
-        response = RestRequest.req().get( (String) map.get( "node_index" ) );
-        assertTrue( response.getStatus() == 200 || response.getStatus() == 204 );
-
-        response = RestRequest.req().get(
-                (String) map.get( "relationship_index" ) );
-        assertTrue( response.getStatus() == 200 || response.getStatus() == 204 );
 
         response = RestRequest.req().get( (String) map.get( "extensions_info" ) );
         assertEquals( 200, response.getStatus() );

@@ -20,40 +20,36 @@ package org.neo4j.examples.socnet;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.index.Index;
-import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.helpers.collection.IterableWrapper;
 
 import static org.neo4j.examples.socnet.RelTypes.A_PERSON;
 
 public class PersonRepository
 {
+    private final Label PERSON = Label.label( "Person" );
     private final GraphDatabaseService graphDb;
-    private final Index<Node> index;
     private final Node personRefNode;
 
-    public PersonRepository( GraphDatabaseService graphDb, Index<Node> index )
+    public PersonRepository( GraphDatabaseService graphDb )
     {
         this.graphDb = graphDb;
-        this.index = index;
 
         personRefNode = getPersonsRootNode( graphDb );
     }
 
     private Node getPersonsRootNode( GraphDatabaseService graphDb )
     {
-        Index<Node> referenceIndex = graphDb.index().forNodes( "reference");
-        IndexHits<Node> result = referenceIndex.get( "reference", "person" );
-        if (result.hasNext())
+        Node node = graphDb.findNode( PERSON, "reference", "person" );
+        if ( node != null )
         {
-            return result.next();
+            return node;
         }
 
         Node refNode = this.graphDb.createNode();
         refNode.setProperty( "reference", "persons" );
-        referenceIndex.add( refNode, "reference", "persons" );
         return refNode;
     }
 
@@ -62,22 +58,21 @@ public class PersonRepository
         // to guard against duplications we use the lock grabbed on ref node
         // when
         // creating a relationship and are optimistic about person not existing
-        Node newPersonNode = graphDb.createNode();
+        Node newPersonNode = graphDb.createNode(PERSON);
         personRefNode.createRelationshipTo( newPersonNode, A_PERSON );
         // lock now taken, we can check if  already exist in index
-        Node alreadyExist = index.get( Person.NAME, name ).getSingle();
+        Node alreadyExist = graphDb.findNode( PERSON, Person.NAME, name );
         if ( alreadyExist != null )
         {
             throw new Exception( "Person with this name already exists " );
         }
         newPersonNode.setProperty( Person.NAME, name );
-        index.add( newPersonNode, Person.NAME, name );
         return new Person( newPersonNode );
     }
 
     public Person getPersonByName( String name )
     {
-        Node personNode = index.get( Person.NAME, name ).getSingle();
+        Node personNode = graphDb.findNode( PERSON, Person.NAME, name );
         if ( personNode == null )
         {
             throw new IllegalArgumentException( "Person[" + name
@@ -89,7 +84,6 @@ public class PersonRepository
     public void deletePerson( Person person )
     {
         Node personNode = person.getUnderlyingNode();
-        index.remove( personNode, Person.NAME, person.getName() );
         for ( Person friend : person.getFriends() )
         {
             person.removeFriend( friend );

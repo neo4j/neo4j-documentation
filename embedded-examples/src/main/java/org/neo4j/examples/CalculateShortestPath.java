@@ -24,23 +24,23 @@ import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.PathExpanders;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.traversal.Paths;
 
 public class CalculateShortestPath
 {
     private static final File databaseDirectory = new File( "target/neo4j-shortest-path" );
     private static final String NAME_KEY = "name";
+    private static final Label NODE_LABEL = Label.label( "NODE" );
     private static final RelationshipType KNOWS = RelationshipType.withName( "KNOWS" );
 
     private static GraphDatabaseService graphDb;
-    private static Index<Node> indexService;
 
     public static void main( final String[] args )
     {
@@ -49,7 +49,6 @@ public class CalculateShortestPath
         registerShutdownHook();
         try ( Transaction tx = graphDb.beginTx() )
         {
-            indexService = graphDb.index().forNodes( "nodes" );
             /*
              *  (Neo) --> (Trinity)
              *     \       ^
@@ -96,12 +95,11 @@ public class CalculateShortestPath
 
     private static Node getOrCreateNode( String name )
     {
-        Node node = indexService.get( NAME_KEY, name ).getSingle();
+        Node node = graphDb.findNode( NODE_LABEL, NAME_KEY, name );
         if ( node == null )
         {
-            node = graphDb.createNode();
+            node = graphDb.createNode( NODE_LABEL );
             node.setProperty( NAME_KEY, name );
-            indexService.add( node, NAME_KEY, name );
         }
         return node;
     }

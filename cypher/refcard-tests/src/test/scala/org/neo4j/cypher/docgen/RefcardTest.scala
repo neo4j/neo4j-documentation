@@ -20,7 +20,6 @@
 package org.neo4j.cypher.docgen
 
 import java.io._
-import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
 
 import org.apache.maven.artifact.versioning.ComparableVersion
@@ -32,11 +31,9 @@ import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphIm
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.graphdb._
-import org.neo4j.graphdb.index.Index
 import org.neo4j.internal.kernel.api.Transaction
 import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
-import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions
@@ -64,8 +61,6 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   var db: GraphDatabaseCypherService = null
   implicit var engine: ExecutionEngine = null
   var nodes: Map[String, Long] = null
-  var nodeIndex: Index[Node] = null
-  var relIndex: Index[Relationship] = null
   val properties: Map[String, Map[String, Any]] = Map()
   var generateConsole: Boolean = true
   var dir: File = createDir(section)
@@ -115,15 +110,6 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     var query = _query
     nodes.keySet.foreach((key) => query = query.replace("%" + key + "%", node(key).getId.toString))
     query
-  }
-
-  def indexProperties[T <: PropertyContainer](n: T, index: Index[T]) {
-    indexProps.foreach((property) => {
-      if (n.hasProperty(property)) {
-        val value = n.getProperty(property)
-        index.add(n, property, value)
-      }
-    })
   }
 
   def node(name: String): Node = graphOps.getNodeById(nodes.getOrElse(name, throw new NotFoundException(name)))
@@ -260,8 +246,6 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     GraphDatabaseServiceCleaner.cleanDatabaseContent(db.getGraphDatabaseService)
 
     db.inTx {
-      nodeIndex = db.index().forNodes("nodeIndexName")
-      relIndex = db.index().forRelationships("relationshipIndexName")
       val g = new GraphImpl(graphDescription.toArray[String])
       val description = GraphDescription.create(g)
 
@@ -274,10 +258,6 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
         n._2.foreach((kv) => nod.setProperty(kv._1, kv._2))
       })
 
-      db.getAllNodes.asScala.foreach((n) => {
-        indexProperties(n, nodeIndex)
-        n.getRelationships(Direction.OUTGOING).asScala.foreach(indexProperties(_, relIndex))
-      })
     }
     engine = ExecutionEngineFactory.createCommunityEngineFromDb(graph) // TODO: This should be using the EnterpriseEngine
   }

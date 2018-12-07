@@ -107,11 +107,6 @@ public class JavaExecutionEngineDocTest
             johanNode.setProperty( "name", "Johan" );
             michaelaNode.setProperty( "name", "Michaela" );
 
-            //this is explicit index functionality
-            index( bobNode );
-            index( johanNode );
-            index( michaelaNode );
-
             tx.success();
         }
     }
@@ -124,11 +119,6 @@ public class JavaExecutionEngineDocTest
             db.shutdown();
         }
         db = null;
-    }
-
-    private void index( Node n )
-    {
-        db.index().forNodes( "people" ).add( n, "name", n.getProperty( "name" ) );
     }
 
     public static String parametersToAsciidoc( final Object params ) throws IOException

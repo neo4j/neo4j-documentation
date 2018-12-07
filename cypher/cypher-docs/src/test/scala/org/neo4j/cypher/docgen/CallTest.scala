@@ -29,7 +29,6 @@ class CallTest extends DocumentingTest {
 
   override def doc = new DocBuilder {
     doc("CALL[...YIELD]", "query-call")
-    registerProcedures(classOf[org.neo4j.procedure.example.IndexingProcedure])
     initQueries("CREATE (a:User:Administrator {name: 'Adrian'})")
     synopsis("The `CALL` clause is used to call a procedure deployed in the database.")
     p(

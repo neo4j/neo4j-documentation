@@ -40,11 +40,7 @@ import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.index.Index;
-import org.neo4j.graphdb.index.RelationshipIndex;
 import org.neo4j.helpers.collection.MapUtil;
-
-import static org.neo4j.helpers.collection.MapUtil.stringMap;
 
 public abstract class AbstractLuceneIndexTest
 {
@@ -156,35 +152,4 @@ public abstract class AbstractLuceneIndexTest
             entity.setProperty( entry.getKey(), entry.getValue() );
         }
     }
-
-    protected Index<Node> nodeIndex()
-    {
-        return nodeIndex( currentIndexName(), stringMap() );
-    }
-
-    protected Index<Node> nodeIndex( Map<String, String> config )
-    {
-        return nodeIndex( currentIndexName(), config );
-    }
-
-    protected Index<Node> nodeIndex( String name, Map<String, String> config )
-    {
-        return graphDb.index().forNodes( name, config );
-    }
-
-    protected RelationshipIndex relationshipIndex( Map<String, String> config )
-    {
-        return relationshipIndex( currentIndexName(), config );
-    }
-
-    protected RelationshipIndex relationshipIndex( String name, Map<String, String> config )
-    {
-        return graphDb.index().forRelationships( name, config );
-    }
-
-    protected String currentIndexName()
-    {
-        return testname.getMethodName();
-    }
-
 }

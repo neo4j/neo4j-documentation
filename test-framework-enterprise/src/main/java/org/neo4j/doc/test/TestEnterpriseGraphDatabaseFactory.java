@@ -57,7 +57,7 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
                 Config config = Config.builder()
                         .withSettings( params )
                         .withSetting( GraphDatabaseSettings.ephemeral, "false" ).build();
-                return new GraphDatabaseFacadeFactory( DatabaseInfo.ENTERPRISE, EnterpriseEditionModule::new )
+                return new GraphDatabaseFacadeFactory( DatabaseInfo.COMMERCIAL, EnterpriseEditionModule::new )
                 {
                     @Override
                     protected PlatformModule createPlatform( File storeDir, Config config,
@@ -113,14 +113,14 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
 
         TestEnterpriseGraphDatabaseFacadeFactory( TestGraphDatabaseFactoryState state, boolean impermanent )
         {
-            super( state, impermanent, DatabaseInfo.ENTERPRISE, EnterpriseEditionModule::new );
+            super( state, impermanent, DatabaseInfo.COMMERCIAL, EnterpriseEditionModule::new );
         }
     }
 
     @Override
     public String getEdition()
     {
-        return Edition.enterprise.toString();
+        return Edition.COMMERCIAL.toString();
     }
 }
 
