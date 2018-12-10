@@ -112,7 +112,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index() {
     profileQuery(
-      title = "Use index",
+      title = "Using indexes",
       text = "There is usually no need to specify which indexes to use in a query, Cypher will figure that out by itself. " +
         "For example the query below will use the `Person(firstname)` index, if it exists. ",
       queryText = "MATCH (person:Person {firstname: 'Andy'}) RETURN person",
