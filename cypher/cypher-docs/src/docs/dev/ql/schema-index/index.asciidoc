@@ -6,13 +6,14 @@
 This section explains how to work with indexes in Neo4j and Cypher.
 --
 
-* <<query-schema-index-introduction, Introduction>>
-* <<schema-index-create-a-single-property-index, Create a single-property index>>
-* <<schema-index-create-a-composite-index, Create a composite index>>
-* <<schema-index-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
-* <<schema-index-drop-a-single-property-index, Drop a single-property index>>
-* <<schema-index-drop-a-composite-index, Drop a composite index>>
-* <<schema-index-use-index, Use index>>
+* <<query-schema-index-introduction, Managing Indexes>>
+** <<schema-index-single-vs-composite-index, Composite index limitations>>
+** <<schema-index-create-a-single-property-index, Create a single-property index>>
+** <<schema-index-create-a-composite-index, Create a composite index>>
+** <<schema-index-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
+** <<schema-index-drop-a-single-property-index, Drop a single-property index>>
+** <<schema-index-drop-a-composite-index, Drop a composite index>>
+* <<schema-index-using-indexes, Using indexes>>
 ** <<schema-index-equality-check-using-where-single-property-index, Equality check using `WHERE` (single-property index)>>
 ** <<schema-index-equality-check-using-where-composite-index, Equality check using `WHERE` (composite index)>>
 ** <<schema-index-range-comparisons-using-where-single-property-index, Range comparisons using `WHERE` (single-property index)>>
@@ -33,7 +34,7 @@ This section explains how to work with indexes in Neo4j and Cypher.
 
 
 [[query-schema-index-introduction]]
-== Introduction
+== Managing Indexes
 
 A database index is a redundant copy of some of the data in the database for the purpose of making searches of related data more efficient.
 This comes at the cost of additional storage space and slower writes, so deciding what to index and what not to index is an important and often non-trivial task.
@@ -42,7 +43,8 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
 
 * An index that is created on a single property for any given label is called a _single-property index_.
 * An index that is created on more than one property for any given label is called a _composite index_.
-  Differences in the usage patterns between composite and single-property indexes are detailed in the examples below.
+  Differences in the usage patterns between composite and single-property indexes are described in
+  <<schema-index-single-vs-composite-index, composite index limitations>> and shown in the examples below.
 
 Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
@@ -56,41 +58,58 @@ Neo4j will automatically pick up and start using the index once it has been crea
 For information on index configuration and limitations, refer to <<operations-manual#index-configuration, Operations Manual -> Index configuration>>.
 ====
 
-include::create-a-single-property-index.asciidoc[]
+[[schema-index-single-vs-composite-index]]
+=== Composite index limitations
 
-include::create-a-composite-index.asciidoc[]
+Unlike single-property indexes, composite indexes currently only support equality check: `n.prop = value` and list membership check: `n.prop IN list`.
+Queries containing the following types of predicates on properties in the index are not supported:
 
-include::get-a-list-of-all-indexes-in-the-database.asciidoc[]
+* existence check: `exists(n.prop)`
+* range search: `n.prop > value`
+* prefix search: `STARTS WITH`
+* suffix search: `ENDS WITH`
+* substring search: `CONTAINS`
 
-include::drop-a-single-property-index.asciidoc[]
+Composite indexes require predicates on all properties indexed.
+If there are predicates on only a subset of the indexed properties, it will not be possible to use the composite index.
+To get this kind of fallback behavior, it is necessary to create additional indexes on the relevant sub-set of properties or on single properties.
 
-include::drop-a-composite-index.asciidoc[]
 
-include::use-index.asciidoc[]
+include::create-a-single-property-index.asciidoc[leveloffset=+1]
 
-include::equality-check-using-where-single-property-index.asciidoc[]
+include::create-a-composite-index.asciidoc[leveloffset=+1]
 
-include::equality-check-using-where-composite-index.asciidoc[]
+include::get-a-list-of-all-indexes-in-the-database.asciidoc[leveloffset=+1]
 
-include::range-comparisons-using-where-single-property-index.asciidoc[]
+include::drop-a-single-property-index.asciidoc[leveloffset=+1]
 
-include::multiple-range-comparisons-using-where-single-property-index.asciidoc[]
+include::drop-a-composite-index.asciidoc[leveloffset=+1]
 
-include::list-membership-check-using-in-single-property-index.asciidoc[]
+include::using-indexes.asciidoc[]
 
-include::list-membership-check-using-in-composite-index.asciidoc[]
+include::equality-check-using-where-single-property-index.asciidoc[leveloffset=+1]
 
-include::prefix-search-using-starts-with-single-property-index.asciidoc[]
+include::equality-check-using-where-composite-index.asciidoc[leveloffset=+1]
 
-include::suffix-search-using-ends-with-single-property-index.asciidoc[]
+include::range-comparisons-using-where-single-property-index.asciidoc[leveloffset=+1]
 
-include::substring-search-using-contains-single-property-index.asciidoc[]
+include::multiple-range-comparisons-using-where-single-property-index.asciidoc[leveloffset=+1]
 
-include::existence-check-using-exists-single-property-index.asciidoc[]
+include::list-membership-check-using-in-single-property-index.asciidoc[leveloffset=+1]
 
-include::spatial-distance-searches-single-property-index.asciidoc[]
+include::list-membership-check-using-in-composite-index.asciidoc[leveloffset=+1]
 
-include::spatial-bounding-box-searches-single-property-index.asciidoc[]
+include::prefix-search-using-starts-with-single-property-index.asciidoc[leveloffset=+1]
+
+include::suffix-search-using-ends-with-single-property-index.asciidoc[leveloffset=+1]
+
+include::substring-search-using-contains-single-property-index.asciidoc[leveloffset=+1]
+
+include::existence-check-using-exists-single-property-index.asciidoc[leveloffset=+1]
+
+include::spatial-distance-searches-single-property-index.asciidoc[leveloffset=+1]
+
+include::spatial-bounding-box-searches-single-property-index.asciidoc[leveloffset=+1]
 
 include::fulltext-schema-index.adoc[leveloffset=+1]
 
