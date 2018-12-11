@@ -11,7 +11,7 @@ The fulltext schema indexes can be used to index nodes and relationships by stri
 == Introduction
 
 Fulltext schema indexes are powered by the http://lucene.apache.org/[Apache Lucene] indexing and search library.
-A fulltext schema index allows you to write queries that matches within the _contents_ of indexed string properties.
+A fulltext schema index allows you to write queries that match within the _contents_ of indexed string properties.
 For instance, the regular schema indexes described in previous sections can only do exact matching or prefix matches on strings.
 A fulltext index will instead tokenize the indexed string values, so it can match _terms_ anywhere within the strings.
 How the indexed strings are tokenized and broken into terms, is determined by what analyzer the fulltext schema index is configured with.

@@ -36,17 +36,20 @@ Setting `dbms.security.allow_csv_import_from_file_urls=false` will completely di
 
 <<operations-manual#config_dbms.directories.import, dbms.directories.import>>::
 Sets the root directory for `+file:///+` URLs used with the Cypher `LOAD CSV` clause.
-This must be set to a single directory on the filesystem of the database server, and will make all requests to load from `+file:///+` URLs relative to the specified directory (similar to how a Unix `chroot` operates).
-The default value is _import_.
-This is a security measure which prevents the database from accessing files outside the standard <<operations-manual#file-locations, import directory>>.
-Setting `dbms.directories.import` to be empty removes this security measure and instead allows access to any file on the system.
-This is not recommended.
+This should be set to a single directory relative to the Neo4j installation path on the database server.
+All requests to load from `+file:///+` URLs will then be relative to the specified directory.
+The default value set in the config settings is _import_.
+This is a security measure which prevents the database from accessing files outside the standard <<operations-manual#file-locations, import directory>>,
+similar to how a Unix `chroot` operates.
+Setting this to an empty field will allow access to all files within the Neo4j installation folder.
+Commenting out this setting will disable the security feature, allowing all files in the local system to be imported.
+This is definitely not recommended.
 
 File URLs will be resolved relative to the `dbms.directories.import` directory.
 For example, a file URL will typically look like `+file:///myfile.csv+` or `+file:///myproject/myfile.csv+`.
 
-*  If `dbms.directories.import` is set to the default value _import_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/import/myfile.csv_ and _<NEO4J_HOME>import/myproject/myfile.csv_ respectively.
-*  If it is set to _/data/csv_, using the above URLs in `LOAD CSV` would read from _/data/csv/myfile.csv_ and _/data/csv/myproject/myfile.csv_ respectively.
+*  If `dbms.directories.import` is set to the default value _import_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/import/myfile.csv_ and _<NEO4J_HOME>/import/myproject/myfile.csv_ respectively.
+*  If it is set to _/data/csv_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/data/csv/myfile.csv_ and _<NEO4J_HOME>/data/csv/myproject/myfile.csv_ respectively.
 
 See the examples below for further details.
 
