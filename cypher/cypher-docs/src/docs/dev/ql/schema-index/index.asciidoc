@@ -71,7 +71,7 @@ Queries containing the following types of predicates on properties in the index 
 * substring search: `CONTAINS`
 
 Composite indexes require predicates on all properties indexed.
-If there are predicates on only a subset of the indexed properties, the Cypher will not be able to use the composite index.
+If there are predicates on only a subset of the indexed properties, it will not be possible to use the composite index.
 To get this kind of fallback behavior, it is necessary to create additional indexes on the relevant sub-set of properties or on single properties.
 
 
