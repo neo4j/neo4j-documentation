@@ -19,6 +19,11 @@
  */
 package org.neo4j.cypher.example;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -36,11 +41,6 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-
 import static org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createCypherSnippet;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createQueryResultSnippet;
@@ -56,7 +56,7 @@ public class IntroDocTest implements GraphHolder
 
     @Test
     @Graph( value = { "John friend Sara", "John friend Joe",
-            "Sara friend Maria", "Joe friend Steve" }, autoIndexNodes = true )
+            "Sara friend Maria", "Joe friend Steve" } )
     public void intro_examples() throws Exception
     {
         try ( Transaction ignored = graphdb.beginTx() )
