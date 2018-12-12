@@ -59,16 +59,4 @@ public class GraphImpl implements Graph
     {
         return new REL[]{};
     }
-
-    @Override
-    public boolean autoIndexNodes()
-    {
-        return true;
-    }
-
-    @Override
-    public boolean autoIndexRelationships()
-    {
-        return true;
-    }
 }
