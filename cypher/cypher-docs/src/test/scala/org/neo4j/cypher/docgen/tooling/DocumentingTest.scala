@@ -20,18 +20,16 @@
 package org.neo4j.cypher.docgen.tooling
 
 import java.io._
-import java.net.InetSocketAddress
 
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.internal.CypherSerializer
 import org.neo4j.cypher.internal.runtime.interpreted.TransactionBoundQueryContext.IndexSearchMonitor
 import org.neo4j.cypher.internal.runtime.interpreted.{TransactionBoundQueryContext, TransactionalContextWrapper}
-import org.neo4j.kernel.GraphDatabaseQueryService
-import org.neo4j.kernel.impl.coreapi.{InternalTransaction, PropertyContainerLocker}
-import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
-import org.neo4j.kernel.impl.query.clientconnection.BoltConnectionInfo
-import org.neo4j.values.virtual.VirtualValues.EMPTY_MAP
 import org.neo4j.cypher.internal.v4_0.util.test_helpers.CypherFunSuite
+import org.neo4j.kernel.GraphDatabaseQueryService
+import org.neo4j.kernel.impl.coreapi.InternalTransaction
+import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
+import org.neo4j.values.virtual.VirtualValues.EMPTY_MAP
 import org.scalatest.{Assertions, Matchers}
 
 /**
@@ -123,7 +121,7 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
 // Used to format values coming from Cypher. Maps, lists, nodes, relationships and paths all have custom
 // formatting applied to them
 class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) extends (Any => String) with CypherSerializer with GraphIcing {
-  val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
+  val contextFactory = Neo4jTransactionalContextFactory.create( db )
   def apply(x: Any): String = {
 
     val transactionalContext = TransactionalContextWrapper(
