@@ -18,23 +18,23 @@
  */
 package org.neo4j.harness.enterprise.doc;
 
+import com.neo4j.harness.junit.CommercialNeo4jRule;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.net.URI;
 import java.util.function.Function;
 
+import org.neo4j.doc.server.HTTP;
+import org.neo4j.doc.test.rule.SuppressOutput;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.ConstraintType;
-import org.neo4j.harness.junit.EnterpriseNeo4jRule;
 import org.neo4j.harness.junit.Neo4jRule;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
-import org.neo4j.doc.test.rule.SuppressOutput;
-import org.neo4j.doc.server.HTTP;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -51,7 +51,7 @@ public class JUnitDocIT
 
     // tag::useEnterpriseJUnitRule[]
     @Rule
-    public Neo4jRule neo4j = new EnterpriseNeo4jRule()
+    public Neo4jRule neo4j = new CommercialNeo4jRule()
             .withFixture( "CREATE (admin:Admin)" )
             .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
                     getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
