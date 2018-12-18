@@ -337,7 +337,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       case planner if expectedException.isEmpty =>
         val parametersValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
 
-        val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
+        val contextFactory = Neo4jTransactionalContextFactory.create( db )
         def txContext(transaction: InternalTransaction) =
           contextFactory.newContext(
             transaction,
@@ -385,7 +385,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         Some(resultAsString)
 
       case s =>
-        val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
+        val contextFactory = Neo4jTransactionalContextFactory.create( db )
         val transaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
         val parametersValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
         val e = intercept[CypherException](
@@ -470,7 +470,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   }
 
   private def executeQueries(tx: InternalTransaction, queries: List[String]) {
-    val contextFactory = Neo4jTransactionalContextFactory.create( db, new PropertyContainerLocker )
+    val contextFactory = Neo4jTransactionalContextFactory.create( db )
     queries.foreach { query => {
       val innerTx = db.beginTransaction( Type.`implicit`, tx.securityContext() )
       engine.execute( query, VirtualValues.EMPTY_MAP,
