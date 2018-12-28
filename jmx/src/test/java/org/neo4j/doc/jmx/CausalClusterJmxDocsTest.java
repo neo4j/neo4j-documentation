@@ -26,14 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.neo4j.doc.AsciiDocListGenerator;
-import org.neo4j.doc.test.rule.TestDirectory;
-import org.neo4j.doc.util.FileUtil;
-import org.neo4j.kernel.configuration.Config;
-import org.neo4j.logging.NullLogProvider;
-import org.neo4j.server.enterprise.OpenEnterpriseNeoServer;
 
-import javax.management.ObjectInstance;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -46,14 +39,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import javax.management.ObjectInstance;
 
+import org.neo4j.doc.AsciiDocListGenerator;
+import org.neo4j.doc.test.rule.TestDirectory;
+import org.neo4j.doc.util.FileUtil;
+import org.neo4j.kernel.configuration.Config;
+import org.neo4j.logging.NullLogProvider;
+import org.neo4j.server.enterprise.OpenEnterpriseNeoServer;
+
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.graphdb.facade.GraphDatabaseDependencies.newDependencies;
 
 public class CausalClusterJmxDocsTest {
 
     private static final String QUERY = "org.neo4j:instance=kernel#0,*";
-    private static final int EXPECTED_NUMBER_OF_BEANS = 10;
+    private static final int EXPECTED_NUMBER_OF_BEANS = 7;
     private final Path outPath = Paths.get("target", "docs", "ops");
 
     @Rule
@@ -69,20 +72,20 @@ public class CausalClusterJmxDocsTest {
      * @return A {@link Config.Builder config builder} which can be further augmented before built and used.
      */
     private Config.Builder config(Integer[] ids, int id) {
-        String initialDiscoveryMembers = String.join(",", Arrays.stream(ids).map(it -> String.format("localhost:500%d", it)).collect(Collectors.toList()));
+        String initialDiscoveryMembers = Arrays.stream(ids).map(it -> format("localhost:500%d", it)).collect( joining( "," ) );
         return Config.builder()
                 .withServerDefaults()
                 .withSetting("dbms.mode", "CORE")
                 .withSetting("causal_clustering.initial_discovery_members", initialDiscoveryMembers)
                 .withSetting("causal_clustering.minimum_core_cluster_size_at_formation", "2")
-                .withSetting("causal_clustering.discovery_listen_address", ":500" + Integer.toString(id))
-                .withSetting("causal_clustering.transaction_listen_address", ":600" + Integer.toString(id))
-                .withSetting("causal_clustering.raft_listen_address", ":700" + Integer.toString(id))
+                .withSetting("causal_clustering.discovery_listen_address", ":500" + id )
+                .withSetting("causal_clustering.transaction_listen_address", ":600" + id )
+                .withSetting("causal_clustering.raft_listen_address", ":700" + id )
                 .withSetting("dbms.backup.enabled", "false")
-                .withSetting("dbms.connector.bolt.listen_address", ":" + Integer.toString(7687 + id))
-                .withSetting("dbms.connector.http.listen_address", ":" + Integer.toString(7474 + id))
-                .withSetting("dbms.connector.https.listen_address", ":" + Integer.toString(7484 + id))
-                .withSetting("dbms.directories.data", testDirectory.directory("server" + Integer.toString(id)).getAbsolutePath());
+                .withSetting("dbms.connector.bolt.listen_address", ":" + (7687 + id) )
+                .withSetting("dbms.connector.http.listen_address", ":" + (7474 + id) )
+                .withSetting("dbms.connector.https.listen_address", ":" + (7484 + id) )
+                .withSetting("dbms.directories.data", testDirectory.directory("server" + id ).getAbsolutePath());
     }
 
     private OpenEnterpriseNeoServer server(Config config) {
@@ -112,18 +115,24 @@ public class CausalClusterJmxDocsTest {
         // OpenEnterpriseNeoServer#start() is blocking, so use an ExecutorService.
         // This is could probably be a little prettier.
         ExecutorService es = Executors.newCachedThreadPool();
-        List<? extends Future<?>> futures = servers.stream().map(server -> es.submit(() -> {
-            try {
-                server.start();
-            } catch (Throwable t) {
-                t.printStackTrace();
+        try
+        {
+            List<? extends Future<?>> futures = servers.stream().map(server -> es.submit(() -> {
+                try {
+                    server.start();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            })).collect(Collectors.toList());
+            for (Future<?> future : futures) {
+                future.get();
             }
-        })).collect(Collectors.toList());
-        for (Future<?> future : futures) {
-            future.get();
         }
-        es.shutdown();
-        es.awaitTermination(5, TimeUnit.MINUTES);
+        finally
+        {
+            es.shutdown();
+            es.awaitTermination(5, TimeUnit.MINUTES);
+        }
     }
 
     @After
