@@ -26,6 +26,8 @@ import java.lang.reflect.Field;
 
 import org.neo4j.kernel.impl.annotations.Documented;
 
+import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
+
 public class MetricsAsciiDocGenerator
 {
     private static final String NEW_LINE = System.lineSeparator();
@@ -84,10 +86,12 @@ public class MetricsAsciiDocGenerator
     private void documentField( StringBuilder builder, Class clazz, Field field )
     {
         Documented documented = field.getAnnotation( Documented.class );
+        field.setAccessible( true );
         if ( documented != null )
         {
-            String name = getStaticFieldValue( clazz, field );
-            builder.append( "|" ).append( name )
+            String fieldValue = getStaticFieldValue( clazz, field );
+            String documentedValue = escapeHtml4( "<prefix>." + fieldValue );
+            builder.append( "|" ).append( documentedValue )
                     .append( "|" ).append( documented.value() )
                     .append( NEW_LINE );
         }
@@ -100,7 +104,7 @@ public class MetricsAsciiDocGenerator
             //noinspection unchecked
             return (T) field.get( null );
         }
-        catch ( IllegalAccessException e )
+        catch ( Exception e )
         {
             throw new IllegalStateException( "Cannot fetch value of field " + field + " in " + clazz, e );
         }

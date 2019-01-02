@@ -41,6 +41,10 @@
                                     <arg value="--output=${project.build.directory}/docs/ops/jvm-metrics.asciidoc" />
                                     <!-- keep this one separate as it's a bit special compared to the others -->
                                     <arg value="org.neo4j.metrics.source.jvm.JvmMetrics" />
+                                    <arg value="org.neo4j.metrics.source.jvm.GCMetrics" />
+                                    <arg value="org.neo4j.metrics.source.jvm.MemoryBuffersMetrics" />
+                                    <arg value="org.neo4j.metrics.source.jvm.MemoryPoolMetrics" />
+                                    <arg value="org.neo4j.metrics.source.jvm.ThreadMetrics" />
                                 </java>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true">
