@@ -21,8 +21,10 @@ package org.neo4j.doc;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
@@ -32,21 +34,33 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.neo4j.configuration.ConfigValue;
+import org.neo4j.graphdb.config.Setting;
+import org.neo4j.kernel.configuration.BoltConnector;
 import org.neo4j.kernel.configuration.Config;
 
 public class ConfigDocsGenerator {
 
     private static final Pattern CONFIG_SETTING_PATTERN = Pattern.compile( "\\+?[a-z0-9]+((\\.|_)[a-z0-9]+)+\\+?" );
     private static final Pattern ENDS_WITH_WORD_CHAR = Pattern.compile("\\w$");
-    public static final String IFDEF_HTMLOUTPUT = String.format("ifndef::nonhtmloutput[]%n");
-    public static final String IFDEF_NONHTMLOUTPUT = String.format("ifdef::nonhtmloutput[]%n");
-    public static final String ENDIF = String.format("endif::nonhtmloutput[]%n%n");
+    private static final String IFDEF_HTMLOUTPUT = String.format("ifndef::nonhtmloutput[]%n");
+    private static final String IFDEF_NONHTMLOUTPUT = String.format("ifdef::nonhtmloutput[]%n");
+    private static final String ENDIF = String.format("endif::nonhtmloutput[]%n%n");
     private final Config config;
     List<SettingDescription> settingDescriptions;
     private PrintStream out;
 
     public ConfigDocsGenerator() {
-        config = Config.builder().withServerDefaults().build();
+        BoltConnector boltConnector = new BoltConnector("bolt");
+        Map<String, String> connectorSettings = Arrays.stream(new Setting[]{
+                boltConnector.advertised_address,
+                boltConnector.encryption_level,
+                boltConnector.listen_address,
+                boltConnector.thread_pool_keep_alive,
+                boltConnector.thread_pool_max_size,
+                boltConnector.thread_pool_min_size
+        }).collect(Collectors.toMap(Setting::name, Setting::getDefaultValue));
+        Config.Builder builder = Config.builder().withServerDefaults().withSettings(connectorSettings);
+        config = builder.build();
     }
 
     public String document(Predicate<ConfigValue> filter, String id, String title, String idPrefix) {
