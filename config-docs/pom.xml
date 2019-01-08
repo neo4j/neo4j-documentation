@@ -74,7 +74,7 @@
         </dependency>
         <dependency>
             <groupId>com.neo4j.app</groupId>
-            <artifactId>neo4j-server-enterprise</artifactId>
+            <artifactId>neo4j-server-commercial</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>
@@ -153,7 +153,7 @@
                                     <arg value="org.neo4j.ext.udc.UdcSettings" />
                                     <arg value="org.neo4j.causalclustering.core.CausalClusteringSettings" />
                                     <arg value="org.neo4j.consistency.ConsistencyCheckSettings" />
-                                    <arg value="org.neo4j.server.enterprise.EnterpriseServerSettings" />
+                                    <arg value="com.neo4j.server.enterprise.CommercialServerSettings" />
                                     <arg value="org.neo4j.server.security.enterprise.configuration.SecuritySettings" />
                                     <arg value="com.neo4j.kernel.impl.enterprise.configuration.EnterpriseEditionSettings" />
                                 </java>

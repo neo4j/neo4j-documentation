@@ -22,6 +22,7 @@
  */
 package org.neo4j.doc.jmx;
 
+import com.neo4j.server.enterprise.CommercialNeoServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,7 +47,6 @@ import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.doc.util.FileUtil;
 import org.neo4j.kernel.configuration.Config;
 import org.neo4j.logging.NullLogProvider;
-import org.neo4j.server.enterprise.OpenEnterpriseNeoServer;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
@@ -64,7 +64,7 @@ public class CausalClusterJmxDocsTest {
 
     private JmxBeanDocumenter jmxBeanDocumenter;
     private FileUtil fileUtil;
-    private List<OpenEnterpriseNeoServer> servers;
+    private List<CommercialNeoServer> servers;
 
     /**
      * @param ids The IDs for all servers. Used to build a value for `initial_discovery_members`.
@@ -88,9 +88,9 @@ public class CausalClusterJmxDocsTest {
                 .withSetting("dbms.directories.data", testDirectory.directory("server" + id ).getAbsolutePath());
     }
 
-    private OpenEnterpriseNeoServer server(Config config) {
+    private CommercialNeoServer server(Config config) {
         NullLogProvider logProvider = NullLogProvider.getInstance();
-        return new OpenEnterpriseNeoServer(config, newDependencies().userLogProvider(logProvider));
+        return new CommercialNeoServer(config, newDependencies().userLogProvider(logProvider));
     }
 
     @Before
@@ -137,7 +137,7 @@ public class CausalClusterJmxDocsTest {
 
     @After
     public void exit() {
-        servers.forEach(OpenEnterpriseNeoServer::stop);
+        servers.forEach(CommercialNeoServer::stop);
     }
 
     @Test
