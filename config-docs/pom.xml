@@ -79,7 +79,7 @@
         </dependency>
         <dependency>
             <groupId>com.neo4j</groupId>
-            <artifactId>neo4j-security-enterprise</artifactId>
+            <artifactId>neo4j-security-commercial</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
 
@@ -154,8 +154,8 @@
                                     <arg value="org.neo4j.causalclustering.core.CausalClusteringSettings" />
                                     <arg value="org.neo4j.consistency.ConsistencyCheckSettings" />
                                     <arg value="com.neo4j.server.enterprise.CommercialServerSettings" />
-                                    <arg value="org.neo4j.server.security.enterprise.configuration.SecuritySettings" />
-                                    <arg value="com.neo4j.kernel.impl.enterprise.configuration.EnterpriseEditionSettings" />
+                                    <arg value="com.neo4j.server.security.enterprise.configuration.SecuritySettings" />
+                                    <arg value="com.neo4j.kernel.impl.enterprise.configuration.CommercialEditionSettings" />
                                 </java>
 
                                 <!-- Connector documentation is kept separate, because otherwise the grouping of these keys becomes unclear (IMO) -->
