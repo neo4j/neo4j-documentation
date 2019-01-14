@@ -21,6 +21,8 @@ package org.neo4j.cypher.example;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -35,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.neo4j.cypher.docgen.tooling.Prettifier;
 import org.neo4j.doc.tools.AsciiDocGenerator;
@@ -46,6 +49,7 @@ import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.Iterators;
 import org.neo4j.test.TestGraphDatabaseFactory;
+import org.neo4j.test.mockito.matcher.RegexMatcher;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
 import static java.util.Arrays.asList;
@@ -58,7 +62,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.neo4j.cypher.internal.javacompat.RegularExpressionMatcher.matchesPattern;
 import static org.neo4j.helpers.collection.Iterators.asIterable;
 import static org.neo4j.helpers.collection.Iterators.count;
 
@@ -176,7 +179,8 @@ public class JavaExecutionEngineDocTest
                 "AND id(six) = 6 AND id(seven) = 7 AND id(eight) = 8 AND id(nine) = 9 AND id(ten) = 10 " +
                 "RETURN one, two, three, four, five, six, seven, eight, nine, ten";
         Result result = db.execute( q );
-        assertThat( result.resultAsString(), matchesPattern( "one.*two.*three.*four.*five.*six.*seven.*eight.*nine.*ten" ) );
+        Pattern pattern = Pattern.compile( "one.*two.*three.*four.*five.*six.*seven.*eight.*nine.*ten" );
+        assertTrue( pattern.matcher( result.resultAsString() ).find() );
     }
 
     private void createTenNodes()
