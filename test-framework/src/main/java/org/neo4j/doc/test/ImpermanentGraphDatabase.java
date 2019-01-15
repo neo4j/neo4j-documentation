@@ -33,7 +33,7 @@ import org.neo4j.helpers.Service;
 import org.neo4j.helpers.collection.Iterables;
 import org.neo4j.io.fs.FileSystemAbstraction;
 import org.neo4j.kernel.configuration.Config;
-import org.neo4j.kernel.extension.KernelExtensionFactory;
+import org.neo4j.kernel.extension.ExtensionFactory;
 import org.neo4j.kernel.impl.factory.DatabaseInfo;
 import org.neo4j.kernel.internal.locker.StoreLocker;
 import org.neo4j.logging.LogProvider;
@@ -99,7 +99,7 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
     public ImpermanentGraphDatabase( File storeDir, Map<String, String> params )
     {
         this( storeDir, params,
-                Iterables.cast( Service.load( KernelExtensionFactory.class ) ) );
+                Iterables.cast( Service.load( ExtensionFactory.class ) ) );
     }
 
     /**
@@ -107,9 +107,9 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
      */
     @Deprecated
     public ImpermanentGraphDatabase( Map<String, String> params,
-                                     Iterable<KernelExtensionFactory<?>> kernelExtensions )
+                                     Iterable<ExtensionFactory<?>> extensionFactories )
     {
-        this( PATH, params, kernelExtensions );
+        this( PATH, params, extensionFactories );
     }
 
     /**
@@ -117,14 +117,14 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
      */
     @Deprecated
     public ImpermanentGraphDatabase( File storeDir, Map<String, String> params,
-                                     Iterable<KernelExtensionFactory<?>> kernelExtensions )
+                                     Iterable<ExtensionFactory<?>> extensionFactories )
     {
-        this( storeDir, params, getDependencies( kernelExtensions ) );
+        this( storeDir, params, getDependencies( extensionFactories ) );
     }
 
-    private static GraphDatabaseFacadeFactory.Dependencies getDependencies( Iterable<KernelExtensionFactory<?>> kernelExtensions )
+    private static GraphDatabaseFacadeFactory.Dependencies getDependencies( Iterable<ExtensionFactory<?>> extensionFactories )
     {
-        return newDependencies().kernelExtensions( kernelExtensions );
+        return newDependencies().extensions( extensionFactories );
     }
 
     public ImpermanentGraphDatabase( File storeDir, Map<String, String> params, GraphDatabaseFacadeFactory.Dependencies dependencies )

@@ -40,7 +40,7 @@ import org.neo4j.graphdb.security.URLAccessRule;
 import org.neo4j.io.fs.FileSystemAbstraction;
 import org.neo4j.kernel.configuration.BoltConnector;
 import org.neo4j.kernel.configuration.Config;
-import org.neo4j.kernel.extension.KernelExtensionFactory;
+import org.neo4j.kernel.extension.ExtensionFactory;
 import org.neo4j.kernel.impl.factory.DatabaseInfo;
 import org.neo4j.kernel.internal.locker.StoreLocker;
 import org.neo4j.kernel.monitoring.Monitors;
@@ -171,20 +171,20 @@ public class TestGraphDatabaseFactory extends GraphDatabaseFactory
         return this;
     }
 
-    public TestGraphDatabaseFactory addKernelExtensions( Iterable<KernelExtensionFactory<?>> newKernelExtensions )
+    public TestGraphDatabaseFactory addKernelExtensions( Iterable<ExtensionFactory<?>> newKernelExtensions )
     {
-        getCurrentState().addKernelExtensions( newKernelExtensions );
+        getCurrentState().addExtensions( newKernelExtensions );
         return this;
     }
 
-    public TestGraphDatabaseFactory addKernelExtension( KernelExtensionFactory<?> newKernelExtension )
+    public TestGraphDatabaseFactory addExtension( ExtensionFactory<?> newExtension )
     {
-        return addKernelExtensions( Collections.singletonList( newKernelExtension ) );
+        return addKernelExtensions( Collections.singletonList( newExtension ) );
     }
 
-    public TestGraphDatabaseFactory setKernelExtensions( Iterable<KernelExtensionFactory<?>> newKernelExtensions )
+    public TestGraphDatabaseFactory setExtensions( Iterable<ExtensionFactory<?>> extensionFactories )
     {
-        getCurrentState().setKernelExtensions( newKernelExtensions );
+        getCurrentState().setExtensions( extensionFactories );
         return this;
     }
 
