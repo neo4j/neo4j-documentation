@@ -18,22 +18,20 @@
  */
 package org.neo4j.harness.enterprise.doc;
 
-import com.neo4j.harness.junit.CommercialNeo4jRule;
+import com.neo4j.harness.junit.rule.CommercialNeo4jRule;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.net.URI;
-import java.util.function.Function;
 
 import org.neo4j.doc.server.HTTP;
-import org.neo4j.doc.test.rule.SuppressOutput;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.ConstraintType;
-import org.neo4j.harness.junit.Neo4jRule;
+import org.neo4j.harness.junit.rule.Neo4jRule;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 
 import static org.junit.Assert.assertEquals;
@@ -43,30 +41,22 @@ import static org.neo4j.helpers.collection.Iterators.count;
 import static org.neo4j.server.ServerTestUtils.getRelativePath;
 import static org.neo4j.server.ServerTestUtils.getSharedTestTemporaryFolder;
 
-
 public class JUnitDocIT
 {
-    @Rule
-    public SuppressOutput suppressOutput = SuppressOutput.suppressAll();
-
     // tag::useEnterpriseJUnitRule[]
     @Rule
     public Neo4jRule neo4j = new CommercialNeo4jRule()
             .withFixture( "CREATE (admin:Admin)" )
             .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
                     getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
-            .withFixture( new Function<GraphDatabaseService,Void>()
+            .withFixture( graphDatabaseService ->
             {
-                @Override
-                public Void apply( GraphDatabaseService graphDatabaseService ) throws RuntimeException
+                try ( Transaction tx = graphDatabaseService.beginTx() )
                 {
-                    try ( Transaction tx = graphDatabaseService.beginTx() )
-                    {
-                        graphDatabaseService.createNode( Label.label( "Admin" ) );
-                        tx.success();
-                    }
-                    return null;
+                    graphDatabaseService.createNode( Label.label( "Admin" ) );
+                    tx.success();
                 }
+                return null;
             } );
 
     @Test
