@@ -151,7 +151,7 @@
                                     <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
                                     <arg value="org.neo4j.metrics.MetricsSettings" />
                                     <arg value="org.neo4j.ext.udc.UdcSettings" />
-                                    <arg value="org.neo4j.causalclustering.core.CausalClusteringSettings" />
+                                    <arg value="com.neo4j.causalclustering.core.CausalClusteringSettings" />
                                     <arg value="org.neo4j.consistency.ConsistencyCheckSettings" />
                                     <arg value="com.neo4j.server.enterprise.CommercialServerSettings" />
                                     <arg value="com.neo4j.server.security.enterprise.configuration.SecuritySettings" />
