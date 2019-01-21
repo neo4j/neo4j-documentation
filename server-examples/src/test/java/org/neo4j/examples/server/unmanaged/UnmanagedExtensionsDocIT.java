@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.neo4j.doc.server.HTTP;
-import org.neo4j.harness.junit.Neo4jRule;
+import org.neo4j.harness.junit.rule.Neo4jRule;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 
 import static junit.framework.TestCase.assertEquals;
@@ -46,8 +46,8 @@ public class UnmanagedExtensionsDocIT
                     "MERGE (p)-[:ACTED_IN]->(m) " )
             .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
                     getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
-            .withExtension( "/path/to/my/extension1", ColleaguesCypherExecutionResource.class )
-            .withExtension( "/path/to/my/extension2", ColleaguesResource.class );
+            .withUnmanagedExtension( "/path/to/my/extension1", ColleaguesCypherExecutionResource.class )
+            .withUnmanagedExtension( "/path/to/my/extension2", ColleaguesResource.class );
 
     @Test
     public void shouldRetrieveColleaguesViaExecutionEngine() throws IOException

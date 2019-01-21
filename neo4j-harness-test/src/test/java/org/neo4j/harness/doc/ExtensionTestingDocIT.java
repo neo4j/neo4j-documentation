@@ -21,32 +21,38 @@ package org.neo4j.harness.doc;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.function.Function;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.doc.server.HTTP;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.harness.ServerControls;
-import org.neo4j.harness.TestServerBuilder;
-import org.neo4j.harness.TestServerBuilders;
+import org.neo4j.harness.junit.rule.Neo4jRule;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
-import org.neo4j.server.ServerTestUtils;
-import org.neo4j.doc.test.rule.SuppressOutput;
-import org.neo4j.doc.server.HTTP;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.helpers.collection.Iterators.count;
+import static org.neo4j.server.ServerTestUtils.getRelativePath;
 import static org.neo4j.server.ServerTestUtils.getSharedTestTemporaryFolder;
 
 public class ExtensionTestingDocIT
 {
     @Rule
-    public SuppressOutput suppressOutput = SuppressOutput.suppressAll();
+    public Neo4jRule neo4j = new Neo4jRule()
+            .withUnmanagedExtension( "/myExtension", MyUnmanagedExtension.class )
+            .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
+                    getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
+            .withFixture( graphDatabaseService ->
+            {
+                try ( Transaction tx = graphDatabaseService.beginTx() )
+                {
+                    graphDatabaseService.createNode( Label.label( "User" ) );
+                    tx.success();
+                }
+                return null;
+            } );
 
     // tag::testExtension[]
     @Path("")
@@ -63,55 +69,20 @@ public class ExtensionTestingDocIT
     public void testMyExtension() throws Exception
     {
         // Given
-        try ( ServerControls server = getServerBuilder()
-                .withExtension( "/myExtension", MyUnmanagedExtension.class )
-                .newServer() )
-        {
-            // When
-            HTTP.Response response = HTTP.GET(
-                    HTTP.GET( server.httpURI().resolve( "myExtension" ).toString() ).location() );
+        HTTP.Response response = HTTP.GET( HTTP.GET( neo4j.httpURI().resolve( "myExtension" ).toString() ).location() );
 
-            // Then
-            assertEquals( 200, response.status() );
-        }
+        // Then
+        assertEquals( 200, response.status() );
     }
 
     @Test
-    public void testMyExtensionWithFunctionFixture() throws Exception
+    public void testMyExtensionWithFunctionFixture()
     {
         // Given
-        try ( ServerControls server = getServerBuilder()
-                .withExtension( "/myExtension", MyUnmanagedExtension.class )
-                .withFixture( new Function<GraphDatabaseService, Void>()
-                {
-                    @Override
-                    public Void apply( GraphDatabaseService graphDatabaseService ) throws RuntimeException
-                    {
-                        try ( Transaction tx = graphDatabaseService.beginTx() )
-                        {
-                            graphDatabaseService.createNode( Label.label( "User" ) );
-                            tx.success();
-                        }
-                        return null;
-                    }
-                } )
-                .newServer() )
-        {
-            // When
-            Result result = server.graph().execute( "MATCH (n:User) return n" );
+        Result result = neo4j.getGraphDatabaseService().execute( "MATCH (n:User) return n" );
 
-            // Then
-            assertEquals( 1, count( result ) );
-        }
+        // Then
+        assertEquals( 1, count( result ) );
     }
     // end::testExtension[]
-
-    private TestServerBuilder getServerBuilder( ) throws IOException
-    {
-        TestServerBuilder serverBuilder = TestServerBuilders.newInProcessBuilder();
-        String path = ServerTestUtils.getRelativePath(
-                getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory );
-        serverBuilder.withConfig( LegacySslPolicyConfig.certificates_directory.name(), path );
-        return serverBuilder;
-    }
 }

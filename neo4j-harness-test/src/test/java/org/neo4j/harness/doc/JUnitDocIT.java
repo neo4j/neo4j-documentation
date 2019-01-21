@@ -22,21 +22,18 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.net.URI;
-import java.util.function.Function;
 
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.doc.server.HTTP;
+import org.neo4j.doc.test.rule.SuppressOutput;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.harness.junit.Neo4jRule;
+import org.neo4j.harness.junit.rule.Neo4jRule;
 import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
-import org.neo4j.doc.test.rule.SuppressOutput;
-import org.neo4j.doc.server.HTTP;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.helpers.collection.Iterators.count;
 import static org.neo4j.server.ServerTestUtils.getRelativePath;
 import static org.neo4j.server.ServerTestUtils.getSharedTestTemporaryFolder;
-
 
 public class JUnitDocIT
 {
@@ -49,22 +46,18 @@ public class JUnitDocIT
             .withFixture( "CREATE (admin:Admin)" )
             .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
                     getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
-            .withFixture( new Function<GraphDatabaseService, Void>()
+            .withFixture( graphDatabaseService ->
             {
-                @Override
-                public Void apply( GraphDatabaseService graphDatabaseService ) throws RuntimeException
+                try (Transaction tx = graphDatabaseService.beginTx())
                 {
-                    try (Transaction tx = graphDatabaseService.beginTx())
-                    {
-                        graphDatabaseService.createNode( Label.label( "Admin" ) );
-                        tx.success();
-                    }
-                    return null;
+                    graphDatabaseService.createNode( Label.label( "Admin" ) );
+                    tx.success();
                 }
+                return null;
             } );
 
     @Test
-    public void shouldWorkWithServer() throws Exception
+    public void shouldWorkWithServer()
     {
         // Given
         URI serverURI = neo4j.httpURI();
