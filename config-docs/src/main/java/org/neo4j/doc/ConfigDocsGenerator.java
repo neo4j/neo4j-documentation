@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 import org.neo4j.configuration.ConfigValue;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.kernel.configuration.BoltConnector;
+import org.neo4j.kernel.configuration.HttpConnector;
+import org.neo4j.kernel.configuration.HttpConnector.Encryption;
 import org.neo4j.kernel.configuration.Config;
 
 public class ConfigDocsGenerator {
@@ -51,13 +53,19 @@ public class ConfigDocsGenerator {
 
     public ConfigDocsGenerator() {
         BoltConnector boltConnector = new BoltConnector("bolt");
+        HttpConnector httpConnector = new HttpConnector( "http", Encryption.NONE );
+        HttpConnector httpsConnector = new HttpConnector( "https", Encryption.TLS );
         Map<String, String> connectorSettings = Arrays.stream(new Setting[]{
                 boltConnector.advertised_address,
                 boltConnector.encryption_level,
                 boltConnector.listen_address,
                 boltConnector.thread_pool_keep_alive,
                 boltConnector.thread_pool_max_size,
-                boltConnector.thread_pool_min_size
+                boltConnector.thread_pool_min_size,
+                httpConnector.listen_address,
+                httpConnector.advertised_address,
+                httpsConnector.listen_address,
+                httpsConnector.advertised_address
         }).collect(Collectors.toMap(Setting::name, Setting::getDefaultValue));
         Config.Builder builder = Config.builder().withServerDefaults().withSettings(connectorSettings);
         config = builder.build();
