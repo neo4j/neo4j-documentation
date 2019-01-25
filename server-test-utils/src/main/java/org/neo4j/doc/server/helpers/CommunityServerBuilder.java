@@ -30,8 +30,8 @@ import java.util.Properties;
 
 import org.neo4j.doc.server.ServerTestUtils;
 import org.neo4j.doc.test.ImpermanentGraphDatabase;
+import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
-import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.helpers.ListenSocketAddress;
 import org.neo4j.kernel.configuration.Config;
@@ -106,8 +106,7 @@ public class CommunityServerBuilder
                 .monitors( new Monitors() ) );
     }
 
-    protected CommunityNeoServer build( Optional<File> configFile, Config config,
-            GraphDatabaseFacadeFactory.Dependencies dependencies )
+    protected CommunityNeoServer build( Optional<File> configFile, Config config, ExternalDependencies dependencies )
     {
         return new TestCommunityNeoServer( config, configFile, dependencies );
     }
@@ -331,8 +330,7 @@ public class CommunityServerBuilder
     {
         private final Optional<File> configFile;
 
-        private TestCommunityNeoServer( Config config, Optional<File> configFile, GraphDatabaseFacadeFactory
-                .Dependencies dependencies )
+        private TestCommunityNeoServer( Config config, Optional<File> configFile, ExternalDependencies dependencies )
         {
             super( config, persistent ? new CommunityGraphFactory() : IN_MEMORY_DB, dependencies );
             this.configFile = configFile;
