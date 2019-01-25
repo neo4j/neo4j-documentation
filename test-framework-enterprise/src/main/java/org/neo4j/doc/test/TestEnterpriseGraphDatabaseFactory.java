@@ -22,18 +22,20 @@
  */
 package org.neo4j.doc.test;
 
+import com.neo4j.kernel.impl.enterprise.EnterpriseEditionModule;
+
 import java.io.File;
 import java.util.Map;
 
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactoryState;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
-import org.neo4j.graphdb.factory.module.PlatformModule;
+import org.neo4j.graphdb.factory.module.GlobalModule;
 import org.neo4j.kernel.configuration.Config;
-import com.neo4j.kernel.impl.enterprise.EnterpriseEditionModule;
 import org.neo4j.kernel.impl.factory.DatabaseInfo;
 import org.neo4j.kernel.impl.factory.Edition;
 import org.neo4j.logging.LogProvider;
@@ -60,10 +62,9 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
                 return new GraphDatabaseFacadeFactory( DatabaseInfo.COMMERCIAL, EnterpriseEditionModule::new )
                 {
                     @Override
-                    protected PlatformModule createPlatform( File storeDir, Config config,
-                            Dependencies dependencies )
+                    protected GlobalModule createGlobalPlatform( File storeDir, Config config, ExternalDependencies dependencies )
                     {
-                        return new PlatformModule( storeDir, config, databaseInfo, dependencies )
+                        return new GlobalModule( storeDir, config, databaseInfo, dependencies )
                         {
                             @Override
                             protected LogService createLogService( LogProvider userLogProvider )
