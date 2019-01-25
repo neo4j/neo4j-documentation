@@ -24,7 +24,7 @@ import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
-import org.neo4j.kernel.impl.proc.Procedures
+import org.neo4j.kernel.impl.proc.GlobalProcedures
 
 import scala.util.Try
 
@@ -86,7 +86,7 @@ class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseG
 
   private def initialize(init: RunnableInitialization, graph: GraphDatabaseCypherService): Seq[QueryRunResult] = {
     // Register procedures and functions
-    val procedureRegistry = graph.getDependencyResolver.resolveDependency(classOf[Procedures])
+    val procedureRegistry = graph.getDependencyResolver.resolveDependency(classOf[GlobalProcedures])
     init.procedures.foreach(procedureRegistry.registerProcedure)
     init.userDefinedFunctions.foreach(procedureRegistry.registerFunction)
     init.userDefinedAggregationFunctions.foreach(procedureRegistry.registerAggregationFunction)
