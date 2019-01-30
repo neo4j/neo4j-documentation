@@ -20,10 +20,10 @@
 package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.internal.javacompat.ExecutionResult
+import org.neo4j.cypher.internal.plandescription.InternalPlanDescription
 import org.neo4j.cypher.internal.result.string.ResultStringBuilder
 import org.neo4j.cypher.internal.runtime._
 import org.neo4j.cypher.internal.runtime.interpreted.TransactionalContextWrapper
-import org.neo4j.cypher.internal.runtime.planDescription.InternalPlanDescription
 import org.neo4j.graphdb.Result.ResultVisitor
 import org.neo4j.graphdb.{Notification, Result}
 import org.neo4j.kernel.impl.query.TransactionalContext
