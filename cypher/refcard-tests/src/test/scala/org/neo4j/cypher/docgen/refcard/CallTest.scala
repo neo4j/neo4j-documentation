@@ -29,6 +29,7 @@ import org.neo4j.internal.kernel.api.procs.ProcedureSignature._
 import org.neo4j.kernel.api.proc.CallableProcedure.BasicProcedure
 import org.neo4j.kernel.api.proc.Context
 import org.neo4j.kernel.api.{InwardKernel, ResourceTracker}
+import org.neo4j.values.AnyValue
 
 class CallTest extends RefcardTest with QueryStatisticsTestSupport {
 
@@ -46,8 +47,8 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
       .out("result", Neo4jTypes.NTString)
 
     val proc = new BasicProcedure(builder.build) {
-      override def apply(ctx: Context, input: Array[AnyRef], resourceTracker: ResourceTracker): RawIterator[Array[AnyRef], ProcedureException] =
-        RawIterator.of[Array[AnyRef], ProcedureException](input)
+      override def apply(ctx: Context, input: Array[AnyValue], resourceTracker: ResourceTracker): RawIterator[Array[AnyValue], ProcedureException] =
+        RawIterator.of[Array[AnyValue], ProcedureException](input)
     }
     kernel.registerProcedure(proc)
   }
