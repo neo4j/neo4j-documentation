@@ -94,8 +94,8 @@
         <dependencies>
             <dependency>
                 <groupId>org.scalatest</groupId>
-                <artifactId>scalatest_2.11</artifactId>
-                <version>2.2.5</version>
+                <artifactId>scalatest_${scala.binary.version}</artifactId>
+                <version>3.0.5</version>
                 <scope>test</scope>
                 <exclusions>
                     <exclusion>
@@ -110,7 +110,7 @@
             </dependency>
             <dependency>
                 <groupId>org.scalautils</groupId>
-                <artifactId>scalautils_2.11</artifactId>
+                <artifactId>scalautils_${scala.binary.version}</artifactId>
                 <version>2.1.7</version>
                 <scope>test</scope>
                 <exclusions>
@@ -127,7 +127,7 @@
 
             <dependency>
                 <groupId>org.parboiled</groupId>
-                <artifactId>parboiled-scala_2.11</artifactId>
+                <artifactId>parboiled-scala_${scala.binary.version}</artifactId>
                 <version>1.1.7</version>
                 <exclusions>
                     <exclusion>
