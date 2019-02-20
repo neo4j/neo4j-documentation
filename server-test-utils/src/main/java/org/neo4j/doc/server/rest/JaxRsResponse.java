@@ -20,12 +20,10 @@ package org.neo4j.doc.server.rest;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.core.util.StringKeyObjectValueIgnoreCaseMultivaluedMap;
-import org.junit.Test;
 
 import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -39,17 +37,6 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
-
-import org.neo4j.logging.NullLogProvider;
-import org.neo4j.server.database.Database;
-import org.neo4j.server.rest.management.AdvertisableService;
-import org.neo4j.server.rest.management.console.ConsoleService;
-import org.neo4j.server.rest.management.repr.ServerRootRepresentation;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 
 public class JaxRsResponse extends Response
 {
@@ -274,22 +261,5 @@ public class JaxRsResponse extends Response
 
     public MediaType getType() {
         return type;
-    }
-
-    public static class ServerRootRepresentationTest
-    {
-        @Test
-        public void shouldProvideAListOfServiceUris() throws Exception
-        {
-            ConsoleService consoleService = new ConsoleService( null, mock( Database.class ), NullLogProvider.getInstance(), null );
-            ServerRootRepresentation srr = new ServerRootRepresentation( new URI( "http://example.org:9999" ),
-                    Collections.<AdvertisableService>singletonList( consoleService ) );
-            Map<String, Map<String, String>> map = srr.serialize();
-
-            assertNotNull( map.get( "services" ) );
-
-            assertThat( map.get( "services" )
-                    .get( consoleService.getName() ), containsString( consoleService.getServerPath() ) );
-        }
     }
 }
