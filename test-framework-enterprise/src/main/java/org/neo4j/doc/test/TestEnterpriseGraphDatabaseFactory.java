@@ -22,7 +22,7 @@
  */
 package org.neo4j.doc.test;
 
-import com.neo4j.kernel.impl.enterprise.EnterpriseEditionModule;
+import com.neo4j.commercial.edition.CommercialEditionModule;
 
 import java.io.File;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
                 Config config = Config.builder()
                         .withSettings( params )
                         .withSetting( GraphDatabaseSettings.ephemeral, "false" ).build();
-                return new GraphDatabaseFacadeFactory( DatabaseInfo.COMMERCIAL, EnterpriseEditionModule::new )
+                return new GraphDatabaseFacadeFactory( DatabaseInfo.COMMERCIAL, CommercialEditionModule::new )
                 {
                     @Override
                     protected GlobalModule createGlobalPlatform( File storeDir, Config config, ExternalDependencies dependencies )
@@ -114,7 +114,7 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
 
         TestEnterpriseGraphDatabaseFacadeFactory( TestGraphDatabaseFactoryState state, boolean impermanent )
         {
-            super( state, impermanent, DatabaseInfo.COMMERCIAL, EnterpriseEditionModule::new );
+            super( state, impermanent, DatabaseInfo.COMMERCIAL, CommercialEditionModule::new );
         }
     }
 
