@@ -98,8 +98,7 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
     @Deprecated
     public ImpermanentGraphDatabase( File storeDir, Map<String, String> params )
     {
-        this( storeDir, params,
-                Iterables.cast( Service.loadAll( ExtensionFactory.class ) ) );
+        this( storeDir, params, Iterables.cast( Service.loadAll( ExtensionFactory.class ) ) );
     }
 
     /**

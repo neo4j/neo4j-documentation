@@ -22,14 +22,15 @@
  */
 package org.neo4j.doc;
 
-import org.neo4j.graphdb.GraphDatabaseService;
-import com.neo4j.graphdb.factory.EnterpriseGraphDatabaseFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
+import com.neo4j.commercial.edition.factory.CommercialGraphDatabaseFactory;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 
 public class Neo4jInstance {
 
@@ -37,7 +38,7 @@ public class Neo4jInstance {
 
     public GraphDatabaseService newEnterpriseInstance() {
         baseDatabaseDirectory.toFile().mkdirs();
-        GraphDatabaseService graphDb = new EnterpriseGraphDatabaseFactory()
+        GraphDatabaseService graphDb = new CommercialGraphDatabaseFactory()
                 .newEmbeddedDatabaseBuilder(databaseDirectory())
                 .setConfig(GraphDatabaseSettings.auth_enabled, "true")
                 .newGraphDatabase();
