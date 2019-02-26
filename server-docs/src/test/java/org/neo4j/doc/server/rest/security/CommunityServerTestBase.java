@@ -72,4 +72,14 @@ public class CommunityServerTestBase extends ExclusiveServerTestBase
     {
         return UTF8.decode( Base64.encode( value ) );
     }
+
+    protected String cypherURL()
+    {
+        return dataURL() + "transaction/commit";
+    }
+
+    protected String simpleCypherRequestBody()
+    {
+        return "{\"statements\": [{\"statement\": \"CREATE (n:MyLabel) RETURN n\"}]}";
+    }
 }
