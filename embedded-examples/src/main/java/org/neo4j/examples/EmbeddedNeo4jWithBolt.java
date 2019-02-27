@@ -21,10 +21,10 @@ package org.neo4j.examples;
 import java.io.File;
 import java.io.IOException;
 
+import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.io.fs.FileUtils;
-import org.neo4j.kernel.configuration.BoltConnector;
 
 public class EmbeddedNeo4jWithBolt
 {

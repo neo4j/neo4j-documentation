@@ -45,7 +45,7 @@ import javax.management.ObjectInstance;
 import org.neo4j.doc.AsciiDocListGenerator;
 import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.doc.util.FileUtil;
-import org.neo4j.kernel.configuration.Config;
+import org.neo4j.configuration.Config;
 import org.neo4j.logging.NullLogProvider;
 
 import static java.lang.String.format;

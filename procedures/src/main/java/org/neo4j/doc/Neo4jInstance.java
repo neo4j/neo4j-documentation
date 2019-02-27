@@ -28,9 +28,9 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 
 public class Neo4jInstance {
 
@@ -40,7 +40,7 @@ public class Neo4jInstance {
         baseDatabaseDirectory.toFile().mkdirs();
         GraphDatabaseService graphDb = new CommercialGraphDatabaseFactory()
                 .newEmbeddedDatabaseBuilder(databaseDirectory())
-                .setConfig(GraphDatabaseSettings.auth_enabled, "true")
+                .setConfig( GraphDatabaseSettings.auth_enabled, "true")
                 .newGraphDatabase();
         registerShutdownHook(graphDb);
         return graphDb;

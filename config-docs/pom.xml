@@ -147,7 +147,7 @@
                                       classpathref="maven.compile.classpath" failonerror="true">
                                     <arg line="-o ${project.build.directory}/docs/ops/configuration-attributes.asciidoc" />
                                     <arg value="org.neo4j.server.configuration.ServerSettings" />
-                                    <arg value="org.neo4j.graphdb.factory.GraphDatabaseSettings" />
+                                    <arg value="org.neo4j.configuration.GraphDatabaseSettings" />
                                     <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
                                     <arg value="org.neo4j.metrics.MetricsSettings" />
                                     <arg value="org.neo4j.ext.udc.UdcSettings" />
@@ -162,13 +162,13 @@
                                 <java classname="org.neo4j.doc.GenerateConfigDocumentation"
                                     classpathref="maven.compile.classpath" failonerror="true">
                                     <arg line="-o ${project.build.directory}/docs/ops/configuration-bolt-connector-attributes.asciidoc" />
-                                    <arg value="org.neo4j.kernel.configuration.BoltConnector" />
+                                    <arg value="org.neo4j.configuration.connectors.BoltConnector" />
                                 </java>
 
                                 <java classname="org.neo4j.doc.GenerateConfigDocumentation"
                                     classpathref="maven.compile.classpath" failonerror="true">
                                     <arg line="-o ${project.build.directory}/docs/ops/configuration-http-connector-attributes.asciidoc" />
-                                    <arg value="org.neo4j.kernel.configuration.HttpConnector" />
+                                    <arg value="org.neo4j.configuration.connectors.HttpConnector" />
                                 </java>
                             </target>
                         </configuration>

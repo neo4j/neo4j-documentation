@@ -19,10 +19,10 @@
  */
 package org.neo4j.doc.cypherdoc;
 
+import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
 
 import java.io.ByteArrayOutputStream;

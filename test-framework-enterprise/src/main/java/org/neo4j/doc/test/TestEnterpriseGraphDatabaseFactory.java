@@ -25,19 +25,17 @@ package org.neo4j.doc.test;
 import com.neo4j.commercial.edition.CommercialEditionModule;
 
 import java.io.File;
-import java.util.Map;
 
+import org.neo4j.common.Edition;
+import org.neo4j.configuration.Config;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactoryState;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.graphdb.factory.module.GlobalModule;
-import org.neo4j.kernel.configuration.Config;
 import org.neo4j.kernel.impl.factory.DatabaseInfo;
-import org.neo4j.kernel.impl.factory.Edition;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.internal.LogService;
 import org.neo4j.logging.internal.SimpleLogService;
@@ -54,11 +52,8 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
         return new GraphDatabaseBuilder.DatabaseCreator()
         {
             @Override
-            public GraphDatabaseService newDatabase( Map<String,String> params )
+            public GraphDatabaseService newDatabase( Config config )
             {
-                Config config = Config.builder()
-                        .withSettings( params )
-                        .withSetting( GraphDatabaseSettings.ephemeral, "false" ).build();
                 return new GraphDatabaseFacadeFactory( DatabaseInfo.COMMERCIAL, CommercialEditionModule::new )
                 {
                     @Override
@@ -94,12 +89,6 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
     {
         return new GraphDatabaseBuilder.DatabaseCreator()
         {
-            @Override
-            public GraphDatabaseService newDatabase( Map<String,String> config )
-            {
-                return newDatabase( Config.defaults( config ) );
-            }
-
             @Override
             public GraphDatabaseService newDatabase( Config config )
             {

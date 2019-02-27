@@ -24,7 +24,7 @@ import org.junit.Rule;
 
 import java.util.concurrent.Callable;
 
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
+import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.server.NeoServer;
 import org.neo4j.doc.server.helpers.ServerHelper;
 import org.neo4j.doc.test.rule.SuppressOutput;

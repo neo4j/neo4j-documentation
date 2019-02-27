@@ -25,9 +25,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.harness.junit.rule.Neo4jRule;
-import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;

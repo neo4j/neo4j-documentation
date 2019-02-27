@@ -33,12 +33,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.neo4j.configuration.Config;
 import org.neo4j.configuration.ConfigValue;
+import org.neo4j.configuration.connectors.BoltConnector;
+import org.neo4j.configuration.connectors.HttpConnector;
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.kernel.configuration.BoltConnector;
-import org.neo4j.kernel.configuration.HttpConnector;
-import org.neo4j.kernel.configuration.HttpConnector.Encryption;
-import org.neo4j.kernel.configuration.Config;
+
+import static org.neo4j.configuration.connectors.HttpConnector.Encryption;
 
 public class ConfigDocsGenerator {
 

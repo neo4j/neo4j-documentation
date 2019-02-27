@@ -30,11 +30,11 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.neo4j.configuration.Description;
+import org.neo4j.configuration.Group;
 import org.neo4j.configuration.Internal;
+import org.neo4j.configuration.Settings;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.helpers.TimeUtil;
-import org.neo4j.kernel.configuration.Group;
-import org.neo4j.kernel.configuration.Settings;
 
 /**
  * A meta description of a settings class, used to generate documentation.

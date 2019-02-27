@@ -31,7 +31,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.harness.junit.rule.Neo4jRule;
-import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
+import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.doc.server.ServerTestUtils.getRelativePath;

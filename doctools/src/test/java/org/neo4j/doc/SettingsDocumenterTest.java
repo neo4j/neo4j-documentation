@@ -21,19 +21,19 @@ package org.neo4j.doc;
 
 import org.junit.Test;
 
-import org.neo4j.graphdb.config.Setting;
 import org.neo4j.configuration.Description;
-import org.neo4j.kernel.configuration.Group;
-import org.neo4j.kernel.configuration.GroupSettingSupport;
+import org.neo4j.configuration.Group;
+import org.neo4j.configuration.GroupSettingSupport;
 import org.neo4j.configuration.Internal;
+import org.neo4j.graphdb.config.Setting;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.neo4j.kernel.configuration.Settings.BOOLEAN;
-import static org.neo4j.kernel.configuration.Settings.INTEGER;
-import static org.neo4j.kernel.configuration.Settings.NO_DEFAULT;
-import static org.neo4j.kernel.configuration.Settings.STRING;
-import static org.neo4j.kernel.configuration.Settings.setting;
+import static org.neo4j.configuration.Settings.BOOLEAN;
+import static org.neo4j.configuration.Settings.INTEGER;
+import static org.neo4j.configuration.Settings.NO_DEFAULT;
+import static org.neo4j.configuration.Settings.STRING;
+import static org.neo4j.configuration.Settings.setting;
 
 public class SettingsDocumenterTest
 {

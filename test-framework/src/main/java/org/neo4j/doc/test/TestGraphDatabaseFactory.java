@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 
+import org.neo4j.configuration.Config;
+import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.graphdb.facade.ExternalDependencies;
@@ -31,7 +34,6 @@ import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.graphdb.factory.module.GlobalModule;
 import org.neo4j.graphdb.factory.module.edition.AbstractEditionModule;
 import org.neo4j.graphdb.factory.module.edition.CommunityEditionModule;
@@ -39,8 +41,6 @@ import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
 import org.neo4j.graphdb.mockfs.UncloseableDelegatingFileSystemAbstraction;
 import org.neo4j.graphdb.security.URLAccessRule;
 import org.neo4j.io.fs.FileSystemAbstraction;
-import org.neo4j.kernel.configuration.BoltConnector;
-import org.neo4j.kernel.configuration.Config;
 import org.neo4j.kernel.extension.ExtensionFactory;
 import org.neo4j.kernel.impl.factory.DatabaseInfo;
 import org.neo4j.kernel.internal.locker.StoreLocker;
@@ -51,10 +51,9 @@ import org.neo4j.logging.internal.LogService;
 import org.neo4j.logging.internal.SimpleLogService;
 import org.neo4j.time.SystemNanoClock;
 
-import static org.neo4j.graphdb.factory.GraphDatabaseSettings.ephemeral;
-import static org.neo4j.kernel.configuration.Connector.ConnectorType.BOLT;
-import static org.neo4j.kernel.configuration.Settings.TRUE;
-
+import static org.neo4j.configuration.GraphDatabaseSettings.ephemeral;
+import static org.neo4j.configuration.Settings.TRUE;
+import static org.neo4j.configuration.connectors.Connector.ConnectorType.BOLT;
 
 /**
  * Test factory for graph databases.

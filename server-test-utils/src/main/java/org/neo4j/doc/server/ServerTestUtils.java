@@ -30,9 +30,9 @@ import java.nio.file.Files;
 import java.util.Map;
 import java.util.Properties;
 
+import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
-import org.neo4j.kernel.configuration.ssl.LegacySslPolicyConfig;
 
 public class ServerTestUtils {
 
