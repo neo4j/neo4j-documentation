@@ -135,13 +135,6 @@
             <groupId>org.neo4j.examples</groupId>
             <artifactId>neo4j-server-examples</artifactId>
             <version>${project.version}</version>
-            <classifier>docs</classifier>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j.examples</groupId>
-            <artifactId>neo4j-server-examples</artifactId>
-            <version>${project.version}</version>
             <classifier>sources</classifier>
             <scope>provided</scope>
         </dependency>
