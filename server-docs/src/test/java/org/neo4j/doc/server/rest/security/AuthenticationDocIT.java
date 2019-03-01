@@ -38,6 +38,7 @@ import org.neo4j.doc.server.HTTP.RawPayload;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.neo4j.doc.server.HTTP.RawPayload.rawPayload;
 
 public class AuthenticationDocIT extends CommunityServerTestBase
 {
@@ -64,7 +65,8 @@ public class AuthenticationDocIT extends CommunityServerTestBase
                 .noGraph()
                 .expectedStatus( 401 )
                 .expectedHeader( "WWW-Authenticate", "Basic realm=\"Neo4j\"" )
-                .get( dataURL() );
+                .payload( simpleCypherRequestBody() )
+                .post( cypherURL() );
 
         // Then
         JsonNode data = JsonHelper.jsonNode( response.entity() );
@@ -113,7 +115,8 @@ public class AuthenticationDocIT extends CommunityServerTestBase
                 .expectedStatus( 401 )
                 .withHeader( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "incorrect" ) )
                 .expectedHeader( "WWW-Authenticate", "Basic realm=\"Neo4j\"" )
-                .post( dataURL() );
+                .payload( simpleCypherRequestBody() )
+                .post( cypherURL() );
 
         // Then
         JsonNode data = JsonHelper.jsonNode( response.entity() );
@@ -139,7 +142,8 @@ public class AuthenticationDocIT extends CommunityServerTestBase
                 .noGraph()
                 .expectedStatus( 403 )
                 .withHeader( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) )
-                .get( dataURL() );
+                .payload( simpleCypherRequestBody() )
+                .post( cypherURL() );
 
         // Then
         JsonNode data = JsonHelper.jsonNode( response.entity() );
@@ -160,9 +164,10 @@ public class AuthenticationDocIT extends CommunityServerTestBase
 
         // Document
         gen.get()
-            .noGraph()
-            .expectedStatus( 200 )
-            .get( dataURL() );
+                .noGraph()
+                .expectedStatus( 200 )
+                .payload( simpleCypherRequestBody() )
+                .post( cypherURL() );
     }
 
     @Test
@@ -172,7 +177,8 @@ public class AuthenticationDocIT extends CommunityServerTestBase
         startServerWithConfiguredUser();
 
         // When
-        HTTP.Response response = HTTP.withHeaders( HttpHeaders.AUTHORIZATION, "This makes no sense" ).GET( dataURL() );
+        HTTP.Response response = HTTP.withHeaders( HttpHeaders.AUTHORIZATION, "This makes no sense" )
+                .POST( cypherURL(), rawPayload( simpleCypherRequestBody() ) );
 
         // Then
         assertThat( response.status(), equalTo( 400 ) );

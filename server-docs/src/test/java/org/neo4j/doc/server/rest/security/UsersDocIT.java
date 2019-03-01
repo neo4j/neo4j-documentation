@@ -19,7 +19,6 @@
  */
 package org.neo4j.doc.server.rest.security;
 
-import com.sun.jersey.core.util.Base64;
 import org.codehaus.jackson.JsonNode;
 import org.junit.After;
 import org.junit.Before;
@@ -30,13 +29,13 @@ import java.io.IOException;
 import javax.ws.rs.core.HttpHeaders;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.doc.server.helpers.FunctionalTestHelper;
 import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
-import org.neo4j.string.UTF8;
 import org.neo4j.doc.test.TestData;
 import org.neo4j.doc.server.ExclusiveServerTestBase;
 import org.neo4j.doc.server.HTTP;
@@ -44,12 +43,15 @@ import org.neo4j.doc.server.HTTP;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.neo4j.doc.server.HTTP.RawPayload.rawPayload;
 
 public class UsersDocIT extends ExclusiveServerTestBase
 {
     @Rule
     public TestData<RESTDocsGenerator> gen = TestData.producedThrough( RESTDocsGenerator.PRODUCER );
     private CommunityNeoServer server;
+
+    private FunctionalTestHelper functionalTestHelper;
 
     @Before
     public void setUp()
@@ -71,13 +73,13 @@ public class UsersDocIT extends ExclusiveServerTestBase
                 .noGraph()
                 .expectedStatus( 200 )
                 .withHeader( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "secret" ) )
-                .get( userURL( "neo4j" ) );
+                .get( functionalTestHelper.userURL( "neo4j" ) );
 
         // Then
         JsonNode data = JsonHelper.jsonNode( response.entity() );
         assertThat( data.get( "username" ).asText(), equalTo( "neo4j" ) );
         assertThat( data.get( "password_change_required" ).asBoolean(), equalTo( false ) );
-        assertThat( data.get( "password_change" ).asText(), equalTo( passwordURL( "neo4j" ) ) );
+        assertThat( data.get( "password_change" ).asText(), equalTo( functionalTestHelper.passwordURL( "neo4j" ) ) );
     }
 
     @Test
@@ -94,13 +96,13 @@ public class UsersDocIT extends ExclusiveServerTestBase
                 .noGraph()
                 .expectedStatus( 200 )
                 .withHeader( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) )
-                .get( userURL( "neo4j" ) );
+                .get( functionalTestHelper.userURL( "neo4j" ) );
 
         // Then
         JsonNode data = JsonHelper.jsonNode( response.entity() );
         assertThat( data.get( "username" ).asText(), equalTo( "neo4j" ) );
         assertThat( data.get( "password_change_required" ).asBoolean(), equalTo( true ) );
-        assertThat( data.get( "password_change" ).asText(), equalTo( passwordURL( "neo4j" ) ) );
+        assertThat( data.get( "password_change" ).asText(), equalTo( functionalTestHelper.passwordURL( "neo4j" ) ) );
     }
 
     @Test
@@ -118,14 +120,18 @@ public class UsersDocIT extends ExclusiveServerTestBase
                 .noGraph()
                 .expectedStatus( 200 )
                 .withHeader( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) )
-                .payload( quotedJson( "{'password':'secret'}" ) )
+                .payload( functionalTestHelper.quotedJson( "{'password':'secret'}" ) )
                 .post( server.baseUri().resolve( "/user/neo4j/password" ).toString() );
 
         // Then the new password should work
-        assertEquals( 200, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "secret" ) ).GET( dataURL() ).status() );
+        assertEquals( 200, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "secret" ) )
+                .POST( functionalTestHelper.cypherURL(), rawPayload( functionalTestHelper.simpleCypherRequestBody() ) )
+                .status() );
 
         // Then the old password should not be invalid
-        assertEquals( 401, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) ).POST( dataURL() ).status() );
+        assertEquals( 401, HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) )
+                .POST( functionalTestHelper.cypherURL(), rawPayload( functionalTestHelper.simpleCypherRequestBody() ) )
+                .status() );
     }
 
     @After
@@ -140,6 +146,7 @@ public class UsersDocIT extends ExclusiveServerTestBase
                 .withProperty( GraphDatabaseSettings.auth_enabled.name(), Boolean.toString( authEnabled ) )
                 .build();
         server.start();
+        functionalTestHelper = new FunctionalTestHelper( server );
     }
 
     public void startServerWithConfiguredUser() throws IOException
@@ -155,31 +162,6 @@ public class UsersDocIT extends ExclusiveServerTestBase
 
     private String challengeResponse( String username, String password )
     {
-        return "Basic " + base64( username + ":" + password );
-    }
-
-    private String dataURL()
-    {
-        return server.baseUri().resolve( "db/data/" ).toString();
-    }
-
-    private String userURL( String username )
-    {
-        return server.baseUri().resolve( "user/" + username ).toString();
-    }
-
-    private String passwordURL( String username )
-    {
-        return server.baseUri().resolve( "user/" + username + "/password" ).toString();
-    }
-
-    private String base64(String value)
-    {
-        return UTF8.decode( Base64.encode( value ) );
-    }
-
-    private String quotedJson( String singleQuoted )
-    {
-        return singleQuoted.replaceAll( "'", "\"" );
+        return "Basic " + functionalTestHelper.base64( username + ":" + password );
     }
 }

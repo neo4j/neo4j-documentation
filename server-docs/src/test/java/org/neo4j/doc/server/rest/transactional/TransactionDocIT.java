@@ -19,6 +19,8 @@
  */
 package org.neo4j.doc.server.rest.transactional;
 
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -189,7 +191,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
         assertNoErrors( result );
 
         Integer id = resultCell( result, 0, 0 );
-        assertThat( GET( getNodeUri( id ) ).status(), is( 200 ) );
+        verifyNodeExists( id );
     }
 
     @Test
@@ -211,7 +213,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
         assertNoErrors( result );
 
         Integer id = resultCell( result, 0, 0 );
-        assertThat( GET( getNodeUri( id ) ).status(), is( 200 ) );
+        verifyNodeExists( id );
     }
 
     @Test
@@ -232,7 +234,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
         Map<String,Object> result = jsonToMap( response.entity() );
         assertNoErrors( result );
         Integer id = resultCell( result, 0, 0 );
-        assertThat( GET( getNodeUri( id ) ).status(), is( 200 ) );
+        verifyNodeExists( id );
         assertThat( response.entity(), containsString( "My Node" ) );
     }
 
@@ -427,5 +429,14 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
     {
         String timestampString = (String) ( (Map<?, ?>) entity.get( "transaction" ) ).get( "expires" );
         return RFC1123.parseTimestamp( timestampString ).getTime();
+    }
+
+    private void verifyNodeExists( long nodeId )
+    {
+        ResponseEntity response = gen.get().expectedStatus( 200 ).payload( quotedJson(
+                "{ 'statements': [ { 'statement': 'MATCH (n) WHERE ID(n) = $nodeId RETURN n' , " + "'parameters': { 'nodeId': " + nodeId + " } } ] }" ) )
+                .post( getDataUri() + "transaction/commit" );
+        // if at least one node is returned, there will be "node" in the metadata part od the the row
+        Assert.assertThat( response.entity(), Matchers.containsString( "node" ) );
     }
 }

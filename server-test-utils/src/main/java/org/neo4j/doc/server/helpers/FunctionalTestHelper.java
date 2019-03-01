@@ -19,17 +19,18 @@
 package org.neo4j.doc.server.helpers;
 
 import com.sun.jersey.api.client.Client;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import com.sun.jersey.core.util.Base64;
 
 import java.net.URI;
-import java.util.Arrays;
 
 import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RestRequest;
 import org.neo4j.doc.server.rest.domain.GraphDbHelper;
 import org.neo4j.server.NeoServer;
+import org.neo4j.string.UTF8;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public final class FunctionalTestHelper
 {
@@ -50,42 +51,6 @@ public final class FunctionalTestHelper
         this.request = new RestRequest(server.baseUri().resolve("db/data/"));
     }
 
-    public static Matcher<String[]> arrayContains( final String element )
-    {
-        return new TypeSafeMatcher<String[]>()
-        {
-            private String[] array;
-
-            @Override
-            public void describeTo( Description descr )
-            {
-                descr.appendText( "The array " )
-                        .appendText( Arrays.toString( array ) )
-                        .appendText( " does not contain <" )
-                        .appendText( element )
-                        .appendText( ">" );
-            }
-
-            @Override
-            public boolean matchesSafely( String[] array )
-            {
-                this.array = array;
-                for ( String string : array )
-                {
-                    if ( element == null )
-                    {
-                        if ( string == null ) return true;
-                    }
-                    else if ( element.equals( string ) )
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        };
-    }
-
     public GraphDbHelper getGraphDbHelper()
     {
         return helper;
@@ -96,105 +61,14 @@ public final class FunctionalTestHelper
         return server.baseUri().toString() + "db/data/";
     }
 
-    public String nodeUri()
-    {
-        return dataUri() + "node";
-    }
-
-    public String nodeUri( long id )
-    {
-        return nodeUri() + "/" + id;
-    }
-
-    public String nodePropertiesUri( long id )
-    {
-        return nodeUri( id ) + "/properties";
-    }
-
-    public String nodePropertyUri( long id, String key )
-    {
-        return nodePropertiesUri( id ) + "/" + key;
-    }
-
-    String relationshipUri()
-    {
-        return dataUri() + "relationship";
-    }
-
-    public String relationshipUri( long id )
-    {
-        return relationshipUri() + "/" + id;
-    }
-
-    public String relationshipPropertiesUri( long id )
-    {
-        return relationshipUri( id ) + "/properties";
-    }
-
-    public String relationshipsUri( long nodeId, String dir, String... types )
-    {
-        StringBuilder typesString = new StringBuilder();
-        for ( String type : types )
-        {
-            typesString.append( typesString.length() > 0 ? "&" : "" );
-            typesString.append( type );
-        }
-        return nodeUri( nodeId ) + "/relationships/" + dir + "/" + typesString;
-    }
-
-    public String indexUri()
-    {
-        return dataUri() + "index/";
-    }
-
-    public String nodeIndexUri()
-    {
-        return indexUri() + "node/";
-    }
-
-    public String relationshipIndexUri()
-    {
-        return indexUri() + "relationship/";
-    }
-
     public String managementUri()
     {
         return server.baseUri()
                 .toString() + "db/manage";
     }
 
-    public String indexNodeUri( String indexName )
-    {
-        return nodeIndexUri() + indexName;
-    }
-
-    public String indexNodeUri( String indexName, String key, Object value )
-    {
-        return indexNodeUri( indexName ) + "/" + key + "/" + value;
-    }
-
-    public String indexRelationshipUri( String indexName )
-    {
-        return relationshipIndexUri() + indexName;
-    }
-
-    public String indexRelationshipUri( String indexName, String key, Object value )
-    {
-        return indexRelationshipUri( indexName ) + "/" + key + "/" + value;
-    }
-
     public JaxRsResponse get(String path) {
         return request.get(path);
-    }
-
-    public long getNodeIdFromUri( String nodeUri )
-    {
-        return Long.valueOf( nodeUri.substring( nodeUri.lastIndexOf( "/" ) +1 , nodeUri.length() ) );
-    }
-
-    public long getRelationshipIdFromUri( String relationshipUri )
-    {
-        return getNodeIdFromUri( relationshipUri );
     }
 
     public URI baseUri()
@@ -202,4 +76,39 @@ public final class FunctionalTestHelper
         return server.baseUri();
     }
 
+    public String cypherURL()
+    {
+        return dataUri() + "transaction/commit";
+    }
+
+    public String simpleCypherRequestBody()
+    {
+        return "{\"statements\": [{\"statement\": \"CREATE (n:MyLabel) RETURN n\"}]}";
+    }
+
+    public void verifyCypherResponse( String responseBody )
+    {
+        // if at least one node is returned, there will be "node" in the metadata part od the the row
+        assertThat( responseBody, containsString( "node" ) );
+    }
+
+    public String userURL( String username )
+    {
+        return baseUri().resolve( "user/" + username ).toString();
+    }
+
+    public String passwordURL( String username )
+    {
+        return baseUri().resolve( "user/" + username + "/password" ).toString();
+    }
+
+    public String base64( String value )
+    {
+        return UTF8.decode( Base64.encode( value ) );
+    }
+
+    public String quotedJson( String singleQuoted )
+    {
+        return singleQuoted.replaceAll( "'", "\"" );
+    }
 }
