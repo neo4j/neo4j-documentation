@@ -26,8 +26,8 @@ import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTest
 import org.neo4j.internal.kernel.api.exceptions.ProcedureException
 import org.neo4j.internal.kernel.api.procs.Neo4jTypes
 import org.neo4j.internal.kernel.api.procs.ProcedureSignature._
-import org.neo4j.kernel.api.proc.CallableProcedure.BasicProcedure
-import org.neo4j.kernel.api.proc.Context
+import org.neo4j.kernel.api.procedure.CallableProcedure.BasicProcedure
+import org.neo4j.kernel.api.procedure.Context
 import org.neo4j.kernel.api.{InwardKernel, ResourceTracker}
 import org.neo4j.values.AnyValue
 
