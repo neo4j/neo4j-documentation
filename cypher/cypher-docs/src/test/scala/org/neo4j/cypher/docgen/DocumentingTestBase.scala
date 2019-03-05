@@ -211,7 +211,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
     try {
       val txContext = graph.transactionalContext(query = query -> Map())
-      val result = DocsExecutionResult(eengine.profile(query, VirtualValues.EMPTY_MAP, txContext), txContext)
+      val result = DocsExecutionResult(eengine.execute("PROFILE "+query, VirtualValues.EMPTY_MAP, txContext), txContext)
 
       if (expectedException.isDefined) {
         fail(s"Expected the test to throw an exception: $expectedException")
