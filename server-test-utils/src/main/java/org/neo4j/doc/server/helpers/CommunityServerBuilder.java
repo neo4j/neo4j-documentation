@@ -68,7 +68,7 @@ public class CommunityServerBuilder
 
     private static GraphFactory IN_MEMORY_DB = ( config, dependencies ) ->
     {
-        File storeDir = config.get( GraphDatabaseSettings.database_path );
+        File storeDir = config.get( GraphDatabaseSettings.databases_root_path );
         Map<String, String> params = config.getRaw();
         params.put( GraphDatabaseSettings.ephemeral.name(), "true" );
         return new ImpermanentGraphDatabase( storeDir, params, GraphDatabaseDependencies.newDependencies(dependencies) );

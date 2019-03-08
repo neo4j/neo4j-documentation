@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 
+import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
@@ -57,7 +58,7 @@ public class ServerHelper
 
     private static void removeLogs( NeoServer server )
     {
-        File logDir = new File( server.getDatabase().getLocation() + File.separator + ".." + File.separator + "log" );
+        File logDir = new File( server.getConfig().get( GraphDatabaseSettings.databases_root_path ) + File.separator + ".." + File.separator + "log" );
         try
         {
             FileUtils.deleteDirectory( logDir );
