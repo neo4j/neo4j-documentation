@@ -655,7 +655,7 @@ public class ImportToolDocIT
     private GraphDatabaseService graphDatabaseService( String databaseName )
     {
         return new TestGraphDatabaseFactory().newEmbeddedDatabaseBuilder( storeDirForDatabase() )
-                .setConfig( GraphDatabaseSettings.active_database, databaseName )
+                .setConfig( GraphDatabaseSettings.default_database, databaseName )
                 .newGraphDatabase();
     }
 
