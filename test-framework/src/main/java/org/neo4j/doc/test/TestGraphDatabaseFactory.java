@@ -255,9 +255,9 @@ public class TestGraphDatabaseFactory extends GraphDatabaseFactory
         }
 
         @Override
-        protected GlobalModule createGlobalPlatform( File storeDir, Config config, ExternalDependencies dependencies )
+        protected GlobalModule createGlobalModule( File storeDir, Config config, ExternalDependencies dependencies )
         {
-            config.augment( GraphDatabaseSettings.default_database, storeDir.getAbsolutePath() );
+            config.augment( GraphDatabaseSettings.databases_root_path, storeDir.getAbsolutePath() );
             if ( impermanent )
             {
                 config.augment( ephemeral, TRUE );
