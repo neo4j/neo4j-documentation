@@ -23,7 +23,7 @@ import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
-import org.neo4j.cypher.internal.planner.v4_0.spi.{DPPlannerName, IDPPlannerName}
+import org.neo4j.cypher.internal.planner.spi.{DPPlannerName, IDPPlannerName}
 import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
 import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
