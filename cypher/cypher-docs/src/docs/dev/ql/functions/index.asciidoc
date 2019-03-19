@@ -341,13 +341,6 @@ include::query-functions-spatial.adoc[leveloffset=+1]
 include::query-functions-udf.adoc[leveloffset=+1]
 
 
-[[query-functions-user-defined-aggregation]]
-=== User-defined aggregation functions ===
-
-User-defined aggregation functions are written in Java, deployed into the database and are called in the same way as any other Cypher function.
-
-This example shows how you invoke a user-defined aggregation function called `longestString` from Cypher.
+// User-defined aggregation functions
 
 include::query-functions-user-defined-aggregation.adoc[leveloffset=+1]
-
-For developing and deploying user-defined aggregation functions in Neo4j, see <<java-reference#extending-neo4j-aggregation-functions, Extending Neo4j -> User-defined aggregation functions>>.

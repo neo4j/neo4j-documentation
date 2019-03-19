@@ -45,6 +45,9 @@ class UserDefinedAggregationFunctionTest extends DocumentingTest {
         resultTable()
       }
     }
+    p("""
+    |For developing and deploying user-defined functions in Neo4j, see <<java-reference#extending-neo4j-aggregation-functions, Extending Neo4j -> User-defined aggregation functions>>.""")
+
   }.build()
 
 }
