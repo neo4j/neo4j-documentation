@@ -77,6 +77,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.ArrayUtils.contains;
 
 public class EphemeralFileSystemAbstraction implements FileSystemAbstraction
 {
@@ -531,12 +532,16 @@ public class EphemeralFileSystemAbstraction implements FileSystemAbstraction
     }
 
     @Override
-    public void copyFile( File from, File to ) throws IOException
+    public void copyFile( File from, File to, CopyOption... copyOptions ) throws IOException
     {
         EphemeralFileData data = files.get( canonicalFile( from ) );
         if ( data == null )
         {
             throw new FileNotFoundException( "File " + from + " not found" );
+        }
+        if ( !contains( copyOptions, REPLACE_EXISTING ) && files.get( canonicalFile( to ) ) != null )
+        {
+            throw new FileAlreadyExistsException( canonicalFile( to ).getAbsolutePath() );
         }
         copyFile( from, this, to, newCopyBuffer() );
     }
