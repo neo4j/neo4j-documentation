@@ -31,7 +31,7 @@ class UserDefinedAggregationFunctionTest extends DocumentingTest {
     initQueries(
       """UNWIND ['John', 'Paul', 'George', 'Ringe'] AS beatle
         |CREATE (:Member {name: beatle})""".stripMargin)
-    synopsis("User-defined aggregation functions are written in Java, deployed into the database and are called in the same way as any other Cypher function.")
+    p("Aggregating functions consume many rows and produces a single aggregated result.")
     p("This example shows how you invoke a user-defined aggregation function called `longestString` from Cypher.")
 
     section("Call a user-defined aggregation function", "functions-call-a-user-defined-aggregation-function") {
