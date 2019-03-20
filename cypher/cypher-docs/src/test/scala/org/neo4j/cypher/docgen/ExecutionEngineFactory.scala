@@ -29,7 +29,7 @@ import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction
 import org.neo4j.configuration.Config
 import org.neo4j.kernel.internal.GraphDatabaseAPI
-import org.neo4j.kernel.monitoring.Monitors
+import org.neo4j.monitoring.Monitors
 import org.neo4j.logging.LogProvider
 import org.neo4j.logging.internal.LogService
 
