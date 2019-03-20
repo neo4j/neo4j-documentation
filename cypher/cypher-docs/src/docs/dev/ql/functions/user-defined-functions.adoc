@@ -1,0 +1,24 @@
+[[query-functions-user-defined]]
+= User-defined functions
+
+[abstract]
+--
+User-defined functions are written in Java, deployed into the database and are called in the same way as any other Cypher function.
+--
+
+There are two main types of functions that can be developed and used:
+
+[options="header"]
+|===
+|Type        | Description                                                     | Usage                              | Developing
+|Scalar      | For each row the function takes parameters and returns a result | <<query-functions-udf, Using UDF>> | <<java-reference#extending-neo4j-functions, Extending Neo4j (UDF)>>
+|Aggregating | Consumes many rows and produces an aggregated result            | <<query-functions-user-defined-aggregation, Using aggregating UDF>> | <<java-reference#extending-neo4j-aggregation-functions, Extending Neo4j (Aggregating UDF)>>
+|===
+
+// User-defined functions
+
+include::query-functions-udf.adoc[leveloffset=+1]
+
+// User-defined aggregating functions
+
+include::query-functions-user-defined-aggregation.adoc[leveloffset=+1]
