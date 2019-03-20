@@ -21,8 +21,6 @@ package org.neo4j.cypher.example;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -49,7 +47,6 @@ import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.Iterators;
 import org.neo4j.test.TestGraphDatabaseFactory;
-import org.neo4j.test.mockito.matcher.RegexMatcher;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
 import static java.util.Arrays.asList;
