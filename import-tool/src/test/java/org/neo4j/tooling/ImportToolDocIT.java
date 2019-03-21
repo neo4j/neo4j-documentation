@@ -22,6 +22,7 @@
  */
 package org.neo4j.tooling;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,7 +62,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.neo4j.helpers.ArrayUtil.join;
 import static org.neo4j.helpers.collection.Iterators.asSet;
-import static org.neo4j.io.fs.FileUtils.readTextFile;
 import static org.neo4j.io.fs.FileUtils.writeToFile;
 import static org.neo4j.tooling.ImportTool.MULTI_FILE_DELIMITER;
 
@@ -719,7 +719,7 @@ public class ImportToolDocIT
     private void printFileWithPathsRemoved( File badFile, String realDir, String destinationFileName )
             throws IOException
     {
-        String contents = readTextFile( badFile, StandardCharsets.UTF_8 );
+        String contents = FileUtils.readFileToString( badFile, StandardCharsets.UTF_8 );
         String cleanedContents = contents.replace( realDir + File.separator, "" );
         writeToFile( file( "ops", destinationFileName ), cleanedContents, false );
     }
