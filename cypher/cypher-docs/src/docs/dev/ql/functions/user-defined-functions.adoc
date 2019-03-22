@@ -11,8 +11,8 @@ There are two main types of functions that can be developed and used:
 [options="header"]
 |===
 |Type        | Description                                                     | Usage                              | Developing
-|Scalar      | For each row the function takes parameters and returns a result | <<query-functions-udf, Using UDF>> | <<user-defined-functions, Extending Neo4j (UDF)>>
-|Aggregating | Consumes many rows and produces an aggregated result            | <<query-functions-user-defined-aggregation, Using aggregating UDF>> | <<user-defined-aggregation-functions, Extending Neo4j (Aggregating UDF)>>
+|Scalar      | For each row the function takes parameters and returns a result | <<query-functions-udf, Using UDF>> | <<java-reference#extending-neo4j-functions, Extending Neo4j (UDF)>>
+|Aggregating | Consumes many rows and produces an aggregated result            | <<query-functions-user-defined-aggregation, Using aggregating UDF>> | <<java-reference#extending-neo4j-aggregation-functions, Extending Neo4j (Aggregating UDF)>>
 |===
 
 // User-defined functions
