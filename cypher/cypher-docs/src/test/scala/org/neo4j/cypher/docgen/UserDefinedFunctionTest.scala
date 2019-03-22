@@ -26,7 +26,7 @@ class UserDefinedFunctionTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/functions"
 
   override def doc = new DocBuilder {
-    doc("User-defined functions", "query-functions-udf")
+    doc("User-defined scalar functions", "query-functions-udf")
 
     registerUserDefinedFunctions(classOf[org.neo4j.function.example.JoinFunction])
 
@@ -34,8 +34,7 @@ class UserDefinedFunctionTest extends DocumentingTest {
       """UNWIND ["John", "Paul", "George", "Ringo"] as name CREATE (:Member {name: name})""")
 
     p("""
-        |User-defined functions are written in Java, deployed into the database and are called in the same way as any
-        |other Cypher function.""")
+        |For each incoming row the function takes parameters and returns a single result.""")
 
     p("""
         |This example shows how you invoke a user-defined function called `join` from Cypher.""")
