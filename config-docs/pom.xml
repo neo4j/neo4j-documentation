@@ -58,11 +58,6 @@
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-udc</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.neo4j</groupId>
             <artifactId>neo4j-causal-clustering</artifactId>
             <version>${neo4j.version}</version>
@@ -150,7 +145,6 @@
                                     <arg value="org.neo4j.configuration.GraphDatabaseSettings" />
                                     <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
                                     <arg value="org.neo4j.metrics.MetricsSettings" />
-                                    <arg value="org.neo4j.ext.udc.UdcSettings" />
                                     <arg value="com.neo4j.causalclustering.core.CausalClusteringSettings" />
                                     <arg value="org.neo4j.consistency.ConsistencyCheckSettings" />
                                     <arg value="com.neo4j.server.enterprise.CommercialServerSettings" />
