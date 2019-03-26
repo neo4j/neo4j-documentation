@@ -31,8 +31,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.neo4j.doc.test.rule.fs.DefaultFileSystemRule;
@@ -45,11 +47,13 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.helpers.collection.MapUtil;
 import org.neo4j.io.fs.FileSystemAbstraction;
+import org.neo4j.io.layout.DatabaseLayout;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserters;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.neo4j.io.layout.DatabaseLayout.of;
 
 public class BatchInsertDocTest
 {
@@ -70,13 +74,19 @@ public class BatchInsertDocTest
     {
         // Make sure our scratch directory is clean
         String database = "batchinserter-example";
-        File tempStoreDir = clean( "target/" + database ).getAbsoluteFile();
+        File databaseDirectory = clean( "target/" + database );
+        DatabaseLayout tempLayout = of( databaseDirectory, () ->
+                {
+                    Path storeDir = databaseDirectory.getParentFile().toPath();
+                    Path defaultTxLogsPath = Path.of( "data", "tx-logs" );
+                    return Optional.of( storeDir.resolve( defaultTxLogsPath ).toFile() );
+                } );
 
         // tag::insert[]
         BatchInserter inserter = null;
         try
         {
-            inserter = BatchInserters.inserter( tempStoreDir );
+            inserter = BatchInserters.inserter( tempLayout );
 
             Label personLabel = Label.label( "Person" );
             inserter.createDeferredSchemaIndex( personLabel ).on( "name" ).create();
@@ -104,7 +114,7 @@ public class BatchInsertDocTest
         // try it out from a normal db
         GraphDatabaseService db =
                 new GraphDatabaseFactory()
-                        .newEmbeddedDatabaseBuilder( tempStoreDir )
+                        .newEmbeddedDatabaseBuilder( tempLayout.databaseDirectory() )
                         .newGraphDatabase();
         try ( Transaction tx = db.beginTx() )
         {
@@ -115,7 +125,7 @@ public class BatchInsertDocTest
             Label personLabelForTesting = Label.label( "Person" );
             Node mNode = db.findNode( personLabelForTesting, "name", "Mattias" );
             Node cNode = mNode.getSingleRelationship( RelationshipType.withName( "KNOWS" ), Direction.OUTGOING ).getEndNode();
-            assertThat( (String) cNode.getProperty( "name" ), is( "Chris" ) );
+            assertThat( cNode.getProperty( "name" ), is( "Chris" ) );
             assertThat( db.schema()
                     .getIndexes( personLabelForTesting )
                     .iterator()
@@ -135,8 +145,7 @@ public class BatchInsertDocTest
         // tag::configuredInsert[]
         Map<String, String> config = new HashMap<>();
         config.put( "dbms.memory.pagecache.size", "512m" );
-        BatchInserter inserter = BatchInserters.inserter(
-                new File( "target/batchinserter-example-config" ).getAbsoluteFile(), config );
+        BatchInserter inserter = BatchInserters.inserter( of( new File( "target/batchinserter-example-config" ) ), config );
         // Insert data here ... and then shut down:
         inserter.shutdown();
         // end::configuredInsert[]
@@ -157,7 +166,7 @@ public class BatchInsertDocTest
         {
             Map<String, String> config = MapUtil.load( input );
             BatchInserter inserter = BatchInserters.inserter(
-                    new File( "target/docs/batchinserter-example-config" ), config );
+                    of( new File( "target/docs/batchinserter-example-config" ) ), config );
             // Insert data here ... and then shut down:
             inserter.shutdown();
         }
