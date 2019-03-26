@@ -656,12 +656,18 @@ public class ImportToolDocIT
     {
         return new TestGraphDatabaseFactory().newEmbeddedDatabaseBuilder( storeDirForDatabase() )
                 .setConfig( GraphDatabaseSettings.default_database, databaseName )
+                .setConfig( GraphDatabaseSettings.transaction_logs_root_path, transactionLogsDirectory().getAbsolutePath() )
                 .newGraphDatabase();
     }
 
     private File storeDirForDatabase()
     {
         return new File( new File( directory.absolutePath(), "data" ), "databases" );
+    }
+
+    private File transactionLogsDirectory()
+    {
+        return new File( new File( directory.absolutePath(), "data" ), "tx-logs" );
     }
 
     private void printCommandToFile( String[] arguments, String dir, String fileName ) throws FileNotFoundException
@@ -738,8 +744,7 @@ public class ImportToolDocIT
 
     private void importTool( String[] arguments, OutsideWorld outsideWorld ) throws CommandFailed, IncorrectUsage
     {
-        ImportCommand importCommand =
-                new ImportCommand( directory.absolutePath().toPath(), directory.absolutePath().toPath(), outsideWorld );
+        ImportCommand importCommand = new ImportCommand( directory.absolutePath().toPath(), directory.absolutePath().toPath(), outsideWorld );
         importCommand.execute( arguments );
     }
 
