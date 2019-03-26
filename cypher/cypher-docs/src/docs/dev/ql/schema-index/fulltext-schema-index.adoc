@@ -1,5 +1,5 @@
-[[schema-index-fulltext]]
-= Fulltext schema index
+[[schema-index-fulltext-search]]
+= Indexes to support fulltext search
 
 [abstract]
 --
@@ -7,7 +7,7 @@ This section describes how to use fulltext schema indexes, to enable fulltext se
 --
 
 
-[[schema-index-fulltext-introduction]]
+[[schema-index-fulltext-search-introduction]]
 == Introduction
 
 Fulltext schema indexes are powered by the http://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
@@ -43,7 +43,7 @@ A full description of the differences between fulltext schema indexes and explic
 --
 
 
-[[schema-index-fulltext-create-and-configure]]
+[[schema-index-fulltext-search-create-and-configure]]
 == Create and configure fulltext schema indexes
 
 Fulltext schema indexes are created with the `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex`.
@@ -133,7 +133,7 @@ Had it not been for the relationship index, one would have had to add artificial
 1+d|0 rows
 |===
 
-[[schema-index-fulltext-query]]
+[[schema-index-fulltext-search-query]]
 == Query fulltext schema indexes
 
 Fulltext indexes will, in addition to any exact matches, also return _approximate_ matches to a given query.
