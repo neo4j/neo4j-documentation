@@ -33,13 +33,13 @@ Fulltext schema indexes:
 * can be configured to be _eventually consistent_, in which index updating is moved from the commit path to a background thread.
 Using this feature, it is possible to work around the slow Lucene writes from the performance critical commit process, thus removing the main bottlenecks for Neo4j write performance.
 
-For information on how to configure fulltext schema indexes, refer to <<operations-manual#index-configuration-fulltext,  Operations Manual -> Fulltext schema indexes>>.
+For information on how to configure fulltext schema indexes, refer to <<operations-manual#index-configuration-fulltext-search,  Operations Manual -> Fulltext schema indexes>>.
 
 [NOTE]
 --
 Fulltext schema indexes replace the _explicit_ indexes, which are deprecated and will be discontinued in the next major release.
 It is therefore recommended migrate to fulltext schema indexes.
-A full description of the differences between fulltext schema indexes and explicit indexes is available in <<operations-manual#index-configuration-fulltext-deprecation-of-explicit, Operations Manual -> Deprecation of explicit indexes>>.
+A full description of the differences between fulltext schema indexes and explicit indexes is available in <<operations-manual#index-configuration-fulltext-search-deprecation-of-explicit, Operations Manual -> Deprecation of explicit indexes>>.
 --
 
 
@@ -113,7 +113,7 @@ this means that updates will be applied in a background thread "as soon as possi
 [NOTE]
 ====
 Using index-specific settings via the `config` parameter is experimental, because these settings currently do not get replicated in a clustered environment.
-See the <<operations-manual#index-configuration-fulltext, Fulltext Schema Indexes>> section of the Operations Manual, for how to configure the default fulltext index configurations in <<operations-manual#file-locations, _neo4j.conf_>>.
+See the <<operations-manual#index-configuration-fulltext-search, Fulltext Schema Indexes>> section of the Operations Manual, for how to configure the default fulltext index configurations in <<operations-manual#file-locations, _neo4j.conf_>>.
 ====
 
 .Query
