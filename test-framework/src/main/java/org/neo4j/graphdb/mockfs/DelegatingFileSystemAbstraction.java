@@ -27,11 +27,12 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.CopyOption;
+import java.nio.file.OpenOption;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.neo4j.io.fs.FileHandle;
 import org.neo4j.io.fs.FileSystemAbstraction;
-import org.neo4j.io.fs.OpenMode;
 import org.neo4j.io.fs.StoreChannel;
 import org.neo4j.io.fs.StreamFilesRecursive;
 import org.neo4j.io.fs.watcher.FileWatcher;
@@ -52,9 +53,9 @@ public class DelegatingFileSystemAbstraction implements FileSystemAbstraction
     }
 
     @Override
-    public StoreChannel open( File fileName, OpenMode openMode ) throws IOException
+    public StoreChannel open( File fileName, Set<OpenOption> options ) throws IOException
     {
-        return delegate.open( fileName, openMode );
+        return delegate.open( fileName, options );
     }
 
     @Override
@@ -118,9 +119,15 @@ public class DelegatingFileSystemAbstraction implements FileSystemAbstraction
     }
 
     @Override
-    public StoreChannel create( File fileName ) throws IOException
+    public StoreChannel write( File fileName ) throws IOException
     {
-        return delegate.create( fileName );
+        return delegate.write( fileName );
+    }
+
+    @Override
+    public StoreChannel read( File fileName ) throws IOException
+    {
+        return delegate.read( fileName );
     }
 
     @Override
