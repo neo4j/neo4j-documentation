@@ -46,11 +46,8 @@ import org.neo4j.monitoring.Monitors;
 import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.server.database.CommunityGraphFactory;
-import org.neo4j.server.database.Database;
 import org.neo4j.server.database.GraphFactory;
 import org.neo4j.server.preflight.PreFlightTasks;
-import org.neo4j.server.rest.web.DatabaseActions;
-import org.neo4j.time.Clocks;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.doc.server.ServerTestUtils.asOneLine;
@@ -307,13 +304,6 @@ public class CommunityServerBuilder
         return this;
     }
 
-    protected DatabaseActions createDatabaseActionsObject( Database database, Config config )
-    {
-        Clock clockToUse = (clock != null) ? clock : Clocks.systemClock();
-
-        return new DatabaseActions( database.getGraph() );
-    }
-
     protected File buildBefore() throws IOException
     {
         File configFile = createConfigFiles();
@@ -340,12 +330,6 @@ public class CommunityServerBuilder
         {
             super( config, persistent ? new CommunityGraphFactory() : IN_MEMORY_DB, dependencies );
             this.configFile = configFile;
-        }
-
-        @Override
-        protected DatabaseActions createDatabaseActions()
-        {
-            return createDatabaseActionsObject( database, getConfig() );
         }
 
         @Override

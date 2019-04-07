@@ -194,6 +194,6 @@ public class AuthenticationDocIT extends CommunityServerTestBase
                 server.baseUri().resolve( "/user/neo4j/password" ).toString(),
                 RawPayload.quotedJson( "{'password':'secret'}" )
         );
-        assertEquals( 200, post.status() );
+        assertEquals( 204, post.status() );
     }
 }

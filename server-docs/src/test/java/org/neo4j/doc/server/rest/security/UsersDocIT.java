@@ -118,7 +118,7 @@ public class UsersDocIT extends ExclusiveServerTestBase
         // Document
         RESTDocsGenerator.ResponseEntity response = gen.get()
                 .noGraph()
-                .expectedStatus( 200 )
+                .expectedStatus( 204 )
                 .withHeader( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) )
                 .payload( functionalTestHelper.quotedJson( "{'password':'secret'}" ) )
                 .post( server.baseUri().resolve( "/user/neo4j/password" ).toString() );
@@ -157,7 +157,7 @@ public class UsersDocIT extends ExclusiveServerTestBase
                 server.baseUri().resolve( "/user/neo4j/password" ).toString(),
                 HTTP.RawPayload.quotedJson( "{'password':'secret'}" )
         );
-        assertEquals( 200, post.status() );
+        assertEquals( 204, post.status() );
     }
 
     private String challengeResponse( String username, String password )
