@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import org.neo4j.configuration.Config;
 import org.neo4j.configuration.GraphDatabaseSettings;
@@ -51,6 +50,7 @@ import org.neo4j.logging.internal.SimpleLogService;
 import org.neo4j.monitoring.Monitors;
 import org.neo4j.time.SystemNanoClock;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.default_database;
 import static org.neo4j.configuration.GraphDatabaseSettings.ephemeral;
 import static org.neo4j.configuration.Settings.TRUE;
 import static org.neo4j.configuration.connectors.Connector.ConnectorType.BOLT;
@@ -214,21 +214,14 @@ public class TestGraphDatabaseFactory extends GraphDatabaseFactory
     protected GraphDatabaseService newEmbeddedDatabase( File storeDir, Config config, ExternalDependencies dependencies )
     {
         return new TestGraphDatabaseFacadeFactory( getCurrentState() ).newFacade( storeDir, config,
-                GraphDatabaseDependencies.newDependencies( dependencies ) );
+                GraphDatabaseDependencies.newDependencies( dependencies ) ).database( config.get( default_database ) );
     }
 
     protected GraphDatabaseBuilder.DatabaseCreator createImpermanentDatabaseCreator( final File storeDir,
                                                                                      final TestGraphDatabaseFactoryState state )
     {
-        return new GraphDatabaseBuilder.DatabaseCreator()
-        {
-            @Override
-            public GraphDatabaseService newDatabase( @Nonnull Config config )
-            {
-                return new TestGraphDatabaseFacadeFactory( state, true ).newFacade( storeDir, config,
-                        GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) );
-            }
-        };
+        return config -> new TestGraphDatabaseFacadeFactory( state, true ).newFacade( storeDir, config,
+                GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) ).database( config.get( default_database ) );
     }
 
     public static class TestGraphDatabaseFacadeFactory extends GraphDatabaseFacadeFactory

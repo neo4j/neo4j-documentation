@@ -40,6 +40,8 @@ import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.internal.LogService;
 import org.neo4j.logging.internal.SimpleLogService;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.default_database;
+
 /**
  * Factory for test graph database.
  */
@@ -78,7 +80,7 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
                         };
                     }
                 }.newFacade( storeDir, config,
-                        GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) );
+                        GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) ).database( config.get( default_database ) );
             }
         };
     }
@@ -87,15 +89,8 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
     protected GraphDatabaseBuilder.DatabaseCreator createImpermanentDatabaseCreator( final File storeDir,
                                                                                      final TestGraphDatabaseFactoryState state )
     {
-        return new GraphDatabaseBuilder.DatabaseCreator()
-        {
-            @Override
-            public GraphDatabaseService newDatabase( Config config )
-            {
-                return new TestEnterpriseGraphDatabaseFacadeFactory( state, true ).newFacade( storeDir, config,
-                        GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) );
-            }
-        };
+        return config -> new TestEnterpriseGraphDatabaseFacadeFactory( state, true ).newFacade( storeDir, config,
+                GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) ).database( config.get( default_database ) );
     }
 
     static class TestEnterpriseGraphDatabaseFacadeFactory extends TestGraphDatabaseFacadeFactory
