@@ -28,7 +28,7 @@ import java.io.File;
 
 import org.neo4j.common.Edition;
 import org.neo4j.configuration.Config;
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
@@ -39,8 +39,6 @@ import org.neo4j.kernel.impl.factory.DatabaseInfo;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.internal.LogService;
 import org.neo4j.logging.internal.SimpleLogService;
-
-import static org.neo4j.configuration.GraphDatabaseSettings.default_database;
 
 /**
  * Factory for test graph database.
@@ -54,7 +52,7 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
         return new GraphDatabaseBuilder.DatabaseCreator()
         {
             @Override
-            public GraphDatabaseService newDatabase( Config config )
+            public DatabaseManagementService newDatabase( Config config )
             {
                 return new GraphDatabaseFacadeFactory( DatabaseInfo.COMMERCIAL, CommercialEditionModule::new )
                 {
@@ -79,8 +77,7 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
                             }
                         };
                     }
-                }.newFacade( storeDir, config,
-                        GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) ).database( config.get( default_database ) );
+                }.newFacade( storeDir, config, GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) );
             }
         };
     }
@@ -90,7 +87,7 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
                                                                                      final TestGraphDatabaseFactoryState state )
     {
         return config -> new TestEnterpriseGraphDatabaseFacadeFactory( state, true ).newFacade( storeDir, config,
-                GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) ).database( config.get( default_database ) );
+                GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) );
     }
 
     static class TestEnterpriseGraphDatabaseFacadeFactory extends TestGraphDatabaseFacadeFactory
