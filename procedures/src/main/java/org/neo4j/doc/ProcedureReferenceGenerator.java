@@ -22,10 +22,6 @@
  */
 package org.neo4j.doc;
 
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Result;
-import org.neo4j.graphdb.Transaction;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Collections;
@@ -35,6 +31,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import org.neo4j.dbms.database.DatabaseManagementService;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Result;
+import org.neo4j.graphdb.Transaction;
+
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class ProcedureReferenceGenerator {
 
@@ -79,16 +82,18 @@ public class ProcedureReferenceGenerator {
     }
 
     private Map<String, Procedure> communityEditionProcedures() {
-        GraphDatabaseService db = neo.newCommunityInstance();
+        DatabaseManagementService managementService = neo.newCommunityInstance();
+        GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
         Map<String, Procedure> procedures = procedures(db);
-        db.shutdown();
+        managementService.shutdown();
         return procedures;
     }
 
     private Map<String, Procedure> enterpriseEditionProcedures() {
-        GraphDatabaseService db = neo.newEnterpriseInstance();
+        DatabaseManagementService managementService = neo.newEnterpriseInstance();
+        GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
         Map<String, Procedure> procedures = procedures(db);
-        db.shutdown();
+        managementService.shutdown();
         return procedures;
     }
 

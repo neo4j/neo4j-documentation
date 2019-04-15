@@ -24,15 +24,16 @@ import java.nio.charset.StandardCharsets
 
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
+import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher._
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
+import org.neo4j.dbms.database.DatabaseManagementService
 import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
 import org.neo4j.graphdb._
 import org.neo4j.internal.kernel.api.Transaction
-import org.neo4j.kernel.impl.coreapi.PropertyContainerLocker
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.visualization.asciidoc.AsciidocHelper
@@ -58,6 +59,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     new ComparableVersion(neo4jVersion).compareTo(new ComparableVersion(featureVersion)) > -1
   }
 
+  var managementService: DatabaseManagementService = null
   var db: GraphDatabaseCypherService = null
   implicit var engine: ExecutionEngine = null
   var nodes: Map[String, Long] = null
@@ -231,7 +233,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   @After
   def teardown() {
-    if (db != null) db.shutdown()
+    if (managementService != null) managementService.shutdown()
     allQueriesWriter.close()
   }
 
@@ -240,7 +242,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     dir = createDir(section)
     allQueriesWriter = new OutputStreamWriter(new FileOutputStream(new File("target/all-queries.asciidoc"), true),
       StandardCharsets.UTF_8)
-    val graph = newTestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase()
+    managementService = newTestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newDatabaseManagementService
+    val graph = managementService.database(DEFAULT_DATABASE_NAME)
     db = new GraphDatabaseCypherService(graph)
 
     GraphDatabaseServiceCleaner.cleanDatabaseContent(db.getGraphDatabaseService)

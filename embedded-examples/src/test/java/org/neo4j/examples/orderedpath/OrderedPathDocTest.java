@@ -24,18 +24,20 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.doc.tools.JavaDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.io.fs.FileUtils;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.helpers.collection.Iterables.count;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
 
@@ -52,8 +54,9 @@ public class OrderedPathDocTest
         {
             FileUtils.deleteRecursively( OrderedPath.databaseDirectory );
         }
-        db = new TestGraphDatabaseFactory().newImpermanentDatabase();
-        orderedPath = new OrderedPath( db );
+        DatabaseManagementService managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        db = managementService.database( DEFAULT_DATABASE_NAME );
+        orderedPath = new OrderedPath( managementService, OrderedPathDocTest.db );
         gen = new JavaDocsGenerator( "ordered-path-java", "dev" );
     }
 

@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.neo4j.configuration.Config;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -42,6 +43,8 @@ import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.io.fs.IoPrimitiveUtils;
+
+import static org.neo4j.configuration.GraphDatabaseSettings.default_database;
 
 public class DbRepresentation
 {
@@ -105,17 +108,18 @@ public class DbRepresentation
 
     public static DbRepresentation of( File storeDir, boolean includeIndexes, Config config )
     {
-        GraphDatabaseBuilder builder = new TestGraphDatabaseFactory().newEmbeddedDatabaseBuilder( storeDir );
+        GraphDatabaseBuilder builder = new TestGraphDatabaseFactory().newEmbeddedDatabaseBuilder( storeDir.getParentFile() );
         builder.setConfig( config.getRaw() );
 
-        GraphDatabaseService db = builder.newGraphDatabase();
+        DatabaseManagementService managementService = builder.newDatabaseManagementService();
+        GraphDatabaseService db = managementService.database( config.get( default_database ) );
         try
         {
-            return of( db, includeIndexes );
+            return of( db );
         }
         finally
         {
-            db.shutdown();
+            managementService.shutdown();
         }
     }
 

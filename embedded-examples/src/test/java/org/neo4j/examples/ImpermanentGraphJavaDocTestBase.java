@@ -27,6 +27,6 @@ public class ImpermanentGraphJavaDocTestBase extends AbstractJavaDocTestBase
     @BeforeClass
     public static void init()
     {
-        db = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase();
+        managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
     }
 }

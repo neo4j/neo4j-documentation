@@ -24,10 +24,13 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.walk.Walker;
+
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class Script extends ConfigurationParser
 {
@@ -135,7 +138,8 @@ public class Script extends ConfigurationParser
 
     public final void emit( File outfile )
     {
-        GraphDatabaseService graphdb = createGraphDb();
+        DatabaseManagementService managementService = createGraphDb();
+        GraphDatabaseService graphdb = managementService.database( DEFAULT_DATABASE_NAME );
         GraphvizWriter writer = new GraphvizWriter( styles() );
         try
         {
@@ -150,7 +154,7 @@ public class Script extends ConfigurationParser
         }
         finally
         {
-            graphdb.shutdown();
+            managementService.shutdown();
         }
     }
 
@@ -159,9 +163,9 @@ public class Script extends ConfigurationParser
         return storeDir;
     }
 
-    protected GraphDatabaseService createGraphDb()
+    protected DatabaseManagementService createGraphDb()
     {
-        return new GraphDatabaseFactory().newEmbeddedDatabase( storeDir() );
+        return new GraphDatabaseFactory().newDatabaseManagementService( storeDir() );
     }
 
     protected Walker createGraphWalker( GraphDatabaseService graphdb )

@@ -24,15 +24,17 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.dbms.database.DatabaseManagementService;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
-import org.neo4j.doc.test.rule.TestDirectory;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 /**
  * An example of unit testing with Neo4j.
@@ -42,6 +44,7 @@ public class Neo4jBasicDocTest
     @Rule
     public TestDirectory testDirectory = TestDirectory.testDirectory();
     protected GraphDatabaseService graphDb;
+    private DatabaseManagementService managementService;
 
     /**
      * Create temporary database for each unit test.
@@ -50,7 +53,8 @@ public class Neo4jBasicDocTest
     @Before
     public void prepareTestDatabase()
     {
-        graphDb = new TestGraphDatabaseFactory().newImpermanentDatabase( testDirectory.directory() );
+        managementService = new TestGraphDatabaseFactory().newImpermanentDatabase( testDirectory.directory() );
+        graphDb = managementService.database( DEFAULT_DATABASE_NAME );
     }
     // end::beforeTest[]
 
@@ -61,7 +65,7 @@ public class Neo4jBasicDocTest
     @After
     public void destroyTestDatabase()
     {
-        graphDb.shutdown();
+        managementService.shutdown();
     }
     // end::afterTest[]
 
@@ -69,14 +73,12 @@ public class Neo4jBasicDocTest
     public void startWithConfiguration()
     {
         // tag::startDbWithConfig[]
-        GraphDatabaseService db = new TestGraphDatabaseFactory()
-            .newImpermanentDatabaseBuilder()
-            .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
-            .setConfig( GraphDatabaseSettings.string_block_size, "60" )
-            .setConfig( GraphDatabaseSettings.array_block_size, "300" )
-            .newGraphDatabase();
+        DatabaseManagementService service =
+                new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().setConfig( GraphDatabaseSettings.pagecache_memory, "512M" ).setConfig(
+                        GraphDatabaseSettings.string_block_size, "60" ).setConfig( GraphDatabaseSettings.array_block_size,
+                        "300" ).newDatabaseManagementService();
         // end::startDbWithConfig[]
-        db.shutdown();
+        service.shutdown();
     }
 
     @Test

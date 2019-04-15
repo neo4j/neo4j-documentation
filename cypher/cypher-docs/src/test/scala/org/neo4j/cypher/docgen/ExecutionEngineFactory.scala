@@ -19,26 +19,28 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, MonitoringCacheTracer}
-import org.neo4j.cypher.internal._
-import org.neo4j.cypher.internal.tracing.TimingCompilationTracer
-import org.neo4j.cypher.internal.ExecutionEngine
+import org.neo4j.configuration.Config
+import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
+import org.neo4j.cypher.internal.{ExecutionEngine, _}
 import org.neo4j.cypher.internal.compiler.CypherPlannerConfiguration
+import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, MonitoringCacheTracer}
+import org.neo4j.cypher.internal.tracing.TimingCompilationTracer
+import org.neo4j.dbms.database.DatabaseManagementService
 import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction
-import org.neo4j.configuration.Config
 import org.neo4j.kernel.internal.GraphDatabaseAPI
-import org.neo4j.monitoring.Monitors
 import org.neo4j.logging.LogProvider
 import org.neo4j.logging.internal.LogService
+import org.neo4j.monitoring.Monitors
 
 object ExecutionEngineFactory {
-  def createEnterpriseDbAndEngine(): (GraphDatabaseService, ExecutionEngine) = {
+  def createEnterpriseDbAndEngine(): (DatabaseManagementService, GraphDatabaseService, ExecutionEngine) = {
     val fs = new EphemeralFileSystemAbstraction
-    val graph: GraphDatabaseService = new TestEnterpriseGraphDatabaseFactory().setFileSystem(fs).newImpermanentDatabase
+    val managementService: DatabaseManagementService = new TestEnterpriseGraphDatabaseFactory().setFileSystem(fs).newImpermanentDatabase
+    val graph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
 
-    (graph, createEnterpriseEngineFromDb(graph))
+    (managementService, graph, createEnterpriseEngineFromDb(graph))
   }
 
   def createEnterpriseEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {

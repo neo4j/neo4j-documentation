@@ -26,11 +26,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.schema.Schema;
-import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
 
 import java.io.File;
 import java.sql.Connection;
@@ -42,14 +37,32 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.schema.Schema;
+import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
+
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assume.assumeFalse;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class BlockTypeTest
 {
@@ -74,11 +87,13 @@ public class BlockTypeTest
     private static final List<String> TWO_NODES_ONE_REL = Arrays.asList( "[source, cypher]", "----",
             "CREATE (n:Person {name:'Alice'})-[r:KNOWS {since: 1998}]->(m:Person {name:'Bob'})", "RETURN n,m,r",
             "----" );
+    private DatabaseManagementService managementService;
 
     @Before
     public void setup() throws SQLException
     {
-        graphOps = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        graphOps = managementService.database( DEFAULT_DATABASE_NAME );
         Connection conn = DriverManager.getConnection( "jdbc:hsqldb:mem:graphgisttests;shutdown=true" );
         conn.setAutoCommit( true );
         state = new State( graphOps, conn, null, "" );
@@ -87,7 +102,7 @@ public class BlockTypeTest
     @After
     public void tearDown()
     {
-        graphOps.shutdown();
+        managementService.shutdown();
     }
 
     @Test

@@ -19,12 +19,6 @@
  */
 package org.neo4j.doc.cypherdoc;
 
-import org.neo4j.configuration.GraphDatabaseSettings;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.config.Setting;
-import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +31,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.dbms.database.DatabaseManagementService;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.config.Setting;
+import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
+
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 /**
  * Parse AsciiDoc-like content for use in Cypher documentation.
@@ -75,9 +78,9 @@ public final class CypherDoc
         //TODO remove config when compiled plans are feature complete
         Map<Setting<?>, String> config = new HashMap<>();
         config.put( GraphDatabaseSettings.cypher_runtime, "INTERPRETED" );
-        GraphDatabaseService graphOps =
-                new TestGraphDatabaseFactory().setFileSystem( fs ).newImpermanentDatabase( config );
 
+        DatabaseManagementService managementService = new TestGraphDatabaseFactory().setFileSystem( fs ).newImpermanentDatabase( config );
+        GraphDatabaseService graphOps = managementService.database( DEFAULT_DATABASE_NAME );
         Connection conn = null;
         TestFailureException failure = null;
         try
@@ -97,7 +100,7 @@ public final class CypherDoc
         }
         finally
         {
-            graphOps.shutdown();
+            managementService.shutdown();
             if ( failure != null )
             {
                 dumpStoreFiles( fs, failure, "after-shutdown" );

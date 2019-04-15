@@ -30,10 +30,12 @@ import java.util.Properties;
 
 import org.neo4j.configuration.Config;
 import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.configuration.Settings;
+import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.configuration.connectors.HttpConnector;
 import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.doc.server.ServerTestUtils;
-import org.neo4j.doc.test.ImpermanentGraphDatabase;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
 import org.neo4j.helpers.ListenSocketAddress;
@@ -50,6 +52,7 @@ import org.neo4j.server.preflight.PreFlightTasks;
 import org.neo4j.server.rest.web.DatabaseActions;
 import org.neo4j.time.Clocks;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.doc.server.ServerTestUtils.asOneLine;
 import static org.neo4j.helpers.collection.MapUtil.stringMap;
 
@@ -68,10 +71,13 @@ public class CommunityServerBuilder
 
     private static GraphFactory IN_MEMORY_DB = ( config, dependencies ) ->
     {
-        File storeDir = config.get( GraphDatabaseSettings.databases_root_path );
-        Map<String, String> params = config.getRaw();
-        params.put( GraphDatabaseSettings.ephemeral.name(), "true" );
-        return new ImpermanentGraphDatabase( storeDir, params, GraphDatabaseDependencies.newDependencies(dependencies) );
+        File storeDir = new File( config.get( GraphDatabaseSettings.databases_root_path ), DEFAULT_DATABASE_NAME );
+        return new TestGraphDatabaseFactory().setExtensions( dependencies.extensions() )
+                .setMonitors( dependencies.monitors() )
+                .newImpermanentDatabaseBuilder( storeDir )
+                .setConfig( new BoltConnector( "bolt" ).listen_address, "localhost:0" )
+                .setConfig( new BoltConnector( "bolt" ).enabled, Settings.TRUE )
+                .setConfig( config ).newDatabaseManagementService();
     };
 
     private Clock clock = null;

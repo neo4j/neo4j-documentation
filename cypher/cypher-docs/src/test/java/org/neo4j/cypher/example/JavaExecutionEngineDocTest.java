@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.neo4j.cypher.docgen.tooling.Prettifier;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -59,6 +60,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.helpers.collection.Iterators.asIterable;
 import static org.neo4j.helpers.collection.Iterators.count;
 
@@ -71,6 +73,7 @@ public class JavaExecutionEngineDocTest
     private Node bobNode;
     private Node johanNode;
     private Node michaelaNode;
+    private DatabaseManagementService managementService;
 
     @BeforeClass
     public static void prepare()
@@ -90,19 +93,20 @@ public class JavaExecutionEngineDocTest
     @Before
     public void setUp() throws IOException
     {
-        db = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newGraphDatabase();
+        managementService = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newDatabaseManagementService();
+        db = managementService.database( DEFAULT_DATABASE_NAME );
 
-        try ( Transaction tx = db.beginTx() )
+        try ( Transaction tx = this.db.beginTx() )
         {
-            db.schema().indexFor( Label.label( "Person" ) ).on( "name" ).create();
+            this.db.schema().indexFor( Label.label( "Person" ) ).on( "name" ).create();
             tx.success();
         }
 
-        try ( Transaction tx = db.beginTx() )
+        try ( Transaction tx = this.db.beginTx() )
         {
-            michaelaNode =  db.createNode( Label.label( "Person" ) );
-            bobNode = db.createNode( Label.label( "Person" ) );
-            johanNode =  db.createNode( Label.label( "Person" ) );
+            michaelaNode =  this.db.createNode( Label.label( "Person" ) );
+            bobNode = this.db.createNode( Label.label( "Person" ) );
+            johanNode =  this.db.createNode( Label.label( "Person" ) );
             bobNode.setProperty( "name", "Bob" );
             johanNode.setProperty( "name", "Johan" );
             michaelaNode.setProperty( "name", "Michaela" );
@@ -114,9 +118,9 @@ public class JavaExecutionEngineDocTest
     @After
     public void shutdownDb()
     {
-        if ( db != null )
+        if ( managementService != null )
         {
-            db.shutdown();
+            managementService.shutdown();
         }
         db = null;
     }

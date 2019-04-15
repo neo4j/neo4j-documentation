@@ -23,6 +23,7 @@ package org.neo4j.examples;
 import java.io.File;
 import java.io.IOException;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -38,6 +39,7 @@ import org.neo4j.graphdb.traversal.Uniqueness;
 import org.neo4j.io.fs.FileUtils;
 
 import static java.lang.System.out;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class TraversalExample
 {
@@ -49,11 +51,12 @@ public class TraversalExample
     public static void main( String[] args ) throws IOException
     {
         FileUtils.deleteRecursively( databaseDirectory );
-        GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
+        DatabaseManagementService managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        GraphDatabaseService database = managementService.database( DEFAULT_DATABASE_NAME );
         TraversalExample example = new TraversalExample( database );
         Node joe = example.createData();
         example.run( joe );
-        database.shutdown();
+        managementService.shutdown();
     }
 
     public TraversalExample( GraphDatabaseService db )

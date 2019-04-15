@@ -47,6 +47,7 @@ import org.neo4j.commandline.admin.OutsideWorld;
 import org.neo4j.commandline.admin.RealOutsideWorld;
 import org.neo4j.commandline.dbms.ImportCommand;
 import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -541,13 +542,14 @@ public class ImportToolDocIT
         printCommandToFile( arguments, realDir, "bad-duplicate-nodes-default.adoc" );
 
         // THEN
-        GraphDatabaseService db = graphDatabaseService( "the_database" );
+        DatabaseManagementService managementService = databaseService( "the_database" );
+        GraphDatabaseService db = managementService.database( "the_database" );
         try ( Transaction tx = db.beginTx(); ResourceIterator<Node> nodes = db.findNodes( Label.label( "Actor" ) ) )
         {
             assertEquals( asSet( "Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss" ), namesOf( nodes ) );
             tx.success();
         }
-        db.shutdown();
+        managementService.shutdown();
     }
 
     @Test
@@ -586,7 +588,8 @@ public class ImportToolDocIT
         printCommandToFile( arguments, realDir, "property-types.adoc" );
 
         // THEN
-        GraphDatabaseService db = graphDatabaseService( "the_database" );
+        DatabaseManagementService managementService = databaseService( "the_database" );
+        GraphDatabaseService db = managementService.database( "the_database" );
         try ( Transaction tx = db.beginTx() )
         {
             long nodeCount = Iterables.count( db.getAllNodes() ), relationshipCount = 0;
@@ -607,7 +610,7 @@ public class ImportToolDocIT
         }
         finally
         {
-            db.shutdown();
+            managementService.shutdown();
         }
     }
 
@@ -623,7 +626,8 @@ public class ImportToolDocIT
 
     private void verifyData()
     {
-        GraphDatabaseService db = graphDatabaseService( "the_database" );
+        DatabaseManagementService managementService = databaseService( "the_database" );
+        GraphDatabaseService db = managementService.database( "the_database" );
         try ( Transaction tx = db.beginTx() )
         {
             long nodeCount = Iterables.count( db.getAllNodes() ), relationshipCount = 0, sequelCount = 0;
@@ -648,16 +652,16 @@ public class ImportToolDocIT
         }
         finally
         {
-            db.shutdown();
+            managementService.shutdown();
         }
     }
 
-    private GraphDatabaseService graphDatabaseService( String databaseName )
+    private DatabaseManagementService databaseService( String databaseName )
     {
         return new TestGraphDatabaseFactory().newEmbeddedDatabaseBuilder( storeDirForDatabase() )
                 .setConfig( GraphDatabaseSettings.default_database, databaseName )
                 .setConfig( GraphDatabaseSettings.transaction_logs_root_path, transactionLogsDirectory().getAbsolutePath() )
-                .newGraphDatabase();
+                .newDatabaseManagementService();
     }
 
     private File storeDirForDatabase()

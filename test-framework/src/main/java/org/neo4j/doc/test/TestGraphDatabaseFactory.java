@@ -27,7 +27,6 @@ import org.neo4j.configuration.Config;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
@@ -68,28 +67,28 @@ public class TestGraphDatabaseFactory extends GraphDatabaseFactory
         setUserLogProvider( NullLogProvider.getInstance() );
     }
 
-    public GraphDatabaseService newImpermanentDatabase()
+    public DatabaseManagementService newImpermanentDatabase()
     {
-        return newImpermanentDatabaseBuilder().newGraphDatabase();
+        return newImpermanentDatabaseBuilder().newDatabaseManagementService();
     }
 
-    public GraphDatabaseService newImpermanentDatabase( File storeDir )
+    public DatabaseManagementService newImpermanentDatabase( File storeDir )
     {
-        return newImpermanentDatabaseBuilder( storeDir ).newGraphDatabase();
+        return newImpermanentDatabaseBuilder( storeDir ).newDatabaseManagementService();
     }
 
-    public GraphDatabaseService newImpermanentDatabase( Map<Setting<?>,String> config )
+    public DatabaseManagementService newImpermanentDatabase( Map<Setting<?>,String> config )
     {
         GraphDatabaseBuilder builder = newImpermanentDatabaseBuilder();
         setConfig( config, builder );
-        return builder.newGraphDatabase();
+        return builder.newDatabaseManagementService();
     }
 
-    public GraphDatabaseService newImpermanentDatabase( File storeDir , Map<Setting<?>,String> config )
+    public DatabaseManagementService newImpermanentDatabase( File storeDir , Map<Setting<?>,String> config )
     {
         GraphDatabaseBuilder builder = newImpermanentDatabaseBuilder(storeDir);
         setConfig( config, builder );
-        return builder.newGraphDatabase();
+        return builder.newDatabaseManagementService();
     }
 
     private void setConfig( Map<Setting<?>,String> config, GraphDatabaseBuilder builder )

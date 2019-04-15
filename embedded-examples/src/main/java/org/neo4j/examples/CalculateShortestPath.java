@@ -20,6 +20,7 @@ package org.neo4j.examples;
 
 import java.io.File;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphdb.Direction;
@@ -33,6 +34,8 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.traversal.Paths;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
+
 public class CalculateShortestPath
 {
     private static final File databaseDirectory = new File( "target/neo4j-shortest-path" );
@@ -41,11 +44,13 @@ public class CalculateShortestPath
     private static final RelationshipType KNOWS = RelationshipType.withName( "KNOWS" );
 
     private static GraphDatabaseService graphDb;
+    private static DatabaseManagementService managementService;
 
     public static void main( final String[] args )
     {
         deleteFileOrDirectory( databaseDirectory );
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
+        managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook();
         try ( Transaction tx = graphDb.beginTx() )
         {
@@ -80,7 +85,7 @@ public class CalculateShortestPath
         }
 
         System.out.println( "Shutting down database ..." );
-        graphDb.shutdown();
+        managementService.shutdown();
     }
 
     private static void createChain( String... names )
@@ -109,7 +114,7 @@ public class CalculateShortestPath
         // Registers a shutdown hook for the Neo4j instance so that it
         // shuts down nicely when the VM exits (even if you "Ctrl-C" the
         // running example before it's completed)
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> graphDb.shutdown()));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> managementService.shutdown()));
     }
 
     private static void deleteFileOrDirectory( File file )

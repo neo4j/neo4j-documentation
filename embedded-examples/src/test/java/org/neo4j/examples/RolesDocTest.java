@@ -20,7 +20,9 @@ package org.neo4j.examples;
 
 import org.junit.Test;
 
+import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.RelationshipType;
@@ -29,7 +31,6 @@ import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.doc.test.GraphDescription.Graph;
 
 import static org.junit.Assert.assertTrue;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
@@ -179,6 +180,7 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
         System.out.println( "All admins:" );
         // tag::get-admins[]
         Node admins = getNodeByName( "Admins" );
+        GraphDatabaseService db = graphdb();
         TraversalDescription traversalDescription = db.traversalDescription()
                 .breadthFirst()
                 .evaluator( Evaluators.excludeStartPosition() )
@@ -187,7 +189,7 @@ public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
         Traverser traverser = traversalDescription.traverse( admins );
         // end::get-admins[]
 
-        try ( Transaction ignore = graphdb().beginTx() )
+        try ( Transaction ignore = db.beginTx() )
         {
             gen.get().addSnippet( "o-get-admins", createOutputSnippet( traverserToString( traverser ) ) );
             String query = "match ({name: 'Admins'})<-[:PART_OF*0..]-(group)<-[:MEMBER_OF]-(user) return user.name, group.name";

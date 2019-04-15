@@ -19,10 +19,12 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
+import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
+import org.neo4j.dbms.database.DatabaseManagementService
 import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 import org.neo4j.kernel.api.procedure.GlobalProcedures
 
@@ -32,6 +34,7 @@ import scala.util.Try
 class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseGraphDatabaseFactory = new TestEnterpriseGraphDatabaseFactory())
  extends GraphIcing with ExecutionEngineHelper {
 
+  var managementService: DatabaseManagementService = _
   var graph: GraphDatabaseCypherService = null
   var eengine: ExecutionEngine = null
   private var _failures: Seq[QueryRunResult] = null
@@ -44,7 +47,8 @@ class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseG
 
   private def createAndStartIfNecessary() {
     if (graph == null) {
-      val db = factory.newImpermanentDatabase()
+      managementService = factory.newImpermanentDatabase()
+      val db = managementService.database(DEFAULT_DATABASE_NAME)
       graph = new GraphDatabaseCypherService(db)
       eengine = ExecutionEngineFactory.createEnterpriseEngineFromDb(db)
       _failures = initialize(init, graph)
@@ -79,7 +83,7 @@ class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseG
 
   private def restart() {
     if (graph == null) return
-    graph.getGraphDatabaseService.shutdown()
+    managementService.shutdown()
     graph = null
     _markedForRestart = false
   }

@@ -25,16 +25,18 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.dbms.database.DatabaseManagementService;
+import org.neo4j.doc.kernel.impl.proc.JarBuilder;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.doc.kernel.impl.proc.JarBuilder;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.helpers.collection.MapUtil.map;
 
 public class ProcedureExampleDocTest
@@ -46,16 +48,16 @@ public class ProcedureExampleDocTest
     public ExpectedException exception = ExpectedException.none();
 
     private GraphDatabaseService db;
+    private DatabaseManagementService managementService;
 
     @Test
     public void listDenseNodesShouldWork() throws Throwable
     {
         // Given
         new JarBuilder().createJarFor( plugins.newFile( "myProcedures.jar" ), ProcedureExample.class );
-        db = new TestGraphDatabaseFactory()
-                .newImpermanentDatabaseBuilder()
-                .setConfig( GraphDatabaseSettings.plugin_dir, plugins.getRoot().getAbsolutePath() )
-                .newGraphDatabase();
+        managementService = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder()
+                .setConfig( GraphDatabaseSettings.plugin_dir, plugins.getRoot().getAbsolutePath() ).newDatabaseManagementService();
+        db = managementService.database( DEFAULT_DATABASE_NAME );
 
         try ( Transaction ignore = db.beginTx() )
         {
@@ -80,9 +82,9 @@ public class ProcedureExampleDocTest
     @After
     public void tearDown()
     {
-        if ( this.db != null )
+        if ( managementService != null )
         {
-            this.db.shutdown();
+            managementService.shutdown();
         }
     }
 }

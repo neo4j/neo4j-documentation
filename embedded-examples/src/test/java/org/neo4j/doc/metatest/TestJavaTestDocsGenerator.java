@@ -29,19 +29,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Map;
 
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
-import org.neo4j.doc.tools.JavaTestDocsGenerator;
 import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.doc.test.rule.TestDirectory;
+import org.neo4j.doc.tools.JavaTestDocsGenerator;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
+import org.neo4j.kernel.impl.annotations.Documented;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class TestJavaTestDocsGenerator implements GraphHolder
 {
@@ -56,6 +58,7 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     private final String sectionName = "testsection";
     private File directory;
     private File sectionDirectory;
+    private static DatabaseManagementService managementService;
 
     @Before
     public void setup()
@@ -157,7 +160,8 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     @BeforeClass
     public static void setUp()
     {
-        graphdb = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        graphdb = managementService.database( DEFAULT_DATABASE_NAME );
     }
 
     @AfterClass
@@ -165,9 +169,9 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     {
         try
         {
-            if ( graphdb != null )
+            if ( managementService != null )
             {
-                graphdb.shutdown();
+                managementService.shutdown();
             }
         }
         finally

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.doc.test.GraphHolder;
@@ -41,6 +42,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createCypherSnippet;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createQueryResultSnippet;
@@ -53,6 +55,7 @@ public class IntroDocTest implements GraphHolder
     @Rule
     public TestData<Map<String,Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this, true ) );
     private static GraphDatabaseService graphdb;
+    private static DatabaseManagementService managementService;
 
     @Test
     @Graph( value = { "John friend Sara", "John friend Joe",
@@ -98,8 +101,9 @@ public class IntroDocTest implements GraphHolder
     @BeforeClass
     public static void setup() throws IOException
     {
-        graphdb = new TestGraphDatabaseFactory().newImpermanentDatabase();
-        cleanDatabaseContent( graphdb );
+        managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        graphdb = managementService.database( DEFAULT_DATABASE_NAME );
+        cleanDatabaseContent( IntroDocTest.graphdb );
     }
 
     @AfterClass
@@ -107,7 +111,10 @@ public class IntroDocTest implements GraphHolder
     {
         try
         {
-            if ( graphdb != null ) graphdb.shutdown();
+            if ( managementService != null )
+            {
+                managementService.shutdown();
+            }
         }
         finally
         {

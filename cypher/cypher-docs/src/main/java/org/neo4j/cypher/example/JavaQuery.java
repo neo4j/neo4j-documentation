@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Result;
@@ -33,6 +34,7 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.helpers.collection.Iterators;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.io.fs.FileUtils.deleteRecursively;
 
 public class JavaQuery
@@ -54,7 +56,8 @@ public class JavaQuery
         clearDbPath();
 
         // tag::addData[]
-        GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
+        DatabaseManagementService managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
 
         try ( Transaction tx = db.beginTx())
         {
@@ -98,7 +101,7 @@ public class JavaQuery
             resultString = db.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ).resultAsString();
         }
 
-        db.shutdown();
+        managementService.shutdown();
     }
 
     private void clearDbPath()

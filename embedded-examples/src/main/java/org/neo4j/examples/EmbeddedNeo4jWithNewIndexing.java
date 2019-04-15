@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -33,6 +34,7 @@ import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.graphdb.schema.Schema;
 import org.neo4j.io.fs.FileUtils;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.helpers.collection.Iterators.loop;
 
 public class EmbeddedNeo4jWithNewIndexing
@@ -45,7 +47,8 @@ public class EmbeddedNeo4jWithNewIndexing
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDb[]
-        GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
+        DatabaseManagementService managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         // end::startDb[]
 
         {
@@ -192,7 +195,7 @@ public class EmbeddedNeo4jWithNewIndexing
 
         System.out.println( "Shutting down database ..." );
         // tag::shutdownDb[]
-        graphDb.shutdown();
+        managementService.shutdown();
         // end::shutdownDb[]
     }
 }
