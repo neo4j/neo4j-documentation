@@ -20,6 +20,7 @@ package org.neo4j.examples;
 
 import org.junit.Test;
 
+import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.Transaction;
@@ -29,7 +30,6 @@ import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.graphdb.traversal.Uniqueness;
 import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.doc.test.GraphDescription.Graph;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createGraphVizWithNodeId;
@@ -87,7 +87,7 @@ public class UniquenessOfPathsDocTest extends ImpermanentGraphJavaDocTestBase
         gen.get().addTestSourceSnippets( this.getClass(), "traverser", "traverseNodeGlobal" );
         // tag::traverser[]
         final Node target = data.get().get( "Principal1" );
-        TraversalDescription td = db.traversalDescription()
+        TraversalDescription td = graphdb().traversalDescription()
                 .uniqueness( Uniqueness.NODE_PATH )
                 .evaluator( new Evaluator()
         {
@@ -104,7 +104,7 @@ public class UniquenessOfPathsDocTest extends ImpermanentGraphJavaDocTestBase
         String output = "";
         int count = 0;
         //we should get two paths back, through Pet1 and Pet3
-        try ( Transaction ignore = db.beginTx() )
+        try ( Transaction ignore = graphdb().beginTx() )
         {
             for ( Path path : results )
             {
@@ -122,7 +122,7 @@ public class UniquenessOfPathsDocTest extends ImpermanentGraphJavaDocTestBase
         String output2 = "";
         count = 0;
         // we should get two paths back, through Pet1 and Pet3
-        try ( Transaction tx = db.beginTx() )
+        try ( Transaction tx = graphdb().beginTx() )
         {
             for ( Path path : results )
             {

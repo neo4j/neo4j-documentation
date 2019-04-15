@@ -21,7 +21,7 @@ package org.neo4j.examples;
 import java.io.File;
 import java.io.IOException;
 
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.logging.slf4j.Slf4jLogProvider;
@@ -29,15 +29,14 @@ import org.neo4j.logging.slf4j.Slf4jLogProvider;
 public class EmbeddedNeo4jWithSLF4JLogging
 {
     private static final File databaseDirectory = new File( "target/neo4j-store" );
-    private static GraphDatabaseService graphDb;
+    private static DatabaseManagementService managementService;
 
     public static void main( final String[] args ) throws IOException
     {
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDbWithSlf4jLogProvider[]
-        graphDb = new GraphDatabaseFactory().setUserLogProvider( new Slf4jLogProvider() )
-                .newEmbeddedDatabase( databaseDirectory );
+        managementService = new GraphDatabaseFactory().setUserLogProvider( new Slf4jLogProvider() ).newDatabaseManagementService( databaseDirectory );
         // end::startDbWithSlf4jLogProvider[]
 
         shutdown();
@@ -45,6 +44,6 @@ public class EmbeddedNeo4jWithSLF4JLogging
 
     private static void shutdown()
     {
-        graphDb.shutdown();
+        managementService.shutdown();
     }
 }

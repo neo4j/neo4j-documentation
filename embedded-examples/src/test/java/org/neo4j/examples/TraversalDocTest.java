@@ -24,10 +24,10 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.doc.test.GraphDescription.Graph;
 
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createGraphVizWithNodeId;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
@@ -125,13 +125,13 @@ public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
     public void how_to_use_the_Traversal_framework()
     {
         Node joe = data.get().get( "Joe" );
-        TraversalExample example = new TraversalExample( db );
+        TraversalExample example = new TraversalExample( graphdb() );
         gen.get().addSnippet(
                 "graph",
                         createGraphVizWithNodeId( "Traversal Example Graph", graphdb(),
                         gen.get().getTitle() ) );
 
-        try ( Transaction tx = db.beginTx() )
+        try ( Transaction tx = graphdb().beginTx() )
         {
             String output = example.knowsLikesTraverser( joe );
             gen.get().addSnippet( "knowslikesoutput", createOutputSnippet( output ) );

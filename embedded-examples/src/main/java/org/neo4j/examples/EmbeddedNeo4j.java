@@ -21,6 +21,7 @@ package org.neo4j.examples;
 import java.io.File;
 import java.io.IOException;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -29,6 +30,8 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.io.fs.FileUtils;
+
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class EmbeddedNeo4j
 {
@@ -41,6 +44,7 @@ public class EmbeddedNeo4j
     Node firstNode;
     Node secondNode;
     Relationship relationship;
+    private DatabaseManagementService managementService;
     // end::vars[]
 
     // tag::createReltype[]
@@ -63,8 +67,9 @@ public class EmbeddedNeo4j
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDb[]
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
-        registerShutdownHook( graphDb );
+        managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        graphDb = managementService.database( DEFAULT_DATABASE_NAME );
+        registerShutdownHook( managementService );
         // end::startDb[]
 
         // tag::transaction[]
@@ -118,12 +123,12 @@ public class EmbeddedNeo4j
         System.out.println();
         System.out.println( "Shutting down database ..." );
         // tag::shutdownServer[]
-        graphDb.shutdown();
+        managementService.shutdown();
         // end::shutdownServer[]
     }
 
     // tag::shutdownHook[]
-    private static void registerShutdownHook( final GraphDatabaseService graphDb )
+    private static void registerShutdownHook( final DatabaseManagementService managementService )
     {
         // Registers a shutdown hook for the Neo4j instance so that it
         // shuts down nicely when the VM exits (even if you "Ctrl-C" the
@@ -133,7 +138,7 @@ public class EmbeddedNeo4j
             @Override
             public void run()
             {
-                graphDb.shutdown();
+                managementService.shutdown();
             }
         } );
     }

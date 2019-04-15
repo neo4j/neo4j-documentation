@@ -39,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.neo4j.batchinsert.BatchInserter;
 import org.neo4j.batchinsert.BatchInserters;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.doc.test.rule.fs.DefaultFileSystemRule;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -53,6 +54,7 @@ import org.neo4j.io.layout.DatabaseLayout;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.io.layout.DatabaseLayout.of;
 
 public class BatchInsertDocTest
@@ -73,7 +75,7 @@ public class BatchInsertDocTest
     public void insert() throws Exception
     {
         // Make sure our scratch directory is clean
-        String database = "batchinserter-example";
+        String database = "neo4j";
         File databaseDirectory = clean( "target/" + database );
         DatabaseLayout tempLayout = of( databaseDirectory, () ->
                 {
@@ -112,10 +114,10 @@ public class BatchInsertDocTest
         // end::insert[]
 
         // try it out from a normal db
-        GraphDatabaseService db =
-                new GraphDatabaseFactory()
-                        .newEmbeddedDatabaseBuilder( tempLayout.databaseDirectory() )
-                        .newGraphDatabase();
+
+        DatabaseManagementService managementService =
+                new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( tempLayout.getStoreLayout().storeDirectory() ).newDatabaseManagementService();
+        GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
         try ( Transaction tx = db.beginTx() )
         {
             db.schema().awaitIndexesOnline( 10, TimeUnit.SECONDS );
@@ -133,7 +135,7 @@ public class BatchInsertDocTest
         }
         finally
         {
-            db.shutdown();
+            managementService.shutdown();
         }
     }
 

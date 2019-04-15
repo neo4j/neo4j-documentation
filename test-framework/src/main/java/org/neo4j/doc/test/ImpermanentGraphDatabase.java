@@ -165,17 +165,6 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
         }
     }
 
-    @Override
-    public void shutdown()
-    {
-        if ( TRACK_UNCLOSED_DATABASE_INSTANCES )
-        {
-            startedButNotYetClosed.remove( databaseLayout() );
-        }
-
-        super.shutdown();
-    }
-
     private static Config withForcedInMemoryConfiguration( Config config )
     {
         config.augment( ephemeral, TRUE );

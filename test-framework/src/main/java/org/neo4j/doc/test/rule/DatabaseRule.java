@@ -28,6 +28,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.neo4j.common.DependencyResolver;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -59,6 +60,7 @@ import org.neo4j.kernel.impl.coreapi.InternalTransaction;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.storageengine.api.StoreId;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.helpers.collection.MapUtil.stringMap;
 
 public abstract class DatabaseRule extends ExternalResource implements GraphDatabaseAPI
@@ -69,6 +71,7 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
     private Supplier<Statement> statementSupplier;
     private boolean startEagerly = true;
     private Map<Setting<?>, String> config;
+    private DatabaseManagementService managementService;
 
     /**
      * Means the database will be started on first {@link #getGraphDatabaseAPI()}}
@@ -329,7 +332,8 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
         if ( database == null )
         {
             applyConfigChanges( additionalConfig );
-            database = (GraphDatabaseAPI) databaseBuilder.newGraphDatabase();
+            managementService = databaseBuilder.newDatabaseManagementService();
+            database = (GraphDatabaseAPI) managementService.database( DEFAULT_DATABASE_NAME );
             databaseLayout = database.databaseLayout();
             statementSupplier = resolveDependency( ThreadToStatementContextBridge.class );
         }
@@ -373,9 +377,9 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
     public GraphDatabaseAPI restartDatabase( RestartAction action, String... configChanges ) throws IOException
     {
         FileSystemAbstraction fs = resolveDependency( FileSystemAbstraction.class );
-        database.shutdown();
+        managementService.shutdown();
         action.run( fs, databaseLayout );
-        database = null;
+        managementService = null;
         applyConfigChanges( configChanges );
         return getGraphDatabaseAPI();
     }
@@ -385,7 +389,6 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
         databaseBuilder.setConfig( stringMap( configChanges ) );
     }
 
-    @Override
     public void shutdown()
     {
         shutdown( true );
@@ -396,9 +399,9 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
         statementSupplier = null;
         try
         {
-            if ( database != null )
+            if ( managementService != null )
             {
-                database.shutdown();
+                managementService.shutdown();
             }
         }
         finally
@@ -407,7 +410,7 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
             {
                 deleteResources();
             }
-            database = null;
+            managementService = null;
         }
     }
 

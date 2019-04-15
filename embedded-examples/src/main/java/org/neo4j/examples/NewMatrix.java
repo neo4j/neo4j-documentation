@@ -21,6 +21,7 @@ package org.neo4j.examples;
 import java.io.File;
 import java.io.IOException;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -34,8 +35,13 @@ import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.io.fs.FileUtils;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
+
 public class NewMatrix
 {
+
+    private DatabaseManagementService managementService;
+
     public enum RelTypes implements RelationshipType
     {
         NEO_NODE,
@@ -59,14 +65,15 @@ public class NewMatrix
     public void setUp() throws IOException
     {
         FileUtils.deleteRecursively( MATRIX_DB );
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( MATRIX_DB );
+        managementService = new GraphDatabaseFactory().newDatabaseManagementService( MATRIX_DB );
+        graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook();
         createNodespace();
     }
 
     public void shutdown()
     {
-        graphDb.shutdown();
+        managementService.shutdown();
     }
 
     private void createNodespace()
@@ -203,6 +210,6 @@ public class NewMatrix
         // Registers a shutdown hook for the Neo4j instance so that it
         // shuts down nicely when the VM exits (even if you "Ctrl-C" the
         // running example before it's completed)
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> graphDb.shutdown()));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> managementService.shutdown()));
     }
 }

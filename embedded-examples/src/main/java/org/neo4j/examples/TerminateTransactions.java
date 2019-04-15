@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Executors;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
@@ -31,6 +32,8 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.TransactionTerminatedException;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.io.fs.FileUtils;
+
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class TerminateTransactions
 {
@@ -47,7 +50,8 @@ public class TerminateTransactions
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDb[]
-        GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
+        DatabaseManagementService managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         // end::startDb[]
 
         // tag::mkTree[]
@@ -89,7 +93,7 @@ public class TerminateTransactions
         finally
         {
             // tag::shutdownDb[]
-            graphDb.shutdown();
+            managementService.shutdown();
             // end::shutdownDb[]
         }
     }

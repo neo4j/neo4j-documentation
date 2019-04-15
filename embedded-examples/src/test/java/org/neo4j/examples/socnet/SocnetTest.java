@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
@@ -36,6 +37,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.helpers.collection.Iterators.addToCollection;
 import static org.neo4j.helpers.collection.Iterators.single;
 
@@ -46,11 +48,13 @@ public class SocnetTest
 
     private GraphDatabaseService graphDb;
     private PersonRepository personRepository;
+    private DatabaseManagementService managementService;
 
     @Before
     public void setup() throws Exception
     {
-        graphDb = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         try ( Transaction tx = graphDb.beginTx() )
         {
             personRepository = new PersonRepository( graphDb );
@@ -63,7 +67,7 @@ public class SocnetTest
     @After
     public void teardown()
     {
-        graphDb.shutdown();
+        managementService.shutdown();
     }
 
     @Test

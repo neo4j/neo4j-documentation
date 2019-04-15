@@ -18,14 +18,15 @@
  */
 package org.neo4j.examples;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
@@ -33,6 +34,7 @@ import org.neo4j.graphdb.security.WriteOperationsNotAllowedException;
 import org.neo4j.io.fs.FileUtils;
 
 import static org.junit.Assert.fail;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 /**
  * How to get a read-only Neo4j instance.
@@ -40,6 +42,7 @@ import static org.junit.Assert.fail;
 public class ReadOnlyDocTest
 {
     protected GraphDatabaseService graphDb;
+    private DatabaseManagementService managementService;
 
     /**
      * Create read only database.
@@ -47,16 +50,16 @@ public class ReadOnlyDocTest
     @Before
     public void prepareReadOnlyDatabase() throws IOException
     {
-        File dir = new File( "target/read-only-db/location" );
+        File dir = new File( "target/read-only-managementService/location" );
         if ( dir.exists() )
         {
             FileUtils.deleteRecursively( dir );
         }
-        new GraphDatabaseFactory().newEmbeddedDatabase( dir ).shutdown();
+        new GraphDatabaseFactory().newDatabaseManagementService( dir ).shutdown();
         // tag::createReadOnlyInstance[]
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( dir )
-                .setConfig( GraphDatabaseSettings.read_only, "true" )
-                .newGraphDatabase();
+        managementService = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( dir ).setConfig( GraphDatabaseSettings.read_only,
+                "true" ).newDatabaseManagementService();
+        graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         // end::createReadOnlyInstance[]
     }
 
@@ -66,7 +69,7 @@ public class ReadOnlyDocTest
     @After
     public void shutdownDatabase()
     {
-        graphDb.shutdown();
+        managementService.shutdown();
     }
 
     @Test

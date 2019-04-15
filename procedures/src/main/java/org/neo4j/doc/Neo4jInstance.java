@@ -29,31 +29,29 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
 public class Neo4jInstance {
 
     private static final Path baseDatabaseDirectory = Paths.get("target/databases");
 
-    public GraphDatabaseService newEnterpriseInstance() {
+    public DatabaseManagementService newEnterpriseInstance() {
         baseDatabaseDirectory.toFile().mkdirs();
-        GraphDatabaseService graphDb = new CommercialGraphDatabaseFactory()
-                .newEmbeddedDatabaseBuilder(databaseDirectory())
-                .setConfig( GraphDatabaseSettings.auth_enabled, "true")
-                .newGraphDatabase();
-        registerShutdownHook(graphDb);
-        return graphDb;
+        DatabaseManagementService managementService =
+                new CommercialGraphDatabaseFactory().newEmbeddedDatabaseBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled,
+                        "true" ).newDatabaseManagementService();
+        registerShutdownHook(managementService);
+        return managementService;
     }
 
-    public GraphDatabaseService newCommunityInstance() {
+    public DatabaseManagementService newCommunityInstance() {
         boolean mkdirs = baseDatabaseDirectory.toFile().mkdirs();
-        GraphDatabaseService graphDb = new GraphDatabaseFactory()
-                .newEmbeddedDatabaseBuilder(databaseDirectory())
-                .setConfig(GraphDatabaseSettings.auth_enabled, "true")
-                .newGraphDatabase();
-        registerShutdownHook(graphDb);
-        return graphDb;
+        DatabaseManagementService managementService =
+                new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled,
+                        "true" ).newDatabaseManagementService();
+        registerShutdownHook(managementService);
+        return managementService;
     }
 
     private File databaseDirectory() {
@@ -61,8 +59,8 @@ public class Neo4jInstance {
         return baseDatabaseDirectory.resolve(uniqueDbDirString).toFile();
     }
 
-    private static void registerShutdownHook(final GraphDatabaseService graphDb) {
-        Runtime.getRuntime().addShutdownHook(new Thread(graphDb::shutdown));
+    private static void registerShutdownHook(final DatabaseManagementService managementService) {
+        Runtime.getRuntime().addShutdownHook(new Thread(managementService::shutdown));
     }
 
 }

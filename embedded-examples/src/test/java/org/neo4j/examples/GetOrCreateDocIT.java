@@ -48,7 +48,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
     @BeforeClass
     public static void init()
     {
-        db = new TestGraphDatabaseFactory().newEmbeddedDatabase( testDirectory.databaseDir() );
+        managementService = new TestGraphDatabaseFactory().newDatabaseManagementService( testDirectory.databaseDir() );
     }
 
     abstract class GetOrCreate<D>
@@ -94,7 +94,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
             for ( int i = 0; i < numThreads; i++ )
             {
                 String threadName = format( "%s thread %d", GetOrCreateDocIT.class.getSimpleName(), i );
-                threads.add( new GetOrCreateTask<>( db,  NUM_USERS, impl, threadName, dependency, base ) );
+                threads.add( new GetOrCreateTask<>( graphdb(),  NUM_USERS, impl, threadName, dependency, base ) );
             }
             for ( Thread thread : threads )
             {

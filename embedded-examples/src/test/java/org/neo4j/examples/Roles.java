@@ -20,6 +20,8 @@ package org.neo4j.examples;
 
 import org.junit.Test;
 
+import org.neo4j.doc.test.GraphDescription.Graph;
+import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.RelationshipType;
@@ -28,7 +30,6 @@ import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.doc.test.GraphDescription.Graph;
 
 import static org.junit.Assert.assertTrue;
 import static org.neo4j.graphdb.Direction.INCOMING;
@@ -178,6 +179,7 @@ public class Roles extends ImpermanentGraphJavaDocTestBase
         System.out.println( "All admins:" );
         // tag::get-admins[]
         Node admins = getNodeByName( "Admins" );
+        GraphDatabaseService db = graphdb();
         TraversalDescription traversal = db.traversalDescription()
                 .breadthFirst()
                 .evaluator( excludeStartPosition() )
@@ -272,7 +274,7 @@ public class Roles extends ImpermanentGraphJavaDocTestBase
 
     private String traverserToString( Traverser traverser )
     {
-        try ( Transaction ignore = db.beginTx() )
+        try ( Transaction ignore = graphdb().beginTx() )
         {
             // tag::read-traverser[]
             String output = "";

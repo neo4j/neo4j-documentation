@@ -21,6 +21,7 @@ package org.neo4j.examples.orderedpath;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
@@ -35,6 +36,7 @@ import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.graphdb.traversal.Uniqueness;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.graphdb.RelationshipType.withName;
 
 public class OrderedPath
@@ -42,17 +44,20 @@ public class OrderedPath
     private static final RelationshipType REL1 = withName( "REL1" ), REL2 = withName( "REL2" ),
             REL3 = withName( "REL3" );
     static final File databaseDirectory = new File( "target/neo4j-orderedpath-db" );
+    private final DatabaseManagementService managementService;
     GraphDatabaseService db;
 
-    public OrderedPath( GraphDatabaseService db )
+    public OrderedPath( DatabaseManagementService managementService, GraphDatabaseService db )
     {
+        this.managementService = managementService;
         this.db = db;
     }
 
     public static void main( String[] args )
     {
-        GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
-        OrderedPath op = new OrderedPath( db );
+        DatabaseManagementService managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
+        OrderedPath op = new OrderedPath( managementService, db );
         op.shutdownGraph();
     }
 
@@ -82,16 +87,9 @@ public class OrderedPath
 
     public void shutdownGraph()
     {
-        try
+        if ( managementService != null )
         {
-            if ( db != null )
-            {
-                db.shutdown();
-            }
-        }
-        finally
-        {
-            db = null;
+            managementService.shutdown();
         }
     }
 

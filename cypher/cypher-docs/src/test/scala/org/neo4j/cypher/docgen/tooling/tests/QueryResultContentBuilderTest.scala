@@ -24,12 +24,9 @@ import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
+import org.neo4j.dbms.database.DatabaseManagementService
 import org.neo4j.values.virtual.VirtualValues
-import org.scalatest.Assertions
-import org.scalatest.BeforeAndAfterAll
-import org.scalatest.FunSuiteLike
-import org.scalatest.Matchers
-import org.scalatest.Suite
+import org.scalatest._
 
 class QueryResultContentBuilderTest extends Suite
                                     with FunSuiteLike
@@ -40,20 +37,22 @@ class QueryResultContentBuilderTest extends Suite
                                     with BeforeAndAfterAll {
 
   def graph: GraphDatabaseCypherService = _graph
+  var _managementService: DatabaseManagementService = _
   var _graph: GraphDatabaseCypherService = _
   def eengine: ExecutionEngine = _eengine
   var _eengine: ExecutionEngine = _
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    val (db, engine) = ExecutionEngineFactory.createEnterpriseDbAndEngine()
+    val (managementService, db, engine) = ExecutionEngineFactory.createEnterpriseDbAndEngine()
+    _managementService = managementService
     _graph = new GraphDatabaseCypherService(db)
     _eengine = engine
   }
 
   override protected def afterAll(): Unit = {
     super.afterAll()
-    _graph.shutdown()
+    _managementService.shutdown()
   }
 
   test("should handle query with result table output and empty results") {

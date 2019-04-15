@@ -22,11 +22,13 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
 import static org.junit.Assert.assertNotNull;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class StartWithConfigurationDocTest
 {
@@ -38,27 +40,27 @@ public class StartWithConfigurationDocTest
     {
         String pathToConfig = "src/test/resources/";
         // tag::startDbWithConfig[]
-        GraphDatabaseService graphDb = new GraphDatabaseFactory()
-            .newEmbeddedDatabaseBuilder( testDirectory.databaseDir() )
-            .loadPropertiesFromFile( pathToConfig + "neo4j.conf" )
-            .newGraphDatabase();
-        // end::startDbWithConfig[]
+        DatabaseManagementService managementService =
+                new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( testDirectory.databaseDir() ).loadPropertiesFromFile(
+                        pathToConfig + "neo4j.conf" ).newDatabaseManagementService();
+        GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
+                // end::startDbWithConfig[]
         assertNotNull( graphDb );
-        graphDb.shutdown();
+        managementService.shutdown();
     }
 
     @Test
     public void loadFromHashmap()
     {
         // tag::startDbWithMapConfig[]
-        GraphDatabaseService graphDb = new GraphDatabaseFactory()
-            .newEmbeddedDatabaseBuilder( testDirectory.databaseDir() )
-            .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
-            .setConfig( GraphDatabaseSettings.string_block_size, "60" )
-            .setConfig( GraphDatabaseSettings.array_block_size, "300" )
-            .newGraphDatabase();
+        DatabaseManagementService managementService =
+                new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( testDirectory.databaseDir() ).setConfig( GraphDatabaseSettings.pagecache_memory,
+                        "512M" ).setConfig( GraphDatabaseSettings.string_block_size, "60" ).setConfig( GraphDatabaseSettings.array_block_size,
+                        "300" ).newDatabaseManagementService();
+        GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
+
         // end::startDbWithMapConfig[]
         assertNotNull( graphDb );
-        graphDb.shutdown();
+        managementService.shutdown();
     }
 }

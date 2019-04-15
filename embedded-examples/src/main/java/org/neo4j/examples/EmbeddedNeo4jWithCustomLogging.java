@@ -21,17 +21,17 @@ package org.neo4j.examples;
 import java.io.File;
 import java.io.IOException;
 
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.io.fs.FileUtils;
-import org.neo4j.logging.NullLog;
 import org.neo4j.logging.Log;
 import org.neo4j.logging.LogProvider;
+import org.neo4j.logging.NullLog;
 
 public class EmbeddedNeo4jWithCustomLogging
 {
     private static final File databaseDirectory = new File( "target/neo4j-store" );
-    private static GraphDatabaseService graphDb;
+    private static DatabaseManagementService managementService;
 
     private static class MyCustomLogProvider implements LogProvider
     {
@@ -60,7 +60,7 @@ public class EmbeddedNeo4jWithCustomLogging
 
         // tag::startDbWithLogProvider[]
         LogProvider logProvider = new MyCustomLogProvider( output );
-        graphDb = new GraphDatabaseFactory().setUserLogProvider( logProvider ).newEmbeddedDatabase( databaseDirectory );
+        managementService = new GraphDatabaseFactory().setUserLogProvider( logProvider ).newDatabaseManagementService( databaseDirectory );
         // end::startDbWithLogProvider[]
 
         shutdown();
@@ -68,6 +68,6 @@ public class EmbeddedNeo4jWithCustomLogging
 
     private static void shutdown()
     {
-        graphDb.shutdown();
+        managementService.shutdown();
     }
 }

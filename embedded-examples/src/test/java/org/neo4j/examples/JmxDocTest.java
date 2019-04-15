@@ -18,24 +18,29 @@
  */
 package org.neo4j.examples;
 
-import java.util.Date;
+import org.junit.Test;
 
+import java.util.Date;
 import javax.management.ObjectName;
 
-import org.junit.Test;
+import org.neo4j.dbms.database.DatabaseManagementService;
+import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.jmx.JmxUtils;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class JmxDocTest
 {
     @Test
     public void readJmxProperties()
     {
-        GraphDatabaseService graphDbService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        DatabaseManagementService managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        GraphDatabaseService graphDbService = managementService.database( DEFAULT_DATABASE_NAME );
         try
         {
             Date startTime = getStartTimeFromManagementBean( graphDbService );
@@ -44,7 +49,7 @@ public class JmxDocTest
         }
         finally
         {
-            graphDbService.shutdown();
+            managementService.shutdown();
         }
     }
 

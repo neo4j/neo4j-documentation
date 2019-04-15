@@ -26,14 +26,16 @@ import org.junit.Rule;
 import java.util.Map;
 
 import org.neo4j.cypher.docgen.tooling.Prettifier;
-import org.neo4j.doc.tools.JavaTestDocsGenerator;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
+import org.neo4j.doc.tools.JavaTestDocsGenerator;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
 
 public abstract class AbstractJavaDocTestBase implements GraphHolder
@@ -44,25 +46,25 @@ public abstract class AbstractJavaDocTestBase implements GraphHolder
     @Rule
     public final TestData<Map<String, Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this, true ) );
 
-    protected static GraphDatabaseService db;
+    protected static DatabaseManagementService managementService;
 
     @AfterClass
     public static void shutdownDb()
     {
         try
         {
-            if ( db != null ) db.shutdown();
+            if ( managementService != null ) managementService.shutdown();
         }
         finally
         {
-            db = null;
+            managementService = null;
         }
     }
 
     @Override
     public GraphDatabaseService graphdb()
     {
-        return db;
+        return managementService.database( DEFAULT_DATABASE_NAME );
     }
 
     protected String createCypherSnippet( String cypherQuery )

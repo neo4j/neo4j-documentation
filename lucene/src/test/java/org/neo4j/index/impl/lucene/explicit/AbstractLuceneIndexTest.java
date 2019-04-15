@@ -32,6 +32,7 @@ import org.junit.rules.TestName;
 
 import java.util.Map;
 
+import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.doc.test.TestGraphDatabaseFactory;
 import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -42,6 +43,8 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.MapUtil;
 
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
+
 public abstract class AbstractLuceneIndexTest
 {
     @Rule
@@ -50,17 +53,19 @@ public abstract class AbstractLuceneIndexTest
     public static TestDirectory testDirectory = TestDirectory.testDirectory( AbstractLuceneIndexTest.class );
     protected static GraphDatabaseService graphDb;
     protected Transaction tx;
+    private static DatabaseManagementService managementService;
 
     @BeforeClass
     public static void setUpStuff()
     {
-        graphDb = new TestGraphDatabaseFactory().newEmbeddedDatabase( testDirectory.storeDir() );
+        managementService = new TestGraphDatabaseFactory().newDatabaseManagementService( testDirectory.storeDir() );
+        graphDb = managementService.database( DEFAULT_DATABASE_NAME );
     }
 
     @AfterClass
     public static void tearDownStuff()
     {
-        graphDb.shutdown();
+        managementService.shutdown();
     }
 
     @After
