@@ -160,7 +160,7 @@ class UsingTest extends DocumentingTest {
     }
     section("`PERIODIC COMMIT` query hint", "query-using-periodic-commit-hint") {
       note {
-        p("""See <<getting-started#cypherdoc-importing-csv-files-with-cypher>> on how to import data from CSV files.""")
+        p("""See <<getting-started#cypher-intro-load-csv>> on how to import data from CSV files.""")
       }
       p("""Importing large amounts of data using `LOAD CSV` with a single Cypher query may fail due to memory constraints.
           |This will manifest itself as an `OutOfMemoryError`.""")
