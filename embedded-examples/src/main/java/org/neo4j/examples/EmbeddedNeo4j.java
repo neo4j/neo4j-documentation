@@ -28,7 +28,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.io.fs.FileUtils;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
@@ -67,7 +67,7 @@ public class EmbeddedNeo4j
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDb[]
-        managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( databaseDirectory );
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook( managementService );
         // end::startDb[]

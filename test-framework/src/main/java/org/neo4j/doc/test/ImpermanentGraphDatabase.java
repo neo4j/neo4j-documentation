@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.neo4j.configuration.Config;
+import org.neo4j.graphdb.facade.DatabaseManagementServiceFactory;
 import org.neo4j.graphdb.facade.ExternalDependencies;
-import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
 import org.neo4j.graphdb.facade.embedded.EmbeddedGraphDatabase;
 import org.neo4j.graphdb.factory.module.GlobalModule;
 import org.neo4j.graphdb.factory.module.edition.CommunityEditionModule;
@@ -142,7 +142,7 @@ public class ImpermanentGraphDatabase extends EmbeddedGraphDatabase
     @Override
     protected void create( File storeDir, Map<String, String> params, ExternalDependencies dependencies )
     {
-        new GraphDatabaseFacadeFactory( DatabaseInfo.COMMUNITY, CommunityEditionModule::new )
+        new DatabaseManagementServiceFactory( DatabaseInfo.COMMUNITY, CommunityEditionModule::new )
         {
             @Override
             protected GlobalModule createGlobalModule( File storeDir, Config config, ExternalDependencies dependencies )

@@ -32,7 +32,7 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Uniqueness;
@@ -51,7 +51,7 @@ public class TraversalExample
     public static void main( String[] args ) throws IOException
     {
         FileUtils.deleteRecursively( databaseDirectory );
-        DatabaseManagementService managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( databaseDirectory );
         GraphDatabaseService database = managementService.database( DEFAULT_DATABASE_NAME );
         TraversalExample example = new TraversalExample( database );
         Node joe = example.createData();

@@ -31,7 +31,7 @@ import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.PathExpanders;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.traversal.Paths;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
@@ -49,7 +49,7 @@ public class CalculateShortestPath
     public static void main( final String[] args )
     {
         deleteFileOrDirectory( databaseDirectory );
-        managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( databaseDirectory );
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook();
         try ( Transaction tx = graphDb.beginTx() )

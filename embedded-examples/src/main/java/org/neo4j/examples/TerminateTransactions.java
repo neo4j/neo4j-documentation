@@ -30,7 +30,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.TransactionTerminatedException;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.io.fs.FileUtils;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
@@ -50,7 +50,7 @@ public class TerminateTransactions
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDb[]
-        DatabaseManagementService managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( databaseDirectory );
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         // end::startDb[]
 

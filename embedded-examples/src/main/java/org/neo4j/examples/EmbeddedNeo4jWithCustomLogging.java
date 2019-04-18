@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.logging.Log;
 import org.neo4j.logging.LogProvider;
@@ -60,7 +60,7 @@ public class EmbeddedNeo4jWithCustomLogging
 
         // tag::startDbWithLogProvider[]
         LogProvider logProvider = new MyCustomLogProvider( output );
-        managementService = new GraphDatabaseFactory().setUserLogProvider( logProvider ).newDatabaseManagementService( databaseDirectory );
+        managementService = new DatabaseManagementServiceBuilder().setUserLogProvider( logProvider ).newDatabaseManagementService( databaseDirectory );
         // end::startDbWithLogProvider[]
 
         shutdown();

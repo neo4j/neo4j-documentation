@@ -39,7 +39,7 @@ import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.TransactionFailureException;
-import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceInternalBuilder;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.io.fs.IoPrimitiveUtils;
@@ -108,7 +108,7 @@ public class DbRepresentation
 
     public static DbRepresentation of( File storeDir, boolean includeIndexes, Config config )
     {
-        GraphDatabaseBuilder builder = new TestGraphDatabaseFactory().newEmbeddedDatabaseBuilder( storeDir.getParentFile() );
+        DatabaseManagementServiceInternalBuilder builder = new TestGraphDatabaseFactory().newEmbeddedDatabaseBuilder( storeDir.getParentFile() );
         builder.setConfig( config.getRaw() );
 
         DatabaseManagementService managementService = builder.newDatabaseManagementService();

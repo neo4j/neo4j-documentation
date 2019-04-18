@@ -19,8 +19,8 @@
 package org.neo4j.doc.test.rule;
 
 import org.neo4j.doc.test.TestGraphDatabaseFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceInternalBuilder;
 import org.neo4j.logging.LogProvider;
 
 /**
@@ -49,13 +49,13 @@ public class ImpermanentDatabaseRule extends DatabaseRule
     }
 
     @Override
-    protected GraphDatabaseFactory newFactory()
+    protected DatabaseManagementServiceBuilder newFactory()
     {
         return maybeSetInternalLogProvider( maybeSetUserLogProvider( new TestGraphDatabaseFactory() ) );
     }
 
     @Override
-    protected GraphDatabaseBuilder newBuilder( GraphDatabaseFactory factory )
+    protected DatabaseManagementServiceInternalBuilder newBuilder( DatabaseManagementServiceBuilder factory )
     {
         return ((TestGraphDatabaseFactory) factory).newImpermanentDatabaseBuilder();
     }

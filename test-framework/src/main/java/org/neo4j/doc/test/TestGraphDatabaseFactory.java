@@ -28,11 +28,11 @@ import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.config.Setting;
+import org.neo4j.graphdb.facade.DatabaseManagementServiceFactory;
 import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
-import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceInternalBuilder;
 import org.neo4j.graphdb.factory.module.GlobalModule;
 import org.neo4j.graphdb.factory.module.edition.AbstractEditionModule;
 import org.neo4j.graphdb.factory.module.edition.CommunityEditionModule;
@@ -59,7 +59,7 @@ import static org.neo4j.configuration.connectors.Connector.ConnectorType.BOLT;
  * Please be aware that since it's a database it will close filesystem as part of its lifecycle.
  * If you expect your file system to be open after database is closed, use {@link UncloseableDelegatingFileSystemAbstraction}
  */
-public class TestGraphDatabaseFactory extends GraphDatabaseFactory
+public class TestGraphDatabaseFactory extends DatabaseManagementServiceBuilder
 {
     public TestGraphDatabaseFactory()
     {
@@ -79,19 +79,19 @@ public class TestGraphDatabaseFactory extends GraphDatabaseFactory
 
     public DatabaseManagementService newImpermanentDatabase( Map<Setting<?>,String> config )
     {
-        GraphDatabaseBuilder builder = newImpermanentDatabaseBuilder();
+        DatabaseManagementServiceInternalBuilder builder = newImpermanentDatabaseBuilder();
         setConfig( config, builder );
         return builder.newDatabaseManagementService();
     }
 
     public DatabaseManagementService newImpermanentDatabase( File storeDir , Map<Setting<?>,String> config )
     {
-        GraphDatabaseBuilder builder = newImpermanentDatabaseBuilder(storeDir);
+        DatabaseManagementServiceInternalBuilder builder = newImpermanentDatabaseBuilder(storeDir);
         setConfig( config, builder );
         return builder.newDatabaseManagementService();
     }
 
-    private void setConfig( Map<Setting<?>,String> config, GraphDatabaseBuilder builder )
+    private void setConfig( Map<Setting<?>,String> config, DatabaseManagementServiceInternalBuilder builder )
     {
         for ( Map.Entry<Setting<?>,String> entry : config.entrySet() )
         {
@@ -101,13 +101,13 @@ public class TestGraphDatabaseFactory extends GraphDatabaseFactory
         }
     }
 
-    public GraphDatabaseBuilder newImpermanentDatabaseBuilder()
+    public DatabaseManagementServiceInternalBuilder newImpermanentDatabaseBuilder()
     {
         return newImpermanentDatabaseBuilder( ImpermanentGraphDatabase.PATH );
     }
 
     @Override
-    protected void configure( GraphDatabaseBuilder builder )
+    protected void configure( DatabaseManagementServiceInternalBuilder builder )
     {
         // Reduce the default page cache memory size to 8 mega-bytes for test databases.
         builder.setConfig( GraphDatabaseSettings.pagecache_memory, "8m" );
@@ -116,7 +116,7 @@ public class TestGraphDatabaseFactory extends GraphDatabaseFactory
         builder.setConfig( new BoltConnector( "bolt" ).enabled, "false" );
     }
 
-    private void configure( GraphDatabaseBuilder builder, File storeDir )
+    private void configure( DatabaseManagementServiceInternalBuilder builder, File storeDir )
     {
         configure( builder );
         builder.setConfig( GraphDatabaseSettings.logs_directory, new File( storeDir, "logs" ).getAbsolutePath() );
@@ -193,10 +193,10 @@ public class TestGraphDatabaseFactory extends GraphDatabaseFactory
         return (TestGraphDatabaseFactory) super.addURLAccessRule( protocol, rule );
     }
 
-    public GraphDatabaseBuilder newImpermanentDatabaseBuilder( final File storeDir )
+    public DatabaseManagementServiceInternalBuilder newImpermanentDatabaseBuilder( final File storeDir )
     {
         final TestGraphDatabaseFactoryState state = getStateCopy();
-        GraphDatabaseBuilder.DatabaseCreator creator =
+        DatabaseManagementServiceInternalBuilder.DatabaseCreator creator =
                 createImpermanentDatabaseCreator( storeDir, state );
         TestGraphDatabaseBuilder builder = createImpermanentGraphDatabaseBuilder( creator );
         configure( builder, storeDir );
@@ -204,7 +204,7 @@ public class TestGraphDatabaseFactory extends GraphDatabaseFactory
     }
 
     private TestGraphDatabaseBuilder createImpermanentGraphDatabaseBuilder(
-            GraphDatabaseBuilder.DatabaseCreator creator )
+            DatabaseManagementServiceInternalBuilder.DatabaseCreator creator )
     {
         return new TestGraphDatabaseBuilder( creator );
     }
@@ -216,14 +216,14 @@ public class TestGraphDatabaseFactory extends GraphDatabaseFactory
                 GraphDatabaseDependencies.newDependencies( dependencies ) );
     }
 
-    protected GraphDatabaseBuilder.DatabaseCreator createImpermanentDatabaseCreator( final File storeDir,
+    protected DatabaseManagementServiceInternalBuilder.DatabaseCreator createImpermanentDatabaseCreator( final File storeDir,
                                                                                      final TestGraphDatabaseFactoryState state )
     {
         return config -> new TestGraphDatabaseFacadeFactory( state, true ).newFacade( storeDir, config,
                 GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) );
     }
 
-    public static class TestGraphDatabaseFacadeFactory extends GraphDatabaseFacadeFactory
+    public static class TestGraphDatabaseFacadeFactory extends DatabaseManagementServiceFactory
     {
         private final TestGraphDatabaseFactoryState state;
         private final boolean impermanent;

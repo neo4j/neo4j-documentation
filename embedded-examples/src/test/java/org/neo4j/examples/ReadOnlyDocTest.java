@@ -29,7 +29,7 @@ import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.security.WriteOperationsNotAllowedException;
 import org.neo4j.io.fs.FileUtils;
 
@@ -55,9 +55,9 @@ public class ReadOnlyDocTest
         {
             FileUtils.deleteRecursively( dir );
         }
-        new GraphDatabaseFactory().newDatabaseManagementService( dir ).shutdown();
+        new DatabaseManagementServiceBuilder().newDatabaseManagementService( dir ).shutdown();
         // tag::createReadOnlyInstance[]
-        managementService = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( dir ).setConfig( GraphDatabaseSettings.read_only,
+        managementService = new DatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( dir ).setConfig( GraphDatabaseSettings.read_only,
                 "true" ).newDatabaseManagementService();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         // end::createReadOnlyInstance[]

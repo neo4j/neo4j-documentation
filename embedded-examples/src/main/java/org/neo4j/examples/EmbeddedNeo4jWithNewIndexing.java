@@ -29,7 +29,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.graphdb.schema.Schema;
 import org.neo4j.io.fs.FileUtils;
@@ -47,7 +47,7 @@ public class EmbeddedNeo4jWithNewIndexing
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDb[]
-        DatabaseManagementService managementService = new GraphDatabaseFactory().newDatabaseManagementService( databaseDirectory );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( databaseDirectory );
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         // end::startDb[]
 

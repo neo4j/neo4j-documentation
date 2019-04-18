@@ -29,7 +29,7 @@ import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
@@ -65,7 +65,7 @@ public class NewMatrix
     public void setUp() throws IOException
     {
         FileUtils.deleteRecursively( MATRIX_DB );
-        managementService = new GraphDatabaseFactory().newDatabaseManagementService( MATRIX_DB );
+        managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( MATRIX_DB );
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook();
         createNodespace();

@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.logging.slf4j.Slf4jLogProvider;
 
@@ -36,7 +36,7 @@ public class EmbeddedNeo4jWithSLF4JLogging
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDbWithSlf4jLogProvider[]
-        managementService = new GraphDatabaseFactory().setUserLogProvider( new Slf4jLogProvider() ).newDatabaseManagementService( databaseDirectory );
+        managementService = new DatabaseManagementServiceBuilder().setUserLogProvider( new Slf4jLogProvider() ).newDatabaseManagementService( databaseDirectory );
         // end::startDbWithSlf4jLogProvider[]
 
         shutdown();

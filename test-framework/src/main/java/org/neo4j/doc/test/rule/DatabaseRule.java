@@ -19,7 +19,6 @@
 package org.neo4j.doc.test.rule;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -43,10 +42,9 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.graphdb.event.DatabaseEventHandler;
 import org.neo4j.graphdb.event.TransactionEventHandler;
-import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceInternalBuilder;
 import org.neo4j.graphdb.schema.Schema;
-import org.neo4j.graphdb.security.URLAccessValidationError;
 import org.neo4j.graphdb.traversal.BidirectionalTraversalDescription;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.internal.kernel.api.connectioninfo.ClientConnectionInfo;
@@ -65,7 +63,7 @@ import static org.neo4j.helpers.collection.MapUtil.stringMap;
 
 public abstract class DatabaseRule extends ExternalResource implements GraphDatabaseAPI
 {
-    private GraphDatabaseBuilder databaseBuilder;
+    private DatabaseManagementServiceInternalBuilder databaseBuilder;
     private GraphDatabaseAPI database;
     private DatabaseLayout databaseLayout;
     private Supplier<Statement> statementSupplier;
@@ -269,7 +267,7 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
         createResources();
         try
         {
-            GraphDatabaseFactory factory = newFactory();
+            DatabaseManagementServiceBuilder factory = newFactory();
             configure( factory );
             databaseBuilder = newBuilder( factory );
             configure( databaseBuilder );
@@ -289,16 +287,16 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
     {
     }
 
-    protected abstract GraphDatabaseFactory newFactory();
+    protected abstract DatabaseManagementServiceBuilder newFactory();
 
-    protected abstract GraphDatabaseBuilder newBuilder( GraphDatabaseFactory factory );
+    protected abstract DatabaseManagementServiceInternalBuilder newBuilder( DatabaseManagementServiceBuilder factory );
 
-    protected void configure( GraphDatabaseFactory databaseFactory )
+    protected void configure( DatabaseManagementServiceBuilder databaseFactory )
     {
         // Override to configure the database factory
     }
 
-    protected void configure( GraphDatabaseBuilder builder )
+    protected void configure( DatabaseManagementServiceInternalBuilder builder )
     {
         // Override to configure the database
 
@@ -312,7 +310,7 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
         }
     }
 
-    public GraphDatabaseBuilder setConfig( Setting<?> setting, String value )
+    public DatabaseManagementServiceInternalBuilder setConfig( Setting<?> setting, String value )
     {
         return databaseBuilder.setConfig( setting, value );
     }
@@ -453,12 +451,6 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
     public DatabaseLayout databaseLayout()
     {
         return database.databaseLayout();
-    }
-
-    @Override
-    public URL validateURLAccess( URL url ) throws URLAccessValidationError
-    {
-        return database.validateURLAccess( url );
     }
 
     @Override

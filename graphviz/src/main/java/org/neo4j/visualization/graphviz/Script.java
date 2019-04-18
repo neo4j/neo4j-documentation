@@ -27,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.walk.Walker;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
@@ -165,7 +165,7 @@ public class Script extends ConfigurationParser
 
     protected DatabaseManagementService createGraphDb()
     {
-        return new GraphDatabaseFactory().newDatabaseManagementService( storeDir() );
+        return new DatabaseManagementServiceBuilder().newDatabaseManagementService( storeDir() );
     }
 
     protected Walker createGraphWalker( GraphDatabaseService graphdb )

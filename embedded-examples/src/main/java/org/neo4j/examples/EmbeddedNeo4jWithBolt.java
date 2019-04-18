@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 import org.neo4j.io.fs.FileUtils;
 
 public class EmbeddedNeo4jWithBolt
@@ -39,7 +39,7 @@ public class EmbeddedNeo4jWithBolt
         BoltConnector bolt = new BoltConnector( "0" );
 
         DatabaseManagementService managementService =
-                new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( DB_PATH ).setConfig( bolt.type, "BOLT" ).setConfig( bolt.enabled, "true" ).setConfig(
+                new DatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( DB_PATH ).setConfig( bolt.type, "BOLT" ).setConfig( bolt.enabled, "true" ).setConfig(
                         bolt.address, "localhost:7687" ).newDatabaseManagementService();
         // end::startDb[]
 

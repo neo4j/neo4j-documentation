@@ -19,9 +19,9 @@
 package org.neo4j.doc.test;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
-import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceInternalBuilder;
 
-public class TestGraphDatabaseBuilder extends GraphDatabaseBuilder
+public class TestGraphDatabaseBuilder extends DatabaseManagementServiceInternalBuilder
 {
     public TestGraphDatabaseBuilder( DatabaseCreator creator )
     {

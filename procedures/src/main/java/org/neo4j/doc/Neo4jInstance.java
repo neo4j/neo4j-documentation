@@ -22,7 +22,7 @@
  */
 package org.neo4j.doc;
 
-import com.neo4j.commercial.edition.factory.CommercialGraphDatabaseFactory;
+import com.neo4j.commercial.edition.factory.CommercialDatabaseManagementServiceBuilder;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -30,7 +30,7 @@ import java.nio.file.Paths;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
 
 public class Neo4jInstance {
 
@@ -39,7 +39,7 @@ public class Neo4jInstance {
     public DatabaseManagementService newEnterpriseInstance() {
         baseDatabaseDirectory.toFile().mkdirs();
         DatabaseManagementService managementService =
-                new CommercialGraphDatabaseFactory().newEmbeddedDatabaseBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled,
+                new CommercialDatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled,
                         "true" ).newDatabaseManagementService();
         registerShutdownHook(managementService);
         return managementService;
@@ -48,7 +48,7 @@ public class Neo4jInstance {
     public DatabaseManagementService newCommunityInstance() {
         boolean mkdirs = baseDatabaseDirectory.toFile().mkdirs();
         DatabaseManagementService managementService =
-                new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled,
+                new DatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled,
                         "true" ).newDatabaseManagementService();
         registerShutdownHook(managementService);
         return managementService;

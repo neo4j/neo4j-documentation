@@ -29,10 +29,10 @@ import java.io.File;
 import org.neo4j.common.Edition;
 import org.neo4j.configuration.Config;
 import org.neo4j.dbms.database.DatabaseManagementService;
+import org.neo4j.graphdb.facade.DatabaseManagementServiceFactory;
 import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
-import org.neo4j.graphdb.facade.GraphDatabaseFacadeFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
+import org.neo4j.graphdb.factory.DatabaseManagementServiceInternalBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactoryState;
 import org.neo4j.graphdb.factory.module.GlobalModule;
 import org.neo4j.kernel.impl.factory.DatabaseInfo;
@@ -46,15 +46,15 @@ import org.neo4j.logging.internal.SimpleLogService;
 public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
 {
     @Override
-    protected GraphDatabaseBuilder.DatabaseCreator createDatabaseCreator( File storeDir,
+    protected DatabaseManagementServiceInternalBuilder.DatabaseCreator createDatabaseCreator( File storeDir,
                                                                           GraphDatabaseFactoryState state )
     {
-        return new GraphDatabaseBuilder.DatabaseCreator()
+        return new DatabaseManagementServiceInternalBuilder.DatabaseCreator()
         {
             @Override
             public DatabaseManagementService newDatabase( Config config )
             {
-                return new GraphDatabaseFacadeFactory( DatabaseInfo.COMMERCIAL, CommercialEditionModule::new )
+                return new DatabaseManagementServiceFactory( DatabaseInfo.COMMERCIAL, CommercialEditionModule::new )
                 {
                     @Override
                     protected GlobalModule createGlobalModule( File storeDir, Config config, ExternalDependencies dependencies )
@@ -83,7 +83,7 @@ public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
     }
 
     @Override
-    protected GraphDatabaseBuilder.DatabaseCreator createImpermanentDatabaseCreator( final File storeDir,
+    protected DatabaseManagementServiceInternalBuilder.DatabaseCreator createImpermanentDatabaseCreator( final File storeDir,
                                                                                      final TestGraphDatabaseFactoryState state )
     {
         return config -> new TestEnterpriseGraphDatabaseFacadeFactory( state, true ).newFacade( storeDir, config,

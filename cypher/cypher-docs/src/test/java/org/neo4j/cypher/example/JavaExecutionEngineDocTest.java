@@ -47,7 +47,7 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.Iterators;
-import org.neo4j.test.TestGraphDatabaseFactory;
+import org.neo4j.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
 import static java.util.Arrays.asList;
@@ -93,7 +93,7 @@ public class JavaExecutionEngineDocTest
     @Before
     public void setUp() throws IOException
     {
-        managementService = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newDatabaseManagementService();
+        managementService = new TestDatabaseManagementServiceBuilder().newImpermanentDatabaseBuilder().newDatabaseManagementService();
         db = managementService.database( DEFAULT_DATABASE_NAME );
 
         try ( Transaction tx = this.db.beginTx() )
