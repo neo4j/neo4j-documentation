@@ -61,6 +61,8 @@ import static org.neo4j.configuration.connectors.Connector.ConnectorType.BOLT;
  */
 public class TestGraphDatabaseFactory extends DatabaseManagementServiceBuilder
 {
+    private static final File EPHEMERAL_PATH = new File( "target/test data/" + GraphDatabaseSettings.DEFAULT_DATABASE_NAME );
+
     public TestGraphDatabaseFactory()
     {
         super( new TestGraphDatabaseFactoryState() );
@@ -103,7 +105,7 @@ public class TestGraphDatabaseFactory extends DatabaseManagementServiceBuilder
 
     public DatabaseManagementServiceInternalBuilder newImpermanentDatabaseBuilder()
     {
-        return newImpermanentDatabaseBuilder( ImpermanentGraphDatabase.PATH );
+        return newImpermanentDatabaseBuilder( EPHEMERAL_PATH );
     }
 
     @Override
