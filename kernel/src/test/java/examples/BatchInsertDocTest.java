@@ -116,7 +116,7 @@ public class BatchInsertDocTest
         // try it out from a normal db
 
         DatabaseManagementService managementService =
-                new DatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( tempLayout.getStoreLayout().storeDirectory() ).newDatabaseManagementService();
+                new DatabaseManagementServiceBuilder( tempLayout.getStoreLayout().storeDirectory() ).build();
         GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
         try ( Transaction tx = db.beginTx() )
         {

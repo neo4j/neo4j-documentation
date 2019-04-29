@@ -36,7 +36,7 @@ public class EmbeddedNeo4jWithSLF4JLogging
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDbWithSlf4jLogProvider[]
-        managementService = new DatabaseManagementServiceBuilder().setUserLogProvider( new Slf4jLogProvider() ).newDatabaseManagementService( databaseDirectory );
+        managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).setUserLogProvider( new Slf4jLogProvider() ).build();
         // end::startDbWithSlf4jLogProvider[]
 
         shutdown();

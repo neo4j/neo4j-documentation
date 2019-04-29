@@ -89,11 +89,10 @@ public class JavaExecutionEngineDocTest
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Before
     public void setUp() throws IOException
     {
-        managementService = new TestDatabaseManagementServiceBuilder().newImpermanentDatabaseBuilder().newDatabaseManagementService();
+        managementService = new TestDatabaseManagementServiceBuilder().impermanent().build();
         db = managementService.database( DEFAULT_DATABASE_NAME );
 
         try ( Transaction tx = this.db.beginTx() )

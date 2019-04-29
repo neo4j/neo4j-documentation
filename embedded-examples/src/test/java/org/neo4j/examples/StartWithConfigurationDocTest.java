@@ -41,8 +41,8 @@ public class StartWithConfigurationDocTest
         String pathToConfig = "src/test/resources/";
         // tag::startDbWithConfig[]
         DatabaseManagementService managementService =
-                new DatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( testDirectory.databaseDir() ).loadPropertiesFromFile(
-                        pathToConfig + "neo4j.conf" ).newDatabaseManagementService();
+                new DatabaseManagementServiceBuilder( testDirectory.databaseDir() ).loadPropertiesFromFile(
+                        pathToConfig + "neo4j.conf" ).build();
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
                 // end::startDbWithConfig[]
         assertNotNull( graphDb );
@@ -54,9 +54,9 @@ public class StartWithConfigurationDocTest
     {
         // tag::startDbWithMapConfig[]
         DatabaseManagementService managementService =
-                new DatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( testDirectory.databaseDir() ).setConfig( GraphDatabaseSettings.pagecache_memory,
+                new DatabaseManagementServiceBuilder( testDirectory.databaseDir() ).setConfig( GraphDatabaseSettings.pagecache_memory,
                         "512M" ).setConfig( GraphDatabaseSettings.string_block_size, "60" ).setConfig( GraphDatabaseSettings.array_block_size,
-                        "300" ).newDatabaseManagementService();
+                        "300" ).build();
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
 
         // end::startDbWithMapConfig[]

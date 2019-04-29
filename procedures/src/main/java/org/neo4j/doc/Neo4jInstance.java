@@ -39,8 +39,8 @@ public class Neo4jInstance {
     public DatabaseManagementService newEnterpriseInstance() {
         baseDatabaseDirectory.toFile().mkdirs();
         DatabaseManagementService managementService =
-                new CommercialDatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled,
-                        "true" ).newDatabaseManagementService();
+                new CommercialDatabaseManagementServiceBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled,
+                        "true" ).build();
         registerShutdownHook(managementService);
         return managementService;
     }
@@ -48,8 +48,8 @@ public class Neo4jInstance {
     public DatabaseManagementService newCommunityInstance() {
         boolean mkdirs = baseDatabaseDirectory.toFile().mkdirs();
         DatabaseManagementService managementService =
-                new DatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled,
-                        "true" ).newDatabaseManagementService();
+                new DatabaseManagementServiceBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled,
+                        "true" ).build();
         registerShutdownHook(managementService);
         return managementService;
     }

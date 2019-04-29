@@ -60,7 +60,7 @@ public class EmbeddedNeo4jWithCustomLogging
 
         // tag::startDbWithLogProvider[]
         LogProvider logProvider = new MyCustomLogProvider( output );
-        managementService = new DatabaseManagementServiceBuilder().setUserLogProvider( logProvider ).newDatabaseManagementService( databaseDirectory );
+        managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).setUserLogProvider( logProvider ).build();
         // end::startDbWithLogProvider[]
 
         shutdown();

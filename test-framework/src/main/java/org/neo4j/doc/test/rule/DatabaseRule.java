@@ -40,10 +40,7 @@ import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.StringSearchMode;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.graphdb.event.DatabaseEventHandler;
-import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
-import org.neo4j.graphdb.factory.DatabaseManagementServiceInternalBuilder;
 import org.neo4j.graphdb.schema.Schema;
 import org.neo4j.graphdb.traversal.BidirectionalTraversalDescription;
 import org.neo4j.graphdb.traversal.TraversalDescription;
@@ -63,7 +60,7 @@ import static org.neo4j.helpers.collection.MapUtil.stringMap;
 
 public abstract class DatabaseRule extends ExternalResource implements GraphDatabaseAPI
 {
-    private DatabaseManagementServiceInternalBuilder databaseBuilder;
+    private DatabaseManagementServiceBuilder databaseBuilder;
     private GraphDatabaseAPI database;
     private DatabaseLayout databaseLayout;
     private Supplier<Statement> statementSupplier;
@@ -289,14 +286,9 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
 
     protected abstract DatabaseManagementServiceBuilder newFactory();
 
-    protected abstract DatabaseManagementServiceInternalBuilder newBuilder( DatabaseManagementServiceBuilder factory );
+    protected abstract DatabaseManagementServiceBuilder newBuilder( DatabaseManagementServiceBuilder factory );
 
-    protected void configure( DatabaseManagementServiceBuilder databaseFactory )
-    {
-        // Override to configure the database factory
-    }
-
-    protected void configure( DatabaseManagementServiceInternalBuilder builder )
+    protected void configure( DatabaseManagementServiceBuilder builder )
     {
         // Override to configure the database
 
@@ -310,7 +302,7 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
         }
     }
 
-    public DatabaseManagementServiceInternalBuilder setConfig( Setting<?> setting, String value )
+    public DatabaseManagementServiceBuilder setConfig( Setting<?> setting, String value )
     {
         return databaseBuilder.setConfig( setting, value );
     }
@@ -330,7 +322,7 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
         if ( database == null )
         {
             applyConfigChanges( additionalConfig );
-            managementService = databaseBuilder.newDatabaseManagementService();
+            managementService = databaseBuilder.build();
             database = (GraphDatabaseAPI) managementService.database( DEFAULT_DATABASE_NAME );
             databaseLayout = database.databaseLayout();
             statementSupplier = resolveDependency( ThreadToStatementContextBridge.class );
@@ -384,7 +376,7 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
 
     private void applyConfigChanges( String[] configChanges )
     {
-        databaseBuilder.setConfig( stringMap( configChanges ) );
+        databaseBuilder.setConfigRaw( stringMap( configChanges ) );
     }
 
     public void shutdown()
@@ -554,30 +546,6 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
     public boolean isAvailable( long timeout )
     {
         return database.isAvailable( timeout );
-    }
-
-    @Override
-    public <T> TransactionEventHandler<T> registerTransactionEventHandler( TransactionEventHandler<T> handler )
-    {
-        return database.registerTransactionEventHandler( handler );
-    }
-
-    @Override
-    public <T> TransactionEventHandler<T> unregisterTransactionEventHandler( TransactionEventHandler<T> handler )
-    {
-        return database.unregisterTransactionEventHandler( handler );
-    }
-
-    @Override
-    public DatabaseEventHandler registerDatabaseEventHandler( DatabaseEventHandler handler )
-    {
-        return database.registerDatabaseEventHandler( handler );
-    }
-
-    @Override
-    public DatabaseEventHandler unregisterDatabaseEventHandler( DatabaseEventHandler handler )
-    {
-        return database.unregisterDatabaseEventHandler( handler );
     }
 
     @Override

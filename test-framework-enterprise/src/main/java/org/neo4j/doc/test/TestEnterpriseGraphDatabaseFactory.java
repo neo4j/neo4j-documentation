@@ -23,80 +23,53 @@
 package org.neo4j.doc.test;
 
 import com.neo4j.commercial.edition.CommercialEditionModule;
+import com.neo4j.kernel.impl.enterprise.configuration.OnlineBackupSettings;
 
 import java.io.File;
+import java.util.function.Function;
 
 import org.neo4j.common.Edition;
 import org.neo4j.configuration.Config;
-import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.graphdb.facade.DatabaseManagementServiceFactory;
-import org.neo4j.graphdb.facade.ExternalDependencies;
-import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
-import org.neo4j.graphdb.factory.DatabaseManagementServiceInternalBuilder;
-import org.neo4j.graphdb.factory.GraphDatabaseFactoryState;
 import org.neo4j.graphdb.factory.module.GlobalModule;
+import org.neo4j.graphdb.factory.module.edition.AbstractEditionModule;
 import org.neo4j.kernel.impl.factory.DatabaseInfo;
-import org.neo4j.logging.LogProvider;
-import org.neo4j.logging.internal.LogService;
-import org.neo4j.logging.internal.SimpleLogService;
+
+import static org.neo4j.configuration.Settings.FALSE;
 
 /**
  * Factory for test graph database.
  */
-public class TestEnterpriseGraphDatabaseFactory extends TestGraphDatabaseFactory
+public class TestEnterpriseGraphDatabaseFactory extends TestDatabaseManagementServiceBuilder
 {
-    @Override
-    protected DatabaseManagementServiceInternalBuilder.DatabaseCreator createDatabaseCreator( File storeDir,
-                                                                          GraphDatabaseFactoryState state )
+    public TestEnterpriseGraphDatabaseFactory()
     {
-        return new DatabaseManagementServiceInternalBuilder.DatabaseCreator()
-        {
-            @Override
-            public DatabaseManagementService newDatabase( Config config )
-            {
-                return new DatabaseManagementServiceFactory( DatabaseInfo.COMMERCIAL, CommercialEditionModule::new )
-                {
-                    @Override
-                    protected GlobalModule createGlobalModule( File storeDir, Config config, ExternalDependencies dependencies )
-                    {
-                        return new GlobalModule( storeDir, config, databaseInfo, dependencies )
-                        {
-                            @Override
-                            protected LogService createLogService( LogProvider userLogProvider )
-                            {
-                                if ( state instanceof TestGraphDatabaseFactoryState )
-                                {
-                                    LogProvider logProvider =
-                                            ((TestGraphDatabaseFactoryState) state).getInternalLogProvider();
-                                    if ( logProvider != null )
-                                    {
-                                        return new SimpleLogService( logProvider, logProvider );
-                                    }
-                                }
-                                return super.createLogService( userLogProvider );
-                            }
-                        };
-                    }
-                }.newFacade( storeDir, config, GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) );
-            }
-        };
+        super();
+    }
+
+    public TestEnterpriseGraphDatabaseFactory( File databaseRootDir )
+    {
+        super( databaseRootDir );
     }
 
     @Override
-    protected DatabaseManagementServiceInternalBuilder.DatabaseCreator createImpermanentDatabaseCreator( final File storeDir,
-                                                                                     final TestGraphDatabaseFactoryState state )
+    protected Config augmentConfig( Config config )
     {
-        return config -> new TestEnterpriseGraphDatabaseFacadeFactory( state, true ).newFacade( storeDir, config,
-                GraphDatabaseDependencies.newDependencies( state.databaseDependencies() ) );
+        config = super.augmentConfig( config );
+        config.augmentDefaults( OnlineBackupSettings.online_backup_listen_address, "127.0.0.1:0" );
+        config.augmentDefaults( OnlineBackupSettings.online_backup_enabled, FALSE );
+        return config;
     }
 
-    static class TestEnterpriseGraphDatabaseFacadeFactory extends TestGraphDatabaseFacadeFactory
+    @Override
+    protected DatabaseInfo getDatabaseInfo()
     {
+        return DatabaseInfo.COMMERCIAL;
+    }
 
-        TestEnterpriseGraphDatabaseFacadeFactory( TestGraphDatabaseFactoryState state, boolean impermanent )
-        {
-            super( state, impermanent, DatabaseInfo.COMMERCIAL, CommercialEditionModule::new );
-        }
+    @Override
+    protected Function<GlobalModule,AbstractEditionModule> getEditionFactory()
+    {
+        return CommercialEditionModule::new;
     }
 
     @Override

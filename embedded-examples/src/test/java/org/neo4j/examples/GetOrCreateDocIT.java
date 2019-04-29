@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -48,7 +48,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
     @BeforeClass
     public static void init()
     {
-        managementService = new TestGraphDatabaseFactory().newDatabaseManagementService( testDirectory.databaseDir() );
+        managementService = new TestDatabaseManagementServiceBuilder( testDirectory.databaseDir() ).build();
     }
 
     abstract class GetOrCreate<D>

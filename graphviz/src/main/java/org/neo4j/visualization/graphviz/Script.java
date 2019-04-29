@@ -165,7 +165,7 @@ public class Script extends ConfigurationParser
 
     protected DatabaseManagementService createGraphDb()
     {
-        return new DatabaseManagementServiceBuilder().newDatabaseManagementService( storeDir() );
+        return new DatabaseManagementServiceBuilder( storeDir() ).build();
     }
 
     protected Walker createGraphWalker( GraphDatabaseService graphdb )

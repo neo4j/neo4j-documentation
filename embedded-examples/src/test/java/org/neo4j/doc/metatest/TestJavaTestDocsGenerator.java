@@ -34,7 +34,7 @@ import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.doc.tools.JavaTestDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -160,7 +160,7 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     @BeforeClass
     public static void setUp()
     {
-        managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        managementService = new TestDatabaseManagementServiceBuilder().impermanent().build();
         graphdb = managementService.database( DEFAULT_DATABASE_NAME );
     }
 

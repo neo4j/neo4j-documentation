@@ -20,14 +20,10 @@
 package org.neo4j.cypher.docgen.tooling.tests
 
 import org.mockito.Mockito._
-import org.neo4j.cypher.CypherException
-import org.neo4j.cypher.GraphIcing
+import org.neo4j.cypher.{CypherException, GraphIcing}
 import org.neo4j.cypher.docgen.tooling.{RestartableDatabase, RunnableInitialization}
 import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
-import org.scalatest.Assertions
-import org.scalatest.FunSuiteLike
-import org.scalatest.Matchers
-import org.scalatest.Suite
+import org.scalatest.{Assertions, FunSuiteLike, Matchers, Suite}
 import org.scalatest.mock.MockitoSugar
 
 class RestartableDatabaseTest extends Suite
@@ -44,7 +40,7 @@ class RestartableDatabaseTest extends Suite
     new RestartableDatabase(RunnableInitialization.empty, databaseFactory)
 
     // then
-    verify(databaseFactory, never()).newImpermanentDatabase()
+    verify(databaseFactory, never()).impermanent()
   }
 
   test("running two read queries should only need one database") {
@@ -58,7 +54,7 @@ class RestartableDatabaseTest extends Suite
     db.execute("MATCH (n) RETURN n")
 
     // then
-    verify(databaseFactory, times(1)).newImpermanentDatabase()
+    verify(databaseFactory, times(1)).impermanent()
 
     db.shutdown()
   }
@@ -74,7 +70,7 @@ class RestartableDatabaseTest extends Suite
     db.executeWithParams("CREATE ()")
 
     // then
-    verify(databaseFactory, times(2)).newImpermanentDatabase()
+    verify(databaseFactory, times(2)).impermanent()
 
     db.shutdown()
   }
@@ -90,7 +86,7 @@ class RestartableDatabaseTest extends Suite
     intercept[CypherException](db.executeWithParams("THIS SHOULD FAIL"))
 
     // then
-    verify(databaseFactory, times(2)).newImpermanentDatabase()
+    verify(databaseFactory, times(2)).impermanent()
 
     db.shutdown()
   }

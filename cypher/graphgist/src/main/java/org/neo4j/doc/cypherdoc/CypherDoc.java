@@ -34,7 +34,7 @@ import java.util.Map;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
@@ -79,7 +79,11 @@ public final class CypherDoc
         Map<Setting<?>, String> config = new HashMap<>();
         config.put( GraphDatabaseSettings.cypher_runtime, "INTERPRETED" );
 
-        DatabaseManagementService managementService = new TestGraphDatabaseFactory().setFileSystem( fs ).newImpermanentDatabase( config );
+        DatabaseManagementService managementService = new TestDatabaseManagementServiceBuilder()
+                .impermanent()
+                .setFileSystem( fs )
+                .setConfig( config )
+                .build();
         GraphDatabaseService graphOps = managementService.database( DEFAULT_DATABASE_NAME );
         Connection conn = null;
         TestFailureException failure = null;

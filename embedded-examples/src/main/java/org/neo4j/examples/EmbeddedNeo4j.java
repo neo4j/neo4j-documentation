@@ -67,7 +67,7 @@ public class EmbeddedNeo4j
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDb[]
-        managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( databaseDirectory );
+        managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook( managementService );
         // end::startDb[]

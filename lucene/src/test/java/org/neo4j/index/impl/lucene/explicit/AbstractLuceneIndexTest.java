@@ -33,7 +33,7 @@ import org.junit.rules.TestName;
 import java.util.Map;
 
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -58,7 +58,7 @@ public abstract class AbstractLuceneIndexTest
     @BeforeClass
     public static void setUpStuff()
     {
-        managementService = new TestGraphDatabaseFactory().newDatabaseManagementService( testDirectory.storeDir() );
+        managementService = new TestDatabaseManagementServiceBuilder( testDirectory.storeDir() ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
     }
 

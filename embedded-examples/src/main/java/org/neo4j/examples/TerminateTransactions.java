@@ -50,7 +50,7 @@ public class TerminateTransactions
         FileUtils.deleteRecursively( databaseDirectory );
 
         // tag::startDb[]
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( databaseDirectory );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         // end::startDb[]
 

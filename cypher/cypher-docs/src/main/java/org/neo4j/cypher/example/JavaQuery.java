@@ -56,7 +56,7 @@ public class JavaQuery
         clearDbPath();
 
         // tag::addData[]
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( databaseDirectory );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
 
         try ( Transaction tx = db.beginTx())

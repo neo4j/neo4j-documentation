@@ -24,7 +24,7 @@ import java.util.Date;
 import javax.management.ObjectName;
 
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.jmx.JmxUtils;
 
@@ -39,7 +39,7 @@ public class JmxDocTest
     @Test
     public void readJmxProperties()
     {
-        DatabaseManagementService managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        DatabaseManagementService managementService = new TestDatabaseManagementServiceBuilder().impermanent().build();
         GraphDatabaseService graphDbService = managementService.database( DEFAULT_DATABASE_NAME );
         try
         {

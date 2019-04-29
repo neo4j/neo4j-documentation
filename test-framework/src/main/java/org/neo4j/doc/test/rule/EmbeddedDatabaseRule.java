@@ -21,9 +21,8 @@ package org.neo4j.doc.test.rule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
-import org.neo4j.graphdb.factory.DatabaseManagementServiceInternalBuilder;
 import org.neo4j.io.layout.DatabaseLayout;
 
 /**
@@ -61,13 +60,13 @@ public class EmbeddedDatabaseRule extends DatabaseRule
     @Override
     protected DatabaseManagementServiceBuilder newFactory()
     {
-        return new TestGraphDatabaseFactory();
+        return new TestDatabaseManagementServiceBuilder( testDirectory.storeDir() );
     }
 
     @Override
-    protected DatabaseManagementServiceInternalBuilder newBuilder( DatabaseManagementServiceBuilder factory )
+    protected DatabaseManagementServiceBuilder newBuilder( DatabaseManagementServiceBuilder factory )
     {
-        return factory.newEmbeddedDatabaseBuilder( testDirectory.databaseDir() );
+        return factory;
     }
 
     @Override

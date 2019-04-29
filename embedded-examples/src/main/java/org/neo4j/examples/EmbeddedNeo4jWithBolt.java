@@ -39,8 +39,8 @@ public class EmbeddedNeo4jWithBolt
         BoltConnector bolt = new BoltConnector( "0" );
 
         DatabaseManagementService managementService =
-                new DatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( DB_PATH ).setConfig( bolt.type, "BOLT" ).setConfig( bolt.enabled, "true" ).setConfig(
-                        bolt.address, "localhost:7687" ).newDatabaseManagementService();
+                new DatabaseManagementServiceBuilder( DB_PATH ).setConfig( bolt.type, "BOLT" ).setConfig( bolt.enabled, "true" ).setConfig(
+                        bolt.address, "localhost:7687" ).build();
         // end::startDb[]
 
         managementService.shutdown();

@@ -47,7 +47,7 @@ class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseG
 
   private def createAndStartIfNecessary() {
     if (graph == null) {
-      managementService = factory.newImpermanentDatabase()
+      managementService = factory.impermanent().build()
       val db = managementService.database(DEFAULT_DATABASE_NAME)
       graph = new GraphDatabaseCypherService(db)
       eengine = ExecutionEngineFactory.createEnterpriseEngineFromDb(db)

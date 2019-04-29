@@ -55,7 +55,7 @@ public class OrderedPath
 
     public static void main( String[] args )
     {
-        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( databaseDirectory );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
         OrderedPath op = new OrderedPath( managementService, db );
         op.shutdownGraph();

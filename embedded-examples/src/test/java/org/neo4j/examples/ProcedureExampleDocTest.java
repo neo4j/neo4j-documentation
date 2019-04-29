@@ -27,7 +27,7 @@ import org.junit.rules.TemporaryFolder;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.database.DatabaseManagementService;
 import org.neo4j.doc.kernel.impl.proc.JarBuilder;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
@@ -55,8 +55,8 @@ public class ProcedureExampleDocTest
     {
         // Given
         new JarBuilder().createJarFor( plugins.newFile( "myProcedures.jar" ), ProcedureExample.class );
-        managementService = new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder()
-                .setConfig( GraphDatabaseSettings.plugin_dir, plugins.getRoot().getAbsolutePath() ).newDatabaseManagementService();
+        managementService = new TestDatabaseManagementServiceBuilder().impermanent()
+                .setConfig( GraphDatabaseSettings.plugin_dir, plugins.getRoot().getAbsolutePath() ).build();
         db = managementService.database( DEFAULT_DATABASE_NAME );
 
         try ( Transaction ignore = db.beginTx() )

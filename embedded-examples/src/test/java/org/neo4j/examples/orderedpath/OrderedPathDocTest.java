@@ -25,7 +25,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.doc.tools.JavaDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -54,7 +54,7 @@ public class OrderedPathDocTest
         {
             FileUtils.deleteRecursively( OrderedPath.databaseDirectory );
         }
-        DatabaseManagementService managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        DatabaseManagementService managementService = new TestDatabaseManagementServiceBuilder().impermanent().build();
         db = managementService.database( DEFAULT_DATABASE_NAME );
         orderedPath = new OrderedPath( managementService, OrderedPathDocTest.db );
         gen = new JavaDocsGenerator( "ordered-path-java", "dev" );

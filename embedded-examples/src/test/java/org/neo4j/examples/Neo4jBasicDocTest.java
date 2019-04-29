@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -53,7 +53,7 @@ public class Neo4jBasicDocTest
     @Before
     public void prepareTestDatabase()
     {
-        managementService = new TestGraphDatabaseFactory().newImpermanentDatabase( testDirectory.directory() );
+        managementService = new TestDatabaseManagementServiceBuilder( testDirectory.directory() ).impermanent().build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
     }
     // end::beforeTest[]
@@ -74,9 +74,9 @@ public class Neo4jBasicDocTest
     {
         // tag::startDbWithConfig[]
         DatabaseManagementService service =
-                new TestGraphDatabaseFactory().newImpermanentDatabaseBuilder().setConfig( GraphDatabaseSettings.pagecache_memory, "512M" ).setConfig(
+                new TestDatabaseManagementServiceBuilder().impermanent().setConfig( GraphDatabaseSettings.pagecache_memory, "512M" ).setConfig(
                         GraphDatabaseSettings.string_block_size, "60" ).setConfig( GraphDatabaseSettings.array_block_size,
-                        "300" ).newDatabaseManagementService();
+                        "300" ).build();
         // end::startDbWithConfig[]
         service.shutdown();
     }

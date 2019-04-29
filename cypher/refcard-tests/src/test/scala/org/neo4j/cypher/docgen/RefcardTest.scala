@@ -31,7 +31,7 @@ import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.dbms.database.DatabaseManagementService
-import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
+import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription, TestDatabaseManagementServiceBuilder, TestEnterpriseGraphDatabaseFactory}
 import org.neo4j.graphdb._
 import org.neo4j.internal.kernel.api.Transaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
@@ -242,7 +242,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     dir = createDir(section)
     allQueriesWriter = new OutputStreamWriter(new FileOutputStream(new File("target/all-queries.asciidoc"), true),
       StandardCharsets.UTF_8)
-    managementService = newTestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newDatabaseManagementService
+    managementService = newTestGraphDatabaseFactory().impermanent().build()
     val graph = managementService.database(DEFAULT_DATABASE_NAME)
     db = new GraphDatabaseCypherService(graph)
 
@@ -265,6 +265,6 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     engine = ExecutionEngineFactory.createCommunityEngineFromDb(graph) // TODO: This should be using the EnterpriseEngine
   }
 
-  protected def newTestGraphDatabaseFactory(): TestGraphDatabaseFactory = new TestEnterpriseGraphDatabaseFactory()
+  protected def newTestGraphDatabaseFactory(): TestDatabaseManagementServiceBuilder = new TestEnterpriseGraphDatabaseFactory()
 }
 

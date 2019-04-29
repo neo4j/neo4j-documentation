@@ -49,7 +49,7 @@ public class CalculateShortestPath
     public static void main( final String[] args )
     {
         deleteFileOrDirectory( databaseDirectory );
-        managementService = new DatabaseManagementServiceBuilder().newDatabaseManagementService( databaseDirectory );
+        managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook();
         try ( Transaction tx = graphDb.beginTx() )

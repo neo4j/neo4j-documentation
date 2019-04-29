@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.collection.Iterables;
@@ -53,7 +53,7 @@ public class SocnetTest
     @Before
     public void setup() throws Exception
     {
-        managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        managementService = new TestDatabaseManagementServiceBuilder().impermanent().build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         try ( Transaction tx = graphDb.beginTx() )
         {

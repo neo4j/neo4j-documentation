@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.Schema;
@@ -92,7 +92,7 @@ public class BlockTypeTest
     @Before
     public void setup() throws SQLException
     {
-        managementService = new TestGraphDatabaseFactory().newImpermanentDatabase();
+        managementService = new TestDatabaseManagementServiceBuilder().impermanent().build();
         graphOps = managementService.database( DEFAULT_DATABASE_NAME );
         Connection conn = DriverManager.getConnection( "jdbc:hsqldb:mem:graphgisttests;shutdown=true" );
         conn.setAutoCommit( true );

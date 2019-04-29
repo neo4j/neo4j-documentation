@@ -35,7 +35,7 @@ import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.configuration.connectors.HttpConnector;
 import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.doc.server.ServerTestUtils;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
 import org.neo4j.helpers.ListenSocketAddress;
@@ -72,12 +72,12 @@ public class CommunityServerBuilder
     private static GraphFactory IN_MEMORY_DB = ( config, dependencies ) ->
     {
         File storeDir = new File( config.get( GraphDatabaseSettings.databases_root_path ), DEFAULT_DATABASE_NAME );
-        return new TestGraphDatabaseFactory().setExtensions( dependencies.extensions() )
+        return new TestDatabaseManagementServiceBuilder( storeDir ).setExtensions( dependencies.extensions() )
                 .setMonitors( dependencies.monitors() )
-                .newImpermanentDatabaseBuilder( storeDir )
+                .impermanent()
                 .setConfig( new BoltConnector( "bolt" ).listen_address, "localhost:0" )
                 .setConfig( new BoltConnector( "bolt" ).enabled, Settings.TRUE )
-                .setConfig( config ).newDatabaseManagementService();
+                .setConfigRaw( config.getRaw() ).build();
     };
 
     private Clock clock = null;

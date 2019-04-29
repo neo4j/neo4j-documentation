@@ -55,10 +55,10 @@ public class ReadOnlyDocTest
         {
             FileUtils.deleteRecursively( dir );
         }
-        new DatabaseManagementServiceBuilder().newDatabaseManagementService( dir ).shutdown();
+        new DatabaseManagementServiceBuilder( dir ).build().shutdown();
         // tag::createReadOnlyInstance[]
-        managementService = new DatabaseManagementServiceBuilder().newEmbeddedDatabaseBuilder( dir ).setConfig( GraphDatabaseSettings.read_only,
-                "true" ).newDatabaseManagementService();
+        managementService = new DatabaseManagementServiceBuilder( dir ).setConfig( GraphDatabaseSettings.read_only,
+                "true" ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         // end::createReadOnlyInstance[]
     }

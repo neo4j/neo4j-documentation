@@ -48,7 +48,7 @@ import org.neo4j.commandline.admin.RealOutsideWorld;
 import org.neo4j.commandline.dbms.ImportCommand;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.doc.test.TestGraphDatabaseFactory;
+import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -658,10 +658,10 @@ public class ImportToolDocIT
 
     private DatabaseManagementService databaseService( String databaseName )
     {
-        return new TestGraphDatabaseFactory().newEmbeddedDatabaseBuilder( storeDirForDatabase() )
+        return new TestDatabaseManagementServiceBuilder( storeDirForDatabase() )
                 .setConfig( GraphDatabaseSettings.default_database, databaseName )
                 .setConfig( GraphDatabaseSettings.transaction_logs_root_path, transactionLogsDirectory().getAbsolutePath() )
-                .newDatabaseManagementService();
+                .build();
     }
 
     private File storeDirForDatabase()

@@ -35,7 +35,7 @@ import org.neo4j.cypher.internal.v4_0.util.Eagerly
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.database.DatabaseManagementService
 import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
-import org.neo4j.doc.test.{GraphDescription, TestEnterpriseGraphDatabaseFactory, TestGraphDatabaseFactory}
+import org.neo4j.doc.test.{GraphDescription, TestDatabaseManagementServiceBuilder, TestEnterpriseGraphDatabaseFactory}
 import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.graphdb._
 import org.neo4j.internal.kernel.api.Transaction.Type
@@ -527,11 +527,11 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     hardReset()
   }
 
-  protected def newTestGraphDatabaseFactory(): TestGraphDatabaseFactory = new TestEnterpriseGraphDatabaseFactory()
+  protected def newTestGraphDatabaseFactory(): TestDatabaseManagementServiceBuilder = new TestEnterpriseGraphDatabaseFactory()
 
   override def hardReset() {
     tearDown()
-    managementService = newTestGraphDatabaseFactory().newImpermanentDatabaseBuilder().newDatabaseManagementService()
+    managementService = newTestGraphDatabaseFactory().impermanent().build()
     val database: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
     db = new GraphDatabaseCypherService(database)
 
