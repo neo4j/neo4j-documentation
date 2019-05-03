@@ -45,18 +45,15 @@ object ExecutionEngineFactory {
 
   def createEnterpriseEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
     createEngineFromDb(graph,
-      (queryService, monitors, logProvider, plannerConfig, runtimeConfig) => {
-        val inner = new CommunityCompilerFactory(queryService, monitors, logProvider, plannerConfig, runtimeConfig)
-        new EnterpriseCompilerFactory(inner, queryService, monitors, logProvider, plannerConfig, runtimeConfig)
-      })
+      (queryService, monitors, logProvider, plannerConfig, runtimeConfig) =>
+        new EnterpriseCompilerFactory(queryService, monitors, logProvider, plannerConfig, runtimeConfig)
+    )
   }
 
-  def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
-    createEngineFromDb(graph,
-      (queryService, monitors, logProvider, plannerConfig, runtimeConfig) => {
-        new CommunityCompilerFactory(queryService, monitors, logProvider, plannerConfig, runtimeConfig)
-      })
-  }
+  def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = createEngineFromDb(graph,
+    (queryService, monitors, logProvider, plannerConfig, runtimeConfig) => {
+      new CommunityCompilerFactory(queryService, monitors, logProvider, plannerConfig, runtimeConfig)
+    })
 
   private def createEngineFromDb(graph: GraphDatabaseService,
                                  newCompatibilityFactory: (GraphDatabaseCypherService, Monitors, LogProvider, CypherPlannerConfiguration, CypherRuntimeConfiguration) => CompilerFactory
@@ -69,14 +66,15 @@ object ExecutionEngineFactory {
     val logProvider = logService.getInternalLogProvider
     val config = resolver.resolveDependency(classOf[Config])
     val cypherConfig = CypherConfiguration.fromConfig(config)
-    val plannerConfig = cypherConfig.toCypherPlannerConfiguration(config)
+    val plannerConfig = cypherConfig.toCypherPlannerConfiguration(config, planSystemCommands = false)
     val runtimeConfig = cypherConfig.toCypherRuntimeConfiguration
 
-    val compatibilityFactory = newCompatibilityFactory(queryService, monitors, logProvider, plannerConfig, runtimeConfig)
+    val compilerFactory = newCompatibilityFactory(queryService, monitors, logProvider, plannerConfig, runtimeConfig)
+    val compilerLibrary = new CompilerLibrary(compilerFactory, () => null)
 
     val cacheTracer = new MonitoringCacheTracer(monitors.newMonitor(classOf[StringCacheMonitor]))
     val cypherConfiguration = CypherConfiguration.fromConfig(resolver.resolveDependency(classOf[Config]))
     val tracer = new TimingCompilationTracer(monitors.newMonitor(classOf[TimingCompilationTracer.EventListener]))
-    new ExecutionEngine(queryService, monitors, tracer, cacheTracer, cypherConfiguration, compatibilityFactory, logProvider)
+    new ExecutionEngine(queryService, monitors, tracer, cacheTracer, cypherConfiguration, compilerLibrary, logProvider)
   }
 }
