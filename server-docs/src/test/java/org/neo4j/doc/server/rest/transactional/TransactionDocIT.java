@@ -25,6 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.text.ParseException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,12 +37,10 @@ import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.doc.server.rest.AbstractRestFunctionalTestBase;
 import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
 import org.neo4j.server.rest.domain.JsonParseException;
-import org.neo4j.server.rest.repr.util.RFC1123;
 import org.neo4j.doc.server.HTTP;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsMapContaining.hasKey;
@@ -49,7 +49,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.neo4j.helpers.collection.Iterators.iterator;
 import static org.neo4j.server.rest.domain.JsonHelper.jsonToMap;
-import static org.neo4j.doc.server.HTTP.GET;
 import static org.neo4j.doc.server.HTTP.POST;
 
 public class TransactionDocIT extends AbstractRestFunctionalTestBase
@@ -293,7 +292,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
         assertNoErrors( result );
 
         Integer id = resultCell( firstReq, 0, 0 );
-        assertThat( GET( getNodeUri( id ) ).status(), is( 404 ) );
+        verifyNodeDoesNotExist( id );
     }
 
     @Test
@@ -425,18 +424,29 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
         return singleQuoted.replaceAll( "'", "\"" );
     }
 
-    private long expirationTime( Map<String, Object> entity ) throws ParseException
+    private long expirationTime( Map<String, Object> entity )
     {
         String timestampString = (String) ( (Map<?, ?>) entity.get( "transaction" ) ).get( "expires" );
-        return RFC1123.parseTimestamp( timestampString ).getTime();
+        return ZonedDateTime.parse( timestampString, DateTimeFormatter.RFC_1123_DATE_TIME ).toEpochSecond();
     }
 
     private void verifyNodeExists( long nodeId )
     {
-        ResponseEntity response = gen.get().expectedStatus( 200 ).payload( quotedJson(
-                "{ 'statements': [ { 'statement': 'MATCH (n) WHERE ID(n) = $nodeId RETURN n' , " + "'parameters': { 'nodeId': " + nodeId + " } } ] }" ) )
-                .post( getDataUri() + "transaction/commit" );
+        ResponseEntity response = getNodeById( nodeId );
         // if at least one node is returned, there will be "node" in the metadata part od the the row
         Assert.assertThat( response.entity(), Matchers.containsString( "node" ) );
+    }
+
+    private void verifyNodeDoesNotExist( long nodeId )
+    {
+        ResponseEntity response = getNodeById( nodeId );
+        Assert.assertThat( response.entity(), not( Matchers.containsString( "node" ) ) );
+    }
+
+    private ResponseEntity getNodeById( long nodeId )
+    {
+        return gen.get().expectedStatus( 200 ).payload( quotedJson(
+                "{ 'statements': [ { 'statement': 'MATCH (n) WHERE ID(n) = $nodeId RETURN n' , " + "'parameters': { 'nodeId': " + nodeId + " } } ] }" ) ).post(
+                getDataUri() + "transaction/commit" );
     }
 }
