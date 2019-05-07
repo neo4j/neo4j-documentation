@@ -127,7 +127,7 @@ class UnwindTest extends DocumentingTest {
     }
     section("Using `UNWIND` with an expression that is not a list", "unwind-using-unwind-with-an-expression-that-is-not-a-list") {
       p(
-        """Attempting to use `UNWIND` on an expression that does not return a list -- such as `UNWIND 5` -- will cause an error.
+        """Using `UNWIND` on an expression that does not return a list -- such as `UNWIND 5`, will return the same result as using `UNWIND` on a singleton list of that expression, in this case `UNWIND [5]`.
           |The exception to this is when the expression returns `null` -- this will reduce the number of rows to zero, causing it to cease its execution and return no results.""".stripMargin)
       query(
         """UNWIND null AS x
