@@ -559,5 +559,11 @@ public abstract class DatabaseRule extends ExternalResource implements GraphData
     {
         return database.bidirectionalTraversalDescription();
     }
+
+    @Override
+    public String databaseName()
+    {
+        return database.databaseName();
+    }
 }
 
