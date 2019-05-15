@@ -50,7 +50,7 @@ class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseG
       managementService = factory.impermanent().build()
       val db = managementService.database(DEFAULT_DATABASE_NAME)
       graph = new GraphDatabaseCypherService(db)
-      eengine = ExecutionEngineFactory.createEnterpriseEngineFromDb(db)
+      eengine = ExecutionEngineFactory.createCommunityEngineFromDb(db)
       _failures = initialize(init, graph)
     }
   }
