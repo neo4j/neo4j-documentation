@@ -35,19 +35,12 @@ import org.neo4j.logging.internal.LogService
 import org.neo4j.monitoring.Monitors
 
 object ExecutionEngineFactory {
-  def createEnterpriseDbAndEngine(): (DatabaseManagementService, GraphDatabaseService, ExecutionEngine) = {
+  def createDbAndCommunityEngine(): (DatabaseManagementService, GraphDatabaseService, ExecutionEngine) = {
     val fs = new EphemeralFileSystemAbstraction
     val managementService: DatabaseManagementService = new TestEnterpriseGraphDatabaseFactory().setFileSystem(fs).impermanent().build()
     val graph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
 
-    (managementService, graph, createEnterpriseEngineFromDb(graph))
-  }
-
-  def createEnterpriseEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
-    createEngineFromDb(graph,
-      (queryService, monitors, logProvider, plannerConfig, runtimeConfig) =>
-        new EnterpriseCompilerFactory(queryService, monitors, logProvider, plannerConfig, runtimeConfig)
-    )
+    (managementService, graph, createCommunityEngineFromDb(graph))
   }
 
   def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = createEngineFromDb(graph,

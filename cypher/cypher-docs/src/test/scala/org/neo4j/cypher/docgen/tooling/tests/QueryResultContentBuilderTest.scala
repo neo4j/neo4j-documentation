@@ -44,7 +44,7 @@ class QueryResultContentBuilderTest extends Suite
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    val (managementService, db, engine) = ExecutionEngineFactory.createEnterpriseDbAndEngine()
+    val (managementService, db, engine) = ExecutionEngineFactory.createDbAndCommunityEngine()
     _managementService = managementService
     _graph = new GraphDatabaseCypherService(db)
     _eengine = engine
