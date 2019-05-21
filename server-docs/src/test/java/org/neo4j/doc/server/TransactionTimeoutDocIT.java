@@ -19,21 +19,20 @@
  */
 package org.neo4j.doc.server;
 
+import org.junit.After;
+import org.junit.Test;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.After;
-import org.junit.Test;
 
 import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.server.configuration.ServerSettings;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-
 import static org.neo4j.doc.server.helpers.CommunityServerBuilder.server;
-import static org.neo4j.helpers.collection.MapUtil.map;
+import static org.neo4j.internal.helpers.collection.MapUtil.map;
 import static org.neo4j.kernel.api.exceptions.Status.Transaction.TransactionNotFound;
 
 public class TransactionTimeoutDocIT extends ExclusiveServerTestBase

@@ -36,15 +36,15 @@ import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.graphdb.traversal.Uniqueness;
-import org.neo4j.helpers.collection.IterableWrapper;
+import org.neo4j.internal.helpers.collection.IterableWrapper;
 
 import static org.neo4j.examples.socnet.RelTypes.FRIEND;
 import static org.neo4j.examples.socnet.RelTypes.NEXT;
 import static org.neo4j.examples.socnet.RelTypes.STATUS;
 import static org.neo4j.graphdb.Direction.BOTH;
 import static org.neo4j.graphdb.PathExpanders.forTypeAndDirection;
-import static org.neo4j.helpers.collection.Iterables.addToCollection;
-import static org.neo4j.helpers.collection.Iterables.count;
+import static org.neo4j.internal.helpers.collection.Iterables.addToCollection;
+import static org.neo4j.internal.helpers.collection.Iterables.count;
 
 public class Person
 {

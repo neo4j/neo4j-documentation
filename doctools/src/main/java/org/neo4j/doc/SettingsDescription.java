@@ -34,7 +34,7 @@ import org.neo4j.configuration.Group;
 import org.neo4j.configuration.Internal;
 import org.neo4j.configuration.Settings;
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.helpers.TimeUtil;
+import org.neo4j.internal.helpers.TimeUtil;
 
 /**
  * A meta description of a settings class, used to generate documentation.

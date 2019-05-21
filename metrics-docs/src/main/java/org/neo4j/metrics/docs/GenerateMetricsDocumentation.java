@@ -25,7 +25,7 @@ package org.neo4j.metrics.docs;
 import java.io.File;
 import java.util.List;
 
-import org.neo4j.helpers.Args;
+import org.neo4j.internal.helpers.Args;
 import org.neo4j.io.fs.FileUtils;
 
 public class GenerateMetricsDocumentation

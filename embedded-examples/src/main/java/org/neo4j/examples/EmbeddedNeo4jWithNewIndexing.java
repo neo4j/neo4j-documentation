@@ -35,7 +35,7 @@ import org.neo4j.graphdb.schema.Schema;
 import org.neo4j.io.fs.FileUtils;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-import static org.neo4j.helpers.collection.Iterators.loop;
+import static org.neo4j.internal.helpers.collection.Iterators.loop;
 
 public class EmbeddedNeo4jWithNewIndexing
 {
