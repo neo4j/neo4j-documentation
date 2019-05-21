@@ -35,10 +35,10 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.helpers.collection.ArrayIterator;
-import org.neo4j.helpers.collection.CombiningIterator;
-import org.neo4j.helpers.collection.Iterators;
-import org.neo4j.helpers.collection.PrefetchingIterator;
+import org.neo4j.internal.helpers.collection.ArrayIterator;
+import org.neo4j.internal.helpers.collection.CombiningIterator;
+import org.neo4j.internal.helpers.collection.Iterators;
+import org.neo4j.internal.helpers.collection.PrefetchingIterator;
 
 public class ConfigurationParser
 {

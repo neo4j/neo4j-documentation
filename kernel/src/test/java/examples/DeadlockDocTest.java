@@ -24,14 +24,15 @@ package examples;
 
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
+
 import org.neo4j.doc.test.rule.EmbeddedDatabaseRule;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.TransactionFailureException;
-import org.neo4j.helpers.TransactionTemplate;
+import org.neo4j.internal.helpers.TransactionTemplate;
 import org.neo4j.kernel.DeadlockDetectedException;
-
-import java.util.concurrent.TimeUnit;
 
 public class DeadlockDocTest
 {

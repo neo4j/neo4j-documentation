@@ -18,13 +18,6 @@
  */
 package org.neo4j.doc.server;
 
-import java.net.URI;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.ws.rs.core.MediaType;
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
@@ -32,20 +25,24 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import org.codehaus.jackson.JsonNode;
 
-import org.neo4j.helpers.collection.Iterables;
+import java.net.URI;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.ws.rs.core.MediaType;
+
+import org.neo4j.internal.helpers.collection.Iterables;
 import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
 
 import static java.util.Collections.unmodifiableMap;
-
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
-
-import static org.neo4j.helpers.collection.MapUtil.stringMap;
-import static org.neo4j.server.rest.domain.JsonHelper.createJsonFrom;
+import static org.neo4j.internal.helpers.collection.MapUtil.stringMap;
 
 /**
  * A tool for performing REST HTTP requests

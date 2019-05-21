@@ -18,6 +18,11 @@
  */
 package org.neo4j.doc.server.rest;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientRequest;
+import com.sun.jersey.api.client.ClientRequest.Builder;
+import com.sun.jersey.api.client.ClientResponse;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -35,17 +40,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientRequest;
-import com.sun.jersey.api.client.ClientRequest.Builder;
-import com.sun.jersey.api.client.ClientResponse;
-
+import org.neo4j.doc.test.GraphDefinition;
+import org.neo4j.doc.test.TestData.Producer;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 import org.neo4j.function.Predicates;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.helpers.collection.Pair;
-import org.neo4j.doc.test.GraphDefinition;
-import org.neo4j.doc.test.TestData.Producer;
+import org.neo4j.internal.helpers.collection.Pair;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
 import static org.junit.Assert.assertEquals;

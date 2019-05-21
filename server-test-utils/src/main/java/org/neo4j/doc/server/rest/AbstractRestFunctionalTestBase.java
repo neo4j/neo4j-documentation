@@ -18,23 +18,23 @@
  */
 package org.neo4j.doc.server.rest;
 
+import org.junit.Before;
+import org.junit.Rule;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Rule;
-
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.doc.server.SharedServerTestBase;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.helpers.collection.Pair;
-import org.neo4j.server.rest.domain.JsonHelper;
-import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
+import org.neo4j.internal.helpers.collection.Pair;
+import org.neo4j.server.rest.domain.JsonHelper;
+import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
 import static org.junit.Assert.assertEquals;

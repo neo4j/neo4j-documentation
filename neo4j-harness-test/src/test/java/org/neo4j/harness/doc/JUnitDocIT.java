@@ -23,15 +23,15 @@ import org.junit.Test;
 
 import java.net.URI;
 
+import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.doc.test.rule.SuppressOutput;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.harness.junit.rule.Neo4jRule;
-import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
 
 import static org.junit.Assert.assertEquals;
-import static org.neo4j.helpers.collection.Iterators.count;
+import static org.neo4j.internal.helpers.collection.Iterators.count;
 import static org.neo4j.server.ServerTestUtils.getRelativePath;
 import static org.neo4j.server.ServerTestUtils.getSharedTestTemporaryFolder;
 

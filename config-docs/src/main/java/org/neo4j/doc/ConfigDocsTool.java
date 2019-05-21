@@ -18,10 +18,6 @@
  */
 package org.neo4j.doc;
 
-import org.neo4j.configuration.ConfigValue;
-import org.neo4j.function.Predicates;
-import org.neo4j.helpers.Args;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -33,6 +29,10 @@ import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.neo4j.configuration.ConfigValue;
+import org.neo4j.function.Predicates;
+import org.neo4j.internal.helpers.Args;
 
 /**
  * Tool to generate config documenatation.

@@ -32,12 +32,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.kernel.api.exceptions.Status;
-import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.doc.server.HTTP;
 import org.neo4j.doc.server.rest.AbstractRestFunctionalTestBase;
 import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
+import org.neo4j.kernel.api.exceptions.Status;
+import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.rest.domain.JsonParseException;
-import org.neo4j.doc.server.HTTP;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -47,9 +47,9 @@ import static org.hamcrest.collection.IsMapContaining.hasKey;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.neo4j.helpers.collection.Iterators.iterator;
-import static org.neo4j.server.rest.domain.JsonHelper.jsonToMap;
 import static org.neo4j.doc.server.HTTP.POST;
+import static org.neo4j.internal.helpers.collection.Iterators.iterator;
+import static org.neo4j.server.rest.domain.JsonHelper.jsonToMap;
 
 public class TransactionDocIT extends AbstractRestFunctionalTestBase
 {

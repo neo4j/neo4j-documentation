@@ -28,7 +28,7 @@ import org.neo4j.graphdb.traversal.Traverser;
 
 import static org.neo4j.examples.socnet.RelTypes.NEXT;
 import static org.neo4j.examples.socnet.RelTypes.STATUS;
-import static org.neo4j.helpers.collection.Iterators.singleOrNull;
+import static org.neo4j.internal.helpers.collection.Iterators.singleOrNull;
 
 public class StatusUpdate
 {

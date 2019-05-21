@@ -23,7 +23,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.helpers.collection.IterableWrapper;
+import org.neo4j.internal.helpers.collection.IterableWrapper;
 
 import static org.neo4j.examples.socnet.RelTypes.A_PERSON;
 
