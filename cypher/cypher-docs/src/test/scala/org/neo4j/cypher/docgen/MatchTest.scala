@@ -83,7 +83,7 @@ class MatchTest extends DocumentingTest {
         | ** <<match-rel-by-id, Relationship by id>>
         | ** <<match-multiple-nodes-by-id, Multiple nodes by id>>
       """.stripMargin)
-    section("Introduction", "match-introduction") {
+    section("Yet a dummy change", "match-introduction") {
       p( """The `MATCH` clause allows you to specify the patterns Neo4j will search for in the database.
            |This is the primary way of getting data into the current set of bindings.
            |It is worth reading up more on the specification of the patterns themselves in <<cypher-patterns>>.""")
