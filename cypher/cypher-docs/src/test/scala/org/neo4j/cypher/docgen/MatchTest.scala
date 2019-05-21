@@ -50,7 +50,7 @@ class MatchTest extends DocumentingTest {
         |       (michael)-[:ACTED_IN {role: 'President Andrew Shepherd'}]->(thePresident),
         |       (rob)-[:DIRECTED]->(thePresident)"""
     )
-    synopsis("The `MATCH` clause is used to search for the pattern described in it.")
+    synopsis("This is a dummy change only to test the 4.0 PR build.")
     p(
       """
         |* <<match-introduction, Introduction>>
