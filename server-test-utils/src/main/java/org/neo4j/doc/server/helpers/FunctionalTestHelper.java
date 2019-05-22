@@ -42,11 +42,11 @@ public final class FunctionalTestHelper
 
     public FunctionalTestHelper( NeoServer server )
     {
-        if ( server.getDatabase() == null )
+        if ( server.getDatabaseService() == null )
         {
             throw new RuntimeException( "Server must be started before using " + getClass().getName() );
         }
-        this.helper = new GraphDbHelper( server.getDatabase() );
+        this.helper = new GraphDbHelper( server.getDatabaseService() );
         this.server = server;
         this.request = new RestRequest(server.baseUri().resolve("db/data/"));
     }

@@ -73,7 +73,7 @@ public class CommunityServerTestBase extends ExclusiveServerTestBase
         return UTF8.decode( Base64.encode( value ) );
     }
 
-    protected String cypherURL()
+    protected String txCommitURL()
     {
         return dataURL() + "transaction/commit";
     }

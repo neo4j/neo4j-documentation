@@ -18,9 +18,12 @@
  */
 package org.neo4j.examples.server.unmanaged;
 
+import org.codehaus.jackson.JsonEncoding;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.ObjectMapper;
+
 import java.io.IOException;
 import java.io.OutputStream;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -30,10 +33,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
-
+import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -49,15 +49,15 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
 @Path("/colleagues")
 public class ColleaguesResource
 {
-    private GraphDatabaseService graphDb;
+    private DatabaseManagementService dbms;
     private final ObjectMapper objectMapper;
 
     private static final RelationshipType ACTED_IN = RelationshipType.withName( "ACTED_IN" );
     private static final Label PERSON = Label.label( "Person" );
 
-    public ColleaguesResource( @Context GraphDatabaseService graphDb )
+    public ColleaguesResource( @Context DatabaseManagementService dbms )
     {
-        this.graphDb = graphDb;
+        this.dbms = dbms;
         this.objectMapper = new ObjectMapper();
     }
 
@@ -75,6 +75,7 @@ public class ColleaguesResource
                 jg.writeFieldName( "colleagues" );
                 jg.writeStartArray();
 
+                final GraphDatabaseService graphDb = dbms.database( "neo4j" );
                 try ( Transaction tx = graphDb.beginTx();
                       ResourceIterator<Node> persons = graphDb.findNodes( PERSON, "name", personName ) )
                 {

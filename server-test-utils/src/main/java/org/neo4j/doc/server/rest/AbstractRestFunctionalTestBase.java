@@ -81,7 +81,7 @@ public class AbstractRestFunctionalTestBase extends SharedServerTestBase impleme
 
     @Override
     public GraphDatabaseService graphdb() {
-        return SharedServerTestBase.server().getDatabase().getGraph();
+        return SharedServerTestBase.server().getDatabaseService().getDatabase();
     }
 
     protected static String getDataUri() {

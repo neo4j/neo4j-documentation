@@ -61,7 +61,7 @@ public class CommunityServerBuilder
     private String maxThreads = null;
     private String dataDir = null;
     private String managementUri = "/db/manage/";
-    private String restUri = "/db/data/";
+    private String restUri = "/db/";
     private PreFlightTasks preflightTasks;
     private final HashMap<String, String> thirdPartyPackages = new HashMap<>();
     private final Properties arbitraryProperties = new Properties();

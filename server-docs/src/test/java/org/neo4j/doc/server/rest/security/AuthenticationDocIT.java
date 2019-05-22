@@ -66,7 +66,7 @@ public class AuthenticationDocIT extends CommunityServerTestBase
                 .expectedStatus( 401 )
                 .expectedHeader( "WWW-Authenticate", "Basic realm=\"Neo4j\"" )
                 .payload( simpleCypherRequestBody() )
-                .post( cypherURL() );
+                .post( txCommitURL() );
 
         // Then
         JsonNode data = JsonHelper.jsonNode( response.entity() );
@@ -116,7 +116,7 @@ public class AuthenticationDocIT extends CommunityServerTestBase
                 .withHeader( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "incorrect" ) )
                 .expectedHeader( "WWW-Authenticate", "Basic realm=\"Neo4j\"" )
                 .payload( simpleCypherRequestBody() )
-                .post( cypherURL() );
+                .post( txCommitURL() );
 
         // Then
         JsonNode data = JsonHelper.jsonNode( response.entity() );
@@ -143,7 +143,7 @@ public class AuthenticationDocIT extends CommunityServerTestBase
                 .expectedStatus( 403 )
                 .withHeader( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) )
                 .payload( simpleCypherRequestBody() )
-                .post( cypherURL() );
+                .post( txCommitURL() );
 
         // Then
         JsonNode data = JsonHelper.jsonNode( response.entity() );
@@ -167,7 +167,7 @@ public class AuthenticationDocIT extends CommunityServerTestBase
                 .noGraph()
                 .expectedStatus( 200 )
                 .payload( simpleCypherRequestBody() )
-                .post( cypherURL() );
+                .post( txCommitURL() );
     }
 
     @Test
@@ -178,7 +178,7 @@ public class AuthenticationDocIT extends CommunityServerTestBase
 
         // When
         HTTP.Response response = HTTP.withHeaders( HttpHeaders.AUTHORIZATION, "This makes no sense" )
-                .POST( cypherURL(), rawPayload( simpleCypherRequestBody() ) );
+                .POST( txCommitURL(), rawPayload( simpleCypherRequestBody() ) );
 
         // Then
         assertThat( response.status(), equalTo( 400 ) );
