@@ -61,12 +61,38 @@ For information on index configuration and limitations, refer to <<operations-ma
 [[schema-index-single-vs-composite-index]]
 === Composite index limitations
 
-Unlike single-property indexes, composite indexes currently only support equality check: `n.prop = value` and list membership check: `n.prop IN list`.
-Queries containing the following types of predicates on properties in the index are not supported:
+Unlike single-property indexes, composite indexes currently support only a subset of predicates:
 
+* equality check: `n.prop = value`
+* list membership check: `n.prop IN list`
 * existence check: `exists(n.prop)`
 * range search: `n.prop > value`
 * prefix search: `STARTS WITH`
+
+However, predicates might be rewritten into existence check and a filter.
+The restrictions for what the index can handle without rewrites are, in order:
+
+* `0-* equality check and list membership check predicates`
+* `0-1 range or prefix search predicate`
+* `0-* existence check predicates`
+
+Predicates not following the order above will be rewritten to existence check and filter.
+For example, an index on `:Label(prop1,prop2,prop3,prop4,prop5,prop6)` and predicates:
+
+```
+equality on prop1, equality on prop2, range on prop3, range on prop4, equality on prop5, exists on prop6
+```
+
+will be rewritten as:
+
+```
+equality on prop1, equality on prop2, range on prop3, exists on prop4, exists on prop5, exists on prop6
+```
+
+with filters on `prop4` and `prop5` for the range and equality predicates.
+
+Queries containing the following types of predicates on properties in the index are not supported (not even as existence check and filter):
+
 * suffix search: `ENDS WITH`
 * substring search: `CONTAINS`
 
@@ -93,7 +119,11 @@ include::equality-check-using-where-composite-index.asciidoc[leveloffset=+1]
 
 include::range-comparisons-using-where-single-property-index.asciidoc[leveloffset=+1]
 
+include::range-comparisons-using-where-composite-index.asciidoc[leveloffset=+1]
+
 include::multiple-range-comparisons-using-where-single-property-index.asciidoc[leveloffset=+1]
+
+include::multiple-range-comparisons-using-where-composite-index.asciidoc[leveloffset=+1]
 
 include::list-membership-check-using-in-single-property-index.asciidoc[leveloffset=+1]
 
@@ -101,15 +131,23 @@ include::list-membership-check-using-in-composite-index.asciidoc[leveloffset=+1]
 
 include::prefix-search-using-starts-with-single-property-index.asciidoc[leveloffset=+1]
 
+include::prefix-search-using-starts-with-composite-index.asciidoc[leveloffset=+1]
+
 include::suffix-search-using-ends-with-single-property-index.asciidoc[leveloffset=+1]
 
 include::substring-search-using-contains-single-property-index.asciidoc[leveloffset=+1]
 
 include::existence-check-using-exists-single-property-index.asciidoc[leveloffset=+1]
 
+include::existence-check-using-exists-composite-index.asciidoc[leveloffset=+1]
+
 include::spatial-distance-searches-single-property-index.asciidoc[leveloffset=+1]
 
+include::spatial-distance-searches-composite-index.asciidoc[leveloffset=+1]
+
 include::spatial-bounding-box-searches-single-property-index.asciidoc[leveloffset=+1]
+
+include::spatial-bounding-box-searches-composite-index.asciidoc[leveloffset=+1]
 
 include::fulltext-schema-index.adoc[leveloffset=+1]
 
