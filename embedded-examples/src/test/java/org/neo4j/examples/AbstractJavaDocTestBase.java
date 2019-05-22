@@ -26,7 +26,7 @@ import org.junit.Rule;
 import java.util.Map;
 
 import org.neo4j.cypher.docgen.tooling.Prettifier;
-import org.neo4j.dbms.database.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;

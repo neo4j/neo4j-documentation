@@ -24,7 +24,7 @@ import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
-import org.neo4j.dbms.database.DatabaseManagementService
+import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.values.virtual.VirtualValues
 import org.scalatest._
 

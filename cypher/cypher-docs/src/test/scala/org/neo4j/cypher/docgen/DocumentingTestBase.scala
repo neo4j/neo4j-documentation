@@ -33,7 +33,7 @@ import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphIm
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.cypher.internal.v4_0.util.Eagerly
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
-import org.neo4j.dbms.database.DatabaseManagementService
+import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.doc.test.{GraphDescription, TestDatabaseManagementServiceBuilder, TestEnterpriseGraphDatabaseFactory}
 import org.neo4j.doc.tools.AsciiDocGenerator
