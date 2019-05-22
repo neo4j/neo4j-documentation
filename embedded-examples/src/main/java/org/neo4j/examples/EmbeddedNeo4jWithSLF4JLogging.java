@@ -21,8 +21,8 @@ package org.neo4j.examples;
 import java.io.File;
 import java.io.IOException;
 
-import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
+import org.neo4j.dbms.api.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.logging.slf4j.Slf4jLogProvider;
 

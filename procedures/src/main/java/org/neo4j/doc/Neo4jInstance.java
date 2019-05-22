@@ -29,8 +29,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
-import org.neo4j.dbms.database.DatabaseManagementService;
-import org.neo4j.graphdb.factory.DatabaseManagementServiceBuilder;
+import org.neo4j.dbms.api.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 
 public class Neo4jInstance {
 

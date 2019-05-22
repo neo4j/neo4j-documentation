@@ -25,7 +25,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
-import org.neo4j.dbms.database.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.doc.kernel.impl.proc.JarBuilder;
 import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;

@@ -30,7 +30,7 @@ import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
-import org.neo4j.dbms.database.DatabaseManagementService
+import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription, TestDatabaseManagementServiceBuilder, TestEnterpriseGraphDatabaseFactory}
 import org.neo4j.graphdb._
 import org.neo4j.internal.kernel.api.Transaction
