@@ -75,27 +75,28 @@ Unlike single-property indexes, composite indexes currently support only a subse
 * range search: `n.prop > value`
 * prefix search: `STARTS WITH`
 
-However, predicates might be rewritten into existence check and a filter.
-The restrictions for what the index can handle without rewrites are, in order:
+However, predicates might be planned as existence check and a filter.
+For this to not happen, these restrictions need to be followed:
 
-* `0-* equality check and list membership check predicates`
-* `0-1 range or prefix search predicate`
-* `0-* existence check predicates`
+* If there is any `equality check` and `list membership check` predicates,
+they need to be for the first properties defined by the index.
+* There can be up to one `range search` or `prefix search` predicate.
+* There can be any number of `existence check` predicates.
+* Any predicate after a `range search`, `prefix search` or `existence check` predicate has to be an `existence check` predicate
 
-Predicates not following the order above will be rewritten to existence check and filter.
 For example, an index on `:Label(prop1,prop2,prop3,prop4,prop5,prop6)` and predicates:
 
 ```
-equality on prop1, equality on prop2, range on prop3, range on prop4, equality on prop5, exists on prop6
+WHERE n.prop1 = 'x' AND n.prop2 = 1 AND n.prop3 > 5 AND n.prop4 < 'e' AND n.prop5 = true AND exists(n.prop6)
 ```
 
-will be rewritten as:
+will be planned as:
 
 ```
-equality on prop1, equality on prop2, range on prop3, exists on prop4, exists on prop5, exists on prop6
+WHERE n.prop1 = 'x' AND n.prop2 = 1 AND n.prop3 > 5 AND exists(n.prop4) AND exists(n.prop5) AND exists(n.prop6)
 ```
 
-with filters on `prop4` and `prop5` for the range and equality predicates.
+with filters on `n.prop4 < 'e'` and `n.prop5 = true`, since `n.prop3` has a `range search` predicate.
 
 Queries containing the following types of predicates on properties in the index are not supported (not even as existence check and filter):
 
