@@ -45,7 +45,7 @@ public class ServerHelper
 
         rollbackAllOpenTransactions( server );
 
-        cleanTheDatabase( server.getDatabase().getGraph() );
+        cleanTheDatabase( server.getDatabaseService().getDatabase() );
 
         removeLogs( server );
     }

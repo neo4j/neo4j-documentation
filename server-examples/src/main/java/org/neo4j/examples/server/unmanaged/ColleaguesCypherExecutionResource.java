@@ -34,6 +34,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
+import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Result;
@@ -45,11 +46,11 @@ import org.neo4j.internal.helpers.collection.MapUtil;
 public class ColleaguesCypherExecutionResource
 {
     private final ObjectMapper objectMapper;
-    private GraphDatabaseService graphDb;
+    private DatabaseManagementService dbms;
 
-    public ColleaguesCypherExecutionResource( @Context GraphDatabaseService graphDb )
+    public ColleaguesCypherExecutionResource( @Context DatabaseManagementService dbms )
     {
-        this.graphDb = graphDb;
+        this.dbms = dbms;
         this.objectMapper = new ObjectMapper();
     }
 
@@ -69,6 +70,7 @@ public class ColleaguesCypherExecutionResource
                 jg.writeFieldName( "colleagues" );
                 jg.writeStartArray();
 
+                final GraphDatabaseService graphDb = dbms.database( "neo4j" );
                 try ( Transaction tx = graphDb.beginTx();
                       Result result = graphDb.execute( colleaguesQuery(), params ) )
                 {

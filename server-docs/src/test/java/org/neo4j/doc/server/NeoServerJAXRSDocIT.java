@@ -19,12 +19,12 @@
  */
 package org.neo4j.doc.server;
 
-import java.net.URI;
-
 import org.dummy.doc.web.service.DummyThirdPartyWebService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.net.URI;
 
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
@@ -38,7 +38,6 @@ import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.server.NeoServer;
 
 import static org.junit.Assert.assertEquals;
-
 import static org.neo4j.doc.server.helpers.FunctionalTestHelper.CLIENT;
 
 public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
@@ -88,7 +87,7 @@ public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
         assertEquals( "hello", response );
 
         // Assert that extensions gets initialized
-        int nodesCreated = createSimpleDatabase( server.getDatabase().getGraph() );
+        int nodesCreated = createSimpleDatabase( server.getDatabaseService().getDatabase() );
         thirdPartyServiceUri = new URI( server.baseUri()
                 .toString() + DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT + "/inject-test" ).normalize();
         response = CLIENT.resource( thirdPartyServiceUri.toString() )
