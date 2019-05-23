@@ -16,37 +16,14 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- Main dependencies -->
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-kernel</artifactId>
+            <artifactId>neo4j</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
-
-        <!-- Test dependencies -->
         <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-import-tool</artifactId>
-            <version>${neo4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.neo4j.doc</groupId>
-            <artifactId>test-framework</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-dbms</artifactId>
-            <version>${neo4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
         </dependency>
     </dependencies>
-
 </project>
