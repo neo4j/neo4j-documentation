@@ -44,7 +44,6 @@
         <module>import-tool</module>
         <module>server-docs</module>
         <module>kernel</module>
-        <module>lucene</module>
         <module>metrics-docs</module>
         <module>doctools</module>
         <module>graphviz</module>
