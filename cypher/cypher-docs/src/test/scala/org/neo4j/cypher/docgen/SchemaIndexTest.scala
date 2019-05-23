@@ -182,6 +182,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_where_using_range_comparisons_composite() {
+    executePreparationQueries(List("CREATE INDEX ON :Person(firstname, highScore)"))
     // Need to make index preferable in terms of cost
     executePreparationQueries((0 to 300).map { i =>
       "CREATE (:Person)"
@@ -222,6 +223,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_where_using_multiple_range_comparisons_composite() {
+    executePreparationQueries(List("CREATE INDEX ON :Person(highScore, name)"))
     // Need to make index preferable in terms of cost
     executePreparationQueries((0 to 300).map { i =>
       "CREATE (:Person)"
@@ -448,16 +450,16 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_distance_query_composite() {
-    executePreparationQueries(List("CREATE INDEX ON :Person(location,name)"))
+    executePreparationQueries(List("CREATE INDEX ON :Person(place,name)"))
     executePreparationQueries(
-      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y}), name: '${x+y}' } )").toList)
+      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {place: point({x:$x, y:$y}), name: '${x+y}' } )").toList)
     profileQuery(
       title = "Spatial distance searches (composite index)",
       text =
         "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries. " +
-        "Any following (non-existence check) predicates (here on property `p.name` for index `:Person(location,name)`) " +
+        "Any following (non-existence check) predicates (here on property `p.name` for index `:Person(place,name)`) " +
         "will be rewritten as existence check with a filter.",
-      queryText = "MATCH (p:Person) WHERE distance(p.location, point({x: 1, y: 2})) < 2 AND exists(p.name) RETURN p.location",
+      queryText = "MATCH (p:Person) WHERE distance(p.place, point({x: 1, y: 2})) < 2 AND exists(p.name) RETURN p.place",
       assertions = {
         (p) =>
           assertEquals(9, p.size)
@@ -486,21 +488,21 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_bbox_query_composite() {
-    executePreparationQueries(List("CREATE INDEX ON :Person(location,firstname)"))
+    executePreparationQueries(List("CREATE INDEX ON :Person(place,firstname)"))
     executePreparationQueries(
-      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y}), firstname: '${x+y}'})").toList ++ List(
-        "MATCH (n:Person {firstname: 'Andy'}) SET n.location = point({x: 1.2345, y: 5.4321})",
-        "MATCH (n:Person {firstname: 'Mark'}) SET n.location = point({y: 1.2345, x: 5.4321})"
+      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {place: point({x:$x, y:$y}), firstname: '${x+y}'})").toList ++ List(
+        "MATCH (n:Person {firstname: 'Andy'}) SET n.place = point({x: 1.2345, y: 5.4321})",
+        "MATCH (n:Person {firstname: 'Mark'}) SET n.place = point({y: 1.2345, x: 5.4321})"
       )
     )
     profileQuery(
       title = "Spatial bounding box searches (composite index)",
       text = "The ability to do index seeks on bounded ranges works even with the 2D and 3D spatial `Point` types. " +
-        "Any following (non-existence check) predicates (here on property `p.firstname` for index `:Person(location,firstname)`) " +
+        "Any following (non-existence check) predicates (here on property `p.firstname` for index `:Person(place,firstname)`) " +
         "will be rewritten as existence check with a filter. " +
-        "For index `:Person(firstname,location)`, if the predicate on `firstname` is equality or list membership then the bounded range is handled as a range itself. " +
+        "For index `:Person(firstname,place)`, if the predicate on `firstname` is equality or list membership then the bounded range is handled as a range itself. " +
         "If the predicate on `firstname` is anything else then the bounded range is rewritten to existence and filter.",
-      queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.location < point({x: 2, y: 6}) AND exists(person.firstname) RETURN person",
+      queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.place < point({x: 2, y: 6}) AND exists(person.firstname) RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
