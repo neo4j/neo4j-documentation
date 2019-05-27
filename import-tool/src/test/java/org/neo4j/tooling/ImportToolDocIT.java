@@ -24,8 +24,8 @@ package org.neo4j.tooling;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -34,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -48,8 +49,7 @@ import org.neo4j.commandline.admin.RealOutsideWorld;
 import org.neo4j.commandline.dbms.ImportCommand;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
-import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
-import org.neo4j.doc.test.rule.TestDirectory;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -59,24 +59,24 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.internal.helpers.collection.Iterables;
 import org.neo4j.tooling.ImportTool.Options;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.neo4j.internal.helpers.ArrayUtil.join;
 import static org.neo4j.internal.helpers.collection.Iterators.asSet;
 import static org.neo4j.io.fs.FileUtils.writeToFile;
 import static org.neo4j.tooling.ImportTool.MULTI_FILE_DELIMITER;
 
-public class ImportToolDocIT
+class ImportToolDocIT
 {
-    @Rule
-    public final TestDirectory directory = TestDirectory.testDirectory();
-
     private static final int NODE_COUNT = 6;
     private static final int RELATIONSHIP_COUNT = 9;
     private static final int SEQUEL_COUNT = 2;
 
+    @TempDir
+    Path testDirectory;
+
     @Test
-    public void basicCsvImport() throws Exception
+    void basicCsvImport() throws Exception
     {
         // GIVEN
         File movies = file( "ops", "movies.csv" );
@@ -127,7 +127,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void separateHeadersCsvImport() throws Exception
+    void separateHeadersCsvImport() throws Exception
     {
         // GIVEN
         File moviesHeader = file( "ops", "movies3-header.csv" );
@@ -189,7 +189,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void multipleInputFiles() throws Exception
+    void multipleInputFiles() throws Exception
     {
         // GIVEN
         File moviesHeader = file( "ops", "movies4-header.csv" );
@@ -266,7 +266,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void sameNodeLabelEverywhere() throws Exception
+    void sameNodeLabelEverywhere() throws Exception
     {
         // GIVEN
         File movies = file( "ops", "movies5.csv" );
@@ -324,7 +324,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void sameRelationshipTypeEverywhere() throws Exception
+    void sameRelationshipTypeEverywhere() throws Exception
     {
         // GIVEN
         File movies = file( "ops", "movies6.csv" );
@@ -375,7 +375,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void idSpaces() throws Exception
+    void idSpaces() throws Exception
     {
         // GIVEN
         File movies = file( "ops", "movies8.csv" );
@@ -426,7 +426,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void badRelationships() throws IOException, CommandFailed, IncorrectUsage
+    void badRelationships() throws IOException, CommandFailed, IncorrectUsage
     {
         // GIVEN
         File movies = file( "ops", "movies9.csv" );
@@ -514,7 +514,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void badDuplicateNodes() throws IOException, CommandFailed, IncorrectUsage
+    void badDuplicateNodes() throws IOException, CommandFailed, IncorrectUsage
     {
         // GIVEN
         File actors = file( "ops", "actors10.csv" );
@@ -553,7 +553,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void propertyTypes() throws IOException, CommandFailed, IncorrectUsage
+    void propertyTypes() throws IOException, CommandFailed, IncorrectUsage
     {
         // GIVEN
         File movies = file( "ops", "movies7.csv" );
@@ -658,7 +658,7 @@ public class ImportToolDocIT
 
     private DatabaseManagementService databaseService( String databaseName )
     {
-        return new TestDatabaseManagementServiceBuilder( storeDirForDatabase() )
+        return new DatabaseManagementServiceBuilder( storeDirForDatabase() )
                 .setConfig( GraphDatabaseSettings.default_database, databaseName )
                 .setConfig( GraphDatabaseSettings.transaction_logs_root_path, transactionLogsDirectory().getAbsolutePath() )
                 .build();
@@ -666,12 +666,12 @@ public class ImportToolDocIT
 
     private File storeDirForDatabase()
     {
-        return new File( new File( directory.absolutePath(), "data" ), "databases" );
+        return new File( new File( testDirectory.toAbsolutePath().toFile(), "data" ), "databases" );
     }
 
     private File transactionLogsDirectory()
     {
-        return new File( new File( directory.absolutePath(), "data" ), "tx-logs" );
+        return new File( new File( testDirectory.toAbsolutePath().toFile(), "data" ), "tx-logs" );
     }
 
     private void printCommandToFile( String[] arguments, String dir, String fileName ) throws FileNotFoundException
@@ -691,7 +691,7 @@ public class ImportToolDocIT
         }
         String documentationArgs = StringUtils.join( cleanedArguments, " " );
         documentationArgs = documentationArgs.replace( dir + File.separator, "" )
-                .replace( directory.absolutePath().getAbsolutePath(), "path_to_target_directory" );
+                .replace( testDirectory.toAbsolutePath().toString(), "path_to_target_directory" );
         String docsCommand = "neo4j-admin import " + documentationArgs;
         try ( PrintStream out = new PrintStream( file( "ops", fileName ) ) )
         {
@@ -700,7 +700,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void printOptionsForManpage() throws Exception
+    void printOptionsForManpage() throws Exception
     {
         try ( PrintStream out = new PrintStream( file( "man", "options.adoc" ) ) )
         {
@@ -712,7 +712,7 @@ public class ImportToolDocIT
     }
 
     @Test
-    public void printOptionsForManual() throws Exception
+    void printOptionsForManual() throws Exception
     {
         try ( PrintStream out = new PrintStream( file( "ops", "options.adoc" ) ) )
         {
@@ -748,7 +748,7 @@ public class ImportToolDocIT
 
     private void importTool( String[] arguments, OutsideWorld outsideWorld ) throws CommandFailed, IncorrectUsage
     {
-        ImportCommand importCommand = new ImportCommand( directory.absolutePath().toPath(), directory.absolutePath().toPath(), outsideWorld );
+        ImportCommand importCommand = new ImportCommand( testDirectory.toAbsolutePath(), testDirectory.toAbsolutePath(), outsideWorld );
         importCommand.execute( arguments );
     }
 
