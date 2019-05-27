@@ -19,22 +19,25 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
+import java.io.File
+
+import org.apache.commons.io.FileUtils
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
-import org.neo4j.dbms.api.DatabaseManagementService
-import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
+import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
 import org.neo4j.kernel.api.procedure.GlobalProcedures
 
 import scala.util.Try
 
 /* I exist so my users can have a restartable database that is lazily created */
-class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseGraphDatabaseFactory = new TestEnterpriseGraphDatabaseFactory())
+class RestartableDatabase(init: RunnableInitialization )
  extends GraphIcing with ExecutionEngineHelper {
 
   var managementService: DatabaseManagementService = _
+  var dbFolder: File = _
   var graph: GraphDatabaseCypherService = null
   var eengine: ExecutionEngine = null
   private var _failures: Seq[QueryRunResult] = null
@@ -47,7 +50,8 @@ class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseG
 
   private def createAndStartIfNecessary() {
     if (graph == null) {
-      managementService = factory.impermanent().build()
+      dbFolder = new File("target/example-db" + System.nanoTime())
+      managementService = new DatabaseManagementServiceBuilder(dbFolder).build()
       val db = managementService.database(DEFAULT_DATABASE_NAME)
       graph = new GraphDatabaseCypherService(db)
       eengine = ExecutionEngineFactory.createCommunityEngineFromDb(db)
@@ -84,6 +88,7 @@ class RestartableDatabase(init: RunnableInitialization, factory: TestEnterpriseG
   private def restart() {
     if (graph == null) return
     managementService.shutdown()
+    FileUtils.deleteQuietly(dbFolder)
     graph = null
     _markedForRestart = false
   }

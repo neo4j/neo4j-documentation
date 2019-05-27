@@ -19,16 +19,16 @@
  */
 package org.neo4j.cypher.docgen
 
+import java.io.File
+
 import org.neo4j.configuration.Config
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher.internal.compiler.CypherPlannerConfiguration
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, MonitoringCacheTracer}
 import org.neo4j.cypher.internal.tracing.TimingCompilationTracer
 import org.neo4j.cypher.internal.{ExecutionEngine, _}
-import org.neo4j.dbms.api.DatabaseManagementService
-import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
+import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
 import org.neo4j.graphdb.GraphDatabaseService
-import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction
 import org.neo4j.kernel.internal.GraphDatabaseAPI
 import org.neo4j.logging.LogProvider
 import org.neo4j.logging.internal.LogService
@@ -36,8 +36,7 @@ import org.neo4j.monitoring.Monitors
 
 object ExecutionEngineFactory {
   def createDbAndCommunityEngine(): (DatabaseManagementService, GraphDatabaseService, ExecutionEngine) = {
-    val fs = new EphemeralFileSystemAbstraction
-    val managementService: DatabaseManagementService = new TestEnterpriseGraphDatabaseFactory().setFileSystem(fs).impermanent().build()
+    val managementService: DatabaseManagementService = new DatabaseManagementServiceBuilder(new File("target/example-db")).build()
     val graph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
 
     (managementService, graph, createCommunityEngineFromDb(graph))

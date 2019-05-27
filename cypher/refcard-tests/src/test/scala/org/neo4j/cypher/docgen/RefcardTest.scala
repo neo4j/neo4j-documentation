@@ -22,6 +22,8 @@ package org.neo4j.cypher.docgen
 import java.io._
 import java.nio.charset.StandardCharsets
 
+import com.neo4j.commercial.edition.factory.CommercialDatabaseManagementServiceBuilder
+import org.apache.commons.io.FileUtils
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
@@ -31,7 +33,7 @@ import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.dbms.api.DatabaseManagementService
-import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription, TestDatabaseManagementServiceBuilder, TestEnterpriseGraphDatabaseFactory}
+import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription}
 import org.neo4j.graphdb._
 import org.neo4j.internal.kernel.api.Transaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
@@ -59,6 +61,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     new ComparableVersion(neo4jVersion).compareTo(new ComparableVersion(featureVersion)) > -1
   }
 
+  var folder: File = _
   var managementService: DatabaseManagementService = null
   var db: GraphDatabaseCypherService = null
   implicit var engine: ExecutionEngine = null
@@ -233,7 +236,10 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   @After
   def teardown() {
-    if (managementService != null) managementService.shutdown()
+    if (managementService != null) {
+      managementService.shutdown()
+      FileUtils.deleteQuietly(folder)
+    }
     allQueriesWriter.close()
   }
 
@@ -242,7 +248,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     dir = createDir(section)
     allQueriesWriter = new OutputStreamWriter(new FileOutputStream(new File("target/all-queries.asciidoc"), true),
       StandardCharsets.UTF_8)
-    managementService = newTestGraphDatabaseFactory().impermanent().build()
+    folder = new File("target/example-db" + System.nanoTime())
+    managementService = newDatabaseManagementService(folder)
     val graph = managementService.database(DEFAULT_DATABASE_NAME)
     db = new GraphDatabaseCypherService(graph)
 
@@ -265,6 +272,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     engine = ExecutionEngineFactory.createCommunityEngineFromDb(graph) // TODO: This should be using the EnterpriseEngine
   }
 
-  protected def newTestGraphDatabaseFactory(): TestDatabaseManagementServiceBuilder = new TestEnterpriseGraphDatabaseFactory()
+  protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new CommercialDatabaseManagementServiceBuilder(directory).build()
+
 }
 

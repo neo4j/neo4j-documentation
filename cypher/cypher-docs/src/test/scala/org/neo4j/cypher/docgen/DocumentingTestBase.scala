@@ -23,6 +23,7 @@ import java.io.{ByteArrayOutputStream, File, PrintWriter, StringWriter}
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
+import org.apache.commons.io.FileUtils
 import org.junit.{After, Before}
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
@@ -33,9 +34,9 @@ import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphIm
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.cypher.internal.v4_0.util.Eagerly
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
-import org.neo4j.dbms.api.DatabaseManagementService
+import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
 import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
-import org.neo4j.doc.test.{GraphDescription, TestDatabaseManagementServiceBuilder, TestEnterpriseGraphDatabaseFactory}
+import org.neo4j.doc.test.GraphDescription
 import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.graphdb._
 import org.neo4j.internal.kernel.api.Transaction.Type
@@ -412,6 +413,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     results.headOption
   }
 
+  var dbFolder: File = _
   var managementService: DatabaseManagementService = _
   var db: GraphDatabaseCypherService = _
   var engine: ExecutionEngine = _
@@ -519,7 +521,10 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   @After
   def tearDown() {
-    if (managementService != null) managementService.shutdown()
+    if (managementService != null) {
+      managementService.shutdown()
+      FileUtils.deleteDirectory(dbFolder)
+    }
   }
 
   @Before
@@ -527,11 +532,12 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     hardReset()
   }
 
-  protected def newTestGraphDatabaseFactory(): TestDatabaseManagementServiceBuilder = new TestEnterpriseGraphDatabaseFactory()
+  protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new DatabaseManagementServiceBuilder(directory).build()
 
   override def hardReset() {
     tearDown()
-    managementService = newTestGraphDatabaseFactory().impermanent().build()
+    dbFolder = new File("target/example-db" + System.nanoTime())
+    managementService = newDatabaseManagementService(dbFolder)
     val database: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
     db = new GraphDatabaseCypherService(database)
 

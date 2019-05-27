@@ -19,18 +19,21 @@
  */
 package org.neo4j.cypher.docgen
 
+import java.io.File
+
+import com.neo4j.commercial.edition.factory.CommercialDatabaseManagementServiceBuilder
 import org.junit.Test
 import org.neo4j.cypher.{ConstraintValidationException, CypherExecutionException}
-import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
+import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.graphdb.{Label, RelationshipType}
 
 import scala.collection.JavaConverters._
 
 class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
-  override protected def newTestGraphDatabaseFactory() = new TestEnterpriseGraphDatabaseFactory()
-
   def section: String = "Constraints"
+
+  override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new CommercialDatabaseManagementServiceBuilder(directory).build()
 
   @Test def create_unique_constraint() {
     testQuery(
