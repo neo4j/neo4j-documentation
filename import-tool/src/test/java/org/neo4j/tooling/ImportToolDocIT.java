@@ -647,8 +647,8 @@ public class ImportToolDocIT
             }
             assertEquals( SEQUEL_COUNT, sequelCount );
             tx.success();
-            Object year = db.findNode( Label.label( "Movie" ), "title", "The Matrix" ).getProperty( "year" );
-            assertEquals( year, 1999 );
+            Number year = (Number) db.findNode( Label.label( "Movie" ), "title", "The Matrix" ).getProperty( "year" );
+            assertEquals( 1999, year.intValue() );
         }
         finally
         {
