@@ -19,7 +19,3 @@ You might want to keep the link:javadocs/[Neo4j JavaDocs] handy while reading!
 
 include::{importdir}/neo4j-kernel-docs-docs-jar/dev/batchinsert.asciidoc[]
 
-:leveloffset: 2
-
-include::{importdir}/neo4j-lucene-index-docs-docs-jar/dev/batchinsertindex.asciidoc[]
-
