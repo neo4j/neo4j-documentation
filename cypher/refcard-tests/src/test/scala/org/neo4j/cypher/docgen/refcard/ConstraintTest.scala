@@ -21,14 +21,11 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
-import org.neo4j.doc.test.TestEnterpriseGraphDatabaseFactory
 
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "CONSTRAINT"
   override val linkId = "schema/constraints"
-
-  override protected def newTestGraphDatabaseFactory() = new TestEnterpriseGraphDatabaseFactory()
 
   override def assert(name: String, result: DocsExecutionResult): Unit = {
     name match {
