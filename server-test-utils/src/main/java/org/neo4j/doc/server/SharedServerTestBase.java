@@ -20,16 +20,10 @@ package org.neo4j.doc.server;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Rule;
-
-import java.util.concurrent.Callable;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
-import org.neo4j.server.NeoServer;
 import org.neo4j.doc.server.helpers.ServerHelper;
-import org.neo4j.doc.test.rule.SuppressOutput;
-
-import static org.neo4j.doc.test.rule.SuppressOutput.suppressAll;
+import org.neo4j.server.NeoServer;
 
 public class SharedServerTestBase
 {
@@ -42,22 +36,16 @@ public class SharedServerTestBase
 
     private static NeoServer server;
 
-    @Rule
-    public SuppressOutput suppressOutput = suppressAll();
-
     @BeforeClass
     public static void allocateServer() throws Throwable
     {
         System.setProperty( "org.neo4j.useInsecureCertificateGeneration", "true" );
         if ( !useExternal )
         {
-            suppressAll().call((Callable<Void>) () -> {
-                ServerHolder.setServerBuilderProperty( GraphDatabaseSettings.cypher_hints_error.name(), "true" );
-                ServerHolder.setServerBuilderProperty( GraphDatabaseSettings.record_id_batch_size.name(), "1" );
-                server = ServerHolder.allocate();
-                ServerHelper.cleanTheDatabase( server );
-                return null;
-            });
+            ServerHolder.setServerBuilderProperty( GraphDatabaseSettings.cypher_hints_error.name(), "true" );
+            ServerHolder.setServerBuilderProperty( GraphDatabaseSettings.record_id_batch_size.name(), "1" );
+            server = ServerHolder.allocate();
+            ServerHelper.cleanTheDatabase( server );
         }
     }
 
@@ -68,10 +56,7 @@ public class SharedServerTestBase
         {
             try
             {
-                suppressAll().call((Callable<Void>) () -> {
-                    ServerHolder.release( server );
-                    return null;
-                });
+                ServerHolder.release( server );
             }
             finally
             {
