@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Clock;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,12 +29,9 @@ import java.util.Properties;
 
 import org.neo4j.configuration.Config;
 import org.neo4j.configuration.GraphDatabaseSettings;
-import org.neo4j.configuration.Settings;
-import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.configuration.connectors.HttpConnector;
 import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.doc.server.ServerTestUtils;
-import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
 import org.neo4j.internal.helpers.ListenSocketAddress;
@@ -46,10 +42,8 @@ import org.neo4j.monitoring.Monitors;
 import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.server.database.CommunityGraphFactory;
-import org.neo4j.server.database.GraphFactory;
 import org.neo4j.server.preflight.PreFlightTasks;
 
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.doc.server.ServerTestUtils.asOneLine;
 import static org.neo4j.internal.helpers.collection.MapUtil.stringMap;
 
@@ -66,18 +60,6 @@ public class CommunityServerBuilder
     private final HashMap<String, String> thirdPartyPackages = new HashMap<>();
     private final Properties arbitraryProperties = new Properties();
 
-    private static GraphFactory IN_MEMORY_DB = ( config, dependencies ) ->
-    {
-        File storeDir = new File( config.get( GraphDatabaseSettings.databases_root_path ), DEFAULT_DATABASE_NAME );
-        return new TestDatabaseManagementServiceBuilder( storeDir ).setExtensions( dependencies.extensions() )
-                .setMonitors( dependencies.monitors() )
-                .impermanent()
-                .setConfig( new BoltConnector( "bolt" ).listen_address, "localhost:0" )
-                .setConfig( new BoltConnector( "bolt" ).enabled, Settings.TRUE )
-                .setConfigRaw( config.getRaw() ).build();
-    };
-
-    private Clock clock = null;
     private String[] autoIndexedNodeKeys = null;
     private String[] autoIndexedRelationshipKeys = null;
     private String[] securityRuleClassNames;
@@ -122,12 +104,6 @@ public class CommunityServerBuilder
         ServerTestUtils.writeConfigToFile( createConfiguration( temporaryFolder ), temporaryConfigFile );
 
         return temporaryConfigFile;
-    }
-
-    public CommunityServerBuilder withClock( Clock clock )
-    {
-        this.clock = clock;
-        return this;
     }
 
     private Map<String, String> createConfiguration( File temporaryFolder )
@@ -328,7 +304,7 @@ public class CommunityServerBuilder
 
         private TestCommunityNeoServer( Config config, Optional<File> configFile, ExternalDependencies dependencies )
         {
-            super( config, persistent ? new CommunityGraphFactory() : IN_MEMORY_DB, dependencies );
+            super( config, new CommunityGraphFactory(), dependencies );
             this.configFile = configFile;
         }
 

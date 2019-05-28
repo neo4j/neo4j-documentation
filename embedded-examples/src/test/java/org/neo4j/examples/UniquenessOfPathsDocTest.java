@@ -35,7 +35,7 @@ import static org.junit.Assert.assertEquals;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createGraphVizWithNodeId;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
 
-public class UniquenessOfPathsDocTest extends ImpermanentGraphJavaDocTestBase
+public class UniquenessOfPathsDocTest extends AbstractJavaDocTestBase
 {
     private static final String UNIQUENESS_OF_PATHS_DOC =
             "Uniqueness of Paths in traversals.\n" +

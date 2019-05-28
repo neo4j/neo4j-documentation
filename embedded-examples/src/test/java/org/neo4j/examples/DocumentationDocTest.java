@@ -22,13 +22,13 @@ package org.neo4j.examples;
 
 import org.junit.Test;
 
-import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.doc.test.GraphDescription.Graph;
+import org.neo4j.kernel.impl.annotations.Documented;
 
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createGraphVizWithNodeId;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
 
-public class DocumentationDocTest extends ImpermanentGraphJavaDocTestBase
+public class DocumentationDocTest extends AbstractJavaDocTestBase
 {
     @Test
     // signaling this to be a documentation test

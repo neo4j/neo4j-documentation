@@ -38,7 +38,7 @@ import static org.neo4j.graphdb.traversal.Evaluators.excludeStartPosition;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createQueryResultSnippet;
 
-public class Roles extends ImpermanentGraphJavaDocTestBase
+public class Roles extends AbstractJavaDocTestBase
 {
     private static final String NAME = "name";
 

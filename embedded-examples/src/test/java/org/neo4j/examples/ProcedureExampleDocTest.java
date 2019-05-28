@@ -18,16 +18,16 @@
  */
 package org.neo4j.examples;
 
-import org.junit.After;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.File;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.doc.kernel.impl.proc.JarBuilder;
-import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
@@ -39,24 +39,21 @@ import static org.junit.Assert.assertFalse;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.internal.helpers.collection.MapUtil.map;
 
-public class ProcedureExampleDocTest
+class ProcedureExampleDocTest
 {
-    @Rule
-    public final TemporaryFolder plugins = new TemporaryFolder();
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     private GraphDatabaseService db;
     private DatabaseManagementService managementService;
 
+    @TempDir
+    private File directory;
+
     @Test
-    public void listDenseNodesShouldWork() throws Throwable
+    void listDenseNodesShouldWork() throws Throwable
     {
         // Given
-        new JarBuilder().createJarFor( plugins.newFile( "myProcedures.jar" ), ProcedureExample.class );
-        managementService = new TestDatabaseManagementServiceBuilder().impermanent()
-                .setConfig( GraphDatabaseSettings.plugin_dir, plugins.getRoot().getAbsolutePath() ).build();
+        new JarBuilder().createJarFor( new File( directory, "myProcedures.jar" ), ProcedureExample.class );
+        managementService =
+                new DatabaseManagementServiceBuilder( directory ).setConfig( GraphDatabaseSettings.plugin_dir, directory.getAbsolutePath() ).build();
         db = managementService.database( DEFAULT_DATABASE_NAME );
 
         try ( Transaction ignore = db.beginTx() )
@@ -79,8 +76,8 @@ public class ProcedureExampleDocTest
 
     }
 
-    @After
-    public void tearDown()
+    @AfterEach
+    void tearDown()
     {
         if ( managementService != null )
         {

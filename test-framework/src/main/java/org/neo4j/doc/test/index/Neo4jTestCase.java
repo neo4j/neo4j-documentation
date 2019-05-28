@@ -18,12 +18,14 @@
  */
 package org.neo4j.doc.test.index;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -31,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
-import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 
@@ -44,18 +46,21 @@ public abstract class Neo4jTestCase
     private static GraphDatabaseService graphDb;
     private Transaction tx;
     private static DatabaseManagementService managementService;
+    private static File folder;
 
     @BeforeClass
     public static void setUpDb()
     {
-        managementService = new TestDatabaseManagementServiceBuilder().impermanent().build();
+        folder = new File( "target/example-db" + System.nanoTime() );
+        managementService = new DatabaseManagementServiceBuilder( folder ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
     }
 
     @AfterClass
-    public static void tearDownDb()
+    public static void tearDownDb() throws IOException
     {
         managementService.shutdown();
+        FileUtils.deleteDirectory( folder );
     }
 
     @Before

@@ -19,23 +19,17 @@
  */
 package org.neo4j.doc.server;
 
-import java.util.concurrent.Callable;
-
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 
-import org.neo4j.doc.test.rule.SuppressOutput;
 import org.neo4j.doc.test.rule.TestDirectory;
 
-import static org.neo4j.doc.test.rule.SuppressOutput.suppressAll;
 
 public class ExclusiveServerTestBase
 {
     @Rule
     public TestDirectory folder = TestDirectory.testDirectory( );
-    @Rule
-    public SuppressOutput suppressOutput = suppressAll();
     @Rule
     public TestName name = new TestName();
 
@@ -43,9 +37,6 @@ public class ExclusiveServerTestBase
     public static void ensureServerNotRunning() throws Exception
     {
         System.setProperty( "org.neo4j.useInsecureCertificateGeneration", "true" );
-        suppressAll().call((Callable<Void>) () -> {
-            ServerHolder.ensureNotRunning();
-            return null;
-        });
+        ServerHolder.ensureNotRunning();
     }
 }

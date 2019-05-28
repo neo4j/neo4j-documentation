@@ -19,6 +19,7 @@
  */
 package org.neo4j.doc.cypherdoc;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -28,6 +29,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -38,7 +40,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
-import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.Schema;
@@ -88,11 +90,13 @@ public class BlockTypeTest
             "CREATE (n:Person {name:'Alice'})-[r:KNOWS {since: 1998}]->(m:Person {name:'Bob'})", "RETURN n,m,r",
             "----" );
     private DatabaseManagementService managementService;
+    private File folder;
 
     @Before
     public void setup() throws SQLException
     {
-        managementService = new TestDatabaseManagementServiceBuilder().impermanent().build();
+        folder = new File( "target/example-db" + System.nanoTime() );
+        managementService = new DatabaseManagementServiceBuilder( folder ).build();
         graphOps = managementService.database( DEFAULT_DATABASE_NAME );
         Connection conn = DriverManager.getConnection( "jdbc:hsqldb:mem:graphgisttests;shutdown=true" );
         conn.setAutoCommit( true );
@@ -100,9 +104,10 @@ public class BlockTypeTest
     }
 
     @After
-    public void tearDown()
+    public void tearDown() throws IOException
     {
         managementService.shutdown();
+        FileUtils.deleteDirectory( folder );
     }
 
     @Test

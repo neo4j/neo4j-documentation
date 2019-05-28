@@ -25,7 +25,6 @@ import java.net.URI;
 
 import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.doc.server.HTTP;
-import org.neo4j.doc.test.rule.SuppressOutput;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.harness.junit.rule.Neo4jRule;
@@ -37,9 +36,6 @@ import static org.neo4j.server.ServerTestUtils.getSharedTestTemporaryFolder;
 
 public class JUnitDocIT
 {
-    @Rule
-    public SuppressOutput suppressOutput = SuppressOutput.suppressAll();
-
     // tag::useJUnitRule[]
     @Rule
     public Neo4jRule neo4j = new Neo4jRule()

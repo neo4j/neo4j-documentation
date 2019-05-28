@@ -27,7 +27,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createQueryResultSnippet;
 
-public class AclExampleDocTest extends ImpermanentGraphJavaDocTestBase
+public class AclExampleDocTest extends AbstractJavaDocTestBase
 {
     private static final String ACL_DOCUMENTATION =
             "This example gives a generic overview of an approach to handling Access Control Lists (ACLs) in graphs,\n" +
