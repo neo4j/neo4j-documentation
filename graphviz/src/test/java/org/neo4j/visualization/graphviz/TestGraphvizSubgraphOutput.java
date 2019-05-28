@@ -19,28 +19,27 @@
  */
 package org.neo4j.visualization.graphviz;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-
-import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.OutputStream;
+
+import org.neo4j.dbms.api.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.doc.test.rule.DatabaseRule;
-import org.neo4j.doc.test.rule.ImpermanentDatabaseRule;
 import org.neo4j.visualization.SubgraphMapper;
 
 import static java.util.Arrays.asList;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class TestGraphvizSubgraphOutput
 {
-    @Rule
-    public final DatabaseRule dbRule = new ImpermanentDatabaseRule();
-
     enum type implements RelationshipType
     {
         KNOWS, WORKS_FOR
@@ -49,56 +48,62 @@ public class TestGraphvizSubgraphOutput
     @Test
     public void testSimpleGraph() throws Exception
     {
-        GraphDatabaseService neo = dbRule.getGraphDatabaseAPI();
-        try ( Transaction tx = neo.beginTx() )
+        File folder = new File( "target/example-db" + System.nanoTime() );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( folder ).build();
+        try
         {
-            final Node emil = neo.createNode();
-            emil.setProperty( "name", "Emil Eifrém" );
-            emil.setProperty( "country_of_residence", "USA" );
-            final Node tobias = neo.createNode();
-            tobias.setProperty( "name", "Tobias Ivarsson" );
-            tobias.setProperty( "country_of_residence", "Sweden" );
-            final Node johan = neo.createNode();
-            johan.setProperty( "name", "Johan Svensson" );
-            johan.setProperty( "country_of_residence", "Sweden" );
-
-            final Relationship emilKNOWStobias = emil.createRelationshipTo( tobias, type.KNOWS );
-            final Relationship johanKNOWSemil = johan.createRelationshipTo( emil, type.KNOWS );
-            final Relationship tobiasKNOWSjohan = tobias.createRelationshipTo( johan, type.KNOWS );
-            final Relationship tobiasWORKS_FORemil = tobias.createRelationshipTo( emil, type.WORKS_FOR );
-
-            OutputStream out = new ByteArrayOutputStream();
-            SubgraphMapper subgraphMapper = new SubgraphMapper()
+            GraphDatabaseService neo = managementService.database( DEFAULT_DATABASE_NAME );
+            try ( Transaction tx = neo.beginTx() )
             {
-                @Override
-                public String getSubgraphFor( Node node )
+                final Node emil = neo.createNode();
+                emil.setProperty( "name", "Emil Eifrém" );
+                emil.setProperty( "country_of_residence", "USA" );
+                final Node tobias = neo.createNode();
+                tobias.setProperty( "name", "Tobias Ivarsson" );
+                tobias.setProperty( "country_of_residence", "Sweden" );
+                final Node johan = neo.createNode();
+                johan.setProperty( "name", "Johan Svensson" );
+                johan.setProperty( "country_of_residence", "Sweden" );
+
+                final Relationship emilKNOWStobias = emil.createRelationshipTo( tobias, type.KNOWS );
+                final Relationship johanKNOWSemil = johan.createRelationshipTo( emil, type.KNOWS );
+                final Relationship tobiasKNOWSjohan = tobias.createRelationshipTo( johan, type.KNOWS );
+                final Relationship tobiasWORKS_FORemil = tobias.createRelationshipTo( emil, type.WORKS_FOR );
+
+                OutputStream out = new ByteArrayOutputStream();
+                SubgraphMapper subgraphMapper = node ->
                 {
                     if ( node.hasProperty( "country_of_residence" ) )
                     {
                         return (String) node.getProperty( "country_of_residence" );
                     }
                     return null;
-                }
-            };
-            GraphvizWriter writer = new GraphvizWriter();
+                };
+                GraphvizWriter writer = new GraphvizWriter();
 
-            SubgraphMapper.SubgraphMappingWalker walker = new SubgraphMapper.SubgraphMappingWalker( subgraphMapper )
-            {
-                @Override
-                protected Iterable<Node> nodes()
+                SubgraphMapper.SubgraphMappingWalker walker = new SubgraphMapper.SubgraphMappingWalker( subgraphMapper )
                 {
-                    return asList( emil, tobias, johan );
-                }
+                    @Override
+                    protected Iterable<Node> nodes()
+                    {
+                        return asList( emil, tobias, johan );
+                    }
 
-                @Override
-                protected Iterable<Relationship> relationships()
-                {
-                    return asList( emilKNOWStobias, johanKNOWSemil, tobiasKNOWSjohan, tobiasWORKS_FORemil );
-                }
-            };
+                    @Override
+                    protected Iterable<Relationship> relationships()
+                    {
+                        return asList( emilKNOWStobias, johanKNOWSemil, tobiasKNOWSjohan, tobiasWORKS_FORemil );
+                    }
+                };
 
-            writer.emit( out, walker );
-            tx.success();
+                writer.emit( out, walker );
+                tx.success();
+            }
+        }
+        finally
+        {
+            managementService.shutdown();
+            deleteDirectory( folder );
         }
     }
 }

@@ -18,17 +18,19 @@
  */
 package org.neo4j.examples.socnet;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
-import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.internal.helpers.collection.Iterables;
@@ -36,12 +38,12 @@ import org.neo4j.internal.helpers.collection.Iterables;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.internal.helpers.collection.Iterators.addToCollection;
 import static org.neo4j.internal.helpers.collection.Iterators.single;
 
-public class SocnetTest
+class SocnetTest
 {
     private static final Random r = new Random( System.currentTimeMillis() );
     private static final int nrOfPersons = 20;
@@ -50,10 +52,13 @@ public class SocnetTest
     private PersonRepository personRepository;
     private DatabaseManagementService managementService;
 
-    @Before
-    public void setup() throws Exception
+    @TempDir
+    private File folder;
+
+    @BeforeEach
+    void setup() throws Exception
     {
-        managementService = new TestDatabaseManagementServiceBuilder().impermanent().build();
+        managementService = new DatabaseManagementServiceBuilder( folder ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         try ( Transaction tx = graphDb.beginTx() )
         {
@@ -64,14 +69,14 @@ public class SocnetTest
         }
     }
 
-    @After
-    public void teardown()
+    @AfterEach
+    void teardown()
     {
         managementService.shutdown();
     }
 
     @Test
-    public void addStatusAndRetrieveIt() throws Exception
+    void addStatusAndRetrieveIt() throws Exception
     {
         Person person;
         try ( Transaction tx = graphDb.beginTx() )
@@ -91,7 +96,7 @@ public class SocnetTest
     }
 
     @Test
-    public void multipleStatusesComeOutInTheRightOrder() throws Exception
+    void multipleStatusesComeOutInTheRightOrder() throws Exception
     {
         ArrayList<String> statuses = new ArrayList<>();
         statuses.add( "Test1" );
@@ -116,7 +121,7 @@ public class SocnetTest
     }
 
     @Test
-    public void removingOneFriendIsHandledCleanly()
+    void removingOneFriendIsHandledCleanly()
     {
         Person person1;
         Person person2;
@@ -145,7 +150,7 @@ public class SocnetTest
     }
 
     @Test
-    public void retrieveStatusUpdatesInDateOrder() throws Exception
+    void retrieveStatusUpdatesInDateOrder() throws Exception
     {
         Person person;
         int numberOfStatuses;
@@ -173,7 +178,7 @@ public class SocnetTest
     }
 
     @Test
-    public void friendsOfFriendsWorks() throws Exception
+    void friendsOfFriendsWorks() throws Exception
     {
         try ( Transaction tx = graphDb.beginTx() )
         {
@@ -191,7 +196,7 @@ public class SocnetTest
     }
 
     @Test
-    public void shouldReturnTheCorrectPersonFromAnyStatusUpdate() throws Exception
+    void shouldReturnTheCorrectPersonFromAnyStatusUpdate() throws Exception
     {
         try ( Transaction tx = graphDb.beginTx() )
         {
@@ -208,7 +213,7 @@ public class SocnetTest
     }
 
     @Test
-    public void getPathBetweenFriends() throws Exception
+    void getPathBetweenFriends() throws Exception
     {
         deleteSocialGraph();
 
@@ -241,7 +246,7 @@ public class SocnetTest
     }
 
     @Test
-    public void singleFriendRecommendation() throws Exception
+    void singleFriendRecommendation() throws Exception
     {
         deleteSocialGraph();
         Person a;
@@ -274,7 +279,7 @@ public class SocnetTest
     }
 
     @Test
-    public void weightedFriendRecommendation() throws Exception
+    void weightedFriendRecommendation() throws Exception
     {
         deleteSocialGraph();
         Person a;

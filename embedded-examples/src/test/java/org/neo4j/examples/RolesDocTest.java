@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createQueryResultSnippet;
 
-public class RolesDocTest extends ImpermanentGraphJavaDocTestBase
+public class RolesDocTest extends AbstractJavaDocTestBase
 {
     private static final String NAME = "name";
 

@@ -32,7 +32,7 @@ import org.neo4j.kernel.impl.annotations.Documented;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createGraphVizWithNodeId;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;
 
-public class TraversalDocTest extends ImpermanentGraphJavaDocTestBase
+public class TraversalDocTest extends AbstractJavaDocTestBase
 {
     private static final String JAVADOC_TRAVERSAL_DESCRIPTION_URI = "{neo4j-javadoc-base-uri}/org/neo4j/graphdb/traversal/TraversalDescription.html";
     private static final String JAVADOC_TRAVERSER_URI = "{neo4j-javadoc-base-uri}/org/neo4j/graphdb/traversal/Traverser.html";

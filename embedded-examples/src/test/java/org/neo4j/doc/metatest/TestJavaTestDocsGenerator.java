@@ -27,20 +27,22 @@ import org.junit.Test;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Map;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
-import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
 import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.doc.tools.JavaTestDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.kernel.impl.annotations.Documented;
 
+import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
@@ -58,6 +60,7 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     private final String sectionName = "testsection";
     private File directory;
     private File sectionDirectory;
+    private static File databaseDirectory;
     private static DatabaseManagementService managementService;
 
     @Before
@@ -160,18 +163,20 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     @BeforeClass
     public static void setUp()
     {
-        managementService = new TestDatabaseManagementServiceBuilder().impermanent().build();
+        databaseDirectory = new File( "target/example-db" + System.nanoTime() );
+        managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         graphdb = managementService.database( DEFAULT_DATABASE_NAME );
     }
 
     @AfterClass
-    public static void shutdown()
+    public static void shutdown() throws IOException
     {
         try
         {
             if ( managementService != null )
             {
                 managementService.shutdown();
+                deleteDirectory( databaseDirectory );
             }
         }
         finally

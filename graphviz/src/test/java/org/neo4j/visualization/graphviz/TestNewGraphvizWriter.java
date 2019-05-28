@@ -19,26 +19,26 @@
  */
 package org.neo4j.visualization.graphviz;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-
-import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.OutputStream;
+
+import org.neo4j.dbms.api.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.doc.test.rule.DatabaseRule;
-import org.neo4j.doc.test.rule.ImpermanentDatabaseRule;
 import org.neo4j.walk.Walker;
+
+import static org.apache.commons.io.FileUtils.deleteDirectory;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class TestNewGraphvizWriter
 {
-    @Rule
-    public final DatabaseRule dbRule = new ImpermanentDatabaseRule();
-
     enum type implements RelationshipType
     {
         KNOWS, WORKS_FOR
@@ -47,39 +47,41 @@ public class TestNewGraphvizWriter
     @Test
     public void testSimpleGraph() throws Exception
     {
-        GraphDatabaseService neo = dbRule.getGraphDatabaseAPI();
-        try ( Transaction tx = neo.beginTx() )
+        File folder = new File( "target/example-db" + System.nanoTime() );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( folder ).build();
+        try
         {
-            final Node emil = neo.createNode();
-            emil.setProperty( "name", "Emil Eifrém" );
-            emil.setProperty( "age", 30 );
-            final Node tobias = neo.createNode();
-            tobias.setProperty( "name", "Tobias \"thobe\" Ivarsson" );
-            tobias.setProperty( "age", 23 );
-            tobias.setProperty( "hours", new int[] { 10, 10, 4, 4, 0 } );
-            final Node johan = neo.createNode();
-            johan.setProperty( "!<>)", "!<>)" );
-            johan.setProperty( "name", "!<>Johan '\\n00b' !<>Svensson" );
-            final Relationship emilKNOWStobias = emil.createRelationshipTo(
-                tobias, type.KNOWS );
-            emilKNOWStobias.setProperty( "since", "2003-08-17" );
-            final Relationship johanKNOWSemil = johan.createRelationshipTo(
-                emil, type.KNOWS );
-            final Relationship tobiasKNOWSjohan = tobias.createRelationshipTo(
-                johan, type.KNOWS );
-            final Relationship tobiasWORKS_FORemil = tobias
-                .createRelationshipTo( emil, type.WORKS_FOR );
-            OutputStream out = new ByteArrayOutputStream();
-            GraphvizWriter writer = new GraphvizWriter();
-            Iterable<Node> traverser = dbRule.traversalDescription()
-                    .depthFirst()
-                    .relationships( type.KNOWS )
-                    .relationships( type.WORKS_FOR )
-                    .traverse( emil )
-                    .nodes();
-            writer.emit( out, Walker.crosscut( traverser, type.KNOWS, type.WORKS_FOR ) );
-            tx.success();
-            out.toString();
+            GraphDatabaseService neo = managementService.database( DEFAULT_DATABASE_NAME );
+            try ( Transaction tx = neo.beginTx() )
+            {
+                final Node emil = neo.createNode();
+                emil.setProperty( "name", "Emil Eifrém" );
+                emil.setProperty( "age", 30 );
+                final Node tobias = neo.createNode();
+                tobias.setProperty( "name", "Tobias \"thobe\" Ivarsson" );
+                tobias.setProperty( "age", 23 );
+                tobias.setProperty( "hours", new int[]{10, 10, 4, 4, 0} );
+                final Node johan = neo.createNode();
+                johan.setProperty( "!<>)", "!<>)" );
+                johan.setProperty( "name", "!<>Johan '\\n00b' !<>Svensson" );
+                final Relationship emilKNOWStobias = emil.createRelationshipTo( tobias, type.KNOWS );
+                emilKNOWStobias.setProperty( "since", "2003-08-17" );
+                final Relationship johanKNOWSemil = johan.createRelationshipTo( emil, type.KNOWS );
+                final Relationship tobiasKNOWSjohan = tobias.createRelationshipTo( johan, type.KNOWS );
+                final Relationship tobiasWORKS_FORemil = tobias.createRelationshipTo( emil, type.WORKS_FOR );
+                OutputStream out = new ByteArrayOutputStream();
+                GraphvizWriter writer = new GraphvizWriter();
+                Iterable<Node> traverser =
+                        neo.traversalDescription().depthFirst().relationships( type.KNOWS ).relationships( type.WORKS_FOR ).traverse( emil ).nodes();
+                writer.emit( out, Walker.crosscut( traverser, type.KNOWS, type.WORKS_FOR ) );
+                tx.success();
+                out.toString();
+            }
+        }
+        finally
+        {
+            managementService.shutdown();
+            deleteDirectory( folder );
         }
     }
 }

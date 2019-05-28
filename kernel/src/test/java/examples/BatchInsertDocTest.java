@@ -22,13 +22,15 @@
  */
 package examples;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -41,7 +43,6 @@ import org.neo4j.batchinsert.BatchInserter;
 import org.neo4j.batchinsert.BatchInserters;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
-import org.neo4j.doc.test.rule.fs.DefaultFileSystemRule;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -49,7 +50,6 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.internal.helpers.collection.MapUtil;
-import org.neo4j.io.fs.FileSystemAbstraction;
 import org.neo4j.io.layout.DatabaseLayout;
 
 import static org.hamcrest.core.Is.is;
@@ -59,16 +59,11 @@ import static org.neo4j.io.layout.DatabaseLayout.of;
 
 public class BatchInsertDocTest
 {
-    @Rule
-    public final DefaultFileSystemRule fileSystemRule = new DefaultFileSystemRule();
-    private FileSystemAbstraction fileSystem;
 
     @Before
     public void before() throws Exception
     {
-        fileSystem = fileSystemRule.get();
-        fileSystem.mkdirs( new File( "target" ) );
-        fileSystem.mkdirs( new File( "target/docs" ) );
+        FileUtils.forceMkdir( new File( "target/docs" ) );
     }
 
     @Test
@@ -157,8 +152,8 @@ public class BatchInsertDocTest
     public void insertWithConfigFile() throws IOException
     {
         clean( "target/docs/batchinserter-example-config" );
-        try ( Writer fw = fileSystem.openAsWriter( new File( "target/docs/batchinsert-config" ).getAbsoluteFile(),
-                StandardCharsets.UTF_8, false ) )
+        try ( Writer fw = new OutputStreamWriter( new FileOutputStream( new File( "target/docs/batchinsert-config" ).getAbsoluteFile() ),
+                StandardCharsets.UTF_8 ) )
         {
             fw.append( "dbms.memory.pagecache.size=8m" );
         }
@@ -178,7 +173,7 @@ public class BatchInsertDocTest
     private File clean( String fileName ) throws IOException
     {
         File directory = new File( fileName );
-        fileSystem.deleteRecursively( directory );
+        FileUtils.deleteDirectory( directory );
         return directory;
     }
 }

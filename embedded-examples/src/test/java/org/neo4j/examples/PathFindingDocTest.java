@@ -24,7 +24,6 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.Iterator;
 
 import org.neo4j.graphalgo.CommonEvaluators;
@@ -41,14 +40,14 @@ import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.doc.test.rule.EmbeddedDatabaseRule;
+import org.neo4j.harness.junit.rule.Neo4jRule;
 
 import static org.junit.Assert.assertEquals;
 
 public class PathFindingDocTest
 {
     @ClassRule
-    public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
+    public static Neo4jRule dbRule = new Neo4jRule();
     private static GraphDatabaseService graphDb;
     private Transaction tx;
 
@@ -60,7 +59,7 @@ public class PathFindingDocTest
     @BeforeClass
     public static void startDb()
     {
-        graphDb = dbRule.getGraphDatabaseAPI();
+        graphDb = dbRule.getGraphDatabaseService();
     }
 
     @Before
@@ -173,41 +172,16 @@ public class PathFindingDocTest
         Relationship relBC = createRelationship( nodeC, nodeB, "length", 3d );
         Relationship relAC = createRelationship( nodeA, nodeB, "length", 10d );
 
-        EstimateEvaluator<Double> estimateEvaluator = new EstimateEvaluator<Double>()
+        EstimateEvaluator<Double> estimateEvaluator = ( node, goal ) ->
         {
-            @Override
-            public Double getCost( final Node node, final Node goal )
-            {
-                double dx = (Double) node.getProperty( "x" ) - (Double) goal.getProperty( "x" );
-                double dy = (Double) node.getProperty( "y" ) - (Double) goal.getProperty( "y" );
-                double result = Math.sqrt( Math.pow( dx, 2 ) + Math.pow( dy, 2 ) );
-                return result;
-            }
+            double dx = (Double) node.getProperty( "x" ) - (Double) goal.getProperty( "x" );
+            double dy = (Double) node.getProperty( "y" ) - (Double) goal.getProperty( "y" );
+            return Math.sqrt( Math.pow( dx, 2 ) + Math.pow( dy, 2 ) );
         };
         PathFinder<WeightedPath> astar = GraphAlgoFactory.aStar(
                 PathExpanders.allTypesAndDirections(),
                 CommonEvaluators.doubleCostEvaluator( "length" ), estimateEvaluator );
         WeightedPath path = astar.findSinglePath( nodeA, nodeB );
         // end::astarUsage[]
-    }
-
-    public static void deleteFileOrDirectory( File file )
-    {
-        if ( !file.exists() )
-        {
-            return;
-        }
-
-        if ( file.isDirectory() )
-        {
-            for ( File child : file.listFiles() )
-            {
-                deleteFileOrDirectory( child );
-            }
-        }
-        else
-        {
-            file.delete();
-        }
     }
 }

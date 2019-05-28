@@ -19,52 +19,39 @@
 package org.neo4j.examples;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 
 import java.util.Map;
 
 import org.neo4j.cypher.docgen.tooling.Prettifier;
-import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
 import org.neo4j.doc.tools.JavaTestDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.harness.junit.rule.Neo4jRule;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
-import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
 
 public abstract class AbstractJavaDocTestBase implements GraphHolder
 {
+    @ClassRule
+    public static Neo4jRule neo4j = new Neo4jRule();
+
     @Rule
     public final TestData<JavaTestDocsGenerator> gen = TestData.producedThrough( JavaTestDocsGenerator.PRODUCER );
 
     @Rule
     public final TestData<Map<String, Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this, true ) );
 
-    protected static DatabaseManagementService managementService;
-
-    @AfterClass
-    public static void shutdownDb()
-    {
-        try
-        {
-            if ( managementService != null ) managementService.shutdown();
-        }
-        finally
-        {
-            managementService = null;
-        }
-    }
-
     @Override
     public GraphDatabaseService graphdb()
     {
-        return managementService.database( DEFAULT_DATABASE_NAME );
+        return neo4j.getGraphDatabaseService();
     }
 
     protected String createCypherSnippet( String cypherQuery )

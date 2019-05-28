@@ -19,9 +19,10 @@
  */
 package org.neo4j.doc.cypherdoc;
 
+import org.zeroturnaround.zip.ZipUtil;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,10 +35,9 @@ import java.util.Map;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
-import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.graphdb.mockfs.EphemeralFileSystemAbstraction;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
@@ -61,7 +61,7 @@ import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAM
  */
 public final class CypherDoc
 {
-    static final String EOL = System.getProperty( "line.separator" );
+    static final String EOL = System.lineSeparator();
 
     private CypherDoc()
     {
@@ -74,14 +74,12 @@ public final class CypherDoc
     {
         List<Block> blocks = parseBlocks( input );
 
-        EphemeralFileSystemAbstraction fs = new EphemeralFileSystemAbstraction();
         //TODO remove config when compiled plans are feature complete
         Map<Setting<?>, String> config = new HashMap<>();
         config.put( GraphDatabaseSettings.cypher_runtime, "INTERPRETED" );
 
-        DatabaseManagementService managementService = new TestDatabaseManagementServiceBuilder()
-                .impermanent()
-                .setFileSystem( fs )
+        File directory = new File( "target/example-db" + System.nanoTime() );
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory )
                 .setConfig( config )
                 .build();
         GraphDatabaseService graphOps = managementService.database( DEFAULT_DATABASE_NAME );
@@ -95,7 +93,8 @@ public final class CypherDoc
         }
         catch ( TestFailureException exception )
         {
-            dumpStoreFiles( fs, failure = exception, "before-shutdown" );
+            failure = exception;
+            dumpStoreFiles( directory, failure, "before-shutdown" );
             throw exception;
         }
         catch ( SQLException sqlException )
@@ -107,7 +106,7 @@ public final class CypherDoc
             managementService.shutdown();
             if ( failure != null )
             {
-                dumpStoreFiles( fs, failure, "after-shutdown" );
+                dumpStoreFiles( directory, failure, "after-shutdown" );
             }
             if ( conn != null )
             {
@@ -186,19 +185,24 @@ public final class CypherDoc
         return string.replace( "\r\n", "\n" ).replace( "\n", EOL + "\t" );
     }
 
-    private static void dumpStoreFiles( EphemeralFileSystemAbstraction fs, TestFailureException exception, String when )
+    private static void dumpStoreFiles( File directory, TestFailureException exception, String when )
     {
         ByteArrayOutputStream snapshot = new ByteArrayOutputStream();
         try
         {
-            fs.dumpZip( snapshot );
+            dumpZip( directory, snapshot );
             exception.addSnapshot( when + ".zip", snapshot.toByteArray() );
         }
-        catch ( IOException e )
+        catch ( Exception e )
         {
             snapshot.reset();
             e.printStackTrace( new PrintStream( snapshot ) );
             exception.addSnapshot( "dump-exception-" + when + ".txt", snapshot.toByteArray() );
         }
+    }
+
+    private static void dumpZip( File directory, ByteArrayOutputStream snapshot )
+    {
+        ZipUtil.pack( directory, snapshot );
     }
 }

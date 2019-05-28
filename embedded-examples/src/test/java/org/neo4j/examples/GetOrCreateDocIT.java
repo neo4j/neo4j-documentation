@@ -18,8 +18,6 @@
  */
 package org.neo4j.examples;
 
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -28,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.neo4j.doc.test.TestDatabaseManagementServiceBuilder;
-import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -42,14 +38,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class GetOrCreateDocIT extends AbstractJavaDocTestBase
 {
-    @ClassRule
-    public static final TestDirectory testDirectory = TestDirectory.testDirectory();
-
-    @BeforeClass
-    public static void init()
-    {
-        managementService = new TestDatabaseManagementServiceBuilder( testDirectory.databaseDir() ).build();
-    }
 
     abstract class GetOrCreate<D>
     {
