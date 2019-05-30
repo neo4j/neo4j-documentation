@@ -18,6 +18,7 @@
  */
 package org.neo4j.doc.metatest;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -36,7 +37,6 @@ import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
-import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.doc.tools.JavaTestDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -54,8 +54,6 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     public final TestData<Map<String,Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this, true ) );
     @Rule
     public final TestData<JavaTestDocsGenerator> gen = TestData.producedThrough( JavaTestDocsGenerator.PRODUCER );
-    @Rule
-    public final TestDirectory testDirectory = TestDirectory.testDirectory();
 
     private final String sectionName = "testsection";
     private File directory;
@@ -66,7 +64,7 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     @Before
     public void setup()
     {
-        directory = testDirectory.directory( "testdocs" );
+        directory = new File( "target/testdocs" + System.nanoTime() );
         sectionDirectory = new File( directory, sectionName );
     }
 
@@ -166,6 +164,12 @@ public class TestJavaTestDocsGenerator implements GraphHolder
         databaseDirectory = new File( "target/example-db" + System.nanoTime() );
         managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         graphdb = managementService.database( DEFAULT_DATABASE_NAME );
+    }
+
+    @After
+    public void tearDown() throws Exception
+    {
+        deleteDirectory( directory );
     }
 
     @AfterClass

@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.File;
 import java.net.URI;
 import javax.ws.rs.core.MediaType;
 
@@ -83,7 +84,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
     {
         server = CommunityServerBuilder.server().withDefaultDatabaseTuning().withSecurityRules(
                 PermanentlyFailingSecurityRule.class.getCanonicalName() )
-                .usingDataDir( folder.directory( name.getMethodName() ).getAbsolutePath() )
+                .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
                 .build();
         server.start();
         gen.get().docHeadingLevel(1);
@@ -114,7 +115,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
         server = CommunityServerBuilder.server().withDefaultDatabaseTuning().withSecurityRules(
                 PermanentlyFailingSecurityRule.class.getCanonicalName(),
                 PermanentlyPassingSecurityRule.class.getCanonicalName() )
-                .usingDataDir( folder.directory( name.getMethodName() ).getAbsolutePath() )
+                .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
                 .build();
         server.start();
         functionalTestHelper = new FunctionalTestHelper( server );
@@ -137,7 +138,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
         // given
         server = CommunityServerBuilder.server().withDefaultDatabaseTuning().withSecurityRules(
                 NoAccessToDatabaseSecurityRule.class.getCanonicalName())
-                .usingDataDir( folder.directory( name.getMethodName() ).getAbsolutePath() )
+                .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
                 .build();
         server.start();
         functionalTestHelper = new FunctionalTestHelper( server );
@@ -155,7 +156,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
     {
         server = CommunityServerBuilder.server().withDefaultDatabaseTuning().withSecurityRules(
                 PermanentlyPassingSecurityRule.class.getCanonicalName() )
-                .usingDataDir( folder.directory( name.getMethodName() ).getAbsolutePath() )
+                .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
                 .build();
         server.start();
         functionalTestHelper = new FunctionalTestHelper( server );
@@ -193,7 +194,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
                         mountPoint )
                 .withSecurityRules(
                         PermanentlyFailingSecurityRuleWithWildcardPath.class.getCanonicalName() )
-                .usingDataDir( folder.directory( name.getMethodName() ).getAbsolutePath() )
+                .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
                 .build();
         server.start();
 
@@ -242,7 +243,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
                         mountPoint )
                 .withSecurityRules(
                         PermanentlyFailingSecurityRuleWithComplexWildcardPath.class.getCanonicalName() )
-                .usingDataDir( folder.directory( name.getMethodName() ).getAbsolutePath() )
+                .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
                 .build();
         server.start();
         gen.get().docHeadingLevel(1);
@@ -274,7 +275,7 @@ public class SecurityRulesDocIT extends ExclusiveServerTestBase
         server = CommunityServerBuilder.server().withDefaultDatabaseTuning().withSecurityRules(
                 PermanentlyForbiddenSecurityRule.class.getCanonicalName(),
                 PermanentlyPassingSecurityRule.class.getCanonicalName() )
-                .usingDataDir( folder.directory( name.getMethodName() ).getAbsolutePath() )
+                .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
                 .build();
         server.start();
         functionalTestHelper = new FunctionalTestHelper( server );

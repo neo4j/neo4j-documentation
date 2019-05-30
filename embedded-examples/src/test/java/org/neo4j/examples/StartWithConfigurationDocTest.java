@@ -18,49 +18,49 @@
  */
 package org.neo4j.examples;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.File;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
-import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 
-import static org.junit.Assert.assertNotNull;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
-public class StartWithConfigurationDocTest
+class StartWithConfigurationDocTest
 {
-    @Rule
-    public final TestDirectory testDirectory = TestDirectory.testDirectory();
+    @TempDir
+    File directory;
 
     @Test
-    public void loadFromFile()
+    void loadFromFile()
     {
         String pathToConfig = "src/test/resources/";
         // tag::startDbWithConfig[]
-        DatabaseManagementService managementService =
-                new DatabaseManagementServiceBuilder( testDirectory.databaseDir() ).loadPropertiesFromFile(
-                        pathToConfig + "neo4j.conf" ).build();
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory )
+                                                            .loadPropertiesFromFile( pathToConfig + "neo4j.conf" ).build();
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
                 // end::startDbWithConfig[]
-        assertNotNull( graphDb );
+        Assertions.assertNotNull( graphDb );
         managementService.shutdown();
     }
 
     @Test
-    public void loadFromHashmap()
+    void loadFromHashmap()
     {
         // tag::startDbWithMapConfig[]
-        DatabaseManagementService managementService =
-                new DatabaseManagementServiceBuilder( testDirectory.databaseDir() ).setConfig( GraphDatabaseSettings.pagecache_memory,
-                        "512M" ).setConfig( GraphDatabaseSettings.string_block_size, "60" ).setConfig( GraphDatabaseSettings.array_block_size,
-                        "300" ).build();
+        DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory)
+                                .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
+                                .setConfig( GraphDatabaseSettings.string_block_size, "60" )
+                                .setConfig( GraphDatabaseSettings.array_block_size, "300" ).build();
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
 
         // end::startDbWithMapConfig[]
-        assertNotNull( graphDb );
+        Assertions.assertNotNull( graphDb );
         managementService.shutdown();
     }
 }

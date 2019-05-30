@@ -23,18 +23,16 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 
-import org.neo4j.doc.test.rule.TestDirectory;
-
+import java.io.File;
 
 public class ExclusiveServerTestBase
 {
-    @Rule
-    public TestDirectory folder = TestDirectory.testDirectory( );
+    public File folder = new File( "target/example-db" + System.nanoTime() );
     @Rule
     public TestName name = new TestName();
 
     @BeforeClass
-    public static void ensureServerNotRunning() throws Exception
+    public static void ensureServerNotRunning()
     {
         System.setProperty( "org.neo4j.useInsecureCertificateGeneration", "true" );
         ServerHolder.ensureNotRunning();

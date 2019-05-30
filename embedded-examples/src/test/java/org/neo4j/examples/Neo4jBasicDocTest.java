@@ -18,42 +18,43 @@
  */
 package org.neo4j.examples;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.File;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
-import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 /**
  * An example of unit testing with Neo4j.
  */
-public class Neo4jBasicDocTest
+class Neo4jBasicDocTest
 {
-    @Rule
-    public TestDirectory testDirectory = TestDirectory.testDirectory();
-    protected GraphDatabaseService graphDb;
+    @TempDir
+    private File directory;
+    private GraphDatabaseService graphDb;
     private DatabaseManagementService managementService;
 
     /**
      * Create temporary database for each unit test.
      */
     // tag::beforeTest[]
-    @Before
-    public void prepareTestDatabase()
+    @BeforeEach
+    void prepareTestDatabase()
     {
-        managementService = new DatabaseManagementServiceBuilder( testDirectory.directory() ).build();
+        managementService = new DatabaseManagementServiceBuilder( directory ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
     }
     // end::beforeTest[]
@@ -62,18 +63,18 @@ public class Neo4jBasicDocTest
      * Shutdown the database.
      */
     // tag::afterTest[]
-    @After
-    public void destroyTestDatabase()
+    @AfterEach
+    void destroyTestDatabase()
     {
         managementService.shutdown();
     }
     // end::afterTest[]
 
     @Test
-    public void startWithConfiguration()
+    void startWithConfiguration()
     {
         // tag::startDbWithConfig[]
-        DatabaseManagementService service = new DatabaseManagementServiceBuilder( testDirectory.directory( "withConfiguration" ) )
+        DatabaseManagementService service = new DatabaseManagementServiceBuilder( new File( directory, "withConfiguration" ) )
                         .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
                         .setConfig( GraphDatabaseSettings.string_block_size, "60" )
                         .setConfig( GraphDatabaseSettings.array_block_size, "300" ).build();
@@ -82,7 +83,7 @@ public class Neo4jBasicDocTest
     }
 
     @Test
-    public void shouldCreateNode()
+    void shouldCreateNode()
     {
         // tag::unitTest[]
         Node n;
@@ -94,15 +95,15 @@ public class Neo4jBasicDocTest
         }
 
         // The node should have a valid id
-        assertThat( n.getId(), is( greaterThan( -1L ) ) );
+        MatcherAssert.assertThat( n.getId(), is( greaterThan( -1L ) ) );
 
         // Retrieve a node by using the id of the created node. The id's and
         // property should match.
         try ( Transaction tx = graphDb.beginTx() )
         {
             Node foundNode = graphDb.getNodeById( n.getId() );
-            assertThat( foundNode.getId(), is( n.getId() ) );
-            assertThat( (String) foundNode.getProperty( "name" ), is( "Nancy" ) );
+            MatcherAssert.assertThat( foundNode.getId(), is( n.getId() ) );
+            MatcherAssert.assertThat( (String) foundNode.getProperty( "name" ), is( "Nancy" ) );
         }
         // end::unitTest[]
     }

@@ -19,35 +19,34 @@
  */
 package org.neo4j.doc.metatest;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import org.neo4j.doc.test.rule.TestDirectory;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AsciiDocGeneratorTest
+class AsciiDocGeneratorTest
 {
-    @Rule
-    public final TestDirectory testDirectory = TestDirectory.testDirectory(getClass());
-
     private File sectionDirectory;
 
-    @Before
-    public void setup() {
-        sectionDirectory = new File(testDirectory.directory("testasciidocs"), "testsection");
+    @TempDir
+    File directory;
+
+    @BeforeEach
+    void setup() {
+        sectionDirectory = new File( new File( directory, "testasciidocs" ), "testsection" );
     }
 
     @Test
-    public void dumpToSeparateFile() throws IOException
+    void dumpToSeparateFile() throws IOException
     {
         String reference = AsciiDocGenerator.dumpToSeparateFile(sectionDirectory, "test1", ".title1\ntest1-content");
         assertEquals(".title1\ninclude::includes/test1.asciidoc[]\n", reference);
@@ -59,7 +58,7 @@ public class AsciiDocGeneratorTest
     }
 
     @Test
-    public void dumpToSeparateFileWithType() throws IOException
+    void dumpToSeparateFileWithType() throws IOException
     {
         String reference = AsciiDocGenerator.dumpToSeparateFileWithType( sectionDirectory, "console", "test2-content" );
         assertEquals("include::includes/console-1.asciidoc[]\n", reference);
