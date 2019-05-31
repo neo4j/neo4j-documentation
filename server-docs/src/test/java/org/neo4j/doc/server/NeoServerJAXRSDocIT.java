@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.net.URI;
 
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
@@ -76,7 +77,7 @@ public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
         server = CommunityServerBuilder.server()
                 .withThirdPartyJaxRsPackage( "org.dummy.doc.web.service",
                         DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT )
-                .usingDataDir( folder.directory( name.getMethodName() ).getAbsolutePath() )
+                .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
                 .build();
         server.start();
 

@@ -97,7 +97,7 @@ class MapsTest extends DocumentingTest {
         query("""MATCH (actor:Person)-[:ACTED_IN]->(movie:Movie)
             |WITH actor, count(movie) as nrOfMovies
             |RETURN actor{ .name, nrOfMovies}""".stripMargin, ResultAssertions((r) => {
-            r.toList should equal(List(Map("actor" -> Map("name" -> "Charlie Sheen", "nrOfMovies" -> 3)), Map("actor" -> Map("name" -> "Martin Sheen", "nrOfMovies" -> 2))))
+            r.toSet should equal(Set(Map("actor" -> Map("name" -> "Charlie Sheen", "nrOfMovies" -> 3)), Map("actor" -> Map("name" -> "Martin Sheen", "nrOfMovies" -> 2))))
           })) {
           resultTable()
         }
