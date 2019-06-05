@@ -232,9 +232,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Multiple range comparisons using `WHERE` (composite index)",
       text = "When the `WHERE` clause contains multiple inequality (range) comparisons for the same property, these can be combined " +
         "in a single index range seek. " +
-        "If this range seek is for the first property in a composite index then the index may be used. " +
-        "For an index on `:Person(highScore,name)` the following query is a valid query. " +
-        "However, for an index on `:Person(name,highScore)` it is not and will instead get an exception.",
+        "That single range seek created in the following query will then use the composite index `Person(highScore, name)` if it exists.",
       queryText = "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 AND exists(person.name) RETURN person",
       assertions = {
         (p) =>
@@ -335,7 +333,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text =
         "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname,surname)` index, if it exists. " +
         "Any (non-existence check) predicate on `person.surname` will be rewritten as existence check with a filter. " +
-        "However, if the predicate on `person.firstname` is a equality check then a `STARTS WITH` on `person.surname` would also use the index (without rewrites).",
+        "However, if the predicate on `person.firstname` is a equality check " +
+        "then a `STARTS WITH` on `person.surname` would also use the index (without rewrites). " +
+        "More information about how the rewriting works can be found in <<schema-index-single-vs-composite-index, composite index limitations>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' AND exists(person.surname) RETURN person",
       assertions = {
         (p) =>
