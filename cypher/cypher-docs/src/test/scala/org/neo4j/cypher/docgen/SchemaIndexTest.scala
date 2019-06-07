@@ -145,16 +145,20 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     prepareAndTestQuery(
       title = "Equality check using `WHERE` (composite index)",
       text = "A query containing equality comparisons for all the properties of a composite index will automatically be backed by the same index. " +
+        "However, the query does not need to have equality on all properties. It can have ranges and existence predicates as well. " +
+        "But in these cases rewrites might happen depending on which properties have which predicates, " +
+        "see <<schema-index-single-vs-composite-index, composite index limitations>>. " +
         "The following query will use the composite index defined <<schema-index-create-a-composite-index, earlier>>: ",
       prepare = _ => executePreparationQueries(List("CREATE INDEX ON :Person(age, country)")),
       queryText = "MATCH (n:Person) WHERE n.age = 35 AND n.country = 'UK' RETURN n",
-      optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, as the query does not contain an equality predicate on the `country` property. " +
+      optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, " +
+        "as the query does not contain a predicate on the `country` property. " +
       "It will only be backed by an index on the `Person` label and `age` property defined thus: `:Person(age)`; i.e. a single-property index. ",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("NodeIndexSeek(equality,equality)")
       }
     )
   }
@@ -166,14 +170,35 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     }.toList)
     profileQuery(
       title = "Range comparisons using `WHERE` (single-property index)",
-      text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause. " +
-        "Composite indexes are currently not able to support range comparisons.",
+      text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause.",
       queryText = "MATCH (person:Person) WHERE person.firstname > 'B' RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_index_with_where_using_range_comparisons_composite() {
+    executePreparationQueries(List("CREATE INDEX ON :Person(firstname, highScore)"))
+    // Need to make index preferable in terms of cost
+    executePreparationQueries((0 to 300).map { i =>
+      "CREATE (:Person)"
+    }.toList)
+    profileQuery(
+      title = "Range comparisons using `WHERE` (composite index)",
+      text = "Composite indexes are also automatically used for inequality (range) comparisons of indexed properties in the `WHERE` clause. " +
+        "Equality or list membership check predicates may precede the range predicate. " +
+        "However, predicates after the range predicate may be rewritten as an existence check predicate and a filter " +
+        "as described in <<schema-index-single-vs-composite-index, composite index limitations>>.",
+      queryText = "MATCH (person:Person) WHERE person.firstname > 'B' AND person.highScore > 10000 RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+
+          checkPlanDescription(p)("NodeIndexSeek(range,exists)")
       }
     )
   }
@@ -193,6 +218,27 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_index_with_where_using_multiple_range_comparisons_composite() {
+    executePreparationQueries(List("CREATE INDEX ON :Person(highScore, name)"))
+    // Need to make index preferable in terms of cost
+    executePreparationQueries((0 to 300).map { i =>
+      "CREATE (:Person)"
+    }.toList)
+    profileQuery(
+      title = "Multiple range comparisons using `WHERE` (composite index)",
+      text = "When the `WHERE` clause contains multiple inequality (range) comparisons for the same property, these can be combined " +
+        "in a single index range seek. " +
+        "That single range seek created in the following query will then use the composite index `Person(highScore, name)` if it exists.",
+      queryText = "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 AND exists(person.name) RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+
+          checkPlanDescription(p)("NodeIndexSeek(range,exists)")
       }
     )
   }
@@ -244,7 +290,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("NodeIndexSeek(equality,equality)")
       }
     )
   }
@@ -261,13 +307,40 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Prefix search using `STARTS WITH` (single-property index)",
       text =
-        "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
-        "Composite indexes are currently not able to support `STARTS WITH`.",
+        "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists.",
       queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
           assertThat(p.executionPlanDescription().toString, containsString(IndexSeekByRange.name))
+      }
+    )
+  }
+
+  @Test def use_index_with_starts_with_composite() {
+    executePreparationQueries(List("CREATE INDEX ON :Person(firstname, surname)"))
+
+    executePreparationQueries {
+      val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
+      val b = (0 to 300).map { i => s"CREATE (:Person {firstname: '$i', surname: '${-i}'})" }.toList
+      a ++ b
+    }
+
+    sampleAllIndexesAndWait()
+
+    profileQuery(
+      title = "Prefix search using `STARTS WITH` (composite index)",
+      text =
+        "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname,surname)` index, if it exists. " +
+        "Any (non-existence check) predicate on `person.surname` will be rewritten as existence check with a filter. " +
+        "However, if the predicate on `person.firstname` is a equality check " +
+        "then a `STARTS WITH` on `person.surname` would also use the index (without rewrites). " +
+        "More information about how the rewriting works can be found in <<schema-index-single-vs-composite-index, composite index limitations>>.",
+      queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' AND exists(person.surname) RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeek(range,exists)"))
       }
     )
   }
@@ -330,9 +403,28 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Existence check using `exists` (single-property index)",
       text =
-        "The `exists(p.firstname)` predicate in the following query will use the `Person(firstname)` index, if it exists. " +
-          "Composite indexes are currently not able to support the `exists` predicate. ",
+        "The `exists(p.firstname)` predicate in the following query will use the `Person(firstname)` index, if it exists. ",
       queryText = "MATCH (p:Person) WHERE exists(p.firstname) RETURN p",
+      assertions = {
+        (p) =>
+          assertEquals(2, p.size)
+          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
+      }
+    )
+  }
+
+  @Test def use_index_with_exists_property_composite() {
+    executePreparationQueries(List("CREATE INDEX ON :Person(firstname, surname)"))
+    // Need to make index preferable in terms of cost
+    executePreparationQueries((0 to 250).map { i =>
+      "CREATE (:Person)"
+    }.toList)
+    profileQuery(
+      title = "Existence check using `exists` (composite index)",
+      text =
+        "The `exists(p.firstname)` and `exists(p.surname)` predicate in the following query will use the `Person(firstname,surname)` index, if it exists. " +
+        "Any (non-existence check) predicate on `person.surname` will be rewritten as existence check with a filter.",
+      queryText = "MATCH (p:Person) WHERE exists(p.firstname) AND exists(p.surname) RETURN p",
       assertions = {
         (p) =>
           assertEquals(2, p.size)
@@ -357,6 +449,25 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
+  @Test def use_index_with_distance_query_composite() {
+    executePreparationQueries(List("CREATE INDEX ON :Person(place,name)"))
+    executePreparationQueries(
+      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {place: point({x:$x, y:$y}), name: '${x+y}' } )").toList)
+    profileQuery(
+      title = "Spatial distance searches (composite index)",
+      text =
+        "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries. " +
+        "Any following (non-existence check) predicates (here on property `p.name` for index `:Person(place,name)`) " +
+        "will be rewritten as existence check with a filter.",
+      queryText = "MATCH (p:Person) WHERE distance(p.place, point({x: 1, y: 2})) < 2 AND exists(p.name) RETURN p.place",
+      assertions = {
+        (p) =>
+          assertEquals(9, p.size)
+          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeek(range,exists)"))
+      }
+    )
+  }
+
   @Test def use_index_with_bbox_query() {
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y})})").toList ++ List(
@@ -372,6 +483,30 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_index_with_bbox_query_composite() {
+    executePreparationQueries(List("CREATE INDEX ON :Person(place,firstname)"))
+    executePreparationQueries(
+      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {place: point({x:$x, y:$y}), firstname: '${x+y}'})").toList ++ List(
+        "MATCH (n:Person {firstname: 'Andy'}) SET n.place = point({x: 1.2345, y: 5.4321})",
+        "MATCH (n:Person {firstname: 'Mark'}) SET n.place = point({y: 1.2345, x: 5.4321})"
+      )
+    )
+    profileQuery(
+      title = "Spatial bounding box searches (composite index)",
+      text = "The ability to do index seeks on bounded ranges works even with the 2D and 3D spatial `Point` types. " +
+        "Any following (non-existence check) predicates (here on property `p.firstname` for index `:Person(place,firstname)`) " +
+        "will be rewritten as existence check with a filter. " +
+        "For index `:Person(firstname,place)`, if the predicate on `firstname` is equality or list membership then the bounded range is handled as a range itself. " +
+        "If the predicate on `firstname` is anything else then the bounded range is rewritten to existence and filter.",
+      queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.place < point({x: 2, y: 6}) AND exists(person.firstname) RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+          checkPlanDescription(p)("NodeIndexSeek(range,exists)")
       }
     )
   }

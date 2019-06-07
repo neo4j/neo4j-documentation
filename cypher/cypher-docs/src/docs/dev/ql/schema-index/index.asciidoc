@@ -17,15 +17,21 @@ This section explains how to configure indexes to enhance performance in search,
 ** <<schema-index-equality-check-using-where-single-property-index, Equality check using `WHERE` (single-property index)>>
 ** <<schema-index-equality-check-using-where-composite-index, Equality check using `WHERE` (composite index)>>
 ** <<schema-index-range-comparisons-using-where-single-property-index, Range comparisons using `WHERE` (single-property index)>>
-** <<schema-index-multiple-range-comparisons-using-where-single-property-index, Use index with `WHERE` using multiple range comparisons>>
-** <<schema-index-list-membership-check-using-in-single-property-index, List membership check using `IN` (single-property index)>>
+** <<schema-index-range-comparisons-using-where-composite-index, Range comparisons using `WHERE` (composite index)>>
+** <<schema-index-multiple-range-comparisons-using-where-single-property-index, Use index with `WHERE` using multiple range comparisons (single-property index)>>
+** <<schema-index-multiple-range-comparisons-using-where-composite-index, Use index with `WHERE` using multiple range comparisons (composite index)>>
+** <<schema-index-list-membership-check-using-in-single-property-index, List membership using `IN` (single-property index)>>
 ** <<schema-index-list-membership-check-using-in-composite-index, List membership check using `IN` (composite index)>>
 ** <<schema-index-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>
+** <<schema-index-prefix-search-using-starts-with-composite-index, Prefix search using `STARTS WITH` (composite index)>>
 ** <<schema-index-suffix-search-using-ends-with-single-property-index, Suffix search using `ENDS WITH` (single-property index)>>
 ** <<schema-index-substring-search-using-contains-single-property-index, Substring search using `CONTAINS` (single-property index)>>
 ** <<schema-index-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
-** <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search>>
-** <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search>>
+** <<schema-index-existence-check-using-exists-composite-index, Existence check using `exists` (composite index)>>
+** <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search (single-property index)>>
+** <<schema-index-spatial-distance-searches-composite-index, Use index when executing a spatial distance search (composite index)>>
+** <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search (single-property index)>>
+** <<schema-index-spatial-bounding-box-searches-composite-index, Use index when executing a spatial bounding box search (composite index)>>
 * <<schema-index-fulltext-search, Indexes to support fulltext search>>
 ** <<schema-index-fulltext-search-introduction, Introduction>>
 ** <<schema-index-fulltext-search-create-and-configure, Create and configure fulltext schema indexes>>
@@ -61,12 +67,39 @@ For information on index configuration and limitations, refer to <<operations-ma
 [[schema-index-single-vs-composite-index]]
 === Composite index limitations
 
-Unlike single-property indexes, composite indexes currently only support equality check: `n.prop = value` and list membership check: `n.prop IN list`.
-Queries containing the following types of predicates on properties in the index are not supported:
+Unlike single-property indexes, composite indexes currently support only a subset of predicates:
 
+* equality check: `n.prop = value`
+* list membership check: `n.prop IN list`
 * existence check: `exists(n.prop)`
 * range search: `n.prop > value`
 * prefix search: `STARTS WITH`
+
+However, predicates might be planned as existence check and a filter.
+For this to not happen, these restrictions need to be followed:
+
+* If there is any `equality check` and `list membership check` predicates,
+they need to be for the first properties defined by the index.
+* There can be up to one `range search` or `prefix search` predicate.
+* There can be any number of `existence check` predicates.
+* Any predicate after a `range search`, `prefix search` or `existence check` predicate has to be an `existence check` predicate
+
+For example, an index on `:Label(prop1,prop2,prop3,prop4,prop5,prop6)` and predicates:
+
+```
+WHERE n.prop1 = 'x' AND n.prop2 = 1 AND n.prop3 > 5 AND n.prop4 < 'e' AND n.prop5 = true AND exists(n.prop6)
+```
+
+will be planned as:
+
+```
+WHERE n.prop1 = 'x' AND n.prop2 = 1 AND n.prop3 > 5 AND exists(n.prop4) AND exists(n.prop5) AND exists(n.prop6)
+```
+
+with filters on `n.prop4 < 'e'` and `n.prop5 = true`, since `n.prop3` has a `range search` predicate.
+
+Queries containing the following types of predicates on properties in the index are not supported (not even as existence check and filter):
+
 * suffix search: `ENDS WITH`
 * substring search: `CONTAINS`
 
@@ -93,7 +126,11 @@ include::equality-check-using-where-composite-index.asciidoc[leveloffset=+1]
 
 include::range-comparisons-using-where-single-property-index.asciidoc[leveloffset=+1]
 
+include::range-comparisons-using-where-composite-index.asciidoc[leveloffset=+1]
+
 include::multiple-range-comparisons-using-where-single-property-index.asciidoc[leveloffset=+1]
+
+include::multiple-range-comparisons-using-where-composite-index.asciidoc[leveloffset=+1]
 
 include::list-membership-check-using-in-single-property-index.asciidoc[leveloffset=+1]
 
@@ -101,15 +138,23 @@ include::list-membership-check-using-in-composite-index.asciidoc[leveloffset=+1]
 
 include::prefix-search-using-starts-with-single-property-index.asciidoc[leveloffset=+1]
 
+include::prefix-search-using-starts-with-composite-index.asciidoc[leveloffset=+1]
+
 include::suffix-search-using-ends-with-single-property-index.asciidoc[leveloffset=+1]
 
 include::substring-search-using-contains-single-property-index.asciidoc[leveloffset=+1]
 
 include::existence-check-using-exists-single-property-index.asciidoc[leveloffset=+1]
 
+include::existence-check-using-exists-composite-index.asciidoc[leveloffset=+1]
+
 include::spatial-distance-searches-single-property-index.asciidoc[leveloffset=+1]
 
+include::spatial-distance-searches-composite-index.asciidoc[leveloffset=+1]
+
 include::spatial-bounding-box-searches-single-property-index.asciidoc[leveloffset=+1]
+
+include::spatial-bounding-box-searches-composite-index.asciidoc[leveloffset=+1]
 
 include::fulltext-schema-index.adoc[leveloffset=+1]
 
