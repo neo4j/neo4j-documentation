@@ -32,11 +32,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.neo4j.annotations.documented.Documented;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.doc.server.rest.AbstractRestFunctionalTestBase;
 import org.neo4j.doc.server.rest.RESTDocsGenerator.ResponseEntity;
 import org.neo4j.kernel.api.exceptions.Status;
-import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.rest.domain.JsonParseException;
 
 import static org.hamcrest.CoreMatchers.containsString;

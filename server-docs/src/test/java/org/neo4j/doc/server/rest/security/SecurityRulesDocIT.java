@@ -29,6 +29,7 @@ import java.io.File;
 import java.net.URI;
 import javax.ws.rs.core.MediaType;
 
+import org.neo4j.annotations.documented.Documented;
 import org.neo4j.doc.server.ExclusiveServerTestBase;
 import org.neo4j.doc.server.helpers.CommunityServerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
@@ -36,7 +37,6 @@ import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
 import org.neo4j.doc.test.TestData;
 import org.neo4j.doc.test.TestData.Title;
-import org.neo4j.kernel.impl.annotations.Documented;
 import org.neo4j.server.CommunityNeoServer;
 
 import static org.hamcrest.Matchers.containsString;
