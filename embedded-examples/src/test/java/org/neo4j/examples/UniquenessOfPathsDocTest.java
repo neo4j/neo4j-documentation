@@ -20,6 +20,7 @@ package org.neo4j.examples;
 
 import org.junit.Test;
 
+import org.neo4j.annotations.documented.Documented;
 import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
@@ -29,7 +30,6 @@ import org.neo4j.graphdb.traversal.Evaluator;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.graphdb.traversal.Uniqueness;
-import org.neo4j.kernel.impl.annotations.Documented;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createGraphVizWithNodeId;

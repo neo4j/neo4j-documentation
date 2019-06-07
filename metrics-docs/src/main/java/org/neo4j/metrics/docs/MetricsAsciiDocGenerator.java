@@ -24,7 +24,7 @@ package org.neo4j.metrics.docs;
 
 import java.lang.reflect.Field;
 
-import org.neo4j.kernel.impl.annotations.Documented;
+import org.neo4j.annotations.documented.Documented;
 
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 

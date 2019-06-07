@@ -20,6 +20,7 @@ package org.neo4j.examples;
 
 import org.junit.Test;
 
+import org.neo4j.annotations.documented.Documented;
 import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -30,7 +31,6 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
-import org.neo4j.kernel.impl.annotations.Documented;
 
 import static org.junit.Assert.assertTrue;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createOutputSnippet;

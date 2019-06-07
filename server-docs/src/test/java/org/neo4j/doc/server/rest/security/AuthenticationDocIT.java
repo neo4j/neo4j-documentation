@@ -27,13 +27,13 @@ import org.junit.Test;
 import java.io.IOException;
 import javax.ws.rs.core.HttpHeaders;
 
-import org.neo4j.kernel.impl.annotations.Documented;
-import org.neo4j.doc.server.rest.RESTDocsGenerator;
-import org.neo4j.server.rest.domain.JsonHelper;
-import org.neo4j.server.rest.domain.JsonParseException;
-import org.neo4j.doc.test.TestData;
+import org.neo4j.annotations.documented.Documented;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.doc.server.HTTP.RawPayload;
+import org.neo4j.doc.server.rest.RESTDocsGenerator;
+import org.neo4j.doc.test.TestData;
+import org.neo4j.server.rest.domain.JsonHelper;
+import org.neo4j.server.rest.domain.JsonParseException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;

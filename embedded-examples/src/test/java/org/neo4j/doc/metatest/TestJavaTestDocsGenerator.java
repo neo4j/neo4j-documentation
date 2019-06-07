@@ -31,6 +31,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 
+import org.neo4j.annotations.documented.Documented;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.doc.test.GraphDescription;
@@ -40,7 +41,6 @@ import org.neo4j.doc.test.TestData;
 import org.neo4j.doc.tools.JavaTestDocsGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
-import org.neo4j.kernel.impl.annotations.Documented;
 
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.junit.Assert.assertNotNull;
