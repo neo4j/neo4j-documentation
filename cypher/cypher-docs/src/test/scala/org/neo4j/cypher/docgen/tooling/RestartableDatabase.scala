@@ -25,7 +25,7 @@ import org.apache.commons.io.FileUtils
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultSubscriber}
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
 import org.neo4j.kernel.api.procedure.GlobalProcedures
@@ -77,7 +77,15 @@ class RestartableDatabase(init: RunnableInitialization )
     createAndStartIfNecessary()
     val executionResult: DocsExecutionResult = try {
       val txContext = graph.transactionalContext(query = q -> params.toMap)
-      DocsExecutionResult(eengine.execute(q, ExecutionEngineHelper.asMapValue(params.toMap), txContext), txContext)
+      val subscriber = new ResultSubscriber(txContext)
+      val execution = eengine.execute(q,
+                                      ExecutionEngineHelper.asMapValue(params.toMap),
+                                      txContext,
+                                      profile = false,
+                                      prePopulate = false,
+                                      subscriber)
+      subscriber.init(execution)
+      DocsExecutionResult(subscriber, txContext)
     } catch {
       case e: Throwable => _markedForRestart = true; throw e
     }

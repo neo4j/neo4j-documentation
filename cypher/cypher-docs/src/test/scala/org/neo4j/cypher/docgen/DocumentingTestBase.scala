@@ -30,7 +30,7 @@ import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
+import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl, ResultSubscriber}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.cypher.internal.v4_0.util.Eagerly
 import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
@@ -46,7 +46,7 @@ import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.core.ThreadToStatementContextBridge
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
-import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
+import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySubscriber}
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.values.virtual.VirtualValues
 import org.neo4j.visualization.asciidoc.AsciidocHelper
@@ -214,7 +214,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
     try {
       val txContext = graph.transactionalContext(query = query -> Map())
-      val result = DocsExecutionResult(eengine.execute("PROFILE "+query, VirtualValues.EMPTY_MAP, txContext), txContext)
+      val result = DocsExecutionResult(db.execute("PROFILE "+ query), txContext)
 
       if (expectedException.isDefined) {
         fail(s"Expected the test to throw an exception: $expectedException")
@@ -370,12 +370,20 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         This transaction is necessary for Core API access in assertion code.
          */
         val executeTransaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
-        val result = engine.execute(s"$planner $query", parametersValue, txContext(executeTransaction))
+        val context = txContext(executeTransaction)
+        val subscriber = new ResultSubscriber(context)
+        val result = engine.execute(s"$planner $query",
+                                    parametersValue,
+                                    context,
+                                    profile = false,
+                                    prePopulate = false,
+                                    subscriber)
+        subscriber.init(result)
 
         val extractResultTransaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
         val docsResult =
           try {
-            DocsExecutionResult(result, txContext(extractResultTransaction))
+            DocsExecutionResult(subscriber, txContext(extractResultTransaction))
           } finally extractResultTransaction.close()
 
         db.inTx(assertions(docsResult))
@@ -391,16 +399,20 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         val contextFactory = Neo4jTransactionalContextFactory.create( db )
         val transaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
         val parametersValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
+        val context = contextFactory.newContext(
+          transaction,
+          query,
+          parametersValue
+          )
         val e = intercept[CypherException](
             engine.execute(
               s"$s $query",
               parametersValue,
-              contextFactory.newContext(
-                transaction,
-                query,
-                parametersValue
-              )
-            )
+              context,
+              profile = false,
+              prePopulate = false,
+              QuerySubscriber.DO_NOTHING_SUBSCRIBER
+              ).consumeAll()
           )
         val expectedExceptionType = expectedException.get
         e match {
@@ -478,13 +490,18 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     val contextFactory = Neo4jTransactionalContextFactory.create( db )
     queries.foreach { query => {
       val innerTx = db.beginTransaction( Type.`implicit`, tx.securityContext() )
-      engine.execute( query, VirtualValues.EMPTY_MAP,
+      engine.execute(
+        query,
+        VirtualValues.EMPTY_MAP,
         contextFactory.newContext(
           innerTx,
           query,
           VirtualValues.EMPTY_MAP
-        )
-      )
+          ),
+        profile = false,
+        prePopulate = false,
+        QuerySubscriber.DO_NOTHING_SUBSCRIBER
+        ).consumeAll()
     } }
   }
 
