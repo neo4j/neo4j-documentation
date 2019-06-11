@@ -30,7 +30,7 @@ import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher._
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl}
+import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl, ResultSubscriber}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription}
@@ -104,7 +104,15 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     val docsResult = db.withTx(
       tx => {
         val txContext = contextFactory.newContext(tx, testQuery, parameterValue)
-        DocsExecutionResult(engine.execute(testQuery, parameterValue, txContext), txContext)
+        val subscriber = new ResultSubscriber(txContext)
+        val execution = engine.execute(testQuery,
+                                       parameterValue,
+                                       txContext,
+                                       profile = false,
+                                       prePopulate = false,
+                                       subscriber)
+        subscriber.init(execution)
+        DocsExecutionResult(subscriber, txContext)
       }, Transaction.Type.`implicit` )
     docsResult
   } catch {

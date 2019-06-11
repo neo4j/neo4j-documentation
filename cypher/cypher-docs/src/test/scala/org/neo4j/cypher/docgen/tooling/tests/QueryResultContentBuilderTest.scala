@@ -22,7 +22,7 @@ package org.neo4j.cypher.docgen.tooling.tests
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultSubscriber}
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.values.virtual.VirtualValues
@@ -75,7 +75,15 @@ class QueryResultContentBuilderTest extends Suite
     if (init != "") graph.execute(init)
     val builder = new QueryResultContentBuilder(x => x.toString)
     val txContext = graph.transactionalContext(query = query -> Map())
-    val queryResult = DocsExecutionResult(eengine.execute(query, VirtualValues.EMPTY_MAP, txContext), txContext)
+    val subscriber = new ResultSubscriber(txContext)
+    val execution = eengine.execute(query,
+                                    VirtualValues.EMPTY_MAP,
+                                    txContext,
+                                    profile = false,
+                                    prePopulate = false,
+                                    subscriber)
+    subscriber.init(execution)
+    val queryResult = DocsExecutionResult(subscriber, txContext)
     builder.apply(queryResult)
   }
 }

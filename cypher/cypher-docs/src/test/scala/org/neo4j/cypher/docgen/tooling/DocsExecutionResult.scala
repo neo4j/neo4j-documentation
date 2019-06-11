@@ -19,14 +19,16 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import org.neo4j.cypher.internal.javacompat.ExecutionResult
+import akka.io.dns.internal
 import org.neo4j.cypher.internal.plandescription.InternalPlanDescription
 import org.neo4j.cypher.internal.result.string.ResultStringBuilder
 import org.neo4j.cypher.internal.runtime._
 import org.neo4j.cypher.internal.runtime.interpreted.TransactionalContextWrapper
 import org.neo4j.graphdb.Result.ResultVisitor
-import org.neo4j.graphdb.{Notification, Result}
-import org.neo4j.kernel.impl.query.TransactionalContext
+import org.neo4j.graphdb.{ExecutionPlanDescription, Notification, Result}
+import org.neo4j.kernel.impl.query.{QueryExecution, TransactionalContext}
+import scala.collection.JavaConverters._
+
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -39,7 +41,6 @@ import scala.collection.mutable.ArrayBuffer
 class DocsExecutionResult(val columns: Array[String],
                           result: Seq[Map[String, Any]],
                           val resultAsString: String,
-                          val executionMode: ExecutionMode,
                           planDescription: InternalPlanDescription,
                           statistics: QueryStatistics,
                           val notifications: Iterable[Notification]) {
@@ -65,13 +66,11 @@ object DocsExecutionResult {
   val scalaValues = new RuntimeScalaValueConverter(isGraphKernelResultValue)
 
   def apply(in: Result, txContext: TransactionalContext): DocsExecutionResult = {
-    val internal = in.asInstanceOf[ExecutionResult].internalExecutionResult
-
-    val resultStringBuilder = ResultStringBuilder(internal.fieldNames(), TransactionalContextWrapper(txContext))
+    val resultStringBuilder = ResultStringBuilder(in.columns().toArray(new Array[String](0)), txContext)
     val result = new ArrayBuffer[Map[String, Any]]()
-    val columns = internal.fieldNames()
+    val columns = in.columns().toArray(new Array[String](0))
 
-    internal.accept(new ResultVisitor[Exception] {
+    in.accept(new ResultVisitor[Exception] {
       override def visit(row: org.neo4j.graphdb.Result.ResultRow): Boolean = {
         resultStringBuilder.addRow(row)
         val map = new java.util.HashMap[String, Any]()
@@ -83,16 +82,15 @@ object DocsExecutionResult {
       }
     })
 
-    val statistics = internal.queryStatistics()
+    val statistics = in.getQueryStatistics
 
     new DocsExecutionResult(
       columns,
       result.toList,
       resultStringBuilder.result(statistics),
-      internal.executionMode,
-      internal.executionPlanDescription(),
-      statistics,
-      internal.notifications
-    )
+      in.getExecutionPlanDescription.asInstanceOf[InternalPlanDescription],
+      statistics.asInstanceOf[QueryStatistics],
+      in.getNotifications.asScala
+      )
   }
 }
