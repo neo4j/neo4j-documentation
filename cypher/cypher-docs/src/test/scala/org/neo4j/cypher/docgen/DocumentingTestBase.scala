@@ -46,7 +46,7 @@ import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.core.ThreadToStatementContextBridge
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
-import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySubscriber}
+import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySubscriber, QuerySubscriberAdapter}
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.values.virtual.VirtualValues
 import org.neo4j.visualization.asciidoc.AsciidocHelper
@@ -404,16 +404,25 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
           query,
           parametersValue
           )
-        val e = intercept[CypherException](
-            engine.execute(
-              s"$s $query",
-              parametersValue,
-              context,
-              profile = false,
-              prePopulate = false,
-              QuerySubscriber.DO_NOTHING_SUBSCRIBER
-              ).consumeAll()
-          )
+
+        var e: Throwable = null
+        val subscriber = new QuerySubscriberAdapter {
+          override def onError(throwable: Throwable): Unit = {
+            e = throwable
+          }
+        }
+        try {
+          engine.execute(s"$s $query",
+                         parametersValue,
+                         context,
+                         profile = false,
+                         prePopulate = false,
+                         subscriber).consumeAll()
+        } catch {
+          case t: Throwable =>
+            e = t
+        }
+
         val expectedExceptionType = expectedException.get
         e match {
           case expectedExceptionType(typedE) => expectedCaught(typedE)
