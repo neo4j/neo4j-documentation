@@ -64,12 +64,12 @@ trait CypherSerializer {
       case n: Node =>
         val ops = qtx.nodeOps
         val node = cursors.allocateNodeCursor()
-        ((id: Long) => ops.propertyKeyIds(id, node, property).map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, node, property).asObject(), qtx)),
+        ((id: Long) => ops.propertyKeyIds(id, node, property).map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, node, property, throwOnDeleted = true).asObject(), qtx)),
           n.getId, qtx.nodeOps.isDeletedInThisTx(n.getId))
       case r: Relationship =>
         val ops = qtx.relationshipOps
         val rel = cursors.allocateRelationshipScanCursor()
-        ((id: Long) => ops.propertyKeyIds(id, rel, property).map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, rel, property).asObject(), qtx)),
+        ((id: Long) => ops.propertyKeyIds(id, rel, property).map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, rel, property, throwOnDeleted = true).asObject(), qtx)),
           r.getId, qtx.relationshipOps.isDeletedInThisTx(r.getId))
     }
 
