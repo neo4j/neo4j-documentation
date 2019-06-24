@@ -27,30 +27,30 @@
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
                                     <arg value="--output=${project.build.directory}/docs/ops/available-metrics.asciidoc" />
-                                    <arg value="org.neo4j.metrics.source.db.CheckPointingMetrics" />
-                                    <arg value="org.neo4j.metrics.source.db.EntityCountMetrics" />
-                                    <arg value="org.neo4j.metrics.source.db.PageCacheMetrics" />
-                                    <arg value="org.neo4j.metrics.source.db.TransactionMetrics" />
-                                    <arg value="org.neo4j.metrics.source.db.CypherMetrics" />
-                                    <arg value="org.neo4j.metrics.source.db.LogRotationMetrics" />
-                                    <arg value="org.neo4j.metrics.source.db.BoltMetrics" />
-                                    <arg value="org.neo4j.metrics.source.server.ServerMetrics" />
+                                    <arg value="com.neo4j.metrics.source.db.CheckPointingMetrics" />
+                                    <arg value="com.neo4j.metrics.source.db.EntityCountMetrics" />
+                                    <arg value="com.neo4j.metrics.source.db.PageCacheMetrics" />
+                                    <arg value="com.neo4j.metrics.source.db.TransactionMetrics" />
+                                    <arg value="com.neo4j.metrics.source.db.CypherMetrics" />
+                                    <arg value="com.neo4j.metrics.source.db.LogRotationMetrics" />
+                                    <arg value="com.neo4j.metrics.source.db.BoltMetrics" />
+                                    <arg value="com.neo4j.metrics.source.server.ServerMetrics" />
                                 </java>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
                                     <arg value="--output=${project.build.directory}/docs/ops/jvm-metrics.asciidoc" />
                                     <!-- keep this one separate as it's a bit special compared to the others -->
-                                    <arg value="org.neo4j.metrics.source.jvm.JvmMetrics" />
-                                    <arg value="org.neo4j.metrics.source.jvm.GCMetrics" />
-                                    <arg value="org.neo4j.metrics.source.jvm.MemoryBuffersMetrics" />
-                                    <arg value="org.neo4j.metrics.source.jvm.MemoryPoolMetrics" />
-                                    <arg value="org.neo4j.metrics.source.jvm.ThreadMetrics" />
+                                    <arg value="com.neo4j.metrics.source.jvm.JvmMetrics" />
+                                    <arg value="com.neo4j.metrics.source.jvm.GCMetrics" />
+                                    <arg value="com.neo4j.metrics.source.jvm.MemoryBuffersMetrics" />
+                                    <arg value="com.neo4j.metrics.source.jvm.MemoryPoolMetrics" />
+                                    <arg value="com.neo4j.metrics.source.jvm.ThreadMetrics" />
                                 </java>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
                                     <arg value="--output=${project.build.directory}/docs/ops/cc-metrics.asciidoc" />
-                                    <arg value="org.neo4j.metrics.source.causalclustering.CoreMetrics" />
-                                    <arg value="org.neo4j.metrics.source.causalclustering.ReadReplicaMetrics" />
+                                    <arg value="com.neo4j.metrics.source.causalclustering.CoreMetrics" />
+                                    <arg value="com.neo4j.metrics.source.causalclustering.ReadReplicaMetrics" />
                                 </java>
                             </target>
                         </configuration>

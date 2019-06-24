@@ -18,6 +18,8 @@
  */
 package org.neo4j.examples.socnet;
 
+import com.google.common.collect.Iterables;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,13 +40,12 @@ import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.graphdb.traversal.Uniqueness;
 import org.neo4j.internal.helpers.collection.IterableWrapper;
 
+import static com.google.common.collect.Iterables.addAll;
 import static org.neo4j.examples.socnet.RelTypes.FRIEND;
 import static org.neo4j.examples.socnet.RelTypes.NEXT;
 import static org.neo4j.examples.socnet.RelTypes.STATUS;
 import static org.neo4j.graphdb.Direction.BOTH;
 import static org.neo4j.graphdb.PathExpanders.forTypeAndDirection;
-import static org.neo4j.internal.helpers.collection.Iterables.addToCollection;
-import static org.neo4j.internal.helpers.collection.Iterables.count;
 
 public class Person
 {
@@ -109,7 +110,7 @@ public class Person
 
     public long getNrOfFriends()
     {
-        return count( getFriends() );
+        return Iterables.size( getFriends() );
     }
 
     public Iterable<Person> getFriends()
@@ -150,10 +151,10 @@ public class Person
             int numberOfFriendsToReturn )
     {
         HashSet<Person> friends = new HashSet<>();
-        addToCollection( getFriends(), friends );
+        addAll( friends, getFriends() );
 
         HashSet<Person> friendsOfFriends = new HashSet<>();
-        addToCollection( getFriendsOfFriends(), friendsOfFriends );
+        addAll( friendsOfFriends, getFriendsOfFriends() );
 
         friendsOfFriends.removeAll( friends );
 
@@ -332,7 +333,7 @@ public class Person
     {
         PathFinder<Path> finder = GraphAlgoFactory.allPaths( forTypeAndDirection( FRIEND, BOTH ), 2 );
         Iterable<Path> paths = finder.findAllPaths( getUnderlyingNode(), otherPerson.getUnderlyingNode() );
-        return count( paths );
+        return Iterables.size( paths );
     }
 
     private Iterable<Person> createPersonsFromNodes( final Path path )
