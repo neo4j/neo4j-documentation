@@ -33,8 +33,8 @@ import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.internal.helpers.collection.Iterables;
 
+import static com.google.common.collect.Iterables.addAll;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -328,7 +328,7 @@ class SocnetTest
                                        Person... expectedPath )
     {
         ArrayList<Person> pathArray = new ArrayList<>();
-        Iterables.addToCollection( path, pathArray );
+        addAll( pathArray, path );
         assertThat( pathArray.size(), equalTo( expectedPath.length ) );
         for ( int i = 0; i < expectedPath.length; i++ )
         {
