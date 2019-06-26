@@ -113,7 +113,7 @@ this means that updates will be applied in a background thread "as soon as possi
 [NOTE]
 ====
 Using index-specific settings via the `config` parameter is experimental, because these settings currently do not get replicated in a clustered environment.
-See the <<operations-manual#index-configuration-fulltext-search, Full-text Schema Indexes>> section of the Operations Manual, for how to configure the default full-text index configurations in <<operations-manual#file-locations, _neo4j.conf_>>.
+See <<operations-manual#index-configuration-fulltext-search, Operations Manual -> Indexes to support fulltext search>> for instructions on how to configure full-text indexes in <<operations-manual#file-locations, neo4j.conf>>.
 ====
 
 .Query
