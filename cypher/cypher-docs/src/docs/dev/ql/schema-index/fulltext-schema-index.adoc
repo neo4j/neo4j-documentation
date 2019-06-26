@@ -160,7 +160,7 @@ RETURN node.title, score
 2+d|4 rows
 |===
 
-The full-text schema indexes uses Lucene under the hood.
+Full-text schema indexes are powered by the http://lucene.apache.org/[Apache Lucene] indexing and search library.
 This means that we can use Lucene's full-text query language to express what we wish to search for.
 For instance, if we are only interested in exact matches, then we can quote the string we are searching for.
 
