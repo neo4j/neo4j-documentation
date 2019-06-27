@@ -608,7 +608,7 @@ public class ImdbDocTest {
         // tag::fulltext[]
         fulltextMovies.add( theMatrix, "title", "The Matrix" );
         fulltextMovies.add( theMatrixReloaded, "title", "The Matrix Reloaded" );
-        // search in the fulltext index
+        // search in the full-text index
         Node found = fulltextMovies.query( "title", "reloAdEd" ).getSingle();
         // end::fulltext[]
         assertEquals( theMatrixReloaded, found );
@@ -652,4 +652,3 @@ public class ImdbDocTest {
     }
 
 }
-

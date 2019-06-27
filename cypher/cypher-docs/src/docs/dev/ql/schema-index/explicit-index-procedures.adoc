@@ -8,7 +8,7 @@ These data structures are special-purpose and the procedures are primarily provi
 [DEPRECATED]
 --
 The explicit indexing features in Neo4j are deprecated for removal in the next major release.
-Consider using <<query-schema-index,schema indexes>>, or the <<schema-index-fulltext-search,fulltext schema indexes>>, instead.
+Consider using <<query-schema-index,schema indexes>>, or the <<schema-index-fulltext-search,full-text schema indexes>>, instead.
 --
 
 [options="header"]
