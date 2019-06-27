@@ -61,7 +61,7 @@ Operating Systems::
 +
 Linux, HP-UX, Windows Server 2012 for production
 +
-Additionally, Windows XP and Mac OS X for development
+Additionally, Windows XP and macOS for development
 +
 Architectures::
 +
