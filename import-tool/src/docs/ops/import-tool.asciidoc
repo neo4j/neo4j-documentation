@@ -87,7 +87,7 @@ We also need to reference that id space in our relationships file i.e. `START_ID
 
 === Linux
 
-Under Unix/Linux/OSX, the command is named `neo4j-admin import`. Depending on the installation type, the tool is either available globally, or used by executing `./bin/neo4j-admin import` from inside the installation directory.
+Under Unix/Linux/macOS, the command is named `neo4j-admin import`. Depending on the installation type, the tool is either available globally, or used by executing `./bin/neo4j-admin import` from inside the installation directory.
 
 === Windows
 
