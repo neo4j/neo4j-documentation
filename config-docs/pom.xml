@@ -146,7 +146,6 @@
                                     <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
                                     <arg value="com.neo4j.metrics.MetricsSettings" />
                                     <arg value="com.neo4j.causalclustering.core.CausalClusteringSettings" />
-                                    <arg value="org.neo4j.consistency.ConsistencyCheckSettings" />
                                     <arg value="com.neo4j.server.enterprise.CommercialServerSettings" />
                                     <arg value="com.neo4j.server.security.enterprise.configuration.SecuritySettings" />
                                     <arg value="com.neo4j.kernel.impl.enterprise.configuration.CommercialEditionSettings" />

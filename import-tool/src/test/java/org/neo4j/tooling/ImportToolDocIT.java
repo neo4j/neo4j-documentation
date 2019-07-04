@@ -26,8 +26,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import picocli.CommandLine;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -42,11 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.neo4j.commandline.admin.CommandFailed;
-import org.neo4j.commandline.admin.IncorrectUsage;
-import org.neo4j.commandline.admin.OutsideWorld;
-import org.neo4j.commandline.admin.RealOutsideWorld;
-import org.neo4j.commandline.dbms.ImportCommand;
+import org.neo4j.cli.ExecutionContext;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
@@ -56,15 +52,13 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.importer.ImportCommand;
 import org.neo4j.internal.helpers.collection.Iterables;
-import org.neo4j.tooling.ImportTool.Options;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.neo4j.internal.helpers.ArrayUtil.join;
 import static org.neo4j.internal.helpers.collection.Iterators.asSet;
 import static org.neo4j.io.fs.FileUtils.writeToFile;
-import static org.neo4j.tooling.ImportTool.MULTI_FILE_DELIMITER;
 
 class ImportToolDocIT
 {
@@ -114,7 +108,7 @@ class ImportToolDocIT
 
         // WHEN
         String[] arguments =
-                arguments( "--mode", "csv", "--database", "the_database", "--nodes", movies.getAbsolutePath(),
+                arguments( "--database", "the_database", "--nodes", movies.getAbsolutePath(),
                         "--nodes", actors.getAbsolutePath(), "--relationships", roles.getAbsolutePath() );
         importTool( arguments );
 
@@ -174,10 +168,10 @@ class ImportToolDocIT
         }
 
         // WHEN
-        String[] arguments = arguments( "--mode", "csv", "--database", "the_database", "--nodes",
-                moviesHeader.getAbsolutePath() + MULTI_FILE_DELIMITER + movies.getAbsolutePath(), "--nodes",
-                actorsHeader.getAbsolutePath() + MULTI_FILE_DELIMITER + actors.getAbsolutePath(), "--relationships",
-                rolesHeader.getAbsolutePath() + MULTI_FILE_DELIMITER + roles.getAbsolutePath() );
+        String[] arguments = arguments( "--database", "the_database", "--nodes",
+                moviesHeader.getAbsolutePath() + "," + movies.getAbsolutePath(), "--nodes",
+                actorsHeader.getAbsolutePath() + "," + actors.getAbsolutePath(), "--relationships",
+                rolesHeader.getAbsolutePath() + "," + roles.getAbsolutePath() );
         importTool( arguments );
 
         // DOCS
@@ -248,13 +242,13 @@ class ImportToolDocIT
         }
 
         // WHEN
-        String[] arguments = arguments( "--mode", "csv", "--database", "the_database", "--nodes",
-                moviesHeader.getAbsolutePath() + MULTI_FILE_DELIMITER + moviesPart1.getAbsolutePath() +
-                        MULTI_FILE_DELIMITER + moviesPart2.getAbsolutePath(), "--nodes",
-                actorsHeader.getAbsolutePath() + MULTI_FILE_DELIMITER + actorsPart1.getAbsolutePath() +
-                        MULTI_FILE_DELIMITER + actorsPart2.getAbsolutePath(), "--relationships",
-                rolesHeader.getAbsolutePath() + MULTI_FILE_DELIMITER + rolesPart1.getAbsolutePath() +
-                        MULTI_FILE_DELIMITER + rolesPart2.getAbsolutePath() );
+        String[] arguments = arguments( "--database", "the_database", "--nodes",
+                moviesHeader.getAbsolutePath() + "," + moviesPart1.getAbsolutePath() +
+                        "," + moviesPart2.getAbsolutePath(), "--nodes",
+                actorsHeader.getAbsolutePath() + "," + actorsPart1.getAbsolutePath() +
+                        "," + actorsPart2.getAbsolutePath(), "--relationships",
+                rolesHeader.getAbsolutePath() + "," + rolesPart1.getAbsolutePath() +
+                        "," + rolesPart2.getAbsolutePath() );
         importTool( arguments );
 
         // DOCS
@@ -308,11 +302,10 @@ class ImportToolDocIT
             out.println( "carrieanne,\"Trinity\",tt0242653,ACTED_IN" );
         }
         // WHEN
-        String[] arguments = arguments( "--mode", "csv", "--database", "the_database",
-                "--nodes:" + join( new String[]{"Movie"}, ":" ), movies.getAbsolutePath(),
-                "--nodes:" + join( new String[]{"Movie", "Sequel"}, ":" ), sequels.getAbsolutePath(),
-                "--nodes:" + join( new String[]{"Actor"}, ":" ), actors.getAbsolutePath(), "--relationships",
-                roles.getAbsolutePath() );
+        String[] arguments = arguments( "--database", "the_database",
+                "--nodes=Movie=" + movies.getAbsolutePath(),
+                "--nodes=Movie:Sequel=" + sequels.getAbsolutePath(),
+                "--nodes=Actor=" + actors.getAbsolutePath(), "--relationships", roles.getAbsolutePath() );
         importTool( arguments );
 
         // DOCS
@@ -361,9 +354,8 @@ class ImportToolDocIT
         }
         // WHEN
         String[] arguments =
-                arguments( "--mode", "csv", "--database", "the_database", "--nodes", movies.getAbsolutePath(),
-                        "--nodes", actors.getAbsolutePath(), "--relationships:" + join( new String[]{"ACTED_IN"}, ":" ),
-                        roles.getAbsolutePath() );
+                arguments( "--database", "the_database", "--nodes", movies.getAbsolutePath(),
+                        "--nodes", actors.getAbsolutePath(), "--relationships=ACTED_IN=" + roles.getAbsolutePath() );
         importTool( arguments );
 
         // DOCS
@@ -412,9 +404,8 @@ class ImportToolDocIT
         }
         // WHEN
         String[] arguments =
-                arguments( "--mode", "csv", "--database", "the_database", "--nodes", movies.getAbsolutePath(),
-                        "--nodes", actors.getAbsolutePath(), "--relationships:" + join( new String[]{"ACTED_IN"}, ":" ),
-                        roles.getAbsolutePath() );
+                arguments( "--database", "the_database", "--nodes", movies.getAbsolutePath(),
+                        "--nodes", actors.getAbsolutePath(), "--relationships=ACTED_IN=" + roles.getAbsolutePath() );
         importTool( arguments );
 
         // DOCS
@@ -426,7 +417,7 @@ class ImportToolDocIT
     }
 
     @Test
-    void badRelationships() throws IOException, CommandFailed, IncorrectUsage
+    void badRelationships() throws IOException
     {
         // GIVEN
         File movies = file( "ops", "movies9.csv" );
@@ -470,7 +461,7 @@ class ImportToolDocIT
                 "--nodes", movies.getAbsolutePath(),
                 "--nodes", actors.getAbsolutePath(),
                 "--relationships", roles.getAbsolutePath(),
-                "--ignore-missing-nodes" );
+                "--skip-bad-relationships" );
         importTool( arguments );
         assertTrue( badFile.exists() );
 
@@ -514,7 +505,7 @@ class ImportToolDocIT
     }
 
     @Test
-    void badDuplicateNodes() throws IOException, CommandFailed, IncorrectUsage
+    void badDuplicateNodes() throws IOException
     {
         // GIVEN
         File actors = file( "ops", "actors10.csv" );
@@ -532,7 +523,7 @@ class ImportToolDocIT
         String[] arguments = arguments(
                 "--database", "the_database",
                 "--nodes", actors.getAbsolutePath(),
-                "--ignore-duplicate-nodes" );
+                "--skip-duplicate-nodes" );
         importTool( arguments );
         assertTrue( badFile.exists() );
 
@@ -553,7 +544,7 @@ class ImportToolDocIT
     }
 
     @Test
-    void propertyTypes() throws IOException, CommandFailed, IncorrectUsage
+    void propertyTypes() throws IOException
     {
         // GIVEN
         File movies = file( "ops", "movies7.csv" );
@@ -579,7 +570,7 @@ class ImportToolDocIT
 
         // WHEN
         String[] arguments =
-                arguments( "--mode", "csv", "--database", "the_database", "--nodes", movies.getAbsolutePath(),
+                arguments( "--database", "the_database", "--nodes", movies.getAbsolutePath(),
                         "--nodes", actors.getAbsolutePath(), "--relationships", roles.getAbsolutePath() );
         importTool( arguments );
 
@@ -704,10 +695,9 @@ class ImportToolDocIT
     {
         try ( PrintStream out = new PrintStream( file( "man", "options.adoc" ) ) )
         {
-            for ( Options option : Options.values() )
-            {
-                out.print( option.manPageEntry() );
-            }
+            ExecutionContext ctx = new ExecutionContext( testDirectory.toAbsolutePath(), testDirectory.toAbsolutePath() );
+            ImportCommand cmd = new ImportCommand( ctx );
+            CommandLine.usage( cmd, out );
         }
     }
 
@@ -716,13 +706,9 @@ class ImportToolDocIT
     {
         try ( PrintStream out = new PrintStream( file( "ops", "options.adoc" ) ) )
         {
-            for ( Options option : Options.values() )
-            {
-                if (option.isSupportedOption())
-                {
-                    out.print( option.manualEntry() );
-                }
-            }
+            ExecutionContext ctx = new ExecutionContext( testDirectory.toAbsolutePath(), testDirectory.toAbsolutePath() );
+            ImportCommand cmd = new ImportCommand( ctx );
+            CommandLine.usage( cmd, out );
         }
     }
 
@@ -746,19 +732,16 @@ class ImportToolDocIT
         return arguments;
     }
 
-    private void importTool( String[] arguments, OutsideWorld outsideWorld ) throws CommandFailed, IncorrectUsage
+    private void importTool( String[] arguments )
     {
-        ImportCommand importCommand = new ImportCommand( testDirectory.toAbsolutePath(), testDirectory.toAbsolutePath(), outsideWorld );
-        importCommand.execute( arguments );
-    }
-
-    private void importTool( String[] arguments ) throws CommandFailed, IncorrectUsage
-    {
-        importTool( arguments, new RealOutsideWorld( System.out, System.err, new ByteArrayInputStream( new byte[0] ) ) );
+        ExecutionContext ctx = new ExecutionContext( testDirectory.toAbsolutePath(), testDirectory.toAbsolutePath() );
+        ImportCommand importCommand = new ImportCommand( ctx );
+        CommandLine.populateCommand( importCommand, arguments );
+        importCommand.execute();
     }
 
     private File badFile()
     {
-        return new File( ImportCommand.DEFAULT_REPORT_FILE_NAME );
+        return new File( "import.report" );
     }
 }
