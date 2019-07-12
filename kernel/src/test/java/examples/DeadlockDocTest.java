@@ -25,13 +25,10 @@ package examples;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.concurrent.TimeUnit;
-
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.TransactionFailureException;
 import org.neo4j.harness.junit.extension.Neo4jExtension;
-import org.neo4j.internal.helpers.TransactionTemplate;
 import org.neo4j.kernel.DeadlockDetectedException;
 
 @ExtendWith( Neo4jExtension.class )
@@ -41,21 +38,6 @@ class DeadlockDocTest
     void transactionWithRetries( GraphDatabaseService databaseService )
     {
         Object result = transactionWithRetry( databaseService );
-    }
-
-    @Test
-    void transactionWithTemplate( GraphDatabaseService databaseService )
-    {
-        // tag::template[]
-        TransactionTemplate template = new TransactionTemplate(  ).retries( 5 ).backoff( 3, TimeUnit.SECONDS );
-        // end::template[]
-
-        // tag::usage-template[]
-        Object result = template.with(databaseService).execute( transaction -> {
-            Object result1 = null;
-            return result1;
-        } );
-        // end::usage-template[]
     }
 
     private Object transactionWithRetry( GraphDatabaseService databaseService )
