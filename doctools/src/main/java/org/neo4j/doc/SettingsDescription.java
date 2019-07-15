@@ -19,22 +19,23 @@
  */
 package org.neo4j.doc;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.neo4j.configuration.Description;
-import org.neo4j.configuration.Group;
+import org.neo4j.configuration.GroupSetting;
 import org.neo4j.configuration.Internal;
-import org.neo4j.configuration.Settings;
+import org.neo4j.configuration.SettingImpl;
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.internal.helpers.TimeUtil;
+import org.neo4j.internal.helpers.Exceptions;
 
 /**
  * A meta description of a settings class, used to generate documentation.
@@ -44,68 +45,42 @@ public class SettingsDescription
     /**
      * Create a description of a given class.
      */
+    @SuppressWarnings( "unchecked" )
     public static SettingsDescription describe( Class<?> settingClass )
     {
         String classDescription = settingClass.isAnnotationPresent( Description.class )
               ? settingClass.getAnnotation( Description.class ).value()
               : "List of configuration settings";
         String settingsName = settingClass.getName().replace( "$", "-" );
-        Object instance = null;
-
-        for(Class<?> cls = settingClass; cls != null; cls = cls.getSuperclass() )
-        {
-            if( cls.isAnnotationPresent( Group.class ) )
-            {
-                instance = groupInstance( settingClass );
-                break;
-            }
-        }
+        Object instance = GroupSetting.class.isAssignableFrom( settingClass ) ? groupInstance( settingClass ) : null;
 
         List<SettingDescription> settings = new LinkedList<>();
-        for ( Field field : settingClass.getFields() )
-        {
-            fieldAsSetting( settingClass, instance, field ).ifPresent( (setting) -> {
-                String name = setting.name();
-                Optional<String> description = Optional.of(field.getAnnotation( Description.class ).value());
-                String validationMessage = setting.toString();
-
-                String defaultValue = null;
-                String mandatoryMessage = null;
-
-                String deprecationMessage = field.isAnnotationPresent( Deprecated.class )
-                                              ? "The `" + name + "` configuration setting has been deprecated."
-                                              : null;
-                try
+        Arrays.stream( FieldUtils.getAllFields( settingClass ) )
+                .filter( f -> f.getType().isAssignableFrom( SettingImpl.class ) )
+                .forEach( field ->
                 {
-                    Object rawDefault = setting.apply( from -> null );
-                    defaultValue = rawDefault != null ? rawDefault.toString() : null;
-                    // Kludge--because for DURATION settings, the internal representation (MS) is leaked as the default value
-                    Optional<? extends Function<String, ?>> parser = setting.getParser();
-                    if (null != defaultValue && parser.isPresent() && Settings.DURATION.equals(parser.get())) {
-                        defaultValue = Long.toString(TimeUtil.DEFAULT_TIME_UNIT.convert(Long.valueOf(defaultValue), TimeUnit.MILLISECONDS));
-                    }
-                    if (name.equals("dbms.threads.worker_count")) {
-                        defaultValue = "The minimum between \"number of processors\" and 500";
-                    }
-                }
-                catch ( IllegalArgumentException iae )
-                {
-                    if ( iae.toString().contains( "mandatory" ) )
+                    try
                     {
-                        mandatoryMessage = "The " + name + " configuration setting is mandatory.";
-                    }
-                }
+                        field.setAccessible( true );
+                        SettingImpl<Object> setting = (SettingImpl<Object>) field.get( instance );
 
-                settings.add( new SettingDescriptionImpl(
-                        "config_" + (name.replace( "(", "").replace( ")", "" ) ),
-                        name, description,
-                        deprecationMessage,
-                        validationMessage,
-                        defaultValue,
-                        null != deprecationMessage, null != defaultValue
-                ));
-            });
-        }
+                        String name = setting.name();
+                        String id = "config_" + (name.replace( "(", "" ).replace( ")", "" ));
+                        boolean deprecated = field.isAnnotationPresent( Deprecated.class );
+                        String deprecationMsg = deprecated ? "The `" + name + "` configuration setting has been deprecated." : null;
+                        String validationMsg = setting.toString();
+                        Optional<String> descr = field.isAnnotationPresent( Description.class ) ? Optional.of( field.getAnnotation( Description.class ).value() ) : Optional.of( "No description" );
+                        boolean hasDefault = setting.defaultValue() != null;
+                        String defaultValue = hasDefault ? setting.valueToString( setting.defaultValue() ) : null;
+
+                        settings.add( new SettingDescriptionImpl( id, name, descr, deprecationMsg, validationMsg, defaultValue, deprecated, hasDefault ) );
+                    }
+                    catch ( Exception e )
+                    {
+                        String msg = String.format( "Can not describe %s, reason: %s", settingClass.getSimpleName(), e.getMessage() );
+                        throw new RuntimeException( msg, e );
+                    }
+                } );
 
         return new SettingsDescription(
                 // Nested classes have `$` in the name, which is an asciidoc keyword
@@ -120,11 +95,22 @@ public class SettingsDescription
         {
             // Group classes are special, we need to instantiate them to read their
             // configuration, this is how the group config DSL works
-            return settingClass.newInstance();
+            var constructor = settingClass.getConstructor( String.class );
+            constructor.setAccessible( true );
+            return constructor.newInstance( "<id>" );
         }
-        catch(Exception e)
+        catch(Exception e1)
         {
-            throw new RuntimeException( e );
+            try
+            {
+                var constructor = settingClass.getConstructor();
+                constructor.setAccessible( true );
+                return constructor.newInstance();
+            }
+            catch ( Exception e2 )
+            {
+                throw new RuntimeException( Exceptions.chain( e1, e2 ) );
+            }
         }
     }
 

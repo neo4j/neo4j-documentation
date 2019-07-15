@@ -28,7 +28,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -41,6 +40,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.neo4j.batchinsert.BatchInserter;
 import org.neo4j.batchinsert.BatchInserters;
+import org.neo4j.configuration.Config;
+import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.Direction;
@@ -49,7 +50,6 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.internal.helpers.collection.MapUtil;
 import org.neo4j.io.layout.DatabaseLayout;
 
 import static org.hamcrest.core.Is.is;
@@ -140,8 +140,7 @@ public class BatchInsertDocTest
         clean( "target/batchinserter-example-config" );
 
         // tag::configuredInsert[]
-        Map<String, String> config = new HashMap<>();
-        config.put( "dbms.memory.pagecache.size", "512m" );
+        Config config = Config.defaults( GraphDatabaseSettings.pagecache_memory, "512m" );
         BatchInserter inserter = BatchInserters.inserter( of( new File( "target/batchinserter-example-config" ) ), config );
         // Insert data here ... and then shut down:
         inserter.shutdown();
@@ -159,14 +158,11 @@ public class BatchInsertDocTest
         }
 
         // tag::configFileInsert[]
-        try ( FileReader input = new FileReader( new File( "target/docs/batchinsert-config" ).getAbsoluteFile() ) )
-        {
-            Map<String, String> config = MapUtil.load( input );
-            BatchInserter inserter = BatchInserters.inserter(
-                    of( new File( "target/docs/batchinserter-example-config" ) ), config );
-            // Insert data here ... and then shut down:
-            inserter.shutdown();
-        }
+        File file = new File( "target/docs/batchinsert-config" ).getAbsoluteFile();
+        Config config = Config.newBuilder().fromFile( file ).build();
+        BatchInserter inserter = BatchInserters.inserter( of( new File( "target/docs/batchinserter-example-config" ) ), config );
+        // Insert data here ... and then shut down:
+        inserter.shutdown();
         // end::configFileInsert[]
     }
 

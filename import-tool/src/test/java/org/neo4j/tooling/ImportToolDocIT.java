@@ -108,7 +108,7 @@ class ImportToolDocIT
 
         // WHEN
         String[] arguments =
-                arguments( "--database", "the_database", "--nodes", movies.getAbsolutePath(),
+                arguments( "--database", "the-database", "--nodes", movies.getAbsolutePath(),
                         "--nodes", actors.getAbsolutePath(), "--relationships", roles.getAbsolutePath() );
         importTool( arguments );
 
@@ -168,7 +168,7 @@ class ImportToolDocIT
         }
 
         // WHEN
-        String[] arguments = arguments( "--database", "the_database", "--nodes",
+        String[] arguments = arguments( "--database", "the-database", "--nodes",
                 moviesHeader.getAbsolutePath() + "," + movies.getAbsolutePath(), "--nodes",
                 actorsHeader.getAbsolutePath() + "," + actors.getAbsolutePath(), "--relationships",
                 rolesHeader.getAbsolutePath() + "," + roles.getAbsolutePath() );
@@ -242,7 +242,7 @@ class ImportToolDocIT
         }
 
         // WHEN
-        String[] arguments = arguments( "--database", "the_database", "--nodes",
+        String[] arguments = arguments( "--database", "the-database", "--nodes",
                 moviesHeader.getAbsolutePath() + "," + moviesPart1.getAbsolutePath() +
                         "," + moviesPart2.getAbsolutePath(), "--nodes",
                 actorsHeader.getAbsolutePath() + "," + actorsPart1.getAbsolutePath() +
@@ -302,7 +302,7 @@ class ImportToolDocIT
             out.println( "carrieanne,\"Trinity\",tt0242653,ACTED_IN" );
         }
         // WHEN
-        String[] arguments = arguments( "--database", "the_database",
+        String[] arguments = arguments( "--database", "the-database",
                 "--nodes=Movie=" + movies.getAbsolutePath(),
                 "--nodes=Movie:Sequel=" + sequels.getAbsolutePath(),
                 "--nodes=Actor=" + actors.getAbsolutePath(), "--relationships", roles.getAbsolutePath() );
@@ -354,7 +354,7 @@ class ImportToolDocIT
         }
         // WHEN
         String[] arguments =
-                arguments( "--database", "the_database", "--nodes", movies.getAbsolutePath(),
+                arguments( "--database", "the-database", "--nodes", movies.getAbsolutePath(),
                         "--nodes", actors.getAbsolutePath(), "--relationships=ACTED_IN=" + roles.getAbsolutePath() );
         importTool( arguments );
 
@@ -404,7 +404,7 @@ class ImportToolDocIT
         }
         // WHEN
         String[] arguments =
-                arguments( "--database", "the_database", "--nodes", movies.getAbsolutePath(),
+                arguments( "--database", "the-database", "--nodes", movies.getAbsolutePath(),
                         "--nodes", actors.getAbsolutePath(), "--relationships=ACTED_IN=" + roles.getAbsolutePath() );
         importTool( arguments );
 
@@ -457,7 +457,7 @@ class ImportToolDocIT
         // WHEN
         File badFile = badFile();
         String[] arguments = arguments(
-                "--database", "the_database",
+                "--database", "the-database",
                 "--nodes", movies.getAbsolutePath(),
                 "--nodes", actors.getAbsolutePath(),
                 "--relationships", roles.getAbsolutePath(),
@@ -521,7 +521,7 @@ class ImportToolDocIT
         // WHEN
         File badFile = badFile();
         String[] arguments = arguments(
-                "--database", "the_database",
+                "--database", "the-database",
                 "--nodes", actors.getAbsolutePath(),
                 "--skip-duplicate-nodes" );
         importTool( arguments );
@@ -533,8 +533,8 @@ class ImportToolDocIT
         printCommandToFile( arguments, realDir, "bad-duplicate-nodes-default.adoc" );
 
         // THEN
-        DatabaseManagementService managementService = databaseService( "the_database" );
-        GraphDatabaseService db = managementService.database( "the_database" );
+        DatabaseManagementService managementService = databaseService( "the-database" );
+        GraphDatabaseService db = managementService.database( "the-database" );
         try ( Transaction tx = db.beginTx(); ResourceIterator<Node> nodes = db.findNodes( Label.label( "Actor" ) ) )
         {
             assertEquals( asSet( "Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss" ), namesOf( nodes ) );
@@ -570,7 +570,7 @@ class ImportToolDocIT
 
         // WHEN
         String[] arguments =
-                arguments( "--database", "the_database", "--nodes", movies.getAbsolutePath(),
+                arguments( "--database", "the-database", "--nodes", movies.getAbsolutePath(),
                         "--nodes", actors.getAbsolutePath(), "--relationships", roles.getAbsolutePath() );
         importTool( arguments );
 
@@ -579,8 +579,8 @@ class ImportToolDocIT
         printCommandToFile( arguments, realDir, "property-types.adoc" );
 
         // THEN
-        DatabaseManagementService managementService = databaseService( "the_database" );
-        GraphDatabaseService db = managementService.database( "the_database" );
+        DatabaseManagementService managementService = databaseService( "the-database" );
+        GraphDatabaseService db = managementService.database( "the-database" );
         try ( Transaction tx = db.beginTx() )
         {
             long nodeCount = Iterables.count( db.getAllNodes() ), relationshipCount = 0;
@@ -617,8 +617,8 @@ class ImportToolDocIT
 
     private void verifyData()
     {
-        DatabaseManagementService managementService = databaseService( "the_database" );
-        GraphDatabaseService db = managementService.database( "the_database" );
+        DatabaseManagementService managementService = databaseService( "the-database" );
+        GraphDatabaseService db = managementService.database( "the-database" );
         try ( Transaction tx = db.beginTx() )
         {
             long nodeCount = Iterables.count( db.getAllNodes() ), relationshipCount = 0, sequelCount = 0;

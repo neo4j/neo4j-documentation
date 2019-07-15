@@ -30,12 +30,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.neo4j.configuration.ConfigValue;
+import org.neo4j.configuration.SettingImpl;
 import org.neo4j.function.Predicates;
 import org.neo4j.internal.helpers.Args;
 
 /**
- * Tool to generate config documenatation.
+ * Tool to generate config documentation.
  */
 public class ConfigDocsTool {
 
@@ -57,7 +57,7 @@ public class ConfigDocsTool {
         String idPrefix = arguments.has("id-prefix") || warnMissingOption("ID prefix", "--id-prefix=my-id-prefix", DEFAULT_ID_PREFIX)
                 ? arguments.get("id-prefix") : DEFAULT_ID_PREFIX;
 
-        Predicate<ConfigValue> filter = filters(arguments);
+        Predicate<SettingImpl<Object>> filter = filters(arguments);
 
         System.out.printf("[+++] id=%s  title=%s  idPrefix=%s%n", id, title, idPrefix);
 
@@ -86,21 +86,23 @@ public class ConfigDocsTool {
      * @param arguments Arguments passed to this tool.
      * @return A Predicate used for filtering which settings to document.
      */
-    private static Predicate<ConfigValue> filters(Args arguments) {
-        Predicate<ConfigValue> filters = Predicates.all(arguments.asMap().entrySet().stream()
-                .<Predicate<ConfigValue>>flatMap(e -> {
+    private static Predicate<SettingImpl<Object>> filters(Args arguments) {
+        Predicate<SettingImpl<Object>> filters = Predicates.all(arguments.asMap().entrySet().stream()
+                .<Predicate<SettingImpl<Object>>>flatMap(e -> {
             switch (e.getKey()) {
                 // Include deprecated settings?
-                // If true, no filter is added. If false, require {@code ConfigValue#isDeprecated()} to be false.
+                // If true, no filter is added. If false, require {@code SettingImpl<Object#isDeprecated()} to be false.
                 case "deprecated":
-                    return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
+                    return Stream.of();
+                    /*return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
                             ? Stream.empty()
-                            : Stream.of(v -> !v.deprecated());
+                            : Stream.of(v -> !v.deprecated());*/
                 // Include only deprecated settings.
                 case "deprecated-only":
-                    return Stream.of(ConfigValue::deprecated);
+                    return Stream.of();
+                    //return Stream.of(SettingImpl<Object>::deprecated);
                 // Include internal settings?
-                // If true, no filter is added. If false, require {@code ConfigValue#isInternal()} to be false.
+                // If true, no filter is added. If false, require {@code SettingImpl<Object#isInternal()} to be false.
                 case "internal":
                     return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
                             ? Stream.empty()
@@ -116,7 +118,7 @@ public class ConfigDocsTool {
                     return Stream.of(v -> v.name().startsWith(e.getValue()));
                 // Include only dynamic settings
                 case "dynamic-only":
-                    return Stream.of(ConfigValue::dynamic);
+                    return Stream.of(SettingImpl::dynamic);
                 default:
                     return Stream.empty();
             }

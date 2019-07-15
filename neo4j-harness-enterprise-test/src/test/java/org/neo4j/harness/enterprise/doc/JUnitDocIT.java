@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import java.net.URI;
 
-import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
+import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
@@ -47,8 +47,8 @@ public class JUnitDocIT
     @Rule
     public Neo4jRule neo4j = new CommercialNeo4jRule()
             .withFixture( "CREATE (admin:Admin)" )
-            .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
-                    getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
+            .withConfig( GraphDatabaseSettings.legacy_certificates_directory.name(),
+                    getRelativePath( getSharedTestTemporaryFolder(), GraphDatabaseSettings.legacy_certificates_directory ) )
             .withFixture( graphDatabaseService ->
             {
                 try ( Transaction tx = graphDatabaseService.beginTx() )

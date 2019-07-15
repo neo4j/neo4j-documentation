@@ -30,11 +30,11 @@ import java.util.Properties;
 import org.neo4j.configuration.Config;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.configuration.connectors.HttpConnector;
-import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
+import org.neo4j.configuration.connectors.HttpsConnector;
+import org.neo4j.configuration.helpers.SocketAddress;
 import org.neo4j.doc.server.ServerTestUtils;
 import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
-import org.neo4j.internal.helpers.ListenSocketAddress;
 import org.neo4j.logging.Log;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
@@ -50,8 +50,8 @@ import static org.neo4j.internal.helpers.collection.MapUtil.stringMap;
 public class CommunityServerBuilder
 {
     protected final LogProvider logProvider;
-    private ListenSocketAddress address = new ListenSocketAddress( "localhost", 7474 );
-    private ListenSocketAddress httpsAddress = new ListenSocketAddress( "localhost", 7473 );
+    private SocketAddress address = new SocketAddress( "localhost", 7474 );
+    private SocketAddress httpsAddress = new SocketAddress( "localhost", 7473 );
     private String maxThreads = null;
     private String dataDir = null;
     private String managementUri = "/db/manage/";
@@ -85,7 +85,7 @@ public class CommunityServerBuilder
         final File configFile = buildBefore();
 
         Log log = logProvider.getLog( getClass() );
-        Config config = Config.fromFile( configFile ).build();
+        Config config = Config.newBuilder().fromFile( configFile ).build();
         config.setLogger( log );
         return build( Optional.of( configFile ), config, GraphDatabaseDependencies.newDependencies().userLogProvider( logProvider )
                 .monitors( new Monitors() ) );
@@ -149,21 +149,17 @@ public class CommunityServerBuilder
             properties.put( ServerSettings.security_rules.name(), propertyKeys );
         }
 
-        HttpConnector httpConnector = new HttpConnector("http");
-        HttpConnector httpsConnector = new HttpConnector("https");
+        HttpConnector httpConnector = HttpConnector.group( "http") ;
+        HttpsConnector httpsConnector = HttpsConnector.group( "https" );
 
-        properties.put( httpConnector.type.name(), "HTTP" );
         properties.put( httpConnector.enabled.name(), "true" );
-        properties.put( httpConnector.address.name(), address.toString() );
-        properties.put( httpConnector.encryption.name(), "NONE" );
+        properties.put( httpConnector.listen_address.name(), address.toString() );
 
-        properties.put( httpsConnector.type.name(), "HTTP" );
         properties.put( httpsConnector.enabled.name(), String.valueOf( httpsEnabled ) );
-        properties.put( httpsConnector.address.name(), httpsAddress.toString() );
-        properties.put( httpsConnector.encryption.name(), "TLS" );
+        properties.put( httpsConnector.listen_address.name(), httpsAddress.toString() );
 
         properties.put( GraphDatabaseSettings.auth_enabled.name(), "false" );
-        properties.put( LegacySslPolicyConfig.certificates_directory.name(), new File(temporaryFolder, "certificates").getAbsolutePath() );
+        properties.put( GraphDatabaseSettings.legacy_certificates_directory.name(), new File(temporaryFolder, "certificates").getAbsolutePath() );
         properties.put( GraphDatabaseSettings.logs_directory.name(), new File(temporaryFolder, "logs").getAbsolutePath() );
         properties.put( GraphDatabaseSettings.pagecache_memory.name(), "8m" );
 
@@ -250,13 +246,13 @@ public class CommunityServerBuilder
         return this;
     }
 
-    public CommunityServerBuilder onAddress( ListenSocketAddress address )
+    public CommunityServerBuilder onAddress( SocketAddress address )
     {
         this.address = address;
         return this;
     }
 
-    public CommunityServerBuilder onHttpsAddress( ListenSocketAddress address )
+    public CommunityServerBuilder onHttpsAddress( SocketAddress address )
     {
         this.httpsAddress = address;
         return this;

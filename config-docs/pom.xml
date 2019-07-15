@@ -144,7 +144,7 @@
                                     <arg value="org.neo4j.server.configuration.ServerSettings" />
                                     <arg value="org.neo4j.configuration.GraphDatabaseSettings" />
                                     <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
-                                    <arg value="com.neo4j.metrics.MetricsSettings" />
+                                    <arg value="com.neo4j.kernel.impl.enterprise.configuration.MetricsSettings" />
                                     <arg value="com.neo4j.causalclustering.core.CausalClusteringSettings" />
                                     <arg value="com.neo4j.server.enterprise.CommercialServerSettings" />
                                     <arg value="com.neo4j.server.security.enterprise.configuration.SecuritySettings" />
@@ -162,6 +162,12 @@
                                     classpathref="maven.compile.classpath" failonerror="true" fork="true">
                                     <arg line="-o ${project.build.directory}/docs/ops/configuration-http-connector-attributes.asciidoc" />
                                     <arg value="org.neo4j.configuration.connectors.HttpConnector" />
+                                </java>
+
+                                <java classname="org.neo4j.doc.GenerateConfigDocumentation"
+                                      classpathref="maven.compile.classpath" failonerror="true" fork="true">
+                                    <arg line="-o ${project.build.directory}/docs/ops/configuration-https-connector-attributes.asciidoc" />
+                                    <arg value="org.neo4j.configuration.connectors.HttpsConnector" />
                                 </java>
                             </target>
                         </configuration>

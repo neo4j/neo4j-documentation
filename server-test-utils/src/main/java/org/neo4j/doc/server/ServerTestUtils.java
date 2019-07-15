@@ -27,11 +27,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
-import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
 import org.neo4j.graphdb.config.Setting;
 
 public class ServerTestUtils {
@@ -56,18 +56,18 @@ public class ServerTestUtils {
         return file;
     }
 
-    public static String getRelativePath(File folder, Setting<File> setting) {
-        return folder.toPath().resolve(setting.getDefaultValue()).toString();
+    public static String getRelativePath(File folder, Setting<Path> setting) {
+        return folder.toPath().resolve(setting.defaultValue()).toString();
     }
 
     public static void addDefaultRelativeProperties(Map<String, String> properties, File temporaryFolder) {
-        addRelativeProperty(temporaryFolder, properties, GraphDatabaseSettings.data_directory);
-        addRelativeProperty(temporaryFolder, properties, GraphDatabaseSettings.logs_directory);
-        addRelativeProperty(temporaryFolder, properties, LegacySslPolicyConfig.certificates_directory);
+        addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.data_directory );
+        addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.logs_directory );
+        addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.legacy_certificates_directory );
     }
 
     private static void addRelativeProperty(File temporaryFolder, Map<String, String> properties,
-                                            Setting<File> setting) {
+                                            Setting<Path> setting) {
         properties.put(setting.name(), getRelativePath(temporaryFolder, setting));
     }
 
