@@ -25,7 +25,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
+import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Result;
@@ -42,8 +42,8 @@ public class ExtensionTestingDocIT
     @Rule
     public Neo4jRule neo4j = new Neo4jRule()
             .withUnmanagedExtension( "/myExtension", MyUnmanagedExtension.class )
-            .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
-                    getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
+            .withConfig( GraphDatabaseSettings.legacy_certificates_directory.name(),
+                    getRelativePath( getSharedTestTemporaryFolder(), GraphDatabaseSettings.legacy_certificates_directory ) )
             .withFixture( graphDatabaseService ->
             {
                 try ( Transaction tx = graphDatabaseService.beginTx() )

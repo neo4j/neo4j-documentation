@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.configuration.ssl.LegacySslPolicyConfig;
+import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.harness.junit.rule.Neo4jRule;
 
@@ -44,8 +44,8 @@ public class UnmanagedExtensionsDocIT
                     "MERGE (m:Movie  {name: 'The Matrix'}) " +
                     "MERGE (p:Person {name: actor}) " +
                     "MERGE (p)-[:ACTED_IN]->(m) " )
-            .withConfig( LegacySslPolicyConfig.certificates_directory.name(),
-                    getRelativePath( getSharedTestTemporaryFolder(), LegacySslPolicyConfig.certificates_directory ) )
+            .withConfig( GraphDatabaseSettings.legacy_certificates_directory.name(),
+                    getRelativePath( getSharedTestTemporaryFolder(), GraphDatabaseSettings.legacy_certificates_directory ) )
             .withUnmanagedExtension( "/path/to/my/extension1", ColleaguesCypherExecutionResource.class )
             .withUnmanagedExtension( "/path/to/my/extension2", ColleaguesResource.class );
 
