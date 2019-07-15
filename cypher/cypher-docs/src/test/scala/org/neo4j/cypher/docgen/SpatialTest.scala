@@ -184,6 +184,13 @@ class SpatialTest extends DocumentingTest {
           })) {
           resultTable()
         }
+        p(
+          """
+            |For the geographic values, there is to note that the `latitude` value should always lie in the interval `[-90, 90]` and any other value
+            |outside this range will throw an exception. The `longitude` value should always lie in the interval `[-180, 180]` and any other value
+            |outside this range will be wrapped around to fit in this range.
+          """.stripMargin
+        )
       }
       section("Accessing components of points", "cypher-spatial-accessing-components-spatial-instants"){
         p(
