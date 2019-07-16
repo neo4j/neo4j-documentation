@@ -186,9 +186,10 @@ class SpatialTest extends DocumentingTest {
         }
         p(
           """
-            |For the geographic values, there is to note that the `latitude` value should always lie in the interval `[-90, 90]` and any other value
+            |For the geographic coordinates, it is important to note that the `latitude` value should always lie in the interval `[-90, 90]` and any other value
             |outside this range will throw an exception. The `longitude` value should always lie in the interval `[-180, 180]` and any other value
-            |outside this range will be wrapped around to fit in this range.
+            |outside this range will be wrapped around to fit in this range. The `height` value and any cartesian coordinates are not explicitly restricted,
+            |and any value within the allowed range of the signed 64-bit floating point type will be accepted.
           """.stripMargin
         )
       }
