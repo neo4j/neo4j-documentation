@@ -55,10 +55,17 @@ public class ConfigDocsGenerator
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         out = new PrintStream( baos );
         settingDescriptions = config.getDeclaredSettings().values().stream().map( setting -> (SettingImpl<Object>) setting ).filter( filter ).sorted(
-                Comparator.comparing( SettingImpl::name ) ).map(
-                c -> new DocsConfigValue( idFromName( idPrefix, c.name() ), c.name(), Optional.of( c.description() ), false, c.toString(), valueAsString( c ),
-                        c.internal(), Optional.empty(), //Should be in the description if deprecated
-                        c.dynamic() ) ).collect( Collectors.toList() );
+                Comparator.comparing( SettingImpl::name ) ).map( setting -> new DocsConfigValue(
+                idFromName( idPrefix, setting.name() ),
+                setting.name(),
+                description( setting ),
+                setting.deprecated(),
+                setting.toString(),
+                valueAsString( setting ),
+                setting.internal(),
+                Optional.empty(), //Should be in the description if deprecated
+                setting.dynamic()
+            ) ).collect( Collectors.toList() );
         out.print( documentSummary( id, title, settingDescriptions ) );
         settingDescriptions.forEach( this::documentForAllOutputs );
         out.flush();
@@ -70,9 +77,26 @@ public class ConfigDocsGenerator
         return idPrefix + name.replace( '<', '-' ).replace( '>', '-' );
     }
 
+    private Optional<String> description( SettingImpl<Object> setting )
+    {
+        if ( !setting.description().equals( setting.toString() ) ) //toString is valueDescription
+        {
+            return Optional.of( setting.description() );
+        }
+        return Optional.empty();
+    }
+
     private Optional<String> valueAsString( SettingImpl<Object> setting )
     {
-        return Optional.of( setting.valueToString( setting.defaultValue() ) );
+        if ( setting.documentedDefaultValue() != null )
+        {
+            return Optional.of( setting.documentedDefaultValue() );
+        }
+        else if ( setting.defaultValue() != null )
+        {
+            return Optional.of( setting.valueToString( setting.defaultValue() ) );
+        }
+        return Optional.empty();
     }
 
     private String documentSummary( String id, String title, List<SettingDescription> settingDescriptions )
