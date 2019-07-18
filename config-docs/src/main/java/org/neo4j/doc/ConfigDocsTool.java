@@ -93,14 +93,12 @@ public class ConfigDocsTool {
                 // Include deprecated settings?
                 // If true, no filter is added. If false, require {@code SettingImpl<Object#isDeprecated()} to be false.
                 case "deprecated":
-                    return Stream.of();
-                    /*return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
+                    return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
                             ? Stream.empty()
-                            : Stream.of(v -> !v.deprecated());*/
+                            : Stream.of(v -> !v.deprecated());
                 // Include only deprecated settings.
                 case "deprecated-only":
-                    return Stream.of();
-                    //return Stream.of(SettingImpl<Object>::deprecated);
+                    return Stream.of(SettingImpl::deprecated);
                 // Include internal settings?
                 // If true, no filter is added. If false, require {@code SettingImpl<Object#isInternal()} to be false.
                 case "internal":
