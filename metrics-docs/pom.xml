@@ -32,7 +32,7 @@
                                     <arg value="com.neo4j.metrics.source.db.PageCacheMetrics" />
                                     <arg value="com.neo4j.metrics.source.db.TransactionMetrics" />
                                     <arg value="com.neo4j.metrics.source.db.CypherMetrics" />
-                                    <arg value="com.neo4j.metrics.source.db.LogRotationMetrics" />
+                                    <arg value="com.neo4j.metrics.source.db.TransactionLogsMetrics" />
                                     <arg value="com.neo4j.metrics.source.db.BoltMetrics" />
                                     <arg value="com.neo4j.metrics.source.server.ServerMetrics" />
                                 </java>
