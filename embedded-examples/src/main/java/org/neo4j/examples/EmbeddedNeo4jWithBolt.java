@@ -36,11 +36,9 @@ public class EmbeddedNeo4jWithBolt
         FileUtils.deleteRecursively( DB_PATH );
 
         // tag::startDb[]
-        BoltConnector bolt = BoltConnector.group( "0" );
-
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( DB_PATH )
-                .setConfig( bolt.enabled, "true" )
-                .setConfig( bolt.listen_address, "localhost:7687" )
+                .setConfig( BoltConnector.enabled, "true" )
+                .setConfig( BoltConnector.listen_address, "localhost:7687" )
                 .build();
         // end::startDb[]
 
