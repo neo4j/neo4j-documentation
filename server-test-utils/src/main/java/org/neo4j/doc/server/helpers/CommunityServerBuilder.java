@@ -149,14 +149,11 @@ public class CommunityServerBuilder
             properties.put( ServerSettings.security_rules.name(), propertyKeys );
         }
 
-        HttpConnector httpConnector = HttpConnector.group( "http") ;
-        HttpsConnector httpsConnector = HttpsConnector.group( "https" );
+        properties.put( HttpConnector.enabled.name(), "true" );
+        properties.put( HttpConnector.listen_address.name(), address.toString() );
 
-        properties.put( httpConnector.enabled.name(), "true" );
-        properties.put( httpConnector.listen_address.name(), address.toString() );
-
-        properties.put( httpsConnector.enabled.name(), String.valueOf( httpsEnabled ) );
-        properties.put( httpsConnector.listen_address.name(), httpsAddress.toString() );
+        properties.put( HttpsConnector.enabled.name(), String.valueOf( httpsEnabled ) );
+        properties.put( HttpsConnector.listen_address.name(), httpsAddress.toString() );
 
         properties.put( GraphDatabaseSettings.auth_enabled.name(), "false" );
         properties.put( GraphDatabaseSettings.legacy_certificates_directory.name(), new File(temporaryFolder, "certificates").getAbsolutePath() );
