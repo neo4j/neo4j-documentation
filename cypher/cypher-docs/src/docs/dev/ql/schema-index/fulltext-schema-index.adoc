@@ -39,7 +39,7 @@ In contrast to <<query-schema-index-introduction, regular indexes>>, a full-text
 * can be applied to more than one label.
 * can be applied to relationship types (one or more).
 * can be applied to more than one property at a time (similar to a <<schema-index-create-a-composite-index, _composite index_>>) but with an important difference:
-While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and _any_ of the indexed properties.
+While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.
 
 For information on how to configure full-text schema indexes, refer to <<operations-manual#index-configuration-fulltext-search,  Operations Manual -> Full-text schema indexes>>.
 
