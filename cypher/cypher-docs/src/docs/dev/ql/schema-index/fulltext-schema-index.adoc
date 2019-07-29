@@ -33,6 +33,14 @@ Full-text schema indexes:
 * can be configured to be _eventually consistent_, in which index updating is moved from the commit path to a background thread.
 Using this feature, it is possible to work around the slow Lucene writes from the performance critical commit process, thus removing the main bottlenecks for Neo4j write performance.
 
+At first sight, the construction of full-text indexes can seem similar to regular indexes.
+However there are some things that are interesting to note:
+In contrast to <<query-schema-index-introduction, regular indexes>>, a full-text index 
+* can be applied to more than one label.
+* can be applied to relationship types (one or more).
+* can be applied to more than one property at a time (similar to a <<schema-index-create-a-composite-index, _composite index_>>) but with an important difference:
+While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and _any_ of the indexed properties.
+
 For information on how to configure full-text schema indexes, refer to <<operations-manual#index-configuration-fulltext-search,  Operations Manual -> Full-text schema indexes>>.
 
 [NOTE]
@@ -43,17 +51,30 @@ A full description of the differences between full-text schema indexes and expli
 --
 
 
+[[schema-index-fulltext-search-manage]]
+== Procedures to manage full-text schema indexes
+
+Full-text scema indexes are managed through built-in procedures.
+The most common procedures are listed in the table below:
+
+[options="header"]
+|===
+| Usage                               | Procedure                                                 | Description
+| Create full-text node index         | `db.index.fulltext.createNodeIndex`                       | Create a node full-text index for the given labels and properties. The optional 'config' map parameter can be used to supply settings to the index. Note: index specific settings are currently experimental, and might not replicated correctly in a cluster, or during backup. Supported settings are 'analyzer', for specifying what analyzer to use when indexing and querying. Use the `db.index.fulltext.listAvailableAnalyzers` procedure to see what options are available. And 'eventually_consistent' which can be set to 'true' to make this index eventually consistent, such that updates from committing transactions are applied in a background thread.
+| Create full-text relationship index | `db.index.fulltext.createRelationshipIndex`               | Create a relationship full-text index for the given relationship types and properties. The optional 'config' map parameter can be used to supply settings to the index. Note: index specific settings are currently experimental, and might not replicated correctly in a cluster, or during backup. Supported settings are 'analyzer', for specifying what analyzer to use when indexing and querying. Use the `db.index.fulltext.listAvailableAnalyzers` procedure to see what options are available. And 'eventually_consistent' which can be set to 'true' to make this index eventually consistent, such that updates from committing transactions are applied in a background thread.
+| List available analyzers            | `db.index.fulltext.listAvailableAnalyzers`                | List the available analyzers that the full-text indexes can be configured with.
+| Use full-text node index            | `db.index.fulltext.queryNodes`                            | Query the given full-text index. Returns the matching nodes and their Lucene query score, ordered by score.
+| Use full-text relationship index    | `db.index.fulltext.queryRelationships`                    | Query the given full-text index. Returns the matching relationships and their Lucene query score, ordered by score.
+| Drop full-text index                | `db.index.fulltext.drop`                                  | Drop the specified index.
+|===
+
+
 [[schema-index-fulltext-search-create-and-configure]]
 == Create and configure full-text schema indexes
 
 Full-text schema indexes are created with the `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex`.
 The indexes must each be given a unique name when created, which is used to reference the specific index in question, when querying or dropping an index.
 A full-text schema index then applies to a list of labels or a list of relationship types, for node and relationship indexes respectively, and then a list of property names.
-
-An index that applies to more than one label, or more than one relationship type, is called a _multi-token index_.
-Multi-token indexes can also apply to more than one property at a time, like a _composite index_ can, but with an important difference.
-A composite index applies only to entities that match the indexed label and _all_ of the indexed properties.
-A multi-token index, on the other hand, will index entities that have at least one of the indexed labels or relationship types, and _any_ of the indexed properties.
 
 For instance, if we have a movie with a title.
 
@@ -112,8 +133,8 @@ this means that updates will be applied in a background thread "as soon as possi
 
 [NOTE]
 ====
-Using index-specific settings via the `config` parameter is experimental, because these settings currently do not get replicated in a clustered environment.
-See <<operations-manual#index-configuration-fulltext-search, Operations Manual -> Indexes to support fulltext search>> for instructions on how to configure full-text indexes in <<operations-manual#file-locations, neo4j.conf>>.
+Using index-specific settings via the `config` parameter is to be considered as experimental, because these settings are currently not replicated in a clustered environment.
+See <<operations-manual#index-configuration-fulltext-search, Operations Manual -> Indexes to support full-text search>> for instructions on how to configure full-text indexes in <<operations-manual#file-locations, neo4j.conf>>.
 ====
 
 .Query
@@ -126,12 +147,6 @@ In this example, an eventually consistent relationship full-text schema index is
 This could, for instance, be a system where people are assigning tags to documents, and where the index on the `taggedByUser` property will allow them to quickly find all of the documents they have tagged.
 Had it not been for the relationship index, one would have had to add artificial connective nodes between the tags and the documents in the data model, just so these nodes could be indexed.
 
-.Result
-[role="queryresult",options="footer",cols="1*<m"]
-|===
-1+|(empty result)
-1+d|0 rows
-|===
 
 [[schema-index-fulltext-search-query]]
 == Query full-text schema indexes
@@ -218,3 +233,19 @@ RETURN node.title, node.description, score
 |===
 
 A complete description of the Lucene query syntax can be found in the http://lucene.apache.org/core/5_5_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description[Lucene documentation].
+
+
+[[schema-index-fulltext-search-drop]]
+== Drop full-text indexes
+
+A full-text node index is dropped by using the procedure  `db.index.fulltext.drop`.
+
+In the following example, we will drop the `taggedByRelationshipIndex` that we created previously:
+
+.Query
+[source, cypher]
+----
+CALL db.index.fulltext.drop("taggedByRelationshipIndex")
+----
+
+
