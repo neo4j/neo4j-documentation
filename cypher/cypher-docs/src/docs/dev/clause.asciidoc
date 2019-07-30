@@ -186,8 +186,6 @@ include::ql/query-merge.adoc[leveloffset=+1]
 
 include::ql/query-call.adoc[leveloffset=+1]
 
-include::ql/create-unique/index.asciidoc[leveloffset=+1]
-
 //Set
 include::ql/query-union.adoc[leveloffset=+1]
 
