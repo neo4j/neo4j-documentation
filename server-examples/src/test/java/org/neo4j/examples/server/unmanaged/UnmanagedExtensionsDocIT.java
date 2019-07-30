@@ -22,6 +22,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -44,8 +45,8 @@ public class UnmanagedExtensionsDocIT
                     "MERGE (m:Movie  {name: 'The Matrix'}) " +
                     "MERGE (p:Person {name: actor}) " +
                     "MERGE (p)-[:ACTED_IN]->(m) " )
-            .withConfig( GraphDatabaseSettings.legacy_certificates_directory.name(),
-                    getRelativePath( getSharedTestTemporaryFolder(), GraphDatabaseSettings.legacy_certificates_directory ) )
+            .withConfig( GraphDatabaseSettings.legacy_certificates_directory,
+                    Path.of( getRelativePath( getSharedTestTemporaryFolder(), GraphDatabaseSettings.legacy_certificates_directory ) ) )
             .withUnmanagedExtension( "/path/to/my/extension1", ColleaguesCypherExecutionResource.class )
             .withUnmanagedExtension( "/path/to/my/extension2", ColleaguesResource.class );
 

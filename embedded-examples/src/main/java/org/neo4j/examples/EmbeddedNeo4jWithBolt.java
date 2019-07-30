@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.neo4j.configuration.connectors.BoltConnector;
+import org.neo4j.configuration.helpers.SocketAddress;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.io.fs.FileUtils;
@@ -37,8 +38,8 @@ public class EmbeddedNeo4jWithBolt
 
         // tag::startDb[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( DB_PATH )
-                .setConfig( BoltConnector.enabled, "true" )
-                .setConfig( BoltConnector.listen_address, "localhost:7687" )
+                .setConfig( BoltConnector.enabled, true )
+                .setConfig( BoltConnector.listen_address, new SocketAddress( "localhost", 7687 ) )
                 .build();
         // end::startDb[]
 

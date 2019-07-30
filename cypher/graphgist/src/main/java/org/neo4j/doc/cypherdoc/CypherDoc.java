@@ -29,15 +29,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.config.Setting;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
@@ -75,12 +72,9 @@ public final class CypherDoc
         List<Block> blocks = parseBlocks( input );
 
         //TODO remove config when compiled plans are feature complete
-        Map<Setting<?>, String> config = new HashMap<>();
-        config.put( GraphDatabaseSettings.cypher_runtime, "INTERPRETED" );
-
         File directory = new File( "target/example-db" + System.nanoTime() );
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory )
-                .setConfig( config )
+                .setConfig( GraphDatabaseSettings.cypher_runtime, GraphDatabaseSettings.CypherRuntime.INTERPRETED )
                 .build();
         GraphDatabaseService graphOps = managementService.database( DEFAULT_DATABASE_NAME );
         Connection conn = null;

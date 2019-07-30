@@ -53,7 +53,7 @@ class ProcedureExampleDocTest
         // Given
         new JarBuilder().createJarFor( new File( directory, "myProcedures.jar" ), ProcedureExample.class );
         managementService =
-                new DatabaseManagementServiceBuilder( directory ).setConfig( GraphDatabaseSettings.plugin_dir, directory.getAbsolutePath() ).build();
+                new DatabaseManagementServiceBuilder( directory ).setConfig( GraphDatabaseSettings.plugin_dir, directory.toPath().toAbsolutePath() ).build();
         db = managementService.database( DEFAULT_DATABASE_NAME );
 
         try ( Transaction ignore = db.beginTx() )
