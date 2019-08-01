@@ -46,7 +46,7 @@ public class ExtensionTestingDocIT
     @Rule
     public Neo4jRule neo4j = new Neo4jRule()
             .withUnmanagedExtension( "/myExtension", MyUnmanagedExtension.class )
-            .withConfig( GraphDatabaseSettings.legacy_certificates_directory.name(),
+            .withConfig( GraphDatabaseSettings.legacy_certificates_directory,
                     getRelativePath( testDirectory.storeDir(), GraphDatabaseSettings.legacy_certificates_directory ) )
             .withFixture( graphDatabaseService ->
             {

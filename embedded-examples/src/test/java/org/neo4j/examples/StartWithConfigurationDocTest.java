@@ -55,8 +55,8 @@ class StartWithConfigurationDocTest
         // tag::startDbWithMapConfig[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory)
                                 .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
-                                .setConfig( GraphDatabaseSettings.string_block_size, "60" )
-                                .setConfig( GraphDatabaseSettings.array_block_size, "300" ).build();
+                                .setConfig( GraphDatabaseSettings.string_block_size, 60 )
+                                .setConfig( GraphDatabaseSettings.array_block_size, 300 ).build();
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
 
         // end::startDbWithMapConfig[]

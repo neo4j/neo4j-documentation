@@ -51,7 +51,7 @@ public class JUnitDocIT
     @Rule
     public Neo4jRule neo4j = new CommercialNeo4jRule()
             .withFixture( "CREATE (admin:Admin)" )
-            .withConfig( GraphDatabaseSettings.legacy_certificates_directory.name(),
+            .withConfig( GraphDatabaseSettings.legacy_certificates_directory,
                     getRelativePath( testDirectory.storeDir(), GraphDatabaseSettings.legacy_certificates_directory ) )
             .withFixture( graphDatabaseService ->
             {

@@ -76,8 +76,8 @@ class Neo4jBasicDocTest
         // tag::startDbWithConfig[]
         DatabaseManagementService service = new DatabaseManagementServiceBuilder( new File( directory, "withConfiguration" ) )
                         .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
-                        .setConfig( GraphDatabaseSettings.string_block_size, "60" )
-                        .setConfig( GraphDatabaseSettings.array_block_size, "300" ).build();
+                        .setConfig( GraphDatabaseSettings.string_block_size, 60 )
+                        .setConfig( GraphDatabaseSettings.array_block_size, 300 ).build();
         // end::startDbWithConfig[]
         service.shutdown();
     }

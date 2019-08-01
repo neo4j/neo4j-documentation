@@ -651,7 +651,7 @@ class ImportToolDocIT
     {
         return new DatabaseManagementServiceBuilder( storeDirForDatabase() )
                 .setConfig( GraphDatabaseSettings.default_database, databaseName )
-                .setConfig( GraphDatabaseSettings.transaction_logs_root_path, transactionLogsDirectory().getAbsolutePath() )
+                .setConfig( GraphDatabaseSettings.transaction_logs_root_path, transactionLogsDirectory().toPath().toAbsolutePath() )
                 .build();
     }
 

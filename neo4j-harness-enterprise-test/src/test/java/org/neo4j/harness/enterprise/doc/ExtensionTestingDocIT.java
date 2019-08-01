@@ -23,8 +23,8 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.nio.file.Path;
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
@@ -46,8 +46,8 @@ public class ExtensionTestingDocIT
 
     @Rule
     public Neo4jRule neo4j = new CommercialNeo4jRule()
-            .withConfig( GraphDatabaseSettings.legacy_certificates_directory.name(),
-                    getRelativePath( testDirectory.storeDir(), GraphDatabaseSettings.legacy_certificates_directory) )
+            .withConfig( GraphDatabaseSettings.legacy_certificates_directory,
+                    Path.of( getRelativePath( testDirectory.storeDir(), GraphDatabaseSettings.legacy_certificates_directory) ) )
             .withUnmanagedExtension( "/myExtension", MyUnmanagedExtension.class )
             .withFixture( graphDatabaseService ->
             {
@@ -60,7 +60,7 @@ public class ExtensionTestingDocIT
             } );
 
     // tag::testEnterpriseExtension[]
-    @Path("/")
+    @javax.ws.rs.Path("/")
     public static class MyUnmanagedExtension
     {
         @GET
