@@ -19,10 +19,9 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class CallTest extends DocumentingTest with QueryStatisticsTestSupport {
+class CallTest extends DocumentingTest {
 
   override def outputPath = "target/docs/dev/ql"
 
