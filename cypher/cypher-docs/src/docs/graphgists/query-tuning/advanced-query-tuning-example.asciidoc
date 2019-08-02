@@ -13,8 +13,7 @@ Any Cypher query that searches for nodes with a specific label and some predicat
 the index if the cost planner deems that to be the most efficient solution.
 
 In order to benefit from enhancements provided by native indexes, it is useful to understand when _index-backed property lookup_ and _index-backed order by_ will come into play.
-In Neo4j 3.4 and earlier, the fact that the index contains the property value, and the results are returned in a specific order, 
-was not used improve the performance of any later part of the query that might depend on the property value or result order.
+In Neo4j 3.4 and earlier, the fact that the index contains the property value, and the results are returned in a specific order, was not used improve the performance of any later part of the query that might depend on the property value or result order.
 
 Let's explain how to use these features with a more advanced query tuning example.
 
@@ -28,7 +27,7 @@ For information on native index support and upgrade considerations regarding ind
 == Advanced query tuning example
 
 In this example we will demonstrate the impact native indexes can have on query performance under certain conditions.
-We'll use a movies data set to illustrate this more advanced query tuning.
+We'll use a movies dataset to illustrate this more advanced query tuning.
 
 //file:movies.csv
 //file:actors.csv
