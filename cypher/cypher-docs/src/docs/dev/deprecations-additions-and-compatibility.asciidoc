@@ -31,7 +31,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | Feature          | Type | Change | Details
 | `has()`  | Function  | Removed | Replaced by <<functions-exists, exists()>>
 | `str()`  | Function  | Removed | Replaced by <<functions-tostring, toString()>>
-| `+{parameter+}` | Syntax | Deprecated | Replaced by <<cypher-parameters, $parameter>>
+| `+{parameter}+` | Syntax | Deprecated | Replaced by <<cypher-parameters, $parameter>>
 | <<functions-properties, properties()>>  | Function  | Added  |
 | <<query-call,CALL [\...YIELD]>>   | Clause  | Added  |
 | <<functions-point-cartesian-2d,point() - Cartesian 2D>> | Function | Added |
