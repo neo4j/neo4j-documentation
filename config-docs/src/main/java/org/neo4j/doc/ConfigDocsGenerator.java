@@ -162,7 +162,7 @@ public class ConfigDocsGenerator {
 
         if (item.hasDefault()) {
             out.printf("|Default value%n" +
-                       "m|%s%n",
+                       "m|+%s+%n",
                     item.defaultValue());
         }
 
