@@ -133,7 +133,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<functions-date-quarter, date({year [, quarter, dayOfQuarter]})>> | Temporal  | Returns a quarter (Year-Quarter-Day) _Date_.
 | <<functions-date-ordinal, date({year [, ordinalDay]})>> | Temporal  | Returns an ordinal (Year-Day) _Date_.
 | <<functions-date-create-string, date(string)>> | Temporal  | Returns a _Date_ by parsing a string.
-| <<functions-date-temporal, date({map})>>  | Temporal | Returns a _Date_ from a map of another temporal value's components.
+| <<functions-date-temporal, date(+{map}+)>>  | Temporal | Returns a _Date_ from a map of another temporal value's components.
 | <<functions-date-current-realtime, date.realtime()>> | Temporal  | Returns the current _Date_ using the `realtime` clock.
 | <<functions-date-current-statement, date.statement()>> | Temporal  | Returns the current _Date_ using the `statement` clock.
 | <<functions-date-current-transaction, date.transaction()>> | Temporal  | Returns the current _Date_ using the `transaction` clock.
@@ -144,15 +144,15 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<functions-datetime-quarter, datetime({year [, quarter, dayOfQuarter, ...]})>> | Temporal  | Returns a quarter (Year-Quarter-Day) _DateTime_.
 | <<functions-datetime-ordinal, datetime({year [, ordinalDay, ...]})>> | Temporal  | Returns an ordinal (Year-Day) _DateTime_.
 | <<functions-datetime-create-string, datetime(string)>> | Temporal  | Returns a _DateTime_ by parsing a string.
-| <<functions-datetime-temporal, datetime({map})>> | Temporal  | Returns a _DateTime_ from a map of another temporal value's components.
-| <<functions-datetime-timestamp, datetime({epochSeconds})>>  | Temporal | Returns a _DateTime_ from a timestamp.
+| <<functions-datetime-temporal, datetime(+{map}+)>> | Temporal  | Returns a _DateTime_ from a map of another temporal value's components.
+| <<functions-datetime-timestamp, datetime(+{epochSeconds}+)>>  | Temporal | Returns a _DateTime_ from a timestamp.
 | <<functions-datetime-current-realtime, datetime.realtime()>>  | Temporal | Returns the current _DateTime_ using the `realtime` clock.
 | <<functions-datetime-current-statement, datetime.statement()>> | Temporal  | Returns the current _DateTime_ using the `statement` clock.
 | <<functions-datetime-current-transaction, datetime.transaction()>> | Temporal  | Returns the current _DateTime_ using the `transaction` clock.
 | <<functions-datetime-truncate, datetime.truncate()>>  | Temporal | Returns a _DateTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
 |<<functions-degrees, degrees()>>               | Trigonometric     | Converts radians to degrees.
 |<<functions-distance, distance()>>              | Spatial           | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
-| <<functions-duration-create-components, duration({map})>> | Temporal | Returns a _Duration_ from a map of its components.
+| <<functions-duration-create-components, duration(+{map}+)>> | Temporal | Returns a _Duration_ from a map of its components.
 | <<functions-duration-create-string, duration(string)>> | Temporal | Returns a _Duration_ by parsing a string.
 | <<functions-duration-between, duration.between()>> | Temporal | Returns a _Duration_ equal to the difference between two given instants.
 | <<functions-duration-indays, duration.inDays()>> | Temporal | Returns a _Duration_ equal to the difference in whole days or weeks between two given instants.
@@ -179,7 +179,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<functions-localdatetime-quarter, localdatetime({year [, quarter, dayOfQuarter, ...]})>> | Temporal  | Returns a quarter (Year-Quarter-Day) _DateTime_.
 | <<functions-localdatetime-ordinal, localdatetime({year [, ordinalDay, ...]})>> | Temporal  | Returns an ordinal (Year-Day) _LocalDateTime_.
 | <<functions-localdatetime-create-string, localdatetime(string)>> | Temporal  | Returns a _LocalDateTime_ by parsing a string.
-| <<functions-localdatetime-temporal, localdatetime({map})>> | Temporal  | Returns a _LocalDateTime_ from a map of another temporal value's components.
+| <<functions-localdatetime-temporal, localdatetime(+{map}+)>> | Temporal  | Returns a _LocalDateTime_ from a map of another temporal value's components.
 | <<functions-localdatetime-current-realtime, localdatetime.realtime()>> | Temporal  | Returns the current _LocalDateTime_ using the `realtime` clock.
 | <<functions-localdatetime-current-statement, localdatetime.statement()>> | Temporal  | Returns the current _LocalDateTime_ using the `statement` clock.
 | <<functions-localdatetime-current-transaction, localdatetime.transaction()>> | Temporal  | Returns the current _LocalDateTime_ using the `transaction` clock.

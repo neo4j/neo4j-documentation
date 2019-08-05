@@ -44,7 +44,7 @@ In these examples, parameters are given in JSON; the exact manner in which they 
 
 [NOTE]
 ====
-It is recommended that the new parameter syntax `$param` is used, as the old syntax `{param}` is deprecated and will be removed altogether in a later release.
+It is recommended that the new parameter syntax `$param` is used, as the old syntax `+{param}+` is deprecated and will be removed altogether in a later release.
 ====
 
 
