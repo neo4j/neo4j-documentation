@@ -43,13 +43,6 @@ While a composite index applies only to entities that match the indexed label an
 
 For information on how to configure full-text schema indexes, refer to <<operations-manual#index-configuration-fulltext-search,  Operations Manual -> Indexes to support full-text search>>.
 
-[NOTE]
---
-Full-text schema indexes replace the _explicit_ indexes, which are deprecated and will be discontinued in the next major release.
-It is therefore recommended migrate to full-text schema indexes.
-A full description of the differences between full-text schema indexes and explicit indexes is available in <<operations-manual#index-configuration-fulltext-search-deprecation-of-explicit, Operations Manual -> Deprecation of explicit indexes>>.
---
-
 
 [[schema-index-fulltext-search-manage]]
 == Procedures to manage full-text schema indexes

@@ -74,14 +74,8 @@ class CallTest extends DocumentingTest {
             |For a list of these, see <<operations-manual#ref-procedures, Operations Manual -> Built-in procedures>>.""")
         p(
           """Users can also develop custom procedures and deploy to the database.
-            |See <<java-reference#extending-neo4j-procedures>> for details.""")
+            |See <<java-reference#extending-neo4j-procedures-and-functions, Java Reference -> Procedures and functions>> for details.""")
       }
-      p("""The following examples show how to pass arguments to and yield result fields from a procedure call.
-          |All examples use the following procedure:""")
-      p("""[source, java]
-          |----
-          |include::{import-neo4j-cypher-docs-sources}/org/neo4j/procedure/example/IndexingProcedure.java[tags=indexingProcedure]
-          |----""")
     }
 
     section("Call a procedure using `CALL`", "call-call-a-procedure-using-call") {
@@ -110,33 +104,33 @@ class CallTest extends DocumentingTest {
     }
 
     section("Call a procedure with literal arguments", "call-call-a-procedure-with-literal-arguments") {
-      p("""This calls the example procedure `org.neo4j.procedure.example.addNodeToIndex` using literal arguments.
+      p("""This calls the example procedure `dbms.security.createUser` using literal arguments.
           |The arguments are written out directly in the statement text.""")
-      query("CALL org.neo4j.procedure.example.addNodeToIndex('users', "+nodeId+", 'name')", assertEmpty) {
+      query("CALL dbms.security.createUser('johnsmith', 'h6u4%kr', false)", assertEmpty) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
 
     section("Call a procedure with parameter arguments", "call-call-a-procedure-with-parameter-arguments") {
-      p("""This calls the example procedure `org.neo4j.procedure.example.addNodeToIndex` using parameters as arguments.
+      p("""This calls the example procedure `dbms.security.createUser` using parameters as arguments.
           |Each procedure argument is taken to be the value of a corresponding statement parameter with the same name (or null if no such parameter has been given).""")
-      query("CALL org.neo4j.procedure.example.addNodeToIndex", assertEmpty, ("indexName", "users"), ("node", nodeId), ("propKey", "name")) {
+      query("CALL dbms.security.createUser", assertEmpty, ("username", "johnsmith"), ("password", "h6u4%kr"), ("requirePasswordChange", false)) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
 
     section("Call a procedure with mixed literal and parameter arguments", "call-call-a-procedure-with-mixed-literal-and-parameter-arguments") {
-      p("This calls the example procedure `org.neo4j.procedure.example.addNodeToIndex` using both literal and parameter arguments.")
-      query("CALL org.neo4j.procedure.example.addNodeToIndex('users', $node, 'name')", assertEmpty, ("node", nodeId)) {
+      p("This calls the example procedure `dbms.security.createUser` using both literal and parameter arguments.")
+      query("CALL dbms.security.createUser('username', $password, 'requirePasswordChange')", assertEmpty, ("password", "h6u4%kr")) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
 
     section("Call a procedure with literal and default arguments", "call-call-a-procedure-with-literal-and-default-arguments") {
       p(
-        """This calls the example procedure `org.neo4j.procedure.example.addNodeToIndex` using literal arguments.
+        """This calls the example procedure `dbms.security.createUser` using literal arguments.
           |That is, arguments that are written out directly in the statement text, and a trailing default argument that is provided by the procedure itself.""")
-      query("CALL org.neo4j.procedure.example.addNodeToIndex('users', "+nodeId+")", assertEmpty) {
+      query("CALL dbms.security.createUser('johnsmith', 'h6u4%kr')", assertEmpty) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
