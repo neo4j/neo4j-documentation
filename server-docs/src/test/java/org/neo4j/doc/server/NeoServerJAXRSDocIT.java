@@ -67,7 +67,7 @@ public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
         server = ServerHelper.createNonPersistentServer( builder );
         FunctionalTestHelper functionalTestHelper = new FunctionalTestHelper( server );
 
-        JaxRsResponse response = new RestRequest().get( functionalTestHelper.managementUri() );
+        JaxRsResponse response = new RestRequest().get( functionalTestHelper.baseUri().toASCIIString() );
         assertEquals( 200, response.getStatus() );
     }
 

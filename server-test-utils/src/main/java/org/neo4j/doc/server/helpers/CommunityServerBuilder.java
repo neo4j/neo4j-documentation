@@ -110,7 +110,7 @@ public class CommunityServerBuilder
     {
         Map<String, String> properties = stringMap(
                 ServerSettings.management_api_path.name(), managementUri,
-                ServerSettings.rest_api_path.name(), restUri );
+                ServerSettings.db_api_path.name(), restUri );
 
         ServerTestUtils.addDefaultRelativeProperties( properties, temporaryFolder );
 
