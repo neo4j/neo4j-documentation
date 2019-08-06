@@ -41,10 +41,8 @@ import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.graphdb._
 import org.neo4j.internal.kernel.api.Transaction.Type
 import org.neo4j.internal.kernel.api.security.SecurityContext
-import org.neo4j.kernel.impl.api.KernelStatement
 import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
-import org.neo4j.kernel.impl.core.ThreadToStatementContextBridge
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySubscriber, QuerySubscriberAdapter}
 import org.neo4j.kernel.impl.util.ValueUtils
@@ -519,24 +517,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   protected def sampleAllIndexesAndWait(mode: IndexSamplingMode = IndexSamplingMode.TRIGGER_REBUILD_ALL, time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS) = {
     indexingService.triggerIndexSampling(mode)
     unit.sleep(time)
-  }
-
-  protected def assertIsDeleted(pc: PropertyContainer) {
-    val nodeManager: ThreadToStatementContextBridge = db.getDependencyResolver.resolveDependency(classOf[ThreadToStatementContextBridge])
-
-    val statement : KernelStatement = nodeManager.getKernelTransactionBoundToThisThread( true ).acquireStatement().asInstanceOf[KernelStatement]
-
-    pc match {
-      case node: Node =>
-        if (statement.txState().nodeIsDeletedInThisTx(node.getId)) {
-        fail("Expected " + pc + " to be deleted, but it isn't.")
-        }
-      case rel: Relationship =>
-        if (statement.txState().relationshipIsDeletedInThisTx(rel.getId)) {
-          fail("Expected " + pc + " to be deleted, but it isn't.")
-        }
-      case _ => throw new ClassCastException
-    }
   }
 
   protected def getLabelsFromNode(p: DocsExecutionResult): Iterable[String] = p.columnAs[Node]("n").next().labels
