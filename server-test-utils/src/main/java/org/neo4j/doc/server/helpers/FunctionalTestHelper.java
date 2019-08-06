@@ -61,12 +61,6 @@ public final class FunctionalTestHelper
         return server.baseUri().toString() + "db/data/";
     }
 
-    public String managementUri()
-    {
-        return server.baseUri()
-                .toString() + "db/manage";
-    }
-
     public JaxRsResponse get(String path) {
         return request.get(path);
     }
