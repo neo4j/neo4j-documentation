@@ -538,7 +538,7 @@ class ImportToolDocIT
         try ( Transaction tx = db.beginTx(); ResourceIterator<Node> nodes = db.findNodes( Label.label( "Actor" ) ) )
         {
             assertEquals( asSet( "Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss" ), namesOf( nodes ) );
-            tx.success();
+            tx.commit();
         }
         managementService.shutdown();
     }
@@ -597,7 +597,7 @@ class ImportToolDocIT
             }
             assertEquals( 1, relationshipCount );
 
-            tx.success();
+            tx.commit();
         }
         finally
         {
@@ -637,9 +637,9 @@ class ImportToolDocIT
                 sequelCount++;
             }
             assertEquals( SEQUEL_COUNT, sequelCount );
-            tx.success();
             Number year = (Number) db.findNode( Label.label( "Movie" ), "title", "The Matrix" ).getProperty( "year" );
             assertEquals( 1999, year.intValue() );
+            tx.commit();
         }
         finally
         {

@@ -79,8 +79,7 @@ public class ReadOnlyDocTest
         try
         {
             graphDb.createNode();
-            tx.success();
-            tx.close();
+            tx.commit();
             fail( "expected exception" );
         }
         // then

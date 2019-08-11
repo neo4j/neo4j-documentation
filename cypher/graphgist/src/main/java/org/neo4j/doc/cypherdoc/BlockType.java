@@ -19,6 +19,10 @@
  */
 package org.neo4j.doc.cypherdoc;
 
+import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -35,10 +39,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
@@ -309,7 +309,7 @@ enum BlockType
                     try ( Transaction tx = state.graphOps.beginTx() )
                     {
                         state.graphOps.schema().awaitIndexesOnline( 10000, TimeUnit.SECONDS );
-                        tx.success();
+                        tx.commit();
                     }
                 }
                 else
@@ -468,7 +468,7 @@ enum BlockType
             {
                 writer.emit( out, Walker.fullGraph( state.graphOps ) );
             }
-            tx.success();
+            tx.commit();
         }
         catch ( IOException e )
         {

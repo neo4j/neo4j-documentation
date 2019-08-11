@@ -71,8 +71,7 @@ public class PathFindingDocTest
     @After
     public void doAfter()
     {
-        tx.success();
-        tx.close();
+        tx.commit();
     }
 
     @Test

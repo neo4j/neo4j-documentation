@@ -74,7 +74,7 @@ public class TestNewGraphvizWriter
                 Iterable<Node> traverser =
                         neo.traversalDescription().depthFirst().relationships( type.KNOWS ).relationships( type.WORKS_FOR ).traverse( emil ).nodes();
                 writer.emit( out, Walker.crosscut( traverser, type.KNOWS, type.WORKS_FOR ) );
-                tx.success();
+                tx.commit();
                 out.toString();
             }
         }

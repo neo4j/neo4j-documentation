@@ -53,7 +53,7 @@ public class ExtensionTestingDocIT
                 try ( Transaction tx = graphDatabaseService.beginTx() )
                 {
                     graphDatabaseService.createNode( Label.label( "User" ) );
-                    tx.success();
+                    tx.commit();
                 }
                 return null;
             } );

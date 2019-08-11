@@ -95,7 +95,7 @@ public class ColleaguesResource
                             }
                         }
                     }
-                    tx.success();
+                    tx.commit();
                 }
 
                 jg.writeEndArray();

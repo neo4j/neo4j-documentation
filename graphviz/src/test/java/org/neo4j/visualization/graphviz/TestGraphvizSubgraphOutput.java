@@ -97,7 +97,7 @@ public class TestGraphvizSubgraphOutput
                 };
 
                 writer.emit( out, walker );
-                tx.success();
+                tx.commit();
             }
         }
         finally

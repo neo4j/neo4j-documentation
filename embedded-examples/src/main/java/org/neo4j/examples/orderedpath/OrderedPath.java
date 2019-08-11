@@ -80,7 +80,7 @@ public class OrderedPath
             B.setProperty( "name", "B" );
             C.setProperty( "name", "C" );
             D.setProperty( "name", "D" );
-            tx.success();
+            tx.commit();
             return A;
         }
     }

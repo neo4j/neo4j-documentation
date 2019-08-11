@@ -51,7 +51,7 @@ public class GraphDatabaseServiceCleaner
             {
                 index.drop();
             }
-            tx.success();
+            tx.commit();
         }
     }
 
@@ -68,7 +68,7 @@ public class GraphDatabaseServiceCleaner
             {
                 node.delete();
             }
-            tx.success();
+            tx.commit();
         }
     }
 }

@@ -60,7 +60,7 @@ public class EmbeddedNeo4jWithNewIndexing
                 indexDefinition = schema.indexFor( Label.label( "User" ) )
                         .on( "username" )
                         .create();
-                tx.success();
+                tx.commit();
             }
             // end::createIndex[]
             // tag::wait[]
@@ -93,7 +93,7 @@ public class EmbeddedNeo4jWithNewIndexing
                     userNode.setProperty( "username", "user" + id + "@neo4j.org" );
                 }
                 System.out.println( "Users created" );
-                tx.success();
+                tx.commit();
             }
             // end::addUsers[]
         }
@@ -154,7 +154,7 @@ public class EmbeddedNeo4jWithNewIndexing
                 {
                     node.setProperty( "username", "user" + (idToFind + 1) + "@neo4j.org" );
                 }
-                tx.success();
+                tx.commit();
             }
             // end::updateUsers[]
         }
@@ -171,7 +171,7 @@ public class EmbeddedNeo4jWithNewIndexing
                 {
                     node.delete();
                 }
-                tx.success();
+                tx.commit();
             }
             // end::deleteUsers[]
         }
@@ -188,7 +188,7 @@ public class EmbeddedNeo4jWithNewIndexing
                     indexDefinition.drop();
                 }
 
-                tx.success();
+                tx.commit();
             }
             // end::dropIndex[]
         }

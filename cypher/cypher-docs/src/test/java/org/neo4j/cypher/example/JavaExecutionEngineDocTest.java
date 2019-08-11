@@ -98,7 +98,7 @@ public class JavaExecutionEngineDocTest
         try ( Transaction tx = this.db.beginTx() )
         {
             this.db.schema().indexFor( Label.label( "Person" ) ).on( "name" ).create();
-            tx.success();
+            tx.commit();
         }
 
         try ( Transaction tx = this.db.beginTx() )
@@ -110,7 +110,7 @@ public class JavaExecutionEngineDocTest
             johanNode.setProperty( "name", "Johan" );
             michaelaNode.setProperty( "name", "Michaela" );
 
-            tx.success();
+            tx.commit();
         }
     }
 
@@ -191,7 +191,7 @@ public class JavaExecutionEngineDocTest
             {
                 db.createNode();
             }
-            tx.success();
+            tx.commit();
         }
     }
 
@@ -473,7 +473,7 @@ public class JavaExecutionEngineDocTest
         try ( Transaction tx = db.beginTx() )
         {
             a.createRelationshipTo( b, RelationshipType.withName( "friend" ) );
-            tx.success();
+            tx.commit();
         }
     }
 }

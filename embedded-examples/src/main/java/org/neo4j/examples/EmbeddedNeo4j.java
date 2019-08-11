@@ -98,7 +98,7 @@ public class EmbeddedNeo4j
                        + ( (String) secondNode.getProperty( "message" ) );
 
             // tag::transaction[]
-            tx.success();
+            tx.commit();
         }
         // end::transaction[]
     }
@@ -114,7 +114,7 @@ public class EmbeddedNeo4j
             secondNode.delete();
             // end::removingData[]
 
-            tx.success();
+            tx.commit();
         }
     }
 

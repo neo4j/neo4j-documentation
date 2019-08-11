@@ -63,7 +63,7 @@ public class JavaQuery
         {
             Node myNode = db.createNode();
             myNode.setProperty( "name", "my node" );
-            tx.success();
+            tx.commit();
         }
         // end::addData[]
 

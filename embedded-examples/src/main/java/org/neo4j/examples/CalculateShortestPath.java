@@ -67,7 +67,7 @@ public class CalculateShortestPath
             createChain( "Neo", "Morpheus", "Trinity" );
             createChain( "Morpheus", "Cypher", "Agent Smith" );
             createChain( "Morpheus", "Agent Smith" );
-            tx.success();
+            tx.commit();
         }
 
         try ( Transaction tx = graphDb.beginTx() )

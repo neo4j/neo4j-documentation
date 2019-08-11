@@ -58,7 +58,7 @@ public class JUnitDocIT
                 try ( Transaction tx = graphDatabaseService.beginTx() )
                 {
                     graphDatabaseService.createNode( Label.label( "Admin" ) );
-                    tx.success();
+                    tx.commit();
                 }
                 return null;
             } );
@@ -79,7 +79,7 @@ public class JUnitDocIT
         try ( Transaction tx = neo4j.getGraphDatabaseService().beginTx() )
         {
             assertEquals( 2, count( neo4j.getGraphDatabaseService().findNodes( Label.label( "Admin" ) ) ) );
-            tx.success();
+            tx.commit();
         }
     }
     // end::useEnterpriseJUnitRule[]
@@ -97,7 +97,7 @@ public class JUnitDocIT
             {
                 // nothing to-do
             }
-            tx.success();
+            tx.commit();
         }
 
         // Then I can access created constraint
@@ -109,7 +109,7 @@ public class JUnitDocIT
             assertEquals( Label.label( "User" ), constraint.getLabel() );
             assertEquals( "name", single( constraint.getPropertyKeys() ) );
 
-            tx.success();
+            tx.commit();
         }
     }
 }

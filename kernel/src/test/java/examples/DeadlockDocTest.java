@@ -51,7 +51,7 @@ class DeadlockDocTest
             try ( Transaction tx = databaseService.beginTx() )
             {
                 Object result = doStuff(tx);
-                tx.success();
+                tx.commit();
                 return result;
             }
             catch ( Throwable ex )

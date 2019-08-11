@@ -79,7 +79,7 @@ public class ColleaguesCypherExecutionResource
                         Map<String,Object> row = result.next();
                         jg.writeString( ((Node) row.get( "colleague" )).getProperty( "name" ).toString() );
                     }
-                    tx.success();
+                    tx.commit();
                 }
 
                 jg.writeEndArray();

@@ -51,7 +51,7 @@ public class JUnitDocIT
                 try (Transaction tx = graphDatabaseService.beginTx())
                 {
                     graphDatabaseService.createNode( Label.label( "Admin" ) );
-                    tx.success();
+                    tx.commit();
                 }
                 return null;
             } );
@@ -71,7 +71,7 @@ public class JUnitDocIT
         // and we have access to underlying GraphDatabaseService
         try (Transaction tx = neo4j.getGraphDatabaseService().beginTx()) {
             assertEquals( 2, count(neo4j.getGraphDatabaseService().findNodes( Label.label( "Admin" ) ) ));
-            tx.success();
+            tx.commit();
         }
     }
     // end::useJUnitRule[]
