@@ -92,7 +92,7 @@ public abstract class Neo4jTestCase
 
         if ( commit )
         {
-            tx.success();
+            tx.commit();
         }
         tx.close();
         tx = null;

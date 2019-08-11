@@ -121,7 +121,7 @@ public class NewMatrix
             architect.setProperty( "name", "The Architect" );
             smith.createRelationshipTo( architect, RelTypes.CODED_BY );
 
-            tx.success();
+            tx.commit();
         }
     }
 

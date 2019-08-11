@@ -65,7 +65,7 @@ class SocnetTest
             personRepository = new PersonRepository( graphDb );
             createPersons();
             setupFriendsBetweenPeople( 10 );
-            tx.success();
+            tx.commit();
         }
     }
 
@@ -83,7 +83,7 @@ class SocnetTest
         {
             person = getRandomPerson();
             person.addStatus( "Testing!" );
-            tx.success();
+            tx.commit();
         }
 
         try ( Transaction tx = graphDb.beginTx() )
@@ -133,13 +133,13 @@ class SocnetTest
             person1.addFriend( person2 );
 
             noOfFriends = person1.getNrOfFriends();
-            tx.success();
+            tx.commit();
         }
 
         try ( Transaction tx = graphDb.beginTx() )
         {
             person1.removeFriend( person2 );
-            tx.success();
+            tx.commit();
         }
 
         try ( Transaction tx = graphDb.beginTx() )
@@ -164,7 +164,7 @@ class SocnetTest
                 Person friend = getRandomFriendOf( person );
                 friend.addStatus( "Dum-deli-dum..." );
             }
-            tx.success();
+            tx.commit();
         }
 
         ArrayList<StatusUpdate> updates;
@@ -233,7 +233,7 @@ class SocnetTest
             start.addFriend( middleMan1 );
             middleMan1.addFriend( middleMan2 );
             middleMan2.addFriend( endMan );
-            tx.success();
+            tx.commit();
         }
 
         try ( Transaction tx = graphDb.beginTx() )
@@ -268,7 +268,7 @@ class SocnetTest
             e.addFriend( b );
             e.addFriend( c );
             e.addFriend( d );
-            tx.success();
+            tx.commit();
         }
 
         try ( Transaction tx = graphDb.beginTx() )
@@ -306,7 +306,7 @@ class SocnetTest
             f.addFriend( b );
             f.addFriend( c );
             f.addFriend( d );
-            tx.success();
+            tx.commit();
         }
 
         try ( Transaction tx = graphDb.beginTx() )

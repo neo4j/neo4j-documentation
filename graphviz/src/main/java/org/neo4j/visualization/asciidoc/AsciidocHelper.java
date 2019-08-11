@@ -151,7 +151,7 @@ public class AsciidocHelper
 
             String safeTitle = title.replaceAll( ILLEGAL_STRINGS, "" );
 
-            tx.success();
+            tx.commit();
 
             try
             {

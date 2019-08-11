@@ -91,7 +91,7 @@ class Neo4jBasicDocTest
         {
             n = graphDb.createNode();
             n.setProperty( "name", "Nancy" );
-            tx.success();
+            tx.commit();
         }
 
         // The node should have a valid id

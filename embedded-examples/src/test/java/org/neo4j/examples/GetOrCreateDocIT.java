@@ -208,7 +208,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
             parameters.put( "name", username );
             resultIterator = graphDb.execute( queryString, parameters ).columnAs( "n" );
             result = resultIterator.next();
-            tx.success();
+            tx.commit();
             return result;
         }
         // end::getOrCreateWithCypher[]
@@ -235,7 +235,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
                     .constraintFor( Label.label( "User" ) )
                     .assertPropertyIsUnique( "name" )
                     .create();
-            tx.success();
+            tx.commit();
         }
         // end::prepareConstraint[]
         return graphdb;
@@ -246,6 +246,6 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
         Label label = Label.label( "User" );
         Node result = graph.findNode( label, "name", username );
         assertNotNull( format( "User '%s' not created.", username ), result );
-        tx.success();
+        tx.commit();
     }
 }
