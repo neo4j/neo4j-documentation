@@ -32,6 +32,8 @@ import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.configuration.connectors.HttpConnector;
 import org.neo4j.configuration.connectors.HttpsConnector;
 import org.neo4j.configuration.helpers.SocketAddress;
+import org.neo4j.configuration.ssl.PemSslPolicyConfig;
+import org.neo4j.configuration.ssl.SslPolicyScope;
 import org.neo4j.doc.server.ServerTestUtils;
 import org.neo4j.graphdb.facade.ExternalDependencies;
 import org.neo4j.graphdb.facade.GraphDatabaseDependencies;
@@ -43,6 +45,7 @@ import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.server.database.CommunityGraphFactory;
 import org.neo4j.server.preflight.PreFlightTasks;
+import org.neo4j.test.ssl.SelfSignedCertificateFactory;
 
 import static org.neo4j.doc.server.ServerTestUtils.asOneLine;
 import static org.neo4j.internal.helpers.collection.MapUtil.stringMap;
@@ -153,9 +156,12 @@ public class CommunityServerBuilder
         properties.put( HttpsConnector.listen_address.name(), httpsAddress.toString() );
 
         properties.put( GraphDatabaseSettings.auth_enabled.name(), "false" );
-        properties.put( GraphDatabaseSettings.legacy_certificates_directory.name(), new File(temporaryFolder, "certificates").getAbsolutePath() );
         properties.put( GraphDatabaseSettings.logs_directory.name(), new File(temporaryFolder, "logs").getAbsolutePath() );
         properties.put( GraphDatabaseSettings.pagecache_memory.name(), "8m" );
+
+        File certificatesDir = new File(temporaryFolder, "certificates").getAbsoluteFile();
+        SelfSignedCertificateFactory.create( certificatesDir );
+        properties.put( PemSslPolicyConfig.forScope( SslPolicyScope.HTTPS ).name(), certificatesDir.toString() );
 
         for ( Object key : arbitraryProperties.keySet() )
         {

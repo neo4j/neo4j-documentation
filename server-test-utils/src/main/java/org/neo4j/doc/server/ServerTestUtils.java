@@ -63,7 +63,6 @@ public class ServerTestUtils {
     public static void addDefaultRelativeProperties(Map<String, String> properties, File temporaryFolder) {
         addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.data_directory );
         addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.logs_directory );
-        addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.legacy_certificates_directory );
     }
 
     private static void addRelativeProperty(File temporaryFolder, Map<String, String> properties,

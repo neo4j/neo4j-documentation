@@ -26,7 +26,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Result;
@@ -36,7 +35,6 @@ import org.neo4j.test.rule.TestDirectory;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.internal.helpers.collection.Iterators.count;
-import static org.neo4j.server.ServerTestUtils.getRelativePath;
 
 public class ExtensionTestingDocIT
 {
@@ -46,8 +44,6 @@ public class ExtensionTestingDocIT
     @Rule
     public Neo4jRule neo4j = new Neo4jRule()
             .withUnmanagedExtension( "/myExtension", MyUnmanagedExtension.class )
-            .withConfig( GraphDatabaseSettings.legacy_certificates_directory,
-                    getRelativePath( testDirectory.storeDir(), GraphDatabaseSettings.legacy_certificates_directory ) )
             .withFixture( graphDatabaseService ->
             {
                 try ( Transaction tx = graphDatabaseService.beginTx() )
