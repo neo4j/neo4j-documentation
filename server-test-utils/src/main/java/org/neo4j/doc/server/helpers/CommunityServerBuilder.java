@@ -54,7 +54,6 @@ public class CommunityServerBuilder
     private SocketAddress httpsAddress = new SocketAddress( "localhost", 7473 );
     private String maxThreads = null;
     private String dataDir = null;
-    private String managementUri = "/db/manage/";
     private String restUri = "/db/";
     private PreFlightTasks preflightTasks;
     private final HashMap<String, String> thirdPartyPackages = new HashMap<>();
@@ -108,9 +107,7 @@ public class CommunityServerBuilder
 
     private Map<String, String> createConfiguration( File temporaryFolder )
     {
-        Map<String, String> properties = stringMap(
-                ServerSettings.management_api_path.name(), managementUri,
-                ServerSettings.db_api_path.name(), restUri );
+        Map<String,String> properties = stringMap( ServerSettings.db_api_path.name(), restUri );
 
         ServerTestUtils.addDefaultRelativeProperties( properties, temporaryFolder );
 
@@ -181,27 +178,6 @@ public class CommunityServerBuilder
     public CommunityServerBuilder usingDataDir( String dataDir )
     {
         this.dataDir = dataDir;
-        return this;
-    }
-
-    public CommunityServerBuilder withRelativeManagementApiUriPath( String uri )
-    {
-        try
-        {
-            URI theUri = new URI( uri );
-            if ( theUri.isAbsolute() )
-            {
-                this.managementUri = theUri.getPath();
-            }
-            else
-            {
-                this.managementUri = theUri.toString();
-            }
-        }
-        catch ( URISyntaxException e )
-        {
-            throw new RuntimeException( e );
-        }
         return this;
     }
 
