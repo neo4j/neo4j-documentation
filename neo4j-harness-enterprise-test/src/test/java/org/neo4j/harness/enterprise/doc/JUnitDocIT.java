@@ -76,9 +76,9 @@ public class JUnitDocIT
         assertEquals( 200, response.status() );
 
         // and we have access to underlying GraphDatabaseService
-        try ( Transaction tx = neo4j.getGraphDatabaseService().beginTx() )
+        try ( Transaction tx = neo4j.defaultDatabaseService().beginTx() )
         {
-            assertEquals( 2, count( neo4j.getGraphDatabaseService().findNodes( Label.label( "Admin" ) ) ) );
+            assertEquals( 2, count( neo4j.defaultDatabaseService().findNodes( Label.label( "Admin" ) ) ) );
             tx.commit();
         }
     }
@@ -88,7 +88,7 @@ public class JUnitDocIT
     public void shouldUserEnterpriseFeatures() throws Exception
     {
         // Given
-        GraphDatabaseService db = neo4j.getGraphDatabaseService();
+        GraphDatabaseService db = neo4j.defaultDatabaseService();
 
         // When I create property existence constraint
         try ( Transaction tx = db.beginTx() )

@@ -51,7 +51,7 @@ public abstract class AbstractJavaDocTestBase implements GraphHolder
     @Override
     public GraphDatabaseService graphdb()
     {
-        return neo4j.getGraphDatabaseService();
+        return neo4j.defaultDatabaseService();
     }
 
     protected String createCypherSnippet( String cypherQuery )

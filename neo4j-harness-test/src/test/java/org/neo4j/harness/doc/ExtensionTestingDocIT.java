@@ -83,7 +83,7 @@ public class ExtensionTestingDocIT
     public void testMyExtensionWithFunctionFixture()
     {
         // Given
-        Result result = neo4j.getGraphDatabaseService().execute( "MATCH (n:User) return n" );
+        Result result = neo4j.defaultDatabaseService().execute( "MATCH (n:User) return n" );
 
         // Then
         assertEquals( 1, count( result ) );

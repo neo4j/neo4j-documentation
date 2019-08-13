@@ -69,8 +69,8 @@ public class JUnitDocIT
         assertEquals(200, response.status());
 
         // and we have access to underlying GraphDatabaseService
-        try (Transaction tx = neo4j.getGraphDatabaseService().beginTx()) {
-            assertEquals( 2, count(neo4j.getGraphDatabaseService().findNodes( Label.label( "Admin" ) ) ));
+        try (Transaction tx = neo4j.defaultDatabaseService().beginTx()) {
+            assertEquals( 2, count(neo4j.defaultDatabaseService().findNodes( Label.label( "Admin" ) ) ));
             tx.commit();
         }
     }

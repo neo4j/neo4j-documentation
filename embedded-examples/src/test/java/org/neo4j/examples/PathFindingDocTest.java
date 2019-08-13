@@ -59,7 +59,7 @@ public class PathFindingDocTest
     @BeforeClass
     public static void startDb()
     {
-        graphDb = dbRule.getGraphDatabaseService();
+        graphDb = dbRule.defaultDatabaseService();
     }
 
     @Before
