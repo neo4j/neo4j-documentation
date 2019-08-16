@@ -24,7 +24,6 @@ import org.junit.Test;
 
 import java.net.URI;
 
-import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Transaction;
@@ -33,7 +32,6 @@ import org.neo4j.test.rule.TestDirectory;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.internal.helpers.collection.Iterators.count;
-import static org.neo4j.server.ServerTestUtils.getRelativePath;
 
 public class JUnitDocIT
 {
@@ -44,8 +42,6 @@ public class JUnitDocIT
     @Rule
     public Neo4jRule neo4j = new Neo4jRule()
             .withFixture( "CREATE (admin:Admin)" )
-            .withConfig( GraphDatabaseSettings.legacy_certificates_directory,
-                    getRelativePath( testDirectory.storeDir(), GraphDatabaseSettings.legacy_certificates_directory ) )
             .withFixture( graphDatabaseService ->
             {
                 try (Transaction tx = graphDatabaseService.beginTx())

@@ -22,11 +22,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.doc.server.HTTP;
 import org.neo4j.harness.junit.rule.Neo4jRule;
 
@@ -34,8 +32,6 @@ import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.neo4j.doc.server.ServerTestUtils.getRelativePath;
-import static org.neo4j.doc.server.ServerTestUtils.getSharedTestTemporaryFolder;
 
 public class UnmanagedExtensionsDocIT
 {
@@ -45,8 +41,6 @@ public class UnmanagedExtensionsDocIT
                     "MERGE (m:Movie  {name: 'The Matrix'}) " +
                     "MERGE (p:Person {name: actor}) " +
                     "MERGE (p)-[:ACTED_IN]->(m) " )
-            .withConfig( GraphDatabaseSettings.legacy_certificates_directory,
-                    Path.of( getRelativePath( getSharedTestTemporaryFolder(), GraphDatabaseSettings.legacy_certificates_directory ) ) )
             .withUnmanagedExtension( "/path/to/my/extension1", ColleaguesCypherExecutionResource.class )
             .withUnmanagedExtension( "/path/to/my/extension2", ColleaguesResource.class );
 
