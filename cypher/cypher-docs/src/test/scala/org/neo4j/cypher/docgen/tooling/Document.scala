@@ -23,7 +23,8 @@ import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunc
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.kernel.GraphDatabaseQueryService
-import org.neo4j.cypher.internal.v4_0.util.{Eagerly, InternalException}
+import org.neo4j.cypher.internal.v4_0.util.Eagerly
+import org.neo4j.exceptions.InternalException
 
 import scala.collection.JavaConverters._
 

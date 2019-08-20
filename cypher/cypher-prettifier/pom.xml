@@ -91,6 +91,11 @@
             <artifactId>neo4j-util-4.0</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-exceptions</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

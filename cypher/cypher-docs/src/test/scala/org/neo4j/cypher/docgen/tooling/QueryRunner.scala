@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.GraphIcing
-import org.neo4j.cypher.internal.v4_0.util.InternalException
+import org.neo4j.exceptions.InternalException
 import org.neo4j.internal.kernel.api.Transaction.Type
 import org.neo4j.internal.kernel.api.security.SecurityContext.AUTH_DISABLED
 import org.neo4j.kernel.GraphDatabaseQueryService
