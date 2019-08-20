@@ -27,7 +27,8 @@ import org.apache.commons.io.FileUtils
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
-import org.neo4j.cypher._
+import org.neo4j.cypher.GraphIcing
+import org.neo4j.exceptions.{InternalException, Neo4jException}
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl, ResultSubscriber}
@@ -116,7 +117,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       }, Transaction.Type.`implicit` )
     docsResult
   } catch {
-    case e: CypherException => throw new InternalException(queryText, e)
+    case e: Neo4jException => throw new InternalException(queryText, e)
   }
 
   def replaceNodeIds(_query: String): String = {
