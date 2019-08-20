@@ -23,7 +23,7 @@ import java.io.File
 
 import com.neo4j.commercial.edition.factory.CommercialDatabaseManagementServiceBuilder
 import org.junit.Test
-import org.neo4j.cypher.{ConstraintValidationException, CypherExecutionException}
+import org.neo4j.exceptions.{ConstraintValidationException, CypherExecutionException}
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.graphdb.{Label, RelationshipType}
 

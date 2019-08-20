@@ -33,7 +33,8 @@ import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl, ResultSubscriber}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.cypher.internal.v4_0.util.Eagerly
-import org.neo4j.cypher.{CypherException, ExecutionEngineHelper, GraphIcing}
+import org.neo4j.exceptions.Neo4jException
+import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
 import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.doc.test.GraphDescription
@@ -172,7 +173,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     internalTestQuery(title, text, queryText, optionalResultExplanation, None, None, parameters, planners, assertions)
   }
 
-  def testFailingQuery[T <: CypherException: ClassTag](title: String, text: String, queryText: String, optionalResultExplanation: String = null) {
+  def testFailingQuery[T <: Neo4jException: ClassTag](title: String, text: String, queryText: String, optionalResultExplanation: String = null) {
     val classTag = implicitly[ClassTag[T]]
     internalTestQuery(title, text, queryText, optionalResultExplanation, Some(classTag), None, Map.empty, Seq.empty, _ => {})
   }
@@ -190,7 +191,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                                    text: String,
                                    queryText: String,
                                    realQuery: Option[String],
-                                   expectedException: Option[ClassTag[_ <: CypherException]],
+                                   expectedException: Option[ClassTag[_ <: Neo4jException]],
                                    prepare: Option[GraphDatabaseCypherService => Unit],
                                    assertions: DocsExecutionResult => Unit) {
     preparationQueries = List()
@@ -243,7 +244,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       }
 
     } catch {
-      case e: CypherException if expectedException.nonEmpty =>
+      case e: Neo4jException if expectedException.nonEmpty =>
         val expectedExceptionType = expectedException.get
         e match {
           case expectedExceptionType(typedE) =>
@@ -258,7 +259,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                                 text: String,
                                 queryText: String,
                                 optionalResultExplanation: String,
-                                expectedException: Option[ClassTag[_ <: CypherException]],
+                                expectedException: Option[ClassTag[_ <: Neo4jException]],
                                 prepare: Option[GraphDatabaseCypherService => Unit],
                                 parameters: Map[String, Any],
                                 planners: Seq[String],
@@ -326,8 +327,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   private def executeWithAllPlannersAndAssert(query: String,
                                               assertions: DocsExecutionResult => Unit,
-                                              expectedException: Option[ClassTag[_ <: CypherException]],
-                                              expectedCaught: CypherException => Unit,
+                                              expectedException: Option[ClassTag[_ <: Neo4jException]],
+                                              expectedCaught: Neo4jException => Unit,
                                               parameters: Map[String, Any],
                                               providedPlanners: Seq[String],
                                               prepareFunction: => Unit): Option[String] = {
@@ -471,12 +472,12 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   }
 
   def dumpToFileWithException(dir: File, writer: PrintWriter, title: String, query: String, returns: String, text: String,
-                 failure: CypherException, consoleData: String, parameters: Map[String, Any]) {
+                 failure: Neo4jException, consoleData: String, parameters: Map[String, Any]) {
     dumpToFile(dir, writer, title, query, returns, text, Left(failure), consoleData, parameters)
   }
 
   private def dumpToFile(dir: File, writer: PrintWriter, title: String, query: String, returns: String, text: String,
-                         result: Either[CypherException, String], consoleData: String, parameters: Map[String, Any]) {
+                         result: Either[Neo4jException, String], consoleData: String, parameters: Map[String, Any]) {
     val testId = niceify(section + " " + title)
     writer.println("[[" + testId + "]]")
     if (!noTitle) writer.println("== " + title + " ==")
@@ -591,7 +592,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                         testId: String,
                         query: String,
                         returns: String,
-                        result: Either[CypherException, String],
+                        result: Either[Neo4jException, String],
                         consoleData: String,
                         parameters: Map[String, Any]) {
     if (parameters != null && parameters.nonEmpty) {

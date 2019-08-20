@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen.tooling.tests
 
 import org.neo4j.cypher.GraphIcing
-import org.neo4j.cypher.SyntaxException
+import org.neo4j.exceptions.SyntaxException
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.kernel.GraphDatabaseQueryService
