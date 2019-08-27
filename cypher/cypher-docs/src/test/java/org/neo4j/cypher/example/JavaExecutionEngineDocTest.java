@@ -60,7 +60,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-import static org.neo4j.internal.helpers.collection.Iterators.asIterable;
 import static org.neo4j.internal.helpers.collection.Iterators.count;
 
 public class JavaExecutionEngineDocTest
@@ -154,7 +153,7 @@ public class JavaExecutionEngineDocTest
 
             assertThat( result.columns(), hasItem( "n" ) );
             Iterator<Node> n_column = result.columnAs( "n" );
-            assertThat( asIterable( n_column ), hasItem( db.getNodeById( 0 ) ) );
+            assertThat( Iterators.asCollection( n_column ), hasItem( db.getNodeById( 0 ) ) );
             // end::JavaQuery[]
             transaction.commit();
         }

@@ -32,7 +32,6 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.internal.helpers.collection.Iterators;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.io.fs.FileUtils.deleteRecursively;
@@ -88,10 +87,7 @@ public class JavaQuery
         {
             // tag::items[]
             Iterator<Node> n_column = result.columnAs( "n" );
-            for ( Node node : Iterators.asIterable( n_column ) )
-            {
-                nodeResult = node + ": " + node.getProperty( "name" );
-            }
+            n_column.forEachRemaining( node -> nodeResult = node + ": " + node.getProperty( "name" ) );
             // end::items[]
 
             // tag::columns[]
