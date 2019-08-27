@@ -29,7 +29,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -148,13 +147,17 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleQuery() throws Exception
     {
-// tag::JavaQuery[]
-        Result result = db.execute( "MATCH (n) WHERE id(n) = 0 AND 1 = 1 RETURN n" );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::JavaQuery[]
+            Result result = db.execute( "MATCH (n) WHERE id(n) = 0 AND 1 = 1 RETURN n" );
 
-        assertThat( result.columns(), hasItem( "n" ) );
-        Iterator<Node> n_column = result.columnAs( "n" );
-        assertThat( asIterable( n_column ), hasItem( db.getNodeById( 0 ) ) );
-// end::JavaQuery[]
+            assertThat( result.columns(), hasItem( "n" ) );
+            Iterator<Node> n_column = result.columnAs( "n" );
+            assertThat( asIterable( n_column ), hasItem( db.getNodeById( 0 ) ) );
+            // end::JavaQuery[]
+            transaction.commit();
+        }
     }
 
     @Test
@@ -163,24 +166,32 @@ public class JavaExecutionEngineDocTest
         makeFriends( michaelaNode, bobNode );
         makeFriends( michaelaNode, johanNode );
 
-        Result result = db.execute( "MATCH (n)-->(friend) WHERE id(n) = 0 RETURN collect(friend)" );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            Result result = db.execute( "MATCH (n)-->(friend) WHERE id(n) = 0 RETURN collect(friend)" );
 
-        Iterable<Node> friends = (Iterable<Node>) result.columnAs( "collect(friend)" ).next();
-        assertThat( friends, hasItems( bobNode, johanNode ) );
-        assertThat( friends, instanceOf( Iterable.class ) );
+            Iterable<Node> friends = (Iterable<Node>) result.columnAs( "collect(friend)" ).next();
+            assertThat( friends, hasItems( bobNode, johanNode ) );
+            assertThat( friends, instanceOf( Iterable.class ) );
+            transaction.commit();
+        }
     }
 
     @Test
     public void testColumnAreInTheRightOrder() throws Exception
     {
         createTenNodes();
-        String q = "MATCH (one), (two), (three), (four), (five), (six), (seven), (eight), (nine), (ten) " +
-                "WHERE id(one) = 1 AND id(two) = 2 AND id(three) = 3 AND id(four) = 4 AND id(five) = 5 " +
-                "AND id(six) = 6 AND id(seven) = 7 AND id(eight) = 8 AND id(nine) = 9 AND id(ten) = 10 " +
-                "RETURN one, two, three, four, five, six, seven, eight, nine, ten";
-        Result result = db.execute( q );
-        Pattern pattern = Pattern.compile( "one.*two.*three.*four.*five.*six.*seven.*eight.*nine.*ten" );
-        assertTrue( pattern.matcher( result.resultAsString() ).find() );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            String q = "MATCH (one), (two), (three), (four), (five), (six), (seven), (eight), (nine), (ten) " +
+                    "WHERE id(one) = 1 AND id(two) = 2 AND id(three) = 3 AND id(four) = 4 AND id(five) = 5 " +
+                    "AND id(six) = 6 AND id(seven) = 7 AND id(eight) = 8 AND id(nine) = 9 AND id(ten) = 10 " +
+                    "RETURN one, two, three, four, five, six, seven, eight, nine, ten";
+            Result result = db.execute( q );
+            Pattern pattern = Pattern.compile( "one.*two.*three.*four.*five.*six.*seven.*eight.*nine.*ten" );
+            assertTrue( pattern.matcher( result.resultAsString() ).find() );
+            transaction.commit();
+        }
     }
 
     private void createTenNodes()
@@ -198,31 +209,39 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithParameterForNodeId() throws Exception
     {
-        // tag::exampleWithParameterForNodeId[]
-        Map<String, Object> params = new HashMap<>();
-        params.put( "id", 0 );
-        String query = "MATCH (n) WHERE id(n) = $id RETURN n.name";
-        Result result = db.execute( query, params );
-        // end::exampleWithParameterForNodeId[]
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::exampleWithParameterForNodeId[]
+            Map<String,Object> params = new HashMap<>();
+            params.put( "id", 0 );
+            String query = "MATCH (n) WHERE id(n) = $id RETURN n.name";
+            Result result = db.execute( query, params );
+            // end::exampleWithParameterForNodeId[]
 
-        assertThat( result.columns(), hasItem( "n.name" ) );
-        Iterator<Object> n_column = result.columnAs( "n.name" );
-        assertEquals( "Michaela", n_column.next() );
-        dumpToFile( "exampleWithParameterForNodeId", query, params );
+            assertThat( result.columns(), hasItem( "n.name" ) );
+            Iterator<Object> n_column = result.columnAs( "n.name" );
+            assertEquals( "Michaela", n_column.next() );
+            dumpToFile( "exampleWithParameterForNodeId", query, params );
+            transaction.commit();
+        }
     }
 
     @Test
     public void exampleWithParameterForMultipleNodeIds() throws Exception
     {
-        // tag::exampleWithParameterForMultipleNodeIds[]
-        Map<String, Object> params = new HashMap<>();
-        params.put( "ids", Arrays.asList( 0, 1, 2 ) );
-        String query = "MATCH (n) WHERE id(n) IN $ids RETURN n.name";
-        Result result = db.execute( query, params );
-        // end::exampleWithParameterForMultipleNodeIds[]
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::exampleWithParameterForMultipleNodeIds[]
+            Map<String,Object> params = new HashMap<>();
+            params.put( "ids", asList( 0, 1, 2 ) );
+            String query = "MATCH (n) WHERE id(n) IN $ids RETURN n.name";
+            Result result = db.execute( query, params );
+            // end::exampleWithParameterForMultipleNodeIds[]
 
-        assertEquals( asList( "Michaela", "Bob", "Johan" ), this.<String>toList( result, "n.name" ) );
-        dumpToFile( "exampleWithParameterForMultipleNodeIds", query, params );
+            assertEquals( asList( "Michaela", "Bob", "Johan" ), this.<String>toList( result, "n.name" ) );
+            dumpToFile( "exampleWithParameterForMultipleNodeIds", query, params );
+            transaction.commit();
+        }
     }
 
     private <T> List<T> toList( Result result, String column )
@@ -235,167 +254,203 @@ public class JavaExecutionEngineDocTest
     @Test
     public void exampleWithStringLiteralAsParameter() throws Exception
     {
-        // tag::exampleWithStringLiteralAsParameter[]
-        Map<String, Object> params = new HashMap<>();
-        params.put( "name", "Johan" );
-        String query = "MATCH (n:Person) WHERE n.name = $name RETURN n";
-        Result result = db.execute( query, params );
-        // end::exampleWithStringLiteralAsParameter[]
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::exampleWithStringLiteralAsParameter[]
+            Map<String,Object> params = new HashMap<>();
+            params.put( "name", "Johan" );
+            String query = "MATCH (n:Person) WHERE n.name = $name RETURN n";
+            Result result = db.execute( query, params );
+            // end::exampleWithStringLiteralAsParameter[]
 
-        assertEquals(singletonList(johanNode), this.<Node>toList( result, "n" ) );
-        dumpToFile( "exampleWithStringLiteralAsParameter", query, params );
+            assertEquals( singletonList( johanNode ), this.<Node>toList( result, "n" ) );
+            dumpToFile( "exampleWithStringLiteralAsParameter", query, params );
+            transaction.commit();
+        }
     }
 
     @Test
     public void exampleWithShortSyntaxStringLiteralAsParameter() throws Exception
     {
-        // tag::exampleWithShortSyntaxStringLiteralAsParameter[]
-        Map<String, Object> params = new HashMap<>();
-        params.put( "name", "Johan" );
-        String query = "MATCH (n:Person {name: $name}) RETURN n";
-        Result result = db.execute( query, params );
-        // end::exampleWithShortSyntaxStringLiteralAsParameter[]
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::exampleWithShortSyntaxStringLiteralAsParameter[]
+            Map<String,Object> params = new HashMap<>();
+            params.put( "name", "Johan" );
+            String query = "MATCH (n:Person {name: $name}) RETURN n";
+            Result result = db.execute( query, params );
+            // end::exampleWithShortSyntaxStringLiteralAsParameter[]
 
-        assertEquals(singletonList(johanNode), this.<Node>toList( result, "n" ) );
-        dumpToFile( "exampleWithShortSyntaxStringLiteralAsParameter", query, params );
+            assertEquals( singletonList( johanNode ), this.<Node>toList( result, "n" ) );
+            dumpToFile( "exampleWithShortSyntaxStringLiteralAsParameter", query, params );
+            transaction.commit();
+        }
     }
 
     @Test
     public void exampleWithParameterForNodeObject() throws Exception
     {
-        // tag::exampleWithParameterForNodeObject[]
-        Map<String, Object> params = new HashMap<>();
-        params.put( "node", bobNode );
-        String query = "MATCH (n:Person) WHERE n = $node RETURN n.name";
-        Result result = db.execute( query, params );
-        // end::exampleWithParameterForNodeObject[]
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::exampleWithParameterForNodeObject[]
+            Map<String,Object> params = new HashMap<>();
+            params.put( "node", bobNode );
+            String query = "MATCH (n:Person) WHERE n = $node RETURN n.name";
+            Result result = db.execute( query, params );
+            // end::exampleWithParameterForNodeObject[]
 
-        assertThat( result.columns(), hasItem( "n.name" ) );
-        Iterator<Object> n_column = result.columnAs( "n.name" );
-        assertEquals( "Bob", n_column.next() );
+            assertThat( result.columns(), hasItem( "n.name" ) );
+            Iterator<Object> n_column = result.columnAs( "n.name" );
+            assertEquals( "Bob", n_column.next() );
+            transaction.commit();
+        }
     }
 
     @Test
     public void exampleWithParameterForSkipAndLimit() throws Exception
     {
-        // tag::exampleWithParameterForSkipLimit[]
-        Map<String, Object> params = new HashMap<>();
-        params.put( "s", 1 );
-        params.put( "l", 1 );
-        String query = "MATCH (n:Person) RETURN n.name SKIP $s LIMIT $l";
-        Result result = db.execute( query, params );
-        // end::exampleWithParameterForSkipLimit[]
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::exampleWithParameterForSkipLimit[]
+            Map<String,Object> params = new HashMap<>();
+            params.put( "s", 1 );
+            params.put( "l", 1 );
+            String query = "MATCH (n:Person) RETURN n.name SKIP $s LIMIT $l";
+            Result result = db.execute( query, params );
+            // end::exampleWithParameterForSkipLimit[]
 
-        assertThat( result.columns(), hasItem( "n.name" ) );
-        Iterator<Object> n_column = result.columnAs( "n.name" );
-        assertEquals( "Bob", n_column.next() );
-        dumpToFile( "exampleWithParameterForSkipLimit", query, params );
+            assertThat( result.columns(), hasItem( "n.name" ) );
+            Iterator<Object> n_column = result.columnAs( "n.name" );
+            assertEquals( "Bob", n_column.next() );
+            dumpToFile( "exampleWithParameterForSkipLimit", query, params );
+            transaction.commit();
+        }
     }
 
     @Test
     public void exampleWithParameterRegularExpression() throws Exception
     {
-        // tag::exampleWithParameterRegularExpression[]
-        Map<String, Object> params = new HashMap<>();
-        params.put( "regex", ".*h.*" );
-        String query = "MATCH (n:Person) WHERE n.name =~ $regex RETURN n.name";
-        Result result = db.execute( query, params );
-        // end::exampleWithParameterRegularExpression[]
-        dumpToFile( "exampleWithParameterRegularExpression", query, params );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::exampleWithParameterRegularExpression[]
+            Map<String,Object> params = new HashMap<>();
+            params.put( "regex", ".*h.*" );
+            String query = "MATCH (n:Person) WHERE n.name =~ $regex RETURN n.name";
+            Result result = db.execute( query, params );
+            // end::exampleWithParameterRegularExpression[]
+            dumpToFile( "exampleWithParameterRegularExpression", query, params );
 
-        assertThat( result.columns(), hasItem( "n.name" ) );
-        Iterator<Object> n_column = result.columnAs( "n.name" );
-        Set<Object> results = Iterators.asSet( n_column );
-        assertTrue( results.remove( "Michaela" ) );
-        assertTrue( results.remove( "Johan" ) );
-        assertTrue( results.isEmpty() );
+            assertThat( result.columns(), hasItem( "n.name" ) );
+            Iterator<Object> n_column = result.columnAs( "n.name" );
+            Set<Object> results = Iterators.asSet( n_column );
+            assertTrue( results.remove( "Michaela" ) );
+            assertTrue( results.remove( "Johan" ) );
+            assertTrue( results.isEmpty() );
+            transaction.commit();
+        }
     }
 
     @Test
     public void exampleWithParameterCSCIStringPatternMatching() throws Exception
     {
-        // tag::exampleWithParameterCSCIStringPatternMatching[]
-        Map<String, Object> params = new HashMap<>();
-        params.put( "name", "Michael" );
-        String query = "MATCH (n:Person) WHERE n.name STARTS WITH $name RETURN n.name";
-        Result result = db.execute( query, params );
-        // end::exampleWithParameterCSCIStringPatternMatching[]
-        dumpToFile( "exampleWithParameterCSCIStringPatternMatching", query, params );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::exampleWithParameterCSCIStringPatternMatching[]
+            Map<String,Object> params = new HashMap<>();
+            params.put( "name", "Michael" );
+            String query = "MATCH (n:Person) WHERE n.name STARTS WITH $name RETURN n.name";
+            Result result = db.execute( query, params );
+            // end::exampleWithParameterCSCIStringPatternMatching[]
+            dumpToFile( "exampleWithParameterCSCIStringPatternMatching", query, params );
 
-        assertThat( result.columns(), hasItem( "n.name" ) );
-        Iterator<Object> n_column = result.columnAs( "n.name" );
-        assertEquals( "Michaela", n_column.next() );
+            assertThat( result.columns(), hasItem( "n.name" ) );
+            Iterator<Object> n_column = result.columnAs( "n.name" );
+            assertEquals( "Michaela", n_column.next() );
+            transaction.commit();
+        }
     }
 
     @Test
     public void exampleWithParameterProcedureCall() throws Exception
     {
-        // tag::exampleWithParameterProcedureCall[]
-        Map<String, Object> params = new HashMap<>();
-        params.put( "indexname", ":Person(name)" );
-        String query = "CALL db.resampleIndex($indexname)";
-        Result result = db.execute( query, params );
-        // end::exampleWithParameterProcedureCall[]
-        dumpToFile( "exampleWithParameterProcedureCall", query, params );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::exampleWithParameterProcedureCall[]
+            Map<String,Object> params = new HashMap<>();
+            params.put( "indexname", ":Person(name)" );
+            String query = "CALL db.resampleIndex($indexname)";
+            Result result = db.execute( query, params );
+            // end::exampleWithParameterProcedureCall[]
+            dumpToFile( "exampleWithParameterProcedureCall", query, params );
 
-        assert result.columns().isEmpty();
+            assert result.columns().isEmpty();
+            transaction.commit();
+        }
     }
 
     @Test
     public void create_node_from_map() throws Exception
     {
-        // tag::create_node_from_map[]
-        Map<String, Object> props = new HashMap<>();
-        props.put( "name", "Andy" );
-        props.put( "position", "Developer" );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::create_node_from_map[]
+            Map<String,Object> props = new HashMap<>();
+            props.put( "name", "Andy" );
+            props.put( "position", "Developer" );
 
-        Map<String, Object> params = new HashMap<>();
-        params.put( "props", props );
-        String query = "CREATE ($props)";
-        db.execute( query, params );
-        // end::create_node_from_map[]
-        dumpToFile( "create_node_from_map", query, params );
+            Map<String,Object> params = new HashMap<>();
+            params.put( "props", props );
+            String query = "CREATE ($props)";
+            db.execute( query, params );
+            // end::create_node_from_map[]
+            dumpToFile( "create_node_from_map", query, params );
 
-        Result result = db.execute( "MATCH (n) WHERE n.name = 'Andy' AND n.position = 'Developer' RETURN n" );
-        assertThat( count( result ), is( 1L ) );
+            Result result = db.execute( "MATCH (n) WHERE n.name = 'Andy' AND n.position = 'Developer' RETURN n" );
+            assertThat( count( result ), is( 1L ) );
+            transaction.commit();
+        }
     }
 
     @Test
     public void create_multiple_nodes_from_map() throws Exception
     {
-        // tag::create_multiple_nodes_from_map[]
-        Map<String, Object> n1 = new HashMap<>();
-        n1.put( "name", "Andy" );
-        n1.put( "position", "Developer" );
-        n1.put( "awesome", true );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::create_multiple_nodes_from_map[]
+            Map<String,Object> n1 = new HashMap<>();
+            n1.put( "name", "Andy" );
+            n1.put( "position", "Developer" );
+            n1.put( "awesome", true );
 
-        Map<String, Object> n2 = new HashMap<>();
-        n2.put( "name", "Michael" );
-        n2.put( "position", "Developer" );
-        n2.put( "children", 3 );
+            Map<String,Object> n2 = new HashMap<>();
+            n2.put( "name", "Michael" );
+            n2.put( "position", "Developer" );
+            n2.put( "children", 3 );
 
-        Map<String, Object> params = new HashMap<>();
-        List<Map<String, Object>> maps = Arrays.asList( n1, n2 );
-        params.put( "props", maps );
-        String query = "UNWIND $props AS properties CREATE (n:Person) SET n = properties RETURN n";
-        db.execute( query, params );
-        // end::create_multiple_nodes_from_map[]
-        dumpToFile( "create_multiple_nodes_from_map", query, params );
+            Map<String,Object> params = new HashMap<>();
+            List<Map<String,Object>> maps = asList( n1, n2 );
+            params.put( "props", maps );
+            String query = "UNWIND $props AS properties CREATE (n:Person) SET n = properties RETURN n";
+            db.execute( query, params );
+            // end::create_multiple_nodes_from_map[]
+            dumpToFile( "create_multiple_nodes_from_map", query, params );
 
-        Result result = db.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
-        assertThat( count( result ), is( 2L ) );
+            Result result = db.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
+            assertThat( count( result ), is( 2L ) );
 
-        result = db.execute( "MATCH (n:Person) WHERE n.children = 3 RETURN n" );
-        assertThat( count( result ), is( 1L ) );
+            result = db.execute( "MATCH (n:Person) WHERE n.children = 3 RETURN n" );
+            assertThat( count( result ), is( 1L ) );
 
-        result = db.execute( "MATCH (n:Person) WHERE n.awesome = true RETURN n" );
-        assertThat( count( result ), is( 1L ) );
+            result = db.execute( "MATCH (n:Person) WHERE n.awesome = true RETURN n" );
+            assertThat( count( result ), is( 1L ) );
+            transaction.commit();
+        }
     }
 
     @Test
     public void set_properties_on_a_node_from_a_map() throws Exception
     {
-        try(Transaction tx = db.beginTx())
+        try ( Transaction tx = db.beginTx() )
         {
             // tag::set_properties_on_a_node_from_a_map[]
             Map<String, Object> n1 = new HashMap<>();
@@ -418,54 +473,65 @@ public class JavaExecutionEngineDocTest
     @Test
     public void create_node_using_create_unique_with_java_maps() throws Exception
     {
-        Map<String, Object> props = new HashMap<>();
-        props.put( "name", "Andy" );
-        props.put( "position", "Developer" );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            Map<String,Object> props = new HashMap<>();
+            props.put( "name", "Andy" );
+            props.put( "position", "Developer" );
 
-        Map<String, Object> params = new HashMap<>();
-        params.put( "props", props );
+            Map<String,Object> params = new HashMap<>();
+            params.put( "props", props );
 
-        String query = "MATCH (n) WHERE id(n) = 0 " +
-                       "MERGE p = (n)-[:REL]->({name: $props.name, position: $props.position}) " +
-                       "RETURN last(nodes(p)) AS X";
-        Result result = db.execute( query, params );
-        assertThat( count( result ), is( 1L ) );
+            String query =
+                    "MATCH (n) WHERE id(n) = 0 " + "MERGE p = (n)-[:REL]->({name: $props.name, position: $props.position}) " + "RETURN last(nodes(p)) AS X";
+            Result result = db.execute( query, params );
+            assertThat( count( result ), is( 1L ) );
+            transaction.commit();
+        }
     }
 
     @Test
     public void should_be_able_to_handle_two_params_without_named_nodes() throws Exception
     {
-        Map<String, Object> props1 = new HashMap<>();
-        props1.put( "name", "Andy" );
-        props1.put( "position", "Developer" );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            Map<String,Object> props1 = new HashMap<>();
+            props1.put( "name", "Andy" );
+            props1.put( "position", "Developer" );
 
-        Map<String, Object> props2 = new HashMap<>();
-        props2.put( "name", "Lasse" );
-        props2.put( "awesome", "true" );
+            Map<String,Object> props2 = new HashMap<>();
+            props2.put( "name", "Lasse" );
+            props2.put( "awesome", "true" );
 
-        Map<String, Object> params = new HashMap<>();
-        params.put( "props1", props1 );
-        params.put( "props2", props2 );
+            Map<String,Object> params = new HashMap<>();
+            params.put( "props1", props1 );
+            params.put( "props2", props2 );
 
-        String query = "MATCH (n) WHERE id(n) = 0 " +
-                       "MERGE p = (n)-[:REL]->({name: $props1.name, position: $props1.position})-[:LER]->({name: $props2.name, awesome: $props2.awesome}) " +
-                       "RETURN p";
-        Result result = db.execute( query, params );
-        assertThat( count( result ), is( 1L ) );
+            String query = "MATCH (n) WHERE id(n) = 0 " +
+                    "MERGE p = (n)-[:REL]->({name: $props1.name, position: $props1.position})-[:LER]->({name: $props2.name, awesome: $props2.awesome}) " +
+                    "RETURN p";
+            Result result = db.execute( query, params );
+            assertThat( count( result ), is( 1L ) );
+            transaction.commit();
+        }
     }
 
     @Test
     public void explain_returns_plan() throws Exception
     {
-        // tag::explain_returns_plan[]
-        Result result = db.execute( "EXPLAIN CREATE (user:User {name: $name}) RETURN user" );
+        try ( Transaction transaction = db.beginTx() )
+        {
+            // tag::explain_returns_plan[]
+            Result result = db.execute( "EXPLAIN CREATE (user:User {name: $name}) RETURN user" );
 
-        assert result.getQueryExecutionType().isExplained();
-        assert result.getQueryExecutionType().requestedExecutionPlanDescription();
-        assert !result.hasNext();
-        assert !result.getQueryStatistics().containsUpdates();
-        assert !result.getExecutionPlanDescription().hasProfilerStatistics();
-        // end::explain_returns_plan[]
+            assert result.getQueryExecutionType().isExplained();
+            assert result.getQueryExecutionType().requestedExecutionPlanDescription();
+            assert !result.hasNext();
+            assert !result.getQueryStatistics().containsUpdates();
+            assert !result.getExecutionPlanDescription().hasProfilerStatistics();
+            // end::explain_returns_plan[]
+            transaction.commit();
+        }
     }
 
     private void makeFriends( Node a, Node b )

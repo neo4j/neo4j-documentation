@@ -72,23 +72,23 @@ public class TraversalExample
 
     private Node createData()
     {
-        String query = "CREATE (joe {name: 'Joe'}), (sara {name: 'Sara'}), "
-           + "(lisa {name: 'Lisa'}), (peter {name: 'PETER'}), (dirk {name: 'Dirk'}), "
-                       + "(lars {name: 'Lars'}), (ed {name: 'Ed'}),"
-           + "(joe)-[:KNOWS]->(sara), (lisa)-[:LIKES]->(joe), "
-           + "(peter)-[:KNOWS]->(sara), (dirk)-[:KNOWS]->(peter), "
-           + "(lars)-[:KNOWS]->(drk), (ed)-[:KNOWS]->(lars), "
-           + "(lisa)-[:KNOWS]->(lars) "
-           + "RETURN joe";
-        Result result = db.execute( query );
-        Object joe = result.columnAs( "joe" ).next();
-        if ( joe instanceof Node )
+        try ( Transaction transaction = db.beginTx() )
         {
-            return (Node) joe;
-        }
-        else
-        {
-            throw new RuntimeException( "Joe isn't a node!" );
+            String query = "CREATE (joe {name: 'Joe'}), (sara {name: 'Sara'}), " + "(lisa {name: 'Lisa'}), (peter {name: 'PETER'}), (dirk {name: 'Dirk'}), " +
+                    "(lars {name: 'Lars'}), (ed {name: 'Ed'})," + "(joe)-[:KNOWS]->(sara), (lisa)-[:LIKES]->(joe), " +
+                    "(peter)-[:KNOWS]->(sara), (dirk)-[:KNOWS]->(peter), " + "(lars)-[:KNOWS]->(drk), (ed)-[:KNOWS]->(lars), " + "(lisa)-[:KNOWS]->(lars) " +
+                    "RETURN joe";
+            Result result = db.execute( query );
+            Object joe = result.columnAs( "joe" ).next();
+            if ( joe instanceof Node )
+            {
+                transaction.commit();
+                return (Node) joe;
+            }
+            else
+            {
+                throw new RuntimeException( "Joe isn't a node!" );
+            }
         }
     }
 

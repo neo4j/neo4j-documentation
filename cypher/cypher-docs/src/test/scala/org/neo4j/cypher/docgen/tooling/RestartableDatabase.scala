@@ -76,16 +76,18 @@ class RestartableDatabase(init: RunnableInitialization )
   def executeWithParams(q: String, params: (String, Any)*): DocsExecutionResult = {
     createAndStartIfNecessary()
     val executionResult: DocsExecutionResult = try {
-      val txContext = graph.transactionalContext(query = q -> params.toMap)
-      val subscriber = new ResultSubscriber(txContext)
-      val execution = eengine.execute(q,
-                                      ExecutionEngineHelper.asMapValue(params.toMap),
-                                      txContext,
-                                      profile = false,
-                                      prePopulate = false,
-                                      subscriber)
-      subscriber.init(execution)
-      DocsExecutionResult(subscriber, txContext)
+      graph.inTx({ tx =>
+        val txContext = graph.transactionalContext(tx, query = q -> params.toMap)
+        val subscriber = new ResultSubscriber(txContext)
+        val execution = eengine.execute(q,
+          ExecutionEngineHelper.asMapValue(params.toMap),
+          txContext,
+          profile = false,
+          prePopulate = false,
+          subscriber)
+        subscriber.init(execution)
+        DocsExecutionResult(subscriber, txContext)
+      })
     } catch {
       case e: Throwable => _markedForRestart = true; throw e
     }

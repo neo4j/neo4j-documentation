@@ -25,6 +25,8 @@ import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultSubscriber}
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.DatabaseManagementService
+import org.neo4j.graphdb.GraphDatabaseService
+import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.values.virtual.VirtualValues
 import org.scalatest._
 
@@ -39,6 +41,7 @@ class QueryResultContentBuilderTest extends Suite
   def graph: GraphDatabaseCypherService = _graph
   var _managementService: DatabaseManagementService = _
   var _graph: GraphDatabaseCypherService = _
+  var _db: GraphDatabaseService = _
   def eengine: ExecutionEngine = _eengine
   var _eengine: ExecutionEngine = _
 
@@ -46,6 +49,7 @@ class QueryResultContentBuilderTest extends Suite
     super.beforeAll()
     val (managementService, db, engine) = ExecutionEngineFactory.createDbAndCommunityEngine()
     _managementService = managementService
+    _db = db;
     _graph = new GraphDatabaseCypherService(db)
     _eengine = engine
   }
@@ -69,21 +73,25 @@ class QueryResultContentBuilderTest extends Suite
     result.rows should have size 1
   }
 
-
-
   def runQuery(query: String, init: String = ""): Content = {
-    if (init != "") graph.execute(init)
-    val builder = new QueryResultContentBuilder(x => x.toString)
-    val txContext = graph.transactionalContext(query = query -> Map())
-    val subscriber = new ResultSubscriber(txContext)
-    val execution = eengine.execute(query,
-                                    VirtualValues.EMPTY_MAP,
-                                    txContext,
-                                    profile = false,
-                                    prePopulate = false,
-                                    subscriber)
-    subscriber.init(execution)
-    val queryResult = DocsExecutionResult(subscriber, txContext)
-    builder.apply(queryResult)
+    val transaction = _db.beginTx()
+    try {
+      if (init != "") graph.execute(init)
+      val builder = new QueryResultContentBuilder(x => x.toString)
+      val txContext = graph.transactionalContext(transaction.asInstanceOf[InternalTransaction], query = query -> Map())
+      val subscriber = new ResultSubscriber(txContext)
+      val execution = eengine.execute(query,
+        VirtualValues.EMPTY_MAP,
+        txContext,
+        profile = false,
+        prePopulate = false,
+        subscriber)
+      subscriber.init(execution)
+      val queryResult = DocsExecutionResult(subscriber, txContext)
+      builder.apply(queryResult)
+    }
+    finally {
+      transaction.close()
+    }
   }
 }

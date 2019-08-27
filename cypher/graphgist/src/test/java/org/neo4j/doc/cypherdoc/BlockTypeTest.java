@@ -233,7 +233,11 @@ public class BlockTypeTest
     @Test
     public void graph()
     {
-        graphOps.execute( "CREATE (n:Person {name: 'Adam'});" );
+        try ( Transaction transaction = graphOps.beginTx() )
+        {
+            graphOps.execute( "CREATE (n:Person {name: 'Adam'});" );
+            transaction.commit();
+        }
         Block block = Block.getBlock(singletonList("// graph:xyz"));
         assertThat( block.type, sameInstance( BlockType.GRAPH ) );
         String output;
@@ -287,7 +291,11 @@ public class BlockTypeTest
     @Test
     public void graphWithoutId()
     {
-        graphOps.execute( "CREATE (n:Person {name: 'Adam'});" );
+        try ( Transaction transaction = graphOps.beginTx() )
+        {
+            graphOps.execute( "CREATE (n:Person {name: 'Adam'});" );
+            transaction.commit();
+        }
         Block block = Block.getBlock(singletonList("//graph"));
         assertThat( block.type, sameInstance( BlockType.GRAPH ) );
         String output;

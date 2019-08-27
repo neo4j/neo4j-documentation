@@ -109,7 +109,7 @@ For this query we'll use `USING PERIODIC COMMIT` (see <<cypher-manual#query-usin
 This hint tells Neo4j that the query might build up inordinate amounts of transaction state, and so needs to be periodically committed.
 In this case we also set the limit to `500` rows per commit.
 
-[source, cypher, subs=attributes+]
+[source, cypher-periodic, subs=attributes+]
 ----
 USING PERIODIC COMMIT 500
 LOAD CSV WITH HEADERS FROM "roles.csv" AS csvLine

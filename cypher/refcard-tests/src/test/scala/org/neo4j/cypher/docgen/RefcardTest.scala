@@ -28,13 +28,13 @@ import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher.GraphIcing
-import org.neo4j.exceptions.{InternalException, Neo4jException}
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl, ResultSubscriber}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription}
+import org.neo4j.exceptions.{InternalException, Neo4jException}
 import org.neo4j.graphdb._
 import org.neo4j.internal.kernel.api.Transaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
@@ -91,30 +91,29 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   var urls: Map[String, String] = Map.empty
 
   def executeQuery(queryText: String, params: Map[String, Any])(implicit engine: ExecutionEngine): DocsExecutionResult = try {
-    val query = replaceNodeIds(queryText)
+    val docsResult = db.inTx(tx => {
+      val query = replaceNodeIds(queryText)
 
-    assert(filePaths.size == urls.size)
-    val testQuery = filePaths.foldLeft(query)((acc, entry) => acc.replace(entry._1, entry._2))
-    val docQuery = urls.foldLeft(query)((acc, entry) => acc.replace(entry._1, entry._2))
+      assert(filePaths.size == urls.size)
+      val testQuery = filePaths.foldLeft(query)((acc, entry) => acc.replace(entry._1, entry._2))
+      val docQuery = urls.foldLeft(query)((acc, entry) => acc.replace(entry._1, entry._2))
 
-    val fullQuerySnippet = AsciidocHelper.createCypherSnippetFromPreformattedQuery(Prettifier(docQuery), true)
-    allQueriesWriter.append(fullQuerySnippet).append("\n\n")
+      val fullQuerySnippet = AsciidocHelper.createCypherSnippetFromPreformattedQuery(Prettifier(docQuery), true)
+      allQueriesWriter.append(fullQuerySnippet).append("\n\n")
 
-    val contextFactory = Neo4jTransactionalContextFactory.create( db )
-    val parameterValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String,AnyRef]])
-    val docsResult = db.withTx(
-      tx => {
-        val txContext = contextFactory.newContext(tx, testQuery, parameterValue)
-        val subscriber = new ResultSubscriber(txContext)
-        val execution = engine.execute(testQuery,
-                                       parameterValue,
-                                       txContext,
-                                       profile = false,
-                                       prePopulate = false,
-                                       subscriber)
-        subscriber.init(execution)
-        DocsExecutionResult(subscriber, txContext)
-      }, Transaction.Type.`implicit` )
+      val contextFactory = Neo4jTransactionalContextFactory.create(db)
+      val parameterValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(params).asInstanceOf[java.util.Map[String, AnyRef]])
+      val txContext = contextFactory.newContext(tx, testQuery, parameterValue)
+      val subscriber = new ResultSubscriber(txContext)
+      val execution = engine.execute(testQuery,
+        parameterValue,
+        txContext,
+        profile = false,
+        prePopulate = false,
+        subscriber)
+      subscriber.init(execution)
+      DocsExecutionResult(subscriber, txContext)
+    }, Transaction.Type.`implicit`)
     docsResult
   } catch {
     case e: Neo4jException => throw new InternalException(queryText, e)
@@ -140,12 +139,10 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   def runQuery(query: String, possibleAssertion: Seq[String], parametersChoice: String): DocsExecutionResult = {
     val result =
-      db.inTx {
-        if (parametersChoice == null) {
-          executeQuery(query, Map.empty)
-        } else {
-          executeQuery(query, parameters(parametersChoice))
-        }
+      if (parametersChoice == null) {
+        executeQuery(query, Map.empty)
+      } else {
+        executeQuery(query, parameters(parametersChoice))
       }
 
     db.inTx {
@@ -264,7 +261,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
     GraphDatabaseServiceCleaner.cleanDatabaseContent(db.getGraphDatabaseService)
 
-    db.inTx {
+
       val g = new GraphImpl(graphDescription.toArray[String])
       val description = GraphDescription.create(g)
 
@@ -272,6 +269,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
         case (name, node) => name -> node.getId
       }.toMap
 
+    db.inTx {
       properties.foreach((n) => {
         val nod = node(n._1)
         n._2.foreach((kv) => nod.setProperty(kv._1, kv._2))

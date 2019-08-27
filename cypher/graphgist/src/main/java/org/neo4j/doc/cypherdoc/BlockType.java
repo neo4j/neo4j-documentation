@@ -41,6 +41,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.internal.kernel.api.security.LoginContext;
+import org.neo4j.kernel.impl.coreapi.InternalTransaction;
+import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle;
 import org.neo4j.visualization.graphviz.GraphvizWriter;
@@ -284,6 +287,7 @@ enum BlockType
         {
             String firstLine = block.lines.get( 0 );
             boolean exec = !(firstLine.contains( "noexec" ) || firstLine.contains( "hideexec" ));
+            boolean periodic = firstLine.contains( "periodic" );
             List<String> statements = getQueriesBlockContent( block );
             List<String> prettifiedStatements = new ArrayList<>();
             String webQuery;
@@ -301,15 +305,29 @@ enum BlockType
                 }
                 if ( exec )
                 {
-                    state.latestResult = new Result( fileQuery,
-                                                     state.graphOps.execute( "PROFILE " + fileQuery, state.parameters ),
-                                                     state.graphOps );
-
-                    prettifiedStatements.add( state.prettify( webQuery ) );
+                    if ( periodic )
+                    {
+                        final GraphDatabaseAPI databaseAPI = (GraphDatabaseAPI) state.graphOps;
+                        try ( InternalTransaction internalTransaction = databaseAPI.beginTransaction( org.neo4j.internal.kernel.api.Transaction.Type.implicit,
+                                LoginContext.AUTH_DISABLED ) )
+                        {
+                            state.latestResult = new Result( fileQuery, databaseAPI.execute( "PROFILE " + fileQuery, state.parameters ) );
+                            prettifiedStatements.add( state.prettify( webQuery ) );
+                            internalTransaction.commit();
+                        }
+                    }
+                    else
+                    {
+                        try ( Transaction tx = state.graphOps.beginTx() )
+                        {
+                            state.latestResult = new Result( fileQuery, state.graphOps.execute( "PROFILE " + fileQuery, state.parameters ) );
+                            prettifiedStatements.add( state.prettify( webQuery ) );
+                            tx.commit();
+                        }
+                    }
                     try ( Transaction tx = state.graphOps.beginTx() )
                     {
                         state.graphOps.schema().awaitIndexesOnline( 10000, TimeUnit.SECONDS );
-                        tx.commit();
                     }
                 }
                 else
