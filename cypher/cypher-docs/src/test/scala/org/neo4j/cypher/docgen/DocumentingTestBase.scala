@@ -33,12 +33,12 @@ import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl, ResultSubscriber}
 import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
 import org.neo4j.cypher.internal.v4_0.util.Eagerly
-import org.neo4j.exceptions.Neo4jException
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
 import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.doc.test.GraphDescription
 import org.neo4j.doc.tools.AsciiDocGenerator
+import org.neo4j.exceptions.Neo4jException
 import org.neo4j.graphdb._
 import org.neo4j.internal.kernel.api.Transaction.Type
 import org.neo4j.internal.kernel.api.security.SecurityContext
@@ -173,7 +173,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     internalTestQuery(title, text, queryText, optionalResultExplanation, None, None, parameters, planners, assertions)
   }
 
-  def testFailingQuery[T <: Neo4jException: ClassTag](title: String, text: String, queryText: String, optionalResultExplanation: String = null) {
+  def testFailingQuery[T <: Exception: ClassTag](title: String, text: String, queryText: String, optionalResultExplanation: String = null) {
     val classTag = implicitly[ClassTag[T]]
     internalTestQuery(title, text, queryText, optionalResultExplanation, Some(classTag), None, Map.empty, Seq.empty, _ => {})
   }
@@ -212,37 +212,35 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     }
 
     try {
-      val txContext = graph.transactionalContext(query = query -> Map())
-      val result = DocsExecutionResult(db.execute("PROFILE "+ query), txContext)
+      db.inTx({ tx:InternalTransaction =>
+        val txContext = graph.transactionalContext(tx, query = query -> Map())
+        val queryResult = DocsExecutionResult(db.execute("PROFILE " + query), txContext)
 
-      if (expectedException.isDefined) {
-        fail(s"Expected the test to throw an exception: $expectedException")
-      }
+        if (expectedException.isDefined) {
+          fail(s"Expected the test to throw an exception: $expectedException")
+        }
 
-      val testId = niceify(section + " " + title)
-      writer.println("[[" + testId + "]]")
-      if (!noTitle) writer.println("== " + title + " ==")
-      writer.println(text)
-      writer.println()
+        val testId = niceify(section + " " + title)
+        writer.println("[[" + testId + "]]")
+        if (!noTitle) writer.println("== " + title + " ==")
+        writer.println(text)
+        writer.println()
 
-      val output = new StringBuilder(2048)
-      output.append(".Query\n")
-      output.append(createCypherSnippet(query))
-      writer.println(AsciiDocGenerator.dumpToSeparateFile(dir, testId + ".query", output.toString()))
-      writer.println()
-      writer.println()
+        val output = new StringBuilder(2048)
+        output.append(".Query\n")
+        output.append(createCypherSnippet(query))
+        writer.println(AsciiDocGenerator.dumpToSeparateFile(dir, testId + ".query", output.toString()))
+        writer.println()
+        writer.println()
 
-      writer.append(".Query Plan\n")
-      writer.append(AsciidocHelper.createOutputSnippet(result.executionPlanDescription().toString))
+        writer.append(".Query Plan\n")
+        writer.append(AsciidocHelper.createOutputSnippet(queryResult.executionPlanDescription().toString))
 
-      writer.flush()
-      writer.close()
+        writer.flush()
+        writer.close()
 
-
-      db.inTx {
-        assertions(result)
-      }
-
+        assertions(queryResult)
+      } )
     } catch {
       case e: Neo4jException if expectedException.nonEmpty =>
         val expectedExceptionType = expectedException.get
@@ -259,7 +257,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                                 text: String,
                                 queryText: String,
                                 optionalResultExplanation: String,
-                                expectedException: Option[ClassTag[_ <: Neo4jException]],
+                                expectedException: Option[ClassTag[_ <: Exception]],
                                 prepare: Option[GraphDatabaseCypherService => Unit],
                                 parameters: Map[String, Any],
                                 planners: Seq[String],
@@ -327,8 +325,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   private def executeWithAllPlannersAndAssert(query: String,
                                               assertions: DocsExecutionResult => Unit,
-                                              expectedException: Option[ClassTag[_ <: Neo4jException]],
-                                              expectedCaught: Neo4jException => Unit,
+                                              expectedException: Option[ClassTag[_ <: Exception]],
+                                              expectedCaught: Exception => Unit,
                                               parameters: Map[String, Any],
                                               providedPlanners: Seq[String],
                                               prepareFunction: => Unit): Option[String] = {
@@ -369,21 +367,20 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         This transaction is necessary for Core API access in assertion code.
          */
         val executeTransaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
-        val context = txContext(executeTransaction)
-        val subscriber = new ResultSubscriber(context)
-        val result = engine.execute(s"$planner $query",
-                                    parametersValue,
-                                    context,
-                                    profile = false,
-                                    prePopulate = false,
-                                    subscriber)
-        subscriber.init(result)
-
-        val extractResultTransaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
-        val docsResult =
-          try {
-            DocsExecutionResult(subscriber, txContext(extractResultTransaction))
-          } finally extractResultTransaction.close()
+        val docsResult = try {
+          val context = txContext(executeTransaction)
+          val subscriber = new ResultSubscriber(context)
+          val result = engine.execute(s"$planner $query",
+            parametersValue,
+            context,
+            profile = false,
+            prePopulate = false,
+            subscriber)
+          subscriber.init(result)
+          val docResult = DocsExecutionResult(subscriber, txContext(executeTransaction))
+          executeTransaction.commit()
+          docResult
+        } finally executeTransaction.close()
 
         db.inTx(assertions(docsResult))
         val resultAsString = docsResult.resultAsString
@@ -417,6 +414,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                          profile = false,
                          prePopulate = false,
                          subscriber).consumeAll()
+          transaction.commit()
         } catch {
           case t: Throwable =>
             e = t
@@ -427,6 +425,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
           case expectedExceptionType(typedE) => expectedCaught(typedE)
           case _ => fail(s"Expected an exception of type $expectedException but got ${e.getClass}", e)
         }
+        transaction.close()
         None
     }
 
@@ -472,12 +471,12 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   }
 
   def dumpToFileWithException(dir: File, writer: PrintWriter, title: String, query: String, returns: String, text: String,
-                 failure: Neo4jException, consoleData: String, parameters: Map[String, Any]) {
+                 failure: Exception, consoleData: String, parameters: Map[String, Any]) {
     dumpToFile(dir, writer, title, query, returns, text, Left(failure), consoleData, parameters)
   }
 
   private def dumpToFile(dir: File, writer: PrintWriter, title: String, query: String, returns: String, text: String,
-                         result: Either[Neo4jException, String], consoleData: String, parameters: Map[String, Any]) {
+                         result: Either[Exception, String], consoleData: String, parameters: Map[String, Any]) {
     val testId = niceify(section + " " + title)
     writer.println("[[" + testId + "]]")
     if (!noTitle) writer.println("== " + title + " ==")
@@ -497,12 +496,11 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   private def executeQueries(tx: InternalTransaction, queries: List[String]) {
     val contextFactory = Neo4jTransactionalContextFactory.create( db )
     queries.foreach { query => {
-      val innerTx = db.beginTransaction( Type.`implicit`, tx.securityContext() )
       engine.execute(
         query,
         VirtualValues.EMPTY_MAP,
         contextFactory.newContext(
-          innerTx,
+          tx,
           query,
           VirtualValues.EMPTY_MAP
           ),
@@ -556,17 +554,14 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   override def softReset() {
     cleanDatabaseContent(db.getGraphDatabaseService)
 
-    db.withTx( tx => {
-      db.schema().awaitIndexesOnline(10, TimeUnit.SECONDS)
+    db.withTx(_ => db.schema().awaitIndexesOnline(10, TimeUnit.SECONDS))
 
-      val g = new GraphImpl(graphDescription.toArray[String])
-      val description = GraphDescription.create(g)
-
-
-      nodeMap = description.create(db.getGraphDatabaseService).asScala.map {
+    val g = new GraphImpl(graphDescription.toArray[String])
+    val description = GraphDescription.create(g)
+    nodeMap = description.create(db.getGraphDatabaseService).asScala.map {
         case (name, node) => name -> node.getId
       }.toMap
-
+    db.withTx( tx => {
       executeQueries(tx, setupQueries)
 
       asNodeMap(properties) foreach {
@@ -592,7 +587,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                         testId: String,
                         query: String,
                         returns: String,
-                        result: Either[Neo4jException, String],
+                        result: Either[Exception, String],
                         consoleData: String,
                         parameters: Map[String, Any]) {
     if (parameters != null && parameters.nonEmpty) {

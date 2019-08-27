@@ -27,6 +27,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 import org.neo4j.doc.server.HTTP;
+import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
@@ -78,11 +79,16 @@ public class ExtensionTestingDocIT
     @Test
     public void testMyExtensionWithFunctionFixture()
     {
-        // Given
-        Result result = neo4j.defaultDatabaseService().execute( "MATCH (n:User) return n" );
+        final GraphDatabaseService graphDatabaseService = neo4j.defaultDatabaseService();
+        try ( Transaction transaction = graphDatabaseService.beginTx() )
+        {
+            // Given
+            Result result = graphDatabaseService.execute( "MATCH (n:User) return n" );
 
-        // Then
-        assertEquals( 1, count( result ) );
+            // Then
+            assertEquals( 1, count( result ) );
+            transaction.commit();
+        }
     }
     // end::testExtension[]
 }

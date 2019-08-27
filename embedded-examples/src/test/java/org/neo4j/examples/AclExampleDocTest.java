@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.neo4j.annotations.documented.Documented;
 import org.neo4j.doc.test.GraphDescription.Graph;
+import org.neo4j.graphdb.Transaction;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -181,41 +182,37 @@ public class AclExampleDocTest extends AbstractJavaDocTestBase
 
         //Files
         //TODO: can we do open ended?
-        String query = "match ({name: 'FileRoot'})-[:contains*0..]->(parentDir)-[:leaf]->(file) return file";
-        gen.get().addSnippet( "query1", createCypherSnippet( query ) );
-        String result = graphdb().execute( query )
-                .resultAsString();
-        assertTrue( result.contains("File1") );
-        gen.get()
-                .addSnippet( "result1", createQueryResultSnippet( result ) );
+        try ( Transaction transaction = graphdb().beginTx() )
+        {
+            String query = "match ({name: 'FileRoot'})-[:contains*0..]->(parentDir)-[:leaf]->(file) return file";
+            gen.get().addSnippet( "query1", createCypherSnippet( query ) );
+            String result = graphdb().execute( query ).resultAsString();
+            assertTrue( result.contains( "File1" ) );
+            gen.get().addSnippet( "result1", createQueryResultSnippet( result ) );
 
-        //Ownership
-        query = "match ({name: 'FileRoot'})-[:contains*0..]->()-[:leaf]->(file)<-[:owns]-(user) return file, user";
-        gen.get().addSnippet( "query2", createCypherSnippet( query ) );
-        result = graphdb().execute( query )
-                .resultAsString();
-        assertTrue( result.contains("File1") );
-        assertTrue( result.contains("User1") );
-        assertTrue( result.contains("User2") );
-        assertTrue( result.contains("File2") );
-        assertFalse( result.contains("Admin1") );
-        assertFalse( result.contains("Admin2") );
-        gen.get()
-                .addSnippet( "result2", createQueryResultSnippet( result ) );
+            //Ownership
+            query = "match ({name: 'FileRoot'})-[:contains*0..]->()-[:leaf]->(file)<-[:owns]-(user) return file, user";
+            gen.get().addSnippet( "query2", createCypherSnippet( query ) );
+            result = graphdb().execute( query ).resultAsString();
+            assertTrue( result.contains( "File1" ) );
+            assertTrue( result.contains( "User1" ) );
+            assertTrue( result.contains( "User2" ) );
+            assertTrue( result.contains( "File2" ) );
+            assertFalse( result.contains( "Admin1" ) );
+            assertFalse( result.contains( "Admin2" ) );
+            gen.get().addSnippet( "result2", createQueryResultSnippet( result ) );
 
-        //ACL
-        query = "MATCH (file)<-[:leaf]-()<-[:contains*0..]-(dir) " +
-                "OPTIONAL MATCH (dir)<-[:canRead]-(role)-[:member]->(readUser) " +
-                "WHERE file.name =~ 'File.*' " +
-                "RETURN file.name, dir.name, role.name, readUser.name";
-        gen.get().addSnippet( "query3", createCypherSnippet( query ) );
-        result = graphdb().execute( query )
-                .resultAsString();
-        assertTrue( result.contains("File1") );
-        assertTrue( result.contains("File2") );
-        assertTrue( result.contains("Admin1") );
-        assertTrue( result.contains("Admin2") );
-        gen.get()
-                .addSnippet( "result3", createQueryResultSnippet( result ) );
+            //ACL
+            query = "MATCH (file)<-[:leaf]-()<-[:contains*0..]-(dir) " + "OPTIONAL MATCH (dir)<-[:canRead]-(role)-[:member]->(readUser) " +
+                    "WHERE file.name =~ 'File.*' " + "RETURN file.name, dir.name, role.name, readUser.name";
+            gen.get().addSnippet( "query3", createCypherSnippet( query ) );
+            result = graphdb().execute( query ).resultAsString();
+            assertTrue( result.contains( "File1" ) );
+            assertTrue( result.contains( "File2" ) );
+            assertTrue( result.contains( "Admin1" ) );
+            assertTrue( result.contains( "Admin2" ) );
+            gen.get().addSnippet( "result3", createQueryResultSnippet( result ) );
+            transaction.commit();
+        }
     }
 }

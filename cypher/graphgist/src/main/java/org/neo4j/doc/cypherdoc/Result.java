@@ -19,17 +19,15 @@
  */
 package org.neo4j.doc.cypherdoc;
 
-import org.neo4j.cypher.internal.result.string.ResultStringBuilder;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Path;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.Transaction;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.neo4j.cypher.internal.result.string.ResultStringBuilder;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Path;
+import org.neo4j.graphdb.Relationship;
 
 class Result
 {
@@ -39,10 +37,10 @@ class Result
     final Set<Long> nodeIds = new HashSet<>();
     final Set<Long> relationshipIds = new HashSet<>();
 
-    public Result( String query, org.neo4j.graphdb.Result result, GraphDatabaseService graphOps )
+    public Result( String query, org.neo4j.graphdb.Result result )
     {
         this.query = query;
-        try ( Transaction tx = graphOps.beginTx() )
+        try
         {
             ResultVisitor visitor = new ResultVisitor( result.columns() );
             result.accept( visitor );

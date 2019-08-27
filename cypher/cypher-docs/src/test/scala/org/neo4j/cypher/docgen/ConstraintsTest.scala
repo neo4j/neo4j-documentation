@@ -23,9 +23,9 @@ import java.io.File
 
 import com.neo4j.commercial.edition.factory.CommercialDatabaseManagementServiceBuilder
 import org.junit.Test
-import org.neo4j.exceptions.{ConstraintValidationException, CypherExecutionException}
 import org.neo4j.dbms.api.DatabaseManagementService
-import org.neo4j.graphdb.{Label, RelationshipType}
+import org.neo4j.exceptions.CypherExecutionException
+import org.neo4j.graphdb.{ConstraintViolationException, Label, RelationshipType}
 
 import scala.collection.JavaConverters._
 
@@ -153,7 +153,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   @Test def violate_node_property_existence_constraint() {
     generateConsole = false
     execute("CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)")
-    testFailingQuery[ConstraintValidationException](
+    testFailingQuery[ConstraintViolationException](
       title = "Create a node that violates a property existence constraint",
       text = "Trying to create a `Book` node without an `isbn` property, given a property existence constraint on `:Book(isbn)`.",
       queryText = "CREATE (book:Book {title: 'Graph Databases'})",
@@ -165,7 +165,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
     execute("CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)")
     execute("CREATE (book:Book {isbn: '1449356265', title: 'Graph Databases'})")
-    testFailingQuery[ConstraintValidationException](
+    testFailingQuery[ConstraintViolationException](
       title = "Removing an existence constrained node property",
       text = "Trying to remove the `isbn` property from an existing node `book`, given a property existence constraint on `:Book(isbn)`.",
       queryText = "MATCH (book:Book {title: 'Graph Databases'}) REMOVE book.isbn",
@@ -226,7 +226,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   @Test def violate_relationship_property_existence_constraint() {
     generateConsole = false
     execute("CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)")
-    testFailingQuery[ConstraintValidationException](
+    testFailingQuery[ConstraintViolationException](
       title = "Create a relationship that violates a property existence constraint",
       text = "Trying to create a `LIKED` relationship without a `day` property, given a property existence constraint `:LIKED(day)`.",
       queryText = "CREATE (user:User)-[like:LIKED]->(book:Book)",
@@ -238,7 +238,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
     execute("CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)")
     execute("CREATE (user:User)-[like:LIKED {day: 'today'}]->(book:Book)")
-    testFailingQuery[ConstraintValidationException](
+    testFailingQuery[ConstraintViolationException](
       title = "Removing an existence constrained relationship property",
       text = "Trying to remove the `day` property from an existing relationship `like` of type `LIKED`, given a property existence constraint `:LIKED(day)`.",
       queryText = "MATCH (user:User)-[like:LIKED]->(book:Book) REMOVE like.day",
@@ -299,7 +299,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   @Test def violate_node_key_constraint() {
     generateConsole = false
     execute("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")
-    testFailingQuery[ConstraintValidationException](
+    testFailingQuery[ConstraintViolationException](
       title = "Create a node that violates a Node Key",
       text = "Trying to create a `Person` node without a `surname` property, given a Node Key on `:Person(firstname, surname)`, will fail.",
       queryText = "CREATE (p:Person {firstname: 'Jane', age: 34})",
@@ -311,7 +311,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
     execute("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")
     execute("CREATE (p:Person {firstname: 'John', surname: 'Wood'})")
-    testFailingQuery[ConstraintValidationException](
+    testFailingQuery[ConstraintViolationException](
       title = "Removing a `NODE KEY`-constrained property",
       text = "Trying to remove the `surname` property from an existing node `Person`, given a `NODE KEY` constraint on `:Person(firstname, surname)`.",
       queryText = "MATCH (p:Person {firstname: 'John', surname: 'Wood'}) REMOVE p.surname",
