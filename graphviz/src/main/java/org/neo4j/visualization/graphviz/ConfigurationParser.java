@@ -19,14 +19,15 @@
  */
 package org.neo4j.visualization.graphviz;
 
-import java.io.BufferedReader;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.list.MutableList;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,23 +36,18 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.internal.helpers.collection.ArrayIterator;
-import org.neo4j.internal.helpers.collection.CombiningIterator;
-import org.neo4j.internal.helpers.collection.Iterators;
-import org.neo4j.internal.helpers.collection.PrefetchingIterator;
 
 public class ConfigurationParser
 {
     @SuppressWarnings( "unchecked" )
     public ConfigurationParser( File configFile, String... format )
     {
-        this( Iterators.asIterable(new CombiningIterator<>(Arrays.asList(
-                new LineIterator(configFile), new ArrayIterator<>(format))) ) );
+        this( getAllFormats( configFile, format ) );
     }
 
     public ConfigurationParser( String... format )
     {
-        this( Iterators.asIterable(new ArrayIterator<>(format) ) );
+        this( Arrays.asList( format ) );
     }
 
     public ConfigurationParser( Iterable<String> format )
@@ -264,44 +260,17 @@ public class ConfigurationParser
         }
     }
 
-    private static class LineIterator extends PrefetchingIterator<String>
+    private static MutableList<String> getAllFormats( File configFile, String[] format )
     {
-        private final BufferedReader reader;
-
-        public LineIterator( BufferedReader reader )
+        try
         {
-            this.reader = reader;
+            var formats = Lists.mutable.of( format );
+            formats.addAll( Files.readAllLines( configFile.toPath() ) );
+            return formats;
         }
-
-        public LineIterator( File file )
+        catch ( IOException e )
         {
-            this( fileReader( file ) );
-        }
-
-        private static BufferedReader fileReader( File file )
-        {
-            try
-            {
-                return new BufferedReader(
-                        new InputStreamReader( new FileInputStream( file ), StandardCharsets.UTF_8 ) );
-            }
-            catch ( FileNotFoundException e )
-            {
-                return null;
-            }
-        }
-
-        @Override
-        protected String fetchNextOrNull()
-        {
-            try
-            {
-                return reader.readLine();
-            }
-            catch ( Exception e )
-            {
-                return null;
-            }
+            throw new UncheckedIOException( e );
         }
     }
 }
