@@ -40,7 +40,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import org.neo4j.doc.test.GraphDefinition;
 import org.neo4j.doc.test.TestData.Producer;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 import org.neo4j.function.Predicates;
@@ -72,21 +71,11 @@ public class RESTDocsGenerator extends AsciiDocGenerator
 
     private static final List<String> REQUEST_HEADERS = Arrays.asList( "Content-Type", "Accept" );
 
-    public static final Producer<RESTDocsGenerator> PRODUCER = new Producer<RESTDocsGenerator>()
+    public static final Producer<RESTDocsGenerator> PRODUCER = ( graph, title, documentation ) ->
     {
-        @Override
-        public RESTDocsGenerator create( GraphDefinition graph, String title, String documentation )
-        {
-            RESTDocsGenerator gen = RESTDocsGenerator.create( title );
-            gen.description(documentation);
-            return gen;
-        }
-
-        @Override
-        public void destroy( RESTDocsGenerator product, boolean successful )
-        {
-            // TODO: invoke some complete method here?
-        }
+        RESTDocsGenerator gen = create( title );
+        gen.description(documentation);
+        return gen;
     };
 
     private int expectedResponseStatus = -1;

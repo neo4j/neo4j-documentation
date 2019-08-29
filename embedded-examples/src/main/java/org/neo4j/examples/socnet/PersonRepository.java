@@ -23,6 +23,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.internal.helpers.collection.IterableWrapper;
 
 import static org.neo4j.examples.socnet.RelTypes.A_PERSON;
@@ -32,11 +33,12 @@ public class PersonRepository
     private final Label PERSON = Label.label( "Person" );
     private final GraphDatabaseService graphDb;
     private final Node personRefNode;
+    private final Transaction transaction;
 
-    public PersonRepository( GraphDatabaseService graphDb )
+    public PersonRepository( GraphDatabaseService graphDb, Transaction transaction )
     {
         this.graphDb = graphDb;
-
+        this.transaction = transaction;
         personRefNode = getPersonsRootNode( graphDb );
     }
 
@@ -67,7 +69,7 @@ public class PersonRepository
             throw new Exception( "Person with this name already exists " );
         }
         newPersonNode.setProperty( Person.NAME, name );
-        return new Person( newPersonNode );
+        return new Person( graphDb, transaction, newPersonNode );
     }
 
     public Person getPersonByName( String name )
@@ -78,7 +80,7 @@ public class PersonRepository
             throw new IllegalArgumentException( "Person[" + name
                     + "] not found" );
         }
-        return new Person( personNode );
+        return new Person( graphDb, transaction, personNode );
     }
 
     public void deletePerson( Person person )
@@ -111,7 +113,7 @@ public class PersonRepository
             @Override
             protected Person underlyingObjectToObject( Relationship personRel )
             {
-                return new Person( personRel.getEndNode() );
+                return new Person( graphDb, transaction, personRel.getEndNode() );
             }
         };
     }

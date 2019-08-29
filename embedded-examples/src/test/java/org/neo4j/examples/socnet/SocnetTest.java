@@ -62,7 +62,7 @@ class SocnetTest
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         try ( Transaction tx = graphDb.beginTx() )
         {
-            personRepository = new PersonRepository( graphDb );
+            personRepository = new PersonRepository( graphDb, tx );
             createPersons();
             setupFriendsBetweenPeople( 10 );
             tx.commit();

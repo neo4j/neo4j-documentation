@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.util.Iterator;
 
+import org.neo4j.graphalgo.BasicEvaluationContext;
 import org.neo4j.graphalgo.CommonEvaluators;
 import org.neo4j.graphalgo.EstimateEvaluator;
 import org.neo4j.graphalgo.GraphAlgoFactory;
@@ -91,7 +92,7 @@ public class PathFindingDocTest
         //
         // (startNode)-->(middleNode1)-->(endNode)
         //
-        PathFinder<Path> finder = GraphAlgoFactory.shortestPath(
+        PathFinder<Path> finder = GraphAlgoFactory.shortestPath( new BasicEvaluationContext( tx, graphDb ),
             PathExpanders.forTypeAndDirection( ExampleTypes.MY_TYPE, Direction.OUTGOING ), 15 );
         Iterable<Path> paths = finder.findAllPaths( startNode, endNode );
         // end::shortestPathUsage[]
@@ -125,7 +126,7 @@ public class PathFindingDocTest
     public WeightedPath findCheapestPathWithDijkstra( final Node nodeA, final Node nodeB )
     {
         // tag::dijkstraUsage[]
-        PathFinder<WeightedPath> finder = GraphAlgoFactory.dijkstra(
+        PathFinder<WeightedPath> finder = GraphAlgoFactory.dijkstra( new BasicEvaluationContext( tx, graphDb ),
             PathExpanders.forTypeAndDirection( ExampleTypes.MY_TYPE, Direction.BOTH ), "cost" );
 
         WeightedPath path = finder.findSinglePath( nodeA, nodeB );
@@ -177,7 +178,7 @@ public class PathFindingDocTest
             double dy = (Double) node.getProperty( "y" ) - (Double) goal.getProperty( "y" );
             return Math.sqrt( Math.pow( dx, 2 ) + Math.pow( dy, 2 ) );
         };
-        PathFinder<WeightedPath> astar = GraphAlgoFactory.aStar(
+        PathFinder<WeightedPath> astar = GraphAlgoFactory.aStar( new BasicEvaluationContext( tx, graphDb ),
                 PathExpanders.allTypesAndDirections(),
                 CommonEvaluators.doubleCostEvaluator( "length" ), estimateEvaluator );
         WeightedPath path = astar.findSinglePath( nodeA, nodeB );

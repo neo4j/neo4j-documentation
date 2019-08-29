@@ -22,6 +22,7 @@ import java.io.File;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
+import org.neo4j.graphalgo.BasicEvaluationContext;
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphdb.Direction;
@@ -76,7 +77,7 @@ public class CalculateShortestPath
             Node neo = getOrCreateNode( "Neo" );
             Node agentSmith = getOrCreateNode( "Agent Smith" );
             // tag::shortestPathUsage[]
-            PathFinder<Path> finder = GraphAlgoFactory.shortestPath(
+            PathFinder<Path> finder = GraphAlgoFactory.shortestPath( new BasicEvaluationContext( tx, graphDb ),
                     PathExpanders.forTypeAndDirection( KNOWS, Direction.BOTH ), 4 );
             Path foundPath = finder.findSinglePath( neo, agentSmith );
             System.out.println( "Path from Neo to Agent Smith: "

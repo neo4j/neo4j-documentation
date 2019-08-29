@@ -42,7 +42,7 @@ import static org.junit.Assert.assertEquals;
 public class AbstractRestFunctionalTestBase extends SharedServerTestBase implements GraphHolder {
 
     @Rule
-    public TestData<Map<String, Node>> data = TestData.producedThrough(GraphDescription.createGraphFor(this, true));
+    public TestData<Map<String,Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this ) );
 
     @Rule
     public TestData<RESTDocsGenerator> gen = TestData.producedThrough(RESTDocsGenerator.PRODUCER);

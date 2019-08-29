@@ -21,7 +21,9 @@ package org.neo4j.examples.socnet;
 import java.util.Date;
 
 import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
@@ -32,13 +34,16 @@ import static org.neo4j.internal.helpers.collection.Iterators.singleOrNull;
 
 public class StatusUpdate
 {
+    private final GraphDatabaseService databaseService;
+    private final Transaction transaction;
     private final Node underlyingNode;
     static final String TEXT = "TEXT";
     static final String DATE = "DATE";
 
-    public StatusUpdate( Node underlyingNode )
+    public StatusUpdate( GraphDatabaseService databaseService, Transaction transaction, Node underlyingNode )
     {
-
+        this.databaseService = databaseService;
+        this.transaction = transaction;
         this.underlyingNode = underlyingNode;
     }
 
@@ -49,12 +54,12 @@ public class StatusUpdate
 
     public Person getPerson()
     {
-        return new Person( getPersonNode() );
+        return new Person( databaseService, transaction, getPersonNode() );
     }
 
     private Node getPersonNode()
     {
-        TraversalDescription traversalDescription = underlyingNode.getGraphDatabase()
+        TraversalDescription traversalDescription = databaseService
                 .traversalDescription()
                 .depthFirst()
                 .relationships( NEXT, Direction.INCOMING )
