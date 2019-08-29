@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.neo4j.graphalgo.BasicEvaluationContext;
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphdb.Direction;
@@ -34,6 +35,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
@@ -51,11 +53,15 @@ public class Person
 {
     static final String NAME = "name";
 
+    private final GraphDatabaseService databaseService;
+    private final Transaction transaction;
     // tag::the-node[]
     private final Node underlyingNode;
 
-    Person( Node personNode )
+    Person( GraphDatabaseService databaseService, Transaction transaction, Node personNode )
     {
+        this.databaseService = databaseService;
+        this.transaction = transaction;
         this.underlyingNode = personNode;
     }
 
@@ -139,7 +145,7 @@ public class Person
                                                int maxDepth )
     {
         // use graph algo to calculate a shortest path
-        PathFinder<Path> finder = GraphAlgoFactory.shortestPath(
+        PathFinder<Path> finder = GraphAlgoFactory.shortestPath( new BasicEvaluationContext( transaction, databaseService ),
                 forTypeAndDirection(FRIEND, BOTH ), maxDepth );
 
         Path path = finder.findSinglePath( underlyingNode,
@@ -181,7 +187,7 @@ public class Person
         }
 
         // tag::getStatusTraversal[]
-        TraversalDescription traversal = graphDb().traversalDescription()
+        TraversalDescription traversal = databaseService.traversalDescription()
                 .depthFirst()
                 .relationships( NEXT );
         // end::getStatusTraversal[]
@@ -192,7 +198,7 @@ public class Person
             @Override
             protected StatusUpdate underlyingObjectToObject( Path path )
             {
-                return new StatusUpdate( path.endNode() );
+                return new StatusUpdate( databaseService, transaction, path.endNode() );
             }
         };
     }
@@ -224,14 +230,9 @@ public class Person
         underlyingNode.createRelationshipTo( newStatus, RelTypes.STATUS );
     }
 
-    private GraphDatabaseService graphDb()
-    {
-        return underlyingNode.getGraphDatabase();
-    }
-
     private Node createNewStatusNode( String text )
     {
-        Node newStatus = graphDb().createNode();
+        Node newStatus = databaseService.createNode();
         newStatus.setProperty( StatusUpdate.TEXT, text );
         newStatus.setProperty( StatusUpdate.DATE, new Date().getTime() );
         return newStatus;
@@ -306,7 +307,7 @@ public class Person
     private Iterable<Person> getFriendsByDepth( int depth )
     {
         // return all my friends and their friends using new traversal API
-        TraversalDescription travDesc = graphDb().traversalDescription()
+        TraversalDescription travDesc = databaseService.traversalDescription()
                 .breadthFirst()
                 .relationships( FRIEND )
                 .uniqueness( Uniqueness.NODE_GLOBAL )
@@ -324,26 +325,27 @@ public class Person
             @Override
             protected Person underlyingObjectToObject( Path path )
             {
-                return new Person( path.endNode() );
+                return new Person( databaseService, transaction, path.endNode() );
             }
         };
     }
 
     private long getNumberOfPathsToPerson( Person otherPerson )
     {
-        PathFinder<Path> finder = GraphAlgoFactory.allPaths( forTypeAndDirection( FRIEND, BOTH ), 2 );
+        PathFinder<Path> finder = GraphAlgoFactory.allPaths( new BasicEvaluationContext( transaction, databaseService ),
+                forTypeAndDirection( FRIEND, BOTH ), 2 );
         Iterable<Path> paths = finder.findAllPaths( getUnderlyingNode(), otherPerson.getUnderlyingNode() );
         return Iterables.size( paths );
     }
 
     private Iterable<Person> createPersonsFromNodes( final Path path )
     {
-        return new IterableWrapper<Person, Node>( path.nodes() )
+        return new IterableWrapper<>( path.nodes() )
         {
             @Override
             protected Person underlyingObjectToObject( Node node )
             {
-                return new Person( node );
+                return new Person( databaseService, transaction, node );
             }
         };
     }

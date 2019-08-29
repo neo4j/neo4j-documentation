@@ -46,7 +46,7 @@ public abstract class AbstractJavaDocTestBase implements GraphHolder
     public final TestData<JavaTestDocsGenerator> gen = TestData.producedThrough( JavaTestDocsGenerator.PRODUCER );
 
     @Rule
-    public final TestData<Map<String, Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this, true ) );
+    public final TestData<Map<String, Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this ) );
 
     @Override
     public GraphDatabaseService graphdb()

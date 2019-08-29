@@ -55,7 +55,7 @@ public class IntroDocTest implements GraphHolder
     @Rule
     public TestData<JavaTestDocsGenerator> gen = TestData.producedThrough( JavaTestDocsGenerator.PRODUCER );
     @Rule
-    public TestData<Map<String,Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this, true ) );
+    public TestData<Map<String,Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this ) );
     private static GraphDatabaseService graphdb;
     private static DatabaseManagementService managementService;
 

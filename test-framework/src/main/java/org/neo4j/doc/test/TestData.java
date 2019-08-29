@@ -20,15 +20,12 @@ package org.neo4j.doc.test;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
-import org.junit.runners.model.MultipleFailureException;
 import org.junit.runners.model.Statement;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import org.neo4j.annotations.documented.Documented;
@@ -43,8 +40,6 @@ public class TestData<T> implements TestRule {
 
     public interface Producer<T> {
         T create(GraphDefinition graph, String title, String documentation);
-
-        void destroy(T product, boolean successful);
     }
 
     public static <T> TestData<T> producedThrough(Producer<T> transformation) {
@@ -112,37 +107,17 @@ public class TestData<T> implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                product.set(create(graph, title == null ? null : title.value(), doc == null ? null : doc.value(), description.getMethodName()));
-                try {
-                    try {
-                        base.evaluate();
-                    } catch (Throwable err) {
-                        try {
-                            destroy(get(false), false);
-                        } catch (Throwable sub) {
-                            List<Throwable> failures = new ArrayList<>();
-                            if (err instanceof MultipleFailureException) {
-                                failures.addAll(((MultipleFailureException) err).getFailures());
-                            } else {
-                                failures.add(err);
-                            }
-                            failures.add(sub);
-                            throw new MultipleFailureException(failures);
-                        }
-                        throw err;
-                    }
-                    destroy(get(false), false);
-                } finally {
-                    product.set(null);
+                product.set( create( graph, title == null ? null : title.value(), doc == null ? null : doc.value(), description.getMethodName() ) );
+                try
+                {
+                    base.evaluate();
+                }
+                finally
+                {
+                    product.set( null );
                 }
             }
         };
-    }
-
-    private void destroy(@SuppressWarnings("hiding") T product, boolean successful) {
-        if (product != null) {
-            producer.destroy(product, successful);
-        }
     }
 
     private T get(boolean create) {

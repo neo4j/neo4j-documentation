@@ -51,7 +51,7 @@ public class TestJavaTestDocsGenerator implements GraphHolder
 {
     private static GraphDatabaseService graphdb;
     @Rule
-    public final TestData<Map<String,Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this, true ) );
+    public final TestData<Map<String,Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this ) );
     @Rule
     public final TestData<JavaTestDocsGenerator> gen = TestData.producedThrough( JavaTestDocsGenerator.PRODUCER );
 

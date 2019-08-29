@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.neo4j.doc.test.TestData.Producer;
-import org.neo4j.doc.test.GraphDefinition;
 
 /**
  * This class is supporting the generation of ASCIIDOC documentation
@@ -35,17 +34,8 @@ import org.neo4j.doc.test.GraphDefinition;
  */
 public class JavaTestDocsGenerator extends AsciiDocGenerator
 {
-    public static final Producer<JavaTestDocsGenerator> PRODUCER = new Producer<JavaTestDocsGenerator>() {
-        @Override
-        public JavaTestDocsGenerator create(GraphDefinition graph, String title, String documentation) {
-            return (JavaTestDocsGenerator) new JavaTestDocsGenerator( title ).description( documentation );
-        }
-
-        @Override
-        public void destroy(JavaTestDocsGenerator product, boolean successful) {
-            // TODO: invoke some complete method here?
-        }
-    };
+    public static final Producer<JavaTestDocsGenerator> PRODUCER =
+            ( graph, title, documentation ) -> (JavaTestDocsGenerator) new JavaTestDocsGenerator( title ).description( documentation );
 
     public JavaTestDocsGenerator(String title) {
         super(title, "docs");
