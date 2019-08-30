@@ -66,7 +66,7 @@ public class TransactionTimeoutDocIT extends ExclusiveServerTestBase
 
     private String txURI()
     {
-        return server.baseUri().toString() + "db/data/transaction";
+        return server.baseUri().toString() + "db/neo4j/tx";
     }
 
 }

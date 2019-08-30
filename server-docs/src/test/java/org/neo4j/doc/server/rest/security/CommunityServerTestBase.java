@@ -53,9 +53,9 @@ public class CommunityServerTestBase extends ExclusiveServerTestBase
         return "Basic " + base64( username + ":" + password );
     }
 
-    protected String dataURL()
+    protected String databaseURL()
     {
-        return server.baseUri().resolve( "db/data/" ).toString();
+        return server.baseUri().resolve( "db/neo4j/" ).toString();
     }
 
     protected String userURL( String username )
@@ -75,7 +75,7 @@ public class CommunityServerTestBase extends ExclusiveServerTestBase
 
     protected String txCommitURL()
     {
-        return dataURL() + "transaction/commit";
+        return databaseURL() + "tx/commit";
     }
 
     protected String simpleCypherRequestBody()

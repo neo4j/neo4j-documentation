@@ -18,18 +18,17 @@
  */
 package org.neo4j.examples.server;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import javax.ws.rs.core.MediaType;
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import javax.ws.rs.core.MediaType;
+
 public class CreateSimpleGraph
 {
-    private static final String SERVER_ROOT_URI = "http://localhost:7474/db/data/";
+    private static final String SERVER_ROOT_URI = "http://localhost:7474/db/neo4j/";
 
     public static void main( String[] args ) throws URISyntaxException
     {
@@ -143,7 +142,7 @@ public class CreateSimpleGraph
     {
         // tag::createNode[]
         final String nodeEntryPointUri = SERVER_ROOT_URI + "node";
-        // http://localhost:7474/db/data/node
+        // http://localhost:7474/db/neo4j/node
 
         WebResource resource = Client.create()
                 .resource( nodeEntryPointUri );

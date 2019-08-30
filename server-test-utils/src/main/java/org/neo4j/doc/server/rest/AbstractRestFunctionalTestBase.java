@@ -84,8 +84,8 @@ public class AbstractRestFunctionalTestBase extends SharedServerTestBase impleme
         return SharedServerTestBase.server().getDatabaseService().getDatabase();
     }
 
-    protected static String getDataUri() {
-        return "http://localhost:7474/db/data/";
+    protected static String databaseUri() {
+        return "http://localhost:7474/db/neo4j/";
     }
 
     protected String getDatabaseUri() {
@@ -93,15 +93,15 @@ public class AbstractRestFunctionalTestBase extends SharedServerTestBase impleme
     }
 
     protected String txUri() {
-        return getDataUri() + "transaction";
+        return databaseUri() + "tx";
     }
 
     protected static String txCommitUri() {
-        return getDataUri() + "transaction/commit";
+        return databaseUri() + "tx/commit";
     }
 
     protected String txUri(long txId) {
-        return getDataUri() + "transaction/" + txId;
+        return databaseUri() + "tx/" + txId;
     }
 
     public static long extractTxId(HTTP.Response response) {

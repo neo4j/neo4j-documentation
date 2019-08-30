@@ -64,7 +64,6 @@ public class CommunityServerBuilder
 
     private String[] autoIndexedNodeKeys = null;
     private String[] autoIndexedRelationshipKeys = null;
-    private String[] securityRuleClassNames;
     private boolean persistent;
     private boolean httpsEnabled = false;
 
@@ -141,12 +140,6 @@ public class CommunityServerBuilder
             properties.put( "dbms.auto_index.relationships.enabled", "true" );
             String propertyKeys = org.apache.commons.lang.StringUtils.join( autoIndexedRelationshipKeys, "," );
             properties.put( "dbms.auto_index.relationships.keys", propertyKeys );
-        }
-
-        if ( securityRuleClassNames != null && securityRuleClassNames.length > 0 )
-        {
-            String propertyKeys = org.apache.commons.lang.StringUtils.join( securityRuleClassNames, "," );
-            properties.put( ServerSettings.security_rules.name(), propertyKeys );
         }
 
         properties.put( HttpConnector.enabled.name(), "true" );
@@ -234,12 +227,6 @@ public class CommunityServerBuilder
     public CommunityServerBuilder onHttpsAddress( SocketAddress address )
     {
         this.httpsAddress = address;
-        return this;
-    }
-
-    public CommunityServerBuilder withSecurityRules( String... securityRuleClassNames )
-    {
-        this.securityRuleClassNames = securityRuleClassNames;
         return this;
     }
 
