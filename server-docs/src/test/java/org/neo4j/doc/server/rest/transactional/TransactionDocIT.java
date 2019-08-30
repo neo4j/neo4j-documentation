@@ -72,7 +72,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
                 .expectedStatus( 201 )
                 .payload( quotedJson( "{ 'statements': [ { 'statement': 'CREATE (n {props}) RETURN n', " +
                         "'parameters': { 'props': { 'name': 'My Node' } } } ] }" ) )
-                .post( getDataUri() + "transaction" );
+                .post( txUri() );
 
         // Then
         Map<String, Object> result = jsonToMap( response.entity() );
@@ -89,7 +89,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
     public void execute_statements_in_an_open_transaction() throws JsonParseException
     {
         // Given
-        String location = POST( getDataUri() + "transaction" ).location();
+        String location = POST( txUri() ).location();
 
         // Document
         ResponseEntity response = gen.get()
@@ -113,7 +113,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
     public void execute_statements_in_an_open_transaction_using_REST() throws JsonParseException
     {
         // Given
-        String location = POST( getDataUri() + "transaction" ).location();
+        String location = POST( txUri() ).location();
 
         // Document
         ResponseEntity response = gen.get()
@@ -143,7 +143,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
             throws JsonParseException, ParseException, InterruptedException
     {
         // Given
-        HTTP.Response initialResponse = POST( getDataUri() + "transaction" );
+        HTTP.Response initialResponse = POST( txUri() );
         String location = initialResponse.location();
         long initialExpirationTime = expirationTime( jsonToMap( initialResponse.rawContent() ) );
 
@@ -176,7 +176,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
     public void commit_an_open_transaction() throws JsonParseException
     {
         // Given
-        String location = POST( getDataUri() + "transaction" ).location();
+        String location = POST( txUri() ).location();
 
         // Document
         ResponseEntity response = gen.get()
@@ -205,7 +205,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
                 .noGraph()
                 .expectedStatus( 200 )
                 .payload( quotedJson( "{ 'statements': [ { 'statement': 'CREATE (n) RETURN id(n)' } ] }" ) )
-                .post( getDataUri() + "transaction/commit" );
+                .post( txCommitUri() );
 
         // Then
         Map<String, Object> result = jsonToMap( response.entity() );
@@ -227,7 +227,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
                 .payload( quotedJson( "{ 'statements': [ { 'statement': 'CREATE (n) RETURN id(n)' }, "
                         + "{ 'statement': 'CREATE (n {props}) RETURN n', "
                         + "'parameters': { 'props': { 'name': 'My Node' } } } ] }" ) )
-                .post( getDataUri() + "transaction/commit" );
+                .post( txCommitUri() );
 
         // Then
         Map<String,Object> result = jsonToMap( response.entity() );
@@ -258,7 +258,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
                         "CREATE p2 = (bike)-[:HAS { position: 2 } ]->(backWheel) " +
                         "RETURN bike, p1, p2', " +
                         "'resultDataContents': ['row','graph']}] }" ) )
-                        .post( getDataUri() + "transaction/commit" );
+                        .post( txCommitUri() );
 
         // Then
         Map<String, Object> result = jsonToMap( response.entity() );
@@ -277,7 +277,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
     public void rollback_an_open_transaction() throws JsonParseException
     {
         // Given
-        HTTP.Response firstReq = POST( getDataUri() + "transaction",
+        HTTP.Response firstReq = POST( txUri(),
                 HTTP.RawPayload.quotedJson( "{ 'statements': [ { 'statement': 'CREATE (n) RETURN id(n)' } ] }" ) );
         String location = firstReq.location();
 
@@ -314,7 +314,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
     public void handling_errors() throws JsonParseException
     {
         // Given
-        String location = POST( getDataUri() + "transaction" ).location();
+        String location = POST( txUri() ).location();
 
         // Document
         ResponseEntity response = gen.get()
@@ -337,7 +337,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
     public void errors_in_open_transaction() throws JsonParseException
     {
         // Given
-        String location = POST( getDataUri() + "transaction" ).location();
+        String location = POST( txUri() ).location();
 
         // Document
         ResponseEntity response = gen.get()
@@ -363,7 +363,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
                 .expectedStatus( 200 )
                 .payload( quotedJson(
                         "{ 'statements': [ { 'statement': 'CREATE (n) RETURN id(n)', 'includeStats': true } ] }" ) )
-                .post( getDataUri() + "transaction/commit" );
+                .post( txCommitUri() );
 
         // Then
         Map<String,Object> entity = jsonToMap( response.entity() );
@@ -447,6 +447,6 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
     {
         return gen.get().expectedStatus( 200 ).payload( quotedJson(
                 "{ 'statements': [ { 'statement': 'MATCH (n) WHERE ID(n) = $nodeId RETURN n' , " + "'parameters': { 'nodeId': " + nodeId + " } } ] }" ) ).post(
-                getDataUri() + "transaction/commit" );
+                txCommitUri() );
     }
 }

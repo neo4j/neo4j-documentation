@@ -48,7 +48,7 @@ public final class FunctionalTestHelper
         }
         this.helper = new GraphDbHelper( server.getDatabaseService() );
         this.server = server;
-        this.request = new RestRequest(server.baseUri().resolve("db/data/"));
+        this.request = new RestRequest(server.baseUri().resolve("db/neo4j/"));
     }
 
     public GraphDbHelper getGraphDbHelper()
@@ -56,9 +56,9 @@ public final class FunctionalTestHelper
         return helper;
     }
 
-    public String dataUri()
+    public String databaseUri()
     {
-        return server.baseUri().toString() + "db/data/";
+        return server.baseUri().toString() + "db/neo4j/";
     }
 
     public JaxRsResponse get(String path) {
@@ -72,7 +72,7 @@ public final class FunctionalTestHelper
 
     public String cypherURL()
     {
-        return dataUri() + "transaction/commit";
+        return databaseUri() + "tx/commit";
     }
 
     public String simpleCypherRequestBody()
