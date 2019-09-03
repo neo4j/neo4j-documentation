@@ -6,7 +6,7 @@
     <parent>
         <artifactId>neo4j-manual-parent</artifactId>
         <groupId>org.neo4j.doc</groupId>
-        <version>3.5.9-SNAPSHOT</version>
+        <version>3.5.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
