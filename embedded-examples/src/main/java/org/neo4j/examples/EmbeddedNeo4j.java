@@ -78,9 +78,9 @@ public class EmbeddedNeo4j
             // Database operations go here
             // end::transaction[]
             // tag::addData[]
-            firstNode = graphDb.createNode();
+            firstNode = tx.createNode();
             firstNode.setProperty( "message", "Hello, " );
-            secondNode = graphDb.createNode();
+            secondNode = tx.createNode();
             secondNode.setProperty( "message", "World!" );
 
             relationship = firstNode.createRelationshipTo( secondNode, RelTypes.KNOWS );

@@ -37,6 +37,7 @@ import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription}
 import org.neo4j.exceptions.{InternalException, Neo4jException}
 import org.neo4j.graphdb._
 import org.neo4j.internal.kernel.api.Transaction
+import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.visualization.asciidoc.AsciidocHelper
@@ -92,7 +93,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   def executeQuery(queryText: String, params: Map[String, Any])(implicit engine: ExecutionEngine): DocsExecutionResult = try {
     val docsResult = db.inTx(tx => {
-      val query = replaceNodeIds(queryText)
+      val query = replaceNodeIds(tx, queryText)
 
       assert(filePaths.size == urls.size)
       val testQuery = filePaths.foldLeft(query)((acc, entry) => acc.replace(entry._1, entry._2))
@@ -119,15 +120,15 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     case e: Neo4jException => throw new InternalException(queryText, e)
   }
 
-  def replaceNodeIds(_query: String): String = {
+  def replaceNodeIds(tx:InternalTransaction, _query: String): String = {
     var query = _query
-    nodes.keySet.foreach((key) => query = query.replace("%" + key + "%", node(key).getId.toString))
+    nodes.keySet.foreach((key) => query = query.replace("%" + key + "%", node(tx, key).getId.toString))
     query
   }
 
-  def node(name: String): Node = graphOps.getNodeById(nodes.getOrElse(name, throw new NotFoundException(name)))
+  def node(tx:InternalTransaction, name: String): Node = tx.getNodeById(nodes.getOrElse(name, throw new NotFoundException(name)))
 
-  def rel(id: Long): Relationship = graphOps.getRelationshipById(id)
+  def rel(tx:InternalTransaction, id: Long): Relationship = tx.getRelationshipById(id)
 
   def text: String
 
@@ -269,13 +270,13 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
         case (name, node) => name -> node.getId
       }.toMap
 
-    db.inTx {
+    db.withTx( tx => {
       properties.foreach((n) => {
-        val nod = node(n._1)
+        val nod = node(tx, n._1)
         n._2.foreach((kv) => nod.setProperty(kv._1, kv._2))
       })
 
-    }
+    } )
     engine = ExecutionEngineFactory.createCommunityEngineFromDb(graph) // TODO: This should be using the EnterpriseEngine
   }
 

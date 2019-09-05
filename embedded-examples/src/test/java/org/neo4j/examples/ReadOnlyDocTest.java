@@ -78,7 +78,7 @@ public class ReadOnlyDocTest
         Transaction tx = graphDb.beginTx();
         try
         {
-            graphDb.createNode();
+            tx.createNode();
             tx.commit();
             fail( "expected exception" );
         }

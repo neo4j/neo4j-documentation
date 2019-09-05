@@ -41,9 +41,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.internal.kernel.api.security.LoginContext;
-import org.neo4j.kernel.impl.coreapi.InternalTransaction;
-import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 import org.neo4j.visualization.graphviz.AsciiDocSimpleStyle;
 import org.neo4j.visualization.graphviz.GraphvizWriter;
@@ -307,20 +304,16 @@ enum BlockType
                 {
                     if ( periodic )
                     {
-                        final GraphDatabaseAPI databaseAPI = (GraphDatabaseAPI) state.graphOps;
-                        try ( InternalTransaction internalTransaction = databaseAPI.beginTransaction( org.neo4j.internal.kernel.api.Transaction.Type.implicit,
-                                LoginContext.AUTH_DISABLED ) )
-                        {
-                            state.latestResult = new Result( fileQuery, databaseAPI.execute( "PROFILE " + fileQuery, state.parameters ) );
-                            prettifiedStatements.add( state.prettify( webQuery ) );
-                            internalTransaction.commit();
-                        }
+                        String originalQuery = fileQuery;
+                        state.graphOps.executeTransactionally( "PROFILE " + fileQuery, state.parameters,
+                                result -> state.latestResult = new Result( originalQuery, result) );
+                        prettifiedStatements.add( state.prettify( webQuery ) );
                     }
                     else
                     {
                         try ( Transaction tx = state.graphOps.beginTx() )
                         {
-                            state.latestResult = new Result( fileQuery, state.graphOps.execute( "PROFILE " + fileQuery, state.parameters ) );
+                            state.latestResult = new Result( fileQuery, tx.execute( "PROFILE " + fileQuery, state.parameters ) );
                             prettifiedStatements.add( state.prettify( webQuery ) );
                             tx.commit();
                         }
@@ -480,11 +473,11 @@ enum BlockType
         {
             if ( resultOnly )
             {
-                writer.emit( out, ResultWalker.result( state ) );
+                writer.emit( out, ResultWalker.result( tx, state ) );
             }
             else
             {
-                writer.emit( out, Walker.fullGraph( state.graphOps ) );
+                writer.emit( out, Walker.fullGraph( tx ) );
             }
             tx.commit();
         }

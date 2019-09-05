@@ -62,12 +62,6 @@ public class TraversalExample
     public TraversalExample( GraphDatabaseService db )
     {
         this.db = db;
-        // tag::basetraverser[]
-        friendsTraversal = db.traversalDescription()
-                .depthFirst()
-                .relationships( Rels.KNOWS )
-                .uniqueness( Uniqueness.RELATIONSHIP_GLOBAL );
-        // end::basetraverser[]
     }
 
     private Node createData()
@@ -78,7 +72,7 @@ public class TraversalExample
                     "(lars {name: 'Lars'}), (ed {name: 'Ed'})," + "(joe)-[:KNOWS]->(sara), (lisa)-[:LIKES]->(joe), " +
                     "(peter)-[:KNOWS]->(sara), (dirk)-[:KNOWS]->(peter), " + "(lars)-[:KNOWS]->(drk), (ed)-[:KNOWS]->(lars), " + "(lisa)-[:KNOWS]->(lars) " +
                     "RETURN joe";
-            Result result = db.execute( query );
+            Result result = transaction.execute( query );
             Object joe = result.columnAs( "joe" ).next();
             if ( joe instanceof Node )
             {
@@ -96,7 +90,8 @@ public class TraversalExample
     {
         try (Transaction tx = db.beginTx())
         {
-            out.println( knowsLikesTraverser( joe ) );
+            init( tx );
+            out.println( knowsLikesTraverser( tx, joe ) );
             out.println( traverseBaseTraverser( joe ) );
             out.println( depth3( joe ) );
             out.println( depth4( joe ) );
@@ -105,11 +100,21 @@ public class TraversalExample
         }
     }
 
-    public String knowsLikesTraverser( Node node )
+    void init( Transaction tx )
+    {
+        // tag::basetraverser[]
+        friendsTraversal = tx.traversalDescription()
+                .depthFirst()
+                .relationships( Rels.KNOWS )
+                .uniqueness( Uniqueness.RELATIONSHIP_GLOBAL );
+        // end::basetraverser[]
+    }
+
+    public String knowsLikesTraverser( Transaction transaction, Node node )
     {
         String output = "";
         // tag::knowslikestraverser[]
-        for ( Path position : db.traversalDescription()
+        for ( Path position : transaction.traversalDescription()
                 .depthFirst()
                 .relationships( Rels.KNOWS )
                 .relationships( Rels.LIKES, Direction.INCOMING )

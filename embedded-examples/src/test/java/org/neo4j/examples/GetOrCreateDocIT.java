@@ -206,7 +206,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
             String queryString = "MERGE (n:User {name: $name}) RETURN n";
             Map<String, Object> parameters = new HashMap<>();
             parameters.put( "name", username );
-            resultIterator = graphDb.execute( queryString, parameters ).columnAs( "n" );
+            resultIterator = tx.execute( queryString, parameters ).columnAs( "n" );
             result = resultIterator.next();
             tx.commit();
             return result;
@@ -244,7 +244,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
     private static void assertUserExistsUniquelyInGraphDb( GraphDatabaseService graph, Transaction tx, String username )
     {
         Label label = Label.label( "User" );
-        Node result = graph.findNode( label, "name", username );
+        Node result = tx.findNode( label, "name", username );
         assertNotNull( format( "User '%s' not created.", username ), result );
         tx.commit();
     }

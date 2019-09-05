@@ -89,7 +89,7 @@ class Neo4jBasicDocTest
         Node n;
         try ( Transaction tx = graphDb.beginTx() )
         {
-            n = graphDb.createNode();
+            n = tx.createNode();
             n.setProperty( "name", "Nancy" );
             tx.commit();
         }
@@ -101,7 +101,7 @@ class Neo4jBasicDocTest
         // property should match.
         try ( Transaction tx = graphDb.beginTx() )
         {
-            Node foundNode = graphDb.getNodeById( n.getId() );
+            Node foundNode = tx.getNodeById( n.getId() );
             MatcherAssert.assertThat( foundNode.getId(), is( n.getId() ) );
             MatcherAssert.assertThat( (String) foundNode.getProperty( "name" ), is( "Nancy" ) );
         }

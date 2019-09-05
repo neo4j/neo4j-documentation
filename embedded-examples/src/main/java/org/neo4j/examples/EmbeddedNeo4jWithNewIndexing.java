@@ -89,7 +89,7 @@ public class EmbeddedNeo4jWithNewIndexing
                 // Create some users
                 for ( int id = 0; id < 100; id++ )
                 {
-                    Node userNode = graphDb.createNode( label );
+                    Node userNode = tx.createNode( label );
                     userNode.setProperty( "username", "user" + id + "@neo4j.org" );
                 }
                 System.out.println( "Users created" );
@@ -106,7 +106,7 @@ public class EmbeddedNeo4jWithNewIndexing
             try ( Transaction tx = graphDb.beginTx() )
             {
                 try ( ResourceIterator<Node> users =
-                              graphDb.findNodes( label, "username", nameToFind ) )
+                              tx.findNodes( label, "username", nameToFind ) )
                 {
                     ArrayList<Node> userNodes = new ArrayList<>();
                     while ( users.hasNext() )
@@ -130,7 +130,7 @@ public class EmbeddedNeo4jWithNewIndexing
             int idToFind = 45;
             String nameToFind = "user" + idToFind + "@neo4j.org";
             try ( Transaction tx = graphDb.beginTx();
-                  ResourceIterator<Node> users = graphDb.findNodes( label, "username", nameToFind ) )
+                  ResourceIterator<Node> users = tx.findNodes( label, "username", nameToFind ) )
             {
                 Node firstUserNode;
                 if ( users.hasNext() )
@@ -150,7 +150,7 @@ public class EmbeddedNeo4jWithNewIndexing
                 int idToFind = 45;
                 String nameToFind = "user" + idToFind + "@neo4j.org";
 
-                for ( Node node : loop( graphDb.findNodes( label, "username", nameToFind ) ) )
+                for ( Node node : loop( tx.findNodes( label, "username", nameToFind ) ) )
                 {
                     node.setProperty( "username", "user" + (idToFind + 1) + "@neo4j.org" );
                 }
@@ -167,7 +167,7 @@ public class EmbeddedNeo4jWithNewIndexing
                 int idToFind = 46;
                 String nameToFind = "user" + idToFind + "@neo4j.org";
 
-                for ( Node node : loop( graphDb.findNodes( label, "username", nameToFind ) ) )
+                for ( Node node : loop( tx.findNodes( label, "username", nameToFind ) ) )
                 {
                     node.delete();
                 }

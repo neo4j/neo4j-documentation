@@ -87,25 +87,26 @@ public class UniquenessOfPathsDocTest extends AbstractJavaDocTestBase
         gen.get().addTestSourceSnippets( this.getClass(), "traverser", "traverseNodeGlobal" );
         // tag::traverser[]
         final Node target = data.get().get( "Principal1" );
-        TraversalDescription td = graphdb().traversalDescription()
-                .uniqueness( Uniqueness.NODE_PATH )
-                .evaluator( new Evaluator()
-        {
-            @Override
-            public Evaluation evaluate( Path path )
-            {
-                boolean endNodeIsTarget = path.endNode().equals( target );
-                return Evaluation.of( endNodeIsTarget, !endNodeIsTarget );
-            }
-        } );
-
-        Traverser results = td.traverse( start );
-        // end::traverser[]
         String output = "";
         int count = 0;
-        //we should get two paths back, through Pet1 and Pet3
-        try ( Transaction ignore = graphdb().beginTx() )
+        try ( Transaction transaction = graphdb().beginTx() )
         {
+            TraversalDescription td = transaction.traversalDescription()
+                    .uniqueness( Uniqueness.NODE_PATH )
+                    .evaluator( new Evaluator()
+            {
+                @Override
+                public Evaluation evaluate( Path path )
+                {
+                    boolean endNodeIsTarget = path.endNode().equals( target );
+                    return Evaluation.of( endNodeIsTarget, !endNodeIsTarget );
+                }
+            } );
+
+            Traverser results = td.traverse( start );
+            // end::traverser[]
+        //we should get two paths back, through Pet1 and Pet3
+
             for ( Path path : results )
             {
                 count++;
@@ -115,15 +116,23 @@ public class UniquenessOfPathsDocTest extends AbstractJavaDocTestBase
         gen.get().addSnippet( "output", createOutputSnippet( output ) );
         assertEquals( 2, count );
 
-        // tag::traverseNodeGlobal[]
-        TraversalDescription nodeGlobalTd = td.uniqueness( Uniqueness.NODE_GLOBAL );
-        results = nodeGlobalTd.traverse( start );
-        // end::traverseNodeGlobal[]
         String output2 = "";
         count = 0;
-        // we should get two paths back, through Pet1 and Pet3
         try ( Transaction tx = graphdb().beginTx() )
         {
+            // tag::traverseNodeGlobal[]
+            TraversalDescription nodeGlobalTd = tx.traversalDescription().uniqueness( Uniqueness.NODE_PATH ).evaluator( new Evaluator()
+            {
+                @Override
+                public Evaluation evaluate( Path path )
+                {
+                    boolean endNodeIsTarget = path.endNode().equals( target );
+                    return Evaluation.of( endNodeIsTarget, !endNodeIsTarget );
+                }
+            } ).uniqueness( Uniqueness.NODE_GLOBAL );
+            Traverser results = nodeGlobalTd.traverse( start );
+            // end::traverseNodeGlobal[]
+            // we should get two paths back, through Pet1 and Pet3
             for ( Path path : results )
             {
                 count++;

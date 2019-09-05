@@ -142,7 +142,7 @@ public class AsciidocHelper
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             try
             {
-                writer.emit( out, Walker.fullGraph( graph ) );
+                writer.emit( out, Walker.fullGraph( tx ) );
             }
             catch ( IOException e )
             {

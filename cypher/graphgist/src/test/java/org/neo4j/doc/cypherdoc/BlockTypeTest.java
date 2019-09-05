@@ -235,7 +235,7 @@ public class BlockTypeTest
     {
         try ( Transaction transaction = graphOps.beginTx() )
         {
-            graphOps.execute( "CREATE (n:Person {name: 'Adam'});" );
+            transaction.execute( "CREATE (n:Person {name: 'Adam'});" );
             transaction.commit();
         }
         Block block = Block.getBlock(singletonList("// graph:xyz"));
@@ -293,7 +293,7 @@ public class BlockTypeTest
     {
         try ( Transaction transaction = graphOps.beginTx() )
         {
-            graphOps.execute( "CREATE (n:Person {name: 'Adam'});" );
+            transaction.execute( "CREATE (n:Person {name: 'Adam'});" );
             transaction.commit();
         }
         Block block = Block.getBlock(singletonList("//graph"));
@@ -358,14 +358,15 @@ public class BlockTypeTest
         Schema schema = mock( Schema.class );
         when( graph.schema() ).thenReturn( schema );
         doNothing().when( schema ).awaitIndexesOnline( anyLong(), any( TimeUnit.class ) );
-        when( graph.beginTx() ).thenReturn( mock( Transaction.class ) );
+        final Transaction transaction = mock( Transaction.class );
+        when( graph.beginTx() ).thenReturn( transaction );
         Block block = new Block( myQuery, BlockType.CYPHER );
         org.neo4j.graphdb.Result result = mock( org.neo4j.graphdb.Result.class );
         when( result.getQueryStatistics() ).thenReturn( mock( org.neo4j.graphdb.QueryStatistics.class ) );
         ArgumentCaptor<String> fileQuery = ArgumentCaptor.forClass( String.class );
         ArgumentCaptor<String> httpQuery = ArgumentCaptor.forClass( String.class );
 
-        when( graph.execute( fileQuery.capture(), eq( Collections.emptyMap() ) ) )
+        when( transaction.execute( fileQuery.capture(), eq( Collections.emptyMap() ) ) )
                 .thenReturn( result );
 
         state = spy( new State( graph, null, new File( "/dev/null" ), "http://myurl" ) );

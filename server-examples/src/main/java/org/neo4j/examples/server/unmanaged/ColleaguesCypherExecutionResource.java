@@ -72,7 +72,7 @@ public class ColleaguesCypherExecutionResource
 
                 final GraphDatabaseService graphDb = dbms.database( "neo4j" );
                 try ( Transaction tx = graphDb.beginTx();
-                      Result result = graphDb.execute( colleaguesQuery(), params ) )
+                      Result result = tx.execute( colleaguesQuery(), params ) )
                 {
                     while ( result.hasNext() )
                     {

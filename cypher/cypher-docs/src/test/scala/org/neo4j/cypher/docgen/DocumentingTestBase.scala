@@ -141,9 +141,9 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
     val out = new ByteArrayOutputStream()
     val writer = new GraphvizWriter(getGraphvizStyle)
 
-    db.inTx {
-      writer.emit(out, Walker.fullGraph(db.getGraphDatabaseService))
-    }
+    db.withTx(tx => {
+      writer.emit(out, Walker.fullGraph(tx))
+    })
 
     val graphOutput = """["dot", "%s.svg", "neoviz", "%s"]
 ----
@@ -205,16 +205,16 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     val writer: PrintWriter = createWriter(title, dir)
     prepareForTest(title, prepare)
 
-    val query = db.inTx {
+    val query = db.withTx(tx => {
       keySet.foldLeft(realQuery.getOrElse(queryText)) {
-        (acc, key) => acc.replace("%" + key + "%", node(key).getId.toString)
+        (acc, key) => acc.replace("%" + key + "%", node(tx, key).getId.toString)
       }
-    }
+    })
 
     try {
       db.inTx({ tx:InternalTransaction =>
         val txContext = graph.transactionalContext(tx, query = query -> Map())
-        val queryResult = DocsExecutionResult(db.execute("PROFILE " + query), txContext)
+        val queryResult = DocsExecutionResult(tx.execute("PROFILE " + query), txContext)
 
         if (expectedException.isDefined) {
           fail(s"Expected the test to throw an exception: $expectedException")
@@ -275,10 +275,10 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     if (generateConsole) {
       if (generateInitialGraphForConsole) {
         val out = new StringWriter()
-        db.inTx {
-          new SubGraphExporter(DatabaseSubGraph.from(db.getGraphDatabaseService)).export(new PrintWriter(out))
+        db.withTx( tx=> {
+          new SubGraphExporter(DatabaseSubGraph.from(db.getGraphDatabaseService, tx)).export(new PrintWriter(out))
           consoleData = out.toString
-        }
+        })
       }
       if (consoleData.isEmpty) {
         consoleData = "none"
@@ -289,9 +289,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     val writer: PrintWriter = createWriter(title, dir)
     prepareForTest(title, prepare)
 
-    val query = db.inTx {
-      keySet.foldLeft(queryText)((acc, key) => acc.replace("%" + key + "%", node(key).getId.toString))
-    }
+    val query = db.withTx( tx => {
+      keySet.foldLeft(queryText)((acc, key) => acc.replace("%" + key + "%", node(tx, key).getId.toString))
+    })
 
     assert(filePaths.size == urls.size)
 
@@ -520,9 +520,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   protected def getLabelsFromNode(p: DocsExecutionResult): Iterable[String] = p.columnAs[Node]("n").next().labels
 
-  def node(name: String): Node = graphOps.getNodeById(nodeMap.getOrElse(name, throw new NotFoundException(name)))
-  def nodes(names: String*): List[Node] = names.map(node).toList
-  def rel(id: Long): Relationship = graphOps.getRelationshipById(id)
+  def node(tx: Transaction, name: String): Node = tx.getNodeById(nodeMap.getOrElse(name, throw new NotFoundException(name)))
+  def nodes(tx:Transaction, names: String*): List[Node] = names.map(name => node(tx,name)).toList
+  def rel(tx:Transaction, id: Long): Relationship = tx.getRelationshipById(id)
 
   @After
   def tearDown() {
@@ -564,7 +564,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     db.withTx( tx => {
       executeQueries(tx, setupQueries)
 
-      asNodeMap(properties) foreach {
+      asNodeMap(tx, properties) foreach {
         case (n: Node, seq: Map[String, Any]) =>
           seq foreach { case (k, v) => n.setProperty(k, v) }
       }
@@ -573,8 +573,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     db.withTx( executeQueries(_, setupConstraintQueries), Type.`explicit` )
   }
 
-  private def asNodeMap[T: ClassTag](m: Map[String, T]): Map[Node, T] =
-    m map { case (k: String, v: T) => (node(k), v) }
+  private def asNodeMap[T: ClassTag](tx:InternalTransaction,  m: Map[String, T]): Map[Node, T] =
+    m map { case (k: String, v: T) => (node(tx, k), v) }
 
   private def mapMapValue(v: Any): Any = v match {
     case v: Map[_, _] => Eagerly.immutableMapValues(v, mapMapValue).asJava

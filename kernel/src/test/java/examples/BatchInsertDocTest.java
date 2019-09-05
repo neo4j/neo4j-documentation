@@ -120,7 +120,7 @@ public class BatchInsertDocTest
         try ( Transaction tx = db.beginTx() )
         {
             Label personLabelForTesting = Label.label( "Person" );
-            Node mNode = db.findNode( personLabelForTesting, "name", "Mattias" );
+            Node mNode = tx.findNode( personLabelForTesting, "name", "Mattias" );
             Node cNode = mNode.getSingleRelationship( RelationshipType.withName( "KNOWS" ), Direction.OUTGOING ).getEndNode();
             assertThat( cNode.getProperty( "name" ), is( "Chris" ) );
             assertThat( db.schema()

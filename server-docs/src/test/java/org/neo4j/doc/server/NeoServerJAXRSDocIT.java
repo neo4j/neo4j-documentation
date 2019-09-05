@@ -35,6 +35,7 @@ import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RestRequest;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.server.NeoServer;
 
@@ -99,15 +100,15 @@ public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
     private int createSimpleDatabase( final GraphDatabaseAPI graph )
     {
         final int numberOfNodes = 10;
-        new Transactor( graph, () -> {
+        new Transactor( graph, ( Transaction tx ) -> {
             for ( int i = 0; i < numberOfNodes; i++ )
             {
-                graph.createNode();
+                tx.createNode();
             }
 
-            for ( Node n1 : graph.getAllNodes() )
+            for ( Node n1 : tx.getAllNodes() )
             {
-                for ( Node n2 : graph.getAllNodes() )
+                for ( Node n2 : tx.getAllNodes() )
                 {
                     if ( n1.equals( n2 ) )
                     {

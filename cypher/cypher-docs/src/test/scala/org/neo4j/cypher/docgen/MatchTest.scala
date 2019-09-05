@@ -351,7 +351,7 @@ class MatchTest extends DocumentingTest {
   private def assertAllNodesReturned = ResultAndDbAssertions((p, db) => {
     val tx = db.beginTransaction(Type.explicit, AnonymousContext.read() )
     try {
-      val allNodes: List[Node] = db.getAllNodes().asScala.toList
+      val allNodes: List[Node] = tx.getAllNodes.asScala.toList
       allNodes should equal(p.columnAs[Node]("n").toList)
     } finally tx.close()
   })

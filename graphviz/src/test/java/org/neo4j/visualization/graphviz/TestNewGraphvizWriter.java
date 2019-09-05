@@ -54,14 +54,14 @@ public class TestNewGraphvizWriter
             GraphDatabaseService neo = managementService.database( DEFAULT_DATABASE_NAME );
             try ( Transaction tx = neo.beginTx() )
             {
-                final Node emil = neo.createNode();
+                final Node emil = tx.createNode();
                 emil.setProperty( "name", "Emil Eifrém" );
                 emil.setProperty( "age", 30 );
-                final Node tobias = neo.createNode();
+                final Node tobias = tx.createNode();
                 tobias.setProperty( "name", "Tobias \"thobe\" Ivarsson" );
                 tobias.setProperty( "age", 23 );
                 tobias.setProperty( "hours", new int[]{10, 10, 4, 4, 0} );
-                final Node johan = neo.createNode();
+                final Node johan = tx.createNode();
                 johan.setProperty( "!<>)", "!<>)" );
                 johan.setProperty( "name", "!<>Johan '\\n00b' !<>Svensson" );
                 final Relationship emilKNOWStobias = emil.createRelationshipTo( tobias, type.KNOWS );
@@ -72,7 +72,7 @@ public class TestNewGraphvizWriter
                 OutputStream out = new ByteArrayOutputStream();
                 GraphvizWriter writer = new GraphvizWriter();
                 Iterable<Node> traverser =
-                        neo.traversalDescription().depthFirst().relationships( type.KNOWS ).relationships( type.WORKS_FOR ).traverse( emil ).nodes();
+                        tx.traversalDescription().depthFirst().relationships( type.KNOWS ).relationships( type.WORKS_FOR ).traverse( emil ).nodes();
                 writer.emit( out, Walker.crosscut( traverser, type.KNOWS, type.WORKS_FOR ) );
                 tx.commit();
                 out.toString();

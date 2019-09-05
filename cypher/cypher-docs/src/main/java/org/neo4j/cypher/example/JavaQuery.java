@@ -60,15 +60,15 @@ public class JavaQuery
 
         try ( Transaction tx = db.beginTx())
         {
-            Node myNode = db.createNode();
+            Node myNode = tx.createNode();
             myNode.setProperty( "name", "my node" );
             tx.commit();
         }
         // end::addData[]
 
         // tag::execute[]
-        try ( Transaction ignored = db.beginTx();
-              Result result = db.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ) )
+        try ( Transaction tx = db.beginTx();
+              Result result = tx.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ) )
         {
             while ( result.hasNext() )
             {
@@ -82,8 +82,8 @@ public class JavaQuery
         }
         // end::execute[]
         // the result is now empty, get a new one
-        try ( Transaction ignored = db.beginTx();
-              Result result = db.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ) )
+        try ( Transaction tx = db.beginTx();
+              Result result = tx.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ) )
         {
             // tag::items[]
             Iterator<Node> n_column = result.columnAs( "n" );
@@ -94,7 +94,7 @@ public class JavaQuery
             List<String> columns = result.columns();
             // end::columns[]
             columnsString = columns.toString();
-            resultString = db.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ).resultAsString();
+            resultString = tx.execute( "MATCH (n {name: 'my node'}) RETURN n, n.name" ).resultAsString();
         }
 
         managementService.shutdown();

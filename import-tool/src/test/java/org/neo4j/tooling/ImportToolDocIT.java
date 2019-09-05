@@ -535,7 +535,8 @@ class ImportToolDocIT
         // THEN
         DatabaseManagementService managementService = databaseService( "the-database" );
         GraphDatabaseService db = managementService.database( "the-database" );
-        try ( Transaction tx = db.beginTx(); ResourceIterator<Node> nodes = db.findNodes( Label.label( "Actor" ) ) )
+        try ( Transaction tx = db.beginTx();
+              ResourceIterator<Node> nodes = tx.findNodes( Label.label( "Actor" ) ) )
         {
             assertEquals( asSet( "Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss" ), namesOf( nodes ) );
             tx.commit();
@@ -583,10 +584,10 @@ class ImportToolDocIT
         GraphDatabaseService db = managementService.database( "the-database" );
         try ( Transaction tx = db.beginTx() )
         {
-            long nodeCount = Iterables.count( db.getAllNodes() ), relationshipCount = 0;
+            long nodeCount = Iterables.count( tx.getAllNodes() ), relationshipCount = 0;
             assertEquals( 2, nodeCount );
 
-            for ( Relationship relationship : db.getAllRelationships() )
+            for ( Relationship relationship : tx.getAllRelationships() )
             {
                 assertTrue( relationship.hasProperty( "roles" ) );
 
@@ -621,15 +622,15 @@ class ImportToolDocIT
         GraphDatabaseService db = managementService.database( "the-database" );
         try ( Transaction tx = db.beginTx() )
         {
-            long nodeCount = Iterables.count( db.getAllNodes() ), relationshipCount = 0, sequelCount = 0;
+            long nodeCount = Iterables.count( tx.getAllNodes() ), relationshipCount = 0, sequelCount = 0;
             assertEquals( NODE_COUNT, nodeCount );
-            for ( Relationship relationship : db.getAllRelationships() )
+            for ( Relationship relationship : tx.getAllRelationships() )
             {
                 assertTrue( relationship.hasProperty( "role" ) );
                 relationshipCount++;
             }
             assertEquals( RELATIONSHIP_COUNT, relationshipCount );
-            ResourceIterator<Node> movieSequels = db.findNodes( Label.label( "Sequel" ) );
+            ResourceIterator<Node> movieSequels = tx.findNodes( Label.label( "Sequel" ) );
             while ( movieSequels.hasNext() )
             {
                 Node sequel = movieSequels.next();
@@ -637,7 +638,7 @@ class ImportToolDocIT
                 sequelCount++;
             }
             assertEquals( SEQUEL_COUNT, sequelCount );
-            Number year = (Number) db.findNode( Label.label( "Movie" ), "title", "The Matrix" ).getProperty( "year" );
+            Number year = (Number) tx.findNode( Label.label( "Movie" ), "title", "The Matrix" ).getProperty( "year" );
             assertEquals( 1999, year.intValue() );
             tx.commit();
         }

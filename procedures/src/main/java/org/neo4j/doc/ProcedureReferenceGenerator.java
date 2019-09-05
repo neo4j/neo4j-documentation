@@ -99,8 +99,12 @@ public class ProcedureReferenceGenerator {
 
     private Map<String, Procedure> procedures(GraphDatabaseService db) {
         Map<String, Procedure> procedures;
-        try (Transaction ignore = db.beginTx(); Result result = db.execute(query)) {
-            procedures = parseResult(result);
+        try ( Transaction tx = db.beginTx() )
+        {
+            try ( Result result = tx.execute( query ) )
+            {
+                procedures = parseResult( result );
+            }
         }
         return procedures;
     }

@@ -77,7 +77,7 @@ public class ColleaguesResource
 
                 final GraphDatabaseService graphDb = dbms.database( "neo4j" );
                 try ( Transaction tx = graphDb.beginTx();
-                      ResourceIterator<Node> persons = graphDb.findNodes( PERSON, "name", personName ) )
+                      ResourceIterator<Node> persons = tx.findNodes( PERSON, "name", personName ) )
                 {
                     while ( persons.hasNext() )
                     {

@@ -186,14 +186,14 @@ public class AclExampleDocTest extends AbstractJavaDocTestBase
         {
             String query = "match ({name: 'FileRoot'})-[:contains*0..]->(parentDir)-[:leaf]->(file) return file";
             gen.get().addSnippet( "query1", createCypherSnippet( query ) );
-            String result = graphdb().execute( query ).resultAsString();
+            String result = transaction.execute( query ).resultAsString();
             assertTrue( result.contains( "File1" ) );
             gen.get().addSnippet( "result1", createQueryResultSnippet( result ) );
 
             //Ownership
             query = "match ({name: 'FileRoot'})-[:contains*0..]->()-[:leaf]->(file)<-[:owns]-(user) return file, user";
             gen.get().addSnippet( "query2", createCypherSnippet( query ) );
-            result = graphdb().execute( query ).resultAsString();
+            result = transaction.execute( query ).resultAsString();
             assertTrue( result.contains( "File1" ) );
             assertTrue( result.contains( "User1" ) );
             assertTrue( result.contains( "User2" ) );
@@ -206,7 +206,7 @@ public class AclExampleDocTest extends AbstractJavaDocTestBase
             query = "MATCH (file)<-[:leaf]-()<-[:contains*0..]-(dir) " + "OPTIONAL MATCH (dir)<-[:canRead]-(role)-[:member]->(readUser) " +
                     "WHERE file.name =~ 'File.*' " + "RETURN file.name, dir.name, role.name, readUser.name";
             gen.get().addSnippet( "query3", createCypherSnippet( query ) );
-            result = graphdb().execute( query ).resultAsString();
+            result = transaction.execute( query ).resultAsString();
             assertTrue( result.contains( "File1" ) );
             assertTrue( result.contains( "File2" ) );
             assertTrue( result.contains( "Admin1" ) );

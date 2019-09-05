@@ -64,18 +64,18 @@ public class CalculateShortestPath
              *             v        v
              *            (Agent Smith)
              */
-            createChain( "Neo", "Trinity" );
-            createChain( "Neo", "Morpheus", "Trinity" );
-            createChain( "Morpheus", "Cypher", "Agent Smith" );
-            createChain( "Morpheus", "Agent Smith" );
+            createChain( tx, "Neo", "Trinity" );
+            createChain( tx, "Neo", "Morpheus", "Trinity" );
+            createChain( tx, "Morpheus", "Cypher", "Agent Smith" );
+            createChain( tx, "Morpheus", "Agent Smith" );
             tx.commit();
         }
 
         try ( Transaction tx = graphDb.beginTx() )
         {
             // So let's find the shortest path between Neo and Agent Smith
-            Node neo = getOrCreateNode( "Neo" );
-            Node agentSmith = getOrCreateNode( "Agent Smith" );
+            Node neo = getOrCreateNode( tx, "Neo" );
+            Node agentSmith = getOrCreateNode( tx, "Agent Smith" );
             // tag::shortestPathUsage[]
             PathFinder<Path> finder = GraphAlgoFactory.shortestPath( new BasicEvaluationContext( tx, graphDb ),
                     PathExpanders.forTypeAndDirection( KNOWS, Direction.BOTH ), 4 );
@@ -89,22 +89,22 @@ public class CalculateShortestPath
         managementService.shutdown();
     }
 
-    private static void createChain( String... names )
+    private static void createChain( Transaction transaction, String... names )
     {
         for ( int i = 0; i < names.length - 1; i++ )
         {
-            Node firstNode = getOrCreateNode( names[i] );
-            Node secondNode = getOrCreateNode( names[i + 1] );
+            Node firstNode = getOrCreateNode( transaction, names[i] );
+            Node secondNode = getOrCreateNode( transaction, names[i + 1] );
             firstNode.createRelationshipTo( secondNode, KNOWS );
         }
     }
 
-    private static Node getOrCreateNode( String name )
+    private static Node getOrCreateNode( Transaction transaction, String name )
     {
-        Node node = graphDb.findNode( NODE_LABEL, NAME_KEY, name );
+        Node node = transaction.findNode( NODE_LABEL, NAME_KEY, name );
         if ( node == null )
         {
-            node = graphDb.createNode( NODE_LABEL );
+            node = transaction.createNode( NODE_LABEL );
             node.setProperty( NAME_KEY, name );
         }
         return node;

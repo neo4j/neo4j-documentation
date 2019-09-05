@@ -180,90 +180,61 @@ public class Roles extends AbstractJavaDocTestBase
         // tag::get-admins[]
         Node admins = getNodeByName( "Admins" );
         GraphDatabaseService db = graphdb();
-        TraversalDescription traversal = db.traversalDescription()
-                .breadthFirst()
-                .evaluator( excludeStartPosition() )
-                .relationships( RoleRels.PART_OF, INCOMING )
-                .relationships( RoleRels.MEMBER_OF, INCOMING );
-        // end::get-admins[]
+        try ( Transaction transaction = db.beginTx() )
+        {
+            TraversalDescription traversal = transaction.traversalDescription().breadthFirst()
+                    .evaluator( excludeStartPosition() ).relationships( RoleRels.PART_OF, INCOMING ).relationships( RoleRels.MEMBER_OF, INCOMING );
+            // end::get-admins[]
 
-        gen.get().addSnippet( "o-get-admins",
-                createOutputSnippet( traverserToString( traversal.traverse( admins ) ) ) );
-        String query = "start admins=node("
-                       + admins.getId()
-                       + ") match (admins)<-[:PART_OF*0..]-(group)<-[:MEMBER_OF]-(user) return user.name, group.name";
-        gen.get().addSnippet( "query-get-admins", createCypherSnippet( query ) );
-        String result = db.execute( query )
-                .resultAsString();
-        assertTrue( result.contains("Engin") );
-        gen.get().addSnippet( "o-query-get-admins", createQueryResultSnippet( result ) );
+            gen.get().addSnippet( "o-get-admins", createOutputSnippet( traverserToString( traversal.traverse( admins ) ) ) );
+            String query = "start admins=node(" + admins.getId() + ") match (admins)<-[:PART_OF*0..]-(group)<-[:MEMBER_OF]-(user) return user.name, group.name";
+            gen.get().addSnippet( "query-get-admins", createCypherSnippet( query ) );
+            String result = transaction.execute( query ).resultAsString();
+            assertTrue( result.contains( "Engin" ) );
+            gen.get().addSnippet( "o-query-get-admins", createQueryResultSnippet( result ) );
 
-        //Jale's memberships
-        // tag::get-user-memberships[]
-        Node jale = getNodeByName( "Jale" );
-        traversal = db.traversalDescription()
-                .depthFirst()
-                .evaluator( excludeStartPosition() )
-                .relationships( RoleRels.MEMBER_OF, OUTGOING )
-                .relationships( RoleRels.PART_OF, OUTGOING );
-        // end::get-user-memberships[]
-        gen.get().addSnippet( "o-get-user-memberships",
-                createOutputSnippet( traverserToString( traversal.traverse( jale ) ) ) );
-        query = "start jale=node("
-                + jale.getId()
-                + ") match (jale)-[:MEMBER_OF]->()-[:PART_OF*0..]->(group) return group.name";
-        gen.get().addSnippet( "query-get-user-memberships", createCypherSnippet( query ) );
-        result = db.execute( query )
-                .resultAsString();
-        assertTrue( result.contains("Users") );
-        gen.get()
-                .addSnippet( "o-query-get-user-memberships",
-                        createQueryResultSnippet( result ) );
+            //Jale's memberships
+            // tag::get-user-memberships[]
+            Node jale = getNodeByName( "Jale" );
+            traversal = transaction.traversalDescription().depthFirst()
+                    .evaluator( excludeStartPosition() ).relationships( RoleRels.MEMBER_OF, OUTGOING ).relationships( RoleRels.PART_OF, OUTGOING );
+            // end::get-user-memberships[]
+            gen.get().addSnippet( "o-get-user-memberships", createOutputSnippet( traverserToString( traversal.traverse( jale ) ) ) );
+            query = "start jale=node(" + jale.getId() + ") match (jale)-[:MEMBER_OF]->()-[:PART_OF*0..]->(group) return group.name";
+            gen.get().addSnippet( "query-get-user-memberships", createCypherSnippet( query ) );
+            result = transaction.execute( query ).resultAsString();
+            assertTrue( result.contains( "Users" ) );
+            gen.get().addSnippet( "o-query-get-user-memberships", createQueryResultSnippet( result ) );
 
-        // get all groups
-        // tag::get-groups[]
-        Node referenceNode = getNodeByName( "Reference_Node") ;
-        traversal = db.traversalDescription()
-                .breadthFirst()
-                .evaluator( excludeStartPosition() )
-                .relationships( RoleRels.ROOT, INCOMING )
-                .relationships( RoleRels.PART_OF, INCOMING );
-        // end::get-groups[]
-        gen.get().addSnippet( "o-get-groups",
-                createOutputSnippet( traverserToString( traversal.traverse( referenceNode ) ) ) );
-        query = "start refNode=node("
-                + referenceNode.getId()
-                + ") match (refNode)<-[:ROOT]->()<-[:PART_OF*0..]-(group) return group.name";
-        gen.get().addSnippet( "query-get-groups", createCypherSnippet( query ) );
-        result = db.execute( query )
-                .resultAsString();
-        assertTrue( result.contains("Users") );
-        gen.get()
-                .addSnippet( "o-query-get-groups",
-                        createQueryResultSnippet( result ) );
+            // get all groups
+            // tag::get-groups[]
+            Node referenceNode = getNodeByName( "Reference_Node" );
+            traversal = transaction.traversalDescription()
+                    .breadthFirst().evaluator( excludeStartPosition() ).relationships( RoleRels.ROOT, INCOMING ).relationships( RoleRels.PART_OF, INCOMING );
+            // end::get-groups[]
+            gen.get().addSnippet( "o-get-groups", createOutputSnippet( traverserToString( traversal.traverse( referenceNode ) ) ) );
+            query = "start refNode=node(" + referenceNode.getId() + ") match (refNode)<-[:ROOT]->()<-[:PART_OF*0..]-(group) return group.name";
+            gen.get().addSnippet( "query-get-groups", createCypherSnippet( query ) );
+            result = transaction.execute( query ).resultAsString();
+            assertTrue( result.contains( "Users" ) );
+            gen.get().addSnippet( "o-query-get-groups", createQueryResultSnippet( result ) );
 
-        //get all members
-        // tag::get-members[]
-        traversal = db.traversalDescription()
-                .breadthFirst()
-                .evaluator( Evaluators.includeWhereLastRelationshipTypeIs( RoleRels.MEMBER_OF ) )
-                .relationships( RoleRels.ROOT, INCOMING )
-                .relationships( RoleRels.PART_OF, INCOMING )
-                .relationships( RoleRels.MEMBER_OF, INCOMING );
-        // end::get-members[]
-        gen.get().addSnippet( "o-get-members",
-                createOutputSnippet( traverserToString( traversal.traverse( referenceNode ) ) ) );
-        query = "start refNode=node("+ referenceNode.getId() +") " +
-                "match (refNode)<-[:ROOT]->(root), p=(root)<-[PART_OF*0..]-()<-[:MEMBER_OF]-(user) " +
-                "return user.name, min(length(p)) " +
-                "order by min(length(p)), user.name";
-        gen.get().addSnippet( "query-get-members", createCypherSnippet( query ) );
-        result = db.execute( query )
-                .resultAsString();
-        assertTrue( result.contains("Engin") );
-        gen.get()
-                .addSnippet( "o-query-get-members",
-                        createQueryResultSnippet( result ) );
+            //get all members
+            // tag::get-members[]
+            traversal = transaction.traversalDescription().breadthFirst()
+                    .evaluator( Evaluators.includeWhereLastRelationshipTypeIs( RoleRels.MEMBER_OF ) )
+                    .relationships( RoleRels.ROOT, INCOMING ).relationships( RoleRels.PART_OF, INCOMING ).relationships( RoleRels.MEMBER_OF, INCOMING );
+            // end::get-members[]
+            gen.get().addSnippet( "o-get-members", createOutputSnippet( traverserToString( traversal.traverse( referenceNode ) ) ) );
+            query = "start refNode=node(" + referenceNode.getId() + ") " +
+                    "match (refNode)<-[:ROOT]->(root), p=(root)<-[PART_OF*0..]-()<-[:MEMBER_OF]-(user) " + "return user.name, min(length(p)) " +
+                    "order by min(length(p)), user.name";
+            gen.get().addSnippet( "query-get-members", createCypherSnippet( query ) );
+            result = transaction.execute( query ).resultAsString();
+            assertTrue( result.contains( "Engin" ) );
+            gen.get().addSnippet( "o-query-get-members", createQueryResultSnippet( result ) );
+            transaction.commit();
+        }
 
         /* more advanced example
         query = "start refNode=node("+ referenceNode.getId() +") " +
@@ -274,17 +245,14 @@ public class Roles extends AbstractJavaDocTestBase
 
     private String traverserToString( Traverser traverser )
     {
-        try ( Transaction ignore = graphdb().beginTx() )
+        // tag::read-traverser[]
+        String output = "";
+        for ( Path path : traverser )
         {
-            // tag::read-traverser[]
-            String output = "";
-            for ( Path path : traverser )
-            {
-                output += "Found: " + path.endNode().getProperty( NAME ) + " at depth: " + path.length() + "\n";
-            }
-            // end::read-traverser[]
-            return output;
+            output += "Found: " + path.endNode().getProperty( NAME ) + " at depth: " + path.length() + "\n";
         }
+        // end::read-traverser[]
+        return output;
     }
 
     private Node getNodeByName( String string )

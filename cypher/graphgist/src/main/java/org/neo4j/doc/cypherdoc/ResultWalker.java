@@ -24,23 +24,24 @@ import java.util.Set;
 
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.walk.Visitor;
 import org.neo4j.walk.Walker;
 
 public class ResultWalker
 {
-    public static Walker result( State state )
+    public static Walker result( Transaction tx, State state )
     {
         final Set<Node> nodes = new HashSet<>();
 
         for ( long nodeId : state.latestResult.nodeIds )
         {
-            nodes.add( state.graphOps.getNodeById( nodeId ) );
+            nodes.add( tx.getNodeById( nodeId ) );
         }
 
         for ( long relationshipId : state.latestResult.relationshipIds )
         {
-            Relationship rel = state.graphOps.getRelationshipById( relationshipId );
+            Relationship rel = tx.getRelationshipById( relationshipId );
             nodes.add( rel.getStartNode() );
             nodes.add( rel.getEndNode() );
         }

@@ -187,7 +187,7 @@ public class Person
         }
 
         // tag::getStatusTraversal[]
-        TraversalDescription traversal = databaseService.traversalDescription()
+        TraversalDescription traversal = transaction.traversalDescription()
                 .depthFirst()
                 .relationships( NEXT );
         // end::getStatusTraversal[]
@@ -232,7 +232,7 @@ public class Person
 
     private Node createNewStatusNode( String text )
     {
-        Node newStatus = databaseService.createNode();
+        Node newStatus = transaction.createNode();
         newStatus.setProperty( StatusUpdate.TEXT, text );
         newStatus.setProperty( StatusUpdate.DATE, new Date().getTime() );
         return newStatus;
@@ -307,7 +307,7 @@ public class Person
     private Iterable<Person> getFriendsByDepth( int depth )
     {
         // return all my friends and their friends using new traversal API
-        TraversalDescription travDesc = databaseService.traversalDescription()
+        TraversalDescription travDesc = transaction.traversalDescription()
                 .breadthFirst()
                 .relationships( FRIEND )
                 .uniqueness( Uniqueness.NODE_GLOBAL )

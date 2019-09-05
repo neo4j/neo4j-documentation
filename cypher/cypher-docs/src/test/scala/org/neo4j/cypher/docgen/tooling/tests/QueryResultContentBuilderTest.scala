@@ -76,7 +76,7 @@ class QueryResultContentBuilderTest extends Suite
   def runQuery(query: String, init: String = ""): Content = {
     val transaction = _db.beginTx()
     try {
-      if (init != "") graph.execute(init)
+      if (init != "") transaction.execute(init)
       val builder = new QueryResultContentBuilder(x => x.toString)
       val txContext = graph.transactionalContext(transaction.asInstanceOf[InternalTransaction], query = query -> Map())
       val subscriber = new ResultSubscriber(txContext)
