@@ -70,13 +70,14 @@ public class OrderedPathDocTest
     public void testPath()
     {
         Node A = orderedPath.createTheGraph();
-        TraversalDescription traversalDescription = orderedPath.findPaths();
+        String output;
         try ( Transaction tx = db.beginTx() )
         {
+            TraversalDescription traversalDescription = orderedPath.findPaths( tx );
             assertEquals( 1, count( traversalDescription.traverse( A ) ) );
+            output = orderedPath.printPaths( traversalDescription, A );
+            assertTrue( output.contains( "(A)--[REL1]-->(B)--[REL2]-->(C)--[REL3]-->(D)" ) );
         }
-        String output = orderedPath.printPaths( traversalDescription, A );
-        assertTrue( output.contains( "(A)--[REL1]-->(B)--[REL2]-->(C)--[REL3]-->(D)" ) );
         String graph = AsciidocHelper.createGraphVizDeletingReferenceNode(
                 "Ordered Path Graph", orderedPath.db, "java" );
         assertFalse( graph.isEmpty() );

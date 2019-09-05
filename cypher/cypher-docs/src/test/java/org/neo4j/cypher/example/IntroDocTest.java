@@ -79,10 +79,10 @@ public class IntroDocTest implements GraphHolder
         fw.append( AsciiDocGenerator.dumpToSeparateFileWithType( new File( DOCS_TARGET ), "intro.query",
                 createCypherSnippet( query ) ) );
         fw.append( "\nResulting in:\n\n" );
-        try ( Transaction ignored = graphdb.beginTx() )
+        try ( Transaction transaction = graphdb.beginTx() )
         {
             fw.append( AsciiDocGenerator.dumpToSeparateFileWithType( new File( DOCS_TARGET ), "intro.result",
-                    createQueryResultSnippet( graphdb.execute( query ).resultAsString() ) ) );
+                    createQueryResultSnippet( transaction.execute( query ).resultAsString() ) ) );
         }
 
         fw.append( "\nNext up we will add filtering to set more parts "
@@ -96,10 +96,10 @@ public class IntroDocTest implements GraphHolder
         fw.append( AsciiDocGenerator.dumpToSeparateFileWithType( new File( DOCS_TARGET ), "intro.query",
                 createCypherSnippet( query ) ) );
         fw.append( "\nResulting in:\n\n" );
-        try ( Transaction ignored = graphdb.beginTx() )
+        try ( Transaction transaction = graphdb.beginTx() )
         {
             fw.append( AsciiDocGenerator.dumpToSeparateFileWithType( new File( DOCS_TARGET ), "intro.result",
-                    createQueryResultSnippet( graphdb.execute( query ).resultAsString() ) ) );
+                    createQueryResultSnippet( transaction.execute( query ).resultAsString() ) ) );
         }
         fw.close();
     }

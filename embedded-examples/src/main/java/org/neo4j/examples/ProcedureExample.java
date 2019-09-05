@@ -22,9 +22,10 @@ import java.util.stream.Stream;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
+import org.neo4j.procedure.Context;
 import org.neo4j.procedure.Name;
 import org.neo4j.procedure.Procedure;
-import org.neo4j.procedure.Context;
 
 public class ProcedureExample
 {
@@ -40,7 +41,7 @@ public class ProcedureExample
     @Procedure
     public Stream<DenseNode> findDenseNodes( @Name("threshold") long threshold )
     {
-        return db.getAllNodes().stream()
+        return GraphDatabaseFacade.TEMP_TOP_LEVEL_TRANSACTION.get().getAllNodes().stream()
                 .filter( (node) -> node.getDegree() > threshold )
                 .map( DenseNode::new );
     }

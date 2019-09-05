@@ -49,7 +49,7 @@ public class ExtensionTestingDocIT
             {
                 try ( Transaction tx = graphDatabaseService.beginTx() )
                 {
-                    graphDatabaseService.createNode( Label.label( "User" ) );
+                    tx.createNode( Label.label( "User" ) );
                     tx.commit();
                 }
                 return null;
@@ -83,7 +83,7 @@ public class ExtensionTestingDocIT
         try ( Transaction transaction = graphDatabaseService.beginTx() )
         {
             // Given
-            Result result = graphDatabaseService.execute( "MATCH (n:User) return n" );
+            Result result = transaction.execute( "MATCH (n:User) return n" );
 
             // Then
             assertEquals( 1, count( result ) );

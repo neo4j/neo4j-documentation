@@ -79,11 +79,11 @@ public class PathFindingDocTest
     public void shortestPathExample()
     {
         // tag::shortestPathUsage[]
-        Node startNode = graphDb.createNode();
-        Node middleNode1 = graphDb.createNode();
-        Node middleNode2 = graphDb.createNode();
-        Node middleNode3 = graphDb.createNode();
-        Node endNode = graphDb.createNode();
+        Node startNode = tx.createNode();
+        Node middleNode1 = tx.createNode();
+        Node middleNode2 = tx.createNode();
+        Node middleNode3 = tx.createNode();
+        Node endNode = tx.createNode();
         createRelationshipsBetween( startNode, middleNode1, endNode );
         createRelationshipsBetween( startNode, middleNode2, middleNode3, endNode );
 
@@ -116,8 +116,8 @@ public class PathFindingDocTest
     @Test
     public void dijkstraUsage()
     {
-        Node node1 = graphDb.createNode();
-        Node node2 = graphDb.createNode();
+        Node node1 = tx.createNode();
+        Node node2 = tx.createNode();
         Relationship rel = node1.createRelationshipTo( node2, ExampleTypes.MY_TYPE );
         rel.setProperty( "cost", 1d );
         findCheapestPathWithDijkstra( node1, node2 );
@@ -139,7 +139,7 @@ public class PathFindingDocTest
 
     private Node createNode( final Object... properties )
     {
-        return setProperties( graphDb.createNode(), properties );
+        return setProperties( tx.createNode(), properties );
     }
 
     private <T extends PropertyContainer> T setProperties( final T entity, final Object[] properties )

@@ -145,7 +145,7 @@ public class Script extends ConfigurationParser
         {
             try ( Transaction tx = graphdb.beginTx() )
             {
-                writer.emit( outfile, createGraphWalker( graphdb ) );
+                writer.emit( outfile, createGraphWalker( tx ) );
             }
         }
         catch ( IOException e )
@@ -168,8 +168,8 @@ public class Script extends ConfigurationParser
         return new DatabaseManagementServiceBuilder( storeDir() ).build();
     }
 
-    protected Walker createGraphWalker( GraphDatabaseService graphdb )
+    protected Walker createGraphWalker( Transaction transaction )
     {
-        return Walker.fullGraph( graphdb );
+        return Walker.fullGraph( transaction );
     }
 }

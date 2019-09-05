@@ -66,7 +66,7 @@ public class DummyThirdPartyWebService
         try (Transaction transaction = db.beginTx())
         {
             return Response.ok()
-                    .entity( String.valueOf( countNodesIn( db ) ) )
+                    .entity( String.valueOf( countNodesIn( transaction ) ) )
                     .build();
         }
     }
@@ -97,10 +97,10 @@ public class DummyThirdPartyWebService
         return Response.ok().entity( theEntity.toString() ).build();
     }
 
-    private int countNodesIn( GraphDatabaseService db )
+    private int countNodesIn( Transaction tx )
     {
         int count = 0;
-        for ( Node ignore : db.getAllNodes() )
+        for ( Node ignore : tx.getAllNodes() )
         {
             count++;
         }

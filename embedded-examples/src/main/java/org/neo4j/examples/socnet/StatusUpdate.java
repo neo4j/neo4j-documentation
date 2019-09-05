@@ -59,7 +59,7 @@ public class StatusUpdate
 
     private Node getPersonNode()
     {
-        TraversalDescription traversalDescription = databaseService
+        TraversalDescription traversalDescription = transaction
                 .traversalDescription()
                 .depthFirst()
                 .relationships( NEXT, Direction.INCOMING )

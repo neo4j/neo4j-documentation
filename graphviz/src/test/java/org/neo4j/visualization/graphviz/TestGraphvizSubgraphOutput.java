@@ -55,13 +55,13 @@ public class TestGraphvizSubgraphOutput
             GraphDatabaseService neo = managementService.database( DEFAULT_DATABASE_NAME );
             try ( Transaction tx = neo.beginTx() )
             {
-                final Node emil = neo.createNode();
+                final Node emil = tx.createNode();
                 emil.setProperty( "name", "Emil Eifrém" );
                 emil.setProperty( "country_of_residence", "USA" );
-                final Node tobias = neo.createNode();
+                final Node tobias = tx.createNode();
                 tobias.setProperty( "name", "Tobias Ivarsson" );
                 tobias.setProperty( "country_of_residence", "Sweden" );
-                final Node johan = neo.createNode();
+                final Node johan = tx.createNode();
                 johan.setProperty( "name", "Johan Svensson" );
                 johan.setProperty( "country_of_residence", "Sweden" );
 

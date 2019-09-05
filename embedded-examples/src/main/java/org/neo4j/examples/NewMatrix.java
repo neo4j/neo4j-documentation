@@ -81,43 +81,43 @@ public class NewMatrix
         try ( Transaction tx = graphDb.beginTx() )
         {
             // Create matrix node
-            Node matrix = graphDb.createNode();
+            Node matrix = tx.createNode();
             matrixNodeId = matrix.getId();
 
             // Create Neo
-            Node thomas = graphDb.createNode();
+            Node thomas = tx.createNode();
             thomas.setProperty( "name", "Thomas Anderson" );
             thomas.setProperty( "age", 29 );
 
             // connect Neo/Thomas to the matrix node
             matrix.createRelationshipTo( thomas, RelTypes.NEO_NODE );
 
-            Node trinity = graphDb.createNode();
+            Node trinity = tx.createNode();
             trinity.setProperty( "name", "Trinity" );
             Relationship rel = thomas.createRelationshipTo( trinity,
                     RelTypes.KNOWS );
             rel.setProperty( "age", "3 days" );
-            Node morpheus = graphDb.createNode();
+            Node morpheus = tx.createNode();
             morpheus.setProperty( "name", "Morpheus" );
             morpheus.setProperty( "rank", "Captain" );
             morpheus.setProperty( "occupation", "Total badass" );
             thomas.createRelationshipTo( morpheus, RelTypes.KNOWS );
             rel = morpheus.createRelationshipTo( trinity, RelTypes.KNOWS );
             rel.setProperty( "age", "12 years" );
-            Node cypher = graphDb.createNode();
+            Node cypher = tx.createNode();
             cypher.setProperty( "name", "Cypher" );
             cypher.setProperty( "last name", "Reagan" );
             trinity.createRelationshipTo( cypher, RelTypes.KNOWS );
             rel = morpheus.createRelationshipTo( cypher, RelTypes.KNOWS );
             rel.setProperty( "disclosure", "public" );
-            Node smith = graphDb.createNode();
+            Node smith = tx.createNode();
             smith.setProperty( "name", "Agent Smith" );
             smith.setProperty( "version", "1.0b" );
             smith.setProperty( "language", "C++" );
             rel = cypher.createRelationshipTo( smith, RelTypes.KNOWS );
             rel.setProperty( "disclosure", "secret" );
             rel.setProperty( "age", "6 months" );
-            Node architect = graphDb.createNode();
+            Node architect = tx.createNode();
             architect.setProperty( "name", "The Architect" );
             smith.createRelationshipTo( architect, RelTypes.CODED_BY );
 
@@ -129,10 +129,11 @@ public class NewMatrix
      * Get the Neo node. (a.k.a. Thomas Anderson node)
      *
      * @return the Neo node
+     * @param transaction
      */
-    private Node getNeoNode()
+    private Node getNeoNode( Transaction transaction )
     {
-        return graphDb.getNodeById( matrixNodeId )
+        return transaction.getNodeById( matrixNodeId )
                 .getSingleRelationship( RelTypes.NEO_NODE, Direction.OUTGOING )
                 .getEndNode();
     }
@@ -141,11 +142,11 @@ public class NewMatrix
     {
         try ( Transaction tx = graphDb.beginTx() )
         {
-            Node neoNode = getNeoNode();
+            Node neoNode = getNeoNode( tx );
             // tag::friends-usage[]
             int numberOfFriends = 0;
             String output = neoNode.getProperty( "name" ) + "'s friends:\n";
-            Traverser friendsTraverser = getFriends( neoNode );
+            Traverser friendsTraverser = getFriends( tx, neoNode );
             for ( Path friendPath : friendsTraverser )
             {
                 output += "At depth " + friendPath.length() + " => "
@@ -160,10 +161,9 @@ public class NewMatrix
     }
 
     // tag::get-friends[]
-    private Traverser getFriends(
-            final Node person )
+    private Traverser getFriends( Transaction transaction, final Node person )
     {
-        TraversalDescription td = graphDb.traversalDescription()
+        TraversalDescription td = transaction.traversalDescription()
                 .breadthFirst()
                 .relationships( RelTypes.KNOWS, Direction.OUTGOING )
                 .evaluator( Evaluators.excludeStartPosition() );
@@ -178,7 +178,7 @@ public class NewMatrix
             // tag::find--hackers-usage[]
             String output = "Hackers:\n";
             int numberOfHackers = 0;
-            Traverser traverser = findHackers( getNeoNode() );
+            Traverser traverser = findHackers( tx, getNeoNode( tx ) );
             for ( Path hackerPath : traverser )
             {
                 output += "At depth " + hackerPath.length() + " => "
@@ -193,9 +193,9 @@ public class NewMatrix
     }
 
     // tag::find-hackers[]
-    private Traverser findHackers( final Node startNode )
+    private Traverser findHackers( Transaction transaction, final Node startNode )
     {
-        TraversalDescription td = graphDb.traversalDescription()
+        TraversalDescription td = transaction.traversalDescription()
                 .breadthFirst()
                 .relationships( RelTypes.CODED_BY, Direction.OUTGOING )
                 .relationships( RelTypes.KNOWS, Direction.OUTGOING )

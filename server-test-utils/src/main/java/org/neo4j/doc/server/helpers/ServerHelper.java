@@ -28,6 +28,7 @@ import java.net.ServerSocket;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
@@ -52,7 +53,7 @@ public class ServerHelper
 
     public static void cleanTheDatabase( GraphDatabaseAPI db )
     {
-        new Transactor( db, new DeleteAllData( db ), 10 ).execute();
+        new Transactor( db, new DeleteAllData(), 10 ).execute();
         new Transactor( db, new DeleteAllSchema( db ), 10 ).execute();
     }
 
@@ -123,22 +124,15 @@ public class ServerHelper
 
     private static class DeleteAllData implements UnitOfWork
     {
-        private final GraphDatabaseAPI db;
-
-        public DeleteAllData( GraphDatabaseAPI db )
-        {
-            this.db = db;
-        }
-
         @Override
-        public void doWork()
+        public void doWork( Transaction tx )
         {
-            deleteAllNodesAndRelationships();
+            deleteAllNodesAndRelationships( tx );
         }
 
-        private void deleteAllNodesAndRelationships()
+        private void deleteAllNodesAndRelationships( Transaction tx )
         {
-            Iterable<Node> allNodes = db.getAllNodes();
+            Iterable<Node> allNodes = tx.getAllNodes();
             for ( Node n : allNodes )
             {
                 Iterable<Relationship> relationships = n.getRelationships();
@@ -161,7 +155,7 @@ public class ServerHelper
         }
 
         @Override
-        public void doWork()
+        public void doWork( Transaction tx )
         {
             deleteAllIndexRules();
             deleteAllConstraints();

@@ -66,10 +66,10 @@ public class OrderedPath
         try ( Transaction tx = db.beginTx() )
         {
             // tag::createGraph[]
-            Node A = db.createNode();
-            Node B = db.createNode();
-            Node C = db.createNode();
-            Node D = db.createNode();
+            Node A = tx.createNode();
+            Node B = tx.createNode();
+            Node C = tx.createNode();
+            Node D = tx.createNode();
 
             A.createRelationshipTo( C, REL2 );
             C.createRelationshipTo( D, REL3 );
@@ -93,14 +93,14 @@ public class OrderedPath
         }
     }
 
-    public TraversalDescription findPaths()
+    public TraversalDescription findPaths( Transaction tx )
     {
         // tag::walkOrderedPath[]
         final ArrayList<RelationshipType> orderedPathContext = new ArrayList<>();
         orderedPathContext.add( REL1 );
         orderedPathContext.add( withName( "REL2" ) );
         orderedPathContext.add( withName( "REL3" ) );
-        TraversalDescription td = db.traversalDescription()
+        TraversalDescription td = tx.traversalDescription()
                 .evaluator( new Evaluator()
                 {
                     @Override
@@ -125,20 +125,17 @@ public class OrderedPath
 
     String printPaths( TraversalDescription td, Node A )
     {
-        try ( Transaction transaction = db.beginTx() )
+        String output = "";
+        // tag::printPath[]
+        Traverser traverser = td.traverse( A );
+        PathPrinter pathPrinter = new PathPrinter( "name" );
+        for ( Path path : traverser )
         {
-            String output = "";
-            // tag::printPath[]
-            Traverser traverser = td.traverse( A );
-            PathPrinter pathPrinter = new PathPrinter( "name" );
-            for ( Path path : traverser )
-            {
-                output += Paths.pathToString( path, pathPrinter );
-            }
-            // end::printPath[]
-            output += "\n";
-            return output;
+            output += Paths.pathToString( path, pathPrinter );
         }
+        // end::printPath[]
+        output += "\n";
+        return output;
     }
 
     // tag::pathPrinter[]

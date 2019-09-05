@@ -53,7 +53,7 @@ public class JUnitDocIT
             {
                 try ( Transaction tx = graphDatabaseService.beginTx() )
                 {
-                    graphDatabaseService.createNode( Label.label( "Admin" ) );
+                    tx.createNode( Label.label( "Admin" ) );
                     tx.commit();
                 }
                 return null;
@@ -74,7 +74,7 @@ public class JUnitDocIT
         // and we have access to underlying GraphDatabaseService
         try ( Transaction tx = neo4j.defaultDatabaseService().beginTx() )
         {
-            assertEquals( 2, count( neo4j.defaultDatabaseService().findNodes( Label.label( "Admin" ) ) ) );
+            assertEquals( 2, count( tx.findNodes( Label.label( "Admin" ) ) ) );
             tx.commit();
         }
     }
@@ -89,7 +89,7 @@ public class JUnitDocIT
         // When I create property existence constraint
         try ( Transaction tx = db.beginTx() )
         {
-            try ( Result result = db.execute( "CREATE CONSTRAINT ON (user:User) ASSERT exists(user.name)" ) )
+            try ( Result result = tx.execute( "CREATE CONSTRAINT ON (user:User) ASSERT exists(user.name)" ) )
             {
                 // nothing to-do
             }

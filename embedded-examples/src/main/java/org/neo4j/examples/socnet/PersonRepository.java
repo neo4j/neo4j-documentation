@@ -44,13 +44,13 @@ public class PersonRepository
 
     private Node getPersonsRootNode( GraphDatabaseService graphDb )
     {
-        Node node = graphDb.findNode( PERSON, "reference", "person" );
+        Node node = transaction.findNode( PERSON, "reference", "person" );
         if ( node != null )
         {
             return node;
         }
 
-        Node refNode = this.graphDb.createNode();
+        Node refNode = this.transaction.createNode();
         refNode.setProperty( "reference", "persons" );
         return refNode;
     }
@@ -60,10 +60,10 @@ public class PersonRepository
         // to guard against duplications we use the lock grabbed on ref node
         // when
         // creating a relationship and are optimistic about person not existing
-        Node newPersonNode = graphDb.createNode(PERSON);
+        Node newPersonNode = transaction.createNode(PERSON);
         personRefNode.createRelationshipTo( newPersonNode, A_PERSON );
         // lock now taken, we can check if  already exist in index
-        Node alreadyExist = graphDb.findNode( PERSON, Person.NAME, name );
+        Node alreadyExist = transaction.findNode( PERSON, Person.NAME, name );
         if ( alreadyExist != null )
         {
             throw new Exception( "Person with this name already exists " );
@@ -74,7 +74,7 @@ public class PersonRepository
 
     public Person getPersonByName( String name )
     {
-        Node personNode = graphDb.findNode( PERSON, Person.NAME, name );
+        Node personNode = transaction.findNode( PERSON, Person.NAME, name );
         if ( personNode == null )
         {
             throw new IllegalArgumentException( "Person[" + name

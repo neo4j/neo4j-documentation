@@ -39,9 +39,9 @@ object captureStateAsGraphViz extends GraphIcing {
     val out = new ByteArrayOutputStream()
     val writer = new GraphvizWriter(AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors())
 
-    db.inTx {
-      writer.emit(out, Walker.fullGraph(db.getGraphDatabaseService))
-    }
+    db.withTx(tx => {
+      writer.emit(out, Walker.fullGraph(tx))
+    })
 
     """.Graph
       |["dot", "%s.svg", "neoviz", "%s"]

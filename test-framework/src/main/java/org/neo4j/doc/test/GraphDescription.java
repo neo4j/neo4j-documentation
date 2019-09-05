@@ -182,7 +182,7 @@ public class GraphDescription implements GraphDefinition {
         Map<String, Node> result = new HashMap<>();
         try (Transaction tx = graphdb.beginTx()) {
             for (NODE def : nodes) {
-                Node node = init(graphdb.createNode(), def.setNameProperty() ? def.name() : null, def.properties());
+                Node node = init(tx.createNode(), def.setNameProperty() ? def.name() : null, def.properties());
                 for (LABEL label : def.labels()) {
                     node.addLabel(label(label.value()));
                 }

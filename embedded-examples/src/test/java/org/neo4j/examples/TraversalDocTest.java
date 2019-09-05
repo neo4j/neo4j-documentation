@@ -133,7 +133,8 @@ public class TraversalDocTest extends AbstractJavaDocTestBase
 
         try ( Transaction tx = graphdb().beginTx() )
         {
-            String output = example.knowsLikesTraverser( joe );
+            example.init( tx );
+            String output = example.knowsLikesTraverser( tx, joe );
             gen.get().addSnippet( "knowslikesoutput", createOutputSnippet( output ) );
 
             output = example.traverseBaseTraverser( joe );

@@ -56,18 +56,18 @@ class ProcedureExampleDocTest
                 new DatabaseManagementServiceBuilder( directory ).setConfig( GraphDatabaseSettings.plugin_dir, directory.toPath().toAbsolutePath() ).build();
         db = managementService.database( DEFAULT_DATABASE_NAME );
 
-        try ( Transaction ignore = db.beginTx() )
+        try ( Transaction transaction = db.beginTx() )
         {
-            Node node1 = db.createNode();
-            Node node2 = db.createNode();
-            Node node3 = db.createNode();
+            Node node1 = transaction.createNode();
+            Node node2 = transaction.createNode();
+            Node node3 = transaction.createNode();
 
             node1.createRelationshipTo( node1, RelationshipType.withName( "KNOWS" ) );
             node1.createRelationshipTo( node2, RelationshipType.withName( "KNOWS" ) );
             node1.createRelationshipTo( node3, RelationshipType.withName( "KNOWS" ) );
 
             // When
-            Result res = db.execute( "CALL org.neo4j.examples.findDenseNodes(2)" );
+            Result res = transaction.execute( "CALL org.neo4j.examples.findDenseNodes(2)" );
 
             // Then
             assertEquals( map( "degree", 3L, "nodeId", node1.getId() ), res.next() );

@@ -61,7 +61,7 @@ public class TerminateTransactions
 
         try ( Transaction tx = graphDb.beginTx() )
         {
-            Node rootNode = graphDb.createNode();
+            Node rootNode = tx.createNode();
             nodes.add( rootNode );
 
             // end::mkTree[]
@@ -74,8 +74,8 @@ public class TerminateTransactions
                 for (int i = 0; i < nodesToExpand; ++i) {
                     Node parent = nodes.remove();
 
-                    Node left = graphDb.createNode();
-                    Node right = graphDb.createNode();
+                    Node left = tx.createNode();
+                    Node right = tx.createNode();
 
                     parent.createRelationshipTo( left, relType );
                     parent.createRelationshipTo( right, relType );
