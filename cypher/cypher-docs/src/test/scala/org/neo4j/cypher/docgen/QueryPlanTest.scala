@@ -395,27 +395,27 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def setNodePropertyFromMap() {
+  @Test def setNodePropertiesFromMap() {
     profileQuery(
-      title = "Set Node Property From Map",
+      title = "Set Node Properties From Map",
       text =
-        """The `SetNodePropertyFromMap` operator is used when setting properties from a map on a node.""".stripMargin,
+        """The `SetNodePropertiesFromMap` operator is used when setting properties from a map on a node.""".stripMargin,
       queryText =
         """MATCH (n)
           |SET n = {weekday: 'Monday', meal: 'Lunch'}""".stripMargin,
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetNodePropertyFromMap"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetNodePropertiesFromMap"))
     )
   }
 
-  @Test def setRelationshipPropertyFromMap() {
+  @Test def setRelationshipPropertiesFromMap() {
     profileQuery(
-      title = "Set Relationship Property From Map",
+      title = "Set Relationship Properties From Map",
       text =
-        """The `SetRelationshipPropertyFromMap` operator is used when setting properties from a map on a relationship.""".stripMargin,
+        """The `SetRelationshipPropertiesFromMap` operator is used when setting properties from a map on a relationship.""".stripMargin,
       queryText =
         """MATCH (n)-[r]->(m)
           |SET r = {weight: 5, unit: 'kg'}""".stripMargin,
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetRelationshipPropertyFromMap"))
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("SetRelationshipPropertiesFromMap"))
     )
   }
 
