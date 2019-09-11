@@ -103,7 +103,7 @@ WHERE id(n) = %A%
 WITH [n] AS list
 RETURN
 
-extract(x IN list | x.prop)
+[x IN list | x.prop]
 ###
 
 A list of the value of the expression for each element in the original list.
@@ -114,7 +114,7 @@ WHERE id(n) = %A%
 WITH [n] AS list
 RETURN
 
-filter(x IN list WHERE x.prop <> $value)
+[x IN list WHERE x.prop <> $value]
 ###
 
 A filtered list of the elements where the predicate is `true`.

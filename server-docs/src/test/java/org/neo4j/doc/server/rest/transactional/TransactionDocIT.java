@@ -70,7 +70,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
         ResponseEntity response = gen.get()
                 .noGraph()
                 .expectedStatus( 201 )
-                .payload( quotedJson( "{ 'statements': [ { 'statement': 'CREATE (n {props}) RETURN n', " +
+                .payload( quotedJson( "{ 'statements': [ { 'statement': 'CREATE (n $props) RETURN n', " +
                         "'parameters': { 'props': { 'name': 'My Node' } } } ] }" ) )
                 .post( txUri() );
 
@@ -225,7 +225,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
         // Document
         ResponseEntity response = gen.get().noGraph().expectedStatus( 200 )
                 .payload( quotedJson( "{ 'statements': [ { 'statement': 'CREATE (n) RETURN id(n)' }, "
-                        + "{ 'statement': 'CREATE (n {props}) RETURN n', "
+                        + "{ 'statement': 'CREATE (n $props) RETURN n', "
                         + "'parameters': { 'props': { 'name': 'My Node' } } } ] }" ) )
                 .post( txCommitUri() );
 

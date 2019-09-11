@@ -36,7 +36,7 @@ Let's find the node we created:
 [source,cypher]
 ----
 MATCH (person:Person)
-WHERE person.name = {name}
+WHERE person.name = $name
 RETURN person;
 ----
 

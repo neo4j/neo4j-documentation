@@ -122,7 +122,7 @@ Returns a list of string representations for the property names of a node, relat
 ###assertion=returns-one parameters=map
 RETURN
 
-properties({expr})###
+properties($expr)###
 
 Returns a map containing all the properties of a node or relationship."""
 }

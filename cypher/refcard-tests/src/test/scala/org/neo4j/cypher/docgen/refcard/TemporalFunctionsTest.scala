@@ -104,7 +104,7 @@ Transforms 3360000 as a UNIX Epoch time into a normal datetime.
 ###assertion=returns-one parameters=date
 RETURN
 
-date({year: {year}, month: {month}, day: {day}})
+date({year: $year, month: $month, day: $day})
 ###
 
 All of the temporal functions can also be called with a map of named components.
@@ -114,7 +114,7 @@ Each function supports a different set of possible components.
 ###assertion=returns-one parameters=datetime
 RETURN
 
-datetime({date: {date}, time: {time}})
+datetime({date: $date, time: $time})
 ###
 
 Temporal types can be created by combining other types. This example creates a `datetime` from a `date` and a `time`.
@@ -122,7 +122,7 @@ Temporal types can be created by combining other types. This example creates a `
 ###assertion=returns-one parameters=dateselection
 RETURN
 
-date({date: {datetime}, day: 5})
+date({date: $datetime, day: 5})
 ###
 
 Temporal types can be created by selecting from more complex types, as well as overriding individual components.

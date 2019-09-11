@@ -95,7 +95,7 @@ MATCH path = (n)-->(m)
 WHERE id(n) = %A% AND id(m) = %B%
 RETURN
 
-extract(x IN nodes(path) | x.prop)
+[x IN nodes(path) | x.prop]
 ###
 
 Extract properties from the nodes in a path.

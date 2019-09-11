@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.graphdb.{Relationship, Node}
+import org.neo4j.graphdb.{Node, Relationship}
 
 class ListFunctionsTest extends DocumentingTest {
 
@@ -75,7 +75,7 @@ class ListFunctionsTest extends DocumentingTest {
       query(
         """MATCH p = (a)-->(b)-->(c)
           |WHERE a.name = 'Alice' AND b.name = 'Bob' AND c.name = 'Daniel'
-          |RETURN extract(n IN nodes(p) | n.age) AS extracted""".stripMargin, ResultAssertions((r) => {
+          |RETURN [n IN nodes(p) | n.age] AS extracted""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("extracted" -> List(38, 25, 54))))
         })) {
         p("The `age` property of all nodes in path `p` are returned.")
@@ -88,8 +88,8 @@ class ListFunctionsTest extends DocumentingTest {
       query(
         """MATCH (a)
           |WHERE a.name = 'Eskil'
-          |RETURN a.array, filter(x IN a.array WHERE size(x)= 3)""".stripMargin, ResultAssertions((r) => {
-          r.columnAs[Iterable[_]]("filter(x IN a.array WHERE size(x)= 3)").toList.head should equal(Array("one", "two"))
+          |RETURN a.array, [x IN a.array WHERE size(x)= 3]""".stripMargin, ResultAssertions((r) => {
+          r.columnAs[Iterable[_]]("[x IN a.array WHERE size(x)= 3]").toList.head should equal(Array("one", "two"))
         })) {
         p("The property named `array` and a list of all values having size *'3'* are returned.")
         resultTable()
