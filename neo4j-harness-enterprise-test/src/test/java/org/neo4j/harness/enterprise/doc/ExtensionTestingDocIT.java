@@ -18,7 +18,7 @@
  */
 package org.neo4j.harness.enterprise.doc;
 
-import com.neo4j.harness.junit.rule.CommercialNeo4jRule;
+import com.neo4j.harness.junit.rule.EnterpriseNeo4jRule;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class ExtensionTestingDocIT
     public static TestDirectory testDirectory = TestDirectory.testDirectory();
 
     @Rule
-    public Neo4jRule neo4j = new CommercialNeo4jRule()
+    public Neo4jRule neo4j = new EnterpriseNeo4jRule()
             .withUnmanagedExtension( "/myExtension", MyUnmanagedExtension.class )
             .withFixture( graphDatabaseService ->
             {

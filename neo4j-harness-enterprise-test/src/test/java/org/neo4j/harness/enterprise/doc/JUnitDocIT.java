@@ -18,7 +18,7 @@
  */
 package org.neo4j.harness.enterprise.doc;
 
-import com.neo4j.harness.junit.rule.CommercialNeo4jRule;
+import com.neo4j.harness.junit.rule.EnterpriseNeo4jRule;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class JUnitDocIT
 
     // tag::useEnterpriseJUnitRule[]
     @Rule
-    public Neo4jRule neo4j = new CommercialNeo4jRule()
+    public Neo4jRule neo4j = new EnterpriseNeo4jRule()
             .withFixture( "CREATE (admin:Admin)" )
             .withFixture( graphDatabaseService ->
             {

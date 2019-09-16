@@ -22,7 +22,7 @@
  */
 package org.neo4j.doc;
 
-import com.neo4j.commercial.edition.factory.CommercialDatabaseManagementServiceBuilder;
+import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -39,7 +39,7 @@ public class Neo4jInstance {
     public DatabaseManagementService newEnterpriseInstance() {
         baseDatabaseDirectory.toFile().mkdirs();
         DatabaseManagementService managementService =
-                new CommercialDatabaseManagementServiceBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled, true ).build();
+                new EnterpriseDatabaseManagementServiceBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled, true ).build();
         registerShutdownHook(managementService);
         return managementService;
     }

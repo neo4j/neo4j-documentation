@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.neo4j</groupId>
-            <artifactId>neo4j-commercial</artifactId>
+            <artifactId>neo4j-enterprise</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>

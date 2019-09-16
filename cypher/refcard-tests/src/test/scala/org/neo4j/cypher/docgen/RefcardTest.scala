@@ -22,7 +22,6 @@ package org.neo4j.cypher.docgen
 import java.io._
 import java.nio.charset.StandardCharsets
 
-import com.neo4j.commercial.edition.factory.CommercialDatabaseManagementServiceBuilder
 import org.apache.commons.io.FileUtils
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
@@ -280,7 +279,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     engine = ExecutionEngineFactory.createCommunityEngineFromDb(graph) // TODO: This should be using the EnterpriseEngine
   }
 
-  protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new CommercialDatabaseManagementServiceBuilder(directory).build()
+  protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
 
 }
 

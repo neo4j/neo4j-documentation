@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>org.neo4j.test</groupId>
-    <artifactId>neo4j-harness-commercial-test</artifactId>
-    <name>Neo4j - Test Harness Commercial Documentation tests</name>
-    <description>Tests for Neo4j Test Harness Commercial.</description>
+    <artifactId>neo4j-harness-enterprise-test</artifactId>
+    <name>Neo4j - Test Harness Enterprise Documentation tests</name>
+    <description>Tests for Neo4j Test Harness Enterprise.</description>
     <packaging>jar</packaging>
 
     <properties>
@@ -61,7 +61,7 @@
 
         <dependency>
             <groupId>com.neo4j.test</groupId>
-            <artifactId>neo4j-harness-commercial</artifactId>
+            <artifactId>neo4j-harness-enterprise</artifactId>
             <version>${neo4j.version}</version>
             <scope>test</scope>
         </dependency>
