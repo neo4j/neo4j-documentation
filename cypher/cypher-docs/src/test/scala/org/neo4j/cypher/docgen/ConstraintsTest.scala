@@ -23,6 +23,7 @@ import java.io.File
 
 import org.junit.Test
 import org.neo4j.dbms.api.DatabaseManagementService
+import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
 import org.neo4j.exceptions.CypherExecutionException
 import org.neo4j.graphdb.{ConstraintViolationException, Label, RelationshipType}
 

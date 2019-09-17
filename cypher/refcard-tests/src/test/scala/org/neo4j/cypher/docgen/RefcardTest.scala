@@ -41,6 +41,7 @@ import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions
+import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
 
 import scala.collection.JavaConverters._
 
