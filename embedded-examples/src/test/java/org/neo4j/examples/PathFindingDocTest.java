@@ -33,11 +33,11 @@ import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphalgo.WeightedPath;
 import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.Entity;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.PathExpanders;
-import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
@@ -142,7 +142,7 @@ public class PathFindingDocTest
         return setProperties( tx.createNode(), properties );
     }
 
-    private <T extends PropertyContainer> T setProperties( final T entity, final Object[] properties )
+    private <T extends Entity> T setProperties( final T entity, final Object[] properties )
     {
         for ( int i = 0; i < properties.length; i++ )
         {

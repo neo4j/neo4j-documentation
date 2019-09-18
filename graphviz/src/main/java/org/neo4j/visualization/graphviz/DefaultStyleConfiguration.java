@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import org.neo4j.graphdb.Entity;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.visualization.PropertyType;
 
@@ -104,7 +104,7 @@ class DefaultStyleConfiguration implements StyleConfiguration
         emit( edge, edgeParams, stream );
     }
 
-    private <C extends PropertyContainer> void emit( C container,
+    private <C extends Entity> void emit( C container,
         Map<String, ParameterGetter<? super C>> params, Appendable stream )
         throws IOException
     {

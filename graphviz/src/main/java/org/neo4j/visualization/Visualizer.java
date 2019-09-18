@@ -22,8 +22,8 @@ package org.neo4j.visualization;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.neo4j.graphdb.Entity;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.walk.Visitor;
 
@@ -77,12 +77,11 @@ public class Visualizer<E extends Throwable> implements Visitor<Void, E>
         return new Visualizer<>(renderer.renderSubgraph(name));
     }
 
-    private void renderProperties( PropertyRenderer<E> propertyRenderer,
-        PropertyContainer container ) throws E
+    private void renderProperties( PropertyRenderer<E> propertyRenderer, Entity entity ) throws E
     {
-        for ( String key : container.getPropertyKeys() )
+        for ( String key : entity.getPropertyKeys() )
         {
-            propertyRenderer.renderProperty( key, container.getProperty( key ) );
+            propertyRenderer.renderProperty( key, entity.getProperty( key ) );
         }
         propertyRenderer.done();
     }

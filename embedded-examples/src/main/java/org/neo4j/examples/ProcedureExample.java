@@ -20,9 +20,8 @@ package org.neo4j.examples;
 
 import java.util.stream.Stream;
 
-import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
-import org.neo4j.kernel.impl.factory.GraphDatabaseFacade;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.procedure.Context;
 import org.neo4j.procedure.Name;
 import org.neo4j.procedure.Procedure;
@@ -31,7 +30,7 @@ public class ProcedureExample
 {
     // tag::procedureExample[]
     @Context
-    public GraphDatabaseService db;
+    public Transaction transaction;
 
     /**
      * Finds all nodes in the database with more relationships than the specified threshold.
@@ -41,9 +40,7 @@ public class ProcedureExample
     @Procedure
     public Stream<DenseNode> findDenseNodes( @Name("threshold") long threshold )
     {
-        return GraphDatabaseFacade.TEMP_TOP_LEVEL_TRANSACTION.get().getAllNodes().stream()
-                .filter( (node) -> node.getDegree() > threshold )
-                .map( DenseNode::new );
+        return transaction.getAllNodes().stream().filter( ( node ) -> node.getDegree() > threshold ).map( DenseNode::new );
     }
     // end::procedureExample[]
 
