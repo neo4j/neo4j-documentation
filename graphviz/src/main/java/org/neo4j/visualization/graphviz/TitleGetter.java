@@ -19,9 +19,9 @@
  */
 package org.neo4j.visualization.graphviz;
 
-import org.neo4j.graphdb.PropertyContainer;
+import org.neo4j.graphdb.Entity;
 
-interface TitleGetter<E extends PropertyContainer>
+interface TitleGetter<E extends Entity>
 {
     /**
      * Get the title for a node or a relationship.

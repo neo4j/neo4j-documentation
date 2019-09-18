@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.Locale;
 
 import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.Entity;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.ConstraintType;
@@ -248,21 +248,21 @@ public class SubGraphExporter
         out.println( ")" );
     }
 
-    private void formatProperties( PrintWriter out, PropertyContainer pc )
+    private void formatProperties( PrintWriter out, Entity entity )
     {
-        if ( !pc.getPropertyKeys().iterator().hasNext() )
+        if ( !entity.getPropertyKeys().iterator().hasNext() )
         {
             return;
         }
         out.print( " " );
-        final String propertyString = formatProperties( pc );
+        final String propertyString = formatProperties( entity );
         out.print( propertyString );
     }
 
-    private String formatProperties( PropertyContainer pc )
+    private String formatProperties( Entity entity )
     {
         StringBuilder result = new StringBuilder();
-        List<String> keys = Iterables.asList( pc.getPropertyKeys() );
+        List<String> keys = Iterables.asList( entity.getPropertyKeys() );
         Collections.sort( keys );
         for ( String prop : keys )
         {
@@ -271,7 +271,7 @@ public class SubGraphExporter
                 result.append( ", " );
             }
             result.append( quote( prop ) ).append( ':' );
-            Object value = pc.getProperty( prop );
+            Object value = entity.getProperty( prop );
             result.append( toString( value ) );
         }
         return "{" + result + "}";

@@ -23,8 +23,8 @@ import java.time._
 import java.time.temporal.TemporalAmount
 
 import org.neo4j.cypher.internal.runtime.QueryContext
-import org.neo4j.graphdb.{Node, Path, PropertyContainer, Relationship}
 import org.neo4j.graphdb.spatial.Point
+import org.neo4j.graphdb.{Entity, Node, Path, Relationship}
 
 import scala.collection.Map
 
@@ -57,7 +57,7 @@ trait CypherSerializer {
     case x                        => throw new IllegalArgumentException(s"Type ${x.getClass} must be explicitly handled.")
   }
 
-  protected def serializeProperties(x: PropertyContainer, qtx: QueryContext): String = {
+  protected def serializeProperties(x: Entity, qtx: QueryContext): String = {
     val cursors = qtx.transactionalContext.cursors
     val property = cursors.allocatePropertyCursor
     val (propertyText, id, deleted) = x match {

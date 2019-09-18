@@ -32,8 +32,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.neo4j.graphdb.Entity;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 
@@ -84,7 +84,7 @@ public class ConfigurationParser
                 {
                     if ( error == null )
                     {
-                        method.invoke( this, (Object[]) args );
+                        method.invoke( this, args );
                     }
                     else
                     {
@@ -187,7 +187,7 @@ public class ConfigurationParser
 
         }
 
-        String parse( PropertyContainer container )
+        String parse( Entity entity )
         {
             StringBuilder result = new StringBuilder();
             for ( int pos = 0; pos < pattern.length(); )
@@ -196,7 +196,7 @@ public class ConfigurationParser
                 if ( cur == '@' )
                 {
                     String key = untilNonAlfa( pos );
-                    result.append( getSpecial( key, container ) );
+                    result.append( getSpecial( key, entity ) );
                     pos += key.length();
                 }
                 else if ( cur == '$' )
@@ -212,7 +212,7 @@ public class ConfigurationParser
                         key = untilNonAlfa( pos );
                     }
                     pos += pattern.length();
-                    result.append( container.getProperty( key ) );
+                    result.append( entity.getProperty( key ) );
                 }
                 else if ( cur == '\\' )
                 {
@@ -236,18 +236,11 @@ public class ConfigurationParser
             return pattern.substring( start, end );
         }
 
-        private String getSpecial( String attribute, PropertyContainer container )
+        private String getSpecial( String attribute, Entity container )
         {
             if ( attribute.equals( "id" ) )
             {
-                if ( container instanceof Node )
-                {
-                    return "" + ((Node) container).getId();
-                }
-                else if ( container instanceof Relationship )
-                {
-                    return "" + ((Relationship) container).getId();
-                }
+                return "" + container.getId();
             }
             else if ( attribute.equals( "type" ) )
             {

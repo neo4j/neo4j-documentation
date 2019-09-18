@@ -31,9 +31,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.neo4j.graphdb.Entity;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 
@@ -198,7 +198,7 @@ public class GraphDescription implements GraphDefinition {
         return result;
     }
 
-    private static <T extends PropertyContainer> T init( T entity, String name, PROP[] properties ) {
+    private static <T extends Entity> T init( T entity, String name, PROP[] properties ) {
         for (PROP prop : properties) {
             PropType tpe = prop.type();
             switch (tpe) {

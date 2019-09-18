@@ -19,9 +19,9 @@
  */
 package org.neo4j.visualization.graphviz;
 
-import org.neo4j.graphdb.PropertyContainer;
+import org.neo4j.graphdb.Entity;
 
-interface ParameterGetter<C extends PropertyContainer>
+interface ParameterGetter<C extends Entity>
 {
     /**
      * Get the value for a parameter.
