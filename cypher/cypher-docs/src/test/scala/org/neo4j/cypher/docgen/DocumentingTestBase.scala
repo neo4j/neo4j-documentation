@@ -40,8 +40,8 @@ import org.neo4j.doc.test.GraphDescription
 import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.exceptions.Neo4jException
 import org.neo4j.graphdb._
-import org.neo4j.internal.kernel.api.Transaction.Type
 import org.neo4j.internal.kernel.api.security.SecurityContext
+import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.coreapi.InternalTransaction

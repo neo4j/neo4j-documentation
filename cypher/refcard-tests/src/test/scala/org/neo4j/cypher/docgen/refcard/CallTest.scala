@@ -28,7 +28,7 @@ import org.neo4j.internal.kernel.api.procs.Neo4jTypes
 import org.neo4j.internal.kernel.api.procs.ProcedureSignature._
 import org.neo4j.kernel.api.procedure.CallableProcedure.BasicProcedure
 import org.neo4j.kernel.api.procedure.Context
-import org.neo4j.kernel.api.{InwardKernel, ResourceTracker}
+import org.neo4j.kernel.api.{Kernel, ResourceTracker}
 import org.neo4j.values.AnyValue
 
 class CallTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -41,7 +41,7 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
   override def init() {
     super.init()
 
-    val kernel = db.getDependencyResolver.resolveDependency(classOf[InwardKernel])
+    val kernel = db.getDependencyResolver.resolveDependency(classOf[Kernel])
     val builder = procedureSignature(Array("java", "stored"), "procedureWithArgs")
       .in("input", Neo4jTypes.NTString)
       .out("result", Neo4jTypes.NTString)

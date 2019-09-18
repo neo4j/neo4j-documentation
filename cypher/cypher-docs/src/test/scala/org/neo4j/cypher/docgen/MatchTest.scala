@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.graphdb.{Node, Path, Relationship}
-import org.neo4j.internal.kernel.api.Transaction.Type
+import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.api.security.AnonymousContext
 
 import scala.collection.JavaConverters._

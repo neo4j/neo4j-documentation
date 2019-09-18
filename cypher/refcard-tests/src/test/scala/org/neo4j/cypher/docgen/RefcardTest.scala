@@ -22,6 +22,7 @@ package org.neo4j.cypher.docgen
 import java.io._
 import java.nio.charset.StandardCharsets
 
+import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
 import org.apache.commons.io.FileUtils
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
@@ -35,13 +36,12 @@ import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription}
 import org.neo4j.exceptions.{InternalException, Neo4jException}
 import org.neo4j.graphdb._
-import org.neo4j.internal.kernel.api.Transaction
+import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions
-import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
 
 import scala.collection.JavaConverters._
 
@@ -114,7 +114,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
         subscriber)
       subscriber.init(execution)
       DocsExecutionResult(subscriber, txContext)
-    }, Transaction.Type.`implicit`)
+    }, KernelTransaction.Type.`implicit`)
     docsResult
   } catch {
     case e: Neo4jException => throw new InternalException(queryText, e)
