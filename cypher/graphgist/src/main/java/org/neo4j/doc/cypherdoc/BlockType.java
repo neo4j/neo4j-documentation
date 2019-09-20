@@ -19,9 +19,9 @@
  */
 package org.neo4j.doc.cypherdoc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
