@@ -212,7 +212,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     })
 
     try {
-      db.inTx({ tx:InternalTransaction =>
+      db.withTx({ tx =>
         val txContext = graph.transactionalContext(tx, query = query -> Map())
         val queryResult = DocsExecutionResult(tx.execute("PROFILE " + query), txContext)
 
