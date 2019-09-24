@@ -22,20 +22,12 @@
  */
 package examples;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.neo4j.batchinsert.BatchInserter;
@@ -51,33 +43,21 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.io.layout.DatabaseLayout;
+import org.neo4j.test.rule.TestDirectory;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-import static org.neo4j.io.layout.DatabaseLayout.of;
 
 public class BatchInsertDocTest
 {
-
-    @Before
-    public void before() throws Exception
-    {
-        FileUtils.forceMkdir( new File( "target/docs" ) );
-    }
+    @Rule
+    public TestDirectory directory = TestDirectory.testDirectory();
 
     @Test
     public void insert() throws Exception
     {
-        // Make sure our scratch directory is clean
-        String database = "neo4j";
-        File databaseDirectory = clean( "target/" + database );
-        DatabaseLayout tempLayout = of( databaseDirectory, () ->
-                {
-                    Path storeDir = databaseDirectory.getParentFile().toPath();
-                    Path defaultTxLogsPath = Path.of( "data", "tx-logs" );
-                    return Optional.of( storeDir.resolve( defaultTxLogsPath ).toFile() );
-                } );
+        DatabaseLayout tempLayout = directory.databaseLayout();
 
         // tag::insert[]
         BatchInserter inserter = null;
@@ -111,7 +91,7 @@ public class BatchInsertDocTest
         // try it out from a normal db
 
         DatabaseManagementService managementService =
-                new DatabaseManagementServiceBuilder( tempLayout.getStoreLayout().storeDirectory() ).build();
+                new DatabaseManagementServiceBuilder( directory.homeDir() ).build();
         GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
         try ( Transaction tx = db.beginTx() )
         {
@@ -137,39 +117,11 @@ public class BatchInsertDocTest
     @Test
     public void insertWithConfig() throws IOException
     {
-        clean( "target/batchinserter-example-config" );
-
         // tag::configuredInsert[]
         Config config = Config.defaults( GraphDatabaseSettings.pagecache_memory, "512m" );
-        BatchInserter inserter = BatchInserters.inserter( of( new File( "target/batchinserter-example-config" ) ), config );
+        BatchInserter inserter = BatchInserters.inserter( directory.databaseLayout(), config );
         // Insert data here ... and then shut down:
         inserter.shutdown();
         // end::configuredInsert[]
-    }
-
-    @Test
-    public void insertWithConfigFile() throws IOException
-    {
-        clean( "target/docs/batchinserter-example-config" );
-        try ( Writer fw = new OutputStreamWriter( new FileOutputStream( new File( "target/docs/batchinsert-config" ).getAbsoluteFile() ),
-                StandardCharsets.UTF_8 ) )
-        {
-            fw.append( "dbms.memory.pagecache.size=8m" );
-        }
-
-        // tag::configFileInsert[]
-        File file = new File( "target/docs/batchinsert-config" ).getAbsoluteFile();
-        Config config = Config.newBuilder().fromFile( file ).build();
-        BatchInserter inserter = BatchInserters.inserter( of( new File( "target/docs/batchinserter-example-config" ) ), config );
-        // Insert data here ... and then shut down:
-        inserter.shutdown();
-        // end::configFileInsert[]
-    }
-
-    private File clean( String fileName ) throws IOException
-    {
-        File directory = new File( fileName );
-        FileUtils.deleteDirectory( directory );
-        return directory;
     }
 }
