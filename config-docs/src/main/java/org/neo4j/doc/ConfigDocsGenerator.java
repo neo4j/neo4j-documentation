@@ -125,7 +125,7 @@ public class ConfigDocsGenerator
 
     private void document( SettingDescription item )
     {
-        out.printf( "[[%s]]%n" + ".%s%n" + "[cols=\"<1h,<4\"]%n" + "|===%n" + "|Description%n" + "a|%s%n" + "|Valid values%n" + "a|%s%n", item.id(),
+        out.printf( "[[%s]]%n" + ".%s%n" + "[cols=\"<1h,<4\"]%n" + "|===%n" + "|Description%n" + "a|+%s+%n" + "|Valid values%n" + "a|%s%n", item.id(),
                 item.name(), item.description().orElse( "No description available." ), item.validationMessage() );
 
         if ( item.isDynamic() )
@@ -135,7 +135,7 @@ public class ConfigDocsGenerator
 
         if ( item.hasDefault() )
         {
-            out.printf( "|Default value%n" + "m|%s%n", item.defaultValue() );
+            out.printf( "|Default value%n" + "m|+%s+%n", item.defaultValue() );
         }
 
         if ( item.isDeprecated() )
