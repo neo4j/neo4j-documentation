@@ -26,6 +26,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 import java.net.URI;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.neo4j.server.rest.domain.JsonHelper;
 import org.neo4j.server.rest.domain.JsonParseException;
 
 import static java.util.Collections.unmodifiableMap;
+import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -60,6 +62,17 @@ public class HTTP
 
     private HTTP()
     {
+    }
+
+    public static String basicAuthHeader( String username, String password )
+    {
+        var usernamePassword = username + ':' + password;
+        return "Basic " + Base64.getEncoder().encodeToString( usernamePassword.getBytes() );
+    }
+
+    public static Builder withBasicAuth( String username, String password )
+    {
+        return withHeaders( AUTHORIZATION, basicAuthHeader( username, password ) );
     }
 
     public static Builder withHeaders( String... kvPairs )
