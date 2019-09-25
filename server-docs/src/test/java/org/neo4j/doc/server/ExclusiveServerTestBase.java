@@ -37,4 +37,14 @@ public class ExclusiveServerTestBase
         System.setProperty( "org.neo4j.useInsecureCertificateGeneration", "true" );
         ServerHolder.ensureNotRunning();
     }
+
+    private static String txEndpoint( String database )
+    {
+        return String.format( "db/%s/tx", database );
+    }
+
+    protected static String txCommitEndpoint( String database )
+    {
+        return txEndpoint( database ) + "/commit";
+    }
 }

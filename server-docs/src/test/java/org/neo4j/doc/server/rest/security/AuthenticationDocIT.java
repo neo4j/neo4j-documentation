@@ -86,18 +86,13 @@ public class AuthenticationDocIT extends CommunityServerTestBase
         // Given
         startServerWithConfiguredUser();
 
-        // Document
-        RESTDocsGenerator.ResponseEntity response = gen.get()
-                .noGraph()
-                .expectedStatus( 200 )
-                .withHeader( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "secret" ) )
-                .get( userURL( "neo4j" ) );
+        HTTP.Response response = HTTP.withBasicAuth( "neo4j", "secret" ).POST( txCommitURL( "system" ), query( "SHOW USERS" ) );
 
-        // Then
-        JsonNode data = JsonHelper.jsonNode( response.entity() );
-        assertThat( data.get( "username" ).asText(), equalTo( "neo4j" ) );
-        assertThat( data.get( "password_change_required" ).asBoolean(), equalTo( false ) );
-        assertThat( data.get( "password_change" ).asText(), equalTo( passwordURL( "neo4j" ) ) );
+        assertThat( response.status(), equalTo( 200 ) );
+
+        final JsonNode jsonNode = getResultRow( response );
+        assertThat( jsonNode.get(0).asText(), equalTo( "neo4j" ) );
+        assertThat( jsonNode.get(1).asBoolean(), equalTo( false ) );
     }
 
     @Test
@@ -137,20 +132,29 @@ public class AuthenticationDocIT extends CommunityServerTestBase
         // Given
         startServer( true );
 
-        // Document
-        RESTDocsGenerator.ResponseEntity response = gen.get()
-                .noGraph()
-                .expectedStatus( 403 )
-                .withHeader( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) )
-                .payload( simpleCypherRequestBody() )
-                .post( txCommitURL() );
+        // It should be possible to authenticate with password change required
+        gen.get().expectedStatus( 200 ).withHeader( HttpHeaders.AUTHORIZATION, HTTP.basicAuthHeader( "neo4j", "neo4j" ) );
+
+        // When
+        HTTP.Response responseBeforePasswordChange = HTTP.withBasicAuth( "neo4j", "neo4j" ).POST( txCommitURL( "system" ), query( "SHOW USERS" ) );
+
+        // The server should throw error when trying to do something else than changing password
+        assertPermissionErrorAtSystemAccess( responseBeforePasswordChange );
+
+        // When
+        // Changing the user password
+        HTTP.Response response =
+                HTTP.withBasicAuth( "neo4j", "neo4j" ).POST( txCommitURL( "system" ), query( "ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'secret'" ) );
+        // Then
+        assertThat( response.status(), equalTo( 200 ) );
+        assertThat( "Should have no errors", response.get( "errors" ).size(), equalTo( 0 ) );
+
+        // When
+        HTTP.Response responseAfterPasswordChange = HTTP.withBasicAuth( "neo4j", "secret" ).POST( txCommitURL( "system" ), query( "SHOW USERS" ) );
 
         // Then
-        JsonNode data = JsonHelper.jsonNode( response.entity() );
-        JsonNode firstError = data.get( "errors" ).get( 0 );
-        assertThat( firstError.get( "code" ).asText(), equalTo( "Neo.ClientError.Security.Forbidden" ) );
-        assertThat( firstError.get( "message" ).asText(), equalTo( "User is required to change their password." ) );
-        assertThat( data.get( "password_change" ).asText(), equalTo( passwordURL( "neo4j" ) ) );
+        assertThat( responseAfterPasswordChange.status(), equalTo( 200 ) );
+        assertThat( "Should have no errors", response.get( "errors" ).size(), equalTo( 0 ) );
     }
 
     @Test
@@ -186,14 +190,17 @@ public class AuthenticationDocIT extends CommunityServerTestBase
         assertThat( response.get( "errors" ).get( 0 ).get( "message" ).asText(), equalTo( "Invalid authentication header." ) );
     }
 
-    public void startServerWithConfiguredUser() throws IOException
+    protected void startServerWithConfiguredUser() throws IOException
     {
         startServer( true );
         // Set the password
-        HTTP.Response post = HTTP.withHeaders( HttpHeaders.AUTHORIZATION, challengeResponse( "neo4j", "neo4j" ) ).POST(
-                server.baseUri().resolve( "/user/neo4j/password" ).toString(),
-                RawPayload.quotedJson( "{'password':'secret'}" )
-        );
-        assertEquals( 204, post.status() );
+        HTTP.Response post = HTTP.withBasicAuth( "neo4j", "neo4j" ).POST( txCommitURL( "system" ),
+                query("ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'secret'" ) );
+        assertEquals( 200, post.status() );
+    }
+
+    private JsonNode getResultRow( HTTP.Response response ) throws JsonParseException
+    {
+        return response.get( "results" ).get( 0 ).get( "data" ).get( 0 ).get( "row" );
     }
 }
