@@ -69,16 +69,6 @@ public class CommunityServerTestBase extends ExclusiveServerTestBase
         return server.baseUri().resolve( "db/neo4j/" ).toString();
     }
 
-    protected String userURL( String username )
-    {
-        return server.baseUri().resolve( "user/" + username ).toString();
-    }
-
-    protected String passwordURL( String username )
-    {
-        return server.baseUri().resolve( "user/" + username + "/password" ).toString();
-    }
-
     protected String base64(String value)
     {
         return UTF8.decode( Base64.encode( value ) );
