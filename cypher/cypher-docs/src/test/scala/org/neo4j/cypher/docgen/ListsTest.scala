@@ -29,12 +29,12 @@ class ListsTest extends DocumentingTest {
     initQueries(
       """CREATE (keanu:Person {name: 'Keanu Reeves'}),
                 |(johnnymnemonic:Movie {title: 'Johnny Mnemonic', released: 1995}),
-                |(somethingsgottagive:Movie {title: 'Something's Gotta Give', released: 2003}),
+                |(somethingsgottagive:Movie {title: 'Somethings Gotta Give', released: 2003}),
                 |(thematrixrevolutions:Movie {title: 'The Matrix Revolutions', released: 2003}),
                 |(thematrixreloaded:Movie {title: 'The Matrix Reloaded', released: 2003}),
                 |(thereplacements:Movie {title: 'The Replacements', released: 2000}),
                 |(thematrix:Movie {title: 'The Matrix', released: 1999}),
-                |(thedevilsadvocate:Movie {title: 'The Devil's Advocate', released: 1997}),
+                |(thedevilsadvocate:Movie {title: 'The Devils Advocate', released: 1997}),
                 |
                 |(keanu)-[:ACTED_IN]->(johnnymnemonic),
                 |(keanu)-[:ACTED_IN]->(somethingsgottagive),
