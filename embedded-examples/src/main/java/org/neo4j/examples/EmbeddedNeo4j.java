@@ -109,6 +109,8 @@ public class EmbeddedNeo4j
         {
             // tag::removingData[]
             // let's remove the data
+            firstNode = tx.getNodeById( firstNode.getId() );
+            secondNode = tx.getNodeById( secondNode.getId() );
             firstNode.getSingleRelationship( RelTypes.KNOWS, Direction.OUTGOING ).delete();
             firstNode.delete();
             secondNode.delete();

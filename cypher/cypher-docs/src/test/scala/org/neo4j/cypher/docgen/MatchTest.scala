@@ -361,7 +361,7 @@ class MatchTest extends DocumentingTest {
     try {
       val nodes = result.columnAs[Node](variable).toList
       val labelStats = nodes.foldLeft(Map[String,Int]()) { (acc, node) =>
-        val label = node.getLabels.iterator().next().name()
+        val label = tx.getNodeById( node.getId ).getLabels.iterator().next().name()
         val count = if (acc.isDefinedAt(label)) acc(label) else 0
         acc + (label -> (count + 1))
       }

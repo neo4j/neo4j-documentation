@@ -74,8 +74,8 @@ public class OrderedPathDocTest
         try ( Transaction tx = db.beginTx() )
         {
             TraversalDescription traversalDescription = orderedPath.findPaths( tx );
-            assertEquals( 1, count( traversalDescription.traverse( A ) ) );
-            output = orderedPath.printPaths( traversalDescription, A );
+            assertEquals( 1, count( traversalDescription.traverse( tx.getNodeById( A.getId() ) ) ) );
+            output = orderedPath.printPaths( tx, traversalDescription, A );
             assertTrue( output.contains( "(A)--[REL1]-->(B)--[REL2]-->(C)--[REL3]-->(D)" ) );
         }
         String graph = AsciidocHelper.createGraphVizDeletingReferenceNode(

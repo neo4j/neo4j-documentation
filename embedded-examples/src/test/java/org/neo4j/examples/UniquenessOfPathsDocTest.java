@@ -86,11 +86,13 @@ public class UniquenessOfPathsDocTest extends AbstractJavaDocTestBase
         gen.get();
         gen.get().addTestSourceSnippets( this.getClass(), "traverser", "traverseNodeGlobal" );
         // tag::traverser[]
-        final Node target = data.get().get( "Principal1" );
+        Node dataTarget = data.get().get( "Principal1" );
         String output = "";
         int count = 0;
         try ( Transaction transaction = graphdb().beginTx() )
         {
+            start = transaction.getNodeById( start.getId() );
+            final Node target = transaction.getNodeById( dataTarget.getId() );
             TraversalDescription td = transaction.traversalDescription()
                     .uniqueness( Uniqueness.NODE_PATH )
                     .evaluator( new Evaluator()
@@ -120,6 +122,8 @@ public class UniquenessOfPathsDocTest extends AbstractJavaDocTestBase
         count = 0;
         try ( Transaction tx = graphdb().beginTx() )
         {
+            start = tx.getNodeById( start.getId() );
+            final Node target = tx.getNodeById( dataTarget.getId() );
             // tag::traverseNodeGlobal[]
             TraversalDescription nodeGlobalTd = tx.traversalDescription().uniqueness( Uniqueness.NODE_PATH ).evaluator( new Evaluator()
             {

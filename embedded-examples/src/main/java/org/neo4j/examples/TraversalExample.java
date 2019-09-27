@@ -90,6 +90,7 @@ public class TraversalExample
     {
         try (Transaction tx = db.beginTx())
         {
+            joe = tx.getNodeById( joe.getId() );
             init( tx );
             out.println( knowsLikesTraverser( tx, joe ) );
             out.println( traverseBaseTraverser( joe ) );
