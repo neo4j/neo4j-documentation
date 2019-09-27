@@ -465,7 +465,7 @@ public class JavaExecutionEngineDocTest
             dumpToFile( "set_properties_on_a_node_from_a_map", query, params );
 
             tx.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
-            assertThat( michaelaNode.getProperty( "name" ).toString(), is( "Andy" ) );
+            assertThat( tx.getNodeById( michaelaNode.getId() ).getProperty( "name" ).toString(), is( "Andy" ) );
         }
     }
 
@@ -537,6 +537,8 @@ public class JavaExecutionEngineDocTest
     {
         try ( Transaction tx = db.beginTx() )
         {
+            a = tx.getNodeById( a.getId() );
+            b = tx.getNodeById( b.getId() );
             a.createRelationshipTo( b, RelationshipType.withName( "friend" ) );
             tx.commit();
         }

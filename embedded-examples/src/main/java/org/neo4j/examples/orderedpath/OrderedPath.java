@@ -123,11 +123,11 @@ public class OrderedPath
         return td;
     }
 
-    String printPaths( TraversalDescription td, Node A )
+    String printPaths( Transaction tx, TraversalDescription td, Node A )
     {
         String output = "";
         // tag::printPath[]
-        Traverser traverser = td.traverse( A );
+        Traverser traverser = td.traverse( tx.getNodeById( A.getId() ) );
         PathPrinter pathPrinter = new PathPrinter( "name" );
         for ( Path path : traverser )
         {

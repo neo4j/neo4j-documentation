@@ -190,7 +190,7 @@ public class RolesDocTest extends AbstractJavaDocTestBase
                     .evaluator( Evaluators.excludeStartPosition() )
                     .relationships( RoleRels.PART_OF, Direction.INCOMING )
                     .relationships( RoleRels.MEMBER_OF, Direction.INCOMING );
-            Traverser traverser = traversalDescription.traverse( admins );
+            Traverser traverser = traversalDescription.traverse( tx.getNodeById( admins.getId() ) );
             gen.get().addSnippet( "o-get-admins", createOutputSnippet( traverserToString( traverser ) ) );
             String query = "match ({name: 'Admins'})<-[:PART_OF*0..]-(group)<-[:MEMBER_OF]-(user) return user.name, group.name";
             gen.get().addSnippet( "query-get-admins", createCypherSnippet( query ) );
@@ -201,7 +201,7 @@ public class RolesDocTest extends AbstractJavaDocTestBase
 
             //Jale's memberships
             // tag::get-user-memberships[]
-            Node jale = getNodeByName( "Jale" );
+            Node jale = tx.getNodeById( getNodeByName( "Jale" ).getId() );
             traversalDescription = tx.traversalDescription()
                     .depthFirst()
                     .evaluator( Evaluators.excludeStartPosition() )
@@ -222,7 +222,7 @@ public class RolesDocTest extends AbstractJavaDocTestBase
 
             // get all groups
             // tag::get-groups[]
-            Node referenceNode = getNodeByName( "Reference_Node") ;
+            Node referenceNode = tx.getNodeById( getNodeByName( "Reference_Node").getId() );
             traversalDescription = tx.traversalDescription()
                     .breadthFirst()
                     .evaluator( Evaluators.excludeStartPosition() )
