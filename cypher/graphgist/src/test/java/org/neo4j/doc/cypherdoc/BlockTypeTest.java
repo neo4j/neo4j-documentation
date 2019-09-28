@@ -56,7 +56,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assume.assumeFalse;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -215,7 +215,7 @@ public class BlockTypeTest
         // then
         assertThat( paramsResult,
                 allOf( containsString( "source,json" ), containsString( "name" ), containsString( "Adam" ) ) );
-        assertThat( (String) state.parameters.get( "name" ), equalTo( "Adam" ) );
+        assertThat( state.parameters.get( "name" ), equalTo( "Adam" ) );
         assertThat( state.parameters.size(), equalTo( 1 ) );
 
         // given
@@ -348,7 +348,7 @@ public class BlockTypeTest
     }
 
     @Test
-    public void should_replace_filenames_in_queries() throws Exception
+    public void should_replace_filenames_in_queries()
     {
         assumeFalse( SystemUtils.IS_OS_WINDOWS );
         // given

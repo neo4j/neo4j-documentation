@@ -38,8 +38,8 @@ class RunnableContentTest extends Suite
     val doc = Document("title", "id", RunnableInitialization(initQueries = Seq("1","2")), queryObject)
 
     doc.contentWithQueries should equal(Seq(
-      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3", "4")), Some("5"), graphVizPlaceHolder),
-      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3", "4")), Some("5"), tablePlaceHolder)
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3", "4")), Some(InitializationQuery("5")), graphVizPlaceHolder),
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3", "4")), Some(InitializationQuery("5")), tablePlaceHolder)
     ))
   }
 

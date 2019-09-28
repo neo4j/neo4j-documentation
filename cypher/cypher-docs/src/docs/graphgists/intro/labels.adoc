@@ -117,9 +117,9 @@ Labels removed: 1
 For more information on labels and related topics, see:
 
 * <<graphdb-neo4j-labels>>
-* <<cypher-schema>>
-* <<query-constraints>>
-* <<query-schema-index>>
+* <<administration>>
+* <<administration-constraints>>
+* <<administration-indexes>>
 * <<query-using>>
 * <<query-set>>
 * <<query-remove>>

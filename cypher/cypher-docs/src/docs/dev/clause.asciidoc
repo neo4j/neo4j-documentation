@@ -14,7 +14,7 @@ This section contains information on all the clauses in the Cypher query languag
 * <<header-reading-writing-clauses,Reading/Writing clauses>>
 * <<header-set-operations-clauses,Set operations>>
 * <<header-importing-clauses,Importing data>>
-* <<header-schema-clauses,Schema clauses>>
+* <<header-administration-clauses,Schema clauses>>
 
 
 [[header-reading-clauses]]
@@ -133,16 +133,18 @@ These comprise clauses that both read data from and write data to the database.
 |===
 
 
-[[header-schema-clauses]]
-**Schema clauses**
+[[header-administration-clauses]]
+**Administration clauses**
 
-These comprise clauses used to manage the schema; further details can found in <<cypher-schema>>.
+These comprise clauses used to manage databases, schema and security; further details can found in <<administration>>.
 
 [options="header"]
 |===
-|Clause                                             |   Description
-|<<query-constraints,CREATE \| DROP CONSTRAINT>>     | Create or drop an index on all nodes with a particular label and property.
-|<<query-schema-index,CREATE \| DROP INDEX>>         | Create or drop a constraint pertaining to either a node label or relationship type, and a property.
+|Clause                                                                | Description
+|<<administration-databases,CREATE \| DROP \| START \| STOP DATABASE>> | Create, drop, start or stop a database.
+|<<administration-indexes,CREATE \| DROP INDEX>>                       | Create or drop a constraint pertaining to either a node label or relationship type, and a property.
+|<<administration-constraints,CREATE \| DROP CONSTRAINT>>              | Create or drop an index on all nodes with a particular label and property.
+|<<administration-security,Users, roles, privileges>>                  | Manage users, roles and privileges for database, graph and sub-graph access control.
 |===
 
 
@@ -150,8 +152,6 @@ These comprise clauses used to manage the schema; further details can found in <
 include::ql/query-match.adoc[leveloffset=+1]
 
 include::ql/query-optional-match.adoc[leveloffset=+1]
-
-include::ql/start/index.asciidoc[leveloffset=+1]
 
 //Projecting
 include::ql/query-return.adoc[leveloffset=+1]

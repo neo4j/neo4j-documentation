@@ -23,9 +23,9 @@ import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.{DPPlannerName, IDPPlannerName}
 import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
-import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
@@ -48,7 +48,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     "CREATE INDEX ON :Person(highScore)"
   )
 
-  def section = "Schema Index"
+  override def parent = Some("Administration")
+  override def section = "Indexes"
 
   @Test def create_index_on_a_label_single_property() {
     testQuery(
@@ -147,8 +148,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "A query containing equality comparisons for all the properties of a composite index will automatically be backed by the same index. " +
         "However, the query does not need to have equality on all properties. It can have ranges and existence predicates as well. " +
         "But in these cases rewrites might happen depending on which properties have which predicates, " +
-        "see <<schema-index-single-vs-composite-index, composite index limitations>>. " +
-        "The following query will use the composite index defined <<schema-index-create-a-composite-index, earlier>>: ",
+        "see <<administration-indexes-single-vs-composite-index, composite index limitations>>. " +
+        "The following query will use the composite index defined <<administration-indexes-create-a-composite-index, earlier>>: ",
       prepare = _ => executePreparationQueries(List("CREATE INDEX ON :Person(age, country)")),
       queryText = "MATCH (n:Person) WHERE n.age = 35 AND n.country = 'UK' RETURN n",
       optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, " +
@@ -192,7 +193,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "Composite indexes are also automatically used for inequality (range) comparisons of indexed properties in the `WHERE` clause. " +
         "Equality or list membership check predicates may precede the range predicate. " +
         "However, predicates after the range predicate may be rewritten as an existence check predicate and a filter " +
-        "as described in <<schema-index-single-vs-composite-index, composite index limitations>>.",
+        "as described in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname > 'B' AND person.highScore > 10000 RETURN person",
       assertions = {
         (p) =>
@@ -335,7 +336,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "Any (non-existence check) predicate on `person.surname` will be rewritten as existence check with a filter. " +
         "However, if the predicate on `person.firstname` is a equality check " +
         "then a `STARTS WITH` on `person.surname` would also use the index (without rewrites). " +
-        "More information about how the rewriting works can be found in <<schema-index-single-vs-composite-index, composite index limitations>>.",
+        "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' AND exists(person.surname) RETURN person",
       assertions = {
         (p) =>

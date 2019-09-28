@@ -60,6 +60,9 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
   def generateConsole: Boolean
   def db: GraphDatabaseCypherService
 
+  def niceify(parent: Option[String], section: String, title: String): String =
+    if (parent.isDefined) niceify(parent.get + " " + section + " " + title) else niceify(section + " " + title)
+
   def niceify(in: String): String = in.toLowerCase
     .replace(" ", "-")
     .replace("(", "")
@@ -125,7 +128,7 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
     }
   }
 
-  val path: File = new File("target/docs/dev/ql/")
+  def path: File = new File("target/docs/dev/ql/")
 
   val graphvizFileName = "cypher-" + simpleName + "-graph"
 
@@ -220,7 +223,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
           fail(s"Expected the test to throw an exception: $expectedException")
         }
 
-        val testId = niceify(section + " " + title)
+        val testId = niceify(parent, section, title)
         writer.println("[[" + testId + "]]")
         if (!noTitle) writer.println("== " + title + " ==")
         writer.println(text)
@@ -449,8 +452,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   var filePaths: Map[String, String] = Map.empty
   var urls: Map[String, String] = Map.empty
 
+  def parent: Option[String] = None
   def section: String
-  val dir: File = createDir(section)
+  lazy val dir: File = if (parent.isDefined) createDir(new File(path, niceify(parent.get)), section) else createDir(section)
 
   def graphDescription: List[String] = List()
 
@@ -477,7 +481,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   private def dumpToFile(dir: File, writer: PrintWriter, title: String, query: String, returns: String, text: String,
                          result: Either[Exception, String], consoleData: String, parameters: Map[String, Any]) {
-    val testId = niceify(section + " " + title)
+    val testId = niceify(parent, section, title)
     writer.println("[[" + testId + "]]")
     if (!noTitle) writer.println("== " + title + " ==")
     writer.println(text)

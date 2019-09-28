@@ -29,25 +29,31 @@ import org.neo4j.exceptions.InternalException
 import scala.collection.JavaConverters._
 
 
-case class ContentWithInit(init: RunnableInitialization, queryText: Option[String], queryResultPlaceHolder: QueryResultPlaceHolder) {
+case class ContentWithInit(init: RunnableInitialization, query: Option[DatabaseQuery], queryResultPlaceHolder: QueryResultPlaceHolder) {
 
-  assert(init.initQueries.nonEmpty || queryText.nonEmpty, "Should never produce ContentWithInit with empty queries")
+  assert(init.initQueries.nonEmpty || query.nonEmpty, "Should never produce ContentWithInit with empty queries")
 
   // In the DSL it is assumed that the last init query will be presented if the place holder is not inside an explicit query,
   // e.g. a graphViz() to show the graph created by initQueries().
   // The key is used to group queries by their initialization requirements (to minimize database creations by the query runner)
-  val initKey: RunnableInitialization = if (queryText.nonEmpty) init else init.copy(initQueries = init.initQueries.dropRight(1))
-  val queryToPresent: String = if (queryText.isDefined) queryText.get else init.initQueries.last
+  val initKey: RunnableInitialization = if (query.nonEmpty) init else init.copy(initQueries = init.initQueries.dropRight(1))
+  val queryToPresent: DatabaseQuery = if (query.isDefined) query.get else init.initQueries.last
 }
 
 object  RunnableInitialization {
   type InitializationFunction = GraphDatabaseCypherService => Unit
 
   def empty = RunnableInitialization()
+
+  def apply(initQueries: Seq[String], userDefinedFunctions: Seq[Class[_]]): RunnableInitialization =
+    new RunnableInitialization(initQueries = initQueries.map(InitializationQuery(_)), userDefinedFunctions = userDefinedFunctions)
+
+  def apply(initQueries: Seq[String]): RunnableInitialization =
+    new RunnableInitialization(initQueries = initQueries.map(InitializationQuery(_)))
 }
 
 case class RunnableInitialization(initCode: Seq[InitializationFunction] = Seq.empty,
-                                  initQueries: Seq[String] = Seq.empty,
+                                  initQueries: Seq[DatabaseQuery] = Seq.empty,
                                   userDefinedFunctions: Seq[java.lang.Class[_]] = Seq.empty,
                                   userDefinedAggregationFunctions: Seq[java.lang.Class[_]] = Seq.empty,
                                   procedures: Seq[java.lang.Class[_]] = Seq.empty) {
@@ -83,12 +89,12 @@ sealed trait Content {
 
   def NewLine: String = "\n"
 
-  def runnableContent(init: RunnableInitialization, queryText: Option[String]): Seq[ContentWithInit]
+  def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]): Seq[ContentWithInit]
 }
 
 trait NoQueries {
   self: Content =>
-  override def runnableContent(init: RunnableInitialization, queryText: Option[String]) = Seq.empty
+  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]) = Seq.empty
 }
 
 case object NoContent extends Content with NoQueries {
@@ -100,7 +106,7 @@ case class ContentChain(a: Content, b: Content) extends Content {
 
   override def toString: String = s"$a ~ $b"
 
-  override def runnableContent(init: RunnableInitialization, queryText: Option[String]): Seq[ContentWithInit] =
+  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]): Seq[ContentWithInit] =
     a.runnableContent(init, queryText) ++ b.runnableContent(init, queryText)
 }
 
@@ -248,13 +254,25 @@ case class QueryResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: 
   private def escape(in: String): String = "+%s+".format(in)
 }
 
-case class Query(queryText: String, assertions: QueryAssertions, myInit: RunnableInitialization, content: Content, params: Seq[(String, Any)], keepMyNewlines: Boolean = false) extends Content {
+trait DatabaseQuery {
+  def prettified: String
+  def database: Option[String]
+  def runtime: Option[String]
+  def explain: DatabaseQuery = InitializationQuery(s"EXPLAIN $runnable", runtime, database)
+  def profile: DatabaseQuery = InitializationQuery(s"PROFILE $runnable", runtime, database)
+  def runnable: String = if(runtime.isDefined) s"CYPHER runtime=${runtime.get} ${prettified}" else prettified
+}
+
+case class InitializationQuery(prettified: String, runtime: Option[String] = None, database: Option[String] = None) extends DatabaseQuery
+
+case class Query(queryText: String, assertions: QueryAssertions, myInit: RunnableInitialization, content: Content, params: Seq[(String, Any)],
+                 keepMyNewlines: Boolean = false, runtime: Option[String] = None, database: Option[String] = None) extends Content with DatabaseQuery {
 
   val prettified = Prettifier(queryText, keepMyNewlines)
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
   override def asciiDoc(level: Int) = {
-    s"""$parameterText
+    s"""$parameterText>
        |.Query
        |[source, cypher]
        |----
@@ -264,8 +282,8 @@ case class Query(queryText: String, assertions: QueryAssertions, myInit: Runnabl
        |""".stripMargin + content.asciiDoc(level)
   }
 
-  override def runnableContent(init: RunnableInitialization, queryText: Option[String]) =
-    content.runnableContent(init ++ myInit, queryText = Some(prettified))
+  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]) =
+    content.runnableContent(init ++ myInit, queryText = Some(this))
 
   private def mapMapValue(v: Any): Any = v match {
     case v: Map[_, _] => Eagerly.immutableMapValues(v, mapMapValue).asJava
@@ -274,10 +292,15 @@ case class Query(queryText: String, assertions: QueryAssertions, myInit: Runnabl
   }
 }
 
-case class ConsoleData(globalInitQueries: Seq[String], localInitQueries: Seq[String], query: String) extends Content with NoQueries {
+object ConsoleData {
+  def of(globalInitQueries: Seq[String], localInitQueries: Seq[String], query: String): ConsoleData =
+    ConsoleData(globalInitQueries.map(InitializationQuery(_)), localInitQueries.map(InitializationQuery(_)), query)
+}
+
+case class ConsoleData(globalInitQueries: Seq[DatabaseQuery], localInitQueries: Seq[DatabaseQuery], query: String) extends Content with NoQueries {
   override def asciiDoc(level: Int): String = {
-    val globalInitQueryRows = globalInitQueries.mkString(NewLine)
-    val localInitQueryRows = localInitQueries.mkString(NewLine)
+    val globalInitQueryRows = globalInitQueries.map(_.prettified).mkString(NewLine)
+    val localInitQueryRows = localInitQueries.map(_.prettified).mkString(NewLine)
     val initQueries =
       if (globalInitQueryRows.isEmpty && localInitQueryRows.isEmpty)
           "none"
@@ -318,7 +341,7 @@ case class Section(heading: String, id: Option[String], init: RunnableInitializa
     idRef + levelIndent + " " + heading + NewLine + NewLine + content.asciiDoc(level + 1)
   }
 
-  override def runnableContent(init: RunnableInitialization, queryText: Option[String]): Seq[ContentWithInit] = content.runnableContent(init ++ this.init, None)
+  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]): Seq[ContentWithInit] = content.runnableContent(init ++ this.init, None)
 }
 
 sealed trait QueryAssertions
@@ -335,7 +358,7 @@ trait QueryResultPlaceHolder {
   self: Content =>
   override def asciiDoc(level: Int) =
     throw new InternalException(s"This object should have been rewritten away already ${this.getClass.getSimpleName}")
-  override def runnableContent(init: RunnableInitialization, queryText: Option[String]) = Seq(ContentWithInit(init, queryText, this))
+  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]) = Seq(ContentWithInit(init, queryText, this))
 }
 
 // NOTE: These must _not_ be case classes, otherwise they will not be compared by identity

@@ -16,7 +16,7 @@ include::clause.asciidoc[leveloffset=+1]
 
 include::ql/functions/index.asciidoc[leveloffset=+1]
 
-include::schema.asciidoc[leveloffset=+1]
+include::administration.asciidoc[leveloffset=+1]
 
 include::query-tuning.asciidoc[leveloffset=+1]
 

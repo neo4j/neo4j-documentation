@@ -67,7 +67,7 @@ class QueryRunnerTest extends Suite
   private def run(init: RunnableInitialization, queryText: String, content: QueryResultPlaceHolder): TestRunResult = {
     val formatter = (_: GraphDatabaseQueryService, _: InternalTransaction) => (_: DocsExecutionResult) => NoContent
     val runner = new QueryRunner(formatter)
-    runner.runQueries(contentsWithInit = Seq(ContentWithInit(init, Some(queryText), content)), "title")
+    runner.runQueries(contentsWithInit = Seq(ContentWithInit(init, Some(InitializationQuery(queryText)), content)), "title")
   }
 
   private def haveATestFailureOfClass[EXCEPTION <: Exception](queryAndClass: (String, Class[EXCEPTION])) =

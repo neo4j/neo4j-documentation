@@ -221,7 +221,7 @@
                                 <argument>${project.build.directory}/docs/parsed-graphgists</argument>
                                 <argument>${remote-csv-upload}</argument>
                                 <argument>${project.build.directory}/../src/docs/graphgists</argument>
-                                <argument>${project.build.directory}/../src/docs/dev/tutorials/gists</argument>
+<!--                                <argument>${project.build.directory}/../src/docs/dev/tutorials/gists</argument>-->
                             </arguments>
                         </configuration>
                     </execution>

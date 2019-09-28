@@ -27,6 +27,7 @@ class CaseExpressionsTest extends DocumentingTest {
 
   override def doc = new DocBuilder {
     doc("`CASE` expressions", "query-syntax-case")
+    runtime("interpreted")
     initQueries(
       """CREATE (alice:A {name:'Alice', age: 38, eyes: 'brown'}),
         |       (bob:B {name: 'Bob', age: 25, eyes: 'blue'}),

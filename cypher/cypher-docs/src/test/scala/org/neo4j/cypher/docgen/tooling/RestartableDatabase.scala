@@ -21,7 +21,9 @@ package org.neo4j.cypher.docgen.tooling
 
 import java.io.File
 
+import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
 import org.apache.commons.io.FileUtils
+import org.neo4j.configuration.GraphDatabaseSettings.SYSTEM_DATABASE_NAME
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
@@ -30,6 +32,7 @@ import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
 import org.neo4j.kernel.api.procedure.GlobalProcedures
 
+import scala.collection.mutable
 import scala.util.Try
 
 /* I exist so my users can have a restartable database that is lazily created */
@@ -39,6 +42,7 @@ class RestartableDatabase(init: RunnableInitialization )
   var managementService: DatabaseManagementService = _
   var dbFolder: File = _
   var graph: GraphDatabaseCypherService = null
+  val graphs: mutable.Map[String, GraphDatabaseCypherService] = mutable.Map.empty
   var eengine: ExecutionEngine = null
   private var _failures: Seq[QueryRunResult] = null
   private var _markedForRestart = false
@@ -46,17 +50,25 @@ class RestartableDatabase(init: RunnableInitialization )
   /*
   This is the public way of controlling when it's safe to restart the database
    */
-  def nowIsASafePointToRestartDatabase() = if(_markedForRestart) restart()
+  def nowIsASafePointToRestartDatabase(): Unit = if(_markedForRestart) restart()
 
   private def createAndStartIfNecessary() {
     if (graph == null) {
       dbFolder = new File("target/example-db" + System.nanoTime())
-      managementService = new DatabaseManagementServiceBuilder(dbFolder).build()
-      val db = managementService.database(DEFAULT_DATABASE_NAME)
-      graph = new GraphDatabaseCypherService(db)
-      eengine = ExecutionEngineFactory.createCommunityEngineFromDb(db)
-      _failures = initialize(init, graph)
+      managementService = new EnterpriseDatabaseManagementServiceBuilder(dbFolder).build()
+      managementService.listDatabases().toArray().foreach { name =>
+        val db = managementService.database(name.toString)
+        graphs(name.toString) = new GraphDatabaseCypherService(db)
+      }
+      selectDatabase(DEFAULT_DATABASE_NAME)
     }
+  }
+
+  private def selectDatabase(database: String): Unit = {
+    val db = managementService.database(database)
+    graph = graphs(database)
+    eengine = ExecutionEngineFactory.createExecutionEngineFromDb(db)
+    _failures = initialize(init, graph)
   }
 
   def failures = {
@@ -73,8 +85,10 @@ class RestartableDatabase(init: RunnableInitialization )
     restart()
   }
 
-  def executeWithParams(q: String, params: (String, Any)*): DocsExecutionResult = {
+  def executeWithParams(query: DatabaseQuery, params: (String, Any)*): DocsExecutionResult = {
+    val q = query.runnable
     createAndStartIfNecessary()
+    if (query.database.isDefined) selectDatabase(query.database.get)
     val executionResult: DocsExecutionResult = try {
       graph.inTx({ tx =>
         val txContext = graph.transactionalContext(tx, query = q -> params.toMap)
@@ -100,6 +114,8 @@ class RestartableDatabase(init: RunnableInitialization )
     managementService.shutdown()
     FileUtils.deleteQuietly(dbFolder)
     graph = null
+    eengine = null
+    _failures = null
     _markedForRestart = false
   }
 
@@ -114,7 +130,9 @@ class RestartableDatabase(init: RunnableInitialization )
     init.initCode.foreach(_.apply(graph))
 
     // Execute queries
-    init.initQueries.flatMap { q =>
+    init.initQueries.flatMap { query =>
+      val q = query.prettified
+      if (query.database.isDefined) selectDatabase(query.database.get)
       val result = Try(execute(q, Seq.empty: _*))
       result.failed.toOption.map((e: Throwable) => QueryRunResult(q, new ErrorPlaceHolder(), Left(e)))
     }

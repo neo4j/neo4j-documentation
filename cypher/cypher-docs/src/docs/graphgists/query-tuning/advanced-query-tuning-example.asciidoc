@@ -7,7 +7,7 @@ This section describes some more subtle optimizations based on new native index 
 --
 
 One of the most important and useful ways of optimizing Cypher queries involves creating appropriate indexes.
-This is described in more detail in <<query-schema-index>>, and demonstrated in <<cypherdoc-basic-query-tuning-example>>.
+This is described in more detail in <<administration-indexes>>, and demonstrated in <<cypherdoc-basic-query-tuning-example>>.
 In summary, an index will be based on the combination of a `Label` and a `property`.
 Any Cypher query that searches for nodes with a specific label and some predicate on the property (equality, range or existence) will be planned to use
 the index if the cost planner deems that to be the most efficient solution.

@@ -1,4 +1,4 @@
-[[query-schema-index]]
+[[administration-indexes]]
 = Indexes
 
 [abstract]
@@ -6,42 +6,41 @@
 This section explains how to configure indexes to enhance performance in search, and to support full-text search.
 --
 
-* <<query-schema-index-introduction, Managing Indexes>>
-** <<schema-index-single-vs-composite-index, Composite index limitations>>
-** <<schema-index-create-a-single-property-index, Create a single-property index>>
-** <<schema-index-create-a-composite-index, Create a composite index>>
-** <<schema-index-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
-** <<schema-index-drop-a-single-property-index, Drop a single-property index>>
-** <<schema-index-drop-a-composite-index, Drop a composite index>>
-* <<schema-index-using-indexes, Using indexes>>
-** <<schema-index-equality-check-using-where-single-property-index, Equality check using `WHERE` (single-property index)>>
-** <<schema-index-equality-check-using-where-composite-index, Equality check using `WHERE` (composite index)>>
-** <<schema-index-range-comparisons-using-where-single-property-index, Range comparisons using `WHERE` (single-property index)>>
-** <<schema-index-range-comparisons-using-where-composite-index, Range comparisons using `WHERE` (composite index)>>
-** <<schema-index-multiple-range-comparisons-using-where-single-property-index, Use index with `WHERE` using multiple range comparisons (single-property index)>>
-** <<schema-index-multiple-range-comparisons-using-where-composite-index, Use index with `WHERE` using multiple range comparisons (composite index)>>
-** <<schema-index-list-membership-check-using-in-single-property-index, List membership using `IN` (single-property index)>>
-** <<schema-index-list-membership-check-using-in-composite-index, List membership check using `IN` (composite index)>>
-** <<schema-index-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>
-** <<schema-index-prefix-search-using-starts-with-composite-index, Prefix search using `STARTS WITH` (composite index)>>
-** <<schema-index-suffix-search-using-ends-with-single-property-index, Suffix search using `ENDS WITH` (single-property index)>>
-** <<schema-index-substring-search-using-contains-single-property-index, Substring search using `CONTAINS` (single-property index)>>
-** <<schema-index-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
-** <<schema-index-existence-check-using-exists-composite-index, Existence check using `exists` (composite index)>>
-** <<schema-index-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search (single-property index)>>
-** <<schema-index-spatial-distance-searches-composite-index, Use index when executing a spatial distance search (composite index)>>
-** <<schema-index-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search (single-property index)>>
-** <<schema-index-spatial-bounding-box-searches-composite-index, Use index when executing a spatial bounding box search (composite index)>>
-* <<schema-index-fulltext-search, Indexes to support full-text search>>
-** <<schema-index-fulltext-search-introduction, Introduction>>
-** <<schema-index-fulltext-search-manage, Procedures to manage full-text schema indexes>>
-** <<schema-index-fulltext-search-create-and-configure, Create and configure full-text schema indexes>>
-** <<schema-index-fulltext-search-query, Query full-text schema indexes>>
-** <<schema-index-fulltext-search-drop, Drop full-text indexes>>
-* <<explicit-indexes-procedures, Manage and use explicit indexes>>
+* <<administration-indexes-introduction, Managing Indexes>>
+** <<administration-indexes-single-vs-composite-index, Composite index limitations>>
+** <<administration-indexes-create-a-single-property-index, Create a single-property index>>
+** <<administration-indexes-create-a-composite-index, Create a composite index>>
+** <<administration-indexes-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
+** <<administration-indexes-drop-a-single-property-index, Drop a single-property index>>
+** <<administration-indexes-drop-a-composite-index, Drop a composite index>>
+* <<administration-indexes-using-indexes, Using indexes>>
+** <<administration-indexes-equality-check-using-where-single-property-index, Equality check using `WHERE` (single-property index)>>
+** <<administration-indexes-equality-check-using-where-composite-index, Equality check using `WHERE` (composite index)>>
+** <<administration-indexes-range-comparisons-using-where-single-property-index, Range comparisons using `WHERE` (single-property index)>>
+** <<administration-indexes-range-comparisons-using-where-composite-index, Range comparisons using `WHERE` (composite index)>>
+** <<administration-indexes-multiple-range-comparisons-using-where-single-property-index, Use index with `WHERE` using multiple range comparisons (single-property index)>>
+** <<administration-indexes-multiple-range-comparisons-using-where-composite-index, Use index with `WHERE` using multiple range comparisons (composite index)>>
+** <<administration-indexes-list-membership-check-using-in-single-property-index, List membership using `IN` (single-property index)>>
+** <<administration-indexes-list-membership-check-using-in-composite-index, List membership check using `IN` (composite index)>>
+** <<administration-indexes-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>
+** <<administration-indexes-prefix-search-using-starts-with-composite-index, Prefix search using `STARTS WITH` (composite index)>>
+** <<administration-indexes-suffix-search-using-ends-with-single-property-index, Suffix search using `ENDS WITH` (single-property index)>>
+** <<administration-indexes-substring-search-using-contains-single-property-index, Substring search using `CONTAINS` (single-property index)>>
+** <<administration-indexes-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
+** <<administration-indexes-existence-check-using-exists-composite-index, Existence check using `exists` (composite index)>>
+** <<administration-indexes-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search (single-property index)>>
+** <<administration-indexes-spatial-distance-searches-composite-index, Use index when executing a spatial distance search (composite index)>>
+** <<administration-indexes-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search (single-property index)>>
+** <<administration-indexes-spatial-bounding-box-searches-composite-index, Use index when executing a spatial bounding box search (composite index)>>
+* <<administration-indexes-fulltext-search, Indexes to support full-text search>>
+** <<administration-indexes-fulltext-search-introduction, Introduction>>
+** <<administration-indexes-fulltext-search-manage, Procedures to manage full-text schema indexes>>
+** <<administration-indexes-fulltext-search-create-and-configure, Create and configure full-text schema indexes>>
+** <<administration-indexes-fulltext-search-query, Query full-text schema indexes>>
+** <<administration-indexes-fulltext-search-drop, Drop full-text indexes>>
 
 
-[[query-schema-index-introduction]]
+[[administration-indexes-introduction]]
 == Managing Indexes
 
 A database index is a redundant copy of some of the data in the database for the purpose of making searches of related data more efficient.
@@ -52,7 +51,7 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
 * An index that is created on a single property for any given label is called a _single-property index_.
 * An index that is created on more than one property for any given label is called a _composite index_.
   Differences in the usage patterns between composite and single-property indexes are described in
-  <<schema-index-single-vs-composite-index, composite index limitations>> and shown in the examples below.
+  <<administration-indexes-single-vs-composite-index, composite index limitations>> and shown in the examples below.
 
 Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
@@ -66,7 +65,7 @@ Neo4j will automatically pick up and start using the index once it has been crea
 For information on index configuration and limitations, refer to <<operations-manual#index-configuration, Operations Manual -> Index configuration>>.
 ====
 
-[[schema-index-single-vs-composite-index]]
+[[administration-indexes-single-vs-composite-index]]
 === Composite index limitations
 
 Unlike single-property indexes, composite indexes currently support only a subset of predicates:
@@ -159,5 +158,3 @@ include::spatial-bounding-box-searches-single-property-index.asciidoc[leveloffse
 include::spatial-bounding-box-searches-composite-index.asciidoc[leveloffset=+1]
 
 include::fulltext-schema-index.adoc[leveloffset=+1]
-
-include::explicit-index-procedures.adoc[leveloffset=+1]
