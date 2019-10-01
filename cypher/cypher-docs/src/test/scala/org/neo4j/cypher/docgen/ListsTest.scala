@@ -164,7 +164,7 @@ class ListsTest extends DocumentingTest {
       graphViz()
       query(
         """MATCH (a:Person {name: 'Keanu Reeves'})
-          |RETURN [(a)-->(b) WHERE b:Movie | b.released] AS Years ORDER BY YEARS ASC""", ResultAssertions((r) => {
+          |RETURN [(a)-->(b) WHERE b:Movie | b.released] AS Years ORDER BY Years ASC""", ResultAssertions((r) => {
           r.toList should equal(List(Map("Years" -> List(1995, 1997, 1999, 2000, 2003, 2003, 2003))))
         })) {
         resultTable()
