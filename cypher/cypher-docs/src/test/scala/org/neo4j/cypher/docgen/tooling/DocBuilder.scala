@@ -19,6 +19,8 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
+import java.io
+
 import org.neo4j.cypher.docgen.tooling.Admonitions.{Caution, Important, Note, Tip}
 import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunction
 
@@ -47,63 +49,81 @@ trait DocBuilder {
     scope.push(DocScope(name, id))
   }
 
-  def initCode(code: InitializationFunction) = current.setInitCode(code)
+  def initCode(code: InitializationFunction): Unit = current.setInitCode(code)
 
-  def initQueries(queries: String*) = current.setInitQueries(queries.map(_.stripMargin))
+  def initQueries(queries: String*): Unit = current.setInitQueries(queries.map{ query =>
+    InitializationQuery(query.stripMargin)
+  })
 
-  def registerUserDefinedFunctions(udfs: java.lang.Class[_]*) = current.setUserDefinedFunctions(udfs)
+  def registerUserDefinedFunctions(udfs: java.lang.Class[_]*): Unit = current.setUserDefinedFunctions(udfs)
 
-  def registerUserDefinedAggregationFunctions(udafs: java.lang.Class[_]*) = current.setUserDefinedAggregationFunctions(udafs)
+  def registerUserDefinedAggregationFunctions(udafs: java.lang.Class[_]*): Unit = current.setUserDefinedAggregationFunctions(udafs)
 
-  def registerProcedures(procedures: java.lang.Class[_]*) = current.setProcedures(procedures)
+  def registerProcedures(procedures: java.lang.Class[_]*): Unit = current.setProcedures(procedures)
 
-  def p(text: String) = current.addContent(Paragraph(text.stripMargin))
+  def p(text: String): Unit = current.addContent(Paragraph(text.stripMargin))
 
   private def formattedSyntax(syntax: String) : String = {
     if (!syntax.isEmpty) "*Syntax:* `" + syntax + "`" else ""
   }
 
-  def function(syntax: String, arguments: (String, String)*) = {
+  def function(syntax: String, arguments: (String, String)*): Unit = {
     current.addContent(Function(formattedSyntax(syntax), "", arguments))
   }
 
-  def function(syntax: String, returns: String, arguments: (String, String)*) = {
+  def function(syntax: String, returns: String, arguments: (String, String)*): Unit = {
     current.addContent(Function(formattedSyntax(syntax), returns, arguments))
   }
 
-  def functionWithCypherStyleFormatting(syntax: String, arguments: (String, String)*) = {
+  def functionWithCypherStyleFormatting(syntax: String, arguments: (String, String)*): Unit = {
     val formattedSyntax = if (!syntax.isEmpty) Array("*Syntax:*", "[source, cypher]", syntax).mkString("\n", "\n", "") else ""
     current.addContent(Function(formattedSyntax, "", arguments))
   }
 
-  def considerations(lines: String*) = {
+  def considerations(lines: String*): Unit = {
     current.addContent(Consideration(lines))
   }
 
-  def resultTable() = {
+  def database(name: String): Unit = {
+    scope.collectFirst {
+      case section: SectionScope => section
+      case doc: DocScope => doc
+      case query: QueryScope => query
+    }.get.setDatabase(name)
+  }
+
+  def runtime(name: String): Unit = {
+    scope.collectFirst {
+      case section: SectionScope => section
+      case doc: DocScope => doc
+      case query: QueryScope => query
+    }.get.setRuntime(name)
+  }
+
+  def resultTable(): Unit = {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
     }.get
     queryScope.addContent(new TablePlaceHolder(queryScope.assertions, queryScope.params:_*))
   }
 
-  def executionPlan() = {
+  def executionPlan(): Unit = {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
     }.get
     queryScope.addContent(new ExecutionPlanPlaceHolder(queryScope.assertions))
   }
 
-  def profileExecutionPlan() = {
+  def profileExecutionPlan(): Unit = {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
     }.get
     queryScope.addContent(new ProfileExecutionPlanPlaceHolder(queryScope.assertions))
   }
 
-  def graphViz(options: String = "") = current.addContent(new GraphVizPlaceHolder(options))
+  def graphViz(options: String = ""): Unit = current.addContent(new GraphVizPlaceHolder(options))
 
-  def consoleData() = {
+  def consoleData(): Unit = {
     val docScope = scope.collectFirst {
       case d: DocScope => d
     }.get
@@ -113,14 +133,27 @@ trait DocBuilder {
     queryScope.addContent(ConsoleData(docScope.init.initQueries, queryScope.init.initQueries, queryScope.queryText))
   }
 
-  def synopsis(text: String) = current.addContent(Abstract(text))
+  def synopsis(text: String): Unit = current.addContent(Abstract(text))
 
   // Scopes
-  private def inScope(newScope: Scope, f: => Unit) = {
+  private def inScope(newScope: Scope, f: => Unit): Unit = {
     scope.push(newScope)
     f
-    val pop = scope.pop()
+    val pop = popAndPopupateAttributes()
     current.addContent(pop.toContent)
+  }
+
+  def popAndPopupateAttributes(): Scope = {
+    val mayBeDatabase: Option[Option[String]] = scope.collectFirst {
+      case s: Scope if (s._database.isDefined) => s._database
+    }
+    val mayBeRuntime: Option[Option[String]] = scope.collectFirst {
+      case s: Scope if (s._runtime.isDefined) => s._runtime
+    }
+    val pop = scope.pop()
+    if (mayBeDatabase.isDefined) pop.setDatabase(mayBeDatabase.get.get)
+    if (mayBeRuntime.isDefined) pop.setRuntime(mayBeRuntime.get.get)
+    pop
   }
 
   def section(title: String, id: String)(f: => Unit) = inScope(SectionScope(title, Some(id)), f)
@@ -131,9 +164,9 @@ trait DocBuilder {
   def caution(f: => Unit) = inScope(AdmonitionScope(Caution.apply), f)
   def important(f: => Unit) = inScope(AdmonitionScope(Important.apply), f)
 
-  def query(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(f: => Unit): Unit =
+  def query(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(innerBlockOfCode: => Unit): Unit =
     inScope(AutoformattedQueryScope(q.stripMargin, assertions, parameters), {
-      f
+      innerBlockOfCode
       consoleData() // Always append console data
     })
 
@@ -149,29 +182,31 @@ object DocBuilder {
   trait Scope {
     private var _initializations: RunnableInitialization = RunnableInitialization()
     private var _content: Content = NoContent
+    var _database: Option[String] = None
+    var _runtime: Option[String] = None
 
-    def init = _initializations
+    def init: RunnableInitialization = _initializations
 
-    def content = _content
+    def content: Content = _content
 
     def setInitCode(code: InitializationFunction) {
       _initializations = _initializations.copy(initCode = _initializations.initCode :+ code)
     }
 
-    def setInitQueries(queries: Seq[String]) {
+    def setInitQueries(queries: Seq[DatabaseQuery]) {
       _initializations = _initializations.copy(initQueries = _initializations.initQueries ++ queries)
     }
 
-    def setUserDefinedFunctions(udfs: Seq[Class[_]]) = {
+    def setUserDefinedFunctions(udfs: Seq[Class[_]]): Unit = {
       _initializations = _initializations.copy(userDefinedFunctions = _initializations.userDefinedFunctions ++ udfs)
     }
 
-    def setUserDefinedAggregationFunctions(udafs: Seq[Class[_]]) = {
+    def setUserDefinedAggregationFunctions(udafs: Seq[Class[_]]): Unit = {
       _initializations = _initializations.copy(
         userDefinedAggregationFunctions = _initializations.userDefinedAggregationFunctions ++ udafs)
     }
 
-    def setProcedures(procedures: Seq[Class[_]]) = {
+    def setProcedures(procedures: Seq[Class[_]]): Unit = {
       _initializations = _initializations.copy(
         procedures = _initializations.procedures ++ procedures)
     }
@@ -181,6 +216,14 @@ object DocBuilder {
         case NoContent => newContent
         case _ => ContentChain(content, newContent)
       }
+    }
+
+    def setDatabase(database: String): Unit = {
+      _database = Some(database)
+    }
+
+    def setRuntime(runtime: String): Unit = {
+      _runtime = Some(runtime)
     }
 
     def toContent: Content
@@ -207,11 +250,11 @@ object DocBuilder {
   }
 
   case class AutoformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
-    override def toContent = Query(queryText, assertions, init, content, params)
+    override def toContent = Query(queryText, assertions, init, content, params, keepMyNewlines = false, runtime = _runtime, database = _database)
   }
 
   case class PreformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
-    override def toContent = Query(queryText, assertions, init, content, params, keepMyNewlines = true)
+    override def toContent = Query(queryText, assertions, init, content, params, keepMyNewlines = true, runtime = _runtime, database = _database)
   }
 }
 

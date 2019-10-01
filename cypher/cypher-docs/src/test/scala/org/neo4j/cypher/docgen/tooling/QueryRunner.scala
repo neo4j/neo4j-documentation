@@ -42,59 +42,59 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
 
   def runQueries(contentsWithInit: Seq[ContentWithInit], title: String): TestRunResult = {
 
-    val groupedByInits: Map[RunnableInitialization, Seq[(String, QueryResultPlaceHolder)]] =
+    val groupedByInits: Map[RunnableInitialization, Seq[(DatabaseQuery, QueryResultPlaceHolder)]] =
       contentsWithInit.groupBy(_.initKey).mapValues(_.map(cwi => cwi.queryToPresent -> cwi.queryResultPlaceHolder))
     var graphVizCounter = 0
 
     val results: Iterable[RunResult] = groupedByInits.flatMap {
       case (init, placeHolders) =>
 
-        val db = new RestartableDatabase(init)
+        val dbms = new RestartableDatabase(init)
         try {
-          if (db.failures.nonEmpty) db.failures
+          if (dbms.failures.nonEmpty) dbms.failures
           else {
             val result = placeHolders.map { queryAndPlaceHolder =>
               try {
                 queryAndPlaceHolder match {
-                  case (queryText: String, tb: TablePlaceHolder) =>
-                    runSingleQuery(db, queryText, tb.assertions, tb)
+                  case (query: DatabaseQuery, tb: TablePlaceHolder) =>
+                    runSingleQuery(dbms, query, tb.assertions, tb)
 
-                  case (queryText: String, gv: GraphVizPlaceHolder) =>
+                  case (query: DatabaseQuery, gv: GraphVizPlaceHolder) =>
                     graphVizCounter = graphVizCounter + 1
-                    Try(db.executeWithParams(queryText)) match {
+                    Try(dbms.executeWithParams(query)) match {
                       case Success(inner) =>
-                        GraphVizRunResult(gv, captureStateAsGraphViz(db.getInnerDb, title, graphVizCounter, gv.options))
+                        GraphVizRunResult(gv, captureStateAsGraphViz(dbms.getInnerDb, title, graphVizCounter, gv.options))
                       case Failure(error) =>
-                        QueryRunResult(queryText, gv, Left(error))
+                        QueryRunResult(query.prettified, gv, Left(error))
                     }
 
-                  case (queryText: String, placeHolder: ExecutionPlanPlaceHolder) =>
-                    explainSingleQuery(db, queryText, placeHolder.assertions, placeHolder)
+                  case (query: DatabaseQuery, placeHolder: ExecutionPlanPlaceHolder) =>
+                    explainSingleQuery(dbms, query, placeHolder.assertions, placeHolder)
 
-                  case (queryText: String, placeHolder: ProfileExecutionPlanPlaceHolder) =>
-                    profileSingleQuery(db, queryText, placeHolder.assertions, placeHolder)
+                  case (query: DatabaseQuery, placeHolder: ProfileExecutionPlanPlaceHolder) =>
+                    profileSingleQuery(dbms, query, placeHolder.assertions, placeHolder)
 
                   case _ =>
                     ???
                 }
               } finally {
-                db.nowIsASafePointToRestartDatabase()
+                dbms.nowIsASafePointToRestartDatabase()
               }
             }
             result
           }
-        } finally db.shutdown()
+        } finally dbms.shutdown()
     }
 
     TestRunResult(results.toSeq)
   }
 
-  private def runSingleQuery(database: RestartableDatabase, queryText: String, assertions: QueryAssertions, content: TablePlaceHolder): QueryRunResult = {
-    val format: (InternalTransaction) => (DocsExecutionResult) => Content = (tx: InternalTransaction) => formatter(database.getInnerDb, tx)(_)
+  private def runSingleQuery(dbms: RestartableDatabase, query: DatabaseQuery, assertions: QueryAssertions, content: TablePlaceHolder): QueryRunResult = {
+    val format: (InternalTransaction) => (DocsExecutionResult) => Content = (tx: InternalTransaction) => formatter(dbms.getInnerDb, tx)(_)
 
     val result: Either[Throwable, InternalTransaction => Content] =
       try {
-        val resultTry = Try(database.executeWithParams(queryText, content.params:_*))
+        val resultTry = Try(dbms.executeWithParams(query, content.params:_*))
         (assertions, resultTry) match {
           // *** Success conditions
 
@@ -103,7 +103,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
             Right(format(_)(r))
 
           case (ResultAndDbAssertions(f), Success(r)) =>
-            f(r, database.getInnerDb)
+            f(r, dbms.getInnerDb)
             Right(format(_)(r))
 
           case (NoAssertions, Success(r)) =>
@@ -122,7 +122,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
       }
 
     val formattedResult: Either[Throwable, Content] = {
-      val tx = database.getInnerDb.beginTransaction(Type.`implicit`, AUTH_DISABLED)
+      val tx = dbms.getInnerDb.beginTransaction(Type.`implicit`, AUTH_DISABLED)
       try {
         val r = result.right.map(contentBuilder => contentBuilder(tx))
         tx.commit()
@@ -132,16 +132,16 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
       }
     }
 
-    QueryRunResult(queryText, content, formattedResult)
+    QueryRunResult(query.prettified, content, formattedResult)
   }
 
   private def explainSingleQuery(database: RestartableDatabase,
-                                 queryText: String,
+                                 query: DatabaseQuery,
                                  assertions: QueryAssertions,
                                  placeHolder: QueryResultPlaceHolder): RunResult = {
     val result: Either[Throwable, ExecutionPlan] =
       try {
-        (assertions, Try(database.executeWithParams(s"EXPLAIN $queryText"))) match {
+        (assertions, Try(database.executeWithParams(query.explain))) match {
           case (ResultAssertions(f), Success(inner)) =>
             f(inner)
             Right(ExecutionPlan(inner.executionPlanDescription().toString))
@@ -160,14 +160,14 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
         case e: Throwable =>
           Left(e)
       }
-    ExecutionPlanRunResult(queryText, placeHolder, result)
+    ExecutionPlanRunResult(query.prettified, placeHolder, result)
   }
 
   private def profileSingleQuery(database: RestartableDatabase,
-                                 queryText: String,
+                                 query: DatabaseQuery,
                                  assertions: QueryAssertions,
                                  placeHolder: QueryResultPlaceHolder) = {
-    val profilingAttempt = Try(database.executeWithParams(s"PROFILE $queryText"))
+    val profilingAttempt = Try(database.executeWithParams(query.profile))
     val planString = (assertions, profilingAttempt) match {
       case (ResultAssertions(f), Success(result)) =>
         f(result)
@@ -183,7 +183,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
       case x =>
         throw new InternalException(s"Did not see this one coming $x")
     }
-    ExecutionPlanRunResult(queryText, placeHolder, Right(ExecutionPlan(planString)))
+    ExecutionPlanRunResult(query.prettified, placeHolder, Right(ExecutionPlan(planString)))
   }
 }
 

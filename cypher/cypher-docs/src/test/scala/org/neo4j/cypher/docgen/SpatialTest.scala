@@ -51,7 +51,8 @@ class SpatialTest extends DocumentingTest {
           |* Each point can have either 2 or 3 dimensions. This means it contains either 2 or 3 64-bit floating point values, which together are called the _Coordinate_.
           |* Each point will also be associated with a specific <<cypher-spatial-crs,Coordinate Reference System>> (CRS) that determines the meaning of the values in the _Coordinate_.
           |* Instances of _Point_ and lists of _Point_ can be assigned to node and relationship properties.
-          |* Nodes with _Point_ or _List(Point)_ properties can be indexed using a spatial index. This is true for all CRS (and for both 2D and 3D). There is no special syntax for creating spatial indexes, as it is supported using the existing <<schema-index-create-a-single-property-index,schema indexes>>.
+          |* Nodes with _Point_ or _List(Point)_ properties can be indexed using a spatial index. This is true for all CRS (and for both 2D and 3D).
+          |  There is no special syntax for creating spatial indexes, as it is supported using the existing <<administration-indexes-create-a-single-property-index,schema indexes>>.
           |* The <<functions-distance,distance function>> will work on points in all CRS and in both 2D and 3D but only if the two points have the same CRS (and therefore also same dimension).
         """.stripMargin)
     }
@@ -250,16 +251,16 @@ class SpatialTest extends DocumentingTest {
     section("Spatial index", "cypher-spatial-index") {
       p(
         """
-          |If there is a <<schema-index-create-a-single-property-index,schema index>> on a particular `:Label(property)` combination, and a spatial point
+          |If there is a <<administration-indexes-create-a-single-property-index,schema index>> on a particular `:Label(property)` combination, and a spatial point
           |is assigned to that property on a node with that label, the node will be indexed in a spatial index. For spatial indexing, Neo4j uses
           |space filling curves in 2D or 3D over an underlying generalized B+Tree. Points will be stored in up to four different trees, one for each of the
           |<<cypher-spatial-crs, four coordinate reference systems>>.
-          |This allows for both <<schema-index-equality-check-using-where-single-property-index, equality>>
-          |and <<schema-index-range-comparisons-using-where-single-property-index, range>> queries using exactly the same syntax and behaviour as for other property types.
+          |This allows for both <<administration-indexes-equality-check-using-where-single-property-index, equality>>
+          |and <<administration-indexes-range-comparisons-using-where-single-property-index, range>> queries using exactly the same syntax and behaviour as for other property types.
           |If two range predicates are used, which define minimum and maximum points, this will effectively result in a
-          |<<schema-index-spatial-bounding-box-searches-single-property-index, bounding box query>>.
+          |<<administration-indexes-spatial-bounding-box-searches-single-property-index, bounding box query>>.
           |In addition, queries using the `distance` function can, under the right conditions, also use the index, as described in the section
-          |<<schema-index-spatial-distance-searches-single-property-index, 'Spatial distance searches'>>.
+          |<<administration-indexes-spatial-distance-searches-single-property-index, 'Spatial distance searches'>>.
         """.stripMargin)
     }
     section("Comparability and Orderability", "cypher-comparability-orderability") {

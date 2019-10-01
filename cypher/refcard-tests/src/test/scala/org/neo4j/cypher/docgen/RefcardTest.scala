@@ -277,7 +277,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       })
 
     } )
-    engine = ExecutionEngineFactory.createCommunityEngineFromDb(graph) // TODO: This should be using the EnterpriseEngine
+    engine = ExecutionEngineFactory.createExecutionEngineFromDb(graph)
   }
 
   protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()

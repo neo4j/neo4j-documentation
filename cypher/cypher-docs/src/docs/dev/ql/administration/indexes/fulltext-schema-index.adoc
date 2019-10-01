@@ -1,4 +1,4 @@
-[[schema-index-fulltext-search]]
+[[administration-indexes-fulltext-search]]
 = Indexes to support full-text search
 
 [abstract]
@@ -7,7 +7,7 @@ This section describes how to use full-text schema indexes, to enable full-text 
 --
 
 
-[[schema-index-fulltext-search-introduction]]
+[[administration-indexes-fulltext-search-introduction]]
 == Introduction
 
 Full-text schema indexes are powered by the http://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
@@ -35,16 +35,16 @@ Using this feature, it is possible to work around the slow Lucene writes from th
 
 At first sight, the construction of full-text indexes can seem similar to regular indexes.
 However there are some things that are interesting to note:
-In contrast to <<query-schema-index-introduction, regular indexes>>, a full-text index 
+In contrast to <<administration-indexes-introduction, regular indexes>>, a full-text index
 * can be applied to more than one label.
 * can be applied to relationship types (one or more).
-* can be applied to more than one property at a time (similar to a <<schema-index-create-a-composite-index, _composite index_>>) but with an important difference:
+* can be applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-index, _composite index_>>) but with an important difference:
 While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.
 
 For information on how to configure full-text schema indexes, refer to <<operations-manual#index-configuration-fulltext-search,  Operations Manual -> Indexes to support full-text search>>.
 
 
-[[schema-index-fulltext-search-manage]]
+[[administration-indexes-fulltext-search-manage]]
 == Procedures to manage full-text schema indexes
 
 Full-text scema indexes are managed through built-in procedures.
@@ -62,7 +62,7 @@ The most common procedures are listed in the table below:
 |===
 
 
-[[schema-index-fulltext-search-create-and-configure]]
+[[administration-indexes-fulltext-search-create-and-configure]]
 == Create and configure full-text schema indexes
 
 Full-text schema indexes are created with the `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex`.
@@ -141,7 +141,7 @@ This could, for instance, be a system where people are assigning tags to documen
 Had it not been for the relationship index, one would have had to add artificial connective nodes between the tags and the documents in the data model, just so these nodes could be indexed.
 
 
-[[schema-index-fulltext-search-query]]
+[[administration-indexes-fulltext-search-query]]
 == Query full-text schema indexes
 
 Full-text indexes will, in addition to any exact matches, also return _approximate_ matches to a given query.
@@ -228,7 +228,7 @@ RETURN node.title, node.description, score
 A complete description of the Lucene query syntax can be found in the http://lucene.apache.org/core/5_5_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description[Lucene documentation].
 
 
-[[schema-index-fulltext-search-drop]]
+[[administration-indexes-fulltext-search-drop]]
 == Drop full-text indexes
 
 A full-text node index is dropped by using the procedure  `db.index.fulltext.drop`.

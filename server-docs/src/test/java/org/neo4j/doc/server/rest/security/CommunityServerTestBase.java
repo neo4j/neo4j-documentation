@@ -106,6 +106,33 @@ public class CommunityServerTestBase extends ExclusiveServerTestBase
         return rawPayload( "{\"statements\":[{\"statement\":\"" + statement + "\"}]}" );
     }
 
+    protected String txCommitURL( String database )
+    {
+        return server.baseUri().resolve( txCommitEndpoint( database ) ).toString();
+    }
+
+    void assertPermissionErrorAtSystemAccess( HTTP.Response response ) throws JsonParseException
+    {
+        List<String> possibleErrors = Arrays.asList( "Neo.ClientError.Security.CredentialsExpired", "Neo.ClientError.Security.Forbidden" );
+        assertPermissionError( response, possibleErrors );
+    }
+
+    private void assertPermissionError( HTTP.Response response, List<String> errors ) throws JsonParseException
+    {
+        assertThat( response.status(), equalTo( 200 ) );
+        assertThat( response.get( "errors" ).size(), equalTo( 1 ) );
+
+        JsonNode firstError = response.get( "errors" ).get( 0 );
+        assertThat( firstError.get( "code" ).asText(), isIn( errors ) );
+
+        assertThat( firstError.get( "message" ).asText(), startsWith( "Permission denied." ) );
+    }
+
+    protected static HTTP.RawPayload query( String statement )
+    {
+        return rawPayload( "{\"statements\":[{\"statement\":\"" + statement + "\"}]}" );
+    }
+
     protected String simpleCypherRequestBody()
     {
         return "{\"statements\": [{\"statement\": \"CREATE (n:MyLabel) RETURN n\"}]}";

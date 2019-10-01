@@ -1,0 +1,38 @@
+[[administration]]
+= Administration
+
+[abstract]
+--
+This section explains how to use Cypher to administer Neo4j databases, such as creating multiple databases, indexes, constraints and security.
+--
+
+
+
+Labels are used in the specification of indexes, and for defining constraints on the graph.
+Together, indexes and constraints are the schema of the graph.
+Cypher includes data definition language (DDL) statements for manipulating the schema.
+
+* <<administration-databases,Database Management>>
+* <<administration-indexes,Indexes>>
+** <<administration-indexes-introduction, Managing Indexes>>
+** <<administration-indexes-using-indexes, Using indexes>>
+** <<administration-indexes-fulltext-search, Indexes to support full-text search>>
+* <<administration-constraints, Constraints>>
+** <<administration-constraints-unique-nodes, Unique node property constraints>>
+** <<administration-constraints-get-a-list-of-all-constraints-in-the-database, Get a list of all constraints in the database>>
+** <<administration-constraints-prop-exist-nodes, Node property existence constraints>>
+** <<administration-constraints-prop-exist-rels, Relationship property existence constraints>>
+** <<administration-constraints-node-key, Node Keys>>
+* <<administration-security,Security>>
+** <<administration-security-users-and-roles,User and Role Management>>
+** <<administration-security-subgraph,Database, Graph and Subgraph Access Control>>
+** <<administration-security-administration,Security of Administration>>
+
+
+include::ql/administration/administration-databases.adoc[leveloffset=+1]
+
+include::ql/administration/indexes/index.asciidoc[leveloffset=+1]
+
+include::ql/administration/constraints/index.asciidoc[leveloffset=+1]
+
+include::ql/administration/administration-security.adoc[leveloffset=+1]

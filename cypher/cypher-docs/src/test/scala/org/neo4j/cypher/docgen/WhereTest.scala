@@ -82,7 +82,7 @@ class WhereTest extends DocumentingTest {
       }
       note {
         p(
-          """<<query-schema-index, Indexes>>` may be used to optimize queries using `WHERE` in a variety of cases.""".stripMargin)
+          """<<administration-indexes, Indexes>>` may be used to optimize queries using `WHERE` in a variety of cases.""".stripMargin)
       }
       p("The following graph is used for the examples below:")
       graphViz()

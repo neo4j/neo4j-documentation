@@ -1,4 +1,4 @@
-[[query-constraints]]
+[[administration-constraints]]
 = Constraints
 
 [abstract]
@@ -6,38 +6,38 @@ Neo4j helps enforce data integrity with the use of constraints.
 Constraints can be applied to either nodes or relationships.
 Unique node property constraints can be created, along with node and relationship property existence constraints, and Node Keys, which guarantee both existence and uniqueness.
 
-* <<query-constraint-introduction, Introduction>>
-* <<query-constraint-unique-nodes, Unique node property constraints>>
- ** <<constraints-create-unique-constraint, Create unique constraint>>
- ** <<constraints-drop-unique-constraint, Drop unique constraint>>
- ** <<constraints-create-a-node-that-complies-with-unique-property-constraints, Create a node that complies with unique property constraints>>
- ** <<constraints-create-a-node-that-violates-a-unique-property-constraint, Create a node that violates a unique property constraint>>
- ** <<constraints-failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes, Failure to create a unique property constraint due to conflicting nodes>>
-* <<constraints-get-a-list-of-all-constraints-in-the-database, Get a list of all constraints in the database>>
-* <<query-constraint-prop-exist-nodes, Node property existence constraints>>
- ** <<constraints-create-node-property-existence-constraint, Create node property existence constraint>>
- ** <<constraints-drop-node-property-existence-constraint, Drop node property existence constraint>>
- ** <<constraints-create-a-node-that-complies-with-property-existence-constraints, Create a node that complies with property existence constraints>>
- ** <<constraints-create-a-node-that-violates-a-property-existence-constraint, Create a node that violates a property existence constraint>>
- ** <<constraints-removing-an-existence-constrained-node-property, Removing an existence constrained node property>>
- ** <<constraints-failure-to-create-a-node-property-existence-constraint-due-to-existing-node, Failure to create a node property existence constraint due to existing node>>
-* <<query-constraint-prop-exist-rels, Relationship property existence constraints>>
- ** <<constraints-create-relationship-property-existence-constraint, Create relationship property existence constraint>>
- ** <<constraints-drop-relationship-property-existence-constraint, Drop relationship property existence constraint>>
- ** <<constraints-create-a-relationship-that-complies-with-property-existence-constraints, Create a relationship that complies with property existence constraints>>
- ** <<constraints-create-a-relationship-that-violates-a-property-existence-constraint, Create a relationship that violates a property existence constraint>>
- ** <<constraints-removing-an-existence-constrained-relationship-property, Removing an existence constrained relationship property>>
- ** <<constraints-failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship, Failure to create a relationship property existence constraint due to existing relationship>>
-* <<query-constraint-node-key, Node Keys>>
- ** <<constraints-create-a-node-key, Create a Node Key>>
- ** <<constraints-drop-a-node-key, Drop a Node Key>>
- ** <<constraints-create-a-node-that-complies-with-a-node-key, Create a node that complies with a Node Key>>
- ** <<constraints-create-a-node-that-violates-a-node-key, Create a node that violates a Node Key>>
- ** <<constraints-removing-a-node-key-constrained-property, Removing a `NODE KEY`-constrained property>>
- ** <<constraints-failure-to-create-a-node-key-due-to-existing-node, Failure to create a Node Key due to existing node>>
+* <<administration-constraints-introduction, Introduction>>
+* <<administration-constraints-unique-nodes, Unique node property constraints>>
+ ** <<administration-constraints-create-unique-constraint, Create unique constraint>>
+ ** <<administration-constraints-drop-unique-constraint, Drop unique constraint>>
+ ** <<administration-constraints-create-a-node-that-complies-with-unique-property-constraints, Create a node that complies with unique property constraints>>
+ ** <<administration-constraints-create-a-node-that-violates-a-unique-property-constraint, Create a node that violates a unique property constraint>>
+ ** <<administration-constraints-failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes, Failure to create a unique property constraint due to conflicting nodes>>
+* <<administration-constraints-get-a-list-of-all-constraints-in-the-database, Get a list of all constraints in the database>>
+* <<administration-constraints-prop-exist-nodes, Node property existence constraints>>
+ ** <<administration-constraints-create-node-property-existence-constraint, Create node property existence constraint>>
+ ** <<administration-constraints-drop-node-property-existence-constraint, Drop node property existence constraint>>
+ ** <<administration-constraints-create-a-node-that-complies-with-property-existence-constraints, Create a node that complies with property existence constraints>>
+ ** <<administration-constraints-create-a-node-that-violates-a-property-existence-constraint, Create a node that violates a property existence constraint>>
+ ** <<administration-constraints-removing-an-existence-constrained-node-property, Removing an existence constrained node property>>
+ ** <<administration-constraints-failure-to-create-a-node-property-existence-constraint-due-to-existing-node, Failure to create a node property existence constraint due to existing node>>
+* <<administration-constraints-prop-exist-rels, Relationship property existence constraints>>
+ ** <<administration-constraints-create-relationship-property-existence-constraint, Create relationship property existence constraint>>
+ ** <<administration-constraints-drop-relationship-property-existence-constraint, Drop relationship property existence constraint>>
+ ** <<administration-constraints-create-a-relationship-that-complies-with-property-existence-constraints, Create a relationship that complies with property existence constraints>>
+ ** <<administration-constraints-create-a-relationship-that-violates-a-property-existence-constraint, Create a relationship that violates a property existence constraint>>
+ ** <<administration-constraints-removing-an-existence-constrained-relationship-property, Removing an existence constrained relationship property>>
+ ** <<administration-constraints-failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship, Failure to create a relationship property existence constraint due to existing relationship>>
+* <<administration-constraints-node-key, Node Keys>>
+ ** <<administration-constraints-create-a-node-key, Create a Node Key>>
+ ** <<administration-constraints-drop-a-node-key, Drop a Node Key>>
+ ** <<administration-constraints-create-a-node-that-complies-with-a-node-key, Create a node that complies with a Node Key>>
+ ** <<administration-constraints-create-a-node-that-violates-a-node-key, Create a node that violates a Node Key>>
+ ** <<administration-constraints-removing-a-node-key-constrained-property, Removing a `NODE KEY`-constrained property>>
+ ** <<administration-constraints-failure-to-create-a-node-key-due-to-existing-node, Failure to create a Node Key due to existing node>>
 
 
-[[query-constraint-introduction]]
+[[administration-constraints-introduction]]
 == Introduction
 
 The following constraint types are available:
@@ -75,14 +75,14 @@ Adding constraints is an atomic operation that can take a while -- all existing 
 
 Creating a constraint has the following implications on indexes:
 
-* Adding a unique property constraint on a property will also add a <<schema-index-create-a-single-property-index, single-property index>> on that property, so such an index cannot be added separately.
-* Adding a Node Key for a set of properties will also add a <<schema-index-create-a-composite-index, composite index>> on those properties, so such an index cannot be added separately.
-* Cypher will use these indexes for lookups just like other indexes; see the <<query-schema-index,Indexes>> section for more details on the rules governing their behavior.
+* Adding a unique property constraint on a property will also add a <<administration-indexes-create-a-single-property-index, single-property index>> on that property, so such an index cannot be added separately.
+* Adding a Node Key for a set of properties will also add a <<administration-indexes-create-a-composite-index, composite index>> on those properties, so such an index cannot be added separately.
+* Cypher will use these indexes for lookups just like other indexes; see the <<administration-indexes,Indexes>> section for more details on the rules governing their behavior.
 * If a unique property constraint is dropped and the single-property index on the property is still required, the index will need to be created explicitly.
 * If a Node Key is dropped and the composite-property index on the properties is still required, the index will need to be created explicitly.
 
 
-[[query-constraint-unique-nodes]]
+[[administration-constraints-unique-nodes]]
 == Unique node property constraints
 
 include::create-unique-constraint.asciidoc[leveloffset=+1]
@@ -99,7 +99,7 @@ include::get-a-list-of-all-constraints-in-the-database.asciidoc[]
 
 
 [role=enterprise-edition]
-[[query-constraint-prop-exist-nodes]]
+[[administration-constraints-prop-exist-nodes]]
 == Node property existence constraints
 
 include::create-node-property-existence-constraint.asciidoc[leveloffset=+1]
@@ -116,7 +116,7 @@ include::failure-to-create-a-node-property-existence-constraint-due-to-existing-
 
 
 [role=enterprise-edition]
-[[query-constraint-prop-exist-rels]]
+[[administration-constraints-prop-exist-rels]]
 == Relationship property existence constraints
 
 include::create-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
@@ -133,7 +133,7 @@ include::failure-to-create-a-relationship-property-existence-constraint-due-to-e
 
 
 [role=enterprise-edition]
-[[query-constraint-node-key]]
+[[administration-constraints-node-key]]
 == Node Keys
 
 include::create-a-node-key.asciidoc[leveloffset=+1]

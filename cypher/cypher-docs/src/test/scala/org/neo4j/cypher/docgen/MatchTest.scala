@@ -99,7 +99,7 @@ class MatchTest extends DocumentingTest {
            |Neo4j will automatically work out the best approach to finding start nodes and matching patterns.
            |Predicates in `WHERE` parts can be evaluated before pattern matching, during pattern matching, or after finding matches.
            |However, there are cases where you can influence the decisions taken by the query compiler.
-           |Read more about indexes in <<query-schema-index>>, and more about specifying hints to force Neo4j to solve a query in a specific way in <<query-using>>.""")
+           |Read more about indexes in <<administration-indexes>>, and more about specifying hints to force Neo4j to solve a query in a specific way in <<query-using>>.""")
       tip {
         p("To understand more about the patterns used in the `MATCH` clause, read <<cypher-patterns>>")
       }

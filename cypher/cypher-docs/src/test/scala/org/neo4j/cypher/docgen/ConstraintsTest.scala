@@ -31,7 +31,8 @@ import scala.collection.JavaConverters._
 
 class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
-  def section: String = "Constraints"
+  override def parent = Some("Administration")
+  override def section: String = "Constraints"
 
   override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
 
@@ -109,7 +110,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
         " the same `isbn`.",
       queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
       optionalResultExplanation = "In this case the constraint can't be created because it is violated by existing " +
-        "data. We may choose to use <<query-schema-index>> instead or remove the offending nodes and then re-apply the " +
+        "data. We may choose to use <<administration-indexes>> instead or remove the offending nodes and then re-apply the " +
         "constraint."
     )
   }

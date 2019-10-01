@@ -50,28 +50,30 @@ public class Main
      */
     public static void main( String[] args ) throws Exception
     {
-        if ( args.length < 3 )
+        if ( args.length >= 3 )
         {
-            throw new IllegalArgumentException(
-                    "Destination directory, public URL and at least one source must be specified." );
+
+            Path destinationDir = getDestinationDir( args[0] );
+            String destinationUrl = args[1];
+
+            for ( int i = 2; i < args.length; i++ )
+            {
+                String name = args[i];
+                Path source = Paths.get( name );
+
+                if ( Files.isDirectory( source ) )
+                {
+                    executeDirectory( source, destinationDir, destinationUrl, true );
+                }
+                else
+                {
+                    executeFile( source, destinationDir, destinationUrl );
+                }
+            }
         }
-
-        Path destinationDir = getDestinationDir( args[0] );
-        String destinationUrl = args[1];
-
-        for ( int i = 2; i < args.length; i++ )
+        else
         {
-            String name = args[i];
-            Path source = Paths.get(name);
-
-            if ( Files.isDirectory( source ) )
-            {
-                executeDirectory( source, destinationDir, destinationUrl, true );
-            }
-            else
-            {
-                executeFile( source, destinationDir, destinationUrl );
-            }
+            //throw new IllegalArgumentException( "Destination directory, public URL and at least one source must be specified." );
         }
     }
 

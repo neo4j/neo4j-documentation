@@ -331,7 +331,7 @@ class DocumentAsciiDocTest extends Suite
   }
 
   test("Simple console data") {
-    val consoleData = ConsoleData(Seq("global1", "global2"), Seq("local1", "local2"), "myquery")
+    val consoleData = ConsoleData.of(Seq("global1", "global2"), Seq("local1", "local2"), "myquery")
 
     consoleData.asciiDoc(0) should equal(
       """ifndef::nonhtmloutput[]
@@ -374,8 +374,8 @@ class DocumentQueryTest extends Suite
     ))
 
     doc.contentWithQueries should equal(Seq(
-      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3")), Some("q"), tableV),
-      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2")), Some("q2"), graphV))
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3")), Some(InitializationQuery("q")), tableV),
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2")), Some(InitializationQuery("q2")), graphV))
     )
   }
 
@@ -390,8 +390,8 @@ class DocumentQueryTest extends Suite
     ))
 
     doc.contentWithQueries should equal(Seq(
-      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3"), userDefinedFunctions = Seq(classOf[Udf1], classOf[Udf2])), Some("q"), tableV),
-      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2"), userDefinedFunctions = Seq(classOf[Udf1])), Some("q2"), graphV))
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2", "3"), userDefinedFunctions = Seq(classOf[Udf1], classOf[Udf2])), Some(InitializationQuery("q")), tableV),
+      ContentWithInit(RunnableInitialization(initQueries = Seq("1", "2"), userDefinedFunctions = Seq(classOf[Udf1])), Some(InitializationQuery("q2")), graphV))
     )
   }
 
