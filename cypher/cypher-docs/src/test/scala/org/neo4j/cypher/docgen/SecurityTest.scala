@@ -28,7 +28,7 @@ class SecurityTest extends DocumentingTest with QueryStatisticsTestSupport {
           |For more information on how to manage multiple databases, refer to the section on <<administration-databases, administering databases>>.
           |Neo4j 3.1 introduced the concept of _role-based access control_.
           |It was possible to create users and assign them to roles to control whether the users could read, write and administer the database.
-          |In Neo4j 4.0 this model has been enhanced significantly with the addition of _privileges_ which are the underlying access-control rules by which the users rights are defined.
+          |In Neo4j 4.0 this model was enhanced significantly with the addition of _privileges_ which are the underlying access-control rules by which the users rights are defined.
           |The original built-in roles still exist with almost the exact same access rights, but they are no-longer statically defined.
           |Instead they are defined in terms of their underlying _privileges_ and they can be modified by adding an removing these access rights.
           |In addition any new roles created can by assigned any combination of _privileges_ to create the specific access control desired.

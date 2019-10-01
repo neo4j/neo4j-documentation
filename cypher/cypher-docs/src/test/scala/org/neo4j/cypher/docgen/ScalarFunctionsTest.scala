@@ -46,15 +46,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     important {
       p(
         """The `length()` and `size()` functions are quite similar, and so it is important to take note of the difference.
-     Owing to backwards compatibility, `length()` currently works on four types: strings, paths, lists and pattern expressions.
-     However, it is recommended to use `length()` only for paths, and the `size()` function for strings, lists and pattern expressions.
-     `length()` on those types may be deprecated in future.""")
-    }
-    note{
-      p("""The `timestamp()` function returns the equivalent value of `datetime().epochMillis`.""")
-    }
-    note {
-      p("The function `toInt()` has been superseded by `toInteger()`, and will be removed in a future release.")
+     `length()` only works for <<functions-length, paths>>, while `size()` only works for the three types:
+     <<functions-size-of-string, strings>>, <<functions-size, lists>> and <<functions-size-of-pattern-expression, pattern expressions>>.""")
     }
     p(
       """Functions:
@@ -251,7 +244,9 @@ class ScalarFunctionsTest extends DocumentingTest {
     }
     section("timestamp()", "functions-timestamp") {
       p(
-        """`timestamp()` returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.""".stripMargin)
+        """`timestamp()` returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
+          |It is the equivalent of `datetime().epochMillis`.
+          |""".stripMargin)
       function("timestamp()", "An Integer.")
       considerations("`timestamp()` will return the same value during one entire query, even for long-running queries.")
       query(

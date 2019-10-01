@@ -6,27 +6,38 @@
 This section explains how to use Cypher to administer Neo4j databases, such as creating multiple databases, indexes, constraints and security.
 --
 
+Neo4j allows the same server to manage multiple databases. The metadata for these databases,
+including the associated security model, is maintained in a special database called the `system` database.
+Most administrative commands need to be executing against the `system` database because they involve
+editing the metadata for the entire system. This includes all commands related to managing multiple databases
+as well as all commands for defining the security model: users, roles and privileges. The administrative commands
+that as specific to the schema of an individual database are still executed against that specific database.
+This includes index and constraint management commands.
 
+* <<administration-databases, Database Management>>
+** <<administration-databases-introduction, Introduction>>
+** <<administration-databases-show-databases, Listing databases>>
+** <<administration-databases-create-database, Creating databases>>
+** <<administration-databases-stop-database, Stopping databases>>
+** <<administration-databases-start-database, Starting databases>>
+** <<administration-databases-drop-database, Deleting databases>>
 
-Labels are used in the specification of indexes, and for defining constraints on the graph.
-Together, indexes and constraints are the schema of the graph.
-Cypher includes data definition language (DDL) statements for manipulating the schema.
-
-* <<administration-databases,Database Management>>
-* <<administration-indexes,Indexes>>
+* <<administration-indexes, Indexes>>
 ** <<administration-indexes-introduction, Managing Indexes>>
 ** <<administration-indexes-using-indexes, Using indexes>>
 ** <<administration-indexes-fulltext-search, Indexes to support full-text search>>
+
 * <<administration-constraints, Constraints>>
 ** <<administration-constraints-unique-nodes, Unique node property constraints>>
 ** <<administration-constraints-get-a-list-of-all-constraints-in-the-database, Get a list of all constraints in the database>>
 ** <<administration-constraints-prop-exist-nodes, Node property existence constraints>>
 ** <<administration-constraints-prop-exist-rels, Relationship property existence constraints>>
 ** <<administration-constraints-node-key, Node Keys>>
-* <<administration-security,Security>>
-** <<administration-security-users-and-roles,User and Role Management>>
-** <<administration-security-subgraph,Database, Graph and Subgraph Access Control>>
-** <<administration-security-administration,Security of Administration>>
+
+* <<administration-security, Security>>
+** <<administration-security-users-and-roles, User and Role Management>>
+** <<administration-security-subgraph, Database, Graph and Subgraph Access Control>>
+** <<administration-security-administration, Security of Administration>>
 
 
 include::ql/administration/administration-databases.adoc[leveloffset=+1]

@@ -42,7 +42,10 @@ In these examples, parameters are given in JSON; the exact manner in which they 
 
 [NOTE]
 ====
-It is recommended that the new parameter syntax `$param` is used, as the old syntax `+{param}+` is deprecated and will be removed altogether in a later release.
+The old parameter syntax `+{param}+` was deprecated in Neo4j 3.0 and removed entirely in Neo4j 4.0.
+Using it will result in a syntax error.
+However, it is still possible to use it, with warnings, if you prefix the query with `CYPHER 3.5`.
+See <<cypher-compatibility, Cypher Compatibility>> for further information.
 ====
 
 

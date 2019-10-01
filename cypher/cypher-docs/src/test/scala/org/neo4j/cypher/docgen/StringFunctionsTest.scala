@@ -32,9 +32,6 @@ class StringFunctionsTest extends DocumentingTest {
         |The exception to this rule is `toString()`, which also accepts numbers, booleans and temporal values (i.e. _Date_, _Time_. _LocalTime_, _DateTime_, _LocalDateTime_  or _Duration_ values). """.stripMargin)
     p("Functions taking a string as input all operate on _Unicode characters_ rather than on a standard `char[]`. For example, `size(s)`, where `s` is a character in the Chinese alphabet, will return *1*.")
     note {
-      p("""The functions `lower()` and `upper()` have been superseded by `toLower()` and `toUpper()`, respectively, and will be removed in a future release.""")
-    }
-    note {
       p(
         """When `toString()` is applied to a temporal value, it returns a string representation suitable for parsing by the corresponding <<query-functions-temporal, temporal functions>>.
           |This string will therefore be formatted according to the https://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format.""".stripMargin)
