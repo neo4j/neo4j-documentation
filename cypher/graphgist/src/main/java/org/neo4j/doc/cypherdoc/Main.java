@@ -132,7 +132,8 @@ public class Main
         try
         {
             String name = sourceFile.getFileName().toString();
-            String input = String.join( "\n", Files.readAllLines( sourceFile, StandardCharsets.UTF_8 ) );
+            String delimiter = System.getProperty("os.name").toLowerCase().startsWith( "windows" ) ? "\r\n" : "\n";
+            String input = String.join( delimiter, Files.readAllLines( sourceFile, StandardCharsets.UTF_8 ) );
             String output = CypherDoc.parse( input, sourceFile.toFile().getParentFile(), url );
 
             Files.createDirectories( destinationDir );

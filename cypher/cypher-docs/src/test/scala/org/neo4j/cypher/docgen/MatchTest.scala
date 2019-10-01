@@ -178,10 +178,12 @@ class MatchTest extends DocumentingTest {
         p("Inside a single pattern, relationships will only be matched once. You can read more about this in <<cypherdoc-uniqueness>>.")
       }
       section("Relationship types with uncommon characters", "rel-types-with-uncommon-chars") {
-        val initQuery =
-          """MATCH (charlie:Person {name: 'Charlie Sheen'}), (rob:Person {name: 'Rob Reiner'})
-            |CREATE (rob)-[:`TYPE
-            |WITH SPACE`]->(charlie)"""
+
+        val isWindows = if (System.getProperty("os.name").toLowerCase.startsWith("windows")) true else false
+        val initQuery = if (isWindows)
+          "MATCH (charlie:Person {name: 'Charlie Sheen'}), (rob:Person {name: 'Rob Reiner'}) CREATE (rob)-[:`TYPE\r\nWITH SPACE`]->(charlie)"
+        else
+          "MATCH (charlie:Person {name: 'Charlie Sheen'}), (rob:Person {name: 'Rob Reiner'}) CREATE (rob)-[:`TYPE\nWITH SPACE`]->(charlie)"
         p("""Sometimes your database will have types with non-letter characters, or with spaces in them.
             | Use ``` (backtick) to quote these.
             | To demonstrate this we can add an additional relationship between *'Charlie Sheen'* and *'Rob Reiner'*:""")
@@ -189,10 +191,21 @@ class MatchTest extends DocumentingTest {
           p("Which leads to the following graph: ")
           graphViz()
         }
-        query("MATCH (n {name: 'Rob Reiner'})-[r:`TYPE\nWITH SPACE`]->() RETURN type(r)", assertRelType("TYPE\nWITH SPACE")) {
-          initQueries(initQuery)
-          p("Returns a relationship type with a space in it")
-          resultTable()
+
+        if (isWindows) {
+          query("MATCH (n {name: 'Rob Reiner'})-[r:`TYPE\r\nWITH SPACE`]->() RETURN type(r)",
+            assertRelType("TYPE\r\nWITH SPACE")) {
+            initQueries(initQuery)
+            p("Returns a relationship type with a space in it")
+            resultTable()
+          }
+        } else {
+          query("MATCH (n {name: 'Rob Reiner'})-[r:`TYPE\nWITH SPACE`]->() RETURN type(r)",
+            assertRelType("TYPE\nWITH SPACE")) {
+            initQueries(initQuery)
+            p("Returns a relationship type with a space in it")
+            resultTable()
+          }
         }
       }
       section("Multiple relationships", "multiple-rels") {

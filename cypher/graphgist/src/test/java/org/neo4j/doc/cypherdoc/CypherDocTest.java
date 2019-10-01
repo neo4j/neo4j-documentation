@@ -133,7 +133,8 @@ public class CypherDocTest
 
     private String readFileToString( Path file ) throws IOException
     {
-        return String.join( "\n", Files.readAllLines( file ) );
+        String delimiter = System.getProperty( "os.name" ).toLowerCase().startsWith( "windows" ) ? "\r\n" : "\n";
+        return String.join( delimiter, Files.readAllLines( file ) );
     }
 
     private Path resourceFile(String resource ) throws IOException
