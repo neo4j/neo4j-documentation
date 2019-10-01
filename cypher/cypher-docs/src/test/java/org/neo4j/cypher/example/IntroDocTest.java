@@ -60,14 +60,25 @@ public class IntroDocTest implements GraphHolder
     private static DatabaseManagementService managementService;
 
     @Test
-    @Graph( value = { "John friend Sara", "John friend Joe",
-            "Sara friend Maria", "Joe friend Steve" } )
     public void intro_examples() throws Exception
     {
 
         Writer fw = AsciiDocGenerator.getFW( DOCS_TARGET, gen.get().getTitle() );
         data.get();
-        fw.append( "\nImagine an example graph like the following one:\n\n" );
+        fw.append( "\nLet's create a simple example graph with the following query:\n\n" );
+        String setupQuery = "CREATE (john:Person {name: 'John'}) " +
+                            "CREATE (joe:Person {name: 'Joe'}) " +
+                            "CREATE (steve:Person {name: 'Steve'}) " +
+                            "CREATE (sara:Person {name: 'Sara'}) " +
+                            "CREATE (maria:Person {name: 'Maria'}) " +
+                            "CREATE (john)-[:FRIEND]->(joe)-[:FRIEND]->(steve) " +
+                            "CREATE (john)-[:FRIEND]->(sara)-[:FRIEND]->(maria)";
+        fw.append( AsciiDocGenerator.dumpToSeparateFileWithType( new File( DOCS_TARGET ), "intro.query",
+                 createCypherSnippet( setupQuery ) ) );
+        try ( Transaction transaction = graphdb.beginTx() )
+        {
+            transaction.execute( setupQuery ).close();
+        }
         fw.append( AsciiDocGenerator.dumpToSeparateFileWithType( new File( DOCS_TARGET ), "intro.graph",
                 AsciidocHelper.createGraphViz( "Example Graph",
                         graphdb(), "cypher-intro" ) ) );
