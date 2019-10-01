@@ -137,7 +137,7 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
           p("""Three nodes labeled `City` are created, each of which contains a `name` property with the value of *'New York'*, *'Ohio'*, and *'New Jersey'*, respectively.
               |Note that even though the `MATCH` clause results in three bound nodes having the value *'New York'* for the `bornIn` property, only a single *'New York'* node (i.e. a `City` node with a name of *'New York'*) is created.
               |As the *'New York'* node is not matched for the first bound node, it is created.
-              |However, the newly-created *'New York'* node is matched and bound for the second and third bound nodes."""")
+              |However, the newly-created *'New York'* node is matched and bound for the second and third bound nodes.""")
           resultTable()
         }
       }
