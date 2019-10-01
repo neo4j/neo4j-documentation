@@ -35,7 +35,15 @@ Parameters cannot be used for the following constructs, as these form part of th
 
 Parameters may consist of letters and numbers, and any combination of these, but cannot start with a number or a currency symbol.
 
-For details on using parameters via the Neo4j HTTP API, see the <<http-api#http-api, HTTP API documentation>>.
+Setting parameters when running a query is dependent on the client environment.
+For example:
+
+* To set a parameter in Cypher Shell use `:param name => 'Joe'`.
+  For more information refer to <<operations-manual#cypher-shell-parameters, Operations Manual -> Cypher Shell - Query Parameters>>.
+* For Neo4j Browser use the same syntax as Cypher Shell, `:param name => 'Joe'`.
+* When using drivers, the syntax is dependent on the language choice.
+  See the examples in <<driver-manual#driver-transactions, Driver Manual -> Transactions>>.
+* For usage via the Neo4j HTTP API, see the <<http-api#http-api, HTTP API documentation>>.
 
 We provide below a comprehensive list of examples of parameter usage.
 In these examples, parameters are given in JSON; the exact manner in which they are to be submitted depends upon the driver being used.
