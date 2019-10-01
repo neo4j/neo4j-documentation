@@ -272,7 +272,7 @@ case class Query(queryText: String, assertions: QueryAssertions, myInit: Runnabl
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
   override def asciiDoc(level: Int) = {
-    s"""$parameterText>
+    s"""$parameterText
        |.Query
        |[source, cypher]
        |----
