@@ -21,13 +21,14 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.graphdb.Transaction
 
 class SetTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A")
   val title = "SET"
   override val linkId = "clauses/set"
 
-  override def assert(name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "set" =>
         assertStats(result, propertiesWritten = 2)

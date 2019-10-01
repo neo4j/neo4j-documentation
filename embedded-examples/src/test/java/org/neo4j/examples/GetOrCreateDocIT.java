@@ -231,7 +231,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
         // tag::prepareConstraint[]
         try ( Transaction tx = graphdb.beginTx() )
         {
-            graphdb.schema()
+            tx.schema()
                     .constraintFor( Label.label( "User" ) )
                     .assertPropertyIsUnique( "name" )
                     .create();

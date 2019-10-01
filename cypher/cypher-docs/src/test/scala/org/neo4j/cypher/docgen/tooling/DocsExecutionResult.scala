@@ -19,17 +19,14 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import akka.io.dns.internal
 import org.neo4j.cypher.internal.plandescription.InternalPlanDescription
 import org.neo4j.cypher.internal.result.string.ResultStringBuilder
 import org.neo4j.cypher.internal.runtime._
-import org.neo4j.cypher.internal.runtime.interpreted.TransactionalContextWrapper
 import org.neo4j.graphdb.Result.ResultVisitor
-import org.neo4j.graphdb.{ExecutionPlanDescription, Notification, Result}
-import org.neo4j.kernel.impl.query.{QueryExecution, TransactionalContext}
+import org.neo4j.graphdb.{Notification, Result}
+import org.neo4j.kernel.impl.query.TransactionalContext
+
 import scala.collection.JavaConverters._
-
-
 import scala.collection.mutable.ArrayBuffer
 
 /**

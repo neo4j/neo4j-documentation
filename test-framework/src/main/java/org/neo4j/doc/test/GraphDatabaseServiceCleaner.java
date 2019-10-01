@@ -42,12 +42,13 @@ public class GraphDatabaseServiceCleaner
     {
         try ( Transaction tx = db.beginTx() )
         {
-            for ( ConstraintDefinition constraint : db.schema().getConstraints() )
+            var schema = tx.schema();
+            for ( ConstraintDefinition constraint : schema.getConstraints() )
             {
                 constraint.drop();
             }
 
-            for ( IndexDefinition index : db.schema().getIndexes() )
+            for ( IndexDefinition index : schema.getIndexes() )
             {
                 index.drop();
             }

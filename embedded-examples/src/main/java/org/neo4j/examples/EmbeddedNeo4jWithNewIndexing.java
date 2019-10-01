@@ -56,7 +56,7 @@ public class EmbeddedNeo4jWithNewIndexing
             IndexDefinition indexDefinition;
             try ( Transaction tx = graphDb.beginTx() )
             {
-                Schema schema = graphDb.schema();
+                Schema schema = tx.schema();
                 indexDefinition = schema.indexFor( Label.label( "User" ) )
                         .on( "username" )
                         .create();
@@ -66,14 +66,14 @@ public class EmbeddedNeo4jWithNewIndexing
             // tag::wait[]
             try ( Transaction tx = graphDb.beginTx() )
             {
-                Schema schema = graphDb.schema();
+                Schema schema = tx.schema();
                 schema.awaitIndexOnline( indexDefinition, 10, TimeUnit.SECONDS );
             }
             // end::wait[]
             // tag::progress[]
             try ( Transaction tx = graphDb.beginTx() )
             {
-                Schema schema = graphDb.schema();
+                Schema schema = tx.schema();
                 System.out.println( String.format( "Percent complete: %1.0f%%",
                         schema.getIndexPopulationProgress( indexDefinition ).getCompletedPercentage() ) );
             }
@@ -181,7 +181,7 @@ public class EmbeddedNeo4jWithNewIndexing
             try ( Transaction tx = graphDb.beginTx() )
             {
                 Label label = Label.label( "User" );
-                for ( IndexDefinition indexDefinition : graphDb.schema()
+                for ( IndexDefinition indexDefinition : tx.schema()
                         .getIndexes( label ) )
                 {
                     // There is only one index

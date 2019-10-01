@@ -99,7 +99,7 @@ public class JUnitDocIT
         // Then I can access created constraint
         try ( Transaction tx = db.beginTx() )
         {
-            ConstraintDefinition constraint = single( db.schema().getConstraints() );
+            ConstraintDefinition constraint = single( tx.schema().getConstraints() );
 
             assertTrue( constraint.isConstraintType( ConstraintType.NODE_PROPERTY_EXISTENCE ) );
             assertEquals( Label.label( "User" ), constraint.getLabel() );

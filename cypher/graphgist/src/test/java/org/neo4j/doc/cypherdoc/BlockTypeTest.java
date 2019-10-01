@@ -356,10 +356,10 @@ public class BlockTypeTest
                 "RETURN line;", "----" );
         GraphDatabaseFacade graph = mock( GraphDatabaseFacade.class );
         Schema schema = mock( Schema.class );
-        when( graph.schema() ).thenReturn( schema );
         doNothing().when( schema ).awaitIndexesOnline( anyLong(), any( TimeUnit.class ) );
         final Transaction transaction = mock( Transaction.class );
         when( graph.beginTx() ).thenReturn( transaction );
+        when( transaction.schema() ).thenReturn( schema );
         Block block = new Block( myQuery, BlockType.CYPHER );
         org.neo4j.graphdb.Result result = mock( org.neo4j.graphdb.Result.class );
         when( result.getQueryStatistics() ).thenReturn( mock( org.neo4j.graphdb.QueryStatistics.class ) );

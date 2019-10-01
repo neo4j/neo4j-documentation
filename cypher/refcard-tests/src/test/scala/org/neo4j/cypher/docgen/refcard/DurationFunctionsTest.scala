@@ -23,6 +23,7 @@ import java.time._
 
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.graphdb.Transaction
 import org.neo4j.values.storable.DurationValue
 
 class DurationFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -30,7 +31,7 @@ class DurationFunctionsTest extends RefcardTest with QueryStatisticsTestSupport 
   val title = "Duration Functions"
   override val linkId = "functions/duration"
 
-  override def assert(name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "returns-one" =>
         assertStats(result, nodesCreated = 0)

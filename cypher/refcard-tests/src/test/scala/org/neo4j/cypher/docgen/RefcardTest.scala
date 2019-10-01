@@ -82,7 +82,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   def title: String
   def linkId: String = null
   def section: String = "refcard"
-  def assert(name: String, result: DocsExecutionResult): Unit
+  def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit
   def parameters(name: String): Map[String, Any] = Map()
   def graphDescription: List[String]
   def indexProps: List[String] = List()
@@ -146,17 +146,17 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
         executeQuery(query, parameters(parametersChoice))
       }
 
-    db.inTx {
+    db.withTx( tx => {
       possibleAssertion.foreach(name => {
         try {
-          assert(name, result)
+          assert(tx, name, result)
         } catch {
           case e: Exception => throw new RuntimeException("Test: %s\nQuery: %sParams: %s\n%s".format(name, query, parametersChoice, e.getMessage), e)
         }
       })
 
       result
-    }
+    } )
   }
 
   @Test

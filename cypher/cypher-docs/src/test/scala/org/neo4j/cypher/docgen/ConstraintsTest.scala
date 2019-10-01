@@ -21,9 +21,9 @@ package org.neo4j.cypher.docgen
 
 import java.io.File
 
+import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
 import org.junit.Test
 import org.neo4j.dbms.api.DatabaseManagementService
-import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
 import org.neo4j.exceptions.CypherExecutionException
 import org.neo4j.graphdb.{ConstraintViolationException, Label, RelationshipType}
 
@@ -359,17 +359,32 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   private def hasNodeConstraint(labelName: String, propName: String): Boolean = {
-    val constraints = db.schema().getConstraints( Label.label(labelName) ).asScala
-    constraints.exists( _.getPropertyKeys.asScala.exists(_ == propName))
+    val transaction = graphOps.beginTx();
+    try {
+      val constraints = transaction.schema().getConstraints(Label.label(labelName)).asScala
+      constraints.exists(_.getPropertyKeys.asScala.exists(_ == propName))
+    } finally {
+      transaction.close()
+    }
   }
 
   private def hasRelationshipConstraint(typeName: String, propName: String): Boolean = {
-    val constraints = db.schema().getConstraints( RelationshipType.withName(typeName) ).asScala
-    constraints.exists( _.getPropertyKeys.asScala.exists(_ == propName))
+    val transaction = graphOps.beginTx();
+    try {
+      val constraints = transaction.schema().getConstraints(RelationshipType.withName(typeName)).asScala
+      constraints.exists(_.getPropertyKeys.asScala.exists(_ == propName))
+    } finally {
+      transaction.close()
+    }
   }
 
   private def hasNodeKeyConstraint(labelName: String, propNames: Seq[String]): Boolean = {
-    val constraints = db.schema().getConstraints( Label.label(labelName) ).asScala
-    constraints.nonEmpty && constraints.head.getPropertyKeys().asScala.toList == propNames.toList
+      val transaction = graphOps.beginTx();
+      try {
+        val constraints = transaction.schema().getConstraints( Label.label(labelName) ).asScala
+        constraints.nonEmpty && constraints.head.getPropertyKeys().asScala.toList == propNames.toList
+      } finally {
+        transaction.close()
+      }
   }
 }
