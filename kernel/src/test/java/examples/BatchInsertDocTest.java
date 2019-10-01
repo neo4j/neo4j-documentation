@@ -95,7 +95,7 @@ public class BatchInsertDocTest
         GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
         try ( Transaction tx = db.beginTx() )
         {
-            db.schema().awaitIndexesOnline( 10, TimeUnit.SECONDS );
+            tx.schema().awaitIndexesOnline( 10, TimeUnit.SECONDS );
         }
         try ( Transaction tx = db.beginTx() )
         {
@@ -103,7 +103,7 @@ public class BatchInsertDocTest
             Node mNode = tx.findNode( personLabelForTesting, "name", "Mattias" );
             Node cNode = mNode.getSingleRelationship( RelationshipType.withName( "KNOWS" ), Direction.OUTGOING ).getEndNode();
             assertThat( cNode.getProperty( "name" ), is( "Chris" ) );
-            assertThat( db.schema()
+            assertThat( tx.schema()
                     .getIndexes( personLabelForTesting )
                     .iterator()
                     .hasNext(), is( true ) );

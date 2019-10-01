@@ -320,7 +320,7 @@ enum BlockType
                     }
                     try ( Transaction tx = state.graphOps.beginTx() )
                     {
-                        state.graphOps.schema().awaitIndexesOnline( 10000, TimeUnit.SECONDS );
+                        tx.schema().awaitIndexesOnline( 10000, TimeUnit.SECONDS );
                     }
                 }
                 else

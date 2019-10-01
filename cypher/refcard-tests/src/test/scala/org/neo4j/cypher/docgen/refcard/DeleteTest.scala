@@ -21,13 +21,14 @@ package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.graphdb.Transaction
 
 class DeleteTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT LINK A:Person", "A LINK B", "B LINK C", "C LINK ROOT")
   val title = "DELETE"
   override val linkId = "clauses/delete"
 
-  override def assert(name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "delete" =>
         assertStats(result, nodesCreated = 1, nodesDeleted = 1, relationshipsDeleted = 1)

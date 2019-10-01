@@ -279,7 +279,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       if (generateInitialGraphForConsole) {
         val out = new StringWriter()
         db.withTx( tx=> {
-          new SubGraphExporter(DatabaseSubGraph.from(db.getGraphDatabaseService, tx)).export(new PrintWriter(out))
+          new SubGraphExporter(DatabaseSubGraph.from(tx)).export(new PrintWriter(out))
           consoleData = out.toString
         })
       }
@@ -323,7 +323,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       dumpPreparationQueries(preparationQueries, dir, title)
       dumpPreparationGraphviz(dir, title, graphvizOptions)
     }
-    db.inTx { db.schema().awaitIndexesOnline(2, TimeUnit.SECONDS) }
+    db.withTx( tx => { tx.schema().awaitIndexesOnline(2, TimeUnit.SECONDS) } )
   }
 
   private def executeWithAllPlannersAndAssert(query: String,
@@ -385,7 +385,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
           docResult
         } finally executeTransaction.close()
 
-        db.inTx(assertions(docsResult))
+        assertions(docsResult)
         val resultAsString = docsResult.resultAsString
         if (graphvizExecutedAfter && planner == planners.head) {
           dumpGraphViz(dir, graphvizOptions.trim)
@@ -558,7 +558,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   override def softReset() {
     cleanDatabaseContent(db.getGraphDatabaseService)
 
-    db.withTx(_ => db.schema().awaitIndexesOnline(10, TimeUnit.SECONDS))
+    db.withTx(tx => tx.schema().awaitIndexesOnline(10, TimeUnit.SECONDS))
 
     val g = new GraphImpl(graphDescription.toArray[String])
     val description = GraphDescription.create(g)

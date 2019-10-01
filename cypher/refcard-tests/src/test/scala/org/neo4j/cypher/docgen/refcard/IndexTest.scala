@@ -23,17 +23,18 @@ import java.util.concurrent.TimeUnit
 
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.graphdb.Transaction
 
 class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "INDEX"
   override val linkId = "schema/index"
 
-  override def assert(name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "create-index" =>
         assert(result.toList.size === 0)
-        db.schema().awaitIndexesOnline(10, TimeUnit.SECONDS)
+        tx.schema().awaitIndexesOnline(10, TimeUnit.SECONDS)
       case "drop-index" =>
         // assertStats(result, indexDeleted = 1)
         assert(result.toList.size === 0)

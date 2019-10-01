@@ -226,16 +226,16 @@ public class GraphDbHelper
         }
     }
 
-    public Iterable<IndexDefinition> getSchemaIndexes( String labelName )
+    public Iterable<IndexDefinition> getSchemaIndexes( Transaction tx, String labelName )
     {
-        return database.getDatabase().schema().getIndexes( label( labelName ) );
+        return tx.schema().getIndexes( label( labelName ) );
     }
 
     public IndexDefinition createSchemaIndex( String labelName, String propertyKey )
     {
         try ( Transaction tx = database.getDatabase().beginTransaction( implicit, AUTH_DISABLED ) )
         {
-            IndexDefinition index = database.getDatabase().schema().indexFor( label( labelName ) ).on( propertyKey ).create();
+            IndexDefinition index = tx.schema().indexFor( label( labelName ) ).on( propertyKey ).create();
             tx.commit();
             return index;
         }
@@ -257,7 +257,7 @@ public class GraphDbHelper
                     return false;
                 }
 
-            }, database.getDatabase().schema().getConstraints( label( labelName ) ) );
+            }, tx.schema().getConstraints( label( labelName ) ) );
             tx.commit();
             return definitions;
         }
@@ -267,7 +267,7 @@ public class GraphDbHelper
     {
         try ( Transaction tx = database.getDatabase().beginTransaction( implicit, AUTH_DISABLED ) )
         {
-            ConstraintCreator creator = database.getDatabase().schema().constraintFor( label( labelName ) );
+            ConstraintCreator creator = tx.schema().constraintFor( label( labelName ) );
             for ( String propertyKey : propertyKeys )
             {
                 creator = creator.assertPropertyIsUnique( propertyKey );

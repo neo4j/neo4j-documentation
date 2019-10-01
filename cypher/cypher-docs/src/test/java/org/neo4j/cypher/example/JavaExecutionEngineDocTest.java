@@ -95,7 +95,7 @@ public class JavaExecutionEngineDocTest
 
         try ( Transaction tx = this.db.beginTx() )
         {
-            this.db.schema().indexFor( Label.label( "Person" ) ).on( "name" ).create();
+            tx.schema().indexFor( Label.label( "Person" ) ).on( "name" ).create();
             tx.commit();
         }
 

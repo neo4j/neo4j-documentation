@@ -21,8 +21,9 @@ package org.neo4j.cypher.docgen.refcard
 
 import java.io.File
 
-import org.neo4j.cypher.docgen.{CsvFile, RefcardTest}
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.{CsvFile, RefcardTest}
+import org.neo4j.graphdb.Transaction
 
 class ImportTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List()
@@ -61,7 +62,7 @@ class ImportTest extends RefcardTest with QueryStatisticsTestSupport {
     "%ARTIS_WITH_HEADER%" -> (baseUrl + artistWithHeaders.getName),
     "%ARTIST_WITH_FIELD_DELIMITER%" -> (baseUrl + artistFieldTerminator.getName))
 
-  override def assert(name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "created" =>
         assertStats(result, nodesCreated = 4, labelsAdded = 4, propertiesWritten = 8)

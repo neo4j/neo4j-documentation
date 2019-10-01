@@ -27,6 +27,9 @@ import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.{DPPlannerName, IDPPlannerName}
 import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
 import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
+import org.neo4j.graphdb.Label
+
+import scala.collection.JavaConverters._
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
 
@@ -58,7 +61,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "Note that the index is not immediately available, but will be created in the background.",
       queryText = "CREATE INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
-      assertions = (p) => assertIndexesOnLabels("Person", List(List("location"), List("firstname"), List("highScore")))
+      assertions = p => assertIndexesOnLabels( "Person", List(List("location"), List("firstname"), List("highScore")))
     )
   }
 
@@ -73,7 +76,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "Node `a` has both an `age` and a `country` property, and so it will be added to the composite index. " +
         "However, as node `b` has no `country` property, it will not be added to the composite index. " +
         "Note that the composite index is not immediately available, but will be created in the background. ",
-      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname"), List("location"), List("highScore"), List("age", "country"), List("location")))
+      assertions = (p) => assertIndexesOnLabels( "Person", List(List("firstname"), List("location"), List("highScore"), List("age", "country"), List("location")))
     )
   }
 
@@ -513,7 +516,14 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   def assertIndexesOnLabels(label: String, expectedIndexes: List[List[String]]) {
-    assert(db.indexPropsForLabel(label).toSet === expectedIndexes.toSet)
+    val transaction = graphOps.beginTx()
+    try {
+      val indexDefs = transaction.schema.getIndexes(Label.label(label)).asScala.toList
+      val properties = indexDefs.map(_.getPropertyKeys.asScala.toList)
+      assert(properties.toSet === expectedIndexes.toSet)
+    } finally {
+      transaction.close()
+    }
   }
 
   private def checkPlanDescription(result: DocsExecutionResult)(costString: String): Unit = {

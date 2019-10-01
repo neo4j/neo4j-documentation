@@ -23,6 +23,7 @@ import org.junit.Before
 import org.neo4j.collection.RawIterator
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.graphdb.Transaction
 import org.neo4j.internal.kernel.api.exceptions.ProcedureException
 import org.neo4j.internal.kernel.api.procs.Neo4jTypes
 import org.neo4j.internal.kernel.api.procs.ProcedureSignature._
@@ -53,7 +54,7 @@ class CallTest extends RefcardTest with QueryStatisticsTestSupport {
     kernel.registerProcedure(proc)
   }
 
-  override def assert(name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "labels" =>
         assert(result.toList.size === 1)
