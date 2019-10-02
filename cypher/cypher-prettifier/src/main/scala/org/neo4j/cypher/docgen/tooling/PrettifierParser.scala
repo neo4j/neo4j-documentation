@@ -85,6 +85,7 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("DESC") |
         keyword("SCAN") |
         keyword("FROM") |
+        keyword("EXISTS") |
         keyword("STARTS WITH") |
         keyword("ENDS WITH") |
         keyword("CONTAINS") |
