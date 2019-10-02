@@ -70,8 +70,8 @@ class WhereTest extends DocumentingTest {
         | ** <<composite-range, Composite range>>
       """.stripMargin)
     section("Introduction", "where-introduction") {
-      p("`WHERE` is not a clause in its own right -- rather, it's part of `MATCH`, `OPTIONAL MATCH`, `START` and `WITH`.")
-      p("In the case of `WITH` and `START`, `WHERE` simply filters the results.")
+      p("`WHERE` is not a clause in its own right -- rather, it's part of `MATCH`, `OPTIONAL MATCH` and `WITH`.")
+      p("In the case of `WITH`, `WHERE` simply filters the results.")
       p(
         """For `MATCH` and `OPTIONAL MATCH` on the other hand, `WHERE` adds constraints to the patterns described.
           |_It should not be seen as a filter after the matching is finished._""".stripMargin)
