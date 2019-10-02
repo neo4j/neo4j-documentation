@@ -55,6 +55,7 @@ class MapsTest extends DocumentingTest {
     section("Literal maps", "cypher-literal-maps") {
       p(
         """From Cypher, you can also construct maps.
+          |The key in those maps is only allowed to be a `String` value.
           |Through REST you will get JSON objects; in Java they will be `java.util.Map<String,Object>`.""".stripMargin)
       query(
         """RETURN { key: 'Value', listKey: [{ inner: 'Map1' }, { inner: 'Map2' }]}""", ResultAssertions((r) => {
@@ -80,7 +81,7 @@ class MapsTest extends DocumentingTest {
           |* Variable selector - Projects a variable, with the variable name as the key, and the value the variable is pointing to as the value of the projection. Its syntax is just the variable.
           |* All-properties selector - projects all key-value pairs from the `map_variable` value.
           |""".stripMargin)
-      p("Note that if the `map_variable` points to a `null` value, the whole map projection will evaluate to `null`.")
+      p("Note that if the `map_variable` points to a `null` value, the whole map projection will evaluate to `null`. Also, maps in Cypher are only allowed to have `String` values as keys")
       section("Examples of map projections", "cypher-map-projection-examples") {
         p(
           """Find *'Charlie Sheen'* and return data about him and the movies he has acted in.
