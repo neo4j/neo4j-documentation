@@ -56,9 +56,6 @@ class UsingTest extends DocumentingTest {
           |Moreover, in some circumstances (albeit rarely) it is better not to use an index at all.""")
       p("""Neo4j can be forced to use a specific starting point through the `USING` keyword. This is called giving a planner hint.
           |There are four types of planner hints: index hints, scan hints, join hints, and the `PERIODIC COMMIT` query hint.""")
-      note {
-        p("You cannot use planner hints if your query has a `START` clause.")
-      }
       p("The following graph is used for the examples below:")
       graphViz()
       query(s"$matchString RETURN 1 AS $columnName", assertIntegersReturned(1)) {
