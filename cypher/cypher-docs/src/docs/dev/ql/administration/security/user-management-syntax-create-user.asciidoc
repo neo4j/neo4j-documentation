@@ -1,0 +1,7 @@
+.Command syntax
+[source, cypher]
+-----
+CREATE USER name SET PASSWORD password
+      [[SET PASSWORD] CHANGE [NOT] REQUIRED]
+      [SET STATUS {ACTIVE | SUSPENDED}]
+-----

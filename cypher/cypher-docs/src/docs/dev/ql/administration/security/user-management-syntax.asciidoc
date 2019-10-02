@@ -1,0 +1,41 @@
+.User management command syntax
+[options="header", width="100%", cols="5a,3,1"]
+|===
+| Command | Description | Type of user
+
+|
+[source, cypher]
+----
+CREATE USER name SET PASSWORD password
+  [[SET PASSWORD] CHANGE [NOT] REQUIRED]
+  [SET STATUS {ACTIVE \| SUSPENDED}]
+----
+| Create a new user | Admin
+
+|
+[source, cypher]
+DROP USER name
+| Drop (remove) an existing user | Admin
+
+| [source, cypher]
+ALTER USER name SET {
+PASSWORD password
+            [[SET PASSWORD] CHANGE [NOT] REQUIRED]
+            [SET STATUS {ACTIVE \| SUSPENDED} ] \|
+PASSWORD CHANGE [NOT] REQUIRED
+            [SET STATUS {ACTIVE \| SUSPENDED}] \|
+STATUS {ACTIVE \| SUSPENDED}
+| Modify the settings for an existing user | Admin
+
+| [source, cypher]
+ALTER CURRENT USER SET PASSWORD FROM original TO password
+| Change the logged in users password | Normal user
+
+| [source, cypher]
+SHOW USERS
+| List all users | Admin
+
+| [source, cypher]
+SHOW USER name PRIVILEGES
+| List the privileges granted to a user | Admin
+|===

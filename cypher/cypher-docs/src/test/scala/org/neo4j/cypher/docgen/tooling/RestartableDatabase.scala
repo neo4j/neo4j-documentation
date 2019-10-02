@@ -36,13 +36,13 @@ import scala.collection.mutable
 import scala.util.Try
 
 /* I exist so my users can have a restartable database that is lazily created */
-class RestartableDatabase(init: RunnableInitialization )
- extends GraphIcing with ExecutionEngineHelper {
+class RestartableDatabase(init: RunnableInitialization)
+  extends GraphIcing with ExecutionEngineHelper {
 
   var managementService: DatabaseManagementService = _
   var dbFolder: File = _
   var graph: GraphDatabaseCypherService = null
-  val graphs: mutable.Map[String, GraphDatabaseCypherService] = mutable.Map.empty
+  val graphs: mutable.Map[String, MetaData] = mutable.Map.empty
   var eengine: ExecutionEngine = null
   private var _failures: Seq[QueryRunResult] = null
   private var _markedForRestart = false
@@ -50,25 +50,24 @@ class RestartableDatabase(init: RunnableInitialization )
   /*
   This is the public way of controlling when it's safe to restart the database
    */
-  def nowIsASafePointToRestartDatabase(): Unit = if(_markedForRestart) restart()
+  def nowIsASafePointToRestartDatabase(): Unit = if (_markedForRestart) restart()
 
   private def createAndStartIfNecessary() {
     if (graph == null) {
       dbFolder = new File("target/example-db" + System.nanoTime())
       managementService = new EnterpriseDatabaseManagementServiceBuilder(dbFolder).build()
       managementService.listDatabases().toArray().foreach { name =>
-        val db = managementService.database(name.toString)
-        graphs(name.toString) = new GraphDatabaseCypherService(db)
+        graphs(name.toString) = new MetaData(name.toString)
       }
       selectDatabase(DEFAULT_DATABASE_NAME)
     }
   }
 
   private def selectDatabase(database: String): Unit = {
-    val db = managementService.database(database)
-    graph = graphs(database)
-    eengine = ExecutionEngineFactory.createExecutionEngineFromDb(db)
-    _failures = initialize(init, graph)
+    val meta = graphs(database)
+    graph = meta.graph
+    eengine = meta.eengine
+    _failures = meta.failures
   }
 
   def failures = {
@@ -113,28 +112,38 @@ class RestartableDatabase(init: RunnableInitialization )
     if (graph == null) return
     managementService.shutdown()
     FileUtils.deleteQuietly(dbFolder)
+    graphs.clear()
     graph = null
     eengine = null
     _failures = null
     _markedForRestart = false
   }
 
-  private def initialize(init: RunnableInitialization, graph: GraphDatabaseCypherService): Seq[QueryRunResult] = {
-    // Register procedures and functions
-    val procedureRegistry = graph.getDependencyResolver.resolveDependency(classOf[GlobalProcedures])
-    init.procedures.foreach(procedureRegistry.registerProcedure)
-    init.userDefinedFunctions.foreach(procedureRegistry.registerFunction)
-    init.userDefinedAggregationFunctions.foreach(procedureRegistry.registerAggregationFunction)
+  class MetaData(database: String) extends GraphIcing with ExecutionEngineHelper {
+    val db = managementService.database(database)
+    val graph = new GraphDatabaseCypherService(db)
+    val eengine = ExecutionEngineFactory.createExecutionEngineFromDb(db)
+    val failures: Seq[QueryRunResult] = initialize(init)
 
-    // Execute custom initialization code
-    init.initCode.foreach(_.apply(graph))
+    private def initialize(init: RunnableInitialization): Seq[QueryRunResult] = {
+      // Register procedures and functions
+      if (database == DEFAULT_DATABASE_NAME) {
+        val procedureRegistry = graph.getDependencyResolver.resolveDependency(classOf[GlobalProcedures])
+        init.procedures.foreach(procedureRegistry.registerProcedure)
+        init.userDefinedFunctions.foreach(procedureRegistry.registerFunction)
+        init.userDefinedAggregationFunctions.foreach(procedureRegistry.registerAggregationFunction)
+      }
 
-    // Execute queries
-    init.initQueries.flatMap { query =>
-      val q = query.prettified
-      if (query.database.isDefined) selectDatabase(query.database.get)
-      val result = Try(execute(q, Seq.empty: _*))
-      result.failed.toOption.map((e: Throwable) => QueryRunResult(q, new ErrorPlaceHolder(), Left(e)))
+      // Execute custom initialization code
+      init.initCode.foreach(_.apply(graph))
+
+      // Execute queries
+      init.initQueries.filter(x => x.database.isEmpty || x.database.get == database).flatMap { query =>
+        val q = query.prettified
+        val result = Try(execute(q, Seq.empty: _*))
+        result.failed.toOption.map((e: Throwable) => QueryRunResult(q, new ErrorPlaceHolder(), Left(e)))
+      }
     }
   }
+
 }

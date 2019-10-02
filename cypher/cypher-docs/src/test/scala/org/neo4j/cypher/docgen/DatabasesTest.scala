@@ -34,9 +34,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES", assertDatabaseShown) {
         resultTable()
       }
-      considerations(
-        """The `status` of the database is the desired status, and might not necessarily reflect the actual status across all members of a cluster.
-          |""".stripMargin)
+      considerations("The `status` of the database is the desired status, and might not necessarily reflect the actual status across all members of a cluster.")
     }
     section("Creating databases", "administration-databases-create-database") {
       p("Databases can be created using the `CREATE DATABASE`.")

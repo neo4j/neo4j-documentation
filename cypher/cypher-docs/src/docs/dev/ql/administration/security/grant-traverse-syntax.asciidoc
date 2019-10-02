@@ -1,0 +1,9 @@
+.Command syntax
+[source, cypher]
+-----
+GRANT TRAVERSE
+    ON GRAPH dbname
+        { NODES | RELATIONSHIPS | ELEMENTS }
+        [ { * | labels } ]
+    TO role
+-----

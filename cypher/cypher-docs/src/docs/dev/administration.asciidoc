@@ -46,4 +46,4 @@ include::ql/administration/indexes/index.asciidoc[leveloffset=+1]
 
 include::ql/administration/constraints/index.asciidoc[leveloffset=+1]
 
-include::ql/administration/administration-security.adoc[leveloffset=+1]
+include::ql/administration/security/index.asciidoc[leveloffset=+1]

@@ -52,7 +52,10 @@ trait DocBuilder {
   def initCode(code: InitializationFunction): Unit = current.setInitCode(code)
 
   def initQueries(queries: String*): Unit = current.setInitQueries(queries.map{ query =>
-    InitializationQuery(query.stripMargin)
+    val mayBeDatabase: Option[String] = scope.collectFirst {
+      case s: Scope if (s._database.isDefined) => s._database.get
+    }
+    InitializationQuery(query.stripMargin, database = mayBeDatabase)
   })
 
   def registerUserDefinedFunctions(udfs: java.lang.Class[_]*): Unit = current.setUserDefinedFunctions(udfs)
@@ -144,15 +147,15 @@ trait DocBuilder {
   }
 
   def popAndPopupateAttributes(): Scope = {
-    val mayBeDatabase: Option[Option[String]] = scope.collectFirst {
-      case s: Scope if (s._database.isDefined) => s._database
+    val mayBeDatabase: Option[String] = scope.collectFirst {
+      case s: Scope if (s._database.isDefined) => s._database.get
     }
-    val mayBeRuntime: Option[Option[String]] = scope.collectFirst {
-      case s: Scope if (s._runtime.isDefined) => s._runtime
+    val mayBeRuntime: Option[String] = scope.collectFirst {
+      case s: Scope if (s._runtime.isDefined) => s._runtime.get
     }
     val pop = scope.pop()
-    if (mayBeDatabase.isDefined) pop.setDatabase(mayBeDatabase.get.get)
-    if (mayBeRuntime.isDefined) pop.setRuntime(mayBeRuntime.get.get)
+    if (mayBeDatabase.isDefined) pop.setDatabase(mayBeDatabase.get)
+    if (mayBeRuntime.isDefined) pop.setRuntime(mayBeRuntime.get)
     pop
   }
 

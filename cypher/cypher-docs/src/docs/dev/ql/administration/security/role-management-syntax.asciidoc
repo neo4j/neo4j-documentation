@@ -1,0 +1,29 @@
+.Role management command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+CREATE ROLE name [AS COPY OF name]
+| Create a new role
+
+| [source, cypher]
+DROP ROLE name
+| Drop (remove) an existing role
+
+| [source, cypher]
+SHOW [ALL\|POPULATED] ROLES [WITH USERS]
+| List roles
+
+| [source, cypher]
+SHOW ROLE name PRIVILEGES
+| List the privileges granted to a role
+
+| [source, cypher]
+GRANT ROLE name TO user
+| Assign a role to a user
+
+| [source, cypher]
+REVOKE ROLE name FROM user
+| Remove a role from a user
+|===
