@@ -225,7 +225,7 @@ case class ResultRow(values: Seq[String])
 case class QueryResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: String) extends Content with NoQueries {
   override def asciiDoc(level: Int): String = {
 
-    val header = if (columns.nonEmpty) "header," else ""
+    val header = if (rows.nonEmpty) "header," else ""
     val cols = if (columns.isEmpty) 1 else columns.size
     val rowsOutput: String = if (rows.isEmpty) s"$cols+|(empty result)"
     else {
