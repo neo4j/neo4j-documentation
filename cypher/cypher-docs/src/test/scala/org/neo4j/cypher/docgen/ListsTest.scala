@@ -27,17 +27,22 @@ class ListsTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("Lists", "cypher-lists")
     initQueries(
-      """CREATE (charlie:Person {name: 'Charlie Sheen',  realName: 'Carlos Irwin Estévez'}),
-                |(martin:Person {name: 'Martin Sheen'}),
-                |(wallstreet:Movie {title: 'Wall Street', year: 1987}),
-                |(reddawn:Movie {title: 'Red Dawn', year: 1984}),
-                |(apocalypsenow:Movie {title: 'Apocalypse Now', year: 1979}),
+      """CREATE (keanu:Person {name: 'Keanu Reeves'}),
+                |(johnnymnemonic:Movie {title: 'Johnny Mnemonic', released: 1995}),
+                |(somethingsgottagive:Movie {title: 'Somethings Gotta Give', released: 2003}),
+                |(thematrixrevolutions:Movie {title: 'The Matrix Revolutions', released: 2003}),
+                |(thematrixreloaded:Movie {title: 'The Matrix Reloaded', released: 2003}),
+                |(thereplacements:Movie {title: 'The Replacements', released: 2000}),
+                |(thematrix:Movie {title: 'The Matrix', released: 1999}),
+                |(thedevilsadvocate:Movie {title: 'The Devils Advocate', released: 1997}),
                 |
-                |(charlie)-[:ACTED_IN]->(wallstreet),
-                |(charlie)-[:ACTED_IN]->(reddawn),
-                |(charlie)-[:ACTED_IN]->(apocalypsenow),
-                |(martin)-[:ACTED_IN]->(wallstreet),
-                |(martin)-[:ACTED_IN]->(apocalypsenow)
+                |(keanu)-[:ACTED_IN]->(johnnymnemonic),
+                |(keanu)-[:ACTED_IN]->(somethingsgottagive),
+                |(keanu)-[:ACTED_IN]->(thematrixrevolutions),
+                |(keanu)-[:ACTED_IN]->(thematrixreloaded),
+                |(keanu)-[:ACTED_IN]->(thereplacements),
+                |(keanu)-[:ACTED_IN]->(thematrix),
+                |(keanu)-[:ACTED_IN]->(thedevilsadvocate)
 
       """.stripMargin)
     synopsis("Cypher has comprehensive support for lists.")
@@ -158,9 +163,9 @@ class ListsTest extends DocumentingTest {
       p("The following graph is used for the example below:")
       graphViz()
       query(
-        """MATCH (a:Person {name: 'Charlie Sheen'})
-          |RETURN [(a)-->(b) WHERE b:Movie | b.year] AS years""", ResultAssertions((r) => {
-          r.toList should equal(List(Map("years" -> List(1979, 1984, 1987))))
+        """MATCH (a:Person {name: 'Keanu Reeves'})
+          |RETURN [(a)-->(b) WHERE b:Movie | b.released] AS years """, ResultAssertions((r) => {
+          r.toList.head("years").equals(List(1995, 1997, 1999, 2000, 2003, 2003, 2003))
         })) {
         resultTable()
       }
