@@ -376,7 +376,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         p(
           """`date()` returns the _Date_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
         function("date(temporalValue)", "A Date.", ("temporalValue", "A string representing a temporal value."))
-        considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>>.", "`date(null)` returns the current date.", "`temporalValue` must denote a valid date; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
+        considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>>.",
+          "`temporalValue` must denote a valid date; i.e. a `temporalValue` denoting `30 February 2001` is invalid.",
+          "`date(null)` returns null.")
         preformattedQuery(
           """UNWIND [
             |   date('2015-07-21'),
@@ -697,9 +699,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`datetime()` returns the _DateTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
         function("datetime(temporalValue)", "A DateTime.", ("temporalValue", "A string representing a temporal value."))
         considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>>, <<cypher-temporal-specify-time, times>> and <<cypher-temporal-specify-time-zone, time zones>>.",
-          "`datetime(null)` returns the current date and time.",
           "The _timezone_ component will default to the configured default time zone if it is omitted.",
-          "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
+          "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.",
+          "`datetime(null)` returns null.")
         preformattedQuery(
           """UNWIND [
             |   datetime('2015-07-21T21:40:32.142+0100'),
@@ -1001,8 +1003,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         p(
           """`localdatetime()` returns the _LocalDateTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
         function("localdatetime(temporalValue)", "A LocalDateTime.", ("temporalValue", "A string representing a temporal value."))
-        considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>> and <<cypher-temporal-specify-time, times>>.", "`localdatetime(null)` returns the current date and time.",
-          "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.")
+        considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>> and <<cypher-temporal-specify-time, times>>.",
+          "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.",
+          "`localdatetime(null)` returns null.")
         preformattedQuery(
           """UNWIND [
             |   localdatetime('2015-07-21T21:40:32.142'),
@@ -1224,7 +1227,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         p(
           """`localtime()` returns the _LocalTime_ value obtained by parsing a string representation of a temporal value.""".stripMargin)
         function("localtime(temporalValue)", "A LocalTime.", ("temporalValue", "A string representing a temporal value."))
-        considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-time, times>>.", "`localtime(null)` returns the current time.", "`temporalValue` must denote a valid time; i.e. a `temporalValue` denoting `13:46:64` is invalid.")
+        considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-time, times>>.",
+          "`temporalValue` must denote a valid time; i.e. a `temporalValue` denoting `13:46:64` is invalid.",
+          "`localtime(null)` returns null.")
         preformattedQuery(
           """UNWIND [
             |   localtime('21:40:32.142'),
@@ -1414,8 +1419,8 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("time(temporalValue)", "A Time.", ("temporalValue", "A string representing a temporal value."))
         considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-time, times>> and <<cypher-temporal-specify-time-zone, time zones>>.",
           "The _timezone_ component will default to the configured default time zone if it is omitted.",
-          "`time(null)` returns the current time.",
-          "`temporalValue` must denote a valid time; i.e. a `temporalValue` denoting `15:67` is invalid.")
+          "`temporalValue` must denote a valid time; i.e. a `temporalValue` denoting `15:67` is invalid.",
+          "`time(null)` returns null.")
         preformattedQuery(
           """UNWIND [
             |   time('21:40:32.142+0100'),
