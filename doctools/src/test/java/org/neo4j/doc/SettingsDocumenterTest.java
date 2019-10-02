@@ -188,11 +188,9 @@ public class SettingsDocumenterTest
                 "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" + "|Description a|Animal type.\n" +
                 "|Valid values a|animal.giraffe.<id>.type, a string\n" + "|Default value m|mammal\n" + "|===\n" + "endif::nonhtmloutput[]\n\n";
         if(System.getProperty("os.name").toLowerCase().startsWith( "windows" )){
-            assertThat( result, equalTo( String.format(
-                    linuxString.replaceAll( "\n","\r\n" ))));
+            assertThat( result, equalTo( linuxString.replaceAll( "\n","\r\n" ) ));
         } else {
-        assertThat( result, equalTo( String.format(
-                linuxString)));
+        assertThat( result, equalTo( linuxString ));
         }
     }
 

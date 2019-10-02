@@ -87,7 +87,8 @@ sealed trait Content {
 
   def asciiDoc(level: Int): String
 
-  def NewLine: String = if (System.getProperty("os.name").toLowerCase.startsWith("windows"))"\r\n" else "\n"
+  def NewLine: String = if (System.getProperty("os.name").toLowerCase.startsWith("windows")) "\r\n" else "\n"
+
   def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]): Seq[ContentWithInit]
 }
 

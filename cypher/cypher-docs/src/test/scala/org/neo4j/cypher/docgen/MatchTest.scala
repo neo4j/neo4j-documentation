@@ -179,7 +179,7 @@ class MatchTest extends DocumentingTest {
       }
       section("Relationship types with uncommon characters", "rel-types-with-uncommon-chars") {
 
-        val isWindows = if (System.getProperty("os.name").toLowerCase.startsWith("windows")) true else false
+        val isWindows = System.getProperty("os.name").toLowerCase.startsWith("windows")
         val initQuery = if (isWindows)
           "MATCH (charlie:Person {name: 'Charlie Sheen'}), (rob:Person {name: 'Rob Reiner'}) CREATE (rob)-[:`TYPE\r\nWITH SPACE`]->(charlie)"
         else
