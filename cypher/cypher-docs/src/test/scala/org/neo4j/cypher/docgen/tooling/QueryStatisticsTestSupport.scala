@@ -27,6 +27,7 @@ trait QueryStatisticsTestSupport extends MockitoSugar {
                   existenceConstraintsRemoved: Int = 0,
                   nodekeyConstraintsAdded: Int = 0,
                   nodekeyConstraintsRemoved: Int = 0,
+                  namedConstraintsRemoved: Int = 0,
                   systemUpdates: Int = 0
                  ): Unit = {
     val expected =
@@ -46,6 +47,7 @@ trait QueryStatisticsTestSupport extends MockitoSugar {
         existenceConstraintsRemoved,
         nodekeyConstraintsAdded,
         nodekeyConstraintsRemoved,
+        namedConstraintsRemoved,
         systemUpdates
       )
 
