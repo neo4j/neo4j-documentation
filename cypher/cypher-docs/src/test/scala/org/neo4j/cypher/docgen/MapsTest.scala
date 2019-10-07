@@ -56,7 +56,7 @@ class MapsTest extends DocumentingTest {
       p(
         """Cypher supports construction of maps.
           |The key names in a map must be of type `String`.
-          |If returned through an <<http-api, HTTP API call>>, a JSON object will be returned.
+          |If returned through an <<http-api#http-api, HTTP API call>>, a JSON object will be returned.
           |If returned in Java, an object of type `java.util.Map<String,Object>` will be returned.
           |""".stripMargin)
       query(
