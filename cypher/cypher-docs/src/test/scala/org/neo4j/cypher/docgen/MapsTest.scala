@@ -40,7 +40,7 @@ class MapsTest extends DocumentingTest {
                 |(martin)-[:ACTED_IN]->(apocalypsenow)
 
       """.stripMargin)
-    synopsis("Cypher has solid support for maps.")
+    synopsis("This section describes how to use maps in Cyphers.")
     p(
       """* <<cypher-literal-maps, Literal maps>>
         |* <<cypher-map-projection, Map projection>>
@@ -54,8 +54,11 @@ class MapsTest extends DocumentingTest {
     }
     section("Literal maps", "cypher-literal-maps") {
       p(
-        """From Cypher, you can also construct maps.
-          |Through REST you will get JSON objects; in Java they will be `java.util.Map<String,Object>`.""".stripMargin)
+        """Cypher supports construction of maps.
+          |The key names in a map must be of type `String`.
+          |If returned through an <<http-api, HTTP API call>>, a JSON object will be returned.
+          |If returned in Java, an object of type `java.util.Map<String,Object>` will be returned.
+          |""".stripMargin)
       query(
         """RETURN { key: 'Value', listKey: [{ inner: 'Map1' }, { inner: 'Map2' }]}""", ResultAssertions((r) => {
           r.toList should equal(List(Map("{ key: 'Value', listKey: [{ inner: 'Map1' }, { inner: 'Map2' }]}" -> Map("key" -> "Value", "listKey" -> List(Map("inner" -> "Map1"), Map("inner" -> "Map2"))))))
@@ -80,7 +83,11 @@ class MapsTest extends DocumentingTest {
           |* Variable selector - Projects a variable, with the variable name as the key, and the value the variable is pointing to as the value of the projection. Its syntax is just the variable.
           |* All-properties selector - projects all key-value pairs from the `map_variable` value.
           |""".stripMargin)
-      p("Note that if the `map_variable` points to a `null` value, the whole map projection will evaluate to `null`.")
+      p("""The following conditions apply:
+          |
+          |* If the `map_variable` points to a `null` value, the whole map projection will evaluate to `null`.
+          |* The key names in a map must be of type `String`.
+          |""".stripMargin)
       section("Examples of map projections", "cypher-map-projection-examples") {
         p(
           """Find *'Charlie Sheen'* and return data about him and the movies he has acted in.
