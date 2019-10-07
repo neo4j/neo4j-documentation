@@ -602,10 +602,17 @@ class TemporalTest extends DocumentingTest {
         })) {
         resultTable()
       }
-      p("Get the _Date_ of Thursday in the current week:")
+      p("Get the first _Date_ of the current year:")
       query(
-        """RETURN date.truncate('week', date(), {dayOfWeek: 4}) as thursday""".stripMargin, ResultAssertions((r) => {
-          r.toList.head("thursday").asInstanceOf[LocalDate].get(ChronoField.DAY_OF_WEEK) should equal(4)
+        """RETURN date.truncate('year') as day""".stripMargin, ResultAssertions((r) => {
+          r.toList.head("day").asInstanceOf[LocalDate].get(ChronoField.DAY_OF_YEAR) should equal(1)
+        })) {
+        resultTable()
+      }
+      p("Get the _Date_ of the Thursday in the week of a specific date:")
+      query(
+        """RETURN date.truncate('week', date('2019-10-01'), {dayOfWeek: 4}) as thursday""".stripMargin, ResultAssertions((r) => {
+          r.toList.head("thursday").asInstanceOf[LocalDate] should equal(LocalDate.of(2019, 10, 3))
         })) {
         resultTable()
       }
