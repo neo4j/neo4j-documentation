@@ -336,20 +336,21 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
           }))
         {
           p("""While there is a matching unique *'michael'* node with the name *'Michael Douglas'*, there is no unique node with the role of *'Gordon Gekko'* and `MERGE` fails to match.""")
-          // Old test produced an "Error message" listing block here:
-          // .Error message
-          // [source]
-          // ----
-          // Merge did not find a matching node michael and can not create a new node due to
-          // conflicts with existing unique nodes
-          // ----
           p(""".Error message
               |[source]
               |----
-              |Merge did not find a matching node oliver and can not create a new node due to
+              |Merge did not find a matching node michael and can not create a new node due to
               |conflicts with existing unique nodes
               |----""")
         }
+        p("""If we want to give Michael Douglas the role of Gordon Gekko, we can use the `SET` clause instead:""")
+        query(
+          """MERGE (michael:Person {name: 'Michael Douglas'})
+            |SET michael.role = 'Gordon Gekko'""".stripMargin,
+          ResultAssertions((r) => {
+
+          }))
+        {}
       }
 
       section("Merge with unique constraints and conflicting matches", "merge-merge-with-unique-constraints-and-conflicting-matches") {
@@ -361,13 +362,6 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
 
           })) {
           p("""While there is a matching unique *'oliver'* node with the name *'Oliver Stone'*, there is also another  unique node with the role of *'Gordon Gekko'* and `MERGE` fails to match.""")
-          // Old test produced an "Error message" listing block here:
-          // .Error message
-          // [source]
-          // ----
-          // Merge did not find a matching node michael and can not create a new node due to
-          // conflicts with existing unique nodes
-          // ----
           p(""".Error message
               |[source]
               |----
