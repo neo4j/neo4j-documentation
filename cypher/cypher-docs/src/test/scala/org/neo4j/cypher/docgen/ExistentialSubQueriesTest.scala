@@ -50,13 +50,13 @@ class ExistentialSubQueriesTest extends DocumentingTest {
       p(
         """Variables introduced by the outside scope can be used in the inner `MATCH` clause. The following example shows this:
         """.stripMargin)
-      query(
+      preformattedQuery(
         """MATCH (person:Person)
            |WHERE EXISTS {
            | MATCH (person)-[:HAS_DOG]->(:Dog)
            |}
-           |RETURN person.name""".stripMargin, ResultAssertions(r => {
-          r.toList should equal(List(Map("person.name" -> "Bosse"), Map("person.name" -> "Chris")))
+           |RETURN person.name as name""".stripMargin, ResultAssertions(r => {
+          r.toList should equal(List(Map("name" -> "Bosse"), Map("name" -> "Chris")))
         })) {
         resultTable()
       }
@@ -66,25 +66,25 @@ class ExistentialSubQueriesTest extends DocumentingTest {
         """A `WHERE` clause can be used in conjunction to the `MATCH`. Variables introduced by the `MATCH` clause and the outside scope can be used in this scope.
           |
         """.stripMargin)
-      query(
+      preformattedQuery(
         """MATCH (person:Person)
            |WHERE EXISTS {
            |  MATCH (person)-[:HAS_DOG]->(dog :Dog)
            |  WHERE person.name = dog.name
            |}
-           |RETURN person.name""".stripMargin, ResultAssertions(r => {
-          r.toList should equal(List(Map("person.name" -> "Bosse")))
+           |RETURN person.name as name""".stripMargin, ResultAssertions(r => {
+          r.toList should equal(List(Map("name" -> "Bosse")))
         })) {
         resultTable()
       }
     }
-    section("Nesting Existential subqueries", "existential-subquery-nesting") {
+    section("Nesting existential subqueries", "existential-subquery-nesting") {
       p(
         """Existential subqueries can be nested like the following example shows.
            The nesting also affects the scopes.
            That means that it is possible to access all variables from inside the subquery which are either on the outside scope or defined in the very same subquery.
         """.stripMargin)
-      query(
+      preformattedQuery(
         """MATCH (person:Person)
            |WHERE EXISTS {
            |  MATCH (person)-[:HAS_DOG]->(dog:Dog)
@@ -93,8 +93,8 @@ class ExistentialSubQueriesTest extends DocumentingTest {
            |    WHERE dog.name = 'Ozzy'
            |  }
            |}
-           |RETURN person.name""".stripMargin, ResultAssertions(r => {
-          r.toList should equal(List(Map("person.name" -> "Chris")))
+           |RETURN person.name as name""".stripMargin, ResultAssertions(r => {
+          r.toList should equal(List(Map("name" -> "Chris")))
         })) {
         resultTable()
       }
