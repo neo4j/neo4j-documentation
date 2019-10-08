@@ -19,6 +19,7 @@ This section contains information on all functions in the Cypher query language.
 * Temporal functions - duration [<<header-query-functions-temporal-duration, Summary>>|<<functions-duration, Detail>>]
 * Spatial functions [<<header-query-functions-spatial, Summary>>|<<query-functions-spatial, Detail>>]
 * User-defined functions [<<header-query-functions-user-defined, Summary>>|<<query-functions-user-defined, Detail>>]
+* LOAD CSV functions [<<header-query-functions-load-csv, Summary>>|<<query-functions-load-csv, Detail>>]
 
 Related information may be found in <<query-operators>>.
 
@@ -307,6 +308,19 @@ There are two main types of functions that can be developed and used:
 |===
 
 
+[[header-query-functions-load-csv]]
+**<<query-functions-load-csv, LOAD CSV functions>>**
+
+LOAD CSV functions can be used to get information about the file that is processed by `LOAD CSV`.
+
+[options="header"]
+|===
+| Function                                                      | Description
+| <<functions-linenumber,linenumber()>>                         | Returns the line number that `LOAD CSV` is currently using.
+| <<functions-file,file()>>                                     | Returns the absolute path of the file that `LOAD CSV` is using.
+|===
+
+
 //Predicate functions
 
 include::query-functions-predicate.adoc[leveloffset=+1]
@@ -354,3 +368,7 @@ include::query-functions-spatial.adoc[leveloffset=+1]
 // User-defined functions
 
 include::user-defined-functions.adoc[leveloffset=+1]
+
+//Load csv functions
+
+include::query-functions-load-csv.adoc[leveloffset=+1]

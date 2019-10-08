@@ -26,6 +26,8 @@ import java.io.File
 import org.junit.Assert._
 
 class LoadCSVTest extends DocumentingTestBase with QueryStatisticsTestSupport with SoftReset {
+  //TODO: Whenever this is ported to DocumentingTest, please go to LoadCSVFunctionsTest and add example queries
+
   override protected def getGraphvizStyle: GraphStyle =
     AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
   override val asciidocSubstitutions = "attributes+"
@@ -177,6 +179,55 @@ include::csv-files/artists-with-escaped-char.csv[]
 Note that strings are wrapped in quotes in the output here.
 You can see that when comparing to the length of the string in this case!""",
       assertions = (p) => assertEquals(List(Map("name" -> """The "Symbol"""", "year" -> 1992, "size" -> 12)), p.toList)
+    )
+  }
+
+  @Test def should_use_csv_function_linenumber() {
+    testQuery(
+      title = "Using linenumber() with LOAD CSV",
+      text = """
+For certain scenarios, like debugging a problem with a csv file, it may be useful to get the current line number that `LOAD CSV` is operating on.
+The ´linenumber()´ function provides exactly that or `null` if called without a `LOAD CSV` context.
+
+.artists.csv
+[source]
+----
+include::csv-files/artists.csv[]
+----
+""",
+      queryText = s"LOAD CSV FROM '%ARTIST%' AS line RETURN linenumber() as number, line",
+      optionalResultExplanation = "",
+      assertions = p =>
+        assertEquals(List(
+          Map("number" -> 1, "line" -> List("1", "ABBA", "1992")),
+          Map("number" -> 2, "line" -> List("2", "Roxette", "1986")),
+          Map("number" -> 3, "line" -> List("3", "Europe", "1979")),
+          Map("number" -> 4, "line" -> List("4", "The Cardigans", "1992"))
+        ), p.toList)
+    )
+  }
+
+  @Test def should_use_csv_function_file() {
+    testQuery(
+      title = "Using file() with LOAD CSV",
+      text = """
+|For certain scenarios, like debugging a problem with a csv file, it may be useful to get the absolute path of the file that `LOAD CSV` is operating on.
+ |The ´file()´ function provides exactly that or `null` if called without a `LOAD CSV` context.
+
+.artists.csv
+[source]
+----
+include::csv-files/artists.csv[]
+----
+""",
+      queryText = s"LOAD CSV FROM '%ARTIST%' AS line RETURN DISTINCT file() as path",
+      optionalResultExplanation = "",
+      assertions = p => {
+        val list = p.toList
+        assertEquals(1, list.size)
+        val path = list.head("path").asInstanceOf[String]
+        assertTrue(path.endsWith("artists.csv"))
+      }
     )
   }
 }
