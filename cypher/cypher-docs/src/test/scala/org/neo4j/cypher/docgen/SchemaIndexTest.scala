@@ -59,9 +59,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Create a single-property index",
       text = "An index on a single property for all nodes that have a particular label can be created with `CREATE INDEX ON :Label(property)`. " +
         "Note that the index is not immediately available, but will be created in the background.",
-      queryText = "CREATE INDEX ON :Person(firstname)",
+      queryText = "CREATE INDEX ON :Person(surname)",
       optionalResultExplanation = "",
-      assertions = p => assertIndexesOnLabels( "Person", List(List("location"), List("firstname"), List("highScore")))
+      assertions = p => assertIndexesOnLabels( "Person", List(List("location"), List("firstname"), List("surname"), List("highScore")))
     )
   }
 
