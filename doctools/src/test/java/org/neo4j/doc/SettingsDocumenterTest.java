@@ -168,28 +168,30 @@ public class SettingsDocumenterTest
         String result = new SettingsDocumenter().document( Giraffe.class );
 
         // then
-        assertThat( result, equalTo( String.format(
-            "// tag::config-org.neo4j.doc.SettingsDocumenterTest-Giraffe[]\n" + "[[config-org.neo4j.doc.SettingsDocumenterTest-Giraffe]]\n" +
-                    ".Use this group to configure giraffes\n" + "ifndef::nonhtmloutput[]\n" + "[options=\"header\"]\n" + "|===\n" + "|Name|Description\n" +
-                    "|<<config_animal.giraffe.<id>.spot_count,animal.giraffe.<id>.spot_count>>|Number of spots this giraffe has, in number.\n" +
-                    "|<<config_animal.giraffe.<id>.type,animal.giraffe.<id>.type>>|Animal type.\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" +
-                    "ifdef::nonhtmloutput[]\n" +
-                    "* <<config_animal.giraffe.<id>.spot_count,animal.giraffe.<id>.spot_count>>: Number of spots this giraffe has, in number.\n" +
-                    "* <<config_animal.giraffe.<id>.type,animal.giraffe.<id>.type>>: Animal type.\n" + "endif::nonhtmloutput[]\n" + "\n" + "\n" +
-                    "// end::config-org.neo4j.doc.SettingsDocumenterTest-Giraffe[]\n" + "\n" + "ifndef::nonhtmloutput[]\n" +
-                    "[[config_animal.giraffe.<id>.spot_count]]\n" + ".animal.giraffe.<id>.spot_count\n" + "[cols=\"<1h,<4\", options=\"noheader\"]\n" +
-                    "|===\n" + "|Description a|Number of spots this giraffe has, in number.\n" +
-                    "|Valid values a|animal.giraffe.<id>.spot_count, an integer\n" + "|Default value m|12\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" +
-                    "ifdef::nonhtmloutput[]\n" + "[[config_animal.giraffe.<id>.spot_count]]\n" + ".animal.giraffe.<id>.spot_count\n" +
-                    "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" + "|Description a|Number of spots this giraffe has, in number.\n" +
-                    "|Valid values a|animal.giraffe.<id>.spot_count, an integer\n" + "|Default value m|12\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" +
-                    "ifndef::nonhtmloutput[]\n" + "[[config_animal.giraffe.<id>.type]]\n" + ".animal.giraffe.<id>.type\n" +
-                    "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" + "|Description a|Animal type.\n" +
-                    "|Valid values a|animal.giraffe.<id>.type, a string\n" + "|Default value m|mammal\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" +
-                    "ifdef::nonhtmloutput[]\n" + "[[config_animal.giraffe.<id>.type]]\n" + ".animal.giraffe.<id>.type\n" +
-                    "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" + "|Description a|Animal type.\n" +
-                    "|Valid values a|animal.giraffe.<id>.type, a string\n" + "|Default value m|mammal\n" + "|===\n" + "endif::nonhtmloutput[]\n\n"
-        ) ));
+        String linuxString = "// tag::config-org.neo4j.doc.SettingsDocumenterTest-Giraffe[]\n" + "[[config-org.neo4j.doc.SettingsDocumenterTest-Giraffe]]\n" +
+                ".Use this group to configure giraffes\n" + "ifndef::nonhtmloutput[]\n" + "[options=\"header\"]\n" + "|===\n" + "|Name|Description\n" +
+                "|<<config_animal.giraffe.<id>.spot_count,animal.giraffe.<id>.spot_count>>|Number of spots this giraffe has, in number.\n" +
+                "|<<config_animal.giraffe.<id>.type,animal.giraffe.<id>.type>>|Animal type.\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" +
+                "ifdef::nonhtmloutput[]\n" +
+                "* <<config_animal.giraffe.<id>.spot_count,animal.giraffe.<id>.spot_count>>: Number of spots this giraffe has, in number.\n" +
+                "* <<config_animal.giraffe.<id>.type,animal.giraffe.<id>.type>>: Animal type.\n" + "endif::nonhtmloutput[]\n" + "\n" + "\n" +
+                "// end::config-org.neo4j.doc.SettingsDocumenterTest-Giraffe[]\n" + "\n" + "ifndef::nonhtmloutput[]\n" +
+                "[[config_animal.giraffe.<id>.spot_count]]\n" + ".animal.giraffe.<id>.spot_count\n" + "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" +
+                "|Description a|Number of spots this giraffe has, in number.\n" + "|Valid values a|animal.giraffe.<id>.spot_count, an integer\n" +
+                "|Default value m|12\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" + "ifdef::nonhtmloutput[]\n" +
+                "[[config_animal.giraffe.<id>.spot_count]]\n" + ".animal.giraffe.<id>.spot_count\n" + "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" +
+                "|Description a|Number of spots this giraffe has, in number.\n" + "|Valid values a|animal.giraffe.<id>.spot_count, an integer\n" +
+                "|Default value m|12\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" + "ifndef::nonhtmloutput[]\n" + "[[config_animal.giraffe.<id>.type]]\n" +
+                ".animal.giraffe.<id>.type\n" + "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" + "|Description a|Animal type.\n" +
+                "|Valid values a|animal.giraffe.<id>.type, a string\n" + "|Default value m|mammal\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" +
+                "ifdef::nonhtmloutput[]\n" + "[[config_animal.giraffe.<id>.type]]\n" + ".animal.giraffe.<id>.type\n" +
+                "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" + "|Description a|Animal type.\n" +
+                "|Valid values a|animal.giraffe.<id>.type, a string\n" + "|Default value m|mammal\n" + "|===\n" + "endif::nonhtmloutput[]\n\n";
+        if(System.getProperty("os.name").toLowerCase().startsWith( "windows" )){
+            assertThat( result, equalTo( linuxString.replaceAll( "\n","\r\n" ) ));
+        } else {
+        assertThat( result, equalTo( linuxString ));
+        }
     }
 
     private static class SimpleSettings

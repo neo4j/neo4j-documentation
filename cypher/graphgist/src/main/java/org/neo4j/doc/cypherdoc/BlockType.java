@@ -602,7 +602,8 @@ enum BlockType
                 }
             }
         }
-        return StringUtils.join( lines, "\n" );
+        String separator = System.getProperty("os.name").toLowerCase().startsWith( "windows" )? "\r\n" : "\n";
+        return StringUtils.join( lines, separator );
     }
 
     private static String executeSql( String sql, Connection sqldb )
