@@ -62,8 +62,27 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           resultTable()
         }
       }
+      section("Deleting users", "administration-security-users-drop") {
+        p("Users can be deleted using `DROP USER`.")
+        query("DROP USER jake", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          p("Nothing is returned from this query, except the count of system database changes made.")
+          resultTable()
+        }
+        p("When a user has been deleted, it will no longer appear on the list provided by `SHOW USERS`.")
+        query("SHOW USERS", assertNodesShown("User", column = "user")) {
+          resultTable()
+        }
+        p("This command is optionally idempotent, with the default behavior to throw an exception if the user does not exists. " +
+          "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the user not exist.")
+        query("DROP USER jake IF EXISTS", ResultAssertions( r => {
+          assertStats(r, systemUpdates = 0)
+        })) {}
+      }
     }
     section("Role Management", "administration-security-roles") {
+      initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED")
       p("Roles can be created and managed using a set of Cypher administration commands executed against the `system` database.")
       p("include::role-management-syntax.asciidoc[]")
       section("Listing roles", "administration-security-roles-show") {
@@ -94,7 +113,26 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           assertStats(r, systemUpdates = 2)
         })) {}
       }
+      section("Deleting roles", "administration-security-roles-drop") {
+        p("Roles can be deleted using `DROP ROLE` command.")
+        query("DROP ROLE myrole", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          p("Nothing is returned from this query, except the count of system database changes made.")
+          resultTable()
+        }
+        p("When a role has been deleted, it will no longer appear on the list provided by `SHOW ROLES`.")
+        query("SHOW ROLES", assertNodesShown("Role", column = "role")) {
+          resultTable()
+        }
+        p("This command is optionally idempotent, with the default behavior to throw an exception if the role does not exists. " +
+          "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the role not exist.")
+        query("DROP ROLE myrole IF EXISTS", ResultAssertions( r => {
+          assertStats(r, systemUpdates = 0)
+        })) {}
+      }
       section("Assigning roles to users", "administration-security-roles-grant") {
+        initQueries("CREATE ROLE myrole")
         p("Users can be give access rights by assigning them roles using `GRANT ROLE`.")
         query("GRANT ROLE myrole TO jake", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
