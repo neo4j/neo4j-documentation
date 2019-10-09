@@ -25,7 +25,9 @@ This section explains how to configure indexes to enhance performance in search,
 ** <<administration-indexes-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>
 ** <<administration-indexes-prefix-search-using-starts-with-composite-index, Prefix search using `STARTS WITH` (composite index)>>
 ** <<administration-indexes-suffix-search-using-ends-with-single-property-index, Suffix search using `ENDS WITH` (single-property index)>>
+** <<administration-indexes-suffix-search-using-ends-with-composite-index, Suffix search using `ENDS WITH` (composite index)>>
 ** <<administration-indexes-substring-search-using-contains-single-property-index, Substring search using `CONTAINS` (single-property index)>>
+** <<administration-indexes-substring-search-using-contains-composite-index, Substring search using `CONTAINS` (composite index)>>
 ** <<administration-indexes-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
 ** <<administration-indexes-existence-check-using-exists-composite-index, Existence check using `exists` (composite index)>>
 ** <<administration-indexes-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search (single-property index)>>
