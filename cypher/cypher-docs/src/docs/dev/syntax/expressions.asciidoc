@@ -7,7 +7,7 @@
  ** <<syntax-simple-case, Simple `CASE` form: comparing an expression against multiple values>>
  ** <<syntax-generic-case, Generic `CASE` form: allowing for multiple conditionals to be expressed>>
  ** <<syntax-distinguish-case, Distinguishing between when to use the simple and generic `CASE` forms>>
-
+* <<existential-subqueries, Existential Subqueries>>
 
 [[cypher-expressions-general]]
 == Expressions in general
@@ -34,6 +34,11 @@ An expression in Cypher can be:
 * An operator application: `1 + 2` and `3 < 4`.
 * A predicate expression is an expression that returns true or false: `a.prop = 'Hello'`, `length(p) > 10`,
 `exists(a.name)`.
+* An existential subquery is an expression that returns true or false:
+`EXISTS {
+  MATCH (n)-[r]->(p)
+  WHERE p.name = 'Sven'
+}`.
 * A regular expression: `a.name =~ 'Tim.*'`
 * A case-sensitive string matching expression: `a.surname STARTS WITH 'Sven'`, `a.surname ENDS WITH 'son'` or `a.surname CONTAINS 'son'`
 * A `CASE` expression.
@@ -60,3 +65,5 @@ String literals can contain the following escape sequences:
 |===================
 
 include::../ql/query-syntax-case.adoc[leveloffset=+1]
+
+include::../ql/existential-subqueries.adoc[leveloffset=+1]
