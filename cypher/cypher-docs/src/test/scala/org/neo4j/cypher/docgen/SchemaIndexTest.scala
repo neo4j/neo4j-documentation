@@ -65,6 +65,17 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
+  @Test def create_named_index_on_a_label_single_property() {
+    testQuery(
+      title = "Create a named single-property index",
+      text = "A named index on a single property for all nodes that have a particular label can be created with `CREATE INDEX index_name FOR (n:Label) ON (n.property)`. " +
+        "Note that the index is not immediately available, but will be created in the background.",
+      queryText = "CREATE INDEX my_index FOR (n:Person) ON (n.surname)",
+      optionalResultExplanation = "Note that the index name needs to be unique. ",
+      assertions = _ => assertIndexWithNameExists("my_index", "Person", List("surname"))
+    )
+  }
+
   @Test def create_index_on_a_label_composite_property() {
     testQuery(
       title = "Create a composite index",
@@ -80,10 +91,24 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
+  @Test def create_named_index_on_a_label_composite_property() {
+    testQuery(
+      title = "Create a named composite index",
+      text = "A named index on multiple properties for all nodes that have a particular label -- i.e. a composite index -- can be created with " +
+      "`CREATE INDEX index_name FOR (n:Label) ON (n.prop1, ..., n.propN)`. " +
+      "Only nodes labeled with the specified label and which contain all the properties in the index definition will be added to the index. " +
+      "Note that the composite index is not immediately available, but will be created in the background. " +
+      "The following statement will create a named composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
+      queryText = "CREATE INDEX my_index FOR (n:Person) ON (n.age, n.country)",
+      optionalResultExplanation = "Note that the index name needs to be unique. ",
+      assertions = _ => assertIndexWithNameExists("my_index", "Person", List("age", "country"))
+    )
+  }
+
   @Test def get_all_indexes() {
     prepareAndTestQuery(
       title = "Get a list of all indexes in the database",
-      text = "Calling the built-in procedure `db.indexes` will list all the indexes in the database.",
+      text = "Calling the built-in procedure `db.indexes` will list all the indexes in the database, including their names.",
       prepare = _ => executePreparationQueries(List("create index on :Person(firstname)")),
       queryText = "CALL db.indexes",
       optionalResultExplanation = "",
@@ -111,6 +136,16 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       queryText = "DROP INDEX ON :Person(age, country)",
       optionalResultExplanation = "",
       assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname"), List("location"), List("highScore")))
+    )
+  }
+
+  @Test def drop_named_index() {
+    prepareAndTestQuery(
+      title = "Drop a named index",
+      text = "A named index on all nodes that have a label and property/properties combination can be dropped with `DROP INDEX index_name`.",
+      prepare = _ => executePreparationQueries(List("CREATE INDEX my_index FOR (n:Person) ON (n.surname)")),
+      queryText = "DROP INDEX my_index",
+      assertions = _ => assertIndexWithNameDoesNotExists("my_index")
     )
   }
 
@@ -577,6 +612,28 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       val indexDefs = transaction.schema.getIndexes(Label.label(label)).asScala.toList
       val properties = indexDefs.map(_.getPropertyKeys.asScala.toList)
       assert(properties.toSet === expectedIndexes.toSet)
+    } finally {
+      transaction.close()
+    }
+  }
+
+  def assertIndexWithNameExists(name: String, expectedLabel: String, expectedProperties: List[String]) {
+    val transaction = graphOps.beginTx()
+    try {
+      val indexDef = transaction.schema.getIndexByName(name)
+      val label = indexDef.getLabels.iterator().next()
+      val properties = indexDef.getPropertyKeys.asScala.toSet
+      assert(label.equals(Label.label(expectedLabel)))
+      assert(properties === expectedProperties.toSet)
+    } finally {
+      transaction.close()
+    }
+  }
+
+  def assertIndexWithNameDoesNotExists(name: String) {
+    val transaction = graphOps.beginTx()
+    try {
+      assertThrows[IllegalArgumentException](transaction.schema.getIndexByName(name))
     } finally {
       transaction.close()
     }
