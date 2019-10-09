@@ -1,0 +1,12 @@
+.Command syntax
+[source, cypher]
+-----
+GRANT READ
+    { * | properties }
+    ON GRAPH dbname
+        [
+            { NODES | RELATIONSHIPS | ELEMENTS }
+            [ { * | labels } ]
+        ]
+    TO role
+-----
