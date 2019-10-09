@@ -374,6 +374,34 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
+  @Test def use_index_with_ends_with_composite() {
+    executePreparationQueries(List("CREATE INDEX ON :Person(surname, age)"))
+
+    executePreparationQueries {
+      val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
+      val b = (0 to 300).map { i => s"CREATE (:Person {age: $i, surname: '${-i}'})" }.toList
+      a ++ b
+    }
+
+    sampleAllIndexesAndWait()
+
+    profileQuery(
+      title = "Suffix search using `ENDS WITH` (composite index)",
+      text =
+        "The `ENDS WITH` predicate on `person.surname` in the following query will use the `Person(surname,age)` index, if it exists. " +
+          "However, it will be rewritten as existence check and a filter due to the index not supporting actual suffix searches for composite indexes, " +
+          "this is still faster than not using an index in the first place. " +
+          "Any (non-existence check) predicate on `person.age` will also be rewritten as existence check with a filter. " +
+          "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
+      queryText = "MATCH (person:Person) WHERE person.surname ENDS WITH '300' AND exists(person.age) RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
+      }
+    )
+  }
+
   @Test def use_index_with_contains() {
     executePreparationQueries {
       val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
@@ -395,6 +423,34 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
           assertThat(p.executionPlanDescription().toString, containsString("NodeIndexContainsScan"))
+      }
+    )
+  }
+
+  @Test def use_index_with_contains_composite() {
+    executePreparationQueries(List("CREATE INDEX ON :Person(surname, age)"))
+
+    executePreparationQueries {
+      val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
+      val b = (0 to 300).map { i => s"CREATE (:Person {age: $i, surname: '${-i}'})" }.toList
+      a ++ b
+    }
+
+    sampleAllIndexesAndWait()
+
+    profileQuery(
+      title = "Substring search using `CONTAINS` (composite index)",
+      text =
+        "The `CONTAINS` predicate on `person.surname` in the following query will use the `Person(surname,age)` index, if it exists. " +
+          "However, it will be rewritten as existence check and a filter due to the index not supporting actual suffix searches for composite indexes, " +
+          "this is still faster than not using an index in the first place. " +
+          "Any (non-existence check) predicate on `person.age` will also be rewritten as existence check with a filter. " +
+          "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
+      queryText = "MATCH (person:Person) WHERE person.surname CONTAINS '300' AND exists(person.age) RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
       }
     )
   }

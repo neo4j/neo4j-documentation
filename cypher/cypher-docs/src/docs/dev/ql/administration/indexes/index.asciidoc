@@ -25,7 +25,9 @@ This section explains how to configure indexes to enhance performance in search,
 ** <<administration-indexes-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>
 ** <<administration-indexes-prefix-search-using-starts-with-composite-index, Prefix search using `STARTS WITH` (composite index)>>
 ** <<administration-indexes-suffix-search-using-ends-with-single-property-index, Suffix search using `ENDS WITH` (single-property index)>>
+** <<administration-indexes-suffix-search-using-ends-with-composite-index, Suffix search using `ENDS WITH` (composite index)>>
 ** <<administration-indexes-substring-search-using-contains-single-property-index, Substring search using `CONTAINS` (single-property index)>>
+** <<administration-indexes-substring-search-using-contains-composite-index, Substring search using `CONTAINS` (composite index)>>
 ** <<administration-indexes-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
 ** <<administration-indexes-existence-check-using-exists-composite-index, Existence check using `exists` (composite index)>>
 ** <<administration-indexes-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search (single-property index)>>
@@ -68,22 +70,27 @@ For information on index configuration and limitations, refer to <<operations-ma
 [[administration-indexes-single-vs-composite-index]]
 === Composite index limitations
 
-Unlike single-property indexes, composite indexes currently support only a subset of predicates:
+Like single-property indexes, composite indexes support all predicates:
 
 * equality check: `n.prop = value`
 * list membership check: `n.prop IN list`
 * existence check: `exists(n.prop)`
 * range search: `n.prop > value`
 * prefix search: `STARTS WITH`
+* suffix search: `ENDS WITH`
+* substring search: `CONTAINS`
 
 However, predicates might be planned as existence check and a filter.
-For this to not happen, these restrictions need to be followed:
+For most predicates, this can be avoided by following these restrictions:
 
 * If there is any `equality check` and `list membership check` predicates,
 they need to be for the first properties defined by the index.
 * There can be up to one `range search` or `prefix search` predicate.
 * There can be any number of `existence check` predicates.
-* Any predicate after a `range search`, `prefix search` or `existence check` predicate has to be an `existence check` predicate
+* Any predicate after a `range search`, `prefix search` or `existence check` predicate has to be an `existence check` predicate.
+
+However, the `suffix search` and `substring search` predicates are always planned as existence check and a filter and
+any predicates following after will therefore also be planned as such.
 
 For example, an index on `:Label(prop1,prop2,prop3,prop4,prop5,prop6)` and predicates:
 
@@ -99,10 +106,19 @@ WHERE n.prop1 = 'x' AND n.prop2 = 1 AND n.prop3 > 5 AND exists(n.prop4) AND exis
 
 with filters on `n.prop4 < 'e'` and `n.prop5 = true`, since `n.prop3` has a `range search` predicate.
 
-Queries containing the following types of predicates on properties in the index are not supported (not even as existence check and filter):
+And an index on `:Label(prop1,prop2)` with predicates:
 
-* suffix search: `ENDS WITH`
-* substring search: `CONTAINS`
+```
+WHERE n.prop1 ENDS WITH 'x' AND n.prop2 = false
+```
+
+will be planned as:
+
+```
+WHERE exists(n.prop1) AND exists(n.prop2)
+```
+
+with filters on `n.prop1 ENDS WITH 'x'` and `n.prop2 = false`, since `n.prop1` has a `suffix search` predicate.
 
 Composite indexes require predicates on all properties indexed.
 If there are predicates on only a subset of the indexed properties, it will not be possible to use the composite index.
@@ -143,7 +159,11 @@ include::prefix-search-using-starts-with-composite-index.asciidoc[leveloffset=+1
 
 include::suffix-search-using-ends-with-single-property-index.asciidoc[leveloffset=+1]
 
+include::suffix-search-using-ends-with-composite-index.asciidoc[leveloffset=+1]
+
 include::substring-search-using-contains-single-property-index.asciidoc[leveloffset=+1]
+
+include::substring-search-using-contains-composite-index.asciidoc[leveloffset=+1]
 
 include::existence-check-using-exists-single-property-index.asciidoc[leveloffset=+1]
 
