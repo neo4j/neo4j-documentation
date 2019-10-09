@@ -88,6 +88,14 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Listing roles", "administration-security-roles-show") {
         p("Available roles can be seen using `SHOW ROLES`.")
         query("SHOW ROLES", assertNodesShown("Role")) {
+          p("This is the same command as `SHOW ALL ROLES`.")
+          resultTable()
+        }
+        p("There are multiple versions of this command, the default being `SHOW ALL ROLES`. " +
+          "To only show roles that are assigned to users, the command is `SHOW POPULATED ROLES`. " +
+          "To see which users are assigned to roles can `WITH USERS` be appended to the commands. " +
+          "This will give one result row for each user, so if a role is assigned to two users then it will show up twice in the result.")
+        query("SHOW POPULATED ROLES WITH USERS", assertNodesShown("Role")) {
           resultTable()
         }
       }
@@ -103,7 +111,14 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("SHOW ROLES", assertNodesShown("Role", column = "role")) {
           resultTable()
         }
-        p("This command is optionally idempotent, with the default behavior to throw an exception if the role already exists. " +
+        p("A role can also be copied, keeping its privileges, using `CREATE ROLE AS COPY OF`.")
+        query("CREATE ROLE mysecondrole AS COPY OF myrole", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          p("Nothing is returned from this query, except the count of system database changes made.")
+          resultTable()
+        }
+        p("These command versions are optionally idempotent, with the default behavior to throw an exception if the role already exists. " +
           "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the role already exist. " +
           "Adding `OR REPLACE` to the command will result in any existing role being deleted and a new one created.")
         query("CREATE ROLE myrole IF NOT EXISTS", ResultAssertions( r => {
@@ -115,7 +130,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       }
       section("Deleting roles", "administration-security-roles-drop") {
         p("Roles can be deleted using `DROP ROLE` command.")
-        query("DROP ROLE myrole", ResultAssertions((r) => {
+        query("DROP ROLE mysecondrole", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
           p("Nothing is returned from this query, except the count of system database changes made.")
@@ -127,12 +142,11 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
         p("This command is optionally idempotent, with the default behavior to throw an exception if the role does not exists. " +
           "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the role not exist.")
-        query("DROP ROLE myrole IF EXISTS", ResultAssertions( r => {
+        query("DROP ROLE mysecondrole IF EXISTS", ResultAssertions( r => {
           assertStats(r, systemUpdates = 0)
         })) {}
       }
       section("Assigning roles to users", "administration-security-roles-grant") {
-        initQueries("CREATE ROLE myrole")
         p("Users can be give access rights by assigning them roles using `GRANT ROLE`.")
         query("GRANT ROLE myrole TO jake", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
@@ -144,6 +158,31 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("SHOW USERS", assertNodesShown("User", column = "user")) {
           resultTable()
         }
+        p("It is possible to assign multiple roles to multiple users in one command.")
+        query("GRANT ROLES role1, role2 TO user1,user2,user3", ResultAssertions( r => {
+          assertStats(r, systemUpdates = 4)
+        })) {
+          // Can't pull on the result since neither roles nor users exist
+        }
+      }
+      section("Revoking roles from users", "administration-security-roles-revoke") {
+        p("Users can lose access rights by revoking roles from them using `REVOKE ROLE`.")
+        query("REVOKE ROLE myrole FROM jake", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          p("Nothing is returned from this query, except the count of system database changes made.")
+          resultTable()
+        }
+        p("The roles revoked from users can no longer be seen in the list provided by `SHOW USERS`.")
+        query("SHOW USERS", assertNodesShown("User", column = "user")) {
+          resultTable()
+        }
+        p("It is possible to revoke multiple roles from multiple users in one command.")
+        query("REVOKE ROLES role1, role2 FROM user1,user2,user3", ResultAssertions( r => {
+          assertStats(r, systemUpdates = 4)
+        })) {
+          // Can't pull on the result since neither roles nor users exist
+        }
       }
     }
   }.build()
@@ -151,12 +190,12 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
   private def assertNodesShown(label: String, propertyKey: String = "name", column: String = "name") = ResultAndDbAssertions((p, db) => {
     val tx = db.beginTransaction(Type.explicit, AnonymousContext.read())
     try {
-      println(p.resultAsString)
+//      println(p.resultAsString)
       val nodes = tx.findNodes(Label.label(label)).asScala.toList
       // TODO: Remove this conditional once we have system graph initialization working OK
       if (nodes.nonEmpty) {
         nodes.length should be > 0
-        nodes.foreach(n => println(s"${n.labels}: ${n.getAllProperties}"))
+//        nodes.foreach(n => println(s"${n.labels}: ${n.getAllProperties}"))
         val props = nodes.map(n => n.getProperty(propertyKey))
         props should equal(p.columnAs[String](column).toList)
       }
