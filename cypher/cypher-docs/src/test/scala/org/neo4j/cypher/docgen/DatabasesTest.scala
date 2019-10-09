@@ -48,6 +48,15 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES", assertDatabaseShown) {
         resultTable()
       }
+      p("This command is optionally idempotent, with the default behavior to throw an exception if the database already exists. " +
+        "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database already exist. " +
+        "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created.")
+      query("CREATE DATABASE customers IF NOT EXISTS", ResultAssertions( r => {
+        assertStats(r, systemUpdates = 0)
+      })) {}
+      query("CREATE OR REPLACE DATABASE customers", ResultAssertions( r => {
+        assertStats(r, systemUpdates = 2)
+      })) {}
     }
     section("Stopping databases", "administration-databases-stop-database") {
       p("Databases can be stopped using the `STOP DATABASE` command.")
@@ -87,6 +96,11 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES", assertDatabaseShown) {
         resultTable()
       }
+      p("This command is optionally idempotent, with the default behavior to throw an exception if the database does not exists. " +
+        "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database not exist.")
+      query("DROP DATABASE customers IF EXISTS", ResultAssertions( r => {
+        assertStats(r, systemUpdates = 0)
+      })) {}
     }
   }.build()
 

@@ -37,6 +37,15 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("SHOW USERS", assertNodesShown("User", column = "user")) {
           resultTable()
         }
+        p("This command is optionally idempotent, with the default behavior to throw an exception if the user already exists. " +
+          "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the user already exist. " +
+          "Adding `OR REPLACE` to the command will result in any existing user being deleted and a new one created.")
+        query("CREATE USER jake IF NOT EXISTS SET PASSWORD 'xyz'", ResultAssertions( r => {
+          assertStats(r, systemUpdates = 0)
+        })) {}
+        query("CREATE OR REPLACE USER jake SET PASSWORD 'xyz'", ResultAssertions( r => {
+          assertStats(r, systemUpdates = 2)
+        })) {}
       }
       section("Modifying users", "administration-security-users-alter") {
         p("Users can be modified using `ALTER USER`.")
@@ -75,6 +84,15 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("SHOW ROLES", assertNodesShown("Role", column = "role")) {
           resultTable()
         }
+        p("This command is optionally idempotent, with the default behavior to throw an exception if the role already exists. " +
+          "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the role already exist. " +
+          "Adding `OR REPLACE` to the command will result in any existing role being deleted and a new one created.")
+        query("CREATE ROLE myrole IF NOT EXISTS", ResultAssertions( r => {
+          assertStats(r, systemUpdates = 0)
+        })) {}
+        query("CREATE OR REPLACE ROLE myrole", ResultAssertions( r => {
+          assertStats(r, systemUpdates = 2)
+        })) {}
       }
       section("Assigning roles to users", "administration-security-roles-grant") {
         p("Users can be give access rights by assigning them roles using `GRANT ROLE`.")
