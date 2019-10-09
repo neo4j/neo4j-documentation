@@ -14,6 +14,8 @@
 * <<load-csv-importing-large-amounts-of-data, Importing large amounts of data>>
 * <<load-csv-setting-the-rate-of-periodic-commits, Setting the rate of periodic commits>>
 * <<load-csv-import-data-containing-escaped-characters, Import data containing escaped characters>>
+* <<load-csv-using-linenumber()-with-load-csv, Using linenumber() with LOAD CSV>>
+* <<load-csv-using-file()-with-load-csv, Using file() with LOAD CSV>>
 
 
 [[query-load-csv-introduction,Introduction]]
@@ -66,5 +68,9 @@ include::importing-large-amounts-of-data.asciidoc[]
 include::setting-the-rate-of-periodic-commits.asciidoc[]
 
 include::import-data-containing-escaped-characters.asciidoc[]
+
+include::using-linenumber-function-with-load-csv.asciidoc[]
+
+include::using-file-function-with-load-csv.asciidoc[]
 
 
