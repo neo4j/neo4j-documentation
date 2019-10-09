@@ -26,6 +26,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Creating users", "administration-security-users-create") {
         p("Users can be created using `CREATE USER`.")
         p("include::user-management-syntax-create-user.asciidoc[]")
+        p("If the optional `SET PASSWORD CHANGE [NOT] REQUIRED` is omitted then the default is `CHANGE REQUIRED`. " +
+          "The default for `SET STATUS` is `ACTIVE`.")
         p("For example, we can create the user `jake` in a suspended state and the requirement to change his password.")
         query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
@@ -61,6 +63,19 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("SHOW USERS", assertNodesShown("User", column = "user")) {
           resultTable()
         }
+      }
+      section("Changing the logged in users password", "administration-security-users-alter-password") {
+        p("Users can be change their own password using `ALTER CURRENT USER SET PASSWORD`, " +
+          "the old password is required in addition to the new. " +
+          "This will both change the password and set the `CHANGE NOT REQUIRED` flag.")
+        query("ALTER CURRENT USER SET PASSWORD FROM 'abc123' TO '123xyz'", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          // Can't pull on the result since the test is run with auth disabled, which is not allowed for this command
+        }
+        note( () => {
+          p("This command cannot be run with auth disabled.")
+        })
       }
       section("Deleting users", "administration-security-users-drop") {
         p("Users can be deleted using `DROP USER`.")
