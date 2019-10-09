@@ -69,8 +69,8 @@ include::setting-the-rate-of-periodic-commits.asciidoc[]
 
 include::import-data-containing-escaped-characters.asciidoc[]
 
-include::using-linenumber()-with-load-csv.asciidoc[]
+include::using-linenumber-function-with-load-csv.asciidoc[]
 
-include::using-file()-with-load-csv.asciidoc[]
+include::using-file-function-with-load-csv.asciidoc[]
 
 

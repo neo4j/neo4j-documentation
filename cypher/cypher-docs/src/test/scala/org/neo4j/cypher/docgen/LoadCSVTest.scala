@@ -184,7 +184,7 @@ You can see that when comparing to the length of the string in this case!""",
 
   @Test def should_use_csv_function_linenumber() {
     testQuery(
-      title = "Using linenumber() with LOAD CSV",
+      title = "Using linenumber function with LOAD CSV",
       text = """
 For certain scenarios, like debugging a problem with a csv file, it may be useful to get the current line number that `LOAD CSV` is operating on.
 The ´linenumber()´ function provides exactly that or `null` if called without a `LOAD CSV` context.
@@ -209,7 +209,7 @@ include::csv-files/artists.csv[]
 
   @Test def should_use_csv_function_file() {
     testQuery(
-      title = "Using file() with LOAD CSV",
+      title = "Using file function with LOAD CSV",
       text = """
 |For certain scenarios, like debugging a problem with a csv file, it may be useful to get the absolute path of the file that `LOAD CSV` is operating on.
  |The ´file()´ function provides exactly that or `null` if called without a `LOAD CSV` context.
