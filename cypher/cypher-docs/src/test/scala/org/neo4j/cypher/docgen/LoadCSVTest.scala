@@ -187,7 +187,7 @@ You can see that when comparing to the length of the string in this case!""",
       title = "Using linenumber function with LOAD CSV",
       text = """
 For certain scenarios, like debugging a problem with a csv file, it may be useful to get the current line number that `LOAD CSV` is operating on.
-The ´linenumber()´ function provides exactly that or `null` if called without a `LOAD CSV` context.
+The `linenumber()` function provides exactly that or `null` if called without a `LOAD CSV` context.
 
 .artists.csv
 [source]
@@ -211,8 +211,8 @@ include::csv-files/artists.csv[]
     testQuery(
       title = "Using file function with LOAD CSV",
       text = """
-|For certain scenarios, like debugging a problem with a csv file, it may be useful to get the absolute path of the file that `LOAD CSV` is operating on.
- |The ´file()´ function provides exactly that or `null` if called without a `LOAD CSV` context.
+For certain scenarios, like debugging a problem with a csv file, it may be useful to get the absolute path of the file that `LOAD CSV` is operating on.
+The `file()` function provides exactly that or `null` if called without a `LOAD CSV` context.
 
 .artists.csv
 [source]
