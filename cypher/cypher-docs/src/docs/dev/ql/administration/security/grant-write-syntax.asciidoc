@@ -1,0 +1,8 @@
+.Command syntax
+[source, cypher]
+-----
+GRANT WRITE { * }
+    ON GRAPH dbname
+    [ ELEMENTS * ]
+    TO role
+-----

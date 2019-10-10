@@ -56,9 +56,6 @@ this combines both TRAVERSE and READ allowing an entity to be found and its prop
 +
 this privilege can only be assigned to all nodes, relationships and properties in the entire graph (this means that the entity part of the command must also be `ELEMENTS +*+` and cannot be more specific.
 +
-//TODO:
-** `ALL OTHER PRIVILEGES +{*}+`
-+
 TODO: Add all the other privileges here, there are quite a few!
 +
 * _dbname_

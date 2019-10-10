@@ -1,0 +1,7 @@
+.Command syntax
+[source, cypher]
+-----
+GRANT ACCESS
+    ON GRAPH dbname
+    TO role
+-----

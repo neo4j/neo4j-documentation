@@ -1,0 +1,8 @@
+.Command syntax
+[source, cypher]
+-----
+DENY WRITE { * }
+    ON GRAPH dbname
+    [ ELEMENTS * ]
+    TO role
+-----
