@@ -36,7 +36,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("Nothing is returned from this query, except the count of system database changes made.")
           resultTable()
         }
-        p("The user created will appear on the list provided by `SHOW USERS`.")
+        p("The created user will appear on the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertNodesShown("User", column = "user")) {
           resultTable()
         }
@@ -48,7 +48,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {}
         query("CREATE OR REPLACE USER jake SET PASSWORD 'xyz'", ResultAssertions( r => {
           assertStats(r, systemUpdates = 2)
-        })) {}
+        })) {
+          p("This is equivalent to running `DROP USER jake IF EXISTS` followed by `CREATE USER jake SET PASSWORD 'xyz'`.")
+        }
       }
       section("Modifying users", "administration-security-users-alter") {
         p("Users can be modified using `ALTER USER`.")
@@ -74,9 +76,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {
           // Can't pull on the result since the test is run with auth disabled, which is not allowed for this command
         }
-        note( () => {
+        note {
           p("This command cannot be run with auth disabled.")
-        })
+        }
       }
       section("Deleting users", "administration-security-users-drop") {
         p("Users can be deleted using `DROP USER`.")
@@ -124,15 +126,15 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("Nothing is returned from this query, except the count of system database changes made.")
           resultTable()
         }
-        p("The role created will appear on the list provided by `SHOW ROLES`.")
-        query("SHOW ROLES", assertNodesShown("Role", column = "role")) {
-          resultTable()
-        }
         p("A role can also be copied, keeping its privileges, using `CREATE ROLE AS COPY OF`.")
         query("CREATE ROLE mysecondrole AS COPY OF myrole", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
           p("Nothing is returned from this query, except the count of system database changes made.")
+          resultTable()
+        }
+        p("The created roles will appear on the list provided by `SHOW ROLES`.")
+        query("SHOW ROLES", assertNodesShown("Role", column = "role")) {
           resultTable()
         }
         p("These command versions are optionally idempotent, with the default behavior to throw an exception if the role already exists. " +
@@ -143,7 +145,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {}
         query("CREATE OR REPLACE ROLE myrole", ResultAssertions( r => {
           assertStats(r, systemUpdates = 2)
-        })) {}
+        })) {
+          p("This is equivalent to running `DROP ROLE myrole IF EXISTS` followed by `CREATE ROLE myrole`.")
+        }
       }
       section("Deleting roles", "administration-security-roles-drop") {
         p("Roles can be deleted using `DROP ROLE` command.")

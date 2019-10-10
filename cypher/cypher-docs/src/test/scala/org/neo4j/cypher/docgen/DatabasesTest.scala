@@ -65,7 +65,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       })) {}
       query("CREATE OR REPLACE DATABASE customers", ResultAssertions( r => {
         assertStats(r, systemUpdates = 2)
-      })) {}
+      })) {
+        p("This is equivalent to running `DROP DATABASE customers IF EXISTS` followed by `CREATE DATABASE customers`.")
+      }
     }
     section("Stopping databases", "administration-databases-stop-database") {
       p("Databases can be stopped using the `STOP DATABASE` command.")
