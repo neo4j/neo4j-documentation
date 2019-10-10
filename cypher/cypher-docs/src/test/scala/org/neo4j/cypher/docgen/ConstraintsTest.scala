@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen
 
 import java.io.File
 
-import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
+import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.junit.Test
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.exceptions.CypherExecutionException

@@ -22,7 +22,7 @@ package org.neo4j.cypher.docgen
 import java.io._
 import java.nio.charset.StandardCharsets
 
-import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
+import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.apache.commons.io.FileUtils
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
