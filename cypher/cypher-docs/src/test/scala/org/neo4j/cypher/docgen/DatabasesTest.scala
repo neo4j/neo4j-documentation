@@ -35,12 +35,12 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
-      p("A particular database can be seen using the `SHOW DATABASE database_name`.")
+      p("A particular database can be seen using the `SHOW DATABASE name`.")
       query("SHOW DATABASE system", assertDatabaseShown("system")) {
         resultTable()
       }
       p("The default database can be seen using the `SHOW DEFAULT DATABASE`.")
-      query("SHOW DATABASE neo4j", assertDatabaseShown("neo4j")) {
+      query("SHOW DEFAULT DATABASE", assertDatabaseShown("neo4j")) {
         resultTable()
       }
       considerations("The `status` of the database is the desired status, and might not necessarily reflect the actual status across all members of a cluster.")
@@ -60,10 +60,10 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       p("This command is optionally idempotent, with the default behavior to throw an exception if the database already exists. " +
         "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database already exist. " +
         "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created.")
-      query("CREATE DATABASE customers IF NOT EXISTS", ResultAssertions( r => {
+      query("CREATE DATABASE customers IF NOT EXISTS", ResultAssertions(r => {
         assertStats(r, systemUpdates = 0)
       })) {}
-      query("CREATE OR REPLACE DATABASE customers", ResultAssertions( r => {
+      query("CREATE OR REPLACE DATABASE customers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 2)
       })) {
         p("This is equivalent to running `DROP DATABASE customers IF EXISTS` followed by `CREATE DATABASE customers`.")
@@ -109,7 +109,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       p("This command is optionally idempotent, with the default behavior to throw an exception if the database does not exists. " +
         "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database not exist.")
-      query("DROP DATABASE customers IF EXISTS", ResultAssertions( r => {
+      query("DROP DATABASE customers IF EXISTS", ResultAssertions(r => {
         assertStats(r, systemUpdates = 0)
       })) {}
     }

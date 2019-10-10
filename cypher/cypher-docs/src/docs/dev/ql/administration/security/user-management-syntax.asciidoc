@@ -29,7 +29,7 @@ STATUS {ACTIVE \| SUSPENDED}
 
 | [source, cypher]
 ALTER CURRENT USER SET PASSWORD FROM original TO password
-| Change the logged in users password | Normal user
+| Change the current user's password | Normal user
 
 | [source, cypher]
 SHOW USERS
