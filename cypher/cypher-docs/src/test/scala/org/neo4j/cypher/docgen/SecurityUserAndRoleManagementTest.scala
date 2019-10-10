@@ -22,6 +22,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("SHOW USERS", assertNodesShown("User")) {
           resultTable()
         }
+        p("The `SHOW USER name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
       }
       section("Creating users", "administration-security-users-create") {
         p("Users can be created using `CREATE USER`.")
@@ -113,6 +114,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("SHOW POPULATED ROLES WITH USERS", assertNodesShown("Role")) {
           resultTable()
         }
+        p("The `SHOW ROLE name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
       }
       section("Creating roles", "administration-security-roles-create") {
         p("Roles can be created using `CREATE ROLE`.")
