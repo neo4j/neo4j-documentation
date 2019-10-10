@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen.tooling
 
 import java.io.File
 
-import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
+import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.apache.commons.io.FileUtils
 import org.neo4j.configuration.GraphDatabaseSettings.SYSTEM_DATABASE_NAME
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME

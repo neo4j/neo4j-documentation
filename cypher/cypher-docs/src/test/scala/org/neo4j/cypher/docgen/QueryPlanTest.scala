@@ -25,7 +25,7 @@ import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.dbms.api.DatabaseManagementService
-import com.neo4j.enterprise.edition.factory.EnterpriseDatabaseManagementServiceBuilder
+import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
