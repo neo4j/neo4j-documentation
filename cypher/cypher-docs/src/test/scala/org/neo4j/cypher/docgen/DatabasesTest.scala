@@ -30,8 +30,17 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |All multi-database administrative commands need to be executing against the `system` database.""".stripMargin)
     }
     section("Listing databases", "administration-databases-show-databases") {
-      p("Available databases can be seen using the `SHOW DATABASES`.")
-      query("SHOW DATABASES", assertDatabaseShown) {
+      p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
+      p("All available databases can be seen using the `SHOW DATABASES`.")
+      query("SHOW DATABASES", assertDatabasesShown) {
+        resultTable()
+      }
+      p("A particular database can be seen using the `SHOW DATABASE database_name`.")
+      query("SHOW DATABASE system", assertDatabaseShown("system")) {
+        resultTable()
+      }
+      p("The default database can be seen using the `SHOW DEFAULT DATABASE`.")
+      query("SHOW DATABASE neo4j", assertDatabaseShown("neo4j")) {
         resultTable()
       }
       considerations("The `status` of the database is the desired status, and might not necessarily reflect the actual status across all members of a cluster.")
@@ -44,8 +53,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("Nothing is returned from this query, except the count of administrative commands.")
         resultTable()
       }
-      p("The status of any databases created can be seen using the command `SHOW DATABASES`.")
-      query("SHOW DATABASES", assertDatabaseShown) {
+      p("When a database has been created, it will show up in the listing provided by the command `SHOW DATABASES`.")
+      query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
       p("This command is optionally idempotent, with the default behavior to throw an exception if the database already exists. " +
@@ -66,8 +75,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("Nothing is returned from this query, except the count of administrative commands.")
         resultTable()
       }
-      p("The status of any databases stopped can be seen using the command `SHOW DATABASES`.")
-      query("SHOW DATABASES", assertDatabaseShown) {
+      p("The status of the stopped database can be seen using the command `SHOW DATABASE name`.")
+      query("SHOW DATABASE customers", assertDatabaseShown("customers")) {
         resultTable()
       }
     }
@@ -79,8 +88,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("Nothing is returned from this query, except the count of administrative commands.")
         resultTable()
       }
-      p("The status of any databases started can be seen using the command `SHOW DATABASES`.")
-      query("SHOW DATABASES", assertDatabaseShown) {
+      p("The status of the started database can be seen using the command `SHOW DATABASE name`.")
+      query("SHOW DATABASE customers", assertDatabaseShown("customers")) {
         resultTable()
       }
     }
@@ -93,7 +102,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
       p("When a database has been deleted, it will no longer show up in the listing provided by the command `SHOW DATABASES`.")
-      query("SHOW DATABASES", assertDatabaseShown) {
+      query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
       p("This command is optionally idempotent, with the default behavior to throw an exception if the database does not exists. " +
@@ -104,12 +113,23 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
   }.build()
 
-  private def assertDatabaseShown = ResultAndDbAssertions((p, db) => {
+  private def assertDatabasesShown = ResultAndDbAssertions((p, db) => {
     val tx = db.beginTransaction(Type.explicit, AnonymousContext.read())
     try {
       val dbNodes = tx.findNodes(Label.label("Database")).asScala.toList
       val dbNames = dbNodes.map(n => n.getProperty("name"))
-      dbNames should equal(p.columnAs[String]("name").toList)
+      val result = p.columnAs[String]("name").toList
+      result should equal(dbNames)
+    } finally {
+      tx.close()
+    }
+  })
+
+  private def assertDatabaseShown(expected: String) = ResultAndDbAssertions((p, db) => {
+    val tx = db.beginTransaction(Type.explicit, AnonymousContext.read())
+    try {
+      val result = p.columnAs[String]("name").toList
+      result should equal(List(expected))
     } finally {
       tx.close()
     }
