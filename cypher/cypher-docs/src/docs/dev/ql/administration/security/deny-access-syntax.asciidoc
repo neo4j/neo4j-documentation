@@ -2,6 +2,6 @@
 [source, cypher]
 -----
 DENY ACCESS
-    ON GRAPH dbname
+    ON DATABASE dbname
     TO role
 -----
