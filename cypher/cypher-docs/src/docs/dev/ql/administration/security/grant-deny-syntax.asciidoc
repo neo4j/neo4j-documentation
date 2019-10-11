@@ -29,14 +29,12 @@ REVOKE graph-privilege ON GRAPH dbname entity FROM role
 | Revoke a granted or denied privilege from a role
 |===
 
+[NOTE]
+These commands are almost identical to the <<administration-security-administration-introduction, database-privileges>> except for the use of the term `GRAPH`, the addition of an `entity` term, and the set of available _database-privileges_ differs from the _graph-privileges_.
 
 Where the components are:
 
 * _graph-privilege_
-** `ACCESS`
-+
-allows access for a specific database/graph
-+
 ** `TRAVERSE`
 +
 allows the specified entities to be found
@@ -56,11 +54,9 @@ this combines both TRAVERSE and READ allowing an entity to be found and its prop
 +
 this privilege can only be assigned to all nodes, relationships and properties in the entire graph (this means that the entity part of the command must also be `ELEMENTS +*+` and cannot be more specific.
 +
-TODO: Add all the other privileges here, there are quite a few!
-+
 * _dbname_
-** The graph or graphs to associate the privilege with, as defined by the database name in Neo4j 4.0 which has only one graph per database.
-   Note that if you delete a database and create a new one with the same name, the new one will NOT have any of the privileges specifically assigned to the deleted graph.
+** The graph or graphs to associate the privilege with. In {neo4j.version} there can be only one graph per database, and therefor this command uses the database name to refer to that graph.
+   Note that if you delete a database and create a new one with the same name, the new one will _NOT_ have any of the privileges specifically assigned to the deleted graph.
 ** Multiple graph names can be specified, comma-separated.
 ** It can be `+*+` which means all graphs.
   Any new databases created after this command will also be associated with these privileges.

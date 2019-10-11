@@ -38,7 +38,8 @@ import scala.util.{Failure, Success, Try}
  * we drop the database and create a new one. This way we can make sure that two queries don't affect each other more than
  * necessary.
  */
-class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) => DocsExecutionResult => Content) extends GraphIcing {
+class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) => DocsExecutionResult => Content,
+                  statsOnly: (GraphDatabaseQueryService, InternalTransaction) => DocsExecutionResult => Content) extends GraphIcing {
 
   def runQueries(contentsWithInit: Seq[ContentWithInit], title: String): TestRunResult = {
 
@@ -90,7 +91,10 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
   }
 
   private def runSingleQuery(dbms: RestartableDatabase, query: DatabaseQuery, assertions: QueryAssertions, content: TablePlaceHolder): QueryRunResult = {
-    val format: (InternalTransaction) => (DocsExecutionResult) => Content = (tx: InternalTransaction) => formatter(dbms.getInnerDb, tx)(_)
+    val format: (InternalTransaction) => (DocsExecutionResult) => Content = (tx: InternalTransaction) => content match {
+      case _: StatsOnlyTablePlaceHolder => statsOnly(dbms.getInnerDb, tx)(_)
+      case _ => formatter(dbms.getInnerDb, tx)(_)
+    }
 
     val result: Either[Throwable, InternalTransaction => Content] =
       try {

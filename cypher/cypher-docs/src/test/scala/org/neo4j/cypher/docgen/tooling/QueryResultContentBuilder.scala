@@ -47,10 +47,27 @@ class QueryResultContentBuilder(valueFormatter: Any => String)
 
     val footerRows = if (rowCount == 1) "1 row" else s"$rowCount rows"
     val footer = if (result.queryStatistics().containsUpdates)
-      footerRows + "\n" + result.queryStatistics().toString
+      footerRows + ", " + result.queryStatistics().toString
     else
       footerRows
 
     QueryResultTable(result.columns, rows, footer)
+  }
+}
+
+class StatsOnlyQueryResultContentBuilder()
+  extends (DocsExecutionResult => Content) {
+
+  override def apply(result: DocsExecutionResult): Content = {
+
+    assert(result.toList.isEmpty, "We can only use the 'StatsOnly' results content builder for queries that return no rows")
+
+    val footerRows = "0 rows"
+    val footer = if (result.queryStatistics().containsUpdates)
+      footerRows + ", " + result.queryStatistics().toString
+    else
+      footerRows
+
+    StatsOnlyQueryResultTable(footer)
   }
 }

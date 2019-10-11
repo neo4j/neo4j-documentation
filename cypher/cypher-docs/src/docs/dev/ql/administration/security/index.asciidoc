@@ -23,7 +23,7 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 ** <<administration-security-subgraph-match, The MATCH privilege>>
 ** <<administration-security-subgraph-revoke, The REVOKE command>>
 * <<administration-security-administration, Security of Administration>>
-** <<administration-security-administration-admin, The 'admin' role>>
+** <<administration-security-administration-introduction, The 'admin' role>>
 ** <<administration-security-administration-database-privileges, Database administration>>
 ** <<administration-security-administration-dbms-privileges, DBMS administration>>
 

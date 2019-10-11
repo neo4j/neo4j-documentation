@@ -1,0 +1,11 @@
+As described above, the `admin` role has a number of built-in privileges that cannot be assigned using Cypher commands.
+These include:
+
+* Create or drop databases
+* Change configuration parameters
+* Manage transactions
+* Manage users and roles
+* Manage sub-graph privileges
+* Manage procedure security
+
+The only way to enable a user to perform these tasks is to grant them the `admin` role.
