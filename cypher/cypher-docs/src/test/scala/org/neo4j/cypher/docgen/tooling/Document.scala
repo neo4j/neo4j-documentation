@@ -254,6 +254,20 @@ case class QueryResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: 
   private def escape(in: String): String = "+%s+".format(in)
 }
 
+case class StatsOnlyQueryResultTable(footer: String) extends Content with NoQueries {
+  override def asciiDoc(level: Int): String = {
+    // Remove trailing white space, then add <space>+ at the end of all rows (except the last one)
+    val footerRows = footer.replaceAll("\\s+$", "").replaceAllLiterally("\n", " +\n")
+
+    s"""[role="statsonlyqueryresult"]
+       |$footerRows
+       |
+       |""".stripMargin
+  }
+
+  private def escape(in: String): String = "+%s+".format(in)
+}
+
 trait DatabaseQuery {
   def prettified: String
   def database: Option[String]
@@ -363,6 +377,7 @@ trait QueryResultPlaceHolder {
 
 // NOTE: These must _not_ be case classes, otherwise they will not be compared by identity
 class TablePlaceHolder(val assertions: QueryAssertions, val params: (String, Any)*) extends Content with QueryResultPlaceHolder
+class StatsOnlyTablePlaceHolder(assertions: QueryAssertions, params: (String, Any)*) extends TablePlaceHolder(assertions, params: _*)
 class GraphVizPlaceHolder(val options: String) extends Content with QueryResultPlaceHolder
 class ErrorPlaceHolder() extends Content with QueryResultPlaceHolder
 class ExecutionPlanPlaceHolder(val assertions: QueryAssertions) extends Content with QueryResultPlaceHolder

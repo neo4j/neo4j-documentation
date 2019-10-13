@@ -1,0 +1,7 @@
+.Command syntax
+[source, cypher]
+-----
+GRANT ACCESS
+    ON DATABASE dbname
+    TO role
+-----

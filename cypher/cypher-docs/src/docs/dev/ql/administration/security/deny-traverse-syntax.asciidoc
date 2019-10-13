@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher]
 -----
-GRANT TRAVERSE
+DENY TRAVERSE
     ON GRAPH dbname
         [
            { NODES | RELATIONSHIPS | ELEMENTS }
