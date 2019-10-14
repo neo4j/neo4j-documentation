@@ -31,27 +31,26 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Listing databases", "administration-databases-show-databases") {
       p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
-      p("All available databases can be seen using the `SHOW DATABASES`.")
+      p("All available databases can be seen using the command `SHOW DATABASES`.")
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
-      p("A particular database can be seen using the `SHOW DATABASE name`.")
+      p("A particular database can be seen using the command `SHOW DATABASE name`.")
       query("SHOW DATABASE system", assertDatabaseShown("system")) {
         resultTable()
       }
-      p("The default database can be seen using the `SHOW DEFAULT DATABASE`.")
+      p("The default database can be seen using the command `SHOW DEFAULT DATABASE`.")
       query("SHOW DEFAULT DATABASE", assertDatabaseShown("neo4j")) {
         resultTable()
       }
       considerations("The `status` of the database is the desired status, and might not necessarily reflect the actual status across all members of a cluster.")
     }
     section("Creating databases", "administration-databases-create-database") {
-      p("Databases can be created using the `CREATE DATABASE`.")
+      p("Databases can be created using `CREATE DATABASE`.")
       query("CREATE DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
       })) {
-        p("Nothing is returned from this query, except the count of administrative commands.")
-        resultTable()
+        statsOnlyResultTable()
       }
       p("When a database has been created, it will show up in the listing provided by the command `SHOW DATABASES`.")
       query("SHOW DATABASES", assertDatabasesShown) {
@@ -70,12 +69,11 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Stopping databases", "administration-databases-stop-database") {
-      p("Databases can be stopped using the `STOP DATABASE` command.")
+      p("Databases can be stopped using the command `STOP DATABASE`.")
       query("STOP DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
       })) {
-        p("Nothing is returned from this query, except the count of administrative commands.")
-        resultTable()
+        statsOnlyResultTable()
       }
       p("The status of the stopped database can be seen using the command `SHOW DATABASE name`.")
       query("SHOW DATABASE customers", assertDatabaseShown("customers")) {
@@ -83,12 +81,11 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Starting databases", "administration-databases-start-database") {
-      p("Databases can be started using the `START DATABASE` command.")
+      p("Databases can be started using the command `START DATABASE`.")
       query("START DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
       })) {
-        p("Nothing is returned from this query, except the count of administrative commands.")
-        resultTable()
+        statsOnlyResultTable()
       }
       p("The status of the started database can be seen using the command `SHOW DATABASE name`.")
       query("SHOW DATABASE customers", assertDatabaseShown("customers")) {
@@ -96,12 +93,11 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Deleting databases", "administration-databases-drop-database") {
-      p("Databases can be deleted using the `DROP DATABASE` command.")
+      p("Databases can be deleted using the command `DROP DATABASE`.")
       query("DROP DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
       })) {
-        p("Nothing is returned from this query, except the count of administrative commands.")
-        resultTable()
+        statsOnlyResultTable()
       }
       p("When a database has been deleted, it will no longer show up in the listing provided by the command `SHOW DATABASES`.")
       query("SHOW DATABASES", assertDatabasesShown) {

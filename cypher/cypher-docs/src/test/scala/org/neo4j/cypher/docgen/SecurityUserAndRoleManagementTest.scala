@@ -33,8 +33,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
-          p("Nothing is returned from this query, except the count of system database changes made.")
-          resultTable()
+          statsOnlyResultTable()
         }
         p("The created user will appear on the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
@@ -59,8 +58,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
-          p("Nothing is returned from this query, except the count of system database changes made.")
-          resultTable()
+          statsOnlyResultTable()
         }
         p("The changes to the user will appear on the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
@@ -126,8 +124,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("CREATE ROLE myrole", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
-          p("Nothing is returned from this query, except the count of system database changes made.")
-          resultTable()
+          statsOnlyResultTable()
         }
         p("A role can also be copied, keeping its privileges, using `CREATE ROLE AS COPY OF`.")
         query("CREATE ROLE mysecondrole AS COPY OF myrole", ResultAssertions((r) => {
@@ -175,8 +172,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("GRANT ROLE myrole TO jake", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
-          p("Nothing is returned from this query, except the count of system database changes made.")
-          resultTable()
+          statsOnlyResultTable()
         }
         p("The roles assigned to each user can be seen in the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {

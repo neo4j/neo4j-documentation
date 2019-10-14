@@ -11,10 +11,10 @@ including the associated security model, is maintained in a special database cal
 Most administrative commands need to be executing against the `system` database because they involve
 editing the metadata for the entire system. This includes all commands related to managing multiple databases
 as well as all commands for defining the security model: users, roles and privileges. The administrative commands
-that as specific to the schema of an individual database are still executed against that specific database.
-This includes index and constraint management commands.
+that are specific to the schema of an individual database are still executed against that specific database.
+These include index and constraint management commands.
 
-* <<administration-databases, Database Management>>
+* <<administration-databases, Databases>>
 ** <<administration-databases-introduction, Introduction>>
 ** <<administration-databases-show-databases, Listing databases>>
 ** <<administration-databases-create-database, Creating databases>>
