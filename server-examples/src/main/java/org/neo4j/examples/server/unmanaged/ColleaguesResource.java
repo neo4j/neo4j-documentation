@@ -82,10 +82,10 @@ public class ColleaguesResource
                     while ( persons.hasNext() )
                     {
                         Node person = persons.next();
-                        for ( Relationship actedIn : person.getRelationships( ACTED_IN, OUTGOING ) )
+                        for ( Relationship actedIn : person.getRelationships( OUTGOING, ACTED_IN ) )
                         {
                             Node endNode = actedIn.getEndNode();
-                            for ( Relationship colleagueActedIn : endNode.getRelationships( ACTED_IN, INCOMING ) )
+                            for ( Relationship colleagueActedIn : endNode.getRelationships( INCOMING, ACTED_IN ) )
                             {
                                 Node colleague = colleagueActedIn.getStartNode();
                                 if ( !colleague.equals( person ) )
