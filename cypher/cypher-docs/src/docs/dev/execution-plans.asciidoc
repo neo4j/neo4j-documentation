@@ -232,6 +232,8 @@ We list below all the actions that trigger one or more database hits:
 * Call a procedure
 * Call a user-defined function
 
+Note that the presented value can vary slightly depending on the Cypher runtime that was used to execute the query.
+In the pipelined runtime the number of _database hits_ will typically be higher since it uses a more accurate way of measuring.
 
 include::execution-plan-groups/operators.asciidoc[leveloffset=+1]
 
