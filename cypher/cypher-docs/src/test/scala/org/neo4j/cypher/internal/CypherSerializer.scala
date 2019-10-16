@@ -24,7 +24,6 @@ import java.time.temporal.TemporalAmount
 
 import org.neo4j.cypher.internal.runtime.QueryContext
 import org.neo4j.graphdb.spatial.Point
-import org.neo4j.graphdb.traversal.Paths
 import org.neo4j.graphdb.{Entity, Node, Path, Relationship}
 
 import scala.collection.Map
@@ -35,16 +34,10 @@ trait CypherSerializer {
   Be explicit to force the decision how to represent each type.
   Don't use internal types.
    */
-  protected def serialize(a: Any, qtx: QueryContext): String = {
-    val transaction = qtx.transactionalContext.transaction.internalTransaction()
-    a match {
-    case x: Node                  =>
-      val node = transaction.getNodeById(x.getId)
-      node.toString + serializeProperties(node, qtx)
-    case x: Relationship          =>
-      val rel = transaction.getRelationshipById(x.getId)
-      ":" + rel.getType.name() + "[" + rel.getId + "]" + serializeProperties(rel, qtx)
-    case x: Path                  => Paths.defaultPathToStringWithNotInTransactionFallback(x);
+  protected def serialize(a: Any, qtx: QueryContext): String = a match {
+    case x: Node                  => x.toString + serializeProperties(x, qtx)
+    case x: Relationship          => ":" + x.getType.name() + "[" + x.getId + "]" + serializeProperties(x, qtx)
+    case x: Path                  => x.toString
     case x: Map[_, _]             => makeString(x.asInstanceOf[Map[String, Any]], qtx)
     case x: Seq[_]                => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
     case x: Array[_]              => x.map(elem => serialize(elem, qtx)).mkString("[", ",", "]")
@@ -62,7 +55,6 @@ trait CypherSerializer {
     case x: Point                 => x.toString
     case null                     => "<null>"
     case x                        => throw new IllegalArgumentException(s"Type ${x.getClass} must be explicitly handled.")
-  }
   }
 
   protected def serializeProperties(x: Entity, qtx: QueryContext): String = {

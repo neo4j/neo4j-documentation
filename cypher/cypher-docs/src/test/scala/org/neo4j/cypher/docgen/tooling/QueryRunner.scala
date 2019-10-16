@@ -96,47 +96,43 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
       case _ => formatter(dbms.getInnerDb, tx)(_)
     }
 
-    val result: Either[Throwable, InternalTransaction => Content] =
-      try {
-        val resultTry = Try(dbms.executeWithParams(query, content.params:_*))
-        (assertions, resultTry) match {
-          // *** Success conditions
+    val tx: InternalTransaction = dbms.beginTx(query.database)
+    try {
+      val result: Either[Throwable, InternalTransaction => Content] =
+        try {
+          val resultTry = Try(dbms.executeWithParams(tx, query.runnable, content.params: _*))
+          (assertions, resultTry) match {
+            // *** Success conditions
 
-          case (ResultAssertions(f), Success(r)) =>
-            f(r)
-            Right(format(_)(r))
+            case (ResultAssertions(f), Success(r)) =>
+              f(r)
+              Right(format(_)(r))
 
-          case (ResultAndDbAssertions(f), Success(r)) =>
-            f(r, dbms.getInnerDb)
-            Right(format(_)(r))
+            case (ResultAndDbAssertions(f), Success(r)) =>
+              f(r, dbms.getInnerDb)
+              Right(format(_)(r))
 
-          case (NoAssertions, Success(r)) =>
-            Right(format(_)(r))
+            case (NoAssertions, Success(r)) =>
+              Right(format(_)(r))
 
-          // *** Error conditions
-          case (_, Failure(exception: Throwable)) =>
-            Left(exception)
+            // *** Error conditions
+            case (_, Failure(exception: Throwable)) =>
+              Left(exception)
 
-          case x =>
-            throw new InternalException(s"Did not see this one coming $x")
+            case x =>
+              throw new InternalException(s"Did not see this one coming $x")
+          }
+        } catch {
+          case e: Throwable =>
+            Left(e)
         }
-      } catch {
-        case e: Throwable =>
-          Left(e)
-      }
 
-    val formattedResult: Either[Throwable, Content] = {
-      val tx = dbms.getInnerDb.beginTransaction(Type.`implicit`, AUTH_DISABLED)
-      try {
-        val r = result.right.map(contentBuilder => contentBuilder(tx))
-        tx.commit()
-        r
-      } finally {
-        tx.close()
-      }
+      val runResult = QueryRunResult(query.prettified, content, result.right.map(contentBuilder => contentBuilder(tx)))
+      tx.commit()
+      runResult
+    } finally {
+      tx.close()
     }
-
-    QueryRunResult(query.prettified, content, formattedResult)
   }
 
   private def explainSingleQuery(database: RestartableDatabase,

@@ -23,14 +23,16 @@ import java.io.File
 
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.apache.commons.io.FileUtils
-import org.neo4j.configuration.GraphDatabaseSettings.SYSTEM_DATABASE_NAME
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultSubscriber}
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
-import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
+import org.neo4j.dbms.api.DatabaseManagementService
+import org.neo4j.internal.kernel.api.security.SecurityContext.AUTH_DISABLED
+import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.api.procedure.GlobalProcedures
+import org.neo4j.kernel.impl.coreapi.InternalTransaction
 
 import scala.collection.mutable
 import scala.util.Try
@@ -59,15 +61,17 @@ class RestartableDatabase(init: RunnableInitialization)
       managementService.listDatabases().toArray().foreach { name =>
         graphs(name.toString) = new MetaData(name.toString)
       }
-      selectDatabase(DEFAULT_DATABASE_NAME)
+      selectDatabase(Some(DEFAULT_DATABASE_NAME))
     }
   }
 
-  private def selectDatabase(database: String): Unit = {
-    val meta = graphs(database)
-    graph = meta.graph
-    eengine = meta.eengine
-    _failures = meta.failures
+  private def selectDatabase(database: Option[String]): Unit = {
+    if (database.isDefined) {
+      val meta = graphs(database.get)
+      graph = meta.graph
+      eengine = meta.eengine
+      _failures = meta.failures
+    }
   }
 
   def failures = {
@@ -84,28 +88,40 @@ class RestartableDatabase(init: RunnableInitialization)
     restart()
   }
 
-  def executeWithParams(query: DatabaseQuery, params: (String, Any)*): DocsExecutionResult = {
-    val q = query.runnable
+  def beginTx(database: Option[String]): InternalTransaction = {
     createAndStartIfNecessary()
-    if (query.database.isDefined) selectDatabase(query.database.get)
+    selectDatabase(database)
+    graph.beginTransaction(Type.`implicit`, AUTH_DISABLED)
+  }
+
+  def executeWithParams(tx: InternalTransaction, q: String, params: (String, Any)*): DocsExecutionResult = {
     val executionResult: DocsExecutionResult = try {
-      graph.inTx({ tx =>
-        val txContext = graph.transactionalContext(tx, query = q -> params.toMap)
-        val subscriber = new ResultSubscriber(txContext)
-        val execution = eengine.execute(q,
-          ExecutionEngineHelper.asMapValue(params.toMap),
-          txContext,
-          profile = false,
-          prePopulate = false,
-          subscriber)
-        subscriber.init(execution)
-        DocsExecutionResult(subscriber, txContext)
-      })
+      val txContext = graph.transactionalContext(tx, query = q -> params.toMap)
+      val subscriber = new ResultSubscriber(txContext)
+      val execution = eengine.execute(q,
+        ExecutionEngineHelper.asMapValue(params.toMap),
+        txContext,
+        profile = false,
+        prePopulate = false,
+        subscriber)
+      subscriber.init(execution)
+      DocsExecutionResult(subscriber, txContext)
     } catch {
       case e: Throwable => _markedForRestart = true; throw e
     }
     _markedForRestart = executionResult.queryStatistics().containsUpdates
     executionResult
+  }
+
+  def executeWithParams(query: DatabaseQuery, params: (String, Any)*): DocsExecutionResult = {
+    val tx = beginTx(query.database)
+    try {
+      val executionResult = executeWithParams(tx, query.runnable, params: _*)
+      tx.commit()
+      executionResult
+    } finally {
+      tx.close()
+    }
   }
 
   private def restart() {
