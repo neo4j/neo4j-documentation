@@ -60,8 +60,7 @@ class ForeachTest extends DocumentingTest with QueryStatisticsTestSupport {
           |FOREACH (n IN nodes(p) | SET n.marked = true)""".stripMargin, ResultAssertions((r) => {
           r.toList.length should equal(0);  assertStats(r, propertiesWritten = 4)
         })) {
-        p("Nothing is returned from this query, but four properties are set.")
-        resultTable()
+        statsOnlyResultTable()
       }
     }
   }.build()

@@ -59,8 +59,7 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
           """CREATE (n)""".stripMargin, ResultAssertions((r) => {
             assertStats(r, nodesCreated = 1)
           })) {
-          p("Nothing is returned from this query, except the count of affected nodes.")
-          resultTable()
+          statsOnlyResultTable()
         }
       }
       section("Create multiple nodes", "create-create-multiple-nodes") {
@@ -80,8 +79,7 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
           """CREATE (n:Person)""".stripMargin, ResultAssertions((r) => {
             assertStats(r, nodesCreated = 1, labelsAdded = 1)
           })) {
-          p("Nothing is returned from this query.")
-          resultTable()
+          statsOnlyResultTable()
         }
       }
       section("Create a node with multiple labels", "create-create-a-node-with-multiple-labels") {
@@ -92,8 +90,7 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
           """CREATE (n:Person:Swedish)""".stripMargin, ResultAssertions((r) => {
             assertStats(r, nodesCreated = 1, labelsAdded = 2)
           })) {
-          p("Nothing is returned from this query.")
-          resultTable()
+          statsOnlyResultTable()
         }
       }
       section("Create node and add labels and properties", "create-create-node-and-add-labels-and-properties") {
@@ -103,8 +100,7 @@ class CreateTest extends DocumentingTest with QueryStatisticsTestSupport {
           """CREATE (n:Person {name: 'Andy', title: 'Developer'})""".stripMargin, ResultAssertions((r) => {
             assertStats(r, nodesCreated = 1, labelsAdded = 1, propertiesWritten = 2)
           })) {
-          p("Nothing is returned from this query.")
-          resultTable()
+          statsOnlyResultTable()
         }
       }
       section("Return created node", "create-return-created-node") {

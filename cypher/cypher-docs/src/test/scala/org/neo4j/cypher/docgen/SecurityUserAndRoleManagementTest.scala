@@ -84,8 +84,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("DROP USER jake", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
-          p("Nothing is returned from this query, except the count of system database changes made.")
-          resultTable()
+          statsOnlyResultTable()
         }
         p("When a user has been deleted, it will no longer appear on the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
@@ -130,8 +129,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("CREATE ROLE mysecondrole AS COPY OF myrole", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
-          p("Nothing is returned from this query, except the count of system database changes made.")
-          resultTable()
+          statsOnlyResultTable()
         }
         p("The created roles will appear on the list provided by `SHOW ROLES`.")
         query("SHOW ROLES", assertAllNodesShown("Role", column = "role")) {
@@ -154,8 +152,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("DROP ROLE mysecondrole", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
-          p("Nothing is returned from this query, except the count of system database changes made.")
-          resultTable()
+          statsOnlyResultTable()
         }
         p("When a role has been deleted, it will no longer appear on the list provided by `SHOW ROLES`.")
         query("SHOW ROLES", assertAllNodesShown("Role", column = "role")) {
@@ -182,8 +179,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("GRANT ROLES role1, role2 TO user1, user2, user3", ResultAssertions(r => {
           assertStats(r, systemUpdates = 6)
         })) {
-          p("Nothing is returned from this query, except the count of system database changes made.")
-          resultTable()
+          statsOnlyResultTable()
         }
       }
       section("Revoking roles from users", "administration-security-roles-revoke") {
@@ -191,8 +187,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("REVOKE ROLE myrole FROM jake", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
-          p("Nothing is returned from this query, except the count of system database changes made.")
-          resultTable()
+          statsOnlyResultTable()
         }
         p("The roles revoked from users can no longer be seen in the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
@@ -202,8 +197,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("REVOKE ROLES role1, role2 FROM user1, user2, user3", ResultAssertions(r => {
           assertStats(r, systemUpdates = 6)
         })) {
-          p("Nothing is returned from this query, except the count of system database changes made.")
-          resultTable()
+          statsOnlyResultTable()
         }
       }
     }
