@@ -63,11 +63,12 @@ class StatsOnlyQueryResultContentBuilder()
     assert(result.toList.isEmpty, "We can only use the 'StatsOnly' results content builder for queries that return no rows")
 
     val footerRows = "0 rows"
-    val footer = if (result.queryStatistics().containsUpdates)
-      footerRows + ", " + result.queryStatistics().toString
-    else
+    val stats = result.queryStatistics()
+    val footer = if (stats.containsUpdates || stats.containsSystemUpdates()) {
+      footerRows + "\n" + result.queryStatistics().toString
+    } else {
       footerRows
-
-    StatsOnlyQueryResultTable(footer)
+    }
+    StatsOnlyQueryResultTable(footer.strip().replaceAll("\n", ", "))
   }
 }
