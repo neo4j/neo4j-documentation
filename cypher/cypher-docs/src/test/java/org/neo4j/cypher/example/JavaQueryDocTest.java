@@ -19,12 +19,12 @@
  */
 package org.neo4j.cypher.example;
 
-import static java.lang.String.format;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
+
 import org.neo4j.doc.tools.JavaDocsGenerator;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
+
+import static org.junit.Assert.assertTrue;
 
 public class JavaQueryDocTest
 {
@@ -43,9 +43,9 @@ public class JavaQueryDocTest
         assertTrue( jq.resultString.contains( "1 row" ) );
         assertTrue( jq.nodeResult.contains( "Node[" ) );
         assertTrue( jq.nodeResult.contains( "my" ) );
-        assertTrue( format( "%s did not contain 'n.name: my node; n: Node['", jq.rows ),
-                jq.rows.contains( "n.name: my node; n: Node[" ) );
-        assertTrue( format( "%s did not contain '];'", jq.rows), jq.rows.contains( "];" ) );
+        assertTrue( jq.rows.contains( "n.name: my node; " ) );
+        assertTrue( jq.rows.contains( "Node[" ) );
+        assertTrue( jq.rows.contains( "];" ) );
 
         gen.saveToFile( "result", AsciidocHelper.createOutputSnippet( jq.resultString ) );
         gen.saveToFile( "columns", AsciidocHelper.createOutputSnippet( jq.columnsString ) );
