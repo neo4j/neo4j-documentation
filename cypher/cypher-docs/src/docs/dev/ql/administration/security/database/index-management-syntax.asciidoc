@@ -1,0 +1,18 @@
+.Index management command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+GRANT [CREATE \| DROP] INDEX
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create or delete indexes on the database `name`
+
+| [source, cypher]
+GRANT INDEX MANAGEMENT
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create or delete indexes on the database `name`
+
+|===

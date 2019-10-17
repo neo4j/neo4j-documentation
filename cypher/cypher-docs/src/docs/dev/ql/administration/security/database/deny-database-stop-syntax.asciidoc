@@ -1,0 +1,7 @@
+.Command syntax
+[source, cypher]
+-----
+DENY STOP
+    ON DATABASE dbname
+    TO role
+-----

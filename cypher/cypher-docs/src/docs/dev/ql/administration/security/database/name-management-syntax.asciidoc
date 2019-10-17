@@ -1,0 +1,30 @@
+.Label, relationship type and property name management command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+GRANT CREATE NEW [NODE] LABEL
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create new labels for nodes in the database `name`
+
+| [source, cypher]
+GRANT CREATE NEW [RELATIONSHIP] TYPE
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create new types for relationships in the database `name`
+
+| [source, cypher]
+GRANT CREATE NEW [PROPERTY] NAME
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create new names for properties in the database `name`
+
+| [source, cypher]
+GRANT NAME MANAGEMENT
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create new labels, relationship types or property names in the database `name`
+
+|===

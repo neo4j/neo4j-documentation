@@ -1,0 +1,78 @@
+.Database management command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+GRANT ACCESS
+    ON DATABASE name
+    TO role
+| Allow the role `role` to access the database `name`
+
+| [source, cypher]
+DENY ACCESS
+    ON DATABASE name
+    TO role
+| Disallow the role `role` from accessing the database `name`
+
+| [source, cypher]
+GRANT [START \| STOP]
+    ON DATABASE name
+    TO role
+| Enable the role `role` to start or stop the database `name`
+
+| [source, cypher]
+GRANT [CREATE \| DROP] INDEX
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create or delete indexes on the database `name`
+
+| [source, cypher]
+GRANT INDEX MANAGEMENT
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create or delete indexes on the database `name`
+
+| [source, cypher]
+GRANT [CREATE \| DROP] CONSTRAINT
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create or delete indexes on the database `name`
+
+| [source, cypher]
+GRANT CONSTRAINT MANAGEMENT
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create or delete constraints on the database `name`
+
+| [source, cypher]
+GRANT CREATE NEW [NODE] LABEL
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create new labels for nodes in the database `name`
+
+| [source, cypher]
+GRANT CREATE NEW [RELATIONSHIP] TYPE
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create new types for relationships in the database `name`
+
+| [source, cypher]
+GRANT CREATE NEW [PROPERTY] NAME
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create new names for properties in the database `name`
+
+| [source, cypher]
+GRANT NAME MANAGEMENT
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create new labels, relationship types or property names in the database `name`
+
+| [source, cypher]
+GRANT ALL [[DATABASE] PRIVILEGES]
+    ON DATABASE name
+    TO role
+| Enable the role `role` to perform any of the above database actions on the database `name`
+
+|===

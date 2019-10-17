@@ -9,3 +9,4 @@ These include:
 * Manage procedure security
 
 The only way to enable a user to perform these tasks is to grant them the `admin` role.
+However, it is possible to make a custom role with a subset of these privileges.

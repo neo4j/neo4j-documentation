@@ -1,0 +1,18 @@
+.Constraint management command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+GRANT [CREATE \| DROP] CONSTRAINT
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create or delete constraints on the database `name`
+
+| [source, cypher]
+GRANT CONSTRAINT MANAGEMENT
+    ON DATABASE name
+    TO role
+| Enable the role `role` to create or delete constraints on the database `name`
+
+|===

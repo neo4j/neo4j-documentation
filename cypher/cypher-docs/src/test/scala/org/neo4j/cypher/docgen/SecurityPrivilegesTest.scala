@@ -11,7 +11,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
   override def outputPath = "target/docs/dev/ql/administration/security/"
 
   override def doc: Document = new DocBuilder {
-    doc("Database, Graph and Sub-graph Access Control", "administration-security-subgraph")
+    doc("Graph and Sub-graph Access Control", "administration-security-subgraph")
     database("system")
     initQueries(
       "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE",
@@ -42,19 +42,26 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     }
     section("Listing privileges", "administration-security-subgraph-show") {
       p("Available privileges for all roles can be seen using `SHOW PRIVILEGES`.")
-      query("SHOW PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+      query("SHOW PRIVILEGES", assertPrivilegeShown(Seq(
+        Map("grant" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
+        Map("grant" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers")
+      ))) {
         p("Lists all privileges for all roles")
         resultTable()
       }
 
       p("Available privileges for a particular role can be seen using `SHOW ROLE name PRIVILEGES`.")
-      query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+      query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
+        Map("grant" -> "GRANTED", "action" -> "access", "role" -> "regularUsers")
+      ))) {
         p("Lists all privileges for role 'regularUsers'")
         resultTable()
       }
 
       p("Available privileges for a particular user can be seen using `SHOW USER name PRIVILEGES`.")
-      query("SHOW USER jake PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+      query("SHOW USER jake PRIVILEGES", assertPrivilegeShown(Seq(
+        Map("grant" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
+      ))) {
         p("Lists all privileges for user 'jake'")
         resultTable()
       }

@@ -36,7 +36,7 @@ These include index and constraint management commands.
 
 * <<administration-security, Security>>
 ** <<administration-security-users-and-roles, User and Role Management>>
-** <<administration-security-subgraph, Database, Graph and Subgraph Access Control>>
+** <<administration-security-subgraph, Graph and Subgraph Access Control>>
 ** <<administration-security-administration, Security of Administration>>
 
 

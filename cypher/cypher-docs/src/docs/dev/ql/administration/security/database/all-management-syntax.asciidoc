@@ -1,0 +1,7 @@
+.Command syntax
+[source, cypher]
+-----
+GRANT ALL [[DATABASE] PRIVILEGES]
+    ON DATABASE name
+    TO role
+-----

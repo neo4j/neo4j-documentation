@@ -20,7 +20,7 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 *** <<administration-security-roles-drop, Deleting roles>>
 *** <<administration-security-roles-grant, Assigning roles>>
 *** <<administration-security-roles-revoke, Revoking roles>>
-* <<administration-security-subgraph, Database, graph and sub-graph access control>>
+* <<administration-security-subgraph, Graph and sub-graph access control>>
 ** <<administration-security-subgraph-introduction, The GRANT and DENY commands>>
 ** <<administration-security-subgraph-traverse, The TRAVERSE privilege>>
 ** <<administration-security-subgraph-read, The READ privilege>>

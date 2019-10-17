@@ -1,0 +1,7 @@
+.Command syntax
+[source, cypher]
+-----
+DENY START
+    ON DATABASE dbname
+    TO role
+-----
