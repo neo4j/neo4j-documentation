@@ -22,6 +22,7 @@
  */
 package examples;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -43,6 +44,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.io.layout.DatabaseLayout;
+import org.neo4j.io.layout.Neo4jLayout;
 import org.neo4j.test.rule.TestDirectory;
 
 import static org.hamcrest.core.Is.is;
@@ -53,17 +55,22 @@ public class BatchInsertDocTest
 {
     @Rule
     public TestDirectory directory = TestDirectory.testDirectory();
+    private DatabaseLayout databaseLayout;
+
+    @Before
+    public void setUp()
+    {
+        databaseLayout = Neo4jLayout.of( directory.homeDir() ).databaseLayout( DEFAULT_DATABASE_NAME );
+    }
 
     @Test
     public void insert() throws Exception
     {
-        DatabaseLayout tempLayout = directory.databaseLayout();
-
         // tag::insert[]
         BatchInserter inserter = null;
         try
         {
-            inserter = BatchInserters.inserter( tempLayout );
+            inserter = BatchInserters.inserter( databaseLayout );
 
             Label personLabel = Label.label( "Person" );
             inserter.createDeferredSchemaIndex( personLabel ).on( "name" ).create();
@@ -119,7 +126,7 @@ public class BatchInsertDocTest
     {
         // tag::configuredInsert[]
         Config config = Config.defaults( GraphDatabaseSettings.pagecache_memory, "512m" );
-        BatchInserter inserter = BatchInserters.inserter( directory.databaseLayout(), config );
+        BatchInserter inserter = BatchInserters.inserter( databaseLayout, config );
         // Insert data here ... and then shut down:
         inserter.shutdown();
         // end::configuredInsert[]
