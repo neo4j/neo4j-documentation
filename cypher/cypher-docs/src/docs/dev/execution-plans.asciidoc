@@ -53,6 +53,12 @@ The compiler uses this estimate to choose a suitable execution plan.
 Each operator will ask the Neo4j storage engine to do work such as retrieving or updating data.
 A _database hit_ is an abstract unit of this storage engine work.
 The actions triggering a database hit are listed in <<execution-plans-dbhits>>.
+`Page Cache Hits`, `Page Cache Misses`, `Page Cache Hit Ratio`::
+These metrics are only shown for some queries when using the enterprise edition.
+The page cache is used to cache data and avoid accessing disk, so having a high number of `hits` and a low number of `misses` will typically make the query run faster.
+`Time`::
+`Time` is only shown for some operators when using the `pipelined` runtime.
+The number shown is the time in milliseconds it took to execute the given operator.
 
 To produce an efficient plan for a query, the Cypher query planner requires information about the Neo4j database.
 This information includes which indexes and constraints are available, as well as various statistics maintained by the database.
@@ -234,9 +240,11 @@ We list below all the actions that trigger one or more database hits:
 * Call a procedure
 * Call a user-defined function
 
-Note that the presented value can vary slightly depending on the Cypher runtime that was used to execute the query.
+[NOTE]
+--
+The presented value can vary slightly depending on the Cypher runtime that was used to execute the query.
 In the pipelined runtime the number of _database hits_ will typically be higher since it uses a more accurate way of measuring.
-
+--
 include::execution-plan-groups/operators.asciidoc[leveloffset=+1]
 
 include::execution-plan-groups/query-shortestpath-planning.adoc[leveloffset=+1]
