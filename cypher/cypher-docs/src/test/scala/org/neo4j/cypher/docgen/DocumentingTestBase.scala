@@ -417,7 +417,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                          profile = false,
                          prePopulate = false,
                          subscriber).consumeAll()
-          transaction.commit()
+          if (transaction.isOpen) {
+            transaction.commit()
+          }
         } catch {
           case t: Throwable =>
             e = t
