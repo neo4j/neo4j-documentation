@@ -221,7 +221,9 @@ include::csv-files/artists.csv[]
 ----
 """,
       queryText = s"LOAD CSV FROM '%ARTIST%' AS line RETURN DISTINCT file() as path",
-      optionalResultExplanation = "",
+      optionalResultExplanation = "Since `LOAD CSV` can temporary download a file to process it, it is important to note that " +
+        "`file()` will always return the path on disk. This is why you see different URIs in this example. " +
+        "If `LOAD CSV` is invoked with a `file:///` URL that points to your disk `file()` will return that same path.",
       assertions = p => {
         val list = p.toList
         assertEquals(1, list.size)
