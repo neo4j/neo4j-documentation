@@ -53,7 +53,7 @@ class ExistentialSubQueriesTest extends DocumentingTest {
       preformattedQuery(
         """MATCH (person:Person)
            |WHERE EXISTS {
-           | MATCH (person)-[:HAS_DOG]->(:Dog)
+           |  MATCH (person)-[:HAS_DOG]->(:Dog)
            |}
            |RETURN person.name as name""".stripMargin, ResultAssertions(r => {
           r.toList should equal(List(Map("name" -> "Bosse"), Map("name" -> "Chris")))

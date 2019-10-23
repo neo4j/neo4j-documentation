@@ -260,11 +260,11 @@ object DocBuilder {
   }
 
   case class AutoformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
-    override def toContent = Query(queryText, assertions, init, content, params, keepMyNewlines = false, runtime = _runtime, database = _database)
+    override def toContent = Query(queryText, assertions, init, content, params, preformatted = false, runtime = _runtime, database = _database)
   }
 
   case class PreformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
-    override def toContent = Query(queryText, assertions, init, content, params, keepMyNewlines = true, runtime = _runtime, database = _database)
+    override def toContent = Query(queryText, assertions, init, content, params, preformatted = true, runtime = _runtime, database = _database)
   }
 }
 

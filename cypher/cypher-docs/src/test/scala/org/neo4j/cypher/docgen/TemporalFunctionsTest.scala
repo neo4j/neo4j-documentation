@@ -311,10 +311,10 @@ class TemporalFunctionsTest extends DocumentingTest {
         considerations("The _day of the month_ component will default to `1` if `day` is omitted.", "The _month_ component will default to `1` if `month` is omitted.", "If `month` is omitted, `day` must also be omitted.")
         preformattedQuery(
           """UNWIND [
-            | date({year:1984, month:10, day:11}),
-            | date({year:1984, month:10}),
-            | date({year:1984})
-            | ] as theDate
+            |  date({year:1984, month:10, day:11}),
+            |  date({year:1984, month:10}),
+            |  date({year:1984})
+            |] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map("theDate" -> LocalDate.of(1984, 10, 11)), Map("theDate" -> LocalDate.of(1984, 10, 1)), Map("theDate" -> LocalDate.of(1984, 1, 1))))
           })) {
@@ -328,10 +328,10 @@ class TemporalFunctionsTest extends DocumentingTest {
         considerations("The _day of the week_ component will default to `1` if `dayOfWeek` is omitted.", "The _week_ component will default to `1` if `week` is omitted.", "If `week` is omitted, `dayOfWeek` must also be omitted.")
         preformattedQuery(
           """UNWIND [
-            | date({year:1984, week:10, dayOfWeek:3}),
-            | date({year:1984, week:10}),
-            | date({year:1984})
-            | ] as theDate
+            |  date({year:1984, week:10, dayOfWeek:3}),
+            |  date({year:1984, week:10}),
+            |  date({year:1984})
+            |] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map("theDate" -> LocalDate.of(1984, 3, 7)), Map("theDate" -> LocalDate.of(1984, 3, 5)), Map("theDate" -> LocalDate.of(1984, 1, 1))))
           })) {
@@ -345,10 +345,10 @@ class TemporalFunctionsTest extends DocumentingTest {
         considerations("The _day of the quarter_ component will default to `1` if `dayOfQuarter` is omitted.", "The _quarter_ component will default to `1` if `quarter` is omitted.", "If `quarter` is omitted, `dayOfQuarter` must also be omitted.")
         preformattedQuery(
           """UNWIND [
-            | date({year:1984, quarter:3, dayOfQuarter: 45}),
-            | date({year:1984, quarter:3}),
-            | date({year:1984})
-            | ] as theDate
+            |  date({year:1984, quarter:3, dayOfQuarter: 45}),
+            |  date({year:1984, quarter:3}),
+            |  date({year:1984})
+            |] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map("theDate" -> LocalDate.of(1984, 8, 14)), Map("theDate" -> LocalDate.of(1984, 7, 1)), Map("theDate" -> LocalDate.of(1984, 1, 1))))
           })) {
@@ -362,9 +362,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         considerations("The _ordinal day of the year_ component will default to `1` if `ordinalDay` is omitted.")
         preformattedQuery(
           """UNWIND [
-            |date({year:1984, ordinalDay:202}),
-            | date({year:1984})
-            | ] as theDate
+            |  date({year:1984, ordinalDay:202}),
+            |  date({year:1984})
+            |] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map("theDate" -> LocalDate.of(1984, 7, 20)), Map("theDate" -> LocalDate.of(1984, 1, 1))))
           })) {
@@ -381,13 +381,13 @@ class TemporalFunctionsTest extends DocumentingTest {
           "`date(null)` returns null.")
         preformattedQuery(
           """UNWIND [
-            |   date('2015-07-21'),
-            |   date('2015-07'),
-            |   date('201507'),
-            |   date('2015-W30-2'),
-            |   date('2015202'),
-            |   date('2015')
-            |   ] as theDate
+            |  date('2015-07-21'),
+            |  date('2015-07'),
+            |  date('201507'),
+            |  date('2015-W30-2'),
+            |  date('2015202'),
+            |  date('2015')
+            |] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theDate" -> DateValue.parse("2015-07-21").asObjectCopy()),
@@ -411,10 +411,10 @@ class TemporalFunctionsTest extends DocumentingTest {
           "`date(dd)` may be written instead of `date({date: dd})`.")
         preformattedQuery(
           """UNWIND [
-            |   date({year:1984, month:11, day:11}),
-            |   localdatetime({year:1984, month:11, day:11, hour:12, minute:31, second:14}),
-            |   datetime({year:1984, month:11, day:11, hour:12, timezone: '+01:00'})
-            |   ] as dd
+            |  date({year:1984, month:11, day:11}),
+            |  localdatetime({year:1984, month:11, day:11, hour:12, minute:31, second:14}),
+            |  datetime({year:1984, month:11, day:11, hour:12, timezone: '+01:00'})
+            |] as dd
             |RETURN date({date: dd}) AS dateOnly,
             |   date({date: dd, day: 28}) AS dateDay""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
@@ -444,14 +444,14 @@ class TemporalFunctionsTest extends DocumentingTest {
         preformattedQuery(
           """WITH datetime({year:2017, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}) AS d
             |RETURN date.truncate('millennium', d) AS truncMillenium,
-            |   date.truncate('century', d) AS truncCentury,
-            |   date.truncate('decade', d) AS truncDecade,
-            |   date.truncate('year', d, {day:5}) AS truncYear,
-            |   date.truncate('weekYear', d) AS truncWeekYear,
-            |   date.truncate('quarter', d) AS truncQuarter,
-            |   date.truncate('month', d) AS truncMonth,
-            |   date.truncate('week', d, {dayOfWeek:2}) AS truncWeek,
-            |   date.truncate('day', d) AS truncDay""".stripMargin, ResultAssertions((r) => {
+            |       date.truncate('century', d) AS truncCentury,
+            |       date.truncate('decade', d) AS truncDecade,
+            |       date.truncate('year', d, {day:5}) AS truncYear,
+            |       date.truncate('weekYear', d) AS truncWeekYear,
+            |       date.truncate('quarter', d) AS truncQuarter,
+            |       date.truncate('month', d) AS truncMonth,
+            |       date.truncate('week', d, {dayOfWeek:2}) AS truncWeek,
+            |       date.truncate('day', d) AS truncDay""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "truncMillenium" -> DateValue.parse("2000-01-01").asObjectCopy(),
               "truncCentury" -> DateValue.parse("2000-01-01").asObjectCopy(),
@@ -573,15 +573,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
         preformattedQuery(
           """UNWIND [
-            |   datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 123, microsecond: 456, nanosecond: 789}),
-            |   datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 645, timezone: '+01:00'}),
-            |   datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: 'Europe/Stockholm'}),
-            |   datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, timezone: '+01:00'}),
-            |   datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14}),
-            |   datetime({year:1984, month:10, day:11, hour:12, minute:31, timezone: 'Europe/Stockholm'}),
-            |   datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'}),
-            |   datetime({year:1984, month:10, day:11, timezone: 'Europe/Stockholm'})
-            |   ] as theDate
+            |  datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 123, microsecond: 456, nanosecond: 789}),
+            |  datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 645, timezone: '+01:00'}),
+            |  datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: 'Europe/Stockholm'}),
+            |  datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, timezone: '+01:00'}),
+            |  datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14}),
+            |  datetime({year:1984, month:10, day:11, hour:12, minute:31, timezone: 'Europe/Stockholm'}),
+            |  datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'}),
+            |  datetime({year:1984, month:10, day:11, timezone: 'Europe/Stockholm'})
+            |] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theDate" -> DateTimeValue.parse("1984-10-11T12:31:14.123456789Z", defaultZoneSupplier).asObjectCopy()),
@@ -613,14 +613,14 @@ class TemporalFunctionsTest extends DocumentingTest {
           "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
         preformattedQuery(
           """UNWIND [
-            |   datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
-            |   datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
-            |   datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: 'Europe/Stockholm'}),
-            |   datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, timezone: 'Europe/Stockholm'}),
-            |   datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14}),
-            |   datetime({year:1984, week:10, dayOfWeek:3, hour:12, timezone: '+01:00'}),
-            |   datetime({year:1984, week:10, dayOfWeek:3, timezone: 'Europe/Stockholm'})
-            |   ] as theDate
+            |  datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
+            |  datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
+            |  datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: 'Europe/Stockholm'}),
+            |  datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, timezone: 'Europe/Stockholm'}),
+            |  datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14}),
+            |  datetime({year:1984, week:10, dayOfWeek:3, hour:12, timezone: '+01:00'}),
+            |  datetime({year:1984, week:10, dayOfWeek:3, timezone: 'Europe/Stockholm'})
+            |] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theDate" -> DateTimeValue.parse("1984-03-07T12:31:14.645Z", defaultZoneSupplier).asObjectCopy()),
@@ -651,11 +651,11 @@ class TemporalFunctionsTest extends DocumentingTest {
           "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
         preformattedQuery(
           """UNWIND [
-            |   datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31, second:14, microsecond: 645876}),
-            |   datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31, second:14, timezone: '+01:00'}),
-            |   datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, timezone: 'Europe/Stockholm'}),
-            |   datetime({year:1984, quarter:3, dayOfQuarter: 45})
-            |   ] as theDate
+            |  datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31, second:14, microsecond: 645876}),
+            |  datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31, second:14, timezone: '+01:00'}),
+            |  datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, timezone: 'Europe/Stockholm'}),
+            |  datetime({year:1984, quarter:3, dayOfQuarter: 45})
+            |] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theDate" -> DateTimeValue.parse("1984-08-14T12:31:14.645876Z", defaultZoneSupplier).asObjectCopy()),
@@ -682,11 +682,11 @@ class TemporalFunctionsTest extends DocumentingTest {
           "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
         preformattedQuery(
           """UNWIND [
-            |   datetime({year:1984, ordinalDay:202, hour:12, minute:31, second:14, millisecond: 645}),
-            |   datetime({year:1984, ordinalDay:202, hour:12, minute:31, second:14, timezone: '+01:00'}),
-            |   datetime({year:1984, ordinalDay:202, timezone: 'Europe/Stockholm'}),
-            |   datetime({year:1984, ordinalDay:202})
-            |   ] as theDate
+            |  datetime({year:1984, ordinalDay:202, hour:12, minute:31, second:14, millisecond: 645}),
+            |  datetime({year:1984, ordinalDay:202, hour:12, minute:31, second:14, timezone: '+01:00'}),
+            |  datetime({year:1984, ordinalDay:202, timezone: 'Europe/Stockholm'}),
+            |  datetime({year:1984, ordinalDay:202})
+            |] as theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theDate" -> DateTimeValue.parse("1984-07-20T12:31:14.645Z", defaultZoneSupplier).asObjectCopy()),
@@ -708,15 +708,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           "`datetime(null)` returns null.")
         preformattedQuery(
           """UNWIND [
-            |   datetime('2015-07-21T21:40:32.142+0100'),
-            |   datetime('2015-W30-2T214032.142Z'),
-            |   datetime('2015T214032-0100'),
-            |   datetime('20150721T21:40-01:30'),
-            |   datetime('2015-W30T2140-02'),
-            |   datetime('2015202T21+18:00'),
-            |   datetime('2015-07-21T21:40:32.142[Europe/London]'),
-            |   datetime('2015-07-21T21:40:32.142-04[America/New_York]')
-            |   ] AS theDate
+            |  datetime('2015-07-21T21:40:32.142+0100'),
+            |  datetime('2015-W30-2T214032.142Z'),
+            |  datetime('2015T214032-0100'),
+            |  datetime('20150721T21:40-01:30'),
+            |  datetime('2015-W30T2140-02'),
+            |  datetime('2015202T21+18:00'),
+            |  datetime('2015-07-21T21:40:32.142[Europe/London]'),
+            |  datetime('2015-07-21T21:40:32.142-04[America/New_York]')
+            |] AS theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theDate" -> DateTimeValue.parse("2015-07-21T21:40:32.142+0100", defaultZoneSupplier).asObjectCopy()),
@@ -747,9 +747,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         preformattedQuery(
           """WITH date({year:1984, month:10, day:11}) AS dd
             |RETURN datetime({date:dd, hour: 10, minute: 10, second: 10}) AS dateHHMMSS,
-            |   datetime({date:dd, hour: 10, minute: 10, second: 10, timezone:'+05:00'}) AS dateHHMMSSTimezone,
-            |   datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS dateDDHHMMSS,
-            |   datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10, timezone:'Pacific/Honolulu'}) AS dateDDHHMMSSTimezone""".stripMargin, ResultAssertions((r) => {
+            |       datetime({date:dd, hour: 10, minute: 10, second: 10, timezone:'+05:00'}) AS dateHHMMSSTimezone,
+            |       datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS dateDDHHMMSS,
+            |       datetime({date:dd, day: 28, hour: 10, minute: 10, second: 10, timezone:'Pacific/Honolulu'}) AS dateDDHHMMSSTimezone""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "dateHHMMSS" -> DateTimeValue.parse("1984-10-11T10:10:10Z", defaultZoneSupplier).asObjectCopy(),
               "dateHHMMSSTimezone" -> DateTimeValue.parse("1984-10-11T10:10:10+05:00", defaultZoneSupplier).asObjectCopy(),
@@ -763,9 +763,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         preformattedQuery(
           """WITH time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}) AS tt
             |RETURN datetime({year:1984, month:10, day:11, time:tt}) AS YYYYMMDDTime,
-            |   datetime({year:1984, month:10, day:11, time:tt, timezone:'+05:00'}) AS YYYYMMDDTimeTimezone,
-            |   datetime({year:1984, month:10, day:11, time:tt, second: 42}) AS YYYYMMDDTimeSS,
-            |   datetime({year:1984, month:10, day:11, time:tt, second: 42, timezone:'Pacific/Honolulu'}) AS YYYYMMDDTimeSSTimezone""".stripMargin, ResultAssertions((r) => {
+            |       datetime({year:1984, month:10, day:11, time:tt, timezone:'+05:00'}) AS YYYYMMDDTimeTimezone,
+            |       datetime({year:1984, month:10, day:11, time:tt, second: 42}) AS YYYYMMDDTimeSS,
+            |       datetime({year:1984, month:10, day:11, time:tt, second: 42, timezone:'Pacific/Honolulu'}) AS YYYYMMDDTimeSSTimezone""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "YYYYMMDDTime" -> DateTimeValue.parse("1984-10-11T12:31:14.645876+01:00", defaultZoneSupplier).asObjectCopy(),
               "YYYYMMDDTimeTimezone" -> DateTimeValue.parse("1984-10-11T16:31:14.645876+05:00", defaultZoneSupplier).asObjectCopy(),
@@ -780,9 +780,9 @@ class TemporalFunctionsTest extends DocumentingTest {
           """WITH date({year:1984, month:10, day:11}) AS dd,
             |     localtime({hour:12, minute:31, second:14, millisecond: 645}) AS tt
             |RETURN datetime({date:dd, time:tt}) as dateTime,
-            |   datetime({date:dd, time:tt, timezone:'+05:00'}) AS dateTimeTimezone,
-            |   datetime({date:dd, time:tt, day: 28, second: 42}) AS dateTimeDDSS,
-            |   datetime({date:dd, time:tt, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS dateTimeDDSSTimezone""".stripMargin, ResultAssertions((r) => {
+            |      datetime({date:dd, time:tt, timezone:'+05:00'}) AS dateTimeTimezone,
+            |      datetime({date:dd, time:tt, day: 28, second: 42}) AS dateTimeDDSS,
+            |      datetime({date:dd, time:tt, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS dateTimeDDSSTimezone""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "dateTime" -> DateTimeValue.parse("1984-10-11T12:31:14.645Z", defaultZoneSupplier).asObjectCopy(),
               "dateTimeTimezone" -> DateTimeValue.parse("1984-10-11T12:31:14.645+05:00", defaultZoneSupplier).asObjectCopy(),
@@ -796,9 +796,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         preformattedQuery(
           """WITH datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'}) AS dd
             |RETURN datetime({datetime:dd}) AS dateTime,
-            |   datetime({datetime:dd, timezone:'+05:00'}) AS dateTimeTimezone,
-            |   datetime({datetime:dd, day: 28, second: 42}) AS dateTimeDDSS,
-            |   datetime({datetime:dd, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS dateTimeDDSSTimezone""".stripMargin, ResultAssertions((r) => {
+            |       datetime({datetime:dd, timezone:'+05:00'}) AS dateTimeTimezone,
+            |       datetime({datetime:dd, day: 28, second: 42}) AS dateTimeDDSS,
+            |       datetime({datetime:dd, day: 28, second: 42, timezone:'Pacific/Honolulu'}) AS dateTimeDDSSTimezone""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "dateTime" -> DateTimeValue.parse("1984-10-11T12:00+01:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy(),
               "dateTimeTimezone" -> DateTimeValue.parse("1984-10-11T16:00+05:00", defaultZoneSupplier).asObjectCopy(),
@@ -850,11 +850,11 @@ class TemporalFunctionsTest extends DocumentingTest {
         preformattedQuery(
           """WITH datetime({year:2017, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+03:00'}) AS d
             |RETURN datetime.truncate('millennium', d, {timezone:'Europe/Stockholm'}) AS truncMillenium,
-            |   datetime.truncate('year', d, {day:5}) AS truncYear,
-            |   datetime.truncate('month', d) AS truncMonth,
-            |   datetime.truncate('day', d, {millisecond:2}) AS truncDay,
-            |   datetime.truncate('hour', d) AS truncHour,
-            |   datetime.truncate('second', d) AS truncSecond""".stripMargin, ResultAssertions((r) => {
+            |       datetime.truncate('year', d, {day:5}) AS truncYear,
+            |       datetime.truncate('month', d) AS truncMonth,
+            |       datetime.truncate('day', d, {millisecond:2}) AS truncDay,
+            |       datetime.truncate('hour', d) AS truncHour,
+            |       datetime.truncate('second', d) AS truncSecond""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "truncMillenium" -> DateTimeValue.parse("2000-01-01T00:00[Europe/Stockholm]", defaultZoneSupplier).asObjectCopy(),
               "truncYear" -> DateTimeValue.parse("2017-01-05T00:00+03:00", defaultZoneSupplier).asObjectCopy(),
@@ -1013,11 +1013,11 @@ class TemporalFunctionsTest extends DocumentingTest {
           "`localdatetime(null)` returns null.")
         preformattedQuery(
           """UNWIND [
-            |   localdatetime('2015-07-21T21:40:32.142'),
-            |   localdatetime('2015-W30-2T214032.142'),
-            |   localdatetime('2015-202T21:40:32'),
-            |   localdatetime('2015202T21')
-            |   ] AS theDate
+            |  localdatetime('2015-07-21T21:40:32.142'),
+            |  localdatetime('2015-W30-2T214032.142'),
+            |  localdatetime('2015-202T21:40:32'),
+            |  localdatetime('2015202T21')
+            |] AS theDate
             |RETURN theDate""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theDate" -> LocalDateTimeValue.parse("2015-07-21T21:40:32.142").asObjectCopy()),
@@ -1105,11 +1105,11 @@ class TemporalFunctionsTest extends DocumentingTest {
         preformattedQuery(
           """WITH localdatetime({year:2017, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123}) AS d
             |RETURN localdatetime.truncate('millennium', d) AS truncMillenium,
-            |   localdatetime.truncate('year', d, {day:2}) AS truncYear,
-            |   localdatetime.truncate('month', d) AS truncMonth,
-            |   localdatetime.truncate('day', d) AS truncDay,
-            |   localdatetime.truncate('hour', d, {nanosecond:2}) AS truncHour,
-            |   localdatetime.truncate('second', d) AS truncSecond""".stripMargin, ResultAssertions((r) => {
+            |       localdatetime.truncate('year', d, {day:2}) AS truncYear,
+            |       localdatetime.truncate('month', d) AS truncMonth,
+            |       localdatetime.truncate('day', d) AS truncDay,
+            |       localdatetime.truncate('hour', d, {nanosecond:2}) AS truncHour,
+            |       localdatetime.truncate('second', d) AS truncSecond""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "truncMillenium" -> LocalDateTimeValue.parse("2000-01-01T00:00").asObjectCopy(),
               "truncYear" -> LocalDateTimeValue.parse("2017-01-02T00:00").asObjectCopy(),
@@ -1215,10 +1215,10 @@ class TemporalFunctionsTest extends DocumentingTest {
         considerations("The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `hour` and `minute`, but specifying `hour` and `second` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
         preformattedQuery(
           """UNWIND [
-            |   localtime({hour:12, minute:31, second:14, nanosecond: 789, millisecond: 123, microsecond: 456}),
-            |   localtime({hour:12, minute:31, second:14}),
-            |   localtime({hour:12})
-            |   ] as theTime
+            |  localtime({hour:12, minute:31, second:14, nanosecond: 789, millisecond: 123, microsecond: 456}),
+            |  localtime({hour:12, minute:31, second:14}),
+            |  localtime({hour:12})
+            |] as theTime
             |RETURN theTime""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theTime" -> LocalTimeValue.parse("12:31:14.123456789").asObjectCopy()),
@@ -1238,11 +1238,11 @@ class TemporalFunctionsTest extends DocumentingTest {
           "`localtime(null)` returns null.")
         preformattedQuery(
           """UNWIND [
-            |   localtime('21:40:32.142'),
-            |   localtime('214032.142'),
-            |   localtime('21:40'),
-            |   localtime('21')
-            |   ] AS theTime
+            |  localtime('21:40:32.142'),
+            |  localtime('214032.142'),
+            |  localtime('21:40'),
+            |  localtime('21')
+            |] AS theTime
             |RETURN theTime""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theTime" -> LocalTimeValue.parse("21:40:32.142").asObjectCopy()),
@@ -1291,11 +1291,11 @@ class TemporalFunctionsTest extends DocumentingTest {
         preformattedQuery(
           """WITH time({hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '-01:00'}) AS t
             |RETURN localtime.truncate('day', t) AS truncDay,
-            |   localtime.truncate('hour', t) AS truncHour,
-            |   localtime.truncate('minute', t, {millisecond:2}) AS truncMinute,
-            |   localtime.truncate('second', t) AS truncSecond,
-            |   localtime.truncate('millisecond', t) AS truncMillisecond,
-            |   localtime.truncate('microsecond', t) AS truncMicrosecond""".stripMargin, ResultAssertions((r) => {
+            |       localtime.truncate('hour', t) AS truncHour,
+            |       localtime.truncate('minute', t, {millisecond:2}) AS truncMinute,
+            |       localtime.truncate('second', t) AS truncSecond,
+            |       localtime.truncate('millisecond', t) AS truncMillisecond,
+            |       localtime.truncate('microsecond', t) AS truncMicrosecond""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "truncDay" -> LocalTimeValue.parse("00:00").asObjectCopy(),
               "truncHour" -> LocalTimeValue.parse("12:00").asObjectCopy(),
@@ -1404,12 +1404,12 @@ class TemporalFunctionsTest extends DocumentingTest {
           "The least significant components in the set `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `hour` and `minute`, but specifying `hour` and `second` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
         preformattedQuery(
           """UNWIND [
-            |   time({hour:12, minute:31, second:14, millisecond: 123, microsecond: 456, nanosecond: 789}),
-            |   time({hour:12, minute:31, second:14, nanosecond: 645876123}),
-            |   time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
-            |   time({hour:12, minute:31, timezone: '+01:00'}),
-            |   time({hour:12, timezone: '+01:00'})
-            |   ] AS theTime
+            |  time({hour:12, minute:31, second:14, millisecond: 123, microsecond: 456, nanosecond: 789}),
+            |  time({hour:12, minute:31, second:14, nanosecond: 645876123}),
+            |  time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
+            |  time({hour:12, minute:31, timezone: '+01:00'}),
+            |  time({hour:12, timezone: '+01:00'})
+            |] AS theTime
             |RETURN theTime""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theTime" -> TimeValue.parse("12:31:14.123456789Z", defaultZoneSupplier).asObjectCopy()),
@@ -1432,15 +1432,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           "`time(null)` returns null.")
         preformattedQuery(
           """UNWIND [
-            |   time('21:40:32.142+0100'),
-            |   time('214032.142Z'),
-            |   time('21:40:32+01:00'),
-            |   time('214032-0100'),
-            |   time('21:40-01:30'),
-            |   time('2140-00:00'),
-            |   time('2140-02'),
-            |   time('22+18:00')
-            |   ] AS theTime
+            |  time('21:40:32.142+0100'),
+            |  time('214032.142Z'),
+            |  time('21:40:32+01:00'),
+            |  time('214032-0100'),
+            |  time('21:40-01:30'),
+            |  time('2140-00:00'),
+            |  time('2140-02'),
+            |  time('22+18:00')
+            |] AS theTime
             |RETURN theTime""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("theTime" -> TimeValue.parse("21:40:32.142+0100", defaultZoneSupplier).asObjectCopy()),
@@ -1469,9 +1469,9 @@ class TemporalFunctionsTest extends DocumentingTest {
         preformattedQuery(
           """WITH localtime({hour:12, minute:31, second:14, microsecond: 645876}) AS tt
             |RETURN time({time:tt}) AS timeOnly,
-            |   time({time:tt, timezone:'+05:00'}) AS timeTimezone,
-            |   time({time:tt, second: 42}) AS timeSS,
-            |   time({time:tt, second: 42, timezone:'+05:00'}) AS timeSSTimezone""".stripMargin, ResultAssertions((r) => {
+            |       time({time:tt, timezone:'+05:00'}) AS timeTimezone,
+            |       time({time:tt, second: 42}) AS timeSS,
+            |       time({time:tt, second: 42, timezone:'+05:00'}) AS timeSSTimezone""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "timeOnly" -> TimeValue.parse("12:31:14.645876", defaultZoneSupplier).asObjectCopy(),
               "timeTimezone" -> TimeValue.parse("12:31:14.645876+05:00", defaultZoneSupplier).asObjectCopy(),

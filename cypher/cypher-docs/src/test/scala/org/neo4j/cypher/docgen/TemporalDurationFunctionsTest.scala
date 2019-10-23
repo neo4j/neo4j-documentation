@@ -71,13 +71,13 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
       considerations("At least one parameter must be provided (`duration()` and `duration({})` are invalid).", "There is no constraint on how many of the parameters are provided.", "It is possible to have a _Duration_ where the amount of a smaller unit (e.g. `seconds`) exceeds the threshold of a larger unit (e.g. `days`).", "The values of the parameters may be expressed as decimal fractions.", "The values of the parameters may be arbitrarily large.", "The values of the parameters may be negative.")
       preformattedQuery(
         """UNWIND [
-          |   duration({days: 14, hours:16, minutes: 12}),
-          |   duration({months: 5, days: 1.5}),
-          |   duration({months: 0.75}),
-          |   duration({weeks: 2.5}),
-          |   duration({minutes: 1.5, seconds: 1, milliseconds: 123, microseconds: 456, nanoseconds: 789}),
-          |   duration({minutes: 1.5, seconds: 1, nanoseconds: 123456789})
-          |   ] AS aDuration
+          |  duration({days: 14, hours:16, minutes: 12}),
+          |  duration({months: 5, days: 1.5}),
+          |  duration({months: 0.75}),
+          |  duration({weeks: 2.5}),
+          |  duration({minutes: 1.5, seconds: 1, milliseconds: 123, microseconds: 456, nanoseconds: 789}),
+          |  duration({minutes: 1.5, seconds: 1, nanoseconds: 123456789})
+          |] AS aDuration
           |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(
             Map("aDuration" -> DurationValue.parse("P14DT16H12M")),
@@ -98,12 +98,12 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
       considerations("`temporalAmount` must comply with either the <<cypher-temporal-specifying-durations, unit based form or date-and-time based form defined for _Durations_>>.")
       preformattedQuery(
         """UNWIND [
-          |   duration("P14DT16H12M"),
-          |   duration("P5M1.5D"),
-          |   duration("P0.75M"),
-          |   duration("PT0.75M"),
-          |   duration("P2012-02-02T14:37:21.545")
-          |   ] AS aDuration
+          |  duration("P14DT16H12M"),
+          |  duration("P5M1.5D"),
+          |  duration("P0.75M"),
+          |  duration("PT0.75M"),
+          |  duration("P2012-02-02T14:37:21.545")
+          |] AS aDuration
           |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(
             Map("aDuration" -> DurationValue.parse("P14DT16H12M")),
@@ -135,14 +135,14 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
           "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.")
         preformattedQuery(
           """UNWIND [
-            |   duration.between(date("1984-10-11"), date("1985-11-25")),
-            |   duration.between(date("1985-11-25"), date("1984-10-11")),
-            |   duration.between(date("1984-10-11"), datetime("1984-10-12T21:40:32.142+0100")),
-            |   duration.between(date("2015-06-24"), localtime("14:30")),
-            |   duration.between(localtime("14:30"), time("16:30+0100")),
-            |   duration.between(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142")),
-            |   duration.between(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
-            |   ] AS aDuration
+            |  duration.between(date("1984-10-11"), date("1985-11-25")),
+            |  duration.between(date("1985-11-25"), date("1984-10-11")),
+            |  duration.between(date("1984-10-11"), datetime("1984-10-12T21:40:32.142+0100")),
+            |  duration.between(date("2015-06-24"), localtime("14:30")),
+            |  duration.between(localtime("14:30"), time("16:30+0100")),
+            |  duration.between(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142")),
+            |  duration.between(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
+            |] AS aDuration
             |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("aDuration" -> DurationValue.parse("P1Y1M14D")),
@@ -169,13 +169,13 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
 
         preformattedQuery(
           """UNWIND [
-            |   duration.inMonths(date("1984-10-11"), date("1985-11-25")),
-            |   duration.inMonths(date("1985-11-25"), date("1984-10-11")),
-            |   duration.inMonths(date("1984-10-11"), datetime("1984-10-12T21:40:32.142+0100")),
-            |   duration.inMonths(date("2015-06-24"), localtime("14:30")),
-            |   duration.inMonths(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142")),
-            |   duration.inMonths(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
-            |   ] AS aDuration
+            |  duration.inMonths(date("1984-10-11"), date("1985-11-25")),
+            |  duration.inMonths(date("1985-11-25"), date("1984-10-11")),
+            |  duration.inMonths(date("1984-10-11"), datetime("1984-10-12T21:40:32.142+0100")),
+            |  duration.inMonths(date("2015-06-24"), localtime("14:30")),
+            |  duration.inMonths(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142")),
+            |  duration.inMonths(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
+            |] AS aDuration
             |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("aDuration" -> DurationValue.parse("P1Y1M")),
@@ -200,13 +200,13 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
           "Any difference smaller than a whole day is disregarded.")
         preformattedQuery(
           """UNWIND [
-            |   duration.inDays(date("1984-10-11"), date("1985-11-25")),
-            |   duration.inDays(date("1985-11-25"), date("1984-10-11")),
-            |   duration.inDays(date("1984-10-11"), datetime("1984-10-12T21:40:32.142+0100")),
-            |   duration.inDays(date("2015-06-24"), localtime("14:30")),
-            |   duration.inDays(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142")),
-            |   duration.inDays(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
-            |   ] AS aDuration
+            |  duration.inDays(date("1984-10-11"), date("1985-11-25")),
+            |  duration.inDays(date("1985-11-25"), date("1984-10-11")),
+            |  duration.inDays(date("1984-10-11"), datetime("1984-10-12T21:40:32.142+0100")),
+            |  duration.inDays(date("2015-06-24"), localtime("14:30")),
+            |  duration.inDays(localdatetime("2015-07-21T21:40:32.142"), localdatetime("2016-07-21T21:45:22.142")),
+            |  duration.inDays(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
+            |] AS aDuration
             |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("aDuration" -> DurationValue.parse("P410D")),
@@ -230,12 +230,12 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
           "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.")
         preformattedQuery(
           """UNWIND [
-            |   duration.inSeconds(date("1984-10-11"), date("1984-10-12")),
-            |   duration.inSeconds(date("1984-10-12"), date("1984-10-11")),
-            |   duration.inSeconds(date("1984-10-11"), datetime("1984-10-12T01:00:32.142+0100")),
-            |   duration.inSeconds(date("2015-06-24"), localtime("14:30")),
-            |   duration.inSeconds(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
-            |   ] AS aDuration
+            |  duration.inSeconds(date("1984-10-11"), date("1984-10-12")),
+            |  duration.inSeconds(date("1984-10-12"), date("1984-10-11")),
+            |  duration.inSeconds(date("1984-10-11"), datetime("1984-10-12T01:00:32.142+0100")),
+            |  duration.inSeconds(date("2015-06-24"), localtime("14:30")),
+            |  duration.inSeconds(datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/Stockholm'}), datetime({year: 2017, month: 10, day: 29, hour: 0, timezone: 'Europe/London'}))
+            |] AS aDuration
             |RETURN aDuration""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(
               Map("aDuration" -> DurationValue.parse("PT24H")),
