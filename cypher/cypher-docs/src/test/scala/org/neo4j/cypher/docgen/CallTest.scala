@@ -80,7 +80,7 @@ class CallTest extends DocumentingTest {
 
     section("Call a procedure using `CALL`", "call-call-a-procedure-using-call") {
       p("This calls the built-in procedure `db.labels`, which lists all labels used in the database.")
-      query("CALL `db`.`labels`", assertNotEmpty) {
+      query("CALL db.labels", assertNotEmpty) {
         resultTable()
       }
     }
