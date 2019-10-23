@@ -59,6 +59,10 @@ class WhereTest extends DocumentingTest {
         | ** <<filter-on-patterns-using-not, Filter on patterns using `NOT`>>
         | ** <<filter-on-patterns-with-properties, Filter on patterns with properties>>
         | ** <<filter-on-relationship-type, Filter on relationship type>>
+        | * <<existential-subqueries, Using existential subqueries in `WHERE`>>
+        | ** <<existential-subquery-simple-cas, Simple existential subquery>>
+        | ** <<existential-subquery-with-with, Existential subquery with WITH clause>>
+        | ** <<existential-subquery-nesting, Nesting existential subqueries>>
         |* <<query-where-lists, Lists>>
         | ** <<where-in-operator, `IN` operator>>
         |* <<missing-properties-and-values, Missing properties and values>>
@@ -288,6 +292,7 @@ class WhereTest extends DocumentingTest {
         }
       }
     }
+    p("include::existential-subqueries.adoc[leveloffset=+1]")
     section("Lists", "query-where-lists") {
       section("`IN` operator", "where-in-operator") {
         p("To check if an element exists in a list, you can use the `IN` operator.")
