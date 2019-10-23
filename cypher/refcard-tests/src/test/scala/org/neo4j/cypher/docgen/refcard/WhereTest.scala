@@ -43,9 +43,9 @@ class WhereTest extends RefcardTest with QueryStatisticsTestSupport {
     }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("property" -> "Andy"),
-    "B" -> Map("property" -> "Timothy"),
-    "C" -> Map("property" -> "Chris"))
+    "A" -> Map("property" -> "Andy", "age" -> 39),
+    "B" -> Map("property" -> "Timothy", "age" -> 39),
+    "C" -> Map("property" -> "Chris", "age" -> 22))
 
   def text = """
 ###assertion=returns-one parameters=aname
@@ -54,10 +54,23 @@ MATCH (n)-->(m)
 WHERE n.property <> $value
 
 AND id(n) = %A% AND id(m) = %B%
-RETURN n, m###
+RETURN n, m
+###
 
 Use a predicate to filter.
 Note that `WHERE` is always part of a  `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
 Putting it after a different clause in a query will alter what it does.
+
+###assertion=returns-one
+MATCH (n)
+
+WHERE EXISTS {
+  MATCH (n)-->(m) WHERE n.age = m.age
+}
+
+RETURN n, m
+###
+
+Use an existential subquery to filter.
 """
 }
