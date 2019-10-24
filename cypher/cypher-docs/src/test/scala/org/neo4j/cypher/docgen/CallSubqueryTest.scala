@@ -9,7 +9,7 @@ class CallSubqueryTest extends DocumentingTest {
   var nodeId:Long = 1
 
   override def doc: Document = new DocBuilder {
-    doc("CALL subquery", "call-subquery")
+    doc("CALL subquery", "query-call-subquery")
     initQueries( """CREATE (a:Person:Child {age: 20, name: 'Alice'}), (b:Person {age: 27, name: 'Bob'}), (c:Person:Parent {age: 65, name: 'Charlie'}), (d:Person {age: 30, name: 'Dora'})
       |CREATE (a)-[:FRIEND_OF]->(b)
       |CREATE (a)-[:CHILD_OF]->(c)
