@@ -78,4 +78,4 @@ x, y
 2, 20
 ----
 
-An exception to this rule is that, as a convenience, a `USE` clause in a subquery may refer to outside variables without a preceding import.
+An exception to this rule is that, as a convenience, a `<<query-use, USE>>` clause in a subquery may refer to outside variables without a preceding import.

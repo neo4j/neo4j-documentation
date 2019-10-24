@@ -79,7 +79,7 @@ USE exampleFabricSetup.exampleDatabaseName
 [[query-use-examples-query-remote-graph-by-default-name]]
 === Query remote graph by default name
 
-Ir no name has been explicitly configured, it can be referred to using the default name.
+If no name has been explicitly configured, it can be referred to using the default name.
 In the configuration, it is referred to as the `0th` database, i.e. its default name is `graph0`:
 
 .Query.
