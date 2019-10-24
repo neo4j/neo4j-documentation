@@ -15,6 +15,9 @@ The `CALL {}` clause can be used to evaluate a subquery.
 
 The `CALL {}` clause can be used to evaluate a subquery.
 
+The `CALL` clause is also used for calling functions.
+For descriptions of the `CALL` clause in this context, refer to <<query-call>>.
+
 [NOTE]
 ====
 This functionality is currently only available in Neo4j Fabric.
