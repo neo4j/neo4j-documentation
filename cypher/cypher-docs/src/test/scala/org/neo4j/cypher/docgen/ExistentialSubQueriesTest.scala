@@ -34,7 +34,7 @@ class ExistentialSubQueriesTest extends DocumentingTest {
 
     p(
       """An existential subquery can be used to find out if a specified pattern exists at least once in the data.
-         |It can be used in the same way as a predicate expression but it allows you to use `MATCH` and `WHERE` clauses internally.
+         |It can be used in the same way as a path pattern but it allows you to use `MATCH` and `WHERE` clauses internally.
          |A subquery has a scope, as indicated by the opening and closing braces, `{` and `}`.
          |Any variable that is defined in the outside scope can be referenced inside the subquery's own scope.
          |Variables introduced inside the subquery are not part of the outside scope and therefore can't be accessed on the outside.
@@ -44,7 +44,7 @@ class ExistentialSubQueriesTest extends DocumentingTest {
     functionWithCypherStyleFormatting(
       "EXISTS { \n MATCH [Pattern] \n WHERE [Expression] \n}")
     p("It is worth noting that the `MATCH` keyword can be omitted in subqueries and that the `WHERE` clause is optional.")
-    p("The following graph is used for the examples below:")
+    p("This section on existential subqueries uses a bigger graph for the example queries below:")
     graphViz()
     section("Simple existential subquery", "existential-subquery-simple-case") {
       p(
