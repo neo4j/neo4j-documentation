@@ -25,7 +25,7 @@ import org.neo4j.graphdb.Transaction
 
 class CallSubqueryTest extends RefcardTest with QueryStatisticsTestSupport {
 
-  val graphDescription = List("A:Person FRIEND_OF B:Person", "A CHILD_OF C:Person")
+  val graphDescription = List("A:Person:Child FRIEND_OF B:Person", "A CHILD_OF C:Person:Parent")
   val title = "CALL subquery"
   override val linkId = "clauses/call-subquery"
 
@@ -61,7 +61,7 @@ CALL {
 RETURN DISTINCT p.name, count(other)
 ###
 
-This calls a subquery with two unioned parts.
+This calls a subquery with two union parts.
 The result of the subquery can afterwards be post-processed.
 """
 }

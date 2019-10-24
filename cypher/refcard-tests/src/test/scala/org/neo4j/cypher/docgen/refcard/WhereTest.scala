@@ -40,6 +40,7 @@ class WhereTest extends RefcardTest with QueryStatisticsTestSupport {
     name match {
       case "parameters=aname" =>
         Map("value" -> "Bob")
+      case _ => Map.empty
     }
 
   override val properties: Map[String, Map[String, Any]] = Map(
@@ -54,8 +55,7 @@ MATCH (n)-->(m)
 WHERE n.property <> $value
 
 AND id(n) = %A% AND id(m) = %B%
-RETURN n, m
-###
+RETURN n, m###
 
 Use a predicate to filter.
 Note that `WHERE` is always part of a  `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
@@ -68,8 +68,7 @@ WHERE EXISTS {
   MATCH (n)-->(m) WHERE n.age = m.age
 }
 
-RETURN n, m
-###
+RETURN n###
 
 Use an existential subquery to filter.
 """
