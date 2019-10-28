@@ -33,10 +33,18 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "create-index" =>
+        assertStats(result, indexesAdded = 1)
+        assert(result.toList.size === 0)
+        tx.schema().awaitIndexesOnline(10, TimeUnit.SECONDS)
+      case "create-named-index" =>
+        assertStats(result, indexesAdded = 1)
         assert(result.toList.size === 0)
         tx.schema().awaitIndexesOnline(10, TimeUnit.SECONDS)
       case "drop-index" =>
-        // assertStats(result, indexDeleted = 1)
+        assertStats(result, indexesRemoved = 1)
+        assert(result.toList.size === 0)
+      case "drop-named-index" =>
+        assertStats(result, indexesRemoved = 1)
         assert(result.toList.size === 0)
       case "match" =>
         assertStats(result, nodesCreated = 0)
@@ -62,15 +70,23 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
 ###assertion=create-index
 //
 
-CREATE INDEX ON :Person(name)
+CREATE INDEX FOR (p:Person) ON (p.name)
 ###
 
 Create an index on the label `Person` and property `name`.
 
+###assertion=create-named-index
+//
+
+CREATE INDEX index_name FOR (p:Person) ON (p.age)
+###
+
+Create an index on the label `Person` and property `age` with the name `index_name`.
+
 ###assertion=create-index
 //
 
-CREATE INDEX ON :Person(name, age)
+CREATE INDEX FOR (p:Person) ON (p.name, p.age)
 ###
 
 Create a composite index on the label `Person` and the properties `name` and `age`.
@@ -128,6 +144,14 @@ more than one index should be used.
 DROP INDEX ON :Person(name)
 ###
 
-Drop the index on the label `Person` and property `name`.
+Drop the index on the label `Person` and property `name`. This is deprecated.
+
+###assertion=drop-named-index
+//
+
+DROP INDEX index_name
+###
+
+Drop the index named `index_name`.
 """
 }

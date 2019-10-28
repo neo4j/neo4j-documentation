@@ -89,7 +89,8 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("STARTS WITH") |
         keyword("ENDS WITH") |
         keyword("CONTAINS") |
-        keyword("YIELD")
+        keyword("YIELD") |
+        keyword("FOR")
     ) ~> NonBreakingKeywords
   }
 
@@ -103,10 +104,14 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
     group(
       keyword("LOAD CSV") |
         keyword("ORDER BY") |
-        keyword("CREATE INDEX ON") |
-        keyword("DROP INDEX ON") |
+        keyword("CREATE INDEX ON") | // Deprecated
+        keyword("CREATE INDEX") |
+        keyword("DROP INDEX ON") | // Deprecated
+        keyword("DROP INDEX") | // These are for the named versions, sadly they will break the query on the ON keyword
         keyword("CREATE CONSTRAINT ON") |
-        keyword("DROP CONSTRAINT ON") |
+        keyword("CREATE CONSTRAINT") | // These are for the named versions, sadly they will break the query on the ON keyword
+        keyword("DROP CONSTRAINT ON") | // Deprecated
+        keyword("DROP CONSTRAINT") | // These are for the named versions, sadly they will break the query on the ON keyword
         keyword("USING PERIODIC COMMIT") |
         keyword("USING INDEX") |
         keyword("USING SCAN") |

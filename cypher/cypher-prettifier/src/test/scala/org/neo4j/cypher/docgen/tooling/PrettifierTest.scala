@@ -35,8 +35,12 @@ class PrettifierTest extends Suite
     actual("create        n") should equal(expected("CREATE n"))
   }
 
-  test("should not break INDEX ON") {
-    actual("create index on :Person(name)") should equal(expected("CREATE INDEX ON :Person(name)"))
+  test("may break CREATE INDEX FOR") {
+    actual("create index for (p:Person) on (p.name)") should equal(expected("CREATE INDEX FOR (p:Person)%nON (p.name)"))
+  }
+
+  test("may break CREATE INDEX FOR with name") {
+    actual("create index name for (p:Person) on (p.name)") should equal(expected("CREATE INDEX name FOR (p:Person)%nON (p.name)"))
   }
 
   test("should not break on ASC") {
@@ -68,6 +72,12 @@ class PrettifierTest extends Suite
   test("should not break CONSTRAINT ON") {
     actual("create constraint on (person:Person) assert person.age is unique") should equal(
       expected("CREATE CONSTRAINT ON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
+  test("may break CREATE CONSTRAINT with name") {
+    actual("create constraint name on (person:Person) assert person.age is unique") should equal(
+      expected("CREATE CONSTRAINT name%nON (person:Person) ASSERT person.age IS UNIQUE")
     )
   }
 

@@ -33,10 +33,16 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
       case "create-unique-property-constraint" =>
         assertStats(result, uniqueConstraintsAdded = 1)
         assert(result.toList.size === 0)
+      case "create-named-unique-property-constraint" =>
+        assertStats(result, uniqueConstraintsAdded = 1)
+        assert(result.toList.size === 0)
       case "drop-unique-property-constraint" =>
         assertStats(result, uniqueConstraintsRemoved = 1)
         assert(result.toList.size === 0)
       case "create-node-property-existence-constraint" =>
+        assertStats(result, existenceConstraintsAdded = 1)
+        assert(result.toList.size === 0)
+      case "create-named-node-property-existence-constraint" =>
         assertStats(result, existenceConstraintsAdded = 1)
         assert(result.toList.size === 0)
       case "drop-node-property-existence-constraint" =>
@@ -45,14 +51,23 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
       case "create-relationship-property-existence-constraint" =>
         assertStats(result, existenceConstraintsAdded = 1)
         assert(result.toList.size === 0)
+      case "create-named-relationship-property-existence-constraint" =>
+        assertStats(result, existenceConstraintsAdded = 1)
+        assert(result.toList.size === 0)
       case "drop-relationship-property-existence-constraint" =>
         assertStats(result, existenceConstraintsRemoved = 1)
         assert(result.toList.size === 0)
       case "create-node-key-constraint" =>
         assertStats(result, nodekeyConstraintsAdded = 1)
         assert(result.toList.size === 0)
+      case "create-named-node-key-constraint" =>
+        assertStats(result, nodekeyConstraintsAdded = 1)
+        assert(result.toList.size === 0)
       case "drop-node-key-constraint" =>
         assertStats(result, nodekeyConstraintsRemoved = 1)
+        assert(result.toList.size === 0)
+      case "drop-named-constraint" =>
+        assertStats(result, namedConstraintsRemoved = 1)
         assert(result.toList.size === 0)
       case "match" =>
         assertStats(result, nodesCreated = 0)
@@ -85,6 +100,18 @@ If any other node with that label is updated or created with a `name` that
 already exists, the write operation will fail.
 This constraint will create an accompanying index.
 
+###assertion=create-named-unique-property-constraint
+//
+
+CREATE CONSTRAINT unique ON (p:Person)
+       ASSERT p.age IS UNIQUE
+###
+
+Create a unique property constraint on the label `Person` and property `age` with the name `unique`.
+If any other node with that label is updated or created with a `age` that
+already exists, the write operation will fail.
+This constraint will create an accompanying index.
+
 ###assertion=drop-unique-property-constraint
 //
 
@@ -92,7 +119,7 @@ DROP CONSTRAINT ON (p:Person)
      ASSERT p.name IS UNIQUE
 ###
 
-Drop the unique constraint and index on the label `Person` and property `name`.
+Drop the unique constraint and index on the label `Person` and property `name`. This is deprecated.
 
 ###assertion=create-node-property-existence-constraint
 //
@@ -105,6 +132,17 @@ CREATE CONSTRAINT ON (p:Person)
 If a node with that label is created without a `name`, or if the `name` property is
 removed from an existing node with the `Person` label, the write operation will fail.
 
+###assertion=create-named-node-property-existence-constraint
+//
+
+CREATE CONSTRAINT node_exists ON (p:Person)
+       ASSERT exists(p.surname)
+###
+
+(★) Create a node property existence constraint on the label `Person` and property `surname` with the name `node_exists`.
+If a node with that label is created without a `surname`, or if the `surname` property is
+removed from an existing node with the `Person` label, the write operation will fail.
+
 ###assertion=drop-node-property-existence-constraint
 //
 
@@ -112,7 +150,7 @@ DROP CONSTRAINT ON (p:Person)
      ASSERT exists(p.name)
 ###
 
-(★) Drop the node property existence constraint on the label `Person` and property `name`.
+(★) Drop the node property existence constraint on the label `Person` and property `name`. This is deprecated.
 
 ###assertion=create-relationship-property-existence-constraint
 //
@@ -125,6 +163,17 @@ CREATE CONSTRAINT ON ()-[l:LIKED]-()
 If a relationship with that type is created without a `when`, or if the `when` property is
 removed from an existing relationship with the `LIKED` type, the write operation will fail.
 
+###assertion=create-named-relationship-property-existence-constraint
+//
+
+CREATE CONSTRAINT relationship_exists ON ()-[l:LIKED]-()
+       ASSERT exists(l.since)
+###
+
+(★) Create a relationship property existence constraint on the type `LIKED` and property `since` with the name `relationship_exists`.
+If a relationship with that type is created without a `since`, or if the `since` property is
+removed from an existing relationship with the `LIKED` type, the write operation will fail.
+
 ###assertion=drop-relationship-property-existence-constraint
 //
 
@@ -132,7 +181,7 @@ DROP CONSTRAINT ON ()-[l:LIKED]-()
      ASSERT exists(l.when)
 ###
 
-(★) Drop the relationship property existence constraint on the type `LIKED` and property `when`.
+(★) Drop the relationship property existence constraint on the type `LIKED` and property `when`. This is deprecated.
 
 """.concat(if (!versionFenceAllowsThisTest("3.2.9")) "" else """
 ###assertion=create-node-key-constraint
@@ -148,6 +197,19 @@ or if the combination of the two is not unique,
 or if the `firstname` and/or `surname` labels on an existing node with the `Person` label
 is modified to violate these constraints, the write operation will fail.
 
+###assertion=create-named-node-key-constraint
+//
+
+CREATE CONSTRAINT node_key ON (p:Person)
+      ASSERT (p.name, p.surname) IS NODE KEY
+###
+
+(★) Create a Node Key constraint on the label `Person` and properties `name` and `surname` with the name `node_key`.
+If a node with that label is created without both `name` and `surname`
+or if the combination of the two is not unique,
+or if the `name` and/or `surname` labels on an existing node with the `Person` label
+is modified to violate these constraints, the write operation will fail.
+
 ###assertion=drop-node-key-constraint
 //
 
@@ -156,7 +218,15 @@ DROP CONSTRAINT ON (p:Person)
 
 ###
 
-(★) Drop the Node Key constraint on the label `Person` and properties `firstname` and `surname`.
+(★) Drop the Node Key constraint on the label `Person` and properties `firstname` and `surname`. This is deprecated.
 
+""").concat("""
+###assertion=drop-named-constraint
+//
+
+DROP CONSTRAINT unique
+###
+
+Drop the constraint with the name `unique`.
 """)
 }

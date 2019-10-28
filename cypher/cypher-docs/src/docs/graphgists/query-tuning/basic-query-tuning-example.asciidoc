@@ -98,7 +98,7 @@ This might be acceptable in some cases but if we're going to be looking up peopl
 
 [source, cypher]
 ----
-CREATE INDEX ON :Person(name)
+CREATE INDEX FOR (p:Person) ON (p.name)
 ----
 
 Now if we run the query again it will run more quickly:

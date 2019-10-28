@@ -102,7 +102,7 @@ public class SubGraphExporter
                 {
                     String key = quote( id );
                     String label = quote( single( index.getLabels() ).name() );
-                    result.add( "create index on :" + label + "(" + key + ")" );
+                    result.add( "create index for (n:" + label + ") ON (n." + key + ")" );
                 }
                 // We don't know how to deal with multi-token indexes here, so we just ignore them.
             }

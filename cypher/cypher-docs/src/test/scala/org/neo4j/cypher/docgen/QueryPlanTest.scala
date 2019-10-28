@@ -91,8 +91,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     """.stripMargin)
 
   override val setupConstraintQueries = List(
-    "CREATE INDEX ON :Location(name)",
-    "CREATE INDEX ON :Person(name)",
+    "CREATE INDEX FOR (n:Location) ON (n.name)",
+    "CREATE INDEX FOR (n:Person) ON (n.name)",
     "CREATE CONSTRAINT ON (team:Team) ASSERT team.name is UNIQUE",
     "CREATE CONSTRAINT ON (team:Team) ASSERT team.id is UNIQUE"
   )
@@ -127,7 +127,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Unique Constraint",
+      title = "Drop Unique Constraint (deprecated)",
       text =
         """The `DropUniqueConstraint` operator removes a unique constraint from a property for all nodes having a certain label.
           |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
@@ -154,7 +154,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Node Property Existence Constraint",
+      title = "Drop Node Property Existence Constraint (deprecated)",
       text =
         """The `DropNodePropertyExistenceConstraint` operator removes an existence constraint from a property for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
@@ -182,7 +182,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Node Key Constraint",
+      title = "Drop Node Key Constraint (deprecated)",
       text =
         """The `DropNodeKeyConstraint` operator removes a Node Key from a set of properties for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
@@ -210,12 +210,26 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Relationship Property Existence Constraint",
+      title = "Drop Relationship Property Existence Constraint (deprecated)",
       text =
         """The `DropRelationshipPropertyExistenceConstraint` operator removes an existence constraint from a property for all relationships of a certain type.
           |This will only appear in Enterprise Edition.""".stripMargin,
       queryText = """DROP CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropRelationshipPropertyExistenceConstraint"))
+    )
+  }
+
+  @Test def dropNamedConstraint() {
+    executePreparationQueries {
+      List("CREATE CONSTRAINT name ON (c:Country) ASSERT c.name is UNIQUE")
+    }
+
+    profileQuery(
+      title = "Drop Named Constraint",
+      text =
+        """The `DropConstraint` operator removes a constraint using the name of the constraint, no matter the type.""".stripMargin,
+      queryText = """DROP CONSTRAINT name""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropConstraint"))
     )
   }
 
@@ -225,22 +239,36 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `CreateIndex` operator creates an index on a property for all nodes having a certain label.
           |The following query will create an index on the `name` property of nodes with the `Country` label.""".stripMargin,
-      queryText = """CREATE INDEX ON :Country(name)""",
+      queryText = """CREATE INDEX FOR (c:Country) ON (c.name)""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateIndex"))
     )
   }
 
   @Test def dropIndex() {
     executePreparationQueries {
-      List("CREATE INDEX ON :Country(name)")
+      List("CREATE INDEX FOR (c:Country) ON (c.name)")
     }
 
     profileQuery(
-      title = "Drop Index",
+      title = "Drop Index (deprecated syntax)",
       text =
         """The `DropIndex` operator removes an index from a property for all nodes having a certain label.
           |The following query will drop an index on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """DROP INDEX ON :Country(name)""",
+      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropIndex"))
+    )
+  }
+
+  @Test def dropNamedIndex() {
+    executePreparationQueries {
+      List("CREATE INDEX name FOR (c:Country) ON (c.name)")
+    }
+
+    profileQuery(
+      title = "Drop Index (new syntax)",
+      text =
+        """The `DropIndex` operator removes an index using the name of the index.""".stripMargin,
+      queryText = """DROP INDEX name""",
       assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropIndex"))
     )
   }

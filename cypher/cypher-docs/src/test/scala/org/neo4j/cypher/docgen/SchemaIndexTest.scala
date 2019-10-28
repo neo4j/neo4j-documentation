@@ -46,9 +46,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   )
 
   override val setupConstraintQueries = List(
-    "CREATE INDEX ON :Person(firstname)",
-    "CREATE INDEX ON :Person(location)",
-    "CREATE INDEX ON :Person(highScore)"
+    "CREATE INDEX FOR (p:Person) ON (p.firstname)",
+    "CREATE INDEX FOR (p:Person) ON (p.location)",
+    "CREATE INDEX FOR (p:Person) ON (p.highScore)"
   )
 
   override def parent = Some("Administration")
@@ -57,9 +57,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def create_index_on_a_label_single_property() {
     testQuery(
       title = "Create a single-property index",
-      text = "An index on a single property for all nodes that have a particular label can be created with `CREATE INDEX ON :Label(property)`. " +
+      text = "An index on a single property for all nodes that have a particular label can be created with `CREATE INDEX FOR (n:Label) ON (n.property)`. " +
         "Note that the index is not immediately available, but will be created in the background.",
-      queryText = "CREATE INDEX ON :Person(surname)",
+      queryText = "CREATE INDEX FOR (p:Person) ON (p.surname)",
       optionalResultExplanation = "",
       assertions = p => assertIndexesOnLabels( "Person", List(List("location"), List("firstname"), List("surname"), List("highScore")))
     )
@@ -79,10 +79,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def create_index_on_a_label_composite_property() {
     testQuery(
       title = "Create a composite index",
-      text = "An index on multiple properties for all nodes that have a particular label -- i.e. a composite index -- can be created with `CREATE INDEX ON :Label(prop1, ..., propN)`. " +
+      text = "An index on multiple properties for all nodes that have a particular label -- i.e. a composite index -- can be created with `CREATE INDEX FOR (n:Label) ON (n.prop1, ..., n.propN)`. " +
       "Only nodes labeled with the specified label and which contain all the properties in the index definition will be added to the index. " +
       "The following statement will create a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
-      queryText = "CREATE INDEX ON :Person(age, country)",
+      queryText = "CREATE INDEX FOR (p:Person) ON (p.age, p.country)",
       optionalResultExplanation = "Assume we execute the query `CREATE (a:Person {firstname: 'Bill', age: 34, country: 'USA'}), (b:Person {firstname: 'Sue', age: 39})`. " +
         "Node `a` has both an `age` and a `country` property, and so it will be added to the composite index. " +
         "However, as node `b` has no `country` property, it will not be added to the composite index. " +
@@ -109,7 +109,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     prepareAndTestQuery(
       title = "Get a list of all indexes in the database",
       text = "Calling the built-in procedure `db.indexes` will list all the indexes in the database, including their names.",
-      prepare = _ => executePreparationQueries(List("create index on :Person(firstname)")),
+      prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "CALL db.indexes",
       optionalResultExplanation = "",
       assertions = (p) => assertEquals(3, p.size)
@@ -119,8 +119,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def drop_index_on_a_label_single_property() {
     prepareAndTestQuery(
       title = "Drop a single-property index",
-      text = "An index on all nodes that have a label and single property combination can be dropped with `DROP INDEX ON :Label(property)`.",
-      prepare = _ => executePreparationQueries(List("create index on :Person(firstname)")),
+      text = "This is deprecated. An index on all nodes that have a label and single property combination can be dropped with `DROP INDEX ON :Label(property)`.",
+      prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "DROP INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
       assertions = (p) => assertIndexesOnLabels("Person", List(List("location"), List("highScore")))
@@ -130,9 +130,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def drop_index_on_a_label_composite_property() {
     prepareAndTestQuery(
       title = "Drop a composite index",
-      text = "A composite index on all nodes that have a label and multiple property combination can be dropped with `DROP INDEX ON :Label(prop1, ..., propN)`. " +
+      text = "This is deprecated. A composite index on all nodes that have a label and multiple property combination can be dropped with `DROP INDEX ON :Label(prop1, ..., propN)`. " +
       "The following statement will drop a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
-      prepare = _ => executePreparationQueries(List("create index on :Person(age, country)")),
+      prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.age, p.country)")),
       queryText = "DROP INDEX ON :Person(age, country)",
       optionalResultExplanation = "",
       assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname"), List("location"), List("highScore")))
@@ -188,7 +188,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "But in these cases rewrites might happen depending on which properties have which predicates, " +
         "see <<administration-indexes-single-vs-composite-index, composite index limitations>>. " +
         "The following query will use the composite index defined <<administration-indexes-create-a-composite-index, earlier>>: ",
-      prepare = _ => executePreparationQueries(List("CREATE INDEX ON :Person(age, country)")),
+      prepare = _ => executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.age, p.country)")),
       queryText = "MATCH (n:Person) WHERE n.age = 35 AND n.country = 'UK' RETURN n",
       optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, " +
         "as the query does not contain a predicate on the `country` property. " +
@@ -221,7 +221,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_where_using_range_comparisons_composite() {
-    executePreparationQueries(List("CREATE INDEX ON :Person(firstname, highScore)"))
+    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.firstname, p.highScore)"))
     // Need to make index preferable in terms of cost
     executePreparationQueries((0 to 300).map { i =>
       "CREATE (:Person)"
@@ -262,7 +262,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_where_using_multiple_range_comparisons_composite() {
-    executePreparationQueries(List("CREATE INDEX ON :Person(highScore, name)"))
+    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.highScore, p.name)"))
     // Need to make index preferable in terms of cost
     executePreparationQueries((0 to 300).map { i =>
       "CREATE (:Person)"
@@ -309,7 +309,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_composite_index_with_in() {
 
-    executePreparationQueries(List("CREATE INDEX ON :Person(age, country)"))
+    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.age, p.country)"))
 
     executePreparationQueries(
       List(
@@ -357,7 +357,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_starts_with_composite() {
-    executePreparationQueries(List("CREATE INDEX ON :Person(firstname, surname)"))
+    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.firstname, p.surname)"))
 
     executePreparationQueries {
       val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
@@ -410,7 +410,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_ends_with_composite() {
-    executePreparationQueries(List("CREATE INDEX ON :Person(surname, age)"))
+    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.surname, p.age)"))
 
     executePreparationQueries {
       val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
@@ -463,7 +463,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_contains_composite() {
-    executePreparationQueries(List("CREATE INDEX ON :Person(surname, age)"))
+    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.surname, p.age)"))
 
     executePreparationQueries {
       val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
@@ -509,7 +509,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_exists_property_composite() {
-    executePreparationQueries(List("CREATE INDEX ON :Person(firstname, surname)"))
+    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.firstname, p.surname)"))
     // Need to make index preferable in terms of cost
     executePreparationQueries((0 to 250).map { i =>
       "CREATE (:Person)"
@@ -545,7 +545,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_distance_query_composite() {
-    executePreparationQueries(List("CREATE INDEX ON :Person(place,name)"))
+    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.place,p.name)"))
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {place: point({x:$x, y:$y}), name: '${x+y}' } )").toList)
     profileQuery(
@@ -583,7 +583,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_bbox_query_composite() {
-    executePreparationQueries(List("CREATE INDEX ON :Person(place,firstname)"))
+    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.place,p.firstname)"))
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {place: point({x:$x, y:$y}), firstname: '${x+y}'})").toList ++ List(
         "MATCH (n:Person {firstname: 'Andy'}) SET n.place = point({x: 1.2345, y: 5.4321})",
