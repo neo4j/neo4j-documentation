@@ -87,6 +87,9 @@ Creating a constraint has the following implications on indexes:
 * If a unique property constraint is dropped and the single-property index on the property is still required, the index will need to be created explicitly.
 * If a Node Key is dropped and the composite-property index on the properties is still required, the index will need to be created explicitly.
 
+[NOTE]
+Constraint creation is not idempotent, but throws when creating the same constraint twice.
+
 [[administration-constraints-naming]]
 === Named constraints
 

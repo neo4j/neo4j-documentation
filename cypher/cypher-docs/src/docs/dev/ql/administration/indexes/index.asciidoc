@@ -71,6 +71,9 @@ Neo4j will automatically pick up and start using the index once it has been crea
 For information on index configuration and limitations, refer to <<operations-manual#index-configuration, Operations Manual -> Index configuration>>.
 ====
 
+[NOTE]
+Index creation is not idempotent, but throws when creating the same index twice.
+
 [[administration-indexes-naming]]
 === Named indexes
 
