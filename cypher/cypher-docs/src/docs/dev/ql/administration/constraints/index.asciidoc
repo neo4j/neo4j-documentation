@@ -7,34 +7,40 @@ Constraints can be applied to either nodes or relationships.
 Unique node property constraints can be created, along with node and relationship property existence constraints, and Node Keys, which guarantee both existence and uniqueness.
 
 * <<administration-constraints-introduction, Introduction>>
+* <<administration-constraints-naming, Named constraints>>
+ ** <<administration-constraints-drop-a-named-constraint, Drop a named constraint>>
 * <<administration-constraints-unique-nodes, Unique node property constraints>>
- ** <<administration-constraints-create-unique-constraint, Create unique constraint>>
- ** <<administration-constraints-drop-unique-constraint, Drop unique constraint>>
+ ** <<administration-constraints-create-a-unique-constraint, Create a unique constraint>>
+ ** <<administration-constraints-create-a-named-unique-constraint, Create a named unique constraint>>
+ ** <<administration-constraints-drop-a-unique-constraint, Drop a unique constraint>>
  ** <<administration-constraints-create-a-node-that-complies-with-unique-property-constraints, Create a node that complies with unique property constraints>>
  ** <<administration-constraints-create-a-node-that-violates-a-unique-property-constraint, Create a node that violates a unique property constraint>>
  ** <<administration-constraints-failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes, Failure to create a unique property constraint due to conflicting nodes>>
 * <<administration-constraints-get-a-list-of-all-constraints-in-the-database, Get a list of all constraints in the database>>
 * <<administration-constraints-prop-exist-nodes, Node property existence constraints>>
- ** <<administration-constraints-create-node-property-existence-constraint, Create node property existence constraint>>
- ** <<administration-constraints-drop-node-property-existence-constraint, Drop node property existence constraint>>
+ ** <<administration-constraints-create-a-node-property-existence-constraint, Create a node property existence constraint>>
+ ** <<administration-constraints-create-a-named-node-property-existence-constraint, Create a named node property existence constraint>>
+ ** <<administration-constraints-drop-a-node-property-existence-constraint, Drop a node property existence constraint>>
  ** <<administration-constraints-create-a-node-that-complies-with-property-existence-constraints, Create a node that complies with property existence constraints>>
  ** <<administration-constraints-create-a-node-that-violates-a-property-existence-constraint, Create a node that violates a property existence constraint>>
  ** <<administration-constraints-removing-an-existence-constrained-node-property, Removing an existence constrained node property>>
  ** <<administration-constraints-failure-to-create-a-node-property-existence-constraint-due-to-existing-node, Failure to create a node property existence constraint due to existing node>>
 * <<administration-constraints-prop-exist-rels, Relationship property existence constraints>>
- ** <<administration-constraints-create-relationship-property-existence-constraint, Create relationship property existence constraint>>
- ** <<administration-constraints-drop-relationship-property-existence-constraint, Drop relationship property existence constraint>>
+ ** <<administration-constraints-create-relationship-property-existence-constraint, Create a relationship property existence constraint>>
+ ** <<administration-constraints-create-a-named-relationship-property-existence-constraint, Create a named relationship property existence constraint>>
+ ** <<administration-constraints-drop-a-relationship-property-existence-constraint, Drop a relationship property existence constraint>>
  ** <<administration-constraints-create-a-relationship-that-complies-with-property-existence-constraints, Create a relationship that complies with property existence constraints>>
  ** <<administration-constraints-create-a-relationship-that-violates-a-property-existence-constraint, Create a relationship that violates a property existence constraint>>
  ** <<administration-constraints-removing-an-existence-constrained-relationship-property, Removing an existence constrained relationship property>>
  ** <<administration-constraints-failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship, Failure to create a relationship property existence constraint due to existing relationship>>
 * <<administration-constraints-node-key, Node Keys>>
- ** <<administration-constraints-create-a-node-key, Create a Node Key>>
- ** <<administration-constraints-drop-a-node-key, Drop a Node Key>>
- ** <<administration-constraints-create-a-node-that-complies-with-a-node-key, Create a node that complies with a Node Key>>
- ** <<administration-constraints-create-a-node-that-violates-a-node-key, Create a node that violates a Node Key>>
+ ** <<administration-constraints-create-a-node-key-constraint, Create a node key constraint>>
+ ** <<administration-constraints-create-a-named-node-key-constraint, Create a named node key constraint>>
+ ** <<administration-constraints-drop-a-node-key-constraint, Drop a node key constraint>>
+ ** <<administration-constraints-create-a-node-that-complies-with-node-key-constraints, Create a node that complies with node key constraints>>
+ ** <<administration-constraints-create-a-node-that-violates-a-node-key-constraint, Create a node that violates a node key constraint>>
  ** <<administration-constraints-removing-a-node-key-constrained-property, Removing a `NODE KEY`-constrained property>>
- ** <<administration-constraints-failure-to-create-a-node-key-due-to-existing-node, Failure to create a Node Key due to existing node>>
+ ** <<administration-constraints-failure-to-create-a-node-key-constraint-due-to-existing-node, Failure to create a node key constraint due to existing node>>
 
 
 [[administration-constraints-introduction]]
@@ -81,13 +87,23 @@ Creating a constraint has the following implications on indexes:
 * If a unique property constraint is dropped and the single-property index on the property is still required, the index will need to be created explicitly.
 * If a Node Key is dropped and the composite-property index on the properties is still required, the index will need to be created explicitly.
 
+[[administration-constraints-naming]]
+=== Named constraints
+
+When created, a constraint may be given a name. The name needs to be unique among both indexes and constraints.
+If no name is given during creation, a unique name will be generated for the constraint.
+To drop a constraint, the preferred way is to drop it by name.
+
+include::drop-a-named-constraint.asciidoc[leveloffset=+1]
 
 [[administration-constraints-unique-nodes]]
 == Unique node property constraints
 
-include::create-unique-constraint.asciidoc[leveloffset=+1]
+include::create-a-unique-constraint.asciidoc[leveloffset=+1]
 
-include::drop-unique-constraint.asciidoc[leveloffset=+1]
+include::create-a-named-unique-constraint.asciidoc[leveloffset=+1]
+
+include::drop-a-unique-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-node-that-complies-with-unique-property-constraints.asciidoc[leveloffset=+1]
 
@@ -102,9 +118,11 @@ include::get-a-list-of-all-constraints-in-the-database.asciidoc[]
 [[administration-constraints-prop-exist-nodes]]
 == Node property existence constraints
 
-include::create-node-property-existence-constraint.asciidoc[leveloffset=+1]
+include::create-a-node-property-existence-constraint.asciidoc[leveloffset=+1]
 
-include::drop-node-property-existence-constraint.asciidoc[leveloffset=+1]
+include::create-a-named-node-property-existence-constraint.asciidoc[leveloffset=+1]
+
+include::drop-a-node-property-existence-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-node-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+1]
 
@@ -119,9 +137,11 @@ include::failure-to-create-a-node-property-existence-constraint-due-to-existing-
 [[administration-constraints-prop-exist-rels]]
 == Relationship property existence constraints
 
-include::create-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
+include::create-a-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
 
-include::drop-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
+include::create-a-named-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
+
+include::drop-a-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-relationship-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+1]
 
@@ -136,14 +156,16 @@ include::failure-to-create-a-relationship-property-existence-constraint-due-to-e
 [[administration-constraints-node-key]]
 == Node Keys
 
-include::create-a-node-key.asciidoc[leveloffset=+1]
+include::create-a-node-key-constraint.asciidoc[leveloffset=+1]
 
-include::drop-a-node-key.asciidoc[leveloffset=+1]
+include::create-a-named-node-key-constraint.asciidoc[leveloffset=+1]
 
-include::create-a-node-that-complies-with-a-node-key.asciidoc[leveloffset=+1]
+include::drop-a-node-key-constraint.asciidoc[leveloffset=+1]
 
-include::create-a-node-that-violates-a-node-key.asciidoc[leveloffset=+1]
+include::create-a-node-that-complies-with-node-key-constraints.asciidoc[leveloffset=+1]
+
+include::create-a-node-that-violates-a-node-key-constraint.asciidoc[leveloffset=+1]
 
 include::removing-a-node-key-constrained-property.asciidoc[leveloffset=+1]
 
-include::failure-to-create-a-node-key-due-to-existing-node.asciidoc[leveloffset=+1]
+include::failure-to-create-a-node-key-constraint-due-to-existing-node.asciidoc[leveloffset=+1]

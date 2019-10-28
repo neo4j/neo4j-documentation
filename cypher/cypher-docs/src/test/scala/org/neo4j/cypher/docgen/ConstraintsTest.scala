@@ -38,7 +38,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   @Test def create_unique_constraint() {
     testQuery(
-      title = "Create unique constraint",
+      title = "Create a unique constraint",
       text = "To create a constraint that makes sure that your database will never contain more than one node with a specific " +
         "label and one property value, use the `IS UNIQUE` syntax.",
       queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
@@ -47,12 +47,23 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def create_named_unique_constraint() {
+    testQuery(
+      title = "Create a named unique constraint",
+      text = "When creating a unique constraint, a name can be provided. The constraint ensures that your database " +
+        "will never contain more than one node with a specific label and one property value.",
+      queryText = "CREATE CONSTRAINT unique ON (book:Book) ASSERT book.isbn IS UNIQUE",
+      optionalResultExplanation = "",
+      assertions = (p) => assertConstraintWithNameExists("unique", "Book", List("isbn"))
+    )
+  }
+
   @Test def get_all_constraints() {
     generateConsole = false
 
     prepareAndTestQuery(
       title = "Get a list of all constraints in the database",
-      text = "Calling the built-in procedure `db.constraints` will list all the constraints in the database.",
+      text = "Calling the built-in procedure `db.constraints` will list all the constraints in the database, including their names.",
       queryText = "CALL db.constraints",
       optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
@@ -64,7 +75,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Drop unique constraint",
+      title = "Drop a unique constraint",
       text = "By using `DROP CONSTRAINT`, you remove a constraint from the database.",
       queryText = "DROP CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
       optionalResultExplanation = "",
@@ -117,7 +128,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   @Test def create_node_property_existence_constraint() {
     testQuery(
-      title = "Create node property existence constraint",
+      title = "Create a node property existence constraint",
       text = "To create a constraint that ensures that all nodes with a certain label have a certain property, use the `ASSERT exists(variable.propertyName)` syntax.",
       queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)",
       optionalResultExplanation = "",
@@ -125,11 +136,22 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def create_named_node_property_existence_constraint() {
+    testQuery(
+      title = "Create a named node property existence constraint",
+      text = "When creating a node property existence constraint, a name can be provided. The constraint ensures that all nodes " +
+        "with a certain label have a certain property.",
+      queryText = "CREATE CONSTRAINT exists ON (book:Book) ASSERT exists(book.isbn)",
+      optionalResultExplanation = "",
+      assertions = (p) => assertConstraintWithNameExists("exists", "Book", List("isbn"))
+    )
+  }
+
   @Test def drop_node_property_existence_constraint() {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Drop node property existence constraint",
+      title = "Drop a node property existence constraint",
       text = "By using `DROP CONSTRAINT`, you remove a constraint from the database.",
       queryText = "DROP CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)",
       optionalResultExplanation = "",
@@ -190,7 +212,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   @Test def create_relationship_property_existence_constraint() {
     testQuery(
-      title = "Create relationship property existence constraint",
+      title = "Create a relationship property existence constraint",
       text = "To create a constraint that makes sure that all relationships with a certain type have a certain property, use the `ASSERT exists(variable.propertyName)` syntax.",
       queryText = "CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)",
       optionalResultExplanation = "",
@@ -198,11 +220,22 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def create_named_relationship_property_existence_constraint() {
+    testQuery(
+      title = "Create a named relationship property existence constraint",
+      text = "When creating a relationship property existence constraint, a name can be provided. The constraint ensures all relationships " +
+        "with a certain type have a certain property.",
+      queryText = "CREATE CONSTRAINT exists ON ()-[like:LIKED]-() ASSERT exists(like.day)",
+      optionalResultExplanation = "",
+      assertions = (p) => assertConstraintWithNameExists("exists", "LIKED", List("day"), forRelationship = true)
+    )
+  }
+
   @Test def drop_relationship_property_existence_constraint() {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Drop relationship property existence constraint",
+      title = "Drop a relationship property existence constraint",
       text = "To remove a constraint from the database, use `DROP CONSTRAINT`.",
       queryText = "DROP CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)",
       optionalResultExplanation = "",
@@ -263,11 +296,24 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   @Test def create_node_key_constraint() {
     testQuery(
-      title = "Create a Node Key",
-      text = "To create a Node Key ensuring that all nodes with a particular label have a set of defined properties whose combined value is unique, and where all properties in the set are present, use the `ASSERT (variable.propertyName_1, ..., variable.propertyName_n) IS NODE KEY` syntax.",
+      title = "Create a node key constraint",
+      text = "To create a node key constraint ensuring that all nodes with a particular label have a set of defined properties whose combined value is unique, " +
+        "and all properties in the set are present, use the `ASSERT (variable.propertyName_1, ..., variable.propertyName_n) IS NODE KEY` syntax.",
       queryText = "CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
       optionalResultExplanation = "",
       assertions = (p) => assertNodeKeyConstraintExists("Person", "firstname", "surname")
+    )
+  }
+
+  @Test def create_named_node_key_constraint() {
+    testQuery(
+      title = "Create a named node key constraint",
+      text = "When creating a node key constraint, a name can be provided. The constraint ensures that all nodes " +
+        "with a particular label have a set of defined properties whose combined value is unique " +
+        "and all properties in the set are present.",
+      queryText = "CREATE CONSTRAINT node_key ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
+      optionalResultExplanation = "",
+      assertions = (p) => assertConstraintWithNameExists("node_key", "Person", List("firstname", "surname"))
     )
   }
 
@@ -275,8 +321,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Drop a Node Key",
-      text = "Use `DROP CONSTRAINT` to remove a Node Key from the database.",
+      title = "Drop a node key constraint",
+      text = "Use `DROP CONSTRAINT` to remove a node key constraint from the database.",
       queryText = "DROP CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
       optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
@@ -288,7 +334,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Create a node that complies with a Node Key",
+      title = "Create a node that complies with node key constraints",
       text = "Create a `Person` node with both a `firstname` and `surname` property.",
       queryText = "CREATE (p:Person {firstname: 'John', surname: 'Wood', age: 55})",
       optionalResultExplanation = "",
@@ -301,8 +347,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
     execute("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")
     testFailingQuery[ConstraintViolationException](
-      title = "Create a node that violates a Node Key",
-      text = "Trying to create a `Person` node without a `surname` property, given a Node Key on `:Person(firstname, surname)`, will fail.",
+      title = "Create a node that violates a node key constraint",
+      text = "Trying to create a `Person` node without a `surname` property, given a node key constraint on `:Person(firstname, surname)`, will fail.",
       queryText = "CREATE (p:Person {firstname: 'Jane', age: 34})",
       optionalResultExplanation = "In this case the node isn't created in the graph."
     )
@@ -325,12 +371,25 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     execute("CREATE (p:Person {firstname: 'Jane', age: 34})")
 
     testFailingQuery[CypherExecutionException](
-      title = "Failure to create a Node Key due to existing node",
-      text = "Trying to create a Node Key on the property `surname` on nodes with the `Person` label will fail when " +
+      title = "Failure to create a node key constraint due to existing node",
+      text = "Trying to create a node key constraint on the property `surname` on nodes with the `Person` label will fail when " +
         " a node without a `surname` already exists in the database.",
       queryText = "CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
-      optionalResultExplanation = "In this case the Node Key can't be created because it is violated by existing " +
+      optionalResultExplanation = "In this case the node key constraint can't be created because it is violated by existing " +
         "data. We may choose to remove the offending nodes and then re-apply the constraint."
+    )
+  }
+
+  @Test def drop_named_constraint() {
+    generateConsole = false
+
+    prepareAndTestQuery(
+      title = "Drop a named constraint",
+      text = "A named constraint can be dropped with `DROP CONSTRAINT constraint_name`." +
+        "It is the same command for unique property, property existence and node key constraints.",
+      queryText = "DROP CONSTRAINT my_constraint",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT my_constraint ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
+      assertions = _ => assertConstraintWithNameDoesNotExists("my_constraint")
     )
   }
 
@@ -356,6 +415,33 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   private def assertRelationshipConstraintDoesNotExist(typeName: String, propName: String) {
     assert(!hasRelationshipConstraint(typeName, propName))
+  }
+
+  def assertConstraintWithNameExists(name: String, expectedLabelOrType: String, expectedProperties: List[String], forRelationship: Boolean = false) {
+    val transaction = graphOps.beginTx()
+    try {
+      val constraintDef = transaction.schema.getConstraintByName(name)
+      val properties = constraintDef.getPropertyKeys.asScala.toSet
+      assert(properties === expectedProperties.toSet)
+      if (forRelationship) {
+        val relType = constraintDef.getRelationshipType
+        assert(relType.equals(RelationshipType.withName(expectedLabelOrType)))
+      } else {
+        val label = constraintDef.getLabel
+        assert(label.equals(Label.label(expectedLabelOrType)))
+      }
+    } finally {
+      transaction.close()
+    }
+  }
+
+  def assertConstraintWithNameDoesNotExists(name: String) {
+    val transaction = graphOps.beginTx()
+    try {
+      assertThrows[IllegalArgumentException](transaction.schema.getConstraintByName(name))
+    } finally {
+      transaction.close()
+    }
   }
 
   private def hasNodeConstraint(labelName: String, propName: String): Boolean = {
