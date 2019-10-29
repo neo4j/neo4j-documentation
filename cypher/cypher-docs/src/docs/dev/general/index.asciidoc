@@ -6,6 +6,11 @@
 This section provides an introduction to the Cypher query language.
 --
 
+* <<cypher-introduction, What is Cypher?>>
+* <<query-updating, Querying, updating and administering>>
+* <<query-transactions, Transactions>>
+* <<cypher-result-uniqueness, Result uniqueness>>
+
 include::introduction.asciidoc[leveloffset=+1]
 
 include::updating.asciidoc[leveloffset=+1]

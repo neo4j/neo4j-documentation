@@ -1,11 +1,24 @@
-= Uniqueness
+[[cypher-result-uniqueness]]
+= Cypher Result Uniqueness
 
-While pattern matching, Neo4j makes sure to not include matches where the same graph relationship is found multiple times in a single pattern.
-In most use cases, this is a sensible thing to do.
+While pattern matching, Neo4j Cypher makes sure to not include matches where the same graph relationship is found multiple times in a single pattern.
+This is called _relationship isomorphism_ and is a very effective way of reducing the result set and prevent infinite traversals.
+To understand this better, let's consider a few alternative options for uniqueness:
 
-Example: looking for a user's friends of friends should not return said user.
+* _homomorphism_
+** No uniqueness checks are made.
+   If the query is looking for paths of length `n` and the graph is composed of only two nodes `a` and `b`, connected by one relationship, a path of length `n` will be returned repeating the two nodes over and over.
+* _node isomoprphism_
+** The same node cannot be returned more than once in the same result record. In the above two-node example, only paths of length 1 can be found.
+* _relationship isomorphism_
+** The same relationship cannot be returned more than once in the same result record. In the above two-node example, only paths of length 1 can be found.
 
-Let's create a few nodes and relationships:
+In the case of variable length pattern expressions, it is particularly important to have a uniqueness check, or an infinite number of result records could be found.
+
+Cypher makes use of _relationship isomorphism_.
+For example: looking for a user's friends of friends should not return said user.
+
+To demonstrate this, let's create a few nodes and relationships:
 
 //setup
 [source, cypher]
