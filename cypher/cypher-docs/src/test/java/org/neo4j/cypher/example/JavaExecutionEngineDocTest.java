@@ -95,7 +95,7 @@ public class JavaExecutionEngineDocTest
 
         try ( Transaction tx = this.db.beginTx() )
         {
-            tx.schema().indexFor( Label.label( "Person" ) ).on( "name" ).create();
+            tx.schema().indexFor( Label.label( "Person" ) ).on( "name" ).withName( "My index" ).create();
             tx.commit();
         }
 
@@ -376,7 +376,7 @@ public class JavaExecutionEngineDocTest
         {
             // tag::exampleWithParameterProcedureCall[]
             Map<String,Object> params = new HashMap<>();
-            params.put( "indexname", ":Person(name)" );
+            params.put( "indexname", "My index" );
             String query = "CALL db.resampleIndex($indexname)";
             Result result = transaction.execute( query, params );
             // end::exampleWithParameterProcedureCall[]
