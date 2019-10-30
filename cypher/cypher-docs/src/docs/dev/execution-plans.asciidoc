@@ -107,14 +107,14 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-detach-delete, DetachDelete>>               | Deletes a node and its relationships.  | | Y |
 | <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>  | Reads one or more relationships by id from the relationship store.  | Y | |
 | <<query-plan-distinct, Distinct>>                                          | Drops duplicate rows from the incoming stream of rows.  | | | Eager
-| <<query-plan-drop-index-deprecated-syntax, DropIndex>> (deprecated syntax) | Drops an index from a property for all nodes having a certain label.  | Y | Y |
-| <<query-plan-drop-index-new-syntax, DropIndex>> (new syntax) | Drops an index using its name.  | Y | Y |
+| <<query-plan-drop-index, DropIndex>> (deprecated syntax) | Drops an index from a property for all nodes having a certain label.  | Y | Y |
+| <<query-plan-drop-index-by-name, DropIndex>> (new syntax) | Drops an index using its name.  | Y | Y |
 | <<query-plan-drop-named-constraint, DropConstraint>>     |  Drops a constraint using its name.  | Y | Y |
-| <<query-plan-drop-node-key-constraint-deprecated, DropNodeKeyConstraint>>     |  Drops a Node Key from a set of properties for all nodes having a certain label.  | Y | Y |
-| <<query-plan-drop-node-property-existence-constraint-deprecated, DropNodePropertyExistenceConstraint>>     | Drops an existence constraint from a property for all nodes having a certain label.  | Y | Y |
-| <<query-plan-drop-relationship-property-existence-constraint-deprecated, DropRelationshipPropertyExistenceConstraint>>     | Drops an existence constraint from a property for all relationships of a certain type.  | Y | Y |
+| <<query-plan-drop-node-key-constraint, DropNodeKeyConstraint>>     |  Drops a Node Key from a set of properties for all nodes having a certain label.  | Y | Y |
+| <<query-plan-drop-node-property-existence-constraint, DropNodePropertyExistenceConstraint>>     | Drops an existence constraint from a property for all nodes having a certain label.  | Y | Y |
+| <<query-plan-drop-relationship-property-existence-constraint, DropRelationshipPropertyExistenceConstraint>>     | Drops an existence constraint from a property for all relationships of a certain type.  | Y | Y |
 | <<query-plan-drop-result, DropResult>>     | Produces zero rows when an expression is guaranteed to produce an empty result.  |  |  |
-| <<query-plan-drop-unique-constraint-deprecated, DropUniqueConstraint>>                  | Drops a unique constraint from a property for all nodes having a certain label.  | Y | Y |
+| <<query-plan-drop-unique-constraint, DropUniqueConstraint>>                  | Drops a unique constraint from a property for all nodes having a certain label.  | Y | Y |
 | <<query-plan-eager, Eager>>                                                | For isolation purposes, `Eager` ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.  | | | Eager
 | <<query-plan-eager-aggregation, EagerAggregation>>                         | Evaluates a grouping expression. | | | Eager
 | <<query-plan-empty-result, EmptyResult>>                                   | Eagerly loads all incoming data and discards it. | | |

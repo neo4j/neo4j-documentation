@@ -106,6 +106,7 @@ include::create-a-unique-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-named-unique-constraint.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::drop-a-unique-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-node-that-complies-with-unique-property-constraints.asciidoc[leveloffset=+1]
@@ -125,6 +126,7 @@ include::create-a-node-property-existence-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-named-node-property-existence-constraint.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::drop-a-node-property-existence-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-node-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+1]
@@ -144,6 +146,7 @@ include::create-a-relationship-property-existence-constraint.asciidoc[leveloffse
 
 include::create-a-named-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::drop-a-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-relationship-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+1]
@@ -163,6 +166,7 @@ include::create-a-node-key-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-named-node-key-constraint.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::drop-a-node-key-constraint.asciidoc[leveloffset=+1]
 
 include::create-a-node-that-complies-with-node-key-constraints.asciidoc[leveloffset=+1]

@@ -131,7 +131,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Unique Constraint (deprecated)",
+      title = "Drop Unique Constraint",
       text =
         """The `DropUniqueConstraint` operator removes a unique constraint from a property for all nodes having a certain label.
           |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
@@ -162,7 +162,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Node Property Existence Constraint (deprecated)",
+      title = "Drop Node Property Existence Constraint",
       text =
         """The `DropNodePropertyExistenceConstraint` operator removes an existence constraint from a property for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
@@ -194,7 +194,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Node Key Constraint (deprecated)",
+      title = "Drop Node Key Constraint",
       text =
         """The `DropNodeKeyConstraint` operator removes a Node Key from a set of properties for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
@@ -226,7 +226,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Relationship Property Existence Constraint (deprecated)",
+      title = "Drop Relationship Property Existence Constraint",
       text =
         """The `DropRelationshipPropertyExistenceConstraint` operator removes an existence constraint from a property for all relationships of a certain type.
           |This will only appear in Enterprise Edition.""".stripMargin,
@@ -274,7 +274,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Index (deprecated syntax)",
+      title = "Drop Index",
       text =
         """The `DropIndex` operator removes an index from a property for all nodes having a certain label.
           |The following query will drop an index on the `name` property of nodes with the `Country` label.""".stripMargin,
@@ -289,7 +289,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Index (new syntax)",
+      title = "Drop Index by name",
       text =
         """The `DropIndex` operator removes an index using the name of the index.""".stripMargin,
       queryText = """DROP INDEX name""",

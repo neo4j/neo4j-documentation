@@ -76,7 +76,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Drop a unique constraint",
-      text = "This is deprecated. By using `DROP CONSTRAINT`, you remove a constraint from the database.",
+      text = "By using `DROP CONSTRAINT`, you remove a constraint from the database.",
       queryText = "DROP CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
       optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
@@ -152,7 +152,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Drop a node property existence constraint",
-      text = "This is deprecated. By using `DROP CONSTRAINT`, you remove a constraint from the database.",
+      text = "By using `DROP CONSTRAINT`, you remove a constraint from the database.",
       queryText = "DROP CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)",
       optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)")),
@@ -236,7 +236,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Drop a relationship property existence constraint",
-      text = "This is deprecated. To remove a constraint from the database, use `DROP CONSTRAINT`.",
+      text = "To remove a constraint from the database, use `DROP CONSTRAINT`.",
       queryText = "DROP CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)",
       optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)")),
@@ -322,7 +322,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Drop a node key constraint",
-      text = "This is deprecated. Use `DROP CONSTRAINT` to remove a node key constraint from the database.",
+      text = "Use `DROP CONSTRAINT` to remove a node key constraint from the database.",
       queryText = "DROP CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
       optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),

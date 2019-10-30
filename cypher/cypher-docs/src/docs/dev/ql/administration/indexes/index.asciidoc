@@ -149,8 +149,10 @@ include::create-a-named-composite-index.asciidoc[leveloffset=+1]
 
 include::get-a-list-of-all-indexes-in-the-database.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::drop-a-single-property-index.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::drop-a-composite-index.asciidoc[leveloffset=+1]
 
 include::drop-an-index-by-name.asciidoc[leveloffset=+1]

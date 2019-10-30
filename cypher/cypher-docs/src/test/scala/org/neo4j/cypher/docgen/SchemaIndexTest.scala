@@ -119,7 +119,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def drop_index_on_a_label_single_property() {
     prepareAndTestQuery(
       title = "Drop a single-property index",
-      text = "This is deprecated. An index on all nodes that have a label and single property combination can be dropped with `DROP INDEX ON :Label(property)`.",
+      text = "An index on all nodes that have a label and single property combination can be dropped with `DROP INDEX ON :Label(property)`.",
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "DROP INDEX ON :Person(firstname)",
       optionalResultExplanation = "",
@@ -130,7 +130,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def drop_index_on_a_label_composite_property() {
     prepareAndTestQuery(
       title = "Drop a composite index",
-      text = "This is deprecated. A composite index on all nodes that have a label and multiple property combination can be dropped with `DROP INDEX ON :Label(prop1, ..., propN)`. " +
+      text = "A composite index on all nodes that have a label and multiple property combination can be dropped with `DROP INDEX ON :Label(prop1, ..., propN)`. " +
       "The following statement will drop a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.age, p.country)")),
       queryText = "DROP INDEX ON :Person(age, country)",
