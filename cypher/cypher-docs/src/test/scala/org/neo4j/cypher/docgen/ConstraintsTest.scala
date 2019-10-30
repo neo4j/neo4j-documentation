@@ -52,9 +52,9 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a named unique constraint",
       text = "When creating a unique constraint, a name can be provided. The constraint ensures that your database " +
         "will never contain more than one node with a specific label and one property value.",
-      queryText = "CREATE CONSTRAINT unique ON (book:Book) ASSERT book.isbn IS UNIQUE",
+      queryText = "CREATE CONSTRAINT uniqueness ON (book:Book) ASSERT book.isbn IS UNIQUE",
       optionalResultExplanation = "",
-      assertions = (p) => assertConstraintWithNameExists("unique", "Book", List("isbn"))
+      assertions = (p) => assertConstraintWithNameExists("uniqueness", "Book", List("isbn"))
     )
   }
 
@@ -141,9 +141,9 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a named node property existence constraint",
       text = "When creating a node property existence constraint, a name can be provided. The constraint ensures that all nodes " +
         "with a certain label have a certain property.",
-      queryText = "CREATE CONSTRAINT exists ON (book:Book) ASSERT exists(book.isbn)",
+      queryText = "CREATE CONSTRAINT existence ON (book:Book) ASSERT exists(book.isbn)",
       optionalResultExplanation = "",
-      assertions = (p) => assertConstraintWithNameExists("exists", "Book", List("isbn"))
+      assertions = (p) => assertConstraintWithNameExists("existence", "Book", List("isbn"))
     )
   }
 
@@ -225,9 +225,9 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a named relationship property existence constraint",
       text = "When creating a relationship property existence constraint, a name can be provided. The constraint ensures all relationships " +
         "with a certain type have a certain property.",
-      queryText = "CREATE CONSTRAINT exists ON ()-[like:LIKED]-() ASSERT exists(like.day)",
+      queryText = "CREATE CONSTRAINT existence ON ()-[like:LIKED]-() ASSERT exists(like.day)",
       optionalResultExplanation = "",
-      assertions = (p) => assertConstraintWithNameExists("exists", "LIKED", List("day"), forRelationship = true)
+      assertions = (p) => assertConstraintWithNameExists("existence", "LIKED", List("day"), forRelationship = true)
     )
   }
 
@@ -384,8 +384,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Drop a named constraint",
-      text = "A named constraint can be dropped with `DROP CONSTRAINT constraint_name`." +
+      title = "Drop a constraint by name",
+      text = "A constraint can be dropped using the name with the `DROP CONSTRAINT constraint_name` command. " +
         "It is the same command for unique property, property existence and node key constraints.",
       queryText = "DROP CONSTRAINT my_constraint",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT my_constraint ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),

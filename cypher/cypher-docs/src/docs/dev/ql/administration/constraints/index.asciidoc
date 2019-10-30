@@ -8,7 +8,7 @@ Unique node property constraints can be created, along with node and relationshi
 
 * <<administration-constraints-introduction, Introduction>>
 * <<administration-constraints-naming, Named constraints>>
- ** <<administration-constraints-drop-a-named-constraint, Drop a named constraint>>
+ ** <<administration-constraints-drop-a-constraint-by-name, Drop a constraint by name>>
 * <<administration-constraints-unique-nodes, Unique node property constraints>>
  ** <<administration-constraints-create-a-unique-constraint, Create a unique constraint>>
  ** <<administration-constraints-create-a-named-unique-constraint, Create a named unique constraint>>
@@ -26,7 +26,7 @@ Unique node property constraints can be created, along with node and relationshi
  ** <<administration-constraints-removing-an-existence-constrained-node-property, Removing an existence constrained node property>>
  ** <<administration-constraints-failure-to-create-a-node-property-existence-constraint-due-to-existing-node, Failure to create a node property existence constraint due to existing node>>
 * <<administration-constraints-prop-exist-rels, Relationship property existence constraints>>
- ** <<administration-constraints-create-relationship-property-existence-constraint, Create a relationship property existence constraint>>
+ ** <<administration-constraints-create-a-relationship-property-existence-constraint, Create a relationship property existence constraint>>
  ** <<administration-constraints-create-a-named-relationship-property-existence-constraint, Create a named relationship property existence constraint>>
  ** <<administration-constraints-drop-a-relationship-property-existence-constraint, Drop a relationship property existence constraint>>
  ** <<administration-constraints-create-a-relationship-that-complies-with-property-existence-constraints, Create a relationship that complies with property existence constraints>>
@@ -91,13 +91,13 @@ Creating a constraint has the following implications on indexes:
 Constraint creation is not idempotent, but throws when creating the same constraint twice.
 
 [[administration-constraints-naming]]
-=== Named constraints
+== Named constraints
 
 When created, a constraint may be given a name. The name needs to be unique among both indexes and constraints.
 If no name is given during creation, a unique name will be generated for the constraint.
 To drop a constraint, the preferred way is to drop it by name.
 
-include::drop-a-named-constraint.asciidoc[leveloffset=+1]
+include::drop-a-constraint-by-name.asciidoc[leveloffset=+1]
 
 [[administration-constraints-unique-nodes]]
 == Unique node property constraints

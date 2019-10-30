@@ -115,9 +115,13 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Create Unique Constraint",
       text =
         """The `CreateUniqueConstraint` operator creates a unique constraint on a property for all nodes having a certain label.
-          |The following query will create a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
-      queryText = """CREATE CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateUniquePropertyConstraint"))
+          |The following query will create a unique constraint with the name `uniqueness` on the `name` property of nodes with the `Country` label.""".stripMargin,
+      queryText = """CREATE CONSTRAINT uniqueness ON (c:Country) ASSERT c.name is UNIQUE""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("CreateUniquePropertyConstraint"))
+        assertThat(plan, containsString("uniqueness"))
+      }
     )
   }
 
@@ -132,7 +136,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `DropUniqueConstraint` operator removes a unique constraint from a property for all nodes having a certain label.
           |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """DROP CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropUniquePropertyConstraint"))
+      assertions = p => assertThat(p.executionPlanString(), containsString("DropUniquePropertyConstraint"))
     )
   }
 
@@ -143,8 +147,12 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint on a property for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
-      queryText = """CREATE CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateNodePropertyExistenceConstraint"))
+      queryText = """CREATE CONSTRAINT existence ON (p:Person) ASSERT exists(p.name)""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("CreateNodePropertyExistenceConstraint"))
+        assertThat(plan, containsString("existence"))
+      }
     )
   }
 
@@ -160,7 +168,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """DROP CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropNodePropertyExistenceConstraint"))
+      assertions = p => assertThat(p.executionPlanString(), containsString("DropNodePropertyExistenceConstraint"))
     )
   }
 
@@ -171,8 +179,12 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `CreateNodeKeyConstraint` operator creates a Node Key which ensures that all nodes with a particular label have a set of defined properties whose combined value is unique, and where all properties in the set are present.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
-      queryText = """CREATE CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateNodeKeyConstraint"))
+      queryText = """CREATE CONSTRAINT node_key ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("CreateNodeKeyConstraint"))
+        assertThat(plan, containsString("node_key"))
+      }
     )
   }
 
@@ -188,7 +200,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """DROP CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropNodeKeyConstraint"))
+      assertions = p => assertThat(p.executionPlanString(), containsString("DropNodeKeyConstraint"))
     )
   }
 
@@ -199,8 +211,12 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint on a property for all relationships of a certain type.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
-      queryText = """CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateRelationshipPropertyExistenceConstraint"))
+      queryText = """CREATE CONSTRAINT existence ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("CreateRelationshipPropertyExistenceConstraint"))
+        assertThat(plan, containsString("existence"))
+      }
     )
   }
 
@@ -215,7 +231,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `DropRelationshipPropertyExistenceConstraint` operator removes an existence constraint from a property for all relationships of a certain type.
           |This will only appear in Enterprise Edition.""".stripMargin,
       queryText = """DROP CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropRelationshipPropertyExistenceConstraint"))
+      assertions = p => assertThat(p.executionPlanString(), containsString("DropRelationshipPropertyExistenceConstraint"))
     )
   }
 
@@ -229,7 +245,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `DropConstraint` operator removes a constraint using the name of the constraint, no matter the type.""".stripMargin,
       queryText = """DROP CONSTRAINT name""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropConstraint"))
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("DropConstraint"))
+        assertThat(plan, containsString("name"))
+      }
     )
   }
 
@@ -238,9 +258,13 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Create Index",
       text =
         """The `CreateIndex` operator creates an index on a property for all nodes having a certain label.
-          |The following query will create an index on the `name` property of nodes with the `Country` label.""".stripMargin,
-      queryText = """CREATE INDEX FOR (c:Country) ON (c.name)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("CreateIndex"))
+          |The following query will create an index with the name `my_index` on the `name` property of nodes with the `Country` label.""".stripMargin,
+      queryText = """CREATE INDEX my_index FOR (c:Country) ON (c.name)""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("CreateIndex"))
+        assertThat(plan, containsString("my_index"))
+      }
     )
   }
 
@@ -255,7 +279,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `DropIndex` operator removes an index from a property for all nodes having a certain label.
           |The following query will drop an index on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """DROP INDEX ON :Country(name)""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropIndex"))
+      assertions = p => assertThat(p.executionPlanString(), containsString("DropIndex"))
     )
   }
 
@@ -269,7 +293,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `DropIndex` operator removes an index using the name of the index.""".stripMargin,
       queryText = """DROP INDEX name""",
-      assertions = (p) => assertThat(p.executionPlanDescription().toString, containsString("DropIndex"))
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("DropIndex"))
+        assertThat(plan, containsString("name"))
+      }
     )
   }
 

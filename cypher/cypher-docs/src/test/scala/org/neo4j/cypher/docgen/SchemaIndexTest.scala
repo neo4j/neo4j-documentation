@@ -141,8 +141,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def drop_named_index() {
     prepareAndTestQuery(
-      title = "Drop a named index",
-      text = "A named index on all nodes that have a label and property/properties combination can be dropped with `DROP INDEX index_name`.",
+      title = "Drop an index by name",
+      text = "An index on all nodes that have a label and property/properties combination can be dropped using the name with the `DROP INDEX index_name` command.",
       prepare = _ => executePreparationQueries(List("CREATE INDEX my_index FOR (n:Person) ON (n.surname)")),
       queryText = "DROP INDEX my_index",
       assertions = _ => assertIndexWithNameDoesNotExists("my_index")

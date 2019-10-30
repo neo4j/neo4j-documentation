@@ -16,7 +16,7 @@ This section explains how to configure indexes to enhance performance in search,
 ** <<administration-indexes-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
 ** <<administration-indexes-drop-a-single-property-index, Drop a single-property index>>
 ** <<administration-indexes-drop-a-composite-index, Drop a composite index>>
-** <<administration-indexes-drop-a-named-index, Drop a named index>>
+** <<administration-indexes-drop-an-index-by-name, Drop an index by name>>
 * <<administration-indexes-using-indexes, Using indexes>>
 ** <<administration-indexes-equality-check-using-where-single-property-index, Equality check using `WHERE` (single-property index)>>
 ** <<administration-indexes-equality-check-using-where-composite-index, Equality check using `WHERE` (composite index)>>
@@ -153,7 +153,7 @@ include::drop-a-single-property-index.asciidoc[leveloffset=+1]
 
 include::drop-a-composite-index.asciidoc[leveloffset=+1]
 
-include::drop-a-named-index.asciidoc[leveloffset=+1]
+include::drop-an-index-by-name.asciidoc[leveloffset=+1]
 
 include::using-indexes.asciidoc[]
 
