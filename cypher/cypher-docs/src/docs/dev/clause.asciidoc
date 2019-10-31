@@ -185,9 +185,9 @@ include::ql/query-foreach.adoc[leveloffset=+1]
 //Reading/Writing
 include::ql/query-merge.adoc[leveloffset=+1]
 
-include::ql/query-call.adoc[leveloffset=+1]
-
 include::ql/query-call-subquery.adoc[leveloffset=+1]
+
+include::ql/query-call.adoc[leveloffset=+1]
 
 //Set
 include::ql/query-union.adoc[leveloffset=+1]
