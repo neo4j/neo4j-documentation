@@ -27,12 +27,15 @@ class WhereTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("WHERE", "query-where")
     initQueries(
-      """CREATE (andy:Swedish {name: 'Andy', age: 36, belt: 'white'}),
-        |       (timothy {name: 'Timothy', age: 25, address: 'Sweden/Malmo'}),
-        |       (peter {name: 'Peter', age: 35, email: 'peter_n@example.com'}),
+      """CREATE (andy:Swedish:Person {name: 'Andy', age: 36, belt: 'white'}),
+        |       (timothy:Person {name: 'Timothy', age: 25, address: 'Sweden/Malmo'}),
+        |       (peter:Person {name: 'Peter', age: 35, email: 'peter_n@example.com'}),
         |
         |       (andy)-[:KNOWS {since: 2012}]->(timothy),
-        |       (andy)-[:KNOWS {since: 1999}]->(peter)
+        |       (andy)-[:KNOWS {since: 1999}]->(peter),
+        |       (andy)-[:HAS_DOG {since: 2016}]->(:Dog {name:'Andy'}),
+        |       (fido:Dog {name:'Fido'})<-[:HAS_DOG {since: 2010}]-(peter)-[:HAS_DOG {since: 2018}]->(:Dog {name:'Ozzy'}),
+        |       (fido)-[:HAS_TOY]->(:Toy{name:'Banana'})
       """.stripMargin)
     synopsis("`WHERE` adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.")
     p(
@@ -60,8 +63,8 @@ class WhereTest extends DocumentingTest {
         | ** <<filter-on-patterns-with-properties, Filter on patterns with properties>>
         | ** <<filter-on-relationship-type, Filter on relationship type>>
         | * <<existential-subqueries, Using existential subqueries in `WHERE`>>
-        | ** <<existential-subquery-simple-cas, Simple existential subquery>>
-        | ** <<existential-subquery-with-with, Existential subquery with WITH clause>>
+        | ** <<existential-subquery-simple-case, Simple existential subquery>>
+        | ** <<existential-subquery-with-with, Existential subquery with `WITH` clause>>
         | ** <<existential-subquery-nesting, Nesting existential subqueries>>
         |* <<query-where-lists, Lists>>
         | ** <<where-in-operator, `IN` operator>>
@@ -86,7 +89,7 @@ class WhereTest extends DocumentingTest {
       }
       note {
         p(
-          """<<administration-indexes, Indexes>>` may be used to optimize queries using `WHERE` in a variety of cases.""".stripMargin)
+          """<<administration-indexes, Indexes>> may be used to optimize queries using `WHERE` in a variety of cases.""".stripMargin)
       }
       p("The following graph is used for the examples below:")
       graphViz()
@@ -97,7 +100,7 @@ class WhereTest extends DocumentingTest {
           """You can use the boolean operators `AND`, `OR`, `XOR` and `NOT`.
             |See <<cypher-working-with-null>> for more information on how this works with `null`.""".stripMargin)
         query(
-          """MATCH (n)
+          """MATCH (n:Person)
             |WHERE n.name = 'Peter' XOR (n.age < 30 AND n.name = 'Timothy') OR NOT (n.name = 'Timothy' OR n.name = 'Peter')
             |RETURN n.name, n.age""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l), Map("n.name" -> "Timothy", "n.age" -> 25l), Map("n.name" -> "Peter", "n.age" -> 35l)))
@@ -116,7 +119,7 @@ class WhereTest extends DocumentingTest {
       }
       section("Filter on node property", "filter-on-node-property") {
         p("To filter on a node property, write your clause after the `WHERE` keyword.")
-        query("MATCH (n)\nWHERE n.age < 30\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("MATCH (n:Person)\nWHERE n.age < 30\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Timothy", "n.age" -> 25l)))
         })) {
           p("The name and age values for the *'Timothy'* node are returned because he is less than 30 years of age.")
@@ -125,7 +128,7 @@ class WhereTest extends DocumentingTest {
       }
       section("Filter on relationship property", "filter-on-relationship-property") {
         p("To filter on a relationship property, write your clause after the `WHERE` keyword.")
-        query("MATCH (n)-[k:KNOWS]->(f)\nWHERE k.since < 2000\nRETURN f.name, f.age, f.email", ResultAssertions((r) => {
+        query("MATCH (n:Person)-[k:KNOWS]->(f)\nWHERE k.since < 2000\nRETURN f.name, f.age, f.email", ResultAssertions((r) => {
           r.toList should equal(List(Map("f.name" -> "Peter", "f.age" -> 35l, "f.email" -> "peter_n@example.com")))
         })) {
           p("The name, age and email values for the *'Peter'* node are returned because Andy has known him since before 2000.")
@@ -134,7 +137,7 @@ class WhereTest extends DocumentingTest {
       }
       section("Filter on dynamically-computed node property", "filter-on-dynamic-property") {
         p("To filter on a property using a dynamically computed name, use square bracket syntax.")
-        query("WITH 'AGE' as propname\nMATCH (n)\nWHERE n[toLower(propname)] < 30\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("WITH 'AGE' as propname\nMATCH (n:Person)\nWHERE n[toLower(propname)] < 30\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Timothy", "n.age" -> 25l)))
         })) {
           p("The name and age values for the *'Timothy'* node are returned because he is less than 30 years of age.")
@@ -143,7 +146,7 @@ class WhereTest extends DocumentingTest {
       }
       section("Property existence checking", "property-existence-checking") {
         p("Use the `exists()` function to only include nodes or relationships in which a property exists.")
-        query("MATCH (n)\nWHERE exists(n.belt)\nRETURN n.name, n.belt", ResultAssertions((r) => {
+        query("MATCH (n:Person)\nWHERE exists(n.belt)\nRETURN n.name, n.belt", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Andy", "n.belt" -> "white")))
         })) {
           p("The name and belt for the *'Andy'* node are returned because he is the only one with a `belt` property.")
@@ -162,7 +165,7 @@ class WhereTest extends DocumentingTest {
           |Attempting to use these operators on values which are not strings will return `null`.""".stripMargin)
       section("Prefix string search using `STARTS WITH`", "match-string-start") {
         p("The `STARTS WITH` operator is used to perform case-sensitive matching on the beginning of a string.")
-        query("MATCH (n)\nWHERE n.name STARTS WITH 'Pet'\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("MATCH (n:Person)\nWHERE n.name STARTS WITH 'Pet'\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Peter", "n.age" -> 35l)))
         })) {
           p("The name and age for the *'Peter'* node are returned because his name starts with *'Pet'*.")
@@ -171,7 +174,7 @@ class WhereTest extends DocumentingTest {
       }
       section("Suffix string search using `ENDS WITH`", "match-string-end") {
         p("The `ENDS WITH` operator is used to perform case-sensitive matching on the ending of a string.")
-        query("MATCH (n)\nWHERE n.name ENDS WITH 'ter'\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("MATCH (n:Person)\nWHERE n.name ENDS WITH 'ter'\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Peter", "n.age" -> 35l)))
         })) {
           p("The name and age for the *'Peter'* node are returned because his name ends with *'ter'*.")
@@ -180,7 +183,7 @@ class WhereTest extends DocumentingTest {
       }
       section("Substring search using `CONTAINS`", "match-string-contains") {
         p("The `CONTAINS` operator is used to perform case-sensitive matching regardless of location within a string.")
-        query("MATCH (n)\nWHERE n.name CONTAINS 'ete'\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("MATCH (n:Person)\nWHERE n.name CONTAINS 'ete'\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Peter", "n.age" -> 35l)))
         })) {
           p("The name and age for the *'Peter'* node are returned because his name contains with *'ete'*.")
@@ -189,7 +192,7 @@ class WhereTest extends DocumentingTest {
       }
       section("String matching negation", "match-string-negation") {
         p("Use the `NOT` keyword to exclude all matches on given string from your result:")
-        query("MATCH (n)\nWHERE NOT n.name ENDS WITH 'y'\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("MATCH (n:Person)\nWHERE NOT n.name ENDS WITH 'y'\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Peter", "n.age" -> 35l)))
         })) {
           p("The name and age for the *'Peter'* node are returned because his name does not end with *'y'*.")
@@ -205,7 +208,7 @@ class WhereTest extends DocumentingTest {
           |Flags are given at the beginning of the regular expression, for example `MATCH (n) WHERE n.name =~ '(?i)Lon.*' RETURN n` will return nodes with name 'London' or with name 'LonDoN'.""".stripMargin)
       section("Matching using regular expressions", "matching-using-regular-expressions") {
         p("You can match on regular expressions by using `=~ 'regexp'`, like this:")
-        query("MATCH (n)\nWHERE n.name =~ 'Tim.*'\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("MATCH (n:Person)\nWHERE n.name =~ 'Tim.*'\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Timothy", "n.age" -> 25l)))
         })) {
           p("The name and age for the *'Timothy'* node are returned because his name starts with *'Tim'*.")
@@ -217,7 +220,7 @@ class WhereTest extends DocumentingTest {
           """Characters like `.` or `*` have special meaning in a regular expression.
             |To use these as ordinary characters, without special meaning, escape them.""".stripMargin)
         query(
-          """MATCH (n)
+          """MATCH (n:Person)
             |WHERE n.email =~ '.*\\\\.com'
             |RETURN n.name, n.age, n.email""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map("n.name" -> "Peter", "n.age" -> 35l, "n.email" -> "peter_n@example.com")))
@@ -228,7 +231,7 @@ class WhereTest extends DocumentingTest {
       }
       section("Case-insensitive regular expressions", "case-insensitive-regular-expressions") {
         p("By pre-pending a regular expression with `(?i)`, the whole expression becomes case-insensitive.")
-        query("MATCH (n)\nWHERE n.name =~ '(?i)AND.*'\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("MATCH (n:Person)\nWHERE n.name =~ '(?i)AND.*'\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l)))
         })) {
           p("The name and age for the *'Andy'* node are returned because his name starts with *'AND'* irrespective of casing.")
@@ -252,10 +255,10 @@ class WhereTest extends DocumentingTest {
             |`MATCH (a)-[*]->(b)` is very different from `WHERE (a)-[*]->(b)`.
             |The first will produce a subgraph for every path it can find between `a` and `b`, whereas the latter will eliminate any matched subgraphs where `a` and `b` do not have a directed relationship chain between them.""".stripMargin)
         query(
-          """MATCH (timothy {name: 'Timothy'}), (others)
-            |WHERE others.name IN ['Andy', 'Peter'] AND (timothy)<--(others)
-            |RETURN others.name, others.age""".stripMargin, ResultAssertions((r) => {
-            r.toList should equal(List(Map("others.name" -> "Andy", "others.age" -> 36l)))
+          """MATCH (timothy:Person {name: 'Timothy'}), (other:Person)
+            |WHERE other.name IN ['Andy', 'Peter'] AND (timothy)<--(other)
+            |RETURN other.name, other.age""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map("other.name" -> "Andy", "other.age" -> 36l)))
           })) {
           p("The name and age for nodes that have an outgoing relationship to the *'Timothy'* node are returned.")
           resultTable()
@@ -263,8 +266,8 @@ class WhereTest extends DocumentingTest {
       }
       section("Filter on patterns using `NOT`", "filter-on-patterns-using-not") {
         p("The `NOT` operator can be used to exclude a pattern.")
-        query("MATCH (persons), (peter {name: 'Peter'})\nWHERE NOT (persons)-->(peter)\nRETURN persons.name, persons.age", ResultAssertions((r) => {
-          r.toList should equal(List(Map("persons.name" -> "Timothy", "persons.age" -> 25l), Map("persons.name" -> "Peter", "persons.age" -> 35l)))
+        query("MATCH (person:Person), (peter:Person {name: 'Peter'})\nWHERE NOT (person)-->(peter)\nRETURN person.name, person.age", ResultAssertions((r) => {
+          r.toList should equal(List(Map("person.name" -> "Timothy", "person.age" -> 25l), Map("person.name" -> "Peter", "person.age" -> 35l)))
         })) {
           p("Name and age values for nodes that do not have an outgoing relationship to the *'Peter'* node are returned.")
           resultTable()
@@ -272,7 +275,7 @@ class WhereTest extends DocumentingTest {
       }
       section("Filter on patterns with properties", "filter-on-patterns-with-properties") {
         p("You can also add properties to your patterns:")
-        query("MATCH (n)\nWHERE (n)-[:KNOWS]-({name: 'Timothy'})\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("MATCH (n:Person)\nWHERE (n)-[:KNOWS]-({name: 'Timothy'})\nRETURN n.name, n.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l)))
         })) {
           p("Finds all name and age values for nodes that have a `KNOWS` relationship to a node with the name *'Timothy'*.")
@@ -284,7 +287,7 @@ class WhereTest extends DocumentingTest {
           """You can put the exact relationship type in the `MATCH` pattern, but sometimes you want to be able to do more advanced filtering on the type.
             |You can use the special property `type` to compare the type with something else.
             |In this example, the query does a regular expression comparison with the name of the relationship type.""".stripMargin)
-        query("MATCH (n)-[r]->()\nWHERE n.name='Andy' AND type(r) =~ 'K.*'\n RETURN type(r), r.since", ResultAssertions((r) => {
+        query("MATCH (n:Person)-[r]->()\nWHERE n.name='Andy' AND type(r) =~ 'K.*'\n RETURN type(r), r.since", ResultAssertions((r) => {
           r.toList should equal(List(Map("type(r)" -> "KNOWS", "r.since" -> 1999), Map("type(r)" -> "KNOWS", "r.since" -> 2012)))
         })) {
           p("This returns all relationships having a type whose name starts with *'K'*.")
@@ -292,11 +295,77 @@ class WhereTest extends DocumentingTest {
         }
       }
     }
-    p("include::existential-subqueries.adoc[leveloffset=+1]")
+    p(
+      """An existential subquery can be used to find out if a specified pattern exists at least once in the data.
+        |It can be used in the same way as a path pattern but it allows you to use `MATCH` and `WHERE` clauses internally.
+        |A subquery has a scope, as indicated by the opening and closing braces, `{` and `}`.
+        |Any variable that is defined in the outside scope can be referenced inside the subquery's own scope.
+        |Variables introduced inside the subquery are not part of the outside scope and therefore can't be accessed on the outside.
+        |If the subquery evaluates even once to anything that is not null, the whole expression will become true.
+        |This also means, that the system only needs to calculate the first occurrence where the subquery evaluates to something that is not null and can skip the rest of the work.
+      """.stripMargin)
+    functionWithCypherStyleFormatting(
+      "EXISTS { \n MATCH [Pattern] \n WHERE [Expression] \n}")
+    p("It is worth noting that the `MATCH` keyword can be omitted in subqueries and that the `WHERE` clause is optional.")
+    section("Using existential subqueries in `WHERE`", "existential-subqueries") {
+      section("Simple existential subquery", "existential-subquery-simple-case") {
+        p(
+          """Variables introduced by the outside scope can be used in the inner `MATCH` clause. The following example shows this:
+        """.stripMargin)
+        preformattedQuery(
+          """MATCH (person:Person)
+            |WHERE EXISTS {
+            |  MATCH (person)-[:HAS_DOG]->(:Dog)
+            |}
+            |RETURN person.name as name""".stripMargin, ResultAssertions(r => {
+            r.toList should equal(List(Map("name" -> "Andy"), Map("name" -> "Peter")))
+          })) {
+          resultTable()
+        }
+      }
+      section("Existential subquery with WITH clause", "existential-subquery-with-with") {
+        p(
+          """A `WHERE` clause can be used in conjunction to the `MATCH`. Variables introduced by the `MATCH` clause and the outside scope can be used in this scope.
+            |
+        """.stripMargin)
+        preformattedQuery(
+          """MATCH (person:Person)
+            |WHERE EXISTS {
+            |  MATCH (person)-[:HAS_DOG]->(dog :Dog)
+            |  WHERE person.name = dog.name
+            |}
+            |RETURN person.name as name""".stripMargin, ResultAssertions(r => {
+            r.toList should equal(List(Map("name" -> "Andy")))
+          })) {
+          resultTable()
+        }
+      }
+      section("Nesting existential subqueries", "existential-subquery-nesting") {
+        p(
+          """Existential subqueries can be nested like the following example shows.
+           The nesting also affects the scopes.
+           That means that it is possible to access all variables from inside the subquery which are either on the outside scope or defined in the very same subquery.
+        """.stripMargin)
+        preformattedQuery(
+          """MATCH (person:Person)
+            |WHERE EXISTS {
+            |  MATCH (person)-[:HAS_DOG]->(dog:Dog)
+            |  WHERE EXISTS {
+            |    MATCH (dog)-[:HAS_TOY]->(toy:Toy)
+            |    WHERE toy.name = 'Banana'
+            |  }
+            |}
+            |RETURN person.name as name""".stripMargin, ResultAssertions(r => {
+            r.toList should equal(List(Map("name" -> "Peter")))
+          })) {
+          resultTable()
+        }
+      }
+    }
     section("Lists", "query-where-lists") {
       section("`IN` operator", "where-in-operator") {
         p("To check if an element exists in a list, you can use the `IN` operator.")
-        query("MATCH (a)\nWHERE a.name IN ['Peter', 'Timothy']\nRETURN a.name, a.age", ResultAssertions((r) => {
+        query("MATCH (a:Person)\nWHERE a.name IN ['Peter', 'Timothy']\nRETURN a.name, a.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("a.name" -> "Timothy", "a.age" -> 25l), Map("a.name" -> "Peter", "a.age" -> 35l)))
         })) {
           p("This query shows how to check if a property exists in a literal list.")
@@ -307,7 +376,7 @@ class WhereTest extends DocumentingTest {
     section("Missing properties and values", "missing-properties-and-values") {
       section("Default to `false` if property is missing", "default-to-false-missing-property") {
         p("As missing properties evaluate to `null`, the comparison in the example will evaluate to `false` for nodes without the `belt` property.")
-        query("MATCH (n)\nWHERE n.belt = 'white'\nRETURN n.name, n.age, n.belt", ResultAssertions((r) => {
+        query("MATCH (n:Person)\nWHERE n.belt = 'white'\nRETURN n.name, n.age, n.belt", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l, "n.belt" -> "white")))
         })) {
           p("Only the name, age and belt values of nodes with white belts are returned.")
@@ -317,7 +386,7 @@ class WhereTest extends DocumentingTest {
       section("Default to `true` if property is missing", "default-to-true-missing-property") {
         p("If you want to compare a property on a node or relationship, but only if it exists, you can compare the property against both the value you are looking for and `null`, like:")
         query(
-          """MATCH (n)
+          """MATCH (n:Person)
             |WHERE n.belt = 'white' OR n.belt IS NULL
             |RETURN n.name, n.age, n.belt
             |ORDER BY n.name""".stripMargin, ResultAssertions((r) => {
@@ -332,7 +401,7 @@ class WhereTest extends DocumentingTest {
           """Sometimes you might want to test if a value or a variable is `null`.
             |This is done just like SQL does it, using `IS NULL`.
             |Also like SQL, the negative is `IS NOT NULL`, although `NOT(IS NULL x)` also works.""".stripMargin)
-        query("MATCH (person)\nWHERE person.name = 'Peter' AND person.belt IS NULL\nRETURN person.name, person.age, person.belt", ResultAssertions((r) => {
+        query("MATCH (person:Person)\nWHERE person.name = 'Peter' AND person.belt IS NULL\nRETURN person.name, person.age, person.belt", ResultAssertions((r) => {
           r.toList should equal(List(Map("person.name" -> "Peter", "person.age" -> 35l, "person.belt" -> null)))
         })) {
           p("The name and age values for nodes that have name *'Peter'* but no belt property are returned.")
@@ -343,7 +412,7 @@ class WhereTest extends DocumentingTest {
     section("Using ranges", "query-where-ranges") {
       section("Simple range", "simple-range") {
         p("""To check for an element being inside a specific range, use the inequality operators `<`, `\<=`, `>=`, `>`.""".stripMargin)
-        query("MATCH (a)\nWHERE a.name >= 'Peter'\nRETURN a.name, a.age", ResultAssertions((r) => {
+        query("MATCH (a:Person)\nWHERE a.name >= 'Peter'\nRETURN a.name, a.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("a.name" -> "Timothy", "a.age" -> 25l), Map("a.name" -> "Peter", "a.age" -> 35l)))
         })) {
           p("The name and age values of nodes having a name property lexicographically greater than or equal to *'Peter'* are returned.")
@@ -352,7 +421,7 @@ class WhereTest extends DocumentingTest {
       }
       section("Composite range", "composite-range") {
         p("Several inequalities can be used to construct a range.")
-        query("MATCH (a)\nWHERE a.name > 'Andy' AND a.name < 'Timothy'\nRETURN a.name, a.age", ResultAssertions((r) => {
+        query("MATCH (a:Person)\nWHERE a.name > 'Andy' AND a.name < 'Timothy'\nRETURN a.name, a.age", ResultAssertions((r) => {
           r.toList should equal(List(Map("a.name" -> "Peter", "a.age" -> 35l)))
         })) {
           p("The name and age values of nodes having a name property lexicographically between *'Andy'* and *'Timothy'* are returned.")
