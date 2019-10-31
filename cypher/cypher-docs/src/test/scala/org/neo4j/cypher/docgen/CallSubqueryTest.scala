@@ -26,6 +26,9 @@ class CallSubqueryTest extends DocumentingTest {
       p( """CALL allows to execute subqueries, i.e. queries inside of other queries.
            |Subqueries allow you to compose queries, which is especially useful when working with `UNION` or aggregations.
          """.stripMargin)
+      p("""The `CALL` clause is also used for calling functions.
+          |For descriptions of the `CALL` clause in this context, refer to <<query-call>>.
+          """.stripMargin)
       p( """A subquery is evaluated for each incoming input row and may produce an arbitrary number of output rows.
            |Every output row is then combined with the input row to build the result of the subquery.
            |That means that a subquery will influence the number of rows.

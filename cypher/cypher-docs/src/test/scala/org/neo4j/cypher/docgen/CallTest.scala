@@ -47,9 +47,9 @@ class CallTest extends DocumentingTest {
 
     section("Introduction", "query-call-introduction") {
       p("Procedures are called using the `CALL` clause.")
-      p(
-        """The `CALL` clause is also used to evaluate a subquery.
-          |For descriptions of the `CALL` clause in this context, refer to <<query-call-subquery>>.""")
+      p("""The `CALL` clause is also used to evaluate a subquery.
+          |For descriptions of the `CALL` clause in this context, refer to <<query-call-subquery>>.
+          """.stripMargin)
       p(
         """Each procedure call needs to specify all required procedure arguments.
           |This may be done either explicitly, by using a comma-separated list wrapped in parentheses after the procedure name, or implicitly by using available query parameters as procedure call arguments.
