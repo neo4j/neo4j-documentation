@@ -323,7 +323,7 @@ class WhereTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Existential subquery with WITH clause", "existential-subquery-with-with") {
+      section("Existential subquery with `WITH` clause", "existential-subquery-with-with") {
         p(
           """A `WHERE` clause can be used in conjunction to the `MATCH`. Variables introduced by the `MATCH` clause and the outside scope can be used in this scope.
             |

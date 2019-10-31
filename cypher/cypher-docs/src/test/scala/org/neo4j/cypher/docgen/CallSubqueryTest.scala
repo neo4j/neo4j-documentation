@@ -9,7 +9,7 @@ class CallSubqueryTest extends DocumentingTest {
   var nodeId:Long = 1
 
   override def doc: Document = new DocBuilder {
-    doc("CALL subquery", "query-call-subquery")
+    doc("CALL {} (subquery)", "query-call-subquery")
     initQueries( """CREATE (a:Person:Child {age: 20, name: 'Alice'}), (b:Person {age: 27, name: 'Bob'}), (c:Person:Parent {age: 65, name: 'Charlie'}), (d:Person {age: 30, name: 'Dora'})
       |CREATE (a)-[:FRIEND_OF]->(b)
       |CREATE (a)-[:CHILD_OF]->(c)
@@ -17,8 +17,8 @@ class CallSubqueryTest extends DocumentingTest {
     synopsis("The `CALL {}` clause evaluates a subquery that returns some values.")
     p(
       """* <<subquery-call-introduction, Introduction>>
-        |* <<subquery-post-union, Post union processing using`>>
-        |* <<subquery-aggregation, Aggregation and side-effects`>>
+        |* <<subquery-post-union, Post- union processing>>
+        |* <<subquery-aggregation, Aggregation and side-effects>>
         |"""
       )
 
@@ -42,8 +42,8 @@ class CallSubqueryTest extends DocumentingTest {
       graphViz()
     }
 
-    section("Post union processing`", "subquery-post-union") {
-      p( """To process the results of a `UNION` query further, subqueries can be used.
+    section("Post-union processing", "subquery-post-union") {
+      p( """Subqueries can be used to process the results of a `UNION` query further.
            |This example query finds the youngest and the oldest person in the database and orders them by name.""".stripMargin)
       preformattedQuery( """CALL {
                            |  MATCH (p:Person) RETURN p ORDER BY p.age ASC LIMIT 1
@@ -75,9 +75,9 @@ class CallSubqueryTest extends DocumentingTest {
 
     section("Aggregation and side-effects`", "subquery-aggregation") {
       p( """Subqueries can be useful to do aggregations for each row and to isolate side-effects.
-        |This example query creates 5 `Clone` nodes for each existing person.
+        |This example query creates five `Clone` nodes for each existing person.
         |The aggregation ensures that cardinality is not changed by the subquery.
-        |Without this, the result would be 5 times as many rows.
+        |Without this, the result would be five times as many rows.
       """.stripMargin)
       preformattedQuery( """MATCH (p:Person)
                            |CALL {

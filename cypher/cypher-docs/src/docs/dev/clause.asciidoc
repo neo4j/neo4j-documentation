@@ -108,7 +108,7 @@ These comprise clauses that both read data from and write data to the database.
 |--- <<query-merge-on-create-on-match,ON CREATE>>   | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
 |--- <<query-merge-on-create-on-match,ON MATCH>>    | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
 |<<query-call,CALL procedure>>                      | Invokes a procedure deployed in the database and return any results.
-|<<query-call,CALL subquery>>                       | Evaluates a subquery.
+|<<query-call,CALL {} (subquery)>>                  | Evaluates a subquery.
 |===
 
 
