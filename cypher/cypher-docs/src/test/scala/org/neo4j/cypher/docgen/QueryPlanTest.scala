@@ -144,7 +144,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Node Property Existence Constraint",
       text =
-        """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint on a property for all nodes having a certain label.
+        """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint with the name `existence` on a property for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """CREATE CONSTRAINT existence ON (p:Person) ASSERT exists(p.name)""",
@@ -176,7 +176,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Node Key Constraint",
       text =
-        """The `CreateNodeKeyConstraint` operator creates a Node Key which ensures that all nodes with a particular label have a set of defined properties whose combined value is unique, and where all properties in the set are present.
+        """The `CreateNodeKeyConstraint` operator creates a node key constraint with the name `node_key` which ensures
+          |that all nodes with a particular label have a set of defined properties whose combined value is unique, and where all properties in the set are present.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """CREATE CONSTRAINT node_key ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
@@ -196,7 +197,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Drop Node Key Constraint",
       text =
-        """The `DropNodeKeyConstraint` operator removes a Node Key from a set of properties for all nodes having a certain label.
+        """The `DropNodeKeyConstraint` operator removes a node key constraint from a set of properties for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """DROP CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
@@ -208,7 +209,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Relationship Property Existence Constraint",
       text =
-        """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint on a property for all relationships of a certain type.
+        """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint with the name `existence` on a property for all relationships of a certain type.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """CREATE CONSTRAINT existence ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
@@ -241,7 +242,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "Drop Named Constraint",
+      title = "Drop Constraint by name",
       text =
         """The `DropConstraint` operator removes a constraint using the name of the constraint, no matter the type.""".stripMargin,
       queryText = """DROP CONSTRAINT name""",

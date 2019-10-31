@@ -28,11 +28,12 @@ These include index and constraint management commands.
 ** <<administration-indexes-fulltext-search, Indexes to support full-text search>>
 
 * <<administration-constraints, Constraints>>
+** <<administration-constraints-naming, Named constraints>>
 ** <<administration-constraints-unique-nodes, Unique node property constraints>>
 ** <<administration-constraints-get-a-list-of-all-constraints-in-the-database, Get a list of all constraints in the database>>
 ** <<administration-constraints-prop-exist-nodes, Node property existence constraints>>
 ** <<administration-constraints-prop-exist-rels, Relationship property existence constraints>>
-** <<administration-constraints-node-key, Node Keys>>
+** <<administration-constraints-node-key, Node key constraints>>
 
 * <<administration-security, Security>>
 ** <<administration-security-users-and-roles, User and Role Management>>

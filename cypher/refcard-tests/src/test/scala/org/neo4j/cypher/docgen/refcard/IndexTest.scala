@@ -40,9 +40,6 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
         assertStats(result, indexesAdded = 1)
         assert(result.toList.size === 0)
         tx.schema().awaitIndexesOnline(10, TimeUnit.SECONDS)
-      case "drop-index" =>
-        assertStats(result, indexesRemoved = 1)
-        assert(result.toList.size === 0)
       case "drop-named-index" =>
         assertStats(result, indexesRemoved = 1)
         assert(result.toList.size === 0)
@@ -137,14 +134,6 @@ RETURN n
 
 Index usage can be enforced when Cypher uses a suboptimal index, or
 more than one index should be used.
-
-###assertion=drop-index
-//
-
-DROP INDEX ON :Person(name)
-###
-
-Drop the index on the label `Person` and property `name`. This is deprecated.
 
 ###assertion=drop-named-index
 //

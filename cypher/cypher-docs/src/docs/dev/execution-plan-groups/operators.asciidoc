@@ -187,7 +187,7 @@ include::../ql/query-plan/create-relationship-property-existence-constraint.asci
 [role=deprecated]
 include::../ql/query-plan/drop-relationship-property-existence-constraint.asciidoc[]
 
-include::../ql/query-plan/drop-named-constraint.asciidoc[]
+include::../ql/query-plan/drop-constraint-by-name.asciidoc[]
 
 include::../ql/query-plan/create-index.asciidoc[]
 

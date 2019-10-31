@@ -4,7 +4,7 @@
 [abstract]
 Neo4j helps enforce data integrity with the use of constraints.
 Constraints can be applied to either nodes or relationships.
-Unique node property constraints can be created, along with node and relationship property existence constraints, and Node Keys, which guarantee both existence and uniqueness.
+Unique node property constraints can be created, along with node and relationship property existence constraints, and node key constraints, which guarantee both existence and uniqueness.
 
 * <<administration-constraints-introduction, Introduction>>
 * <<administration-constraints-naming, Named constraints>>
@@ -33,7 +33,7 @@ Unique node property constraints can be created, along with node and relationshi
  ** <<administration-constraints-create-a-relationship-that-violates-a-property-existence-constraint, Create a relationship that violates a property existence constraint>>
  ** <<administration-constraints-removing-an-existence-constrained-relationship-property, Removing an existence constrained relationship property>>
  ** <<administration-constraints-failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship, Failure to create a relationship property existence constraint due to existing relationship>>
-* <<administration-constraints-node-key, Node Keys>>
+* <<administration-constraints-node-key, Node key constraints>>
  ** <<administration-constraints-create-a-node-key-constraint, Create a node key constraint>>
  ** <<administration-constraints-create-a-named-node-key-constraint, Create a named node key constraint>>
  ** <<administration-constraints-drop-a-node-key-constraint, Drop a node key constraint>>
@@ -56,8 +56,8 @@ Unique constraints do not mean that all nodes have to have a unique value for th
 Property existence constraints ensure that a property exists for all nodes with a specific label or for all relationships with a specific type.
 All queries that try to create new nodes or relationships without the property, or queries that try to remove the mandatory property will now fail.
 
-*[enterprise-edition]#Node Keys#*::
-Node Keys ensure that, for a given label and set of properties:
+*[enterprise-edition]#Node key constraints#*::
+Node key constraints ensure that, for a given label and set of properties:
 +
 [lowerroman]
 . All the properties exist on all the nodes with that label.
@@ -72,8 +72,8 @@ Queries attempting to do any of the following will fail:
 
 
 [NOTE]
-Property existence constraints and Node Keys are only available in Neo4j Enterprise Edition.
-Note that databases with property existence constraints and/or Node Keys cannot be opened using Neo4j Community Edition.
+Property existence constraints and node key constraints are only available in Neo4j Enterprise Edition.
+Note that databases with property existence constraints and/or node key constraints cannot be opened using Neo4j Community Edition.
 
 A given label can have multiple constraints, and unique and property existence constraints can be combined on the same property.
 
@@ -82,10 +82,10 @@ Adding constraints is an atomic operation that can take a while -- all existing 
 Creating a constraint has the following implications on indexes:
 
 * Adding a unique property constraint on a property will also add a <<administration-indexes-create-a-single-property-index, single-property index>> on that property, so such an index cannot be added separately.
-* Adding a Node Key for a set of properties will also add a <<administration-indexes-create-a-composite-index, composite index>> on those properties, so such an index cannot be added separately.
+* Adding a node key constraint for a set of properties will also add a <<administration-indexes-create-a-composite-index, composite index>> on those properties, so such an index cannot be added separately.
 * Cypher will use these indexes for lookups just like other indexes; see the <<administration-indexes,Indexes>> section for more details on the rules governing their behavior.
 * If a unique property constraint is dropped and the single-property index on the property is still required, the index will need to be created explicitly.
-* If a Node Key is dropped and the composite-property index on the properties is still required, the index will need to be created explicitly.
+* If a node key constraint is dropped and the composite-property index on the properties is still required, the index will need to be created explicitly.
 
 [NOTE]
 Constraint creation is not idempotent, but throws when creating the same constraint twice.
@@ -160,7 +160,7 @@ include::failure-to-create-a-relationship-property-existence-constraint-due-to-e
 
 [role=enterprise-edition]
 [[administration-constraints-node-key]]
-== Node Keys
+== Node key constraints
 
 include::create-a-node-key-constraint.asciidoc[leveloffset=+1]
 

@@ -70,9 +70,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Create a named single-property index",
       text = "A named index on a single property for all nodes that have a particular label can be created with `CREATE INDEX index_name FOR (n:Label) ON (n.property)`. " +
         "Note that the index is not immediately available, but will be created in the background.",
-      queryText = "CREATE INDEX my_index FOR (n:Person) ON (n.surname)",
+      queryText = "CREATE INDEX index_name FOR (n:Person) ON (n.surname)",
       optionalResultExplanation = "Note that the index name needs to be unique. ",
-      assertions = _ => assertIndexWithNameExists("my_index", "Person", List("surname"))
+      assertions = _ => assertIndexWithNameExists("index_name", "Person", List("surname"))
     )
   }
 
@@ -99,9 +99,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "Only nodes labeled with the specified label and which contain all the properties in the index definition will be added to the index. " +
       "Note that the composite index is not immediately available, but will be created in the background. " +
       "The following statement will create a named composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
-      queryText = "CREATE INDEX my_index FOR (n:Person) ON (n.age, n.country)",
+      queryText = "CREATE INDEX index_name FOR (n:Person) ON (n.age, n.country)",
       optionalResultExplanation = "Note that the index name needs to be unique. ",
-      assertions = _ => assertIndexWithNameExists("my_index", "Person", List("age", "country"))
+      assertions = _ => assertIndexWithNameExists("index_name", "Person", List("age", "country"))
     )
   }
 
@@ -143,9 +143,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     prepareAndTestQuery(
       title = "Drop an index by name",
       text = "An index on all nodes that have a label and property/properties combination can be dropped using the name with the `DROP INDEX index_name` command.",
-      prepare = _ => executePreparationQueries(List("CREATE INDEX my_index FOR (n:Person) ON (n.surname)")),
-      queryText = "DROP INDEX my_index",
-      assertions = _ => assertIndexWithNameDoesNotExists("my_index")
+      prepare = _ => executePreparationQueries(List("CREATE INDEX index_name FOR (n:Person) ON (n.surname)")),
+      queryText = "DROP INDEX index_name",
+      assertions = _ => assertIndexWithNameDoesNotExists("index_name")
     )
   }
 
