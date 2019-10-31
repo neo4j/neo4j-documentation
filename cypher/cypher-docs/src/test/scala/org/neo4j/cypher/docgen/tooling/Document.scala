@@ -280,9 +280,9 @@ trait DatabaseQuery {
 case class InitializationQuery(prettified: String, runtime: Option[String] = None, database: Option[String] = None) extends DatabaseQuery
 
 case class Query(queryText: String, assertions: QueryAssertions, myInit: RunnableInitialization, content: Content, params: Seq[(String, Any)],
-                 keepMyNewlines: Boolean = false, runtime: Option[String] = None, database: Option[String] = None) extends Content with DatabaseQuery {
+                 preformatted: Boolean = false, runtime: Option[String] = None, database: Option[String] = None) extends Content with DatabaseQuery {
 
-  val prettified = Prettifier(queryText, keepMyNewlines)
+  val prettified = if (preformatted) queryText else Prettifier(queryText).toString
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
   override def asciiDoc(level: Int) = {

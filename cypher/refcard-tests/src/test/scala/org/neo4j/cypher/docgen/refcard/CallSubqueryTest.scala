@@ -23,53 +23,46 @@ import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 import org.neo4j.graphdb.Transaction
 
-class WhereTest extends RefcardTest with QueryStatisticsTestSupport {
-  val graphDescription = List("ROOT FRIEND A", "A FRIEND B", "B FRIEND C", "C FRIEND ROOT")
-  val title = "WHERE"
-  override val linkId = "clauses/where"
+class CallSubqueryTest extends RefcardTest with QueryStatisticsTestSupport {
+
+  val graphDescription = List("A:Person:Child FRIEND_OF B:Person", "A CHILD_OF C:Person:Parent")
+  val title = "CALL subquery"
+  override val linkId = "clauses/call-subquery"
+
+  override val properties: Map[String, Map[String, Any]] = Map(
+    "A" -> Map("name" -> "Alice"),
+    "B" -> Map("name" -> "Bob"),
+    "C" -> Map("name" -> "Chuck")
+    )
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
-      case "returns-one" =>
-        assertStats(result, nodesCreated = 0)
-        assert(result.toList.size === 1)
+      case "itWorks" =>
+        assert(result.toList === Seq(Map("p.name" -> "Alice", "count(other)" -> 2)))
     }
   }
 
   override def parameters(name: String): Map[String, Any] =
     name match {
-      case "parameters=aname" =>
-        Map("value" -> "Bob")
-      case _ => Map.empty
+      case "parameters=arg" => Map("input" ->"foo")
+      case "" => Map.empty
     }
 
-  override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("property" -> "Andy", "age" -> 39),
-    "B" -> Map("property" -> "Timothy", "age" -> 39),
-    "C" -> Map("property" -> "Chris", "age" -> 22))
-
   def text = """
-###assertion=returns-one parameters=aname
-MATCH (n)-->(m)
+### assertion=itWorks
+//
 
-WHERE n.property <> $value
-
-AND id(n) = %A% AND id(m) = %B%
-RETURN n, m###
-
-Use a predicate to filter.
-Note that `WHERE` is always part of a  `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
-Putting it after a different clause in a query will alter what it does.
-
-###assertion=returns-one
-MATCH (n)
-
-WHERE EXISTS {
-  MATCH (n)-->(m) WHERE n.age = m.age
+CALL {
+  MATCH (p:Person)-[:FRIEND_OF]->(other:Person) RETURN p, other
+  UNION
+  MATCH (p:Child)-[:CHILD_OF]->(other:Parent) RETURN p, other
 }
 
-RETURN n###
+RETURN DISTINCT p.name, count(other)
+###
 
-Use an existential subquery to filter.
+This calls a subquery with two union parts.
+The result of the subquery can afterwards be post-processed.
 """
 }
+

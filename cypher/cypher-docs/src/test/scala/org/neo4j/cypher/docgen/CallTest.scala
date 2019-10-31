@@ -28,7 +28,7 @@ class CallTest extends DocumentingTest {
   var nodeId:Long = 1
 
   override def doc = new DocBuilder {
-    doc("CALL[...YIELD]", "query-call")
+    doc("CALL procedure", "query-call")
     initQueries("CREATE (a:User:Administrator {name: 'Adrian'})")
     synopsis("The `CALL` clause is used to call a procedure deployed in the database.")
     p(
@@ -80,7 +80,7 @@ class CallTest extends DocumentingTest {
 
     section("Call a procedure using `CALL`", "call-call-a-procedure-using-call") {
       p("This calls the built-in procedure `db.labels`, which lists all labels used in the database.")
-      query("CALL `db`.`labels`", assertNotEmpty) {
+      query("CALL db.labels", assertNotEmpty) {
         resultTable()
       }
     }

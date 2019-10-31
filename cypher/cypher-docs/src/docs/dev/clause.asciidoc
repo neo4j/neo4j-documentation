@@ -14,7 +14,7 @@ This section contains information on all the clauses in the Cypher query languag
 * <<header-reading-writing-clauses,Reading/Writing clauses>>
 * <<header-set-operations-clauses,Set operations>>
 * <<header-importing-clauses,Importing data>>
-* <<header-administration-clauses,Schema clauses>>
+* <<header-administration-clauses,Administration clauses>>
 
 
 [[header-reading-clauses]]
@@ -107,7 +107,8 @@ These comprise clauses that both read data from and write data to the database.
 |<<query-merge,MERGE>>                              |   Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
 |--- <<query-merge-on-create-on-match,ON CREATE>>   | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
 |--- <<query-merge-on-create-on-match,ON MATCH>>    | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
-|<<query-call,CALL [...YIELD]>>         | Invoke a procedure deployed in the database and return any results.
+|<<query-call,CALL procedure>>                      | Invokes a procedure deployed in the database and return any results.
+|<<query-call,CALL {} (subquery)>>                  | Evaluates a subquery.
 |===
 
 
@@ -183,6 +184,8 @@ include::ql/query-foreach.adoc[leveloffset=+1]
 
 //Reading/Writing
 include::ql/query-merge.adoc[leveloffset=+1]
+
+include::ql/query-call-subquery.adoc[leveloffset=+1]
 
 include::ql/query-call.adoc[leveloffset=+1]
 

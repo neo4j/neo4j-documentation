@@ -7,7 +7,6 @@
  ** <<syntax-simple-case, Simple `CASE` form: comparing an expression against multiple values>>
  ** <<syntax-generic-case, Generic `CASE` form: allowing for multiple conditionals to be expressed>>
  ** <<syntax-distinguish-case, Distinguishing between when to use the simple and generic `CASE` forms>>
-* <<existential-subqueries, Existential Subqueries>>
 
 [[cypher-expressions-general]]
 == Expressions in general
@@ -65,5 +64,3 @@ String literals can contain the following escape sequences:
 |===================
 
 include::../ql/query-syntax-case.adoc[leveloffset=+1]
-
-include::../ql/existential-subqueries.adoc[leveloffset=+1]

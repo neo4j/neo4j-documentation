@@ -35,7 +35,7 @@ import org.neo4j.values.AnyValue
 class CallTest extends RefcardTest with QueryStatisticsTestSupport {
 
   val graphDescription = List("ROOT KNOWS A:Person", "A KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
-  val title = "CALL"
+  val title = "CALL procedure"
   override val linkId = "clauses/call"
 
   @Before
