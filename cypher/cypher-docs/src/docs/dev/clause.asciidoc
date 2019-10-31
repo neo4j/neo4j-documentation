@@ -14,7 +14,7 @@ This section contains information on all the clauses in the Cypher query languag
 * <<header-reading-writing-clauses,Reading/Writing clauses>>
 * <<header-set-operations-clauses,Set operations>>
 * <<header-importing-clauses,Importing data>>
-* <<header-administration-clauses,Schema clauses>>
+* <<header-administration-clauses,Administration clauses>>
 
 
 [[header-reading-clauses]]
