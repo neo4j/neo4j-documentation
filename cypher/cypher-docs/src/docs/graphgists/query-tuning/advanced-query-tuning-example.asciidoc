@@ -20,7 +20,7 @@ Let's explain how to use these features with a more advanced query tuning exampl
 [NOTE]
 ====
 If you are upgrading an existing store to {neo4j-version-exact}, it may be necessary to drop and re-create existing indexes.
-For information on native index support and upgrade considerations regarding indexes, see <<operations-manual#index-configuration-schema-indexes, Operations Manual -> Schema indexes>>.
+For information on native index support and upgrade considerations regarding indexes, see <<operations-manual#index-configuration-indexes, Operations Manual -> Indexes>>.
 ====
 
 
