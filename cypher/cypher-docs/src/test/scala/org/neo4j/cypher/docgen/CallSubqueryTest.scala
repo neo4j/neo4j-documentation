@@ -19,6 +19,7 @@ class CallSubqueryTest extends DocumentingTest {
       """* <<subquery-call-introduction, Introduction>>
         |* <<subquery-post-union, Post- union processing>>
         |* <<subquery-aggregation, Aggregation and side-effects>>
+        |* <<subquery-correlated, Correlated subqueries>>
         |"""
       )
 
@@ -26,6 +27,11 @@ class CallSubqueryTest extends DocumentingTest {
       p( """CALL allows to execute subqueries, i.e. queries inside of other queries.
            |Subqueries allow you to compose queries, which is especially useful when working with `UNION` or aggregations.
          """.stripMargin)
+      tip{
+        p("""The `CALL` clause is also used for calling functions.
+            |For descriptions of the `CALL` clause in this context, refer to <<query-call>>.
+          """.stripMargin)
+      }
       p( """A subquery is evaluated for each incoming input row and may produce an arbitrary number of output rows.
            |Every output row is then combined with the input row to build the result of the subquery.
            |That means that a subquery will influence the number of rows.
@@ -73,7 +79,7 @@ class CallSubqueryTest extends DocumentingTest {
       }
     }
 
-    section("Aggregation and side-effects`", "subquery-aggregation") {
+    section("Aggregation and side-effects", "subquery-aggregation") {
       p( """Subqueries can be useful to do aggregations for each row and to isolate side-effects.
         |This example query creates five `Clone` nodes for each existing person.
         |The aggregation ensures that cardinality is not changed by the subquery.

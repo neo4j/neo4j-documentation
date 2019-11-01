@@ -1,0 +1,102 @@
+[role=fabric]
+[[query-use]]
+= USE
+
+[abstract]
+--
+The `USE` clause determines which graph a query, or query part, is executed against.
+--
+
+* <<query-use-introduction, Introduction>>
+* <<query-use-syntax, Syntax>>
+* <<query-use-examples, Examples>>
+** <<query-use-examples-query-remote-graph-by-name, Query remote graph by name>>
+** <<query-use-examples-query-remote-graph-by-default-name, Query remote graph by default name>>
+** <<query-use-examples-query-remote-graph-by-graph-id, Query remote graph by graph ID>>
+
+[[query-use-introduction]]
+== Introduction
+
+The `USE` clause determines which graph a query, or query part, is executed against.
+
+[NOTE]
+====
+This functionality is currently only available in Neo4j Fabric.
+Find out more about this feature in <<operations-manual#fabric, Operations Manual -> Fabric>>.
+====
+
+[[query-use-syntax]]
+== Syntax
+
+The `USE` clause can appear at the beginning of:
+
+* Queries:
++
+[source, cypher]
+----
+USE <graph>
+[<clauses>]
+----
+
+* Union parts:
++
+[source, cypher]
+----
+USE <graph>
+[<clauses>]
+UNION
+USE <graph>
+[<clauses>]
+----
+
+* Subqueries:
++
+[source, cypher]
+----
+CALL {
+  USE <graph>
+  [<clauses>]
+}
+----
+
+
+[[query-use-examples]]
+== Examples
+
+In the following examples we assume that we have configured a Fabric database called `exampleFabricSetup`.
+
+[[query-use-examples-query-remote-graph-by-name]]
+=== Query remote graph by name:
+
+The remote graph that we wish to connect to is configured to be referred to by the name `exampleDatabaseName`.
+
+.Query.
+[source, cypher]
+----
+USE exampleFabricSetup.exampleDatabaseName
+----
+
+[[query-use-examples-query-remote-graph-by-default-name]]
+=== Query remote graph by default name
+
+If no name has been explicitly configured, it can be referred to using the default name.
+In the configuration, it is referred to as the `0th` database, i.e. its default name is `graph0`:
+
+.Query.
+[source, cypher]
+----
+USE exampleFabricSetup.graph0
+----
+
+
+[[query-use-examples-query-remote-graph-by-graph-id]]
+=== Query remote graph by graph ID
+
+In _neo4j.conf_, this graph is referred to as the `0th` database, which is why we can refer to it using the built-in function `graph()` with the argument `0`:
+
+.Query.
+[source, cypher]
+----
+USE exampleFabricSetup.graph(0)
+----
+
