@@ -54,30 +54,3 @@ When reading the configuration parameters on startup Neo4j will automatically co
 The cache size will be configured based on the available memory on the computer, with the assumption that the machine is dedicated to running Neo4j.
 Specifically, Neo4j will look at how much memory the machine has, subtract the JVM heap allocation from that, and then use 50% of what is left for the page cache.
 This is the default configuration when nothing else is specified.
-
-[[configuration-batchinsert]]
-== Batch insert example ==
-
-Read general information on batch insertion in <<batchinsert>>.
-
-The configuration should suit the data set you are about to inject using BatchInsert.
-Lets say we have a random-like graph with 10M nodes and 100M relationships.
-Each node (and maybe some relationships) have different properties of string and Java primitive types.
-The important thing is that the page cache has enough memory to work with, that it doesn't slow down the BatchInserter:
-
-[source]
-----
-dbms.memory.pagecache.size=4g
-----
-
-The configuration above will more or less fit the entire graph in memory.
-A rough formula to calculate the memory needed can look like this:
-
-[source]
-----
-bytes_needed = number_of_nodes * 15
-             + number_of_relationships * 34
-             + number_of_properties * 64
-----
-
-Note that the size of the individual property very much depends on what data it contains. The numbers given in the above formula are only a rough estimate.
