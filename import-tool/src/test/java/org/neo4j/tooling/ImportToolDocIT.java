@@ -663,7 +663,7 @@ class ImportToolDocIT
 
     private File transactionLogsDirectory()
     {
-        return new File( new File( testDirectory.toAbsolutePath().toFile(), "data" ), "tx-logs" );
+        return new File( new File( testDirectory.toAbsolutePath().toFile(), "data" ), "transactions" );
     }
 
     private void printCommandToFile( String[] arguments, String dir, String fileName ) throws FileNotFoundException
