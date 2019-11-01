@@ -23,7 +23,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
     synopsis("This section explains how to use Cypher to manage Neo4j administrative privileges.")
     p(
       """All of the commands described in the enclosing <<administration, Administration>> section require that the user executing the commands has the rights to do so.
-        |These privileges can be conferred either by granting the user the `admin` role, which enables all administrative rights, or by granting specific combinations of privileges..
+        |These privileges can be conferred either by granting the user the `admin` role, which enables all administrative rights, or by granting specific combinations of privileges.
         |""".stripMargin)
     p(
       """
@@ -262,16 +262,12 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
   }.build()
 
   private def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]) = ResultAndDbAssertions((p, db) => {
-    println(p.resultAsString)
-    println(s"Searching for $expected")
     val found = p.toList.filter { row =>
-      println(s"Checking row: $row")
       val m = expected.filter { expectedRow =>
         expectedRow.forall {
           case (k, v) => row.contains(k) && row(k) == v
         }
       }
-      println(s"\tmatched: $m")
       m.nonEmpty
     }
     found.nonEmpty

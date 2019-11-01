@@ -204,16 +204,12 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
   }.build()
 
   private def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]) = ResultAndDbAssertions((p, db) => {
-    println(p.resultAsString)
-    println(s"Searching for $expected")
     val found = p.toList.filter { row =>
-      println(s"Checking row: $row")
       val m = expected.filter { expectedRow =>
         expectedRow.forall {
           case (k, v) => row.contains(k) && row(k) == v
         }
       }
-      println(s"\tmatched: $m")
       m.nonEmpty
     }
     found.nonEmpty
