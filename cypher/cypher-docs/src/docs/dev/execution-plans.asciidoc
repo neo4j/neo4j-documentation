@@ -101,6 +101,7 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-apply, Apply>>                                                | Performs a nested loop. Yields rows from both the left-hand and right-hand side operators.  | | |
 | <<query-plan-argument, Argument>>                                | Indicates the variable to be used as an argument to the right-hand side of an `Apply` operator.  | Y | |
 | <<query-plan-assert-same-node, AssertSameNode>>                            | Used to ensure that no unique constraints are violated.  | | |
+| <<query-plan-cache-properties, CacheProperties>>                 | Reads node or relationship properties and caches them. | | |
 | <<query-plan-cartesian-product, CartesianProduct>>                 | Produces a cartesian product of the inputs from the left-hand and right-hand operators.  | | |
 | <<query-plan-conditional-apply, ConditionalApply>>                         | Performs a nested loop. If a variable is not `null`, the right-hand side will be executed.  | | |
 | <<query-plan-create-index, CreateIndex>>              | Creates an index on a property for all nodes having a certain label.  | Y | Y |
@@ -151,9 +152,13 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>                 | Executes a right outer hash join. |  |  | Eager
 | <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>                        | Finds nodes using an index seek within a unique index. | Y | |
 | <<query-plan-node-unique-index-seek-by-range, NodeUniqueIndexSeekByRange>>                 | Finds nodes using an index seek within a unique index where the value of the property matches the given prefix string. | Y | |
+| <<query-plan-ordered-aggregation, OrderedAggregation>>                    | Like `EagerAggregation` but relies on the ordering of incoming rows. Is not eager. | | |
+| <<query-plan-ordered-distinct, OrderedDistinct>>                    | Like `Distinct` but relies on the ordering of incoming rows. | | |
 | <<query-plan-optional, Optional>>                    | Yields a single row with all columns set to `null` if no data is returned by its source. | | |
 | <<query-plan-optional-expand-all, OptionalExpand(All)>>                    | Traverses relationships from a given node, producing a single row with the relationship and end node set to `null` if the predicates are not fulfilled. | | |
 | <<query-plan-optional-expand-into, OptionalExpand(Into)>>                    | Traverses all relationships between two nodes, producing a single row with the relationship and end node set to `null` if no matching relationships are found (the start node will be the node with the smallest degree). | | |
+| <<query-plan-partial-sort, PartialSort>>                               | Sorts a row by multiple columns if there is already an ordering.| | |
+| <<query-plan-partial-top, PartialTop>>                                 | Returns the first 'n' rows sorted by multiple columns if there is already an ordering.| | |
 | <<query-plan-procedure-call, ProcedureCall>>                               | Calls a procedure. | | |
 | <<query-plan-produce-results, ProduceResults>>                                   | Prepares the result so that it is consumable by the user. | | |
 | <<query-plan-project-endpoints, ProjectEndpoints>>                         | Projects the start and end node of a relationship. | | |
