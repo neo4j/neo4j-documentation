@@ -21,7 +21,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p("Users can be created using `CREATE USER`.")
         p("include::user-management-syntax-create-user.asciidoc[]")
         p("If the optional `SET PASSWORD CHANGE [NOT] REQUIRED` is omitted then the default is `CHANGE REQUIRED`. " +
-          "The default for `SET STATUS` is `ACTIVE`.")
+          "The default for `SET STATUS` is `ACTIVE`. The `password` can either be a string value or a string parameter.")
         p("For example, we can create the user `jake` in a suspended state and the requirement to change his password.")
         query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
@@ -67,6 +67,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Modifying users", "administration-security-users-alter", "enterprise-edition") {
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
+        p("The `password` can either be a string value or a string parameter.")
         p("For example, we can modify the user `jake` with a new password and active state as well as remove the requirement to change his password.")
         query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
@@ -81,7 +82,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Changing the current user's password", "administration-security-users-alter-password") {
         p("Users can be change their own password using `ALTER CURRENT USER SET PASSWORD`, " +
           "the old password is required in addition to the new. " +
-          "This will both change the password and set the `CHANGE NOT REQUIRED` flag.")
+          "This will both change the password and set the `CHANGE NOT REQUIRED` flag. " +
+          "Both the old and new password can either be a string value or a string parameter.")
         query("ALTER CURRENT USER SET PASSWORD FROM 'abc123' TO '123xyz'", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
