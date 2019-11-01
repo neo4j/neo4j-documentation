@@ -43,7 +43,7 @@ class ShortestPathPlanningTest extends DocumentingTest {
         |       (thePresident:Movie {title: 'The American President'}),
         |       (martin)-[:ACTED_IN {role: 'A.J. MacInerney'}]->(thePresident),
         |       (michael)-[:ACTED_IN {role: 'President Andrew Shepherd'}]->(thePresident),
-        |       (rob)-[:DIRECTED]->(thePresident)""", "CREATE INDEX ON :Person(name)")
+        |       (rob)-[:DIRECTED]->(thePresident)""", "CREATE INDEX FOR (p:Person) ON (p.name)")
     synopsis("Shortest path finding in Cypher and how it is planned.")
     p(
       """Planning shortest paths in Cypher can lead to different query plans depending on the predicates that need

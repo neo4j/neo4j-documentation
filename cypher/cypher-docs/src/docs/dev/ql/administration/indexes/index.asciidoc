@@ -7,12 +7,16 @@ This section explains how to configure indexes to enhance performance in search,
 --
 
 * <<administration-indexes-introduction, Managing Indexes>>
+** <<administration-indexes-naming, Named indexes>>
 ** <<administration-indexes-single-vs-composite-index, Composite index limitations>>
 ** <<administration-indexes-create-a-single-property-index, Create a single-property index>>
+** <<administration-indexes-create-a-named-single-property-index, Create a named single-property index>>
 ** <<administration-indexes-create-a-composite-index, Create a composite index>>
+** <<administration-indexes-create-a-named-composite-index, Create a named composite index>>
 ** <<administration-indexes-get-a-list-of-all-indexes-in-the-database, Get a list of all indexes in the database>>
 ** <<administration-indexes-drop-a-single-property-index, Drop a single-property index>>
 ** <<administration-indexes-drop-a-composite-index, Drop a composite index>>
+** <<administration-indexes-drop-an-index-by-name, Drop an index by name>>
 * <<administration-indexes-using-indexes, Using indexes>>
 ** <<administration-indexes-equality-check-using-where-single-property-index, Equality check using `WHERE` (single-property index)>>
 ** <<administration-indexes-equality-check-using-where-composite-index, Equality check using `WHERE` (composite index)>>
@@ -66,6 +70,16 @@ Neo4j will automatically pick up and start using the index once it has been crea
 ====
 For information on index configuration and limitations, refer to <<operations-manual#index-configuration, Operations Manual -> Index configuration>>.
 ====
+
+[NOTE]
+Index creation is not idempotent, but throws when creating the same index twice.
+
+[[administration-indexes-naming]]
+=== Named indexes
+
+When created, an index may be given a name. The name needs to be unique among both indexes and constraints.
+If no name is given during creation, a unique name will be generated for the index.
+To drop an index, the preferred way is to drop it by name.
 
 [[administration-indexes-single-vs-composite-index]]
 === Composite index limitations
@@ -127,13 +141,21 @@ To get this kind of fallback behavior, it is necessary to create additional inde
 
 include::create-a-single-property-index.asciidoc[leveloffset=+1]
 
+include::create-a-named-single-property-index.asciidoc[leveloffset=+1]
+
 include::create-a-composite-index.asciidoc[leveloffset=+1]
+
+include::create-a-named-composite-index.asciidoc[leveloffset=+1]
 
 include::get-a-list-of-all-indexes-in-the-database.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::drop-a-single-property-index.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::drop-a-composite-index.asciidoc[leveloffset=+1]
+
+include::drop-an-index-by-name.asciidoc[leveloffset=+1]
 
 include::using-indexes.asciidoc[]
 

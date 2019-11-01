@@ -39,7 +39,7 @@ In this case we want an index to speed up finding actors by name in the database
 
 [source, cypher]
 ----
-CREATE INDEX ON :Actor(name)
+CREATE INDEX FOR (a:Actor) ON (a.name)
 ----
 
 [source, querytest]

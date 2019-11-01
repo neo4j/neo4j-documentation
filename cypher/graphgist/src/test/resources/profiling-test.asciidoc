@@ -44,7 +44,7 @@ NodeByLabelScan
 
 [source, cypher]
 ----
-CREATE INDEX ON :Person(name)
+CREATE INDEX FOR (p:Person) ON (p.name)
 ----
 
 [source, cypher]

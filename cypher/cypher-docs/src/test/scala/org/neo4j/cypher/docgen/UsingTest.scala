@@ -26,8 +26,8 @@ class UsingTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("Planner hints and the USING keyword", "query-using")
     initQueries(
-      "CREATE INDEX ON :Scientist(name)",
-      "CREATE INDEX ON :Science(name)",
+      "CREATE INDEX FOR (n:Scientist) ON (n.name)",
+      "CREATE INDEX FOR (n:Science) ON (n.name)",
 
       """CREATE
         |(liskov:Scientist {name: 'Liskov', born: 1939})-[:KNOWS]->(wing:Scientist {name: 'Wing', born: 1956})-[:RESEARCHED]->(cs:Science {name: 'Computer Science'})<-[:RESEARCHED]-(conway:Scientist {name: 'Conway', born: 1938}),
