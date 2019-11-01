@@ -13,7 +13,7 @@
     <groupId>org.neo4j.examples</groupId>
     <artifactId>neo4j-server-examples</artifactId>
     <name>Neo4j - Server Examples</name>
-    <description>Neo4j Server Plugin Examples</description>
+    <description>Neo4j Unmanaged Extensions Examples</description>
 
     <properties>
         <short-name>neo4j-server-examples</short-name>
