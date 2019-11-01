@@ -28,14 +28,14 @@ Find out more about this feature in <<operations-manual#fabric, Operations Manua
 [[query-use-syntax]]
 == Syntax
 
-The `USE` clause can appear at the beginning of:
+The `USE` clause can only appear as the first clause of:
 
 * Queries:
 +
 [source, cypher]
 ----
 USE <graph>
-[<clauses>]
+<other clauses>
 ----
 
 * Union parts:
@@ -43,10 +43,10 @@ USE <graph>
 [source, cypher]
 ----
 USE <graph>
-[<clauses>]
-UNION
+<other clauses>
+  UNION
 USE <graph>
-[<clauses>]
+<other clauses>
 ----
 
 * Subqueries:
@@ -55,9 +55,11 @@ USE <graph>
 ----
 CALL {
   USE <graph>
-  [<clauses>]
+  <other clauses>
 }
 ----
++
+In subqueries, a `USE` clause may appear as the second clause, if directly following an <<subquery-correlated-importing, importing `WITH` clause>>
 
 
 [[query-use-examples]]
@@ -76,23 +78,11 @@ The remote graph that we wish to connect to is configured to be referred to by t
 USE exampleFabricSetup.exampleDatabaseName
 ----
 
-[[query-use-examples-query-remote-graph-by-default-name]]
-=== Query remote graph by default name
-
-If no name has been explicitly configured, it can be referred to using the default name.
-In the configuration, it is referred to as the `0th` database, i.e. its default name is `graph0`:
-
-.Query.
-[source, cypher]
-----
-USE exampleFabricSetup.graph0
-----
-
-
 [[query-use-examples-query-remote-graph-by-graph-id]]
 === Query remote graph by graph ID
 
-In _neo4j.conf_, this graph is referred to as the `0th` database, which is why we can refer to it using the built-in function `graph()` with the argument `0`:
+In the Fabric configuration in _neo4j.conf_, this graph is referred to as the `0th` graph, which is why we can refer to it
+using the built-in function `graph()` with the argument `0`:
 
 .Query.
 [source, cypher]
