@@ -54,7 +54,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
         }
       }
-      section("Modifying users", "administration-security-users-alter") {
+      section("Modifying users", "administration-security-users-alter", "enterprise-edition") {
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
         p("For example, we can modify the user `jake` with a new password and active state as well as remove the requirement to change his password.")
@@ -100,7 +100,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {}
       }
     }
-    section("Role Management", "administration-security-roles") {
+    section("Role Management", "administration-security-roles", "enterprise-edition") {
       initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED",
         "CREATE USER user1 SET PASSWORD 'abc'", "CREATE USER user2 SET PASSWORD 'abc'", "CREATE USER user3 SET PASSWORD 'abc'",
         "CREATE ROLE role1", "CREATE ROLE role2")
