@@ -50,6 +50,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {
           p("This is equivalent to running `DROP USER jake IF EXISTS` followed by `CREATE USER jake SET PASSWORD 'xyz'`.")
         }
+        note {
+          p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
+        }
       }
       section("Modifying users", "administration-security-users-alter") {
         p("Users can be modified using `ALTER USER`.")
@@ -145,6 +148,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           assertStats(r, systemUpdates = 2)
         })) {
           p("This is equivalent to running `DROP ROLE myrole IF EXISTS` followed by `CREATE ROLE myrole`.")
+        }
+        note {
+          p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
         }
       }
       section("Deleting roles", "administration-security-roles-drop") {

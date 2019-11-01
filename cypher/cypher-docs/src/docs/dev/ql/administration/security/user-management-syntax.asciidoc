@@ -6,7 +6,8 @@
 |
 [source, cypher]
 ----
-CREATE USER name SET PASSWORD password
+CREATE [OR REPLACE] USER name [IF NOT EXISTS]
+  SET PASSWORD password
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
 ----
@@ -14,7 +15,7 @@ CREATE USER name SET PASSWORD password
 
 |
 [source, cypher]
-DROP USER name
+DROP USER name [IF EXISTS]
 | Drop (remove) an existing user | Admin
 
 | [source, cypher]

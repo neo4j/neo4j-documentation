@@ -67,6 +67,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       })) {
         p("This is equivalent to running `DROP DATABASE customers IF EXISTS` followed by `CREATE DATABASE customers`.")
       }
+      note {
+        p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
+      }
     }
     section("Stopping databases", "administration-databases-stop-database") {
       p("Databases can be stopped using the command `STOP DATABASE`.")
