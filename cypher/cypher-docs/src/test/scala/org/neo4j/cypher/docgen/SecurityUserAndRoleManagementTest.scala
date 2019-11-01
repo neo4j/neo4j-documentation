@@ -47,23 +47,6 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
         }
       }
-      section("Deleting users", "administration-security-users-drop") {
-        p("Users can be deleted using `DROP USER`.")
-        query("DROP USER jake", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
-        })) {
-          statsOnlyResultTable()
-        }
-        p("When a user has been deleted, it will no longer appear on the list provided by `SHOW USERS`.")
-        query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
-          resultTable()
-        }
-        p("This command is optionally idempotent, with the default behavior to throw an exception if the user does not exists. " +
-          "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the user not exist.")
-        query("DROP USER jake IF EXISTS", ResultAssertions(r => {
-          assertStats(r, systemUpdates = 0)
-        })) {}
-      }
       section("Modifying users", "administration-security-users-alter", "enterprise-edition") {
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
@@ -93,6 +76,23 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         note {
           p("This command only works for a logged in user and cannot be run with auth disabled.")
         }
+      }
+      section("Deleting users", "administration-security-users-drop") {
+        p("Users can be deleted using `DROP USER`.")
+        query("DROP USER jake", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("When a user has been deleted, it will no longer appear on the list provided by `SHOW USERS`.")
+        query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
+          resultTable()
+        }
+        p("This command is optionally idempotent, with the default behavior to throw an exception if the user does not exists. " +
+          "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the user not exist.")
+        query("DROP USER jake IF EXISTS", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 0)
+        })) {}
       }
       section("Listing users", "administration-security-users-show") {
         p("Available users can be seen using `SHOW USERS`.")

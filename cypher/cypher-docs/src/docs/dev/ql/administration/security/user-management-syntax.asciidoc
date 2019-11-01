@@ -13,11 +13,6 @@ CREATE [OR REPLACE] USER name [IF NOT EXISTS]
 ----
 | Create a new user | Admin | `X`
 
-|
-[source, cypher]
-DROP USER name [IF EXISTS]
-| Drop (remove) an existing user | Admin | `X`
-
 | [source, cypher]
 ALTER USER name SET {
 PASSWORD password
@@ -31,6 +26,11 @@ STATUS {ACTIVE \| SUSPENDED}
 | [source, cypher]
 ALTER CURRENT USER SET PASSWORD FROM original TO password
 | Change the current user's password | Normal user | `X`
+
+|
+[source, cypher]
+DROP USER name [IF EXISTS]
+| Drop (remove) an existing user | Admin | `X`
 
 | [source, cypher]
 SHOW USERS
