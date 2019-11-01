@@ -73,12 +73,13 @@ class FulltextIndexTest extends DocumentingTest {
           |[options="header"]
           ||===
           || Usage                               | Procedure                                                 | Description
-          || Create full-text node index         | `db.index.fulltext.createNodeIndex`                       | Create a node full-text index for the given labels and properties. The optional 'config' map parameter can be used to supply settings to the index. Note: index specific settings are currently experimental, and might not replicated correctly in a cluster, or during backup. Supported settings are 'analyzer', for specifying what analyzer to use when indexing and querying. Use the `db.index.fulltext.listAvailableAnalyzers` procedure to see what options are available. And 'eventually_consistent' which can be set to 'true' to make this index eventually consistent, such that updates from committing transactions are applied in a background thread.
-          || Create full-text relationship index | `db.index.fulltext.createRelationshipIndex`               | Create a relationship full-text index for the given relationship types and properties. The optional 'config' map parameter can be used to supply settings to the index. Note: index specific settings are currently experimental, and might not replicated correctly in a cluster, or during backup. Supported settings are 'analyzer', for specifying what analyzer to use when indexing and querying. Use the `db.index.fulltext.listAvailableAnalyzers` procedure to see what options are available. And 'eventually_consistent' which can be set to 'true' to make this index eventually consistent, such that updates from committing transactions are applied in a background thread.
+          || Create full-text node index         | `db.index.fulltext.createNodeIndex`                       | Create a node fulltext index for the given labels and properties. The optional 'config' map parameter can be used to supply settings to the index. Supported settings are 'analyzer', for specifying what analyzer to use when indexing and querying. Use the `db.index.fulltext.listAvailableAnalyzers` procedure to see what options are available. And 'eventually_consistent' which can be set to 'true' to make this index eventually consistent, such that updates from committing transactions are applied in a background thread.
+          || Create full-text relationship index | `db.index.fulltext.createRelationshipIndex`               | Create a relationship fulltext index for the given relationship types and properties. The optional 'config' map parameter can be used to supply settings to the index. Supported settings are 'analyzer', for specifying what analyzer to use when indexing and querying. Use the `db.index.fulltext.listAvailableAnalyzers` procedure to see what options are available. And 'eventually_consistent' which can be set to 'true' to make this index eventually consistent, such that updates from committing transactions are applied in a background thread.
           || List available analyzers            | `db.index.fulltext.listAvailableAnalyzers`                | List the available analyzers that the full-text indexes can be configured with.
           || Use full-text node index            | `db.index.fulltext.queryNodes`                            | Query the given full-text index. Returns the matching nodes and their Lucene query score, ordered by score.
           || Use full-text relationship index    | `db.index.fulltext.queryRelationships`                    | Query the given full-text index. Returns the matching relationships and their Lucene query score, ordered by score.
           || Drop full-text index                | `db.index.fulltext.drop`                                  | Drop the specified index.
+          || Eventually consistent indexes       | `db.index.fulltext.awaitEventuallyConsistentIndexRefresh` | Wait for the updates from recently committed transactions to be applied to any eventually-consistent full-text indexes.
           ||===
           |"""
       )
@@ -119,10 +120,6 @@ class FulltextIndexTest extends DocumentingTest {
           |The `eventually_consistent` setting, if set to `"true"`, will put the index in an _eventually consistent_ update mode.
           |this means that updates will be applied in a background thread "as soon as possible", instead of during transaction commit like other indexes.
         """)
-      note(p(
-        """
-          |Using index-specific settings via the `config` parameter is to be considered as experimental, because these settings are currently not replicated in a clustered environment.
-          |See <<operations-manual#index-configuration-fulltext-search, Operations Manual -> Indexes to support full-text search>> for instructions on how to configure full-text indexes in <<operations-manual#file-locations, neo4j.conf>>."""))
       query(createRelationshipFulltextIndexWithConfig, ResultAssertions(r => {})) {
         p(
           """
