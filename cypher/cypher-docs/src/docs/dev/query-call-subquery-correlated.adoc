@@ -40,7 +40,7 @@ RETURN x, y
 |===
 
 
-An importing `WITH` clause must
+An importing `WITH` clause must:
 
  * Consist only of simple references to outside variables - e.g. `WITH x, y, z`.
    Aliasing or expressions are not supported in importing `WITH` clauses - e.g. `WITH a AS b` or `WITH a+1 AS b`.

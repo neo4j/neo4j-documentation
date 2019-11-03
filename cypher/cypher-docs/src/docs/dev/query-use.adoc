@@ -11,7 +11,6 @@ The `USE` clause determines which graph a query, or query part, is executed agai
 * <<query-use-syntax, Syntax>>
 * <<query-use-examples, Examples>>
 ** <<query-use-examples-query-remote-graph-by-name, Query remote graph by name>>
-** <<query-use-examples-query-remote-graph-by-default-name, Query remote graph by default name>>
 ** <<query-use-examples-query-remote-graph-by-graph-id, Query remote graph by graph ID>>
 
 [[query-use-introduction]]
@@ -68,7 +67,7 @@ In subqueries, a `USE` clause may appear as the second clause, if directly follo
 In the following examples we assume that we have configured a Fabric database called `exampleFabricSetup`.
 
 [[query-use-examples-query-remote-graph-by-name]]
-=== Query remote graph by name:
+=== Query remote graph by name
 
 The remote graph that we wish to connect to is configured to be referred to by the name `exampleDatabaseName`.
 
