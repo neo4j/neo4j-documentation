@@ -9,57 +9,67 @@ This functionality is currently only available in Neo4j Fabric.
 Find out more about this feature in <<operations-manual#fabric, Operations Manual -> Fabric>>.
 ====
 
-First consider a simple subquery where the `CALL {}` clause evaluates a subquery that returns some values:
+A correlated subquery is a subquery that uses variables defined outside of the `CALL` clause.
+To be able to use a variable in this way, the variable must be explicitly imported into the subquery.
+
+[[subquery-correlated-importing]]
+== Importing variables into subqueries
+
+Variables are imported into a subquery using an importing `WITH` clause.
+As the subquery is evaluated for each incoming input row, the imported variables get bound to the corresponding values from the input row in each evaluation.
 
 .Query.
 [source, cypher]
 ----
 UNWIND [0, 1, 2] AS x
 CALL {
-  UNWIND [10, 20, 30] AS y
-  RETURN y
+  WITH x
+  RETURN x*10 AS y
 }
 RETURN x, y
 ----
 
 .Result
-[source, cypher]
-----
-x, y
-0, 10
-0, 20
-0, 30
-1, 10
-1, 20
-1, 30
-2, 10
-2, 20
-2, 30
-----
+[role="queryresult",options="header,footer",cols="2*<m"]
+|===
+| +x+ | +y+
+| +0+ | +0+
+| +1+ | +10+
+| +2+ | +20+
+2+d|3 rows
+|===
 
 
-Now consider a correlated subquery, i.e. a subquery that uses variables defined outside of the `CALL` clause:
+An importing `WITH` clause must:
 
-.Query. 
+ * Consist only of simple references to outside variables - e.g. `WITH x, y, z`.
+   Aliasing or expressions are not supported in importing `WITH` clauses - e.g. `WITH a AS b` or `WITH a+1 AS b`.
+ * Be the first clause of a subquery (or the second clause, if directly following a `USE` clause).
+
+[[subquery-correlated-aggregation]]
+== Aggregation on imported variables
+
+Aggregations in subqueries are scoped to the subquery evaluation, also for imported variables, as shown in the following example:
+
+.Query.
 [source, cypher]
 ----
 UNWIND [0, 1, 2] AS x
 CALL {
   WITH x
-  UNWIND range(1, x) AS y
-  RETURN 10 * y
+  RETURN max(x) AS xMax
 }
-RETURN x, y
+RETURN x, xMax
 ----
 
 .Result
-[source, cypher]
-----
-x, y
-1, 10
-2, 10
-2, 20
-----
+[role="queryresult",options="header,footer",cols="2*<m"]
+|===
+| +x+ | +xMax+
+| +0+ | +0+
+| +1+ | +1+
+| +2+ | +2+
+2+d|3 rows
+|===
 
-Note that variables that are defined by clauses outside a subquery must be explicitly imported using the `WITH` clause at the beginning of the subquery.
-An exception to this rule is that, as a convenience, a `USE` clause in a subquery may refer to outside variables without a preceding import.
+The aggregation `max(x)` observes only a single value of `x` in each evaluation of the subquery, and thus simply evaluates to that same value.
