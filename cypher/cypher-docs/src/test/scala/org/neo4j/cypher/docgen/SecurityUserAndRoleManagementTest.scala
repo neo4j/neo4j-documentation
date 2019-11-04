@@ -14,21 +14,31 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
     doc("User and role management", "administration-security-users-and-roles")
     database("system")
     synopsis("This section explains how to use Cypher to manage Neo4j role-based access control through users and roles.")
+
+    p(
+      """
+        |* <<administration-security-users, User Management>>
+        |** <<administration-security-users-show, Listing users>>
+        |** <<administration-security-users-create, Creating users>>
+        |** <<administration-security-users-alter, Modifying users>>
+        |** <<administration-security-users-alter-password, Changing the current user's password>>
+        |** <<administration-security-users-drop, Deleting users>>
+        |* <<administration-security-roles, Role management>>
+        |** <<administration-security-roles-show, Listing roles>>
+        |** <<administration-security-roles-create, Creating roles>>
+        |** <<administration-security-roles-drop, Deleting roles>>
+        |** <<administration-security-roles-grant, Assigning roles>>
+        |** <<administration-security-roles-revoke, Revoking roles>>
+        |""".stripMargin)
+
     section("User Management", "administration-security-users") {
       p("Users can be created and managed using a set of Cypher administration commands executed against the `system` database.")
       p("include::user-management-syntax.asciidoc[]")
-      section("Listing users", "administration-security-users-show") {
-        p("Available users can be seen using `SHOW USERS`.")
-        query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
-          resultTable()
-        }
-        p("The `SHOW USER name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
-      }
       section("Creating users", "administration-security-users-create") {
         p("Users can be created using `CREATE USER`.")
         p("include::user-management-syntax-create-user.asciidoc[]")
         p("If the optional `SET PASSWORD CHANGE [NOT] REQUIRED` is omitted then the default is `CHANGE REQUIRED`. " +
-          "The default for `SET STATUS` is `ACTIVE`.")
+          "The default for `SET STATUS` is `ACTIVE`. The `password` can either be a string value or a string parameter.")
         p("For example, we can create the user `jake` in a suspended state and the requirement to change his password.")
         query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
@@ -50,10 +60,14 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {
           p("This is equivalent to running `DROP USER jake IF EXISTS` followed by `CREATE USER jake SET PASSWORD 'xyz'`.")
         }
+        note {
+          p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
+        }
       }
-      section("Modifying users", "administration-security-users-alter") {
+      section("Modifying users", "administration-security-users-alter", "enterprise-edition") {
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
+        p("The `password` can either be a string value or a string parameter.")
         p("For example, we can modify the user `jake` with a new password and active state as well as remove the requirement to change his password.")
         query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
@@ -68,7 +82,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Changing the current user's password", "administration-security-users-alter-password") {
         p("Users can be change their own password using `ALTER CURRENT USER SET PASSWORD`, " +
           "the old password is required in addition to the new. " +
-          "This will both change the password and set the `CHANGE NOT REQUIRED` flag.")
+          "This will both change the password and set the `CHANGE NOT REQUIRED` flag. " +
+          "Both the old and new password can either be a string value or a string parameter.")
         query("ALTER CURRENT USER SET PASSWORD FROM 'abc123' TO '123xyz'", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -96,28 +111,20 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           assertStats(r, systemUpdates = 0)
         })) {}
       }
+      section("Listing users", "administration-security-users-show") {
+        p("Available users can be seen using `SHOW USERS`.")
+        query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
+          resultTable()
+        }
+        p("The `SHOW USER name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
+      }
     }
-    section("Role Management", "administration-security-roles") {
+    section("Role Management", "administration-security-roles", "enterprise-edition") {
       initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED",
         "CREATE USER user1 SET PASSWORD 'abc'", "CREATE USER user2 SET PASSWORD 'abc'", "CREATE USER user3 SET PASSWORD 'abc'",
         "CREATE ROLE role1", "CREATE ROLE role2")
       p("Roles can be created and managed using a set of Cypher administration commands executed against the `system` database.")
       p("include::role-management-syntax.asciidoc[]")
-      section("Listing roles", "administration-security-roles-show") {
-        p("Available roles can be seen using `SHOW ROLES`.")
-        query("SHOW ROLES", assertAllNodesShown("Role", column = "role")) {
-          p("This is the same command as `SHOW ALL ROLES`.")
-          resultTable()
-        }
-        p("There are multiple versions of this command, the default being `SHOW ALL ROLES`. " +
-          "To only show roles that are assigned to users, the command is `SHOW POPULATED ROLES`. " +
-          "To see which users are assigned to roles `WITH USERS` can be appended to the commands. " +
-          "This will give one result row for each user, so if a role is assigned to two users then it will show up twice in the result.")
-        query("SHOW POPULATED ROLES WITH USERS", assertRolesShown()) {
-          resultTable()
-        }
-        p("The `SHOW ROLE name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
-      }
       section("Creating roles", "administration-security-roles-create") {
         p("Roles can be created using `CREATE ROLE`.")
         query("CREATE ROLE myrole", ResultAssertions((r) => {
@@ -146,6 +153,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {
           p("This is equivalent to running `DROP ROLE myrole IF EXISTS` followed by `CREATE ROLE myrole`.")
         }
+        note {
+          p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
+        }
       }
       section("Deleting roles", "administration-security-roles-drop") {
         p("Roles can be deleted using `DROP ROLE` command.")
@@ -163,6 +173,21 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("DROP ROLE mysecondrole IF EXISTS", ResultAssertions(r => {
           assertStats(r, systemUpdates = 0)
         })) {}
+      }
+      section("Listing roles", "administration-security-roles-show") {
+        p("Available roles can be seen using `SHOW ROLES`.")
+        query("SHOW ROLES", assertAllNodesShown("Role", column = "role")) {
+          p("This is the same command as `SHOW ALL ROLES`.")
+          resultTable()
+        }
+        p("There are multiple versions of this command, the default being `SHOW ALL ROLES`. " +
+          "To only show roles that are assigned to users, the command is `SHOW POPULATED ROLES`. " +
+          "To see which users are assigned to roles `WITH USERS` can be appended to the commands. " +
+          "This will give one result row for each user, so if a role is assigned to two users then it will show up twice in the result.")
+        query("SHOW POPULATED ROLES WITH USERS", assertRolesShown()) {
+          resultTable()
+        }
+        p("The `SHOW ROLE name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
       }
       section("Assigning roles to users", "administration-security-roles-grant") {
         p("Users can be give access rights by assigning them roles using `GRANT ROLE`.")

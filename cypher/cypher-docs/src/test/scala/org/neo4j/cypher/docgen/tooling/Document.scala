@@ -347,12 +347,13 @@ case class ExecutionPlan(planString: String) extends Content with NoQueries {
   }
 }
 
-case class Section(heading: String, id: Option[String], init: RunnableInitialization, content: Content) extends Content {
+case class Section(heading: String, id: Option[String], init: RunnableInitialization, content: Content, role: Option[String] = None) extends Content {
 
   override def asciiDoc(level: Int) = {
+    val roleRef = role.map("[role=" + _ + "]\n").getOrElse("")
     val idRef = id.map("[[" + _ + "]]\n").getOrElse("")
     val levelIndent = (0 to (level + 1)).map(_ => "=").mkString
-    idRef + levelIndent + " " + heading + NewLine + NewLine + content.asciiDoc(level + 1)
+    roleRef + idRef + levelIndent + " " + heading + NewLine + NewLine + content.asciiDoc(level + 1)
   }
 
   override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]): Seq[ContentWithInit] = content.runnableContent(init ++ this.init, None)

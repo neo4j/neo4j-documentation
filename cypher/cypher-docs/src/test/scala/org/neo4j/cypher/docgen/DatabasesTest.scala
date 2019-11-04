@@ -45,7 +45,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       considerations("The `status` of the database is the desired status, and might not necessarily reflect the actual status across all members of a cluster.")
     }
-    section("Creating databases", "administration-databases-create-database") {
+    section("Creating databases", "administration-databases-create-database", "enterprise-edition") {
       p("Databases can be created using `CREATE DATABASE`.")
       query("CREATE DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
@@ -67,8 +67,11 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       })) {
         p("This is equivalent to running `DROP DATABASE customers IF EXISTS` followed by `CREATE DATABASE customers`.")
       }
+      note {
+        p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
+      }
     }
-    section("Stopping databases", "administration-databases-stop-database") {
+    section("Stopping databases", "administration-databases-stop-database", "enterprise-edition") {
       p("Databases can be stopped using the command `STOP DATABASE`.")
       query("STOP DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
@@ -80,7 +83,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Starting databases", "administration-databases-start-database") {
+    section("Starting databases", "administration-databases-start-database", "enterprise-edition") {
       p("Databases can be started using the command `START DATABASE`.")
       query("START DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
@@ -92,7 +95,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Deleting databases", "administration-databases-drop-database") {
+    section("Deleting databases", "administration-databases-drop-database", "enterprise-edition") {
       p("Databases can be deleted using the command `DROP DATABASE`.")
       query("DROP DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)

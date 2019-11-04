@@ -4,11 +4,11 @@
 | Command | Description
 
 | [source, cypher]
-CREATE ROLE name [AS COPY OF name]
+CREATE [OR REPLACE] ROLE name [IF NOT EXISTS] [AS COPY OF name]
 | Create a new role
 
 | [source, cypher]
-DROP ROLE name
+DROP ROLE name [IF EXISTS]
 | Drop (remove) an existing role
 
 | [source, cypher]
