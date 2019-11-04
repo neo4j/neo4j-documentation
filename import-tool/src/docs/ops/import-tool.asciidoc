@@ -22,9 +22,7 @@ Instead you'll need to add indexes afterwards (see <<graphdb-neo4j-indexes>>).
 [NOTE]
 --
 Data cannot be imported into an existing database using this tool.
-
-* If you want to load small to medium sized CSV files see <<query-load-csv>>.
-* If you want to bulk import into an existing database see <<batchinsert>>.
+If you want to load small to medium sized CSV files see <<query-load-csv>>.
 --
 
 [[import-tool-header-format]]
