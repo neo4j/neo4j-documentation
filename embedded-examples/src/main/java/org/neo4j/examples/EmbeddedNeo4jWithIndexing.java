@@ -37,7 +37,7 @@ import org.neo4j.io.fs.FileUtils;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.internal.helpers.collection.Iterators.loop;
 
-public class EmbeddedNeo4jWithNewIndexing
+public class EmbeddedNeo4jWithIndexing
 {
     private static final File databaseDirectory = new File( "target/neo4j-store-with-new-indexing" );
 

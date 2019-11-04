@@ -22,11 +22,11 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-public class EmbeddedNeo4jWithNewIndexingDocTest
+public class EmbeddedNeo4JWithIndexingDocTest
 {
     @Test
     public void justExecuteIt() throws IOException
     {
-        EmbeddedNeo4jWithNewIndexing.main( null );
+        EmbeddedNeo4jWithIndexing.main( null );
     }
 }
