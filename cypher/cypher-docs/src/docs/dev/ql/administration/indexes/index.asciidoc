@@ -199,4 +199,4 @@ include::spatial-bounding-box-searches-single-property-index.asciidoc[leveloffse
 
 include::spatial-bounding-box-searches-composite-index.asciidoc[leveloffset=+1]
 
-include::fulltext-index.adoc[leveloffset=+1]
+include::administration-indexes-fulltext-search.adoc[leveloffset=+1]
