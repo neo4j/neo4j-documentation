@@ -53,21 +53,22 @@ public class EmbeddedNeo4jWithIndexing
 
         {
             // tag::createIndex[]
-            IndexDefinition indexDefinition;
+            IndexDefinition usernamesIndex;
             try ( Transaction tx = graphDb.beginTx() )
             {
                 Schema schema = tx.schema();
-                indexDefinition = schema.indexFor( Label.label( "User" ) )
-                        .on( "username" )
-                        .create();
-                tx.commit();
+                usernamesIndex = schema.indexFor( Label.label( "User" ) ) // <1>
+                        .on( "username" ) // <2>
+                        .withName( "usernames" ) // <3>
+                        .create(); // <4>
+                tx.commit(); // <5>
             }
             // end::createIndex[]
             // tag::wait[]
             try ( Transaction tx = graphDb.beginTx() )
             {
                 Schema schema = tx.schema();
-                schema.awaitIndexOnline( indexDefinition, 10, TimeUnit.SECONDS );
+                schema.awaitIndexOnline( usernamesIndex, 10, TimeUnit.SECONDS );
             }
             // end::wait[]
             // tag::progress[]
@@ -75,7 +76,7 @@ public class EmbeddedNeo4jWithIndexing
             {
                 Schema schema = tx.schema();
                 System.out.println( String.format( "Percent complete: %1.0f%%",
-                        schema.getIndexPopulationProgress( indexDefinition ).getCompletedPercentage() ) );
+                        schema.getIndexPopulationProgress( usernamesIndex ).getCompletedPercentage() ) );
             }
             // end::progress[]
         }
@@ -138,6 +139,7 @@ public class EmbeddedNeo4jWithIndexing
                     firstUserNode = users.next();
                 }
                 users.close();
+                // ... Do stuff with the firstUserNode we found ...
             }
             // end::resourceIterator[]
         }
@@ -180,14 +182,8 @@ public class EmbeddedNeo4jWithIndexing
             // tag::dropIndex[]
             try ( Transaction tx = graphDb.beginTx() )
             {
-                Label label = Label.label( "User" );
-                for ( IndexDefinition indexDefinition : tx.schema()
-                        .getIndexes( label ) )
-                {
-                    // There is only one index
-                    indexDefinition.drop();
-                }
-
+                IndexDefinition usernamesIndex = tx.schema().getIndexByName( "usernames" ); // <1>
+                usernamesIndex.drop();
                 tx.commit();
             }
             // end::dropIndex[]
