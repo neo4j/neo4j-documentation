@@ -3,7 +3,7 @@ package org.neo4j.cypher.docgen
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, Document, DocumentingTest, ResultAssertions}
 
 class FulltextIndexTest extends DocumentingTest {
-  override def outputPath = "target/docs/dev/ql/"
+  override def outputPath = "target/docs/dev/ql/administration/indexes"
 
   override def doc: Document = new DocBuilder {
     private val createMatrixMovieNode = """create (m:Movie {title: "The Matrix"}) return m.title"""
@@ -88,9 +88,9 @@ class FulltextIndexTest extends DocumentingTest {
     section("Create and configure full-text indexes", "administration-indexes-fulltext-search-create-and-configure") {
       p(
         """
-          |Full-text indexes are created with the `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex`.
-          |The indexes must each be given a unique name when created, which is used to reference the specific index in question, when querying or dropping an index.
-          |A full-text index then applies to a list of labels or a list of relationship types, for node and relationship indexes respectively, and then a list of property names.
+          |Full-text indexes are created with the `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex` procedures.
+          |An index must be given a unique name when created, which is used to reference the specific index when querying or dropping it.
+          |A full-text index applies to a list of labels or a list of relationship types, for node and relationship indexes respectively, and then a list of property names.
           |"""
       )
       p("For instance, if we have a movie with a title.")
@@ -113,7 +113,7 @@ class FulltextIndexTest extends DocumentingTest {
           |Though a relationship can only have one type, a relationship full-text index can index multiple types, and all relationships will be included that match one of the relationship types, and at least one of the indexed properties.""")
       p(
         """
-          |The `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex` takes an optional fourth argument, called `config`.
+          |The `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex` procedures take an optional fourth argument, called `config`.
           |The `config` parameter is a map from string to string, and can be used to set index-specific configuration settings.
           |The `analyzer` setting can be used to configure an index-specific analyzer.
           |The possible values for the `analyzer` setting can be listed with the `db.index.fulltext.listAvailableAnalyzers` procedure.
