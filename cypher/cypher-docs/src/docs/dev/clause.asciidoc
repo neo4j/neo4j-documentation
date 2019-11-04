@@ -13,7 +13,7 @@ This section contains information on all the clauses in the Cypher query languag
 * <<header-writing-clauses,Writing clauses>>
 * <<header-reading-writing-clauses,Reading/Writing clauses>>
 * <<header-set-operations-clauses,Set operations>>
-* <<header-subquery-clauses],Subquery clauses>>
+* <<header-subquery-clauses,Subquery clauses>>
 * <<header-multiple-graphs-clauses,Multiple graphs>>
 * <<header-importing-clauses,Importing data>>
 * <<header-administration-clauses,Administration clauses>>
