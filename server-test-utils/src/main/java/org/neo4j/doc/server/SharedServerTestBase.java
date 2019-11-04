@@ -27,7 +27,7 @@ import org.neo4j.server.NeoServer;
 
 public class SharedServerTestBase
 {
-    private static final boolean useExternal = Boolean.valueOf( System.getProperty( "neo-server.external", "false" ) );
+    private static final boolean useExternal = Boolean.parseBoolean( System.getProperty( "neo-server.external", "false" ) );
 
     protected static NeoServer server()
     {
@@ -49,7 +49,7 @@ public class SharedServerTestBase
     }
 
     @AfterClass
-    public static void releaseServer() throws Exception
+    public static void releaseServer()
     {
         if ( !useExternal )
         {

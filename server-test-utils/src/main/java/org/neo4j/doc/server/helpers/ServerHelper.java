@@ -32,7 +32,6 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
-import org.neo4j.logging.LogProvider;
 import org.neo4j.server.NeoServer;
 
 public class ServerHelper
@@ -68,11 +67,6 @@ public class ServerHelper
         {
             throw new RuntimeException( e );
         }
-    }
-
-    public static NeoServer createNonPersistentServer( LogProvider logProvider ) throws IOException
-    {
-        return createServer( CommunityServerBuilder.server( logProvider ), false, null );
     }
 
     public static NeoServer createNonPersistentServer( CommunityServerBuilder builder ) throws IOException

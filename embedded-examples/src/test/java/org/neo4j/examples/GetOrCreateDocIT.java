@@ -39,13 +39,13 @@ import static org.junit.Assert.assertNotNull;
 public class GetOrCreateDocIT extends AbstractJavaDocTestBase
 {
 
-    abstract class GetOrCreate<D>
+    static abstract class GetOrCreate<D>
     {
         abstract Node getOrCreateUser( String username, GraphDatabaseService graphDb, D dependency );
 
-        void assertUserExistsUniquely( GraphDatabaseService graphDb, Transaction tx, String username )
+        void assertUserExistsUniquely( Transaction tx, String username )
         {
-            assertUserExistsUniquelyInGraphDb( graphDb, tx, username );
+            assertUserExistsUniquelyInGraphDb( tx, username );
         }
     }
 
@@ -129,7 +129,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
 
                 try ( Transaction tx = graphdb.beginTx() )
                 {
-                    impl.assertUserExistsUniquely( graphdb, tx, username );
+                    impl.assertUserExistsUniquely( tx, username );
                 }
                 catch ( NoSuchElementException e )
                 {
@@ -170,12 +170,12 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
         {
             try
             {
-                List<Node> subresult = new ArrayList<>();
+                List<Node> subResult = new ArrayList<>();
                 for ( int j = 0; j < numUsers; j++ )
                 {
-                    subresult.add( impl.getOrCreateUser( getUsername( base, j ), db, dependency) );
+                    subResult.add( impl.getOrCreateUser( getUsername( base, j ), db, dependency) );
                 }
-                this.result = subresult;
+                this.result = subResult;
             }
             catch ( RuntimeException e )
             {
@@ -185,9 +185,9 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
     }
 
     @Test
-    public void getOrCreateUsingCypher() throws Exception
+    public void getOrCreateUsingCypher()
     {
-        new ThreadRunner<GraphDatabaseService>( new CypherGetOrCreate(), "cypher") {
+        new ThreadRunner<>( new CypherGetOrCreate(), "cypher") {
             @Override
             GraphDatabaseService createDependency()
             {
@@ -234,6 +234,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
             tx.schema()
                     .constraintFor( Label.label( "User" ) )
                     .assertPropertyIsUnique( "name" )
+                    .withName( "usernames" )
                     .create();
             tx.commit();
         }
@@ -241,7 +242,7 @@ public class GetOrCreateDocIT extends AbstractJavaDocTestBase
         return graphdb;
     }
 
-    private static void assertUserExistsUniquelyInGraphDb( GraphDatabaseService graph, Transaction tx, String username )
+    private static void assertUserExistsUniquelyInGraphDb( Transaction tx, String username )
     {
         Label label = Label.label( "User" );
         Node result = tx.findNode( label, "name", username );

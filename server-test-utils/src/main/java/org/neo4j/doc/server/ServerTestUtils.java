@@ -42,14 +42,6 @@ public class ServerTestUtils {
         return Files.createTempDirectory("neo4j-test").toFile();
     }
 
-    public static File getSharedTestTemporaryFolder() {
-        try {
-            return createTempConfigFile().getParentFile();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static File createTempConfigFile() throws IOException {
         File file = File.createTempFile("neo4j", "conf");
         file.delete();
@@ -122,26 +114,6 @@ public class ServerTestUtils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    public interface BlockWithCSVFileURL {
-        void execute(String url) throws Exception;
-    }
-
-    public static void withCSVFile(int rowCount, BlockWithCSVFileURL block) throws Exception {
-        File file = File.createTempFile("file", ".csv", null);
-        try {
-            try (PrintWriter writer = new PrintWriter(file)) {
-                for (int i = 0; i < rowCount; ++i) {
-                    writer.println("1,2,3");
-                }
-            }
-
-            String url = file.toURI().toURL().toString().replace("\\", "\\\\");
-            block.execute(url);
-        } finally {
-            file.delete();
         }
     }
 }
