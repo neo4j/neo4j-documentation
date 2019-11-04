@@ -37,15 +37,15 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         |** <<administration-security-administration-database-all, Granting all database administration privileges>>
         |* <<administration-security-administration-dbms-privileges, DBMS administration>>
         |""".stripMargin)
-    section("The 'admin' role", "administration-security-administration-introduction") {
+    section("The 'admin' role", "administration-security-administration-introduction", "enterprise-edition") {
       p("include::admin-role-introduction.asciidoc[]")
     }
-    section("Database administration", "administration-security-administration-database-privileges") {
+    section("Database administration", "administration-security-administration-database-privileges", "enterprise-edition") {
       synopsis("This section explains how to use Cypher to manage privileges for Neo4j database administrative rights.")
       p("include::database/admin-role-database.asciidoc[]")
       p("include::database/admin-database-syntax.asciidoc[]")
       p("image::grant-privileges-database.png[title=\"Syntax of GRANT and DENY Database Privileges\"]")
-      section("The database ACCESS privilege", "administration-security-administration-database-access") {
+      section("The database ACCESS privilege", "administration-security-administration-database-access", "enterprise-edition") {
         p(
           """The `ACCESS` privilege can be used to enable the ability to access a database.
             |If this is not granted to users, they will not even be able to start transactions on the relevant database.""".stripMargin)
@@ -77,7 +77,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
       }
-      section("The database START/STOP privileges", "administration-security-administration-database-startstop") {
+      section("The database START/STOP privileges", "administration-security-administration-database-startstop", "enterprise-edition") {
         p(
           """The `START` privilege can be used to enable the ability to start a database.""".stripMargin)
         p("include::database/grant-database-start-syntax.asciidoc[]")
@@ -134,7 +134,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
       }
-      section("The INDEX MANAGEMENT privileges", "administration-security-administration-database-indexes") {
+      section("The INDEX MANAGEMENT privileges", "administration-security-administration-database-indexes", "enterprise-edition") {
         p(
           """Indexes can be created or deleted with the `CREATE INDEX` and `DROP INDEX` commands.
             |The privilege to do this can be granted with `GRANT CREATE INDEX` and `GRANT DROP INDEX` commands.""".stripMargin)
@@ -148,7 +148,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           statsOnlyResultTable()
         }
       }
-      section("The CONSTRAINT MANAGEMENT privileges", "administration-security-administration-database-constraints") {
+      section("The CONSTRAINT MANAGEMENT privileges", "administration-security-administration-database-constraints", "enterprise-edition") {
         p(
           """Constraints can be created or deleted with the `CREATE CONSTRAINT` and `DROP CONSTRAINT` commands.
             |The privilege to do this can be granted with `GRANT CREATE CONSTRAINT` and `GRANT DROP CONSTRAINT` commands.""".stripMargin)
@@ -162,7 +162,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           statsOnlyResultTable()
         }
       }
-      section("The NAME MANAGEMENT privileges", "administration-security-administration-database-tokens") {
+      section("The NAME MANAGEMENT privileges", "administration-security-administration-database-tokens", "enterprise-edition") {
         p(
           """The right to create new labels, relationship types or propery names is different from the right to create nodes, relationships or properties.
             |The latter is managed using database `WRITE` privileges, while the former is managed using specific `GRANT/DENY CREATE NEW ...` commands for each type.""".stripMargin)
@@ -176,7 +176,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           statsOnlyResultTable()
         }
       }
-      section("Granting all database administration privileges", "administration-security-administration-database-all") {
+      section("Granting all database administration privileges", "administration-security-administration-database-all", "enterprise-edition") {
         p(
           """Conferring the right to perform all of the above tasks can be achieved with a single command:""".stripMargin)
         p("include::database/all-management-syntax.asciidoc[]")
@@ -206,9 +206,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
     }
-    section("DBMS administration", "administration-security-administration-dbms-privileges") {
+    section("DBMS administration", "administration-security-administration-dbms-privileges", "enterprise-edition") {
       p("include::dbms/admin-role-dbms.asciidoc[]")
-      section("Using a custom role to manage DBMS privileges", "administration-security-administration-dbms-custom") {
+      section("Using a custom role to manage DBMS privileges", "administration-security-administration-dbms-custom", "enterprise-edition") {
         p("include::dbms/admin-role-dbms-custom.asciidoc[]")
         p("First we copy the 'admin' role:")/*
         //TODO: Fix system graph initialization in Neo4j 4.0 to initialize the security model earlier
