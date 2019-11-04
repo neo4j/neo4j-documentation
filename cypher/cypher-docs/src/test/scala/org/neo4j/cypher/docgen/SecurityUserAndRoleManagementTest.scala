@@ -14,6 +14,23 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
     doc("User and role management", "administration-security-users-and-roles")
     database("system")
     synopsis("This section explains how to use Cypher to manage Neo4j role-based access control through users and roles.")
+
+    p(
+      """
+        |* <<administration-security-users, User Management>>
+        |** <<administration-security-users-show, Listing users>>
+        |** <<administration-security-users-create, Creating users>>
+        |** <<administration-security-users-alter, Modifying users>>
+        |** <<administration-security-users-alter-password, Changing the current user's password>>
+        |** <<administration-security-users-drop, Deleting users>>
+        |* <<administration-security-roles, Role management>>
+        |** <<administration-security-roles-show, Listing roles>>
+        |** <<administration-security-roles-create, Creating roles>>
+        |** <<administration-security-roles-drop, Deleting roles>>
+        |** <<administration-security-roles-grant, Assigning roles>>
+        |** <<administration-security-roles-revoke, Revoking roles>>
+        |""".stripMargin)
+
     section("User Management", "administration-security-users") {
       p("Users can be created and managed using a set of Cypher administration commands executed against the `system` database.")
       p("include::user-management-syntax.asciidoc[]")

@@ -11,7 +11,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
   override def outputPath = "target/docs/dev/ql/administration/security/"
 
   override def doc: Document = new DocBuilder {
-    doc("Graph and Sub-graph Access Control", "administration-security-subgraph")
+    doc("Graph and sub-graph access control", "administration-security-subgraph")
     database("system")
     initQueries(
       "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE",
@@ -22,6 +22,18 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       "DENY ACCESS ON DATABASE neo4j TO noAccessUsers"
     )
     synopsis("This section explains how to use Cypher to manage privileges for Neo4j role-based access control and fine-grained security.")
+
+    p(
+      """
+        |* <<administration-security-subgraph-introduction, The `GRANT`, `DENY` and `REVOKE` commands>>
+        |* <<administration-security-subgraph-show, Listing privileges>>
+        |* <<administration-security-subgraph-traverse, The `TRAVERSE` privilege>>
+        |* <<administration-security-subgraph-read, The `READ` privilege>>
+        |* <<administration-security-subgraph-match, The `MATCH` privilege>>
+        |* <<administration-security-subgraph-write, The `WRITE` privilege>>
+        |* <<administration-security-subgraph-revoke, The `REVOKE` command>>
+        |""".stripMargin)
+
     p(
       """
         |Privileges control the access rights to graph elements using a combined whitelist/blacklist mechanism.
@@ -36,7 +48,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
           |Information about the database access privilege can be found in <<administration-security-administration-database-access, The ACCESS privilege>>.
           |""".stripMargin)
     }
-    section("The GRANT, DENY and REVOKE commands", "administration-security-subgraph-introduction", "enterprise-edition") {
+    section("The `GRANT`, `DENY` and `REVOKE` commands", "administration-security-subgraph-introduction", "enterprise-edition") {
       p("include::grant-deny-syntax.asciidoc[]")
       p("image::grant-privileges-graph.png[title=\"GRANT and DENY Syntax\"]")
     }
@@ -67,7 +79,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
     }
 
-    section("The TRAVERSE privilege", "administration-security-subgraph-traverse", "enterprise-edition") {
+    section("The `TRAVERSE` privilege", "administration-security-subgraph-traverse", "enterprise-edition") {
       p("Users can be granted the right to find nodes and relationships using the `GRANT TRAVERSE` privilege.")
       p("include::grant-traverse-syntax.asciidoc[]")
       p("For example, we can allow the user `jake`, who has role 'regularUsers' to find all nodes with the label `Post`.")
@@ -87,7 +99,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
     }
 
-    section("The READ privilege", "administration-security-subgraph-read", "enterprise-edition") {
+    section("The `READ` privilege", "administration-security-subgraph-read", "enterprise-edition") {
       p(
         """Users can be granted the right to do property reads on nodes and relationships using the `GRANT READ` privilege.
           |It is very important to note that users can only read properties on entities that they is allowed to find in the first place.""".stripMargin)
@@ -112,7 +124,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         statsOnlyResultTable()
       }
     }
-    section("The MATCH privilege", "administration-security-subgraph-match", "enterprise-edition") {
+    section("The `MATCH` privilege", "administration-security-subgraph-match", "enterprise-edition") {
       p("As a shorthand for `TRAVERSE` and `READ`, users can be granted the right to find and do property reads on nodes and relationships using the `GRANT MATCH` privilege. ")
       p("include::grant-match-syntax.asciidoc[]")
 
@@ -158,7 +170,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
     }
 
-    section("The WRITE privilege", "administration-security-subgraph-write", "enterprise-edition") {
+    section("The `WRITE` privilege", "administration-security-subgraph-write", "enterprise-edition") {
       p(
         """The `WRITE` privilege can be used to allow the ability to write on a graph. At the moment, granting the `WRITE` privilege implies that you can do any write operation on any part of the graph. """.stripMargin)
       p("include::grant-write-syntax.asciidoc[]")
@@ -182,7 +194,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
     }
 
-    section("The REVOKE command", "administration-security-subgraph-revoke", "enterprise-edition") {
+    section("The `REVOKE` command", "administration-security-subgraph-revoke", "enterprise-edition") {
       p("Privileges that were granted or denied earlier can be revoked using the `REVOKE` command. ")
       p("include::revoke-syntax.asciidoc[]")
 

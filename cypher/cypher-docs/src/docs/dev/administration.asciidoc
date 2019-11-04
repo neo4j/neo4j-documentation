@@ -23,7 +23,7 @@ These include index and constraint management commands.
 ** <<administration-databases-drop-database, Deleting databases>>
 
 * <<administration-indexes, Indexes>>
-** <<administration-indexes-introduction, Managing Indexes>>
+** <<administration-indexes-introduction, Managing indexes>>
 ** <<administration-indexes-using-indexes, Using indexes>>
 ** <<administration-indexes-fulltext-search, Indexes to support full-text search>>
 
@@ -36,9 +36,10 @@ These include index and constraint management commands.
 ** <<administration-constraints-node-key, Node key constraints>>
 
 * <<administration-security, Security>>
-** <<administration-security-users-and-roles, User and Role Management>>
-** <<administration-security-subgraph, Graph and Subgraph Access Control>>
-** <<administration-security-administration, Security of Administration>>
+** <<administration-security-introduction, User and role management>>
+** <<administration-security-users-and-roles, User and role management>>
+** <<administration-security-subgraph, Graph and subgraph access control>>
+** <<administration-security-administration, Security of administration>>
 
 
 include::ql/administration/administration-databases.adoc[leveloffset=+1]

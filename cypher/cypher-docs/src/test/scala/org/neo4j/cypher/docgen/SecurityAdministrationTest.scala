@@ -11,7 +11,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
   override def outputPath = "target/docs/dev/ql/administration/security/"
 
   override def doc: Document = new DocBuilder {
-    doc("Security of Administration", "administration-security-administration")
+    doc("Security of administration", "administration-security-administration")
     database("system")
     initQueries(
       "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE",
@@ -27,17 +27,17 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         |""".stripMargin)
     p(
       """
-        |* <<administration-security-administration-introduction, The 'admin' role>>
+        |* <<administration-security-administration-introduction, The `admin` role>>
         |* <<administration-security-administration-database-privileges, Database administration>>
-        |** <<administration-security-administration-database-access, The database ACCESS privilege>>
-        |** <<administration-security-administration-database-startstop, The database START/STOP privileges>>
-        |** <<administration-security-administration-database-indexes, The INDEX MANAGEMENT privileges>>
-        |** <<administration-security-administration-database-constraints, The CONSTRAINT MANAGEMENT privileges>>
-        |** <<administration-security-administration-database-tokens, The NAME MANAGEMENT privileges>>
+        |** <<administration-security-administration-database-access, The database `ACCESS` privilege>>
+        |** <<administration-security-administration-database-startstop, The database `START`/`STOP` privileges>>
+        |** <<administration-security-administration-database-indexes, The `INDEX MANAGEMENT` privileges>>
+        |** <<administration-security-administration-database-constraints, The `CONSTRAINT MANAGEMENT` privileges>>
+        |** <<administration-security-administration-database-tokens, The `NAME MANAGEMENT` privileges>>
         |** <<administration-security-administration-database-all, Granting all database administration privileges>>
         |* <<administration-security-administration-dbms-privileges, DBMS administration>>
         |""".stripMargin)
-    section("The 'admin' role", "administration-security-administration-introduction", "enterprise-edition") {
+    section("The `admin` role", "administration-security-administration-introduction", "enterprise-edition") {
       p("include::admin-role-introduction.asciidoc[]")
     }
     section("Database administration", "administration-security-administration-database-privileges", "enterprise-edition") {
@@ -45,7 +45,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       p("include::database/admin-role-database.asciidoc[]")
       p("include::database/admin-database-syntax.asciidoc[]")
       p("image::grant-privileges-database.png[title=\"Syntax of GRANT and DENY Database Privileges\"]")
-      section("The database ACCESS privilege", "administration-security-administration-database-access", "enterprise-edition") {
+      section("The database `ACCESS` privilege", "administration-security-administration-database-access", "enterprise-edition") {
         p(
           """The `ACCESS` privilege can be used to enable the ability to access a database.
             |If this is not granted to users, they will not even be able to start transactions on the relevant database.""".stripMargin)
@@ -77,7 +77,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
       }
-      section("The database START/STOP privileges", "administration-security-administration-database-startstop", "enterprise-edition") {
+      section("The database `START`/`STOP` privileges", "administration-security-administration-database-startstop", "enterprise-edition") {
         p(
           """The `START` privilege can be used to enable the ability to start a database.""".stripMargin)
         p("include::database/grant-database-start-syntax.asciidoc[]")
@@ -134,7 +134,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
       }
-      section("The INDEX MANAGEMENT privileges", "administration-security-administration-database-indexes", "enterprise-edition") {
+      section("The `INDEX MANAGEMENT` privileges", "administration-security-administration-database-indexes", "enterprise-edition") {
         p(
           """Indexes can be created or deleted with the `CREATE INDEX` and `DROP INDEX` commands.
             |The privilege to do this can be granted with `GRANT CREATE INDEX` and `GRANT DROP INDEX` commands.""".stripMargin)
@@ -148,7 +148,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           statsOnlyResultTable()
         }
       }
-      section("The CONSTRAINT MANAGEMENT privileges", "administration-security-administration-database-constraints", "enterprise-edition") {
+      section("The `CONSTRAINT MANAGEMENT` privileges", "administration-security-administration-database-constraints", "enterprise-edition") {
         p(
           """Constraints can be created or deleted with the `CREATE CONSTRAINT` and `DROP CONSTRAINT` commands.
             |The privilege to do this can be granted with `GRANT CREATE CONSTRAINT` and `GRANT DROP CONSTRAINT` commands.""".stripMargin)
@@ -162,7 +162,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           statsOnlyResultTable()
         }
       }
-      section("The NAME MANAGEMENT privileges", "administration-security-administration-database-tokens", "enterprise-edition") {
+      section("The `NAME MANAGEMENT` privileges", "administration-security-administration-database-tokens", "enterprise-edition") {
         p(
           """The right to create new labels, relationship types or propery names is different from the right to create nodes, relationships or properties.
             |The latter is managed using database `WRITE` privileges, while the former is managed using specific `GRANT/DENY CREATE NEW ...` commands for each type.""".stripMargin)
@@ -206,11 +206,12 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
     }
+    /*
     section("DBMS administration", "administration-security-administration-dbms-privileges", "enterprise-edition") {
       p("include::dbms/admin-role-dbms.asciidoc[]")
       section("Using a custom role to manage DBMS privileges", "administration-security-administration-dbms-custom", "enterprise-edition") {
         p("include::dbms/admin-role-dbms-custom.asciidoc[]")
-        p("First we copy the 'admin' role:")/*
+        p("First we copy the 'admin' role:")
         //TODO: Fix system graph initialization in Neo4j 4.0 to initialize the security model earlier
         query("CREATE ROLE usermanager AS COPY OF admin", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 10)
@@ -256,9 +257,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         query("SHOW ROLE usermanager PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
           p("Lists all privileges for role 'usermanager'")
           resultTable()
-        }*/
+        }
       }
-    }
+    }*/
   }.build()
 
   private def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]) = ResultAndDbAssertions((p, db) => {

@@ -1,4 +1,4 @@
-* <<administration-security-administration, Security of Administration>>
+* <<administration-security-administration, Security of administration>>
 ** <<administration-security-administration-introduction, The 'admin' role>>
 ** <<administration-security-administration-database-privileges, Database administration>>
 *** <<administration-security-administration-database-access, The database ACCESS privilege>>
@@ -8,4 +8,4 @@
 *** <<administration-security-administration-database-tokens, The NAME MANAGEMENT privileges>>
 *** <<administration-security-administration-database-all, Granting all database administration privileges>>
 ** <<administration-security-administration-dbms-privileges, DBMS administration>>
-*** <<administration-security-administration-dbms-custom, Creating custom roles with DBMS privileges>>
+//*** <<administration-security-administration-dbms-custom, Creating custom roles with DBMS privileges>>

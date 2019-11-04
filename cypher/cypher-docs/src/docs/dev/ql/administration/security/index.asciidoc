@@ -21,18 +21,26 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 *** <<administration-security-roles-grant, Assigning roles>>
 *** <<administration-security-roles-revoke, Revoking roles>>
 * <<administration-security-subgraph, Graph and sub-graph access control>>
-** <<administration-security-subgraph-introduction, The GRANT and DENY commands>>
-** <<administration-security-subgraph-traverse, The TRAVERSE privilege>>
-** <<administration-security-subgraph-read, The READ privilege>>
-** <<administration-security-subgraph-match, The MATCH privilege>>
-** <<administration-security-subgraph-revoke, The REVOKE command>>
-* <<administration-security-administration, Security of Administration>>
-** <<administration-security-administration-introduction, The 'admin' role>>
+** <<administration-security-subgraph-introduction, The `GRANT`, `DENY` and `REVOKE` commands>>
+** <<administration-security-subgraph-show, Listing privileges>>
+** <<administration-security-subgraph-traverse, The `TRAVERSE` privilege>>
+** <<administration-security-subgraph-read, The `READ` privilege>>
+** <<administration-security-subgraph-match, The `MATCH` privilege>>
+** <<administration-security-subgraph-write, The `WRITE` privilege>>
+** <<administration-security-subgraph-revoke, The `REVOKE` command>>
+* <<administration-security-administration, Security of administration>>
+** <<administration-security-administration-introduction, The `admin` role>>
 ** <<administration-security-administration-database-privileges, Database administration>>
 ** <<administration-security-administration-dbms-privileges, DBMS administration>>
 
 [[administration-security-introduction]]
 == Introduction
+
+[abstract]
+--
+This section introduces the sections on how to manage Neo4j role-based access control and fine-grained security.
+--
+
 Neo4j has a complex security model stored in the system graph, maintained in a special database called the `system` database.
 All administrative commands need to be executing against the `system` database.
 For more information on how to manage multiple databases, refer to the section on <<administration-databases, administering databases>>.
