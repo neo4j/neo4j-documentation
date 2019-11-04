@@ -13,6 +13,7 @@ This section contains information on all the clauses in the Cypher query languag
 * <<header-writing-clauses,Writing clauses>>
 * <<header-reading-writing-clauses,Reading/Writing clauses>>
 * <<header-set-operations-clauses,Set operations>>
+* <<header-subquery-clauses,Subquery clauses>>
 * <<header-multiple-graphs-clauses,Multiple graphs>>
 * <<header-importing-clauses,Importing data>>
 * <<header-administration-clauses,Administration clauses>>
@@ -109,7 +110,6 @@ These comprise clauses that both read data from and write data to the database.
 |--- <<query-merge-on-create-on-match,ON CREATE>>   | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
 |--- <<query-merge-on-create-on-match,ON MATCH>>    | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
 |<<query-call,CALL procedure>>                      | Invokes a procedure deployed in the database and return any results.
-|<<query-call,CALL {} (subquery)>>                  | Evaluates a subquery.
 |===
 
 
@@ -121,6 +121,15 @@ These comprise clauses that both read data from and write data to the database.
 |Clause                             |   Description
 |<<query-union,UNION>>              | Combines the result of multiple queries into a single result set. Duplicates are removed.
 |<<query-union,UNION ALL>>          | Combines the result of multiple queries into a single result set. Duplicates are retained.
+|===
+
+[[header-subquery-clauses]]
+**Subquery clauses**
+
+[options="header"]
+|===
+|Clause                             |   Description
+|<<query-call-subquery,CALL {} (subquery)>>  | Evaluates a subquery returning values.
 |===
 
 [[header-multiple-graphs-clauses]]
