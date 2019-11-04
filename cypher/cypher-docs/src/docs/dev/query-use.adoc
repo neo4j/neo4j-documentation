@@ -10,8 +10,8 @@ The `USE` clause determines which graph a query, or query part, is executed agai
 * <<query-use-introduction, Introduction>>
 * <<query-use-syntax, Syntax>>
 * <<query-use-examples, Examples>>
-** <<query-use-examples-query-remote-graph-by-name, Query remote graph by name>>
-** <<query-use-examples-query-remote-graph-by-graph-id, Query remote graph by graph ID>>
+** <<query-use-examples-query-graph-by-name, Query remote graph by name>>
+** <<query-use-examples-query-graph-by-graph-id, Query remote graph by graph ID>>
 
 [[query-use-introduction]]
 == Introduction
@@ -66,10 +66,10 @@ In subqueries, a `USE` clause may appear as the second clause, if directly follo
 
 In the following examples we assume that we have configured a Fabric database called `exampleFabricSetup`.
 
-[[query-use-examples-query-remote-graph-by-name]]
-=== Query remote graph by name
+[[query-use-examples-query-graph-by-name]]
+=== Query graph by name
 
-The remote graph that we wish to connect to is configured to be referred to by the name `exampleDatabaseName`.
+The graph that we wish to query is configured to be referred to by the name `exampleDatabaseName`.
 
 .Query.
 [source, cypher]
@@ -77,10 +77,10 @@ The remote graph that we wish to connect to is configured to be referred to by t
 USE exampleFabricSetup.exampleDatabaseName
 ----
 
-[[query-use-examples-query-remote-graph-by-graph-id]]
-=== Query remote graph by graph ID
+[[query-use-examples-query-graph-by-graph-id]]
+=== Query graph by graph ID
 
-In the Fabric configuration in _neo4j.conf_, this graph is referred to as the `0th` graph, which is why we can refer to it
+The graph we wish to query is configured with the graph id `0`, which is why we can refer to it
 using the built-in function `graph()` with the argument `0`:
 
 .Query.
