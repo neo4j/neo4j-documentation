@@ -17,7 +17,7 @@ These are some things you'll need to keep in mind when creating your input files
 
 [TIP]
 Indexes are not created during the import.
-Instead you'll need to add indexes afterwards (see <<graphdb-neo4j-schema-indexes>>).
+Instead you'll need to add indexes afterwards (see <<graphdb-neo4j-indexes>>).
 
 [NOTE]
 --

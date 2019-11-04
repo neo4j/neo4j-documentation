@@ -40,9 +40,9 @@ This section explains how to configure indexes to enhance performance in search,
 ** <<administration-indexes-spatial-bounding-box-searches-composite-index, Use index when executing a spatial bounding box search (composite index)>>
 * <<administration-indexes-fulltext-search, Indexes to support full-text search>>
 ** <<administration-indexes-fulltext-search-introduction, Introduction>>
-** <<administration-indexes-fulltext-search-manage, Procedures to manage full-text schema indexes>>
-** <<administration-indexes-fulltext-search-create-and-configure, Create and configure full-text schema indexes>>
-** <<administration-indexes-fulltext-search-query, Query full-text schema indexes>>
+** <<administration-indexes-fulltext-search-manage, Procedures to manage full-text indexes>>
+** <<administration-indexes-fulltext-search-create-and-configure, Create and configure full-text indexes>>
+** <<administration-indexes-fulltext-search-query, Query full-text indexes>>
 ** <<administration-indexes-fulltext-search-drop, Drop full-text indexes>>
 
 
@@ -199,4 +199,4 @@ include::spatial-bounding-box-searches-single-property-index.asciidoc[leveloffse
 
 include::spatial-bounding-box-searches-composite-index.asciidoc[leveloffset=+1]
 
-include::fulltext-schema-index.adoc[leveloffset=+1]
+include::fulltext-index.adoc[leveloffset=+1]
