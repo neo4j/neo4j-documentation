@@ -39,7 +39,7 @@ import static org.junit.Assert.assertNotNull;
 public class GetOrCreateDocIT extends AbstractJavaDocTestBase
 {
 
-    static abstract class GetOrCreate<D>
+    abstract static class GetOrCreate<D>
     {
         abstract Node getOrCreateUser( String username, GraphDatabaseService graphDb, D dependency );
 
