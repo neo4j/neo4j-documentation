@@ -150,7 +150,7 @@ public class ConfigDocsGenerator {
                         "[cols=\"<1h,<4\"]%n" +
                         "|===%n" +
                         "|Description%n" +
-                        "a|+%s+%n" +
+                        "a|%s%n" +
                         "|Valid values%n" +
                         "a|%s%n",
                 item.id(), item.name(),
@@ -162,7 +162,7 @@ public class ConfigDocsGenerator {
 
         if (item.hasDefault()) {
             out.printf("|Default value%n" +
-                       "m|+%s+%n",
+                       "m|%s%n",
                     item.defaultValue());
         }
 
