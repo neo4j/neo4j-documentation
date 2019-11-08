@@ -206,9 +206,10 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
     }
-    /*
     section("DBMS administration", "administration-security-administration-dbms-privileges", "enterprise-edition") {
       p("include::dbms/admin-role-dbms.asciidoc[]")
+    }
+    /*
       section("Using a custom role to manage DBMS privileges", "administration-security-administration-dbms-custom", "enterprise-edition") {
         p("include::dbms/admin-role-dbms-custom.asciidoc[]")
         p("First we copy the 'admin' role:")
