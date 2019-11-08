@@ -6,15 +6,9 @@
 This chapter contains the complete and authoritative documentation for the Cypher query language.
 --
 
-== WHERE IS THIS?
-
 // tag::cypher-manual-wip[]
 
-== AND THIS?
-
 include::general/index.asciidoc[leveloffset=+1]
-
-== AND THIS (AGAIN)?
 
 include::syntax/index.asciidoc[leveloffset=+1]
 

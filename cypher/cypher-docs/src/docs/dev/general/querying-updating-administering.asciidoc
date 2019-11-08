@@ -1,13 +1,25 @@
-[[query-updating]]
-= Querying and updating the graph
+[[cypher-querying-updating-administering]]
+= Querying, updating and administering
 
 [abstract]
 --
-Cypher can be used for both querying and updating your graph.
+Cypher can be used for both querying and updating your graph, as well as administering graphs and databases.
 --
 
+In the <<cypher-introduction, introduction>> we described the common case of using Cypher to perform read-only queries of the graph.
+However, it is also possible to use Cypher to perform updates to the graph, import data int the graph, and perform administrative actions on graphs, databases and the entire DBMS.
 
-[[query-updating-structure]]
+All these various options are described in more detail in later sections, but it is worth summarizing a few key points first.
+
+[[cypher-admin-queries]]
+== The structure of administrative queries
+
+Cypher administrative queries cannot be combined with normal reading and writing queries.
+Each administrative query will perform either an update action to the `system` or a read of status information from the `system`.
+Some administrative commands make changes to a specific database, and will therefor be possible to run when connected to the database of interest.
+Others make changes to the state of the entire DBMS and can only be run against the special `system` database.
+
+[[cypher-updating-queries]]
 == The structure of update queries
 
 
@@ -48,7 +60,7 @@ RETURN n.friendsCount
 You can chain together as many query parts as the available memory permits.
 
 
-[[query-updating-return]]
+[[cypher-returning-data]]
 == Returning data
 
 Any query can return data.

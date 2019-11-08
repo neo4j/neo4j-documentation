@@ -1,19 +1,20 @@
 [[cypher-result-uniqueness]]
 = Cypher Result Uniqueness
 
-While pattern matching, Neo4j Cypher makes sure to not include matches where the same graph relationship is found multiple times in a single pattern.
-This is called _relationship isomorphism_ and is a very effective way of reducing the result set and prevent infinite traversals.
+While pattern matching, Neo4j Cypher makes sure to not include matches where the same graph relationship is found multiple times in a single path matching a particular pattern.
+This is called _relationship isomorphism_ and is a very effective way of reducing the result set size and preventing infinite traversals.
 To understand this better, let's consider a few alternative options for uniqueness:
 
 * _homomorphism_
 ** No uniqueness checks are made.
-   If the query is looking for paths of length `n` and the graph is composed of only two nodes `a` and `b`, connected by one relationship, a path of length `n` will be returned repeating the two nodes over and over.
+If the query is looking for paths of length `n` and the graph is composed of only two nodes `a` and `b`, connected by one relationship, a path of length `n` will be returned repeating the two nodes over and over.
+For example `MATCH p=()-[*5]-() RETURN nodes(p)` could return `[a,b,a,b,a,b]` as well as `[b,a,b,a,b,a]`.
 * _node isomoprphism_
-** The same node cannot be returned more than once in the same result record. In the above two-node example, only paths of length 1 can be found.
+** The same node cannot be returned more than once in the same result record. In the above two-node example, only paths of length 1 can be found. The path `[a,b,a]` would be filtered out because of duplication of node `b`, as would any other paths longer than length 1.
 * _relationship isomorphism_
-** The same relationship cannot be returned more than once in the same result record. In the above two-node example, only paths of length 1 can be found.
+** The same relationship cannot be returned more than once in the same result record. In the above two-node example, only paths of length 1 can be found. The single relationship between `a` and `b` can only exist once in the path result.
 
-In the case of variable length pattern expressions, it is particularly important to have a uniqueness check, or an infinite number of result records could be found.
+As can be seen in the above examples, in the case of variable length pattern expressions, it is particularly important to have a uniqueness check, or an infinite number of result records could be found.
 
 Cypher makes use of _relationship isomorphism_.
 For example: looking for a user's friends of friends should not return said user.

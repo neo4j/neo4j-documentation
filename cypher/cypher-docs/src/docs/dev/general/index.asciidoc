@@ -7,13 +7,16 @@ This section provides an introduction to the Cypher query language.
 --
 
 * <<cypher-introduction, What is Cypher?>>
-* <<query-updating, Querying, updating and administering>>
+* <<neo4j-databases-graphs, Neo4j databases and graphs>>
+* <<cypher-querying-updating-administering, Querying, updating and administering>>
 * <<query-transactions, Transactions>>
 * <<cypher-result-uniqueness, Result uniqueness>>
 
 include::introduction.asciidoc[leveloffset=+1]
 
-include::updating.asciidoc[leveloffset=+1]
+include::databases-and-graphs.asciidoc[leveloffset=+1]
+
+include::querying-updating-administering.asciidoc[leveloffset=+1]
 
 include::transactions.asciidoc[leveloffset=+1]
 

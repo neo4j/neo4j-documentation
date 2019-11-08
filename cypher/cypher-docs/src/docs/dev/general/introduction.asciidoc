@@ -1,7 +1,7 @@
 [[cypher-introduction]]
 = What is Cypher?
 
-Cypher is a declarative graph query language that allows for expressive and efficient querying and updating of the graph.
+Cypher is a declarative graph query language that allows for expressive and efficient <<cypher-querying-updating-administering, querying, updating and administering>> of the graph.
 It is designed to be suitable for both developers and operations professionals.
 Cypher is designed to be simple, yet powerful; highly complicated database queries can be easily expressed, enabling you to focus on your domain, instead of getting lost in database access.
 
