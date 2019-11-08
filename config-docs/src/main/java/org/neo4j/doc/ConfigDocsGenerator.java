@@ -135,7 +135,7 @@ public class ConfigDocsGenerator
 
         if ( item.hasDefault() )
         {
-            out.printf( "|Default value%n" + "m|+%s+%n", item.defaultValue() );
+            out.printf( "|Default value%n" + "m|%s%n", item.defaultValue() );
         }
 
         if ( item.isDeprecated() )
