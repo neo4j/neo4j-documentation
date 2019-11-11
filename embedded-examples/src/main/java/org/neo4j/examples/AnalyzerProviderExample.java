@@ -34,17 +34,17 @@ public class AnalyzerProviderExample
     // tag::customAnalyzerProvider[]
     public class CustomAnalyzerProvider extends AnalyzerProvider // <1>
     {
-        public CustomAnalyzerProvider() // <2>
+        public CustomAnalyzerProvider()                          // <2>
         {
-            super( "custom-analyzer" ); // <3>
+            super( "custom-analyzer" );                          // <3>
         }
 
         @Override
-        public Analyzer createAnalyzer() // <4>
+        public Analyzer createAnalyzer()                         // <4>
         {
             try
             {
-                return CustomAnalyzer.builder() // <5>
+                return CustomAnalyzer.builder()                  // <5>
                         .withTokenizer( StandardTokenizerFactory.class )
                         .addTokenFilter( LowerCaseFilterFactory.class )
                         .addTokenFilter( StopFilterFactory.class, "ignoreCase", "false", "words", "stopwords.txt", "format", "wordset" )

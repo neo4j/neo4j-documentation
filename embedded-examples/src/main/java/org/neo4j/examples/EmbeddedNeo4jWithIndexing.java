@@ -57,11 +57,11 @@ public class EmbeddedNeo4jWithIndexing
             try ( Transaction tx = graphDb.beginTx() )
             {
                 Schema schema = tx.schema();
-                usernamesIndex = schema.indexFor( Label.label( "User" ) ) // <1>
-                        .on( "username" ) // <2>
-                        .withName( "usernames" ) // <3>
-                        .create(); // <4>
-                tx.commit(); // <5>
+                usernamesIndex = schema.indexFor( Label.label( "User" ) )  // <1>
+                        .on( "username" )                                  // <2>
+                        .withName( "usernames" )                           // <3>
+                        .create();                                         // <4>
+                tx.commit();                                               // <5>
             }
             // end::createIndex[]
             // tag::wait[]
