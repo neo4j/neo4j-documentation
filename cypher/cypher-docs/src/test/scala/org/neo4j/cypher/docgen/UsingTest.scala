@@ -156,10 +156,7 @@ class UsingTest extends DocumentingTest {
       }
     }
     section("`PERIODIC COMMIT` query hint", "query-using-periodic-commit-hint") {
-      note {
-        p("""See <<getting-started#cypherdoc-importing-csv-files-with-cypher>> on how to import data from CSV files.""")
-      }
-      p("""Importing large amounts of data using `LOAD CSV` with a single Cypher query may fail due to memory constraints.
+      p("""Importing large amounts of data using <<query-load-csv, `LOAD CSV`>> with a single Cypher query may fail due to memory constraints.
           |This will manifest itself as an `OutOfMemoryError`.""")
       p("""For this situation _only,_ Cypher provides the global `USING PERIODIC COMMIT` query hint for updating queries using `LOAD CSV`.
           |If required, the limit for the number of rows per commit may be set as follows: `USING PERIODIC COMMIT 500`.""")
