@@ -68,5 +68,4 @@ public class TransactionTimeoutDocIT extends ExclusiveServerTestBase
     {
         return server.baseUri().toString() + "db/neo4j/tx";
     }
-
 }

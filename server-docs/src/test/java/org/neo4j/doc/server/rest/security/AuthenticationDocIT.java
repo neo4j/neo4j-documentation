@@ -29,7 +29,6 @@ import javax.ws.rs.core.HttpHeaders;
 
 import org.neo4j.annotations.documented.Documented;
 import org.neo4j.doc.server.HTTP;
-import org.neo4j.doc.server.HTTP.RawPayload;
 import org.neo4j.doc.server.rest.RESTDocsGenerator;
 import org.neo4j.doc.test.TestData;
 import org.neo4j.server.rest.domain.JsonHelper;

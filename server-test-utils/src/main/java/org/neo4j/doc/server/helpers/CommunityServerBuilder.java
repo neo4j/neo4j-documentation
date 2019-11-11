@@ -62,8 +62,6 @@ public class CommunityServerBuilder
     private final HashMap<String, String> thirdPartyPackages = new HashMap<>();
     private final Properties arbitraryProperties = new Properties();
 
-    private String[] autoIndexedNodeKeys = null;
-    private String[] autoIndexedRelationshipKeys = null;
     private boolean persistent;
     private boolean httpsEnabled = false;
 
@@ -128,20 +126,6 @@ public class CommunityServerBuilder
             properties.put( ServerSettings.third_party_packages.name(), asOneLine( thirdPartyPackages ) );
         }
 
-        if ( autoIndexedNodeKeys != null && autoIndexedNodeKeys.length > 0 )
-        {
-            properties.put( "dbms.auto_index.nodes.enabled", "true" );
-            String propertyKeys = org.apache.commons.lang.StringUtils.join( autoIndexedNodeKeys, "," );
-            properties.put( "dbms.auto_index.nodes.keys", propertyKeys );
-        }
-
-        if ( autoIndexedRelationshipKeys != null && autoIndexedRelationshipKeys.length > 0 )
-        {
-            properties.put( "dbms.auto_index.relationships.enabled", "true" );
-            String propertyKeys = org.apache.commons.lang.StringUtils.join( autoIndexedRelationshipKeys, "," );
-            properties.put( "dbms.auto_index.relationships.keys", propertyKeys );
-        }
-
         properties.put( HttpConnector.enabled.name(), "true" );
         properties.put( HttpConnector.listen_address.name(), address.toString() );
 
@@ -201,20 +185,9 @@ public class CommunityServerBuilder
         return this;
     }
 
-    public CommunityServerBuilder withDefaultDatabaseTuning()
-    {
-        return this;
-    }
-
     public CommunityServerBuilder withThirdPartyJaxRsPackage( String packageName, String mountPoint )
     {
         thirdPartyPackages.put( packageName, mountPoint );
-        return this;
-    }
-
-    public CommunityServerBuilder withAutoIndexingEnabledForNodes( String... keys )
-    {
-        autoIndexedNodeKeys = keys;
         return this;
     }
 
@@ -260,7 +233,7 @@ public class CommunityServerBuilder
         return configFile;
     }
 
-    private class TestCommunityNeoServer extends CommunityNeoServer
+    private static class TestCommunityNeoServer extends CommunityNeoServer
     {
         private final Optional<File> configFile;
 

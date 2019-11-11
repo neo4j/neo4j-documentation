@@ -24,7 +24,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -140,7 +139,7 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
                  "This request will reset the transaction timeout and return the new time at which the transaction will\n" +
                  "expire as an RFC1123 formatted timestamp value in the ``transaction'' section of the response." )
     public void reset_transaction_timeout_of_an_open_transaction()
-            throws JsonParseException, ParseException, InterruptedException
+            throws JsonParseException, InterruptedException
     {
         // Given
         HTTP.Response initialResponse = POST( txUri() );

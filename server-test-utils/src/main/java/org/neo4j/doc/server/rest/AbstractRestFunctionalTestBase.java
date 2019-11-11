@@ -21,23 +21,14 @@ package org.neo4j.doc.server.rest;
 import org.junit.Before;
 import org.junit.Rule;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 
-import org.neo4j.doc.server.HTTP;
 import org.neo4j.doc.server.SharedServerTestBase;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
-import org.neo4j.internal.helpers.collection.Pair;
-import org.neo4j.server.rest.domain.JsonHelper;
-import org.neo4j.server.rest.domain.JsonParseException;
-import org.neo4j.visualization.asciidoc.AsciidocHelper;
-
-import static org.junit.Assert.assertEquals;
 
 public class AbstractRestFunctionalTestBase extends SharedServerTestBase implements GraphHolder {
 
@@ -55,28 +46,6 @@ public class AbstractRestFunctionalTestBase extends SharedServerTestBase impleme
 
     private Long idFor(String name) {
         return data.get().get(name).getId();
-    }
-
-    private String createParameterString(Pair<String, String>[] params) {
-        String paramString = "";
-        for (Pair<String, String> param : params) {
-            String delimiter = paramString.isEmpty() || paramString.endsWith("{") ? "" : ",";
-
-            paramString += delimiter + "\"" + param.first() + "\":\"" + param.other() + "\"";
-        }
-
-        return paramString;
-    }
-
-    protected String createScript(String template) {
-        for (String key : data.get().keySet()) {
-            template = template.replace("%" + key + "%", idFor(key).toString());
-        }
-        return template;
-    }
-
-    protected String startGraph(String name) {
-        return AsciidocHelper.createGraphVizWithNodeId("Starting Graph", graphdb(), name);
     }
 
     @Override
@@ -98,39 +67,6 @@ public class AbstractRestFunctionalTestBase extends SharedServerTestBase impleme
 
     protected static String txCommitUri() {
         return databaseUri() + "tx/commit";
-    }
-
-    protected String txUri(long txId) {
-        return databaseUri() + "tx/" + txId;
-    }
-
-    public static long extractTxId(HTTP.Response response) {
-        int lastSlash = response.location().lastIndexOf("/");
-        String txIdString = response.location().substring(lastSlash + 1);
-        return Long.parseLong(txIdString);
-    }
-
-    protected Node getNode(String name) {
-        return data.get().get(name);
-    }
-
-    protected Node[] getNodes(String... names) {
-        Node[] nodes = {};
-        ArrayList<Node> result = new ArrayList<>();
-        for (String name : names) {
-            result.add(getNode(name));
-        }
-        return result.toArray(nodes);
-    }
-
-    public void assertSize(int expectedSize, String entity) {
-        Collection<?> hits;
-        try {
-            hits = (Collection<?>) JsonHelper.readJson(entity);
-            assertEquals(expectedSize, hits.size());
-        } catch (JsonParseException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public RESTDocsGenerator gen() {
