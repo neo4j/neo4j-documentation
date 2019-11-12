@@ -12,13 +12,13 @@ This section provides an introduction to the Cypher query language.
 * <<query-transactions, Transactions>>
 * <<cypher-result-uniqueness, Result uniqueness>>
 
-include::introduction.asciidoc[leveloffset=+1]
+include::cypher-introduction.asciidoc[leveloffset=+1]
 
 include::databases-and-graphs.asciidoc[leveloffset=+1]
 
 include::querying-updating-administering.asciidoc[leveloffset=+1]
 
-include::transactions.asciidoc[leveloffset=+1]
+include::query-transactions.asciidoc[leveloffset=+1]
 
 include::../../parsed-graphgists/uniqueness/uniqueness.asciidoc[leveloffset=+1]
 
