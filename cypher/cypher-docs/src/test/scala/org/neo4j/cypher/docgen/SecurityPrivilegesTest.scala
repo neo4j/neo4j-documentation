@@ -51,8 +51,8 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     section("Listing privileges", "administration-security-subgraph-show", "enterprise-edition") {
       p("Available privileges for all roles can be seen using `SHOW PRIVILEGES`.")
       query("SHOW PRIVILEGES", assertPrivilegeShown(Seq(
-        Map("grant" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
-        Map("grant" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers")
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
+        Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers")
       ))) {
         p("Lists all privileges for all roles")
         resultTable()
@@ -60,7 +60,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
 
       p("Available privileges for a particular role can be seen using `SHOW ROLE name PRIVILEGES`.")
       query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
-        Map("grant" -> "GRANTED", "action" -> "access", "role" -> "regularUsers")
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers")
       ))) {
         p("Lists all privileges for role 'regularUsers'")
         resultTable()
@@ -68,7 +68,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
 
       p("Available privileges for a particular user can be seen using `SHOW USER name PRIVILEGES`.")
       query("SHOW USER jake PRIVILEGES", assertPrivilegeShown(Seq(
-        Map("grant" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
       ))) {
         p("Lists all privileges for user 'jake'")
         resultTable()
