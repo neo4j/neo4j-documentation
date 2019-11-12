@@ -111,9 +111,7 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
 
   private def runQueries(doc: Document): TestRunResult = {
     val builder = (db: GraphDatabaseQueryService, tx: InternalTransaction) => new QueryResultContentBuilder(new ValueFormatter(db, tx))
-    val statsOnlybuilder = (db: GraphDatabaseQueryService, tx: InternalTransaction) => new StatsOnlyQueryResultContentBuilder()
-
-    val runner = new QueryRunner(builder, statsOnlybuilder)
+    val runner = new QueryRunner(builder)
     val result = runner.runQueries(contentsWithInit = doc.contentWithQueries, doc.title)
     result
   }

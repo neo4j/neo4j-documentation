@@ -117,6 +117,13 @@ trait DocBuilder {
     queryScope.addContent(new StatsOnlyTablePlaceHolder(queryScope.assertions, queryScope.params:_*))
   }
 
+  def errorOnlyResultTable(): Unit = {
+    val queryScope = scope.collectFirst {
+      case q: QueryScope => q
+    }.get
+    queryScope.addContent(new ErrorOnlyTablePlaceHolder(queryScope.assertions, queryScope.params:_*))
+  }
+
   def executionPlan(): Unit = {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
