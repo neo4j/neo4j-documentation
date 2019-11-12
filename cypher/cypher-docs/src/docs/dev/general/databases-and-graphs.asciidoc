@@ -40,7 +40,7 @@ A fresh installation of Neo4j will include two databases:
 
 Neo4j has two editions, a commercial enterprise edition with additional performance and administrative features, and an open-source community edition.
 Cypher works almost identically between the two editions, and as such most of this manual will not differentiate between them.
-In the few cases where there is a difference in Cypher language support or behaviour between editions, these will be highlighted as described below.
+In the few cases where there is a difference in Cypher language support or behaviour between editions, these are highlighted as described below in <<cypher-limited-support>>.
 
 However it is worth listing up-front the key areas that are not supported in the open-source edition:
 
@@ -52,7 +52,7 @@ However it is worth listing up-front the key areas that are not supported in the
 | Constraints | Only <<administration-constraints-unique-nodes, single property uniqueness constraints>> | <<administration-constraints-existence, Existence constraints>> and <<administration-constraints-node-key, multi-property `NODE KEY` constraints>>
 |===
 
-
+[[cypher-limited-support]]
 == Limited Support Features
 
 Some elements of Cypher do not work in all deployments of Neo4j, and we use specific markers to highlight these cases:
