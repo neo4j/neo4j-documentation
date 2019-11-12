@@ -272,6 +272,6 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       }
       m.nonEmpty
     }
-    found.nonEmpty
+    found.nonEmpty should be(true)
   })
 }

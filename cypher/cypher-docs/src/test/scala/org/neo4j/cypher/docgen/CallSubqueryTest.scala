@@ -28,7 +28,7 @@ class CallSubqueryTest extends DocumentingTest {
            |Subqueries allow you to compose queries, which is especially useful when working with `UNION` or aggregations.
          """.stripMargin)
       tip{
-        p("""The `CALL` clause is also used for calling functions.
+        p("""The `CALL` clause is also used for calling procedures.
             |For descriptions of the `CALL` clause in this context, refer to <<query-call>>.
           """.stripMargin)
       }

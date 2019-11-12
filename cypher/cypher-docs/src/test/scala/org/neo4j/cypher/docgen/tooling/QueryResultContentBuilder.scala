@@ -55,8 +55,7 @@ class QueryResultContentBuilder(valueFormatter: Any => String)
   }
 }
 
-class StatsOnlyQueryResultContentBuilder()
-  extends (DocsExecutionResult => Content) {
+class StatsOnlyQueryResultContentBuilder() extends (DocsExecutionResult => Content) {
 
   override def apply(result: DocsExecutionResult): Content = {
 
@@ -71,4 +70,8 @@ class StatsOnlyQueryResultContentBuilder()
     }
     StatsOnlyQueryResultTable(footer.strip().replaceAll("\n", ", "))
   }
+}
+
+class ErrorOnlyQueryResultContentBuilder() extends (Throwable => Content) {
+  override def apply(error: Throwable): Content = ErrorOnlyQueryResultTable(error.getMessage)
 }

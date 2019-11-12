@@ -38,8 +38,9 @@ import scala.util.{Failure, Success, Try}
  * we drop the database and create a new one. This way we can make sure that two queries don't affect each other more than
  * necessary.
  */
-class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) => DocsExecutionResult => Content,
-                  statsOnly: (GraphDatabaseQueryService, InternalTransaction) => DocsExecutionResult => Content) extends GraphIcing {
+class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) => DocsExecutionResult => Content) extends GraphIcing {
+  val statsOnly: DocsExecutionResult => Content = new StatsOnlyQueryResultContentBuilder()
+  val errorOnly: Throwable => Content = new ErrorOnlyQueryResultContentBuilder()
 
   def runQueries(contentsWithInit: Seq[ContentWithInit], title: String): TestRunResult = {
 
@@ -92,7 +93,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
 
   private def runSingleQuery(dbms: RestartableDatabase, query: DatabaseQuery, assertions: QueryAssertions, content: TablePlaceHolder): QueryRunResult = {
     val format: (InternalTransaction) => (DocsExecutionResult) => Content = (tx: InternalTransaction) => content match {
-      case _: StatsOnlyTablePlaceHolder => statsOnly(dbms.getInnerDb, tx)(_)
+      case _: StatsOnlyTablePlaceHolder => statsOnly(_)
       case _ => formatter(dbms.getInnerDb, tx)(_)
     }
 
@@ -119,7 +120,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
             case (ErrorAssertions(f), Failure(exception: Throwable)) =>
               val errorResult = Try(f(exception))
               errorResult match {
-                case Success(_) => Right(_ => NoContent)
+                case Success(_) => Right(_ => errorOnly(exception))
                 case _ => Left(exception)
               }
 
@@ -135,10 +136,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
         }
 
       val runResult = QueryRunResult(query.prettified, content, result.right.map(contentBuilder => contentBuilder(tx)))
-      result match {
-        case Left(_) => tx.rollback()
-        case _ => tx.commit()
-      }
+      if (tx.isOpen) tx.commit()
       runResult
     } finally {
       tx.close()

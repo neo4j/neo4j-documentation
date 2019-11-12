@@ -1,0 +1,69 @@
+[[neo4j-databases-graphs]]
+= Neo4j databases and graphs
+
+Cypher queries are executed against a Neo4j database, but normally apply to specific graphs.
+It is important to understand the meaning of these terms and exactly when a graph is not a database.
+
+* DBMS
+** A Neo4j server is a _Database Management System_ capable of containing and managing multiple databases.
+   Client applications will connect to a database server and be able to open sessions against a particular database.
+* Database
+** A database is a storage and retrieval mechanism for collecting data in a defined space on disk and in memory.
+   A client session provides access to a single database in the DBMS.
+   Cypher commands executed through this session will apply to the default graph within that database.
+   It is never possible to operate against multiple databases at the same time.
+   Transactions are specific to a database.
+* Graph
+** This is a data model within a database.
+   In Neo4j 4.0 there is only one graph within each database, and many <<cypher-querying-updating-administering, administrative>> commands that refer to a specific graph do so using the database name.
+** In Neo4j 4.0 Fabric it is possible to refer to multiple graphs within the same transaction and Cypher query.
+
+Most of the time Cypher queries are <<cypher-querying-updating-administering, reading or updating queries>> which are run against a graph.
+There are, however, <<administrative, administrative>> commands that apply to a database, or to the entire DBMS.
+Such commands cannot be run in a session connected to a normal user database, but instead need to be run within a session connected to the special _system_ database.
+
+More on this requirement is described in the chapter on <<administration, Administration>>.
+
+== The System Database and the Default Database
+
+All Neo4j servers will contain a built-in database called `system` which behaves differently to all other databases.
+In particular, when connected to this database you can only perform a specific set of administrative functions, as described in detail in the section on <<administration, administration>>.
+It is also true that only users with specific administrative privileges will be able to run most of the administrative commands available.
+Information on configuring the security privileges is described in the <<operations#, Operations Manual>> as well as the section below on <<administration-security, security commands>>.
+
+A fresh installation of Neo4j will include two databases:
+
+* `system` - the system database described above, containing meta-data on the DBMS and security configuration
+* `neo4j` - the default database, named using the config option `dbms.default_database=neo4j`
+
+== Enterprise versus Community
+
+Neo4j has two editions, a commercial enterprise edition with additional performance and administrative features, and an open-source community edition.
+Cypher works almost identically between the two editions, and as such most of this manual will not differentiate between them.
+In the few cases where there is a difference in Cypher language support or behaviour between editions, these are highlighted as described below in <<cypher-limited-support>>.
+
+However it is worth listing up-front the key areas that are not supported in the open-source edition:
+
+[options="header"]
+|===
+| Feature | Community | Enterprise
+| <<administration-databases, Multi-database>> | Only `system` and one user database | Any number of user databases
+| Role-based security | <<administration-security-users, Multi-user management>>. All users have full access rights. | <<administration-security, User, Role and Privilege management>> for flexible access control and <<administration-security-subgraph, sub-graph access control>>.
+| Constraints | Only <<administration-constraints-unique-nodes, single property uniqueness constraints>> | <<administration-constraints-existence, Existence constraints>> and <<administration-constraints-node-key, multi-property `NODE KEY` constraints>>
+|===
+
+[[cypher-limited-support]]
+== Limited Support Features
+
+Some elements of Cypher do not work in all deployments of Neo4j, and we use specific markers to highlight these cases:
+
+[options="header"]
+|===
+| Marker                | Description | Example
+| `deprecated` | This feature is deprecated and will be removed in a future version
+| [deprecated]#`filter()`#
+| `enterprise-only`     | This feature only works in the enterprise edition of Neo4j
+| [enterprise-edition]#`CREATE DATABASE foo`#
+| `fabric`   | This feature only works in a fabric deployment of Neo4j.
+| [fabric]#`USE fabric.graph(0)`#
+|===

@@ -1,0 +1,29 @@
+[[query-transactions]]
+= Transactions
+
+All Cypher statements are explicitly run within a transaction.
+For read-only queries the transaction will always succeed.
+For updating queries it is possible that a failure can occur for some reason, for example the query attempts to violate a constraint, in which case the entire transaction is rolled back, and no changes are made to the graph.
+Every statement is executed within the context of the transaction, and nothing will be persisted to disk until that transaction is successfully committed.
+
+In short, an updating query will always either fully succeed, or not succeed at all.
+
+While it is not possible to run a Cypher query outside a transaction, it is possible to run multiple queries within a single transaction using the following sequence of operations:
+
+. Open a transaction,
+. Run multiple updating Cypher queries.
+. Commit all of them in one go.
+
+Note that the transaction will hold the changes in memory until the whole query, or whole set of queries, has finished executing.
+A query that makes a large number of updates will consequently use large amounts of memory.
+For memory configuration in Neo4j, see the <<operations-manual#memory-configuration, Neo4j Operations Manual>>.
+
+For examples of the API's used to start and commit transactions, refer to the API specific documentation:
+
+* For using transactions with a Neo4j driver, see the <<driver-manual#driver-sessions-transactions, Neo4j Driver manual>>.
+* For using transactions over the HTTP API, see the <<http-api#http-api, HTTP API documentation>>.
+* For using transactions within the embedded Core API, see the <<java-reference#tutorials-cypher-java, Java Reference>>.
+
+When writing procedures or using Neo4j embedded, remember that all iterators returned from an execution result should be either fully exhausted or closed.
+This ensures that the resources bound to them are properly released.
+

@@ -175,7 +175,7 @@ class MatchTest extends DocumentingTest {
     }
     section("Relationships in depth", "relationships-in-depth") {
       note {
-        p("Inside a single pattern, relationships will only be matched once. You can read more about this in <<cypherdoc-uniqueness>>.")
+        p("Inside a single pattern, relationships will only be matched once. You can read more about this in <<cypher-result-uniqueness>>.")
       }
       section("Relationship types with uncommon characters", "rel-types-with-uncommon-chars") {
         val initQuery =

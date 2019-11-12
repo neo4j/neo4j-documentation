@@ -1,7 +1,6 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.cypher.internal.v4_0.util.OpenCypherExceptionFactory.SyntaxException
 import org.neo4j.exceptions.SyntaxException
 
 class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSupport {
@@ -173,27 +172,25 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p("include::grant-write-syntax.asciidoc[]")
 
       p(
-        """For example, granting the ability to write on the graph `neo4j` to the role `regularUsers` is done like the following query.""".stripMargin)
+        """For example, granting the ability to write on the graph `neo4j` to the role `regularUsers` would be achieved using:""".stripMargin)
       query("GRANT WRITE ON GRAPH neo4j TO regularUsers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 2)
       })) {
         statsOnlyResultTable()
       }
-      /*
-      query("GRANT WRITE ON GRAPH neo4j ELEMENTS A TO regularUsers", ErrorAssertions((e) => {
-        val expected = "The use of ELEMENT, NODE or RELATIONSHIP with the WRITE privilege is not supported"
-        e match {
-          case s: SyntaxException if (s.getMessage.startsWith(expected)) =>
-          case _ => throw new IllegalStateException("Expected exception: SyntaxException($expected)")
-        }
-      })) {
-        statsOnlyResultTable()
-      }*/
+      note {
+        p("Unlike with `GRANT READ` it is not possible to restrict `WRITE` privileges to specific ELEMENTS, NODES or RELATIONSHIPS.")
+      }
+      p("For example, using `NODES A` will produce a syntax error.")
+      query("GRANT WRITE ON GRAPH neo4j NODES A TO regularUsers", assertSyntaxException("The use of ELEMENT, NODE or RELATIONSHIP with the WRITE privilege is not supported")
+      ) {
+        errorOnlyResultTable()
+      }
 
       p("The `WRITE` privilege can also be denied.")
       p("include::deny-write-syntax.asciidoc[]")
 
-      p("For example, denying the ability to write on the graph `neo4j` to the role `regularUsers` is done like the following query.")
+      p("For example, denying the ability to write on the graph `neo4j` to the role `regularUsers` would be achieved using:")
       query("DENY WRITE ON GRAPH neo4j TO regularUsers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 2)
       })) {
@@ -231,6 +228,11 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
       m.nonEmpty
     }
-    found.nonEmpty
+    found.nonEmpty should be(true)
   })
+
+  private def assertSyntaxException(expected: String) = ErrorAssertions {
+    case s: SyntaxException => s.getMessage should startWith(expected)
+    case _ => fail("Expected exception: SyntaxException($expected)")
+  }
 }
