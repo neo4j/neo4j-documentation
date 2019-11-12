@@ -263,7 +263,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
     }*/
   }.build()
 
-  private def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]) = ResultAndDbAssertions((p, db) => {
+  private def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]) = ResultAssertions(p => {
     val found = p.toList.filter { row =>
       val m = expected.filter { expectedRow =>
         expectedRow.forall {

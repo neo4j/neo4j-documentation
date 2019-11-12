@@ -116,6 +116,13 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
               Right(format(_)(r))
 
             // *** Error conditions
+            case (ErrorAssertions(f), Failure(exception: Throwable)) =>
+              val errorResult = Try(f(exception))
+              errorResult match {
+                case Success(_) => Right(_ => NoContent)
+                case _ => Left(exception)
+              }
+
             case (_, Failure(exception: Throwable)) =>
               Left(exception)
 
@@ -128,7 +135,10 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
         }
 
       val runResult = QueryRunResult(query.prettified, content, result.right.map(contentBuilder => contentBuilder(tx)))
-      tx.commit()
+      result match {
+        case Left(_) => tx.rollback()
+        case _ => tx.commit()
+      }
       runResult
     } finally {
       tx.close()

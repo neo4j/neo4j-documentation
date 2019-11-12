@@ -365,6 +365,8 @@ case class ResultAssertions(f: DocsExecutionResult => Unit) extends QueryAsserti
 
 case class ResultAndDbAssertions(f: (DocsExecutionResult, GraphDatabaseQueryService) => Unit) extends QueryAssertions
 
+case class ErrorAssertions(f: Throwable => Unit) extends QueryAssertions
+
 case object NoAssertions extends QueryAssertions
 
 // These objects are used to mark where in the document tree

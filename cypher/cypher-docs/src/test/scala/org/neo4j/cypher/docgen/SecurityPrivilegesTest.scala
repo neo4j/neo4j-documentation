@@ -1,11 +1,8 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.graphdb.Label
-import org.neo4j.kernel.api.KernelTransaction.Type
-import org.neo4j.kernel.api.security.AnonymousContext
-
-import scala.collection.JavaConverters._
+import org.neo4j.cypher.internal.v4_0.util.OpenCypherExceptionFactory.SyntaxException
+import org.neo4j.exceptions.SyntaxException
 
 class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql/administration/security/"
@@ -177,17 +174,27 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
 
       p(
         """For example, granting the ability to write on the graph `neo4j` to the role `regularUsers` is done like the following query.""".stripMargin)
-      query("GRANT WRITE { * } ON GRAPH neo4j ELEMENTS * TO regularUsers", ResultAssertions((r) => {
+      query("GRANT WRITE ON GRAPH neo4j TO regularUsers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 2)
       })) {
         statsOnlyResultTable()
       }
+      /*
+      query("GRANT WRITE ON GRAPH neo4j ELEMENTS A TO regularUsers", ErrorAssertions((e) => {
+        val expected = "The use of ELEMENT, NODE or RELATIONSHIP with the WRITE privilege is not supported"
+        e match {
+          case s: SyntaxException if (s.getMessage.startsWith(expected)) =>
+          case _ => throw new IllegalStateException("Expected exception: SyntaxException($expected)")
+        }
+      })) {
+        statsOnlyResultTable()
+      }*/
 
       p("The `WRITE` privilege can also be denied.")
       p("include::deny-write-syntax.asciidoc[]")
 
       p("For example, denying the ability to write on the graph `neo4j` to the role `regularUsers` is done like the following query.")
-      query("DENY WRITE { * } ON GRAPH neo4j ELEMENTS * TO regularUsers", ResultAssertions((r) => {
+      query("DENY WRITE ON GRAPH neo4j TO regularUsers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 2)
       })) {
         statsOnlyResultTable()
@@ -215,7 +222,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     }
   }.build()
 
-  private def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]) = ResultAndDbAssertions((p, db) => {
+  private def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]) = ResultAssertions(p => {
     val found = p.toList.filter { row =>
       val m = expected.filter { expectedRow =>
         expectedRow.forall {
