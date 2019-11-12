@@ -73,5 +73,5 @@ class StatsOnlyQueryResultContentBuilder() extends (DocsExecutionResult => Conte
 }
 
 class ErrorOnlyQueryResultContentBuilder() extends (Throwable => Content) {
-  override def apply(error: Throwable): Content = ErrorOnlyQueryResultTable(error.getMessage.strip().replaceAll("\n", ", "))
+  override def apply(error: Throwable): Content = ErrorOnlyQueryResultTable(error.getMessage)
 }

@@ -172,13 +172,15 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p("include::grant-write-syntax.asciidoc[]")
 
       p(
-        """For example, granting the ability to write on the graph `neo4j` to the role `regularUsers` is done like the following query.""".stripMargin)
+        """For example, granting the ability to write on the graph `neo4j` to the role `regularUsers` would be achieved using:""".stripMargin)
       query("GRANT WRITE ON GRAPH neo4j TO regularUsers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 2)
       })) {
         statsOnlyResultTable()
       }
-      note("Unlike with `GRANT READ` it is not possible to restrict `WRITE` privileges to specific ELEMENTS, NODES or RELATIONSHIPS.")
+      note {
+        p("Unlike with `GRANT READ` it is not possible to restrict `WRITE` privileges to specific ELEMENTS, NODES or RELATIONSHIPS.")
+      }
       p("For example, using `NODES A` will produce a syntax error.")
       query("GRANT WRITE ON GRAPH neo4j NODES A TO regularUsers", assertSyntaxException("The use of ELEMENT, NODE or RELATIONSHIP with the WRITE privilege is not supported")
       ) {
@@ -188,7 +190,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p("The `WRITE` privilege can also be denied.")
       p("include::deny-write-syntax.asciidoc[]")
 
-      p("For example, denying the ability to write on the graph `neo4j` to the role `regularUsers` is done like the following query.")
+      p("For example, denying the ability to write on the graph `neo4j` to the role `regularUsers` would be achieved using:")
       query("DENY WRITE ON GRAPH neo4j TO regularUsers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 2)
       })) {
