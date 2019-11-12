@@ -71,8 +71,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p("The privileges granted can be seen using the `SHOW PRIVILEGES` command:")
         query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
-          Map("grant" -> "GRANTED", "action" -> "access"),
-          Map("grant" -> "DENIED", "action" -> "access")
+          Map("access" -> "GRANTED", "action" -> "access"),
+          Map("access" -> "DENIED", "action" -> "access")
         ))) {
           resultTable()
         }
@@ -124,12 +124,12 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p("The privileges granted can be seen using the `SHOW PRIVILEGES` command:")
         query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
-          Map("grant" -> "GRANTED", "action" -> "access"),
-          Map("grant" -> "DENIED", "action" -> "access"),
-          Map("grant" -> "GRANTED", "action" -> "start_database"),
-          Map("grant" -> "DENIED", "action" -> "start_database"),
-          Map("grant" -> "GRANTED", "action" -> "stop_database"),
-          Map("grant" -> "DENIED", "action" -> "stop_database")
+          Map("access" -> "GRANTED", "action" -> "access"),
+          Map("access" -> "DENIED", "action" -> "access"),
+          Map("access" -> "GRANTED", "action" -> "start_database"),
+          Map("access" -> "DENIED", "action" -> "start_database"),
+          Map("access" -> "GRANTED", "action" -> "stop_database"),
+          Map("access" -> "DENIED", "action" -> "stop_database")
         ))) {
           resultTable()
         }
@@ -191,16 +191,16 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p("The privileges granted can be seen using the `SHOW PRIVILEGES` command:")
         query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
-          Map("grant" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
-          Map("grant" -> "GRANTED", "action" -> "start_database", "role" -> "regularUsers"),
-          Map("grant" -> "GRANTED", "action" -> "stop_database", "role" -> "regularUsers"),
-          Map("grant" -> "GRANTED", "action" -> "create_index", "role" -> "regularUsers"),
-          Map("grant" -> "GRANTED", "action" -> "drop_index", "role" -> "regularUsers"),
-          Map("grant" -> "GRANTED", "action" -> "create_constraint", "role" -> "regularUsers"),
-          Map("grant" -> "GRANTED", "action" -> "drop_constraint", "role" -> "regularUsers"),
-          Map("grant" -> "GRANTED", "action" -> "create_label", "role" -> "regularUsers"),
-          Map("grant" -> "GRANTED", "action" -> "create_reltype", "role" -> "regularUsers"),
-          Map("grant" -> "GRANTED", "action" -> "create_propertykey", "role" -> "regularUsers")
+          Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
+          Map("access" -> "GRANTED", "action" -> "start_database", "role" -> "regularUsers"),
+          Map("access" -> "GRANTED", "action" -> "stop_database", "role" -> "regularUsers"),
+          Map("access" -> "GRANTED", "action" -> "create_index", "role" -> "regularUsers"),
+          Map("access" -> "GRANTED", "action" -> "drop_index", "role" -> "regularUsers"),
+          Map("access" -> "GRANTED", "action" -> "create_constraint", "role" -> "regularUsers"),
+          Map("access" -> "GRANTED", "action" -> "drop_constraint", "role" -> "regularUsers"),
+          Map("access" -> "GRANTED", "action" -> "create_label", "role" -> "regularUsers"),
+          Map("access" -> "GRANTED", "action" -> "create_reltype", "role" -> "regularUsers"),
+          Map("access" -> "GRANTED", "action" -> "create_propertykey", "role" -> "regularUsers")
         ))) {
           resultTable()
         }
