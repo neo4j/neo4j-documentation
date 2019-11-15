@@ -217,15 +217,21 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
 
       p("An example usage of the `REVOKE` command is given here:")
-      query("REVOKE GRANT TRAVERSE ON GRAPH neo4j NODES Post TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 1)
-      })) {}
+      query("REVOKE GRANT TRAVERSE ON GRAPH neo4j NODES Post FROM regularUsers", ResultAssertions((r) => {
+        // TODO: revoke a privilege that exists
+        assertStats(r, systemUpdates = 0)
+      })) {
+        statsOnlyResultTable()
+      }
       p(
         """While it can be explicitly specified that revoke should remove a `GRANT` or `DENY`, it is also possible to revoke either one by not specifying at all as the next example demonstrates.
           |Because of this, if there happen to be a `GRANT` and a `DENY` on the same privilege, it would remove both.""".stripMargin)
-      query("REVOKE TRAVERSE ON GRAPH neo4j NODES Payments TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 1)
-      })) {}
+      query("REVOKE TRAVERSE ON GRAPH neo4j NODES Payments FROM regularUsers", ResultAssertions((r) => {
+        // TODO: revoke a privilege that exists
+        assertStats(r, systemUpdates = 0)
+      })) {
+        statsOnlyResultTable()
+      }
     }
   }.build()
 
