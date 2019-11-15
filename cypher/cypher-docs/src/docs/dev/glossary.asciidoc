@@ -158,8 +158,6 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-endnode, endNode()>>                | Scalar            | Returns the end node of a relationship.
 |<<functions-exists, exists()>>                  | Predicate         | Returns true if a match for the pattern exists in the graph, or if the specified property exists in the node, relationship or map.
 |<<functions-exp, exp()>>                       | Logarithmic       | Returns `e^n`, where `e` is the base of the natural logarithm, and `n` is the value of the argument expression.
-|<<functions-extract, extract()>>                | List              | [deprecated]#Returns a list `l~result~` containing the values resulting from an expression which has been applied to each element in a list `list`.#
-|<<functions-filter, filter()>>                  | List              | [deprecated]#Returns a list `l~result~` containing all the elements from a list `list` that comply with a predicate.#
 |<<functions-floor, floor()>>                   | Numeric           | Returns the largest floating point number that is less than or equal to a number and equal to a mathematical integer.
 |<<functions-haversin, haversin()>>             | Trigonometric     | Returns half the versine of a number.
 |<<functions-head, head()>>                      | Scalar            | Returns the first element in a list.

@@ -89,7 +89,7 @@ range($firstNum, $lastNum, $step) AS list
 ###
 
 `range()` creates a list of numbers (`step` is optional), other functions returning lists are:
-`labels()`, `nodes()`, `relationships()`, `filter()`, `extract()`.
+`labels()`, `nodes()`, `relationships()`.
 
 ###assertion=returns-one
 //

@@ -61,7 +61,7 @@ Some elements of Cypher do not work in all deployments of Neo4j, and we use spec
 |===
 | Marker                | Description | Example
 | `deprecated` | This feature is deprecated and will be removed in a future version
-| [deprecated]#`filter()`#
+| [deprecated]#`DROP INDEX ON :Label(property)`#
 | `enterprise-only`     | This feature only works in the enterprise edition of Neo4j
 | [enterprise-edition]#`CREATE DATABASE foo`#
 | `fabric`   | This feature only works in a fabric deployment of Neo4j.

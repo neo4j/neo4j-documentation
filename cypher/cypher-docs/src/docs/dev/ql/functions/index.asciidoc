@@ -105,8 +105,6 @@ Further details and examples of lists may be found in <<cypher-lists>>.
 [options="header"]
 |===
 |Function                                       | Description
-|<<functions-extract,extract()>>                | [deprecated]#Returns a list `l~result~` containing the values resulting from an expression which has been applied to each element in a list `list`.#
-|<<functions-filter,filter()>>                  | [deprecated]#Returns a list `l~result~` containing all the elements from a list `list` that comply with a predicate.#
 |<<functions-keys,keys()>>                      | Returns a list containing the string representations for all the property names of a node, relationship, or map.
 |<<functions-labels,labels()>>                  | Returns a list containing the string representations for all the labels of a node.
 |<<functions-nodes,nodes()>>                    | Returns a list containing all the nodes in a path.
