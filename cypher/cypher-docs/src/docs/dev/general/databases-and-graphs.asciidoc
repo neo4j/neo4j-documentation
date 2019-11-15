@@ -29,7 +29,7 @@ More on this requirement is described in the chapter on <<administration, Admini
 All Neo4j servers will contain a built-in database called `system` which behaves differently to all other databases.
 In particular, when connected to this database you can only perform a specific set of administrative functions, as described in detail in the section on <<administration, administration>>.
 It is also true that only users with specific administrative privileges will be able to run most of the administrative commands available.
-Information on configuring the security privileges is described in the <<operations#, Operations Manual>> as well as the section below on <<administration-security, security commands>>.
+Information on configuring the security privileges is described in the <<operations-manual#operations-manual, Operations Manual>> as well as the section below on <<administration-security, security commands>>.
 
 A fresh installation of Neo4j will include two databases:
 
