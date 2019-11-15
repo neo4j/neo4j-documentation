@@ -56,6 +56,8 @@ class ListFunctionsTest extends DocumentingTest {
         |* <<functions-reverse-list, reverse()>>
         |* <<functions-tail,tail()>>""")
     graphViz()
+
+    p("[role=deprecated]")
     section("extract()", "functions-extract") {
       p(
         """`extract()` returns a list `l~result~` containing the values resulting from an expression which has been applied to each element in a list `list`.
@@ -78,6 +80,7 @@ class ListFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
+    p("[role=deprecated]")
     section("filter()", "functions-filter") {
       p("""`filter()` returns a list `l~result~` containing all the elements from a list `list` that comply with the given predicate. Note that this function has been deprecated, consider using a <<cypher-list-comprehension, list comprehension>> (e.g. `[variable IN list WHERE predicate]`) instead.""")
       function("filter(variable IN list WHERE predicate)", "A list containing heterogeneous elements; the types of the elements are determined by the elements in `list`.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from the predicate."), ("predicate", "A predicate that is tested against all elements in `list`."))
