@@ -79,14 +79,17 @@ object DocsExecutionResult {
       }
     })
 
-    val statistics = in.getQueryStatistics
+    val statistics = in.getQueryStatistics match {
+      case s:QueryStatistics => s
+      case _ => QueryStatistics()
+    }
 
     new DocsExecutionResult(
       columns,
       result.toList,
       resultStringBuilder.result(statistics),
       in.getExecutionPlanDescription.asInstanceOf[InternalPlanDescription],
-      statistics.asInstanceOf[QueryStatistics],
+      statistics,
       in.getNotifications.asScala
       )
   }

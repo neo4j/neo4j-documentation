@@ -103,6 +103,14 @@ trait DocBuilder {
     }.get.setRuntime(name)
   }
 
+  def login(name: String, password: String): Unit = {
+    scope.collectFirst {
+      case section: SectionScope => section
+      case doc: DocScope => doc
+      case query: QueryScope => query
+    }.get.setLogin((name, password))
+  }
+
   def resultTable(): Unit = {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
@@ -167,9 +175,13 @@ trait DocBuilder {
     val mayBeRuntime: Option[String] = scope.collectFirst {
       case s: Scope if (s._runtime.isDefined) => s._runtime.get
     }
+    val mayBeLogin: Option[(String, String)] = scope.collectFirst {
+      case s: Scope if (s._login.isDefined) => s._login.get
+    }
     val pop = scope.pop()
     if (mayBeDatabase.isDefined) pop.setDatabase(mayBeDatabase.get)
     if (mayBeRuntime.isDefined) pop.setRuntime(mayBeRuntime.get)
+    if (mayBeLogin.isDefined) pop.setLogin(mayBeLogin.get)
     pop
   }
 
@@ -202,6 +214,7 @@ object DocBuilder {
     private var _content: Content = NoContent
     var _database: Option[String] = None
     var _runtime: Option[String] = None
+    var _login: Option[(String, String)] = None
 
     def init: RunnableInitialization = _initializations
 
@@ -244,6 +257,10 @@ object DocBuilder {
       _runtime = Some(runtime)
     }
 
+    def setLogin(login: (String, String)): Unit = {
+      _login = Some(login)
+    }
+
     def toContent: Content
   }
 
@@ -268,11 +285,11 @@ object DocBuilder {
   }
 
   case class AutoformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
-    override def toContent = Query(queryText, assertions, init, content, params, preformatted = false, runtime = _runtime, database = _database)
+    override def toContent = Query(queryText, assertions, init, content, params, preformatted = false, runtime = _runtime, database = _database, login = _login)
   }
 
   case class PreformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
-    override def toContent = Query(queryText, assertions, init, content, params, preformatted = true, runtime = _runtime, database = _database)
+    override def toContent = Query(queryText, assertions, init, content, params, preformatted = true, runtime = _runtime, database = _database, login = _login)
   }
 }
 

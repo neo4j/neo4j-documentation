@@ -20,20 +20,26 @@
 package org.neo4j.cypher.docgen.tooling
 
 import java.io.File
+import java.lang.Boolean.TRUE
 
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
+import com.neo4j.kernel.enterprise.api.security.EnterpriseAuthManager
 import org.apache.commons.io.FileUtils
+import org.neo4j.configuration.GraphDatabaseSettings
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultSubscriber}
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.DatabaseManagementService
+import org.neo4j.graphdb.config.Setting
 import org.neo4j.internal.kernel.api.security.SecurityContext.AUTH_DISABLED
 import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.api.procedure.GlobalProcedures
+import org.neo4j.kernel.api.security.AuthToken
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.util.Try
 
@@ -42,12 +48,14 @@ class RestartableDatabase(init: RunnableInitialization)
   extends GraphIcing with ExecutionEngineHelper {
 
   var managementService: DatabaseManagementService = _
+  var authManager: EnterpriseAuthManager = _
   var dbFolder: File = _
   var graph: GraphDatabaseCypherService = null
   val graphs: mutable.Map[String, MetaData] = mutable.Map.empty
   var eengine: ExecutionEngine = null
   private var _failures: Seq[QueryRunResult] = null
   private var _markedForRestart = false
+  private var _login: Option[(String, String)] = None
 
   /*
   This is the public way of controlling when it's safe to restart the database
@@ -57,11 +65,15 @@ class RestartableDatabase(init: RunnableInitialization)
   private def createAndStartIfNecessary() {
     if (graph == null) {
       dbFolder = new File("target/example-db" + System.nanoTime())
-      managementService = new EnterpriseDatabaseManagementServiceBuilder(dbFolder).build()
+      val config: Map[Setting[_], Object] = Map(GraphDatabaseSettings.auth_enabled -> TRUE)
+      managementService = new EnterpriseDatabaseManagementServiceBuilder(dbFolder).setConfig(config.asJava).build()
+
+      //    managementService = graphDatabaseFactory(Files.createTempDirectory("test").getParent.toFile).impermanent().setConfig(config.asJava).setInternalLogProvider(logProvider).build()
       managementService.listDatabases().toArray().foreach { name =>
         graphs(name.toString) = new MetaData(name.toString)
       }
       selectDatabase(Some(DEFAULT_DATABASE_NAME))
+      authManager = graph.getDependencyResolver.resolveDependency(classOf[EnterpriseAuthManager])
     }
   }
 
@@ -88,10 +100,18 @@ class RestartableDatabase(init: RunnableInitialization)
     restart()
   }
 
+  def login(login: Option[(String, String)]): Unit = {
+    _login = login
+  }
+
   def beginTx(database: Option[String]): InternalTransaction = {
     createAndStartIfNecessary()
     selectDatabase(database)
-    graph.beginTransaction(Type.`implicit`, AUTH_DISABLED)
+    val loginContext = _login match {
+      case Some((name, password)) => authManager.login(AuthToken.newBasicAuthToken(name, password))
+      case _ => AUTH_DISABLED
+    }
+    graph.beginTransaction(Type.`implicit`, loginContext)
   }
 
   def executeWithParams(tx: InternalTransaction, q: String, params: (String, Any)*): DocsExecutionResult = {
@@ -155,6 +175,7 @@ class RestartableDatabase(init: RunnableInitialization)
 
       // Execute queries
       init.initQueries.filter(x => x.database.isEmpty || x.database.get == database).flatMap { query =>
+        //TODO: Consider supporting login for initQueries
         val q = query.prettified
         val result = Try(execute(q, Seq.empty: _*))
         result.failed.toOption.map((e: Throwable) => QueryRunResult(q, new ErrorPlaceHolder(), Left(e)))

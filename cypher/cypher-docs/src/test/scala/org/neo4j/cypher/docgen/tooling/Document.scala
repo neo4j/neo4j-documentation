@@ -280,15 +280,26 @@ trait DatabaseQuery {
   def prettified: String
   def database: Option[String]
   def runtime: Option[String]
-  def explain: DatabaseQuery = InitializationQuery(s"EXPLAIN $runnable", runtime, database)
-  def profile: DatabaseQuery = InitializationQuery(s"PROFILE $runnable", runtime, database)
+  def login: Option[(String, String)]
+  def explain: DatabaseQuery = InitializationQuery(s"EXPLAIN $runnable", runtime, database, login)
+  def profile: DatabaseQuery = InitializationQuery(s"PROFILE $runnable", runtime, database, login)
   def runnable: String = if(runtime.isDefined) s"CYPHER runtime=${runtime.get} ${prettified}" else prettified
 }
 
-case class InitializationQuery(prettified: String, runtime: Option[String] = None, database: Option[String] = None) extends DatabaseQuery
+case class InitializationQuery(prettified: String,
+                               runtime: Option[String] = None,
+                               database: Option[String] = None,
+                               login: Option[(String, String)] = None) extends DatabaseQuery
 
-case class Query(queryText: String, assertions: QueryAssertions, myInit: RunnableInitialization, content: Content, params: Seq[(String, Any)],
-                 preformatted: Boolean = false, runtime: Option[String] = None, database: Option[String] = None) extends Content with DatabaseQuery {
+case class Query(queryText: String,
+                 assertions: QueryAssertions,
+                 myInit: RunnableInitialization,
+                 content: Content,
+                 params: Seq[(String, Any)],
+                 preformatted: Boolean = false,
+                 runtime: Option[String] = None,
+                 database: Option[String] = None,
+                 login: Option[(String, String)] = None) extends Content with DatabaseQuery {
 
   val prettified = if (preformatted) queryText else Prettifier(queryText).toString
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))

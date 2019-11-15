@@ -39,6 +39,11 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         |""".stripMargin)
     section("The `admin` role", "administration-security-administration-introduction", "enterprise-edition") {
       p("include::admin-role-introduction.asciidoc[]")
+      query("SHOW ROLE admin PRIVILEGES", assertPrivilegeShown(Seq(
+        Map("access" -> "GRANTED", "action" -> "access")
+      ))) {
+        resultTable()
+      }
     }
     section("Database administration", "administration-security-administration-database-privileges", "enterprise-edition") {
       synopsis("This section explains how to use Cypher to manage privileges for Neo4j database administrative rights.")
@@ -208,14 +213,11 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
     }
     section("DBMS administration", "administration-security-administration-dbms-privileges", "enterprise-edition") {
       p("include::dbms/admin-role-dbms.asciidoc[]")
-    }
-    /*
       section("Using a custom role to manage DBMS privileges", "administration-security-administration-dbms-custom", "enterprise-edition") {
         p("include::dbms/admin-role-dbms-custom.asciidoc[]")
         p("First we copy the 'admin' role:")
-        //TODO: Fix system graph initialization in Neo4j 4.0 to initialize the security model earlier
         query("CREATE ROLE usermanager AS COPY OF admin", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 10)
+          assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
@@ -238,18 +240,18 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
         p("And DENY index and constraint management:")
         query("DENY INDEX MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
+          assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
         query("DENY CONSTRAINT MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
+          assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
         p("And finally DENY label, relationship type and property name:")
         query("DENY NAME MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
+          assertStats(r, systemUpdates = 3)
         })) {
           statsOnlyResultTable()
         }
@@ -260,7 +262,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
       }
-    }*/
+    }
   }.build()
 
   private def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]) = ResultAssertions(p => {
@@ -272,7 +274,6 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       }
       m.nonEmpty
     }
-    //TODO: Fix this
-    //found.nonEmpty should be(true)
+    found.nonEmpty should be(true)
   })
 }

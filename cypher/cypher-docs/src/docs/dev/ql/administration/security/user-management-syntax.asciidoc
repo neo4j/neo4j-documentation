@@ -3,15 +3,22 @@
 |===
 | Command | Description | Type of user | Available in Community Edition
 
-|
-[source, cypher]
+| [source, cypher]
+SHOW USERS
+| List all users | Admin | `+`
+
+| [source, cypher]
+SHOW USER name PRIVILEGES
+| List the privileges granted to a user | Admin | [enterprise-edition]#-#
+
+| [source, cypher]
 ----
 CREATE [OR REPLACE] USER name [IF NOT EXISTS]
   SET PASSWORD password
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
 ----
-| Create a new user | Admin | `X`
+| Create a new user | Admin | `+`
 
 | [source, cypher]
 ALTER USER name SET {
@@ -21,22 +28,14 @@ PASSWORD password
 PASSWORD CHANGE [NOT] REQUIRED
             [SET STATUS {ACTIVE \| SUSPENDED}] \|
 STATUS {ACTIVE \| SUSPENDED}
-| Modify the settings for an existing user | Admin |
+| Modify the settings for an existing user | Admin | [enterprise-edition]#-#
 
 | [source, cypher]
 ALTER CURRENT USER SET PASSWORD FROM original TO password
-| Change the current user's password | Normal user | `X`
+| Change the current user's password | Normal user | `+`
 
 |
 [source, cypher]
 DROP USER name [IF EXISTS]
-| Drop (remove) an existing user | Admin | `X`
-
-| [source, cypher]
-SHOW USERS
-| List all users | Admin | `X`
-
-| [source, cypher]
-SHOW USER name PRIVILEGES
-| List the privileges granted to a user | Admin |
+| Drop (remove) an existing user | Admin | `+`
 |===

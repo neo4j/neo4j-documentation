@@ -97,6 +97,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
       case _ => formatter(dbms.getInnerDb, tx)(_)
     }
 
+    dbms.login(query.login)
     val tx: InternalTransaction = dbms.beginTx(query.database)
     try {
       val result: Either[Throwable, InternalTransaction => Content] =
