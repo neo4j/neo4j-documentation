@@ -57,6 +57,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         p(
           """Lists all privileges for all roles.
             |The table contains columns describing the privilege:
+            |
             |* access: whether the privilege is granted or denied (whitelist or blacklist)
             |* action: which type of privilege this is: access, traverse, read, write, token, schema or admin
             |* resource: what type of scope this privilege applies to: the entire dbms, a database, a graph or sub-graph access
