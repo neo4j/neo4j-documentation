@@ -38,6 +38,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.neo4j</groupId>
+            <artifactId>neo4j-enterprise</artifactId>
+            <version>${neo4j.version}</version>
+            <scope>provided</scope>
+        </dependency><dependency>
+            <groupId>com.neo4j</groupId>
+            <artifactId>neo4j-backup</artifactId>
+            <version>${neo4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j</artifactId>
             <version>${neo4j.version}</version>

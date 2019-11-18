@@ -20,13 +20,17 @@ package org.neo4j.examples;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Consumer;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.io.fs.FileUtils;
 import org.neo4j.logging.Log;
 import org.neo4j.logging.LogProvider;
-import org.neo4j.logging.NullLog;
+import org.neo4j.logging.Logger;
 
 public class EmbeddedNeo4jWithCustomLogging
 {
@@ -42,13 +46,155 @@ public class EmbeddedNeo4jWithCustomLogging
         @Override
         public Log getLog( Class loggingClass )
         {
-            return NullLog.getInstance();
+            return new MyCustomLog();
         }
 
         @Override
         public Log getLog( String context )
         {
-            return NullLog.getInstance();
+            return new MyCustomLog();
+        }
+
+        private static class MyCustomLog implements Log
+        {
+            @Override
+            public boolean isDebugEnabled()
+            {
+                return false;
+            }
+
+            @Nonnull
+            @Override
+            public Logger debugLogger()
+            {
+                return new MyCustomLogger();
+            }
+
+            @Override
+            public void debug( @Nonnull String message )
+            {
+
+            }
+
+            @Override
+            public void debug( @Nonnull String message, @Nonnull Throwable throwable )
+            {
+
+            }
+
+            @Override
+            public void debug( @Nonnull String format, @Nullable Object... arguments )
+            {
+
+            }
+
+            @Nonnull
+            @Override
+            public Logger infoLogger()
+            {
+                return new MyCustomLogger();
+            }
+
+            @Override
+            public void info( @Nonnull String message )
+            {
+
+            }
+
+            @Override
+            public void info( @Nonnull String message, @Nonnull Throwable throwable )
+            {
+
+            }
+
+            @Override
+            public void info( @Nonnull String format, @Nullable Object... arguments )
+            {
+
+            }
+
+            @Nonnull
+            @Override
+            public Logger warnLogger()
+            {
+                return new MyCustomLogger();
+            }
+
+            @Override
+            public void warn( @Nonnull String message )
+            {
+
+            }
+
+            @Override
+            public void warn( @Nonnull String message, @Nonnull Throwable throwable )
+            {
+
+            }
+
+            @Override
+            public void warn( @Nonnull String format, @Nullable Object... arguments )
+            {
+
+            }
+
+            @Nonnull
+            @Override
+            public Logger errorLogger()
+            {
+                return new MyCustomLogger();
+            }
+
+            @Override
+            public void error( @Nonnull String message )
+            {
+
+            }
+
+            @Override
+            public void error( @Nonnull String message, @Nonnull Throwable throwable )
+            {
+
+            }
+
+            @Override
+            public void error( @Nonnull String format, @Nullable Object... arguments )
+            {
+
+            }
+
+            @Override
+            public void bulk( @Nonnull Consumer<Log> consumer )
+            {
+
+            }
+
+            private static class MyCustomLogger implements Logger
+            {
+                @Override
+                public void log( @Nonnull String message )
+                {
+
+                }
+
+                @Override
+                public void log( @Nonnull String message, @Nonnull Throwable throwable )
+                {
+
+                }
+
+                @Override
+                public void log( @Nonnull String format, @Nullable Object... arguments )
+                {
+
+                }
+
+                @Override
+                public void bulk( @Nonnull Consumer<Logger> consumer )
+                {
+
+                }
+            }
         }
     }
 
