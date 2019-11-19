@@ -9,7 +9,7 @@ Cypher is inspired by a number of different approaches and builds on established
 Many of the keywords, such as `WHERE` and `ORDER BY`, are inspired by http://en.wikipedia.org/wiki/SQL[SQL].
 Pattern matching borrows expression approaches from http://en.wikipedia.org/wiki/SPARQL[SPARQL].
 Some of the list semantics are borrowed from languages such as Haskell and Python.
-Cypher's constructs, based on English prose and neat iconography, make queries easy both to write, and to read.
+Cypher's constructs, based on English prose and neat iconography, make queries easy, both to write and to read.
 
 **Structure**
 
@@ -19,9 +19,9 @@ Clauses are chained together, and they feed intermediate result sets between eac
 For example, the matching variables from one `MATCH` clause will be the context that the next clause exists in.
 
 The query language is comprised of several distinct clauses.
-You can read more details about them later in the manual.
+These are discussed in more detail in the chapter on <<query-clause, Clauses>>.
 
-Here are a few clauses used to read from the graph:
+The following are a few examples of clauses used to read from the graph:
 
 * `MATCH`: The graph pattern to match.
   This is the most common way to get data from the graph.
@@ -35,11 +35,10 @@ Let's see `MATCH` and `RETURN` in action.
 
 include::intro-examples.asciidoc[]
 
-And here are examples of clauses that are used to update the graph:
+And these are examples of clauses that are used to update the graph:
 
 * `CREATE` (and `DELETE`): Create (and delete) nodes and relationships.
 
 * `SET` (and `REMOVE`): Set values to properties and add labels on nodes using `SET` and use `REMOVE` to remove them.
 
 * `MERGE`: Match existing or create new nodes and patterns. This is especially useful together with unique constraints.
-
