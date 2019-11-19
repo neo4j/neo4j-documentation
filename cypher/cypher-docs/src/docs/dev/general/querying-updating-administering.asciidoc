@@ -67,7 +67,7 @@ You can chain together as many query parts as the available memory permits.
 
 Any query can return data.
 If a query only reads, it has to return data.
-If it doesn't return any data, it serves no purpose, and is therefore not a valid Cypher query.
+If a read-query doesn't return any data, it serves no purpose, and is therefore not a valid Cypher query.
 Queries that update the graph don't have to return anything, but they can.
 
 After all the parts of the query comes one final `RETURN` clause.
