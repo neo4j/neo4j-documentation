@@ -97,7 +97,7 @@ With native indexes, however, we can leverage the fact that indexes store the pr
 In this case, it means that the names can be looked up directly from the index.
 This allows Cypher to avoid the second call to the database to find the property, which can save time on very large queries.
 
-If we profile the above query, we see that the `NodeIndexScan` in the `Variables` column contains `cached[p.name]`,
+If we profile the above query, we see that the `NodeIndexScan` in the `Variables` column contains `cache[p.name]`,
 which means that `p.name` is retrieved from the index.
 We can also see that the `Projection` has no `DB Hits`, which means it does not have to access the database again.
 
@@ -110,7 +110,7 @@ RETURN p.name, count(m)
 
 //profile
 
-If we change the query, such that it can no longer use an index, we will see that there will be no `cached[p.name]` in the Variables, and that the
+If we change the query, such that it can no longer use an index, we will see that there will be no `cache[p.name]` in the Variables, and that the
 `Projection` now has `DB Hits`, since it accesses the database again to retrieve the name.
 
 [source, cypher]
@@ -130,12 +130,32 @@ In indexes with mixed values, only those values that cannot be looked up from th
 
 Predicates that can be used to enable this optimization are:
 
-* Existance (`WHERE exists(n.name)`)
+* Existence (`WHERE exists(n.name)`)
 * Equality (e.g. `WHERE n.name = 'Tom Hanks'`)
 * Range (eg. `WHERE n.uid > 1000 AND n.uid < 2000`)
 * Prefix (eg. `WHERE n.name STARTS WITH 'Tom'`)
 * Suffix (eg. `WHERE n.name ENDS WITH 'Hanks'`)
 * Substring (eg. `WHERE n.name CONTAINS 'a'`)
+* Several predicates of the above types with `OR` in between them, given that all of them are on the same property (eg. `WHERE n.prop < 10 OR n.prop = 'infinity'` )
+
+If there is an existence constraint (e.g. `CREATE CONSTRAINT constraint_name ON (p:Person) ASSERT exists(p.name)`) on the property, no predicate is required to trigger the optimization.
+
+==== Index-backed property-lookup for aggregating functions
+
+For all <<query-functions-aggregating, built-in aggregating functions>> in Cypher, the _index-backed property-lookup_ optimization can be used even without a predicate.
+Consider this query which returns the number of distinct names of people in the movies dataset:
+
+[source, cypher]
+----
+PROFILE
+MATCH (p:Person)
+RETURN count(DISTINCT p.name) AS numberOfNames
+----
+
+//profile
+
+Note that the `NodeIndexScan` in the `Variables` column contains `cache[p.name]` and that the `EagerAggregation` has no `DB Hits`.
+In this case, the semantics of aggregating functions works like an implicit existence constraint because `Person` nodes without the property `name` will not affect the result of an aggregation.
 
 === Index-backed order by
 
@@ -187,7 +207,52 @@ RETURN p.name, count(m) ORDER BY p.name
 
 We also see that the `Order` column contains `p.name ASC` from the index seek operation, meaning that the rows are ordered by `p.name` in ascending order.
 
+Even if sorting is needed, like in the first example, the Cypher planner can utilize the knowledge about the _required order_ after each operator to move the `Sort` operator to a place with less cardinality.
+
 _Index-backed order by_ can also be used for queries that expect their results is descending order, but with slightly lower performance.
+
+==== Indexed-backed order by for min and max
+
+For the `min` and `max` functions, the _index-backed order by_ optimization can be used to avoid aggregation and instead utilize the fact that the minimum/maximum value is the first/last one in a sorted index.
+Consider the following query which returns the fist actor in alphabetical order:
+
+[source, cypher]
+----
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WHERE p.name STARTS WITH ''
+RETURN min(p.name) AS name
+----
+
+//table
+
+To demonstrate the effect of _index-backed order by_, let’s remove the String prefix predicate so that Cypher no longer knows the type of the property, and replace it with an existence predicate.
+Now the database can no longer guarantee the order. If we profile the query we will see the `EagerAggregation` operation:
+
+[source, cypher]
+----
+PROFILE
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie) USING INDEX p:Person(name) WHERE exists(p.name)
+RETURN min(p.name) AS name
+----
+
+//profile
+
+Now if we add back the predicate that gives us the property type information, we will see that the `EagerAggregation` operation gets replaced by `Projection` followed by `Limit` followed by `Optional`:
+
+[source, cypher]
+----
+PROFILE
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WHERE p.name STARTS WITH ''
+RETURN min(p.name) AS name
+----
+
+//profile
+
+In the first case, all nodes in the index are scanned to find the name that is first in alphabetic order.
+In the second case, we will simply pick the first value from the index.
+This is reflected by the `total database access` decreasing.
+For large datasets, this can improve performance dramatically.
+
+_Index-backed order by_ can also be used for corresponding queries with the `max` function, but with slightly lower performance.
 
 ==== Restrictions
 
@@ -202,4 +267,7 @@ Predicates that can be used to enable this optimization are:
 
 Predicates that will not work:
 
+* Several predicates with `OR` in between them because the property type might differ between the predicates
 * Existence (eg. `WHERE exists(n.email)`) because no property type information is given
+
+An existence constraint does not include any type information either and will thus not be enough to trigger _index-backed order by_.
