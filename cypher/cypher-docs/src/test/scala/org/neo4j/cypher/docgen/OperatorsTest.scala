@@ -475,7 +475,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
       section("Using `IN` for more complex list membership operations", "syntax-using-in-for-more-complex-list-membership-operations") {
         p(
           """The general rule is that the `IN` operator will evaluate to `true` if the list given as the right-hand operand contains an element which has the same _type and contents (or value)_ as the left-hand operand.
-            |Lists are only comparable to other lists, and elements of a list `l` are compared pairwise in ascending order from the first element in `l` to the last element in `l`.""".stripMargin)
+            |Lists are only comparable to other lists, and elements of a list `innerList` are compared pairwise in ascending order from the first element in `innerList` to the last element in `innerList`.""".stripMargin)
         p("""The following query checks whether or not the list `[2, 1]` is an element of the list `[1, [2, 1], 3]`:""".stripMargin)
         query(
           """RETURN [2, 1] IN [1, [2, 1], 3] AS inList""".stripMargin, ResultAssertions((r) => {
@@ -497,11 +497,11 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           resultTable()
         }
         p(
-          """The following query can be used to ascertain whether or not a list `l~lhs~` -- obtained from, say, the <<functions-labels, labels()>> function -- contains at least one element that is also present in another list `l~rhs~`:""".stripMargin)
+          """The following query can be used to ascertain whether or not a list -- obtained from, say, the <<functions-labels, labels()>> function -- contains at least one element that is also present in another list:""".stripMargin)
         p("""[source, cypher]
             |----
             |MATCH (n)
-            |WHERE size([l IN labels(n) WHERE l IN ['Person', 'Employee'] | 1]) > 0
+            |WHERE size([label IN labels(n) WHERE label IN ['Person', 'Employee'] | 1]) > 0
             |RETURN count(n)
             |----
             |""")
