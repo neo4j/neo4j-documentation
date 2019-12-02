@@ -25,6 +25,8 @@ To read more about the execution plan operators mentioned in this chapter, see <
 * <<how-do-i-profile-a-query,Profiling a query>>
 * <<cypherdoc-basic-query-tuning-example,Basic query tuning example>>
 * <<cypher-index-values-order,Index Values and Order>>
+** <<cypher-ibob-index-values, Index-backed property-lookup>>
+** <<cypher-ibob-index-order, Index-backed order by>>
 * <<query-using,Planner hints and the `USING` keyword>>
 ** <<query-using-introduction,Introduction>>
 ** <<query-using-index-hint,Index hints>>

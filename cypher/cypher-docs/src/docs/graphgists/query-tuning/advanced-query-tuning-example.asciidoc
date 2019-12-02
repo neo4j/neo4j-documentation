@@ -6,6 +6,14 @@
 This section describes some more subtle optimizations based on new native index capabilities
 --
 
+* <<cypher-index-values-order, Index values and order>>
+** <<cypher-ibob-example, Advanced query tuning example>>
+* <<cypher-ibob-index-values, Index-backed property-lookup>>
+** <<cypher-ibob-index-values-aggregating, Index-backed property-lookup for aggregating functions>>
+* <<cypher-ibob-index-order, Index-backed order by>>
+** <<cypher-ibob-index-order-min-max, Index-backed order by for min() and max()>>
+** <<cypher-ibob-index-order-restrictions, Restrictions for index-backed order by>>
+
 One of the most important and useful ways of optimizing Cypher queries involves creating appropriate indexes.
 This is described in more detail in <<administration-indexes>>, and demonstrated in <<cypherdoc-basic-query-tuning-example>>.
 In summary, an index will be based on the combination of a `Label` and a `property`.
@@ -24,6 +32,7 @@ For information on native index support and upgrade considerations regarding ind
 ====
 
 
+[[cypher-ibob-example]]
 == Advanced query tuning example
 
 In this example we will demonstrate the impact native indexes can have on query performance under certain conditions.
@@ -78,7 +87,8 @@ CALL db.indexes
 
 //table
 
-=== Index-backed property-lookup
+[[cypher-ibob-index-values]]
+== Index-backed property-lookup
 
 Let’s say we want to write a query to find persons with the name 'Tom' that acted in a movie.
 
@@ -136,11 +146,13 @@ Predicates that can be used to enable this optimization are:
 * Prefix (eg. `WHERE n.name STARTS WITH 'Tom'`)
 * Suffix (eg. `WHERE n.name ENDS WITH 'Hanks'`)
 * Substring (eg. `WHERE n.name CONTAINS 'a'`)
-* Several predicates of the above types with `OR` in between them, given that all of them are on the same property (eg. `WHERE n.prop < 10 OR n.prop = 'infinity'` )
+* Several predicates of the above types combined using `OR`, given that all of them are on the same property (eg. `WHERE n.prop < 10 OR n.prop = 'infinity'` )
 
-If there is an existence constraint (e.g. `CREATE CONSTRAINT constraint_name ON (p:Person) ASSERT exists(p.name)`) on the property, no predicate is required to trigger the optimization.
+[NOTE]
+If there is an existence constraint on the property, no predicate is required to trigger the optimization. For example, `CREATE CONSTRAINT constraint_name ON (p:Person) ASSERT exists(p.name)`
 
-==== Index-backed property-lookup for aggregating functions
+[[cypher-ibob-index-values-aggregating]]
+=== Index-backed property-lookup for aggregating functions
 
 For all <<query-functions-aggregating, built-in aggregating functions>> in Cypher, the _index-backed property-lookup_ optimization can be used even without a predicate.
 Consider this query which returns the number of distinct names of people in the movies dataset:
@@ -157,7 +169,8 @@ RETURN count(DISTINCT p.name) AS numberOfNames
 Note that the `NodeIndexScan` in the `Variables` column contains `cache[p.name]` and that the `EagerAggregation` has no `DB Hits`.
 In this case, the semantics of aggregating functions works like an implicit existence constraint because `Person` nodes without the property `name` will not affect the result of an aggregation.
 
-=== Index-backed order by
+[[cypher-ibob-index-order]]
+== Index-backed order by
 
 Now consider the following refinement to the query:
 
@@ -207,11 +220,13 @@ RETURN p.name, count(m) ORDER BY p.name
 
 We also see that the `Order` column contains `p.name ASC` from the index seek operation, meaning that the rows are ordered by `p.name` in ascending order.
 
-Even if sorting is needed, like in the first example, the Cypher planner can utilize the knowledge about the _required order_ after each operator to move the `Sort` operator to a place with less cardinality.
-
 _Index-backed order by_ can also be used for queries that expect their results is descending order, but with slightly lower performance.
 
-==== Indexed-backed order by for min and max
+[NOTE]
+In cases where the Cypher planner is unable to remove the `Sort` operator, like in the first example, the planner can utilize knowledge of _required order_ after each operator to plan the `Sort` operator at a point in the plan with optimal cardinality.
+
+[[cypher-ibob-index-order-min-max]]
+=== Indexed-backed order by for min() and max()
 
 For the `min` and `max` functions, the _index-backed order by_ optimization can be used to avoid aggregation and instead utilize the fact that the minimum/maximum value is the first/last one in a sorted index.
 Consider the following query which returns the fist actor in alphabetical order:
@@ -249,12 +264,13 @@ RETURN min(p.name) AS name
 
 In the first case, all nodes in the index are scanned to find the name that is first in alphabetic order.
 In the second case, we will simply pick the first value from the index.
-This is reflected by the `total database access` decreasing.
+This is reflected in the fact that the `total database access` is lower, indicating a faster query.
 For large datasets, this can improve performance dramatically.
 
 _Index-backed order by_ can also be used for corresponding queries with the `max` function, but with slightly lower performance.
 
-==== Restrictions
+[[cypher-ibob-index-order-restrictions]]
+=== Restrictions for index-backed order by
 
 The optimization can only work on native indexes, and only if we query for a specific type, in order to rule out the spatial type `Point`.
 Predicates that can be used to enable this optimization are:
@@ -267,7 +283,7 @@ Predicates that can be used to enable this optimization are:
 
 Predicates that will not work:
 
-* Several predicates with `OR` in between them because the property type might differ between the predicates
+* Several predicates combined using `OR` because the property type might differ between the predicates
 * Existence (eg. `WHERE exists(n.email)`) because no property type information is given
 
 An existence constraint does not include any type information either and will thus not be enough to trigger _index-backed order by_.
