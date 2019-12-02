@@ -26,8 +26,7 @@ Related information may be found in <<query-operators>>.
 .Please note
 * Functions in Cypher return `null` if an input parameter is `null`.
 * Functions taking a string as input all operate on _Unicode characters_ rather than on a standard `char[]`.
-  For example, `size(s)`, where `s` is a character in the Chinese alphabet, will return *1*.
-
+  For example, the `size()` function applied to any _Unicode character_ will return *1*, even if the character does not fit in the 16 bits of one `char`.
 
 [[header-query-predicates]]
 **<<query-functions-predicate, Predicate functions>>**
