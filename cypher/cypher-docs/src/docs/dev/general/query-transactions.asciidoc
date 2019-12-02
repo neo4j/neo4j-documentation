@@ -3,7 +3,7 @@
 
 [abstract]
 --
-This section describes transactions with a database.
+This section describes how Cypher queries work with database transactions.
 --
 
 All Cypher statements are explicitly run within a transaction.
