@@ -61,15 +61,12 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
 
 Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
-
-[NOTE]
 <<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).
 
-[NOTE]
+
 .Index configuration and limitations
-====
 For information on index configuration and limitations, refer to <<operations-manual#index-configuration, Operations Manual -> Index configuration>>.
-====
+
 
 [NOTE]
 Index creation is not idempotent, but throws when creating the same index twice.
@@ -79,7 +76,7 @@ Index creation is not idempotent, but throws when creating the same index twice.
 
 When created, an index may be given a name. The name needs to be unique among both indexes and constraints.
 If no name is given during creation, a unique name will be generated for the index.
-To drop an index, the preferred way is to drop it by name.
+The unique name is used also when dropping an index.
 
 [[administration-indexes-single-vs-composite-index]]
 === Composite index limitations
