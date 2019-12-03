@@ -1,18 +1,21 @@
-[[cypher-index-values-order]]
-= Index Values and Order
+[[advanced-query-tuning-example]]
+= Advanced query tuning example
 
 [abstract]
 --
 This section describes some more subtle optimizations based on new native index capabilities
 --
 
-* <<cypher-index-values-order, Index values and order>>
-** <<cypher-ibob-example, Advanced query tuning example>>
-* <<cypher-ibob-index-values, Index-backed property-lookup>>
-** <<cypher-ibob-index-values-aggregating, Index-backed property-lookup for aggregating functions>>
-* <<cypher-ibob-index-order, Index-backed order by>>
-** <<cypher-ibob-index-order-min-max, Index-backed order by for min() and max()>>
-** <<cypher-ibob-index-order-restrictions, Restrictions for index-backed order by>>
+* <<advanced-query-tuning-example-introduction, Introduction>>
+* <<advanced-query-tuning-example-data-set, The data set>>
+* <<advanced-query-tuning-example-index-backed-property-lookup, Index-backed property-lookup>>
+** <<advanced-query-tuning-example-index-backed-property-lookup-aggregating-functions, Aggregating functions>>
+* <<advanced-query-tuning-example-index-backed-order-by, Index-backed order by>>
+** <<advanced-query-tuning-example-indexed-backed-order-by-min-and-max, `min()` and `max()` >>
+** <<advanced-query-tuning-example-indexed-backed-order-by-restrictions, Restrictions>>
+
+[[advanced-query-tuning-example-introduction]]
+== Introduction
 
 One of the most important and useful ways of optimizing Cypher queries involves creating appropriate indexes.
 This is described in more detail in <<administration-indexes>>, and demonstrated in <<cypherdoc-basic-query-tuning-example>>.
@@ -32,8 +35,8 @@ For information on native index support and upgrade considerations regarding ind
 ====
 
 
-[[cypher-ibob-example]]
-== Advanced query tuning example
+[[advanced-query-tuning-example-data-set]]
+== The data set
 
 In this example we will demonstrate the impact native indexes can have on query performance under certain conditions.
 We'll use a movies dataset to illustrate this more advanced query tuning.
@@ -87,7 +90,7 @@ CALL db.indexes
 
 //table
 
-[[cypher-ibob-index-values]]
+[[advanced-query-tuning-example-index-backed-property-lookup]]
 == Index-backed property-lookup
 
 Let’s say we want to write a query to find persons with the name 'Tom' that acted in a movie.
@@ -151,8 +154,8 @@ Predicates that can be used to enable this optimization are:
 [NOTE]
 If there is an existence constraint on the property, no predicate is required to trigger the optimization. For example, `CREATE CONSTRAINT constraint_name ON (p:Person) ASSERT exists(p.name)`
 
-[[cypher-ibob-index-values-aggregating]]
-=== Index-backed property-lookup for aggregating functions
+[[advanced-query-tuning-example-index-backed-property-lookup-aggregating-functions]]
+=== Aggregating functions
 
 For all <<query-functions-aggregating, built-in aggregating functions>> in Cypher, the _index-backed property-lookup_ optimization can be used even without a predicate.
 Consider this query which returns the number of distinct names of people in the movies dataset:
@@ -169,7 +172,7 @@ RETURN count(DISTINCT p.name) AS numberOfNames
 Note that the `NodeIndexScan` in the `Variables` column contains `cache[p.name]` and that the `EagerAggregation` has no `DB Hits`.
 In this case, the semantics of aggregating functions works like an implicit existence constraint because `Person` nodes without the property `name` will not affect the result of an aggregation.
 
-[[cypher-ibob-index-order]]
+[[advanced-query-tuning-example-index-backed-order-by]]
 == Index-backed order by
 
 Now consider the following refinement to the query:
@@ -225,8 +228,8 @@ _Index-backed order by_ can also be used for queries that expect their results i
 [NOTE]
 In cases where the Cypher planner is unable to remove the `Sort` operator, like in the first example, the planner can utilize knowledge of _required order_ after each operator to plan the `Sort` operator at a point in the plan with optimal cardinality.
 
-[[cypher-ibob-index-order-min-max]]
-=== Indexed-backed order by for min() and max()
+[[advanced-query-tuning-example-indexed-backed-order-by-min-and-max]]
+=== `min()` and `max()`
 
 For the `min` and `max` functions, the _index-backed order by_ optimization can be used to avoid aggregation and instead utilize the fact that the minimum/maximum value is the first/last one in a sorted index.
 Consider the following query which returns the fist actor in alphabetical order:
@@ -269,8 +272,8 @@ For large datasets, this can improve performance dramatically.
 
 _Index-backed order by_ can also be used for corresponding queries with the `max` function, but with slightly lower performance.
 
-[[cypher-ibob-index-order-restrictions]]
-=== Restrictions for index-backed order by
+[[advanced-query-tuning-example-indexed-backed-order-by-restrictions]]
+=== Restrictions
 
 The optimization can only work on native indexes, and only if we query for a specific type, in order to rule out the spatial type `Point`.
 Predicates that can be used to enable this optimization are:
