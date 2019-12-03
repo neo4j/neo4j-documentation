@@ -80,7 +80,7 @@ public class IntroDocTest implements GraphHolder
             fw.append( "\nFor example, here is a query which finds a user called *'John'* and *'John's'* friends (though not " +
                     "his direct friends) before returning both *'John'* and any friends-of-friends that are found." );
             fw.append( "\n\n" );
-            String query = "MATCH (john {name: 'John'})-[:friend]->()-[:friend]->(fof) RETURN john.name, fof.name ";
+            String query = "MATCH (john {name: 'John'})-[:FRIEND]->()-[:FRIEND]->(fof) RETURN john.name, fof.name ";
             fw.append( AsciiDocGenerator.dumpToSeparateFileWithType( new File( DOCS_TARGET ), "intro.query",
                     createCypherSnippet( query ) ) );
             fw.append( "\nResulting in:\n\n" );
@@ -91,7 +91,7 @@ public class IntroDocTest implements GraphHolder
                     + "in motion:\n\nWe take a list of user names "
                     + "and find all nodes with names from this list, match their friends and return "
                     + "only those followed users who have a *'name'* property starting with *'S'*." );
-            query = "MATCH (user)-[:friend]->(follower) WHERE "
+            query = "MATCH (user)-[:FRIEND]->(follower) WHERE "
                     + "user.name IN ['Joe', 'John', 'Sara', 'Maria', 'Steve'] AND follower.name =~ 'S.*' "
                             + "RETURN user.name, follower.name ";
             fw.append( "\n\n" );
