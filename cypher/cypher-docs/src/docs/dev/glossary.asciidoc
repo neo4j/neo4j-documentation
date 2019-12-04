@@ -298,14 +298,14 @@ All of these commands are only executable against the system database.
 | <<administration-security-roles-grant, GRANT ROLE[S] ... TO>>                                                                                                                     | Privilege administration      | Assigns one or multiple roles to one or multiple users.
 | <<administration-security-administration-database-privileges, GRANT ... ON DATABASE ... TO>>                                                                                      | Privilege administration      | Assigns a database or schema privilege to one or multiple roles.
 | <<administration-security-subgraph-introduction, GRANT ... ON GRAPH ... [NODES \| RELATIONSHIPS \| ELEMENTS] ... TO>>                                                             | Privilege administration      | Assigns a graph privilege for one or multiple specified elements to one or multiple roles.
-| <<tbd, GRANT ... ON DBMS TO>>  | Privilege administration  | Assigns a DBMS privilege to one or multiple roles.
+| <<administration-security-administration-dbms-privileges-role-management, GRANT ... ON DBMS TO>>                                                                                  | Privilege administration      | Assigns a DBMS privilege to one or multiple roles.
 | <<administration-security-administration-database-privileges, DENY ... ON DATABASE ... TO>>                                                                                       | Privilege administration      | Denies a database or schema privilege to one or multiple roles.
 | <<administration-security-subgraph-introduction, DENY ... ON GRAPH ... [NODES \| RELATIONSHIPS \| ELEMENTS] ... TO>>                                                              | Privilege administration      | Denies a graph privilege for one or multiple specified elements to one or multiple roles.
-| <<tbd, DENY ... ON DBMS TO>>  | Privilege administration  | Denies a DBMS privilege to one or multiple roles.
+| <<administration-security-administration-dbms-privileges-role-management, DENY ... ON DBMS TO>>                                                                                   | Privilege administration      | Denies a DBMS privilege to one or multiple roles.
 | <<administration-security-roles-revoke, REVOKE ROLE[S] ... FROM>>                                                                                                                 | Privilege administration      | Removes one or multiple roles from one or multiple users.
 | <<administration-security-administration-database-privileges, REVOKE [GRANT \| DENY] ... ON DATABASE ... FROM>>                                                                   | Privilege administration      | Removes a database or schema privilege from one or multiple roles.
 | <<administration-security-subgraph-revoke, REVOKE [GRANT \| DENY] ... ON GRAPH ... [NODES \| RELATIONSHIPS \| ELEMENTS] ... FROM>>                                                | Privilege administration      | Removes a graph privilege for one or multiple specified elements from one or multiple roles
-| <<tbd, REVOKE [GRANT \| DENY] ... ON DBMS FROM>>  | Privilege administration  | Removes a DBMS privilege from one or multiple roles.
+| <<administration-security-administration-dbms-privileges-role-management, REVOKE [GRANT \| DENY] ... ON DBMS FROM>>                                                               | Privilege administration      | Removes a DBMS privilege from one or multiple roles.
 |===
 
 [[glossary-privileges]]
@@ -332,10 +332,10 @@ All of these commands are only executable against the system database.
 | <<administration-security-subgraph-read, READ>>                                               | GRAPH                 | Determines whether the properties of an element (node, relationship or both) can be read while executing queries on the specified graph.
 | <<administration-security-subgraph-match, MATCH>>                                             | GRAPH                 | Determines whether the properties of an element (node, relationship or both) can be read and the element can be found and traversed while executing queries on the specified graph.
 | <<administration-security-subgraph-write, WRITE>>                                             | GRAPH                 | Determines whether the user can execute write operations on the specified graph.
-| <<tbd, CREATE ROLE>>                                                                          | DBMS                  | Determines whether the user can create new roles.
-| <<tbd, DROP ROLE>>                                                                            | DBMS                  | Determines whether the user can delete roles.
-| <<tbd, ASSIGN ROLE>>                                                                          | DBMS                  | Determines whether the user can grant roles.
-| <<tbd, REMOVE ROLE>>                                                                          | DBMS                  | Determines whether the user can revoke roles.
-| <<tbd, SHOW ROLE>>                                                                            | DBMS                  | Determines whether the user can get information about existing and assigned roles.
-| <<tbd, ROLE MANAGEMENT>>                                                                      | DBMS                  | Determines whether the user can create, drop, grant, revoke and show roles.
+| <<administration-security-administration-dbms-privileges-role-management, CREATE ROLE>>       | DBMS                  | Determines whether the user can create new roles.
+| <<administration-security-administration-dbms-privileges-role-management, DROP ROLE>>         | DBMS                  | Determines whether the user can delete roles.
+| <<administration-security-administration-dbms-privileges-role-management, ASSIGN ROLE>>       | DBMS                  | Determines whether the user can grant roles.
+| <<administration-security-administration-dbms-privileges-role-management, REMOVE ROLE>>       | DBMS                  | Determines whether the user can revoke roles.
+| <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>         | DBMS                  | Determines whether the user can get information about existing and assigned roles.
+| <<administration-security-administration-dbms-privileges-role-management, ROLE MANAGEMENT>>   | DBMS                  | Determines whether the user can create, drop, grant, revoke and show roles.
 |===
