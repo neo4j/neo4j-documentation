@@ -3,10 +3,10 @@
 
 [abstract]
 --
-This section explains how to configure indexes to enhance performance in search, and to support full-text search.
+This section explains how to manage indexes used for search performance as well as for full-text search.
 --
 
-* <<administration-indexes-introduction, Managing Indexes>>
+* <<administration-indexes-introduction, Managing indexes for search performance>>
 ** <<administration-indexes-naming, Named indexes>>
 ** <<administration-indexes-single-vs-composite-index, Composite index limitations>>
 ** <<administration-indexes-create-a-single-property-index, Create a single-property index>>
@@ -17,33 +17,18 @@ This section explains how to configure indexes to enhance performance in search,
 ** <<administration-indexes-drop-a-single-property-index, Drop a single-property index>>
 ** <<administration-indexes-drop-a-composite-index, Drop a composite index>>
 ** <<administration-indexes-drop-an-index-by-name, Drop an index by name>>
-* <<administration-indexes-using-indexes, Using indexes>>
-** <<administration-indexes-equality-check-using-where-single-property-index, Equality check using `WHERE` (single-property index)>>
-** <<administration-indexes-equality-check-using-where-composite-index, Equality check using `WHERE` (composite index)>>
-** <<administration-indexes-range-comparisons-using-where-single-property-index, Range comparisons using `WHERE` (single-property index)>>
-** <<administration-indexes-range-comparisons-using-where-composite-index, Range comparisons using `WHERE` (composite index)>>
-** <<administration-indexes-multiple-range-comparisons-using-where-single-property-index, Use index with `WHERE` using multiple range comparisons (single-property index)>>
-** <<administration-indexes-multiple-range-comparisons-using-where-composite-index, Use index with `WHERE` using multiple range comparisons (composite index)>>
-** <<administration-indexes-list-membership-check-using-in-single-property-index, List membership using `IN` (single-property index)>>
-** <<administration-indexes-list-membership-check-using-in-composite-index, List membership check using `IN` (composite index)>>
-** <<administration-indexes-prefix-search-using-starts-with-single-property-index, Prefix search using `STARTS WITH` (single-property index)>>
-** <<administration-indexes-prefix-search-using-starts-with-composite-index, Prefix search using `STARTS WITH` (composite index)>>
-** <<administration-indexes-suffix-search-using-ends-with-single-property-index, Suffix search using `ENDS WITH` (single-property index)>>
-** <<administration-indexes-suffix-search-using-ends-with-composite-index, Suffix search using `ENDS WITH` (composite index)>>
-** <<administration-indexes-substring-search-using-contains-single-property-index, Substring search using `CONTAINS` (single-property index)>>
-** <<administration-indexes-substring-search-using-contains-composite-index, Substring search using `CONTAINS` (composite index)>>
-** <<administration-indexes-existence-check-using-exists-single-property-index, Existence check using `exists` (single-property index)>>
-** <<administration-indexes-existence-check-using-exists-composite-index, Existence check using `exists` (composite index)>>
-** <<administration-indexes-spatial-distance-searches-single-property-index, Use index when executing a spatial distance search (single-property index)>>
-** <<administration-indexes-spatial-distance-searches-composite-index, Use index when executing a spatial distance search (composite index)>>
-** <<administration-indexes-spatial-bounding-box-searches-single-property-index, Use index when executing a spatial bounding box search (single-property index)>>
-** <<administration-indexes-spatial-bounding-box-searches-composite-index, Use index when executing a spatial bounding box search (composite index)>>
-* <<administration-indexes-fulltext-search, Indexes to support full-text search>>
+* <<administration-indexes-fulltext-search, Managing indexes for full-text search>>
 ** <<administration-indexes-fulltext-search-introduction, Introduction>>
 ** <<administration-indexes-fulltext-search-manage, Procedures to manage full-text indexes>>
 ** <<administration-indexes-fulltext-search-create-and-configure, Create and configure full-text indexes>>
 ** <<administration-indexes-fulltext-search-query, Query full-text indexes>>
 ** <<administration-indexes-fulltext-search-drop, Drop full-text indexes>>
+
+[NOTE]
+This section describes how to manage indexes.
+For query performance purposes, it is important to also understand how the indexes are used by the Cypher planner.
+Refer to <<query-tuning>> for examples and in-depth discussions on how 
+See also <<query-tuning-indexes>> for an extended discussion on the query plans result from different index scenarios.
 
 
 [[administration-indexes-introduction]]
@@ -61,6 +46,7 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
 
 Once an index has been created, it will automatically be managed and kept up to date by the database when the graph is changed.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
+
 <<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).
 
 
@@ -153,47 +139,5 @@ include::drop-a-single-property-index.asciidoc[leveloffset=+1]
 include::drop-a-composite-index.asciidoc[leveloffset=+1]
 
 include::drop-an-index-by-name.asciidoc[leveloffset=+1]
-
-include::using-indexes.asciidoc[]
-
-include::equality-check-using-where-single-property-index.asciidoc[leveloffset=+1]
-
-include::equality-check-using-where-composite-index.asciidoc[leveloffset=+1]
-
-include::range-comparisons-using-where-single-property-index.asciidoc[leveloffset=+1]
-
-include::range-comparisons-using-where-composite-index.asciidoc[leveloffset=+1]
-
-include::multiple-range-comparisons-using-where-single-property-index.asciidoc[leveloffset=+1]
-
-include::multiple-range-comparisons-using-where-composite-index.asciidoc[leveloffset=+1]
-
-include::list-membership-check-using-in-single-property-index.asciidoc[leveloffset=+1]
-
-include::list-membership-check-using-in-composite-index.asciidoc[leveloffset=+1]
-
-include::prefix-search-using-starts-with-single-property-index.asciidoc[leveloffset=+1]
-
-include::prefix-search-using-starts-with-composite-index.asciidoc[leveloffset=+1]
-
-include::suffix-search-using-ends-with-single-property-index.asciidoc[leveloffset=+1]
-
-include::suffix-search-using-ends-with-composite-index.asciidoc[leveloffset=+1]
-
-include::substring-search-using-contains-single-property-index.asciidoc[leveloffset=+1]
-
-include::substring-search-using-contains-composite-index.asciidoc[leveloffset=+1]
-
-include::existence-check-using-exists-single-property-index.asciidoc[leveloffset=+1]
-
-include::existence-check-using-exists-composite-index.asciidoc[leveloffset=+1]
-
-include::spatial-distance-searches-single-property-index.asciidoc[leveloffset=+1]
-
-include::spatial-distance-searches-composite-index.asciidoc[leveloffset=+1]
-
-include::spatial-bounding-box-searches-single-property-index.asciidoc[leveloffset=+1]
-
-include::spatial-bounding-box-searches-composite-index.asciidoc[leveloffset=+1]
 
 include::administration-indexes-fulltext-search.adoc[leveloffset=+1]
