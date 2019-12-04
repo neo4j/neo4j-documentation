@@ -11,47 +11,47 @@ Therefore, it is important to have a fundamental understanding of how the indexe
 This section describes the query plans that result from different index scenarios.
 
 
-Please refer to <<administration-indexes>> for instructions on how to create and maintain the indexes themselves.
+Please refer to <<administration-indexes-search-performance>> for instructions on how to create and maintain the indexes themselves.
 
 
-include::ql/administration/indexes/a-simple-example.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/a-simple-example.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/equality-check-using-where-single-property-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/equality-check-using-where-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/equality-check-using-where-composite-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/equality-check-using-where-composite-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/range-comparisons-using-where-single-property-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/range-comparisons-using-where-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/range-comparisons-using-where-composite-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/range-comparisons-using-where-composite-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/multiple-range-comparisons-using-where-single-property-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/multiple-range-comparisons-using-where-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/multiple-range-comparisons-using-where-composite-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/multiple-range-comparisons-using-where-composite-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/list-membership-check-using-in-single-property-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/list-membership-check-using-in-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/list-membership-check-using-in-composite-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/list-membership-check-using-in-composite-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/prefix-search-using-starts-with-single-property-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/prefix-search-using-starts-with-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/prefix-search-using-starts-with-composite-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/prefix-search-using-starts-with-composite-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/suffix-search-using-ends-with-single-property-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/suffix-search-using-ends-with-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/suffix-search-using-ends-with-composite-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/suffix-search-using-ends-with-composite-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/substring-search-using-contains-single-property-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/substring-search-using-contains-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/substring-search-using-contains-composite-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/substring-search-using-contains-composite-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/existence-check-using-exists-single-property-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/existence-check-using-exists-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/existence-check-using-exists-composite-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/existence-check-using-exists-composite-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/spatial-distance-searches-single-property-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/spatial-distance-searches-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/spatial-distance-searches-composite-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/spatial-distance-searches-composite-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/spatial-bounding-box-searches-single-property-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/spatial-bounding-box-searches-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/spatial-bounding-box-searches-composite-index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/spatial-bounding-box-searches-composite-index.asciidoc[leveloffset=2]

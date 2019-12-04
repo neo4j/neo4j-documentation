@@ -119,7 +119,7 @@ For more information on labels and related topics, see:
 * <<graphdb-neo4j-labels>>
 * <<administration>>
 * <<administration-constraints>>
-* <<administration-indexes>>
+* <<administration-indexes-search-performance>>
 * <<query-using>>
 * <<query-set>>
 * <<query-remove>>

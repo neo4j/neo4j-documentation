@@ -50,7 +50,7 @@ We're using `MERGE` to create nodes that represent countries.
 Using `MERGE` avoids creating duplicate country nodes in the case where multiple movies have been made in the same country.
 
 [IMPORTANT]
-When using `MERGE` or `MATCH` with `LOAD CSV` we need to make sure we have an index (see <<cypher-manual#administration-indexes>>) or a unique constraint (see <<cypher-manual#administration-constraints>>) on the property we're merging.
+When using `MERGE` or `MATCH` with `LOAD CSV` we need to make sure we have an index (see <<cypher-manual#administration-indexes-search-performance>>) or a unique constraint (see <<cypher-manual#administration-constraints>>) on the property we're merging.
 This will ensure the query executes in a performant way.
 
 Before running our query to connect movies and countries we'll create an index for the name property on the `Country` label to ensure the query runs as fast as it can:

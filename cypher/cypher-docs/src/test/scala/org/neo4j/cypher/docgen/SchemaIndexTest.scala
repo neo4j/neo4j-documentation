@@ -54,20 +54,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   override def parent = Some("Administration")
   override def section = "Indexes"
 
+
   @Test def create_index_on_a_label_single_property() {
     testQuery(
       title = "Create a single-property index",
-      text = "An index on a single property for all nodes that have a particular label can be created with `CREATE INDEX FOR (n:Label) ON (n.property)`. " +
-        "Note that the index is not immediately available, but will be created in the background.",
-      queryText = "CREATE INDEX FOR (p:Person) ON (p.surname)",
-      optionalResultExplanation = "",
-      assertions = p => assertIndexesOnLabels( "Person", List(List("location"), List("firstname"), List("surname"), List("highScore")))
-    )
-  }
-
-  @Test def create_named_index_on_a_label_single_property() {
-    testQuery(
-      title = "Create a named single-property index",
       text = "A named index on a single property for all nodes that have a particular label can be created with `CREATE INDEX index_name FOR (n:Label) ON (n.property)`. " +
         "Note that the index is not immediately available, but will be created in the background.",
       queryText = "CREATE INDEX index_name FOR (n:Person) ON (n.surname)",
@@ -79,21 +69,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def create_index_on_a_label_composite_property() {
     testQuery(
       title = "Create a composite index",
-      text = "An index on multiple properties for all nodes that have a particular label -- i.e. a composite index -- can be created with `CREATE INDEX FOR (n:Label) ON (n.prop1, ..., n.propN)`. " +
-      "Only nodes labeled with the specified label and which contain all the properties in the index definition will be added to the index. " +
-      "The following statement will create a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
-      queryText = "CREATE INDEX FOR (p:Person) ON (p.age, p.country)",
-      optionalResultExplanation = "Assume we execute the query `CREATE (a:Person {firstname: 'Bill', age: 34, country: 'USA'}), (b:Person {firstname: 'Sue', age: 39})`. " +
-        "Node `a` has both an `age` and a `country` property, and so it will be added to the composite index. " +
-        "However, as node `b` has no `country` property, it will not be added to the composite index. " +
-        "Note that the composite index is not immediately available, but will be created in the background. ",
-      assertions = (p) => assertIndexesOnLabels( "Person", List(List("firstname"), List("location"), List("highScore"), List("age", "country"), List("location")))
-    )
-  }
-
-  @Test def create_named_index_on_a_label_composite_property() {
-    testQuery(
-      title = "Create a named composite index",
       text = "A named index on multiple properties for all nodes that have a particular label -- i.e. a composite index -- can be created with " +
       "`CREATE INDEX index_name FOR (n:Label) ON (n.prop1, ..., n.propN)`. " +
       "Only nodes labeled with the specified label and which contain all the properties in the index definition will be added to the index. " +
@@ -105,10 +80,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def get_all_indexes() {
+  @Test def list_indexes() {
     prepareAndTestQuery(
-      title = "Get a list of all indexes in the database",
-      text = "Calling the built-in procedure `db.indexes` will list all the indexes in the database, including their names.",
+      title = "List indexes",
+      text = "Calling the built-in procedure `db.indexes` will list all indexes, including their names.",
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "CALL db.indexes",
       optionalResultExplanation = "",
@@ -139,9 +114,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def drop_named_index() {
+  @Test def drop_index() {
     prepareAndTestQuery(
-      title = "Drop an index by name",
+      title = "Drop an index",
       text = "An index on all nodes that have a label and property/properties combination can be dropped using the name with the `DROP INDEX index_name` command.",
       prepare = _ => executePreparationQueries(List("CREATE INDEX index_name FOR (n:Person) ON (n.surname)")),
       queryText = "DROP INDEX index_name",

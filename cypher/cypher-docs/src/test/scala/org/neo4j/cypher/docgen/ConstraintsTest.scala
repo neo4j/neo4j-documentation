@@ -36,20 +36,10 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
 
+
   @Test def create_unique_constraint() {
     testQuery(
       title = "Create a unique constraint",
-      text = "To create a constraint that makes sure that your database will never contain more than one node with a specific " +
-        "label and one property value, use the `IS UNIQUE` syntax.",
-      queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
-      optionalResultExplanation = "",
-      assertions = (p) => assertNodeConstraintExist("Book", "isbn")
-    )
-  }
-
-  @Test def create_named_unique_constraint() {
-    testQuery(
-      title = "Create a named unique constraint",
       text = "When creating a unique constraint, a name can be provided. The constraint ensures that your database " +
         "will never contain more than one node with a specific label and one property value.",
       queryText = "CREATE CONSTRAINT constraint_name ON (book:Book) ASSERT book.isbn IS UNIQUE",
@@ -58,12 +48,12 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def get_all_constraints() {
+  @Test def list_constraints() {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Get a list of all constraints in the database",
-      text = "Calling the built-in procedure `db.constraints` will list all the constraints in the database, including their names.",
+      title = "List constraints",
+      text = "Calling the built-in procedure `db.constraints` will list all constraints, including their names.",
       queryText = "CALL db.constraints",
       optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
@@ -121,7 +111,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
         " the same `isbn`.",
       queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
       optionalResultExplanation = "In this case the constraint can't be created because it is violated by existing " +
-        "data. We may choose to use <<administration-indexes>> instead or remove the offending nodes and then re-apply the " +
+        "data. We may choose to use <<administration-indexes-search-performance>> instead or remove the offending nodes and then re-apply the " +
         "constraint."
     )
   }
@@ -129,16 +119,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   @Test def create_node_property_existence_constraint() {
     testQuery(
       title = "Create a node property existence constraint",
-      text = "To create a constraint that ensures that all nodes with a certain label have a certain property, use the `ASSERT exists(variable.propertyName)` syntax.",
-      queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)",
-      optionalResultExplanation = "",
-      assertions = (p) => assertNodeConstraintExist("Book", "isbn")
-    )
-  }
-
-  @Test def create_named_node_property_existence_constraint() {
-    testQuery(
-      title = "Create a named node property existence constraint",
       text = "When creating a node property existence constraint, a name can be provided. The constraint ensures that all nodes " +
         "with a certain label have a certain property.",
       queryText = "CREATE CONSTRAINT constraint_name ON (book:Book) ASSERT exists(book.isbn)",
@@ -213,16 +193,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   @Test def create_relationship_property_existence_constraint() {
     testQuery(
       title = "Create a relationship property existence constraint",
-      text = "To create a constraint that makes sure that all relationships with a certain type have a certain property, use the `ASSERT exists(variable.propertyName)` syntax.",
-      queryText = "CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)",
-      optionalResultExplanation = "",
-      assertions = (p) => assertRelationshipConstraintExist("LIKED", "day")
-    )
-  }
-
-  @Test def create_named_relationship_property_existence_constraint() {
-    testQuery(
-      title = "Create a named relationship property existence constraint",
       text = "When creating a relationship property existence constraint, a name can be provided. The constraint ensures all relationships " +
         "with a certain type have a certain property.",
       queryText = "CREATE CONSTRAINT constraint_name ON ()-[like:LIKED]-() ASSERT exists(like.day)",
@@ -297,17 +267,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   @Test def create_node_key_constraint() {
     testQuery(
       title = "Create a node key constraint",
-      text = "To create a node key constraint ensuring that all nodes with a particular label have a set of defined properties whose combined value is unique, " +
-        "and all properties in the set are present, use the `ASSERT (variable.propertyName_1, ..., variable.propertyName_n) IS NODE KEY` syntax.",
-      queryText = "CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
-      optionalResultExplanation = "",
-      assertions = (p) => assertNodeKeyConstraintExists("Person", "firstname", "surname")
-    )
-  }
-
-  @Test def create_named_node_key_constraint() {
-    testQuery(
-      title = "Create a named node key constraint",
       text = "When creating a node key constraint, a name can be provided. The constraint ensures that all nodes " +
         "with a particular label have a set of defined properties whose combined value is unique " +
         "and all properties in the set are present.",
@@ -380,11 +339,11 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def drop_named_constraint() {
+  @Test def drop_constraint() {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Drop a constraint by name",
+      title = "Drop a constraint",
       text = "A constraint can be dropped using the name with the `DROP CONSTRAINT constraint_name` command. " +
         "It is the same command for unique property, property existence and node key constraints.",
       queryText = "DROP CONSTRAINT constraint_name",
