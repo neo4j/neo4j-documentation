@@ -43,7 +43,15 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DEFAULT DATABASE", assertDatabaseShown("neo4j")) {
         resultTable()
       }
-      considerations("The `status` of the database is the desired status, and might not necessarily reflect the actual status across all members of a cluster.")
+      note {
+        p(
+          """Note that for failed databases, the `currentStatus` and `requestedStatus` are different.
+            |This often implies an error, but **does not always**.
+            |For example, a database may take a while to transition from `offline` to `online` due to performing recovery.
+            |Or, during normal operation a database's `currentStatus` may be transiently different from its `requestedStatus` due to a necessary automatic process, such as one Neo4j instance copying store files from another.
+            |The possible statuses are `initial`, `online`, `offline`, `store copying` and `unknown`.
+            |""".stripMargin)
+      }
     }
     section("Creating databases", "administration-databases-create-database", "enterprise-edition") {
       p("Databases can be created using `CREATE DATABASE`.")
