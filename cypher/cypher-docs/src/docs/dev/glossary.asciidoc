@@ -12,7 +12,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 * <<glossary-expressions, Expressions>>
 * <<glossary-cypher-query-options, Cypher query options>>
 * <<glossary-admin-commands, Administrative commands>>
-** <<glossary-privileges, Privileges>>
+* <<glossary-privileges, Privilege Actions>>
 
 
 [[glossary-clauses]]
@@ -292,7 +292,7 @@ The following commands are only executable against the `system` database:
 | <<administration-security-users-show, SHOW USERS>>                                                                                                                                | User and role administration  | Returns information about all users.
 | <<administration-security-users-create, CREATE [OR REPLACE] USER ... [IF NOT EXISTS] SET PASSWORD ... [[SET PASSWORD] CHANGE [NOT] REQUIRED] [SET STATUS {ACTIVE \| SUSPENDED}]>> | User and role administration  | Creates a new user and sets the password for the new account. Optionally the account status can also be set and if the user should change the password upon first login.
 | <<administration-security-users-drop, DROP USER ... [IF EXISTS]>>                                                                                                                 | User and role administration  | Deletes a specified user.
-| <<administration-security-users-alter, ALTER USER ... [SET PASSWORD {password [CHANGE [NOT] REQUIRED] | CHANGE [NOT] REQUIRED}] [SET STATUS {ACTIVE | SUSPENDED}]>>               | User and role administration  | Changes a user account. Changes can include setting a new password, setting the account status and enabling that the user should change the password upon next login.
+| <<administration-security-users-alter, ALTER USER ... [SET PASSWORD {password [CHANGE [NOT] REQUIRED] \| CHANGE [NOT] REQUIRED}] [SET STATUS {ACTIVE \| SUSPENDED}]>>               | User and role administration  | Changes a user account. Changes can include setting a new password, setting the account status and enabling that the user should change the password upon next login.
 | <<administration-security-users-alter-password, ALTER CURRENT USER SET PASSWORD FROM ... TO>>                                                                                     | User and role administration  | Change the password of the user that is currently logged in.
 | <<administration-security-roles-grant, GRANT ROLE[S] ... TO>>                                                                                                                     | User and role administration  | Assigns one or multiple roles to one or multiple users.
 | <<administration-security-roles-revoke, REVOKE ROLE[S] ... FROM>>                                                                                                                 | User and role administration  | Removes one or multiple roles from one or multiple users.
@@ -309,7 +309,7 @@ The following commands are only executable against the `system` database:
 |===
 
 [[glossary-privileges]]
-=== Privileges
+== Privilege Actions
 
 [options="header"]
 |===
