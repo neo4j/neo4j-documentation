@@ -24,9 +24,11 @@ To read more about the execution plan operators mentioned in this chapter, see <
 * <<cypher-query-options,Cypher query options>>
 * <<how-do-i-profile-a-query,Profiling a query>>
 * <<cypherdoc-basic-query-tuning-example,Basic query tuning example>>
-* <<cypher-index-values-order,Index Values and Order>>
-** <<cypher-ibob-index-values, Index-backed property-lookup>>
-** <<cypher-ibob-index-order, Index-backed order by>>
+* <<advanced-query-tuning-example, Advanced query tuning example>>
+** <<advanced-query-tuning-example-introduction, Introduction>>
+** <<advanced-query-tuning-example-data-set, The data set>>
+** <<advanced-query-tuning-example-index-backed-property-lookup, Index-backed property-lookup>>
+** <<advanced-query-tuning-example-index-backed-order-by, Index-backed order by>>
 * <<query-using,Planner hints and the `USING` keyword>>
 ** <<query-using-introduction,Introduction>>
 ** <<query-using-index-hint,Index hints>>
@@ -126,6 +128,8 @@ See <<execution-plans>> for a detailed explanation of each of the operators cont
 Being explicit about what types and labels you expect relationships and nodes to have in your query helps Neo4j use the best possible statistical information, which leads to better execution plans.
 This means that when you know that a relationship can only be of a certain type, you should add that to the query.
 The same goes for labels, where declaring labels on both the start and end nodes of a relationship helps Neo4j find the best way to execute the statement.
+
+include::query-tuning-indexes.adoc[leveloffset=+1]
 
 include::../parsed-graphgists/query-tuning/basic-query-tuning-example.asciidoc[leveloffset=+1]
 

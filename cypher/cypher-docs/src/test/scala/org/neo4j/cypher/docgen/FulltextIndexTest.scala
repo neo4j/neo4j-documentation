@@ -12,13 +12,22 @@ class FulltextIndexTest extends DocumentingTest {
     private val awaitIndexesOnline = """call db.awaitIndexes(1000)"""
     private val queryForMatrixNode = """call db.index.fulltext.queryNodes("titlesAndDescriptions", "matrix") yield node, score return node.title, node.description, score"""
     private val createRelationshipFulltextIndexWithConfig = """call db.index.fulltext.createRelationshipIndex("taggedByRelationshipIndex", ["TAGGED_AS"], ["taggedByUser"], {analyzer: "url_or_email", eventually_consistent: "true"})"""
-    doc("Indexes to support full-text search", "administration-indexes-fulltext-search")
+    doc("Indexes for full-text search", "administration-indexes-fulltext-search")
     initQueries(
       createMatrixMovieNode,
       createJacketMovies,
       createTitleAndDescriptionFulltextIndex,
       awaitIndexesOnline)
     synopsis("This section describes how to use full-text indexes, to enable full-text search.")
+    p(
+      """
+        | * <<administration-indexes-fulltext-search-introduction, Introduction>>
+        | * <<administration-indexes-fulltext-search-manage, Procedures to manage full-text indexes>>
+        | * <<administration-indexes-fulltext-search-create-and-configure, Create and configure full-text indexes>>
+        | * <<administration-indexes-fulltext-search-query, Query full-text indexes>>
+        | * <<administration-indexes-fulltext-search-drop, Drop full-text indexes>>
+        |"""
+    )
     section("Introduction", "administration-indexes-fulltext-search-introduction") {
       p(
         """
@@ -53,6 +62,10 @@ class FulltextIndexTest extends DocumentingTest {
           |At first sight, the construction of full-text indexes can seem similar to regular indexes.
           |However there are some things that are interesting to note:
           |In contrast to <<administration-indexes-introduction, btree indexes>>, a full-text index
+          |"""
+      )
+      p(
+        """
           |* can be applied to more than one label.
           |* can be applied to relationship types (one or more).
           |* can be applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-index, _composite index_>>) but with an important difference:

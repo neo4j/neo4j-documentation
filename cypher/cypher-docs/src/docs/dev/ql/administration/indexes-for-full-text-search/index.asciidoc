@@ -1,0 +1,1 @@
+include::../indexes/administration-indexes-fulltext-search.adoc[leveloffset=2]

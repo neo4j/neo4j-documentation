@@ -61,7 +61,7 @@ class OrderByTest extends DocumentingTest {
       p(
         """The performance of Cypher queries using `ORDER BY` on node properties can be influenced by the existence and use of an index for finding the nodes.
           | If the index can provide the nodes in the order requested in the query, Cypher can avoid the use of an expensive `Sort` operation.
-          | Read more about this capability in the section on <<cypher-index-values-order,Index Values and Order>>.
+          | Read more about this capability in <<query-tuning-indexes>>.
         """.stripMargin
       )
       graphViz()
