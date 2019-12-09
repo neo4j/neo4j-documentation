@@ -164,9 +164,9 @@ include::../ql/query-plan/set-labels.asciidoc[]
 
 include::../ql/query-plan/remove-labels.asciidoc[]
 
-include::../ql/query-plan/set-node-property-from-map.asciidoc[]
+include::../ql/query-plan/set-node-properties-from-map.asciidoc[]
 
-include::../ql/query-plan/set-relationship-property-from-map.asciidoc[]
+include::../ql/query-plan/set-relationship-properties-from-map.asciidoc[]
 
 include::../ql/query-plan/set-property.asciidoc[]
 

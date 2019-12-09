@@ -158,9 +158,9 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-select-or-semi-apply, SelectOrSemiApply>>                     | Performs a nested loop. Tests for the presence of a pattern predicate if an expression predicate evaluates to `false`. | | |
 | <<query-plan-semi-apply, SemiApply>>                                       | Performs a nested loop. Tests for the presence of a pattern predicate. | | |
 | <<query-plan-set-labels, SetLabels>>                            | Sets labels on a node. | | Y |
-| <<query-plan-set-node-property-from-map, SetNodePropertyFromMap>>          | Sets properties from a map on a node. | | Y |
+| <<query-plan-set-node-properties-from-map, SetNodePropertiesFromMap>>          | Sets properties from a map on a node. | | Y |
 | <<query-plan-set-property, SetProperty>>          | Sets a property on a node or relationship. | | Y |
-| <<query-plan-set-relationship-property-from-map, SetRelationshipPropertyFromMap>>    | Sets properties from a map on a relationship. | | Y |
+| <<query-plan-set-relationship-properties-from-map, SetRelationshipPropertiesFromMap>>    | Sets properties from a map on a relationship. | | Y |
 | <<query-plan-skip, Skip>>                                                  | Skips 'n' rows from the incoming rows. | | |
 | <<query-plan-sort, Sort>>                                                  | Sorts rows by a provided key. | | | Eager
 | <<query-plan-top, Top>>                                                    | Returns the first 'n' rows sorted by a provided key. | | | Eager
