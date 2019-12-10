@@ -4,15 +4,15 @@
 | Command | Description
 
 | [source, cypher]
-GRANT [CREATE \| DROP] INDEX
-    ON DATABASE name
+GRANT {CREATE \| DROP} INDEX[ES]
+    ON DATABASE[S] {name \| *}
     TO role
-| Enable the role `role` to create or delete indexes on the database `name`
+| Enable the role `role` to create or delete indexes on the database `name` or all databases
 
 | [source, cypher]
-GRANT INDEX MANAGEMENT
-    ON DATABASE name
+GRANT INDEX[ES] [MANAGEMENT]
+    ON DATABASE[S] {name \| *}
     TO role
-| Enable the role `role` to create or delete indexes on the database `name`
+| Enable the role `role` to create and delete indexes on the database `name` or all databases
 
 |===

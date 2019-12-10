@@ -55,7 +55,7 @@ allows indexes to be created on the specified database.
 +
 allows indexes to be deleted on the specified database.
 +
-** `INDEX MANAGEMENT`
+** `INDEX [MANAGEMENT]`
 +
 allows indexes to be created and deleted on the specified database.
 +
@@ -67,7 +67,7 @@ allows constraints to be created on the specified database.
 +
 allows constraints to be deleted on the specified database.
 +
-** `CONSTRAINT MANAGEMENT`
+** `CONSTRAINT [MANAGEMENT]`
 +
 allows constraints to be created and deleted on the specified database.
 +
@@ -83,7 +83,7 @@ allows relationship types to be created so that future relationships can be crea
 +
 allows property names to be created so that nodes and relationships can have properties with these names assigned.
 +
-** `NAME MANAGEMENT`
+** `NAME [MANAGEMENT]`
 +
 allows all of the name management capabilities: node labels, relationship types and property names.
 +
@@ -93,8 +93,9 @@ allows all of the above privileges to be enabled for the specified database.
 +
 * _dbname_
 ** The database to associate the privilege with.
-   Note that if you delete a database and create a new one with the same name, the new one will NOT have any of the privileges specifically assigned to the deleted graph.
-** Multiple databases can be specified, comma-separated.
+   Note that if you delete a database and create a new one with the same name, the new one will NOT have any of the privileges specifically assigned to the deleted database.
+// TODO: currently not true
+//** Multiple databases can be specified, comma-separated.
 ** It can be `+*+` which means all databases.
   Any new databases created after this command will also be associated with these privileges.
 * _role_
