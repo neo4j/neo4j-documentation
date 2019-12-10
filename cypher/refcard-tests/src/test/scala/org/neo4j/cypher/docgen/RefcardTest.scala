@@ -114,7 +114,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
         subscriber)
       subscriber.init(execution)
       DocsExecutionResult(subscriber, txContext)
-    }, KernelTransaction.Type.`implicit`)
+    }, KernelTransaction.Type.IMPLICIT)
     docsResult
   } catch {
     case e: Neo4jException => throw new InternalException(queryText, e)

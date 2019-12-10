@@ -369,7 +369,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
         This transaction is necessary for Core API access in assertion code.
          */
-        val executeTransaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
+        val executeTransaction = db.beginTransaction( Type.IMPLICIT, SecurityContext.AUTH_DISABLED )
         val docsResult = try {
           val context = txContext(executeTransaction)
           val subscriber = new ResultSubscriber(context)
@@ -396,7 +396,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
       case s =>
         val contextFactory = Neo4jTransactionalContextFactory.create( db )
-        val transaction = db.beginTransaction( Type.`implicit`, SecurityContext.AUTH_DISABLED )
+        val transaction = db.beginTransaction( Type.IMPLICIT, SecurityContext.AUTH_DISABLED )
         val parametersValue = ValueUtils.asMapValue(javaValues.asDeepJavaMap(parameters).asInstanceOf[java.util.Map[String, AnyRef]])
         val context = contextFactory.newContext(
           transaction,
@@ -496,7 +496,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   def executePreparationQueries(queries: List[String]) {
     preparationQueries = queries
 
-    graph.withTx( executeQueries(_, queries), Type.`implicit` )
+    graph.withTx( executeQueries(_, queries), Type.IMPLICIT )
   }
 
   private def executeQueries(tx: InternalTransaction, queries: List[String]) {
@@ -574,9 +574,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         case (n: Node, seq: Map[String, Any]) =>
           seq foreach { case (k, v) => n.setProperty(k, v) }
       }
-    }, Type.`explicit` )
+    }, Type.EXPLICIT )
 
-    db.withTx( executeQueries(_, setupConstraintQueries), Type.`explicit` )
+    db.withTx( executeQueries(_, setupConstraintQueries), Type.EXPLICIT )
   }
 
   private def asNodeMap[T: ClassTag](tx:InternalTransaction,  m: Map[String, T]): Map[Node, T] =

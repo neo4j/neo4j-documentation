@@ -348,7 +348,7 @@ class MatchTest extends DocumentingTest {
   }.build()
 
   private def assertAllNodesReturned = ResultAndDbAssertions((p, db) => {
-    val tx = db.beginTransaction(Type.explicit, AnonymousContext.read() )
+    val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read() )
     try {
       val allNodes: List[Node] = tx.getAllNodes.asScala.toList
       allNodes should equal(p.columnAs[Node]("n").toList)
@@ -356,7 +356,7 @@ class MatchTest extends DocumentingTest {
   })
 
   private def assertLabelStats(variable: String, stats: Map[String, Int]) = ResultAndDbAssertions((result, db) => {
-    val tx = db.beginTransaction(Type.explicit, AnonymousContext.read() )
+    val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read() )
     try {
       val nodes = result.columnAs[Node](variable).toList
       val labelStats = nodes.foldLeft(Map[String,Int]()) { (acc, node) =>

@@ -111,7 +111,7 @@ class RestartableDatabase(init: RunnableInitialization)
       case Some((name, password)) => authManager.login(AuthToken.newBasicAuthToken(name, password))
       case _ => AUTH_DISABLED
     }
-    graph.beginTransaction(Type.`implicit`, loginContext)
+    graph.beginTransaction(Type.IMPLICIT, loginContext)
   }
 
   def executeWithParams(tx: InternalTransaction, q: String, params: (String, Any)*): DocsExecutionResult = {
