@@ -269,7 +269,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
   }.build()
 
   private def assertAllNodesShown(label: String, column: String) = ResultAndDbAssertions((p, db) => {
-    val tx = db.beginTransaction(Type.explicit, AnonymousContext.read())
+    val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
     try {
       val nodes = tx.findNodes(Label.label(label)).asScala.toList
       // TODO: Remove this conditional once we have system graph initialization working OK
@@ -285,7 +285,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
   })
 
   private def assertRolesShown(expected: Seq[String] = List.empty) = ResultAndDbAssertions((p, db) => {
-    val tx = db.beginTransaction(Type.explicit, AnonymousContext.read())
+    val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
     try {
       val result = p.columnAs[String]("role").toList
       result should equal(expected)

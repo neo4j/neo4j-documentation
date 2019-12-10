@@ -1,7 +1,7 @@
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.{DocBuilder, Document, DocumentingTest, QueryStatisticsTestSupport, ResultAndDbAssertions, ResultAssertions}
-import org.neo4j.graphdb.{Label, Node}
+import org.neo4j.cypher.docgen.tooling._
+import org.neo4j.graphdb.Label
 import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.api.security.AnonymousContext
 
@@ -115,7 +115,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
   }.build()
 
   private def assertDatabasesShown = ResultAndDbAssertions((p, db) => {
-    val tx = db.beginTransaction(Type.explicit, AnonymousContext.read())
+    val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
     try {
       val dbNodes = tx.findNodes(Label.label("Database")).asScala.toList
       val dbNames = dbNodes.map(n => n.getProperty("name"))
@@ -127,7 +127,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
   })
 
   private def assertDatabaseShown(expected: String) = ResultAndDbAssertions((p, db) => {
-    val tx = db.beginTransaction(Type.explicit, AnonymousContext.read())
+    val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
     try {
       val result = p.columnAs[String]("name").toList
       result should equal(List(expected))
