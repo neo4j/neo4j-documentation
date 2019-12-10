@@ -74,7 +74,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `MATCH (n)-[x:A\|:B\|:C]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[x:A\|B\|C]-() RETURN n`
 | `MATCH (n)-[x:A\|:B\|:C*]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[x:A\|B\|C*]-() RETURN n`
 | <<java-reference#extending-neo4j-aggregation-functions, User-defined aggregation functions>> | Functionality | Added |
-| <<administration-indexes-introduction, Composite indexes>> | Index | Added |
+| <<administration-indexes-search-performance, Composite indexes>> | Index | Added |
 | <<administration-constraints-node-key, Node Key>> | Index | Added | Neo4j Enterprise Edition only
 | `CYPHER runtime=compiled` (Compiled runtime) | Functionality | Added | Neo4j Enterprise Edition only
 | <<functions-reverse-list,reverse()>> | Function  | Extended | Now also allows a list as input

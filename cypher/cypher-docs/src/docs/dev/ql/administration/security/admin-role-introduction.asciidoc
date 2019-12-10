@@ -3,7 +3,7 @@ These include the rights to perform the following classes of tasks:
 
 * Manage <<administration-security-administration-database-privileges, database security>> for controlling the rights to perform actions on specific databases:
 ** Manage access to a database and the right to start and stop a database
-** Manage <<administration-indexes, indexes>> and <<administration-constraints, constraints>>
+** Manage <<administration-indexes-search-performance, indexes>> and <<administration-constraints, constraints>>
 ** Allow the creation of labels, relationship types or property names
 * Manage <<administration-security-administration-dbms-privileges, DBMS security>> for controlling the rights to perform actions on the entire system:
 ** Manage <<administration-databases, multiple databases>>

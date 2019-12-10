@@ -101,6 +101,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {
           statsOnlyResultTable()
         }
+        note(p(
+          """When altering a user it is only necessary to specify the changes required.
+            |For example, leaving out any `STATUS` change part of the query will leave that unchanged.""".stripMargin))
         p("The changes to the user will appear on the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
           resultTable()
