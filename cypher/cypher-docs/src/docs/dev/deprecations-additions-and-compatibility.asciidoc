@@ -7,117 +7,24 @@ Cypher is a language that is constantly evolving.
 New features get added to the language continuously, and occasionally, some features become deprecated and are subsequently removed.
 --
 
-* <<cypher-deprecations-additions-removals, Removals, deprecations, additions and extensions>>
- ** <<cypher-deprecations-additions-removals-3.0, Version 3.0>>
- ** <<cypher-deprecations-additions-removals-3.1, Version 3.1>>
- ** <<cypher-deprecations-additions-removals-3.2, Version 3.2>>
- ** <<cypher-deprecations-additions-removals-3.3, Version 3.3>>
- ** <<cypher-deprecations-additions-removals-3.4, Version 3.4>>
- ** <<cypher-deprecations-additions-removals-3.5, Version 3.5>>
- ** <<cypher-deprecations-additions-removals-4.0, Version 4.0>>
+* <<cypher-deprecations-additions-removals, Removals, deprecations, additions, and extensions>>
+** <<cypher-deprecations-additions-removals-4.0, Version 4.0>>
+** <<cypher-deprecations-additions-removals-3.5, Version 3.5>>
+** <<cypher-deprecations-additions-removals-3.4, Version 3.4>>
+** <<cypher-deprecations-additions-removals-3.3, Version 3.3>>
+** <<cypher-deprecations-additions-removals-3.2, Version 3.2>>
+** <<cypher-deprecations-additions-removals-3.1, Version 3.1>>
+** <<cypher-deprecations-additions-removals-3.0, Version 3.0>>
 * <<cypher-compatibility, Compatibility>>
 * <<cypher-versions, Supported language versions>>
 
 
 [[cypher-deprecations-additions-removals]]
-== Removals, deprecations, additions and extensions
+== Removals, deprecations, additions, and extensions
 
-The following tables lists all the features which have been removed, deprecated, added or extended in Cypher.
+The following tables list all of the features which have been removed, deprecated, added, or extended in Cypher.
 Replacement syntax for deprecated and removed features are also indicated.
 
-
-[[cypher-deprecations-additions-removals-3.0]]
-=== Version 3.0
-[options="header"]
-|===
-| Feature          | Type | Change | Details
-| `has()`  | Function  | Removed | Replaced by <<functions-exists, exists()>>
-| `str()`  | Function  | Removed | Replaced by <<functions-tostring, toString()>>
-| `+{parameter}+` | Syntax | Deprecated | Replaced by <<cypher-parameters, $parameter>>
-| <<functions-properties, properties()>>  | Function  | Added  |
-| <<query-call,CALL [\...YIELD]>>   | Clause  | Added  |
-| <<functions-point-cartesian-2d,point() - Cartesian 2D>> | Function | Added |
-| <<functions-point-wgs84-2d,point() - WGS 84 2D>> | Function | Added |
-| <<functions-distance,distance()>> | Function | Added |
-| <<java-reference#extending-neo4j-procedures, User-defined procedures>> | Functionality | Added |
-| <<functions-tostring, toString()>>   | Function  | Extended | Now also allows Boolean values as input
-|===
-
-
-[[cypher-deprecations-additions-removals-3.1]]
-=== Version 3.1
-[options="header"]
-|===
-| Feature          | Type | Change | Details
-| `rels()`   | Function  | Deprecated | Replaced by <<functions-relationships, relationships()>>
-| `toInt()`   | Function  | Deprecated | Replaced by <<functions-tointeger, toInteger()>>
-| `lower()`   | Function  | Deprecated | Replaced by <<functions-tolower, toLower()>>
-| `upper()`   | Function  | Deprecated | Replaced by <<functions-toupper, toUpper()>>
-| <<functions-toboolean,toBoolean()>> | Function | Added |
-| <<cypher-map-projection, Map projection>> | Syntax | Added |
-| <<cypher-pattern-comprehension, Pattern comprehension>> | Syntax | Added |
-| <<java-reference#extending-neo4j-functions, User-defined functions>> | Functionality | Added |
-| <<query-call, CALL\...YIELD\...WHERE>>   | Clause  | Extended  | Records returned by `YIELD` may be filtered further using `WHERE`
-|===
-
-
-[[cypher-deprecations-additions-removals-3.2]]
-=== Version 3.2
-[options="header"]
-|===
-| Feature          | Type | Change | Details
-| `CYPHER planner=rule` (Rule planner)    | Functionality | Removed | All queries now use the cost planner. Any query prepended thus will fall back to using Cypher 3.1.
-| `CREATE UNIQUE`     | Clause | Removed | Running such queries will fall back to using Cypher 3.1 (and use the rule planner)
-| `START`     | Clause | Removed | Running such queries will fall back to using Cypher 3.1 (and use the rule planner)
-| `MATCH (n)-[rs*]-() RETURN rs`     | Syntax | Deprecated | Replaced by `MATCH p=(n)-[*]-() RETURN relationships(p) AS rs`
-| `MATCH (n)-[:A\|:B\|:C {foo: 'bar'}]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[:A\|B\|C {foo: 'bar'}]-() RETURN n`
-| `MATCH (n)-[x:A\|:B\|:C]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[x:A\|B\|C]-() RETURN n`
-| `MATCH (n)-[x:A\|:B\|:C*]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[x:A\|B\|C*]-() RETURN n`
-| <<java-reference#extending-neo4j-aggregation-functions, User-defined aggregation functions>> | Functionality | Added |
-| <<administration-indexes-search-performance, Composite indexes>> | Index | Added |
-| <<administration-constraints-node-key, Node Key>> | Index | Added | Neo4j Enterprise Edition only
-| `CYPHER runtime=compiled` (Compiled runtime) | Functionality | Added | Neo4j Enterprise Edition only
-| <<functions-reverse-list,reverse()>> | Function  | Extended | Now also allows a list as input
-| <<functions-max, max()>>, <<functions-min, min()>> | Function  | Extended | Now also supports aggregation over a set containing both strings and numbers
-|===
-
-
-[[cypher-deprecations-additions-removals-3.3]]
-=== Version 3.3
-[options="header"]
-|===
-| Feature          | Type | Change | Details
-| `START`          | Clause | Removed | As in Cypher 3.2, any queries using the `START` clause will revert back to Cypher 3.1 `planner=rule`.
-However, there are link:https://neo4j.com/docs/cypher-manual/3.5/schema/index/#explicit-indexes-procedures[built-in procedures for Neo4j versions 3.3 to 3.5] for accessing explicit indexes. The procedures will enable users to use the current version of Cypher and the cost planner together with these indexes.
-An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*')`.
-| `CYPHER runtime=slotted` (Faster interpreted runtime) | Functionality | Added | Neo4j Enterprise Edition only
-| <<functions-max, max()>>, <<functions-min, min()>> | Function  | Extended | Now also supports aggregation over sets containing lists of strings and/or numbers, as well as over sets containing strings, numbers, and lists of strings and/or numbers
-|===
-
-[[cypher-deprecations-additions-removals-3.4]]
-=== Version 3.4
-[options="header"]
-|===
-| Feature          | Type | Change | Details
-| <<cypher-spatial, Spatial point types>> | Functionality | Amendment | A point -- irrespective of which Coordinate Reference System is used -- can be stored as a property and is able to be backed by an index. Prior to this, a point was a virtual property only.
-| <<functions-point-cartesian-3d, point() - Cartesian 3D>> | Function | Added |
-| <<functions-point-wgs84-3d, point() - WGS 84 3D>> | Function | Added |
-| <<functions-randomuuid, randomUUID()>> | Function | Added |
-| <<cypher-temporal, Temporal types>>  | Functionality | Added | Supports storing, indexing and working with the following temporal types: Date, Time, LocalTime, DateTime, LocalDateTime and Duration.
-| <<query-functions-temporal, Temporal functions>>  | Functionality | Added | Functions allowing for the creation and manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.
-| <<query-operators-temporal, Temporal operators>>  | Functionality | Added | Operators allowing for the manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.
-|  <<functions-tostring, toString()>>   | Function  | Extended | Now also allows temporal values as input (i.e. values of type _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ or _Duration_).
-|===
-
-[[cypher-deprecations-additions-removals-3.5]]
-=== Version 3.5
-[options="header"]
-|===
-| Feature     | Type | Change | Details
-| `CYPHER runtime=compiled` (Compiled runtime)    | Functionality | Deprecated | The compiled runtime will be discontinued in the next major release. It might still be used for default queries in order to not cause regressions, but explicitly requesting it will not be possible.
-| `extract()` | Function  | Deprecated | Replaced by <<cypher-list-comprehension, list comprehension>>
-| `filter()`  | Function  | Deprecated | Replaced by <<cypher-list-comprehension, list comprehension>>
-|===
 
 [[cypher-deprecations-additions-removals-4.0]]
 === Version 4.0
@@ -157,6 +64,103 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 | <<administration-security, Security administration>> | Functionality | Added | New Cypher commands for administering role-based access-control
 | <<administration-security-subgraph, Fine-grained security>> | Functionality | Added | New Cypher commands for administering dbms, database, graph and sub-graph access control
 |===
+
+
+[[cypher-deprecations-additions-removals-3.5]]
+=== Version 3.5
+[options="header"]
+|===
+| Feature     | Type | Change | Details
+| `CYPHER runtime=compiled` (Compiled runtime)    | Functionality | Deprecated | The compiled runtime will be discontinued in the next major release. It might still be used for default queries in order to not cause regressions, but explicitly requesting it will not be possible.
+| `extract()` | Function  | Deprecated | Replaced by <<cypher-list-comprehension, list comprehension>>
+| `filter()`  | Function  | Deprecated | Replaced by <<cypher-list-comprehension, list comprehension>>
+|===
+
+
+[[cypher-deprecations-additions-removals-3.4]]
+=== Version 3.4
+[options="header"]
+|===
+| Feature          | Type | Change | Details
+| <<cypher-spatial, Spatial point types>> | Functionality | Amendment | A point -- irrespective of which Coordinate Reference System is used -- can be stored as a property and is able to be backed by an index. Prior to this, a point was a virtual property only.
+| <<functions-point-cartesian-3d, point() - Cartesian 3D>> | Function | Added |
+| <<functions-point-wgs84-3d, point() - WGS 84 3D>> | Function | Added |
+| <<functions-randomuuid, randomUUID()>> | Function | Added |
+| <<cypher-temporal, Temporal types>>  | Functionality | Added | Supports storing, indexing and working with the following temporal types: Date, Time, LocalTime, DateTime, LocalDateTime and Duration.
+| <<query-functions-temporal, Temporal functions>>  | Functionality | Added | Functions allowing for the creation and manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.
+| <<query-operators-temporal, Temporal operators>>  | Functionality | Added | Operators allowing for the manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.
+|  <<functions-tostring, toString()>>   | Function  | Extended | Now also allows temporal values as input (i.e. values of type _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ or _Duration_).
+|===
+
+
+[[cypher-deprecations-additions-removals-3.3]]
+=== Version 3.3
+[options="header"]
+|===
+| Feature          | Type | Change | Details
+| `START`          | Clause | Removed | As in Cypher 3.2, any queries using the `START` clause will revert back to Cypher 3.1 `planner=rule`.
+However, there are link:https://neo4j.com/docs/cypher-manual/3.5/schema/index/#explicit-indexes-procedures[built-in procedures for Neo4j versions 3.3 to 3.5] for accessing explicit indexes. The procedures will enable users to use the current version of Cypher and the cost planner together with these indexes.
+An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*')`.
+| `CYPHER runtime=slotted` (Faster interpreted runtime) | Functionality | Added | Neo4j Enterprise Edition only
+| <<functions-max, max()>>, <<functions-min, min()>> | Function  | Extended | Now also supports aggregation over sets containing lists of strings and/or numbers, as well as over sets containing strings, numbers, and lists of strings and/or numbers
+|===
+
+
+[[cypher-deprecations-additions-removals-3.2]]
+=== Version 3.2
+[options="header"]
+|===
+| Feature          | Type | Change | Details
+| `CYPHER planner=rule` (Rule planner)    | Functionality | Removed | All queries now use the cost planner. Any query prepended thus will fall back to using Cypher 3.1.
+| `CREATE UNIQUE`     | Clause | Removed | Running such queries will fall back to using Cypher 3.1 (and use the rule planner)
+| `START`     | Clause | Removed | Running such queries will fall back to using Cypher 3.1 (and use the rule planner)
+| `MATCH (n)-[rs*]-() RETURN rs`     | Syntax | Deprecated | Replaced by `MATCH p=(n)-[*]-() RETURN relationships(p) AS rs`
+| `MATCH (n)-[:A\|:B\|:C {foo: 'bar'}]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[:A\|B\|C {foo: 'bar'}]-() RETURN n`
+| `MATCH (n)-[x:A\|:B\|:C]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[x:A\|B\|C]-() RETURN n`
+| `MATCH (n)-[x:A\|:B\|:C*]-() RETURN n`     | Syntax | Deprecated | Replaced by `MATCH (n)-[x:A\|B\|C*]-() RETURN n`
+| <<java-reference#extending-neo4j-aggregation-functions, User-defined aggregation functions>> | Functionality | Added |
+| <<administration-indexes-search-performance, Composite indexes>> | Index | Added |
+| <<administration-constraints-node-key, Node Key>> | Index | Added | Neo4j Enterprise Edition only
+| `CYPHER runtime=compiled` (Compiled runtime) | Functionality | Added | Neo4j Enterprise Edition only
+| <<functions-reverse-list,reverse()>> | Function  | Extended | Now also allows a list as input
+| <<functions-max, max()>>, <<functions-min, min()>> | Function  | Extended | Now also supports aggregation over a set containing both strings and numbers
+|===
+
+
+[[cypher-deprecations-additions-removals-3.1]]
+=== Version 3.1
+[options="header"]
+|===
+| Feature          | Type | Change | Details
+| `rels()`   | Function  | Deprecated | Replaced by <<functions-relationships, relationships()>>
+| `toInt()`   | Function  | Deprecated | Replaced by <<functions-tointeger, toInteger()>>
+| `lower()`   | Function  | Deprecated | Replaced by <<functions-tolower, toLower()>>
+| `upper()`   | Function  | Deprecated | Replaced by <<functions-toupper, toUpper()>>
+| <<functions-toboolean,toBoolean()>> | Function | Added |
+| <<cypher-map-projection, Map projection>> | Syntax | Added |
+| <<cypher-pattern-comprehension, Pattern comprehension>> | Syntax | Added |
+| <<java-reference#extending-neo4j-functions, User-defined functions>> | Functionality | Added |
+| <<query-call, CALL\...YIELD\...WHERE>>   | Clause  | Extended  | Records returned by `YIELD` may be filtered further using `WHERE`
+|===
+
+
+[[cypher-deprecations-additions-removals-3.0]]
+=== Version 3.0
+[options="header"]
+|===
+| Feature          | Type | Change | Details
+| `has()`  | Function  | Removed | Replaced by <<functions-exists, exists()>>
+| `str()`  | Function  | Removed | Replaced by <<functions-tostring, toString()>>
+| `+{parameter}+` | Syntax | Deprecated | Replaced by <<cypher-parameters, $parameter>>
+| <<functions-properties, properties()>>  | Function  | Added  |
+| <<query-call,CALL [\...YIELD]>>   | Clause  | Added  |
+| <<functions-point-cartesian-2d,point() - Cartesian 2D>> | Function | Added |
+| <<functions-point-wgs84-2d,point() - WGS 84 2D>> | Function | Added |
+| <<functions-distance,distance()>> | Function | Added |
+| <<java-reference#extending-neo4j-procedures, User-defined procedures>> | Functionality | Added |
+| <<functions-tostring, toString()>>   | Function  | Extended | Now also allows Boolean values as input
+|===
+
 
 [[cypher-compatibility]]
 == Compatibility
