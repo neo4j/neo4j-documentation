@@ -6,25 +6,25 @@
 | [source, cypher]
 GRANT CREATE NEW [NODE] LABEL[S]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create new labels for nodes in the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create new labels for nodes in the database `name` or all databases
 
 | [source, cypher]
 GRANT CREATE NEW [RELATIONSHIP] TYPE[S]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create new types for relationships in the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create new types for relationships in the database `name` or all databases
 
 | [source, cypher]
 GRANT CREATE NEW [PROPERTY] NAME[S]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create new names for properties in the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create new names for properties in the database `name` or all databases
 
 | [source, cypher]
 GRANT NAME [MANAGEMENT]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create new labels, relationship types and property names in the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create new labels, relationship types and property names in the database `name` or all databases
 
 |===

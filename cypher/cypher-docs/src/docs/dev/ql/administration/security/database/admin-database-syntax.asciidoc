@@ -6,73 +6,67 @@
 | [source, cypher]
 GRANT ACCESS
     ON DATABASE[S] {name \| *}
-    TO role
-| Allow the role `role` to access the database `name` or all databases
-
-| [source, cypher]
-DENY ACCESS
-    ON DATABASE[S] {name \| *}
-    TO role
-| Disallow the role `role` from accessing the database `name` or all databases
+    TO role[, ...]
+| Allow the specified role or roles to access the database `name` or all databases
 
 | [source, cypher]
 GRANT {START \| STOP}
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to start or stop the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to start or stop the database `name` or all databases
 
 | [source, cypher]
 GRANT {CREATE \| DROP} INDEX[ES]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create or delete indexes on the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create or delete indexes on the database `name` or all databases
 
 | [source, cypher]
 GRANT INDEX[ES] [MANAGEMENT]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create and delete indexes on the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create and delete indexes on the database `name` or all databases
 
 | [source, cypher]
 GRANT {CREATE \| DROP} CONSTRAINT[S]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create or delete indexes on the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create or delete indexes on the database `name` or all databases
 
 | [source, cypher]
 GRANT CONSTRAINT[S] [MANAGEMENT]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create and delete constraints on the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create and delete constraints on the database `name` or all databases
 
 | [source, cypher]
 GRANT CREATE NEW [NODE] LABEL[S]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create new labels for nodes in the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create new labels for nodes in the database `name` or all databases
 
 | [source, cypher]
 GRANT CREATE NEW [RELATIONSHIP] TYPE[S]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create new types for relationships in the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create new types for relationships in the database `name` or all databases
 
 | [source, cypher]
 GRANT CREATE NEW [PROPERTY] NAME[S]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create new names for properties in the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create new names for properties in the database `name` or all databases
 
 | [source, cypher]
 GRANT NAME [MANAGEMENT]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to create new labels, relationship types and property names in the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to create new labels, relationship types and property names in the database `name` or all databases
 
 | [source, cypher]
 GRANT ALL [[DATABASE] PRIVILEGES]
     ON DATABASE[S] {name \| *}
-    TO role
-| Enable the role `role` to perform all of the above database actions on the database `name` or all databases
+    TO role[, ...]
+| Enable the specified role or roles to perform all of the above database actions on the database `name` or all databases
 
 |===

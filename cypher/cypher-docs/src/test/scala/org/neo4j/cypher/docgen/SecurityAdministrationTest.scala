@@ -196,7 +196,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("include::database/all-management-syntax.asciidoc[]")
 
         p(
-          """For example, granting the ability to create indexes, constraints, labels, relationship types and property names on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
+          """For example, granting the ability to access, start and stop all databases and create indexes, constraints, labels, relationship types and property names on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
         query("GRANT ALL DATABASE PRIVILEGES ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 4)
         })) {

@@ -3,5 +3,5 @@
 -----
 GRANT ALL [[DATABASE] PRIVILEGES]
     ON DATABASE[S] {name | *}
-    TO role
+    TO role[, ...]
 -----

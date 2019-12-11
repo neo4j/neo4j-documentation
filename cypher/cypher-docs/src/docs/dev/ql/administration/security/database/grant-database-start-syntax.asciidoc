@@ -3,5 +3,5 @@
 -----
 GRANT START
     ON DATABASE[S] {dbname | *}
-    TO role
+    TO role[, ...]
 -----
