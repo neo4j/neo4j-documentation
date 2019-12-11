@@ -1,0 +1,42 @@
+.Role management privileges command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+GRANT CREATE ROLE
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to create new roles
+
+| [source, cypher]
+GRANT DROP ROLE
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to delete roles
+
+| [source, cypher]
+GRANT ASSIGN ROLE
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to assign roles to users
+
+| [source, cypher]
+GRANT REMOVE ROLE
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to remove roles from users
+
+| [source, cypher]
+GRANT SHOW ROLE
+ON DBMS
+TO role[, ...]
+| Enable the specified role or roles to list roles
+
+| [source, cypher]
+GRANT ROLE MANAGEMENT
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to create, delete, assign, remove and list roles
+
+|===

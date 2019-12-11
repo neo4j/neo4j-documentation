@@ -279,6 +279,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
       section("The dbms `ROLE MANAGEMENT` privileges", "administration-security-administration-dbms-privileges-role-management", "enterprise-edition") {
         p("The dbms privileges for role management are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
+        p("include::dbms/role-management-syntax.asciidoc[]")
 
         p("The ability to add roles can be granted via the `CREATE ROLE` privilege. The following query shows an example of this:")
         query("GRANT CREATE ROLE ON DBMS TO roleAdder", ResultAssertions((r) => {
