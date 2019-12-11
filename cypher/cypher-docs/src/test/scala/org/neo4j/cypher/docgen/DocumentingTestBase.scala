@@ -475,6 +475,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   private def dumpToFile(dir: File, writer: PrintWriter, title: String, query: String, returns: String, text: String,
                          result: Either[CypherException, String], consoleData: String, parameters: Map[String, Any]) {
     val testId = niceify(section + " " + title)
+    writer.println(":prewrap!:") // globally disabling wrapping in listings
     writer.println("[[" + testId + "]]")
     if (!noTitle) writer.println("== " + title + " ==")
     writer.println(text)
