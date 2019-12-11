@@ -169,7 +169,7 @@ public class AsciidocHelper
 
     public static String createOutputSnippet( final String output )
     {
-        return "[source]\n----\n" + output + "\n----\n";
+        return "[source, options=\"nowrap\"]\n----\n" + output + "\n----\n";
     }
 
     public static String createQueryResultSnippet( final String output )
