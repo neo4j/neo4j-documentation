@@ -20,10 +20,10 @@ DROP ROLE name [IF EXISTS]
 | Drop (remove) an existing role
 
 | [source, cypher]
-GRANT ROLE name TO user
-| Assign a role to a user
+GRANT ROLE name[, ...] TO user[, ...]
+| Assign one or multiple roles to one or multiple users
 
 | [source, cypher]
-REVOKE ROLE name FROM user
-| Remove a role from a user
+REVOKE ROLE name[, ...] FROM user[, ...]
+| Remove one or multiple roles from one or multiple users
 |===

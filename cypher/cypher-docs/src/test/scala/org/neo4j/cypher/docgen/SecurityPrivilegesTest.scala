@@ -108,7 +108,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     section("The `READ` privilege", "administration-security-subgraph-read", "enterprise-edition") {
       p(
         """Users can be granted the right to do property reads on nodes and relationships using the `GRANT READ` privilege.
-          |It is very important to note that users can only read properties on entities that they is allowed to find in the first place.""".stripMargin)
+          |It is very important to note that users can only read properties on entities that they are allowed to find in the first place.""".stripMargin)
       p("include::grant-read-syntax.asciidoc[]")
 
       p(
