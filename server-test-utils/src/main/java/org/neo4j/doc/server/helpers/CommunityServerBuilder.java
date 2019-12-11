@@ -20,8 +20,6 @@ package org.neo4j.doc.server.helpers;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -44,7 +42,6 @@ import org.neo4j.monitoring.Monitors;
 import org.neo4j.server.CommunityNeoServer;
 import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.server.database.CommunityGraphFactory;
-import org.neo4j.server.preflight.PreFlightTasks;
 import org.neo4j.test.ssl.SelfSignedCertificateFactory;
 
 import static org.neo4j.doc.server.ServerTestUtils.asOneLine;
@@ -58,7 +55,6 @@ public class CommunityServerBuilder
     private String maxThreads = null;
     private String dataDir = null;
     private String restUri = "/db/";
-    private PreFlightTasks preflightTasks;
     private final HashMap<String, String> thirdPartyPackages = new HashMap<>();
     private final Properties arbitraryProperties = new Properties();
 
@@ -164,27 +160,6 @@ public class CommunityServerBuilder
         return this;
     }
 
-    public CommunityServerBuilder withRelativeRestApiUriPath( String uri )
-    {
-        try
-        {
-            URI theUri = new URI( uri );
-            if ( theUri.isAbsolute() )
-            {
-                this.restUri = theUri.getPath();
-            }
-            else
-            {
-                this.restUri = theUri.toString();
-            }
-        }
-        catch ( URISyntaxException e )
-        {
-            throw new RuntimeException( e );
-        }
-        return this;
-    }
-
     public CommunityServerBuilder withThirdPartyJaxRsPackage( String packageName, String mountPoint )
     {
         thirdPartyPackages.put( packageName, mountPoint );
@@ -217,20 +192,7 @@ public class CommunityServerBuilder
 
     protected File buildBefore() throws IOException
     {
-        File configFile = createConfigFiles();
-
-        if ( preflightTasks == null )
-        {
-            preflightTasks = new PreFlightTasks( NullLogProvider.getInstance() )
-            {
-                @Override
-                public boolean run()
-                {
-                    return true;
-                }
-            };
-        }
-        return configFile;
+        return createConfigFiles();
     }
 
     private static class TestCommunityNeoServer extends CommunityNeoServer
