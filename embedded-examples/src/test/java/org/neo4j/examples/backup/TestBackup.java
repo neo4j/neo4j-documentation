@@ -24,6 +24,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
@@ -53,12 +54,29 @@ public class TestBackup
     }
 
     @Test
-    public void fullThenIncremental()
+    public void fullBackup()
     {
         // tag::onlineBackup[]
-        OnlineBackup backup = OnlineBackup.from( "127.0.0.1" );
+        var backup = OnlineBackup.from( "127.0.0.1" );
+
         var backupResult = backup.backup( "neo4j", backupDirectory.toPath() );
         assertTrue( "Should be consistent", backupResult.isConsistent() );
         // end::onlineBackup[]
+    }
+
+    @Test
+    public void backupNonDefaults()
+    {
+        // tag::backupNonDefaults[]
+        var out = new ByteArrayOutputStream();
+        var backup = OnlineBackup.from( "127.0.0.1" )
+                .withFallbackToFullBackup( false )
+                .withConsistencyCheck( true )
+                .withOutputStream( out );
+
+        var backupResult = backup.backup( "neo4j", backupDirectory.toPath() );
+        assertTrue( "Custom output stream should not be empty", out.toByteArray().length > 0 );
+        assertTrue( "Should be consistent", backupResult.isConsistent() );
+        // end::backupNonDefaults[]
     }
 }
