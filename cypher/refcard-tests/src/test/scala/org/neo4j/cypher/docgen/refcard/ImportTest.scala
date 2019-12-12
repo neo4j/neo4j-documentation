@@ -66,6 +66,12 @@ class ImportTest extends RefcardTest with QueryStatisticsTestSupport {
     name match {
       case "created" =>
         assertStats(result, nodesCreated = 4, labelsAdded = 4, propertiesWritten = 8)
+      case "file" =>
+        assertStats(result, nodesCreated = 0, labelsAdded = 0, propertiesWritten = 0)
+        assert(result.toList.size === 1)
+      case "linenumber" =>
+        assertStats(result, nodesCreated = 0, labelsAdded = 0, propertiesWritten = 0)
+        assert(result.toList.size === 4)
     }
   }
 
@@ -111,5 +117,25 @@ CREATE (:Artist {name: line[1], year: toInteger(line[2])})
 ###
 
 Use a different field terminator, not the default which is a comma (with no whitespace around it).
+
+###assertion=file
+//
+
+LOAD CSV FROM
+'%ARTIST%' AS line
+RETURN DISTINCT file()
+###
+
+Returns the absolute path of the file that `LOAD CSV` is processing, returns `null` if called outside of `LOAD CSV` context.
+
+###assertion=linenumber
+//
+
+LOAD CSV FROM
+'%ARTIST%' AS line
+RETURN linenumber()
+###
+
+Returns the line number that `LOAD CSV` is currently processing, returns `null` if called outside of `LOAD CSV` context.
 """
 }
