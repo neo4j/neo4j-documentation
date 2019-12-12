@@ -206,6 +206,11 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       })) {
         statsOnlyResultTable()
       }
+      note {
+        p(
+          """Users with `WRITE` privilege but restricted `TRAVERSE` privileges will not be able to do `DETACH DELETE` in all cases.
+            | See <<operations-manual#detach-delete-restricted-user, Operations Manual -> Fine-grained access control>> for more info.""".stripMargin)
+      }
     }
 
     section("The `REVOKE` command", "administration-security-subgraph-revoke", "enterprise-edition") {
