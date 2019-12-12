@@ -87,17 +87,6 @@ head($list), last($list), tail($list)
 of the list. `tail()` returns all but the first element.
 All return `null` for an empty list.
 
-###assertion=returns-one parameters=value
-MATCH path = (n)-->(m)
-WHERE id(n) = %A% AND id(m) = %B%
-WITH nodes(path) AS list
-RETURN
-
-[x IN list WHERE x.prop <> $value | x.prop]
-###
-
-Combination of filter and extract in a concise notation.
-
 ###assertion=returns-one
 MATCH (n)
 WHERE id(n) = %A%
@@ -119,6 +108,17 @@ RETURN
 ###
 
 A filtered list of the elements where the predicate is `true`.
+
+###assertion=returns-one parameters=value
+MATCH path = (n)-->(m)
+WHERE id(n) = %A% AND id(m) = %B%
+WITH nodes(path) AS list
+RETURN
+
+[x IN list WHERE x.prop <> $value | x.prop]
+###
+
+A list comprehension that filters a list and extracts the value of the expression for each element in that list.
 
 ###assertion=returns-one
 MATCH (n)
