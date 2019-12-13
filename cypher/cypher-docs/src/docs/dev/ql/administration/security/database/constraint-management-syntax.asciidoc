@@ -4,15 +4,15 @@
 | Command | Description
 
 | [source, cypher]
-GRANT [CREATE \| DROP] CONSTRAINT
-    ON DATABASE name
-    TO role
-| Enable the role `role` to create or delete constraints on the database `name`
+GRANT {CREATE \| DROP} CONSTRAINT[S]
+    ON DATABASE[S] {name \| *}
+    TO role[, ...]
+| Enable the specified role or roles to create or delete constraints on the database `name` or all databases
 
 | [source, cypher]
-GRANT CONSTRAINT MANAGEMENT
-    ON DATABASE name
-    TO role
-| Enable the role `role` to create or delete constraints on the database `name`
+GRANT CONSTRAINT[S] [MANAGEMENT]
+    ON DATABASE[S] {name \| *}
+    TO role[, ...]
+| Enable the specified role or roles to create and delete constraints on the database `name` or all databases
 
 |===

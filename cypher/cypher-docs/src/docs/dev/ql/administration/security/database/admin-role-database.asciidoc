@@ -9,24 +9,24 @@ The syntax is:
 | Command | Description
 
 | [source, cypher]
-GRANT database-privilege ON DATABASE dbname TO role
-| Grant a privilege to a role
+GRANT database-privilege ON DATABASE[S] {dbname \| *} TO role[, ...]
+| Grant a privilege to one or multiple roles
 
 | [source, cypher]
-DENY database-privilege ON DATABASE dbname TO role
-| Deny a privilege to a role
+DENY database-privilege ON DATABASE[S] {dbname \| *} TO role[, ...]
+| Deny a privilege to one or multiple roles
 
 | [source, cypher]
-REVOKE GRANT database-privilege ON DATABASE dbname FROM role
-| Revoke a granted privilege from a role
+REVOKE GRANT database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
+| Revoke a granted privilege from one or multiple roles
 
 | [source, cypher]
-REVOKE DENY database-privilege ON DATABASE dbname FROM role
-| Revoke a denied privilege from a role
+REVOKE DENY database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
+| Revoke a denied privilege from one or multiple roles
 
 | [source, cypher]
-REVOKE database-privilege ON DATABASE dbname FROM role
-| Revoke a granted or denied privilege from a role
+REVOKE database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
+| Revoke a granted or denied privilege from one or multiple roles
 |===
 
 [NOTE]
@@ -55,7 +55,7 @@ allows indexes to be created on the specified database.
 +
 allows indexes to be deleted on the specified database.
 +
-** `INDEX MANAGEMENT`
+** `INDEX [MANAGEMENT]`
 +
 allows indexes to be created and deleted on the specified database.
 +
@@ -67,7 +67,7 @@ allows constraints to be created on the specified database.
 +
 allows constraints to be deleted on the specified database.
 +
-** `CONSTRAINT MANAGEMENT`
+** `CONSTRAINT [MANAGEMENT]`
 +
 allows constraints to be created and deleted on the specified database.
 +
@@ -83,7 +83,7 @@ allows relationship types to be created so that future relationships can be crea
 +
 allows property names to be created so that nodes and relationships can have properties with these names assigned.
 +
-** `NAME MANAGEMENT`
+** `NAME [MANAGEMENT]`
 +
 allows all of the name management capabilities: node labels, relationship types and property names.
 +
@@ -93,12 +93,11 @@ allows all of the above privileges to be enabled for the specified database.
 +
 * _dbname_
 ** The database to associate the privilege with.
-   Note that if you delete a database and create a new one with the same name, the new one will NOT have any of the privileges specifically assigned to the deleted graph.
-** Multiple databases can be specified, comma-separated.
+   Note that if you delete a database and create a new one with the same name, the new one will NOT have any of the privileges specifically assigned to the deleted database.
 ** It can be `+*+` which means all databases.
   Any new databases created after this command will also be associated with these privileges.
-* _role_
-** The role or roles to associate the privilege with.
+* _role[, ...]_
+** The role or roles to associate the privilege with, comma-separated.
 
 
 NOTE: It is important to note that using DENY does NOT erase a GRANT command; they both exist.
