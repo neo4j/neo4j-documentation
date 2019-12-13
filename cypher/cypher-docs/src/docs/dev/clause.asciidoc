@@ -59,7 +59,7 @@ These comprise sub-clauses that must operate as part of reading clauses.
 |===
 |Sub-clause                                         | Description
 |<<query-where,WHERE>>                          | Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.
-|<<existential-subqueries, WHERE EXISTS {}>>    | An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
+|<<existential-subqueries, WHERE EXISTS {...}>> | An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
 |<<query-order,ORDER BY [ASC[ENDING] \| DESC[ENDING]]>>                       | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in either ascending (the default) or descending order.
 |<<query-skip,SKIP>>                            | Defines from which row to start including the rows in the output.
 |<<query-limit,LIMIT>>                          | Constrains the number of rows in the output.
@@ -110,7 +110,7 @@ These comprise clauses that both read data from and write data to the database.
 |<<query-merge,MERGE>>                              |   Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
 |--- <<query-merge-on-create-on-match,ON CREATE>>   | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
 |--- <<query-merge-on-create-on-match,ON MATCH>>    | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
-|<<query-call,CALL procedure>>                      | Invokes a procedure deployed in the database and return any results.
+|<<query-call,CALL [...YIELD]>>                      | Invokes a procedure deployed in the database and return any results.
 |===
 
 
@@ -130,7 +130,7 @@ These comprise clauses that both read data from and write data to the database.
 [options="header"]
 |===
 |Clause                             |   Description
-|<<query-call-subquery,CALL {} (subquery)>>  | Evaluates a subquery, typically used for post-union processing or aggregations.
+|<<query-call-subquery,CALL { ... }>>   | Evaluates a subquery, typically used for post-union processing or aggregations.
 |===
 
 [[header-multiple-graphs-clauses]]

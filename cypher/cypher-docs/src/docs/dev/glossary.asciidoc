@@ -21,8 +21,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 [options="header"]
 |===
 |Clause                                     | Category      |   Description
-|<<query-call, CALL procedure>>             | Reading/Writing   | Invoke a procedure deployed in the database.
-|<<query-call-subquery, CALL {} (subquery)>> | Reading/Writing   | Evaluates a subquery, typically used for post-union processing or aggregations.
+|<<query-call, CALL [...YIELD]>>            | Reading/Writing   | Invoke a procedure deployed in the database.
+|<<query-call-subquery, CALL {...}>>        | Reading/Writing   | Evaluates a subquery, typically used for post-union processing or aggregations.
 |<<query-create, CREATE>>                    | Writing     |  Create nodes and relationships.
 |<<administration-constraints-syntax, CREATE CONSTRAINT [existence] ON (n:Label) ASSERT exists(n.property)>>  | Schema   | Create a constraint ensuring that all nodes with a particular label have a certain property.
 |<<administration-constraints-syntax, CREATE CONSTRAINT [node_key] ON (n:Label) ASSERT (n.prop1, ..., n.propN) IS NODE KEY>>  |  Schema | Create a constraint ensuring all nodes with a particular label have all the specified properties and that the combination of property values is unique; i.e. ensures existence and uniqueness.
@@ -58,7 +58,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-using-scan-hint, USING SCAN variable:Label>>              | Hint | Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
 |<<query-with, WITH ... [AS]>>                        | Projecting   |  Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
 |<<query-where, WHERE>>                          | Reading sub-clause | A sub-clause used to add constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause, or to filter the results of a `WITH` clause.
-|<<existential-subqueries, WHERE EXISTS {}>>  | Reading sub-clause | An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
+|<<existential-subqueries, WHERE EXISTS {...}>>  | Reading sub-clause | An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
 |===
 
 
