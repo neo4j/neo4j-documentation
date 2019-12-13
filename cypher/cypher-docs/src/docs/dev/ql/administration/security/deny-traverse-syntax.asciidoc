@@ -2,10 +2,10 @@
 [source, cypher]
 -----
 DENY TRAVERSE
-    ON GRAPH dbname
+    ON GRAPH[S] {name | *}
         [
-           { NODES | RELATIONSHIPS | ELEMENTS }
+           { NODE[S] | RELATIONSHIP[S] | ELEMENT[S] }
            [ { * | labels } ]
         ]
-    TO role
+    TO roles
 -----

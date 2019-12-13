@@ -27,7 +27,7 @@ For examples of the API's used to start and commit transactions, refer to the AP
 
 * For information on using transactions with a Neo4j driver, see the <<driver-manual#driver-sessions-transactions, Neo4j Driver manual -> Sessions and transactions>>.
 * For information on using transactions over the HTTP API, see the <<http-api#http-api-actions, HTTP API documentation -> Using the HTTP API>>.
-* For information on using transactions within the embedded Core API, see the <<java-reference#tutorials-cypher-java, Java Reference -> Executing Cypher queries from Java>>.
+* For information on using transactions within the embedded Core API, see the <<java-reference#cypher-java, Java Reference -> Executing Cypher queries from Java>>.
 
 When writing procedures or using Neo4j embedded, remember that all iterators returned from an execution result should be either fully exhausted or closed.
 This ensures that the resources bound to them are properly released.

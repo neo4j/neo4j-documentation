@@ -28,7 +28,7 @@ import org.neo4j.graphdb.Transaction
 class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "INDEX"
-  override val linkId = "schema/index"
+  override val linkId = "administration/indexes-for-search-performance"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {

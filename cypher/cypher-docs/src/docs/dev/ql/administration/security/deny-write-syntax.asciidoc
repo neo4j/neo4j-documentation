@@ -2,7 +2,7 @@
 [source, cypher]
 -----
 DENY WRITE
-    ON GRAPH dbname
-    [ ELEMENTS * ]
-    TO role
+    ON GRAPH[S] {name | *}
+    [ ELEMENT[S] * ]
+    TO roles
 -----

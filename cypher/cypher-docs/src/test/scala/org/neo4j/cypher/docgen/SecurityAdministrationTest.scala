@@ -58,6 +58,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       p("include::database/admin-role-database.asciidoc[]")
       p("include::database/admin-database-syntax.asciidoc[]")
       p("image::grant-privileges-database.png[title=\"Syntax of GRANT and DENY Database Privileges\"]")
+      // image source: https://docs.google.com/drawings/d/1Zc5eawW58r4CI8e4FeYnA8cwUyIJX-7B4Eecj-qkd_8/edit
       section("The database `ACCESS` privilege", "administration-security-administration-database-access", "enterprise-edition") {
         p(
           """The `ACCESS` privilege can be used to enable the ability to access a database.
@@ -195,7 +196,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("include::database/all-management-syntax.asciidoc[]")
 
         p(
-          """For example, granting the ability to create indexes, constraints, labels, relationship types and property names on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
+          """For example, granting the ability to access, start and stop all databases and create indexes, constraints, labels, relationship types and property names on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
         query("GRANT ALL DATABASE PRIVILEGES ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 4)
         })) {
@@ -278,6 +279,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
       section("The dbms `ROLE MANAGEMENT` privileges", "administration-security-administration-dbms-privileges-role-management", "enterprise-edition") {
         p("The dbms privileges for role management are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
+        p("include::dbms/role-management-syntax.asciidoc[]")
 
         p("The ability to add roles can be granted via the `CREATE ROLE` privilege. The following query shows an example of this:")
         query("GRANT CREATE ROLE ON DBMS TO roleAdder", ResultAssertions((r) => {
