@@ -59,6 +59,7 @@ These comprise sub-clauses that must operate as part of reading clauses.
 |===
 |Sub-clause                                         | Description
 |<<query-where,WHERE>>                          | Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.
+|<<existential-subqueries, WHERE EXISTS {}>>    | An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
 |<<query-order,ORDER BY [ASC[ENDING] \| DESC[ENDING]]>>                       | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in either ascending (the default) or descending order.
 |<<query-skip,SKIP>>                            | Defines from which row to start including the rows in the output.
 |<<query-limit,LIMIT>>                          | Constrains the number of rows in the output.
@@ -129,7 +130,7 @@ These comprise clauses that both read data from and write data to the database.
 [options="header"]
 |===
 |Clause                             |   Description
-|<<query-call-subquery,CALL {} (subquery)>>  | Evaluates a subquery returning values.
+|<<query-call-subquery,CALL {} (subquery)>>  | Evaluates a subquery, typically used for post-union processing or aggregations.
 |===
 
 [[header-multiple-graphs-clauses]]
