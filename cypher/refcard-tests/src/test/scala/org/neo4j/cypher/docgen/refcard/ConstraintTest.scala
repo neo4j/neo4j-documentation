@@ -26,7 +26,7 @@ import org.neo4j.graphdb.Transaction
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "CONSTRAINT"
-  override val linkId = "schema/constraints"
+  override val linkId = "administration/constraints"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
