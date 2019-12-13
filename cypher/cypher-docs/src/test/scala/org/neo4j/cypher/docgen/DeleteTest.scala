@@ -80,6 +80,9 @@ class DeleteTest extends DocumentingTest with QueryStatisticsTestSupport {
         })) {
         resultTable()
       }
+      note {
+        p( """For `DETACH DELETE` for users with restricted security privileges, see <<operations-manual#detach-delete-restricted-user, Operations Manual -> Fine-grained access control>>.""".stripMargin)
+      }
     }
     section("Delete relationships only", "delete-delete-relationships-only") {
       p(
