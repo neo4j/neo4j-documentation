@@ -9,23 +9,23 @@ The syntax is:
 | Command | Description
 
 | [source, cypher]
-GRANT database-privilege ON DATABASE[S] {dbname \| *} TO roles
+GRANT database-privilege ON DATABASE[S] {dbname \| *} TO role[, ...]
 | Grant a privilege to one or multiple roles
 
 | [source, cypher]
-DENY database-privilege ON DATABASE[S] {dbname \| *} TO roles
+DENY database-privilege ON DATABASE[S] {dbname \| *} TO role[, ...]
 | Deny a privilege to one or multiple roles
 
 | [source, cypher]
-REVOKE GRANT database-privilege ON DATABASE[S] {dbname \| *} FROM roles
+REVOKE GRANT database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
 | Revoke a granted privilege from one or multiple roles
 
 | [source, cypher]
-REVOKE DENY database-privilege ON DATABASE[S] {dbname \| *} FROM roles
+REVOKE DENY database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
 | Revoke a denied privilege from one or multiple roles
 
 | [source, cypher]
-REVOKE database-privilege ON DATABASE[S] {dbname \| *} FROM roles
+REVOKE database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
 | Revoke a granted or denied privilege from one or multiple roles
 |===
 
@@ -96,7 +96,7 @@ allows all of the above privileges to be enabled for the specified database.
    Note that if you delete a database and create a new one with the same name, the new one will NOT have any of the privileges specifically assigned to the deleted database.
 ** It can be `+*+` which means all databases.
   Any new databases created after this command will also be associated with these privileges.
-* _roles_
+* _role[, ...]_
 ** The role or roles to associate the privilege with, comma-separated.
 
 
