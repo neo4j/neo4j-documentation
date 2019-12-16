@@ -232,7 +232,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
       }
       section("Assigning roles to users", "administration-security-roles-grant", "enterprise-edition") {
-        p("Users can be give access rights by assigning them roles using `GRANT ROLE`.")
+        p("Users can be given access rights by assigning them roles using `GRANT ROLE`.")
         initQueries("CREATE ROLE myrole")
         query("GRANT ROLE myrole TO jake", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
