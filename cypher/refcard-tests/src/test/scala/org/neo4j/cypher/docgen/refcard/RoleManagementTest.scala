@@ -62,13 +62,21 @@ REVOKE ROLE my_second_role FROM alice
 
 Remove the role `my_second_role` from the user `alice`.
 
-###assertion=show
+###assertion=show-two
+//
+
+SHOW ROLES
+###
+
+List all roles in the system.
+
+###assertion=show-one
 //
 
 SHOW POPULATED ROLES WITH USERS
 ###
 
-List all roles, and their users, that are assigned to users in the system.
+List all roles that are assigned to at least one user in the system and the users assigned to them.
 
 ###assertion=update-one
 //

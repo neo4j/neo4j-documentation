@@ -43,20 +43,19 @@ Grant `traverse` privilege on all nodes and all graphs to the role `my_role`.
 ###assertion=update-one
 //
 
-DENY READ {prop} ON GRAPH foo NODES Label TO my_role
+DENY READ {prop} ON GRAPH foo RELATIONSHIP Type TO my_role
 ###
 
-Deny `read` privilege on property `prop` on all nodes with label `Label` on the graph `foo` to the role `my_role`.
+Deny `read` privilege on property `prop` on all nodes with label `Label` in the graph `foo` to the role `my_role`.
 
-###assertion=update-two
+###assertion=update-four
 //
 
-GRANT MATCH {*} ON GRAPH foo NODES Label TO my_role
+GRANT MATCH {*} ON GRAPH foo ELEMENTS Label TO my_role
 ###
 
-Grant `read` and `traverse` privileges to the role `my_role`.
-Here the `read` privilege is on all properties on all nodes with label `Label` on the graph `foo` and
-the `traverse` privilege on all nodes with label `Label` on the graph `foo`.
+Grant `read` privilege on all properties and `traverse` privilege to the role `my_role`.
+Here both privileges apply to all nodes with label `Label` in the graph `foo`.
 
 ###assertion=update-two
 //

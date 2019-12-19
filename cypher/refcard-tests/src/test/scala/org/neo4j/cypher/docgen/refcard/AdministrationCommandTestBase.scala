@@ -37,12 +37,18 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
       case "update-two" =>
         assertStats(result, systemUpdates = 2)
         assert(result.toList.size === 0)
+      case "update-four" =>
+        assertStats(result, systemUpdates = 4)
+        assert(result.toList.size === 0)
       case "update-ten" =>
         assertStats(result, systemUpdates = 10)
         assert(result.toList.size === 0)
-      case "show" =>
+      case "show-one" =>
         assertStats(result, systemUpdates = 0)
         assert(result.toList.size === 1) // there are no default roles or users, nor is the system or neo4j databases shown
+      case "show-two" =>
+        assertStats(result, systemUpdates = 0)
+        assert(result.toList.size === 2) // there are no default users
       case "show-nothing" =>
         assertStats(result, systemUpdates = 0)
         assert(result.toList.size === 0) // `show default database` finds none due to not listing neo4j

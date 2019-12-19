@@ -49,7 +49,15 @@ Create a user with the username `alice` that needs to change her password on fir
 ALTER USER alice SET PASSWORD $password CHANGE NOT REQUIRED
 ###
 
-(★) Change the password for `alice` and update so that she is not required to change password on next login.
+(★) Change the password for the user `alice` and update so that she is not required to change password on next login.
+
+###assertion=update-one parameters=update
+//
+
+ALTER USER alice SET STATUS SUSPENDED
+###
+
+(★) Change the status for the user `alice` so that she is suspended. Use `SET STATUS ACTIVE` to reactivate `alice`.
 
 ###dontrun
 // Can't be run since we can't log in as a user, and have auth disabled
@@ -59,13 +67,13 @@ ALTER CURRENT USER SET PASSWORD FROM $old TO $new
 
 Change the password for the logged in user and update so that a password change is not required on next login.
 
-###assertion=show
+###assertion=show-one
 //
 
 SHOW USERS
 ###
 
-List all users in the system, if they need to update their password, their status and roles.
+List all users in the system, their status, roles and if they need to change their password.\n
 (★) Status and roles are enterprise only.
 
 ###assertion=update-one

@@ -33,29 +33,29 @@ class ListPrivilegeTest extends AdministrationCommandTestBase {
   def text: String = {
     setup()
     """
-###assertion=show
+###assertion=show-one
 //
 
 SHOW PRIVILEGES
 ###
 
-List all privileges in the system, what privilege it is, what resource and segment its on and which role it is assigned to.
+List all privileges in the system and which roles they are assigned to.
 
-###assertion=show
+###assertion=show-one
 //
 
 SHOW ROLE my_role PRIVILEGES
 ###
 
-List all privileges belonging to the role `my_role`, what privilege it is and what resource and segment its on.
+List all privileges assigned to the role `my_role`.
 
-###assertion=show
+###assertion=show-one
 //
 
 SHOW USER alice PRIVILEGES
 ###
 
-List all privileges belonging to the user `alice`, what privilege it is, what resource and segment its on and which role it is assigned to.
+List all privileges belonging to the user `alice` and which role it is assigned to.
 
 """
   }

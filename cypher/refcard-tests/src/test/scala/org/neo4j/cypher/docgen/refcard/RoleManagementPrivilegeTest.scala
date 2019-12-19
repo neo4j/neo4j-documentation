@@ -77,7 +77,7 @@ Revoke the existing denied privilege to show roles from the role `my_role`.
 GRANT ROLE MANAGEMENT ON DBMS TO my_role
 ###
 
-Grant the privileges to create, delete, assign, remove and show roles to the role `my_role`.
+Grant all the above privileges to manage roles to the role `my_role`.
 
 """
   }

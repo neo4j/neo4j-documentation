@@ -144,9 +144,7 @@ Grant privilege to create labels, relationship types and property keys on all da
 GRANT ALL ON DATABASE baz TO my_role
 ###
 
-Grant all database privileges on the database `baz` to the role `my_role`.
-This means that users with `my_role` can access, start and stop the database as well as
-create and drop indexes and constraints and create labels, relationship types and property keys on the database.
+Grant all database privileges above on the database `baz` to the role `my_role`.
 
 """
   }
