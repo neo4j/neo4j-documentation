@@ -30,13 +30,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.graphdb.config.Setting;
 
-public class ServerTestUtils {
-
-    private ServerTestUtils() {}
+public class WebContainerTestUtils
+{
+    private WebContainerTestUtils() {}
 
     public static File createTempDir() throws IOException {
         return Files.createTempDirectory("neo4j-test").toFile();
@@ -45,6 +46,13 @@ public class ServerTestUtils {
     public static File createTempConfigFile() throws IOException {
         File file = File.createTempFile("neo4j", "conf");
         file.delete();
+        return file;
+    }
+
+    public static File createTempConfigFile( File parentDir )
+    {
+        File file = new File( parentDir, "test-" + new Random().nextInt() + ".properties" );
+        file.deleteOnExit();
         return file;
     }
 

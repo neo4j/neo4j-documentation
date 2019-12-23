@@ -18,51 +18,71 @@
  */
 package org.neo4j.doc.server;
 
-import java.io.IOException;
+import org.apache.commons.lang3.SystemUtils;
 
-import org.neo4j.server.NeoServer;
-import org.neo4j.doc.server.helpers.CommunityServerBuilder;
-import org.neo4j.doc.server.helpers.ServerHelper;
+import java.io.File;
 
-public final class ServerHolder extends Thread
+import org.neo4j.doc.server.helpers.CommunityWebContainerBuilder;
+import org.neo4j.doc.server.helpers.TestWebContainer;
+
+import static org.neo4j.doc.server.helpers.WebContainerHelper.createContainer;
+
+public final class WebContainerHolder extends Thread
 {
     private static AssertionError allocation;
-    private static NeoServer server;
-    private static CommunityServerBuilder builder;
+    private static TestWebContainer testWebContainer;
+    private static CommunityWebContainerBuilder builder;
 
-    static synchronized NeoServer allocate() throws IOException
+    static synchronized TestWebContainer allocate() throws Exception
     {
-        if ( allocation != null ) throw allocation;
-        if ( server == null ) server = startServer();
+        if ( allocation != null )
+        {
+            throw allocation;
+        }
+        if ( testWebContainer == null )
+        {
+            testWebContainer = startServer( SystemUtils.getJavaIoTmpDir() );
+        }
         allocation = new AssertionError( "The server was allocated from here but not released properly" );
-        return server;
+        return testWebContainer;
     }
 
-    static synchronized void release( NeoServer server )
+    static synchronized void release( TestWebContainer server )
     {
-        if ( server == null ) return;
-        if ( server != ServerHolder.server )
+        if ( server == null )
+        {
+            return;
+        }
+        if ( server != WebContainerHolder.testWebContainer )
+        {
             throw new AssertionError( "trying to suspend a server not allocated from here" );
-        if ( allocation == null ) throw new AssertionError( "releasing the server although it is not allocated" );
+        }
+        if ( allocation == null )
+        {
+            throw new AssertionError( "releasing the server although it is not allocated" );
+        }
         allocation = null;
     }
 
     static synchronized void ensureNotRunning()
     {
-        if ( allocation != null ) throw allocation;
+        if ( allocation != null )
+        {
+            throw allocation;
+        }
         shutdown();
     }
 
-    static synchronized void setServerBuilderProperty( String key, String value )
+    static synchronized void setWebContainerBuilderProperty( String key, String value )
     {
         initBuilder();
         builder = builder.withProperty( key, value );
     }
 
-    private static NeoServer startServer() throws IOException
+    private static TestWebContainer startServer( File path ) throws Exception
     {
         initBuilder();
-        return ServerHelper.createNonPersistentServer( builder );
+        return createContainer( builder, path );
     }
 
     private static synchronized void shutdown()
@@ -70,12 +90,15 @@ public final class ServerHolder extends Thread
         allocation = null;
         try
         {
-            if ( server != null ) server.stop();
+            if ( testWebContainer != null )
+            {
+                testWebContainer.shutdown();
+            }
         }
         finally
         {
             builder = null;
-            server = null;
+            testWebContainer = null;
         }
     }
 
@@ -83,7 +106,7 @@ public final class ServerHolder extends Thread
     {
         if ( builder == null )
         {
-            builder = CommunityServerBuilder.server();
+            builder = CommunityWebContainerBuilder.builder();
         }
     }
 
@@ -91,15 +114,5 @@ public final class ServerHolder extends Thread
     public void run()
     {
         shutdown();
-    }
-
-    static
-    {
-        Runtime.getRuntime().addShutdownHook( new ServerHolder() );
-    }
-
-    private ServerHolder()
-    {
-        super( ServerHolder.class.getName() );
     }
 }

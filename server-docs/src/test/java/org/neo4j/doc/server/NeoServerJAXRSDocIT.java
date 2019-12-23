@@ -27,46 +27,46 @@ import org.junit.Test;
 import java.io.File;
 import java.net.URI;
 
-import org.neo4j.doc.server.helpers.CommunityServerBuilder;
+import org.neo4j.doc.server.helpers.CommunityWebContainerBuilder;
 import org.neo4j.doc.server.helpers.FunctionalTestHelper;
-import org.neo4j.doc.server.helpers.ServerHelper;
+import org.neo4j.doc.server.helpers.TestWebContainer;
 import org.neo4j.doc.server.helpers.Transactor;
+import org.neo4j.doc.server.helpers.WebContainerHelper;
 import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RestRequest;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
-import org.neo4j.server.NeoServer;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.doc.server.helpers.FunctionalTestHelper.CLIENT;
 
-public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
+public class NeoServerJAXRSDocIT extends ExclusiveWebContainerTestBase
 {
-    private NeoServer server;
+    private TestWebContainer webContainer;
 
     @Before
     public void cleanTheDatabase()
     {
-        ServerHelper.cleanTheDatabase( server );
+        WebContainerHelper.cleanTheDatabase( webContainer );
     }
 
     @After
     public void stopServer()
     {
-        if ( server != null )
+        if ( webContainer != null )
         {
-            server.stop();
+            webContainer.shutdown();
         }
     }
 
     @Test
     public void shouldMakeJAXRSClassesAvailableViaHTTP() throws Exception
     {
-        CommunityServerBuilder builder = CommunityServerBuilder.server();
-        server = ServerHelper.createNonPersistentServer( builder );
-        FunctionalTestHelper functionalTestHelper = new FunctionalTestHelper( server );
+        CommunityWebContainerBuilder builder = CommunityWebContainerBuilder.builder();
+        webContainer = WebContainerHelper.createContainer( builder, folder );
+        FunctionalTestHelper functionalTestHelper = new FunctionalTestHelper( webContainer );
 
         JaxRsResponse response = new RestRequest().get( functionalTestHelper.baseUri().toASCIIString() );
         assertEquals( 200, response.getStatus() );
@@ -75,22 +75,21 @@ public class NeoServerJAXRSDocIT extends ExclusiveServerTestBase
     @Test
     public void shouldLoadThirdPartyJaxRsClasses() throws Exception
     {
-        server = CommunityServerBuilder.server()
+        webContainer = CommunityWebContainerBuilder.builder()
                 .withThirdPartyJaxRsPackage( "org.dummy.doc.web.service",
                         DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT )
                 .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
                 .build();
-        server.start();
 
-        URI thirdPartyServiceUri = new URI( server.baseUri()
+        URI thirdPartyServiceUri = new URI( webContainer.getBaseUri()
                 .toString() + DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT ).normalize();
         String response = CLIENT.resource( thirdPartyServiceUri.toString() )
                 .get( String.class );
         assertEquals( "hello", response );
 
         // Assert that extensions gets initialized
-        int nodesCreated = createSimpleDatabase( server.getDatabaseService().getDatabase() );
-        thirdPartyServiceUri = new URI( server.baseUri()
+        int nodesCreated = createSimpleDatabase( webContainer.getDefaultDatabase() );
+        thirdPartyServiceUri = new URI( webContainer.getBaseUri()
                 .toString() + DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT + "/inject-test" ).normalize();
         response = CLIENT.resource( thirdPartyServiceUri.toString() )
                 .get( String.class );
