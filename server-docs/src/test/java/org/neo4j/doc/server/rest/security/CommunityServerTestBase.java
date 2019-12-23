@@ -28,10 +28,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
-import org.neo4j.doc.server.ExclusiveServerTestBase;
+import org.neo4j.doc.server.ExclusiveWebContainerTestBase;
 import org.neo4j.doc.server.HTTP;
-import org.neo4j.doc.server.helpers.CommunityServerBuilder;
-import org.neo4j.server.CommunityNeoServer;
+import org.neo4j.doc.server.helpers.TestWebContainer;
 import org.neo4j.server.rest.domain.JsonParseException;
 import org.neo4j.string.UTF8;
 
@@ -40,23 +39,27 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.collection.IsIn.isIn;
 import static org.junit.Assert.assertThat;
 import static org.neo4j.doc.server.HTTP.RawPayload.rawPayload;
+import static org.neo4j.doc.server.helpers.CommunityWebContainerBuilder.builder;
 
-public class CommunityServerTestBase extends ExclusiveServerTestBase
+public class CommunityServerTestBase extends ExclusiveWebContainerTestBase
 {
-    protected CommunityNeoServer server;
+    protected TestWebContainer webContainer;
 
     @After
     public void cleanup()
     {
-        if(server != null) {server.stop();}
+        if ( webContainer != null )
+        {
+            webContainer.shutdown();
+        }
     }
 
     protected void startServer( boolean authEnabled ) throws IOException
     {
-        server = CommunityServerBuilder.server()
+        webContainer = builder()
+                .usingDataDir( folder.getAbsolutePath() )
                 .withProperty( GraphDatabaseSettings.auth_enabled.name(), Boolean.toString( authEnabled ) )
                 .build();
-        server.start();
     }
 
     protected String challengeResponse( String username, String password )
@@ -66,7 +69,7 @@ public class CommunityServerTestBase extends ExclusiveServerTestBase
 
     protected String databaseURL()
     {
-        return server.baseUri().resolve( "db/neo4j/" ).toString();
+        return webContainer.getBaseUri().resolve( "db/neo4j/" ).toString();
     }
 
     protected String base64(String value)
@@ -92,7 +95,7 @@ public class CommunityServerTestBase extends ExclusiveServerTestBase
 
     protected String txCommitURL( String database )
     {
-        return server.baseUri().resolve( txCommitEndpoint( database ) ).toString();
+        return webContainer.getBaseUri().resolve( txCommitEndpoint( database ) ).toString();
     }
 
     void assertPermissionErrorAtSystemAccess( HTTP.Response response ) throws JsonParseException

@@ -24,23 +24,18 @@ import java.net.URI;
 
 import org.neo4j.doc.server.rest.JaxRsResponse;
 import org.neo4j.doc.server.rest.RestRequest;
-import org.neo4j.server.NeoServer;
 
 public final class FunctionalTestHelper
 {
-    private final NeoServer server;
+    private final TestWebContainer container;
 
     public static final Client CLIENT = Client.create();
     private RestRequest request;
 
-    public FunctionalTestHelper( NeoServer server )
+    public FunctionalTestHelper( TestWebContainer container )
     {
-        if ( server.getDatabaseService() == null )
-        {
-            throw new RuntimeException( "Server must be started before using " + getClass().getName() );
-        }
-        this.server = server;
-        this.request = new RestRequest(server.baseUri().resolve("db/neo4j/"));
+        this.container = container;
+        this.request = new RestRequest(container.getBaseUri().resolve("db/neo4j/"));
     }
 
     public JaxRsResponse get(String path) {
@@ -49,6 +44,6 @@ public final class FunctionalTestHelper
 
     public URI baseUri()
     {
-        return server.baseUri();
+        return container.getBaseUri();
     }
 }

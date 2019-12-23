@@ -26,31 +26,33 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.server.CommunityNeoServer;
+import org.neo4j.doc.server.helpers.TestWebContainer;
 import org.neo4j.server.configuration.ServerSettings;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.neo4j.doc.server.helpers.CommunityServerBuilder.server;
+import static org.neo4j.doc.server.helpers.CommunityWebContainerBuilder.builder;
 import static org.neo4j.internal.helpers.collection.MapUtil.map;
 import static org.neo4j.kernel.api.exceptions.Status.Transaction.TransactionNotFound;
 
-public class TransactionTimeoutDocIT extends ExclusiveServerTestBase
+public class TransactionTimeoutDocIT extends ExclusiveWebContainerTestBase
 {
-    private CommunityNeoServer server;
+    private TestWebContainer webContainer;
 
     @After
     public void stopTheServer()
     {
-        server.stop();
+        if ( webContainer != null )
+        {
+            webContainer.shutdown();
+        }
     }
 
     @Test
     public void shouldHonorReallyLowSessionTimeout() throws Exception
     {
         // Given
-        server = server().withProperty( ServerSettings.transaction_idle_timeout.name(), "1" ).build();
-        server.start();
+        webContainer = builder().withProperty( ServerSettings.transaction_idle_timeout.name(), "1" ).usingDataDir( folder.getAbsolutePath() ).build();
 
         String tx = HTTP.POST( txURI(), Collections.singletonList(map("statement", "CREATE (n)"))).location();
 
@@ -66,6 +68,6 @@ public class TransactionTimeoutDocIT extends ExclusiveServerTestBase
 
     private String txURI()
     {
-        return server.baseUri().toString() + "db/neo4j/tx";
+        return webContainer.getBaseUri().toString() + "db/neo4j/tx";
     }
 }

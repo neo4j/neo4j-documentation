@@ -23,14 +23,14 @@ import org.junit.Rule;
 
 import java.util.Map;
 
-import org.neo4j.doc.server.SharedServerTestBase;
+import org.neo4j.doc.server.SharedWebContainerTestBase;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 
-public class AbstractRestFunctionalTestBase extends SharedServerTestBase implements GraphHolder {
+public class AbstractRestFunctionalTestBase extends SharedWebContainerTestBase implements GraphHolder {
 
     @Rule
     public TestData<Map<String,Node>> data = TestData.producedThrough( GraphDescription.createGraphFor( this ) );
@@ -50,15 +50,15 @@ public class AbstractRestFunctionalTestBase extends SharedServerTestBase impleme
 
     @Override
     public GraphDatabaseService graphdb() {
-        return SharedServerTestBase.server().getDatabaseService().getDatabase();
+        return SharedWebContainerTestBase.container().getDefaultDatabase();
     }
 
     protected static String databaseUri() {
-        return "http://localhost:7474/db/neo4j/";
+        return  container().getBaseUri() + "db/neo4j/";
     }
 
     protected String getDatabaseUri() {
-        return "http://localhost:7474/db/";
+        return container().getBaseUri() + "db/";
     }
 
     protected String txUri() {

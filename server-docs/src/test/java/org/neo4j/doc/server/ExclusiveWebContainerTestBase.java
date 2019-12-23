@@ -25,7 +25,7 @@ import org.junit.rules.TestName;
 
 import java.io.File;
 
-public class ExclusiveServerTestBase
+public class ExclusiveWebContainerTestBase
 {
     public File folder = new File( "target/example-db" + System.nanoTime() );
     @Rule
@@ -35,7 +35,7 @@ public class ExclusiveServerTestBase
     public static void ensureServerNotRunning()
     {
         System.setProperty( "org.neo4j.useInsecureCertificateGeneration", "true" );
-        ServerHolder.ensureNotRunning();
+        WebContainerHolder.ensureNotRunning();
     }
 
     private static String txEndpoint( String database )
