@@ -34,11 +34,12 @@ Full-text schema indexes:
 Using this feature, it is possible to work around the slow Lucene writes from the performance critical commit process, thus removing the main bottlenecks for Neo4j write performance.
 
 At first sight, the construction of full-text indexes can seem similar to regular indexes.
-However there are some things that are interesting to note:
-In contrast to <<query-schema-index-introduction, regular indexes>>, a full-text index 
+However there are some things that are interesting to note.
+In contrast to <<query-schema-index-introduction, regular indexes>>, a full-text index:
+
 * can be applied to more than one label.
 * can be applied to relationship types (one or more).
-* can be applied to more than one property at a time (similar to a <<schema-index-create-a-composite-index, _composite index_>>) but with an important difference:
+* can be applied to more than one property at a time (similar to a <<schema-index-create-a-composite-index, _composite index_>>), but with an important difference:
 While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.
 
 For information on how to configure full-text schema indexes, refer to <<operations-manual#index-configuration-fulltext-search,  Operations Manual -> Indexes to support full-text search>>.
@@ -247,5 +248,3 @@ In the following example, we will drop the `taggedByRelationshipIndex` that we c
 ----
 CALL db.index.fulltext.drop("taggedByRelationshipIndex")
 ----
-
-
