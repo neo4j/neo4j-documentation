@@ -23,7 +23,7 @@ import java.io.ByteArrayOutputStream
 
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
-import org.neo4j.cypher.internal.v4_0.util._
+import org.neo4j.cypher.internal.util._
 import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphvizWriter}
 import org.neo4j.walk.Walker
 

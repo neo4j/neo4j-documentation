@@ -19,9 +19,9 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import org.neo4j.cypher.internal.v4_0.parser.Base
-import org.neo4j.cypher.internal.v4_0.parser.Strings
-import org.neo4j.cypher.internal.v4_0.parser.WSChar
+import org.neo4j.cypher.internal.parser.Base
+import org.neo4j.cypher.internal.parser.Strings
+import org.neo4j.cypher.internal.parser.WSChar
 import org.neo4j.exceptions.SyntaxException
 import org.parboiled.scala._
 
