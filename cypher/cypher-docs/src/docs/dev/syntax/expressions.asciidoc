@@ -18,7 +18,7 @@ Notable exceptions are the operators `IS NULL` and `IS NOT NULL`.
 An expression in Cypher can be:
 
 * A decimal (integer or float) literal: `13`, `-40000`, `3.14`, `6.022E23`.
-* A hexadecimal integer literal (starting with `0x`): `0x13zf`, `0xFC3A9`, `-0x66eff`.
+* A hexadecimal integer literal (starting with `0x`): `0x13af`, `0xFC3A9`, `-0x66eff`.
 * An octal integer literal (starting with `0`): `01372`, `02127`, `-05671`.
 * A string literal: `'Hello'`, `"World"`.
 * A boolean literal:  `true`, `false`, `TRUE`, `FALSE`.
