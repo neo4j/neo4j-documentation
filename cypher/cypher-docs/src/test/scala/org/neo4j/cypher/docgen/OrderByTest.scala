@@ -29,7 +29,7 @@ class OrderByTest extends DocumentingTest {
     initQueries(
       """
         |CREATE (a {name: 'A', age: 34, length: 170}),
-        |       (b {name: 'B', age: 34}),
+        |       (b {name: 'B', age: 36}),
         |       (c {name: 'C', age: 32, length: 185}),
         |
         |       (a)-[:KNOWS]->(b),
@@ -43,6 +43,7 @@ class OrderByTest extends DocumentingTest {
         |* <<order-nodes-by-multiple-properties, Order nodes by multiple properties>>
         |* <<order-nodes-in-descending-order, Order nodes in descending order>>
         |* <<order-null, Ordering `null`>>
+        |* <<order-with, Ordering in a `WITH` clause>>
       """.stripMargin)
     section("Introduction", "order-introduction") {
       p(
@@ -64,6 +65,7 @@ class OrderByTest extends DocumentingTest {
           | Read more about this capability in <<query-tuning-indexes>>.
         """.stripMargin
       )
+      p("The following graph is used for the examples below:")
       graphViz()
     }
     
@@ -76,7 +78,7 @@ class OrderByTest extends DocumentingTest {
         """MATCH (n)
           |RETURN n.name, n.age
           |ORDER BY n.name""".stripMargin, ResultAssertions((r) => {
-        r.toList should equal(List(Map("n.name" -> "A", "n.age" -> 34), Map("n.name" -> "B", "n.age" -> 34), Map("n.name" -> "C", "n.age" -> 32)))
+        r.toList should equal(List(Map("n.name" -> "A", "n.age" -> 34), Map("n.name" -> "B", "n.age" -> 36), Map("n.name" -> "C", "n.age" -> 32)))
       })) {
         p("The nodes are returned, sorted by their name.")
         resultTable()
@@ -90,7 +92,7 @@ class OrderByTest extends DocumentingTest {
         """MATCH (n)
           |RETURN n.name, n.age
           |ORDER BY n.age, n.name""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.age" -> 32, "n.name" -> "C"), Map("n.age" -> 34, "n.name" -> "A"), Map("n.age" -> 34, "n.name" -> "B")))
+          r.toList should equal(List(Map("n.age" -> 32, "n.name" -> "C"), Map("n.age" -> 34, "n.name" -> "A"), Map("n.age" -> 36, "n.name" -> "B")))
         })) {
         p("This returns the nodes, sorted first by their age, and then by their name.")
         resultTable()
@@ -103,7 +105,7 @@ class OrderByTest extends DocumentingTest {
         """MATCH (n)
           |RETURN n.name, n.age
           |ORDER BY n.name DESC""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.age" -> 32, "n.name" -> "C"), Map("n.age" -> 34, "n.name" -> "B"), Map("n.age" -> 34, "n.name" -> "A")))
+          r.toList should equal(List(Map("n.age" -> 32, "n.name" -> "C"), Map("n.age" -> 36, "n.name" -> "B"), Map("n.age" -> 34, "n.name" -> "A")))
         })) {
         p("The example returns the nodes, sorted by their name in reverse order.")
         resultTable()
@@ -116,9 +118,24 @@ class OrderByTest extends DocumentingTest {
         """MATCH (n)
           |RETURN n.length, n.name, n.age
           |ORDER BY n.length""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("n.age" -> 34, "n.name" -> "A", "n.length" -> 170), Map("n.age" -> 32, "n.name" -> "C", "n.length" -> 185), Map("n.age" -> 34, "n.name" -> "B", "n.length" -> null)))
+          r.toList should equal(List(Map("n.age" -> 34, "n.name" -> "A", "n.length" -> 170), Map("n.age" -> 32, "n.name" -> "C", "n.length" -> 185), Map("n.age" -> 36, "n.name" -> "B", "n.length" -> null)))
         })) {
         p("The nodes are returned sorted by the length property, with a node without that property last.")
+        resultTable()
+      }
+    }
+    section("Ordering in a `WITH` clause", "order-with") {
+      p(
+        """When specifying `ORDER BY` in a `WITH` clause, the immediate next clause is allowed to rely on that ordering.
+          |This is useful, e.g. when the next clause contains an aggregation which should receive the rows in a particular order.
+          |""".stripMargin)
+      query(
+        """MATCH (n)
+          |WITH n ORDER BY n.age
+          |RETURN collect(n.name) AS names""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("names" -> List("C", "A", "B"))))
+        })) {
+        p("The list of names built from the `collect` aggregation function contains the names in order of the `age` property.")
         resultTable()
       }
     }
