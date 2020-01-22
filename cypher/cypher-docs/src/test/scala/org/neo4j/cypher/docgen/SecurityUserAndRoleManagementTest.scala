@@ -147,8 +147,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
     }
     section("Role Management", "administration-security-roles", "enterprise-edition") {
       initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED",
-        "CREATE USER user1 SET PASSWORD 'abc'", "CREATE USER user2 SET PASSWORD 'abc'", "CREATE USER user3 SET PASSWORD 'abc'",
-        "CREATE ROLE role1", "CREATE ROLE role2")
+        "CREATE USER user1 SET PASSWORD 'abc'", "CREATE USER user2 SET PASSWORD 'abc'", "CREATE USER user3 SET PASSWORD 'abc'")
       p("Roles can be created and managed using a set of Cypher administration commands executed against the `system` database.")
       p("include::role-management-syntax.asciidoc[]")
       section("Listing roles", "administration-security-roles-show", "enterprise-edition") {
@@ -233,7 +232,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       }
       section("Assigning roles to users", "administration-security-roles-grant", "enterprise-edition") {
         p("Users can be given access rights by assigning them roles using `GRANT ROLE`.")
-        initQueries("CREATE ROLE myrole")
+        initQueries("CREATE ROLE myrole", "CREATE ROLE role1", "CREATE ROLE role2")
         query("GRANT ROLE myrole TO jake", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -249,11 +248,16 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {
           statsOnlyResultTable()
         }
+        query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
+          resultTable()
+        }
       }
       section("Revoking roles from users", "administration-security-roles-revoke", "enterprise-edition") {
         p("Users can lose access rights by revoking roles from them using `REVOKE ROLE`.")
+        initQueries("CREATE ROLE myrole", "GRANT ROLE myrole TO jake",
+          "CREATE ROLE role1", "CREATE ROLE role2", "GRANT ROLES role1, role2 TO user1, user2, user3")
         query("REVOKE ROLE myrole FROM jake", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 0)
+          assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
@@ -263,7 +267,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
         p("It is possible to revoke multiple roles from multiple users in one command.")
         query("REVOKE ROLES role1, role2 FROM user1, user2, user3", ResultAssertions(r => {
-          assertStats(r, systemUpdates = 0)
+          assertStats(r, systemUpdates = 6)
         })) {
           statsOnlyResultTable()
         }
