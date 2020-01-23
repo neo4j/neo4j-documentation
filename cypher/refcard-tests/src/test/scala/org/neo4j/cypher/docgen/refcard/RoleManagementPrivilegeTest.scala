@@ -37,7 +37,7 @@ class RoleManagementPrivilegeTest extends AdministrationCommandTestBase {
 GRANT CREATE ROLE ON DBMS TO my_role
 ###
 
-Grant the privilege to create roles to the role `my_role`.
+Grant the privilege to create roles to a role.
 
 ###assertion=update-one
 //
@@ -45,7 +45,7 @@ Grant the privilege to create roles to the role `my_role`.
 GRANT DROP ROLE ON DBMS TO my_role
 ###
 
-Grant the privilege to delete roles to the role `my_role`.
+Grant the privilege to delete roles to a role.
 
 ###assertion=update-one
 //
@@ -53,7 +53,7 @@ Grant the privilege to delete roles to the role `my_role`.
 DENY ASSIGN ROLE ON DBMS TO my_role
 ###
 
-Deny the privilege to assign roles to users to the role `my_role`.
+Deny the privilege to assign roles to users to a role.
 
 ###assertion=update-one
 //
@@ -61,7 +61,7 @@ Deny the privilege to assign roles to users to the role `my_role`.
 DENY REMOVE ROLE ON DBMS TO my_role
 ###
 
-Deny the privilege to remove roles from users to the role `my_role`.
+Deny the privilege to remove roles from users to a role.
 
 ###assertion=update-one
 //
@@ -69,7 +69,7 @@ Deny the privilege to remove roles from users to the role `my_role`.
 REVOKE DENY SHOW ROLE ON DBMS FROM my_role
 ###
 
-Revoke the existing denied privilege to show roles from the role `my_role`.
+Revoke the denied privilege to show roles from a role.
 
 ###assertion=update-one
 //
@@ -77,7 +77,7 @@ Revoke the existing denied privilege to show roles from the role `my_role`.
 GRANT ROLE MANAGEMENT ON DBMS TO my_role
 ###
 
-Grant all the above privileges to manage roles to the role `my_role`.
+Grant all privileges to manage roles to a role.
 
 """
   }

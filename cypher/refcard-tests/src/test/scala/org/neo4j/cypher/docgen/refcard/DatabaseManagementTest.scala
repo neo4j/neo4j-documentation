@@ -31,7 +31,7 @@ class DatabaseManagementTest extends AdministrationCommandTestBase {
 CREATE OR REPLACE DATABASE myDatabase
 ###
 
-(★) Create a database named `myDatabase`. If a database with that name already existed, then the existing database is deleted and a new one created.
+(★) Create a database named `myDatabase`. If a database with that name exists, then the existing database is deleted and a new one created.
 
 ###assertion=update-one
 //
@@ -71,7 +71,7 @@ List information about the database `myDatabase`.
 SHOW DEFAULT DATABASE
 ###
 
-List information about the current default database.
+List information about the default database.
 
 ###assertion=update-one
 //
@@ -79,7 +79,7 @@ List information about the current default database.
 DROP DATABASE myDatabase IF EXISTS
 ###
 
-(★) Delete the database `myDatabase` if it exists.
+(★) Delete the database `myDatabase`, if it exists.
 
 """
 }

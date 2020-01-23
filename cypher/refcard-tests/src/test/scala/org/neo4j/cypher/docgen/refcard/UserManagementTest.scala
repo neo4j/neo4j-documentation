@@ -41,7 +41,7 @@ class UserManagementTest extends AdministrationCommandTestBase {
 CREATE USER alice SET PASSWORD $password
 ###
 
-Create a user with the username `alice` that needs to change her password on first login.
+Create a new user and a password. This password must be changed on the first login.
 
 ###assertion=update-one parameters=update
 //
@@ -49,7 +49,7 @@ Create a user with the username `alice` that needs to change her password on fir
 ALTER USER alice SET PASSWORD $password CHANGE NOT REQUIRED
 ###
 
-(★) Change the password for the user `alice` and update so that she is not required to change password on next login.
+(★) Set a new password for a user. This user will not be required to change this password on the next login.
 
 ###assertion=update-one parameters=update
 //
@@ -57,7 +57,7 @@ ALTER USER alice SET PASSWORD $password CHANGE NOT REQUIRED
 ALTER USER alice SET STATUS SUSPENDED
 ###
 
-(★) Change the status for the user `alice` so that she is suspended. Use `SET STATUS ACTIVE` to reactivate `alice`.
+(★) Change the user status to suspended. Use `SET STATUS ACTIVE` to reactivate the user name.
 
 ###dontrun
 // Can't be run since we can't log in as a user, and have auth disabled
@@ -65,7 +65,7 @@ ALTER USER alice SET STATUS SUSPENDED
 ALTER CURRENT USER SET PASSWORD FROM $old TO $new
 ###
 
-Change the password for the logged in user and update so that a password change is not required on next login.
+Change the password of the logged-in user, and update. The user will not be required to change this password on the next login.
 
 ###assertion=show-one
 //
@@ -73,8 +73,8 @@ Change the password for the logged in user and update so that a password change 
 SHOW USERS
 ###
 
-List all users in the system, their status, roles and if they need to change their password.\n
-(★) Status and roles are enterprise only.
+List all users in the system, their status, roles and if they need to change their password. +
+(★) Status and roles are Enterprise Edition only.
 
 ###assertion=update-one
 //
@@ -82,7 +82,7 @@ List all users in the system, their status, roles and if they need to change the
 DROP USER alice
 ###
 
-Delete the user `alice`.
+Delete the user.
 
 """
 }

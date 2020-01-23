@@ -38,7 +38,7 @@ class GraphPrivilegeTest extends AdministrationCommandTestBase {
 GRANT TRAVERSE ON GRAPH * NODES * TO my_role
 ###
 
-Grant `traverse` privilege on all nodes and all graphs to the role `my_role`.
+Grant `traverse` privilege on all nodes and all graphs to a role.
 
 ###assertion=update-one
 //
@@ -46,7 +46,7 @@ Grant `traverse` privilege on all nodes and all graphs to the role `my_role`.
 DENY READ {prop} ON GRAPH foo RELATIONSHIP Type TO my_role
 ###
 
-Deny `read` privilege on property `prop` on all nodes with label `Label` in the graph `foo` to the role `my_role`.
+Deny `read` privilege on a specified property, on all nodes with label `Label` in the graph `foo`, to the role `my_role`.
 
 ###assertion=update-four
 //
@@ -54,8 +54,8 @@ Deny `read` privilege on property `prop` on all nodes with label `Label` in the 
 GRANT MATCH {*} ON GRAPH foo ELEMENTS Label TO my_role
 ###
 
-Grant `read` privilege on all properties and `traverse` privilege to the role `my_role`.
-Here both privileges apply to all nodes with label `Label` in the graph `foo`.
+Grant `read` privilege on all properties and `traverse` privilege to a role.
+Here, both privileges apply to all nodes with a specified label in the graph.
 
 ###assertion=update-two
 //
@@ -63,7 +63,7 @@ Here both privileges apply to all nodes with label `Label` in the graph `foo`.
 REVOKE WRITE ON GRAPH * FROM my_role
 ###
 
-Revoke `write` privilege on all graphs from the role `my_role`.
+Revoke `write` privilege on all graphs from a role.
 
 """
   }

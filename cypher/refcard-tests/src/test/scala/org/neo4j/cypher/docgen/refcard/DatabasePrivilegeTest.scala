@@ -40,7 +40,7 @@ class DatabasePrivilegeTest extends AdministrationCommandTestBase {
 GRANT ACCESS ON DATABASE * TO my_role
 ###
 
-Grant privilege to access and run queries against all databases to the role `my_role`.
+Grant privilege to access and run queries against all databases to a role.
 
 ###assertion=update-one
 //
@@ -48,7 +48,7 @@ Grant privilege to access and run queries against all databases to the role `my_
 GRANT START ON DATABASE * TO my_role
 ###
 
-Grant privilege to start all databases to the role `my_role`.
+Grant privilege to start all databases to a role.
 
 ###assertion=update-one
 //
@@ -56,7 +56,7 @@ Grant privilege to start all databases to the role `my_role`.
 GRANT STOP ON DATABASE * TO my_role
 ###
 
-Grant privilege to stop all databases to the role `my_role`.
+Grant privilege to stop all databases to a role.
 
 ###assertion=update-one
 //
@@ -64,7 +64,7 @@ Grant privilege to stop all databases to the role `my_role`.
 GRANT CREATE INDEX ON DATABASE foo TO my_role
 ###
 
-Grant privilege to create indexes on the database `foo` to the role `my_role`.
+Grant privilege to create indexes on a specified database to a role.
 
 ###assertion=update-one
 //
@@ -72,7 +72,7 @@ Grant privilege to create indexes on the database `foo` to the role `my_role`.
 GRANT DROP INDEX ON DATABASE foo TO my_role
 ###
 
-Grant privilege to drop indexes on the database `foo` to the role `my_role`.
+Grant privilege to drop indexes on a specified database to a role.
 
 ###assertion=update-two
 //
@@ -80,7 +80,7 @@ Grant privilege to drop indexes on the database `foo` to the role `my_role`.
 DENY INDEX MANAGEMENT ON DATABASE bar TO my_role
 ###
 
-Deny privilege to create and drop indexes on the database `bar` to the role `my_role`.
+Deny privilege to create and drop indexes on a specified database to a role.
 
 ###assertion=update-one
 //
@@ -88,7 +88,7 @@ Deny privilege to create and drop indexes on the database `bar` to the role `my_
 GRANT CREATE CONSTRAINT ON DATABASE * TO my_role
 ###
 
-Grant privilege to create constraints on all databases to the role `my_role`.
+Grant privilege to create constraints on all databases to a role.
 
 ###assertion=update-one
 //
@@ -96,7 +96,7 @@ Grant privilege to create constraints on all databases to the role `my_role`.
 DENY DROP CONSTRAINT ON DATABASE * TO my_role
 ###
 
-Deny privilege to drop constraints on all databases to the role `my_role`.
+Deny privilege to drop constraints on all databases to a role.
 
 ###assertion=update-two
 //
@@ -104,7 +104,7 @@ Deny privilege to drop constraints on all databases to the role `my_role`.
 REVOKE CONSTRAINT ON DATABASE * FROM my_role
 ###
 
-Revoke existing privileges (both granted and denied) to create and drop constraints on all databases from the role `my_role`.
+Revoke granted and denied privileges to create and drop constraints on all databases from a role.
 
 ###assertion=update-one
 //
@@ -112,7 +112,7 @@ Revoke existing privileges (both granted and denied) to create and drop constrai
 GRANT CREATE NEW LABELS ON DATABASE * TO my_role
 ###
 
-Grant privilege to create new labels on all databases to the role `my_role`.
+Grant privilege to create new labels on all databases to a role.
 
 ###assertion=update-one
 //
@@ -120,7 +120,7 @@ Grant privilege to create new labels on all databases to the role `my_role`.
 DENY CREATE NEW TYPES ON DATABASE foo TO my_role
 ###
 
-Deny privilege to create new relationship types on the database `foo` to the role `my_role`.
+Deny privilege to create new relationship types on a specified database to a role.
 
 ###assertion=update-one
 //
@@ -128,7 +128,7 @@ Deny privilege to create new relationship types on the database `foo` to the rol
 REVOKE GRANT CREATE NEW PROPERTY NAMES ON DATABASE bar FROM my_role
 ###
 
-Revoke grant privilege to create new property keys on the database `bar` from the role `my_role`.
+Revoke the grant privilege from a role to create new property names on a specified database.
 
 ###assertion=update-two
 //
@@ -136,7 +136,7 @@ Revoke grant privilege to create new property keys on the database `bar` from th
 GRANT NAME MANAGEMENT ON DATABASE * TO my_role
 ###
 
-Grant privilege to create labels, relationship types and property keys on all databases to the role `my_role`.
+Grant privilege to create labels, relationship types, and property names on all databases to a role.
 
 ###assertion=update-ten
 //
@@ -144,7 +144,7 @@ Grant privilege to create labels, relationship types and property keys on all da
 GRANT ALL ON DATABASE baz TO my_role
 ###
 
-Grant all database privileges above on the database `baz` to the role `my_role`.
+Grant all privileges on a specified database to a role.
 
 """
   }

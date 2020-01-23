@@ -39,7 +39,7 @@ class ListPrivilegeTest extends AdministrationCommandTestBase {
 SHOW PRIVILEGES
 ###
 
-List all privileges in the system and which roles they are assigned to.
+List all privileges in the system, and the roles that they are assigned to.
 
 ###assertion=show-one
 //
@@ -47,7 +47,7 @@ List all privileges in the system and which roles they are assigned to.
 SHOW ROLE my_role PRIVILEGES
 ###
 
-List all privileges assigned to the role `my_role`.
+List all privileges assigned to a role.
 
 ###assertion=show-one
 //
@@ -55,7 +55,7 @@ List all privileges assigned to the role `my_role`.
 SHOW USER alice PRIVILEGES
 ###
 
-List all privileges belonging to the user `alice` and which role it is assigned to.
+List all privileges of a user, and the role that they are assigned to.
 
 """
   }

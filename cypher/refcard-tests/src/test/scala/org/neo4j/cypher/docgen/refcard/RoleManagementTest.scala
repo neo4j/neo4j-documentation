@@ -36,7 +36,7 @@ class RoleManagementTest extends AdministrationCommandTestBase {
 CREATE ROLE my_role
 ###
 
-Create a role named `my_role`.
+Create a role.
 
 ###assertion=update-one
 //
@@ -44,7 +44,7 @@ Create a role named `my_role`.
 CREATE ROLE my_second_role IF NOT EXISTS AS COPY OF my_role
 ###
 
-Create a role named `my_second_role` unless it already exists, as a copy of the existing role `my_role`.
+Create a role named `my_second_role`, unless it already exists, as a copy of the existing `my_role`.
 
 ###assertion=update-two
 //
@@ -52,7 +52,7 @@ Create a role named `my_second_role` unless it already exists, as a copy of the 
 GRANT ROLE my_role, my_second_role TO alice
 ###
 
-Assign the roles `my_role` and `my_second_role` to the user `alice`.
+Assign roles to a user.
 
 ###assertion=update-one
 //
@@ -60,7 +60,7 @@ Assign the roles `my_role` and `my_second_role` to the user `alice`.
 REVOKE ROLE my_second_role FROM alice
 ###
 
-Remove the role `my_second_role` from the user `alice`.
+Remove a specified role from a user.
 
 ###assertion=show-two
 //
@@ -76,7 +76,7 @@ List all roles in the system.
 SHOW POPULATED ROLES WITH USERS
 ###
 
-List all roles that are assigned to at least one user in the system and the users assigned to them.
+List all roles that are assigned to at least one user in the system, and the users assigned to those roles.
 
 ###assertion=update-one
 //
@@ -84,7 +84,7 @@ List all roles that are assigned to at least one user in the system and the user
 DROP ROLE my_role
 ###
 
-Delete the role `my_role`.
+Delete a role.
 
 """
   }
