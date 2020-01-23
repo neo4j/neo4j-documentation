@@ -149,8 +149,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED",
         "CREATE USER user1 SET PASSWORD 'abc'", "CREATE USER user2 SET PASSWORD 'abc'", "CREATE USER user3 SET PASSWORD 'abc'")
       p("Roles can be created and managed using a set of Cypher administration commands executed against the `system` database.")
-      important {
-        p("""It is not allowed to use the role name `PUBLIC`. This is a system reserved role that should not be used.""")
+      note {
+        p("""The role name `PUBLIC` is not permitted. This is a system-reserved role, and cannot be used.""")
       }
       p("include::role-management-syntax.asciidoc[]")
       section("Listing roles", "administration-security-roles-show", "enterprise-edition") {
