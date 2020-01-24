@@ -126,8 +126,11 @@ class OrderByTest extends DocumentingTest {
     }
     section("Ordering in a `WITH` clause", "order-with") {
       p(
-        """When specifying `ORDER BY` in a `WITH` clause, the immediate next clause is allowed to rely on that ordering.
-          |This is useful, e.g. when the next clause contains an aggregation which should receive the rows in a particular order.
+        """When `ORDER BY` is present on a `WITH` clause , the immediately following clause will receive records in the specified order.
+          |The order is not guaranteed to be retained after the following clause, unless that also has an `ORDER BY` subclause.
+          |The ordering guarantee can be useful to exploit by operations which depend on the order in which they consume values.
+          |For example, this can be used to control the order of items in the list produced by the `collect()` aggregating function.
+          |The `MERGE` and `SET` clauses also have ordering dependencies which can be controlled this way.
           |""".stripMargin)
       query(
         """MATCH (n)
@@ -135,7 +138,7 @@ class OrderByTest extends DocumentingTest {
           |RETURN collect(n.name) AS names""".stripMargin, ResultAssertions((r) => {
           r.toList should equal(List(Map("names" -> List("C", "A", "B"))))
         })) {
-        p("The list of names built from the `collect` aggregation function contains the names in order of the `age` property.")
+        p("The list of names built from the `collect` aggregating function contains the names in order of the `age` property.")
         resultTable()
       }
     }
