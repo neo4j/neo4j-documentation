@@ -128,7 +128,7 @@ Deny privilege to create new relationship types on a specified database to a rol
 REVOKE GRANT CREATE NEW PROPERTY NAMES ON DATABASE bar FROM my_role
 ###
 
-Revoke the grant privilege from a role to create new property names on a specified database.
+Revoke the grant privilege to create new property names on a specified database from a role.
 
 ###assertion=update-two
 //
@@ -144,7 +144,7 @@ Grant privilege to create labels, relationship types, and property names on all 
 GRANT ALL ON DATABASE baz TO my_role
 ###
 
-Grant all privileges on a specified database to a role.
+Grant all database privileges on a specified database to a role.
 
 """
   }
