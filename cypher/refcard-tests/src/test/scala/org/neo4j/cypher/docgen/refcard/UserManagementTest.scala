@@ -57,7 +57,7 @@ ALTER USER alice SET PASSWORD $password CHANGE NOT REQUIRED
 ALTER USER alice SET STATUS SUSPENDED
 ###
 
-(★) Change the user status to suspended. Use `SET STATUS ACTIVE` to reactivate the user name.
+(★) Change the user status to suspended. Use `SET STATUS ACTIVE` to reactivate the user.
 
 ###dontrun
 // Can't be run since we can't log in as a user, and have auth disabled
@@ -65,7 +65,7 @@ ALTER USER alice SET STATUS SUSPENDED
 ALTER CURRENT USER SET PASSWORD FROM $old TO $new
 ###
 
-Change the password of the logged-in user, and update. The user will not be required to change this password on the next login.
+Change the password of the logged-in user. The user will not be required to change this password on the next login.
 
 ###assertion=show-one
 //
