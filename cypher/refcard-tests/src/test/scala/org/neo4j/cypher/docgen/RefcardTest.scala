@@ -132,8 +132,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   def text: String
 
-  def expandQuery(query: String, queryPart: String, dir: File, possibleAssertion: Seq[String], parametersChoice: String) = {
-    runQuery(query, possibleAssertion, parametersChoice)
+  def expandQuery(query: String, queryPart: String, dir: File, possibleAssertion: Seq[String], parametersChoice: String, doRun: Boolean): String = {
+    if (doRun) runQuery(query, possibleAssertion, parametersChoice)
 
     queryPart
   }
@@ -213,6 +213,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   val assertiongRegEx = "assertion=([^\\s]*)".r
   val parametersRegEx = "parameters=([^\\s]*)".r
+  val dontRunRegEx = "dontrun".r
 
   private def includeQueries(query: String, dir: File) = {
     val startText = includeGraphviz(query, dir)
@@ -229,12 +230,13 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
           val asserts: Seq[String] = assertiongRegEx.findFirstMatchIn(firstLine).toSeq.flatMap(_.subgroups)
           val parameterChoice: String = parametersRegEx.findFirstMatchIn(firstLine).mkString("")
+          val doRun: Boolean = dontRunRegEx.findFirstMatchIn(firstLine).isEmpty
 
           val rest = query.split("\n").tail.mkString("\n")
           val q = rest.replaceAll("#", "")
           val parts = q.split("\n\n")
           val publishPart = if (parts.length > 1) parts(1) else parts(0)
-          producedText = producedText.replace(query, expandQuery(q, publishPart, dir, asserts, parameterChoice))
+          producedText = producedText.replace(query, expandQuery(q, publishPart, dir, asserts, parameterChoice, doRun))
         }
     }
 
@@ -257,7 +259,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       StandardCharsets.UTF_8)
     folder = new File("target/example-db" + System.nanoTime())
     managementService = newDatabaseManagementService(folder)
-    val graph = managementService.database(DEFAULT_DATABASE_NAME)
+    val graph = getGraph
     db = new GraphDatabaseCypherService(graph)
 
     GraphDatabaseServiceCleaner.cleanDatabaseContent(db.getGraphDatabaseService)
@@ -279,6 +281,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     } )
     engine = ExecutionEngineFactory.createExecutionEngineFromDb(graph)
   }
+
+  // override to start against SYSTEM_DATABASE_NAME or another database
+  protected def getGraph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
 
   protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
 

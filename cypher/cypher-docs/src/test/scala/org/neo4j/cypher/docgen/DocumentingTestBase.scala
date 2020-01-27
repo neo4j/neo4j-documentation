@@ -64,6 +64,7 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
     if (parent.isDefined) niceify(parent.get + " " + section + " " + title) else niceify(section + " " + title)
 
   def niceify(in: String): String = in.toLowerCase
+    .replace("(★) ", "")
     .replace(" ", "-")
     .replace("(", "")
     .replace(")", "")
