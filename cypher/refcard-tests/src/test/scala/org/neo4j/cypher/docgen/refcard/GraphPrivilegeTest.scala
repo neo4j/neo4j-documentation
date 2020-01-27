@@ -46,7 +46,7 @@ Grant `traverse` privilege on all nodes and all graphs to a role.
 DENY READ {prop} ON GRAPH foo RELATIONSHIP Type TO my_role
 ###
 
-Deny `read` privilege on a specified property, on all nodes with label `Label` in the graph `foo`, to the role `my_role`.
+Deny `read` privilege on a specified property, on all relationships with a specified type in a specified graph, to a role.
 
 ###assertion=update-four
 //
@@ -54,7 +54,7 @@ Deny `read` privilege on a specified property, on all nodes with label `Label` i
 GRANT MATCH {*} ON GRAPH foo ELEMENTS Label TO my_role
 ###
 
-Grant `read` privilege on all properties and `traverse` privilege to a role.
+Grant `read` privilege on all properties and `traverse` privilege to a role.+
 Here, both privileges apply to all nodes with a specified label in the graph.
 
 ###assertion=update-two
