@@ -25,6 +25,7 @@ import java.time.temporal.TemporalAmount
 import org.neo4j.cypher.internal.runtime.QueryContext
 import org.neo4j.graphdb.spatial.Point
 import org.neo4j.graphdb.{Entity, Node, Path, Relationship}
+import org.neo4j.io.pagecache.tracing.cursor.PageCursorTracer
 
 import scala.collection.Map
 
@@ -59,16 +60,16 @@ trait CypherSerializer {
 
   protected def serializeProperties(x: Entity, qtx: QueryContext): String = {
     val cursors = qtx.transactionalContext.cursors
-    val property = cursors.allocatePropertyCursor
+    val property = cursors.allocatePropertyCursor(PageCursorTracer.NULL)
     val (propertyText, id, deleted) = x match {
       case n: Node =>
         val ops = qtx.nodeOps
-        val node = cursors.allocateNodeCursor()
+        val node = cursors.allocateNodeCursor(PageCursorTracer.NULL)
         ((id: Long) => ops.propertyKeyIds(id, node, property).map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, node, property, throwOnDeleted = true).asObject(), qtx)),
           n.getId, qtx.nodeOps.isDeletedInThisTx(n.getId))
       case r: Relationship =>
         val ops = qtx.relationshipOps
-        val rel = cursors.allocateRelationshipScanCursor()
+        val rel = cursors.allocateRelationshipScanCursor(PageCursorTracer.NULL)
         ((id: Long) => ops.propertyKeyIds(id, rel, property).map(pkId => qtx.getPropertyKeyName(pkId) + ":" + serialize(ops.getProperty(id, pkId, rel, property, throwOnDeleted = true).asObject(), qtx)),
           r.getId, qtx.relationshipOps.isDeletedInThisTx(r.getId))
     }
