@@ -55,7 +55,7 @@ this combines both TRAVERSE and READ allowing an entity to be found and its prop
 this privilege can only be assigned to all nodes, relationships and properties in the entire graph (this means that the entity part of the command must also be `ELEMENTS +*+` and cannot be more specific).
 +
 * _name_
-** The graph or graphs to associate the privilege with. In {neo4j.version} there can be only one graph per database, and therefor this command uses the database name to refer to that graph.
+** The graph or graphs to associate the privilege with. In {neo4j-version} there can be only one graph per database, and therefore this command uses the database name to refer to that graph.
    Note that if you delete a database and create a new one with the same name, the new one will _NOT_ have any of the privileges specifically assigned to the deleted graph.
 ** It can be `+*+` which means all graphs.
   Any new databases created after this command will also be associated with these privileges.
