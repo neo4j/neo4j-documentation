@@ -60,6 +60,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `DROP CONSTRAINT ON (n:Label) ASSERT (n.prop) IS UNIQUE` | Syntax | Deprecated | Replaced by `DROP CONSTRAINT name`
 | `DROP CONSTRAINT ON (n:Label) ASSERT exists(n.prop)` | Syntax | Deprecated | Replaced by `DROP CONSTRAINT name`
 | `DROP CONSTRAINT ON ()-[r:Type]-() ASSERT exists(r.prop)` | Syntax | Deprecated | Replaced by `DROP CONSTRAINT name`
+| `WHERE EXISTS {...}` | Clause | Added | Existential sub-queries are sub-clauses used to filter the results of a MATCH, OPTIONAL MATCH or WITH clause.
 | <<administration-databases, Multi-database administration>> | Functionality | Added | New Cypher commands for administering multiple databases
 | <<administration-security, Security administration>> | Functionality | Added | New Cypher commands for administering role-based access-control
 | <<administration-security-subgraph, Fine-grained security>> | Functionality | Added | New Cypher commands for administering dbms, database, graph and sub-graph access control
