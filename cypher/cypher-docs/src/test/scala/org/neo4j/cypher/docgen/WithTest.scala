@@ -104,7 +104,7 @@ class WithTest extends DocumentingTest {
           |LIMIT 1
           |MATCH (m)--(o)
           |RETURN o.name""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("o.name" -> "Bossman"), Map("o.name" -> "Anders")))
+          r.toSet should equal(Set(Map("o.name" -> "Bossman"), Map("o.name" -> "Anders")))
         })) {
         p("Starting at *'Anders'*, find all matching nodes, order by name descending and get the top result, then find all the nodes connected to that top result, and return their names.")
         resultTable()
