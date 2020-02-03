@@ -291,13 +291,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
     }
   })
 
-<<<<<<< HEAD
-  private def assertRolesShown(expected: Seq[String] = List.empty) = ResultAndDbAssertions((p, db) => {
-    val tx = db.beginTransaction(Type.explicit, AnonymousContext.read())
-=======
   private def assertRolesShown(expected: Seq[String] = List.empty, ignore: Seq[String] = List.empty) = ResultAndDbAssertions((p, db) => {
     val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
->>>>>>> 88e5b880a0... Fixed failing tests due to change in result order
     try {
       val result = p.columnAs[String]("role").toList.filter(!ignore.contains(_))
       result.toSet should equal(expected.toSet)
