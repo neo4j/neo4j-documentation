@@ -172,7 +172,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           "To only show roles that are assigned to users, the command is `SHOW POPULATED ROLES`. " +
           "To see which users are assigned to roles `WITH USERS` can be appended to the commands. " +
           "This will give one result row for each user, so if a role is assigned to two users then it will show up twice in the result.")
-        query("SHOW POPULATED ROLES WITH USERS", assertRolesShown(Seq("admin"))) {
+        query("SHOW POPULATED ROLES WITH USERS", assertRolesShown(Seq("admin"), Seq("PUBLIC"))) {
           p("The table of results contains two columns, the first is the role name, and the other a flag indicating whether the role is a built-in role or a custom role.")
           resultTable()
         }
@@ -282,23 +282,20 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
     val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
     try {
       val nodes = tx.findNodes(Label.label(label)).asScala.toList
-      // TODO: Remove this conditional once we have system graph initialization working OK
-      if (nodes.nonEmpty) {
-        nodes.length should be > 0
-        val props = nodes.map(n => n.getProperty("name"))
-        val result = p.columnAs[String](column).toList
-        result should equal(props)
-      }
+      nodes.length should be > 0
+      val props = nodes.map(n => n.getProperty("name"))
+      val result = p.columnAs[String](column).toList
+      result.toSet should equal(props.toSet)
     } finally {
       tx.close()
     }
   })
 
-  private def assertRolesShown(expected: Seq[String] = List.empty) = ResultAndDbAssertions((p, db) => {
+  private def assertRolesShown(expected: Seq[String] = List.empty, ignore: Seq[String] = List.empty) = ResultAndDbAssertions((p, db) => {
     val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
     try {
-      val result = p.columnAs[String]("role").toList
-      result should equal(expected)
+      val result = p.columnAs[String]("role").toList.filter(!ignore.contains(_))
+      result.toSet should equal(expected.toSet)
     } finally {
       tx.close()
     }
