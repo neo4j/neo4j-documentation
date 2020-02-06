@@ -64,7 +64,7 @@ class WhereTest extends DocumentingTest {
         | ** <<filter-on-relationship-type, Filter on relationship type>>
         | * <<existential-subqueries, Using existential subqueries in `WHERE`>>
         | ** <<existential-subquery-simple-case, Simple existential subquery>>
-        | ** <<existential-subquery-with-with, Existential subquery with `WITH` clause>>
+        | ** <<existential-subquery-with-where, Existential subquery with `WHERE` clause>>
         | ** <<existential-subquery-nesting, Nesting existential subqueries>>
         |* <<query-where-lists, Lists>>
         | ** <<where-in-operator, `IN` operator>>
@@ -323,7 +323,7 @@ class WhereTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Existential subquery with `WITH` clause", "existential-subquery-with-with") {
+      section("Existential subquery with `WHERE` clause", "existential-subquery-with-where") {
         p(
           """A `WHERE` clause can be used in conjunction to the `MATCH`. Variables introduced by the `MATCH` clause and the outside scope can be used in this scope.
             |
