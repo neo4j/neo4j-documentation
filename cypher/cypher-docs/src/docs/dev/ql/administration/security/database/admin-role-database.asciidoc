@@ -9,23 +9,23 @@ The syntax is:
 | Command | Description
 
 | [source, cypher]
-GRANT database-privilege ON DATABASE[S] {dbname \| *} TO role[, ...]
+GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} TO role[, ...]
 | Grant a privilege to one or multiple roles
 
 | [source, cypher]
-DENY database-privilege ON DATABASE[S] {dbname \| *} TO role[, ...]
+DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} TO role[, ...]
 | Deny a privilege to one or multiple roles
 
 | [source, cypher]
-REVOKE GRANT database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
+REVOKE GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} FROM role[, ...]
 | Revoke a granted privilege from one or multiple roles
 
 | [source, cypher]
-REVOKE DENY database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
+REVOKE DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} FROM role[, ...]
 | Revoke a denied privilege from one or multiple roles
 
 | [source, cypher]
-REVOKE database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
+REVOKE database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} FROM role[, ...]
 | Revoke a granted or denied privilege from one or multiple roles
 |===
 
@@ -94,8 +94,10 @@ allows all of the above privileges to be enabled for the specified database.
 * _dbname_
 ** The database to associate the privilege with.
    Note that if you delete a database and create a new one with the same name, the new one will NOT have any of the privileges specifically assigned to the deleted database.
-** It can be `+*+` which means all databases.
+** The _dbname_ component can be `+*+` which means all databases.
   Any new databases created after this command will also be associated with these privileges.
+** The `DATABASE[S] _dbname_` part of the command can be replaced by `DEFAULT DATABASE`.
+  If the server is restarted and a new default database chosen after this command, the new one will be associated with these privileges.
 * _role[, ...]_
 ** The role or roles to associate the privilege with, comma-separated.
 
