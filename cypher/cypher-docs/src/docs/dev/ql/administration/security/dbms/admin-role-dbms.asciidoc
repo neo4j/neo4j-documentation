@@ -1,4 +1,4 @@
-As <<administration-security-administration-introduction, described above>>, the `admin` role has a number of built-in privileges that cannot be assigned using Cypher commands.
+As <<administration-security-administration-introduction, described above>>, the `admin` role has a number of built-in privileges.
 These include:
 
 * Create or drop databases

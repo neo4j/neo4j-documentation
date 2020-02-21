@@ -8,6 +8,7 @@ New features get added to the language continuously, and occasionally, some feat
 --
 
 * <<cypher-deprecations-additions-removals, Removals, deprecations, additions, and extensions>>
+** <<cypher-deprecations-additions-removals-4.1, Version 4.1>>
 ** <<cypher-deprecations-additions-removals-4.0, Version 4.0>>
 ** <<cypher-deprecations-additions-removals-3.5, Version 3.5>>
 ** <<cypher-deprecations-additions-removals-3.4, Version 3.4>>
@@ -25,6 +26,14 @@ New features get added to the language continuously, and occasionally, some feat
 The following tables list all of the features which have been removed, deprecated, added, or extended in Cypher.
 Replacement syntax for deprecated and removed features are also indicated.
 
+[[cypher-deprecations-additions-removals-4.1]]
+=== Version 4.1
+[options="header"]
+|===
+| Feature     | Type | Change | Details
+| Dbms <<administration-security-administration-dbms-privileges-user-management, USER MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering user management
+| `ON DEFAULT DATABASE` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges, database privileges>>
+|===
 
 [[cypher-deprecations-additions-removals-4.0]]
 === Version 4.0
@@ -208,6 +217,7 @@ Neo4j {neo4j-version} supports the following versions of the Cypher language:
 
 * Neo4j Cypher 3.5
 * Neo4j Cypher 4.0
+* Neo4j Cypher 4.1
 
 [TIP]
 Each release of Neo4j supports a limited number of old Cypher Language Versions.
