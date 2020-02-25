@@ -60,10 +60,10 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
             |The table contains columns describing the privilege:
             |
             |* access: whether the privilege is granted or denied (whitelist or blacklist)
-            |* action: which type of privilege this is: access, traverse, read, write, token, schema or admin
+            |* action: which type of privilege this is: traverse, read, match, write, a database privilege, a dbms privilege or admin
             |* resource: what type of scope this privilege applies to: the entire dbms, a database, a graph or sub-graph access
             |* graph: the specific database or graph this privilege applies to
-            |* segement: for sub-graph access control, this describes the scope in terms of labels or relationship types
+            |* segment: for sub-graph access control, this describes the scope in terms of labels or relationship types
             |* role: the role the privilege is granted to
             |""".stripMargin)
         resultTable()
@@ -140,7 +140,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
           |as well as the ability to find these nodes, to a role `regularUsers` you can use the following `GRANT MATCH` query.""".stripMargin)
 
       query("GRANT MATCH { language, length } ON GRAPH neo4j NODES Message TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 3)
+        assertStats(r, systemUpdates = 2)
       })) {
         statsOnlyResultTable()
       }
@@ -167,13 +167,9 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p("The following query exemplifies how it would look like if you want to deny both reading all properties and traversing nodes labeled with `Account`.")
 
       query("DENY MATCH { * } ON GRAPH neo4j NODES Account TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 2)
+        assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
-      }
-
-      note {
-        p("Please note that `REVOKE MATCH` is not allowed, instead revoke the individual `READ` and `TRAVERSE` privileges.")
       }
     }
 
@@ -217,10 +213,6 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     section("The `REVOKE` command", "administration-security-subgraph-revoke", "enterprise-edition") {
       p("Privileges that were granted or denied earlier can be revoked using the `REVOKE` command. ")
       p("include::revoke-syntax.asciidoc[]")
-
-      note {
-        p("Please note that `REVOKE MATCH` is not allowed, instead revoke the individual `READ` and `TRAVERSE` privileges.")
-      }
 
       p("An example usage of the `REVOKE` command is given here:")
       query("REVOKE GRANT TRAVERSE ON GRAPH neo4j NODES Post FROM regularUsers", ResultAssertions((r) => {

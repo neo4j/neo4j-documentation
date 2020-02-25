@@ -16,6 +16,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
     initQueries(
       "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE",
       "CREATE ROLE regularUsers",
+      "CREATE ROLE databaseAdminUsers",
       "CREATE ROLE noAccessUsers",
       "CREATE ROLE roleAdder",
       "CREATE ROLE roleDropper",
@@ -154,6 +155,10 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         ))) {
           resultTable()
         }
+
+        note {
+          p("Please note that `START` and `STOP` privileges are not included in the all database administration privilege.")
+        }
       }
       section("The `INDEX MANAGEMENT` privileges", "administration-security-administration-database-indexes", "enterprise-edition") {
         p(
@@ -185,7 +190,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       }
       section("The `NAME MANAGEMENT` privileges", "administration-security-administration-database-tokens", "enterprise-edition") {
         p(
-          """The right to create new labels, relationship types or propery names is different from the right to create nodes, relationships or properties.
+          """The right to create new labels, relationship types or property names is different from the right to create nodes, relationships or properties.
             |The latter is managed using database `WRITE` privileges, while the former is managed using specific `GRANT/DENY CREATE NEW ...` commands for each type.""".stripMargin)
         p("include::database/name-management-syntax.asciidoc[]")
 
@@ -199,33 +204,24 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       }
       section("Granting all database administration privileges", "administration-security-administration-database-all", "enterprise-edition") {
         p(
-          """Conferring the right to perform all of the above tasks can be achieved with a single command:""".stripMargin)
+          """Conferring the right to access, manage indexes and constraints and create new labels, relationship types or property names can be achieved with a single command:""".stripMargin)
         p("include::database/all-management-syntax.asciidoc[]")
 
         note {
-          p("Please note that the privileges for transaction management are not included.")
+          p("Please note that the privileges for starting and stopping all databases and transaction management are not included.")
         }
 
         p(
-          """For example, granting the ability to access, start and stop all databases and create indexes, constraints, labels, relationship types and property names on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
-        query("GRANT ALL DATABASE PRIVILEGES ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 4)
+          """For example, granting the abilities above on the database `neo4j` to the role `databaseAdminUsers` is done using the following query.""".stripMargin)
+        query("GRANT ALL DATABASE PRIVILEGES ON DATABASE neo4j TO databaseAdminUsers", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
 
         p("The privileges granted can be seen using the `SHOW PRIVILEGES` command:")
-        query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
-          Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
-          Map("access" -> "GRANTED", "action" -> "start_database", "role" -> "regularUsers"),
-          Map("access" -> "GRANTED", "action" -> "stop_database", "role" -> "regularUsers"),
-          Map("access" -> "GRANTED", "action" -> "create_index", "role" -> "regularUsers"),
-          Map("access" -> "GRANTED", "action" -> "drop_index", "role" -> "regularUsers"),
-          Map("access" -> "GRANTED", "action" -> "create_constraint", "role" -> "regularUsers"),
-          Map("access" -> "GRANTED", "action" -> "drop_constraint", "role" -> "regularUsers"),
-          Map("access" -> "GRANTED", "action" -> "create_label", "role" -> "regularUsers"),
-          Map("access" -> "GRANTED", "action" -> "create_reltype", "role" -> "regularUsers"),
-          Map("access" -> "GRANTED", "action" -> "create_propertykey", "role" -> "regularUsers")
+        query("SHOW ROLE databaseAdminUsers PRIVILEGES", assertPrivilegeShown(Seq(
+          Map("access" -> "GRANTED", "action" -> "database_actions", "role" -> "databaseAdminUsers")
         ))) {
           resultTable()
         }
@@ -283,18 +279,18 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
         p("And DENY index and constraint management:")
         query("DENY INDEX MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 2)
+          assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         query("DENY CONSTRAINT MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 2)
+          assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("And finally DENY label, relationship type and property name:")
         query("DENY NAME MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 3)
+          assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }

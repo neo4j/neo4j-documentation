@@ -74,7 +74,7 @@ GRANT DROP INDEX ON DATABASE foo TO my_role
 
 Grant privilege to drop indexes on a specified database to a role.
 
-###assertion=update-two
+###assertion=update-one
 //
 
 DENY INDEX MANAGEMENT ON DATABASE bar TO my_role
@@ -98,7 +98,7 @@ DENY DROP CONSTRAINT ON DATABASE * TO my_role
 
 Deny privilege to drop constraints on all databases to a role.
 
-###assertion=update-two
+###assertion=update-zero
 //
 
 REVOKE CONSTRAINT ON DATABASE * FROM my_role
@@ -130,7 +130,7 @@ REVOKE GRANT CREATE NEW PROPERTY NAMES ON DATABASE bar FROM my_role
 
 Revoke the grant privilege to create new property names on a specified database from a role.
 
-###assertion=update-two
+###assertion=update-one
 //
 
 GRANT NAME MANAGEMENT ON DATABASE * TO my_role
@@ -138,13 +138,13 @@ GRANT NAME MANAGEMENT ON DATABASE * TO my_role
 
 Grant privilege to create labels, relationship types, and property names on all databases to a role.
 
-###assertion=update-ten
+###assertion=update-one
 //
 
 GRANT ALL ON DATABASE baz TO my_role
 ###
 
-Grant all database privileges on a specified database to a role.
+Grant most database privileges on a specified database to a role.
 
 """
   }
