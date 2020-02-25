@@ -59,7 +59,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         resultTable()
       }
     }
-    section("Database administration", administration-security-administration-database-prive"", "enterprise-edition") {
+    section("Database administration", "administration-security-administration-database-privileges", "enterprise-edition") {
       synopsis("This section explains how to use Cypher to manage privileges for Neo4j database administrative rights.")
       p("include::database/admin-role-database.asciidoc[]")
       p("include::database/admin-database-syntax.asciidoc[]")
@@ -245,10 +245,11 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         query("DENY ACCESS ON DATABASE * TO usermanager", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
-          statsOnlyResultTab("And DENY START and STOP for normal databases:")
+          statsOnlyResultTable()
+        }
+        p("And DENY START and STOP for normal databases:")
         query("DENY START ON DATABASE * TO usermanager", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
-        })) {
         })) {
           statsOnlyResultTable()
         }
