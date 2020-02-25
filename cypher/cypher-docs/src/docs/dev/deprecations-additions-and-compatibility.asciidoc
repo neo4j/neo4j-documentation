@@ -31,6 +31,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 [options="header"]
 |===
 | Feature     | Type | Change | Details
+| <<administration-security-administration-database-transaction, TRANSACTION MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering transaction management
 | Dbms <<administration-security-administration-dbms-privileges-user-management, USER MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering user management
 | `ON DEFAULT DATABASE` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges, database privileges>>
 |===
