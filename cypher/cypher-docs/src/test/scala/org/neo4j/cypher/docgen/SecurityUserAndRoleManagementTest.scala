@@ -69,9 +69,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
         note {
           p(
-            """When creating a user, their initial list of roles is empty.
-              |In Neo4j community-edition this is not important as all users have implied administator privileges.
-              |In Neo4j enterprise-edition a new user like this will have no rights and it is important to <<administration-security-roles-grant, grant roles to the user>>.""".stripMargin)
+            """When creating a user, they are assigned the role `PUBLIC`.""".stripMargin)
         }
         p("The `CREATE USER` command is optionally idempotent, with the default behavior to throw an exception if the user already exists. " +
           "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the user already exist. " +
@@ -149,10 +147,14 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED",
         "CREATE USER user1 SET PASSWORD 'abc'", "CREATE USER user2 SET PASSWORD 'abc'", "CREATE USER user3 SET PASSWORD 'abc'")
       p("Roles can be created and managed using a set of Cypher administration commands executed against the `system` database.")
-      note {
-        p("""The role name `PUBLIC` is not permitted. This is a system-reserved role, and cannot be used.""")
-      }
       p("include::role-management-syntax.asciidoc[]")
+      note {
+        p(
+          """There exists a special built-in role, `PUBLIC`, which is assigned to all users upon creation.
+            |This role cannot be dropped or revoked from any user, but its privileges may be modified.
+            |By default, it has the privilege to <<administration-security-administration-database-access, access>> the default database.
+            |""".stripMargin)
+      }
       section("Listing roles", "administration-security-roles-show", "enterprise-edition") {
         p("Available roles can be seen using `SHOW ROLES`.")
         query("SHOW ROLES", assertAllNodesShown("Role", column = "role")) {
@@ -160,6 +162,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             """This is the same command as `SHOW ALL ROLES`.
               |When first starting a Neo4j DBMS there are a number of built-in roles:
               |
+              |* `PUBLIC` - can access the default database, is automatically assigned to all users
               |* `reader` - can perform read-only queries on all databases except `system`
               |* `editor` - can perform read and write operations on all databases except `system`, but cannot make new labels or relationship types
               |* `publisher` - can do the same as `editor`, but also create new labels and relationship types.
