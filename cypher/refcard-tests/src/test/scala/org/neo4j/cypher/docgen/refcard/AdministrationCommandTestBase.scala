@@ -32,9 +32,6 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
   //noinspection RedundantDefaultArgument
   override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
-      case "update-zero" =>
-        assertStats(result, systemUpdates = 0)
-        assert(result.toList.size === 0)
       case "update-one" =>
         assertStats(result, systemUpdates = 1)
         assert(result.toList.size === 0)

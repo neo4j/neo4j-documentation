@@ -1,11 +1,6 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.graphdb.Label
-import org.neo4j.kernel.api.KernelTransaction.Type
-import org.neo4j.kernel.api.security.AnonymousContext
-
-import scala.collection.JavaConverters._
 
 class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql/administration/security/"
@@ -46,7 +41,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         |** <<administration-security-administration-database-indexes, The `INDEX MANAGEMENT` privileges>>
         |** <<administration-security-administration-database-constraints, The `CONSTRAINT MANAGEMENT` privileges>>
         |** <<administration-security-administration-database-tokens, The `NAME MANAGEMENT` privileges>>
-        |** <<administration-security-administration-database-all, Granting all database administration privileges>>
+        |** <<administration-security-administration-database-all, Granting `ALL DATABASE PRIVILEGES`>>
         |** <<administration-security-administration-database-transaction, Granting `TRANSACTION MANAGEMENT` privileges>>
         |* <<administration-security-administration-dbms-privileges, DBMS administration>>
         |** <<administration-security-administration-dbms-custom, Using a custom role to manage DBMS privileges>>
@@ -157,7 +152,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         note {
-          p("Please note that `START` and `STOP` privileges are not included in the all database administration privilege.")
+          p("Note that `START` and `STOP` privileges are not included in the <<administration-security-administration-database-all, `ALL DATABASE PRIVILEGES`>>.")
         }
       }
       section("The `INDEX MANAGEMENT` privileges", "administration-security-administration-database-indexes", "enterprise-edition") {
@@ -202,13 +197,15 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           statsOnlyResultTable()
         }
       }
-      section("Granting all database administration privileges", "administration-security-administration-database-all", "enterprise-edition") {
+      section("Granting `ALL DATABASE PRIVILEGES`", "administration-security-administration-database-all", "enterprise-edition") {
         p(
-          """Conferring the right to access, manage indexes and constraints and create new labels, relationship types or property names can be achieved with a single command:""".stripMargin)
+          """The right to access a database, create and drop indexes and constraints and create new labels, relationship types or property names can be achieved with a single command:""".stripMargin)
         p("include::database/all-management-syntax.asciidoc[]")
 
         note {
-          p("Please note that the privileges for starting and stopping all databases and transaction management are not included.")
+          p(
+            """Note that the privileges for starting and stopping all databases, and transaction management, are not included in the `ALL DATABASE PRIVILEGES` grant.
+              |These privileges are associated with administrators while other database privileges are of use to domain and application developers.""".stripMargin)
         }
 
         p(
@@ -233,7 +230,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("include::database/transaction-management-syntax.asciidoc[]")
 
         note {
-          p("Please note that the transaction management privileges are not included in the all database administration privilege.")
+          p("Note that the `TRANSACTION MANAGEMENT` privileges are not included in the <<administration-security-administration-database-all, `ALL DATABASE PRIVILEGES`>>.")
         }
 
         p(

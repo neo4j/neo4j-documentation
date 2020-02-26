@@ -132,7 +132,9 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
     }
     section("The `MATCH` privilege", "administration-security-subgraph-match", "enterprise-edition") {
-      p("As a shorthand for `TRAVERSE` and `READ`, users can be granted the right to find and do property reads on nodes and relationships using the `GRANT MATCH` privilege. ")
+      p(
+        """Users can be granted the right to find and do property reads on nodes and relationships using the `GRANT MATCH` privilege.
+          |This is semantically the same as having both `TRAVERSE` and `READ` privileges.""".stripMargin)
       p("include::grant-match-syntax.asciidoc[]")
 
       p(
@@ -211,13 +213,17 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     }
 
     section("The `REVOKE` command", "administration-security-subgraph-revoke", "enterprise-edition") {
+      initQueries(
+        "GRANT TRAVERSE ON GRAPH neo4j NODES Post TO regularUsers",
+        "GRANT TRAVERSE ON GRAPH neo4j NODES Payments TO regularUsers",
+        "DENY TRAVERSE ON GRAPH neo4j NODES Payments TO regularUsers"
+      )
       p("Privileges that were granted or denied earlier can be revoked using the `REVOKE` command. ")
       p("include::revoke-syntax.asciidoc[]")
 
       p("An example usage of the `REVOKE` command is given here:")
       query("REVOKE GRANT TRAVERSE ON GRAPH neo4j NODES Post FROM regularUsers", ResultAssertions((r) => {
-        // TODO: revoke a privilege that exists
-        assertStats(r, systemUpdates = 0)
+        assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
       }
@@ -225,8 +231,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         """While it can be explicitly specified that revoke should remove a `GRANT` or `DENY`, it is also possible to revoke either one by not specifying at all as the next example demonstrates.
           |Because of this, if there happen to be a `GRANT` and a `DENY` on the same privilege, it would remove both.""".stripMargin)
       query("REVOKE TRAVERSE ON GRAPH neo4j NODES Payments FROM regularUsers", ResultAssertions((r) => {
-        // TODO: revoke a privilege that exists
-        assertStats(r, systemUpdates = 0)
+        assertStats(r, systemUpdates = 2)
       })) {
         statsOnlyResultTable()
       }
