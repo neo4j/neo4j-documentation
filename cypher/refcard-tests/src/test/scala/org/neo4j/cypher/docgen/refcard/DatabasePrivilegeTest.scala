@@ -31,6 +31,7 @@ class DatabasePrivilegeTest extends AdministrationCommandTestBase {
     tx.execute("GRANT CREATE NEW PROPERTY NAMES ON DATABASE bar TO my_role")
     tx.execute("GRANT CONSTRAINT ON DATABASE * TO my_role")
     tx.execute("DENY CONSTRAINT ON DATABASE * TO my_role")
+    tx.execute("GRANT TRANSACTION MANAGEMENT ON DEFAULT DATABASE TO my_role")
   }
 
   def text: String = {
@@ -135,10 +136,10 @@ Revoke the grant privilege to create new property names on a specified database 
 ###assertion=update-one
 //
 
-GRANT NAME MANAGEMENT ON DATABASE * TO my_role
+GRANT NAME MANAGEMENT ON DEFAULT DATABASE TO my_role
 ###
 
-Grant privilege to create labels, relationship types, and property names on all databases to a role.
+Grant privilege to create labels, relationship types, and property names on default database to a role.
 
 ###assertion=update-one
 //
@@ -147,6 +148,30 @@ GRANT ALL ON DATABASE baz TO my_role
 ###
 
 Grant privilege to access, create and drop indexes and constraints, create new labels, types and property names on a specified database to a role.
+
+###assertion=update-one
+//
+
+GRANT SHOW TRANSACTION (*) ON DATABASE foo TO my_role
+###
+
+Grant privilege to list transactions and queries from all users on a specified database to a role.
+
+###assertion=update-two
+//
+
+DENY TERMINATE TRANSACTION (user1, user2) ON DATABASES * TO my_role
+###
+
+Deny privilege to kill transactions and queries from user1 and user2 on all databases to a role.
+
+###assertion=update-one
+//
+
+REVOKE GRANT TRANSACTION MANAGEMENT ON DEFAULT DATABASE FROM my_role
+###
+
+Revoke the granted privilege to list and kill transactions and queries from all users on the default database from a role.
 
 """
   }
