@@ -178,7 +178,7 @@ class FulltextIndexTest extends DocumentingTest {
       })) {
         resultTable()
       }
-      p("A complete description of the Lucene query syntax can be found in the http://lucene.apache.org/core/5_5_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description[Lucene documentation].")
+      p("A complete description of the Lucene query syntax can be found in the https://lucene.apache.org/core/8_2_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description[Lucene documentation].")
     }
 
     section("Drop full-text indexes", "administration-indexes-fulltext-search-drop") {
