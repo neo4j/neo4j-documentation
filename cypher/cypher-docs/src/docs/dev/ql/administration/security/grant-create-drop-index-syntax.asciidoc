@@ -1,0 +1,6 @@
+.Add `CREATE INDEX` and `DROP INDEX` privileges
+[source, cypher]
+-----
+GRANT CREATE INDEX ON DATABASE * TO indexUsers
+GRANT DROP INDEX ON DATABASE * TO indexUsers
+-----
