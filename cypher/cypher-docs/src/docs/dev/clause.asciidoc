@@ -207,9 +207,6 @@ include::ql/query-merge.adoc[leveloffset=+1]
 
 include::ql/query-call-subquery.adoc[leveloffset=+1]
 
-// NOTE that the following is static content that should be converted into the test framework:
-include::query-call-subquery-correlated.adoc[leveloffset=+2]
-
 include::ql/query-call.adoc[leveloffset=+1]
 
 //Set
