@@ -1,0 +1,24 @@
+.Transaction management command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+GRANT SHOW TRANSACTION[S] [(* \| user[, ...])]
+    ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
+    TO role[, ...]
+| Enable the specified role, or roles, to list transactions and queries for all users, the specified user, or users in the default database, the database `name`, or all databases.
+
+| [source, cypher]
+GRANT TERMINATE TRANSACTION[S] [(* \| user[, ...])]
+    ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
+    TO role[, ...]
+| Enable the specified role, or roles, to end running transactions and queries for all users, the specified user, or users in the default database, the database `name`, or all databases.
+
+| [source, cypher]
+GRANT TRANSACTION [MANAGEMENT] [(* \| user[, ...])]
+    ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
+    TO role[, ...]
+| Enable the specified role, or roles, to list and end running transactions and queries for all users, the specified user, or users in the default database, the database `name`, or all databases.
+
+|===

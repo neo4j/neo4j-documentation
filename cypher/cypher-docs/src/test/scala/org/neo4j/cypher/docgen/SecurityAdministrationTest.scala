@@ -46,6 +46,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         |** <<administration-security-administration-database-constraints, The `CONSTRAINT MANAGEMENT` privileges>>
         |** <<administration-security-administration-database-tokens, The `NAME MANAGEMENT` privileges>>
         |** <<administration-security-administration-database-all, Granting all database administration privileges>>
+        |** <<administration-security-administration-database-transaction, Granting `TRANSACTION MANAGEMENT` privileges>>
         |* <<administration-security-administration-dbms-privileges, DBMS administration>>
         |** <<administration-security-administration-dbms-custom, Using a custom role to manage DBMS privileges>>
         |** <<administration-security-administration-dbms-privileges-role-management, The dbms `ROLE MANAGEMENT` privileges>>
@@ -201,6 +202,10 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           """Conferring the right to perform all of the above tasks can be achieved with a single command:""".stripMargin)
         p("include::database/all-management-syntax.asciidoc[]")
 
+        note {
+          p("Please note that the privileges for transaction management are not included.")
+        }
+
         p(
           """For example, granting the ability to access, start and stop all databases and create indexes, constraints, labels, relationship types and property names on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
         query("GRANT ALL DATABASE PRIVILEGES ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
@@ -223,6 +228,24 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           Map("access" -> "GRANTED", "action" -> "create_propertykey", "role" -> "regularUsers")
         ))) {
           resultTable()
+        }
+      }
+      section("Granting `TRANSACTION MANAGEMENT` privileges", "administration-security-administration-database-transaction", "enterprise-edition") {
+        p(
+          """The right to run the procedures `dbms.listTransactions`, `dbms.listQueries`, `dbms.killQuery`, `dbms.killQueries`,
+            |`dbms.killTransaction` and `dbms.killTransactions` are managed through the `SHOW TRANSACTION` and `TERMINATE TRANSACTION` privileges.""".stripMargin)
+        p("include::database/transaction-management-syntax.asciidoc[]")
+
+        note {
+          p("Please note that the transaction management privileges are not included in the all database administration privilege.")
+        }
+
+        p(
+          """For example, granting the ability to list transactions for user `jake` in the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
+        query("GRANT SHOW TRANSACTION (jake) ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
         }
       }
     }

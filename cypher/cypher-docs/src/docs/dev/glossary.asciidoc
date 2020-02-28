@@ -318,7 +318,7 @@ The following commands are only executable against the `system` database:
 |===
 |Name                                                                                           | Category              | Description
 | <<administration-security-administration-database-access, ACCESS>>                            | Database              | Determines whether a user can access a specific database.
-| <<administration-security-administration-database-all, ALL DATABASE PRIVILEGES>>              | Database and schema   | Implies all privileges from the categories Database and Schema for a specific database.
+| <<administration-security-administration-database-all, ALL DATABASE PRIVILEGES>>              | Database and schema   | Determines whether a user is allowed to access, create and drop indexes and constraints, create new labels, types and property names on a specific database.
 | <<administration-security-administration-dbms-privileges-user-management, ALTER USER>>        | DBMS                  | Determines whether the user can modify users.
 | <<administration-security-administration-dbms-privileges-role-management, ASSIGN ROLE>>       | DBMS                  | Determines whether the user can grant roles.
 | <<administration-security-administration-database-constraints, CONSTRAINT MANAGEMENT>>        | Schema                | Determines whether a user is allowed to create and drop constraints on a specific database.
@@ -340,9 +340,12 @@ The following commands are only executable against the `system` database:
 | <<administration-security-administration-dbms-privileges-role-management, REMOVE ROLE>>       | DBMS                  | Determines whether the user can revoke roles.
 | <<administration-security-administration-dbms-privileges-role-management, ROLE MANAGEMENT>>   | DBMS                  | Determines whether the user can create, drop, grant, revoke and show roles.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>         | DBMS                  | Determines whether the user can get information about existing and assigned roles.
+| <<administration-security-administration-database-transaction, SHOW TRANSACTION>>             | Database              | Determines whether a user is allowed to list transactions and queries.
 | <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>         | DBMS                  | Determines whether the user can get information about existing users.
 | <<administration-security-administration-database-startstop, START>>                          | Database              | Determines whether a user can start up a specific database.
 | <<administration-security-administration-database-startstop, STOP>>                           | Database              | Determines whether a user can stop a specific running database.
+| <<administration-security-administration-database-transaction, TERMINATE TRANSACTION>>        | Database              | Determines whether a user is allowed to end running transactions and queries.
+| <<administration-security-administration-database-transaction, TRANSACTION MANAGEMENT>>       | Database              | Determines whether a user is allowed to list and end running transactions and queries.
 | <<administration-security-subgraph-traverse, TRAVERSE>>                                       | GRAPH                 | Determines whether an element (node, relationship or both) can be found and traversed while executing queries on the specified graph.
 | <<administration-security-administration-dbms-privileges-user-management, USER MANAGEMENT>>   | DBMS                  | Determines whether the user can create, drop, modify and show users.
 | <<administration-security-subgraph-write, WRITE>>                                             | GRAPH                 | Determines whether the user can execute write operations on the specified graph.
