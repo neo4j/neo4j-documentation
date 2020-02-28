@@ -13,6 +13,6 @@ GRANT {CREATE \| DROP} CONSTRAINT[S]
 GRANT CONSTRAINT[S] [MANAGEMENT]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to create and delete constraints on the defaul database, the database `name` or all databases
+| Enable the specified role or roles to create and delete constraints on the default database, the database `name` or all databases
 
 |===
