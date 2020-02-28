@@ -1,0 +1,36 @@
+.User management privileges command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+GRANT CREATE USER
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to create new users
+
+| [source, cypher]
+GRANT DROP USER
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to delete users
+
+| [source, cypher]
+GRANT ALTER USER
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to modify users
+
+| [source, cypher]
+GRANT SHOW USER
+ON DBMS
+TO role[, ...]
+| Enable the specified  role or roles to list users
+
+| [source, cypher]
+GRANT USER MANAGEMENT
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to create, delete, modify and list users
+
+|===

@@ -23,6 +23,11 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       "CREATE ROLE roleRemover",
       "CREATE ROLE roleShower",
       "CREATE ROLE roleManager",
+      "CREATE ROLE userAdder",
+      "CREATE ROLE userDropper",
+      "CREATE ROLE userModifier",
+      "CREATE ROLE userShower",
+      "CREATE ROLE userManager",
       "GRANT ROLE regularUsers TO jake",
       "DENY ACCESS ON DATABASE neo4j TO noAccessUsers"
     )
@@ -44,6 +49,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         |* <<administration-security-administration-dbms-privileges, DBMS administration>>
         |** <<administration-security-administration-dbms-custom, Using a custom role to manage DBMS privileges>>
         |** <<administration-security-administration-dbms-privileges-role-management, The dbms `ROLE MANAGEMENT` privileges>>
+        |** <<administration-security-administration-dbms-privileges-user-management, The dbms `USER MANAGEMENT` privileges>>
         |""".stripMargin)
     section("The `admin` role", "administration-security-administration-introduction", "enterprise-edition") {
       p("include::admin-role-introduction.asciidoc[]")
@@ -58,7 +64,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       p("include::database/admin-role-database.asciidoc[]")
       p("include::database/admin-database-syntax.asciidoc[]")
       p("image::grant-privileges-database.png[title=\"Syntax of GRANT and DENY Database Privileges\"]")
-      // image source: https://docs.google.com/drawings/d/1Zc5eawW58r4CI8e4FeYnA8cwUyIJX-7B4Eecj-qkd_8/edit
+      // image source: https://docs.google.com/drawings/d/1ukniqD0-LPYm5Xw0PrdXdp66Hbmt3xKElBZ8kIbkdYc/edit?usp=sharing
       section("The database `ACCESS` privilege", "administration-security-administration-database-access", "enterprise-edition") {
         p(
           """The `ACCESS` privilege can be used to enable the ability to access a database.
@@ -350,6 +356,70 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("The resulting role should have all privileges to manage roles:")
         query("SHOW ROLE roleManager PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
           p("Lists all privileges for role 'roleManager'")
+          resultTable()
+        }
+      }
+      section("The dbms `USER MANAGEMENT` privileges", "administration-security-administration-dbms-privileges-user-management", "enterprise-edition") {
+        p("The dbms privileges for user management are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
+        p("include::dbms/user-management-syntax.asciidoc[]")
+
+        p("The ability to add users can be granted via the `CREATE USER` privilege. The following query shows an example of this:")
+        query("GRANT CREATE USER ON DBMS TO userAdder", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow adding users:")
+        query("SHOW ROLE userAdder PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+          p("Lists all privileges for role 'userAdder'")
+          resultTable()
+        }
+
+        p("The ability to delete users can be granted via the `DROP USER` privilege. The following query shows an example of this:")
+        query("GRANT DROP USER ON DBMS TO userDropper", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow deleting users:")
+        query("SHOW ROLE userDropper PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+          p("Lists all privileges for role 'userDropper'")
+          resultTable()
+        }
+
+        p("The ability to modify users can be granted via the `ALTER USER` privilege. The following query shows an example of this:")
+        query("GRANT ALTER USER ON DBMS TO userModifier", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow modifying users:")
+        query("SHOW ROLE userModifier PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+          p("Lists all privileges for role 'userModifier'")
+          resultTable()
+        }
+
+        p("The ability to show users can be granted via the `SHOW USER` privilege. The following query shows an example of this:")
+        query("GRANT SHOW USER ON DBMS TO userShower", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow showing users:")
+        query("SHOW ROLE userShower PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+          p("Lists all privileges for role 'userShower'")
+          resultTable()
+        }
+
+        p("All of the above mentioned privileges can be granted via the `USER MANAGEMENT` privilege. The following query shows an example of this:")
+        query("GRANT USER MANAGEMENT ON DBMS TO userManager", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have all privileges to manage users:")
+        query("SHOW ROLE userManager PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+          p("Lists all privileges for role 'userManager'")
           resultTable()
         }
       }
