@@ -13,12 +13,12 @@ GRANT SHOW TRANSACTION[S] [(* \| user[, ...])]
 GRANT TERMINATE TRANSACTION[S] [(* \| user[, ...])]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role, or roles, to kill transactions and queries for all users, the specified user, or users in the default database, the database `name`, or all databases.
+| Enable the specified role, or roles, to end running transactions and queries for all users, the specified user, or users in the default database, the database `name`, or all databases.
 
 | [source, cypher]
 GRANT TRANSACTION [MANAGEMENT] [(* \| user[, ...])]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role, or roles, to list and kill transactions and queries for all users, the specified user, or users in the default database, the database `name`, or all databases.
+| Enable the specified role, or roles, to list and end running transactions and queries for all users, the specified user, or users in the default database, the database `name`, or all databases.
 
 |===

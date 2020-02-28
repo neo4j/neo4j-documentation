@@ -344,8 +344,8 @@ The following commands are only executable against the `system` database:
 | <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>         | DBMS                  | Determines whether the user can get information about existing users.
 | <<administration-security-administration-database-startstop, START>>                          | Database              | Determines whether a user can start up a specific database.
 | <<administration-security-administration-database-startstop, STOP>>                           | Database              | Determines whether a user can stop a specific running database.
-| <<administration-security-administration-database-transaction, TERMINATE TRANSACTION>>        | Database              | Determines whether a user is allowed to kill transactions and queries.
-| <<administration-security-administration-database-transaction, TRANSACTION MANAGEMENT>>       | Database              | Determines whether a user is allowed to list and kill transactions and queries.
+| <<administration-security-administration-database-transaction, TERMINATE TRANSACTION>>        | Database              | Determines whether a user is allowed to end running transactions and queries.
+| <<administration-security-administration-database-transaction, TRANSACTION MANAGEMENT>>       | Database              | Determines whether a user is allowed to list and end running transactions and queries.
 | <<administration-security-subgraph-traverse, TRAVERSE>>                                       | GRAPH                 | Determines whether an element (node, relationship or both) can be found and traversed while executing queries on the specified graph.
 | <<administration-security-administration-dbms-privileges-user-management, USER MANAGEMENT>>   | DBMS                  | Determines whether the user can create, drop, modify and show users.
 | <<administration-security-subgraph-write, WRITE>>                                             | GRAPH                 | Determines whether the user can execute write operations on the specified graph.
