@@ -302,7 +302,7 @@ class WhereTest extends DocumentingTest {
         |Any variable that is defined in the outside scope can be referenced inside the subquery's own scope.
         |Variables introduced inside the subquery are not part of the outside scope and therefore can't be accessed on the outside.
         |If the subquery evaluates even once to anything that is not null, the whole expression will become true.
-        |This also means, that the system only needs to calculate the first occurrence where the subquery evaluates to something that is not null and can skip the rest of the work.
+        |This also means that the system only needs to calculate the first occurrence where the subquery evaluates to something that is not null and can skip the rest of the work.
       """.stripMargin)
     functionWithCypherStyleFormatting(
       "EXISTS { \n MATCH [Pattern] \n WHERE [Expression] \n}")
@@ -375,7 +375,7 @@ class WhereTest extends DocumentingTest {
     }
     section("Missing properties and values", "missing-properties-and-values") {
       section("Default to `false` if property is missing", "default-to-false-missing-property") {
-        p("As missing properties evaluate to `null`, the comparison in the example will evaluate to `false` for nodes without the `belt` property.")
+        p("As missing properties evaluate to `null`, the comparison in the example will evaluate to `null` for nodes without the `belt` property.")
         query("MATCH (n:Person)\nWHERE n.belt = 'white'\nRETURN n.name, n.age, n.belt", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l, "n.belt" -> "white")))
         })) {
