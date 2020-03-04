@@ -27,6 +27,7 @@
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
                                     <arg value="--output=${project.build.directory}/docs/ops/available-metrics.asciidoc" />
+                                    <arg value="com.neo4j.metrics.source.db.StoreSizeMetrics" />
                                     <arg value="com.neo4j.metrics.source.db.CheckPointingMetrics" />
                                     <arg value="com.neo4j.metrics.source.db.EntityCountMetrics" />
                                     <arg value="com.neo4j.metrics.source.db.PageCacheMetrics" />
@@ -34,6 +35,7 @@
                                     <arg value="com.neo4j.metrics.source.db.CypherMetrics" />
                                     <arg value="com.neo4j.metrics.source.db.TransactionLogsMetrics" />
                                     <arg value="com.neo4j.metrics.source.db.BoltMetrics" />
+                                    <arg value="com.neo4j.metrics.source.db.DatabaseCountMetrics" />
                                     <arg value="com.neo4j.metrics.source.server.ServerMetrics" />
                                 </java>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
