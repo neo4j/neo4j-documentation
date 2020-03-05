@@ -89,7 +89,19 @@ allows all of the name management capabilities: node labels, relationship types 
 +
 ** `ALL [[DATABASE] PRIVILEGES]`
 +
-allows all of the above privileges to be enabled for the specified database.
+allows access and index, constraint and name management for the specified database.
++
+** `SHOW TRANSACTION {* | user[, ...]}`
++
+allows listing transactions and queries for the specified users on the specified database.
++
+** `TERMINATE TRANSACTION {* | user[, ...]}`
++
+allows ending transactions and queries for the specified users on the specified database.
++
+** `TRANSACTION [MANAGEMENT] {* | user[, ...]}`
++
+allows listing and ending transactions and queries for the specified users on the specified database.
 +
 * _dbname_
 ** The database to associate the privilege with.
