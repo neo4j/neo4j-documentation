@@ -29,6 +29,7 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
 
   override protected def getGraph: GraphDatabaseService = managementService.database(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)
 
+  //noinspection RedundantDefaultArgument
   override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "update-one" =>
@@ -36,12 +37,6 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
         assert(result.toList.size === 0)
       case "update-two" =>
         assertStats(result, systemUpdates = 2)
-        assert(result.toList.size === 0)
-      case "update-four" =>
-        assertStats(result, systemUpdates = 4)
-        assert(result.toList.size === 0)
-      case "update-ten" =>
-        assertStats(result, systemUpdates = 10)
         assert(result.toList.size === 0)
       case "show-one" =>
         assertStats(result, systemUpdates = 0)

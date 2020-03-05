@@ -6,7 +6,7 @@
 *** <<administration-security-administration-database-indexes, The INDEX MANAGEMENT privileges>>
 *** <<administration-security-administration-database-constraints, The CONSTRAINT MANAGEMENT privileges>>
 *** <<administration-security-administration-database-tokens, The NAME MANAGEMENT privileges>>
-*** <<administration-security-administration-database-all, Granting all database administration privileges>>
+*** <<administration-security-administration-database-all, Granting `ALL DATABASE PRIVILEGES`>>
 *** <<administration-security-administration-database-transaction, Granting `TRANSACTION MANAGEMENT` privileges>>
 ** <<administration-security-administration-dbms-privileges, DBMS administration>>
 *** <<administration-security-administration-dbms-privileges-intro, DBMS privileges>>

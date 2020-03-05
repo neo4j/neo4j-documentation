@@ -29,6 +29,8 @@ class DatabasePrivilegeTest extends AdministrationCommandTestBase {
     tx.execute("CREATE DATABASE bar")
     tx.execute("CREATE DATABASE baz")
     tx.execute("GRANT CREATE NEW PROPERTY NAMES ON DATABASE bar TO my_role")
+    tx.execute("GRANT CONSTRAINT ON DATABASE * TO my_role")
+    tx.execute("DENY CONSTRAINT ON DATABASE * TO my_role")
   }
 
   def text: String = {
@@ -74,7 +76,7 @@ GRANT DROP INDEX ON DATABASE foo TO my_role
 
 Grant privilege to drop indexes on a specified database to a role.
 
-###assertion=update-two
+###assertion=update-one
 //
 
 DENY INDEX MANAGEMENT ON DATABASE bar TO my_role
@@ -130,7 +132,7 @@ REVOKE GRANT CREATE NEW PROPERTY NAMES ON DATABASE bar FROM my_role
 
 Revoke the grant privilege to create new property names on a specified database from a role.
 
-###assertion=update-two
+###assertion=update-one
 //
 
 GRANT NAME MANAGEMENT ON DATABASE * TO my_role
@@ -138,13 +140,13 @@ GRANT NAME MANAGEMENT ON DATABASE * TO my_role
 
 Grant privilege to create labels, relationship types, and property names on all databases to a role.
 
-###assertion=update-ten
+###assertion=update-one
 //
 
 GRANT ALL ON DATABASE baz TO my_role
 ###
 
-Grant all database privileges on a specified database to a role.
+Grant privilege to access, create and drop indexes and constraints, create new labels, types and property names on a specified database to a role.
 
 """
   }

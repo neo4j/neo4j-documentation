@@ -48,7 +48,7 @@ DENY READ {prop} ON GRAPH foo RELATIONSHIP Type TO my_role
 
 Deny `read` privilege on a specified property, on all relationships with a specified type in a specified graph, to a role.
 
-###assertion=update-four
+###assertion=update-two
 //
 
 GRANT MATCH {*} ON GRAPH foo ELEMENTS Label TO my_role
