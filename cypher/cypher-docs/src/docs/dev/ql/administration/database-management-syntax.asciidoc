@@ -1,0 +1,34 @@
+.Database management command syntax
+[options="header", width="100%", cols="a,,"]
+|===
+| Command | Description | Comments
+
+| [source, cypher]
+SHOW DATABASES
+| List all databases and their details
+|
+| [source, cypher]
+SHOW DATABASE name
+| List a specific database and its details
+|
+| [source, cypher]
+SHOW DEFAULT DATABASE
+| List the default database and its details
+|
+| [source, cypher]
+STOP DATABASE name
+| Stop a database
+|
+| [source, cypher]
+START DATABASE name
+| Start a database
+|
+| [source, cypher]
+CREATE DATABASE [OR REPLACE] name [IF NOT EXISTS]
+| Create a new database
+|The IF `NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together. 
+| [source, cypher]
+DROP DATABASE name [IF EXISTS]
+| Drop a database
+|
+|===

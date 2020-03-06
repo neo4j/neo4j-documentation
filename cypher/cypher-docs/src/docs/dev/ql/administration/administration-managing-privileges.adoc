@@ -1,0 +1,129 @@
+[role=enterprise-edition]
+[[administration-managing-privileges]]
+= Managing privileges
+
+[abstract]
+--
+This section explains the general syntax for managing privileges in Neo4j.
+--
+
+
+* <<administration-security-access-control-introduction, Introduction>>
+* <<administration-security-access-control-syntax, Syntax of the `GRANT`, `DENY` and `REVOKE` commands>>
+* <<administration-security-access-control-show, Listing privileges>>
+
+
+[[administration-security-access-control-introduction]]
+== Introduction
+
+This section explains how to control privileges on the graph or parts of the graph.
+
+Privileges control the access rights to graph elements using a combined whitelist/blacklist mechanism.
+It is possible to grant access, or deny access, or a combination of the two.
+
+The user will be able to access the resource if they have a grant (whitelist) and do not have a deny (blacklist) relevant to that resource.
+All other combinations of `GRANT` and `DENY` will result in the matching subgraph being invisible.
+It will appear to the user as if they have a smaller database (smaller graph).
+
+A prerequisite is that the user is granted access to the database.
+
+
+[[administration-security-access-control-syntax]]
+== Syntax of the `GRANT`, `DENY` and `REVOKE` commands
+
+Access to graph data is controlled using the `GRANT`, `DENY` and `REVOKE` commands, which have the following definitions:
+
+* `GRANT` Grant a privilege to a role in order to access an entity.
+* `DENY` Deny a privilege to a role in order to prevent access to an entity.
+* `REVOKE` Remove a previously granted or denied privilege.
+
+These commands are idempotent, meaning that they can be executed multiple times without throwing any errors.
+
+CAUTION: It is important to note that using `DENY` does not erase a privilege granted by the `GRANT` command.
+They can both exist at the same time.
+The only way to erase a privilege is to use the `REVOKE` command to revoke the granted or denied privilege.
+
+The table below describes the general syntax for assigning and revoking privileges:
+
+
+.Privilege command syntax
+[options="header", width="100%", cols="1a,3"]
+|===
+| Command | Description
+| [source, cypher]
+{ GRANT \| DENY } privilege
+ON resource
+TO role [, ...]
+| Grant or deny a privilege to one or several roles.
+| [source, cypher]
+REVOKE [ GRANT \| DENY ] privilege
+ON resource
+FROM role [, ...]
+| Revoke a granted or denied privilege from one or several roles.
+
+If neither `GRANT` nor `DENY` is present, any privileges that were granted or denied will be revoked.
+|===
+
+* `privilege` can be either `graph-privilege`, `database-privilege` or `role-privilege`.
++
+See the relevant section for a thorough explanation of each of these:
+
+** `graph-privilege` - See <<administration-managing-graph-privileges>>.
+** `database-privilege` - See <<administration-managing-database-privileges>>.
+** `role-privilege` - See <<administration-managing-role-privileges>>.
+
+* `resource` is defined in the context of the specific `privilege`.
+
+[[administration-security-access-control-show]]
+== Listing privileges
+
+The `SHOW PRIVILEGES` command is used to inspect which privileges have been granted to which roles.
+
+.`SHOW PRIVILEGES` syntax
+[options="header", width="100%", cols="5a,3"]
+|===
+| Command | Description
+
+| [source, cypher]
+----
+SHOW PRIVILEGES
+----
+| List all privileges for all roles.
+| [source, cypher]
+----
+SHOW ROLE role PRIVILEGES
+----
+| List all privileges for a particular role.
+
+| [source, cypher]
+----
+SHOW USER user PRIVILEGES
+----
+| List all privileges for a particular user.
+|===
+
+
+.Return fields from the `SHOW PRIVILEGES` command
+[options="header", width="100%", cols="3a,2, 2"]
+|===
+| Command | Possible values | Description
+| `access`
+| `GRANT`, `DENY`
+| Whether the privilege is granted or denied.
+| `action`
+| `access`, `traverse`, `read`, `write`, `token`, `schema`, `admin`
+| Which type of privilege this is.
+| `resource`
+| 
+| What type of scope this privilege applies to: the entire DBMS, a database, a graph or sub-graph access
+| `graph`
+| 
+| The specific database or graph this privilege applies to
+| `segment`
+|
+| For sub-graph access control, this describes the scope in terms of labels or relationship types
+| `role`
+|
+| The role the privilege is granted to
+|===
+

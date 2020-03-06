@@ -7,29 +7,41 @@ import org.neo4j.kernel.api.security.AnonymousContext
 
 import scala.collection.JavaConverters._
 
-class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
+class AdministrationDatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql/administration/"
 
   override def doc: Document = new DocBuilder {
-    doc("Databases", "administration-databases")
+    doc("Managing databases", "administration-managing-databases")
     database("system")
     synopsis("This section explains how to use Cypher to manage Neo4j databases: creating, deleting, starting and stopping individual databases within a single server.")
     p(
       """
-        |* <<administration-databases-introduction, Introduction>>
-        |* <<administration-databases-show-databases, Listing databases>>
-        |* <<administration-databases-create-database, Creating databases>>
-        |* <<administration-databases-stop-database, Stopping databases>>
-        |* <<administration-databases-start-database, Starting databases>>
-        |* <<administration-databases-drop-database, Deleting databases>>
+        |* <<administration-managing-databases-introduction, Introduction>>
+        |* <<administration-managing-databases-syntax, Syntax>>
+        |* <<administration-managing-databases-examples, Examples>>
+        |** <<administration-managing-databases-examples-show, Listing databases>>
+        |** <<administration-managing-databases-examples-create, Creating databases>>
+        |** <<administration-managing-databases-examples-stop, Stopping databases>>
+        |** <<administration-managing-databases-examples-start, Starting databases>>
+        |** <<administration-managing-databases-examples-drop, Deleting databases>>
         |""".stripMargin)
-    section("Introduction", "administration-databases-introduction") {
+    section("Introduction", "administration-managing-databases-introduction") {
       p(
-        """Neo4j allows the same server to manage multiple databases. The metadata for these databases,
-          |including the associated security model, is maintained in a special database called the `system` database.
-          |All multi-database administrative commands need to be executing against the `system` database.""".stripMargin)
+        """With Neo4j, multiple databases can be managed within the same DBMS.
+          |The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
+          |All commands described in this section must be executed against the `system` database.""".stripMargin)
+      p(
+        """In order for a user to manage databases, they must first be assigned the required privileges.
+          |A user who is assigned the `admin` role can perform all the actions decribed in this section.
+          |The privileges to `START` and `STOP` databases can be granted to roles using Cypher commands.
+          |For details, see <<administration-managing-database-privileges>>.
+          |The privileges to `CREATE` and `DROP` databases are only available through the `admin` role.""".stripMargin)
     }
-    section("Listing databases", "administration-databases-show-databases") {
+    section("Syntax", "administration-managing-databases-syntax") {
+      p("include::database-management-syntax.asciidoc[]")
+    }
+    section("Examples", "administration-managing-databases-examples") {
+    section("Listing databases", "administration-managing-databases-examples-show") {
       p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
       p("All available databases can be seen using the command `SHOW DATABASES`.")
       query("SHOW DATABASES", assertDatabasesShown) {
@@ -53,7 +65,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |""".stripMargin)
       }
     }
-    section("Creating databases", "administration-databases-create-database", "enterprise-edition") {
+    section("Creating databases", "administration-managing-databases-examples-create", "enterprise-edition") {
       p("Databases can be created using `CREATE DATABASE`.")
       query("CREATE DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
@@ -79,7 +91,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
       }
     }
-    section("Stopping databases", "administration-databases-stop-database", "enterprise-edition") {
+    section("Stopping databases", "administration-managing-databases-examples-stop", "enterprise-edition") {
       p("Databases can be stopped using the command `STOP DATABASE`.")
       query("STOP DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
@@ -91,7 +103,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Starting databases", "administration-databases-start-database", "enterprise-edition") {
+    section("Starting databases", "administration-managing-databases-examples-start", "enterprise-edition") {
       p("Databases can be started using the command `START DATABASE`.")
       query("START DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
@@ -103,7 +115,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
     }
-    section("Deleting databases", "administration-databases-drop-database", "enterprise-edition") {
+    section("Deleting databases", "administration-managing-databases-examples-drop", "enterprise-edition") {
       p("Databases can be deleted using the command `DROP DATABASE`.")
       query("DROP DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
@@ -119,6 +131,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("DROP DATABASE customers IF EXISTS", ResultAssertions(r => {
         assertStats(r, systemUpdates = 0)
       })) {}
+    }
     }
   }.build()
 

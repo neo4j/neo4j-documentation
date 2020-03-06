@@ -1,0 +1,70 @@
+.Managing database privileges command syntax
+[options="header", width="100%", cols="a,"]
+|===
+| Command | Comment
+| [source, cypher]
+{ GRANT \| DENY } database-privilege
+ON GRAPH[S] { graph-name \| * }
+[ entity ] 
+TO role [, ...]
+.2+.^| Exactly one graph privilege can be granted in each statement.
+
+Privileges can either be granted to one specific named graph, or all graphs signified with `*`.
+
+Specifying `entity` is optional.
+| [source, cypher]
+REVOKE [ GRANT \| DENY ] database-privilege
+ON GRAPH[S] { graph-name \| * }
+[ entity ] 
+FROM role [, ...]
+|===
+
+.`database-privilege`: The privilege to be granted, denied or revoked
+[options="header", width="100%", cols="a,"]
+|===
+| Possible values | Description
+| [source, cypher]
+ACCESS
+| Allows access for a specific database/graph
+| [source, cypher]
+START
+| Allows the specified database to be started
+| [source, cypher]
+STOP
+| Allows the specified database to be stopped
+| [source, cypher]
+CREATE INDEX
+| Allows indexes to be created on the specified database.
+| [source, cypher]
+DROP INDEX
+| Allows indexes to be deleted on the specified database.
+| [source, cypher]
+INDEX MANAGEMENT
+| Allows indexes to be created and deleted on the specified database.
+| [source, cypher]
+CREATE CONSTRAINT
+| Allows constraints to be created on the specified database.
+| [source, cypher]
+DROP CONSTRAINT
+| Allows constraints to be deleted on the specified database.
+| [source, cypher]
+CONSTRAINT MANAGEMENT
+| Allows constraints to be created and deleted on the specified database.
+| [source, cypher]
+CREATE NEW [NODE] LABEL
+| Allows labels to be created so that future nodes can be assigned them.
+| [source, cypher]
+CREATE NEW [RELATIONSHIP] TYPE
+| Allows relationship types to be created so that future relationships can be created with these types.
+| [source, cypher]
+CREATE NEW [PROPERTY] NAME
+| Allows property names to be created so that nodes and relationships can have properties with these names assigned.
+| [source, cypher]
+NAME MANAGEMENT
+| Allows all of the name management capabilities: node labels, relationship types and property names.
+| [source, cypher]
+ALL [[DATABASE] PRIVILEGES]
+| Allows all of the above privileges to be enabled for the specified database.
+|===
+
+

@@ -1,0 +1,91 @@
+.Managing graph privileges command syntax
+[options="header", width="100%", cols="a,"]
+|===
+| Command | Comment
+| [source, cypher]
+{ GRANT \| DENY } graph-privilege
+ON GRAPH[S] { graph-name \| * }
+[ entity ] 
+TO role [, ...]
+.2+.^| Exactly one graph privilege can be granted in each statement.
+
+Privileges can either be granted to one specific named graph, or all graphs signified with `*`.
+
+Specifying `entity` is optional.
+| [source, cypher]
+REVOKE [ GRANT \| DENY ] graph-privilege
+ON GRAPH[S] { graph-name \| * }
+[ entity ] 
+FROM role [, ...]
+|===
+
+
+// Note to self:
+// Only one graph privilege per statement
+// Either only one graph or *
+// entity is entirely optional 
+
+.`graph-privilege`: The privilege to be granted, denied or revoked
+[options="header", width="100%", cols="1a,3"]
+|===
+| Possible values | Description
+| [source, cypher]
+TRAVERSE
+| Allows the specified nodes and/or relationships to be found.
+| [source, cypher]
+READ {
+property_name [, ...] \| * }
+| Grants `READ` privilege to the specified properties.
+
+Granting property `READ` access does not imply that the entity (node and/or relationship) with that property can be found.
+
+For example if there is also a `DENY` on the entity, it will not be found.
+| [source, cypher]
+MATCH {
+property_name [, ...] \| * }
+| Combines both `TRAVERSE` and `READ`, allowing an entity to be found and its properties read.
+
+`REVOKE MATCH` is not supported.
+
+Instead you must perform `REVOKE` on the individual `READ` and `TRAVERSE` privileges.
+| [source, cypher]
+WRITE {*}
+| Grants the `WRITE` privilege.
+
+The `WRITE` privilege can only be assigned to all nodes, relationships and properties in the entire graph.
+
+This means that, if specified, the `entity` part of the command must be `ELEMENTS *` and cannot be more specific.
+|===
+
+
+
+[NOTE]
+See <<administration-managing-graph-privileges-examples>> for more in-depth description of how the `graph-privileges` work!
+
+.`entity`: The graph elements this privilege applies to
+[options="header", width="100%", cols="1a,3"]
+|===
+| Possible values | Description
+| [source, cypher]
+NODES {
+label_name [, ...]
+\| * }
+| The label name can be `*` which means _all label names_.
+
+Multiple labels can be specified, comma-separated.
+| [source, cypher]
+RELATIONSHIPS {
+relationship_type [, ...]
+\| * }
+| The relationship type can be `*` which means _all relationship types_.
+
+Multiple relationship types can be specified, comma-separated.
+| [source, cypher]
+ELEMENTS {
+{ [label_name [, ...]] [relationship_name [, ...]] }
+\| * }
+| Details about elements
+|===
+
+
+

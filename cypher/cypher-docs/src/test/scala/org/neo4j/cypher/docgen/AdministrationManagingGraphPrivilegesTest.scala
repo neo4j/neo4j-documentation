@@ -3,11 +3,11 @@ package org.neo4j.cypher.docgen
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.exceptions.SyntaxException
 
-class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSupport {
-  override def outputPath = "target/docs/dev/ql/administration/security/"
+class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with QueryStatisticsTestSupport {
+  override def outputPath = "target/docs/dev/ql/administration/"
 
   override def doc: Document = new DocBuilder {
-    doc("Graph and sub-graph access control", "administration-security-subgraph")
+    doc("Managing graph privileges", "administration-managing-graph-privileges")
     database("system")
     initQueries(
       "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE",
@@ -17,76 +17,42 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       "GRANT ACCESS ON DATABASE neo4j TO regularUsers",
       "DENY ACCESS ON DATABASE neo4j TO noAccessUsers"
     )
-    synopsis("This section explains how to use Cypher to manage privileges for Neo4j role-based access control and fine-grained security.")
+    synopsis("This section explains how to use Cypher to manage graph privileges, i.e. the privileges to `TRAVERSE`, `READ`, `MATCH` and `WRITE` elements in the Neo4j graph.")
 
     p(
       """
-        |* <<administration-security-subgraph-introduction, The `GRANT`, `DENY` and `REVOKE` commands>>
-        |* <<administration-security-subgraph-show, Listing privileges>>
-        |* <<administration-security-subgraph-traverse, The `TRAVERSE` privilege>>
-        |* <<administration-security-subgraph-read, The `READ` privilege>>
-        |* <<administration-security-subgraph-match, The `MATCH` privilege>>
-        |* <<administration-security-subgraph-write, The `WRITE` privilege>>
-        |* <<administration-security-subgraph-revoke, The `REVOKE` command>>
+        |* <<administration-managing-graph-privileges-introduction, Introduction>>
+        |* <<administration-managing-graph-privileges-syntax, Syntax>>
+        |* <<administration-managing-graph-privileges-examples, Examples>>
+        |** <<administration-managing-graph-privileges-examples-traverse, The `TRAVERSE` privilege>>
+        |** <<administration-managing-graph-privileges-examples-read, The `READ` privilege>>
+        |** <<administration-managing-graph-privileges-examples-match, The `MATCH` privilege>>
+        |** <<administration-managing-graph-privileges-examples-write, The `WRITE` privilege>>
+        |** <<administration-managing-graph-privileges-examples-revoke, The `REVOKE` command>>
+        |** <<administration-managing-graph-privileges-examples-show, Listing privileges using the `SHOW PRIVILEGES` command>>
         |""".stripMargin)
 
-    p(
-      """
-        |Privileges control the access rights to graph elements using a combined whitelist/blacklist mechanism.
-        |It is possible to grant access, or deny access, or a combination of the two.
-        |The user will be able to access the resource if they have a grant (whitelist) and do not have a deny (blacklist) relevant to that resource.
-        |All other combinations of `GRANT` and `DENY` will result in the matching subgraph being invisible.
-        |It will appear to the user as if they have a smaller database (smaller graph).
-        |""".stripMargin)
-    note {
-      p(
-        """If a user was not also provided with the database `ACCESS` privilege then access to the entire database will be denied.
-          |Information about the database access privilege can be found in <<administration-security-administration-database-access, The ACCESS privilege>>.
-          |""".stripMargin)
-    }
-    section("The `GRANT`, `DENY` and `REVOKE` commands", "administration-security-subgraph-introduction", "enterprise-edition") {
-      p("include::grant-deny-syntax.asciidoc[]")
-      p("image::grant-privileges-graph.png[title=\"GRANT and DENY Syntax\"]")
-      // image source: https://docs.google.com/drawings/d/10PrJ2xb0fvT0I_i5P0thmSEReIcsZD8cJqJMV7FS7yg/edit?usp=sharing
-    }
-    section("Listing privileges", "administration-security-subgraph-show", "enterprise-edition") {
-      p("Available privileges for all roles can be seen using `SHOW PRIVILEGES`.")
-      query("SHOW PRIVILEGES", assertPrivilegeShown(Seq(
-        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
-        Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers")
-      ))) {
-        p(
-          """Lists all privileges for all roles.
-            |The table contains columns describing the privilege:
-            |
-            |* access: whether the privilege is granted or denied (whitelist or blacklist)
-            |* action: which type of privilege this is: access, traverse, read, write, token, schema or admin
-            |* resource: what type of scope this privilege applies to: the entire dbms, a database, a graph or sub-graph access
-            |* graph: the specific database or graph this privilege applies to
-            |* segment: for sub-graph access control, this describes the scope in terms of labels or relationship types
-            |* role: the role the privilege is granted to
-            |""".stripMargin)
-        resultTable()
-      }
+    section("Introduction", "administration-managing-graph-privileges-introduction") {
+      p("""
+        |This section explains how to control privileges on the graph or parts of the graph.
+        |A user must be assigned the `admin` role in order to perform the commands described."""".stripMargin)
+      p("""
+          |Privileges control the access rights to graph elements using a combined whitelist/blacklist mechanism.
+          |It is possible to grant access, or deny access, or a combination of the two.""".stripMargin)
+      p("""
+          |The user will be able to access the resource if they have a grant (_whitelist_) and do not have a deny (_blacklist_) relevant to that resource.
+          |All other combinations of `GRANT` and `DENY` will result in the matching subgraph being invisible.
+          |It will appear to the user as if they have a smaller database (smaller graph).""".stripMargin)
 
-      p("Available privileges for a particular role can be seen using `SHOW ROLE name PRIVILEGES`.")
-      query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
-        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers")
-      ))) {
-        p("Lists all privileges for role 'regularUsers'")
-        resultTable()
-      }
-
-      p("Available privileges for a particular user can be seen using `SHOW USER name PRIVILEGES`.")
-      query("SHOW USER jake PRIVILEGES", assertPrivilegeShown(Seq(
-        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
-      ))) {
-        p("Lists all privileges for user 'jake'")
-        resultTable()
-      }
+      p("A prerequisite is that the user is granted access to the database.")
+    }
+    section("Syntax", "administration-managing-graph-privileges-syntax") {
+      p("include::managing-graph-privileges-syntax.adoc[]")
     }
 
-    section("The `TRAVERSE` privilege", "administration-security-subgraph-traverse", "enterprise-edition") {
+
+    section("Examples", "administration-managing-graph-privileges-examples") {
+    section("The `TRAVERSE` privilege", "administration-managing-graph-privileges-examples-traverse") {
       p("Users can be granted the right to find nodes and relationships using the `GRANT TRAVERSE` privilege.")
       p("include::grant-traverse-syntax.asciidoc[]")
       p("For example, we can allow the user `jake`, who has role 'regularUsers' to find all nodes with the label `Post`.")
@@ -106,7 +72,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
     }
 
-    section("The `READ` privilege", "administration-security-subgraph-read", "enterprise-edition") {
+    section("The `READ` privilege", "administration-managing-graph-privileges-examples-read") {
       p(
         """Users can be granted the right to do property reads on nodes and relationships using the `GRANT READ` privilege.
           |It is very important to note that users can only read properties on entities that they are allowed to find in the first place.""".stripMargin)
@@ -131,7 +97,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         statsOnlyResultTable()
       }
     }
-    section("The `MATCH` privilege", "administration-security-subgraph-match", "enterprise-edition") {
+    section("The `MATCH` privilege", "administration-managing-graph-privileges-examples-match") {
       p("As a shorthand for `TRAVERSE` and `READ`, users can be granted the right to find and do property reads on nodes and relationships using the `GRANT MATCH` privilege. ")
       p("include::grant-match-syntax.asciidoc[]")
 
@@ -177,7 +143,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
     }
 
-    section("The `WRITE` privilege", "administration-security-subgraph-write", "enterprise-edition") {
+    section("The `WRITE` privilege", "administration-managing-graph-privileges-examples-write") {
       p(
         """The `WRITE` privilege can be used to allow the ability to write on a graph. At the moment, granting the `WRITE` privilege implies that you can do any write operation on any part of the graph. """.stripMargin)
       p("include::grant-write-syntax.asciidoc[]")
@@ -214,7 +180,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
     }
 
-    section("The `REVOKE` command", "administration-security-subgraph-revoke", "enterprise-edition") {
+    section("The `REVOKE` command", "administration-managing-graph-privileges-examples-revoke") {
       initQueries(
         "GRANT TRAVERSE ON GRAPH neo4j NODES Post TO regularUsers",
         "GRANT TRAVERSE ON GRAPH neo4j NODES Payments TO regularUsers",
@@ -260,6 +226,43 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         p("Both the `CREATE INDEX` and `DROP INDEX` privileges have been revoked:")
         resultTable()
       }
+    }
+    section("Listing privileges using the `SHOW PRIVILEGES` command", "administration-managing-graph-privileges-examples-show") {
+      p("Available privileges for all roles can be seen using `SHOW PRIVILEGES`.")
+      query("SHOW PRIVILEGES", assertPrivilegeShown(Seq(
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
+        Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers")
+      ))) {
+        p(
+          """Lists all privileges for all roles.
+            |The table contains columns describing the privilege:
+            |
+            |* access: whether the privilege is granted or denied (whitelist or blacklist)
+            |* action: which type of privilege this is: access, traverse, read, write, token, schema or admin
+            |* resource: what type of scope this privilege applies to: the entire dbms, a database, a graph or sub-graph access
+            |* graph: the specific database or graph this privilege applies to
+            |* segment: for sub-graph access control, this describes the scope in terms of labels or relationship types
+            |* role: the role the privilege is granted to
+            |""".stripMargin)
+        resultTable()
+      }
+
+      p("Available privileges for a particular role can be seen using `SHOW ROLE name PRIVILEGES`.")
+      query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers")
+      ))) {
+        p("Lists all privileges for role 'regularUsers'")
+        resultTable()
+      }
+
+      p("Available privileges for a particular user can be seen using `SHOW USER name PRIVILEGES`.")
+      query("SHOW USER jake PRIVILEGES", assertPrivilegeShown(Seq(
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
+      ))) {
+        p("Lists all privileges for user 'jake'")
+        resultTable()
+      }
+    }
     }
   }.build()
 

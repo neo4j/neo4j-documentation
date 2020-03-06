@@ -1,0 +1,39 @@
+.Role management privilege command syntax
+[options="header", width="100%", cols="a,"]
+|===
+| Command | Comment
+| [source, cypher]
+{ GRANT \| DENY } role-management-privilege
+ON DBMS
+TO role [, ...]
+| Grant or deny a role-management-privilege to one or several roles.
+| [source, cypher]
+REVOKE [ GRANT \| DENY ] role-management-privilege
+ON DBMS
+FROM role [, ...]
+| Revoke a granted or denied role-management-privilege from one or several roles.
+|===
+
+.`role-management-privilege`: The privilege to be granted, denied or revoked
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+| [source, cypher]
+CREATE ROLE
+| Enable the specified role or roles to create new roles
+| [source, cypher]
+DROP ROLE
+| Enable the specified role or roles to delete roles
+| [source, cypher]
+ASSIGN ROLE
+| Enable the specified role or roles to assign roles to users
+| [source, cypher]
+REMOVE ROLE
+| Enable the specified role or roles to remove roles from users
+| [source, cypher]
+SHOW ROLE
+| Enable the specified role or roles to list roles
+| [source, cypher]
+ROLE MANAGEMENT
+| Enable the specified role or roles to create, delete, assign, remove and list roles
+|===

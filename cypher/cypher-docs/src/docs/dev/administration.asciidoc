@@ -7,13 +7,42 @@ This section explains how to use Cypher to administer Neo4j databases, such as c
 --
 
 
-* <<administration-databases, Databases>>
-** <<administration-databases-introduction, Introduction>>
-** <<administration-databases-show-databases, Listing databases>>
-** <<administration-databases-create-database, Creating databases>>
-** <<administration-databases-stop-database, Stopping databases>>
-** <<administration-databases-start-database, Starting databases>>
-** <<administration-databases-drop-database, Deleting databases>>
+* <<administration-managing-databases, Managing databases>>
+** <<administration-managing-databases-introduction, Introduction>>
+** <<administration-managing-databases-syntax, Syntax>>
+** <<administration-managing-databases-examples, Examples>>
+
+* <<administration-managing-users, Managing users>>
+** <<administration-managing-users-introduction, Introduction>>
+** <<administration-managing-users-syntax, Syntax>>
+** <<administration-managing-users-examples, Examples>>
+
+* <<administration-managing-roles, Managing roles>>
+** <<administration-managing-roles-introduction, Introduction>>
+** <<administration-managing-roles-built-in-roles, Built-in roles>>
+** <<administration-managing-roles-the-admin-role, The `admin` role>>
+** <<administration-managing-roles-syntax, Syntax>>
+** <<administration-managing-roles-examples, Examples>>
+
+* <<administration-managing-privileges, Managing privileges>>
+** <<administration-security-access-control-introduction, Introduction>>
+** <<administration-security-access-control-syntax, Syntax of the `GRANT`, `DENY` and `REVOKE` commands>>
+** <<administration-security-access-control-show, Listing privileges>>
+
+* <<administration-managing-graph-privileges, Managing graph privileges>>
+** <<administration-managing-graph-privileges-introduction, Introduction>>
+** <<administration-managing-graph-privileges-syntax, Syntax>>
+** <<administration-managing-graph-privileges-examples, Examples>>
+
+* <<administration-managing-database-privileges, Managing database privileges>>
+** <<administration-managing-database-privileges-introduction, Introduction>>
+** <<administration-managing-database-privileges-syntax, Syntax>>
+** <<administration-managing-database-privileges-examples, Examples>>
+
+* <<administration-managing-role-privileges, Managing role privileges>>
+** <<administration-managing-role-privileges-introduction, Introduction>>
+** <<administration-managing-role-privileges-syntax, Syntax>>
+** <<administration-managing-role-privileges-examples, Examples>>
 
 * <<administration-indexes-search-performance, Indexes for search performance>>
 ** <<administration-indexes-introduction, Introduction>>
@@ -33,27 +62,29 @@ This section explains how to use Cypher to administer Neo4j databases, such as c
 ** <<administration-constraints-syntax, Syntax>>
 ** <<administration-constraints-examples, Examples>>
 
-* <<administration-security, Security>>
-** <<administration-security-introduction, Introduction>>
-** <<administration-security-users-and-roles, User and role management>>
-** <<administration-security-subgraph, Graph and subgraph access control>>
-** <<administration-security-administration, Security of administration>>
 
+include::ql/administration/administration-managing-databases.adoc[leveloffset=+1]
 
-Neo4j supports the management of manage multiple databases within the same DBMS.
-The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
-Most administrative commands must be executed against the `system` database because they involve editing the metadata for the entire system.
-This includes all commands related to managing multiple databases as well as all commands for defining the security model: users, roles and privileges.
-The administrative commands that are specific to the schema of an individual database are still executed against that specific database.
-These include index and constraint management commands.
+[role=enterprise-edition]
+include::ql/administration/administration-managing-users.adoc[leveloffset=+1]
 
+[role=enterprise-edition]
+include::ql/administration/administration-managing-roles.adoc[leveloffset=+1]
 
-include::ql/administration/administration-databases.adoc[leveloffset=+1]
+[role=enterprise-edition]
+include::ql/administration/administration-managing-privileges.adoc[leveloffset=+1]
+
+[role=enterprise-edition]
+include::ql/administration/administration-managing-graph-privileges.adoc[leveloffset=+1]
+
+[role=enterprise-edition]
+include::ql/administration/administration-managing-database-privileges.adoc[leveloffset=+1]
+
+[role=enterprise-edition]
+include::ql/administration/administration-managing-role-privileges.adoc[leveloffset=+1]
 
 include::ql/administration/indexes-for-search-performance/index.asciidoc[leveloffset=+1]
 
 include::ql/administration/indexes-for-full-text-search/index.asciidoc[leveloffset=+1]
 
 include::ql/administration/constraints/index.asciidoc[leveloffset=+1]
-
-include::ql/administration/security/index.asciidoc[leveloffset=+1]

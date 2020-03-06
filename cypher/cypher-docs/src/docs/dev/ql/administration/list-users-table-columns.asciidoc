@@ -1,0 +1,13 @@
+.`SHOW USERS` output
+[options="header", width="100%", cols="1a,3"]
+|===
+| Column | Description
+| `user`
+| The username.
+| `roles`
+| [enterprise-edition]#Roles granted to the user.#
+| `passwordChangeRequired`
+| If `true`, the user must change their password at next login.
+| `suspended`
+| [enterprise-edition]#If `true`, the user is currently suspended (cannot log in).#
+|===

@@ -7,19 +7,6 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 --
 
 * <<administration-security-introduction, Introduction>>
-* <<administration-security-users-and-roles, User and role management>>
-** <<administration-security-users, User management>>
-*** <<administration-security-users-show, Listing users>>
-*** <<administration-security-users-create, Creating users>>
-*** <<administration-security-users-alter, Modifying users>>
-*** <<administration-security-users-alter-password, Changing the current user's password>>
-*** <<administration-security-users-drop, Deleting users>>
-** <<administration-security-roles, Role management>>
-*** <<administration-security-roles-show, Listing roles>>
-*** <<administration-security-roles-create, Creating roles>>
-*** <<administration-security-roles-drop, Deleting roles>>
-*** <<administration-security-roles-grant, Assigning roles>>
-*** <<administration-security-roles-revoke, Revoking roles>>
 * <<administration-security-subgraph, Graph and sub-graph access control>>
 ** <<administration-security-subgraph-introduction, The `GRANT`, `DENY` and `REVOKE` commands>>
 ** <<administration-security-subgraph-show, Listing privileges>>
@@ -60,7 +47,6 @@ Instead they are defined in terms of their underlying _privileges_ and they can 
 In addition any new roles created can by assigned any combination of _privileges_ to create the specific access control desired.
 A major additional capability is _sub-graph_ access control whereby read-access to the graph can be limited to specific combinations of label, relationship-type and property.
 
-include::administration-security-users-and-roles.adoc[leveloffset=+1]
 
 [role=enterprise-edition]
 include::administration-security-subgraph.adoc[leveloffset=+1]
