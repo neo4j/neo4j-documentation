@@ -24,6 +24,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         |** <<administration-security-users-alter-password, Changing the current user's password>>
         |** <<administration-security-users-drop, Deleting users>>
         |* <<administration-security-roles, Role management>>
+        |** <<administration-security-roles-public, The `PUBLIC` role>>
         |** <<administration-security-roles-show, Listing roles>>
         |** <<administration-security-roles-create, Creating roles>>
         |** <<administration-security-roles-drop, Deleting roles>>
@@ -69,9 +70,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
         note {
           p(
-            """When creating a user, their initial list of roles is empty.
-              |In Neo4j community-edition this is not important as all users have implied administator privileges.
-              |In Neo4j enterprise-edition a new user like this will have no rights and it is important to <<administration-security-roles-grant, grant roles to the user>>.""".stripMargin)
+            """In Neo4j Community Edition there are no roles, but all users have implied administrator privileges.
+              |In Neo4j Enterprise Edition all users are automatically assigned the <<administration-security-roles-public, `PUBLIC`>> role, giving them a base set of privileges.""".stripMargin)
         }
         p("The `CREATE USER` command is optionally idempotent, with the default behavior to throw an exception if the user already exists. " +
           "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the user already exist. " +
@@ -149,10 +149,15 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED",
         "CREATE USER user1 SET PASSWORD 'abc'", "CREATE USER user2 SET PASSWORD 'abc'", "CREATE USER user3 SET PASSWORD 'abc'")
       p("Roles can be created and managed using a set of Cypher administration commands executed against the `system` database.")
-      note {
-        p("""The role name `PUBLIC` is not permitted. This is a system-reserved role, and cannot be used.""")
-      }
       p("include::role-management-syntax.asciidoc[]")
+      section("The `PUBLIC` role", "administration-security-roles-public", "enterprise-edition") {
+        p(
+          """There exists a special built-in role, `PUBLIC`, which is assigned to all users.
+            |This role cannot be dropped or revoked from any user, but its privileges may be modified.
+            |By default, it is assigned the <<administration-security-administration-database-access, ACCESS>> privilege on the default database.
+            |""".stripMargin)
+        p("""In contrast to the `PUBLIC` role, the other built-in roles can be granted, revoked, dropped and re-created.""")
+      }
       section("Listing roles", "administration-security-roles-show", "enterprise-edition") {
         p("Available roles can be seen using `SHOW ROLES`.")
         query("SHOW ROLES", assertAllNodesShown("Role", column = "role")) {
@@ -160,6 +165,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             """This is the same command as `SHOW ALL ROLES`.
               |When first starting a Neo4j DBMS there are a number of built-in roles:
               |
+              |* `PUBLIC` - a role that all users have granted, by default it gives access to the default database
               |* `reader` - can perform read-only queries on all databases except `system`
               |* `editor` - can perform read and write operations on all databases except `system`, but cannot make new labels or relationship types
               |* `publisher` - can do the same as `editor`, but also create new labels and relationship types.
