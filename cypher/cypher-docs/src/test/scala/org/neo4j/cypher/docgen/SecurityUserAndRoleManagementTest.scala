@@ -70,8 +70,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
         note {
           p(
-            """In Neo4j community-edition there are no roles, but all users have implied administrator privileges.
-              |In Neo4j enterprise-edition all users are automatically assigned the <<administration-security-roles-public, `PUBLIC`>> role, giving them a base set of privileges.""".stripMargin)
+            """In Neo4j Community Edition there are no roles, but all users have implied administrator privileges.
+              |In Neo4j Enterprise Edition all users are automatically assigned the <<administration-security-roles-public, `PUBLIC`>> role, giving them a base set of privileges.""".stripMargin)
         }
         p("The `CREATE USER` command is optionally idempotent, with the default behavior to throw an exception if the user already exists. " +
           "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the user already exist. " +
