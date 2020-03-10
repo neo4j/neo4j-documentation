@@ -986,7 +986,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |If the right-hand side operator yields at least one row, the row from the left-hand side operator is yielded by the `SemiApply` operator.
           |This makes `SemiApply` a filtering operator, used mostly for pattern predicates in queries.""".stripMargin,
       queryText =
-        """MATCH (p:Person)
+        """CYPHER runtime=slotted
+          |MATCH (p:Person)
           |WHERE (p)-[:FRIENDS_WITH]->(:Person)
           |RETURN p.name""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("SemiApply"))
@@ -1001,7 +1002,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |If the right-hand side operator yields no rows, the row from the left-hand side operator is yielded by the `AntiSemiApply` operator.
           |This makes `AntiSemiApply` a filtering operator, used for pattern predicates in queries.""".stripMargin,
       queryText =
-        """MATCH (me:Person {name: "me"}), (other:Person)
+        """CYPHER runtime=slotted
+          |MATCH (me:Person {name: "me"}), (other:Person)
           |WHERE NOT (me)-[:FRIENDS_WITH]->(other)
           |RETURN other.name""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("AntiSemiApply"))
