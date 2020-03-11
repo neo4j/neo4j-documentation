@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.neo4j.doc</groupId>
         <artifactId>neo4j-cypher-docs-parent</artifactId>
-        <version>3.5.16-SNAPSHOT</version>
+        <version>3.5.17-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>neo4j-cypher-prettifier</artifactId>
