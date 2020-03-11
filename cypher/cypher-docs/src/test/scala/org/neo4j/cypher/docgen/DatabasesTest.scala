@@ -126,8 +126,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     val tx = db.beginTransaction(Type.explicit, AnonymousContext.read())
     try {
       val dbNodes = tx.findNodes(Label.label("Database")).asScala.toList
-      val dbNames = dbNodes.map(n => n.getProperty("name"))
-      val result = p.columnAs[String]("name").toList
+      val dbNames = dbNodes.map(n => n.getProperty("name")).toSet
+      val result = p.columnAs[String]("name").toSet
       result should equal(dbNames)
     } finally {
       tx.close()
@@ -137,8 +137,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
   private def assertDatabaseShown(expected: String) = ResultAndDbAssertions((p, db) => {
     val tx = db.beginTransaction(Type.explicit, AnonymousContext.read())
     try {
-      val result = p.columnAs[String]("name").toList
-      result should equal(List(expected))
+      val result = p.columnAs[String]("name").toSet
+      result should equal(Set(expected))
     } finally {
       tx.close()
     }
