@@ -13,6 +13,7 @@ following contexts:
 * Parameters
 
 If any reserved keyword is escaped -- i.e. is encapsulated by backticks ```, such as `++`AND`++` -- it would become a valid identifier in the above contexts.
+For more information on naming rules, see <<cypher-naming>>.
 
 == Clauses
 
