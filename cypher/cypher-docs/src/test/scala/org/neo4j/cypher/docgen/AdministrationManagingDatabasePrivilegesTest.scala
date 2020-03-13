@@ -48,14 +48,14 @@ class AdministrationManagingDatabasePrivilegesTest extends DocumentingTest with 
         |""".stripMargin)
     }
     section("Syntax", "administration-managing-database-privileges-syntax") {
-      p("include::managing-database-privileges-syntax.adoc[]")
+      p("include::managing-database-privileges/managing-database-privileges-syntax.adoc[]")
     }
     section("Examples", "administration-managing-database-privileges-examples") {
       section("The database `ACCESS` privilege", "administration-managing-database-privileges-examples-access") {
         p(
           """The `ACCESS` privilege can be used to enable the ability to access a database.
             |If this is not granted to users, they will not even be able to start transactions on the relevant database.""".stripMargin)
-        p("include::database/grant-database-access-syntax.asciidoc[]")
+        p("include::managing-database-privileges/grant-database-access-syntax.asciidoc[]")
 
         p(
           """For example, granting the ability to access the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
@@ -66,7 +66,7 @@ class AdministrationManagingDatabasePrivilegesTest extends DocumentingTest with 
         }
 
         p("The `ACCESS` privilege can also be denied.")
-        p("include::database/deny-database-access-syntax.asciidoc[]")
+        p("include::managing-database-privileges/deny-database-access-syntax.asciidoc[]")
 
         p("For example, denying the ability to access to the database `neo4j` to the role `regularUsers` is done using the following query.")
         query("DENY ACCESS ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
@@ -86,7 +86,7 @@ class AdministrationManagingDatabasePrivilegesTest extends DocumentingTest with 
       section("The database `START`/`STOP` privileges", "administration-managing-database-privileges-examples-startstop") {
         p(
           """The `START` privilege can be used to enable the ability to start a database.""".stripMargin)
-        p("include::database/grant-database-start-syntax.asciidoc[]")
+        p("include::managing-database-privileges/grant-database-start-syntax.asciidoc[]")
 
         p(
           """For example, granting the ability to start the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
@@ -97,7 +97,7 @@ class AdministrationManagingDatabasePrivilegesTest extends DocumentingTest with 
         }
 
         p("The `START` privilege can also be denied.")
-        p("include::database/deny-database-start-syntax.asciidoc[]")
+        p("include::managing-database-privileges/deny-database-start-syntax.asciidoc[]")
 
         p("For example, denying the ability to start to the database `neo4j` to the role `regularUsers` is done using the following query.")
         query("DENY START ON DATABASE system TO regularUsers", ResultAssertions((r) => {
@@ -108,7 +108,7 @@ class AdministrationManagingDatabasePrivilegesTest extends DocumentingTest with 
 
         p(
           """The `STOP` privilege can be used to enable the ability to stop a database.""".stripMargin)
-        p("include::database/grant-database-stop-syntax.asciidoc[]")
+        p("include::managing-database-privileges/grant-database-stop-syntax.asciidoc[]")
 
         p(
           """For example, granting the ability to stop the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
@@ -119,7 +119,7 @@ class AdministrationManagingDatabasePrivilegesTest extends DocumentingTest with 
         }
 
         p("The `STOP` privilege can also be denied.")
-        p("include::database/deny-database-stop-syntax.asciidoc[]")
+        p("include::managing-database-privileges/deny-database-stop-syntax.asciidoc[]")
 
         p("For example, denying the ability to stop to the database `neo4j` to the role `regularUsers` is done using the following query.")
         query("DENY STOP ON DATABASE system TO regularUsers", ResultAssertions((r) => {
@@ -144,7 +144,7 @@ class AdministrationManagingDatabasePrivilegesTest extends DocumentingTest with 
         p(
           """Indexes can be created or deleted with the `CREATE INDEX` and `DROP INDEX` commands.
             |The privilege to do this can be granted with `GRANT CREATE INDEX` and `GRANT DROP INDEX` commands.""".stripMargin)
-        p("include::database/index-management-syntax.asciidoc[]")
+        p("include::managing-database-privileges/index-management-syntax.asciidoc[]")
 
         p(
           """For example, granting the ability to create indexes on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
@@ -158,7 +158,7 @@ class AdministrationManagingDatabasePrivilegesTest extends DocumentingTest with 
         p(
           """Constraints can be created or deleted with the `CREATE CONSTRAINT` and `DROP CONSTRAINT` commands.
             |The privilege to do this can be granted with `GRANT CREATE CONSTRAINT` and `GRANT DROP CONSTRAINT` commands.""".stripMargin)
-        p("include::database/constraint-management-syntax.asciidoc[]")
+        p("include::managing-database-privileges/constraint-management-syntax.asciidoc[]")
 
         p(
           """For example, granting the ability to create constraints on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
@@ -172,7 +172,7 @@ class AdministrationManagingDatabasePrivilegesTest extends DocumentingTest with 
         p(
           """The right to create new labels, relationship types or propery names is different from the right to create nodes, relationships or properties.
             |The latter is managed using database `WRITE` privileges, while the former is managed using specific `GRANT/DENY CREATE NEW ...` commands for each type.""".stripMargin)
-        p("include::database/name-management-syntax.asciidoc[]")
+        p("include::managing-database-privileges/name-management-syntax.asciidoc[]")
 
         p(
           """For example, granting the ability to create new properties on nodes or relationships in the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
@@ -185,7 +185,7 @@ class AdministrationManagingDatabasePrivilegesTest extends DocumentingTest with 
       section("Granting all database administration privileges", "administration-managing-database-privileges-examples-all") {
         p(
           """Conferring the right to perform all of the above tasks can be achieved with a single command:""".stripMargin)
-        p("include::database/all-management-syntax.asciidoc[]")
+        p("include::managing-database-privileges/all-management-syntax.asciidoc[]")
 
         p(
           """For example, granting the ability to access, start and stop all databases and create indexes, constraints, labels, relationship types and property names on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)

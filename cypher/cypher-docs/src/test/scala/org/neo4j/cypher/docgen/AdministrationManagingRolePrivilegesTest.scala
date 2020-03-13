@@ -41,7 +41,7 @@ class AdministrationManagingRolePrivilegesTest extends DocumentingTest with Quer
         |""".stripMargin)
     }
     section("Syntax", "administration-managing-role-privileges-syntax") {
-      p("include::role-management-privilege-syntax.asciidoc[]")
+      p("include::managing-role-privileges/role-management-privilege-syntax.asciidoc[]")
     }
 
     section("Examples", "administration-managing-role-privileges-examples") {

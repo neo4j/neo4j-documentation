@@ -47,14 +47,14 @@ class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with Que
       p("A prerequisite is that the user is granted access to the database.")
     }
     section("Syntax", "administration-managing-graph-privileges-syntax") {
-      p("include::managing-graph-privileges-syntax.adoc[]")
+      p("include::managing-graph-privileges/managing-graph-privileges-syntax.adoc[]")
     }
 
 
     section("Examples", "administration-managing-graph-privileges-examples") {
     section("The `TRAVERSE` privilege", "administration-managing-graph-privileges-examples-traverse") {
       p("Users can be granted the right to find nodes and relationships using the `GRANT TRAVERSE` privilege.")
-      p("include::grant-traverse-syntax.asciidoc[]")
+      p("include::managing-graph-privileges/grant-traverse-syntax.asciidoc[]")
       p("For example, we can allow the user `jake`, who has role 'regularUsers' to find all nodes with the label `Post`.")
       query("GRANT TRAVERSE ON GRAPH neo4j NODES Post TO regularUsers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
@@ -63,7 +63,7 @@ class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with Que
       }
 
       p("The `TRAVERSE` privilege can also be denied.")
-      p("include::deny-traverse-syntax.asciidoc[]")
+      p("include::managing-graph-privileges/deny-traverse-syntax.asciidoc[]")
       p("For example, we can disallow the user `jake`, who has role 'regularUsers' to find all nodes with the label `Payments`.")
       query("DENY TRAVERSE ON GRAPH neo4j NODES Payments TO regularUsers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
@@ -76,7 +76,7 @@ class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with Que
       p(
         """Users can be granted the right to do property reads on nodes and relationships using the `GRANT READ` privilege.
           |It is very important to note that users can only read properties on entities that they are allowed to find in the first place.""".stripMargin)
-      p("include::grant-read-syntax.asciidoc[]")
+      p("include::managing-graph-privileges/grant-read-syntax.asciidoc[]")
 
       p(
         """For example, we can allow the user `jake`, who has role 'regularUsers' to read all properties on nodes with the label `Post`.
@@ -88,7 +88,7 @@ class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with Que
       }
 
       p("The `READ` privilege can also be denied.")
-      p("include::deny-read-syntax.asciidoc[]")
+      p("include::managing-graph-privileges/deny-read-syntax.asciidoc[]")
 
       p("Although we just granted the user 'jake' the right to read all properties, we may want to hide the `secret` property. The following example shows how to do that.")
       query("DENY READ { secret } ON GRAPH neo4j NODES Post TO regularUsers", ResultAssertions((r) => {
@@ -99,7 +99,7 @@ class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with Que
     }
     section("The `MATCH` privilege", "administration-managing-graph-privileges-examples-match") {
       p("As a shorthand for `TRAVERSE` and `READ`, users can be granted the right to find and do property reads on nodes and relationships using the `GRANT MATCH` privilege. ")
-      p("include::grant-match-syntax.asciidoc[]")
+      p("include::managing-graph-privileges/grant-match-syntax.asciidoc[]")
 
       p(
         """For example if you want to grant the ability to read the properties `language` and `length` for nodes with the label `Message`,
@@ -112,7 +112,7 @@ class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with Que
       }
 
       p("""Like all other privileges, the `MATCH` privilege can also be denied.""".stripMargin)
-      p("include::deny-match-syntax.asciidoc[]")
+      p("include::managing-graph-privileges/deny-match-syntax.asciidoc[]")
 
       p(
         """Please note that the effect of denying a `MATCH` privilege depends on whether concrete property keys are specified or a `*`.
@@ -146,7 +146,7 @@ class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with Que
     section("The `WRITE` privilege", "administration-managing-graph-privileges-examples-write") {
       p(
         """The `WRITE` privilege can be used to allow the ability to write on a graph. At the moment, granting the `WRITE` privilege implies that you can do any write operation on any part of the graph. """.stripMargin)
-      p("include::grant-write-syntax.asciidoc[]")
+      p("include::managing-graph-privileges/grant-write-syntax.asciidoc[]")
 
       p(
         """For example, granting the ability to write on the graph `neo4j` to the role `regularUsers` would be achieved using:""".stripMargin)
@@ -165,7 +165,7 @@ class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with Que
       }
 
       p("The `WRITE` privilege can also be denied.")
-      p("include::deny-write-syntax.asciidoc[]")
+      p("include::managing-graph-privileges/deny-write-syntax.asciidoc[]")
 
       p("For example, denying the ability to write on the graph `neo4j` to the role `regularUsers` would be achieved using:")
       query("DENY WRITE ON GRAPH neo4j TO regularUsers", ResultAssertions((r) => {
@@ -190,7 +190,7 @@ class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with Que
         "GRANT DROP INDEX ON DATABASE * TO indexUsers"
       )
       p("Privileges that were granted or denied earlier can be revoked using the `REVOKE` command. ")
-      p("include::revoke-syntax.asciidoc[]")
+      p("include::managing-graph-privileges/revoke-syntax.asciidoc[]")
 
       note {
         p("Please note that `REVOKE MATCH` is not allowed, instead revoke the individual `READ` and `TRAVERSE` privileges.")
@@ -214,7 +214,7 @@ class AdministrationManagingGraphPrivilegesTest extends DocumentingTest with Que
       p(
         """Some privileges are compound privileges and contains sub-privileges, for example <<administration-security-administration-database-indexes, `INDEX MANAGEMENT`>> which covers `CREATE INDEX` and `DROP INDEX`.
           |When these compound privileges are revoked, all sub-privileges matching the revoke command will also be revoked as shown in the example below.""".stripMargin)
-      p("include::grant-create-drop-index-syntax.asciidoc[]")
+      p("include::managing-graph-privileges/grant-create-drop-index-syntax.asciidoc[]")
       query("REVOKE INDEX MANAGEMENT ON DATABASE * FROM indexUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 2)
       })) {

@@ -34,12 +34,12 @@ class AdministrationUserManagementTest extends DocumentingTest with QueryStatist
           |This is done by assigning them the built-in `admin` role, or a role which is created as a copy of this role.""".stripMargin)
     }
     section("Syntax", "administration-managing-users-syntax") {
-      p("include::user-management-syntax.asciidoc[]")
+      p("include::managing-users/user-management-syntax.asciidoc[]")
     }
     section("Examples", "administration-managing-users-examples") {
       section("Listing users", "administration-managing-users-examples-show") {
         p("Available users can be listed using the `SHOW USERS` command, which will produce a table of users with the following columns:")
-        p("include::list-users-table-columns.asciidoc[]")
+        p("include::managing-users/list-users-table-columns.asciidoc[]")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
           resultTable()
         }
@@ -55,7 +55,7 @@ class AdministrationUserManagementTest extends DocumentingTest with QueryStatist
       }
       section("Creating users", "administration-managing-users-examples-create") {
         p("Users can be created using `CREATE USER`.")
-        p("include::user-management-syntax-create-user.asciidoc[]")
+        p("include::managing-users/user-management-syntax-create-user.asciidoc[]")
         p("If the optional `SET PASSWORD CHANGE [NOT] REQUIRED` is omitted then the default is `CHANGE REQUIRED`. " +
           "The default for `SET STATUS` is `ACTIVE`. The `password` can either be a string value or a string parameter.")
         p("For example, we can create the user `jake` in a suspended state and the requirement to change his password.")
@@ -98,7 +98,7 @@ class AdministrationUserManagementTest extends DocumentingTest with QueryStatist
       }
       section("Modifying users", "administration-managing-users-examples-alter") {
         p("Users can be modified using `ALTER USER`.")
-        p("include::user-management-syntax-alter-user.asciidoc[]")
+        p("include::managing-users/user-management-syntax-alter-user.asciidoc[]")
         p("The `password` can either be a string value or a string parameter.")
         p("For example, we can modify the user `jake` with a new password and active status as well as remove the requirement to change his password.")
         query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {

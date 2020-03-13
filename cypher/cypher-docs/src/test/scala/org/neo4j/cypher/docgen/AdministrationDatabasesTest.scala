@@ -38,7 +38,7 @@ class AdministrationDatabasesTest extends DocumentingTest with QueryStatisticsTe
           |The privileges to `CREATE` and `DROP` databases are only available through the `admin` role.""".stripMargin)
     }
     section("Syntax", "administration-managing-databases-syntax") {
-      p("include::database-management-syntax.asciidoc[]")
+      p("include::managing-databases/database-management-syntax.asciidoc[]")
     }
     section("Examples", "administration-managing-databases-examples") {
     section("Listing databases", "administration-managing-databases-examples-show") {

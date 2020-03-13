@@ -54,12 +54,12 @@ class AdministrationRoleManagementTest extends DocumentingTest with QueryStatist
             |The built-in roles are described in greater detail in <<operations-manual#auth-built-in-roles, Operations Manual -> Built-in roles>>.
             |""".stripMargin)
     }
-    section("The `admin` role", "administration-managing-roles-the-admin-role") {
-      p("include::admin-role-introduction.asciidoc[]")
-    }
+//    section("The `admin` role", "administration-managing-roles-the-admin-role") {
+//      p("include::admin-role-introduction.asciidoc[]")
+//    }
 
     section("Syntax", "administration-managing-roles-syntax") {
-      p("include::role-management-syntax.asciidoc[]")
+      p("include::managing-roles/role-management-syntax.asciidoc[]")
     }
     section("Examples", "administration-managing-roles-examples"){
       initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED",
