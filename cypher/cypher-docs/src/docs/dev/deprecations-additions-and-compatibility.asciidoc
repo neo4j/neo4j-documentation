@@ -39,6 +39,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | <<administration-security-administration-database-transaction, TRANSACTION MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering transaction management
 | DBMS <<administration-security-administration-dbms-privileges-user-management, USER MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering user management
 | DBMS <<administration-security-administration-dbms-privileges-database-management, DATABASE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering database management
+| DBMS <<administration-security-administration-dbms-privileges-privilege-management, PRIVILEGE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering privilege management
 | `ON DEFAULT DATABASE` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges, database privileges>>
 |===
 

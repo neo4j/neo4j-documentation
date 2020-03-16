@@ -316,40 +316,44 @@ The following commands are only executable against the `system` database:
 
 [options="header"]
 |===
-|Name                                                                                                   | Category              | Description
-| <<administration-security-administration-database-access, ACCESS>>                                    | Database              | Determines whether a user can access a specific database.
-| <<administration-security-administration-database-all, ALL DATABASE PRIVILEGES>>                      | Database and schema   | Determines whether a user is allowed to access, create and drop indexes and constraints, create new labels, types and property names on a specific database.
-| <<administration-security-administration-dbms-privileges-user-management, ALTER USER>>                | DBMS                  | Determines whether the user can modify users.
-| <<administration-security-administration-dbms-privileges-role-management, ASSIGN ROLE>>               | DBMS                  | Determines whether the user can grant roles.
-| <<administration-security-administration-database-constraints, CONSTRAINT MANAGEMENT>>                | Schema                | Determines whether a user is allowed to create and drop constraints on a specific database.
-| <<administration-security-administration-database-constraints, CREATE CONSTRAINT>>                    | Schema                | Determines whether a user is allowed to create constraints on a specific database.
-| <<administration-security-administration-dbms-privileges-database-management, CREATE DATABASE>>       | DBMS                  | Determines whether the user can create new roles.
-| <<administration-security-administration-database-indexes, CREATE INDEX>>                             | Schema                | Determines whether a user is allowed to create indexes on a specific database.
-| <<administration-security-administration-database-tokens, CREATE NEW NODE LABEL>>                     | Schema                | Determines whether a user is allowed to create new node labels on a specific database.
-| <<administration-security-administration-database-tokens, CREATE NEW PROPERTY NAME>>                  | Schema                | Determines whether a user is allowed to create new property names on a specific database.
-| <<administration-security-administration-database-tokens, CREATE NEW RELATIONSHIP TYPE>>              | Schema                | Determines whether a user is allowed to create new relationship types on a specific database.
-| <<administration-security-administration-dbms-privileges-role-management, CREATE ROLE>>               | DBMS                  | Determines whether the user can create new roles.
-| <<administration-security-administration-dbms-privileges-user-management, CREATE USER>>               | DBMS                  | Determines whether the user can create new users.
-| <<administration-security-administration-dbms-privileges-database-management, DATABASE MANAGEMENT>>   | DBMS                  | Determines whether the user can create and drop databases.
-| <<administration-security-administration-database-constraints, DROP CONSTRAINT>>                      | Schema                | Determines whether a user is allowed to drop constraints on a specific database.
-| <<administration-security-administration-dbms-privileges-database-management, DROP DATABASE>>         | DBMS                  | Determines whether the user can delete databases.
-| <<administration-security-administration-database-indexes, DROP INDEX>>                               | Schema                | Determines whether a user is allowed to drop indexes on a specific database.
-| <<administration-security-administration-dbms-privileges-role-management, DROP ROLE>>                 | DBMS                  | Determines whether the user can delete roles.
-| <<administration-security-administration-dbms-privileges-user-management, DROP USER>>                 | DBMS                  | Determines whether the user can delete users.
-| <<administration-security-administration-database-indexes, INDEX MANAGEMENT>>                         | Schema                | Determines whether a user is allowed to create and drop indexes on a specific database.
-| <<administration-security-subgraph-match, MATCH>>                                                     | GRAPH                 | Determines whether the properties of an element (node, relationship or both) can be read and the element can be found and traversed while executing queries on the specified graph.
-| <<administration-security-administration-database-tokens, NAME MANAGEMENT>>                           | Schema                | Determines whether a user is allowed to create new labels, types and property names on a specific database.
-| <<administration-security-subgraph-read, READ>>                                                       | GRAPH                 | Determines whether the properties of an element (node, relationship or both) can be read while executing queries on the specified graph.
-| <<administration-security-administration-dbms-privileges-role-management, REMOVE ROLE>>               | DBMS                  | Determines whether the user can revoke roles.
-| <<administration-security-administration-dbms-privileges-role-management, ROLE MANAGEMENT>>           | DBMS                  | Determines whether the user can create, drop, grant, revoke and show roles.
-| <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>                 | DBMS                  | Determines whether the user can get information about existing and assigned roles.
-| <<administration-security-administration-database-transaction, SHOW TRANSACTION>>                     | Database              | Determines whether a user is allowed to list transactions and queries.
-| <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>                 | DBMS                  | Determines whether the user can get information about existing users.
-| <<administration-security-administration-database-startstop, START>>                                  | Database              | Determines whether a user can start up a specific database.
-| <<administration-security-administration-database-startstop, STOP>>                                   | Database              | Determines whether a user can stop a specific running database.
-| <<administration-security-administration-database-transaction, TERMINATE TRANSACTION>>                | Database              | Determines whether a user is allowed to end running transactions and queries.
-| <<administration-security-administration-database-transaction, TRANSACTION MANAGEMENT>>               | Database              | Determines whether a user is allowed to list and end running transactions and queries.
-| <<administration-security-subgraph-traverse, TRAVERSE>>                                               | GRAPH                 | Determines whether an element (node, relationship or both) can be found and traversed while executing queries on the specified graph.
-| <<administration-security-administration-dbms-privileges-user-management, USER MANAGEMENT>>           | DBMS                  | Determines whether the user can create, drop, modify and show users.
-| <<administration-security-subgraph-write, WRITE>>                                                     | GRAPH                 | Determines whether the user can execute write operations on the specified graph.
+|Name                                                                                                     | Category              | Description
+| <<administration-security-administration-database-access, ACCESS>>                                      | Database              | Determines whether a user can access a specific database.
+| <<administration-security-administration-database-all, ALL DATABASE PRIVILEGES>>                        | Database and schema   | Determines whether a user is allowed to access, create and drop indexes and constraints, create new labels, types and property names on a specific database.
+| <<administration-security-administration-dbms-privileges-user-management, ALTER USER>>                  | DBMS                  | Determines whether the user can modify users.
+| <<administration-security-administration-dbms-privileges-privilege-management, ASSIGN PRIVILEGE>>       | DBMS                  | Determines whether the user can assign privileges using the GRANT and DENY commands.
+| <<administration-security-administration-dbms-privileges-role-management, ASSIGN ROLE>>                 | DBMS                  | Determines whether the user can grant roles.
+| <<administration-security-administration-database-constraints, CONSTRAINT MANAGEMENT>>                  | Schema                | Determines whether a user is allowed to create and drop constraints on a specific database.
+| <<administration-security-administration-database-constraints, CREATE CONSTRAINT>>                      | Schema                | Determines whether a user is allowed to create constraints on a specific database.
+| <<administration-security-administration-dbms-privileges-database-management, CREATE DATABASE>>         | DBMS                  | Determines whether the user can create new roles.
+| <<administration-security-administration-database-indexes, CREATE INDEX>>                               | Schema                | Determines whether a user is allowed to create indexes on a specific database.
+| <<administration-security-administration-database-tokens, CREATE NEW NODE LABEL>>                       | Schema                | Determines whether a user is allowed to create new node labels on a specific database.
+| <<administration-security-administration-database-tokens, CREATE NEW PROPERTY NAME>>                    | Schema                | Determines whether a user is allowed to create new property names on a specific database.
+| <<administration-security-administration-database-tokens, CREATE NEW RELATIONSHIP TYPE>>                | Schema                | Determines whether a user is allowed to create new relationship types on a specific database.
+| <<administration-security-administration-dbms-privileges-role-management, CREATE ROLE>>                 | DBMS                  | Determines whether the user can create new roles.
+| <<administration-security-administration-dbms-privileges-user-management, CREATE USER>>                 | DBMS                  | Determines whether the user can create new users.
+| <<administration-security-administration-dbms-privileges-database-management, DATABASE MANAGEMENT>>     | DBMS                  | Determines whether the user can create and drop databases.
+| <<administration-security-administration-database-constraints, DROP CONSTRAINT>>                        | Schema                | Determines whether a user is allowed to drop constraints on a specific database.
+| <<administration-security-administration-dbms-privileges-database-management, DROP DATABASE>>           | DBMS                  | Determines whether the user can delete databases.
+| <<administration-security-administration-database-indexes, DROP INDEX>>                                 | Schema                | Determines whether a user is allowed to drop indexes on a specific database.
+| <<administration-security-administration-dbms-privileges-role-management, DROP ROLE>>                   | DBMS                  | Determines whether the user can delete roles.
+| <<administration-security-administration-dbms-privileges-user-management, DROP USER>>                   | DBMS                  | Determines whether the user can delete users.
+| <<administration-security-administration-database-indexes, INDEX MANAGEMENT>>                           | Schema                | Determines whether a user is allowed to create and drop indexes on a specific database.
+| <<administration-security-subgraph-match, MATCH>>                                                       | GRAPH                 | Determines whether the properties of an element (node, relationship or both) can be read and the element can be found and traversed while executing queries on the specified graph.
+| <<administration-security-administration-database-tokens, NAME MANAGEMENT>>                             | Schema                | Determines whether a user is allowed to create new labels, types and property names on a specific database.
+| <<administration-security-administration-dbms-privileges-privilege-management, PRIVILEGE MANAGEMENT>>   | DBMS                  | Determines whether the user can show, assign and remove privileges.
+| <<administration-security-subgraph-read, READ>>                                                         | GRAPH                 | Determines whether the properties of an element (node, relationship or both) can be read while executing queries on the specified graph.
+| <<administration-security-administration-dbms-privileges-privilege-management, REMOVE PRIVILEGE>>       | DBMS                  | Determines whether the user can remove privileges using the REVOKE command.
+| <<administration-security-administration-dbms-privileges-role-management, REMOVE ROLE>>                 | DBMS                  | Determines whether the user can revoke roles.
+| <<administration-security-administration-dbms-privileges-role-management, ROLE MANAGEMENT>>             | DBMS                  | Determines whether the user can create, drop, grant, revoke and show roles.
+| <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>>         | DBMS                  | Determines whether the user can get information about privileges assigned to users and roles.
+| <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>                   | DBMS                  | Determines whether the user can get information about existing and assigned roles.
+| <<administration-security-administration-database-transaction, SHOW TRANSACTION>>                       | Database              | Determines whether a user is allowed to list transactions and queries.
+| <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>                   | DBMS                  | Determines whether the user can get information about existing users.
+| <<administration-security-administration-database-startstop, START>>                                    | Database              | Determines whether a user can start up a specific database.
+| <<administration-security-administration-database-startstop, STOP>>                                     | Database              | Determines whether a user can stop a specific running database.
+| <<administration-security-administration-database-transaction, TERMINATE TRANSACTION>>                  | Database              | Determines whether a user is allowed to end running transactions and queries.
+| <<administration-security-administration-database-transaction, TRANSACTION MANAGEMENT>>                 | Database              | Determines whether a user is allowed to list and end running transactions and queries.
+| <<administration-security-subgraph-traverse, TRAVERSE>>                                                 | GRAPH                 | Determines whether an element (node, relationship or both) can be found and traversed while executing queries on the specified graph.
+| <<administration-security-administration-dbms-privileges-user-management, USER MANAGEMENT>>             | DBMS                  | Determines whether the user can create, drop, modify and show users.
+| <<administration-security-subgraph-write, WRITE>>                                                       | GRAPH                 | Determines whether the user can execute write operations on the specified graph.
 |===
