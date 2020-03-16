@@ -1,0 +1,7 @@
+.Command syntax
+[source, cypher]
+-----
+GRANT ALL [[DBMS] PRIVILEGES]
+    ON DBMS
+    TO role[, ...]
+-----

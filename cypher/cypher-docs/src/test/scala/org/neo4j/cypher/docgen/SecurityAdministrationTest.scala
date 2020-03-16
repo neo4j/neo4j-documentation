@@ -31,6 +31,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       "CREATE ROLE privilegeAssigner",
       "CREATE ROLE privilegeRemover",
       "CREATE ROLE privilegeManager",
+      "CREATE ROLE dbmsManager",
       "GRANT ROLE regularUsers TO jake",
       "DENY ACCESS ON DATABASE neo4j TO noAccessUsers"
     )
@@ -57,6 +58,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         |** <<administration-security-administration-dbms-privileges-user-management, The dbms `USER MANAGEMENT` privileges>>
         |** <<administration-security-administration-dbms-privileges-database-management, The dbms `DATABASE MANAGEMENT` privileges>>
         |** <<administration-security-administration-dbms-privileges-privilege-management, The dbms `PRIVILEGE MANAGEMENT` privileges>>
+        |** <<administration-security-administration-dbms-privileges-all, Granting `ALL DBMS PRIVILEGES`>>
         |""".stripMargin)
     section("The `admin` role", "administration-security-administration-introduction", "enterprise-edition") {
       p("include::admin-role-introduction.asciidoc[]")
@@ -541,6 +543,27 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("The resulting role should have all privileges to manage privileges:")
         query("SHOW ROLE privilegeManager PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
           p("Lists all privileges for role 'privilegeManager'")
+          resultTable()
+        }
+      }
+
+      section("Granting `ALL DBMS PRIVILEGES`", "administration-security-administration-dbms-privileges-all", "enterprise-edition") {
+        p(
+          """The right to create, drop, assign, remove and show roles, create, alter, drop and show users, create and drop databases and show, assign and remove privileges can be achieved with a single command:""".stripMargin)
+        p("include::dbms/all-management-syntax.asciidoc[]")
+
+        p(
+          """For example, granting the abilities above to the role `dbmsManager` is done using the following query.""".stripMargin)
+        query("GRANT ALL DBMS PRIVILEGES ON DBMS TO dbmsManager", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+
+        p("The privileges granted can be seen using the `SHOW PRIVILEGES` command:")
+        query("SHOW ROLE dbmsManager PRIVILEGES", assertPrivilegeShown(Seq(
+          Map("access" -> "GRANTED", "action" -> "dbms_actions", "role" -> "dbmsManager")
+        ))) {
           resultTable()
         }
       }

@@ -319,6 +319,7 @@ The following commands are only executable against the `system` database:
 |Name                                                                                                     | Category              | Description
 | <<administration-security-administration-database-access, ACCESS>>                                      | Database              | Determines whether a user can access a specific database.
 | <<administration-security-administration-database-all, ALL DATABASE PRIVILEGES>>                        | Database and schema   | Determines whether a user is allowed to access, create and drop indexes and constraints, create new labels, types and property names on a specific database.
+| <<administration-security-administration-dbms-privileges-all, ALL DBMS PRIVILEGES>>                     | DBMS                  | Determines whether a user is allowed to perform role, user, database and privilege management.
 | <<administration-security-administration-dbms-privileges-user-management, ALTER USER>>                  | DBMS                  | Determines whether the user can modify users.
 | <<administration-security-administration-dbms-privileges-privilege-management, ASSIGN PRIVILEGE>>       | DBMS                  | Determines whether the user can assign privileges using the GRANT and DENY commands.
 | <<administration-security-administration-dbms-privileges-role-management, ASSIGN ROLE>>                 | DBMS                  | Determines whether the user can grant roles.
