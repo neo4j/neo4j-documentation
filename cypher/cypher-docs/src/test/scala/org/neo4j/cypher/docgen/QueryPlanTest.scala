@@ -1010,6 +1010,23 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def anti() {
+    profileQuery(
+      title = "Anti",
+      text =
+        """The `Anti` operator tests for the absence of a pattern.
+          |If there are incoming rows, the `Anti` operator will yield no rows.
+          |If there are no incoming rows, the `Anti` operator will yield a single row.
+          |""".stripMargin,
+      queryText =
+        """CYPHER runtime=pipelined
+          |MATCH (me:Person {name: "me"}), (other:Person)
+          |WHERE NOT (me)-[:FRIENDS_WITH]->(other)
+          |RETURN other.name""".stripMargin,
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("Anti"))
+    )
+  }
+
   @Test def letSemiApply() {
     profileQuery(
       title = "Let Semi Apply",
