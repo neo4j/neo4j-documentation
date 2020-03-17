@@ -19,6 +19,8 @@ include::../ql/query-plan/node-index-seek.asciidoc[]
 
 include::../ql/query-plan/node-unique-index-seek.asciidoc[]
 
+include::../ql/query-plan/multi-node-index-seek.asciidoc[]
+
 include::../ql/query-plan/node-index-seek-by-range.asciidoc[]
 
 include::../ql/query-plan/node-unique-index-seek-by-range.asciidoc[]

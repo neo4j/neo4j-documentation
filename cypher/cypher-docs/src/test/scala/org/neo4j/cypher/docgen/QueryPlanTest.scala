@@ -577,6 +577,25 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def multiNodeIndexSeek() {
+    profileQuery(
+      title = "Multi Node Index Seek",
+      text =
+        """The `MultiNodeIndexSeek` operator finds nodes using multiple index seeks.
+          |It supports using multiple distinct indexes for different nodes in the query.
+          |The node variables and the indexes used are shown in the arguments of the operator.
+          |
+          |The operator yields a cartesian product of all index seeks.
+          |For example, if the operator does two seeks and the first seek finds the nodes `a1, a2` and the second `b1, b2, b3`,
+          |the `MultiNodeIndexSeek` will yield the rows `(a1, b1), (a1, b2), (a1, b3), (a2, b1), (a2, b2), (a2, b3)`.
+          |""".stripMargin,
+      queryText =
+        """CYPHER runtime=pipelined
+          |MATCH (location:Location {name: 'Malmo'}), (person:Person {name: 'Bob'}) RETURN location, person""".stripMargin,
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("MultiNodeIndexSeek"))
+    )
+  }
+
   @Test def argument() {
     profileQuery(
       title = "Argument",
