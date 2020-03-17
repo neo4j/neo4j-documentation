@@ -13,5 +13,5 @@ These include the rights to perform the following classes of tasks:
 ** Manage sub-graph privileges
 ** Manage procedure security
 
-These rights are conferred using privileges that can be  managed using `GRANT`, `DENY` and `REVOKE` commands,
-with the exception of the _DBMS Security_ privileges which are only available within the built-in `admin` role.
+These rights are conferred using privileges that can be  managed using `GRANT`, `DENY` and `REVOKE` commands, with the exception of changing configuration parameters and procedure security.
+Those are only available within the built-in `admin` role, or in the case of procedure security, through the `dbms.security.procedures.default_allowed` and `dbms.security.procedures.roles` configuration parameters.
