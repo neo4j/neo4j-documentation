@@ -39,7 +39,6 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
     p(
       """All of the commands described in the enclosing <<administration, Administration>> section require that the user executing the commands has the rights to do so.
         |These privileges can be conferred either by granting the user the `admin` role, which enables all administrative rights, or by granting specific combinations of privileges.
-        |These privileges can be conferred either by granting the user the `admin` role, which enables all administrative rights, or by granting specific combinations of privileges.
         |""".stripMargin)
     p(
       """

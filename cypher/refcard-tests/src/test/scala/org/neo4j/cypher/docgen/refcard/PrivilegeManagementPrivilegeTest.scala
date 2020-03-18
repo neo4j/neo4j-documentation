@@ -26,6 +26,8 @@ class PrivilegeManagementPrivilegeTest extends AdministrationCommandTestBase {
   private def setup() = graph.withTx { tx =>
     tx.execute("CREATE ROLE my_role")
     tx.execute("GRANT REMOVE PRIVILEGE ON DBMS TO my_role")
+    tx.execute("GRANT PRIVILEGE MANAGEMENT ON DBMS TO my_role")
+    tx.execute("DENY PRIVILEGE MANAGEMENT ON DBMS TO my_role")
   }
 
   def text: String = {
@@ -55,13 +57,13 @@ REVOKE GRANT REMOVE PRIVILEGE ON DBMS FROM my_role
 
 Revoke the granted privilege to remove privileges from roles from a role.
 
-###assertion=update-one
+###assertion=update-two
 //
 
-GRANT PRIVILEGE MANAGEMENT ON DBMS TO my_role
+REVOKE PRIVILEGE MANAGEMENT ON DBMS FROM my_role
 ###
 
-Grant all privileges to manage privileges to a role.
+Revoke all granted and denied privileges for manage privileges from a role.
 
 """
   }
