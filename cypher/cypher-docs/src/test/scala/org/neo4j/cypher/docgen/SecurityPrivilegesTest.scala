@@ -63,7 +63,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
             |* action: which type of privilege this is: access, traverse, read, write, token, schema or admin
             |* resource: what type of scope this privilege applies to: the entire dbms, a database, a graph or sub-graph access
             |* graph: the specific database or graph this privilege applies to
-            |* segement: for sub-graph access control, this describes the scope in terms of labels or relationship types
+            |* segment: for sub-graph access control, this describes the scope in terms of labels or relationship types
             |* role: the role the privilege is granted to
             |""".stripMargin)
         resultTable()
@@ -215,6 +215,14 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     }
 
     section("The `REVOKE` command", "administration-security-subgraph-revoke", "enterprise-edition") {
+      initQueries(
+        "GRANT TRAVERSE ON GRAPH neo4j NODES Post TO regularUsers",
+        "GRANT TRAVERSE ON GRAPH neo4j NODES Payments TO regularUsers",
+        "DENY TRAVERSE ON GRAPH neo4j NODES Payments TO regularUsers",
+        "CREATE ROLE indexUsers",
+        "GRANT CREATE INDEX ON DATABASE * TO indexUsers",
+        "GRANT DROP INDEX ON DATABASE * TO indexUsers"
+      )
       p("Privileges that were granted or denied earlier can be revoked using the `REVOKE` command. ")
       p("include::revoke-syntax.asciidoc[]")
 
@@ -224,8 +232,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
 
       p("An example usage of the `REVOKE` command is given here:")
       query("REVOKE GRANT TRAVERSE ON GRAPH neo4j NODES Post FROM regularUsers", ResultAssertions((r) => {
-        // TODO: revoke a privilege that exists
-        assertStats(r, systemUpdates = 0)
+        assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
       }
@@ -233,10 +240,25 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         """While it can be explicitly specified that revoke should remove a `GRANT` or `DENY`, it is also possible to revoke either one by not specifying at all as the next example demonstrates.
           |Because of this, if there happen to be a `GRANT` and a `DENY` on the same privilege, it would remove both.""".stripMargin)
       query("REVOKE TRAVERSE ON GRAPH neo4j NODES Payments FROM regularUsers", ResultAssertions((r) => {
-        // TODO: revoke a privilege that exists
-        assertStats(r, systemUpdates = 0)
+        assertStats(r, systemUpdates = 2)
       })) {
         statsOnlyResultTable()
+      }
+
+      p(
+        """Some privileges are compound privileges and contains sub-privileges, for example <<administration-security-administration-database-indexes, `INDEX MANAGEMENT`>> which covers `CREATE INDEX` and `DROP INDEX`.
+          |When these compound privileges are revoked, all sub-privileges matching the revoke command will also be revoked as shown in the example below.""".stripMargin)
+      p("include::grant-create-drop-index-syntax.asciidoc[]")
+      query("REVOKE INDEX MANAGEMENT ON DATABASE * FROM indexUsers", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 2)
+      })) {
+        statsOnlyResultTable()
+      }
+      query("SHOW ROLE indexUsers PRIVILEGES", ResultAssertions(r => {
+        assertStats(r) // role has no privileges
+      })) {
+        p("Both the `CREATE INDEX` and `DROP INDEX` privileges have been revoked:")
+        resultTable()
       }
     }
   }.build()

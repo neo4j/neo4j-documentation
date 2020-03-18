@@ -37,6 +37,7 @@ class FulltextIndexTest extends DocumentingTest {
           |A full-text index will instead tokenize the indexed string values, so it can match _terms_ anywhere within the strings.
           |How the indexed strings are tokenized and broken into terms, is determined by what analyzer the full-text index is configured with.
           |For instance, the _swedish_ analyzer knows how to tokenize and stem Swedish words, and will avoid indexing Swedish stop words.
+          |The complete list of stop words for each analyzer is included in the result of the `db.index.fulltext.listAvailableAnalyzers` procedure.
           |"""
       )
       p("Full-text indexes:")
