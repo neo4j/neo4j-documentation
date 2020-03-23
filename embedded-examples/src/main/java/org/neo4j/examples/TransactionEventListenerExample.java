@@ -36,6 +36,7 @@ public class TransactionEventListenerExample
 {
     private static final File HOME_DIRECTORY = new File( "target/transaction-event-listener" );
 
+    // tag::TransactionEventListener[]
     public static void main( String[] args ) throws IOException
     {
         FileUtils.deleteRecursively( HOME_DIRECTORY );
@@ -98,4 +99,5 @@ public class TransactionEventListenerExample
             return createdRelationships;
         }
     }
+    // end::TransactionEventListener[]
 }
