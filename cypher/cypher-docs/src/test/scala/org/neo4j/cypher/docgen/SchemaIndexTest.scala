@@ -171,7 +171,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek(equality,equality)")
+          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("n:Person(age, country) WHERE age = $`  AUTOINT0` AND country = $`  AUTOSTRING1`")
       }
     )
   }
@@ -211,7 +212,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek(range,exists)")
+          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("person:Person(firstname, highScore) WHERE firstname > $  AUTOSTRING0 AND exists(highScore)")
       }
     )
   }
@@ -251,7 +253,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek(range,exists)")
+          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("person:Person(highScore, name) WHERE highScore > $  AUTOINT1 AND highScore < $  AUTOINT0 AND exists(name)")
       }
     )
   }
@@ -303,7 +306,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek(equality,equality)")
+          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("person:Person(age, country) WHERE age IN $`  AUTOLIST0` AND country IN $`  AUTOLIST1`")
       }
     )
   }
@@ -353,7 +357,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       assertions = {
         (p) =>
           assertEquals(1, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeek(range,exists)"))
+          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("person:Person(firstname, surname) WHERE firstname STARTS WITH $`  AUTOSTRING0` AND exists(surname)")
       }
     )
   }
@@ -532,7 +537,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       assertions = {
         (p) =>
           assertEquals(9, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeek(range,exists)"))
+          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("p:Person(place, name) WHERE distance(place, point($`  AUTOINT0`, $`  AUTOINT1`)) < $`  AUTOINT2` AND exists(name)")
       }
     )
   }
@@ -575,7 +581,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       assertions = {
         (p) =>
           assertEquals(1, p.size)
-          checkPlanDescription(p)("NodeIndexSeek(range,exists)")
+          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("person:Person(place, firstname) WHERE place > point({x: $  AUTOINT2, y: $  AUTOINT3}) AND place < point({x: $  AUTOINT0, y: $  AUTOINT1}) AND exists(firstname)")
       }
     )
   }
