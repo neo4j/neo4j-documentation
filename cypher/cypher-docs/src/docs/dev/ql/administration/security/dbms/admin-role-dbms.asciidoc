@@ -1,7 +1,7 @@
 As <<administration-security-administration-introduction, described above>>, the `admin` role has a number of built-in privileges.
 These include:
 
-* Create or drop databases
+* Create and drop databases
 * Change configuration parameters
 * Manage transactions
 * Manage users and roles
