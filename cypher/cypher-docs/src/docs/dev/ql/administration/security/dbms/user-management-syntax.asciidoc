@@ -7,30 +7,30 @@
 GRANT CREATE USER
     ON DBMS
     TO role[, ...]
-| Enable the specified role(s) to create new users.
+| Enable the specified roles to create new users.
 
 | [source, cypher]
 GRANT DROP USER
     ON DBMS
     TO role[, ...]
-| Enable the specified role(s) to delete users.
+| Enable the specified roles to delete users.
 
 | [source, cypher]
 GRANT ALTER USER
     ON DBMS
     TO role[, ...]
-| Enable the specified role(s) to modify users.
+| Enable the specified roles to modify users.
 
 | [source, cypher]
 GRANT SHOW USER
 ON DBMS
 TO role[, ...]
-| Enable the specified role(s) to list users.
+| Enable the specified roles to list users.
 
 | [source, cypher]
 GRANT USER MANAGEMENT
     ON DBMS
     TO role[, ...]
-| Enable the specified role(s) to create, delete, modify, and list users.
+| Enable the specified roles to create, delete, modify, and list users.
 
 |===

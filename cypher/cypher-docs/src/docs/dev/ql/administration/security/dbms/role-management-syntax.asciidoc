@@ -7,36 +7,36 @@
 GRANT CREATE ROLE
     ON DBMS
     TO role[, ...]
-| Enable the specified role(s) to create new roles.
+| Enable the specified roles to create new roles.
 
 | [source, cypher]
 GRANT DROP ROLE
     ON DBMS
     TO role[, ...]
-| Enable the specified role(s) to delete roles.
+| Enable the specified roles to delete roles.
 
 | [source, cypher]
 GRANT ASSIGN ROLE
     ON DBMS
     TO role[, ...]
-| Enable the specified role(s) to assign roles to users.
+| Enable the specified roles to assign roles to users.
 
 | [source, cypher]
 GRANT REMOVE ROLE
     ON DBMS
     TO role[, ...]
-| Enable the specified role(s) to remove roles from users.
+| Enable the specified roles to remove roles from users.
 
 | [source, cypher]
 GRANT SHOW ROLE
 ON DBMS
 TO role[, ...]
-| Enable the specified role(s) to list roles.
+| Enable the specified roles to list roles.
 
 | [source, cypher]
 GRANT ROLE MANAGEMENT
     ON DBMS
     TO role[, ...]
-| Enable the specified role(s) to create, delete, assign, remove, and list roles.
+| Enable the specified roles to create, delete, assign, remove, and list roles.
 
 |===
