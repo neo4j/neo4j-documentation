@@ -1,7 +1,39 @@
-The `GRANT` command allows an administrator to grant a privilege to a role in order to access an entity.
-The `DENY` command allows an administrator to deny a privilege to a role in order to prevent access to an entity.
-The `REVOKE` command allows an administrator to remove a previously granted or denied privilege.
-The syntax is:
+The administrators can use Cypher commands to manage Neo4j graph administrative rights.
+The components of the graph privilege commands are:
+
+* the command:
+** `GRANT` – gives privileges to roles.
+** `DENY` – denies privileges to roles.
+** `REVOKE` – removes granted or denied privilege from roles.
+
+* _graph-privilege_
+** `TRAVERSE` - allows the specified entities to be found.
+** `READ +{props}+` - allows the specified properties on the found entities to be read.
+Note:: Granting property `READ` access does not imply that the entities with that property can be found.
+For exampl, if there is also a `DENY` on it, the entity will not be found.
+The props can be `+*+`, which means all properties.
+** `MATCH +{props}+` - combines both `TRAVERSE` and `READ`, allowing an entity to be found and its properties read.
+** `WRITE` - this privilege can only be assigned to all nodes, relationships, and properties in the entire graph.
+This means that the entity part of the command must also be `ELEMENTS` `+*+` and cannot be specific.
+
+* _name_
+** The graph or graphs to associate the privilege with.
+Because in {neo4j.version} you can have only one graph per database, this command uses the database name to refer to that graph.
+Note:: If you delete a database and create a new one with the same name, the new one will _NOT_ have the privileges assigned to the deleted graph.
+** It can be `+*+` which means all graphs.
+Graphs created after this command execution will also be associated with these privileges.
+
+* _entity_
+** The graph elements this privilege applies to:
+*** `NODES` label (nodes with the specified label(s)).
+*** `RELATIONSHIPS` type (relationships of the specific type(s)).
+*** `ELEMENTS` label (both nodes and relationships).
+** The label or type can be `+*+` which means all labels or types.
+** Multiple labels or types can be specified, comma-separated.
+** Defaults to `ELEMENTS` `+*+` if omitted.
+
+* _roles_
+** The role or roles to associate the privilege with, comma-separated.
 
 .Privilege command syntax
 [options="header", width="100%", cols="3a,2"]
@@ -10,66 +42,24 @@ The syntax is:
 
 | [source, cypher]
 GRANT graph-privilege ON GRAPH[S] {name \| *} [entity] TO roles
-| Grant a privilege to one or multiple roles
+| Grant a privilege to one or multiple roles.
 
 | [source, cypher]
 DENY graph-privilege ON GRAPH[S] {name \| *} [entity] TO roles
-| Deny a privilege to one or multiple roles
+| Deny a privilege to one or multiple roles.
 
 | [source, cypher]
 REVOKE GRANT graph-privilege ON GRAPH[S] {name \| *} [entity] FROM roles
-| Revoke a granted privilege from one or multiple roles
+| Revoke a granted privilege from one or multiple roles.
 
 | [source, cypher]
 REVOKE DENY graph-privilege ON GRAPH[S] {name \| *} [entity] FROM roles
-| Revoke a denied privilege from one or multiple roles
+| Revoke a denied privilege from one or multiple roles.
 
 | [source, cypher]
 REVOKE graph-privilege ON GRAPH[S] {name \| *} [entity] FROM roles
-| Revoke a granted or denied privilege from one or multiple roles
+| Revoke a granted or denied privilege from one or multiple roles.
 |===
 
-[NOTE]
-These commands are almost identical to the <<administration-security-administration-introduction, database-privileges>> except for the use of the term `GRAPH`, the addition of an `entity` term, and the set of available _database-privileges_ differs from the _graph-privileges_.
-
-Where the components are:
-
-* _graph-privilege_
-** `TRAVERSE`
-+
-allows the specified entities to be found
-+
-** `READ +{props}+`
-+
-allows the specified properties to be read on the found entities.
-Note that granting property READ access does not imply that the entities with that property can be found.
-For example if there is also a DENY on it, the entity will not be found.
-The props can be `+*+` which means all properties.
-+
-** `MATCH +{props}+`
-+
-this combines both TRAVERSE and READ allowing an entity to be found and its properties read.
-+
-** `WRITE`
-+
-this privilege can only be assigned to all nodes, relationships and properties in the entire graph (this means that the entity part of the command must also be `ELEMENTS +*+` and cannot be more specific).
-+
-* _name_
-** The graph or graphs to associate the privilege with. In {neo4j.version} there can be only one graph per database, and therefor this command uses the database name to refer to that graph.
-   Note that if you delete a database and create a new one with the same name, the new one will _NOT_ have any of the privileges specifically assigned to the deleted graph.
-** It can be `+*+` which means all graphs.
-  Any new databases created after this command will also be associated with these privileges.
-* _entity_
-** The graph elements this privilege applies to:
-*** `NODES` label (nodes with the specified label(s)).
-*** `RELATIONSHIPS` type (relationships of the specific type(s)).
-*** `ELEMENTS` label (both nodes and relationships).
-** The label or type can be `+*+` which means all labels or types.
-** Multiple labels or types can be specified, comma-separated.
-** Defaults to `ELEMENTS +*+` if omitted.
-* _roles_
-** The role or roles to associate the privilege with, comma-separated.
-
-
-NOTE: It is important to note that using DENY does NOT erase a GRANT command; they both exist.
-The only way to erase a privilege is with REVOKE.
+NOTE: `DENY` does NOT erase a granted privilege; they both exist.
+Use `REVOKE` if you want to remove a privilege.
