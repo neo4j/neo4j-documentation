@@ -1,7 +1,41 @@
-As described in the section on <<administration-security-subgraph, sub-graph security>>, the `GRANT` command allows an administrator to grant a privilege to a role in order to access an entity.
-The `DENY` command allows an administrator to deny a privilege to a role in order to prevent access to an entity.
-The `REVOKE` command allows an administrator to remove a previously granted or denied privilege.
-The syntax is:
+The administrators can use the following Cypher commands to manage Neo4j database administrative rights.
+The components of the database privilege commands are:
+
+* the command:
+** `GRANT` – gives privileges to roles.
+** `DENY` – denies privileges to roles.
+** `REVOKE` – removes granted or denied privilege from roles.
+
+
+* _database-privilege_
+** `ACCESS` - allows access to a specific database.
+** `START` - allows the specified database to be started.
+** `STOP` - allows the specified database to be stopped.
+** `CREATE INDEX` - allows indexes to be created on the specified database.
+** `DROP INDEX` - allows indexes to be deleted on the specified database.
+** `INDEX [MANAGEMENT]` - allows indexes to be created and deleted on the specified database.
+** `CREATE CONSTRAINT` - allows constraints to be created on the specified database.
+** `DROP CONSTRAINT` - allows constraints to be deleted on the specified database.
+** `CONSTRAINT [MANAGEMENT]` - allows constraints to be created and deleted on the specified database.
+** `CREATE NEW [NODE] LABEL` - allows labels to be created so that future nodes can be assigned them.
+** `CREATE NEW [RELATIONSHIP] TYPE` - allows relationship types to be created, so that future relationships can be created with these types.
+** `CREATE NEW [PROPERTY] NAME` - allows property names to be created, so that nodes and relationships can have properties with these names assigned.
+** `NAME [MANAGEMENT]` - allows all of the name management capabilities: node labels, relationship types, and property names.
+** `ALL [[DATABASE] PRIVILEGES]` - allows access, index, constraint, and name management for the specified database.
+** `SHOW TRANSACTION {* | user[, ...]}` -  allows listing transactions and queries for the specified users on the specified database.
+** `TERMINATE TRANSACTION {* | user[, ...]}` - allows ending transactions and queries for the specified users on the specified database.
+** `TRANSACTION [MANAGEMENT] {* | user[, ...]}` - allows listing and ending transactions and queries for the specified users on the specified database.
+
+* _dbname_
+** The database to associate the privilege with.
+NOTE:: If you delete a database and create a new one with the same name, the new one will NOT have the privileges assigned to the deleted database.
+** The _dbname_ component can be `+*+`, which means all databases.
+Databases created after this command execution will also be associated with these privileges.
+** The `DATABASE[S] _dbname_` part of the command can be replaced by `DEFAULT DATABASE`.
+  If you restart the server and choose a new default database after this command execution, the new one will be associated with these privileges.
+
+* _role[, ...]_
+** The role or roles to associate the privilege with, comma-separated.
 
 .Privilege command syntax
 [options="header", width="100%", cols="3a,2"]
@@ -10,109 +44,24 @@ The syntax is:
 
 | [source, cypher]
 GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} TO role[, ...]
-| Grant a privilege to one or multiple roles
+| Grant a privilege to one or multiple roles.
 
 | [source, cypher]
 DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} TO role[, ...]
-| Deny a privilege to one or multiple roles
+| Deny a privilege to one or multiple roles.
 
 | [source, cypher]
 REVOKE GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} FROM role[, ...]
-| Revoke a granted privilege from one or multiple roles
+| Revoke a granted privilege from one or multiple roles.
 
 | [source, cypher]
 REVOKE DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} FROM role[, ...]
-| Revoke a denied privilege from one or multiple roles
+| Revoke a denied privilege from one or multiple roles.
 
 | [source, cypher]
 REVOKE database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} FROM role[, ...]
-| Revoke a granted or denied privilege from one or multiple roles
+| Revoke a granted or denied privilege from one or multiple roles.
 |===
 
-[NOTE]
-These commands are very similar to the <<administration-security-subgraph-introduction, graph-privileges>> except for the use of the term `DATABASE`, no `entity` and and the set of available _database-privileges_ differs from the _graph-privileges_.
-
-Where the components are:
-
-* _database-privilege_
-** `ACCESS`
-+
-allows access for a specific database/graph
-+
-** `START`
-+
-allows the specified database to be started
-+
-** `STOP`
-+
-allows the specified database to be stopped
-+
-** `CREATE INDEX`
-+
-allows indexes to be created on the specified database.
-+
-** `DROP INDEX`
-+
-allows indexes to be deleted on the specified database.
-+
-** `INDEX [MANAGEMENT]`
-+
-allows indexes to be created and deleted on the specified database.
-+
-** `CREATE CONSTRAINT`
-+
-allows constraints to be created on the specified database.
-+
-** `DROP CONSTRAINT`
-+
-allows constraints to be deleted on the specified database.
-+
-** `CONSTRAINT [MANAGEMENT]`
-+
-allows constraints to be created and deleted on the specified database.
-+
-** `CREATE NEW [NODE] LABEL`
-+
-allows labels to be created so that future nodes can be assigned them.
-+
-** `CREATE NEW [RELATIONSHIP] TYPE`
-+
-allows relationship types to be created so that future relationships can be created with these types.
-+
-** `CREATE NEW [PROPERTY] NAME`
-+
-allows property names to be created so that nodes and relationships can have properties with these names assigned.
-+
-** `NAME [MANAGEMENT]`
-+
-allows all of the name management capabilities: node labels, relationship types and property names.
-+
-** `ALL [[DATABASE] PRIVILEGES]`
-+
-allows access and index, constraint and name management for the specified database.
-+
-** `SHOW TRANSACTION {* | user[, ...]}`
-+
-allows listing transactions and queries for the specified users on the specified database.
-+
-** `TERMINATE TRANSACTION {* | user[, ...]}`
-+
-allows ending transactions and queries for the specified users on the specified database.
-+
-** `TRANSACTION [MANAGEMENT] {* | user[, ...]}`
-+
-allows listing and ending transactions and queries for the specified users on the specified database.
-+
-* _dbname_
-** The database to associate the privilege with.
-   Note that if you delete a database and create a new one with the same name, the new one will NOT have any of the privileges specifically assigned to the deleted database.
-** The _dbname_ component can be `+*+` which means all databases.
-  Any new databases created after this command will also be associated with these privileges.
-** The `DATABASE[S] _dbname_` part of the command can be replaced by `DEFAULT DATABASE`.
-  If the server is restarted and a new default database chosen after this command, the new one will be associated with these privileges.
-* _role[, ...]_
-** The role or roles to associate the privilege with, comma-separated.
-
-
-NOTE: It is important to note that using DENY does NOT erase a GRANT command; they both exist.
-The only way to erase a privilege is with REVOKE.
+NOTE: `DENY` does NOT erase a granted privilege; they both exist.
+Use `REVOKE` if you want to remove a privilege.
