@@ -56,7 +56,9 @@ class PredicateFunctionsTest extends DocumentingTest {
     section("all()", "functions-all") {
       p("`all()` returns true if the predicate holds for all elements in the given list." +
         " `null` is returned if the list is `null` or all of its elements are `null`.")
-      function("all(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
+      function("all(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list. "+
+         "A single element cannot be explicitly passed as a literal in the cypher statement. " +
+         "However, an implicit conversion will happen for a single elements when passing node properties during cypher execution."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (a)-[*1..3]->(b)
           |WHERE a.name = 'Alice' AND b.name = 'Daniel'
@@ -71,7 +73,10 @@ class PredicateFunctionsTest extends DocumentingTest {
     section("any()", "functions-any") {
       p("`any()` returns true if the predicate holds for at least one element in the given list." +
         " `null` is returned if the list is `null` or all of its elements are `null`.")
-      function("any(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
+      function("any(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list. " +
+        "A single element cannot be explicitly passed as a literal in the cypher statement. " +
+        "However, an implicit conversion will happen for a single elements when passing node properties during cypher execution."),
+      ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH (a)
           |WHERE a.name = 'Eskil'
@@ -114,7 +119,10 @@ class PredicateFunctionsTest extends DocumentingTest {
     section("none()", "functions-none") {
       p("`none()` returns true if the predicate holds for no element in the given list." +
         " `null` is returned if the list is `null` or all of its elements are `null`.")
-      function("none(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
+      function("none(variable IN list WHERE predicate)", "A Boolean.", ("list", "An expression that returns a list. "
+        +
+         "A single element cannot be explicitly passed as a literal in the cypher statement. " +
+         "However, an implicit conversion will happen for a single elements when passing node properties during cypher execution."), ("variable", "This is the variable that can be used from within the predicate."), ("predicate", "A predicate that is tested against all items in the list."))
       query(
         """MATCH p = (n)-[*1..3]->(b)
           |WHERE n.name = 'Alice'
@@ -142,5 +150,3 @@ class PredicateFunctionsTest extends DocumentingTest {
     }
   }.build()
 }
-
-
