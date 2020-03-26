@@ -1,17 +1,28 @@
 .List users output
-[options="header", width="100%", cols="1a,3,^.^"]
+[options="header", width="100%", cols="1a,4,^.^,^"]
 |===
-| Column | Description | Available in Community Edition
+| Column
+| Description
+| Community Edition
+| Enterprise Edition
 
 | user
-| user name | `+`
+| User name
+| `+`
+| `+`
 
 | roles
-| roles granted to the user | [enterprise-edition]#-#
+| Roles granted to the user.
+| `-`
+| `+`
 
 | passwordChangeRequired
-| if `true` the user must change their password at next login | `+`
+| If `true`, the user must change their password at the next login.
+| `+`
+| `+`
 
 | suspended
-| if `true` the user is currently suspended (cannot log in) | [enterprise-edition]#-#
+| If `true`, the user is currently suspended (cannot log in).
+| `-`
+|`+`
 |===
