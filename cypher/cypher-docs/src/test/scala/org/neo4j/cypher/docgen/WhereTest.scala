@@ -302,7 +302,7 @@ class WhereTest extends DocumentingTest {
         |Any variable that is defined in the outside scope can be referenced inside the subquery's own scope.
         |Variables introduced inside the subquery are not part of the outside scope and therefore can't be accessed on the outside.
         |If the subquery evaluates even once to anything that is not null, the whole expression will become true.
-        |This also means, that the system only needs to calculate the first occurrence where the subquery evaluates to something that is not null and can skip the rest of the work.
+        |This also means that the system only needs to calculate the first occurrence where the subquery evaluates to something that is not null and can skip the rest of the work.
       """.stripMargin)
     functionWithCypherStyleFormatting(
       "EXISTS { \n MATCH [Pattern] \n WHERE [Expression] \n}")
