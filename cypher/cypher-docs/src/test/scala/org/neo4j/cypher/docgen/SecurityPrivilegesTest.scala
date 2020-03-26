@@ -84,6 +84,12 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         p("Lists all privileges for user 'jake'")
         resultTable()
       }
+
+      p("The same command can be used at all times to review available privileges for the current user. " +
+        "For this purpose also exists a shorter form of the command: `SHOW USER PRIVILEGES`.")
+      query("SHOW USER PRIVILEGES", ResultAssertions((r) => {
+        assertStats(r)
+      })){}
     }
 
     section("The `TRAVERSE` privilege", "administration-security-subgraph-traverse", "enterprise-edition") {
