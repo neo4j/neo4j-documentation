@@ -1,5 +1,5 @@
 .User management command syntax
-[options="header", width="100%", cols="6a,5,3,^,^."]
+[options="header", width="100%", cols="5a,3,1,^,^."]
 |===
 | Command | Description | Type of user | Community Edition | Enterprise Edition
 
