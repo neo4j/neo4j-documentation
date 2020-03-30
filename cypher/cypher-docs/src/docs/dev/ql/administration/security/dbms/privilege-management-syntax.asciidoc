@@ -1,0 +1,30 @@
+.Privilege management privileges command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+GRANT SHOW PRIVILEGE
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to list privileges
+
+| [source, cypher]
+GRANT ASSIGN PRIVILEGE
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to assign privileges using the GRANT and DENY commands
+
+| [source, cypher]
+GRANT REMOVE PRIVILEGE
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to remove privileges using the REVOKE command
+
+| [source, cypher]
+GRANT PRIVILEGE MANAGEMENT
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to list, assign and remove privileges
+
+|===

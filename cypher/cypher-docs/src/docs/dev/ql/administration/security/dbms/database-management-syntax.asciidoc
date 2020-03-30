@@ -1,0 +1,24 @@
+.Database management privileges command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+GRANT CREATE DATABASE
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to create new databases
+
+| [source, cypher]
+GRANT DROP DATABASE
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to delete databases
+
+| [source, cypher]
+GRANT DATABASE MANAGEMENT
+    ON DBMS
+    TO role[, ...]
+| Enable the specified role or roles to create and delete databases
+
+|===
