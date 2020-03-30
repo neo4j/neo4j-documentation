@@ -7,7 +7,10 @@
 ----
 SHOW USERS
 ----
-| List all users. | Admin | `+` | `+`
+| List all users.
+| Admin
+| `+`
+| `+`
 
 | [source, cypher]
 ----
@@ -22,7 +25,10 @@ CREATE [OR REPLACE] USER name [IF NOT EXISTS]
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
 ----
-| Create a new user | Admin | `+` | `+`
+| Create a new user.
+| Admin
+| `+`
+| `+`
 
 | [source, cypher]
 ----
@@ -34,18 +40,27 @@ PASSWORD CHANGE [NOT] REQUIRED
             [SET STATUS {ACTIVE \| SUSPENDED}] \|
 STATUS {ACTIVE \| SUSPENDED}
 ----
-| Modify the settings for an existing user. | Admin | `-` | `+`
+| Modify the settings for an existing user.
+| Admin
+| `-`
+| `+`
 
 | [source, cypher]
 ----
 ALTER CURRENT USER SET PASSWORD FROM original TO password
 ----
-| Change the current user's password. | Normal user | `+` | `+`
+| Change the current user's password.
+| Normal user
+| `+`
+| `+`
 
 |
 [source, cypher]
 ----
 DROP USER name [IF EXISTS]
 ----
-| Remove an existing user. | Admin | `+` | `+`
+| Remove an existing user.
+| Admin 
+| `+`
+| `+`
 |===
