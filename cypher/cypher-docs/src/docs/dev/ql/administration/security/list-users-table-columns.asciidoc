@@ -10,7 +10,7 @@
 | roles granted to the user | [enterprise-edition]#-#
 
 | passwordChangeRequired
-| if `true the user must change their password at next login | `+`
+| if `true` the user must change their password at next login | `+`
 
 | suspended
 | if `true` the user is currently suspended (cannot log in) | [enterprise-edition]#-#
