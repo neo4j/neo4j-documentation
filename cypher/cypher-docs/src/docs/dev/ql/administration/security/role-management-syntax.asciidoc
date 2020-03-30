@@ -5,25 +5,25 @@
 
 | [source, cypher]
 SHOW [ALL\|POPULATED] ROLES [WITH USERS]
-| List roles
+| List roles.
 
 | [source, cypher]
 SHOW ROLE name PRIVILEGES
-| List the privileges granted to a role
+| List the privileges granted to a role.
 
 | [source, cypher]
 CREATE [OR REPLACE] ROLE name [IF NOT EXISTS] [AS COPY OF name]
-| Create a new role
+| Create a new role.
 
 | [source, cypher]
 DROP ROLE name [IF EXISTS]
-| Drop (remove) an existing role
+| Remove a role.
 
 | [source, cypher]
 GRANT ROLE name[, ...] TO user[, ...]
-| Assign one or multiple roles to one or multiple users
+| Assign roles to users.
 
 | [source, cypher]
 REVOKE ROLE name[, ...] FROM user[, ...]
-| Remove one or multiple roles from one or multiple users
+| Remove roles from users.
 |===
