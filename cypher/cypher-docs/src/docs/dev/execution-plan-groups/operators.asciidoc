@@ -4,6 +4,8 @@
 [abstract]
 All operators are listed here, grouped by the similarity of their characteristics.
 
+Certain operators are only used by a subset of the <<cypher-runtime,runtimes>> that Cypher can choose from.
+If that is the case, the example queries will be prefixed with an option to choose one of these runtimes.
 
 include::../ql/query-plan/all-nodes-scan.asciidoc[]
 
@@ -16,6 +18,8 @@ include::../ql/query-plan/node-by-label-scan.asciidoc[]
 include::../ql/query-plan/node-index-seek.asciidoc[]
 
 include::../ql/query-plan/node-unique-index-seek.asciidoc[]
+
+include::../ql/query-plan/multi-node-index-seek.asciidoc[]
 
 include::../ql/query-plan/node-index-seek-by-range.asciidoc[]
 
@@ -34,6 +38,8 @@ include::../ql/query-plan/apply.asciidoc[]
 include::../ql/query-plan/semi-apply.asciidoc[]
 
 include::../ql/query-plan/anti-semi-apply.asciidoc[]
+
+include::../ql/query-plan/anti.asciidoc[]
 
 include::../ql/query-plan/let-semi-apply.asciidoc[]
 
