@@ -28,22 +28,27 @@ class ShortestPathPlanningTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("Shortest path planning", "query-shortestpath-planning")
     initQueries(
-      """CREATE (charlie:Person {name: 'Charlie Sheen'}),
-        |       (martin:Person {name: 'Martin Sheen'}),
-        |       (michael:Person {name: 'Michael Douglas'}),
-        |       (oliver:Person {name: 'Oliver Stone'}),
-        |       (rob:Person {name: 'Rob Reiner'}),
+      """CREATE (KevinB:Person {name: 'Kevin Bacon'}),
+        |       (JackN:Person {name: 'Jack Nicholson'}),
+        |       (Keanu:Person {name: 'Keanu Reeves'}),
+        |       (Al:Person {name: 'Al Pacino'}),
+        |       (NancyM:Person {name: 'Nancy Meyers'}),
+        |       (RobR:Person {name: 'Rob Reiner'}),
+        |       (Taylor:Person {name: 'Taylor Hackford'}),
         |
-        |       (wallStreet:Movie {title: 'Wall Street'}),
-        |       (charlie)-[:ACTED_IN {role: 'Bud Fox'}]->(wallStreet),
-        |       (martin)-[:ACTED_IN {role: 'Carl Fox'}]->(wallStreet),
-        |       (michael)-[:ACTED_IN {role: 'Gordon Gekko'}]->(wallStreet),
-        |       (oliver)-[:DIRECTED]->(wallStreet),
+        |       (AFewGoodMen:Movie {title: 'A Few Good Men'}),
+        |       (JackN)-[:ACTED_IN {role: 'Col. Nathan R. Jessup'}]->(AFewGoodMen),
+        |       (KevinB)-[:ACTED_IN {role: 'Capt. Jack Ross'}]->(AFewGoodMen),
+        |       (RobR)-[:DIRECTED]->(AFewGoodMen),
         |
-        |       (thePresident:Movie {title: 'The American President'}),
-        |       (martin)-[:ACTED_IN {role: 'A.J. MacInerney'}]->(thePresident),
-        |       (michael)-[:ACTED_IN {role: 'President Andrew Shepherd'}]->(thePresident),
-        |       (rob)-[:DIRECTED]->(thePresident)""", "CREATE INDEX ON :Person(name)")
+        |       (SomethingsGottaGive:Movie {title: 'Something´s Gotta Give'}),
+        |       (JackN)-[:ACTED_IN {role: 'Harry Sanborn'}]->(SomethingsGottaGive),
+        |       (Keanu)-[:ACTED_IN {role: 'Julian Mercer'}]->(SomethingsGottaGive),
+        |       (NancyM)-[:DIRECTED]->(SomethingsGottaGive),
+        |
+        |       (TheDevilsAdvocate:Movie {title: 'The Devil´s Advocate'}),
+        |       (Keanu)-[:ACTED_IN {role: 'Kevin Lomax'}]->(TheDevilsAdvocate),
+        |       (Al)-[:ACTED_IN {role: 'John Milton'}]->(TheDevilsAdvocate)""", "CREATE INDEX ON :Person(name)")
     synopsis("Shortest path finding in Cypher and how it is planned.")
     p(
       """Planning shortest paths in Cypher can lead to different query plans depending on the predicates that need
@@ -59,7 +64,7 @@ class ShortestPathPlanningTest extends DocumentingTest {
         |queries with non-universal predicates will include a fallback to running the exhaustive search to find
         |the path should the fast algorithm not succeed. For example, depending on the data, an answer to a shortest
         |path query with existential predicates -- such as the requirement that at least one node contains the property
-        |`name='Charlie Sheen'` -- may not be able to be found by the fast algorithm. In this case, Neo4j will fall back to using
+        |`name='Kevin Bacon'` -- may not be able to be found by the fast algorithm. In this case, Neo4j will fall back to using
         |the exhaustive search to enumerate all paths and potentially return an answer.""".stripMargin)
     p(
       """The running times of these two algorithms may differ by orders of magnitude, so it is important to ensure
@@ -75,9 +80,9 @@ class ShortestPathPlanningTest extends DocumentingTest {
         |as explained in <<operations-manual#config_cypher.forbid_exhaustive_shortestpath, Operations Manual -> Configuration settings>>""".stripMargin)
     section("Shortest path with fast algorithm") {
       query(
-        """MATCH (ms:Person {name: 'Martin Sheen'} ),
-          |      (cs:Person {name: 'Charlie Sheen'}),
-          |      p = shortestPath((ms)-[:ACTED_IN*]-(cs))
+        """MATCH (KevinB:Person {name: 'Kevin Bacon'} ),
+          |      (Al:Person {name: 'Al Pacino'}),
+          |      p = shortestPath((KevinB)-[:ACTED_IN*]-(Al))
           |WHERE all(r IN relationships(p) WHERE exists(r.role))
           |RETURN p""", assertShortestPathLength) {
         p(
@@ -92,9 +97,9 @@ class ShortestPathPlanningTest extends DocumentingTest {
           """Predicates used in the `WHERE` clause that apply to the shortest path pattern are evaluated before deciding
             |what the shortest matching path is. """)
         query(
-          """MATCH (cs:Person {name: 'Charlie Sheen'}),
-            |      (ms:Person {name: 'Martin Sheen'}),
-            |      p = shortestPath((cs)-[*]-(ms))
+          """MATCH (KevinB:Person {name: 'Kevin Bacon'}),
+            |      (Al:Person {name: 'Al Pacino'}),
+            |      p = shortestPath((KevinB)-[*]-(Al))
             |WHERE length(p) > 1
             |RETURN p""", assertShortestPathLength) {
           p(
@@ -116,9 +121,9 @@ class ShortestPathPlanningTest extends DocumentingTest {
       }
       section("Prevent the exhaustive search from being used as a fallback") {
         query(
-          """MATCH (cs:Person {name: 'Charlie Sheen'}),
-            |      (ms:Person {name: 'Martin Sheen'}),
-            |      p = shortestPath((cs)-[*]-(ms))
+          """MATCH (KevinB:Person {name: 'Kevin Bacon'}),
+            |      (Al:Person {name: 'Al Pacino'}),
+            |      p = shortestPath((KevinB)-[*]-(Al))
             |WITH p
             |WHERE length(p) > 1
             |RETURN p""", assertShortestPathLength) {
@@ -134,5 +139,5 @@ class ShortestPathPlanningTest extends DocumentingTest {
     }
   }.build()
 
-  private def assertShortestPathLength = ResultAssertions(result => result.toList.head("p").asInstanceOf[Path].length() shouldBe 2)
+  private def assertShortestPathLength = ResultAssertions(result => result.toList.head("p").asInstanceOf[Path].length() shouldBe 6)
 }
