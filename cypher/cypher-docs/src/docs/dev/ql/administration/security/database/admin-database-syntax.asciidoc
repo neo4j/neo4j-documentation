@@ -7,78 +7,78 @@
 GRANT ACCESS
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Allow the specified role or roles to access the default database, the database `name` or all databases
+| Grant the specified roles the privilege to access the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT {START \| STOP}
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to start or stop the default database, the database `name` or all databases
+| Grant the specified roles the privilege to start and stop the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT {CREATE \| DROP} INDEX[ES]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to create or delete indexes on the default database, the database `name` or all databases
+| Grant the specified roles the privilege to create and delete indexes on the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT INDEX[ES] [MANAGEMENT]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to create and delete indexes on the default database, the database `name` or all databases
+| Grant the specified roles the privilege to manage indexes on the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT {CREATE \| DROP} CONSTRAINT[S]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to create or delete indexes on the default database, the database `name` or all databases
+| Grant the specified roles the privilege to create and delete constraints on the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT CONSTRAINT[S] [MANAGEMENT]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to create and delete constraints on the default database, the database `name` or all databases
+| Grant the specified roles the privilege to manage constraints on the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT CREATE NEW [NODE] LABEL[S]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to create new labels for nodes in the default database, the database `name` or all databases
+| Grant the specified roles the privilege to create new node labels in the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT CREATE NEW [RELATIONSHIP] TYPE[S]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to create new types for relationships in the default database, the database `name` or all databases
+| Grant the specified roles the privilege to create new relationships types in the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT CREATE NEW [PROPERTY] NAME[S]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to create new names for properties in the default database, the database `name` or all databases
+| Grant the specified roles the privilege to create new property names in the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT NAME [MANAGEMENT]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to create new labels, relationship types and property names in the default database, the database `name` or all databases
+| Grant the specified roles the privilege to manage new labels, relationship types, and property names in the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT ALL [[DATABASE] PRIVILEGES]
     ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
     TO role[, ...]
-| Enable the specified role or roles to access, create and delete indexes and constraints on, create new labels, relationship types and property names in the default database, the database `name` or all databases
+| Grant the specified roles all privileges for the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT {SHOW \| TERMINATE} TRANSACTION[S] [(* \| user[, ...])]
 ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
 TO role[, ...]
-| Enable the specified role, or roles, to list or end transactions and queries for all users, the specified user, or users in the default database, the database `name` or all databases
+| Grant the specified roles the privilege to list and end the transactions and queries of all users or a particular user(s) in the default database, a specific database, or all databases.
 
 | [source, cypher]
 GRANT TRANSACTION [MANAGEMENT] [(* \| user[, ...])]
 ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
 TO role[, ...]
-| Enable the specified role, or roles, to list and end running transactions and queries for all users, the specified user, or users in the default database, the database `name` or all databases
+| Grant the specified roles the privilege to manage the transactions and queries of all users or a particular user(s) in the default database, a specific database, or all databases.
 
 |===
