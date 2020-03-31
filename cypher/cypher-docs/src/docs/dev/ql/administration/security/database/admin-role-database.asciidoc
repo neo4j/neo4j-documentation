@@ -28,7 +28,11 @@ The components of the database privilege commands are:
 
 * _dbname_
 ** The database to associate the privilege with.
-NOTE:: If you delete a database and create a new one with the same name, the new one will NOT have the privileges assigned to the deleted database.
++
+[NOTE]
+====
+If you delete a database and create a new one with the same name, the new one will NOT have the privileges assigned to the deleted database.
+====
 ** The _dbname_ component can be `+*+`, which means all databases.
 Databases created after this command execution will also be associated with these privileges.
 ** The `DATABASE[S] _dbname_` part of the command can be replaced by `DEFAULT DATABASE`.
@@ -63,5 +67,8 @@ REVOKE database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {dbname \| *}} FRO
 | Revoke a granted or denied privilege from one or multiple roles.
 |===
 
-NOTE: `DENY` does NOT erase a granted privilege; they both exist.
+[NOTE]
+====
+`DENY` does NOT erase a granted privilege; they both exist.
 Use `REVOKE` if you want to remove a privilege.
+====

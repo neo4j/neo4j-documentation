@@ -9,9 +9,13 @@ The components of the graph privilege commands are:
 * _graph-privilege_
 ** `TRAVERSE` - allows the specified entities to be found.
 ** `READ +{props}+` - allows the specified properties on the found entities to be read.
-Note:: Granting property `READ` access does not imply that the entities with that property can be found.
-For exampl, if there is also a `DENY` on it, the entity will not be found.
++
+[NOTE]
+====
+Granting property `READ` access does not imply that the entities with that property can be found.
+For example, if there is also a `DENY` on it, the entity will not be found.
 The props can be `+*+`, which means all properties.
+====
 ** `MATCH +{props}+` - combines both `TRAVERSE` and `READ`, allowing an entity to be found and its properties read.
 ** `WRITE` - this privilege can only be assigned to all nodes, relationships, and properties in the entire graph.
 This means that the entity part of the command must also be `ELEMENTS` `+*+` and cannot be specific.
@@ -19,7 +23,11 @@ This means that the entity part of the command must also be `ELEMENTS` `+*+` and
 * _name_
 ** The graph or graphs to associate the privilege with.
 Because in {neo4j.version} you can have only one graph per database, this command uses the database name to refer to that graph.
-Note:: If you delete a database and create a new one with the same name, the new one will _NOT_ have the privileges assigned to the deleted graph.
++
+[NOTE]
+====
+If you delete a database and create a new one with the same name, the new one will _NOT_ have the privileges assigned to the deleted graph.
+====
 ** It can be `+*+` which means all graphs.
 Graphs created after this command execution will also be associated with these privileges.
 
@@ -61,5 +69,9 @@ REVOKE graph-privilege ON GRAPH[S] {name \| *} [entity] FROM roles
 | Revoke a granted or denied privilege from one or multiple roles.
 |===
 
-NOTE: `DENY` does NOT erase a granted privilege; they both exist.
+
+[NOTE]
+====
+`DENY` does NOT erase a granted privilege; they both exist.
 Use `REVOKE` if you want to remove a privilege.
+====
