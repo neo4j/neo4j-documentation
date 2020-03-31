@@ -1284,7 +1284,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |for example, when using a pattern expression or pattern comprehension in a query.
           |This operator is a variation of the <<query-plan-apply, Apply>> operator.""".stripMargin,
       queryText =
-        """MATCH (p:Person)
+        """CYPHER runtime=slotted
+          |MATCH (p:Person)
           |RETURN p.name, [ (p)-[:WORKS_IN]->(location) | location.name ] AS cities""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("RollUpApply"))
     )
