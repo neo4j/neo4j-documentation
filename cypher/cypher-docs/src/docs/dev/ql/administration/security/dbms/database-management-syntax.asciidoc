@@ -7,18 +7,18 @@
 GRANT CREATE DATABASE
     ON DBMS
     TO role[, ...]
-| Enable the specified role or roles to create new databases
+| Enable the specified roles to create new databases.
 
 | [source, cypher]
 GRANT DROP DATABASE
     ON DBMS
     TO role[, ...]
-| Enable the specified role or roles to delete databases
+| Enable the specified roles to delete databases.
 
 | [source, cypher]
 GRANT DATABASE MANAGEMENT
     ON DBMS
     TO role[, ...]
-| Enable the specified role or roles to create and delete databases
+| Enable the specified roles to manage databases.
 
 |===
