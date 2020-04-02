@@ -57,6 +57,14 @@ SHOW USER alice PRIVILEGES
 
 List all privileges of a user, and the role that they are assigned to.
 
+###assertion=show-nothing
+//
+
+SHOW USER PRIVILEGES
+###
+
+Lists all privileges of the currently logged in user, and the role that they are assigned to.
+
 """
   }
 }

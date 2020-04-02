@@ -14,7 +14,7 @@ SHOW USERS
 
 | [source, cypher]
 ----
-SHOW USER name PRIVILEGES
+SHOW USER [name] PRIVILEGES
 ----
 | List the privileges granted to a user. | Admin | `-` | `+`
 
@@ -60,7 +60,7 @@ ALTER CURRENT USER SET PASSWORD FROM original TO password
 DROP USER name [IF EXISTS]
 ----
 | Remove an existing user.
-| Admin 
+| Admin
 | `+`
 | `+`
 |===
