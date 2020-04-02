@@ -7,24 +7,24 @@
 GRANT SHOW PRIVILEGE
     ON DBMS
     TO role[, ...]
-| Enable the specified role or roles to list privileges
+| Enable the specified roles to list privileges.
 
 | [source, cypher]
 GRANT ASSIGN PRIVILEGE
     ON DBMS
     TO role[, ...]
-| Enable the specified role or roles to assign privileges using the GRANT and DENY commands
+| Enable the specified roles to assign privileges using the `GRANT` and `DENY` commands.
 
 | [source, cypher]
 GRANT REMOVE PRIVILEGE
     ON DBMS
     TO role[, ...]
-| Enable the specified role or roles to remove privileges using the REVOKE command
+| Enable the specified roles to remove privileges using the `REVOKE` command.
 
 | [source, cypher]
 GRANT PRIVILEGE MANAGEMENT
     ON DBMS
     TO role[, ...]
-| Enable the specified role or roles to list, assign and remove privileges
+| Enable the specified roles to list, assign, and remove privileges.
 
 |===
