@@ -361,7 +361,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
-        p("The ability to show roles can be granted via the `SHOW ROLE` privilege. The following query shows an example of this:")
+        p("The ability to show roles can be granted via the `SHOW ROLE` privilege. A user with this privilege is allowed to execute the `SHOW ROLES` and `SHOW POPULATED ROLES` administration commands. " +
+          "For the `SHOW ROLES WITH USERS` and `SHOW POPULATED ROLES WITH USERS` administration command, both this privilege and the `SHOW USER` privilege are required. The following query shows an example of how to grant the `SHOW ROLE` privilege:")
         query("GRANT SHOW ROLE ON DBMS TO roleShower", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -496,7 +497,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("The dbms privileges for privilege management are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
         p("include::dbms/privilege-management-syntax.asciidoc[]")
 
-        p("The ability to list privileges can be granted via the `SHOW PRIVILEGE` privilege. A user with this privilege is allowed to execute the `SHOW PRIVILEGES`, `SHOW ROLE roleName PRIVILEGES` and `SHOW USER username PRIVILEGES` administration commands. The following query shows an example of how to grant this privilege:")
+        p("The ability to list privileges can be granted via the `SHOW PRIVILEGE` privilege. A user with this privilege is allowed to execute the `SHOW PRIVILEGES` and `SHOW ROLE roleName PRIVILEGES` administration commands. " +
+          "For the `SHOW USER username PRIVILEGES` administration command, both this privilege and the `SHOW USER` privilege are required. The following query shows an example of how to grant the `SHOW PRIVILEGE` privilege:")
         query("GRANT SHOW PRIVILEGE ON DBMS TO privilegeShower", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -506,6 +508,10 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         query("SHOW ROLE privilegeShower PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
           p("Lists all privileges for role 'privilegeShower'")
           resultTable()
+        }
+
+        note {
+          p("Note that no specific privileges are required for showing the current user's privileges using `SHOW USER [username] PRIVILEGES`.")
         }
 
         p("The ability to assign privileges to roles can be granted via the `ASSIGN PRIVILEGE` privilege. A user with this privilege is allowed to execute GRANT and DENY administration commands. The following query shows an example of how to grant this privilege:")
