@@ -362,7 +362,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         p("The ability to show roles can be granted via the `SHOW ROLE` privilege. A user with this privilege is allowed to execute the `SHOW ROLES` and `SHOW POPULATED ROLES` administration commands. " +
-          "For the `SHOW ROLES WITH USERS` and `SHOW POPULATED ROLES WITH USERS` administration command, both this privilege and the `SHOW USER` privilege are required. The following query shows an example of how to grant the `SHOW ROLE` privilege:")
+          "For the `SHOW ROLES WITH USERS` and `SHOW POPULATED ROLES WITH USERS` administration commands, both this privilege and the `SHOW USER` privilege are required. The following query shows an example of how to grant the `SHOW ROLE` privilege:")
         query("GRANT SHOW ROLE ON DBMS TO roleShower", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
