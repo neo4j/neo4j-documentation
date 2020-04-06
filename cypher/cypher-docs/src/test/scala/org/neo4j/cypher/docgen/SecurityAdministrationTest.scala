@@ -441,13 +441,13 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
-        p("The ability to modify users' account statuses can be granted via the `SET USER STATUS` privilege. The following query shows an example of this:")
+        p("The ability to modify the account status of users can be granted via the `SET USER STATUS` privilege. The following query shows an example of this:")
         query("GRANT SET USER STATUS ON DBMS TO statusModifier", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow modifying users' account statuses:")
+        p("The resulting role should have privileges that only allow modifying the account status of users:")
         query("SHOW ROLE statusModifier PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
           p("Lists all privileges for role 'statusModifier'")
           resultTable()

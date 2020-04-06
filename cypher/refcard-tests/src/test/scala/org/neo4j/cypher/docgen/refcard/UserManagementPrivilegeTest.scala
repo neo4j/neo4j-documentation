@@ -72,7 +72,7 @@ Revoke the granted and denied privileges to alter users' passwords from a role.
 REVOKE GRANT SET USER STATUS ON DBMS FROM my_role
 ###
 
-Revoke the granted privilege to alter users' account statuses from a role.
+Revoke the granted privilege to alter the account status of users from a role.
 
 ###assertion=update-one
 //

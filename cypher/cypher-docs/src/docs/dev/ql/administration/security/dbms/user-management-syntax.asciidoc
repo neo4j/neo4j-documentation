@@ -31,7 +31,7 @@ GRANT SET PASSWORD[S]
 GRANT SET USER STATUS
     ON DBMS
     TO role[, ...]
-| Enable the specified roles to modify users' account statuses.
+| Enable the specified roles to modify the account status of users.
 
 | [source, cypher]
 GRANT SHOW USER
