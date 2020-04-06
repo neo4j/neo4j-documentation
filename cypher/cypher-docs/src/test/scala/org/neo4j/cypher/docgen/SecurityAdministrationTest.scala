@@ -22,6 +22,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       "CREATE ROLE userAdder",
       "CREATE ROLE userDropper",
       "CREATE ROLE userModifier",
+      "CREATE ROLE passwordModifier",
+      "CREATE ROLE statusModifier",
       "CREATE ROLE userShower",
       "CREATE ROLE userManager",
       "CREATE ROLE databaseAdder",
@@ -425,6 +427,34 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         query("SHOW ROLE userModifier PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
           p("Lists all privileges for role 'userModifier'")
           resultTable()
+        }
+
+        p("The ability to modify users' passwords and whether those passwords must be changed upon first login can be granted via the `SET PASSWORDS` privilege. The following query shows an example of this:")
+        query("GRANT SET PASSWORDS ON DBMS TO passwordModifier", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow modifying users' passwords and whether those passwords must be changed upon first login:")
+        query("SHOW ROLE passwordModifier PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+          p("Lists all privileges for role 'passwordModifier'")
+          resultTable()
+        }
+
+        p("The ability to modify users' account statuses can be granted via the `SET USER STATUS` privilege. The following query shows an example of this:")
+        query("GRANT SET USER STATUS ON DBMS TO statusModifier", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow modifying users' account statuses:")
+        query("SHOW ROLE statusModifier PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+          p("Lists all privileges for role 'statusModifier'")
+          resultTable()
+        }
+
+        note {
+          p("Note that the combination of the `SET PASSWORDS` and the `SET USER STATUS` privilege actions is equivalent to the `ALTER USER` privilege action.")
         }
 
         p("The ability to show users can be granted via the `SHOW USER` privilege. The following query shows an example of this:")
