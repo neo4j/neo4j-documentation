@@ -169,7 +169,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
               |* `reader` - can perform read-only queries on all databases except `system`
               |* `editor` - can perform read and write operations on all databases except `system`, but cannot make new labels or relationship types
               |* `publisher` - can do the same as `editor`, but also create new labels and relationship types.
-              |* `architect` - can do the same as `architect` as well as create and manage indexes and constraints
+              |* `architect` - can do the same as `publisher` as well as create and manage indexes and constraints
               |* `admin` - can do the same as all the above, as well as manage databases, users, roles and privileges
               |""".stripMargin)
           resultTable()
@@ -177,10 +177,11 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p("There are multiple versions of this command, the default being `SHOW ALL ROLES`. " +
           "To only show roles that are assigned to users, the command is `SHOW POPULATED ROLES`. " +
           "To see which users are assigned to roles `WITH USERS` can be appended to the commands. " +
-          "This will give one result row for each user, so if a role is assigned to two users then it will show up twice in the result.")
+          "This will give one result row for each user, so if a role is assigned to two users then it will show up twice in the result. ")
         query("SHOW POPULATED ROLES WITH USERS", assertRolesShown(Seq("admin"), Seq("PUBLIC"))) {
-          p("The table of results contains two columns, the first is the role name, and the other a flag indicating whether the role is a built-in role or a custom role.")
+        p("The table of results will show information about the role, i.e. its name, whether or not it is built-in and what database it belongs to. ")  
           resultTable()
+
         }
         p("The `SHOW ROLE name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
       }
