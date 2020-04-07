@@ -99,13 +99,17 @@ class ListFunctionsTest extends DocumentingTest {
     section("range()", "functions-range") {
       p(
         """`range()` returns a list comprising all integer values within a range bounded by a start value `start` and end value `end`, where the difference `step` between any two consecutive values is constant; i.e. an arithmetic progression.
-          |The range is inclusive, and the arithmetic progression will therefore always contain `start` and -- depending on the values of `start`, `step` and `end` -- `end`.""".stripMargin)
+          |To create ranges with decreasing integerer values, use a negative value `step`.
+          |The range is inclusive for non-empty ranges, and the arithmetic progression will therefore always contain `start` and -- depending on the values of `start`, `step` and `end` -- `end`.
+          |The only exception where the range does not contain `start` are empty ranges.
+          |An empty range will be returned if the value `step` is negative and `start - end` is positive, or vice versa, e.g. `range(0, 5, -1)`.
+          |""".stripMargin)
       function("range(start, end [, step])", "A list of Integer elements.", ("start", "An expression that returns an integer value."), ("end", "An expression that returns an integer value."), ("step", "A numeric expression defining the difference between any two consecutive values, with a default of `1`."))
       query(
-        """RETURN range(0, 10), range(2, 18, 3)""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("range(0, 10)" -> List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), "range(2, 18, 3)" -> List(2, 5, 8, 11, 14, 17))))
+        """RETURN range(0, 10), range(2, 18, 3), range(0, 5, -1)""".stripMargin, ResultAssertions((r) => {
+          r.toList should equal(List(Map("range(0, 10)" -> List(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10), "range(2, 18, 3)" -> List(2, 5, 8, 11, 14, 17), "range(0, 5, -1)" -> List())))
         })) {
-        p("Two lists of numbers in the given ranges are returned.")
+        p("Three lists of numbers in the given ranges are returned.")
         resultTable()
       }
     }
