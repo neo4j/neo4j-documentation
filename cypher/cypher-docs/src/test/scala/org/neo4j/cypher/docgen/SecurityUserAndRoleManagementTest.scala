@@ -184,7 +184,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           "To see which users are assigned to roles `WITH USERS` can be appended to the commands. " +
           "This will give one result row for each user, so if a role is assigned to two users then it will show up twice in the result. ")
         query("SHOW POPULATED ROLES WITH USERS", assertRolesShown(Seq("admin"), Seq("PUBLIC"))) {
-        p("The table of results will show information about the role, i.e. its name, whether or not it is built-in and what database it belongs to. ")
+        p("The table of results will show information about the role and what database it belongs to. ")
           resultTable()
 
         }
