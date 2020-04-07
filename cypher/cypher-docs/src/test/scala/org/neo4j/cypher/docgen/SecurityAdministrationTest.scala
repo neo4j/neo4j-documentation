@@ -511,7 +511,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         note {
-          p("Note that no specific privileges are required for showing the current user's privileges using `SHOW USER [username] PRIVILEGES`.")
+          p("Note that no specific privileges are required for showing the current user's privileges using either `SHOW USER username PRIVILEGES`, or `SHOW USER PRIVILEGES`.")
         }
 
         p("The ability to assign privileges to roles can be granted via the `ASSIGN PRIVILEGE` privilege. A user with this privilege is allowed to execute GRANT and DENY administration commands. The following query shows an example of how to grant this privilege:")
