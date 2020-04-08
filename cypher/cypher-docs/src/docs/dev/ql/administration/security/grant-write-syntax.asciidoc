@@ -3,6 +3,5 @@
 -----
 GRANT WRITE
     ON GRAPH[S] {name | *}
-    [ ELEMENT[S] * ]
     TO roles
 -----

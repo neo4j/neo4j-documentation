@@ -183,7 +183,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
 
     section("The `WRITE` privilege", "administration-security-subgraph-write", "enterprise-edition") {
       p(
-        """The `WRITE` privilege can be used to allow the ability to write on a graph. At the moment, granting the `WRITE` privilege implies that you can do any write operation on any part of the graph. """.stripMargin)
+        """The `WRITE` privilege enables you to write on a graph.""".stripMargin)
       p("include::grant-write-syntax.asciidoc[]")
 
       p(
