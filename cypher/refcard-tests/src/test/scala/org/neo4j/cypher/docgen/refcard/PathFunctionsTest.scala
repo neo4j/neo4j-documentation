@@ -25,7 +25,7 @@ import org.neo4j.graphdb.Transaction
 
 class PathFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A:Person KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
-  val title = "Path Functions"
+  val title = "Path functions"
   override val linkId = "functions/list"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {

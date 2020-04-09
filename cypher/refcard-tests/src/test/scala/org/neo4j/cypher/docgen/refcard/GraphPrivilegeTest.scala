@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen.refcard
 
 class GraphPrivilegeTest extends AdministrationCommandTestBase {
-  val title = "(★) GRAPH PRIVILEGES"
+  val title = "(★) Graph privileges"
   override val linkId = "administration/security/subgraph"
 
   private def setup() = graph.withTx { tx =>

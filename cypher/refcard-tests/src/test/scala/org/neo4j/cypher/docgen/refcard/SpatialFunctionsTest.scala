@@ -25,7 +25,7 @@ import org.neo4j.graphdb.Transaction
 
 class SpatialFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A")
-  val title = "Spatial Functions"
+  val title = "Spatial functions"
   override val linkId = "functions/spatial"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {

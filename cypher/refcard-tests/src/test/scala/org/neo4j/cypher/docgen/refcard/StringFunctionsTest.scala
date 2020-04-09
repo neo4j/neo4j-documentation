@@ -25,7 +25,7 @@ import org.neo4j.graphdb.Transaction
 
 class StringFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A KNOWS B", "B KNOWS C", "C KNOWS ROOT")
-  val title = "String Functions"
+  val title = "String functions"
   override val linkId = "functions/string"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {

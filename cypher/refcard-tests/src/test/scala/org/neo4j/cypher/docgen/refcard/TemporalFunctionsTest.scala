@@ -27,7 +27,7 @@ import org.neo4j.graphdb.Transaction
 
 class TemporalFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A")
-  val title = "Temporal Functions"
+  val title = "Temporal functions"
   override val linkId = "functions/temporal"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {

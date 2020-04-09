@@ -147,6 +147,6 @@ RETURN count(*)
 ###
 
 The number of matching rows.
-See Aggregating Functions for more.
+See Aggregating functions for more.
 """
 }

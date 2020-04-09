@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen.refcard
 
 class RoleManagementPrivilegeTest extends AdministrationCommandTestBase {
-  val title = "(★) ROLE MANAGEMENT PRIVILEGES"
+  val title = "(★) Role management privileges"
   override val linkId = "administration/security/administration/#administration-security-administration-dbms-privileges-role-management"
 
   private def setup() = graph.withTx { tx =>

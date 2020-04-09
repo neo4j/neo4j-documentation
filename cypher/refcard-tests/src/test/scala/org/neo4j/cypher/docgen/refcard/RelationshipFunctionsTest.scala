@@ -25,7 +25,7 @@ import org.neo4j.graphdb.Transaction
 
 class RelationshipFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A KNOWS B", "B KNOWS C", "C KNOWS ROOT")
-  val title = "Relationship Functions"
+  val title = "Relationship functions"
   override val linkId = "functions/scalar"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
