@@ -25,7 +25,7 @@ import org.neo4j.graphdb.Transaction
 
 class ListPredicatesTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A KNOWS B", "B KNOWS C", "C KNOWS ROOT")
-  val title = "List Predicates"
+  val title = "List predicates"
   override val linkId = "functions/predicate"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {

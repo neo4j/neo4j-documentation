@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen.refcard
 
 class UserManagementTest extends AdministrationCommandTestBase {
-  val title = "USER MANAGEMENT"
+  val title = "User management"
   override val linkId = "administration/security/users-and-roles/#administration-security-users"
 
   override def parameters(name: String): Map[String, Any] =

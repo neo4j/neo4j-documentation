@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen.refcard
 
 class DatabasePrivilegeTest extends AdministrationCommandTestBase {
-  val title = "(★) DATABASE PRIVILEGES"
+  val title = "(★) Database privileges"
   override val linkId = "administration/security/administration/#administration-security-administration-database-privileges"
 
   private def setup() = graph.withTx { tx =>

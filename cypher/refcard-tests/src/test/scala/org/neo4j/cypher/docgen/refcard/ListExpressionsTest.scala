@@ -25,7 +25,7 @@ import org.neo4j.graphdb.Transaction
 
 class ListExpressionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A", "A:Person KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
-  val title = "List Expressions"
+  val title = "List expressions"
   override val linkId = "functions/list"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {

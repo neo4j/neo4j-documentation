@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen.refcard
 
 class DatabaseManagementTest extends AdministrationCommandTestBase {
-  val title = "DATABASE MANAGEMENT"
+  val title = "Database management"
   override val linkId = "administration/databases"
 
   def text: String =

@@ -28,7 +28,7 @@ import org.neo4j.values.storable.DurationValue
 
 class DurationFunctionsTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("ROOT KNOWS A")
-  val title = "Duration Functions"
+  val title = "Duration functions"
   override val linkId = "functions/temporal/duration/"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
