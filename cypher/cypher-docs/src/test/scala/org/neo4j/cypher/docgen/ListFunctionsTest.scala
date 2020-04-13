@@ -99,7 +99,7 @@ class ListFunctionsTest extends DocumentingTest {
     section("range()", "functions-range") {
       p(
         """`range()` returns a list comprising all integer values within a range bounded by a start value `start` and end value `end`, where the difference `step` between any two consecutive values is constant; i.e. an arithmetic progression.
-          |To create ranges with decreasing integerer values, use a negative value `step`.
+          |To create ranges with decreasing integer values, use a negative value `step`.
           |The range is inclusive for non-empty ranges, and the arithmetic progression will therefore always contain `start` and -- depending on the values of `start`, `step` and `end` -- `end`.
           |The only exception where the range does not contain `start` are empty ranges.
           |An empty range will be returned if the value `step` is negative and `start - end` is positive, or vice versa, e.g. `range(0, 5, -1)`.
