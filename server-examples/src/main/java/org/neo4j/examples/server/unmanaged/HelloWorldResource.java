@@ -27,18 +27,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.string.UTF8;
 
 // tag::HelloWorldResource[]
 @Path( "/helloworld" )
 public class HelloWorldResource
 {
-    private final GraphDatabaseService database;
+    private final DatabaseManagementService dbms;
 
-    public HelloWorldResource( @Context GraphDatabaseService database )
+    public HelloWorldResource( @Context DatabaseManagementService dbms )
     {
-        this.database = database;
+        this.dbms = dbms;
     }
 
     @GET
