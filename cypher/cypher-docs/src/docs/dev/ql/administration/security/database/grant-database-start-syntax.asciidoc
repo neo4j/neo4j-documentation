@@ -2,6 +2,6 @@
 [source, cypher]
 -----
 GRANT START
-    ON {DEFAULT DATABASE \| DATABASE[S] {name \| *}}
-    TO role[, ...]
+    ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}}
+    TO role [, ...]
 -----

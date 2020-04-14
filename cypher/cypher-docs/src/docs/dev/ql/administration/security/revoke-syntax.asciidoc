@@ -3,5 +3,5 @@
 -----
 REVOKE
     [ { GRANT | DENY } ] graph-privilege
-    FROM roles
+    FROM role [, ...]
 -----
