@@ -3,10 +3,10 @@
 -----
 DENY READ
     { * | properties }
-    ON GRAPH[S] {name | *}
+    ON GRAPH[S] {name [, ...] | *}
         [
             { NODE[S] | RELATIONSHIP[S] | ELEMENT[S] }
-            [ { * | labels } ]
+            [ { * | label [, ...] } ]
         ]
-    TO roles
+    TO role [, ...]
 -----
