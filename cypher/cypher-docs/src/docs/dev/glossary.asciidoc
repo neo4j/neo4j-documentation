@@ -346,6 +346,8 @@ The following commands are only executable against the `system` database:
 | <<administration-security-administration-dbms-privileges-privilege-management, REMOVE PRIVILEGE>>       | DBMS                  | Determines whether the user can remove privileges using the REVOKE command.
 | <<administration-security-administration-dbms-privileges-role-management, REMOVE ROLE>>                 | DBMS                  | Determines whether the user can revoke roles.
 | <<administration-security-administration-dbms-privileges-role-management, ROLE MANAGEMENT>>             | DBMS                  | Determines whether the user can create, drop, grant, revoke and show roles.
+| <<administration-security-administration-dbms-privileges-user-management, SET PASSWORDS>>               | DBMS                  | Determines whether the user can modify users' passwords and whether those passwords must be changed upon first login.
+| <<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>>             | DBMS                  | Determines whether the user can modify the account status of users.
 | <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>>         | DBMS                  | Determines whether the user can get information about privileges assigned to users and roles.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>                   | DBMS                  | Determines whether the user can get information about existing and assigned roles.
 | <<administration-security-administration-database-transaction, SHOW TRANSACTION>>                       | Database              | Determines whether a user is allowed to list transactions and queries.

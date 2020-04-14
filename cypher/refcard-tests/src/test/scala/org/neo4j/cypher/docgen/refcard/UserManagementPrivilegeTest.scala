@@ -25,6 +25,9 @@ class UserManagementPrivilegeTest extends AdministrationCommandTestBase {
 
   private def setup() = graph.withTx { tx =>
     tx.execute("CREATE ROLE my_role")
+    tx.execute("GRANT SET PASSWORDS ON DBMS TO my_role")
+    tx.execute("DENY SET PASSWORDS ON DBMS TO my_role")
+    tx.execute("GRANT SET USER STATUS ON DBMS TO my_role")
     tx.execute("DENY SHOW USER ON DBMS TO my_role")
   }
 
@@ -54,6 +57,22 @@ DENY ALTER USER ON DBMS TO my_role
 ###
 
 Deny the privilege to alter users to a role.
+
+###assertion=update-two
+//
+
+REVOKE SET PASSWORDS ON DBMS FROM my_role
+###
+
+Revoke the granted and denied privileges to alter users' passwords from a role.
+
+###assertion=update-one
+//
+
+REVOKE GRANT SET USER STATUS ON DBMS FROM my_role
+###
+
+Revoke the granted privilege to alter the account status of users from a role.
 
 ###assertion=update-one
 //

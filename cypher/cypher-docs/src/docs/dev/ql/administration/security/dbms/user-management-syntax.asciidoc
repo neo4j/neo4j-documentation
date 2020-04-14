@@ -22,6 +22,18 @@ GRANT ALTER USER
 | Enable the specified roles to modify users.
 
 | [source, cypher]
+GRANT SET PASSWORD[S]
+    ON DBMS
+    TO role[, ...]
+| Enable the specified roles to modify users' passwords and whether those passwords must be changed upon first login.
+
+| [source, cypher]
+GRANT SET USER STATUS
+    ON DBMS
+    TO role[, ...]
+| Enable the specified roles to modify the account status of users.
+
+| [source, cypher]
 GRANT SHOW USER
 ON DBMS
 TO role[, ...]
