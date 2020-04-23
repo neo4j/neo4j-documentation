@@ -44,8 +44,8 @@
                                     <!-- keep this one separate as it's a bit special compared to the others -->
                                     <arg value="com.neo4j.metrics.source.jvm.JvmMetrics" />
                                     <arg value="com.neo4j.metrics.source.jvm.GCMetrics" />
-                                    <arg value="com.neo4j.metrics.source.jvm.MemoryBuffersMetrics" />
-                                    <arg value="com.neo4j.metrics.source.jvm.MemoryPoolMetrics" />
+                                    <arg value="com.neo4j.metrics.source.jvm.JVMMemoryBuffersMetrics" />
+                                    <arg value="com.neo4j.metrics.source.jvm.JVMMemoryPoolMetrics" />
                                     <arg value="com.neo4j.metrics.source.jvm.ThreadMetrics" />
                                 </java>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
