@@ -64,7 +64,7 @@ object ExecutionEngineFactory {
     val plannerConfig = cypherConfig.toCypherPlannerConfiguration(spi.config, isSystemDatabase)
     val runtimeConfig = cypherConfig.toCypherRuntimeConfiguration
     val compilerFactory = newCompatibilityFactory(queryService, plannerConfig, runtimeConfig)
-    val cacheTracer = new MonitoringCacheTracer(spi.monitors.newMonitor(classOf[StringCacheMonitor]))
+    val cacheTracer = new MonitoringCacheTracer(spi.monitors.newMonitor(classOf[ExecutionEngineQueryCacheMonitor]))
     val tracer = new TimingCompilationTracer(spi.monitors.newMonitor(classOf[TimingCompilationTracer.EventListener]))
     if (isSystemDatabase) {
       val innerPlannerConfig: CypherPlannerConfiguration = cypherConfig.toCypherPlannerConfiguration(spi.config, planSystemCommands = false)
