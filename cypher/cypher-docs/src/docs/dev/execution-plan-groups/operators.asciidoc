@@ -21,6 +21,30 @@ If that is the case, the example queries will be prefixed with an option to choo
 * <<query-plan-undirected-relationship-by-id-seek, UndirectedRelationshipByIdSeek>>
 * <<query-plan-apply, Apply>>
 * <<query-plan-semi-apply, SemiApply>>
+* <<query-plan-anti-semi-apply, AntiSemiApply>>
+* <<query-plan-anti>>
+* <<query-plan-let-semi-apply, LetSemiApply>>
+* <<query-plan-let-anti-semi-apply, LetAntiSemiApply>>
+* <<query-plan-select-or-semi-apply, SelectOrSemiApply>>
+* <<query-plan-select-or-anti-semi-apply, SelectOrAntiSemiApply>>
+* <<query-plan-let-select-or-semi-apply, LetSelectOrSemiApply>>
+* <<query-plan-let-select-or-anti-semi-apply, LetSelectOrAntiSemiApply>>
+* <<query-plan-conditional-apply, ConditionalApply>>
+* <<query-plan-anti-conditional-apply, AntiConditionalApply>>
+* <<query-plan-roll-up-apply, RollUpApply>>
+* <<query-plan-argument, Argument>>
+* <<query-plan-expand-all, Expand(All)>>
+* <<query-plan-expand-into, Expand(Into)>>
+* <<query-plan-optional-expand-all, OptionalExpand(All)>>
+* <<query-plan-optional-expand-into, OptionalExpand(Into)>>
+* <<query-plan-varlength-expand-all, VarLengthExpand(All)>>
+* <<query-plan-varlength-expand-into, VarLengthExpand(Into)>>
+* <<query-plan-varlength-expand-pruning, VarLengthExpand(Pruning)>>
+* <<query-plan-assert-same-node, AssertSameNode>>
+* <<query-plan-drop-result, DropResult>>
+* <<query-plan-empty-result, EmptyResult>>
+* <<query-plan-produce-results, ProduceResults>>
+* <<query-plan-load-csv, LoadCSV>>
 
 include::../ql/query-plan/all-nodes-scan.asciidoc[]
 
@@ -49,7 +73,6 @@ include::../ql/query-plan/node-index-scan.asciidoc[]
 include::../ql/query-plan/undirected-relationship-by-id-seek.asciidoc[]
 
 include::../ql/query-plan/apply.asciidoc[]
-
 
 include::../ql/query-plan/semi-apply.asciidoc[]
 
