@@ -7,6 +7,21 @@ All operators are listed here, grouped by the similarity of their characteristic
 Certain operators are only used by a subset of the <<cypher-runtime,runtimes>> that Cypher can choose from.
 If that is the case, the example queries will be prefixed with an option to choose one of these runtimes.
 
+* <<query-plan-all-nodes-scan, AllNodesScan>>
+* <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>
+* <<query-plan-node-by-id-seek, NodeByIdSeek>>
+* <<query-plan-node-by-label-scan, NodeByLabelScan>>
+* <<query-plan-node-index-seek, NodeIndexSeek>>
+* <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>
+* <<query-plan-multi-node-index-seek>>
+* <<query-plan-node-unique-index-seek-by-range, NodeUniqueIndexSeekByRange>>
+* <<query-plan-node-index-contains-scan, NodeIndexContainsScan>>
+* <<query-plan-node-index-ends-with-scan, NodeIndexEndsWithScan>>
+* <<query-plan-node-index-scan, NodeIndexScan>>
+* <<query-plan-undirected-relationship-by-id-seek, UndirectedRelationshipByIdSeek>>
+* <<query-plan-apply, Apply>>
+* <<query-plan-semi-apply, SemiApply>>
+
 include::../ql/query-plan/all-nodes-scan.asciidoc[]
 
 include::../ql/query-plan/directed-relationship-by-id-seek.asciidoc[]
@@ -34,6 +49,7 @@ include::../ql/query-plan/node-index-scan.asciidoc[]
 include::../ql/query-plan/undirected-relationship-by-id-seek.asciidoc[]
 
 include::../ql/query-plan/apply.asciidoc[]
+
 
 include::../ql/query-plan/semi-apply.asciidoc[]
 
