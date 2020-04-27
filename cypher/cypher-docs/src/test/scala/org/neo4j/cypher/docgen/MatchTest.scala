@@ -69,6 +69,7 @@ class MatchTest extends DocumentingTest {
         | ** <<rel-types-with-uncommon-chars, Relationship types with uncommon characters>>
         | ** <<multiple-rels, Multiple relationships>>
         | ** <<varlength-rels, Variable length relationships>>
+        | ** <<varlength-rels-multiple-types, Variable length relationships with multiple relationship types>>
         | ** <<rel-variable-in-varlength-rels, Relationship variable in variable length relationships>>
         | ** <<match-props-on-varlength-path, Match with properties on a variable length path>>
         | ** <<zero-length-paths, Zero length paths>>
@@ -207,8 +208,15 @@ class MatchTest extends DocumentingTest {
             | `minHops` and `maxHops` are optional and default to 1 and infinity respectively.
             | When no bounds are given the dots may be omitted.
             | The dots may also be omitted when setting only one bound and this implies a fixed length pattern.""")
-        query("match (martin {name: 'Charlie Sheen'})-[:ACTED_IN*1..3]-(movie:Movie) return movie.title", assertAllMoviesAreReturned) {
+        query("match (charlie {name: 'Charlie Sheen'})-[:ACTED_IN*1..3]-(movie:Movie) return movie.title", assertAllMoviesAreReturned) {
           p("Returns all movies related to *'Charlie Sheen'* by 1 to 3 hops.")
+          resultTable()
+        }
+      }
+      section("Variable length relationships with multiple relationship types", "varlength-rels-multiple-types") {
+        p("Variable length relationships can be combined with multiple relationship types. In this case the `*minHops..maxHops` applies to all relationship types as well as any combination of them.")
+        query("MATCH (charlie {name: 'Charlie Sheen'})-[:ACTED_IN|DIRECTED*2]-(person:Person) RETURN person.name", assertEveryoneConnectedToWallStreetButCharlieIsFound) {
+          p("Returns all people related to *'Charlie Sheen'* by 2 hops with any combination of the relationship types `ACTED_IN` and `DIRECTED`.")
           resultTable()
         }
       }
@@ -409,6 +417,13 @@ class MatchTest extends DocumentingTest {
       Map("person.name" -> "Oliver Stone"),
       Map("person.name" -> "Martin Sheen"),
       Map("person.name" -> "Charlie Sheen")))
+  )
+
+    private def assertEveryoneConnectedToWallStreetButCharlieIsFound = ResultAssertions(result =>
+    result.toSet should equal(Set(
+      Map("person.name" -> "Michael Douglas"),
+      Map("person.name" -> "Oliver Stone"),
+      Map("person.name" -> "Martin Sheen")))
   )
 
   private def assertRelationshipsToWallStreetAreReturned = ResultAssertions(result =>
