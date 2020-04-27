@@ -42,7 +42,7 @@ STATUS {ACTIVE \| SUSPENDED}
 ----
 | Modify the settings for an existing user.
 | Admin
-| `-`
+| `+`
 | `+`
 
 | [source, cypher]

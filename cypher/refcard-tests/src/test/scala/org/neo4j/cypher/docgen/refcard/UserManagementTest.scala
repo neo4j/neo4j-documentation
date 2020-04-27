@@ -49,7 +49,7 @@ Create a new user and a password. This password must be changed on the first log
 ALTER USER alice SET PASSWORD $password CHANGE NOT REQUIRED
 ###
 
-(★) Set a new password for a user. This user will not be required to change this password on the next login.
+Set a new password for a user. This user will not be required to change this password on the next login.
 
 ###assertion=update-one parameters=update
 //

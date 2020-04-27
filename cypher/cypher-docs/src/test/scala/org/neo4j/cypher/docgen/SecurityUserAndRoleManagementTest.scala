@@ -61,7 +61,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {
           statsOnlyResultTable()
           note {
-            p("[enterprise-edition]#The SUSPENDED flag is an enterprise feature.#")
+            p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` part of the command is only available in Enterprise Edition.#")
           }
         }
         p("The created user will appear on the list provided by `SHOW USERS`.")
@@ -91,19 +91,24 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
         }
       }
-      section("Modifying users", "administration-security-users-alter", "enterprise-edition") {
+      section("Modifying users", "administration-security-users-alter") {
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
-        p("The `password` can either be a string value or a string parameter.")
+        p("The `password` can either be a string value or a string parameter, and is not allowed to be identical to the old password.")
         p("For example, we can modify the user `jake` with a new password and active status as well as remove the requirement to change his password.")
         query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        note(p(
+        note{
+          p(
           """When altering a user it is only necessary to specify the changes required.
-            |For example, leaving out any `STATUS` change part of the query will leave that unchanged.""".stripMargin))
+            |For example, leaving out the `CHANGE [NOT] REQUIRED` part of the query will leave that unchanged.""".stripMargin)
+        }
+        note {
+          p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` part of the command is only available in Enterprise Edition.#")
+        }
         p("The changes to the user will appear on the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
           resultTable()
