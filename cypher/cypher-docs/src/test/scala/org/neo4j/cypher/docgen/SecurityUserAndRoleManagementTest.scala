@@ -94,7 +94,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Modifying users", "administration-security-users-alter") {
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
-        p("The `password` can either be a string value or a string parameter and is not allowed to be identical to the old password.")
+        p("The `password` can either be a string value or a string parameter, and is not allowed to be identical to the old password.")
         p("For example, we can modify the user `jake` with a new password and active status as well as remove the requirement to change his password.")
         query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
@@ -107,7 +107,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             |For example, leaving out the `CHANGE [NOT] REQUIRED` part of the query will leave that unchanged.""".stripMargin)
         }
         note {
-          p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` part of the command is only available in enterprise.#")
+          p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` part of the command is only available in Enterprise Edition.#")
         }
         p("The changes to the user will appear on the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
