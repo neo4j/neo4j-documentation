@@ -61,7 +61,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {
           statsOnlyResultTable()
           note {
-            p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` part of the command is only available in enterprise.#")
+            p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` part of the command is only available in Enterprise Edition.#")
           }
         }
         p("The created user will appear on the list provided by `SHOW USERS`.")
