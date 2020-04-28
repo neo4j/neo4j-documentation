@@ -7,9 +7,9 @@ All operators are listed here, grouped by the similarity of their characteristic
 Certain operators are only used by a subset of the <<cypher-runtime,runtimes>> that Cypher can choose from.
 If that is the case, the example queries will be prefixed with an option to choose one of these runtimes.
 
-* <<query-plan-all-nodes-scan>> - Reads all nodes from the node store.
-* <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>> - Reads one or more relationships by id from the relationship store.
-* <<query-plan-node-by-id-seek, NodeByIdSeek>> - Reads one or more nodes by id from the node store.
+* <<query-plan-all-nodes-scan, AllNodesScan>>
+* <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>
+* <<query-plan-node-by-id-seek, NodeByIdSeek>> 
 * <<query-plan-node-by-label-scan, NodeByLabelScan>>
 * <<query-plan-node-index-seek, NodeIndexSeek>>
 * <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>
@@ -45,11 +45,10 @@ If that is the case, the example queries will be prefixed with an option to choo
 * <<query-plan-empty-result, EmptyResult>>
 * <<query-plan-produce-results, ProduceResults>>
 * <<query-plan-load-csv, LoadCSV>>
-* <<execution-plans-operators-hash-join-general>>
-** <<query-plan-node-hash-join, NodeHashJoin>>
-** <<query-plan-value-hash-join, ValueHashJoin>>
-** <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>
-** <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>
+* <<query-plan-node-hash-join, NodeHashJoin>>
+* <<query-plan-value-hash-join, ValueHashJoin>>
+* <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>
+* <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>
 * <<query-plan-triadic-selection, TriadicSelection>>
 * <<query-plan-cartesian-product, CartesianProduct>>
 * <<query-plan-foreach, Foreach>>
