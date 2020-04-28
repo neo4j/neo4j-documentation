@@ -28,6 +28,7 @@ import org.neo4j.cypher.internal.planner.spi.{DPPlannerName, IDPPlannerName}
 import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
 import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
 import org.neo4j.graphdb.Label
+import org.neo4j.cypher.internal.util.Foldable.FoldableAny
 
 import scala.collection.JavaConverters._
 
@@ -254,7 +255,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescription(p)("person:Person(highScore, name) WHERE highScore > $  AUTOINT1 AND highScore < $  AUTOINT0 AND exists(name)")
+          checkPlanDescriptionArgument(p)("person:Person(highScore, name) WHERE highScore > $  AUTOINT1 AND highScore < $  AUTOINT0 AND exists(name)")
       }
     )
   }
@@ -538,7 +539,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(9, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescription(p)("p:Person(place, name) WHERE distance(place, point($`  AUTOINT0`, $`  AUTOINT1`)) < $`  AUTOINT2` AND exists(name)")
+          checkPlanDescriptionArgument(p)("p:Person(place, name) WHERE distance(place, point($`  AUTOINT0`, $`  AUTOINT1`)) < $`  AUTOINT2` AND exists(name)")
       }
     )
   }
@@ -582,7 +583,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescription(p)("person:Person(place, firstname) WHERE place > point({x: $  AUTOINT2, y: $  AUTOINT3}) AND place < point({x: $  AUTOINT0, y: $  AUTOINT1}) AND exists(firstname)")
+          checkPlanDescriptionArgument(p)("person:Person(place, firstname) WHERE place > point({x: $  AUTOINT2, y: $  AUTOINT3}) AND place < point({x: $  AUTOINT0, y: $  AUTOINT1}) AND exists(firstname)")
       }
     )
   }
@@ -635,5 +636,15 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       case x =>
         fail(s"Couldn't determine used planner: $x")
     }
+  }
+
+  private def checkPlanDescriptionArgument(result: DocsExecutionResult)(expected: String): Unit = {
+    val planDescription = result.executionPlanDescription()
+
+    val res = planDescription.treeExists {
+      case str: String => str.contains(expected)
+    }
+
+    assertTrue(s"Could not find expected string: $expected", res)
   }
 }
