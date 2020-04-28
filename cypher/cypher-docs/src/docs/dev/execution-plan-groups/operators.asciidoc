@@ -13,7 +13,7 @@ If that is the case, the example queries will be prefixed with an option to choo
 * <<query-plan-node-by-label-scan, NodeByLabelScan>>
 * <<query-plan-node-index-seek, NodeIndexSeek>>
 * <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>
-* <<query-plan-multi-node-index-seek>>
+* <<query-plan-multi-node-index-seek, MultiNodeIndexSeek>>
 * <<query-plan-node-unique-index-seek-by-range, NodeUniqueIndexSeekByRange>>
 * <<query-plan-node-index-contains-scan, NodeIndexContainsScan>>
 * <<query-plan-node-index-ends-with-scan, NodeIndexEndsWithScan>>
@@ -22,7 +22,7 @@ If that is the case, the example queries will be prefixed with an option to choo
 * <<query-plan-apply, Apply>>
 * <<query-plan-semi-apply, SemiApply>>
 * <<query-plan-anti-semi-apply, AntiSemiApply>>
-* <<query-plan-anti>>
+* <<query-plan-anti, Anti>>
 * <<query-plan-let-semi-apply, LetSemiApply>>
 * <<query-plan-let-anti-semi-apply, LetAntiSemiApply>>
 * <<query-plan-select-or-semi-apply, SelectOrSemiApply>>
