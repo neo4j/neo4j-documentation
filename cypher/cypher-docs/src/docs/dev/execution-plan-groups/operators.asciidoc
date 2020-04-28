@@ -9,7 +9,7 @@ If that is the case, the example queries will be prefixed with an option to choo
 
 * <<query-plan-all-nodes-scan, AllNodesScan>>
 * <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>
-* <<query-plan-node-by-id-seek, NodeByIdSeek>> 
+* <<query-plan-node-by-id-seek, NodeByIdSeek>>
 * <<query-plan-node-by-label-scan, NodeByLabelScan>>
 * <<query-plan-node-index-seek, NodeIndexSeek>>
 * <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>
@@ -191,10 +191,10 @@ In query plans, the build input is always the left operator, and the probe input
 
 There are four hash join operators:
 
-** <<query-plan-node-hash-join, NodeHashJoin>>
-** <<query-plan-value-hash-join, ValueHashJoin>>
-** <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>
-** <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>
+* <<query-plan-node-hash-join, NodeHashJoin>>
+* <<query-plan-value-hash-join, ValueHashJoin>>
+* <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>
+* <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>
 
 include::../ql/query-plan/node-hash-join.asciidoc[]
 
