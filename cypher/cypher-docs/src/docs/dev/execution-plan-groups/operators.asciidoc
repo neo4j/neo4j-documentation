@@ -87,34 +87,17 @@ If that is the case, the example queries will be prefixed with an option to choo
 * <<query-plan-set-relationship-properties-from-map, SetRelationshipPropertiesFromMap>>
 * <<query-plan-set-property, SetProperty>>
 * <<query-plan-create-unique-constraint, CreateUniqueConstraint>>
-+
-[role=deprecated]
-* <<query-plan-drop-unique-constraint, DropUniqueConstraint>>
-
-include::../ql/query-plan/create-node-property-existence-constraint.asciidoc[]
-
-[role=deprecated]
-include::../ql/query-plan/drop-node-property-existence-constraint.asciidoc[]
-
-include::../ql/query-plan/create-node-key-constraint.asciidoc[]
-
-[role=deprecated]
-include::../ql/query-plan/drop-node-key-constraint.asciidoc[]
-
-include::../ql/query-plan/create-relationship-property-existence-constraint.asciidoc[]
-
-[role=deprecated]
-include::../ql/query-plan/drop-relationship-property-existence-constraint.asciidoc[]
-
-include::../ql/query-plan/drop-constraint-by-name.asciidoc[]
-
-include::../ql/query-plan/create-index.asciidoc[]
-
-[role=deprecated]
-include::../ql/query-plan/drop-index.asciidoc[]
-
-include::../ql/query-plan/drop-index-by-name.asciidoc[]
-====
+* <<query-plan-drop-unique-constraint, DropUniqueConstraint (deprecated)>>
+* <<query-plan-create-node-property-existence-constraint, CreateNodePropertyExistenceConstraint>>
+* <<query-plan-drop-node-property-existence-constraint, DropNodePropertyExistenceConstraint (deprecated)>>
+* <<query-plan-create-node-key-constraint, CreateNodeKeyConstraint>>
+* <<query-plan-drop-node-key-constraint, DropNodeKeyConstraint (deprecated)>>
+* <<query-plan-create-relationship-property-existence-constraint, CreateRelationshipPropertyExistenceConstraint>>
+* <<query-plan-drop-relationship-property-existence-constraint, DropRelationshipPropertyExistenceConstraint (deprecated)>>
+* <<query-plan-drop-constraint-by-name, DropConstraint>>
+* <<query-plan-create-index, CreateIndex>>
+* <<query-plan-drop-index, DropIndex (deprecated)>>
+* <<query-plan-drop-index-by-name, DropIndex>>
 
 include::../ql/query-plan/all-nodes-scan.asciidoc[]
 
