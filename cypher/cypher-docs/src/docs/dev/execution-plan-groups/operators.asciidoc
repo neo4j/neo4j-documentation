@@ -7,9 +7,9 @@ All operators are listed here, grouped by the similarity of their characteristic
 Certain operators are only used by a subset of the <<cypher-runtime,runtimes>> that Cypher can choose from.
 If that is the case, the example queries will be prefixed with an option to choose one of these runtimes.
 
-* <<query-plan-all-nodes-scan, AllNodesScan>>
-* <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>
-* <<query-plan-node-by-id-seek, NodeByIdSeek>>
+* <<query-plan-all-nodes-scan>> - Reads all nodes from the node store.
+* <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>> - Reads one or more relationships by id from the relationship store.
+* <<query-plan-node-by-id-seek, NodeByIdSeek>> - Reads one or more nodes by id from the node store.
 * <<query-plan-node-by-label-scan, NodeByLabelScan>>
 * <<query-plan-node-index-seek, NodeIndexSeek>>
 * <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>
@@ -45,6 +45,76 @@ If that is the case, the example queries will be prefixed with an option to choo
 * <<query-plan-empty-result, EmptyResult>>
 * <<query-plan-produce-results, ProduceResults>>
 * <<query-plan-load-csv, LoadCSV>>
+* <<execution-plans-operators-hash-join-general>>
+** <<query-plan-node-hash-join, NodeHashJoin>>
+** <<query-plan-value-hash-join, ValueHashJoin>>
+** <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>
+** <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>
+* <<query-plan-triadic-selection, TriadicSelection>>
+* <<query-plan-cartesian-product, CartesianProduct>>
+* <<query-plan-foreach, Foreach>>
+* <<query-plan-eager, Eager>>
+* <<query-plan-eager-aggregation, EagerAggregation>>
+* <<query-plan-ordered-aggregation, OrderedAggregation>>
+* <<query-plan-node-count-from-count-store, NodeCountFromCountStore>>
+* <<query-plan-relationship-count-from-count-store, RelationshipCountFromCountStore>>
+* <<query-plan-distinct, Distinct>>
+* <<query-plan-ordered-distinct, OrderedDistinct>>
+* <<query-plan-filter, Filter>>
+* <<query-plan-limit, Limit>>
+* <<query-plan-skip, Skip>>
+* <<query-plan-sort, Sort>>
+* <<query-plan-partial-sort, PartialSort>>
+* <<query-plan-top, Top>>
+* <<query-plan-partial-top, PartialTop>>
+* <<query-plan-union, Union>>
+* <<query-plan-unwind, Unwind>>
+* <<query-plan-lock-nodes, LockNodes>>
+* <<query-plan-optional, Optional>>
+* <<query-plan-project-endpoints, ProjectEndpoints>>
+* <<query-plan-projection, Projection>>
+* <<query-plan-empty-row, EmptyRow>>
+* <<query-plan-procedure-call, ProcedureCall>>
+* <<query-plan-cache-properties, CacheProperties>>
+* <<query-plan-create-nodes---relationships, Create>>
+* <<query-plan-delete, Delete>>
+* <<query-plan-detach-delete, DetachDelete>>
+* <<query-plan-merge-create-node, MergeCreateNode>>
+* <<query-plan-merge-create-relationship, MergeCreateRelationship>>
+* <<query-plan-set-labels, SetLabels>>
+* <<query-plan-remove-labels, RemoveLabels>>
+* <<query-plan-set-node-properties-from-map, SetNodePropertiesFromMap>>
+* <<query-plan-set-relationship-properties-from-map, SetRelationshipPropertiesFromMap>>
+* <<query-plan-set-property, SetProperty>>
+* <<query-plan-create-unique-constraint, CreateUniqueConstraint>>
++
+[role=deprecated]
+* <<query-plan-drop-unique-constraint, DropUniqueConstraint>>
+
+include::../ql/query-plan/create-node-property-existence-constraint.asciidoc[]
+
+[role=deprecated]
+include::../ql/query-plan/drop-node-property-existence-constraint.asciidoc[]
+
+include::../ql/query-plan/create-node-key-constraint.asciidoc[]
+
+[role=deprecated]
+include::../ql/query-plan/drop-node-key-constraint.asciidoc[]
+
+include::../ql/query-plan/create-relationship-property-existence-constraint.asciidoc[]
+
+[role=deprecated]
+include::../ql/query-plan/drop-relationship-property-existence-constraint.asciidoc[]
+
+include::../ql/query-plan/drop-constraint-by-name.asciidoc[]
+
+include::../ql/query-plan/create-index.asciidoc[]
+
+[role=deprecated]
+include::../ql/query-plan/drop-index.asciidoc[]
+
+include::../ql/query-plan/drop-index-by-name.asciidoc[]
+====
 
 include::../ql/query-plan/all-nodes-scan.asciidoc[]
 
@@ -139,10 +209,10 @@ In query plans, the build input is always the left operator, and the probe input
 
 There are four hash join operators:
 
-* <<query-plan-node-hash-join, NodeHashJoin>>
-* <<query-plan-value-hash-join, ValueHashJoin>>
-* <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>
-* <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>
+** <<query-plan-node-hash-join, NodeHashJoin>>
+** <<query-plan-value-hash-join, ValueHashJoin>>
+** <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>
+** <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>
 
 include::../ql/query-plan/node-hash-join.asciidoc[]
 
