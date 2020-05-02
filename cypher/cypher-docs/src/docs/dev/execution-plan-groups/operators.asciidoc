@@ -7,6 +7,97 @@ All operators are listed here, grouped by the similarity of their characteristic
 Certain operators are only used by a subset of the <<cypher-runtime,runtimes>> that Cypher can choose from.
 If that is the case, the example queries will be prefixed with an option to choose one of these runtimes.
 
+* <<query-plan-all-nodes-scan, AllNodesScan>>
+* <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>
+* <<query-plan-node-by-id-seek, NodeByIdSeek>>
+* <<query-plan-node-by-label-scan, NodeByLabelScan>>
+* <<query-plan-node-index-seek, NodeIndexSeek>>
+* <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>
+* <<query-plan-multi-node-index-seek, MultiNodeIndexSeek>>
+* <<query-plan-node-unique-index-seek-by-range, NodeUniqueIndexSeekByRange>>
+* <<query-plan-node-index-contains-scan, NodeIndexContainsScan>>
+* <<query-plan-node-index-ends-with-scan, NodeIndexEndsWithScan>>
+* <<query-plan-node-index-scan, NodeIndexScan>>
+* <<query-plan-undirected-relationship-by-id-seek, UndirectedRelationshipByIdSeek>>
+* <<query-plan-apply, Apply>>
+* <<query-plan-semi-apply, SemiApply>>
+* <<query-plan-anti-semi-apply, AntiSemiApply>>
+* <<query-plan-anti, Anti>>
+* <<query-plan-let-semi-apply, LetSemiApply>>
+* <<query-plan-let-anti-semi-apply, LetAntiSemiApply>>
+* <<query-plan-select-or-semi-apply, SelectOrSemiApply>>
+* <<query-plan-select-or-anti-semi-apply, SelectOrAntiSemiApply>>
+* <<query-plan-let-select-or-semi-apply, LetSelectOrSemiApply>>
+* <<query-plan-let-select-or-anti-semi-apply, LetSelectOrAntiSemiApply>>
+* <<query-plan-conditional-apply, ConditionalApply>>
+* <<query-plan-anti-conditional-apply, AntiConditionalApply>>
+* <<query-plan-roll-up-apply, RollUpApply>>
+* <<query-plan-argument, Argument>>
+* <<query-plan-expand-all, Expand(All)>>
+* <<query-plan-expand-into, Expand(Into)>>
+* <<query-plan-optional-expand-all, OptionalExpand(All)>>
+* <<query-plan-optional-expand-into, OptionalExpand(Into)>>
+* <<query-plan-varlength-expand-all, VarLengthExpand(All)>>
+* <<query-plan-varlength-expand-into, VarLengthExpand(Into)>>
+* <<query-plan-varlength-expand-pruning, VarLengthExpand(Pruning)>>
+* <<query-plan-assert-same-node, AssertSameNode>>
+* <<query-plan-drop-result, DropResult>>
+* <<query-plan-empty-result, EmptyResult>>
+* <<query-plan-produce-results, ProduceResults>>
+* <<query-plan-load-csv, LoadCSV>>
+* <<query-plan-node-hash-join, NodeHashJoin>>
+* <<query-plan-value-hash-join, ValueHashJoin>>
+* <<query-plan-node-left-right-outer-hash-join, NodeLeftOuterHashJoin>>
+* <<query-plan-node-left-right-outer-hash-join, NodeRightOuterHashJoin>>
+* <<query-plan-triadic-selection, TriadicSelection>>
+* <<query-plan-cartesian-product, CartesianProduct>>
+* <<query-plan-foreach, Foreach>>
+* <<query-plan-eager, Eager>>
+* <<query-plan-eager-aggregation, EagerAggregation>>
+* <<query-plan-ordered-aggregation, OrderedAggregation>>
+* <<query-plan-node-count-from-count-store, NodeCountFromCountStore>>
+* <<query-plan-relationship-count-from-count-store, RelationshipCountFromCountStore>>
+* <<query-plan-distinct, Distinct>>
+* <<query-plan-ordered-distinct, OrderedDistinct>>
+* <<query-plan-filter, Filter>>
+* <<query-plan-limit, Limit>>
+* <<query-plan-skip, Skip>>
+* <<query-plan-sort, Sort>>
+* <<query-plan-partial-sort, PartialSort>>
+* <<query-plan-top, Top>>
+* <<query-plan-partial-top, PartialTop>>
+* <<query-plan-union, Union>>
+* <<query-plan-unwind, Unwind>>
+* <<query-plan-lock-nodes, LockNodes>>
+* <<query-plan-optional, Optional>>
+* <<query-plan-project-endpoints, ProjectEndpoints>>
+* <<query-plan-projection, Projection>>
+* <<query-plan-empty-row, EmptyRow>>
+* <<query-plan-procedure-call, ProcedureCall>>
+* <<query-plan-cache-properties, CacheProperties>>
+* <<query-plan-create-nodes---relationships, Create>>
+* <<query-plan-delete, Delete>>
+* <<query-plan-detach-delete, DetachDelete>>
+* <<query-plan-merge-create-node, MergeCreateNode>>
+* <<query-plan-merge-create-relationship, MergeCreateRelationship>>
+* <<query-plan-set-labels, SetLabels>>
+* <<query-plan-remove-labels, RemoveLabels>>
+* <<query-plan-set-node-properties-from-map, SetNodePropertiesFromMap>>
+* <<query-plan-set-relationship-properties-from-map, SetRelationshipPropertiesFromMap>>
+* <<query-plan-set-property, SetProperty>>
+* <<query-plan-create-unique-constraint, CreateUniqueConstraint>>
+* <<query-plan-drop-unique-constraint, DropUniqueConstraint (deprecated)>>
+* <<query-plan-create-node-property-existence-constraint, CreateNodePropertyExistenceConstraint>>
+* <<query-plan-drop-node-property-existence-constraint, DropNodePropertyExistenceConstraint (deprecated)>>
+* <<query-plan-create-node-key-constraint, CreateNodeKeyConstraint>>
+* <<query-plan-drop-node-key-constraint, DropNodeKeyConstraint (deprecated)>>
+* <<query-plan-create-relationship-property-existence-constraint, CreateRelationshipPropertyExistenceConstraint>>
+* <<query-plan-drop-relationship-property-existence-constraint, DropRelationshipPropertyExistenceConstraint (deprecated)>>
+* <<query-plan-drop-constraint-by-name, DropConstraint>>
+* <<query-plan-create-index, CreateIndex>>
+* <<query-plan-drop-index, DropIndex (deprecated)>>
+* <<query-plan-drop-index-by-name, DropIndex>>
+
 include::../ql/query-plan/all-nodes-scan.asciidoc[]
 
 include::../ql/query-plan/directed-relationship-by-id-seek.asciidoc[]
@@ -84,7 +175,6 @@ include::../ql/query-plan/empty-result.asciidoc[]
 include::../ql/query-plan/produce-results.asciidoc[]
 
 include::../ql/query-plan/load-csv.asciidoc[]
-
 
 
 [[execution-plans-operators-hash-join-general]]
