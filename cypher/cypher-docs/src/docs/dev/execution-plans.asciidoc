@@ -9,6 +9,7 @@ This section describes the characteristics of query execution plans and provides
 * <<execution-plan-introduction, Introduction>>
 * <<execution-plan-operators-summary, Execution plan operators>>
 * <<execution-plans-dbhits, Database hits (DbHits)>>
+* <<execution-plans-operators, Execution plan operators in detail>>
 * <<query-shortestpath-planning, Shortest path planning>>
 
 
