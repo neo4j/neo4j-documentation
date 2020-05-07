@@ -26,6 +26,7 @@ import org.neo4j.cypher.internal.runtime.QueryContext
 import org.neo4j.graphdb.spatial.Point
 import org.neo4j.graphdb.{Entity, Node, Path, Relationship}
 import org.neo4j.io.pagecache.tracing.cursor.PageCursorTracer
+import org.neo4j.memory.EmptyMemoryTracker
 
 import scala.collection.Map
 
@@ -60,7 +61,7 @@ trait CypherSerializer {
 
   protected def serializeProperties(x: Entity, qtx: QueryContext): String = {
     val cursors = qtx.transactionalContext.cursors
-    val property = cursors.allocatePropertyCursor(PageCursorTracer.NULL)
+    val property = cursors.allocatePropertyCursor(PageCursorTracer.NULL, EmptyMemoryTracker.INSTANCE)
     val (propertyText, id, deleted) = x match {
       case n: Node =>
         val ops = qtx.nodeOps
