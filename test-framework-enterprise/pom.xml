@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>neo4j-manual-parent</artifactId>
+        <groupId>org.neo4j.doc</groupId>
+        <version>3.5.18-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>test-framework-enterprise</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.neo4j</groupId>
+            <artifactId>neo4j-enterprise-kernel</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.doc</groupId>
+            <artifactId>test-framework</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>
