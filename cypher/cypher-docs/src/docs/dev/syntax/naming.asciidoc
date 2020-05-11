@@ -39,5 +39,5 @@ Here are the recommended naming conventions:
 
 |===
 | Node labels          | Camel-case, beginning with an upper-case character | `:VehicleOwner` rather than `:vehicle_owner` etc.
-| Relationship types   | Upper-case, using underscore to separate words     | `:OWNS_VEHICLE` rather than `:ownsVehicle` etc
+| Relationship types   | Upper-case, using underscore to separate words     | `:OWNS_VEHICLE` rather than `:ownsVehicle` etc.
 |===
