@@ -36,6 +36,7 @@ Either the pattern already exists, or it needs to be created.
 
 `MERGE` either matches existing nodes and binds them, or it creates new data and binds that.
 It's like a combination of `MATCH` and `CREATE` that additionally allows you to specify what happens if the data was matched or created.
+For performance reasons, creating a schema index on the label or property is highly recommended when using `MERGE`.
 
 For example, you can specify that the graph must contain a node for a user with a certain name.
 If there isn't a node with the correct name, a new node will be created and its name property set.
@@ -116,4 +117,3 @@ include::merge-with-unique-constraints-and-partial-matches.asciidoc[leveloffset=
 include::merge-with-unique-constraints-and-conflicting-matches.asciidoc[leveloffset=+1]
 
 include::using-map-parameters-with-merge.asciidoc[]
-
