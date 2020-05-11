@@ -105,7 +105,7 @@ class ShortestPathPlanningTest extends DocumentingTest {
           p(
             """This query, in contrast with the one above, needs to check that the whole path follows the predicate
               |before we know if it is valid or not, and so the query plan will also include the fallback to the slower
-              |exhaustive search algorithm""")
+              |exhaustive search algorithm.""")
           profileExecutionPlan()
         }
         p(
