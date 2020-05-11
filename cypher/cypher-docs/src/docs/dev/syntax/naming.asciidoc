@@ -8,16 +8,11 @@ This section describes rules and recommendations for the naming of node labels, 
 * Alphabetic characters:
 ** Names should begin with an alphabetic character.
 ** This includes "non-English" characters, such as `å`, `ä`, `ö`, `ü` etc.
-//** If a leading non-alphabetic character is required, use backticks for escaping; e.g. `++`^n`++`.
 * Numbers:
 ** Names should not begin with a number.
 ** To illustrate, `1first` is not allowed, whereas `first1` is allowed.
-//** If a leading numeric character is required, use backticks for escaping; e.g. `++`1first`++`.
 * Symbols:
-** Names should not contain symbols, except for underscore as in `my_variable`, or `$` as the first character to denote a <<cypher-parameters, parameter>>, as given by `$myParam`.
-//** An exception to this rule is using underscore, as given by `my_variable`.
-//** An ostensible exception to this rule is using `$` as the first character to denote a <<cypher-parameters, parameter>>, as given by `$myParam`.
-//** If a leading symbolic character is required, use backticks for escaping; e.g. `++`$$n`++`.
+** Names should not contain symbols, except for underscore, as in `my_variable`, or `$` as the first character to denote a <<cypher-parameters, parameter>>, as given by `$myParam`.
 * Length:
 ** Can be very long, up to `65535` (`2^16 - 1`) or `65534` characters, depending on the version of Neo4j.
 * Case-sensitive:
@@ -25,7 +20,6 @@ This section describes rules and recommendations for the naming of node labels, 
 * Whitespace characters:
 ** Leading and trailing whitespace characters will be removed automatically.
 For example, `MATCH (  a  ) RETURN a` is equivalent to `MATCH (a) RETURN a`.
-//** If spaces are required within a name, use backticks for escaping; e.g. `++`my variable has spaces`++`.
 
 [NOTE]
 Non-alphabetic characters, including numbers, symbols and whitespace characters, *can* be used in names, but *must* be escaped using backticks.
