@@ -41,6 +41,9 @@ class WithTest extends DocumentingTest {
                 (b)-[:BLOCKS]->(d)
       """.stripMargin)
     synopsis("The `WITH` clause allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.")
+    note {
+      p("Bear in mind that `WITH` affects only variables in scope. Variables that are not included in the `WITH` clause will not be carried over to the rest of the query.")
+    }
     p(
       """* <<with-introduction, Introduction>>
         |* <<with-filter-on-aggregate-function-results, Filter on aggregate function results>>
