@@ -124,6 +124,9 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
           })) {
           p("*'Michael Douglas'* will be matched and the `name` and  `bornIn` properties returned.")
           resultTable()
+          p("""As mentioned previously, `MERGE` queries can greatly benefit from schema indexes.
+              |In this example, the following would significantly improve the performance of the `MERGE` clause:
+              |`CREATE INDEX PersonIndex FOR (n:Person) ON (n.name)`""")
         }
       }
 
