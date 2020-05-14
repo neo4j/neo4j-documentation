@@ -40,6 +40,10 @@ It's like a combination of `MATCH` and `CREATE` that additionally allows you to 
 For example, you can specify that the graph must contain a node for a user with a certain name.
 If there isn't a node with the correct name, a new node will be created and its name property set.
 
+[NOTE]
+For performance reasons, creating a schema index on the label or property is highly recommended when using `MERGE`.
+See <<administration-indexes-search-performance>> for more information.
+
 When using `MERGE` on full patterns, the behavior is that either the whole pattern matches, or the whole pattern is created.
 `MERGE` will not partially use existing patterns -- it's all or nothing.
 If partial matches are needed, this can be accomplished by splitting a pattern up into multiple `MERGE` clauses.
@@ -116,4 +120,3 @@ include::merge-with-unique-constraints-and-partial-matches.asciidoc[leveloffset=
 include::merge-with-unique-constraints-and-conflicting-matches.asciidoc[leveloffset=+1]
 
 include::using-map-parameters-with-merge.asciidoc[]
-
