@@ -75,10 +75,12 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
 
     section("Introduction", "query-merge-introduction") {
       p("""`MERGE` either matches existing nodes and binds them, or it creates new data and binds that.
-          |It's like a combination of `MATCH` and `CREATE` that additionally allows you to specify what happens if the data was matched or created.
-          |For performance reasons, creating a schema index on the label or property is highly recommended when using `MERGE`.""")
+          |It's like a combination of `MATCH` and `CREATE` that additionally allows you to specify what happens if the data was matched or created.""")
       p("""For example, you can specify that the graph must contain a node for a user with a certain name.
           |If there isn't a node with the correct name, a new node will be created and its name property set.""")
+      note {
+        p("""For performance reasons, creating a schema index on the label or property is highly recommended when using `MERGE`.""")
+          }
       p("""When using `MERGE` on full patterns, the behavior is that either the whole pattern matches, or the whole pattern is created.
           |`MERGE` will not partially use existing patterns -- it's all or nothing.
           |If partial matches are needed, this can be accomplished by splitting a pattern up into multiple `MERGE` clauses.""")
