@@ -79,7 +79,8 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
       p("""For example, you can specify that the graph must contain a node for a user with a certain name.
           |If there isn't a node with the correct name, a new node will be created and its name property set.""")
       note {
-        p("""For performance reasons, creating a schema index on the label or property is highly recommended when using `MERGE`.""")
+        p("""For performance reasons, creating a schema index on the label or property is highly recommended when using `MERGE`.
+          |See <<administration-indexes-search-performance>> for more information.""")
           }
       p("""When using `MERGE` on full patterns, the behavior is that either the whole pattern matches, or the whole pattern is created.
           |`MERGE` will not partially use existing patterns -- it's all or nothing.
