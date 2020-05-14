@@ -78,6 +78,10 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
           |It's like a combination of `MATCH` and `CREATE` that additionally allows you to specify what happens if the data was matched or created.""")
       p("""For example, you can specify that the graph must contain a node for a user with a certain name.
           |If there isn't a node with the correct name, a new node will be created and its name property set.""")
+      note {
+        p("""For performance reasons, creating a schema index on the label or property is highly recommended when using `MERGE`.
+          |See <<administration-indexes-search-performance>> for more information.""")
+          }
       p("""When using `MERGE` on full patterns, the behavior is that either the whole pattern matches, or the whole pattern is created.
           |`MERGE` will not partially use existing patterns -- it's all or nothing.
           |If partial matches are needed, this can be accomplished by splitting a pattern up into multiple `MERGE` clauses.""")
@@ -123,6 +127,9 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
           })) {
           p("*'Michael Douglas'* will be matched and the `name` and  `bornIn` properties returned.")
           resultTable()
+          p("""As mentioned previously, `MERGE` queries can greatly benefit from schema indexes.
+              |In this example, the following would significantly improve the performance of the `MERGE` clause:
+              |`CREATE INDEX PersonIndex FOR (n:Person) ON (n.name)`""")
         }
       }
 
