@@ -196,11 +196,6 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       note {
         p("Unlike with `GRANT READ` it is not possible to restrict `WRITE` privileges to specific ELEMENTS, NODES or RELATIONSHIPS.")
       }
-      p("For example, using `NODES A` will produce a syntax error.")
-      query("GRANT WRITE ON GRAPH neo4j NODES A TO regularUsers", assertSyntaxException("The use of ELEMENT, NODE or RELATIONSHIP with the WRITE privilege is not supported")
-      ) {
-        errorOnlyResultTable()
-      }
 
       p("The `WRITE` privilege can also be denied.")
       p("include::deny-write-syntax.asciidoc[]")
