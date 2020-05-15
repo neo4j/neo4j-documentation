@@ -262,8 +262,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     val graph = getGraph
     db = new GraphDatabaseCypherService(graph)
 
-    GraphDatabaseServiceCleaner.cleanDatabaseContent(db.getGraphDatabaseService)
-
+    cleanGraph
 
       val g = new GraphImpl(graphDescription.toArray[String])
       val description = GraphDescription.create(g)
@@ -284,6 +283,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   // override to start against SYSTEM_DATABASE_NAME or another database
   protected def getGraph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
+
+  protected def cleanGraph: Unit = GraphDatabaseServiceCleaner.cleanDatabaseContent(db.getGraphDatabaseService)
 
   protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
 

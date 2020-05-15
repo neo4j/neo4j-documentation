@@ -49,7 +49,7 @@ START DATABASE myDatabase
 
 (★) Start the database `myDatabase`.
 
-###assertion=show-one
+###assertion=show-three
 //
 
 SHOW DATABASES
@@ -65,7 +65,7 @@ SHOW DATABASE myDatabase
 
 List information about the database `myDatabase`.
 
-###assertion=show-nothing
+###assertion=show-one
 //
 
 SHOW DEFAULT DATABASE
