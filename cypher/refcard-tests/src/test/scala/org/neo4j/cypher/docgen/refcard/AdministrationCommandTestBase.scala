@@ -22,12 +22,35 @@ package org.neo4j.cypher.docgen.refcard
 import org.neo4j.configuration.GraphDatabaseSettings
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.{GraphDatabaseService, Transaction}
+import org.neo4j.internal.kernel.api.security.LoginContext
+import org.neo4j.kernel.api.KernelTransaction
 
 abstract class AdministrationCommandTestBase extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List()
 
   override protected def getGraph: GraphDatabaseService = managementService.database(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)
+
+  override protected def cleanGraph: Unit = {
+    db.getGraphDatabaseService
+    val tx = db.beginTransaction(KernelTransaction.Type.EXPLICIT, LoginContext.AUTH_DISABLED)
+    try {
+      // delete all roles
+      tx.findNodes(Label.label("Role")).forEachRemaining(role => {
+        role.getRelationships.forEach(rel => rel.delete())
+        role.delete()
+      })
+      // delete all users
+      tx.findNodes(Label.label("User")).forEachRemaining(user => {
+        user.getRelationships.forEach(rel => rel.delete())
+        user.delete()
+      })
+      tx.commit()
+    } finally {
+      if (tx != null) tx.close()
+    }
+  }
 
   //noinspection RedundantDefaultArgument
   override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
@@ -40,13 +63,16 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
         assert(result.toList.size === 0)
       case "show-one" =>
         assertStats(result, systemUpdates = 0)
-        assert(result.toList.size === 1) // there are no default roles or users, nor is the system or neo4j databases shown
+        assert(result.toList.size === 1) // there are no default roles or users
       case "show-two" =>
         assertStats(result, systemUpdates = 0)
         assert(result.toList.size === 2) // there are no default users
+      case "show-three" =>
+        assertStats(result, systemUpdates = 0)
+        assert(result.toList.size === 3) // default and system database are shown
       case "show-nothing" =>
         assertStats(result, systemUpdates = 0)
-        assert(result.toList.size === 0) // `show default database` finds none due to not listing neo4j
+        assert(result.toList.size === 0)
     }
   }
 }
