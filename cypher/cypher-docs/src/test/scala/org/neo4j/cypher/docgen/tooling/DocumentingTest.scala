@@ -23,6 +23,7 @@ import java.io._
 
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.internal.CypherSerializer
+import org.neo4j.cypher.internal.runtime.ResourceManager
 import org.neo4j.cypher.internal.runtime.interpreted.TransactionBoundQueryContext.IndexSearchMonitor
 import org.neo4j.cypher.internal.runtime.interpreted.{TransactionBoundQueryContext, TransactionalContextWrapper}
 import org.neo4j.cypher.internal.util.test_helpers.CypherFunSuite
@@ -127,7 +128,7 @@ class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) ext
       contextFactory.newContext(tx, "QUERY", EMPTY_MAP )
     )
     val QUIET_MONITOR:IndexSearchMonitor = null // this is ok because we're only serializing using this TBQC
-    val ctx = new TransactionBoundQueryContext(transactionalContext)(QUIET_MONITOR)
+    val ctx = new TransactionBoundQueryContext(transactionalContext, new ResourceManager())(QUIET_MONITOR)
     serialize(x, ctx)
   }
 }
