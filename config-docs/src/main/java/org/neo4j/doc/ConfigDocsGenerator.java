@@ -81,7 +81,7 @@ public class ConfigDocsGenerator
     {
         if ( !setting.description().equals( setting.toString() ) ) //toString is valueDescription
         {
-            return Optional.of( setting.description() );
+            return Optional.of( setting.description().trim() );
         }
         return Optional.empty();
     }
@@ -125,7 +125,7 @@ public class ConfigDocsGenerator
 
     private void document( SettingDescription item )
     {
-        out.printf( "[[%s]]%n" + ".%s%n" + "[cols=\"<1h,<4\"]%n" + "|===%n" + "|Description%n" + "a|+%s+%n" + "|Valid values%n" + "a|%s%n", item.id(),
+        out.printf( "[[%s]]%n" + ".%s%n" + "[cols=\"<1h,<4\"]%n" + "|===%n" + "|Description%n" + "a|%s%n" + "|Valid values%n" + "a|%s%n", item.id(),
                 item.name(), item.description().orElse( "No description available." ), item.validationMessage() );
 
         if ( item.isDynamic() )
