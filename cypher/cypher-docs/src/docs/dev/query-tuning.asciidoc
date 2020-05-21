@@ -57,7 +57,7 @@ Here we detail the available versions:
 
 [options="header"]
 |===
-| Query option | Description | Default?
+| Query option | Description | Default
 | `3.5` | This will force the query to use Neo4j Cypher 3.5. |
 | `4.0` | This will force the query to use Neo4j Cypher 4.0. As this is the default version, it is not necessary to use this option explicitly. | X
 |===
@@ -70,7 +70,7 @@ Please refer to the discussion in <<cypher-compatibility, Cypher Compatibility>>
 === Cypher runtime
 
 Using the execution plan, the query is executed -- and records returned -- by the Cypher _runtime_.
-Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used, there are three different runtimes available.
+Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used, there are three different runtimes available:
 
 Interpreted::
 In this runtime, the operators in the execution plan are chained together in a tree, where each non-leaf operator feeds from one or two child operators.
@@ -99,7 +99,7 @@ In Enterprise Edition, the Cypher query planner selects the runtime, falling bac
 |===
 | Option
 | Description
-| Default?
+| Default
 
 | runtime=interpreted
 | This will force the query planner to use the interpreted runtime.
