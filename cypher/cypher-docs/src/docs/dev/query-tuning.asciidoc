@@ -93,13 +93,6 @@ It combines some of the advantages of the compiled runtime in a new architecture
 Algorithms are employed to intelligently group the operators in the execution plan in order to generate new combinations and orders of execution which are optimised for performance and memory usage.
 While this should lead to superior performance in most cases (over both the interpreted and slotted runtimes), it is still under development and does not support all possible operators or queries (the slotted runtime covers all operators and queries).
 
-In Enterprise Edition, the Cypher query planner selects the runtime, falling back to alternative runtimes as follows:
-
-* Try the pipelined runtime first.
-* If the pipelined runtime does not support the query, then fall back to use the slotted runtime.
-* Finally, if the slotted runtime does not support the query, fall back to the interpreted runtime.
-  The interpreted runtime supports all queries, and is the only option in Neo4j Community Edition.
-
 [options="header",cols="m,a,a"]
 |===
 |Option
@@ -120,6 +113,13 @@ It is the only option for all queries in Community Edition--it is not necessary 
 If the pipelined runtime does not support the query, the planner will fall back to the slotted runtime.
 |This is the default option for some queries in Enterprise Edition.
 |===
+
+In Enterprise Edition, the Cypher query planner selects the runtime, falling back to alternative runtimes as follows:
+
+* Try the pipelined runtime first.
+* If the pipelined runtime does not support the query, then fall back to use the slotted runtime.
+* Finally, if the slotted runtime does not support the query, fall back to the interpreted runtime.
+  The interpreted runtime supports all queries, and is the only option in Neo4j Community Edition.
 
 
 [[how-do-i-profile-a-query]]
