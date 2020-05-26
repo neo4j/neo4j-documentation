@@ -36,6 +36,7 @@
                                     <arg value="com.neo4j.metrics.source.db.TransactionLogsMetrics" />
                                     <arg value="com.neo4j.metrics.source.db.BoltMetrics" />
                                     <arg value="com.neo4j.metrics.source.db.DatabaseCountMetrics" />
+                                    <arg value="com.neo4j.metrics.source.db.DatabaseOperationCountMetrics" />
                                     <arg value="com.neo4j.metrics.source.server.ServerMetrics" />
                                 </java>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
