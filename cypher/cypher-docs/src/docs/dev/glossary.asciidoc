@@ -269,10 +269,10 @@ This section comprises a glossary of all the keywords -- grouped by category and
 [options="header"]
 |===
 |Name           | Type | Description
-| <<cypher-version, CYPHER $version query>>  | Version | This will force `'query'` to use Neo4j Cypher `$version`. The default is `3.3`.
+| <<cypher-version, CYPHER $version query>>  | Version | This will force `'query'` to use Neo4j Cypher `$version`. The default is `4.0`.
 | <<cypher-runtime, CYPHER runtime=interpreted query>> | Runtime | This will force the query planner to use the interpreted runtime. This is the only option in Neo4j Community Edition.
 | <<cypher-runtime, CYPHER runtime=slotted query>> | Runtime | This will cause the query planner to use the slotted runtime. This is only available in Neo4j Enterprise Edition.
-| <<cypher-runtime, CYPHER runtime=compiled query>> | Runtime | [deprecated]#This will cause the query planner to use the compiled runtime if it supports `'query'`. This is only available in Neo4j Enterprise Edition.#
+| <<cypher-runtime, CYPHER runtime=pipelined query>> | Runtime | This will cause the query planner to use the pipelined runtime if it supports `'query'`. This is only available in Neo4j Enterprise Edition.
 |===
 
 [[glossary-admin-commands]]
