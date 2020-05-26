@@ -41,6 +41,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | DBMS <<administration-security-administration-dbms-privileges-database-management, DATABASE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering database management
 | DBMS <<administration-security-administration-dbms-privileges-privilege-management, PRIVILEGE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering privilege management
 | `ALL DBMS PRIVILEGES` | Functionality | Added | New Cypher command for administering role, user, database and privilege management
+| `ALL GRAPH PRIVILEGES` | Functionality | Added | New Cypher command for administering read and write privileges
+| Write privileges | Functionality | Added | New Cypher commands for administering write privileges
 | `ON DEFAULT DATABASE` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges, database privileges>>
 |===
 

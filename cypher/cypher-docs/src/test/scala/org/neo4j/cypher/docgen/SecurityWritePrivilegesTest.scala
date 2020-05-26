@@ -18,7 +18,14 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
     p(
       """
+        |* <<administration-security-writes-create, The `CREATE` privilege>>
+        |* <<administration-security-writes-delete, The `DELETE` privilege>>
+        |* <<administration-security-writes-set-label, The `SET LABEL` privilege>>
+        |* <<administration-security-writes-remove-label, The `REMOVE LABEL` privilege>>
+        |* <<administration-security-writes-set-property, The `SET PROPERTY` privilege>>
+        |* <<administration-security-writes-merge, The `MERGE` privilege>>
         |* <<administration-security-writes-write, The `WRITE` privilege>>
+        |* <<administration-security-writes-all, `ALL GRAPH PRIVILEGES`>>
         |""".stripMargin)
 
         p(
@@ -27,6 +34,30 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
         |
         |* `WRITE` - this privilege can only be assigned to all nodes, relationships, and properties in the entire graph.
         |""".stripMargin)
+
+    section("The `CREATE` privilege", "administration-security-writes-create", "enterprise-edition") {
+
+    }
+
+    section("The `DELETE` privilege", "administration-security-writes-delete", "enterprise-edition") {
+
+    }
+
+    section("The `SET LABEL` privilege", "administration-security-writes-set-label", "enterprise-edition") {
+
+    }
+
+    section("The `REMOVE LABEL` privilege", "administration-security-writes-remove-label", "enterprise-edition") {
+
+    }
+
+    section("The `SET PROPERTY` privilege", "administration-security-writes-set-property", "enterprise-edition") {
+
+    }
+
+    section("The `MERGE` privilege", "administration-security-writes-merge", "enterprise-edition") {
+
+    }
 
     section("The `WRITE` privilege", "administration-security-writes-write", "enterprise-edition") {
       p(
@@ -58,6 +89,10 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
           """Users with `WRITE` privilege but restricted `TRAVERSE` privileges will not be able to do `DETACH DELETE` in all cases.
             | See <<operations-manual#detach-delete-restricted-user, Operations Manual -> Fine-grained access control>> for more info.""".stripMargin)
       }
+    }
+
+    section("`ALL GRAPH PRIVILEGES`", "administration-security-writes-all", "enterprise-edition") {
+
     }
   }.build()
 
