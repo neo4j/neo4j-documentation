@@ -7,7 +7,7 @@ The components of the graph privilege commands are:
 ** `REVOKE` – removes granted or denied privilege from roles.
 
 * _graph-privilege_
-** Can be either a <<administration-security-reads, fine-grained read privilege>> or <<administration-security-writes, fine-grained write privilege>>.
+** Can be either a <<administration-security-reads, read privilege>> or <<administration-security-writes, write privilege>>.
 
 * _name_
 ** The graph or graphs to associate the privilege with.
@@ -28,7 +28,7 @@ Graphs created after this command execution will also be associated with these p
 ** The label or type can be `+*+` which means all labels or types.
 ** Multiple labels or types can be specified, comma-separated.
 ** Defaults to `ELEMENTS` `+*+` if omitted.
-** Some of the fine-grained write commands does not allow an _entity_ part, see  <<administration-security-writes, Fine-grained writes>> for details.
+** Some of the commands for write privileges does not allow an _entity_ part, see  <<administration-security-writes, Write privileges>> for details.
 
 * _roles_
 ** The role or roles to associate the privilege with, comma-separated.

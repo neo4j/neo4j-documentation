@@ -6,7 +6,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
   override def outputPath = "target/docs/dev/ql/administration/security/"
 
   override def doc: Document = new DocBuilder {
-    doc("Fine-grained writes", "administration-security-writes")
+    doc("Write privileges", "administration-security-writes")
     database("system")
     initQueries(
       "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE",
@@ -14,7 +14,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       "GRANT ROLE regularUsers TO jake",
       "GRANT ACCESS ON DATABASE neo4j TO regularUsers"
     )
-    synopsis("This section explains how to use Cypher to manage privileges for Neo4j fine-grained write security.")
+    synopsis("This section explains how to use Cypher to manage write privileges for Neo4j.")
 
     p(
       """
@@ -23,7 +23,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
         p(
       """
-        |There are several separate fine-grained write privileges:
+        |There are several separate write privileges:
         |
         |* `WRITE` - this privilege can only be assigned to all nodes, relationships, and properties in the entire graph.
         |""".stripMargin)

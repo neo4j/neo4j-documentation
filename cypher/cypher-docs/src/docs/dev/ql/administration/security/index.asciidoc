@@ -25,11 +25,11 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 ** <<administration-security-subgraph-introduction, The `GRANT`, `DENY` and `REVOKE` commands>>
 ** <<administration-security-subgraph-show, Listing privileges>>
 ** <<administration-security-subgraph-revoke, The `REVOKE` command>>
-* <<administration-security-reads, Fine-grained reads>>
+* <<administration-security-reads, Read privileges>>
 ** <<administration-security-reads-traverse, The `TRAVERSE` privilege>>
 ** <<administration-security-reads-read, The `READ` privilege>>
 ** <<administration-security-reads-match, The `MATCH` privilege>>
-* <<administration-security-writes, Fine-grained writes>>
+* <<administration-security-writes, Write privileges>>
 ** <<administration-security-writes-write, The `WRITE` privilege>>
 * <<administration-security-administration, Security of administration>>
 ** <<administration-security-administration-introduction, The `admin` role>>

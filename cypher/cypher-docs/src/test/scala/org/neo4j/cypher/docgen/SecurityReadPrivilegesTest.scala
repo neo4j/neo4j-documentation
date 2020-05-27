@@ -6,7 +6,7 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
   override def outputPath = "target/docs/dev/ql/administration/security/"
 
   override def doc: Document = new DocBuilder {
-    doc("Fine-grained reads", "administration-security-reads")
+    doc("Read privileges", "administration-security-reads")
     database("system")
     initQueries(
       "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE",
@@ -14,7 +14,7 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
       "GRANT ROLE regularUsers TO jake",
       "GRANT ACCESS ON DATABASE neo4j TO regularUsers"
     )
-    synopsis("This section explains how to use Cypher to manage privileges for Neo4j fine-grained read security.")
+    synopsis("This section explains how to use Cypher to manage read privileges for Neo4j.")
 
     p(
       """
@@ -25,7 +25,7 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
 
     p(
       """
-        |There are three separate fine-grained read privileges:
+        |There are three separate read privileges:
         |
         |* `TRAVERSE` - allows the specified entities to be found.
         |* `READ +{props}+` - allows the specified properties on the found entities to be read.

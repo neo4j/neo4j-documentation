@@ -37,8 +37,8 @@ This section explains how to use Cypher to administer Neo4j databases, such as c
 ** <<administration-security-introduction, Introduction>>
 ** <<administration-security-users-and-roles, User and role management>>
 ** <<administration-security-subgraph, Graph and subgraph access control>>
-** <<administration-security-reads, Fine-grained reads>>
-** <<administration-security-writes, Fine-grained writes>>
+** <<administration-security-reads, Read privileges>>
+** <<administration-security-writes, Write privileges>>
 ** <<administration-security-administration, Security of administration>>
 
 
