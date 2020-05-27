@@ -31,7 +31,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
         p(
       """
         |There are several separate write privileges:
-        |
+        |* `SET LABEL labels` - allows setting the specified node labels using the `SET` clause.
         |* `WRITE` - this privilege can only be assigned to all nodes, relationships, and properties in the entire graph.
         |""".stripMargin)
 
@@ -44,11 +44,60 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
     }
 
     section("The `SET LABEL` privilege", "administration-security-writes-set-label", "enterprise-edition") {
+      p(
+        """The `SET LABEL` privilege enables you to set labels on a node using the <<set-set-a-label-on-a-node, SET clause>>.""".stripMargin)
+      p("include::grant-set-label-syntax.asciidoc[]")
 
+      p(
+        """For example, granting the ability to set any label on nodes of the graph `neo4j` to the role `regularUsers` would be achieved using:""".stripMargin)
+      query("GRANT SET LABEL * ON GRAPH neo4j TO regularUsers", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 2)
+      })) {
+        statsOnlyResultTable()
+      }
+      note {
+        p("Unlike many of the other read and write privileges, it is not possible to restrict the `SET LABEL` privilege to specific ELEMENTS, NODES or RELATIONSHIPS.")
+      }
+
+      p("The `SET LABEL` privilege can also be denied.")
+      p("include::deny-set-label-syntax.asciidoc[]")
+
+      p("For example, denying the ability to set the label `foo` on nodes of all graphs to the role `regularUsers` would be achieved using:")
+      query("DENY SET LABEL foo ON GRAPH * TO regularUsers", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 2)
+      })) {
+        statsOnlyResultTable()
+      }
+      note {
+        p("If no instances of this label exist on the database, then the <<administration-security-administration-database-tokens, CREATE NEW LABEL>> privilege is also required.")
+      }
     }
 
     section("The `REMOVE LABEL` privilege", "administration-security-writes-remove-label", "enterprise-edition") {
+      p(
+        """The `REMOVE LABEL` privilege enables you to remove labels from a node using the <<remove-remove-a-label-from-a-node, REMOVE clause>>.""".stripMargin)
+      p("include::grant-remove-label-syntax.asciidoc[]")
 
+      p(
+        """For example, granting the ability to remove any label from nodes of the graph `neo4j` to the role `regularUsers` would be achieved using:""".stripMargin)
+      query("GRANT REMOVE LABEL * ON GRAPH neo4j TO regularUsers", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 2)
+      })) {
+        statsOnlyResultTable()
+      }
+      note {
+        p("Unlike many of the other read and write privileges, it is not possible to restrict the `REMOVE LABEL` privilege to specific ELEMENTS, NODES or RELATIONSHIPS.")
+      }
+
+      p("The `REMOVE LABEL` privilege can also be denied.")
+      p("include::deny-remove-label-syntax.asciidoc[]")
+
+      p("For example, denying the ability to remove the label `foo` from nodes of all graphs to the role `regularUsers` would be achieved using:")
+      query("DENY REMOVE LABEL foo ON GRAPH * TO regularUsers", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 2)
+      })) {
+        statsOnlyResultTable()
+      }
     }
 
     section("The `SET PROPERTY` privilege", "administration-security-writes-set-property", "enterprise-edition") {
