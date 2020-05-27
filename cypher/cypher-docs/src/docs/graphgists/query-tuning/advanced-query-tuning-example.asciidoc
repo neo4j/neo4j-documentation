@@ -289,4 +289,8 @@ Predicates that will not work:
 * Several predicates combined using `OR` because the property type might differ between the predicates
 * Existence (eg. `WHERE exists(n.email)`) because no property type information is given
 
+As of Neo4j 4.1 predicates with parameters (eg. `WHERE n.prop > $param`) can trigger _index-backed order by_.
+The only exception are queries with any parameters of type `Float` or `Point`.
+
 An existence constraint does not include any type information either and will thus not be enough to trigger _index-backed order by_.
+
