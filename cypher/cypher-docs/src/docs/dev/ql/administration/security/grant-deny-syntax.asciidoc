@@ -7,18 +7,7 @@ The components of the graph privilege commands are:
 ** `REVOKE` – removes granted or denied privilege from roles.
 
 * _graph-privilege_
-** `TRAVERSE` - allows the specified entities to be found.
-** `READ +{props}+` - allows the specified properties on the found entities to be read.
-+
-[NOTE]
-====
-Granting property `READ` access does not imply that the entities with that property can be found.
-For example, if there is also a `DENY` on it, the entity will not be found.
-The props can be `+*+`, which means all properties.
-====
-** `MATCH +{props}+` - combines both `TRAVERSE` and `READ`, allowing an entity to be found and its properties read.
-** `WRITE` - this privilege can only be assigned to all nodes, relationships, and properties in the entire graph.
-This means that the entity part of the command must also be `ELEMENTS` `+*+` and cannot be specific.
+** Can be either a <<administration-security-reads, read privilege>> or <<administration-security-writes, write privilege>>.
 
 * _name_
 ** The graph or graphs to associate the privilege with.
@@ -39,6 +28,7 @@ Graphs created after this command execution will also be associated with these p
 ** The label or type can be `+*+` which means all labels or types.
 ** Multiple labels or types can be specified, comma-separated.
 ** Defaults to `ELEMENTS` `+*+` if omitted.
+** Some of the commands for write privileges does not allow an _entity_ part, see  <<administration-security-writes, Write privileges>> for details.
 
 * _roles_
 ** The role or roles to associate the privilege with, comma-separated.

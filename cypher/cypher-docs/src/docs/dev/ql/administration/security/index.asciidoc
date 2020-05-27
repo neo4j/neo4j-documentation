@@ -24,11 +24,13 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 * <<administration-security-subgraph, Graph and sub-graph access control>>
 ** <<administration-security-subgraph-introduction, The `GRANT`, `DENY` and `REVOKE` commands>>
 ** <<administration-security-subgraph-show, Listing privileges>>
-** <<administration-security-subgraph-traverse, The `TRAVERSE` privilege>>
-** <<administration-security-subgraph-read, The `READ` privilege>>
-** <<administration-security-subgraph-match, The `MATCH` privilege>>
-** <<administration-security-subgraph-write, The `WRITE` privilege>>
 ** <<administration-security-subgraph-revoke, The `REVOKE` command>>
+* <<administration-security-reads, Read privileges>>
+** <<administration-security-reads-traverse, The `TRAVERSE` privilege>>
+** <<administration-security-reads-read, The `READ` privilege>>
+** <<administration-security-reads-match, The `MATCH` privilege>>
+* <<administration-security-writes, Write privileges>>
+** <<administration-security-writes-write, The `WRITE` privilege>>
 * <<administration-security-administration, Security of administration>>
 ** <<administration-security-administration-introduction, The `admin` role>>
 ** <<administration-security-administration-database-privileges, Database administration>>
@@ -70,6 +72,12 @@ include::administration-security-users-and-roles.adoc[leveloffset=+1]
 
 [role=enterprise-edition]
 include::administration-security-subgraph.adoc[leveloffset=+1]
+
+[role=enterprise-edition]
+include::administration-security-reads.adoc[leveloffset=+1]
+
+[role=enterprise-edition]
+include::administration-security-writes.adoc[leveloffset=+1]
 
 [role=enterprise-edition]
 include::administration-security-administration.adoc[leveloffset=+1]

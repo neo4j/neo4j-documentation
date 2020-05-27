@@ -1,7 +1,6 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.exceptions.SyntaxException
 
 class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql/administration/security/"
@@ -23,10 +22,6 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       """
         |* <<administration-security-subgraph-introduction, The `GRANT`, `DENY` and `REVOKE` commands>>
         |* <<administration-security-subgraph-show, Listing privileges>>
-        |* <<administration-security-subgraph-traverse, The `TRAVERSE` privilege>>
-        |* <<administration-security-subgraph-read, The `READ` privilege>>
-        |* <<administration-security-subgraph-match, The `MATCH` privilege>>
-        |* <<administration-security-subgraph-write, The `WRITE` privilege>>
         |* <<administration-security-subgraph-revoke, The `REVOKE` command>>
         |""".stripMargin)
 
@@ -87,130 +82,9 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
 
       p("The same command can be used at all times to review available privileges for the current user. " +
         "For this purpose, a shorter form of the the command also exists: SHOW USER PRIVILEGES.")
-      query("SHOW USER PRIVILEGES", ResultAssertions((r) => {
+      query("SHOW USER PRIVILEGES", ResultAssertions(r => {
         assertStats(r)
       })){}
-    }
-
-    section("The `TRAVERSE` privilege", "administration-security-subgraph-traverse", "enterprise-edition") {
-      p("Users can be granted the right to find nodes and relationships using the `GRANT TRAVERSE` privilege.")
-      p("include::grant-traverse-syntax.asciidoc[]")
-      p("For example, we can allow the user `jake`, who has role 'regularUsers' to find all nodes with the label `Post`.")
-      query("GRANT TRAVERSE ON GRAPH neo4j NODES Post TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 1)
-      })) {
-        statsOnlyResultTable()
-      }
-
-      p("The `TRAVERSE` privilege can also be denied.")
-      p("include::deny-traverse-syntax.asciidoc[]")
-      p("For example, we can disallow the user `jake`, who has role 'regularUsers' to find all nodes with the label `Payments`.")
-      query("DENY TRAVERSE ON GRAPH neo4j NODES Payments TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 1)
-      })) {
-        statsOnlyResultTable()
-      }
-    }
-
-    section("The `READ` privilege", "administration-security-subgraph-read", "enterprise-edition") {
-      p(
-        """Users can be granted the right to do property reads on nodes and relationships using the `GRANT READ` privilege.
-          |It is very important to note that users can only read properties on entities that they are allowed to find in the first place.""".stripMargin)
-      p("include::grant-read-syntax.asciidoc[]")
-
-      p(
-        """For example, we can allow the user `jake`, who has role 'regularUsers' to read all properties on nodes with the label `Post`.
-          |The `*` implies that the ability to read all properties also extends to properties that might be added in the future.""".stripMargin)
-      query("GRANT READ { * } ON GRAPH neo4j NODES Post TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 1)
-      })) {
-        statsOnlyResultTable()
-      }
-
-      p("The `READ` privilege can also be denied.")
-      p("include::deny-read-syntax.asciidoc[]")
-
-      p("Although we just granted the user 'jake' the right to read all properties, we may want to hide the `secret` property. The following example shows how to do that.")
-      query("DENY READ { secret } ON GRAPH neo4j NODES Post TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 1)
-      })) {
-        statsOnlyResultTable()
-      }
-    }
-    section("The `MATCH` privilege", "administration-security-subgraph-match", "enterprise-edition") {
-      p(
-        """Users can be granted the right to find and do property reads on nodes and relationships using the `GRANT MATCH` privilege.
-          |This is semantically the same as having both `TRAVERSE` and `READ` privileges.""".stripMargin)
-      p("include::grant-match-syntax.asciidoc[]")
-
-      p(
-        """For example if you want to grant the ability to read the properties `language` and `length` for nodes with the label `Message`,
-          |as well as the ability to find these nodes, to a role `regularUsers` you can use the following `GRANT MATCH` query.""".stripMargin)
-
-      query("GRANT MATCH { language, length } ON GRAPH neo4j NODES Message TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 2)
-      })) {
-        statsOnlyResultTable()
-      }
-
-      p("""Like all other privileges, the `MATCH` privilege can also be denied.""".stripMargin)
-      p("include::deny-match-syntax.asciidoc[]")
-
-      p(
-        """Please note that the effect of denying a `MATCH` privilege depends on whether concrete property keys are specified or a `*`.
-          |If you specify concrete property keys then `DENY MATCH` will only deny reading those properties. Finding the elements to traverse would still be allowed.
-          |If you specify `*` instead then both traversal of the element and all property reads will be disallowed.
-          |The following queries will show examples for this.""".stripMargin)
-
-      p(
-        """Denying to read the property ´content´ on nodes with the label `Message` for the role `regularUsers` would look like the following query.
-          |Although not being able to read this specific property, nodes with that label can still be traversed (and, depending on other grants, other properties on it could still be read).""".stripMargin)
-
-      query("DENY MATCH { content } ON GRAPH neo4j NODES Message TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 1)
-      })) {
-        statsOnlyResultTable()
-      }
-
-      p("The following query exemplifies how it would look like if you want to deny both reading all properties and traversing nodes labeled with `Account`.")
-
-      query("DENY MATCH { * } ON GRAPH neo4j NODES Account TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 1)
-      })) {
-        statsOnlyResultTable()
-      }
-    }
-
-    section("The `WRITE` privilege", "administration-security-subgraph-write", "enterprise-edition") {
-      p(
-        """The `WRITE` privilege enables you to write on a graph.""".stripMargin)
-      p("include::grant-write-syntax.asciidoc[]")
-
-      p(
-        """For example, granting the ability to write on the graph `neo4j` to the role `regularUsers` would be achieved using:""".stripMargin)
-      query("GRANT WRITE ON GRAPH neo4j TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 2)
-      })) {
-        statsOnlyResultTable()
-      }
-      note {
-        p("Unlike with `GRANT READ` it is not possible to restrict `WRITE` privileges to specific ELEMENTS, NODES or RELATIONSHIPS.")
-      }
-
-      p("The `WRITE` privilege can also be denied.")
-      p("include::deny-write-syntax.asciidoc[]")
-
-      p("For example, denying the ability to write on the graph `neo4j` to the role `regularUsers` would be achieved using:")
-      query("DENY WRITE ON GRAPH neo4j TO regularUsers", ResultAssertions((r) => {
-        assertStats(r, systemUpdates = 2)
-      })) {
-        statsOnlyResultTable()
-      }
-      note {
-        p(
-          """Users with `WRITE` privilege but restricted `TRAVERSE` privileges will not be able to do `DETACH DELETE` in all cases.
-            | See <<operations-manual#detach-delete-restricted-user, Operations Manual -> Fine-grained access control>> for more info.""".stripMargin)
-      }
     }
 
     section("The `REVOKE` command", "administration-security-subgraph-revoke", "enterprise-edition") {
@@ -223,7 +97,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p("include::revoke-syntax.asciidoc[]")
 
       p("An example usage of the `REVOKE` command is given here:")
-      query("REVOKE GRANT TRAVERSE ON GRAPH neo4j NODES Post FROM regularUsers", ResultAssertions((r) => {
+      query("REVOKE GRANT TRAVERSE ON GRAPH neo4j NODES Post FROM regularUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
@@ -231,7 +105,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p(
         """While it can be explicitly specified that revoke should remove a `GRANT` or `DENY`, it is also possible to revoke either one by not specifying at all as the next example demonstrates.
           |Because of this, if there happen to be a `GRANT` and a `DENY` on the same privilege, it would remove both.""".stripMargin)
-      query("REVOKE TRAVERSE ON GRAPH neo4j NODES Payments FROM regularUsers", ResultAssertions((r) => {
+      query("REVOKE TRAVERSE ON GRAPH neo4j NODES Payments FROM regularUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 2)
       })) {
         statsOnlyResultTable()
@@ -250,9 +124,4 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     }
     found.nonEmpty should be(true)
   })
-
-  private def assertSyntaxException(expected: String) = ErrorAssertions {
-    case s: SyntaxException => s.getMessage should startWith(expected)
-    case _ => fail("Expected exception: SyntaxException($expected)")
-  }
 }
