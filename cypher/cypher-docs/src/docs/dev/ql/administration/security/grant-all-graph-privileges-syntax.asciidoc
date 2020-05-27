@@ -1,0 +1,7 @@
+.Command syntax
+[source, cypher]
+-----
+GRANT ALL [ [ GRAPH ] PRIVILEGES ]
+    ON GRAPH[S] {name [, ...] | * }
+    TO role [, ...]
+-----

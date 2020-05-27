@@ -14,7 +14,7 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
       "GRANT ROLE regularUsers TO jake",
       "GRANT ACCESS ON DATABASE neo4j TO regularUsers"
     )
-    synopsis("This section explains how to use Cypher to manage read privileges for Neo4j.")
+    synopsis("This section explains how to use Cypher to manage read privileges on graphs.")
 
     p(
       """

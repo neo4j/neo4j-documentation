@@ -1,0 +1,10 @@
+.Command syntax
+[source, cypher]
+-----
+GRANT MERGE "{" { * | property-name[,...] } "}"
+    ON GRAPH[S] { * | graph-name[,...] }
+    [ ELEMENT[S] { * | label-or-rel-type-name[,...] }
+    | NODE[S] { * | label-name[,...] }
+    | RELATIONSHIP[S] { * |rel-type-name[,...] } ]
+    TO grantee[,...]
+-----
