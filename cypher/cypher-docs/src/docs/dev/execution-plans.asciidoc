@@ -12,6 +12,9 @@ This section describes the characteristics of query execution plans and provides
 * <<execution-plans-operators, Execution plan operators in detail>>
 * <<query-shortestpath-planning, Shortest path planning>>
 
+[NOTE]
+For information on replanning, see <<cypher-replanning>>.
+
 
 [[execution-plan-introduction]]
 == Introduction
