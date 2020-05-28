@@ -22,6 +22,9 @@ This allows Cypher to re-use your queries instead of having to parse and build n
 To read more about the execution plan operators mentioned in this chapter, see <<execution-plans>>.
 
 * <<cypher-query-options,Cypher query options>>
+** <<cypher-version,Cypher version>>
+** <<cypher-runtime,Cypher runtime>>
+** <<cypher-replanning,Cypher replanning>>
 * <<how-do-i-profile-a-query,Profiling a query>>
 * <<cypherdoc-basic-query-tuning-example,Basic query tuning example>>
 * <<advanced-query-tuning-example, Advanced query tuning example>>
@@ -120,6 +123,61 @@ In Enterprise Edition, the Cypher query planner selects the runtime, falling bac
 * If the pipelined runtime does not support the query, then fall back to use the slotted runtime.
 * Finally, if the slotted runtime does not support the query, fall back to the interpreted runtime.
   The interpreted runtime supports all queries, and is the only option in Neo4j Community Edition.
+
+
+[[cypher-replanning]]
+=== Cypher replanning
+
+There may be situations where <<execution-plans,Cypher query planning>> can occur at a non-ideal time.
+For example, when a query must be as fast as possible and a valid plan is already in place.
+
+Cypher replanning occurs in the following circumstances:
+
+* The query is not in the cache.
+This can either be when the server is first started or restarted, if the cache has recently been cleared, or if <<operations-manual#config_dbms.query_cache_size,dbms.query_cache_size>> was exceeded.
+* The time limit has past the <<operations-manual#config_cypher.min_replan_interval,cypher.min_replan_interval>> value, and the database statistics have changed more than the <<operations-manual#config_cypher.statistics_divergence_threshold,cypher.statistics_divergence_threshold>> value.
+
+[NOTE]
+Replanning is not performed for all queries at once, however it is performed in the same thread as running the query, and can block the query.
+However, replanning one query does not replan any other queries.
+
+There are three different replan options available:
+
+[options="header",cols="m,a,a"]
+|===
+|Option
+|Description
+|Default
+
+|replan=default
+|This is the planning and replanning option as described above.
+|X
+
+|replan=force
+|This will force a replan, even if the plan is valid according to the planning rules.
+Once the new plan is complete, it replaces the existing one in the query cache.
+|
+
+|replan=skip
+|If a valid plan already exists, it will be used even if the planning rules would normally dictate that it should be replanned.
+|
+|===
+
+The replan option is prepended to queries.
+For example:
+
+[source, cypher]
+----
+CYPHER replan=force MATCH ...
+----
+
+In a mixed workload, you can force replanning by using the Cypher `EXPLAIN` commands.
+For example:
+
+[source, cypher]
+----
+CYPHER replan=force EXPLAIN MATCH ...
+----
 
 
 [[how-do-i-profile-a-query]]
