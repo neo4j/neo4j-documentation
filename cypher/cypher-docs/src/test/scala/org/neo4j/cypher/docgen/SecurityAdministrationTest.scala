@@ -558,9 +558,12 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         note {
-          p("Note that no specific privileges are required for showing the current user's privileges using either `SHOW USER username PRIVILEGES`, or `SHOW USER PRIVILEGES`.")
+          p("Note that no specific privileges are required for showing the current user's privileges using either `SHOW USER _username_ PRIVILEGES`, or `SHOW USER PRIVILEGES`.")
         }
-
+        note {
+          p("Please note that if you are using non native auth providers like LDAP, `SHOW USER PRIVILEGES` will only work in the following limited capacity:" +
+            "It is only possible for a user to get their own privileges. Other users privileges can not be listed when using a non native auth provider.")
+        }
         p("The ability to assign privileges to roles can be granted via the `ASSIGN PRIVILEGE` privilege. A user with this privilege is allowed to execute GRANT and DENY administration commands. The following query shows an example of how to grant this privilege:")
         query("GRANT ASSIGN PRIVILEGE ON DBMS TO privilegeAssigner", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
