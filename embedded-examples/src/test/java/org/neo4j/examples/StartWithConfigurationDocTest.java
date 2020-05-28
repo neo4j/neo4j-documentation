@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.time.Duration;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
@@ -55,8 +56,8 @@ class StartWithConfigurationDocTest
         // tag::startDbWithMapConfig[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory)
                                 .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
-                                .setConfig( GraphDatabaseSettings.string_block_size, 60 )
-                                .setConfig( GraphDatabaseSettings.array_block_size, 300 ).build();
+                                .setConfig( GraphDatabaseSettings.transaction_timeout, Duration.ofSeconds( 60 ) )
+                                .setConfig( GraphDatabaseSettings.preallocate_logical_logs, true ).build();
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
 
         // end::startDbWithMapConfig[]
