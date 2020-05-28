@@ -78,6 +78,10 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
 
       p("Available privileges for a particular user can be seen using `SHOW USER name PRIVILEGES`.")
+      note {
+        p("Please note that if you are using non native auth providers like LDAP, `SHOW USER PRIVILEGES` will only work in the following limited capacity:" +
+          "It is only possible for a user to get their own privileges. Other users privileges can not be listed when using a non native auth provider.")
+      }
       query("SHOW USER jake PRIVILEGES", assertPrivilegeShown(Seq(
         Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
       ))) {
