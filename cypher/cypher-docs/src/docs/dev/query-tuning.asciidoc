@@ -133,12 +133,12 @@ For example, when a query must be as fast as possible and a valid plan is alread
 
 Cypher replanning occurs in the following circumstances:
 
-* The query is not in the cache.
+* When the query is not in the cache.
 This can either be when the server is first started or restarted, if the cache has recently been cleared, or if <<operations-manual#config_dbms.query_cache_size,dbms.query_cache_size>> was exceeded.
-* The time limit has past the <<operations-manual#config_cypher.min_replan_interval,cypher.min_replan_interval>> value, and the database statistics have changed more than the <<operations-manual#config_cypher.statistics_divergence_threshold,cypher.statistics_divergence_threshold>> value.
+* When the time has past the <<operations-manual#config_cypher.min_replan_interval,cypher.min_replan_interval>> value, and the database statistics have changed more than the <<operations-manual#config_cypher.statistics_divergence_threshold,cypher.statistics_divergence_threshold>> value.
 
 [NOTE]
-Replanning is not performed for all queries at once, however it is performed in the same thread as running the query, and can block the query.
+Replanning is not performed for all queries at once; it is performed in the same thread as running the query, and can block the query.
 However, replanning one query does not replan any other queries.
 
 There are three different replan options available:
