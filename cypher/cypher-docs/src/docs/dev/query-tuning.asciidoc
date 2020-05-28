@@ -128,14 +128,14 @@ In Enterprise Edition, the Cypher query planner selects the runtime, falling bac
 [[cypher-replanning]]
 === Cypher replanning
 
-There may be situations where <<execution-plans,Cypher query planning>> can occur at a non-ideal time.
-For example, when a query must be as fast as possible and a valid plan is already in place.
-
 Cypher replanning occurs in the following circumstances:
 
 * When the query is not in the cache.
 This can either be when the server is first started or restarted, if the cache has recently been cleared, or if <<operations-manual#config_dbms.query_cache_size,dbms.query_cache_size>> was exceeded.
 * When the time has past the <<operations-manual#config_cypher.min_replan_interval,cypher.min_replan_interval>> value, and the database statistics have changed more than the <<operations-manual#config_cypher.statistics_divergence_threshold,cypher.statistics_divergence_threshold>> value.
+
+There may be situations where <<execution-plans,Cypher query planning>> can occur at a non-ideal time.
+For example, when a query must be as fast as possible and a valid plan is already in place.
 
 [NOTE]
 Replanning is not performed for all queries at once; it is performed in the same thread as running the query, and can block the query.
@@ -172,12 +172,16 @@ CYPHER replan=force MATCH ...
 ----
 
 In a mixed workload, you can force replanning by using the Cypher `EXPLAIN` commands.
+This can be useful to schedule replanning of queries which are expensive to plan, at known times of low load.
+Using `EXPLAIN` will make sure the query is only planned, but not executed.
 For example:
 
 [source, cypher]
 ----
 CYPHER replan=force EXPLAIN MATCH ...
 ----
+
+During times of known high load, `replan=skip` can be useful to not introduce unwanted latency spikes.
 
 
 [[how-do-i-profile-a-query]]
