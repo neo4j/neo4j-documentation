@@ -290,6 +290,8 @@ Predicates that will not work:
 * Existence (eg. `WHERE exists(n.email)`) because no property type information is given
 
 [NOTE]
+====
 If the predicate uses a parameter, such as `WHERE n.prop > $param`, it will not trigger _index-backed order by_ in this version of Neo4j.
 
 An existence constraint does not include any type information either and will thus not be enough to trigger _index-backed order by_.
+====
