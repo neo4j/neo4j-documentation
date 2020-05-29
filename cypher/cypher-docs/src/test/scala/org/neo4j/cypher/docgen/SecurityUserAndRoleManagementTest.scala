@@ -176,6 +176,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
               |* `publisher` - can do the same as `editor`, but also create new labels and relationship types.
               |* `architect` - can do the same as `publisher` as well as create and manage indexes and constraints.
               |* `admin` - can do the same as all the above, as well as manage databases, users, roles and privileges.
+              |
+              |More information about the built-in roles can be found in <<operations-manual#auth-built-in-roles, Operations Manual -> Built-in roles>>
               |""".stripMargin)
           resultTable()
         }
