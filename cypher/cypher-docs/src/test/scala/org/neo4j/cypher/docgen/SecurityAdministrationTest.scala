@@ -61,8 +61,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       // image source: https://docs.google.com/drawings/d/1Zc5eawW58r4CI8e4FeYnA8cwUyIJX-7B4Eecj-qkd_8/edit
       section("The database `ACCESS` privilege", "administration-security-administration-database-access", "enterprise-edition") {
         p(
-          """The `ACCESS` privilege enables users to read data and perform updates in a database.
-            |For example, you can run calculations, such as `RETURN 2*5 AS answer` or call functions `RETURN timestamp() AS time`.""".stripMargin)
+          """The `ACCESS` privilege enables users to connect to a database.
+            |With `ACCESS` you can run calculations, for example, `RETURN 2*5 AS answer` or call functions `RETURN timestamp() AS time`.""".stripMargin)
         p("include::database/grant-database-access-syntax.asciidoc[]")
 
         p(
