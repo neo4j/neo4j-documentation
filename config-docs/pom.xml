@@ -144,11 +144,11 @@
                                     <arg value="org.neo4j.server.configuration.ServerSettings" />
                                     <arg value="org.neo4j.configuration.GraphDatabaseSettings" />
                                     <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
-                                    <arg value="com.neo4j.kernel.impl.enterprise.configuration.MetricsSettings" />
-                                    <arg value="com.neo4j.causalclustering.core.CausalClusteringSettings" />
+                                    <arg value="com.neo4j.configuration.MetricsSettings" />
+                                    <arg value="com.neo4j.configuration.CausalClusteringSettings" />
                                     <arg value="com.neo4j.server.enterprise.EnterpriseServerSettings" />
-                                    <arg value="com.neo4j.server.security.enterprise.configuration.SecuritySettings" />
-                                    <arg value="com.neo4j.kernel.impl.enterprise.configuration.EnterpriseEditionSettings" />
+                                    <arg value="com.neo4j.configuration.SecuritySettings" />
+                                    <arg value="com.neo4j.configuration.EnterpriseEditionSettings" />
                                 </java>
 
                                 <!-- Connector documentation is kept separate, because otherwise the grouping of these keys becomes unclear (IMO) -->
