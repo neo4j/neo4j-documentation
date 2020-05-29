@@ -65,7 +65,15 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           }
         }
         p("The created user will appear on the list provided by `SHOW USERS`.")
-        query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
+        query("SHOW USERS YIELD user, suspended, passwordChangeRequired, roles WHERE user = 'jake'", assertUsersShown(Seq("jake"))) {
+          p(
+            """In this example we also:
+              |
+              |* Reorder the columns using a `YIELD` clause
+              |* Filter the results using a `WHERE` clause to show only the new user
+              |
+              |""".stripMargin
+          )
           resultTable()
         }
         note {
@@ -190,6 +198,18 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           resultTable()
 
         }
+        p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`")
+        query("SHOW ROLES YIELD role ORDER BY role WHERE role ENDS WITH 'r' ", assertRolesShown(Seq("reader", "editor", "publisher"))) {
+          p(
+            """In this example:
+              |
+              |* The results have been filtered to only return the roles ending in 'r'
+              |* The results are ordered by the 'action' column using `ORDER BY`
+              |
+              |It is also possible to use `SKIP` and `LIMIT` to paginate the results.
+              |""".stripMargin)
+          resultTable()
+        }
         p("The `SHOW ROLE name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
       }
       section("Creating roles", "administration-security-roles-create", "enterprise-edition") {
@@ -300,6 +320,18 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       val props = nodes.map(n => n.getProperty("name"))
       val result = p.columnAs[String](column).toList
       result.toSet should equal(props.toSet)
+    } finally {
+      tx.close()
+    }
+  })
+
+  private def assertUsersShown(expected: Seq[String]) = ResultAndDbAssertions((p, db) => {
+    val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
+    try {
+      val nodes = tx.findNodes(Label.label("User")).asScala.toList
+      nodes.length should be > 0
+      val result = p.columnAs[String]("user").toList
+      result.toSet should equal(expected.toSet)
     } finally {
       tx.close()
     }

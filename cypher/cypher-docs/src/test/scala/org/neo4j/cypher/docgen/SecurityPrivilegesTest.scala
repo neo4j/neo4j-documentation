@@ -59,6 +59,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     }
     section("Listing privileges", "administration-security-subgraph-show", "enterprise-edition") {
       p("Available privileges for all roles can be seen using `SHOW PRIVILEGES`.")
+      p("include::show-all-privileges-syntax.asciidoc[]")
       query("SHOW PRIVILEGES", assertPrivilegeShown(Seq(
         Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
         Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers")
@@ -77,7 +78,26 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         resultTable()
       }
 
+      p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`")
+      query("SHOW PRIVILEGES YIELD role, access, action ORDER BY action WHERE role = 'admin' ", assertPrivilegeShown(Seq(
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "admin"),
+        Map("access" -> "GRANTED", "action" -> "write", "role" -> "admin")
+      ))) {
+        p(
+          """In this example:
+            |
+            |* The number of columns returned has been reduced with the `YIELD` clause
+            |* The order of the returned columns has been changed
+            |* The results have been filtered to only return the 'admin' role using a `WHERE` clause
+            |* The results are ordered by the 'action' column using `ORDER BY`
+            |
+            |It is also possible to use `SKIP` and `LIMIT` to paginate the results.
+            |""".stripMargin)
+        resultTable()
+      }
+
       p("Available privileges for a particular role can be seen using `SHOW ROLE name PRIVILEGES`.")
+      p("include::show-role-privileges-syntax.asciidoc[]")
       query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
         Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers")
       ))) {
@@ -91,6 +111,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
           "It is only possible for a user to show their own privileges. Other users' privileges cannot be listed when using a non-native auth provider.")
       }
 
+      p("include::show-user-privileges-syntax.asciidoc[]")
       query("SHOW USER jake PRIVILEGES", assertPrivilegeShown(Seq(
         Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
       ))) {
