@@ -21,11 +21,11 @@ package org.neo4j.cypher.docgen
 
 import java.io.File
 
+import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.dbms.api.DatabaseManagementService
-import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
@@ -119,7 +119,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       queryText = """CREATE CONSTRAINT uniqueness ON (c:Country) ASSERT c.name is UNIQUE""",
       assertions = p => {
         val plan = p.executionPlanString()
-        assertThat(plan, containsString("CreateUniquePropertyConstraint"))
+        assertThat(plan, containsString("CreateConstraint"))
         assertThat(plan, containsString("uniqueness"))
       }
     )
@@ -136,7 +136,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `DropUniqueConstraint` operator removes a unique constraint from a property for all nodes having a certain label.
           |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """DROP CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
-      assertions = p => assertThat(p.executionPlanString(), containsString("DropUniquePropertyConstraint"))
+      assertions = p => assertThat(p.executionPlanString(), containsString("DropConstraint"))
     )
   }
 
@@ -150,7 +150,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       queryText = """CREATE CONSTRAINT existence ON (p:Person) ASSERT exists(p.name)""",
       assertions = p => {
         val plan = p.executionPlanString()
-        assertThat(plan, containsString("CreateNodePropertyExistenceConstraint"))
+        assertThat(plan, containsString("CreateConstraint"))
         assertThat(plan, containsString("existence"))
       }
     )
@@ -168,7 +168,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """DROP CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
-      assertions = p => assertThat(p.executionPlanString(), containsString("DropNodePropertyExistenceConstraint"))
+      assertions = p => assertThat(p.executionPlanString(), containsString("DropConstraint"))
     )
   }
 
@@ -183,7 +183,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       queryText = """CREATE CONSTRAINT node_key ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
       assertions = p => {
         val plan = p.executionPlanString()
-        assertThat(plan, containsString("CreateNodeKeyConstraint"))
+        assertThat(plan, containsString("CreateConstraint"))
         assertThat(plan, containsString("node_key"))
       }
     )
@@ -201,7 +201,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |This will only appear in Enterprise Edition.
         """.stripMargin,
       queryText = """DROP CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
-      assertions = p => assertThat(p.executionPlanString(), containsString("DropNodeKeyConstraint"))
+      assertions = p => assertThat(p.executionPlanString(), containsString("DropConstraint"))
     )
   }
 
@@ -215,7 +215,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       queryText = """CREATE CONSTRAINT existence ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
       assertions = p => {
         val plan = p.executionPlanString()
-        assertThat(plan, containsString("CreateRelationshipPropertyExistenceConstraint"))
+        assertThat(plan, containsString("CreateConstraint"))
         assertThat(plan, containsString("existence"))
       }
     )
@@ -232,7 +232,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `DropRelationshipPropertyExistenceConstraint` operator removes an existence constraint from a property for all relationships of a certain type.
           |This will only appear in Enterprise Edition.""".stripMargin,
       queryText = """DROP CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
-      assertions = p => assertThat(p.executionPlanString(), containsString("DropRelationshipPropertyExistenceConstraint"))
+      assertions = p => assertThat(p.executionPlanString(), containsString("DropConstraint"))
     )
   }
 

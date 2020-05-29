@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.configuration.GraphDatabaseInternalSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -74,7 +74,7 @@ public final class CypherDoc
         //TODO remove config when compiled plans are feature complete
         File directory = new File( "target/example-db" + System.nanoTime() );
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory )
-                .setConfig( GraphDatabaseSettings.cypher_runtime, GraphDatabaseSettings.CypherRuntime.INTERPRETED )
+                .setConfig( GraphDatabaseInternalSettings.cypher_runtime, GraphDatabaseInternalSettings.CypherRuntime.INTERPRETED )
                 .build();
         GraphDatabaseService graphOps = managementService.database( DEFAULT_DATABASE_NAME );
         Connection conn = null;
