@@ -11,7 +11,7 @@ The components of the graph privilege commands are:
 
 * _name_
 ** The graph or graphs to associate the privilege with.
-Because in {neo4j.version} you can have only one graph per database, this command uses the database name to refer to that graph.
+Because in ${neo4j.version} you can have only one graph per database, this command uses the database name to refer to that graph.
 +
 [NOTE]
 ====
@@ -28,7 +28,7 @@ Graphs created after this command execution will also be associated with these p
 ** The label or type can be `+*+` which means all labels or types.
 ** Multiple labels or types can be specified, comma-separated.
 ** Defaults to `ELEMENTS` `+*+` if omitted.
-** Some of the commands for write privileges does not allow an _entity_ part, see  <<administration-security-writes, Write privileges>> for details.
+** Some of the commands for write privileges do not allow an _entity_ part, see  <<administration-security-writes, Write privileges>> for details.
 
 * _roles_
 ** The role or roles to associate the privilege with, comma-separated.

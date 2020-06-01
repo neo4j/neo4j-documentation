@@ -47,7 +47,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
     section("The `CREATE` privilege", "administration-security-writes-create", "enterprise-edition") {
       p(
-        """The `CREATE` privilege enables a user to create new node and relationship elements in a graph. See <<query-create, CREATE>>.""".stripMargin)
+        """The `CREATE` privilege allows a user to create new node and relationship elements in a graph. See <<query-create, CREATE>>.""".stripMargin)
       p("include::grant-create-syntax.asciidoc[]")
 
       p(
@@ -76,7 +76,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
     section("The `DELETE` privilege", "administration-security-writes-delete", "enterprise-edition") {
       p(
-        """The `DELETE` privilege enables a user to delete node and relationship elements in a graph. See <<query-delete, DELETE>>.""".stripMargin)
+        """The `DELETE` privilege allows a user to delete node and relationship elements in a graph. See <<query-delete, DELETE>>.""".stripMargin)
       p("include::grant-delete-syntax.asciidoc[]")
 
       p(
@@ -105,7 +105,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
     section("The `SET LABEL` privilege", "administration-security-writes-set-label", "enterprise-edition") {
       p(
-        """The `SET LABEL` privilege enables you to set labels on a node using the <<set-set-a-label-on-a-node, SET clause>>.""".stripMargin)
+        """The `SET LABEL` privilege allows you to set labels on a node using the <<set-set-a-label-on-a-node, SET clause>>.""".stripMargin)
       p("include::grant-set-label-syntax.asciidoc[]")
 
       p(
@@ -135,7 +135,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
     section("The `REMOVE LABEL` privilege", "administration-security-writes-remove-label", "enterprise-edition") {
       p(
-        """The `REMOVE LABEL` privilege enables you to remove labels from a node using the <<remove-remove-a-label-from-a-node, REMOVE clause>>.""".stripMargin)
+        """The `REMOVE LABEL` privilege allows you to remove labels from a node using the <<remove-remove-a-label-from-a-node, REMOVE clause>>.""".stripMargin)
       p("include::grant-remove-label-syntax.asciidoc[]")
 
       p(
@@ -162,7 +162,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
     section("The `SET PROPERTY` privilege", "administration-security-writes-set-property", "enterprise-edition") {
       p(
-        """The `SET PROPERTY` privilege enables a user to set a property on a node or relationship element in a graph using the <<set-set-a-property, SET clause>>.""".stripMargin)
+        """The `SET PROPERTY` privilege allows a user to set a property on a node or relationship element in a graph using the <<set-set-a-property, SET clause>>.""".stripMargin)
       p("include::grant-set-property-syntax.asciidoc[]")
 
       p(
