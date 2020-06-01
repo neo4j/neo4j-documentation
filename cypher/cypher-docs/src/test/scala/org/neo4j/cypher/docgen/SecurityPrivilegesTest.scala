@@ -36,13 +36,16 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         |* If a entity is not accessible due to <<administration-security-reads, read privileges>>, the data will become invisible to attempts to read it.
         |  It will appear to the user as if they have a smaller database (smaller graph).
         |* If an entity is not accessible due to <<administration-security-writes, write privileges>>, an error will occur on any attempt to write that data.
-        |
-        |[NOTE]
-        |In this document we will often use the terms _'allows'_ and _'enables'_ in seemingly identical ways. However, there is a subtle difference.
-        |We will use _'enables'_ to refer to the consequences of <<administration-security-reads, read privileges>> where a restriction will not cause an error,
-        |only a reduction in the apparent graph size. We will use _'allows'_ to refer to the consequence of <<administration-security-write, write privileges>>
-        |where a restriction can result in an error.
         |""".stripMargin)
+    note {
+      p(
+        """In this document we will often use the terms _'allows'_ and _'enables'_ in seemingly identical ways. However, there is a subtle difference.
+          |We will use _'enables'_ to refer to the consequences of <<administration-security-reads, read privileges>> where a restriction will not cause an error,
+          |only a reduction in the apparent graph size. We will use _'allows'_ to refer to the consequence of <<administration-security-write, write privileges>>
+          |where a restriction can result in an error.
+          |""".stripMargin
+      )
+    }
     note {
       p(
         """If a user was not also provided with the database `ACCESS` privilege then access to the entire database will be denied.

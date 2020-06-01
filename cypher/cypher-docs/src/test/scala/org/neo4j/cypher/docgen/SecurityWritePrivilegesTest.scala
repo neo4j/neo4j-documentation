@@ -47,7 +47,8 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
     section("The `CREATE` privilege", "administration-security-writes-create", "enterprise-edition") {
       p(
-        """The `CREATE` privilege allows a user to create new node and relationship elements in a graph. See <<query-create, CREATE>>.""".stripMargin)
+        """The `CREATE` privilege allows a user to create new node and relationship elements in a graph.
+          |See the Cypher <<query-create, CREATE>> clause.""".stripMargin)
       p("include::grant-create-syntax.asciidoc[]")
 
       p(
@@ -69,7 +70,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       }
       note {
         p(
-          """If the user attempts to create nodes with a label that does not already exist on, then the database the user must also possess the
+          """If the user attempts to create nodes with a label that does not already exist in the database, then the user must also possess the
             |<<administration-security-administration-database-tokens, CREATE NEW LABEL>> privilege. The same applies to new relationships - the
             |<<administration-security-administration-database-tokens, CREATE NEW RELATIONSHIP TYPE>> privilege is required.""".stripMargin)
       }
@@ -77,7 +78,8 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
     section("The `DELETE` privilege", "administration-security-writes-delete", "enterprise-edition") {
       p(
-        """The `DELETE` privilege allows a user to delete node and relationship elements in a graph. See <<query-delete, DELETE>>.""".stripMargin)
+        """The `DELETE` privilege allows a user to delete node and relationship elements in a graph.
+          |See the Cypher <<query-delete, DELETE>> clause.""".stripMargin)
       p("include::grant-delete-syntax.asciidoc[]")
 
       p(
@@ -130,7 +132,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
         statsOnlyResultTable()
       }
       note {
-        p("If no instances of this label exist on the database, then the <<administration-security-administration-database-tokens, CREATE NEW LABEL>> privilege is also required.")
+        p("If no instances of this label exist in the database, then the <<administration-security-administration-database-tokens, CREATE NEW LABEL>> privilege is also required.")
       }
     }
 
@@ -185,7 +187,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       }
       note {
         p(
-          """If the users attempts to set a property with a property name that does not already exist on the database the user must also possess the
+          """If the users attempts to set a property with a property name that does not already exist in the database the user must also possess the
             |<<administration-security-administration-database-tokens, CREATE NEW PROPERTY NAME>> privilege.""".stripMargin)
       }
     }
@@ -210,7 +212,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
       note {
         p(
-          """If the users attempts to create nodes with a label that does not already exist on the database the user must also possess the
+          """If the users attempts to create nodes with a label that does not already exist in the database the user must also possess the
             |<<administration-security-administration-database-tokens, CREATE NEW LABEL>> privilege. The same applies to new relationships and properties - the
             |<<administration-security-administration-database-tokens, CREATE NEW RELATIONSHIP TYPE>> or
             |<<administration-security-administration-database-tokens, CREATE NEW PROPERTY NAME>> privileges are required.""".stripMargin)
