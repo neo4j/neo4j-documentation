@@ -37,7 +37,7 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 ** <<administration-security-writes-set-property, The `SET PROPERTY` privilege>>
 ** <<administration-security-writes-merge, The `MERGE` privilege>>
 ** <<administration-security-writes-write, The `WRITE` privilege>>
-** <<administration-security-writes-all, `ALL GRAPH PRIVILEGES`>>
+** <<administration-security-writes-all, The `ALL GRAPH PRIVILEGES` privilege>>
 * <<administration-security-administration, Security of administration>>
 ** <<administration-security-administration-introduction, The `admin` role>>
 ** <<administration-security-administration-database-privileges, Database administration>>

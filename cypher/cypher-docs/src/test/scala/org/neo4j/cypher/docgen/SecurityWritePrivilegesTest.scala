@@ -25,15 +25,15 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
         |* <<administration-security-writes-set-property, The `SET PROPERTY` privilege>>
         |* <<administration-security-writes-merge, The `MERGE` privilege>>
         |* <<administration-security-writes-write, The `WRITE` privilege>>
-        |* <<administration-security-writes-all, `ALL GRAPH PRIVILEGES`>>
+        |* <<administration-security-writes-all, The `ALL GRAPH PRIVILEGES` privilege>>
         |""".stripMargin)
 
         p(
       """
         |Write privileges are defined for different parts of the graph:
         |
-        |* `CREATE` - allows creating nodes and relationships
-        |* `DELETE` - allows deleting nodes and relationships
+        |* `CREATE` - allows creating nodes and relationships.
+        |* `DELETE` - allows deleting nodes and relationships.
         |* `SET LABEL labels` - allows setting the specified node labels using the `SET` clause.
         |* `REMOVE LABEL labels` - allows removing the specified node labels using the `REMOVE` clause.
         |* `SET PROPERTY +{props}+` - allows setting properties on nodes and relationships.
@@ -47,7 +47,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
     section("The `CREATE` privilege", "administration-security-writes-create", "enterprise-edition") {
       p(
-        """The `CREATE` privilege enables a user to create new node and relationship elements in a graph. See <<query-create, CREATE>>""".stripMargin)
+        """The `CREATE` privilege enables a user to create new node and relationship elements in a graph. See <<query-create, CREATE>>.""".stripMargin)
       p("include::grant-create-syntax.asciidoc[]")
 
       p(
@@ -68,7 +68,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
         statsOnlyResultTable()
       }
       note {
-        p("If the users attempts to create nodes with a label that does not already exist on the database the user must also possess the " +
+        p("If the user attempts to create nodes with a label that does not already exist on, then the database the user must also possess the " +
           "<<administration-security-administration-database-tokens, CREATE NEW LABEL>> privilege. The same applies to new relationships - the " +
           "<<administration-security-administration-database-tokens, CREATE NEW RELATIONSHIP TYPE>> privilege is required.")
       }
@@ -98,7 +98,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       }
       note {
         p(
-          """Users with `DELETE` privilege but restricted `TRAVERSE` privileges will not be able to do `DETACH DELETE` in all cases.
+          """Users with `DELETE` privilege, but restricted `TRAVERSE` privileges, will not be able to do `DETACH DELETE` in all cases.
             | See <<operations-manual#detach-delete-restricted-user, Operations Manual -> Fine-grained access control>> for more info.""".stripMargin)
       }
     }
@@ -202,7 +202,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
         statsOnlyResultTable()
       }
 
-      p("It is not possible to deny the `MERGE` privilege. If it is desirable to prevent a users from creating elements and setting properties use " +
+      p("It is not possible to deny the `MERGE` privilege. If it is desirable to prevent a users from creating elements and setting properties, use " +
         "<<administration-security-writes-create, DENY CREATE>> or <<administration-security-writes-set-property,DENY SET PROPERTY>>.")
 
       note {
@@ -227,7 +227,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       }
       note {
         p("Unlike the more specific write commands, it is not possible to restrict `WRITE` privileges to specific ELEMENTS, NODES or RELATIONSHIPS. If it is " +
-        "desirable to prevent a user from writing to a subset of database objects, a `GRANT WRITE` can be combined with more specific DENYs targeting these elements.")
+        "desirable to prevent a user from writing to a subset of database objects, a `GRANT WRITE` can be combined with more specific `DENY` commands to target these elements.")
       }
 
       p("The `WRITE` privilege can also be denied.")
@@ -260,7 +260,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       }
       note {
         p("Unlike the more specific read and write commands, it is not possible to restrict `ALL GRAPH PRIVILEGES` privileges to specific ELEMENTS, NODES or RELATIONSHIPS. If it is " +
-          "desirable to prevent a user from reading or writing to a subset of database objects, a `GRANT ALL GRAPH PRIVILEGES` can be combined with more specific DENYs targeting these elements.")
+          "desirable to prevent a user from reading or writing to a subset of database objects, a `GRANT ALL GRAPH PRIVILEGES` can be combined with more specific `DENY` commands to target these elements.")
       }
 
       p("The `ALL GRAPH PRIVILEGES` privilege can also be denied.")
