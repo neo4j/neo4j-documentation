@@ -91,8 +91,18 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
             |* The results have been filtered to only return the 'admin' role using a `WHERE` clause
             |* The results are ordered by the 'action' column using `ORDER BY`
             |
-            |It is also possible to use `SKIP` and `LIMIT` to paginate the results.
+            |`SKIP` and `LIMIT` can also be used to paginate the results.
             |""".stripMargin)
+        resultTable()
+      }
+
+      p("`WHERE` can be used without `YIELD`")
+      query("SHOW PRIVILEGES WHERE graph <> '*' ", assertPrivilegeShown(Seq(
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "graph" -> "neo4j"),
+        Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers", "graph" -> "neo4j")
+      ))) {
+        p(
+          """In this example the `WHERE` clause is used to filter privileges down to those that target specific graphs only""".stripMargin)
         resultTable()
       }
 
