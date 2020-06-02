@@ -19,13 +19,12 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-class GraphPrivilegeTest extends AdministrationCommandTestBase {
-  val title = "(★) Graph privileges"
-  override val linkId = "administration/security/subgraph"
+class GraphReadPrivilegeTest extends AdministrationCommandTestBase {
+  val title = "(★) Graph read privileges"
+  override val linkId = "administration/security/reads"
 
   private def setup() = graph.withTx { tx =>
     tx.execute("CREATE ROLE my_role")
-    tx.execute("GRANT WRITE ON GRAPH * TO my_role")
     tx.execute("CREATE DATABASE foo")
   }
 
@@ -55,15 +54,7 @@ GRANT MATCH {*} ON GRAPH foo ELEMENTS Label TO my_role
 ###
 
 Grant `read` privilege on all properties and `traverse` privilege to a role.
-Here, both privileges apply to all nodes with a specified label in the graph.
-
-###assertion=update-two
-//
-
-REVOKE WRITE ON GRAPH * FROM my_role
-###
-
-Revoke `write` privilege on all graphs from a role.
+Here, both privileges apply to all nodes and relationships with a specified label/type in the graph.
 
 """
   }
