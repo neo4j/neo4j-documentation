@@ -1,14 +1,14 @@
 .User management command syntax
-[options="header", width="100%", cols="5a,3,1,^,^."]
+[options="header", width="100%", cols="5a,3,2,^,^."]
 |===
-| Command | Description | Type of user | Community Edition | Enterprise Edition
+| Command | Description | Required privilege | Community Edition | Enterprise Edition
 
 | [source, cypher]
 ----
 SHOW USERS
 ----
 | List all users.
-| Admin
+| <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
 | `+`
 | `+`
 
@@ -16,17 +16,34 @@ SHOW USERS
 ----
 SHOW USER [name] PRIVILEGES
 ----
-| List the privileges granted to a user. | Admin | `-` | `+`
+| List the privileges granted to a user.
+| <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>> and
+<<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
+| `-`
+| `+`
 
 | [source, cypher]
 ----
-CREATE [OR REPLACE] USER name [IF NOT EXISTS]
+CREATE USER name [IF NOT EXISTS]
   SET PASSWORD password
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
 ----
 | Create a new user.
-| Admin
+| <<administration-security-administration-dbms-privileges-user-management, CREATE USER>>
+| `+`
+| `+`
+
+| [source, cypher]
+----
+CREATE OR REPLACE USER name
+  SET PASSWORD password
+  [[SET PASSWORD] CHANGE [NOT] REQUIRED]
+  [SET STATUS {ACTIVE \| SUSPENDED}]
+----
+| Create a new user.
+| <<administration-security-administration-dbms-privileges-user-management, CREATE USER>> and
+<<administration-security-administration-dbms-privileges-user-management, DROP USER>>
 | `+`
 | `+`
 
@@ -41,7 +58,8 @@ PASSWORD CHANGE [NOT] REQUIRED
 STATUS {ACTIVE \| SUSPENDED}
 ----
 | Modify the settings for an existing user.
-| Admin
+| <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>> and/or
+<<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>>
 | `+`
 | `+`
 
@@ -50,7 +68,7 @@ STATUS {ACTIVE \| SUSPENDED}
 ALTER CURRENT USER SET PASSWORD FROM original TO password
 ----
 | Change the current user's password.
-| Normal user
+| None
 | `+`
 | `+`
 
@@ -60,7 +78,7 @@ ALTER CURRENT USER SET PASSWORD FROM original TO password
 DROP USER name [IF EXISTS]
 ----
 | Remove an existing user.
-| Admin
+| <<administration-security-administration-dbms-privileges-user-management, DROP USER>>
 | `+`
 | `+`
 |===
