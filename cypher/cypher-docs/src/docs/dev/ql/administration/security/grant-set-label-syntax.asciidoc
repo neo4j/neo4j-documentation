@@ -1,0 +1,7 @@
+.Command syntax
+[source, cypher]
+-----
+GRANT SET LABEL {label [, ...] | *}
+    ON GRAPH[S] {name [, ...] | *}
+    TO role [, ...]
+-----

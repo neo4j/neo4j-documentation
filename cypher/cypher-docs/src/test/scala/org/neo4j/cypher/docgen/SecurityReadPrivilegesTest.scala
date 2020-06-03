@@ -14,7 +14,7 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
       "GRANT ROLE regularUsers TO jake",
       "GRANT ACCESS ON DATABASE neo4j TO regularUsers"
     )
-    synopsis("This section explains how to use Cypher to manage read privileges for Neo4j.")
+    synopsis("This section explains how to use Cypher to manage read privileges on graphs.")
 
     p(
       """
@@ -27,15 +27,15 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
       """
         |There are three separate read privileges:
         |
-        |* `TRAVERSE` - allows the specified entities to be found.
-        |* `READ +{props}+` - allows the specified properties on the found entities to be read.
-        |* `MATCH +{props}+` - combines both `TRAVERSE` and `READ`, allowing an entity to be found and its properties read.
+        |* `TRAVERSE` - enables the specified entities to be found.
+        |* `READ +{props}+` - enables the specified properties on the found entities to be read.
+        |* `MATCH +{props}+` - combines both `TRAVERSE` and `READ`, enabling an entity to be found and its properties read.
         |""".stripMargin)
 
     section("The `TRAVERSE` privilege", "administration-security-reads-traverse", "enterprise-edition") {
       p("Users can be granted the right to find nodes and relationships using the `GRANT TRAVERSE` privilege.")
       p("include::grant-traverse-syntax.asciidoc[]")
-      p("For example, we can allow the user `jake`, who has role 'regularUsers' to find all nodes with the label `Post`.")
+      p("For example, we can enable the user `jake`, who has role 'regularUsers' to find all nodes with the label `Post`.")
       query("GRANT TRAVERSE ON GRAPH neo4j NODES Post TO regularUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
@@ -44,7 +44,7 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
 
       p("The `TRAVERSE` privilege can also be denied.")
       p("include::deny-traverse-syntax.asciidoc[]")
-      p("For example, we can disallow the user `jake`, who has role 'regularUsers' to find all nodes with the label `Payments`.")
+      p("For example, we can disable the user `jake`, who has role 'regularUsers' from finding all nodes with the label `Payments`.")
       query("DENY TRAVERSE ON GRAPH neo4j NODES Payments TO regularUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
@@ -55,11 +55,11 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
     section("The `READ` privilege", "administration-security-reads-read", "enterprise-edition") {
       p(
         """Users can be granted the right to do property reads on nodes and relationships using the `GRANT READ` privilege.
-          |It is very important to note that users can only read properties on entities that they are allowed to find in the first place.""".stripMargin)
+          |It is very important to note that users can only read properties on entities that they are enabled to find in the first place.""".stripMargin)
       p("include::grant-read-syntax.asciidoc[]")
 
       p(
-        """For example, we can allow the user `jake`, who has role 'regularUsers' to read all properties on nodes with the label `Post`.
+        """For example, we can enable the user `jake`, who has role 'regularUsers' to read all properties on nodes with the label `Post`.
           |The `*` implies that the ability to read all properties also extends to properties that might be added in the future.""".stripMargin)
       query("GRANT READ { * } ON GRAPH neo4j NODES Post TO regularUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
@@ -105,8 +105,9 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
 
       p(
         """Please note that the effect of denying a `MATCH` privilege depends on whether concrete property keys are specified or a `*`.
-          |If you specify concrete property keys then `DENY MATCH` will only deny reading those properties. Finding the elements to traverse would still be allowed.
-          |If you specify `*` instead then both traversal of the element and all property reads will be disallowed.
+          |If you specify concrete property keys then `DENY MATCH` will only deny reading those properties.
+          |Finding the elements to traverse would still be enabled.
+          |If you specify `*` instead then both traversal of the element and all property reads will be disabled.
           |The following queries will show examples for this.""".stripMargin)
 
       p(
