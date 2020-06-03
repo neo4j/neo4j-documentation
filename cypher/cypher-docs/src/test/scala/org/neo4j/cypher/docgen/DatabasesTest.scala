@@ -120,9 +120,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         assertStats(r, systemUpdates = 0)
       })) {}
       p("The `DROP DATABASE` command will remove a database entirely. " +
-        "However you may request that a dump of the store files is produced first, and stored in the path configured using the setting `dbms.directories.dumps.root` (by default `<neo4j-home>/data/dumps`). " +
-        "This may be achieved by appending `DUMP DATA` to the command (or `DESTROY DATA` to explicitly request the default behaviour). " +
-        "These dumps are equivalent to those produced by `neo4j-admin dump` and may be similarly restored using `neo4j-admin load`.")
+        "However, you can request that a dump of the store files is produced first, and stored in the path configured using the `dbms.directories.dumps.root` setting (by default `<neo4j-home>/data/dumps`). " +
+        "This can be achieved by appending `DUMP DATA` to the command (or `DESTROY DATA` to explicitly request the default behaviour). " +
+        "These dumps are equivalent to those produced by `neo4j-admin dump` and can be similarly restored using `neo4j-admin load`.")
       query("DROP DATABASE customers DUMP DATA", ResultAssertions(r => {
         assertStats(r, systemUpdates = 0)
       })) {}
