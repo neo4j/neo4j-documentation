@@ -68,6 +68,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       ))) {
         resultTable()
       }
+      p("If the built-in admin role has been altered or dropped, and needs to be restored to its original state, see " +
+        "<<operations-manual#password-and-user-recovery, Operations Manual -> Password and user recovery>>.")
     }
     section("Database administration", "administration-security-administration-database-privileges", "enterprise-edition") {
       p("include::database/admin-role-database.asciidoc[]")
