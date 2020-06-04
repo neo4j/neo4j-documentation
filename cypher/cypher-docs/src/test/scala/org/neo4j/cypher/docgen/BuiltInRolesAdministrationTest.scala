@@ -24,7 +24,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         |* <<administration-built-in-roles-admin, The `admin` role>>
         |""".stripMargin)
     section("The `PUBLIC` role", "administration-built-in-roles-public", "enterprise-edition") {
-      p("All users are granted the `PUBLIC` role. It cannot be revoked or dropped. By default it gives access to the default database.")
+      p("All users are granted the `PUBLIC` role, and it can not be revoked or dropped. By default, it gives access to the default database.")
       section("Privileges of the `PUBLIC` role", "administration-built-in-roles-public-privileges", "enterprise-edition") {
         query("SHOW ROLE PUBLIC PRIVILEGES", ResultAssertions(p => true)) {
           resultTable()
