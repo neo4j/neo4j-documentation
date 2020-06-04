@@ -12,7 +12,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
 
     p(
       """All of the commands described in this chapter require that the user executing the commands has the rights to do so.
-        |The privileges listed in the following sections are the default set of privileges for each built-in role.
+        |The privileges listed in the following sections are the default set of privileges for each built-in role:
         |""".stripMargin)
     p(
       """
