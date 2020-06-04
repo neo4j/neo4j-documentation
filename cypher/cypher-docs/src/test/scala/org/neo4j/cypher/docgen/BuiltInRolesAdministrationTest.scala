@@ -11,7 +11,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
     synopsis("This section explains the default privileges of the built-in roles in Neo4j and how to recreate them if needed.")
 
     p(
-      """All of the commands described in the enclosing section require that the user executing the commands has the rights to do so.
+      """All of the commands described in this chapter require that the user executing the commands has the rights to do so.
         |The privileges listed in the following sections are the default set of privileges for each built-in role.
         |""".stripMargin)
     p(
