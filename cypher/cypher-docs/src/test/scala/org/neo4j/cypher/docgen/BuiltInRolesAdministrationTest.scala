@@ -296,9 +296,9 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           statsOnlyResultTable()
         }
 
-        p("All of the queries above are enough to grant (almost) full admin capabilities. " +
+        p("The queries above are enough to grant most of the full admin capabilities. " +
           "Please note that the result of executing `SHOW ROLE admin PRIVILEGES` now appears to be slightly different from " +
-          "the privileges shown for the <<administration-built-in-roles-admin-privileges,original built-in `admin` role>>. This does not make any functional difference.")
+          "the privileges shown for the original built-in `admin` role. This does not make any functional difference.")
 
         query("SHOW ROLE admin PRIVILEGES",ResultAssertions(p => true)) {
           resultTable()
