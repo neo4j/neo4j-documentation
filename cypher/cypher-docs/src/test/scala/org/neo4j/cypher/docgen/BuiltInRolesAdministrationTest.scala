@@ -25,26 +25,26 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         |""".stripMargin)
     section("The `PUBLIC` role", "administration-built-in-roles-public", "enterprise-edition") {
       p("All users are granted the `PUBLIC` role, and it can not be revoked or dropped. By default, it gives access to the default database.")
-      section("Privileges of the `PUBLIC` role", "administration-built-in-roles-public-privileges", "enterprise-edition") {
+      section("Privileges of the `PUBLIC` role", "administration-built-in-roles-public-privileges") {
         query("SHOW ROLE PUBLIC PRIVILEGES", ResultAssertions(p => true)) {
           resultTable()
         }
       }
-      section("How to recreate the `PUBLIC` role", "administration-built-in-roles-public-recreate", "enterprise-edition") {
+      section("How to recreate the `PUBLIC` role", "administration-built-in-roles-public-recreate") {
         initQueries(
           """REVOKE GRANT ACCESS ON DEFAULT DATABASE FROM PUBLIC""")  // setup so that later when the grant query gets executed, it will show systemUpdates: 1
         p(
           """The `PUBLIC` role can not be dropped and thus there is no need to recreate the role itself.
             |To restore the role to its original capabilities, two steps are needed. First, all `GRANT` or `DENY` privileges on this role should be revoked (see output of `SHOW ROLE PUBLIC PRIVILEGES` on what to revoke).
-            |Secondly, the following query need to be executed:""".stripMargin)
+            |Secondly, the following query must be run:""".stripMargin)
         query("GRANT ACCESS ON DEFAULT DATABASE TO PUBLIC", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
 
-        p("The resulting `PUBLIC` role has the same privileges as the " +
-          "<<administration-built-in-roles-public-privileges,original built-in `PUBLIC` role>>.")
+        p("The resulting `PUBLIC` role now has the same privileges as the " +
+          "original built-in `PUBLIC` role.")
 
 //        query("SHOW ROLE PUBLIC PRIVILEGES", ResultAssertions(p => true)) {
 //          resultTable()
@@ -52,19 +52,19 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       }
     }
     section("The `reader` role", "administration-built-in-roles-reader", "enterprise-edition") {
-      p("The `reader` can perform read-only queries on all graphs except for the `system` database.")
-      section("Privileges of the `reader` role", "administration-built-in-roles-reader-privileges", "enterprise-edition") {
+      p("The `reader` role can perform read-only queries on all graphs except for the `system` database.")
+      section("Privileges of the `reader` role", "administration-built-in-roles-reader-privileges") {
         query("SHOW ROLE reader PRIVILEGES", ResultAssertions(p => true)) {
           resultTable()
         }
       }
-      section("How to recreate the `reader` role", "administration-built-in-roles-reader-recreate", "enterprise-edition") {
+      section("How to recreate the `reader` role", "administration-built-in-roles-reader-recreate") {
         initQueries(
           "DROP ROLE reader")  // setup so that later when the grant query gets executed, it will show systemUpdates: 1
         p(
           """
-            |To restore the role to its original capabilities two steps are needed: First, if not already done, execute `DROP ROLE reader`.
-            |Secondly, the following queries need to be executed:""".stripMargin)
+            |To restore the role to its original capabilities two steps are needed. First, if not already done, execute `DROP ROLE reader`.
+            |Secondly, the following queries must be run:""".stripMargin)
 
         query("CREATE ROLE reader", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
@@ -82,8 +82,8 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           statsOnlyResultTable()
         }
 
-        p("The resulting `reader` role has the same privileges as the " +
-          "<<administration-built-in-roles-reader-privileges,original built-in `reader` role>>.")
+        p("The resulting `reader` role now has the same privileges as the " +
+          "original built-in `reader` role.")
 
 //        query("SHOW ROLE reader PRIVILEGES", ResultAssertions(p => true)) {
 //          resultTable()
@@ -91,19 +91,19 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       }
     }
     section("The `editor` role", "administration-built-in-roles-editor", "enterprise-edition") {
-      p("The `editor` can perform read and write operations on all graphs except for the `system` database, but cannot make new labels, property keys or relationship types.")
-      section("Privileges of the `editor` role", "administration-built-in-roles-editor-privileges", "enterprise-edition") {
+      p("The `editor` role can perform read and write operations on all graphs except for the `system` database, but can not make new labels, property keys or relationship types.")
+      section("Privileges of the `editor` role", "administration-built-in-roles-editor-privileges") {
         query("SHOW ROLE editor PRIVILEGES", ResultAssertions(p => true)) {
           resultTable()
         }
       }
-      section("How to recreate the `editor` role", "administration-built-in-roles-editor-recreate", "enterprise-edition") {
+      section("How to recreate the `editor` role", "administration-built-in-roles-editor-recreate") {
         initQueries(
           "DROP ROLE editor")  // setup so that later when the grant query gets executed, it will show systemUpdates: 1
         p(
           """
-            |To restore the role to its original capabilities two steps are needed: First, if not already done, execute `DROP ROLE editor`.
-            |Secondly, the following queries need to be executed:""".stripMargin)
+            |To restore the role to its original capabilities two steps are needed. First, if not already done, execute `DROP ROLE editor`.
+            |Secondly, the following queries must be run:""".stripMargin)
         query("CREATE ROLE editor", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -125,8 +125,8 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           statsOnlyResultTable()
         }
 
-        p("The resulting `editor` role has the same privileges as the " +
-          "<<administration-built-in-roles-editor-privileges,original built-in `editor` role>>.")
+        p("The resulting `editor` role now has the same privileges as the " +
+          "original built-in `editor` role.")
 
 //        query("SHOW ROLE editor PRIVILEGES", ResultAssertions(p => true)) {
 //          resultTable()
@@ -134,7 +134,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       }
     }
     section("The `publisher` role", "administration-built-in-roles-publisher", "enterprise-edition") {
-      p("The `publisher` can do the same as <<administration-built-in-roles-editor,`editor`>>, but also create new labels, property keys and relationship types.")
+      p("The `publisher` role can do the same as <<administration-built-in-roles-editor,`editor`>>, but can also create new labels, property keys and relationship types.")
       section("Privileges of the `publisher` role", "administration-built-in-roles-publisher-privileges", "enterprise-edition") {
         query("SHOW ROLE publisher PRIVILEGES", ResultAssertions(p => true)) {
           resultTable()
