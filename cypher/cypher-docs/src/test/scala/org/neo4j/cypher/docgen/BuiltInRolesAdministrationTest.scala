@@ -253,8 +253,8 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           " Because of that, dropping the `admin` role is strongly discouraged."))
         p(
           """
-            |To restore the role to its original capabilities (minus the ability to run admin procedures) two steps are needed: First, if not already done, execute `DROP ROLE admin`.
-            |Secondly, the following queries need to be executed in order to set up the privileges:""".stripMargin)
+            |To restore the role to its original capabilities (minus the ability to run admin procedures) two steps are needed. First, if not already done, execute `DROP ROLE admin`.
+            |Secondly, the following queries must be run in order to set up the privileges:""".stripMargin)
         query("CREATE ROLE admin", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
