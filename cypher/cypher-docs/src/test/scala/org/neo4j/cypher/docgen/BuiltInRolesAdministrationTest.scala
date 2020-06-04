@@ -248,7 +248,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       section("How to recreate the `admin` role", "administration-built-in-roles-admin-recreate", "enterprise-edition") {
         initQueries(
           "DROP ROLE admin")  // setup so that later when the grant query gets executed, it will show systemUpdates: 1
-        note(p("In Neo4j 4.1.0 it is *not* possible to fully recreate a dropped admin role. " +
+        note(p("In Neo4j {neo4j-version-exact} it is *not* possible to fully recreate a dropped `admin` role. " +
           "Specifically, the ability to run procedures with the `@Admin` annotation like e.g. `dbms.listConfig` can *not* be restored." +
           " Because of that, it is highly discouraged to drop the admin role."))
         p(
