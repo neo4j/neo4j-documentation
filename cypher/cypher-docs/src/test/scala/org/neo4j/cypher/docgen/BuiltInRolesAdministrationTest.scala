@@ -249,8 +249,8 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         initQueries(
           "DROP ROLE admin")  // setup so that later when the grant query gets executed, it will show systemUpdates: 1
         note(p("In Neo4j {neo4j-version-exact} it is *not* possible to fully recreate a dropped `admin` role. " +
-          "Specifically, the ability to run procedures with the `@Admin` annotation like e.g. `dbms.listConfig` can *not* be restored." +
-          " Because of that, it is highly discouraged to drop the admin role."))
+          "Specifically, the ability to run procedures with the `@Admin` annotation, such as  `dbms.listConfig`, can *not* be restored." +
+          " Because of that, dropping the `admin` role is strongly discouraged."))
         p(
           """
             |To restore the role to its original capabilities (minus the ability to run admin procedures) two steps are needed: First, if not already done, execute `DROP ROLE admin`.
