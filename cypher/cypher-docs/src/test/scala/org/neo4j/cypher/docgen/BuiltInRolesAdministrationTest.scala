@@ -135,18 +135,18 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
     }
     section("The `publisher` role", "administration-built-in-roles-publisher", "enterprise-edition") {
       p("The `publisher` role can do the same as <<administration-built-in-roles-editor,`editor`>>, but can also create new labels, property keys and relationship types.")
-      section("Privileges of the `publisher` role", "administration-built-in-roles-publisher-privileges", "enterprise-edition") {
+      section("Privileges of the `publisher` role", "administration-built-in-roles-publisher-privileges") {
         query("SHOW ROLE publisher PRIVILEGES", ResultAssertions(p => true)) {
           resultTable()
         }
       }
-      section("How to recreate the `publisher` role", "administration-built-in-roles-publisher-recreate", "enterprise-edition") {
+      section("How to recreate the `publisher` role", "administration-built-in-roles-publisher-recreate") {
         initQueries(
           "DROP ROLE publisher")  // setup so that later when the grant query gets executed, it will show systemUpdates: 1
         p(
           """
-            |To restore the role to its original capabilities two steps are needed: First, if not already done, execute `DROP ROLE publisher`.
-            |Secondly, the following queries need to be executed:""".stripMargin)
+            |To restore the role to its original capabilities two steps are needed. First, if not already done, execute `DROP ROLE publisher`.
+            |Secondly, the following queries must be run:""".stripMargin)
         query("CREATE ROLE publisher", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -173,8 +173,8 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           statsOnlyResultTable()
         }
 
-        p("The resulting `publisher` role has the same privileges as the " +
-          "<<administration-built-in-roles-publisher-privileges,original built-in `publisher` role>>.")
+        p("The resulting `publisher` role now has the same privileges as the " +
+          "original built-in `publisher` role.")
 
 //        query("SHOW ROLE publisher PRIVILEGES", ResultAssertions(p => true)) {
 //          resultTable()
@@ -182,19 +182,19 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       }
     }
     section("The `architect` role", "administration-built-in-roles-architect", "enterprise-edition") {
-      p("The `architect` can do the same as the <<administration-built-in-roles-publisher,`publisher`>> as well as create and manage indexes and constraints.")
-      section("Privileges of the `architect` role", "administration-built-in-roles-architect-privileges", "enterprise-edition") {
+      p("The `architect` role can do the same as the <<administration-built-in-roles-publisher,`publisher`>>, as well as create and manage indexes and constraints.")
+      section("Privileges of the `architect` role", "administration-built-in-roles-architect-privileges") {
         query("SHOW ROLE architect PRIVILEGES",ResultAssertions(p => true)) {
           resultTable()
         }
       }
-      section("How to recreate the `architect` role", "administration-built-in-roles-architect-recreate", "enterprise-edition") {
+      section("How to recreate the `architect` role", "administration-built-in-roles-architect-recreate") {
         initQueries(
           "DROP ROLE architect")  // setup so that later when the grant query gets executed, it will show systemUpdates: 1
         p(
           """
-            |To restore the role to its original capabilities two steps are needed: First, if not already done, execute `DROP ROLE architect`.
-            |Secondly, the following queries need to be executed:""".stripMargin)
+            |To restore the role to its original capabilities two steps are needed. First, if not already done, execute `DROP ROLE architect`.
+            |Secondly, the following queries must be run:""".stripMargin)
         query("CREATE ROLE architect", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -230,8 +230,8 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting `architect` role has the same privileges as the " +
-          "<<administration-built-in-roles-architect-privileges,original built-in `architect` role>>.")
+        p("The resulting `architect` role now has the same privileges as the " +
+          "original built-in `architect` role.")
 
 //        query("SHOW ROLE architect PRIVILEGES", ResultAssertions(p => true)) {
 //          resultTable()
@@ -239,13 +239,13 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       }
     }
     section("The `admin` role", "administration-built-in-roles-admin", "enterprise-edition") {
-      p("The `admin` can do the same as  the <<administration-built-in-roles-architect,`architect`>>, as well as manage databases, users, roles and privileges.")
-      section("Privileges of the `admin` role", "administration-built-in-roles-admin-privileges", "enterprise-edition") {
+      p("The `admin` role can do the same as the <<administration-built-in-roles-architect,`architect`>>, as well as manage databases, users, roles and privileges.")
+      section("Privileges of the `admin` role", "administration-built-in-roles-admin-privileges") {
         query("SHOW ROLE admin PRIVILEGES",ResultAssertions(p => true)) {
           resultTable()
         }
       }
-      section("How to recreate the `admin` role", "administration-built-in-roles-admin-recreate", "enterprise-edition") {
+      section("How to recreate the `admin` role", "administration-built-in-roles-admin-recreate") {
         initQueries(
           "DROP ROLE admin")  // setup so that later when the grant query gets executed, it will show systemUpdates: 1
         note(p("In Neo4j {neo4j-version-exact} it is *not* possible to fully recreate a dropped `admin` role. " +
