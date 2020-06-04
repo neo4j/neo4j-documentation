@@ -52,7 +52,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       }
     }
     section("The `reader` role", "administration-built-in-roles-reader", "enterprise-edition") {
-      p("The `reader` can perform read-only queries on all databases except `system`.")
+      p("The `reader` can perform read-only queries on all graphs except for the `system` database.")
       section("Privileges of the `reader` role", "administration-built-in-roles-reader-privileges", "enterprise-edition") {
         query("SHOW ROLE reader PRIVILEGES", ResultAssertions(p => true)) {
           resultTable()
@@ -76,13 +76,8 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT MATCH {*} ON GRAPH * NODES * TO reader", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
-        })) {
-          statsOnlyResultTable()
-        }
-        query("GRANT MATCH {*} ON GRAPH * RELATIONSHIPS * TO reader", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
+        query("GRANT MATCH {*} ON GRAPH * TO reader", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
@@ -96,7 +91,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       }
     }
     section("The `editor` role", "administration-built-in-roles-editor", "enterprise-edition") {
-      p("The `editor` can perform read and write operations on all databases except `system`, but cannot make new labels or relationship types.")
+      p("The `editor` can perform read and write operations on all graphs except for the `system` database, but cannot make new labels, property keys or relationship types.")
       section("Privileges of the `editor` role", "administration-built-in-roles-editor-privileges", "enterprise-edition") {
         query("SHOW ROLE editor PRIVILEGES", ResultAssertions(p => true)) {
           resultTable()
@@ -119,13 +114,8 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT MATCH {*} ON GRAPH * NODES * TO editor", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
-        })) {
-          statsOnlyResultTable()
-        }
-        query("GRANT MATCH {*} ON GRAPH * RELATIONSHIPS * TO editor", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
+        query("GRANT MATCH {*} ON GRAPH * TO editor", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
@@ -144,7 +134,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       }
     }
     section("The `publisher` role", "administration-built-in-roles-publisher", "enterprise-edition") {
-      p("The `publisher` can do the same as <<administration-built-in-roles-editor,`editor`>>, but also create new labels and relationship types.")
+      p("The `publisher` can do the same as <<administration-built-in-roles-editor,`editor`>>, but also create new labels, property keys and relationship types.")
       section("Privileges of the `publisher` role", "administration-built-in-roles-publisher-privileges", "enterprise-edition") {
         query("SHOW ROLE publisher PRIVILEGES", ResultAssertions(p => true)) {
           resultTable()
@@ -167,13 +157,8 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT MATCH {*} ON GRAPH * NODES * TO publisher", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
-        })) {
-          statsOnlyResultTable()
-        }
-        query("GRANT MATCH {*} ON GRAPH * RELATIONSHIPS * TO publisher", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
+        query("GRANT MATCH {*} ON GRAPH * TO publisher", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
@@ -220,13 +205,8 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT MATCH {*} ON GRAPH * NODES * TO architect", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
-        })) {
-          statsOnlyResultTable()
-        }
-        query("GRANT MATCH {*} ON GRAPH * RELATIONSHIPS * TO architect", ResultAssertions((r) => {
-          assertStats(r, systemUpdates = 1)
+        query("GRANT MATCH {*} ON GRAPH * TO architect", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
@@ -250,7 +230,6 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         })) {
           statsOnlyResultTable()
         }
-
         p("The resulting `architect` role has the same privileges as the " +
           "<<administration-built-in-roles-architect-privileges,original built-in `architect` role>>.")
 
@@ -274,7 +253,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           " Because of that, it is highly discouraged to drop the admin role."))
         p(
           """
-            |To restore the role to its original capabilities (minus the ability to run admin procedures) the  two steps are needed: First, if not already done, execute `DROP ROLE admin`.
+            |To restore the role to its original capabilities (minus the ability to run admin procedures) two steps are needed: First, if not already done, execute `DROP ROLE admin`.
             |Secondly, the following queries need to be executed in order to set up the privileges:""".stripMargin)
         query("CREATE ROLE admin", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
