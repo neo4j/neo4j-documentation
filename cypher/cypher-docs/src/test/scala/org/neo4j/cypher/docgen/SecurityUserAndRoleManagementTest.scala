@@ -198,13 +198,13 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           resultTable()
 
         }
-        p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`")
+        p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`.")
         query("SHOW ROLES YIELD role ORDER BY role WHERE role ENDS WITH 'r' ", assertRolesShown(Seq("reader", "editor", "publisher"))) {
           p(
             """In this example:
               |
-              |* The results have been filtered to only return the roles ending in 'r'
-              |* The results are ordered by the 'action' column using `ORDER BY`
+              |* The results have been filtered to only return the roles ending in 'r'.
+              |* The results are ordered by the 'action' column using `ORDER BY`.
               |
               |It is also possible to use `SKIP` and `LIMIT` to paginate the results.
               |""".stripMargin)

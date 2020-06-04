@@ -78,7 +78,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         resultTable()
       }
 
-      p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`")
+      p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`.")
       query("SHOW PRIVILEGES YIELD role, access, action ORDER BY action WHERE role = 'admin' ", assertPrivilegeShown(Seq(
         Map("access" -> "GRANTED", "action" -> "access", "role" -> "admin"),
         Map("access" -> "GRANTED", "action" -> "write", "role" -> "admin")
@@ -86,10 +86,10 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         p(
           """In this example:
             |
-            |* The number of columns returned has been reduced with the `YIELD` clause
-            |* The order of the returned columns has been changed
-            |* The results have been filtered to only return the 'admin' role using a `WHERE` clause
-            |* The results are ordered by the 'action' column using `ORDER BY`
+            |* The number of columns returned has been reduced with the `YIELD` clause.
+            |* The order of the returned columns has been changed.
+            |* The results have been filtered to only return the 'admin' role using a `WHERE` clause.
+            |* The results are ordered by the 'action' column using `ORDER BY`.
             |
             |`SKIP` and `LIMIT` can also be used to paginate the results.
             |""".stripMargin)
@@ -102,7 +102,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers", "graph" -> "neo4j")
       ))) {
         p(
-          """In this example the `WHERE` clause is used to filter privileges down to those that target specific graphs only""".stripMargin)
+          """In this example the `WHERE` clause is used to filter privileges down to those that target specific graphs only.""".stripMargin)
         resultTable()
       }
 

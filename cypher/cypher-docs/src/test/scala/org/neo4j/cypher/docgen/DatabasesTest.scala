@@ -48,16 +48,16 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DEFAULT DATABASE", assertDatabaseShown("neo4j")) {
         resultTable()
       }
-      p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`")
+      p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`.")
       query("SHOW DATABASES YIELD name, currentStatus, requestedStatus ORDER BY currentStatus WHERE name CONTAINS 'e'",
         assertDatabaseShown("neo4j", "system", "movies")) {
         p(
           """In this example:
             |
-            |* The number of columns returned has been reduced with the `YIELD` clause
-            |* The order of the returned columns has been changed
-            |* The results have been filtered to only show database names containing 'e'
-            |* The results are ordered by the 'currentStatus' column using `ORDER BY`
+            |* The number of columns returned has been reduced with the `YIELD` clause.
+            |* The order of the returned columns has been changed.
+            |* The results have been filtered to only show database names containing 'e'.
+            |* The results are ordered by the 'currentStatus' column using `ORDER BY`.
             |
             |It is also possible to use `SKIP` and `LIMIT` to paginate the results.
             |""".stripMargin)
