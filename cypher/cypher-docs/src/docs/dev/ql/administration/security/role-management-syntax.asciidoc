@@ -6,6 +6,8 @@
 | [source, cypher]
 ----
 SHOW [ALL\|POPULATED] ROLES
+    [YIELD field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
 ----
 | List roles.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>
@@ -13,6 +15,8 @@ SHOW [ALL\|POPULATED] ROLES
 | [source, cypher]
 ----
 SHOW [ALL\|POPULATED] ROLES WITH USERS
+    [YIELD field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
 ----
 | List roles and users assigned to them.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> and
