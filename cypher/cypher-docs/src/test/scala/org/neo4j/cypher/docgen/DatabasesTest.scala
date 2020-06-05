@@ -13,6 +13,10 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def doc: Document = new DocBuilder {
     doc("Databases", "administration-databases")
     database("system")
+    initQueries(
+      "CREATE DATABASE `movies`",
+      "CREATE DATABASE `northwind-graph`"
+    )
     synopsis("This section explains how to use Cypher to manage Neo4j databases: creating, deleting, starting and stopping individual databases within a single server.")
     p(
       """
@@ -31,6 +35,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Listing databases", "administration-databases-show-databases") {
       p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
+      p("include::show-databases-syntax.asciidoc[]")
       p("All available databases can be seen using the command `SHOW DATABASES`.")
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
@@ -41,6 +46,21 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       p("The default database can be seen using the command `SHOW DEFAULT DATABASE`.")
       query("SHOW DEFAULT DATABASE", assertDatabaseShown("neo4j")) {
+        resultTable()
+      }
+      p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`.")
+      query("SHOW DATABASES YIELD name, currentStatus, requestedStatus ORDER BY currentStatus WHERE name CONTAINS 'e'",
+        assertDatabaseShown("neo4j", "system", "movies")) {
+        p(
+          """In this example:
+            |
+            |* The number of columns returned has been reduced with the `YIELD` clause.
+            |* The order of the returned columns has been changed.
+            |* The results have been filtered to only show database names containing 'e'.
+            |* The results are ordered by the 'currentStatus' column using `ORDER BY`.
+            |
+            |It is also possible to use `SKIP` and `LIMIT` to paginate the results.
+            |""".stripMargin)
         resultTable()
       }
       note {
@@ -146,11 +166,11 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
   })
 
-  private def assertDatabaseShown(expected: String) = ResultAndDbAssertions((p, db) => {
+  private def assertDatabaseShown(expected: String*) = ResultAndDbAssertions((p, db) => {
     val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
     try {
       val result = p.columnAs[String]("name").toSet
-      result should equal(Set(expected))
+      result should equal(expected.toSet)
     } finally {
       tx.close()
     }
