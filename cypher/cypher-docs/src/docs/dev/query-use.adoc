@@ -16,6 +16,7 @@ The `USE` clause determines which graph a query, or query part, is executed agai
 == Introduction
 
 The `USE` clause determines which graph a query, or query part, is executed against.
+It is supported for queries and schema commands.
 
 [NOTE]
 ====
@@ -26,15 +27,22 @@ Find out more about this feature in <<operations-manual#fabric, Operations Manua
 [[query-use-syntax]]
 == Syntax
 
-The `USE` clause can only appear as the first clause of:
+The `USE` clause can only appear as the first clause of queries:
 
-* Queries:
-+
 [source, cypher]
 ----
 USE <graph>
 <other clauses>
 ----
+
+Where `<graph>` refers to the name of a database in the DBMS.
+
+
+[role=fabric]
+[[query-use-syntax-fabric]]
+=== Fabric syntax
+
+When executing queries against a Fabric database, the `USE` clause can also appear as the first clause of:
 
 * Union parts:
 +
@@ -59,31 +67,54 @@ CALL {
 +
 In subqueries, a `USE` clause may appear as the second clause, if directly following an <<subquery-correlated-importing, importing `WITH` clause>>
 
+When executing queries against a Fabric database, in addition to referring to databases in the DBMS, the `<graph>` may refer to a graph mounted through the Fabric configuration.
+
+For more information, see <<operations-manual#fabric, Operations Manual -> Fabric>>.
+
 
 [[query-use-examples]]
 == Examples
 
-In the following examples we assume that we have configured a Fabric database called `exampleFabricSetup`.
 
 [[query-use-examples-query-graph-by-name]]
-=== Query graph by name
+=== Query a graph by name
 
-The graph that we wish to query is configured to be referred to by the name `exampleDatabaseName`.
+In this example we assume that your DBMS contains a database named `myDatabase`:
+
+.Query.
+[source, cypher]
+----
+USE myDatabase
+MATCH (n) RETURN n
+----
+
+
+[role=fabric]
+[[query-use-examples-query-fabric-graph-by-name]]
+=== Query a Fabric graph by name
+
+In this example we assume that we have configured a Fabric database called `exampleFabricSetup`.
+The graph that we wish to query is named `exampleDatabaseName`:
 
 .Query.
 [source, cypher]
 ----
 USE exampleFabricSetup.exampleDatabaseName
+MATCH (n) RETURN n
 ----
 
-[[query-use-examples-query-graph-by-graph-id]]
-=== Query graph by graph ID
 
-The graph we wish to query is configured with the graph id `0`, which is why we can refer to it
-using the built-in function `graph()` with the argument `0`:
+[role=fabric]
+[[query-use-examples-query-graph-by-graph-id]]
+=== Query a Fabric graph by graph ID
+
+This examples continues with a Fabric database called `exampleFabricSetup`.
+
+The graph we wish to query is configured with the graph id `0`, which is why we can refer to it using the built-in function `graph()` with the argument `0`:
 
 .Query.
 [source, cypher]
 ----
 USE exampleFabricSetup.graph(0)
+MATCH (n) RETURN n
 ----
