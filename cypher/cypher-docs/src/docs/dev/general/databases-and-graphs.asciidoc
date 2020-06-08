@@ -9,19 +9,21 @@ This section describes databases and graphs in Neo4j.
 Cypher queries are executed against a Neo4j database, but normally apply to specific graphs.
 It is important to understand the meaning of these terms and exactly when a graph is not a database.
 
-* DBMS
-** A Neo4j server is a _Database Management System_ capable of containing and managing multiple databases.
-   Client applications will connect to a database server and be able to open sessions against a particular database.
-* Database
-** A database is a storage and retrieval mechanism for collecting data in a defined space on disk and in memory.
-   A client session provides access to a single database in the DBMS.
-   Cypher commands executed through this session will apply to the default graph within that database.
-   It is never possible to operate against multiple databases at the same time.
-   Transactions are specific to a database.
-* Graph
-** This is a data model within a database.
-   In Neo4j 4.0 there is only one graph within each database, and many <<cypher-querying-updating-administering, administrative>> commands that refer to a specific graph do so using the database name.
-** In Neo4j 4.0 Fabric it is possible to refer to multiple graphs within the same transaction and Cypher query.
+DBMS::
+A Neo4j Database Management System is capable of containing and managing multiple graphs contained in databases.
+Client applications will connect to the DBMS and open sessions against it.
+A client session provides access to any graph in the DBMS.
+
+Graph::
+This is a data model within a database.
+Normally there is only one graph within each database, and many <<cypher-querying-updating-administering, administrative>> commands that refer to a specific graph do so using the database name.
++
+Cypher queries executed in a session may declare which graph they apply to, or use a default, given by the session.
++
+[fabric]#In Neo4j Fabric it is possible to refer to multiple graphs within the same query.#
+
+Database::
+A database is a storage and retrieval mechanism for collecting data in a defined space on disk and in memory.
 
 Most of the time Cypher queries are <<cypher-querying-updating-administering, reading or updating queries>> which are run against a graph.
 There are, however, <<administration, administrative>> commands that apply to a database, or to the entire DBMS.
