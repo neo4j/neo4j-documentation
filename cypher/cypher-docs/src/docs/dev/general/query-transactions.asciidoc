@@ -42,7 +42,7 @@ A DBMS-level transaction is a container for database transactions.
 A database transaction is started when the first query to a specific database is issued.
 Database transactions opened inside a DBMS-level transaction are committed or rolled back when the DBMS-level transaction is committed or rolled back.
 
-For an example of how queries to multiple databases can be issued in one transaction, see <<driver-manual#db-execution-context, Driver Manual -> Databases and execution context>>.
+For an example of how queries to multiple databases can be issued in one transaction, see <<driver-manual#driver-databases, Driver Manual -> Databases and execution context>>.
 
 DBMS transactions have the following limitations:
 
