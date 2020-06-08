@@ -36,7 +36,7 @@ This ensures that the resources bound to them are properly released.
 [[dbms-transactions]]
 == DBMS Transactions
 
-Beginning a transaction while connected to a DBMS, will start a DBMS-level transaction.
+Beginning a transaction while connected to a DBMS will start a DBMS-level transaction.
 A DBMS-level transaction is a container for database transactions.
 
 A database transaction is started when the first query to a specific database is issued.
@@ -47,5 +47,11 @@ For an example of how queries to multiple databases can be issued in one transac
 DBMS transactions have the following limitations:
 
 * Only one database can be written to in a DBMS transaction
-* Cypher operations fall into three main categories - operations on graphs, schema commands and administration commands.
-These three types of workload cannot be combined in a single DBMS transaction.
+* Cypher operations fall into the following main categories:
+
+** Operations on graphs.
+** Schema commands.
+** Administration commands.
+
++
+It is not possible to combine any of these workloads in a single DBMS transaction.
