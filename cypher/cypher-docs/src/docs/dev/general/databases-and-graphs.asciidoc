@@ -20,7 +20,7 @@ Normally there is only one graph within each database, and many <<cypher-queryin
 +
 Cypher queries executed in a session may declare which graph they apply to, or use a default, given by the session.
 +
-[fabric]#In Neo4j Fabric it is possible to refer to multiple graphs within the same query.#
+In Neo4j Fabric it is possible to refer to multiple graphs within the same query.
 
 Database::
 A database is a storage and retrieval mechanism for collecting data in a defined space on disk and in memory.
