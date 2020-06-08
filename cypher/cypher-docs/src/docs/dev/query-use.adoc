@@ -18,11 +18,6 @@ The `USE` clause determines which graph a query, or query part, is executed agai
 The `USE` clause determines which graph a query, or query part, is executed against.
 It is supported for queries and schema commands.
 
-[NOTE]
-====
-This functionality is currently only available in Neo4j Fabric.
-Find out more about this feature in <<operations-manual#fabric, Operations Manual -> Fabric>>.
-====
 
 [[query-use-syntax]]
 == Syntax
@@ -42,7 +37,7 @@ Where `<graph>` refers to the name of a database in the DBMS.
 [[query-use-syntax-fabric]]
 === Fabric syntax
 
-When executing queries against a Fabric database, the `USE` clause can also appear as the first clause of:
+When running queries against a Fabric database, the `USE` clause can also appear as the first clause of:
 
 * Union parts:
 +
@@ -67,8 +62,7 @@ CALL {
 +
 In subqueries, a `USE` clause may appear as the second clause, if directly following an <<subquery-correlated-importing, importing `WITH` clause>>
 
-When executing queries against a Fabric database, in addition to referring to databases in the DBMS, the `<graph>` may refer to a graph mounted through the Fabric configuration.
-
+When executing queries against a Fabric database, in addition to referring to databases in the DBMS, the `<graph>` may also refer to a graph mounted through the Fabric configuration.
 For more information, see <<operations-manual#fabric, Operations Manual -> Fabric>>.
 
 
