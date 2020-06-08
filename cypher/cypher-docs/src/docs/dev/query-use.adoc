@@ -1,4 +1,3 @@
-[role=fabric]
 [[query-use]]
 = USE
 
@@ -88,4 +87,3 @@ using the built-in function `graph()` with the argument `0`:
 ----
 USE exampleFabricSetup.graph(0)
 ----
-
