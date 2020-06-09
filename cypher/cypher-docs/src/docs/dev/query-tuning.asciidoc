@@ -26,6 +26,7 @@ To read more about the execution plan operators mentioned in this chapter, see <
 ** <<cypher-runtime,Cypher runtime>>
 ** <<cypher-replanning,Cypher replanning>>
 * <<how-do-i-profile-a-query,Profiling a query>>
+* <<query-tuning-indexes,The use of indexes>>
 * <<cypherdoc-basic-query-tuning-example,Basic query tuning example>>
 * <<advanced-query-tuning-example, Advanced query tuning example>>
 ** <<advanced-query-tuning-example-introduction, Introduction>>
