@@ -1,0 +1,34 @@
+As described in <<administration-indexes-search-performance, Indexes for search performance>>, Neo4j ${neo4j.version} supports the creation and use of indexes to improve the performance of Cypher queries.
+The Neo4j security model will impact the results of queries that use the index.
+When using normal Neo4j indexes, a Cypher query will always return the same results it would have if no index existed.
+This means that if the security model causes fewer results to be returned due to restricted read access in <<administration-security-subgraph, Graph and sub-graph access control>>,
+the index will also return the same fewer results.
+
+However, this rule is not correctly obeyed by <<administration-indexes-fulltext-search, Indexes for full-text search>>.
+These specific indexes are backed by Lucene internally.
+It is therefor not possible to know for certain whether a security violation occured for each specific entry returned from the index.
+As a result, Neo4j will return zero results from Full-text indexes if it is determined that any result might violate the security privileges active for that query.
+
+== Example with blacklisted properties
+
+Consider the following example.
+The database has nodes with Label `:User` and these have properties `name` and `email`.
+We have a normal index on both properties:
+
+    CREATE INDEX FOR (n:User) FOR (n.name, n.email);
+    CALL db.index.fulltext.createNodeIndex("titlesAndDescriptions",["User"],["name", "email"]);
+
+[NOTE]
+Full-text indexes also support multiple labels.
+See <<administration-indexes-fulltext-search, Indexes for full-text search>> for more details on crfeating and using full-text indexes.
+
+After creating these indexes, it would appear we have two indexes accomplishing the same thing.
+However this is not completely accurate.
+These two indexes behave in different ways and are focused on different use cases.
+A key difference is that full-text indexes are backed by Lucene, and will use the Lucene syntax for querying the index.
+
+This has consequences for users restricted
+
+== Neo4j indexes on node label and properties
+
+Based on the index

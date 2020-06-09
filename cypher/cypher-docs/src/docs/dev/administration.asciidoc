@@ -38,6 +38,7 @@ This section explains how to use Cypher to administer Neo4j databases, such as c
 ** <<administration-security-users-and-roles, User and role management>>
 ** <<administration-security-subgraph, Graph and subgraph access control>>
 ** <<administration-security-administration, Security of administration>>
+** <<administration-security-indexes, Security and indexing>>
 
 
 Neo4j supports the management of manage multiple databases within the same DBMS.
