@@ -33,7 +33,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         |""".stripMargin)
 
     section("User Management", "administration-security-users") {
-      p("Users can be created and managed using a set of Cypher administration commands executed against the `system` database.")
+      p("Users can be created and managed using a set of Cypher administration commands executed against the `system` database."
+        "When connected to the DBMS over bolt, administration commands are automatically routed to the `system` database.")
       p("include::user-management-syntax.asciidoc[]")
       section("Listing users", "administration-security-users-show") {
         p("Available users can be seen using `SHOW USERS` which will produce a table of users with four columns:")
@@ -161,7 +162,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
     section("Role Management", "administration-security-roles", "enterprise-edition") {
       initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED",
         "CREATE USER user1 SET PASSWORD 'abc'", "CREATE USER user2 SET PASSWORD 'abc'", "CREATE USER user3 SET PASSWORD 'abc'")
-      p("Roles can be created and managed using a set of Cypher administration commands executed against the `system` database.")
+      p("Roles can be created and managed using a set of Cypher administration commands executed against the `system` database."
+        "When connected to the DBMS over bolt, administration commands are automatically routed to the `system` database.")
       p("include::role-management-syntax.asciidoc[]")
       section("The `PUBLIC` role", "administration-security-roles-public", "enterprise-edition") {
         p(
