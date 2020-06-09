@@ -3,7 +3,7 @@
 
 [abstract]
 --
-This section explains how to use Cypher to administer Neo4j databases, such as creating databases, managing indexes and constraints, and managing security.
+This chapter explains how to use Cypher to administer Neo4j databases, such as creating databases, managing indexes and constraints, and managing security.
 --
 
 
@@ -20,7 +20,7 @@ This section explains how to use Cypher to administer Neo4j databases, such as c
 ** <<administration-indexes-syntax, Syntax>>
 ** <<administration-indexes-single-vs-composite-index, Composite index limitations>>
 ** <<administration-indexes-examples, Examples>>
-   
+
 * <<administration-indexes-fulltext-search, Indexes for full-text search>>
 ** <<administration-indexes-fulltext-search-introduction, Introduction>>
 ** <<administration-indexes-fulltext-search-manage, Procedures to manage full-text indexes>>
@@ -40,14 +40,6 @@ This section explains how to use Cypher to administer Neo4j databases, such as c
 ** <<administration-security-reads, Read privileges>>
 ** <<administration-security-writes, Write privileges>>
 ** <<administration-security-administration, Security of administration>>
-
-
-Neo4j supports the management of manage multiple databases within the same DBMS.
-The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
-Most administrative commands must be executed against the `system` database because they involve editing the metadata for the entire system.
-This includes all commands related to managing multiple databases as well as all commands for defining the security model: users, roles and privileges.
-The administrative commands that are specific to the schema of an individual database are still executed against that specific database.
-These include index and constraint management commands.
 
 
 include::ql/administration/administration-databases.adoc[leveloffset=+1]

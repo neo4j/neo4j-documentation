@@ -29,9 +29,13 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         |""".stripMargin)
     section("Introduction", "administration-databases-introduction") {
       p(
-        """Neo4j allows the same server to manage multiple databases. The metadata for these databases,
-          |including the associated security model, is maintained in a special database called the `system` database.
-          |All multi-database administrative commands need to be executing against the `system` database.""".stripMargin)
+        """Neo4j supports the management of multiple databases within the same DBMS.
+          |The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
+          |Most administrative commands must be executed against the `system` database because they involve editing the metadata for the entire system.
+          |This includes all commands related to managing multiple databases as well as all commands for defining the security model: users, roles and privileges.
+          |The administrative commands that are specific to the schema of an individual database are still executed against that specific database.
+          |These include index and constraint management commands.
+          |When connected to the DBMS over bolt, administrative commands are automatically routed to the `system` database.""".stripMargin)
     }
     section("Listing databases", "administration-databases-show-databases") {
       p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
