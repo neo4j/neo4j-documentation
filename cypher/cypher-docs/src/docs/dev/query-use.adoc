@@ -22,7 +22,7 @@ It is supported for queries and schema commands.
 [[query-use-syntax]]
 == Syntax
 
-The `USE` clause can only appear as the first clause of queries:
+The `USE` clause can only appear as the prefix of schema commands, or as the first clause of queries:
 
 [source, cypher]
 ----
