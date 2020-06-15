@@ -31,3 +31,27 @@ For examples of the API's used to start and commit transactions, refer to the AP
 
 When writing procedures or using Neo4j embedded, remember that all iterators returned from an execution result should be either fully exhausted or closed.
 This ensures that the resources bound to them are properly released.
+
+
+[[dbms-transactions]]
+== DBMS Transactions
+
+Beginning a transaction while connected to a DBMS will start a DBMS-level transaction.
+A DBMS-level transaction is a container for database transactions.
+
+A database transaction is started when the first query to a specific database is issued.
+Database transactions opened inside a DBMS-level transaction are committed or rolled back when the DBMS-level transaction is committed or rolled back.
+
+For an example of how queries to multiple databases can be issued in one transaction, see <<driver-manual#driver-databases, Driver Manual -> Databases and execution context>>.
+
+DBMS transactions have the following limitations:
+
+* Only one database can be written to in a DBMS transaction
+* Cypher operations fall into the following main categories:
+
+** Operations on graphs.
+** Schema commands.
+** Administration commands.
+
++
+It is not possible to combine any of these workloads in a single DBMS transaction.
