@@ -31,6 +31,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 [options="header"]
 |===
 | Feature     | Type | Change | Details
+| `queryId` | Procedure | Updated | The `queryId` procedure format has changed, and no longer includes the database name. For example, `mydb-query-123` is now `query-123`. This change affects built-in procedures `dbms.listQueries()`, `dbms.listActiveLocks(queryId)`, `dbms.killQueries(queryIds)` `and dbms.killQuery(queryId)` 
 | `PUBLIC` role | Functionality | Added | The `PUBLIC` role is automatically assigned to all users, giving them a set of base privileges
 | `REVOKE MATCH` | Syntax | Added | The `MATCH` privilege can now be revoked
 | `REVOKE ...` | Functionality | Restricted | No longer revokes sub-privileges when revoking a compound privilege, e.g. when revoking `INDEX MANAGEMENT`, any `CREATE INDEX` and `DROP INDEX` privileges will no longer be revoked
