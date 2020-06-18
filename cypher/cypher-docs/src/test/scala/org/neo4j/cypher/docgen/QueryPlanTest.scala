@@ -1056,7 +1056,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |In the example, `LetSemiApply` will be used to check for the presence of the `FRIENDS_WITH`
           |relationship from each person.""".stripMargin,
       queryText =
-        """MATCH (other:Person)
+        """CYPHER runtime=slotted
+          |MATCH (other:Person)
           |WHERE (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location)
           |RETURN other.name""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("LetSemiApply"))
@@ -1074,7 +1075,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |In the example, `LetAntiSemiApply` will be used to check for the absence of
           |the `FRIENDS_WITH` relationship from each person.""".stripMargin,
       queryText =
-        """MATCH (other:Person)
+        """CYPHER runtime=slotted
+          |MATCH (other:Person)
           |WHERE NOT ((other)-[:FRIENDS_WITH]->(:Person)) OR (other)-[:WORKS_IN]->(:Location)
           |RETURN other.name""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("LetAntiSemiApply"))
