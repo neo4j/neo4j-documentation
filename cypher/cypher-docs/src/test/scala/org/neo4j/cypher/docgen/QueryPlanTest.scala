@@ -1255,7 +1255,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |This is a variation of the <<query-plan-apply, Apply>> operator.
         """.stripMargin,
       queryText =
-        """MATCH (other:Person)
+        """CYPHER runtime=slotted
+          |MATCH (other:Person)
           |WHERE (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location) OR other.age = 5
           |RETURN other.name""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("LetSelectOrSemiApply"))
@@ -1271,7 +1272,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |This operator is a variation of the <<query-plan-apply, Apply>> operator.
         """.stripMargin,
       queryText =
-        """MATCH (other:Person)
+        """CYPHER runtime=slotted
+          |MATCH (other:Person)
           |WHERE NOT (other)-[:FRIENDS_WITH]->(:Person) OR (other)-[:WORKS_IN]->(:Location) OR other.age = 5
           |RETURN other.name""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("LetSelectOrAntiSemiApply"))
