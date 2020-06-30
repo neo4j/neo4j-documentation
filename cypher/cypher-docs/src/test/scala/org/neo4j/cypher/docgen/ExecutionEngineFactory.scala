@@ -23,6 +23,7 @@ import java.io.File
 
 import org.neo4j.configuration.Config
 import org.neo4j.configuration.GraphDatabaseSettings.{DEFAULT_DATABASE_NAME, SYSTEM_DATABASE_NAME}
+import org.neo4j.cypher.internal.cache.ExecutorBasedCaffeineCacheFactory
 import org.neo4j.cypher.internal.compiler.CypherPlannerConfiguration
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, MonitoringCacheTracer}
 import org.neo4j.cypher.internal.tracing.TimingCompilationTracer
@@ -47,7 +48,9 @@ object ExecutionEngineFactory {
 
   def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
     val spi = new DocsKernelSPI(graph.asInstanceOf[GraphDatabaseAPI])
-    createEngineFromDb(spi, (queryService, plannerConfig, runtimeConfig) => new CommunityCompilerFactory(queryService, spi.monitors, spi.logProvider, plannerConfig, runtimeConfig))
+    val cacheFactory = new ExecutorBasedCaffeineCacheFactory((_:Runnable).run())
+    createEngineFromDb(spi, (queryService, plannerConfig, runtimeConfig) => new CommunityCompilerFactory(queryService, spi.monitors, cacheFactory,
+      spi.logProvider, plannerConfig, runtimeConfig))
   }
 
   def createExecutionEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
@@ -64,6 +67,7 @@ object ExecutionEngineFactory {
     val plannerConfig = cypherConfig.toCypherPlannerConfiguration(spi.config, isSystemDatabase)
     val runtimeConfig = cypherConfig.toCypherRuntimeConfiguration
     val compilerFactory = newCompatibilityFactory(queryService, plannerConfig, runtimeConfig)
+    val cacheFactory = new ExecutorBasedCaffeineCacheFactory((_:Runnable).run())
     val cacheTracer = new MonitoringCacheTracer(spi.monitors.newMonitor(classOf[ExecutionEngineQueryCacheMonitor]))
     val tracer = new TimingCompilationTracer(spi.monitors.newMonitor(classOf[TimingCompilationTracer.EventListener]))
     if (isSystemDatabase) {
@@ -74,10 +78,11 @@ object ExecutionEngineFactory {
 //      val innerEngine: SystemDatabaseInnerEngine = (query, parameters, context, subscriber) => inner.executeQuery(query, parameters, context, false, subscriber)
 //      val innerAccessor: SystemDatabaseInnerAccessor = new SystemDatabaseInnerAccessor(spi.graphAPI, innerEngine)
 //      spi.resolver.asInstanceOf[Dependencies].satisfyDependency(innerAccessor)
-      val innerExecutionEngine = new ExecutionEngine(queryService, spi.monitors, tracer, cacheTracer, cypherConfig, new CompilerLibrary(innerCompilerFactory, () => null), spi.logProvider)
-      new ExecutionEngine(queryService, spi.monitors, tracer, cacheTracer, cypherConfig, new CompilerLibrary(compilerFactory, () => innerExecutionEngine), spi.logProvider)
+      val innerExecutionEngine = new ExecutionEngine(queryService, spi.monitors, tracer, cacheTracer, cypherConfig,
+        new CompilerLibrary(innerCompilerFactory, () => null), cacheFactory, spi.logProvider)
+      new ExecutionEngine(queryService, spi.monitors, tracer, cacheTracer, cypherConfig, new CompilerLibrary(compilerFactory, () => innerExecutionEngine), cacheFactory, spi.logProvider)
     } else {
-      new ExecutionEngine(queryService, spi.monitors, tracer, cacheTracer, cypherConfig, new CompilerLibrary(compilerFactory, () => null), spi.logProvider)
+      new ExecutionEngine(queryService, spi.monitors, tracer, cacheTracer, cypherConfig, new CompilerLibrary(compilerFactory, () => null), cacheFactory, spi.logProvider)
     }
   }
 
