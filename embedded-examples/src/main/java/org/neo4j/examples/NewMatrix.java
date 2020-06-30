@@ -18,7 +18,6 @@
  */
 package org.neo4j.examples;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
@@ -49,7 +48,7 @@ public class NewMatrix
         CODED_BY
     }
 
-    private static final File MATRIX_DB = new File( "target/matrix-new-db" );
+    private static final java.nio.file.Path MATRIX_DB = java.nio.file.Path.of( "target/matrix-new-db" );
     private GraphDatabaseService graphDb;
     private long matrixNodeId;
 
@@ -64,7 +63,7 @@ public class NewMatrix
 
     public void setUp() throws IOException
     {
-        FileUtils.deleteRecursively( MATRIX_DB );
+        FileUtils.deletePathRecursively( MATRIX_DB );
         managementService = new DatabaseManagementServiceBuilder( MATRIX_DB ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook();

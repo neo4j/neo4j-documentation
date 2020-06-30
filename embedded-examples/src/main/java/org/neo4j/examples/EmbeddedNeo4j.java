@@ -18,8 +18,8 @@
  */
 package org.neo4j.examples;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
@@ -35,7 +35,7 @@ import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAM
 
 public class EmbeddedNeo4j
 {
-    private static final File databaseDirectory = new File( "target/neo4j-hello-db" );
+    private static final Path databaseDirectory = Path.of( "target/neo4j-hello-db" );
 
     public String greeting;
 
@@ -64,7 +64,7 @@ public class EmbeddedNeo4j
 
     void createDb() throws IOException
     {
-        FileUtils.deleteRecursively( databaseDirectory );
+        FileUtils.deletePathRecursively( databaseDirectory );
 
         // tag::startDb[]
         managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();

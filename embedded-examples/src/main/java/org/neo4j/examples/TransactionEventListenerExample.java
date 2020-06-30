@@ -18,8 +18,8 @@
  */
 package org.neo4j.examples;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -34,11 +34,11 @@ import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAM
 
 public class TransactionEventListenerExample
 {
-    private static final File HOME_DIRECTORY = new File( "target/transaction-event-listener" );
+    private static final Path HOME_DIRECTORY = Path.of( "target/transaction-event-listener" );
 
     public static void main( String[] args ) throws IOException
     {
-        FileUtils.deleteRecursively( HOME_DIRECTORY );
+        FileUtils.deletePathRecursively( HOME_DIRECTORY );
         var managementService = new DatabaseManagementServiceBuilder( HOME_DIRECTORY ).build();
         var database = managementService.database( DEFAULT_DATABASE_NAME );
 

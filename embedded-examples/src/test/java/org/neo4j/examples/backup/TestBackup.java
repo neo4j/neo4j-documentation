@@ -25,7 +25,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
 
@@ -33,14 +35,14 @@ import static org.junit.Assert.assertTrue;
 
 public class TestBackup
 {
-    private static final File databaseDirectory = new File( "target/backup-store" );
-    private static final File backupDirectory = new File( "target/backup-destination" );
+    private static final Path databaseDirectory = Path.of( "target/backup-store" );
+    private static final Path backupDirectory = Path.of( "target/backup-destination" );
     private DatabaseManagementService managementService;
 
     @Before
-    public void before()
+    public void before() throws IOException
     {
-        backupDirectory.mkdirs();
+        Files.createDirectories( backupDirectory );
         managementService = new EnterpriseDatabaseManagementServiceBuilder( databaseDirectory ).build();
     }
 
@@ -59,7 +61,7 @@ public class TestBackup
         // tag::onlineBackup[]
         var backup = OnlineBackup.from( "127.0.0.1" );
 
-        var backupResult = backup.backup( "neo4j", backupDirectory.toPath() );
+        var backupResult = backup.backup( "neo4j", backupDirectory );
         assertTrue( "Should be consistent", backupResult.isConsistent() );
         // end::onlineBackup[]
     }
@@ -74,7 +76,7 @@ public class TestBackup
                 .withConsistencyCheck( true )
                 .withOutputStream( out );
 
-        var backupResult = backup.backup( "neo4j", backupDirectory.toPath() );
+        var backupResult = backup.backup( "neo4j", backupDirectory );
         assertTrue( "Custom output stream should not be empty", out.toByteArray().length > 0 );
         assertTrue( "Should be consistent", backupResult.isConsistent() );
         // end::backupNonDefaults[]

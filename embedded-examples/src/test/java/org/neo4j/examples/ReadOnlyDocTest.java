@@ -22,8 +22,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
@@ -50,10 +51,10 @@ public class ReadOnlyDocTest
     @Before
     public void prepareReadOnlyDatabase() throws IOException
     {
-        File dir = new File( "target/read-only-managementService/location" );
-        if ( dir.exists() )
+        Path dir = Path.of( "target/read-only-managementService/location" );
+        if ( Files.exists( dir ) )
         {
-            FileUtils.deleteRecursively( dir );
+            FileUtils.deletePathRecursively( dir );
         }
         new DatabaseManagementServiceBuilder( dir ).build().shutdown();
         // tag::createReadOnlyInstance[]

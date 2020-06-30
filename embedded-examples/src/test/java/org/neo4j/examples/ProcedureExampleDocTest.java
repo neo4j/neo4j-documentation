@@ -22,7 +22,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.dbms.api.DatabaseManagementService;
@@ -45,15 +45,15 @@ class ProcedureExampleDocTest
     private DatabaseManagementService managementService;
 
     @TempDir
-    private File directory;
+    private Path directory;
 
     @Test
     void listDenseNodesShouldWork() throws Throwable
     {
         // Given
-        new JarBuilder().createJarFor( new File( directory, "myProcedures.jar" ), ProcedureExample.class );
+        new JarBuilder().createJarFor( directory.resolve( "myProcedures.jar" ).toFile(), ProcedureExample.class );
         managementService =
-                new DatabaseManagementServiceBuilder( directory ).setConfig( GraphDatabaseSettings.plugin_dir, directory.toPath().toAbsolutePath() ).build();
+                new DatabaseManagementServiceBuilder( directory ).setConfig( GraphDatabaseSettings.plugin_dir, directory.toAbsolutePath() ).build();
         db = managementService.database( DEFAULT_DATABASE_NAME );
 
         try ( Transaction transaction = db.beginTx() )

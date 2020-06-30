@@ -20,10 +20,12 @@ package org.neo4j.examples;
 
 import org.junit.Test;
 
+import java.io.IOException;
+
 public class CalculateShortestPathTest
 {
     @Test
-    public void testMain()
+    public void testMain() throws IOException
     {
         CalculateShortestPath.main( null );
     }
