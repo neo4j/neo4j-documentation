@@ -18,8 +18,8 @@
  */
 package org.neo4j.examples;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Executors;
@@ -37,7 +37,7 @@ import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAM
 
 public class TerminateTransactions
 {
-    private static final File databaseDirectory = new File( "target/neo4j-terminate-tx-db" );
+    private static final Path databaseDirectory = Path.of( "target/neo4j-terminate-tx-db" );
 
     public static void main(String[] args) throws IOException
     {
@@ -47,7 +47,7 @@ public class TerminateTransactions
 
     public String run() throws IOException
     {
-        FileUtils.deleteRecursively( databaseDirectory );
+        FileUtils.deletePathRecursively( databaseDirectory );
 
         // tag::startDb[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();

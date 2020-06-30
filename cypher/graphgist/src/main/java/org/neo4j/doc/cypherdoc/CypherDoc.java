@@ -24,6 +24,7 @@ import org.zeroturnaround.zip.ZipUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -72,7 +73,7 @@ public final class CypherDoc
         List<Block> blocks = parseBlocks( input );
 
         //TODO remove config when compiled plans are feature complete
-        File directory = new File( "target/example-db" + System.nanoTime() );
+        Path directory = Path.of( "target/example-db" + System.nanoTime() );
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory )
                 .setConfig( GraphDatabaseInternalSettings.cypher_runtime, GraphDatabaseInternalSettings.CypherRuntime.INTERPRETED )
                 .build();
@@ -179,7 +180,7 @@ public final class CypherDoc
         return string.replace( "\r\n", "\n" ).replace( "\n", EOL + "\t" );
     }
 
-    private static void dumpStoreFiles( File directory, TestFailureException exception, String when )
+    private static void dumpStoreFiles( Path directory, TestFailureException exception, String when )
     {
         ByteArrayOutputStream snapshot = new ByteArrayOutputStream();
         try
@@ -195,8 +196,8 @@ public final class CypherDoc
         }
     }
 
-    private static void dumpZip( File directory, ByteArrayOutputStream snapshot )
+    private static void dumpZip( Path directory, ByteArrayOutputStream snapshot )
     {
-        ZipUtil.pack( directory, snapshot );
+        ZipUtil.pack( directory.toFile(), snapshot );
     }
 }

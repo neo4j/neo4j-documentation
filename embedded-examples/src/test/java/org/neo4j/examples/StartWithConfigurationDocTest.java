@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.time.Duration;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
@@ -35,7 +35,7 @@ import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAM
 class StartWithConfigurationDocTest
 {
     @TempDir
-    File directory;
+    Path directory;
 
     @Test
     void loadFromFile()

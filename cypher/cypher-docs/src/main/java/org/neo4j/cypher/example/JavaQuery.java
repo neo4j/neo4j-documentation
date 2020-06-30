@@ -19,8 +19,8 @@
  */
 package org.neo4j.cypher.example;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +34,11 @@ import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-import static org.neo4j.io.fs.FileUtils.deleteRecursively;
+import static org.neo4j.io.fs.FileUtils.deletePathRecursively;
 
 public class JavaQuery
 {
-    private static final File databaseDirectory = new File( "target/java-query-db" );
+    private static final Path databaseDirectory = Path.of( "target/java-query-db" );
     String resultString;
     String columnsString;
     String nodeResult;
@@ -104,7 +104,7 @@ public class JavaQuery
     {
         try
         {
-            deleteRecursively( databaseDirectory );
+            deletePathRecursively( databaseDirectory );
         }
         catch ( IOException e )
         {

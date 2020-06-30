@@ -18,7 +18,7 @@
  */
 package org.neo4j.examples;
 
-import java.io.File;
+import java.io.IOException;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
@@ -34,12 +34,13 @@ import org.neo4j.graphdb.PathExpanders;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.traversal.Paths;
+import org.neo4j.io.fs.FileUtils;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class CalculateShortestPath
 {
-    private static final File databaseDirectory = new File( "target/neo4j-shortest-path" );
+    private static final java.nio.file.Path databaseDirectory = java.nio.file.Path.of( "target/neo4j-shortest-path" );
     private static final String NAME_KEY = "name";
     private static final Label NODE_LABEL = Label.label( "NODE" );
     private static final RelationshipType KNOWS = RelationshipType.withName( "KNOWS" );
@@ -47,9 +48,9 @@ public class CalculateShortestPath
     private static GraphDatabaseService graphDb;
     private static DatabaseManagementService managementService;
 
-    public static void main( final String[] args )
+    public static void main( final String[] args ) throws IOException
     {
-        deleteFileOrDirectory( databaseDirectory );
+        FileUtils.deletePathRecursively(  databaseDirectory );
         managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook();
@@ -116,20 +117,5 @@ public class CalculateShortestPath
         // shuts down nicely when the VM exits (even if you "Ctrl-C" the
         // running example before it's completed)
         Runtime.getRuntime().addShutdownHook(new Thread(() -> managementService.shutdown()));
-    }
-
-    private static void deleteFileOrDirectory( File file )
-    {
-        if ( file.exists() )
-        {
-            if ( file.isDirectory() )
-            {
-                for ( File child : file.listFiles() )
-                {
-                    deleteFileOrDirectory( child );
-                }
-            }
-            file.delete();
-        }
     }
 }

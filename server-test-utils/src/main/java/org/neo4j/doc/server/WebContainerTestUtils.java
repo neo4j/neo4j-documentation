@@ -19,13 +19,9 @@
 package org.neo4j.doc.server;
 
 import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
@@ -35,42 +31,40 @@ import java.util.Random;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.graphdb.config.Setting;
 
-public class WebContainerTestUtils
+public final class WebContainerTestUtils
 {
     private WebContainerTestUtils() {}
 
-    public static File createTempDir() throws IOException {
-        return Files.createTempDirectory("neo4j-test").toFile();
+    public static Path createTempDir() throws IOException {
+        return Files.createTempDirectory("neo4j-test");
     }
 
-    public static File createTempConfigFile() throws IOException {
-        File file = File.createTempFile("neo4j", "conf");
-        file.delete();
-        return file;
+    public static Path createTempConfigFile() throws IOException {
+        return Files.createTempFile( "neo4j", "conf" );
     }
 
-    public static File createTempConfigFile( File parentDir )
+    public static Path createTempConfigFile( Path parentDir )
     {
-        File file = new File( parentDir, "test-" + new Random().nextInt() + ".properties" );
-        file.deleteOnExit();
+        Path file = parentDir.resolve( "test-" + new Random().nextInt() + ".properties" );
+        file.toFile().deleteOnExit();
         return file;
     }
 
-    public static String getRelativePath(File folder, Setting<Path> setting) {
-        return folder.toPath().resolve(setting.defaultValue()).toString();
+    public static String getRelativePath(Path folder, Setting<Path> setting) {
+        return folder.resolve(setting.defaultValue()).toString();
     }
 
-    public static void addDefaultRelativeProperties(Map<String, String> properties, File temporaryFolder) {
+    public static void addDefaultRelativeProperties(Map<String, String> properties, Path temporaryFolder) {
         addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.data_directory );
         addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.logs_directory );
     }
 
-    private static void addRelativeProperty(File temporaryFolder, Map<String, String> properties,
+    private static void addRelativeProperty(Path temporaryFolder, Map<String, String> properties,
                                             Setting<Path> setting) {
         properties.put(setting.name(), getRelativePath(temporaryFolder, setting));
     }
 
-    public static void writeConfigToFile(Map<String, String> properties, File file) {
+    public static void writeConfigToFile(Map<String, String> properties, Path file) {
         Properties props = loadProperties(file);
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             props.setProperty(entry.getKey(), entry.getValue());
@@ -87,10 +81,10 @@ public class WebContainerTestUtils
         return builder.toString();
     }
 
-    private static void storeProperties(File file, Properties properties) {
+    private static void storeProperties(Path file, Properties properties) {
         OutputStream out = null;
         try {
-            out = new FileOutputStream(file);
+            out = Files.newOutputStream(file);
             properties.store(out, "");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -99,12 +93,12 @@ public class WebContainerTestUtils
         }
     }
 
-    private static Properties loadProperties(File file) {
+    private static Properties loadProperties(Path file) {
         Properties properties = new Properties();
-        if (file.exists()) {
+        if (Files.exists(file)) {
             InputStream in = null;
             try {
-                in = new FileInputStream(file);
+                in = Files.newInputStream( file );
                 properties.load(in);
             } catch (IOException e) {
                 throw new RuntimeException(e);

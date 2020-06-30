@@ -18,8 +18,8 @@
  */
 package org.neo4j.examples;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.configuration.helpers.SocketAddress;
@@ -29,12 +29,12 @@ import org.neo4j.io.fs.FileUtils;
 
 public class EmbeddedNeo4jWithBolt
 {
-    private static final File DB_PATH = new File( "target/neo4j-store-with-new-indexing" );
+    private static final Path DB_PATH = Path.of( "target/neo4j-store-with-new-indexing" );
 
     public static void main( final String[] args ) throws IOException
     {
         System.out.println( "Starting database ..." );
-        FileUtils.deleteRecursively( DB_PATH );
+        FileUtils.deletePathRecursively( DB_PATH );
 
         // tag::startDb[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( DB_PATH )

@@ -22,8 +22,8 @@ import com.neo4j.configuration.CausalClusteringSettings;
 import com.neo4j.configuration.DiscoveryType;
 import com.neo4j.dbms.api.ClusterDatabaseManagementServiceBuilder;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
@@ -36,12 +36,12 @@ import static org.neo4j.configuration.GraphDatabaseSettings.Mode.CORE;
 
 public class EmbeddedNeo4jClusterUsingBuilder
 {
-    private static final File homeDirectory = new File( "target/neo4j-home" );
+    private static final Path homeDirectory = Path.of( "target/neo4j-home" );
 
     public static void main( final String[] args ) throws IOException
     {
         System.out.println( "Starting database ..." );
-        FileUtils.deleteRecursively( homeDirectory );
+        FileUtils.deletePathRecursively( homeDirectory );
 
         // tag::startCore[]
         var defaultAdvertised = new SocketAddress( "core01.example.com" );

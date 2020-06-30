@@ -656,9 +656,9 @@ class ImportToolDocIT
                 .build();
     }
 
-    private File storeDirForDatabase()
+    private Path storeDirForDatabase()
     {
-        return new File( new File( testDirectory.toAbsolutePath().toFile(), "data" ), "databases" );
+        return testDirectory.toAbsolutePath().resolve( "data" ).resolve( "databases" );
     }
 
     private File transactionLogsDirectory()

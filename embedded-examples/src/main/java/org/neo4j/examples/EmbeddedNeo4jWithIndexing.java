@@ -18,8 +18,8 @@
  */
 package org.neo4j.examples;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -39,12 +39,12 @@ import static org.neo4j.internal.helpers.collection.Iterators.loop;
 
 public class EmbeddedNeo4jWithIndexing
 {
-    private static final File databaseDirectory = new File( "target/neo4j-store-with-new-indexing" );
+    private static final Path databaseDirectory = Path.of( "target/neo4j-store-with-new-indexing" );
 
     public static void main( final String[] args ) throws IOException
     {
         System.out.println( "Starting database ..." );
-        FileUtils.deleteRecursively( databaseDirectory );
+        FileUtils.deletePathRecursively( databaseDirectory );
 
         // tag::startDb[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();

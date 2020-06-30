@@ -27,12 +27,12 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Path;
 import java.util.Map;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.doc.test.GraphDescription;
-import org.neo4j.doc.test.GraphDescription.Graph;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
 import org.neo4j.doc.tools.AsciiDocGenerator;
@@ -51,7 +51,7 @@ import static org.neo4j.visualization.asciidoc.AsciidocHelper.createQueryResultS
 public class IntroDocTest implements GraphHolder
 {
     private static final String DOCS_TARGET = "target/docs/dev/general/";
-    private static File folder;
+    private static Path folder;
     @Rule
     public TestData<JavaTestDocsGenerator> gen = TestData.producedThrough( JavaTestDocsGenerator.PRODUCER );
     @Rule
@@ -119,7 +119,7 @@ public class IntroDocTest implements GraphHolder
     @BeforeClass
     public static void setup() throws IOException
     {
-        folder = new File( "target/example-db" + System.nanoTime() );
+        folder = Path.of( "target/example-db" + System.nanoTime() );
         managementService = new DatabaseManagementServiceBuilder( folder ).build();
         graphdb = managementService.database( DEFAULT_DATABASE_NAME );
         cleanDatabaseContent( IntroDocTest.graphdb );
@@ -133,7 +133,7 @@ public class IntroDocTest implements GraphHolder
             if ( managementService != null )
             {
                 managementService.shutdown();
-                deleteDirectory( folder );
+                deleteDirectory( folder.toFile() );
             }
         }
         finally

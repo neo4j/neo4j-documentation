@@ -22,8 +22,8 @@ package org.neo4j.visualization.graphviz;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.OutputStream;
+import java.nio.file.Path;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
@@ -48,7 +48,7 @@ public class TestGraphvizSubgraphOutput
     @Test
     public void testSimpleGraph() throws Exception
     {
-        File folder = new File( "target/example-db" + System.nanoTime() );
+        Path folder = Path.of( "target/example-db" + System.nanoTime() );
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( folder ).build();
         try
         {
@@ -103,7 +103,7 @@ public class TestGraphvizSubgraphOutput
         finally
         {
             managementService.shutdown();
-            deleteDirectory( folder );
+            deleteDirectory( folder.toFile() );
         }
     }
 }

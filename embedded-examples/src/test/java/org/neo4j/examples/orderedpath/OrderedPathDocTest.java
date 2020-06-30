@@ -23,6 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
@@ -50,9 +51,9 @@ public class OrderedPathDocTest
     @BeforeClass
     public static void setUp() throws IOException
     {
-        if ( OrderedPath.databaseDirectory.exists() )
+        if ( Files.exists( OrderedPath.databaseDirectory ) )
         {
-            FileUtils.deleteRecursively( OrderedPath.databaseDirectory );
+            FileUtils.deletePathRecursively( OrderedPath.databaseDirectory );
         }
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( OrderedPath.databaseDirectory ).build();
         db = managementService.database( DEFAULT_DATABASE_NAME );

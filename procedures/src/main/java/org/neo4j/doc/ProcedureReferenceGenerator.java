@@ -23,6 +23,7 @@
 package org.neo4j.doc;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Collections;
 import java.util.Comparator;
@@ -54,7 +55,8 @@ public class ProcedureReferenceGenerator {
         this.neo = new Neo4jInstance();
     }
 
-    public String document(String id, String title, String edition, Predicate<Procedure> filter) {
+    public String document(String id, String title, String edition, Predicate<Procedure> filter) throws IOException
+    {
         this.filter = filter;
         this.includeRolesColumn = !edition.equalsIgnoreCase("community");
         this.inlineEditionRole = edition.equalsIgnoreCase("both");
@@ -81,7 +83,7 @@ public class ProcedureReferenceGenerator {
         return baos.toString();
     }
 
-    private Map<String, Procedure> communityEditionProcedures() {
+    private Map<String, Procedure> communityEditionProcedures() throws IOException {
         DatabaseManagementService managementService = neo.newCommunityInstance();
         GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
         Map<String, Procedure> procedures = procedures(db);
@@ -89,7 +91,7 @@ public class ProcedureReferenceGenerator {
         return procedures;
     }
 
-    private Map<String, Procedure> enterpriseEditionProcedures() {
+    private Map<String, Procedure> enterpriseEditionProcedures() throws IOException {
         DatabaseManagementService managementService = neo.newEnterpriseInstance();
         GraphDatabaseService db = managementService.database( DEFAULT_DATABASE_NAME );
         Map<String, Procedure> procedures = procedures(db);

@@ -30,6 +30,7 @@ import org.mockito.ArgumentCaptor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -90,12 +91,12 @@ public class BlockTypeTest
             "CREATE (n:Person {name:'Alice'})-[r:KNOWS {since: 1998}]->(m:Person {name:'Bob'})", "RETURN n,m,r",
             "----" );
     private DatabaseManagementService managementService;
-    private File folder;
+    private Path folder;
 
     @Before
     public void setup() throws SQLException
     {
-        folder = new File( "target/example-db" + System.nanoTime() );
+        folder = Path.of( "target/example-db" + System.nanoTime() );
         managementService = new DatabaseManagementServiceBuilder( folder ).build();
         graphOps = managementService.database( DEFAULT_DATABASE_NAME );
         Connection conn = DriverManager.getConnection( "jdbc:hsqldb:mem:graphgisttests;shutdown=true" );
@@ -107,7 +108,7 @@ public class BlockTypeTest
     public void tearDown() throws IOException
     {
         managementService.shutdown();
-        FileUtils.deleteDirectory( folder );
+        FileUtils.deleteDirectory( folder.toFile() );
     }
 
     @Test

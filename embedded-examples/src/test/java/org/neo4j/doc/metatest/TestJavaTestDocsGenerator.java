@@ -26,9 +26,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 import org.neo4j.annotations.documented.Documented;
@@ -56,16 +56,16 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     public final TestData<JavaTestDocsGenerator> gen = TestData.producedThrough( JavaTestDocsGenerator.PRODUCER );
 
     private final String sectionName = "testsection";
-    private File directory;
-    private File sectionDirectory;
-    private static File databaseDirectory;
+    private Path directory;
+    private Path sectionDirectory;
+    private static Path databaseDirectory;
     private static DatabaseManagementService managementService;
 
     @Before
     public void setup()
     {
-        directory = new File( "target/testdocs" + System.nanoTime() );
-        sectionDirectory = new File( directory, sectionName );
+        directory = Path.of( "target/testdocs" + System.nanoTime() );
+        sectionDirectory = directory.resolve( sectionName );
     }
 
     @Documented( value = "Title1.\n\nhej\n@@snippet1\n\nmore docs\n@@snippet_2-1\n@@snippet12\n." )
@@ -83,22 +83,19 @@ public class TestJavaTestDocsGenerator implements GraphHolder
         doc.addSnippet( "snippet1", snippet1 );
         doc.addSnippet( "snippet12", snippet12 );
         doc.addSnippet( "snippet_2-1", snippet2 );
-        doc.document( directory.getAbsolutePath(), sectionName );
+        doc.document( directory.toAbsolutePath().toString(), sectionName );
 
-        String result = readFileAsString( new File( sectionDirectory, "title1.asciidoc" ) );
+        String result = readFileAsString( sectionDirectory.resolve( "title1.asciidoc" ) );
         assertTrue( result.contains( "include::includes/title1-snippet1.asciidoc[]" ) );
         assertTrue( result.contains( "include::includes/title1-snippet_2-1.asciidoc[]" ) );
         assertTrue( result.contains( "include::includes/title1-snippet12.asciidoc[]" ) );
 
-        File includes = new File( sectionDirectory, "includes" );
-        result = readFileAsString( new File( includes,
-                "title1-snippet1.asciidoc" ) );
+        Path includes = sectionDirectory.resolve( "includes" );
+        result = readFileAsString( includes.resolve( "title1-snippet1.asciidoc" ) );
         assertTrue( result.contains( snippet1 ) );
-        result = readFileAsString( new File( includes,
-                "title1-snippet_2-1.asciidoc" ) );
+        result = readFileAsString( includes.resolve( "title1-snippet_2-1.asciidoc" ) );
         assertTrue( result.contains( snippet2 ) );
-        result = readFileAsString( new File( includes,
-                "title1-snippet12.asciidoc" ) );
+        result = readFileAsString( includes.resolve( "title1-snippet12.asciidoc" ) );
         assertTrue( result.contains( snippet12 ) );
     }
 
@@ -109,7 +106,7 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     {
         data.get();
         JavaTestDocsGenerator doc = gen.get();
-        doc.document( directory.getAbsolutePath(), sectionName );
+        doc.document( directory.toAbsolutePath().toString(), sectionName );
     }
 
     @Documented( "Title2.\n" +
@@ -132,20 +129,20 @@ public class TestJavaTestDocsGenerator implements GraphHolder
         String snippet2 = "snippet2-value";
         doc.addSnippet( "snippet1", snippet1 );
         doc.addSnippet( "snippet2", snippet2 );
-        doc.document( directory.getAbsolutePath(), sectionName );
-        String result = readFileAsString( new File( sectionDirectory, "title2.asciidoc" ) );
+        doc.document( directory.toAbsolutePath().toString(), sectionName );
+        String result = readFileAsString( sectionDirectory.resolve( "title2.asciidoc" ) );
         assertTrue( result.contains( "include::includes/title2-snippet1.asciidoc[]" ) );
         assertTrue( result.contains( "include::includes/title2-snippet2.asciidoc[]" ) );
-        result = readFileAsString( new File( new File( sectionDirectory, "includes" ), "title2-snippet1.asciidoc" ) );
+        result = readFileAsString( sectionDirectory.resolve( "includes" ).resolve( "title2-snippet1.asciidoc" ) );
         assertTrue( result.contains( snippet1 ) );
-        result = readFileAsString( new File( new File( sectionDirectory, "includes" ), "title2-snippet2.asciidoc" ) );
+        result = readFileAsString( sectionDirectory.resolve( "includes" ).resolve( "title2-snippet2.asciidoc" ) );
         assertTrue( result.contains( snippet2 ) );
     }
 
-    public static String readFileAsString( File file ) throws java.io.IOException
+    public static String readFileAsString( Path file ) throws java.io.IOException
     {
-        byte[] buffer = new byte[(int) file.length()];
-        try ( BufferedInputStream f = new BufferedInputStream( new FileInputStream( file ) ) )
+        byte[] buffer = new byte[(int) Files.size( file )];
+        try ( BufferedInputStream f = new BufferedInputStream( Files.newInputStream( file ) ) )
         {
             f.read( buffer );
             return new String( buffer );
@@ -161,7 +158,7 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     @BeforeClass
     public static void setUp()
     {
-        databaseDirectory = new File( "target/example-db" + System.nanoTime() );
+        databaseDirectory = Path.of( "target/example-db" + System.nanoTime() );
         managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         graphdb = managementService.database( DEFAULT_DATABASE_NAME );
     }
@@ -169,7 +166,7 @@ public class TestJavaTestDocsGenerator implements GraphHolder
     @After
     public void tearDown() throws Exception
     {
-        deleteDirectory( directory );
+        deleteDirectory( directory.toFile() );
     }
 
     @AfterClass
@@ -180,7 +177,7 @@ public class TestJavaTestDocsGenerator implements GraphHolder
             if ( managementService != null )
             {
                 managementService.shutdown();
-                deleteDirectory( databaseDirectory );
+                deleteDirectory( databaseDirectory.toFile() );
             }
         }
         finally

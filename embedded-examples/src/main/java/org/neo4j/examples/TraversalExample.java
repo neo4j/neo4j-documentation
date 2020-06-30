@@ -20,7 +20,6 @@
 // tag::_sampleDocumentation[]
 package org.neo4j.examples;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.neo4j.dbms.api.DatabaseManagementService;
@@ -46,11 +45,11 @@ public class TraversalExample
     private GraphDatabaseService db;
     private TraversalDescription friendsTraversal;
 
-    private static final File databaseDirectory = new File( "target/neo4j-traversal-example" );
+    private static final java.nio.file.Path databaseDirectory = java.nio.file.Path.of( "target/neo4j-traversal-example" );
 
     public static void main( String[] args ) throws IOException
     {
-        FileUtils.deleteRecursively( databaseDirectory );
+        FileUtils.deletePathRecursively( databaseDirectory );
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         GraphDatabaseService database = managementService.database( DEFAULT_DATABASE_NAME );
         TraversalExample example = new TraversalExample( database );

@@ -24,7 +24,8 @@ package org.neo4j.doc;
 
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -36,25 +37,25 @@ public class Neo4jInstance {
 
     private static final Path baseDatabaseDirectory = Paths.get("target/databases");
 
-    public DatabaseManagementService newEnterpriseInstance() {
-        baseDatabaseDirectory.toFile().mkdirs();
+    public DatabaseManagementService newEnterpriseInstance() throws IOException {
+        Files.createDirectories( baseDatabaseDirectory );
         DatabaseManagementService managementService =
                 new EnterpriseDatabaseManagementServiceBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled, true ).build();
         registerShutdownHook(managementService);
         return managementService;
     }
 
-    public DatabaseManagementService newCommunityInstance() {
-        boolean mkdirs = baseDatabaseDirectory.toFile().mkdirs();
+    public DatabaseManagementService newCommunityInstance() throws IOException {
+        Files.createDirectories( baseDatabaseDirectory );
         DatabaseManagementService managementService =
                 new DatabaseManagementServiceBuilder( databaseDirectory() ).setConfig( GraphDatabaseSettings.auth_enabled, true ).build();
         registerShutdownHook(managementService);
         return managementService;
     }
 
-    private File databaseDirectory() {
+    private Path databaseDirectory() {
         String uniqueDbDirString = String.format("graph-db-%d", System.currentTimeMillis());
-        return baseDatabaseDirectory.resolve(uniqueDbDirString).toFile();
+        return baseDatabaseDirectory.resolve(uniqueDbDirString);
     }
 
     private static void registerShutdownHook(final DatabaseManagementService managementService) {

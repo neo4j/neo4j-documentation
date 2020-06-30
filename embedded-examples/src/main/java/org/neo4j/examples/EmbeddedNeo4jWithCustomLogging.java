@@ -18,10 +18,9 @@
  */
 package org.neo4j.examples;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.function.Consumer;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -34,7 +33,7 @@ import org.neo4j.logging.Logger;
 
 public class EmbeddedNeo4jWithCustomLogging
 {
-    private static final File databaseDirectory = new File( "target/neo4j-store" );
+    private static final Path databaseDirectory = Path.of( "target/neo4j-store" );
     private static DatabaseManagementService managementService;
 
     private static class MyCustomLogProvider implements LogProvider
@@ -200,7 +199,7 @@ public class EmbeddedNeo4jWithCustomLogging
 
     public static void main( final String[] args ) throws IOException
     {
-        FileUtils.deleteRecursively( databaseDirectory );
+        FileUtils.deletePathRecursively( databaseDirectory );
 
         Object output = new Object();
 
