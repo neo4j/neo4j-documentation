@@ -8,6 +8,7 @@ New features get added to the language continuously, and occasionally, some feat
 --
 
 * <<cypher-deprecations-additions-removals, Removals, deprecations, additions, and extensions>>
+** <<cypher-deprecations-additions-removals-4.2, Version 4.2>>
 ** <<cypher-deprecations-additions-removals-4.1, Version 4.1>>
 ** <<cypher-deprecations-additions-removals-4.0, Version 4.0>>
 ** <<cypher-deprecations-additions-removals-3.5, Version 3.5>>
@@ -25,6 +26,13 @@ New features get added to the language continuously, and occasionally, some feat
 
 The following tables list all of the features which have been removed, deprecated, added, or extended in Cypher.
 Replacement syntax for deprecated and removed features are also indicated.
+
+[[cypher-deprecations-additions-removals-4.2]]
+=== Version 4.2
+[options="header"]
+|===
+| Feature     | Type | Change | Details
+|===
 
 [[cypher-deprecations-additions-removals-4.1]]
 === Version 4.1
@@ -228,8 +236,8 @@ These features will result in runtime errors. See the table at <<cypher-deprecat
 Neo4j {neo4j-version} supports the following versions of the Cypher language:
 
 * Neo4j Cypher 3.5
-* Neo4j Cypher 4.0
 * Neo4j Cypher 4.1
+* Neo4j Cypher 4.2
 
 [TIP]
 Each release of Neo4j supports a limited number of old Cypher Language Versions.
