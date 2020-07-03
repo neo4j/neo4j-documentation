@@ -25,7 +25,9 @@ class ListPrivilegeTest extends AdministrationCommandTestBase {
 
   private def setup() = graph.withTx { tx =>
     tx.execute("CREATE ROLE my_role")
+    tx.execute("CREATE ROLE my_second_role")
     tx.execute("GRANT ACCESS ON DATABASE * TO my_role")
+    tx.execute("GRANT TRAVERSE ON GRAPH * NODES * TO my_second_role")
     tx.execute("CREATE USER alice SET PASSWORD 'secret'")
     tx.execute("GRANT ROLE my_role TO alice")
   }
@@ -33,7 +35,7 @@ class ListPrivilegeTest extends AdministrationCommandTestBase {
   def text: String = {
     setup()
     """
-###assertion=show-one
+###assertion=show-two
 //
 
 SHOW PRIVILEGES
@@ -48,6 +50,14 @@ SHOW ROLE my_role PRIVILEGES
 ###
 
 List all privileges assigned to a role.
+
+###assertion=show-two
+//
+
+SHOW ROLE my_role, my_second_role PRIVILEGES
+###
+
+List all privileges assigned to each of the multiple roles.
 
 ###assertion=show-one
 //
