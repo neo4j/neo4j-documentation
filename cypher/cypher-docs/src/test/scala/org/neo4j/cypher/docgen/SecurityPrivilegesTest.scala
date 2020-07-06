@@ -10,9 +10,11 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     database("system")
     initQueries(
       "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE",
+      "CREATE USER joe SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE",
       "CREATE ROLE regularUsers",
       "CREATE ROLE noAccessUsers",
       "GRANT ROLE regularUsers TO jake",
+      "GRANT ROLE noAccessUsers TO joe",
       "GRANT ACCESS ON DATABASE neo4j TO regularUsers",
       "DENY ACCESS ON DATABASE neo4j TO noAccessUsers"
     )
@@ -107,7 +109,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         resultTable()
       }
 
-      p("Available privileges for a particular role can be seen using `SHOW ROLE name PRIVILEGES`.")
+      p("Available privileges for specific roles can be seen using `SHOW ROLE name PRIVILEGES`.")
       p("include::show-role-privileges-syntax.asciidoc[]")
       query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
         Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "graph" -> "neo4j")
@@ -115,8 +117,15 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         p("Lists all privileges for role 'regularUsers'")
         resultTable()
       }
+      query("SHOW ROLES regularUsers, noAccessUsers PRIVILEGES", assertPrivilegeShown(Seq(
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "graph" -> "neo4j"),
+        Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers", "graph" -> "neo4j")
+      ))) {
+        p("Lists all privileges for roles 'regularUsers' and 'noAccessUsers'")
+        resultTable()
+      }
 
-      p("Available privileges for a particular user can be seen using `SHOW USER name PRIVILEGES`.")
+      p("Available privileges for specific users can be seen using `SHOW USER name PRIVILEGES`.")
       note {
         p("Please note that if a non-native auth provider like LDAP is in use, `SHOW USER PRIVILEGES` will only work in a limited capacity; " +
           "It is only possible for a user to show their own privileges. Other users' privileges cannot be listed when using a non-native auth provider.")
@@ -127,6 +136,13 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
       ))) {
         p("Lists all privileges for user 'jake'")
+        resultTable()
+      }
+      query("SHOW USERS jake, joe PRIVILEGES", assertPrivilegeShown(Seq(
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake"),
+        Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers", "user" -> "joe")
+      ))) {
+        p("Lists all privileges for users 'jake' and 'joe'")
         resultTable()
       }
 

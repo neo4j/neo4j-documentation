@@ -212,7 +212,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
               |""".stripMargin)
           resultTable()
         }
-        p("The `SHOW ROLE name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
+        note {
+          p("The `SHOW ROLE name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
+        }
       }
       section("Creating roles", "administration-security-roles-create", "enterprise-edition") {
         p("Roles can be created using `CREATE ROLE`.")

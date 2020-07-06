@@ -24,9 +24,9 @@ SHOW [ALL\|POPULATED] ROLES WITH USERS
 
 | [source, cypher]
 ----
-SHOW ROLE name PRIVILEGES
+SHOW ROLE[S] name1[, name2] PRIVILEGES
 ----
-| List the privileges granted to a role.
+| List the privileges granted to the specified roles.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE PRIVILEGES>>
 
 | [source, cypher]

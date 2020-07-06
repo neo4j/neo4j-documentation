@@ -32,6 +32,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 [options="header"]
 |===
 | Feature     | Type | Change | Details
+| `SHOW ROLE name PRIVILEGES` | Functionality | Updated | Can now handle multiple roles, `SHOW ROLES n1, n2, ... PRIVILEGES`
+| `SHOW USER name PRIVILEGES` | Functionality | Updated | Can now handle multiple users, `SHOW USERS n1, n2, ... PRIVILEGES`
 |===
 
 [[cypher-deprecations-additions-removals-4.1]]
