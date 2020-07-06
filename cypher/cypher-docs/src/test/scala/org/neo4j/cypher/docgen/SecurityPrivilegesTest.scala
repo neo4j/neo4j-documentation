@@ -79,9 +79,10 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
 
       p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`.")
-      query("SHOW PRIVILEGES YIELD role, access, action ORDER BY action WHERE role = 'admin' ", assertPrivilegeShown(Seq(
-        Map("access" -> "GRANTED", "action" -> "access", "role" -> "admin"),
-        Map("access" -> "GRANTED", "action" -> "write", "role" -> "admin")
+      query("SHOW PRIVILEGES YIELD role, access, action, segment ORDER BY action WHERE role = 'admin' ", assertPrivilegeShown(Seq(
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "admin", "segment" -> "database"),
+        Map("access" -> "GRANTED", "action" -> "write", "role" -> "admin", "segment" -> "NODE(*)"),
+        Map("access" -> "GRANTED", "action" -> "write", "role" -> "admin", "segment" -> "RELATIONSHIP(*)")
       ))) {
         p(
           """In this example:
@@ -109,7 +110,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p("Available privileges for a particular role can be seen using `SHOW ROLE name PRIVILEGES`.")
       p("include::show-role-privileges-syntax.asciidoc[]")
       query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
-        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers")
+        Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "graph" -> "neo4j")
       ))) {
         p("Lists all privileges for role 'regularUsers'")
         resultTable()
@@ -163,6 +164,14 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
   }.build()
 
   private def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]) = ResultAssertions(p => {
+    // Quite lenient method:
+    // - Only checks specified rows, result can include more privileges that are not checked against
+    // - Only checks specified fields, result can include more fields that are not checked against
+    // - Only checks that the number of found matching rows are the same as number of expected rows
+
+    // This can however lead to errors:
+    // - If you specify too few fields you might match more than one privilege and the sizes will differ (ex. not specifying `segment` and finding both `NODE` and `RELATIONSHIP`)
+    // - Will not fail when expecting ['existing matching 2 privileges', 'non-existing'], since we will find 2 privileges matching the first and none matching the second (so the sizes will be the same)
     val found = p.toList.filter { row =>
       val m = expected.filter { expectedRow =>
         expectedRow.forall {
@@ -172,5 +181,6 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       m.nonEmpty
     }
     found.nonEmpty should be(true)
+    found.size should equal(expected.size)
   })
 }
