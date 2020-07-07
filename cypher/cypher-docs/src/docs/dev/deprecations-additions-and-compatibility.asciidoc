@@ -51,7 +51,10 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `PUBLIC` role | Functionality | Added | The `PUBLIC` role is automatically assigned to all users, giving them a set of base privileges
 | `REVOKE MATCH` | Syntax | Added | The `MATCH` privilege can now be revoked
 | `REVOKE ...` | Functionality | Restricted | No longer revokes sub-privileges when revoking a compound privilege, e.g. when revoking `INDEX MANAGEMENT`, any `CREATE INDEX` and `DROP INDEX` privileges will no longer be revoked
-| `SHOW PRIVILEGES` | Functionality | Updated | The returned privileges are a closer match to the original grants and denies, e.g. if granted `MATCH` the command will show that specific privilege and not the `TRAVERSE` and `READ` privileges
+| `SHOW PRIVILEGES` | Functionality | Updated | The returned privileges are a closer match to the original grants and denies, e.g. if granted `MATCH` the command will show that specific privilege and not the `TRAVERSE` and `READ` privileges. Added support for `YIELD` and `WHERE` clauses to allow filtering results.
+| `SHOW USERS` | Functionality | Added | New support for `YIELD` and `WHERE` clauses to allow filtering results.
+| `SHOW ROLES` | Functionality | Added | New support for `YIELD` and `WHERE` clauses to allow filtering results.
+| `SHOW DATABASES` | Functionality | Added | New support for `YIELD` and `WHERE` clauses to allow filtering results.
 | `ALL DATABASE PRIVILEGES` | Functionality | Restricted | No longer includes the privileges `START DATABASE` and `STOP DATABASE`
 | <<administration-security-administration-database-transaction, TRANSACTION MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering transaction management
 | DBMS <<administration-security-administration-dbms-privileges-user-management, USER MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering user management
