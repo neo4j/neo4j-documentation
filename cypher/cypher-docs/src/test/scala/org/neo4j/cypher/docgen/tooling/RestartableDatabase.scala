@@ -119,7 +119,7 @@ class RestartableDatabase(init: RunnableInitialization)
       val txContext = graph.transactionalContext(tx, query = q -> params.toMap)
       val subscriber = new ResultSubscriber(txContext)
       val execution = eengine.execute(q,
-        ExecutionEngineHelper.asMapValue(params.toMap),
+        ValueUtils.asParameterMapValue(asJavaMapDeep(params.toMap)),
         txContext,
         profile = false,
         prePopulate = false,
