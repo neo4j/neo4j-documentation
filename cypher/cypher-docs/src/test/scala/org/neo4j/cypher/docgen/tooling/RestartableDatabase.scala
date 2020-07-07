@@ -38,6 +38,7 @@ import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.api.procedure.GlobalProcedures
 import org.neo4j.kernel.api.security.AuthToken
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
+import org.neo4j.kernel.impl.util.ValueUtils
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
@@ -119,7 +120,7 @@ class RestartableDatabase(init: RunnableInitialization)
       val txContext = graph.transactionalContext(tx, query = q -> params.toMap)
       val subscriber = new ResultSubscriber(txContext)
       val execution = eengine.execute(q,
-        ValueUtils.asParameterMapValue(asJavaMapDeep(params.toMap)),
+        ValueUtils.asParameterMapValue(ExecutionEngineHelper.asJavaMapDeep(params.toMap)),
         txContext,
         profile = false,
         prePopulate = false,
