@@ -16,9 +16,9 @@ SHOW USERS
 
 | [source, cypher]
 ----
-SHOW USER [name] PRIVILEGES
+SHOW USER[S] [name1[, name2]] PRIVILEGES
 ----
-| List the privileges granted to a user.
+| List the privileges granted to the specified users or the current user, if no user is specified.
 | <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>> and
 <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
 | `-`
