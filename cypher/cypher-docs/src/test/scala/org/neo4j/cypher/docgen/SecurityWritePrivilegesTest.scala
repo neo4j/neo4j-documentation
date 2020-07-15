@@ -170,7 +170,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
       p(
         """For example, granting the ability to set any property on all elements of the graph `neo4j` to the role `regularUsers` would be achieved using:""".stripMargin)
-      query("GRANT SET PROPERTY {*} ON GRAPH neo4j ELEMENTS * TO regularUsers", ResultAssertions(r => {
+      query("GRANT SET PROPERTY {*} ON DEFAULT GRAPH ELEMENTS * TO regularUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 2)
       })) {
         statsOnlyResultTable()

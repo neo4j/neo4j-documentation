@@ -75,7 +75,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       p("include::database/admin-role-database.asciidoc[]")
       p("include::database/admin-database-syntax.asciidoc[]")
       p("image::grant-privileges-database.png[title=\"Syntax of GRANT and DENY Database Privileges\"]")
-      // image source: https://docs.google.com/drawings/d/1ukniqD0-LPYm5Xw0PrdXdp66Hbmt3xKElBZ8kIbkdYc/edit?usp=sharing
+      // image source: https://docs.google.com/drawings/d/1OEo-s6zv0psAR16DOm61Du1iQRhyQsIFL6llDq0jgJk/edit
       section("The database `ACCESS` privilege", "administration-security-administration-database-access", "enterprise-edition") {
         p(
           """The `ACCESS` privilege enables users to connect to a database.
