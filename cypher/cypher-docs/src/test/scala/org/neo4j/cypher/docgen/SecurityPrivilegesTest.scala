@@ -163,7 +163,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p("include::revoke-syntax.asciidoc[]")
 
       p("An example usage of the `REVOKE` command is given here:")
-      query("REVOKE GRANT TRAVERSE ON GRAPH neo4j NODES Post FROM regularUsers", ResultAssertions(r => {
+      query("REVOKE GRANT TRAVERSE ON DEFAULT GRAPH NODES Post FROM regularUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()

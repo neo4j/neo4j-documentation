@@ -45,7 +45,7 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
       p("The `TRAVERSE` privilege can also be denied.")
       p("include::deny-traverse-syntax.asciidoc[]")
       p("For example, we can disable the user `jake`, who has role 'regularUsers' from finding all nodes with the label `Payments`.")
-      query("DENY TRAVERSE ON GRAPH neo4j NODES Payments TO regularUsers", ResultAssertions(r => {
+      query("DENY TRAVERSE ON DEFAULT GRAPH NODES Payments TO regularUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
