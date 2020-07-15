@@ -353,7 +353,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have all privileges to manage roles (except showing privileges):")
+        p("The resulting role should have all privileges to manage roles:")
         query("SHOW ROLE roleManager PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
           p("Lists all privileges for role 'roleManager'")
           resultTable()
