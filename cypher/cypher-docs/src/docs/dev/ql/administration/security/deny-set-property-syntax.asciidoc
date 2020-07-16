@@ -2,7 +2,7 @@
 [source, cypher]
 -----
 DENY SET PROPERTY "{" { * | property-name[,...] } "}"
-    ON DEFAULT GRAPH {GRAPH[S] { * | graph-name[,...] }}
+    ON {DEFAULT GRAPH | GRAPH[S] { * | graph-name[,...] }}
         [
             ELEMENT[S] { * | label-or-rel-type-name[,...] }
             | NODE[S] { * | label-name[,...] }
