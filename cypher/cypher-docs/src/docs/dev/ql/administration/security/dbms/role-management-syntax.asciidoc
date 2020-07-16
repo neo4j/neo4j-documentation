@@ -40,3 +40,6 @@ GRANT ROLE MANAGEMENT
 | Enable the specified role or roles to create, delete, assign, remove and list roles
 
 |===
+
+[NOTE]
+Only the `admin` role has access to execute the `SHOW PRIVILEGES` command.

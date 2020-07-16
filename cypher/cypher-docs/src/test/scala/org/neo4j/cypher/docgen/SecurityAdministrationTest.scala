@@ -92,6 +92,10 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         ))) {
           resultTable()
         }
+
+        note {
+        p("""Only the `admin` role has access to execute the `SHOW PRIVILEGES` command.""")
+          }
       }
       section("The database `START`/`STOP` privileges", "administration-security-administration-database-startstop", "enterprise-edition") {
         p(
@@ -337,7 +341,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow showing roles:")
+        p("The resulting role should have privileges that only allow showing roles, _not privileges_:")
         query("SHOW ROLE roleShower PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
           p("Lists all privileges for role 'roleShower'")
           resultTable()
