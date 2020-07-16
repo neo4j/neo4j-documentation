@@ -438,8 +438,9 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
 
     private void verifyNodeDoesNotExist( long nodeId )
     {
-        ResponseEntity response = getNodeById( nodeId );
-        Assert.assertThat( response.entity(), not( Matchers.containsString( "node" ) ) );
+        HTTP.Response firstReq = POST( txCommitUri(),
+                                       HTTP.RawPayload.quotedJson( "{ 'statement': 'MATCH (n) WHERE ID(n) = $nodeId RETURN n' , \" + \"'parameters': { 'nodeId': " + nodeId + " } }" ) );
+        Assert.assertThat( firstReq.rawContent(), not( Matchers.containsString( "node" ) ) );
     }
 
     private ResponseEntity getNodeById( long nodeId )
