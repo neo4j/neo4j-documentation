@@ -255,7 +255,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("person:Person(highScore, name) WHERE highScore > $autoint_1 AND highScore < $autoint_0 AND exists(name)")
+          checkPlanDescriptionArgument(p)("person:Person(highScore, name) WHERE highScore > $autoint_0 AND highScore < $autoint_1 AND exists(name)")
       }
     )
   }
@@ -583,7 +583,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         (p) =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("person:Person(place, firstname) WHERE place > point({x: $autoint_2, y: $autoint_3}) AND place < point({x: $autoint_0, y: $autoint_1}) AND exists(firstname)")
+          checkPlanDescriptionArgument(p)("person:Person(place, firstname) WHERE place > point({x: $autoint_0, y: $autoint_1}) AND place < point({x: $autoint_2, y: $autoint_3}) AND exists(firstname)")
       }
     )
   }
