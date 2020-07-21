@@ -38,6 +38,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `round(expression, precision, mode)` | Functionality | Updated | round()-function can now take two additional arguments to specify rounding precision, and rounding mode.
 | `DEFAULT GRAPH` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges, database privileges>>
 | `0o...`                     | Syntax        | Added   | Cypher will now interpret literals with prefix `0o` as an octal integer literal.
+| `0...`                      | Syntax        | Deprecated   | Replaced by `0o...` (see above).
+| `0X...`                     | Syntax        | Deprecated   | Only `0x...` (lowercase x) will be supported.
 |===
 
 [[cypher-deprecations-additions-removals-4.1]]
