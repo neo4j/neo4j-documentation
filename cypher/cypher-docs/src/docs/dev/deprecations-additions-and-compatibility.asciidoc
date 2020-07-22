@@ -34,6 +34,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | Feature     | Type | Change | Details
 | `SHOW ROLE name PRIVILEGES` | Functionality | Updated | Can now handle multiple roles, `SHOW ROLES n1, n2, ... PRIVILEGES`
 | `SHOW USER name PRIVILEGES` | Functionality | Updated | Can now handle multiple users, `SHOW USERS n1, n2, ... PRIVILEGES`
+| `round(expression, precision)` | Functionality | Updated | round()-function can now take an additional argument to specify rounding precision.
+| `round(expression, precision, mode)` | Functionality | Updated | round()-function can now take two additional arguments to specify rounding precision, and rounding mode.
 | `DEFAULT GRAPH` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges, database privileges>>
 |===
 
