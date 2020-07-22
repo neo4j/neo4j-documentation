@@ -298,7 +298,9 @@ include::../ql/query-plan/drop-constraint-by-name.asciidoc[]
 
 include::../ql/query-plan/create-index.asciidoc[]
 
+include::../ql/query-plan/create-index-only-if-it-does-not-already-exist.asciidoc[]
+
 [role=deprecated]
-include::../ql/query-plan/drop-index.asciidoc[]
+include::../ql/query-plan/drop-index-by-schema.asciidoc[]
 
 include::../ql/query-plan/drop-index-by-name.asciidoc[]

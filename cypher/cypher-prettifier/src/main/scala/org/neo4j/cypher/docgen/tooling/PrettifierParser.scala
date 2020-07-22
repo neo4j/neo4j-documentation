@@ -90,7 +90,9 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("ENDS WITH") |
         keyword("CONTAINS") |
         keyword("YIELD") |
-        keyword("FOR")
+        keyword("FOR") |
+        keyword("IF NOT EXISTS") |
+        keyword("IF EXISTS")
     ) ~> NonBreakingKeywords
   }
 
@@ -104,6 +106,7 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
     group(
       keyword("LOAD CSV") |
         keyword("ORDER BY") |
+        keyword("CREATE OR REPLACE INDEX") |
         keyword("CREATE INDEX ON") | // Deprecated
         keyword("CREATE INDEX") |
         keyword("DROP INDEX ON") | // Deprecated
