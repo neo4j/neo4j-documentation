@@ -96,6 +96,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | <<administration-databases, Multi-database administration>> | Functionality | Added | New Cypher commands for administering multiple databases
 | <<administration-security, Security administration>> | Functionality | Added | New Cypher commands for administering role-based access-control
 | <<administration-security-subgraph, Fine-grained security>> | Functionality | Added | New Cypher commands for administering dbms, database, graph and sub-graph access control
+| `USE neo4j` | Clause| Added | New clause to specify which graph a query, or query part, is executed against.
 |===
 
 
