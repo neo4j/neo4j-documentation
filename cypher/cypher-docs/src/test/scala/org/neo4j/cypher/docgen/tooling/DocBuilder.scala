@@ -87,6 +87,10 @@ trait DocBuilder {
     current.addContent(Consideration(lines))
   }
 
+  def enumTable(title: String, lines: (String, String)*): Unit = {
+    current.addContent(EnumTable(title, lines))
+  }
+
   def database(name: String): Unit = {
     scope.collectFirst {
       case section: SectionScope => section

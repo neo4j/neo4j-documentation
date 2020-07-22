@@ -47,7 +47,9 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
         |* <<functions-ceil, ceil()>>
         |* <<functions-floor, floor()>>
         |* <<functions-rand, rand()>>
-        |* <<functions-round, round()>>
+        |* <<functions-round1, round()>>
+        |* <<functions-round2, round(), with precision>>
+        |* <<functions-round3, round(), with precision and rounding mode>>
         |* <<functions-sign, sign()>>
       """.stripMargin)
     p("The following graph is used for the examples below:")
@@ -97,14 +99,51 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("round()", "functions-round") {
-      p("`round()` returns the value of the given number rounded to the nearest integer.")
-      function("round(expression)", "A Float.", ("expression", "A numeric expression."))
+    section("round()", "functions-round1") {
+      p("`round()` returns the value of the given number rounded to the nearest integer, with half-way values always rounded up.")
+      function("round(expression)", "A Float.", ("expression", "A numeric expression to be rounded."))
       considerations("`round(null)` returns `null`.")
       query("RETURN round(3.141592)", ResultAssertions((r) => {
         r.toList.head("round(3.141592)") should equal(3.0)
       })) {
         p("`3.0` is returned.")
+        resultTable()
+      }
+    }
+    section("round(), with precision", "functions-round2") {
+      p("`round()` returns the value of the given number rounded with the specified precision, with half-values always being rounded up.")
+      function("round(expression, precision)", "A Float.",
+        ("expression", "A numeric expression to be rounded."),
+        ("precision", "A numeric expression specifying precision."))
+      considerations("`round(null)` returns `null`.")
+      query("RETURN round(3.141592, 3)", ResultAssertions((r) => {
+        r.toList.head("round(3.141592, 3)") should equal(3.142)
+      })) {
+        p("`3.142` is returned.")
+        resultTable()
+      }
+    }
+    section("round(), with precision and rounding mode", "functions-round3") {
+      p("`round()` returns the value of the given number rounded with the specified precision and the specified rounding mode.")
+      function("round(expression, precision, mode)", "A Float.",
+        ("expression", "A numeric expression to be rounded."),
+        ("precision", "A numeric expression specifying precision."),
+        ("mode", "A string expression specifying rounding mode."))
+      enumTable("Modes",
+        ("Mode", "Description"),
+        ("CEILING", "Round towards positive infinity."),
+        ("DOWN", "Round towards zero."),
+        ("FLOOR", "Round towards zero."),
+        ("HALF_DOWN", "Round towards closest value of given precision, with half-values always being rounded down."),
+        ("HALF_EVEN", "Round towards closest value of given precision, with half-values always being rounded to the even neighbor."),
+        ("HALF_UP", "Round towards closest value of given precision, with half-values always being rounded up."),
+        ("UP", "Round away from zero.")
+      )
+      considerations("`round(null)` returns `null`.")
+      query("RETURN round(3.141592, 2, 'CEILING')", ResultAssertions((r) => {
+        r.toList.head("round(3.141592, 2, 'CEILING')") should equal(3.15)
+      })) {
+        p("`3.15` is returned.")
         resultTable()
       }
     }

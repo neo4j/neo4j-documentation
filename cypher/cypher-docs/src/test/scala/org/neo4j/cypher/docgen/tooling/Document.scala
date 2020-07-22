@@ -153,6 +153,19 @@ case class Consideration(lines: Seq[(String)]) extends Content with NoQueries {
 
 }
 
+case class EnumTable(title: String, entries: Seq[(String, String)]) extends Content with NoQueries {
+  override def asciiDoc(level: Int) = {
+    val entryLines = entries.map(x => "| `" + x._1 + "` | " + x._2).mkString("", NewLine, "")
+    val formattedLines = Array("*" + title + ":*", "[options=\"header\"]", "|===", entryLines, "|===").mkString(NewLine, NewLine, "")
+    print(String.format(
+      """%s%n
+        |""".stripMargin, formattedLines))
+    String.format(
+      """%s%n
+        |""".stripMargin, formattedLines)
+  }
+}
+
 object Admonitions {
 
   object Tip {
