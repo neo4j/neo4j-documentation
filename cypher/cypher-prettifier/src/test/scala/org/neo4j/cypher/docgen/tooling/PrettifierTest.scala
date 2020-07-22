@@ -99,9 +99,45 @@ class PrettifierTest extends Suite
     )
   }
 
+  test("should not break CONSTRAINT IF NOT EXISTS ON") {
+    actual("create constraint if not exists on (person:Person) assert person.age is unique") should equal(
+      expected("CREATE CONSTRAINT IF NOT EXISTS ON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
+  test("should not break CREATE OR REPLACE CONSTRAINT ON") {
+    actual("create or replace constraint on (person:Person) assert person.age is unique") should equal(
+      expected("CREATE OR REPLACE CONSTRAINT ON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
   test("may break CREATE CONSTRAINT with name") {
     actual("create constraint name on (person:Person) assert person.age is unique") should equal(
       expected("CREATE CONSTRAINT name%nON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
+  test("should not break CREATE CONSTRAINT IF NOT EXISTS with name") {
+    actual("create constraint name if not exists on (person:Person) assert person.age is unique") should equal(
+      expected("CREATE CONSTRAINT name IF NOT EXISTS ON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
+  test("may break CREATE OR REPLACE CONSTRAINT with name") {
+    actual("create or replace constraint name on (person:Person) assert person.age is unique") should equal(
+      expected("CREATE OR REPLACE CONSTRAINT name%nON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
+  test("should not break DROP CONSTRAINT by name") {
+    actual("drop constraint name") should equal(
+      expected("DROP CONSTRAINT name")
+    )
+  }
+
+  test("should not break DROP CONSTRAINT IF EXISTS by name") {
+    actual("drop constraint name if exists") should equal(
+      expected("DROP CONSTRAINT name IF EXISTS")
     )
   }
 

@@ -11,8 +11,8 @@ This section explains how to manage constraints used for ensuring data integrity
 ** <<administration-constraints-prop-exist-nodes, Node property existence constraints>>
 ** <<administration-constraints-prop-exist-rels, Relationship property existence constraints>>
 ** <<administration-constraints-node-key, Node key constraints>>
-** <<administration-constraints-drop-a-constraint, Drop a constraint>>
-** <<administration-constraints-list-constraints, List constraints>>
+** <<administration-constraints-drop-constraint, Drop a constraint by name>>
+** <<administration-constraints-list-constraint, List constraints>>
 ** <<administration-constraints-deprecated-syntax, Deprecated syntax>>
 
 [[administration-constraints-introduction]]
@@ -50,7 +50,7 @@ Queries attempting to do any of the following will fail:
 
 
 [NOTE]
-Unique node property constraints, node property existence constraints and relationship property existence constraints are only available in Neo4j Enterprise Edition.
+Node key constraints, node property existence constraints and relationship property existence constraints are only available in Neo4j Enterprise Edition.
 Databases containing one of these constraint types cannot be opened using Neo4j Community Edition.
 
 Creating a constraint has the following implications on indexes:
@@ -69,8 +69,8 @@ Additionally, the following is true for constraints:
 * Best practice is to give the constraint a name when it is created.
 If the constraint is not explicitly named, it will get an auto-generated name.
 * The constraint name must be unique among both indexes and constraints.
-* Constraint creation is not idempotent.
-An error will be thrown if you attempt to create the same constraint twice.
+* Constraint creation is by default not idempotent, and an error will be thrown if you attempt to create the same constraint twice.
+Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error will be thrown if you attempt to create the same constraint twice.
 
 [[administration-constraints-syntax]]
 == Syntax
@@ -82,35 +82,56 @@ An error will be thrown if you attempt to create the same constraint twice.
 
 | [source, cypher]
 ----
-CREATE CONSTRAINT [constraint_name]
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName) 
 ASSERT n.propertyName IS UNIQUE
 ----
-| Create a unique node property constraint.
-.4+.^| Best practice is to give the constraint a name when it is created.
+.2+.^| Create a unique node property constraint.
+.8+.^| Best practice is to give the constraint a name when it is created.
 If the constraint is not explicitly named, it will get an auto-generated name.
 
 The constraint name must be unique among both indexes and constraints.
 
-Constraint creation is not idempotent.
-An error will be thrown if you attempt to create the same constraint twice.
+
+The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
+With `IF NOT EXISTS`, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
+It may still throw an error should a conflicting index or constraint exist.
+Adding `OR REPLACE` to the command will result in any existing constraint with that name being deleted and a new one created.
 | [source, cypher]
 ----
-CREATE CONSTRAINT [constraint_name]
+CREATE OR REPLACE CONSTRAINT constraint_name
+ON (n:LabelName)
+ASSERT n.propertyName IS UNIQUE
+----
+| [source, cypher]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName) 
 ASSERT EXISTS (n.propertyName)
 ----
-| [enterprise-edition]#Create a node property existence constraint.#
+.2+.^| [enterprise-edition]#Create a node property existence constraint.#
 | [source, cypher]
 ----
-CREATE CONSTRAINT [constraint_name]
+CREATE OR REPLACE CONSTRAINT constraint_name
+ON (n:LabelName)
+ASSERT EXISTS (n.propertyName)
+----
+| [source, cypher]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON ()-[R:RELATIONSHIP_TYPE]-() 
 ASSERT EXISTS (R.propertyName)
 ----
-| [enterprise-edition]#Create a relationship property existence constraint.#
+.2+.^| [enterprise-edition]#Create a relationship property existence constraint.#
 | [source, cypher]
 ----
-CREATE CONSTRAINT [constraint_name]
+CREATE OR REPLACE CONSTRAINT constraint_name
+ON ()-[R:RELATIONSHIP_TYPE]-()
+ASSERT EXISTS (R.propertyName)
+----
+| [source, cypher]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName) 
 ASSERT (n.propertyName_1,
 n.propertyName_2,
@@ -118,13 +139,24 @@ n.propertyName_2,
 n.propertyName_n)
 IS NODE KEY
 ----
-| [enterprise-edition]#Create a node key constraint.#
+.2+.^| [enterprise-edition]#Create a node key constraint.#
 | [source, cypher]
 ----
-DROP CONSTRAINT constraint_name
+CREATE OR REPLACE CONSTRAINT constraint_name
+ON (n:LabelName)
+ASSERT (n.propertyName_1,
+n.propertyName_2,
+…
+n.propertyName_n)
+IS NODE KEY
+----
+| [source, cypher]
+----
+DROP CONSTRAINT constraint_name [IF EXISTS]
 ----
 | Drop a constraint.
-| 
+| The command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same constraint twice.
+With `IF EXISTS`, no error is thrown and nothing happens should the constraint not exist.
 | [source, cypher]
 ----
 CALL db.constraints
@@ -174,6 +206,10 @@ IS NODE KEY
 
 include::create-a-unique-constraint.asciidoc[leveloffset=+2]
 
+include::create-a-unique-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
+
+include::replace-a-unique-constraint.asciidoc[leveloffset=+2]
+
 include::create-a-node-that-complies-with-unique-property-constraints.asciidoc[leveloffset=+2]
 
 include::create-a-node-that-violates-a-unique-property-constraint.asciidoc[leveloffset=+2]
@@ -188,6 +224,10 @@ include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes
 === Node property existence constraints
 
 include::create-a-node-property-existence-constraint.asciidoc[leveloffset=+2]
+
+include::create-a-node-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
+
+include::replace-a-node-property-existence-constraint.asciidoc[leveloffset=+2]
 
 include::create-a-node-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+2]
 
@@ -204,6 +244,10 @@ include::failure-to-create-a-node-property-existence-constraint-due-to-existing-
 
 include::create-a-relationship-property-existence-constraint.asciidoc[leveloffset=+2]
 
+include::create-a-relationship-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
+
+include::replace-a-relationship-property-existence-constraint.asciidoc[leveloffset=+2]
+
 include::create-a-relationship-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+2]
 
 include::create-a-relationship-that-violates-a-property-existence-constraint.asciidoc[leveloffset=+2]
@@ -219,6 +263,10 @@ include::failure-to-create-a-relationship-property-existence-constraint-due-to-e
 
 include::create-a-node-key-constraint.asciidoc[leveloffset=+2]
 
+include::create-a-node-key-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
+
+include::replace-a-node-key-constraint.asciidoc[leveloffset=+2]
+
 include::create-a-node-that-complies-with-node-key-constraints.asciidoc[leveloffset=+2]
 
 include::create-a-node-that-violates-a-node-key-constraint.asciidoc[leveloffset=+2]
@@ -227,10 +275,14 @@ include::removing-a-node-key-constrained-property.asciidoc[leveloffset=+2]
 
 include::failure-to-create-a-node-key-constraint-due-to-existing-node.asciidoc[leveloffset=+2]
 
-//=== Drop a constraint
+[[administration-constraints-drop-constraint]]
+=== Drop a constraint by name
 include::drop-a-constraint.asciidoc[leveloffset=+2]
 
-//=== List constraints
+include::drop-a-non-existing-constraint.asciidoc[leveloffset=+2]
+
+[[administration-constraints-list-constraint]]
+=== List constraints
 include::list-constraints.asciidoc[leveloffset=+2]
 
 
