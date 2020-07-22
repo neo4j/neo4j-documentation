@@ -34,6 +34,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | Feature     | Type | Change | Details
 | `CREATE INDEX [name] IF NOT EXISTS FOR ...` | Syntax | Added | Makes index creation idempotent. If an index with the name or schema already exists no error will be thrown
 | `DROP INDEX name IF EXISTS` | Syntax | Added | Makes index deletion idempotent. If no index with the name exists no error will be thrown
+| `CREATE CONSTRAINT [name] IF NOT EXISTS ON ...` | Syntax | Added | Makes constraint creation idempotent. If a constraint with the name or type and schema already exists no error will be thrown
+| `DROP CONSTRAINT name IF EXISTS` | Syntax | Added | Makes constraint deletion idempotent. If no constraint with the name exists no error will be thrown|===
 |===
 
 [[cypher-deprecations-additions-removals-4.1]]

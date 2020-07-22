@@ -140,6 +140,25 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def doNothingIfExistsForConstraint() {
+    profileQuery(
+      title = "Create Constraint only if it does not already exist",
+      text =
+        """To not get an error creating the same constraint twice, we use the `DoNothingIfExists` operator for constraints.
+          |This will make sure no other constraint with the given name or another constraint of the same type and schema already exists before the specific `CreateConstraint` operator creates the constraint.
+          |If it finds a constraint with the given name or with the same type and schema it will stop the execution and no new constraint is created.
+          |The following query will create a unique constraint with the name `uniqueness` on the `name` property of nodes with the `Country` label only if
+          |no constraint named `uniqueness` or unique constraint on `(:Country {name})` already exists.""".stripMargin,
+      queryText = """CREATE CONSTRAINT uniqueness IF NOT EXISTS ON (c:Country) ASSERT c.name is UNIQUE""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("CreateConstraint"))
+        assertThat(plan, containsString("uniqueness"))
+        assertThat(plan, containsString("DoNothingIfExists(CONSTRAINT)"))
+      }
+    )
+  }
+
   @Test def createNodePropertyExistenceConstraint() {
     profileQuery(
       title = "Create Node Property Existence Constraint",

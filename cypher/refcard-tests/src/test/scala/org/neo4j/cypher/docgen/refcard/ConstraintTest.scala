@@ -33,29 +33,20 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
       case "create-unique-property-constraint" =>
         assertStats(result, uniqueConstraintsAdded = 1)
         assert(result.toList.size === 0)
-      case "create-named-unique-property-constraint" =>
-        assertStats(result, uniqueConstraintsAdded = 1)
-        assert(result.toList.size === 0)
-      case "create-node-property-existence-constraint" =>
+      case "create-property-existence-constraint" =>
         assertStats(result, existenceConstraintsAdded = 1)
         assert(result.toList.size === 0)
-      case "create-named-node-property-existence-constraint" =>
-        assertStats(result, existenceConstraintsAdded = 1)
-        assert(result.toList.size === 0)
-      case "create-relationship-property-existence-constraint" =>
-        assertStats(result, existenceConstraintsAdded = 1)
-        assert(result.toList.size === 0)
-      case "create-named-relationship-property-existence-constraint" =>
-        assertStats(result, existenceConstraintsAdded = 1)
+      case "create-existing-property-existence-constraint" =>
+        assertStats(result, existenceConstraintsAdded = 0)
         assert(result.toList.size === 0)
       case "create-node-key-constraint" =>
         assertStats(result, nodekeyConstraintsAdded = 1)
         assert(result.toList.size === 0)
-      case "create-named-node-key-constraint" =>
-        assertStats(result, nodekeyConstraintsAdded = 1)
-        assert(result.toList.size === 0)
       case "drop-named-constraint" =>
         assertStats(result, namedConstraintsRemoved = 1)
+        assert(result.toList.size === 0)
+      case "drop-non-existing-constraint" =>
+        assertStats(result, namedConstraintsRemoved = 0)
         assert(result.toList.size === 0)
       case "match" =>
         assertStats(result, nodesCreated = 0)
@@ -88,7 +79,7 @@ If any other node with that label is updated or created with a `name` that
 already exists, the write operation will fail.
 This constraint will create an accompanying index.
 
-###assertion=create-named-unique-property-constraint
+###assertion=create-unique-property-constraint
 //
 
 CREATE CONSTRAINT uniqueness ON (p:Person)
@@ -100,29 +91,28 @@ If any other node with that label is updated or created with a `age` that
 already exists, the write operation will fail.
 This constraint will create an accompanying index.
 
-###assertion=create-node-property-existence-constraint
+###assertion=create-property-existence-constraint
 //
 
 CREATE CONSTRAINT ON (p:Person)
        ASSERT exists(p.name)
 ###
 
-(★) Create a node property existence constraint on the label `Person` and property `name`.
+(★) Create a node property existence constraint on the label `Person` and property `name`, throws an error if the constraint already exists.
 If a node with that label is created without a `name`, or if the `name` property is
 removed from an existing node with the `Person` label, the write operation will fail.
 
-###assertion=create-named-node-property-existence-constraint
+###assertion=create-existing-property-existence-constraint
 //
 
-CREATE CONSTRAINT node_exists ON (p:Person)
-       ASSERT exists(p.surname)
+CREATE CONSTRAINT node_exists IF NOT EXISTS ON (p:Person)
+       ASSERT exists(p.name)
 ###
 
-(★) Create a node property existence constraint on the label `Person` and property `surname` with the name `node_exists`.
-If a node with that label is created without a `surname`, or if the `surname` property is
-removed from an existing node with the `Person` label, the write operation will fail.
+(★) If a node property existence constraint on the label `Person` and property `name` or any constraint with the name `node_exists` already exist then nothing happens.
+If no such constraint exists, then it will be created.
 
-###assertion=create-relationship-property-existence-constraint
+###assertion=create-property-existence-constraint
 //
 
 CREATE CONSTRAINT ON ()-[l:LIKED]-()
@@ -133,7 +123,7 @@ CREATE CONSTRAINT ON ()-[l:LIKED]-()
 If a relationship with that type is created without a `when`, or if the `when` property is
 removed from an existing relationship with the `LIKED` type, the write operation will fail.
 
-###assertion=create-named-relationship-property-existence-constraint
+###assertion=create-property-existence-constraint
 //
 
 CREATE CONSTRAINT relationship_exists ON ()-[l:LIKED]-()
@@ -158,7 +148,7 @@ or if the combination of the two is not unique,
 or if the `firstname` and/or `surname` labels on an existing node with the `Person` label
 is modified to violate these constraints, the write operation will fail.
 
-###assertion=create-named-node-key-constraint
+###assertion=create-node-key-constraint
 //
 
 CREATE CONSTRAINT node_key ON (p:Person)
@@ -178,6 +168,14 @@ is modified to violate these constraints, the write operation will fail.
 DROP CONSTRAINT uniqueness
 ###
 
-Drop the constraint with the name `uniqueness`.
+Drop the constraint with the name `uniqueness`, throws an error if the constraint does not exist.
+
+###assertion=drop-non-existing-constraint
+//
+
+DROP CONSTRAINT uniqueness IF EXISTS
+###
+
+Drop the constraint with the name `uniqueness` if it exists, does nothing if it does not exist.
 """)
 }

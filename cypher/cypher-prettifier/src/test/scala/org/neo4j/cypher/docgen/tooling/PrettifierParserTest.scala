@@ -56,7 +56,26 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
         NonBreakingKeywords("assert"), AnyText("person.age"), NonBreakingKeywords("is unique"))
   }
 
-  test("shouldParseCreatIndexWithName") {
+  test("shouldParseCreateConstraintIfNotExists") {
+    // given
+    val query = "create constraint if not exists on (person:Person) assert person.age is unique"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create constraint"), NonBreakingKeywords("if not exists"), BreakingKeywords("on"), GroupToken("(", ")",
+        Seq(AnyText("person:Person"))), NonBreakingKeywords("assert"), AnyText("person.age"), NonBreakingKeywords("is unique"))
+  }
+
+  test("shouldParseDropConstraintByName") {
+    // given
+    val query = "drop constraint name"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("drop constraint"), AnyText("name"))
+  }
+
+  test("shouldParseCreateIndexWithName") {
     // given
     val query = "create index name for (person:Person) on (person.age)"
 
