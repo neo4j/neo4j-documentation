@@ -66,6 +66,15 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
         BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))))
   }
 
+  test("shouldParseDropIndexByNameIfExists") {
+    // given
+    val query = "drop index name if exists"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("drop index"), AnyText("name"), NonBreakingKeywords("if exists"))
+  }
+
   test("shouldParseAscAsKeyword") {
     // given
     val keyword = "asc"

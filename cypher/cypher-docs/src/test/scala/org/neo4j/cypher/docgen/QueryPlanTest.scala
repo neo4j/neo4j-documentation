@@ -269,13 +269,35 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def doNothingIfExistsForIndex() {
+    executePreparationQueries {
+      List("CREATE INDEX my_index FOR (c:Country) ON (c.name)")
+    }
+
+    profileQuery(
+      title = "Create Index only if it does not already exist",
+      text =
+        """To not get an error creating the same index twice, we use the `DoNothingIfExists` operator for indexes.
+          |This will make sure no other index with the given name or schema already exists before the `CreateIndex` operator creates an index on a property for all nodes having a certain label.
+          |If it finds an index with the given name or schema it will stop the execution and no new index is created.
+          |The following query will create an index with the name `my_index` on the `name` property of nodes with the `Country` label only if no such index already exists.""".stripMargin,
+      queryText = """CREATE INDEX my_index IF NOT EXISTS FOR (c:Country) ON (c.name)""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("CreateIndex"))
+        assertThat(plan, containsString("my_index"))
+        assertThat(plan, containsString("DoNothingIfExists(INDEX)"))
+      }
+    )
+  }
+
   @Test def dropIndex() {
     executePreparationQueries {
       List("CREATE INDEX FOR (c:Country) ON (c.name)")
     }
 
     profileQuery(
-      title = "Drop Index",
+      title = "Drop Index by schema",
       text =
         """The `DropIndex` operator removes an index from a property for all nodes having a certain label.
           |The following query will drop an index on the `name` property of nodes with the `Country` label.""".stripMargin,
