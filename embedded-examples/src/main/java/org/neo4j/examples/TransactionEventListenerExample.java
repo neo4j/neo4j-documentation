@@ -36,6 +36,7 @@ public class TransactionEventListenerExample
 {
     private static final Path HOME_DIRECTORY = Path.of( "target/transaction-event-listener" );
 
+    // tag::TransactionEventListener[]
     public static void main( String[] args ) throws IOException
     {
         FileUtils.deletePathRecursively( HOME_DIRECTORY );
@@ -73,7 +74,6 @@ public class TransactionEventListenerExample
         @Override
         public void afterRollback( TransactionData data, CreatedEntitiesCounter state, GraphDatabaseService databaseService )
         {
-            //empty
         }
     }
 
@@ -98,4 +98,5 @@ public class TransactionEventListenerExample
             return createdRelationships;
         }
     }
+    // end::TransactionEventListener[]
 }
