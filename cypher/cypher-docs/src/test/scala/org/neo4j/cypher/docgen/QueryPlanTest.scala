@@ -528,7 +528,9 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `DropResult` operator produces zero rows.
           |It is applied when it can be deduced through static analysis that the result of an expression will be empty, such as when a predicate guaranteed to return `false` (e.g. `1 > 5`) is used in a query.""".stripMargin,
-      queryText = """MATCH (p) WHERE false RETURN p""",
+      queryText =
+        """CYPHER runtime=slotted
+          |MATCH (p) WHERE false RETURN p""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DropResult"))
     )
   }
