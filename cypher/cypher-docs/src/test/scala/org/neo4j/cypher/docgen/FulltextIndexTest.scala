@@ -115,7 +115,7 @@ class FulltextIndexTest extends DocumentingTest {
       }
       p("And we have a full-text index on the `title` and `description` properties of movies and books.")
       query(createTitleAndDescriptionFulltextIndex, ResultAssertions(r => {})) {}
-      p("Then our movie node from above will be included in the index, even though it only have one of the indexed labels, and only one of the indexed properties:")
+      p("Then our movie node from above will be included in the index, even though it only has one of the indexed labels, and only one of the indexed properties:")
       query(queryForMatrixNode, ResultAssertions(r => {
         r.size should equal(1)
       })) {
