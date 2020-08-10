@@ -32,7 +32,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         """Neo4j supports the management of multiple databases within the same DBMS.
           |The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
           |All multi-database administrative commands must be run against the `system` database.
-          |These administrative commands are automatically routed to the `system` database when connected to the DBMS over bolt.""".stripMargin)
+          |These administrative commands are automatically routed to the `system` database when connected to the DBMS over Bolt.""".stripMargin)
     }
     section("Listing databases", "administration-databases-show-databases") {
       p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
