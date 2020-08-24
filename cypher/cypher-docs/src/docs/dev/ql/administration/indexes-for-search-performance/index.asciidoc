@@ -11,8 +11,11 @@ This section explains how to manage indexes used for search performance.
 * <<administration-indexes-single-vs-composite-index, Composite index limitations>>
 * <<administration-indexes-examples, Examples>>
 ** <<administration-indexes-create-a-single-property-index, Create a single-property index>>
+** <<administration-indexes-create-a-single-property-index-only-if-it-does-not-already-exist, Create a single-property index only if it does not already exist>>
 ** <<administration-indexes-create-a-composite-index, Create a composite index>>
+** <<administration-indexes-replace-a-composite-index, Replace a composite index>>
 ** <<administration-indexes-drop-an-index, Drop an index>>
+** <<administration-indexes-drop-a-non-existing-index, Drop a non-existing index>>
 ** <<administration-indexes-list-indexes, List indexes>>
 ** <<administration-indexes-examples-deprecated-syntax, Deprecated syntax>>
 
@@ -45,8 +48,8 @@ The following is true for indexes:
 * Best practice is to give the index a name when it is created.
 If the index is not explicitly named, it will get an auto-generated name.
 * The index name must be unique among both indexes and constraints.
-* Index creation is not idempotent.
-An error will be thrown if you attempt to create the same index twice.
+* Index creation is by default not idempotent, and an error will be thrown if you attempt to create the same index twice.
+Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error will be thrown if you attempt to create the same index twice.
 
 
 [[administration-indexes-syntax]]
@@ -59,36 +62,56 @@ An error will be thrown if you attempt to create the same index twice.
 
 | [source, cypher]
 ----
-CREATE INDEX [index_name]
+CREATE INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 ON (n.propertyName)
 ----
-| Create a single-property index.
-.2+.^| Best practice is to give the index a name when it is created.
+.2+.^| Create a single-property index.
+.4+.^| Best practice is to give the index a name when it is created.
 If the index is not explicitly named, it will get an auto-generated name.
 
 The index name must be unique among both indexes and constraints.
 
-Index creation is not idempotent.
-An error will be thrown if you attempt to create the same index twice.
+The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same index twice.
+With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name, schema or both already exist.
+It may still throw an error should a conflicting constraint exist.
+Adding `OR REPLACE` to the command will result in any existing index with that name being deleted and a new one created.
 
 | [source, cypher]
 ----
-CREATE INDEX [index_name]
+CREATE OR REPLACE INDEX index_name
 FOR (n:LabelName)
-ON (n.propertyName_1, 
+ON (n.propertyName)
+----
+
+| [source, cypher]
+----
+CREATE INDEX [index_name] [IF NOT EXISTS]
+FOR (n:LabelName)
+ON (n.propertyName_1,
     n.propertyName_2,
     …
     n.propertyName_n)
 ----
-| Create a composite index.
+.2+.^| Create a composite index.
 
 | [source, cypher]
 ----
-DROP INDEX index_name
+CREATE OR REPLACE INDEX index_name
+FOR (n:LabelName)
+ON (n.propertyName_1,
+    n.propertyName_2,
+    …
+    n.propertyName_n)
+----
+
+| [source, cypher]
+----
+DROP INDEX index_name [IF EXISTS]
 ----
 | Drop an index
-| 
+| The command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same index twice.
+With `IF EXISTS`, no error is thrown and nothing happens should the index not exist.
 
 | [source, cypher]
 ----
@@ -180,9 +203,15 @@ To get this kind of fallback behavior, it is necessary to create additional inde
 
 include::../indexes/create-a-single-property-index.asciidoc[leveloffset=+1]
 
+include::../indexes/create-a-single-property-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
+
 include::../indexes/create-a-composite-index.asciidoc[leveloffset=+1]
 
+include::../indexes/replace-a-composite-index.asciidoc[leveloffset=+1]
+
 include::../indexes/drop-an-index.asciidoc[leveloffset=+1]
+
+include::../indexes/drop-a-non-existing-index.asciidoc[leveloffset=+1]
 
 include::../indexes/list-indexes.asciidoc[leveloffset=+1]
 

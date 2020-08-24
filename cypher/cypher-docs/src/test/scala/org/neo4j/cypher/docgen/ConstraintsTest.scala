@@ -29,9 +29,10 @@ import org.neo4j.graphdb.{ConstraintViolationException, Label, RelationshipType}
 
 import scala.collection.JavaConverters._
 
+//noinspection SameParameterValue
 class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
-  override def parent = Some("Administration")
+  override def parent: Option[String] = Some("Administration")
   override def section: String = "Constraints"
 
   override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
@@ -43,8 +44,29 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text = "When creating a unique constraint, a name can be provided. The constraint ensures that your database " +
         "will never contain more than one node with a specific label and one property value.",
       queryText = "CREATE CONSTRAINT constraint_name ON (book:Book) ASSERT book.isbn IS UNIQUE",
-      optionalResultExplanation = "",
-      assertions = (p) => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
+    )
+    prepareAndTestQuery(
+      title = "Create a unique constraint only if it does not already exist",
+      text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+        "The uniqueness constraint ensures that your database will never contain more than one node with a specific label and one property value.",
+      prepare = _ => executePreparationQueries(List("DROP CONSTRAINT constraint_name IF EXISTS")),
+      queryText = "CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (book:Book) ASSERT book.isbn IS UNIQUE",
+      optionalResultExplanation = "Note no constraint will be created if any other constraint with that name or another uniqueness constraint on the same schema already exists. " +
+        "Assuming no such constraints existed:",
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
+    )
+  }
+
+  @Test def replace_unique_constraint() {
+    prepareAndTestQuery(
+      title = "Replace a unique constraint",
+      text = "If you want to reuse a constraint name you can replace the constraint. This will then drop the constraint with the given name if it exists, before creating the new specified one. " +
+        "The uniqueness constraint ensures that your database will never contain more than one node with a specific label and one property value.",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (book:Book) ASSERT exists(book.isbn)")),
+      queryText = "CREATE OR REPLACE CONSTRAINT constraint_name ON (book:Book) ASSERT book.isbn IS UNIQUE",
+      optionalResultExplanation = "Note that it doesn't matter what kind of constraint the old one is nor the schema it's defined on, if it exists then it will be dropped regardless.",
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
     )
   }
 
@@ -55,9 +77,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "List constraints",
       text = "Calling the built-in procedure `db.constraints` will list all constraints, including their names.",
       queryText = "CALL db.constraints",
-      optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
-      assertions = (p) => assert(p.size == 1)
+      assertions = p => assert(p.size == 1)
     )
   }
 
@@ -68,9 +89,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Drop a unique constraint",
       text = "By using `DROP CONSTRAINT`, you remove a constraint from the database.",
       queryText = "DROP CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
-      optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
-      assertions = (p) => assertNodeConstraintDoesNotExist("Book", "isbn")
+      assertions = _ => assertNodeConstraintDoesNotExist("Book", "isbn")
     )
   }
 
@@ -81,9 +101,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a node that complies with unique property constraints",
       text = "Create a `Book` node with an `isbn` that isn't already in the database.",
       queryText = "CREATE (book:Book {isbn: '1449356265', title: 'Graph Databases'})",
-      optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
-      assertions = (p) => assertNodeConstraintExist("Book", "isbn")
+      assertions = _ => assertNodeConstraintExist("Book", "isbn")
     )
   }
 
@@ -122,8 +141,29 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text = "When creating a node property existence constraint, a name can be provided. The constraint ensures that all nodes " +
         "with a certain label have a certain property.",
       queryText = "CREATE CONSTRAINT constraint_name ON (book:Book) ASSERT exists(book.isbn)",
-      optionalResultExplanation = "",
-      assertions = (p) => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
+    )
+    prepareAndTestQuery(
+      title = "Create a node property existence constraint only if it does not already exist",
+      text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+        "The node property existence constraint ensures that all nodes with a certain label have a certain property.",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (book:Book) ASSERT book.isbn IS UNIQUE")),
+      queryText = "CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (book:Book) ASSERT exists(book.isbn)",
+      optionalResultExplanation = "Note no constraint will be created if any other constraint with that name or another node property existence constraint on the same schema already exists. " +
+        "Assuming a constraint with the name `constraint_name` already existed:",
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
+    )
+  }
+
+  @Test def replace_node_property_existence_constraint() {
+    prepareAndTestQuery(
+      title = "Replace a node property existence constraint",
+      text = "If you want to reuse a constraint name you can replace the constraint. This will then drop the constraint with the given name if it exists, before creating the new specified one. " +
+        "The node property existence constraint ensures that all nodes with a certain label have a certain property.",
+      prepare = _ => executePreparationQueries(List("DROP CONSTRAINT constraint_name IF EXISTS")),
+      queryText = "CREATE OR REPLACE CONSTRAINT constraint_name ON (book:Book) ASSERT exists(book.isbn)",
+      optionalResultExplanation = "Note that it doesn't matter what kind of constraint the old one is nor the schema it's defined on, if it exists then it will be dropped regardless.",
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
     )
   }
 
@@ -134,9 +174,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Drop a node property existence constraint",
       text = "By using `DROP CONSTRAINT`, you remove a constraint from the database.",
       queryText = "DROP CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)",
-      optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)")),
-      assertions = (p) => assertNodeConstraintDoesNotExist("Book", "isbn")
+      assertions = _ => assertNodeConstraintDoesNotExist("Book", "isbn")
     )
   }
 
@@ -147,9 +186,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a node that complies with property existence constraints",
       text = "Create a `Book` node with an `isbn` property.",
       queryText = "CREATE (book:Book {isbn: '1449356265', title: 'Graph Databases'})",
-      optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)")),
-      assertions = (p) => assertNodeConstraintExist("Book", "isbn")
+      assertions = _ => assertNodeConstraintExist("Book", "isbn")
     )
   }
 
@@ -196,8 +234,29 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text = "When creating a relationship property existence constraint, a name can be provided. The constraint ensures all relationships " +
         "with a certain type have a certain property.",
       queryText = "CREATE CONSTRAINT constraint_name ON ()-[like:LIKED]-() ASSERT exists(like.day)",
-      optionalResultExplanation = "",
-      assertions = (p) => assertConstraintWithNameExists("constraint_name", "LIKED", List("day"), forRelationship = true)
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "LIKED", List("day"), forRelationship = true)
+    )
+    prepareAndTestQuery(
+      title = "Create a relationship property existence constraint only if it does not already exist",
+      text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+        "The relationship property existence constraint ensures all relationships with a certain type have a certain property.",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS ON ()-[like:LIKED]-() ASSERT exists(like.since)")),
+      queryText = "CREATE CONSTRAINT constraint_name IF NOT EXISTS ON ()-[like:LIKED]-() ASSERT exists(like.day)",
+      optionalResultExplanation = "Note no constraint will be created if any other constraint with that name or another relationship property existence constraint on the same schema already exists. " +
+        "Assuming a constraint with the name `constraint_name` already existed:",
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "LIKED", List("since"), forRelationship = true)
+    )
+  }
+
+  @Test def replace_relationship_property_existence_constraint() {
+    prepareAndTestQuery(
+      title = "Replace a relationship property existence constraint",
+      text = "If you want to reuse a constraint name you can replace the constraint. This will then drop the constraint with the given name if it exists, before creating the new specified one. " +
+        "The relationship property existence constraint ensures all relationships with a certain type have a certain property.",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS ON ()-[like:LIKED]-() ASSERT exists(like.since)")),
+      queryText = "CREATE OR REPLACE CONSTRAINT constraint_name ON ()-[like:LIKED]-() ASSERT exists(like.day)",
+      optionalResultExplanation = "Note that it doesn't matter what kind of constraint the old one is nor the schema it's defined on, if it exists then it will be dropped regardless.",
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "LIKED", List("day"), forRelationship = true)
     )
   }
 
@@ -208,9 +267,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Drop a relationship property existence constraint",
       text = "To remove a constraint from the database, use `DROP CONSTRAINT`.",
       queryText = "DROP CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)",
-      optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)")),
-      assertions = (p) => assertRelationshipConstraintDoesNotExist("LIKED", "day")
+      assertions = _ => assertRelationshipConstraintDoesNotExist("LIKED", "day")
     )
   }
 
@@ -221,9 +279,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a relationship that complies with property existence constraints",
       text = "Create a `LIKED` relationship with a `day` property.",
       queryText = "CREATE (user:User)-[like:LIKED {day: 'yesterday'}]->(book:Book)",
-      optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)")),
-      assertions = (p) => assertRelationshipConstraintExist("LIKED", "day")
+      assertions = _ => assertRelationshipConstraintExist("LIKED", "day")
     )
   }
 
@@ -271,8 +328,31 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
         "with a particular label have a set of defined properties whose combined value is unique " +
         "and all properties in the set are present.",
       queryText = "CREATE CONSTRAINT constraint_name ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
-      optionalResultExplanation = "",
-      assertions = (p) => assertConstraintWithNameExists("constraint_name", "Person", List("firstname", "surname"))
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "Person", List("firstname", "surname"))
+    )
+    prepareAndTestQuery(
+      title = "Create a node key constraint only if it does not already exist",
+      text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+        "The node key constraint ensures that all nodes with a particular label have a set of defined properties whose combined value is unique " +
+        "and all properties in the set are present.",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT old_constraint_name IF NOT EXISTS ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
+      queryText = "CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
+      optionalResultExplanation = "Note no constraint will be created if any other constraint with that name or another node key constraint on the same schema already exists. " +
+        "Assuming a node key constraint on `(:Person {firstname, surname})` already existed:",
+      assertions = _ => assertConstraintWithNameExists("old_constraint_name", "Person", List("firstname", "surname"))
+    )
+  }
+
+  @Test def replace_node_key_constraint() {
+    prepareAndTestQuery(
+      title = "Replace a node key constraint",
+      text = "If you want to reuse a constraint name you can replace the constraint. This will then drop the constraint with the given name if it exists, before creating the new specified one. " +
+        "The node key constraint ensures that all nodes with a particular label have a set of defined properties whose combined value is unique " +
+        "and all properties in the set are present.",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
+      queryText = "CREATE OR REPLACE CONSTRAINT constraint_name ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
+      optionalResultExplanation = "Note that it doesn't matter what kind of constraint the old one is nor the schema it's defined on, if it exists then it will be dropped regardless.",
+      assertions = _ => assertConstraintWithNameExists("constraint_name", "Person", List("firstname", "surname"))
     )
   }
 
@@ -283,9 +363,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Drop a node key constraint",
       text = "Use `DROP CONSTRAINT` to remove a node key constraint from the database.",
       queryText = "DROP CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
-      optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
-      assertions = (p) => assertNodeKeyConstraintDoesNotExist("Person", "firstname", "surname")
+      assertions = _ => assertNodeKeyConstraintDoesNotExist("Person", "firstname", "surname")
     )
   }
 
@@ -296,9 +375,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a node that complies with node key constraints",
       text = "Create a `Person` node with both a `firstname` and `surname` property.",
       queryText = "CREATE (p:Person {firstname: 'John', surname: 'Wood', age: 55})",
-      optionalResultExplanation = "",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
-      assertions = (p) => assertNodeKeyConstraintExists("Person", "firstname", "surname")
+      assertions = _ => assertNodeKeyConstraintExists("Person", "firstname", "surname")
     )
   }
 
@@ -349,6 +427,13 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       queryText = "DROP CONSTRAINT constraint_name",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
       assertions = _ => assertConstraintWithNameDoesNotExists("constraint_name")
+    )
+    testQuery(
+      title = "Drop a non-existing constraint",
+      text = "If it is uncertain if any constraint with a given name exists and you want to drop it if it does but not get an error should it not, use `IF EXISTS`. " +
+        "It is the same command for unique property, property existence and node key constraints.",
+      queryText = "DROP CONSTRAINT missing_constraint_name IF EXISTS",
+      assertions = _ => assertConstraintWithNameDoesNotExists("missing_constraint_name")
     )
   }
 
@@ -404,7 +489,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   private def hasNodeConstraint(labelName: String, propName: String): Boolean = {
-    val transaction = graphOps.beginTx();
+    val transaction = graphOps.beginTx()
     try {
       val constraints = transaction.schema().getConstraints(Label.label(labelName)).asScala
       constraints.exists(_.getPropertyKeys.asScala.exists(_ == propName))
@@ -414,7 +499,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   private def hasRelationshipConstraint(typeName: String, propName: String): Boolean = {
-    val transaction = graphOps.beginTx();
+    val transaction = graphOps.beginTx()
     try {
       val constraints = transaction.schema().getConstraints(RelationshipType.withName(typeName)).asScala
       constraints.exists(_.getPropertyKeys.asScala.exists(_ == propName))
@@ -424,10 +509,10 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   private def hasNodeKeyConstraint(labelName: String, propNames: Seq[String]): Boolean = {
-      val transaction = graphOps.beginTx();
+      val transaction = graphOps.beginTx()
       try {
         val constraints = transaction.schema().getConstraints( Label.label(labelName) ).asScala
-        constraints.nonEmpty && constraints.head.getPropertyKeys().asScala.toList == propNames.toList
+        constraints.nonEmpty && constraints.head.getPropertyKeys.asScala.toList == propNames.toList
       } finally {
         transaction.close()
       }

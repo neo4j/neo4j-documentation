@@ -279,6 +279,8 @@ include::../ql/query-plan/create-unique-constraint.asciidoc[]
 [role=deprecated]
 include::../ql/query-plan/drop-unique-constraint.asciidoc[]
 
+include::../ql/query-plan/create-constraint-only-if-it-does-not-already-exist.asciidoc[]
+
 include::../ql/query-plan/create-node-property-existence-constraint.asciidoc[]
 
 [role=deprecated]
@@ -298,7 +300,9 @@ include::../ql/query-plan/drop-constraint-by-name.asciidoc[]
 
 include::../ql/query-plan/create-index.asciidoc[]
 
+include::../ql/query-plan/create-index-only-if-it-does-not-already-exist.asciidoc[]
+
 [role=deprecated]
-include::../ql/query-plan/drop-index.asciidoc[]
+include::../ql/query-plan/drop-index-by-schema.asciidoc[]
 
 include::../ql/query-plan/drop-index-by-name.asciidoc[]

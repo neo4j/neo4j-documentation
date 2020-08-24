@@ -30,18 +30,22 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val title = "INDEX"
   override val linkId = "administration/indexes-for-search-performance"
 
+  //noinspection RedundantDefaultArgument
+  // Disable warnings for redundant default argument since its used for clarification of the `assertStats` when nothing should have happened
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "create-index" =>
         assertStats(result, indexesAdded = 1)
         assert(result.toList.size === 0)
         tx.schema().awaitIndexesOnline(10, TimeUnit.SECONDS)
-      case "create-named-index" =>
-        assertStats(result, indexesAdded = 1)
+      case "create-existing-index" =>
+        assertStats(result, indexesAdded = 0)
         assert(result.toList.size === 0)
-        tx.schema().awaitIndexesOnline(10, TimeUnit.SECONDS)
       case "drop-named-index" =>
         assertStats(result, indexesRemoved = 1)
+        assert(result.toList.size === 0)
+      case "drop-non-existing-index" =>
+        assertStats(result, indexesRemoved = 0)
         assert(result.toList.size === 0)
       case "match" =>
         assertStats(result, nodesCreated = 0)
@@ -72,13 +76,14 @@ CREATE INDEX FOR (p:Person) ON (p.name)
 
 Create an index on the label `Person` and property `name`.
 
-###assertion=create-named-index
+###assertion=create-index
 //
 
-CREATE INDEX index_name FOR (p:Person) ON (p.age)
+CREATE OR REPLACE INDEX index_name FOR (p:Person) ON (p.age)
 ###
 
 Create an index on the label `Person` and property `age` with the name `index_name`.
+If there existed an index with the name `index_name` before it would be dropped and the new one created.
 
 ###assertion=create-index
 //
@@ -86,7 +91,15 @@ Create an index on the label `Person` and property `age` with the name `index_na
 CREATE INDEX FOR (p:Person) ON (p.name, p.age)
 ###
 
-Create a composite index on the label `Person` and the properties `name` and `age`.
+Create a composite index on the label `Person` and the properties `name` and `age`, throws an error if the index already exist.
+
+###assertion=create-existing-index
+//
+
+CREATE INDEX IF NOT EXISTS FOR (p:Person) ON (p.name, p.age)
+###
+
+Create a composite index on the label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
 
 ###assertion=match parameters=aname
 //
@@ -141,6 +154,14 @@ more than one index should be used.
 DROP INDEX index_name
 ###
 
-Drop the index named `index_name`.
+Drop the index named `index_name`, throws an error if the index does not exist.
+
+###assertion=drop-non-existing-index
+//
+
+DROP INDEX index_name IF EXISTS
+###
+
+Drop the index named `index_name` if it exists, does nothing if it does not exist.
 """
 }

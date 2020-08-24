@@ -31,7 +31,7 @@ class PrettifierTest extends Suite
                      with Matchers
                      with GraphIcing {
 
-  test("should upcase keywords") {
+  test("should uppercase keywords") {
     actual("create        n") should equal(expected("CREATE n"))
   }
 
@@ -39,8 +39,32 @@ class PrettifierTest extends Suite
     actual("create index for (p:Person) on (p.name)") should equal(expected("CREATE INDEX FOR (p:Person)%nON (p.name)"))
   }
 
+  test("may break CREATE INDEX IF NOT EXISTS FOR") {
+    actual("create index if not exists for (p:Person) on (p.name)") should equal(expected("CREATE INDEX IF NOT EXISTS FOR (p:Person)%nON (p.name)"))
+  }
+
+  test("may break CREATE OR REPLACE INDEX FOR") {
+    actual("create or replace index for (p:Person) on (p.name)") should equal(expected("CREATE OR REPLACE INDEX FOR (p:Person)%nON (p.name)"))
+  }
+
   test("may break CREATE INDEX FOR with name") {
     actual("create index name for (p:Person) on (p.name)") should equal(expected("CREATE INDEX name FOR (p:Person)%nON (p.name)"))
+  }
+
+  test("may break CREATE INDEX IF NOT EXISTS FOR with name") {
+    actual("create index name if not exists for (p:Person) on (p.name)") should equal(expected("CREATE INDEX name IF NOT EXISTS FOR (p:Person)%nON (p.name)"))
+  }
+
+  test("may break CREATE OR REPLACE INDEX FOR with name") {
+    actual("create or replace index name for (p:Person) on (p.name)") should equal(expected("CREATE OR REPLACE INDEX name FOR (p:Person)%nON (p.name)"))
+  }
+
+  test("should not break DROP INDEX by name") {
+    actual("drop index name") should equal(expected("DROP INDEX name"))
+  }
+
+  test("should not break DROP INDEX IF EXISTS by name") {
+    actual("drop index name if exists") should equal(expected("DROP INDEX name IF EXISTS"))
   }
 
   test("should not break on ASC") {
@@ -75,9 +99,45 @@ class PrettifierTest extends Suite
     )
   }
 
+  test("should not break CONSTRAINT IF NOT EXISTS ON") {
+    actual("create constraint if not exists on (person:Person) assert person.age is unique") should equal(
+      expected("CREATE CONSTRAINT IF NOT EXISTS ON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
+  test("should not break CREATE OR REPLACE CONSTRAINT ON") {
+    actual("create or replace constraint on (person:Person) assert person.age is unique") should equal(
+      expected("CREATE OR REPLACE CONSTRAINT ON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
   test("may break CREATE CONSTRAINT with name") {
     actual("create constraint name on (person:Person) assert person.age is unique") should equal(
       expected("CREATE CONSTRAINT name%nON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
+  test("should not break CREATE CONSTRAINT IF NOT EXISTS with name") {
+    actual("create constraint name if not exists on (person:Person) assert person.age is unique") should equal(
+      expected("CREATE CONSTRAINT name IF NOT EXISTS ON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
+  test("may break CREATE OR REPLACE CONSTRAINT with name") {
+    actual("create or replace constraint name on (person:Person) assert person.age is unique") should equal(
+      expected("CREATE OR REPLACE CONSTRAINT name%nON (person:Person) ASSERT person.age IS UNIQUE")
+    )
+  }
+
+  test("should not break DROP CONSTRAINT by name") {
+    actual("drop constraint name") should equal(
+      expected("DROP CONSTRAINT name")
+    )
+  }
+
+  test("should not break DROP CONSTRAINT IF EXISTS by name") {
+    actual("drop constraint name if exists") should equal(
+      expected("DROP CONSTRAINT name IF EXISTS")
     )
   }
 
@@ -89,11 +149,11 @@ class PrettifierTest extends Suite
     actual("match (a)-->(b) return b") should equal(expected("MATCH (a)-->(b)%nRETURN b"))
   }
 
-  test("should upcase multiple keywords") {
+  test("should uppercase multiple keywords") {
     actual("match (n) where n.name='B' return n") should equal(expected("MATCH (n)%nWHERE n.name='B'%nRETURN n"))
   }
 
-  test("should upcase multiple keywords 2") {
+  test("should uppercase multiple keywords 2") {
     actual("match (a) where a.name='A' return a.age as SomethingTotallyDifferent") should equal(
       expected("MATCH (a)%nWHERE a.name='A'%nRETURN a.age AS SomethingTotallyDifferent")
     )
@@ -105,7 +165,7 @@ class PrettifierTest extends Suite
     )
   }
 
-  test("should upcase extra keywords") {
+  test("should uppercase extra keywords") {
     actual("match david--otherPerson-->() where david.name='David' with otherPerson, count(*) as foaf where foaf > 1 return otherPerson") should equal(
       expected("MATCH david--otherPerson-->()%nWHERE david.name='David'%nWITH otherPerson, count(*) AS foaf%nWHERE foaf > 1%nRETURN otherPerson")
     )
@@ -184,7 +244,7 @@ class PrettifierTest extends Suite
     ))
   }
 
-  test("enfore newlines before breaking keywords, even if keepNewlines is set") {
+  test("enforce newlines before breaking keywords, even if keepNewlines is set") {
     actualKeepNL(
       """with
         |1
