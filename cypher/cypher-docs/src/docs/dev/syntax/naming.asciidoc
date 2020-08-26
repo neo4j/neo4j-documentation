@@ -1,7 +1,7 @@
 [[cypher-naming]]
 = Naming rules and recommendations
 
-This section describes rules and recommendations for the naming of node labels, relationship types, property names and <<cypher-variables, variables>>.
+This section describes rules and recommendations for the naming of node labels, relationship types, property names, <<cypher-variables, variables>>, indexes and constraints.
 
 == Naming rules
 
