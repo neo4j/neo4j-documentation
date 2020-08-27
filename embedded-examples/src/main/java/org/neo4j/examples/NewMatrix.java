@@ -63,7 +63,7 @@ public class NewMatrix
 
     public void setUp() throws IOException
     {
-        FileUtils.deletePathRecursively( MATRIX_DB );
+        FileUtils.deleteDirectory( MATRIX_DB );
         managementService = new DatabaseManagementServiceBuilder( MATRIX_DB ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook();

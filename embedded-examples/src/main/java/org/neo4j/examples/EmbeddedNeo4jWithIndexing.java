@@ -44,7 +44,7 @@ public class EmbeddedNeo4jWithIndexing
     public static void main( final String[] args ) throws IOException
     {
         System.out.println( "Starting database ..." );
-        FileUtils.deletePathRecursively( databaseDirectory );
+        FileUtils.deleteDirectory( databaseDirectory );
 
         // tag::startDb[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();

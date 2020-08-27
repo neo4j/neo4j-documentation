@@ -199,7 +199,7 @@ public class EmbeddedNeo4jWithCustomLogging
 
     public static void main( final String[] args ) throws IOException
     {
-        FileUtils.deletePathRecursively( databaseDirectory );
+        FileUtils.deleteDirectory( databaseDirectory );
 
         Object output = new Object();
 

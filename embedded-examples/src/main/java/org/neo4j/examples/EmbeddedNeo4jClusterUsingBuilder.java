@@ -41,7 +41,7 @@ public class EmbeddedNeo4jClusterUsingBuilder
     public static void main( final String[] args ) throws IOException
     {
         System.out.println( "Starting database ..." );
-        FileUtils.deletePathRecursively( homeDirectory );
+        FileUtils.deleteDirectory( homeDirectory );
 
         // tag::startCore[]
         var defaultAdvertised = new SocketAddress( "core01.example.com" );

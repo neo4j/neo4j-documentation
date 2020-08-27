@@ -50,7 +50,7 @@ public class CalculateShortestPath
 
     public static void main( final String[] args ) throws IOException
     {
-        FileUtils.deletePathRecursively(  databaseDirectory );
+        FileUtils.deleteDirectory(  databaseDirectory );
         managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         registerShutdownHook();

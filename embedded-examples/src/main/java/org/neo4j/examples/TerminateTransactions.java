@@ -47,7 +47,7 @@ public class TerminateTransactions
 
     public String run() throws IOException
     {
-        FileUtils.deletePathRecursively( databaseDirectory );
+        FileUtils.deleteDirectory( databaseDirectory );
 
         // tag::startDb[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();

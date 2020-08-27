@@ -49,7 +49,7 @@ public class TraversalExample
 
     public static void main( String[] args ) throws IOException
     {
-        FileUtils.deletePathRecursively( databaseDirectory );
+        FileUtils.deleteDirectory( databaseDirectory );
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();
         GraphDatabaseService database = managementService.database( DEFAULT_DATABASE_NAME );
         TraversalExample example = new TraversalExample( database );
