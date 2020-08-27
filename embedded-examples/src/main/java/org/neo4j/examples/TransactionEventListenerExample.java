@@ -39,7 +39,7 @@ public class TransactionEventListenerExample
     // tag::TransactionEventListener[]
     public static void main( String[] args ) throws IOException
     {
-        FileUtils.deletePathRecursively( HOME_DIRECTORY );
+        FileUtils.deleteDirectory( HOME_DIRECTORY );
         var managementService = new DatabaseManagementServiceBuilder( HOME_DIRECTORY ).build();
         var database = managementService.database( DEFAULT_DATABASE_NAME );
 

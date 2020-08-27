@@ -64,7 +64,7 @@ public class EmbeddedNeo4j
 
     void createDb() throws IOException
     {
-        FileUtils.deletePathRecursively( databaseDirectory );
+        FileUtils.deleteDirectory( databaseDirectory );
 
         // tag::startDb[]
         managementService = new DatabaseManagementServiceBuilder( databaseDirectory ).build();

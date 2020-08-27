@@ -19,7 +19,7 @@
  */
 package org.neo4j.doc;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 
@@ -35,7 +35,7 @@ public class GenerateConfigDocumentation
     {
         Args arguments = Args.parse( argv );
 
-        File output = arguments.has( "o" ) ? new File(arguments.get("o")) : null;
+        Path output = arguments.has( "o" ) ? Path.of(arguments.get("o")) : null;
         List<String> settingsClasses = arguments.orphans();
         if(settingsClasses.size() == 0)
         {
@@ -48,7 +48,7 @@ public class GenerateConfigDocumentation
 
         if(output != null)
         {
-            System.out.println("Saving docs in '" + output.getAbsolutePath() + "'.");
+            System.out.println("Saving docs in '" + output.toAbsolutePath() + "'.");
             FileUtils.writeToFile(output, doc, false);
         } else
         {
@@ -56,7 +56,7 @@ public class GenerateConfigDocumentation
         }
     }
 
-    private static final Function<String,Class<?>> classFromString = (Function<String,Class<?>>) ( className ) -> {
+    private static final Function<String,Class<?>> classFromString = ( className ) -> {
         try
         {
             return Class.forName( className );

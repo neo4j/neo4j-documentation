@@ -32,7 +32,7 @@ public class EmbeddedNeo4jClusterUsingNeo4jConf
     public static void main( final String[] args ) throws IOException
     {
         System.out.println( "Starting database ..." );
-        FileUtils.deletePathRecursively( homeDirectory );
+        FileUtils.deleteDirectory( homeDirectory );
 
         // tag::startCore[]
         var managementService = new ClusterDatabaseManagementServiceBuilder( homeDirectory )

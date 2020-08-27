@@ -53,7 +53,7 @@ public class OrderedPathDocTest
     {
         if ( Files.exists( OrderedPath.databaseDirectory ) )
         {
-            FileUtils.deletePathRecursively( OrderedPath.databaseDirectory );
+            FileUtils.deleteDirectory( OrderedPath.databaseDirectory );
         }
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( OrderedPath.databaseDirectory ).build();
         db = managementService.database( DEFAULT_DATABASE_NAME );

@@ -34,7 +34,7 @@ public class EmbeddedNeo4jWithBolt
     public static void main( final String[] args ) throws IOException
     {
         System.out.println( "Starting database ..." );
-        FileUtils.deletePathRecursively( DB_PATH );
+        FileUtils.deleteDirectory( DB_PATH );
 
         // tag::startDb[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( DB_PATH )

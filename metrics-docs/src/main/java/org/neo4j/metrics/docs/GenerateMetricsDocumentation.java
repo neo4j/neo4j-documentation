@@ -22,7 +22,7 @@
  */
 package org.neo4j.metrics.docs;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.neo4j.internal.helpers.Args;
@@ -53,8 +53,8 @@ public class GenerateMetricsDocumentation
         String outputFileName = args.get( OUTPUT_FILE_FLAG );
         if ( outputFileName != null )
         {
-            File output = new File( outputFileName );
-            System.out.println( "Saving docs for '" + metricsClassNames + "' in '" + output.getAbsolutePath() + "'." );
+            Path output = Path.of( outputFileName );
+            System.out.println( "Saving docs for '" + metricsClassNames + "' in '" + output.toAbsolutePath() + "'." );
             FileUtils.writeToFile( output, builder.toString(), false );
         }
         else

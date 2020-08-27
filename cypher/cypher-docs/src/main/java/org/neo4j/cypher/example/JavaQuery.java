@@ -32,9 +32,9 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.io.fs.FileUtils;
 
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
-import static org.neo4j.io.fs.FileUtils.deletePathRecursively;
 
 public class JavaQuery
 {
@@ -104,7 +104,7 @@ public class JavaQuery
     {
         try
         {
-            deletePathRecursively( databaseDirectory );
+            FileUtils.deleteDirectory( databaseDirectory );
         }
         catch ( IOException e )
         {

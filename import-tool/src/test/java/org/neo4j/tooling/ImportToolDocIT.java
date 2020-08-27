@@ -29,11 +29,11 @@ import org.junit.jupiter.api.io.TempDir;
 import picocli.CommandLine;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +55,7 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.importer.ImportCommand;
 import org.neo4j.internal.helpers.collection.Iterables;
 
+import static java.nio.file.Files.newOutputStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.neo4j.internal.helpers.collection.Iterators.asSet;
@@ -73,8 +74,8 @@ class ImportToolDocIT
     void basicCsvImport() throws Exception
     {
         // GIVEN
-        File movies = file( "ops", "movies.csv" );
-        try ( PrintStream out = new PrintStream( movies ) )
+        Path movies = file( "ops", "movies.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( movies ) ) )
         {
             out.println( "movieId:ID,title,year:int,:LABEL" );
             out.println( "tt0133093,\"The Matrix\",1999,Movie" );
@@ -82,8 +83,8 @@ class ImportToolDocIT
             out.println( "tt0242653,\"The Matrix Revolutions\",2003,Movie;Sequel" );
         }
 
-        File actors = file( "ops", "actors.csv" );
-        try ( PrintStream out = new PrintStream( actors ) )
+        Path actors = file( "ops", "actors.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actors ) ) )
         {
             out.println( "personId:ID,name,:LABEL" );
             out.println( "keanu,\"Keanu Reeves\",Actor" );
@@ -91,8 +92,8 @@ class ImportToolDocIT
             out.println( "carrieanne,\"Carrie-Anne Moss\",Actor" );
         }
 
-        File roles = file( "ops", "roles.csv" );
-        try ( PrintStream out = new PrintStream( roles ) )
+        Path roles = file( "ops", "roles.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( roles ) ) )
         {
             out.println( ":START_ID,role,:END_ID,:TYPE" );
             out.println( "keanu,\"Neo\",tt0133093,ACTED_IN" );
@@ -108,12 +109,12 @@ class ImportToolDocIT
 
         // WHEN
         String[] arguments =
-                arguments( "--database", "the-database", "--nodes", movies.getAbsolutePath(),
-                        "--nodes", actors.getAbsolutePath(), "--relationships", roles.getAbsolutePath() );
+                arguments( "--database", "the-database", "--nodes", movies.toAbsolutePath().toString(),
+                        "--nodes", actors.toAbsolutePath().toString(), "--relationships", roles.toAbsolutePath().toString() );
         importTool( arguments );
 
         // DOCS
-        String realDir = movies.getParentFile().getAbsolutePath();
+        String realDir = movies.getParent().toAbsolutePath().toString();
         printCommandToFile( arguments, realDir, "example-command.adoc" );
 
         // THEN
@@ -124,37 +125,37 @@ class ImportToolDocIT
     void separateHeadersCsvImport() throws Exception
     {
         // GIVEN
-        File moviesHeader = file( "ops", "movies3-header.csv" );
-        try ( PrintStream out = new PrintStream( moviesHeader ) )
+        Path moviesHeader = file( "ops", "movies3-header.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( moviesHeader ) ) )
         {
             out.println( "movieId:ID,title,year:int,:LABEL" );
         }
-        File movies = file( "ops", "movies3.csv" );
-        try ( PrintStream out = new PrintStream( movies ) )
+        Path movies = file( "ops", "movies3.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( movies ) ) )
         {
             out.println( "tt0133093,\"The Matrix\",1999,Movie" );
             out.println( "tt0234215,\"The Matrix Reloaded\",2003,Movie;Sequel" );
             out.println( "tt0242653,\"The Matrix Revolutions\",2003,Movie;Sequel" );
         }
-        File actorsHeader = file( "ops", "actors3-header.csv" );
-        try ( PrintStream out = new PrintStream( actorsHeader ) )
+        Path actorsHeader = file( "ops", "actors3-header.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actorsHeader ) ) )
         {
             out.println( "personId:ID,name,:LABEL" );
         }
-        File actors = file( "ops", "actors3.csv" );
-        try ( PrintStream out = new PrintStream( actors ) )
+        Path actors = file( "ops", "actors3.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actors ) ) )
         {
             out.println( "keanu,\"Keanu Reeves\",Actor" );
             out.println( "laurence,\"Laurence Fishburne\",Actor" );
             out.println( "carrieanne,\"Carrie-Anne Moss\",Actor" );
         }
-        File rolesHeader = file( "ops", "roles3-header.csv" );
-        try ( PrintStream out = new PrintStream( rolesHeader ) )
+        Path rolesHeader = file( "ops", "roles3-header.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( rolesHeader ) ) )
         {
             out.println( ":START_ID,role,:END_ID,:TYPE" );
         }
-        File roles = file( "ops", "roles3.csv" );
-        try ( PrintStream out = new PrintStream( roles ) )
+        Path roles = file( "ops", "roles3.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( roles ) ) )
         {
             out.println( "keanu,\"Neo\",tt0133093,ACTED_IN" );
             out.println( "keanu,\"Neo\",tt0234215,ACTED_IN" );
@@ -169,13 +170,13 @@ class ImportToolDocIT
 
         // WHEN
         String[] arguments = arguments( "--database", "the-database", "--nodes",
-                moviesHeader.getAbsolutePath() + "," + movies.getAbsolutePath(), "--nodes",
-                actorsHeader.getAbsolutePath() + "," + actors.getAbsolutePath(), "--relationships",
-                rolesHeader.getAbsolutePath() + "," + roles.getAbsolutePath() );
+                moviesHeader.toAbsolutePath() + "," + movies.toAbsolutePath(), "--nodes",
+                actorsHeader.toAbsolutePath() + "," + actors.toAbsolutePath(), "--relationships",
+                rolesHeader.toAbsolutePath() + "," + roles.toAbsolutePath() );
         importTool( arguments );
 
         // DOCS
-        String realDir = movies.getParentFile().getAbsolutePath();
+        String realDir = movies.getParent().toAbsolutePath().toString();
         printCommandToFile( arguments, realDir, "separate-header-example-command.adoc" );
 
         // THEN
@@ -186,45 +187,45 @@ class ImportToolDocIT
     void multipleInputFiles() throws Exception
     {
         // GIVEN
-        File moviesHeader = file( "ops", "movies4-header.csv" );
-        try ( PrintStream out = new PrintStream( moviesHeader ) )
+        Path moviesHeader = file( "ops", "movies4-header.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( moviesHeader ) ) )
         {
             out.println( "movieId:ID,title,year:int,:LABEL" );
         }
-        File moviesPart1 = file( "ops", "movies4-part1.csv" );
-        try ( PrintStream out = new PrintStream( moviesPart1 ) )
+        Path moviesPart1 = file( "ops", "movies4-part1.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( moviesPart1 ) ) )
         {
             out.println( "tt0133093,\"The Matrix\",1999,Movie" );
             out.println( "tt0234215,\"The Matrix Reloaded\",2003,Movie;Sequel" );
         }
-        File moviesPart2 = file( "ops", "movies4-part2.csv" );
-        try ( PrintStream out = new PrintStream( moviesPart2 ) )
+        Path moviesPart2 = file( "ops", "movies4-part2.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( moviesPart2 ) ) )
         {
             out.println( "tt0242653,\"The Matrix Revolutions\",2003,Movie;Sequel" );
         }
-        File actorsHeader = file( "ops", "actors4-header.csv" );
-        try ( PrintStream out = new PrintStream( actorsHeader ) )
+        Path actorsHeader = file( "ops", "actors4-header.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actorsHeader ) ) )
         {
             out.println( "personId:ID,name,:LABEL" );
         }
-        File actorsPart1 = file( "ops", "actors4-part1.csv" );
-        try ( PrintStream out = new PrintStream( actorsPart1 ) )
+        Path actorsPart1 = file( "ops", "actors4-part1.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actorsPart1 ) ) )
         {
             out.println( "keanu,\"Keanu Reeves\",Actor" );
             out.println( "laurence,\"Laurence Fishburne\",Actor" );
         }
-        File actorsPart2 = file( "ops", "actors4-part2.csv" );
-        try ( PrintStream out = new PrintStream( actorsPart2 ) )
+        Path actorsPart2 = file( "ops", "actors4-part2.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actorsPart2 ) ) )
         {
             out.println( "carrieanne,\"Carrie-Anne Moss\",Actor" );
         }
-        File rolesHeader = file( "ops", "roles4-header.csv" );
-        try ( PrintStream out = new PrintStream( rolesHeader ) )
+        Path rolesHeader = file( "ops", "roles4-header.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( rolesHeader ) ) )
         {
             out.println( ":START_ID,role,:END_ID,:TYPE" );
         }
-        File rolesPart1 = file( "ops", "roles4-part1.csv" );
-        try ( PrintStream out = new PrintStream( rolesPart1 ) )
+        Path rolesPart1 = file( "ops", "roles4-part1.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( rolesPart1 ) ) )
         {
             out.println( "keanu,\"Neo\",tt0133093,ACTED_IN" );
             out.println( "keanu,\"Neo\",tt0234215,ACTED_IN" );
@@ -232,8 +233,8 @@ class ImportToolDocIT
             out.println( "laurence,\"Morpheus\",tt0133093,ACTED_IN" );
             out.println( "laurence,\"Morpheus\",tt0234215,ACTED_IN" );
         }
-        File rolesPart2 = file( "ops", "roles4-part2.csv" );
-        try ( PrintStream out = new PrintStream( rolesPart2 ) )
+        Path rolesPart2 = file( "ops", "roles4-part2.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( rolesPart2 ) ) )
         {
             out.println( "laurence,\"Morpheus\",tt0242653,ACTED_IN" );
             out.println( "carrieanne,\"Trinity\",tt0133093,ACTED_IN" );
@@ -243,16 +244,16 @@ class ImportToolDocIT
 
         // WHEN
         String[] arguments = arguments( "--database", "the-database", "--nodes",
-                moviesHeader.getAbsolutePath() + "," + moviesPart1.getAbsolutePath() +
-                        "," + moviesPart2.getAbsolutePath(), "--nodes",
-                actorsHeader.getAbsolutePath() + "," + actorsPart1.getAbsolutePath() +
-                        "," + actorsPart2.getAbsolutePath(), "--relationships",
-                rolesHeader.getAbsolutePath() + "," + rolesPart1.getAbsolutePath() +
-                        "," + rolesPart2.getAbsolutePath() );
+                moviesHeader.toAbsolutePath() + "," + moviesPart1.toAbsolutePath() +
+                        "," + moviesPart2.toAbsolutePath(), "--nodes",
+                actorsHeader.toAbsolutePath() + "," + actorsPart1.toAbsolutePath() +
+                        "," + actorsPart2.toAbsolutePath(), "--relationships",
+                rolesHeader.toAbsolutePath() + "," + rolesPart1.toAbsolutePath() +
+                        "," + rolesPart2.toAbsolutePath() );
         importTool( arguments );
 
         // DOCS
-        String realDir = moviesPart2.getParentFile().getAbsolutePath();
+        String realDir = moviesPart2.getParent().toAbsolutePath().toString();
         printCommandToFile( arguments, realDir, "multiple-input-files.adoc" );
 
         // THEN
@@ -263,23 +264,23 @@ class ImportToolDocIT
     void sameNodeLabelEverywhere() throws Exception
     {
         // GIVEN
-        File movies = file( "ops", "movies5.csv" );
-        try ( PrintStream out = new PrintStream( movies ) )
+        Path movies = file( "ops", "movies5.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( movies ) ) )
         {
             out.println( "movieId:ID,title,year:int" );
             out.println( "tt0133093,\"The Matrix\",1999" );
         }
 
-        File sequels = file( "ops", "sequels5.csv" );
-        try ( PrintStream out = new PrintStream( sequels ) )
+        Path sequels = file( "ops", "sequels5.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( sequels ) ) )
         {
             out.println( "movieId:ID,title,year:int" );
             out.println( "tt0234215,\"The Matrix Reloaded\",2003" );
             out.println( "tt0242653,\"The Matrix Revolutions\",2003" );
         }
 
-        File actors = file( "ops", "actors5.csv" );
-        try ( PrintStream out = new PrintStream( actors ) )
+        Path actors = file( "ops", "actors5.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actors ) ) )
         {
             out.println( "personId:ID,name" );
             out.println( "keanu,\"Keanu Reeves\"" );
@@ -287,8 +288,8 @@ class ImportToolDocIT
             out.println( "carrieanne,\"Carrie-Anne Moss\"" );
         }
 
-        File roles = file( "ops", "roles5.csv" );
-        try ( PrintStream out = new PrintStream( roles ) )
+        Path roles = file( "ops", "roles5.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( roles ) ) )
         {
             out.println( ":START_ID,role,:END_ID,:TYPE" );
             out.println( "keanu,\"Neo\",tt0133093,ACTED_IN" );
@@ -303,13 +304,13 @@ class ImportToolDocIT
         }
         // WHEN
         String[] arguments = arguments( "--database", "the-database",
-                "--nodes=Movie=" + movies.getAbsolutePath(),
-                "--nodes=Movie:Sequel=" + sequels.getAbsolutePath(),
-                "--nodes=Actor=" + actors.getAbsolutePath(), "--relationships", roles.getAbsolutePath() );
+                "--nodes=Movie=" + movies.toAbsolutePath(),
+                "--nodes=Movie:Sequel=" + sequels.toAbsolutePath(),
+                "--nodes=Actor=" + actors.toAbsolutePath(), "--relationships", roles.toAbsolutePath().toString() );
         importTool( arguments );
 
         // DOCS
-        String realDir = movies.getParentFile().getAbsolutePath();
+        String realDir = movies.getParent().toAbsolutePath().toString();
         printCommandToFile( arguments, realDir, "same-node-label-everywhere.adoc" );
 
         // THEN
@@ -320,8 +321,8 @@ class ImportToolDocIT
     void sameRelationshipTypeEverywhere() throws Exception
     {
         // GIVEN
-        File movies = file( "ops", "movies6.csv" );
-        try ( PrintStream out = new PrintStream( movies ) )
+        Path movies = file( "ops", "movies6.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( movies ) ) )
         {
             out.println( "movieId:ID,title,year:int,:LABEL" );
             out.println( "tt0133093,\"The Matrix\",1999,Movie" );
@@ -329,8 +330,8 @@ class ImportToolDocIT
             out.println( "tt0242653,\"The Matrix Revolutions\",2003,Movie;Sequel" );
         }
 
-        File actors = file( "ops", "actors6.csv" );
-        try ( PrintStream out = new PrintStream( actors ) )
+        Path actors = file( "ops", "actors6.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actors ) ) )
         {
             out.println( "personId:ID,name,:LABEL" );
             out.println( "keanu,\"Keanu Reeves\",Actor" );
@@ -338,8 +339,8 @@ class ImportToolDocIT
             out.println( "carrieanne,\"Carrie-Anne Moss\",Actor" );
         }
 
-        File roles = file( "ops", "roles6.csv" );
-        try ( PrintStream out = new PrintStream( roles ) )
+        Path roles = file( "ops", "roles6.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( roles ) ) )
         {
             out.println( ":START_ID,role,:END_ID" );
             out.println( "keanu,\"Neo\",tt0133093" );
@@ -354,12 +355,12 @@ class ImportToolDocIT
         }
         // WHEN
         String[] arguments =
-                arguments( "--database", "the-database", "--nodes", movies.getAbsolutePath(),
-                        "--nodes", actors.getAbsolutePath(), "--relationships=ACTED_IN=" + roles.getAbsolutePath() );
+                arguments( "--database", "the-database", "--nodes", movies.toAbsolutePath().toString(),
+                        "--nodes", actors.toAbsolutePath().toString(), "--relationships=ACTED_IN=" + roles.toAbsolutePath() );
         importTool( arguments );
 
         // DOCS
-        String realDir = movies.getParentFile().getAbsolutePath();
+        String realDir = movies.getParent().toAbsolutePath().toString();
         printCommandToFile( arguments, realDir, "same-relationship-type-everywhere.adoc" );
 
         // THEN
@@ -370,8 +371,8 @@ class ImportToolDocIT
     void idSpaces() throws Exception
     {
         // GIVEN
-        File movies = file( "ops", "movies8.csv" );
-        try ( PrintStream out = new PrintStream( movies ) )
+        Path movies = file( "ops", "movies8.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( movies ) ) )
         {
             out.println( "movieId:ID(Movie),title,year:int,:LABEL" );
             out.println( "1,\"The Matrix\",1999,Movie" );
@@ -379,8 +380,8 @@ class ImportToolDocIT
             out.println( "3,\"The Matrix Revolutions\",2003,Movie;Sequel" );
         }
 
-        File actors = file( "ops", "actors8.csv" );
-        try ( PrintStream out = new PrintStream( actors ) )
+        Path actors = file( "ops", "actors8.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actors ) ) )
         {
             out.println( "personId:ID(Actor),name,:LABEL" );
             out.println( "1,\"Keanu Reeves\",Actor" );
@@ -388,8 +389,8 @@ class ImportToolDocIT
             out.println( "3,\"Carrie-Anne Moss\",Actor" );
         }
 
-        File roles = file( "ops", "roles8.csv" );
-        try ( PrintStream out = new PrintStream( roles ) )
+        Path roles = file( "ops", "roles8.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( roles ) ) )
         {
             out.println( ":START_ID(Actor),role,:END_ID(Movie)" );
             out.println( "1,\"Neo\",1" );
@@ -404,12 +405,12 @@ class ImportToolDocIT
         }
         // WHEN
         String[] arguments =
-                arguments( "--database", "the-database", "--nodes", movies.getAbsolutePath(),
-                        "--nodes", actors.getAbsolutePath(), "--relationships=ACTED_IN=" + roles.getAbsolutePath() );
+                arguments( "--database", "the-database", "--nodes", movies.toAbsolutePath().toString(),
+                        "--nodes", actors.toAbsolutePath().toString(), "--relationships=ACTED_IN=" + roles.toAbsolutePath() );
         importTool( arguments );
 
         // DOCS
-        String realDir = movies.getParentFile().getAbsolutePath();
+        String realDir = movies.getParent().toAbsolutePath().toString();
         printCommandToFile( arguments, realDir, "id-spaces.adoc" );
 
         // THEN
@@ -420,8 +421,8 @@ class ImportToolDocIT
     void badRelationships() throws IOException
     {
         // GIVEN
-        File movies = file( "ops", "movies9.csv" );
-        try ( PrintStream out = new PrintStream( movies ) )
+        Path movies = file( "ops", "movies9.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( movies ) ) )
         {
             out.println( "movieId:ID,title,year:int,:LABEL" );
             out.println( "tt0133093,\"The Matrix\",1999,Movie" );
@@ -429,8 +430,8 @@ class ImportToolDocIT
             out.println( "tt0242653,\"The Matrix Revolutions\",2003,Movie;Sequel" );
         }
 
-        File actors = file( "ops", "actors9.csv" );
-        try ( PrintStream out = new PrintStream( actors ) )
+        Path actors = file( "ops", "actors9.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actors ) ) )
         {
             out.println( "personId:ID,name,:LABEL" );
             out.println( "keanu,\"Keanu Reeves\",Actor" );
@@ -438,8 +439,8 @@ class ImportToolDocIT
             out.println( "carrieanne,\"Carrie-Anne Moss\",Actor" );
         }
 
-        File roles = file( "ops", "roles9.csv" );
-        try ( PrintStream out = new PrintStream( roles ) )
+        Path roles = file( "ops", "roles9.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( roles ) ) )
         {
             out.println( ":START_ID,role,:END_ID,:TYPE" );
             out.println( "keanu,\"Neo\",tt0133093,ACTED_IN" );
@@ -455,18 +456,18 @@ class ImportToolDocIT
         }
 
         // WHEN
-        File badFile = badFile();
+        Path badFile = badFile();
         String[] arguments = arguments(
                 "--database", "the-database",
-                "--nodes", movies.getAbsolutePath(),
-                "--nodes", actors.getAbsolutePath(),
-                "--relationships", roles.getAbsolutePath(),
+                "--nodes", movies.toAbsolutePath().toString(),
+                "--nodes", actors.toAbsolutePath().toString(),
+                "--relationships", roles.toAbsolutePath().toString(),
                 "--skip-bad-relationships" );
         importTool( arguments );
-        assertTrue( badFile.exists() );
+        assertTrue( Files.exists( badFile ) );
 
         // DOCS
-        String realDir = movies.getParentFile().getAbsolutePath();
+        String realDir = movies.getParent().toAbsolutePath().toString();
         printFileWithPathsRemoved( badFile, realDir, "bad-relationships-default-not-imported.bad.adoc" );
         printCommandToFile( arguments, realDir, "bad-relationships-default.adoc" );
 
@@ -508,8 +509,8 @@ class ImportToolDocIT
     void badDuplicateNodes() throws IOException
     {
         // GIVEN
-        File actors = file( "ops", "actors10.csv" );
-        try ( PrintStream out = new PrintStream( actors ) )
+        Path actors = file( "ops", "actors10.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actors ) ) )
         {
             out.println( "personId:ID,name,:LABEL" );
             out.println( "keanu,\"Keanu Reeves\",Actor" );
@@ -519,16 +520,16 @@ class ImportToolDocIT
         }
 
         // WHEN
-        File badFile = badFile();
+        Path badFile = badFile();
         String[] arguments = arguments(
                 "--database", "the-database",
-                "--nodes", actors.getAbsolutePath(),
+                "--nodes", actors.toAbsolutePath().toString(),
                 "--skip-duplicate-nodes" );
         importTool( arguments );
-        assertTrue( badFile.exists() );
+        assertTrue( Files.exists( badFile ) );
 
         // DOCS
-        String realDir = actors.getParentFile().getAbsolutePath();
+        String realDir = actors.getParent().toAbsolutePath().toString();
         printFileWithPathsRemoved( badFile, realDir, "bad-duplicate-nodes-default-not-imported.bad.adoc" );
         printCommandToFile( arguments, realDir, "bad-duplicate-nodes-default.adoc" );
 
@@ -548,22 +549,22 @@ class ImportToolDocIT
     void propertyTypes() throws IOException
     {
         // GIVEN
-        File movies = file( "ops", "movies7.csv" );
-        try ( PrintStream out = new PrintStream( movies ) )
+        Path movies = file( "ops", "movies7.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( movies ) ) )
         {
             out.println( "movieId:ID,title,year:int,:LABEL" );
             out.println( "tt0099892,\"Joe Versus the Volcano\",1990,Movie" );
         }
 
-        File actors = file( "ops", "actors7.csv" );
-        try ( PrintStream out = new PrintStream( actors ) )
+        Path actors = file( "ops", "actors7.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( actors ) ) )
         {
             out.println( "personId:ID,name,:LABEL" );
             out.println( "meg,\"Meg Ryan\",Actor" );
         }
 
-        File roles = file( "ops", "roles7.csv" );
-        try ( PrintStream out = new PrintStream( roles ) )
+        Path roles = file( "ops", "roles7.csv" );
+        try ( PrintStream out = new PrintStream( newOutputStream( roles ) ) )
         {
             out.println( ":START_ID,roles:string[],:END_ID,:TYPE" );
             out.println( "meg,\"DeDe;Angelica Graynamore;Patricia Graynamore\",tt0099892,ACTED_IN" );
@@ -571,12 +572,12 @@ class ImportToolDocIT
 
         // WHEN
         String[] arguments =
-                arguments( "--database", "the-database", "--nodes", movies.getAbsolutePath(),
-                        "--nodes", actors.getAbsolutePath(), "--relationships", roles.getAbsolutePath() );
+                arguments( "--database", "the-database", "--nodes", movies.toAbsolutePath().toString(),
+                        "--nodes", actors.toAbsolutePath().toString(), "--relationships", roles.toAbsolutePath().toString() );
         importTool( arguments );
 
         // DOCS
-        String realDir = movies.getParentFile().getAbsolutePath();
+        String realDir = movies.getParent().toAbsolutePath().toString();
         printCommandToFile( arguments, realDir, "property-types.adoc" );
 
         // THEN
@@ -666,7 +667,7 @@ class ImportToolDocIT
         return new File( new File( testDirectory.toAbsolutePath().toFile(), "data" ), "transactions" );
     }
 
-    private void printCommandToFile( String[] arguments, String dir, String fileName ) throws FileNotFoundException
+    private void printCommandToFile( String[] arguments, String dir, String fileName ) throws IOException
     {
         List<String> cleanedArguments = new ArrayList<>();
         for ( String argument : arguments )
@@ -685,7 +686,7 @@ class ImportToolDocIT
         documentationArgs = documentationArgs.replace( dir + File.separator, "" )
                 .replace( testDirectory.toAbsolutePath().toString(), "path_to_target_directory" );
         String docsCommand = "neo4j-admin import " + documentationArgs;
-        try ( PrintStream out = new PrintStream( file( "ops", fileName ) ) )
+        try ( PrintStream out = new PrintStream( newOutputStream( file( "ops", fileName ) ) ) )
         {
             out.println( docsCommand );
         }
@@ -694,7 +695,7 @@ class ImportToolDocIT
     @Test
     void printOptionsForManpage() throws Exception
     {
-        try ( PrintStream out = new PrintStream( file( "man", "options.adoc" ) ) )
+        try ( PrintStream out = new PrintStream( newOutputStream( file( "man", "options.adoc" ) ) ) )
         {
             ExecutionContext ctx = new ExecutionContext( testDirectory.toAbsolutePath(), testDirectory.toAbsolutePath() );
             ImportCommand cmd = new ImportCommand( ctx );
@@ -705,7 +706,7 @@ class ImportToolDocIT
     @Test
     void printOptionsForManual() throws Exception
     {
-        try ( PrintStream out = new PrintStream( file( "ops", "options.adoc" ) ) )
+        try ( PrintStream out = new PrintStream( newOutputStream( file( "ops", "options.adoc" ) ) ) )
         {
             ExecutionContext ctx = new ExecutionContext( testDirectory.toAbsolutePath(), testDirectory.toAbsolutePath() );
             ImportCommand cmd = new ImportCommand( ctx );
@@ -713,19 +714,19 @@ class ImportToolDocIT
         }
     }
 
-    private void printFileWithPathsRemoved( File badFile, String realDir, String destinationFileName )
+    private void printFileWithPathsRemoved( Path badFile, String realDir, String destinationFileName )
             throws IOException
     {
-        String contents = FileUtils.readFileToString( badFile, StandardCharsets.UTF_8 );
+        String contents = FileUtils.readFileToString( badFile.toFile(), StandardCharsets.UTF_8 );
         String cleanedContents = contents.replace( realDir + File.separator, "" );
         writeToFile( file( "ops", destinationFileName ), cleanedContents, false );
     }
 
-    private File file( String section, String name )
+    private Path file( String section, String name ) throws IOException
     {
-        File directory = new File( new File( new File( "target" ), "docs" ), section );
-        directory.mkdirs();
-        return new File( directory, name );
+        Path directory = Path.of( "target", "docs", section );
+        Files.createDirectories( directory );
+        return directory.resolve( name );
     }
 
     private String[] arguments( String... arguments )
@@ -741,8 +742,8 @@ class ImportToolDocIT
         importCommand.execute();
     }
 
-    private File badFile()
+    private Path badFile()
     {
-        return new File( "import.report" );
+        return Path.of( "import.report" );
     }
 }

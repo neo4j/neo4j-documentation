@@ -54,7 +54,7 @@ public class ReadOnlyDocTest
         Path dir = Path.of( "target/read-only-managementService/location" );
         if ( Files.exists( dir ) )
         {
-            FileUtils.deletePathRecursively( dir );
+            FileUtils.deleteDirectory( dir );
         }
         new DatabaseManagementServiceBuilder( dir ).build().shutdown();
         // tag::createReadOnlyInstance[]
