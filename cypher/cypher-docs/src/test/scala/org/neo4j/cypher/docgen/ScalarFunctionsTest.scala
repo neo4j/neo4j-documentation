@@ -218,7 +218,7 @@ class ScalarFunctionsTest extends DocumentingTest {
           r.toList should equal(List(Map("fof" -> 3)))
         })) {
         resultTable()
-        p("The number of sub-graphs matching the pattern expression is returned.")
+        p("The number of paths matching the pattern expression is returned.")
       }
     }
     section("size() applied to string", "functions-size-of-string") {
