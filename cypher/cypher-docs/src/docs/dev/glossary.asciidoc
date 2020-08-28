@@ -228,7 +228,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-sin, sin()>>                       | Trigonometric     | Returns the sine of a number.
 |<<functions-single, single()>>                  | Predicate         | Returns true if the predicate holds for exactly one of the elements in a list.
 |<<functions-size, size()>>                      | Scalar            | Returns the number of items in a list.
-|<<functions-size-of-pattern-expression, size() applied to pattern expression>>  | Scalar   | Returns the number of sub-graphs matching the pattern expression.
+|<<functions-size-of-pattern-expression, size() applied to pattern expression>>  | Scalar   | Returns the number of paths matching the pattern expression.
 |<<functions-size-of-string, size() applied to string>>  | Scalar          | Returns the number of Unicode characters in a string.
 |<<functions-split, split()>>                    | String            | Returns a list of strings resulting from the splitting of the original string around matches of the given delimiter.
 |<<functions-sqrt, sqrt()>>                     | Logarithmic       | Returns the square root of a number.
