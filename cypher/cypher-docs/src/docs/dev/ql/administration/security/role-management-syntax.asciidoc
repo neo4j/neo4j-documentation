@@ -6,8 +6,9 @@
 | [source, cypher]
 ----
 SHOW [ALL\|POPULATED] ROLES
-    [YIELD field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [YIELD { * \| field1[, field2] } [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
     [WHERE expression]
+    [RETURN field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
 ----
 | List roles.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>

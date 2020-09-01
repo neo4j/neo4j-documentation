@@ -41,6 +41,12 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
+      p("The number of databases can be seen using a `count()` aggregation with `YIELD` and `RETURN`.")
+      query("SHOW DATABASES YIELD * RETURN count(*) as count", ResultAssertions({ r: DocsExecutionResult =>
+        r.columnAs[Int]("count").toSet should be(Set(4))
+      })){
+        resultTable()
+      }
       p("A particular database can be seen using the command `SHOW DATABASE name`.")
       query("SHOW DATABASE system", assertDatabaseShown("system")) {
         resultTable()

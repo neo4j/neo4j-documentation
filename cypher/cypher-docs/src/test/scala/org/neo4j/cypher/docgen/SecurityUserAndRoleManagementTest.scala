@@ -77,6 +77,14 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           )
           resultTable()
         }
+        query("SHOW USERS YIELD roles, user WHERE \"PUBLIC\" IN roles RETURN user as publicUsers", ResultAssertions({ r: DocsExecutionResult =>
+          r.columnAs[String]("publicUsers").toSet should be(Set("neo4j", "jake"))
+          })) {
+          p(
+            """It is also possible to add a `RETURN` clause to further manipulate the results after filtering. In this
+              |case it is used to filter out the roles column and rename the users column to publicUsers.""".stripMargin)
+          resultTable()
+        }
         note {
           p(
             """In Neo4j Community Edition there are no roles, but all users have implied administrator privileges.
