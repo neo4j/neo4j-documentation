@@ -93,7 +93,7 @@ class MatchTest extends DocumentingTest {
       p( """`MATCH` can occur at the beginning of the query or later, possibly after a `WITH`.
            |If it is the first clause, nothing will have been bound yet, and Neo4j will design a search to find the results matching the clause and any associated predicates specified in any `WHERE` part.
            |This could involve a scan of the database, a search for nodes having a certain label, or a search of an index to find starting points for the pattern matching.
-           |Nodes and relationships found by this search are available as _bound pattern elements,_ and can be used for pattern matching of sub-graphs.
+           |Nodes and relationships found by this search are available as _bound pattern elements,_ and can be used for pattern matching of paths.
            |They can also be used in any further `MATCH` clauses, where Neo4j will use the known elements, and from there find further unknown elements.""")
       p( """Cypher is declarative, and so usually the query itself does not specify the algorithm to use to perform the search.
            |Neo4j will automatically work out the best approach to finding start nodes and matching patterns.
