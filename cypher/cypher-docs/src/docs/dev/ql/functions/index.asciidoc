@@ -61,7 +61,7 @@ These functions return a single value.
 | <<functions-properties,properties()>>                               | Returns a map containing all the properties of a node or relationship.
 | <<functions-randomuuid, randomUUID()>>                              | Returns a string value corresponding to a randomly-generated UUID.
 | <<functions-size,size()>>                                           | Returns the number of items in a list.
-| <<functions-size-of-pattern-expression,size() applied to pattern expression>> | Returns the number of sub-graphs matching the pattern expression.
+| <<functions-size-of-pattern-expression,size() applied to pattern expression>> | Returns the number of paths matching the pattern expression.
 | <<functions-size-of-string,size() applied to string>>                         | Returns the number of Unicode characters in a string.
 | <<functions-startnode,startNode()>>                                 | Returns the start node of a relationship.
 | <<functions-timestamp,timestamp()>>                                 | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
