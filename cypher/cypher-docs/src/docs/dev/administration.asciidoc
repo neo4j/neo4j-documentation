@@ -20,7 +20,7 @@ This section explains how to use Cypher to administer Neo4j databases, such as c
 ** <<administration-indexes-syntax, Syntax>>
 ** <<administration-indexes-single-vs-composite-index, Composite index limitations>>
 ** <<administration-indexes-examples, Examples>>
-   
+
 * <<administration-indexes-fulltext-search, Indexes for full-text search>>
 ** <<administration-indexes-fulltext-search-introduction, Introduction>>
 ** <<administration-indexes-fulltext-search-manage, Procedures to manage full-text indexes>>
