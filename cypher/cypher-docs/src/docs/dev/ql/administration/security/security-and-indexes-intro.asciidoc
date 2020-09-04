@@ -13,7 +13,7 @@ Since full-text indexes are not automatically used by Cypher, this does not lead
 Users need to explicitly call procedures to use these indexes.
 The problem is only that if this behaviour is not understood by the user, they might expect the full text index to return results that a different but semantically similar Cypher query does.
 
-== Example with blacklisted properties
+==== Example with blacklisted properties
 
 Consider the following example.
 The database has nodes with Label `:User` and these have properties `name` and `email`.
@@ -71,7 +71,7 @@ The steps taken by the query engine would be:
 
 This difference in results is due to the `OR` relationship between the two properties in the index creation.
 
-== Blacklisting properties
+==== Blacklisting properties
 
 Now consider blacklisting properties, like the `surname` property:
 
