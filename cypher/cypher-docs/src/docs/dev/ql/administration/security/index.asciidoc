@@ -40,7 +40,7 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 ** <<administration-security-administration-dbms-privileges, DBMS administration>>
 *** <<administration-security-administration-dbms-custom, Creating custom roles with DBMS privileges>>
 *** <<administration-security-administration-dbms-privileges-role-management, The dbms `ROLE MANAGEMENT` privileges>>
-* <<administration-security-indexes, Security and indexing>>
+* <<administration-security-limitations, Known limitations of security>>
 
 [[administration-security-introduction]]
 == Introduction
@@ -70,4 +70,4 @@ include::administration-security-subgraph.adoc[leveloffset=+1]
 include::administration-security-administration.adoc[leveloffset=+1]
 
 [role=enterprise-edition]
-include::administration-security-indexes.adoc[leveloffset=+1]
+include::administration-security-limitations.adoc[leveloffset=+1]
