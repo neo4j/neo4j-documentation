@@ -48,7 +48,7 @@ These include index and constraint management commands.
 ** <<administration-security-reads, Read privileges>>
 ** <<administration-security-writes, Write privileges>>
 ** <<administration-security-administration, Security of administration>>
-** <<administration-security-indexes, Security and indexing>>
+** <<administration-security-limitations, Known limitations of security>>
 
 
 include::ql/administration/administration-databases.adoc[leveloffset=+1]

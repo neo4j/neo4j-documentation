@@ -1,0 +1,69 @@
+=== How does role-based access control impact label visibility
+
+==== Traversing the graph with multi-labeled nodes
+
+The general influence of access control privileges on graph traversal is described in detail in <<administration-security-subgraph, Graph and sub-graph access control>>.
+The following section will only focus on nodes because of their ability to have multiple labels. Relationships can only ever have one type
+and thus they do not exhibit the behavior this section aims to clarify.
+While this document will not mention relationships further, the general function of the traverse privilege also applies to them.
+
+For any node that is traversable, due to `GRANT TRAVERSE` or `GRANT MATCH`,
+the user can get information about the labels attached to the node by calling the built-in `labels()` function.
+In the case of nodes with multiple labels, this can seemingly result in labels being returned to which the user
+wasn't directly granted access to.
+
+To give an illustrative example, imagine a graph with three nodes: one labeled `:A`, one labeled `:B` and one with `:A :B`.
+We also have user with the role "custom" as defined by:
+
+    GRANT TRAVERSE ON GRAPH * NODES A TO custom;
+
+If that user were to execute
+
+    MATCH (n:A) RETURN n, labels(n);
+
+they would be returned two nodes: the node that was labeled with `:A` and the node with labels `:A :B`.
+
+In contrast, executing
+
+    MATCH (n:B) RETURN n, labels(n);
+
+will return only the one node that has both labels: `:A :B`. Even though `:B` was not whitelisted for traversal, there is one
+node with that label accessible in the data because of the whitelisted label `:A` that is attached to the same node.
+
+// Get A,B but was only granted A
+
+If a user is denied traverse on a label they will never get results from any node that has this label (also)
+attached to it. Thus, the label name will never show up for them. For our example this can be done by executing:
+
+    DENY TRAVERSE ON GRAPH * NODES B TO custom;
+
+The query
+
+    MATCH (n:A) RETURN n, labels(n);
+
+will now return the node only labeled with `:A`, while the query
+
+    MATCH (n:B) RETURN n, labels(n);
+
+will now return no nodes.
+
+==== The db.labels() procedure
+
+In contrast to the normal graph traversal described in the previous section the built-in `db.labels()` procedure
+is not processing the data graph itself but the security rules defined on the system graph.
+That means:
+
+* if a label is explicitly whitelisted (granted), it will be returned by this procedure.
+* if a label is blacklisted (denied) or isn't explicitly whitelisted it will not be returned by this procedure.
+
+To reuse the example of the previous section: imagine a graph with three nodes: one labeled `:A`, one labeled `:B` and one with `:A :B`.
+We also have user with the role "custom" as defined by:
+
+    GRANT TRAVERSE ON GRAPH * NODES A TO custom;
+
+This means that only label `:A` is explicitly whitelisted.
+Thus, executing
+
+    CALL db.labels();
+
+will only return label `:A` because that is the only label for which traversal was granted.
