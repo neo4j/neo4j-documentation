@@ -4,16 +4,16 @@ When using normal Neo4j indexes, a Cypher query will always return the same resu
 This means that if the security model causes fewer results to be returned due to restricted read access in <<administration-security-subgraph, Graph and sub-graph access control>>,
 the index will also return the same fewer results.
 
-However, this rule is not correctly obeyed by <<administration-indexes-fulltext-search, Indexes for full-text search>>.
+However, this rule is not fully obeyed by <<administration-indexes-fulltext-search, Indexes for full-text search>>.
 These specific indexes are backed by Lucene internally.
-It is therefor not possible to know for certain whether a security violation occured for each specific entry returned from the index.
+It is therefore not possible to know for certain whether a security violation occurred for each specific entry returned from the index.
 As a result, Neo4j will return zero results from Full-text indexes if it is determined that any result might violate the security privileges active for that query.
 
-Since full-text indexes are not automatically used by Cypher, this does not lead to the case where the same Cypher query would return different results simple because such an index got created.
+Since full-text indexes are not automatically used by Cypher, this does not lead to the case where the same Cypher query would return different results simply because such an index got created.
 Users need to explicitly call procedures to use these indexes.
-The problem is only that if this behaviour is not understood by the user, they might expect the full text index to return results that a different but semantically similar Cypher query does.
+The problem is only that if this behavior is not understood by the user, they might expect the full text index to return results that a different, but semantically similar, Cypher query does.
 
-==== Example with blacklisted properties
+==== Example with denylisted properties
 
 Consider the following example.
 The database has nodes with Label `:User` and these have properties `name` and `email`.
@@ -27,13 +27,13 @@ Full-text indexes also support multiple labels.
 See <<administration-indexes-fulltext-search, Indexes for full-text search>> for more details on creating and using full-text indexes.
 
 After creating these indexes, it would appear we have two indexes accomplishing the same thing.
-However this is not completely accurate.
+However, this is not completely accurate.
 These two indexes behave in different ways and are focused on different use cases.
 A key difference is that full-text indexes are backed by Lucene, and will use the Lucene syntax for querying the index.
 
 This has consequences for users restricted on the labels or properties involved in the indexes.
-Ideally if the labels and properties in the index are blacklisted, we can correctly return zero results from both native indexes and full-text indexes.
-However, there exist edge cases where this is not so simple.
+Ideally, if the labels and properties in the index are denylisted, we can correctly return zero results from both native indexes and full-text indexes.
+However, there are borderline cases where this is not as simple.
 
 Imagine the following nodes were added to the database:
 
@@ -42,7 +42,7 @@ Imagine the following nodes were added to the database:
     CREATE (:User:Person {name:'Mandy', surname:'Smith'});
     CREATE (:User:Person {name:'Joe', surname:'Andy'});
 
-Consider blacklisting on the label `:Person`.
+Consider denylisting on the label `:Person`.
 
     DENY TRAVERSE Person ON GRAPH * TO users;
 
@@ -73,7 +73,7 @@ This difference in results is due to the `OR` relationship between the two prope
 
 ==== Blacklisting properties
 
-Now consider blacklisting properties, like the `surname` property:
+Now consider denylisting/denying access on properties, like the `surname` property:
 
     DENY READ {surname} ON GRAPH * TO users;
 
@@ -81,7 +81,7 @@ Now we run the same queries again:
 
     MATCH (n:User) WHERE n.name CONTAINS 'ndy' RETURN n.name;
 
-This query will operate exactly as before, returning the same single result, because nothing in this query relates to the blacklisted property.
+This query will operate exactly as before, returning the same single result, because nothing in this query relates to the denylisted property.
 
 But consider the full-text index query:
 
@@ -92,10 +92,10 @@ The problem now is that we do not know if the results provided by the index were
 Results from the surname need to be excluded by the security rules, because they require that the user cannot see any `surname properties.
 However, the security model is not able to introspect the _Lucene_ query to know what it will actually do, whether it works only on the allowed `name` property, or also on the disallowed `surname` property.
 We know that the earlier query returned a match for `Joe Andy` which should now be filtered out.
-So, in order to never result results the user should not be able to see, we have to block all results.
+So, in order to never return results the user should not be able to see, we have to block all results.
 The steps taken by the query engine would be:
 
-* Determine if the full-text index includes blacklisted properties
+* Determine if the full-text index includes denylisted properties
 * If yes, return an empty results stream, otherwise process as before
 
-The query will therefor return zero results in this case, rather than simply returning only the `Andy` result that might be expected.
+The query will therefore return zero results in this case, rather than simply returning only the `Andy` result that might be expected.
