@@ -19,8 +19,11 @@ Consider the following example.
 The database has nodes with Label `:User` and these have properties `name` and `email`.
 We have a normal index on both properties:
 
-    CREATE INDEX FOR (n:User) FOR (n.name, n.surname);
-    CALL db.index.fulltext.createNodeIndex("userNames",["User", "Person"],["name", "surname"]);
+[source, cypher]
+----
+CREATE INDEX FOR (n:User) FOR (n.name, n.surname);
+CALL db.index.fulltext.createNodeIndex("userNames",["User", "Person"],["name", "surname"]);
+----
 
 [NOTE]
 Full-text indexes also support multiple labels.
@@ -37,18 +40,27 @@ However, there are borderline cases where this is not as simple.
 
 Imagine the following nodes were added to the database:
 
-    CREATE (:User {name:'Mark', surname:'Andy'});
-    CREATE (:User {name:'Andy', surname:'Anderson'});
-    CREATE (:User:Person {name:'Mandy', surname:'Smith'});
-    CREATE (:User:Person {name:'Joe', surname:'Andy'});
+[source, cypher]
+----
+CREATE (:User {name:'Mark', surname:'Andy'});
+CREATE (:User {name:'Andy', surname:'Anderson'});
+CREATE (:User:Person {name:'Mandy', surname:'Smith'});
+CREATE (:User:Person {name:'Joe', surname:'Andy'});
+----
 
 Consider denylisting on the label `:Person`.
 
-    DENY TRAVERSE Person ON GRAPH * TO users;
+[source, cypher]
+----
+DENY TRAVERSE Person ON GRAPH * TO users;
+----
 
 If the user runs a query that will use the native index:
 
-    MATCH (n:User) WHERE n.name CONTAINS 'ndy' RETURN n.name;
+[source, cypher]
+----
+MATCH (n:User) WHERE n.name CONTAINS 'ndy' RETURN n.name;
+----
 
 This query will perform several checks:
 
@@ -60,8 +72,11 @@ For the above dataset, we can see we will get one result.
 
 What if we query this with the full-text index:
 
-    CALL db.index.fulltext.queryNodes("userNames", "ndy") YIELD node, score
-    RETURN node.name
+[source, cypher]
+----
+CALL db.index.fulltext.queryNodes("userNames", "ndy") YIELD node, score
+RETURN node.name
+----
 
 The problem now is that we do not know if the results provided by the index were because of a match to the `name` or the `surname` property.
 The steps taken by the query engine would be:
@@ -75,18 +90,27 @@ This difference in results is due to the `OR` relationship between the two prope
 
 Now consider denylisting/denying access on properties, like the `surname` property:
 
-    DENY READ {surname} ON GRAPH * TO users;
+[source, cypher]
+----
+DENY READ {surname} ON GRAPH * TO users;
+----
 
 Now we run the same queries again:
 
-    MATCH (n:User) WHERE n.name CONTAINS 'ndy' RETURN n.name;
+[source, cypher]
+----
+MATCH (n:User) WHERE n.name CONTAINS 'ndy' RETURN n.name;
+----
 
 This query will operate exactly as before, returning the same single result, because nothing in this query relates to the denylisted property.
 
 But consider the full-text index query:
 
-    CALL db.index.fulltext.queryNodes("userNames", "ndy") YIELD node, score
-    RETURN node.name
+[source, cypher]
+----
+CALL db.index.fulltext.queryNodes("userNames", "ndy") YIELD node, score
+RETURN node.name
+----
 
 The problem now is that we do not know if the results provided by the index were because of a match to the `name` or the `surname` property.
 Results from the surname need to be excluded by the security rules, because they require that the user cannot see any `surname properties.

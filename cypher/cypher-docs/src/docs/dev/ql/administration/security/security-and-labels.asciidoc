@@ -15,35 +15,51 @@ wasn't directly granted access to.
 To give an illustrative example, imagine a graph with three nodes: one labeled `:A`, one labeled `:B` and one with `:A :B`.
 We also have user with the role "custom" as defined by:
 
-    GRANT TRAVERSE ON GRAPH * NODES A TO custom;
+[source, cypher]
+----
+GRANT TRAVERSE ON GRAPH * NODES A TO custom;
+----
 
 If that user were to execute
 
-    MATCH (n:A) RETURN n, labels(n);
+[source, cypher]
+----
+MATCH (n:A) RETURN n, labels(n);
+----
 
 they would be returned two nodes: the node that was labeled with `:A` and the node with labels `:A :B`.
 
 In contrast, executing
 
-    MATCH (n:B) RETURN n, labels(n);
+[source, cypher]
+----
+MATCH (n:B) RETURN n, labels(n);
+----
 
 will return only the one node that has both labels: `:A :B`. Even though `:B` was not allowed access for traversal, there is one
 node with that label accessible in the data because of the allowlisted label `:A` that is attached to the same node.
 
-// Get A,B but was only granted A
-
 If a user is denied traverse on a label they will never get results from any node that has this label (also)
 attached to it. Thus, the label name will never show up for them. For our example this can be done by executing:
 
-    DENY TRAVERSE ON GRAPH * NODES B TO custom;
+[source, cypher]
+----
+DENY TRAVERSE ON GRAPH * NODES B TO custom;
+----
 
 The query
 
-    MATCH (n:A) RETURN n, labels(n);
+[source, cypher]
+----
+MATCH (n:A) RETURN n, labels(n);
+----
 
 will now return the node only labeled with `:A`, while the query
 
-    MATCH (n:B) RETURN n, labels(n);
+[source, cypher]
+----
+MATCH (n:B) RETURN n, labels(n);
+----
 
 will now return no nodes.
 
@@ -59,11 +75,17 @@ That means:
 To reuse the example of the previous section: imagine a graph with three nodes: one labeled `:A`, one labeled `:B` and one with `:A :B`.
 We also have user with the role "custom" as defined by:
 
-    GRANT TRAVERSE ON GRAPH * NODES A TO custom;
+[source, cypher]
+----
+GRANT TRAVERSE ON GRAPH * NODES A TO custom;
+----
 
 This means that only label `:A` is explicitly allowlisted.
 Thus, executing
 
-    CALL db.labels();
+[source, cypher]
+----
+CALL db.labels();
+----
 
 will only return label `:A` because that is the only label for which traversal was granted.
