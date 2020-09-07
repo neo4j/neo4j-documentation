@@ -116,6 +116,14 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         resultTable()
       }
 
+      p("The `RETURN` clause can also be used to order and paginate the results which is useful when combined with `YIELD` and `WHERE`. In this example the" +
+        "query returns privileges for display five per page and skips the first five to display the second page.")
+      query("SHOW PRIVILEGES YIELD * RETURN * ORDER BY role SKIP 5 LIMIT 5", ResultAssertions(r => {
+        assertStats(r)
+      })){
+        resultTable()
+      }
+
       p("Available privileges for specific roles can be seen using `SHOW ROLE name PRIVILEGES`.")
       p("include::show-role-privileges-syntax.asciidoc[]")
       query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(

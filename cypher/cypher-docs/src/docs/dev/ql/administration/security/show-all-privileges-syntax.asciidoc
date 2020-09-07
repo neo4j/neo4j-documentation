@@ -2,7 +2,7 @@
 [source, cypher]
 -----
 SHOW [ALL] PRIVILEGES
-    [YIELD { * | field1[, field2] } [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [YIELD { * | field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
-    [RETURN field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
 -----

@@ -6,9 +6,9 @@
 | [source, cypher]
 ----
 SHOW [ALL\|POPULATED] ROLES
-    [YIELD { * \| field1[, field2] } [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
-    [RETURN field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
 ----
 | List roles.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>
@@ -16,8 +16,9 @@ SHOW [ALL\|POPULATED] ROLES
 | [source, cypher]
 ----
 SHOW [ALL\|POPULATED] ROLES WITH USERS
-    [YIELD field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
+    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
 ----
 | List roles and users assigned to them.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> and
@@ -26,6 +27,9 @@ SHOW [ALL\|POPULATED] ROLES WITH USERS
 | [source, cypher]
 ----
 SHOW ROLE[S] name1[, name2] PRIVILEGES
+    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
+    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
 ----
 | List the privileges granted to the specified roles.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE PRIVILEGES>>

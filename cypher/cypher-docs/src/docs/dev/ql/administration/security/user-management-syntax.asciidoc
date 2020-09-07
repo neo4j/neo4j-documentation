@@ -6,9 +6,9 @@
 | [source, cypher]
 ----
 SHOW USERS
-    { * \| field1[, field2] } [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
-    [RETURN field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
 ----
 | List all users.
 | <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
@@ -18,9 +18,9 @@ SHOW USERS
 | [source, cypher]
 ----
 SHOW USER[S] [name1[, name2]] PRIVILEGES
-    { * \| field1[, field2] } [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
-    [RETURN field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
 ----
 | List the privileges granted to the specified users or the current user, if no user is specified.
 | <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>> and
