@@ -7,18 +7,15 @@ class SecurityKnownLimitationsTest extends DocumentingTest with QueryStatisticsT
 
   override def doc: Document = new DocBuilder {
     doc("Known limitations of security", "administration-security-limitations")
-    database("neo4j")
-    initQueries(
-      "CREATE INDEX foo FOR (n:Person) ON (n.name)"
-    )
     //TODO: Make this page dynamic
+//    database("neo4j")
+//    initQueries(
+//      "CREATE INDEX foo FOR (n:Person) ON (n.name)"
+//    )
     synopsis("This section explains known limitations and implications of Neo4js role-based access control security.")
 
     section("Security and indexes", "administration-security-limitations-indexes") {
-
-      section("How do privileges impact index results") {
-        p("include::security-and-indexes-intro.asciidoc[]")
-      }
+      p("include::security-and-indexes-intro.asciidoc[]")
     }
 
     section("Security and labels", "administration-security-limitations-labels") {
