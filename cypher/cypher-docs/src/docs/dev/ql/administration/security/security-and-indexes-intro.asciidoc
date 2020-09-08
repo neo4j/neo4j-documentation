@@ -88,7 +88,7 @@ This difference in results is due to the `OR` relationship between the two prope
 
 ==== Blacklisting properties
 
-Now consider denylisting/denying access on properties, like the `surname` property:
+Now consider denying access on properties, like the `surname` property:
 
 [source, cypher]
 ----
