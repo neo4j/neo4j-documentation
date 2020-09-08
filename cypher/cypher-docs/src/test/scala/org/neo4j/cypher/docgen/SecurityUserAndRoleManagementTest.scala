@@ -82,7 +82,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           })) {
           p(
             """It is also possible to add a `RETURN` clause to further manipulate the results after filtering. In this
-              |case it is used to filter out the roles column and rename the users column to publicUsers.""".stripMargin)
+              |case it is used to filter out the roles column and rename the users column to `publicUsers`.""".stripMargin)
           resultTable()
         }
         note {
