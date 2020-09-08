@@ -2,7 +2,7 @@ The rules of a security model may impact some of the database operations.
 This comes down to necessary additional security checks that incur additional data accesses.
 Especially in regards to count store operations, as they are usually very fast lookups, the difference might be noticeable.
 
-Let's look at the following security rules that set up a "restricted" and a "free" role as an example:
+Let's look at the following security rules that set up a `restricted` and a `free` role as an example:
 
      GRANT TRAVERSE ON GRAPH * NODES Person TO restricted;
      DENY TRAVERSE ON GRAPH * NODES Customer TO restricted;
@@ -29,14 +29,14 @@ Internally however, very different operations need to be executed. The following
 
 [%header,cols=2*]
 |===
-|User with "free" role
-|User with "restricted" role
+|User with `free` role
+|User with `restricted` role
 
 |The database can access the count store and retrieve the total number of nodes with the label `:Person`.
 
 This is a very quick operation.
 
-|The database cannot just access the count store because it must make sure that only nodes with the desired label `:Person` are counted.
+|The database cannot just access the count store because it must make sure that only traversable nodes with the desired label `:Person` are counted.
 Due to this, each node with the `:Person` label needs to be accessed and examined to make sure that it does not also have a denylisted label, such as `:Customer`.
 
 Due to the additional data accesses that the security checks need to do, this operation will be slower compared to executing the query as an unrestricted user.

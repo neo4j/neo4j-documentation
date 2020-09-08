@@ -57,6 +57,9 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 *** <<administration-security-administration-dbms-privileges-all, Granting `ALL DBMS PRIVILEGES`>>
 * <<administration-built-in-roles, Built-in roles>>
 * <<administration-security-limitations, Known limitations of security>>
+** <<administration-security-limitations-indexes, Security and indexes>>
+** <<administration-security-limitations-labels, Security and labels>>
+** <<administration-security-limitations-db-operations, Security and count store operations>>
 
 [[administration-security-introduction]]
 == Introduction

@@ -1,6 +1,4 @@
-=== How does role-based access control impact label visibility
-
-==== Traversing the graph with multi-labeled nodes
+=== Traversing the graph with multi-labeled nodes
 
 The general influence of access control privileges on graph traversal is described in detail in <<administration-security-subgraph, Graph and sub-graph access control>>.
 The following section will only focus on nodes because of their ability to have multiple labels. Relationships can only ever have one type
@@ -13,7 +11,7 @@ In the case of nodes with multiple labels, this can seemingly result in labels b
 wasn't directly granted access to.
 
 To give an illustrative example, imagine a graph with three nodes: one labeled `:A`, one labeled `:B` and one with `:A :B`.
-We also have user with the role "custom" as defined by:
+We also have user with a role `custom` as defined by:
 
 [source, cypher]
 ----
@@ -39,7 +37,7 @@ MATCH (n:B) RETURN n, labels(n);
 will return only the one node that has both labels: `:A :B`. Even though `:B` was not allowed access for traversal, there is one
 node with that label accessible in the data because of the allowlisted label `:A` that is attached to the same node.
 
-If a user is denied traverse on a label they will never get results from any node that has this label (also)
+If a user is denied traverse on a label they will never get results from any node that has this label
 attached to it. Thus, the label name will never show up for them. For our example this can be done by executing:
 
 [source, cypher]
@@ -63,7 +61,7 @@ MATCH (n:B) RETURN n, labels(n);
 
 will now return no nodes.
 
-==== The db.labels() procedure
+=== The db.labels() procedure
 
 In contrast to the normal graph traversal described in the previous section, the built-in `db.labels()` procedure
 is not processing the data graph itself but the security rules defined on the system graph.
@@ -73,7 +71,7 @@ That means:
 * if a label is denied or isn't explicitly allowed it will not be returned by this procedure.
 
 To reuse the example of the previous section: imagine a graph with three nodes: one labeled `:A`, one labeled `:B` and one with `:A :B`.
-We also have user with the role "custom" as defined by:
+We also have user with a role `custom` as defined by:
 
 [source, cypher]
 ----
