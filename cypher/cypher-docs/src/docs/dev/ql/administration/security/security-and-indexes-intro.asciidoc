@@ -1,23 +1,23 @@
 As described in <<administration-indexes-search-performance, Indexes for search performance>>, Neo4j {neo4j-version} supports the creation and use of indexes to improve the performance of Cypher queries.
-The Neo4j security model will impact the results of queries that use the index.
-When using normal Neo4j indexes, a Cypher query will always return the same results it would have if no index existed.
+The Neo4j security model will impact the results of queries (regardless if the indexes are used).
+When using non full-text Neo4j indexes, a Cypher query will always return the same results it would have if no index existed.
 This means that if the security model causes fewer results to be returned due to restricted read access in <<administration-security-subgraph, Graph and sub-graph access control>>,
 the index will also return the same fewer results.
 
 However, this rule is not fully obeyed by <<administration-indexes-fulltext-search, Indexes for full-text search>>.
 These specific indexes are backed by Lucene internally.
 It is therefore not possible to know for certain whether a security violation occurred for each specific entry returned from the index.
-As a result, Neo4j will return zero results from Full-text indexes if it is determined that any result might violate the security privileges active for that query.
+As a result, Neo4j will return zero results from full-text indexes if it is determined that any result might violate the security privileges active for that query.
 
 Since full-text indexes are not automatically used by Cypher, this does not lead to the case where the same Cypher query would return different results simply because such an index got created.
 Users need to explicitly call procedures to use these indexes.
-The problem is only that if this behavior is not understood by the user, they might expect the full text index to return results that a different, but semantically similar, Cypher query does.
+The problem is only that if this behavior is not understood by the user, they might expect the full text index to return the same results that a different, but semantically similar, Cypher query does.
 
 ==== Example with denylisted properties
 
 Consider the following example.
-The database has nodes with Label `:User` and these have properties `name` and `email`.
-We have a normal index on both properties:
+The database has nodes with label `:User` and these have properties `name` and `email`.
+We have indexes on both properties:
 
 [source, cypher]
 ----
