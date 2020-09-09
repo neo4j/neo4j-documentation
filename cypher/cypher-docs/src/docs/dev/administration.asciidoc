@@ -38,9 +38,10 @@ This section explains how to use Cypher to administer Neo4j databases, such as c
 ** <<administration-security-users-and-roles, User and role management>>
 ** <<administration-security-subgraph, Graph and subgraph access control>>
 ** <<administration-security-administration, Security of administration>>
+** <<administration-security-limitations, Known limitations of security>>
 
 
-Neo4j supports the management of manage multiple databases within the same DBMS.
+Neo4j supports the management of multiple databases within the same DBMS.
 The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
 Most administrative commands must be executed against the `system` database because they involve editing the metadata for the entire system.
 This includes all commands related to managing multiple databases as well as all commands for defining the security model: users, roles and privileges.
