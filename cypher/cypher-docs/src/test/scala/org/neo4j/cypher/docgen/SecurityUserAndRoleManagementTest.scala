@@ -55,7 +55,11 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p("Users can be created using `CREATE USER`.")
         p("include::user-management-syntax-create-user.asciidoc[]")
         p("If the optional `SET PASSWORD CHANGE [NOT] REQUIRED` is omitted then the default is `CHANGE REQUIRED`. " +
-          "The default for `SET STATUS` is `ACTIVE`. The `password` can either be a string value or a string parameter.")
+          "The default for `SET STATUS` is `ACTIVE`. The `password` can either be a string value or a string parameter. " +
+          "The optional `PLAINTEXT` in `SET PLAINTEXT PASSWORD` has the same behaviour as `SET PASSWORD`. " +
+          "The optional `ENCRYPTED` can be used to create a user when the plaintext password is unknown but the encrypted password is available (e.g. from a database backup). " +
+          "With `ENCRYPTED`, the password string is expected to be on the format `<encryption-version>,<hash>,<salt>`."
+        )
         p("For example, we can create the user `jake` in a suspended state and the requirement to change his password.")
         query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
@@ -98,7 +102,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {
           statsOnlyResultTable()
         }
-        query("CREATE OR REPLACE USER jake SET PASSWORD 'xyz'", ResultAssertions(r => {
+        query("CREATE OR REPLACE USER jake SET PLAINTEXT PASSWORD 'xyz'", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
@@ -111,7 +115,11 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Modifying users", "administration-security-users-alter") {
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
-        p("The `password` can either be a string value or a string parameter, and is not allowed to be identical to the old password.")
+        p("The `password` can either be a string value or a string parameter, and must not be identical to the old password. " +
+          "The optional `PLAINTEXT` in `SET PLAINTEXT PASSWORD` has the same behaviour as `SET PASSWORD`. " +
+          "The optional `ENCRYPTED` can be used to update a user's password when the plaintext password is unknown but the encrypted password is available (e.g. from a database backup). " +
+          "With `ENCRYPTED`, the password string is expected to be on the format `<encryption-version>,<hash>,<salt>`."
+        )
         p("For example, we can modify the user `jake` with a new password and active status as well as remove the requirement to change his password.")
         query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
