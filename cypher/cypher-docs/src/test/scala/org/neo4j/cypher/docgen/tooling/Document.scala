@@ -157,9 +157,6 @@ case class EnumTable(title: String, entries: Seq[(String, String)]) extends Cont
   override def asciiDoc(level: Int) = {
     val entryLines = entries.map(x => "| `" + x._1 + "` | " + x._2).mkString("", NewLine, "")
     val formattedLines = Array("*" + title + ":*", "[options=\"header\"]", "|===", entryLines, "|===").mkString(NewLine, NewLine, "")
-    print(String.format(
-      """%s%n
-        |""".stripMargin, formattedLines))
     String.format(
       """%s%n
         |""".stripMargin, formattedLines)
