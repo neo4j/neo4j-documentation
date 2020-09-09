@@ -2,7 +2,7 @@
 [source, cypher]
 -----
 ALTER USER name SET {
-      PASSWORD password
+      [PLAINTEXT | ENCRYPTED] PASSWORD password
             [[SET PASSWORD] CHANGE [NOT] REQUIRED]
             [SET STATUS {ACTIVE | SUSPENDED} ] |
       PASSWORD CHANGE [NOT] REQUIRED
