@@ -86,7 +86,7 @@ The steps taken by the query engine would be:
 
 This difference in results is due to the `OR` relationship between the two properties in the index creation.
 
-==== Blacklisting properties
+==== Denylisting properties
 
 Now consider denying access on properties, like the `surname` property:
 
@@ -113,7 +113,7 @@ RETURN node.name
 ----
 
 The problem now is that we do not know if the results provided by the index were because of a match to the `name` or the `surname` property.
-Results from the surname need to be excluded by the security rules, because they require that the user cannot see any `surname properties.
+Results from the surname need to be excluded by the security rules, because they require that the user cannot see any `surname` properties.
 However, the security model is not able to introspect the _Lucene_ query to know what it will actually do, whether it works only on the allowed `name` property, or also on the disallowed `surname` property.
 We know that the earlier query returned a match for `Joe Andy` which should now be filtered out.
 So, in order to never return results the user should not be able to see, we have to block all results.
