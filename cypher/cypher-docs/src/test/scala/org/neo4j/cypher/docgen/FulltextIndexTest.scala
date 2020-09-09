@@ -73,7 +73,7 @@ class FulltextIndexTest extends DocumentingTest {
           |While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.
           |"""
       )
-      p("For information on how to configure full-text indexes, refer to <<operations-manual#index-configuration-fulltext-search,  Operations Manual -> Indexes to support full-text search>>.")
+      p("For information on how to configure full-text indexes, refer to <<operations-manual#index-configuration-fulltext,  Operations Manual -> Indexes to support full-text search>>.")
     }
     section("Procedures to manage full-text indexes", "administration-indexes-fulltext-search-manage") {
       p(
