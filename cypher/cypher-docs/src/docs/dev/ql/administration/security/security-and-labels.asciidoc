@@ -11,7 +11,7 @@ In the case of nodes with multiple labels, this can seemingly result in labels b
 wasn't directly granted access to.
 
 To give an illustrative example, imagine a graph with three nodes: one labeled `:A`, one labeled `:B` and one with `:A :B`.
-We also have user with a role `custom` as defined by:
+We also have a user with a role `custom` as defined by:
 
 [source, cypher]
 ----
@@ -71,7 +71,7 @@ That means:
 * if a label is denied or isn't explicitly allowed it will not be returned by this procedure.
 
 To reuse the example of the previous section: imagine a graph with three nodes: one labeled `:A`, one labeled `:B` and one with `:A :B`.
-We also have user with a role `custom` as defined by:
+We also have a user with a role `custom` as defined by:
 
 [source, cypher]
 ----
