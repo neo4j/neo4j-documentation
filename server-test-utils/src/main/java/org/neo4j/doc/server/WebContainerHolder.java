@@ -33,7 +33,7 @@ public final class WebContainerHolder extends Thread
     private static TestWebContainer testWebContainer;
     private static CommunityWebContainerBuilder builder;
 
-    static synchronized TestWebContainer allocate() throws Exception
+    static synchronized TestWebContainer allocate( boolean onRandomPorts ) throws Exception
     {
         if ( allocation != null )
         {
@@ -41,7 +41,7 @@ public final class WebContainerHolder extends Thread
         }
         if ( testWebContainer == null )
         {
-            testWebContainer = startServer( SystemUtils.getJavaIoTmpDir() );
+            testWebContainer = startServer( SystemUtils.getJavaIoTmpDir(), onRandomPorts );
         }
         allocation = new AssertionError( "The server was allocated from here but not released properly" );
         return testWebContainer;
@@ -79,10 +79,10 @@ public final class WebContainerHolder extends Thread
         builder = builder.withProperty( key, value );
     }
 
-    private static TestWebContainer startServer( File path ) throws Exception
+    private static TestWebContainer startServer( File path, boolean onRandomPorts ) throws Exception
     {
         initBuilder();
-        return createContainer( builder, path );
+        return createContainer( builder, path, onRandomPorts );
     }
 
     private static synchronized void shutdown()

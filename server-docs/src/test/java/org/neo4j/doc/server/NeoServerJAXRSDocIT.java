@@ -65,7 +65,7 @@ public class NeoServerJAXRSDocIT extends ExclusiveWebContainerTestBase
     public void shouldMakeJAXRSClassesAvailableViaHTTP() throws Exception
     {
         CommunityWebContainerBuilder builder = CommunityWebContainerBuilder.builder();
-        webContainer = WebContainerHelper.createContainer( builder, folder );
+        webContainer = WebContainerHelper.createContainer( builder, folder, true );
         FunctionalTestHelper functionalTestHelper = new FunctionalTestHelper( webContainer );
 
         JaxRsResponse response = new RestRequest().get( functionalTestHelper.baseUri().toASCIIString() );
