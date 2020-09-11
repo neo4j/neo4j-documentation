@@ -51,8 +51,9 @@
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
                                     <arg value="--output=${project.build.directory}/docs/ops/cc-metrics.asciidoc" />
-                                    <arg value="com.neo4j.metrics.source.causalclustering.CoreMetrics" />
+                                    <arg value="com.neo4j.metrics.source.causalclustering.RaftCoreMetrics" />
                                     <arg value="com.neo4j.metrics.source.causalclustering.ReadReplicaMetrics" />
+                                    <arg value="com.neo4j.metrics.source.causalclustering.DiscoveryCoreMetrics" />
                                 </java>
                             </target>
                         </configuration>
