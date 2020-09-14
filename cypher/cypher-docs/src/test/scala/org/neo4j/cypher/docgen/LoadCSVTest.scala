@@ -148,11 +148,12 @@ can be used to instruct Neo4j to perform a commit after a number of rows.
 This reduces the memory overhead of the transaction state.
 By default, the commit will happen every 1000 rows.
 For more information, see <<query-using-periodic-commit-hint>>.
+
+Note: The <<query-use, `USE` clause>> cannot be used together with the `PERIODIC COMMIT` clause.
 """,
       queryText = s"USING PERIODIC COMMIT LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
       optionalResultExplanation = "",
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
-    Note.apply(Paragraph("The <<query-use, `USE` clause>> cannot be used together with the `PERIODIC COMMIT` clause."))
   }
 
   @Test def should_import_data_from_a_csv_file_with_periodic_commit_after_500_rows() {
