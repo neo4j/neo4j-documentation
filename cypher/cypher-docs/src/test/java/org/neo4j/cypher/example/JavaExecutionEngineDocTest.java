@@ -291,9 +291,12 @@ public class JavaExecutionEngineDocTest
     {
         try ( Transaction transaction = db.beginTx() )
         {
+            // It's only possible to send an entity as a parameter if the transaction of the entity is still open.
+            Node nodeInOtherTransaction = transaction.getNodeById( bobNode.getId() );
+
             // tag::exampleWithParameterForNodeObject[]
             Map<String,Object> params = new HashMap<>();
-            params.put( "node", bobNode );
+            params.put( "node", nodeInOtherTransaction );
             String query = "MATCH (n:Person) WHERE n = $node RETURN n.name";
             Result result = transaction.execute( query, params );
             // end::exampleWithParameterForNodeObject[]
