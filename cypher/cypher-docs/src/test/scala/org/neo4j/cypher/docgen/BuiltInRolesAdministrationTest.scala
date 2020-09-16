@@ -24,7 +24,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         |* <<administration-built-in-roles-admin, The `admin` role>>
         |""".stripMargin)
     section("The `PUBLIC` role", "administration-built-in-roles-public", "enterprise-edition") {
-      p("All users are granted the `PUBLIC` role, and it can not be revoked or dropped. By default, it gives access to the default database.")
+      p("All users are granted the `PUBLIC` role, and it can not be revoked or dropped. By default, it gives access to the default database and allows executing all procedures.")
       section("Privileges of the `PUBLIC` role", "administration-built-in-roles-public-privileges") {
         query("SHOW ROLE PUBLIC PRIVILEGES", ResultAssertions(p => true)) {
           resultTable()
@@ -32,12 +32,20 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       }
       section("How to recreate the `PUBLIC` role", "administration-built-in-roles-public-recreate") {
         initQueries(
-          """REVOKE GRANT ACCESS ON DEFAULT DATABASE FROM PUBLIC""")  // setup so that later when the grant query gets executed, it will show systemUpdates: 1
+          // setup so that later when the grant query gets executed, it will show systemUpdates: 1
+          "REVOKE GRANT ACCESS ON DEFAULT DATABASE FROM PUBLIC",
+          "REVOKE EXECUTE PROCEDURES * ON DBMS FROM PUBLIC"
+        )
         p(
           """The `PUBLIC` role can not be dropped and thus there is no need to recreate the role itself.
             |To restore the role to its original capabilities, two steps are needed. First, all `GRANT` or `DENY` privileges on this role should be revoked (see output of `SHOW ROLE PUBLIC PRIVILEGES` on what to revoke).
-            |Secondly, the following query must be run:""".stripMargin)
+            |Secondly, the following queries must be run:""".stripMargin)
         query("GRANT ACCESS ON DEFAULT DATABASE TO PUBLIC", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        query("GRANT EXECUTE PROCEDURES * ON DBMS TO PUBLIC", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()

@@ -59,6 +59,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         |** <<administration-security-administration-dbms-privileges-user-management, The dbms `USER MANAGEMENT` privileges>>
         |** <<administration-security-administration-dbms-privileges-database-management, The dbms `DATABASE MANAGEMENT` privileges>>
         |** <<administration-security-administration-dbms-privileges-privilege-management, The dbms `PRIVILEGE MANAGEMENT` privileges>>
+        |** <<administration-security-administration-dbms-privileges-execute-procedure, The dbms `EXECUTE PROCEDURE` privileges>>
         |** <<administration-security-administration-dbms-privileges-all, Granting `ALL DBMS PRIVILEGES`>>
         |""".stripMargin)
     section("The `admin` role", "administration-security-administration-introduction", "enterprise-edition") {
@@ -601,9 +602,262 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
 
+      section("The dbms `EXECUTE PROCEDURE` privileges", "administration-security-administration-dbms-privileges-execute-procedure", "enterprise-edition") {
+        initQueries(
+          "CREATE ROLE procedureExecutor",
+          "CREATE ROLE deniedProcedureExecutor",
+          "CREATE ROLE boostedProcedureExecutor",
+          "CREATE ROLE deniedBoostedProcedureExecutor1",
+          "CREATE ROLE deniedBoostedProcedureExecutor2",
+          "CREATE ROLE deniedBoostedProcedureExecutor3",
+          "CREATE ROLE deniedBoostedProcedureExecutor4",
+          "CREATE ROLE adminProcedureExecutor",
+          "CREATE ROLE procedureGlobbing1",
+          "CREATE ROLE procedureGlobbing2",
+          "CREATE ROLE procedureGlobbing3",
+          "CREATE ROLE procedureGlobbing4",
+          "CREATE ROLE procedureGlobbing5"
+        )
+        p("The dbms privileges for procedure execution are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
+        p("include::dbms/execute-procedure-syntax.asciidoc[]")
+
+        section("The `EXECUTE PROCEDURE` privilege", "execute-procedure-subsection", "enterprise-edition") {
+          p(
+            """The ability to execute a procedure can be granted via the `EXECUTE PROCEDURE` privilege.
+              |A user with this privilege is allowed to execute the procedures matched by the <<procedure-name-globbing, name-globbing>>.
+              |The following query shows an example of how to grant this privilege:""".stripMargin)
+          query("GRANT EXECUTE PROCEDURE db.schema.* ON DBMS TO procedureExecutor", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'procedureExecutor' can then run any procedure in the `db.schema` namespace. The procedure will be run using the users own privileges.")
+          }
+          p("The resulting role should have privileges that only allow executing procedures in the `db.schema` namespace:")
+          query("SHOW ROLE procedureExecutor PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+            p("Lists all privileges for role 'procedureExecutor'")
+            resultTable()
+          }
+
+          p(
+            """If we want to allow executing all but a few procedures, we can grant `EXECUTE PROCEDURES *` and deny the unwanted procedures.
+              |For example, the following queries allows for executing all procedures except `dbms.killTransaction` and `dbms.killTransactions`:""".stripMargin)
+          query("GRANT EXECUTE PROCEDURE * ON DBMS TO deniedProcedureExecutor", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE PROCEDURE dbms.killTransaction* ON DBMS TO deniedProcedureExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p("The resulting role should have privileges that only allow executing all procedures except `dbms.killTransaction` and `dbms.killTransactions`:")
+          query("SHOW ROLE deniedProcedureExecutor PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+            p("Lists all privileges for role 'deniedProcedureExecutor'")
+            resultTable()
+          }
+        }
+
+        section("The `EXECUTE BOOSTED PROCEDURE` privilege", "boosted-execute-procedure-subsection", "enterprise-edition") {
+          p(
+            """The ability to execute a procedure with elevated privileges can be granted via the `EXECUTE BOOSTED PROCEDURE` privilege.
+              |A user with this privilege is allowed to execute the procedures matched by the <<procedure-name-globbing, name-globbing>>
+              |without the execution being restricted to their other privileges.
+              |The following query shows an example of how to grant this privilege:""".stripMargin)
+          query("GRANT EXECUTE BOOSTED PROCEDURE db.labels, db.relationshipTypes ON DBMS TO boostedProcedureExecutor", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 2)
+          })) {
+            statsOnlyResultTable()
+            p(
+              """Users with the role 'boostedProcedureExecutor' can then run `db.labels` and `db.relationshipTypes` with full privileges,
+                |seeing everything in the graph not just the labels and types that the user has `TRAVERSE` privilege on.""".stripMargin)
+          }
+          p("The resulting role should have privileges that only allow executing procedures `db.labels` and `db.relationshipTypes`, but with elevated execution:")
+          query("SHOW ROLE boostedProcedureExecutor PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+            p("Lists all privileges for role 'boostedProcedureExecutor'")
+            resultTable()
+          }
+
+          p(
+            """This replaces the `dbms.security.procedures.default_allowed` and `dbms.security.procedures.roles` configuration parameters for procedures.
+              |The configuration parameters are still honoured as a set of temporary privileges. These cannot be revoked, but will be updated on each restart
+              |with the current configuration values.""".stripMargin)
+
+          p(
+            """While granting `EXECUTE BOOSTED PROCEDURE` on its own allows the procedure to be both executed and given elevated privileges during the execution,
+              |the deny behaves slightly different and only denies the elevation and not the execution. However, having only a granted `EXECUTE BOOSTED PROCEDURE`
+              |and a deny `EXECUTE BOOSTED PROCEDURE` will deny the execution as well. This is explained through the examples below:""".stripMargin)
+
+          p("Example 1: Grant `EXECUTE PROCEDURE` and deny `EXECUTE BOOSTED PROCEDURE`")
+          query("GRANT EXECUTE PROCEDURE * ON DBMS TO deniedBoostedProcedureExecutor1", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE BOOSTED PROCEDURE db.labels ON DBMS TO deniedBoostedProcedureExecutor1", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p(
+            """The resulting role should have privileges that allow executing all procedures using the users own privileges,
+              |as well as blocking `db.labels` from being elevated. The deny `EXECUTE BOOSTED PROCEDURE` does not block execution of `db.labels`.""".stripMargin)
+          query("SHOW ROLE deniedBoostedProcedureExecutor1 PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+            p("Lists all privileges for role 'deniedBoostedProcedureExecutor1'")
+            resultTable()
+          }
+
+          p("Example 2: Grant `EXECUTE BOOSTED PROCEDURE` and deny `EXECUTE PROCEDURE`")
+          query("GRANT EXECUTE BOOSTED PROCEDURE * ON DBMS TO deniedBoostedProcedureExecutor2", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE PROCEDURE db.labels ON DBMS TO deniedBoostedProcedureExecutor2", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p(
+            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+              |except `db.labels` which is not allowed to execute at all:""".stripMargin)
+          query("SHOW ROLE deniedBoostedProcedureExecutor2 PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+            p("Lists all privileges for role 'deniedBoostedProcedureExecutor2'")
+            resultTable()
+          }
+
+          p("Example 3: Grant `EXECUTE BOOSTED PROCEDURE` and deny `EXECUTE BOOSTED PROCEDURE`")
+          query("GRANT EXECUTE BOOSTED PROCEDURE * ON DBMS TO deniedBoostedProcedureExecutor3", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE BOOSTED PROCEDURE db.labels ON DBMS TO deniedBoostedProcedureExecutor3", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p(
+            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+              |except `db.labels` which is not allowed to execute at all:""".stripMargin)
+          query("SHOW ROLE deniedBoostedProcedureExecutor3 PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+            p("Lists all privileges for role 'deniedBoostedProcedureExecutor3'")
+            resultTable()
+          }
+
+          p("Example 4: Grant `EXECUTE PROCEDURE` and `EXECUTE BOOSTED PROCEDURE` and deny `EXECUTE BOOSTED PROCEDURE`")
+          query("GRANT EXECUTE PROCEDURE db.labels ON DBMS TO deniedBoostedProcedureExecutor4", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("GRANT EXECUTE BOOSTED PROCEDURE * ON DBMS TO deniedBoostedProcedureExecutor4", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE BOOSTED PROCEDURE db.labels ON DBMS TO deniedBoostedProcedureExecutor4", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p(
+            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+              |except `db.labels` which is only allowed to execute using the users own privileges:""".stripMargin)
+          query("SHOW ROLE deniedBoostedProcedureExecutor4 PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+            p("Lists all privileges for role 'deniedBoostedProcedureExecutor4'")
+            resultTable()
+          }
+        }
+
+        section("The `EXECUTE ADMIN PROCEDURES` privilege", "admin-execute-procedure-subsection", "enterprise-edition") {
+          p(
+            """The ability to execute admin procedures (annotated with `@Admin`) can be granted via the `EXECUTE ADMIN PROCEDURES` privilege.
+              |This privilege is equivalent with granting <<boosted-execute-procedure-subsection, the `EXECUTE BOOSTED PROCEDURE` privilege>> on each of the admin procedures.
+              |Any new admin procedures that gets added are automatically included in this privilege.
+              |The following query shows an example of how to grant this privilege:""".stripMargin)
+          query("GRANT EXECUTE ADMIN PROCEDURES ON DBMS TO adminProcedureExecutor", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'adminProcedureExecutor' can then run any admin procedure with elevated privileges.")
+          }
+          p("The resulting role should have privileges that allows executing all admin procedures:")
+          query("SHOW ROLE adminProcedureExecutor PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+            p("Lists all privileges for role 'adminProcedureExecutor'")
+            resultTable()
+          }
+        }
+
+        section("Procedure name-globbing", "procedure-name-globbing", "enterprise-edition") {
+          p(
+            """The name-globbing for procedure names is a simplified version of globbing for filename expansions, only allowing two wildcard characters -- `*` and `?`.
+              |They are used for multiple and single character matches, where `*` means 0 or more characters and `?` matches exactly one character.""".stripMargin)
+          p(
+            """For the examples below, assume we have the following procedures:
+              |* mine.public.exampleProcedure
+              |* mine.public.exampleProcedure1
+              |* mine.public.exampleProcedure42
+              |* mine.private.exampleProcedure
+              |* mine.private.exampleProcedure1
+              |* mine.private.exampleProcedure2
+              |* your.exampleProcedure""".stripMargin)
+
+          query("GRANT EXECUTE PROCEDURE * ON DBMS TO procedureGlobbing1", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'procedureGlobbing1' can then run procedures all the procedures.")
+          }
+
+          query("GRANT EXECUTE PROCEDURE mine.*.exampleProcedure ON DBMS TO procedureGlobbing2", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'procedureGlobbing2' can then run procedures `mine.public.exampleProcedure` and `mine.private.exampleProcedure`, but none of the others.")
+          }
+
+          query("GRANT EXECUTE PROCEDURE mine.*.exampleProcedure? ON DBMS TO procedureGlobbing3", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'procedureGlobbing3' can then run procedures `mine.public.exampleProcedure1`, `mine.private.exampleProcedure1` and `mine.private.exampleProcedure2`, but none of the others.")
+          }
+
+          query("GRANT EXECUTE PROCEDURE *.exampleProcedure ON DBMS TO procedureGlobbing4", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'procedureGlobbing4' can then run procedures `your.exampleProcedure`, `mine.public.exampleProcedure` and `mine.private.exampleProcedure`, but none of the others.")
+          }
+
+          query("GRANT EXECUTE PROCEDURE mine.public.exampleProcedure* ON DBMS TO procedureGlobbing5", ResultAssertions((r) => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'procedureGlobbing5' can then run procedures `mine.public.exampleProcedure`, `mine.public.exampleProcedure1` and `mine.public.exampleProcedure42`, but none of the others.")
+          }
+        }
+      }
+
       section("Granting `ALL DBMS PRIVILEGES`", "administration-security-administration-dbms-privileges-all", "enterprise-edition") {
         p(
-          """The right to create, drop, assign, remove and show roles, create, alter, drop and show users, create and drop databases and show, assign and remove privileges can be achieved with a single command:""".stripMargin)
+          """The right to perform the following privileges can be achieved with a single command:
+            |* create roles
+            |* drop roles
+            |* assign roles
+            |* remove roles
+            |* show roles
+            |* create users
+            |* alter users
+            |* drop users
+            |* show users
+            |* create databases
+            |* drop databases
+            |* show privileges
+            |* assign privileges
+            |* remove privileges
+            |* execute all procedures with elevated privileges""".stripMargin)
         p("include::dbms/all-management-syntax.asciidoc[]")
 
         p(
