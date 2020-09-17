@@ -68,9 +68,9 @@ public class JavaExecutionEngineDocTest
     private static final ObjectWriter WRITER = MAPPER.writerWithDefaultPrettyPrinter();
     private static final File docsTargetDir = new File( "target/docs/dev/syntax" );
     private GraphDatabaseService db;
-    private Node bobNode;
-    private Node johanNode;
-    private Node michaelaNode;
+    private Long bobNodeId;
+    private Long johanNodeId;
+    private Long michaelaNodeId;
     private DatabaseManagementService managementService;
 
     @BeforeClass
@@ -101,13 +101,16 @@ public class JavaExecutionEngineDocTest
 
         try ( Transaction tx = this.db.beginTx() )
         {
-            michaelaNode = tx.createNode( Label.label( "Person" ) );
-            bobNode = tx.createNode( Label.label( "Person" ) );
-            johanNode = tx.createNode( Label.label( "Person" ) );
+            Node michaelaNode = tx.createNode( Label.label( "Person" ) );
+            Node bobNode = tx.createNode( Label.label( "Person" ) );
+            Node johanNode = tx.createNode( Label.label( "Person" ) );
             bobNode.setProperty( "name", "Bob" );
             johanNode.setProperty( "name", "Johan" );
             michaelaNode.setProperty( "name", "Michaela" );
 
+            michaelaNodeId = michaelaNode.getId();
+            bobNodeId = bobNode.getId();
+            johanNodeId = johanNode.getId();
             tx.commit();
         }
     }
@@ -162,11 +165,14 @@ public class JavaExecutionEngineDocTest
     @Test
     public void shouldBeAbleToEmitJavaIterables() throws Exception
     {
-        makeFriends( michaelaNode, bobNode );
-        makeFriends( michaelaNode, johanNode );
+        makeFriends( michaelaNodeId, bobNodeId );
+        makeFriends( michaelaNodeId, johanNodeId );
 
         try ( Transaction transaction = db.beginTx() )
         {
+            Node bobNode = transaction.getNodeById( bobNodeId );
+            Node johanNode = transaction.getNodeById( johanNodeId );
+
             Result result = transaction.execute( "MATCH (n)-->(friend) WHERE id(n) = 0 RETURN collect(friend)" );
 
             Iterable<Node> friends = (Iterable<Node>) result.columnAs( "collect(friend)" ).next();
@@ -255,6 +261,8 @@ public class JavaExecutionEngineDocTest
     {
         try ( Transaction transaction = db.beginTx() )
         {
+            Node johanNode = transaction.getNodeById( johanNodeId );
+
             // tag::exampleWithStringLiteralAsParameter[]
             Map<String,Object> params = new HashMap<>();
             params.put( "name", "Johan" );
@@ -273,6 +281,8 @@ public class JavaExecutionEngineDocTest
     {
         try ( Transaction transaction = db.beginTx() )
         {
+            Node johanNode = transaction.getNodeById( johanNodeId );
+
             // tag::exampleWithShortSyntaxStringLiteralAsParameter[]
             Map<String,Object> params = new HashMap<>();
             params.put( "name", "Johan" );
@@ -291,6 +301,8 @@ public class JavaExecutionEngineDocTest
     {
         try ( Transaction transaction = db.beginTx() )
         {
+            Node bobNode = transaction.getNodeById( bobNodeId );
+
             // tag::exampleWithParameterForNodeObject[]
             Map<String,Object> params = new HashMap<>();
             params.put( "node", bobNode );
@@ -465,7 +477,7 @@ public class JavaExecutionEngineDocTest
             dumpToFile( "set_properties_on_a_node_from_a_map", query, params );
 
             tx.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
-            assertThat( tx.getNodeById( michaelaNode.getId() ).getProperty( "name" ).toString(), is( "Andy" ) );
+            assertThat( tx.getNodeById( michaelaNodeId ).getProperty( "name" ).toString(), is( "Andy" ) );
         }
     }
 
@@ -533,12 +545,12 @@ public class JavaExecutionEngineDocTest
         }
     }
 
-    private void makeFriends( Node a, Node b )
+    private void makeFriends( Long aId, Long bId )
     {
         try ( Transaction tx = db.beginTx() )
         {
-            a = tx.getNodeById( a.getId() );
-            b = tx.getNodeById( b.getId() );
+            Node a = tx.getNodeById( aId );
+            Node b = tx.getNodeById( bId );
             a.createRelationshipTo( b, RelationshipType.withName( "friend" ) );
             tx.commit();
         }
