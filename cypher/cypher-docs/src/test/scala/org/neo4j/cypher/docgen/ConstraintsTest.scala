@@ -58,18 +58,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def replace_unique_constraint() {
-    prepareAndTestQuery(
-      title = "Replace a unique constraint",
-      text = "If you want to reuse a constraint name you can replace the constraint. This will then drop the constraint with the given name if it exists, before creating the new specified one. " +
-        "The uniqueness constraint ensures that your database will never contain more than one node with a specific label and one property value.",
-      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (book:Book) ASSERT exists(book.isbn)")),
-      queryText = "CREATE OR REPLACE CONSTRAINT constraint_name ON (book:Book) ASSERT book.isbn IS UNIQUE",
-      optionalResultExplanation = "Note that it doesn't matter what kind of constraint the old one is nor the schema it's defined on, if it exists then it will be dropped regardless.",
-      assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
-    )
-  }
-
   @Test def list_constraints() {
     generateConsole = false
 
@@ -155,18 +143,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def replace_node_property_existence_constraint() {
-    prepareAndTestQuery(
-      title = "Replace a node property existence constraint",
-      text = "If you want to reuse a constraint name you can replace the constraint. This will then drop the constraint with the given name if it exists, before creating the new specified one. " +
-        "The node property existence constraint ensures that all nodes with a certain label have a certain property.",
-      prepare = _ => executePreparationQueries(List("DROP CONSTRAINT constraint_name IF EXISTS")),
-      queryText = "CREATE OR REPLACE CONSTRAINT constraint_name ON (book:Book) ASSERT exists(book.isbn)",
-      optionalResultExplanation = "Note that it doesn't matter what kind of constraint the old one is nor the schema it's defined on, if it exists then it will be dropped regardless.",
-      assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
-    )
-  }
-
   @Test def drop_node_property_existence_constraint() {
     generateConsole = false
 
@@ -245,18 +221,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       optionalResultExplanation = "Note no constraint will be created if any other constraint with that name or another relationship property existence constraint on the same schema already exists. " +
         "Assuming a constraint with the name `constraint_name` already existed:",
       assertions = _ => assertConstraintWithNameExists("constraint_name", "LIKED", List("since"), forRelationship = true)
-    )
-  }
-
-  @Test def replace_relationship_property_existence_constraint() {
-    prepareAndTestQuery(
-      title = "Replace a relationship property existence constraint",
-      text = "If you want to reuse a constraint name you can replace the constraint. This will then drop the constraint with the given name if it exists, before creating the new specified one. " +
-        "The relationship property existence constraint ensures all relationships with a certain type have a certain property.",
-      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS ON ()-[like:LIKED]-() ASSERT exists(like.since)")),
-      queryText = "CREATE OR REPLACE CONSTRAINT constraint_name ON ()-[like:LIKED]-() ASSERT exists(like.day)",
-      optionalResultExplanation = "Note that it doesn't matter what kind of constraint the old one is nor the schema it's defined on, if it exists then it will be dropped regardless.",
-      assertions = _ => assertConstraintWithNameExists("constraint_name", "LIKED", List("day"), forRelationship = true)
     )
   }
 
@@ -340,19 +304,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       optionalResultExplanation = "Note no constraint will be created if any other constraint with that name or another node key constraint on the same schema already exists. " +
         "Assuming a node key constraint on `(:Person {firstname, surname})` already existed:",
       assertions = _ => assertConstraintWithNameExists("old_constraint_name", "Person", List("firstname", "surname"))
-    )
-  }
-
-  @Test def replace_node_key_constraint() {
-    prepareAndTestQuery(
-      title = "Replace a node key constraint",
-      text = "If you want to reuse a constraint name you can replace the constraint. This will then drop the constraint with the given name if it exists, before creating the new specified one. " +
-        "The node key constraint ensures that all nodes with a particular label have a set of defined properties whose combined value is unique " +
-        "and all properties in the set are present.",
-      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
-      queryText = "CREATE OR REPLACE CONSTRAINT constraint_name ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
-      optionalResultExplanation = "Note that it doesn't matter what kind of constraint the old one is nor the schema it's defined on, if it exists then it will be dropped regardless.",
-      assertions = _ => assertConstraintWithNameExists("constraint_name", "Person", List("firstname", "surname"))
     )
   }
 

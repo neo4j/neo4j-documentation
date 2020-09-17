@@ -79,11 +79,10 @@ Create an index on the label `Person` and property `name`.
 ###assertion=create-index
 //
 
-CREATE OR REPLACE INDEX index_name FOR (p:Person) ON (p.age)
+CREATE INDEX index_name FOR (p:Person) ON (p.age)
 ###
 
 Create an index on the label `Person` and property `age` with the name `index_name`.
-If there existed an index with the name `index_name` before it would be dropped and the new one created.
 
 ###assertion=create-index
 //
