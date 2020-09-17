@@ -56,15 +56,17 @@ public final class WebContainerHelper
     {
         CommunityWebContainerBuilder builder = CommunityWebContainerBuilder.builder();
         builder.withProperty( "dbms.connector.bolt.listen_address", ":0" );
-        createContainer( builder, path ).shutdown();
         builder.withProperty( GraphDatabaseSettings.read_only.name(), "true" );
-        return createContainer( builder, path );
+        return createContainer( builder, path, true );
     }
 
-    public static TestWebContainer createContainer( CommunityWebContainerBuilder builder, File path ) throws Exception
+    public static TestWebContainer createContainer( CommunityWebContainerBuilder builder, File path, boolean onRandomPorts ) throws Exception
     {
         builder = builder.persistent();
-        builder.onRandomPorts();
+        if ( onRandomPorts )
+        {
+            builder.onRandomPorts();
+        }
         return builder
                 .usingDataDir( path != null ? path.getAbsolutePath() : null )
                 .build();
