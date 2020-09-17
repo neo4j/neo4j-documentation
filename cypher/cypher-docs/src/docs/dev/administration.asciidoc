@@ -8,12 +8,11 @@ This chapter explains how to use Cypher to administer Neo4j databases, such as c
 
 Neo4j supports the management of multiple databases within the same DBMS.
 The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
-Most administrative commands must be run against the `system` database because they involve editing the metadata for the entire system.
-These are automatically routed to the `system` database when connected to the DBMS over bolt.
-This includes all commands related to managing multiple databases, as well as all commands for defining the security model: users, roles and privileges.
-
+Most administrative commands must be executed against the `system` database because they involve editing the metadata for the entire system.
+This includes all commands related to managing multiple databases as well as all commands for defining the security model: users, roles and privileges.
 The administrative commands that are specific to the schema of an individual database are still executed against that specific database.
 These include index and constraint management commands.
+
 
 * <<administration-databases, Databases>>
 ** <<administration-databases-introduction, Introduction>>
@@ -49,6 +48,8 @@ These include index and constraint management commands.
 ** <<administration-security-writes, Write privileges>>
 ** <<administration-security-administration, Security of administration>>
 ** <<administration-security-limitations, Known limitations of security>>
+
+
 
 
 include::ql/administration/administration-databases.adoc[leveloffset=+1]
