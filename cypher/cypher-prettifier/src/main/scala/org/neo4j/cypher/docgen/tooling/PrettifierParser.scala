@@ -107,13 +107,13 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
       keyword("LOAD CSV") |
         keyword("ORDER BY") |
         keyword("CREATE INDEX ON") | // Deprecated
-        keyword("CREATE INDEX") |
+        keyword("CREATE INDEX") | // These are for the named versions, sadly they will break the query on the ON keyword
         keyword("DROP INDEX ON") | // Deprecated
-        keyword("DROP INDEX") | // These are for the named versions, sadly they will break the query on the ON keyword
+        keyword("DROP INDEX") |
         keyword("CREATE CONSTRAINT ON") |
         keyword("CREATE CONSTRAINT") | // These are for the named versions, sadly they will break the query on the ON keyword
         keyword("DROP CONSTRAINT ON") | // Deprecated
-        keyword("DROP CONSTRAINT") | // These are for the named versions, sadly they will break the query on the ON keyword
+        keyword("DROP CONSTRAINT") |
         keyword("USING PERIODIC COMMIT") |
         keyword("USING INDEX") |
         keyword("USING SCAN") |

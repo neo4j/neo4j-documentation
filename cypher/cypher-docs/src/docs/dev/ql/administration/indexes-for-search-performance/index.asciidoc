@@ -13,7 +13,6 @@ This section explains how to manage indexes used for search performance.
 ** <<administration-indexes-create-a-single-property-index, Create a single-property index>>
 ** <<administration-indexes-create-a-single-property-index-only-if-it-does-not-already-exist, Create a single-property index only if it does not already exist>>
 ** <<administration-indexes-create-a-composite-index, Create a composite index>>
-** <<administration-indexes-replace-a-composite-index, Replace a composite index>>
 ** <<administration-indexes-drop-an-index, Drop an index>>
 ** <<administration-indexes-drop-a-non-existing-index, Drop a non-existing index>>
 ** <<administration-indexes-list-indexes, List indexes>>
