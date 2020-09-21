@@ -43,20 +43,12 @@ class PrettifierTest extends Suite
     actual("create index if not exists for (p:Person) on (p.name)") should equal(expected("CREATE INDEX IF NOT EXISTS FOR (p:Person)%nON (p.name)"))
   }
 
-  test("may break CREATE OR REPLACE INDEX FOR") {
-    actual("create or replace index for (p:Person) on (p.name)") should equal(expected("CREATE OR REPLACE INDEX FOR (p:Person)%nON (p.name)"))
-  }
-
   test("may break CREATE INDEX FOR with name") {
     actual("create index name for (p:Person) on (p.name)") should equal(expected("CREATE INDEX name FOR (p:Person)%nON (p.name)"))
   }
 
   test("may break CREATE INDEX IF NOT EXISTS FOR with name") {
     actual("create index name if not exists for (p:Person) on (p.name)") should equal(expected("CREATE INDEX name IF NOT EXISTS FOR (p:Person)%nON (p.name)"))
-  }
-
-  test("may break CREATE OR REPLACE INDEX FOR with name") {
-    actual("create or replace index name for (p:Person) on (p.name)") should equal(expected("CREATE OR REPLACE INDEX name FOR (p:Person)%nON (p.name)"))
   }
 
   test("should not break DROP INDEX by name") {
@@ -105,12 +97,6 @@ class PrettifierTest extends Suite
     )
   }
 
-  test("should not break CREATE OR REPLACE CONSTRAINT ON") {
-    actual("create or replace constraint on (person:Person) assert person.age is unique") should equal(
-      expected("CREATE OR REPLACE CONSTRAINT ON (person:Person) ASSERT person.age IS UNIQUE")
-    )
-  }
-
   test("may break CREATE CONSTRAINT with name") {
     actual("create constraint name on (person:Person) assert person.age is unique") should equal(
       expected("CREATE CONSTRAINT name%nON (person:Person) ASSERT person.age IS UNIQUE")
@@ -120,12 +106,6 @@ class PrettifierTest extends Suite
   test("should not break CREATE CONSTRAINT IF NOT EXISTS with name") {
     actual("create constraint name if not exists on (person:Person) assert person.age is unique") should equal(
       expected("CREATE CONSTRAINT name IF NOT EXISTS ON (person:Person) ASSERT person.age IS UNIQUE")
-    )
-  }
-
-  test("may break CREATE OR REPLACE CONSTRAINT with name") {
-    actual("create or replace constraint name on (person:Person) assert person.age is unique") should equal(
-      expected("CREATE OR REPLACE CONSTRAINT name%nON (person:Person) ASSERT person.age IS UNIQUE")
     )
   }
 

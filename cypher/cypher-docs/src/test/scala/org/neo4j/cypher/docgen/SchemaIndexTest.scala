@@ -88,17 +88,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def replace_index_on_a_label_composite_property() {
-    prepareAndTestQuery(
-      title = "Replace a composite index",
-      text = "Say we realized we wanted the index on the properties in the other order, then we can easily replace the old index by: ",
-      prepare = _ => executePreparationQueries(List("CREATE INDEX index_name IF NOT EXISTS FOR (n:Person) ON (n.age, n.country)")),
-      queryText = "CREATE OR REPLACE INDEX index_name FOR (n:Person) ON (n.country, n.age)",
-      optionalResultExplanation = "Note that the old `index_name` index is dropped and only the new one exists.",
-      assertions = _ => assertIndexWithNameExists("index_name", "Person", List("country", "age"))
-    )
-  }
-
   @Test def list_indexes() {
     prepareAndTestQuery(
       title = "List indexes",

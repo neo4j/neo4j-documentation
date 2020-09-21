@@ -13,7 +13,6 @@ This section explains how to manage indexes used for search performance.
 ** <<administration-indexes-create-a-single-property-index, Create a single-property index>>
 ** <<administration-indexes-create-a-single-property-index-only-if-it-does-not-already-exist, Create a single-property index only if it does not already exist>>
 ** <<administration-indexes-create-a-composite-index, Create a composite index>>
-** <<administration-indexes-replace-a-composite-index, Replace a composite index>>
 ** <<administration-indexes-drop-an-index, Drop an index>>
 ** <<administration-indexes-drop-a-non-existing-index, Drop a non-existing index>>
 ** <<administration-indexes-list-indexes, List indexes>>
@@ -66,8 +65,8 @@ CREATE INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 ON (n.propertyName)
 ----
-.2+.^| Create a single-property index.
-.4+.^| Best practice is to give the index a name when it is created.
+| Create a single-property index.
+.2+.^| Best practice is to give the index a name when it is created.
 If the index is not explicitly named, it will get an auto-generated name.
 
 The index name must be unique among both indexes and constraints.
@@ -75,14 +74,6 @@ The index name must be unique among both indexes and constraints.
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same index twice.
 With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name, schema or both already exist.
 It may still throw an error should a conflicting constraint exist.
-Adding `OR REPLACE` to the command will result in any existing index with that name being deleted and a new one created.
-
-| [source, cypher]
-----
-CREATE OR REPLACE INDEX index_name
-FOR (n:LabelName)
-ON (n.propertyName)
-----
 
 | [source, cypher]
 ----
@@ -93,17 +84,7 @@ ON (n.propertyName_1,
     …
     n.propertyName_n)
 ----
-.2+.^| Create a composite index.
-
-| [source, cypher]
-----
-CREATE OR REPLACE INDEX index_name
-FOR (n:LabelName)
-ON (n.propertyName_1,
-    n.propertyName_2,
-    …
-    n.propertyName_n)
-----
+| Create a composite index.
 
 | [source, cypher]
 ----
@@ -206,8 +187,6 @@ include::../indexes/create-a-single-property-index.asciidoc[leveloffset=+1]
 include::../indexes/create-a-single-property-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-composite-index.asciidoc[leveloffset=+1]
-
-include::../indexes/replace-a-composite-index.asciidoc[leveloffset=+1]
 
 include::../indexes/drop-an-index.asciidoc[leveloffset=+1]
 

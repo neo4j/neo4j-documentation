@@ -86,49 +86,29 @@ CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName) 
 ASSERT n.propertyName IS UNIQUE
 ----
-.2+.^| Create a unique node property constraint.
-.8+.^| Best practice is to give the constraint a name when it is created.
+| Create a unique node property constraint.
+.4+.^| Best practice is to give the constraint a name when it is created.
 If the constraint is not explicitly named, it will get an auto-generated name.
 
 The constraint name must be unique among both indexes and constraints.
 
-
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
 With `IF NOT EXISTS`, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
 It may still throw an error should a conflicting index or constraint exist.
-Adding `OR REPLACE` to the command will result in any existing constraint with that name being deleted and a new one created.
-| [source, cypher]
-----
-CREATE OR REPLACE CONSTRAINT constraint_name
-ON (n:LabelName)
-ASSERT n.propertyName IS UNIQUE
-----
 | [source, cypher]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName) 
 ASSERT EXISTS (n.propertyName)
 ----
-.2+.^| [enterprise-edition]#Create a node property existence constraint.#
-| [source, cypher]
-----
-CREATE OR REPLACE CONSTRAINT constraint_name
-ON (n:LabelName)
-ASSERT EXISTS (n.propertyName)
-----
+| [enterprise-edition]#Create a node property existence constraint.#
 | [source, cypher]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON ()-[R:RELATIONSHIP_TYPE]-() 
 ASSERT EXISTS (R.propertyName)
 ----
-.2+.^| [enterprise-edition]#Create a relationship property existence constraint.#
-| [source, cypher]
-----
-CREATE OR REPLACE CONSTRAINT constraint_name
-ON ()-[R:RELATIONSHIP_TYPE]-()
-ASSERT EXISTS (R.propertyName)
-----
+| [enterprise-edition]#Create a relationship property existence constraint.#
 | [source, cypher]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
@@ -139,17 +119,7 @@ n.propertyName_2,
 n.propertyName_n)
 IS NODE KEY
 ----
-.2+.^| [enterprise-edition]#Create a node key constraint.#
-| [source, cypher]
-----
-CREATE OR REPLACE CONSTRAINT constraint_name
-ON (n:LabelName)
-ASSERT (n.propertyName_1,
-n.propertyName_2,
-…
-n.propertyName_n)
-IS NODE KEY
-----
+| [enterprise-edition]#Create a node key constraint.#
 | [source, cypher]
 ----
 DROP CONSTRAINT constraint_name [IF EXISTS]
@@ -208,8 +178,6 @@ include::create-a-unique-constraint.asciidoc[leveloffset=+2]
 
 include::create-a-unique-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
 
-include::replace-a-unique-constraint.asciidoc[leveloffset=+2]
-
 include::create-a-node-that-complies-with-unique-property-constraints.asciidoc[leveloffset=+2]
 
 include::create-a-node-that-violates-a-unique-property-constraint.asciidoc[leveloffset=+2]
@@ -226,8 +194,6 @@ include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes
 include::create-a-node-property-existence-constraint.asciidoc[leveloffset=+2]
 
 include::create-a-node-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
-
-include::replace-a-node-property-existence-constraint.asciidoc[leveloffset=+2]
 
 include::create-a-node-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+2]
 
@@ -246,8 +212,6 @@ include::create-a-relationship-property-existence-constraint.asciidoc[leveloffse
 
 include::create-a-relationship-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
 
-include::replace-a-relationship-property-existence-constraint.asciidoc[leveloffset=+2]
-
 include::create-a-relationship-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+2]
 
 include::create-a-relationship-that-violates-a-property-existence-constraint.asciidoc[leveloffset=+2]
@@ -264,8 +228,6 @@ include::failure-to-create-a-relationship-property-existence-constraint-due-to-e
 include::create-a-node-key-constraint.asciidoc[leveloffset=+2]
 
 include::create-a-node-key-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
-
-include::replace-a-node-key-constraint.asciidoc[leveloffset=+2]
 
 include::create-a-node-that-complies-with-node-key-constraints.asciidoc[leveloffset=+2]
 

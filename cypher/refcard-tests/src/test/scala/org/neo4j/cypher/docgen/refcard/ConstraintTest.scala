@@ -84,7 +84,7 @@ This constraint will create an accompanying index.
 ###assertion=create-unique-property-constraint
 //
 
-CREATE OR REPLACE CONSTRAINT uniqueness ON (p:Person)
+CREATE CONSTRAINT uniqueness ON (p:Person)
        ASSERT p.age IS UNIQUE
 ###
 
@@ -92,7 +92,6 @@ Create a unique property constraint on the label `Person` and property `age` wit
 If any other node with that label is updated or created with a `age` that
 already exists, the write operation will fail.
 This constraint will create an accompanying index.
-If there existed a constraint with the name `uniqueness` before it would be dropped and the new one created.
 
 ###assertion=create-property-existence-constraint
 //
