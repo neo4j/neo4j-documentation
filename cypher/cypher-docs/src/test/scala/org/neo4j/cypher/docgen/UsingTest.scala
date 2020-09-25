@@ -169,7 +169,7 @@ class UsingTest extends DocumentingTest {
                 |However, it will also break transactional isolation and thus it should only be used where needed.""")
       }
       note {
-        p("The <<query-use, `USE` clause>> cannot be used together with the `PERIODIC COMMIT` clause.")
+        p("The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` clause.")
       }
     }
   }.build()
