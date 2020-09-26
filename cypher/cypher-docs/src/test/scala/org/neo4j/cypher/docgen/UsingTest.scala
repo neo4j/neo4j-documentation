@@ -167,7 +167,10 @@ class UsingTest extends DocumentingTest {
       important {
         p("""Using `PERIODIC COMMIT` will prevent running out of memory when importing large amounts of data.
                 |However, it will also break transactional isolation and thus it should only be used where needed.""")
-        }
+      }
+      note {
+        p("The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` clause.")
+      }
     }
   }.build()
 
