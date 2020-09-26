@@ -19,7 +19,8 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
+import org.neo4j.cypher.docgen.tooling.Admonitions.Note
+import org.neo4j.cypher.docgen.tooling.{Paragraph, QueryStatisticsTestSupport}
 import org.neo4j.visualization.graphviz.{AsciiDocSimpleStyle, GraphStyle}
 import org.junit.Test
 import java.io.File
@@ -147,6 +148,8 @@ can be used to instruct Neo4j to perform a commit after a number of rows.
 This reduces the memory overhead of the transaction state.
 By default, the commit will happen every 1000 rows.
 For more information, see <<query-using-periodic-commit-hint>>.
+
+Note: The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` clause.
 """,
       queryText = s"USING PERIODIC COMMIT LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
       optionalResultExplanation = "",
