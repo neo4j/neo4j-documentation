@@ -109,7 +109,7 @@ CREATE CONSTRAINT node_exists IF NOT EXISTS ON (p:Person)
        ASSERT exists(p.name)
 ###
 
-(★) If a node property existence constraint on the label `Person` and property `name` or any constraint with the name `node_exists` already exist then nothing happens.
+(★)(★★) If a node property existence constraint on the label `Person` and property `name` or any constraint with the name `node_exists` already exist then nothing happens.
 If no such constraint exists, then it will be created.
 
 ###assertion=create-property-existence-constraint
@@ -176,6 +176,6 @@ Drop the constraint with the name `uniqueness`, throws an error if the constrain
 DROP CONSTRAINT uniqueness IF EXISTS
 ###
 
-Drop the constraint with the name `uniqueness` if it exists, does nothing if it does not exist.
+(★★) Drop the constraint with the name `uniqueness` if it exists, does nothing if it does not exist.
 """)
 }

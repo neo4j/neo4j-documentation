@@ -168,6 +168,9 @@ IS NODE KEY
 | Drop a node key constraint without specifying a name.
 |===
 
+[NOTE]
+The `IF [NOT] EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards.
+
 [[administration-constraints-examples]]
 == Examples
 

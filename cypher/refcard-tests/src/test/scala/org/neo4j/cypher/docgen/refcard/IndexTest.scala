@@ -96,7 +96,7 @@ Create a composite index on the label `Person` and the properties `name` and `ag
 CREATE INDEX IF NOT EXISTS FOR (p:Person) ON (p.name, p.age)
 ###
 
-Create a composite index on the label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
+(★★) Create a composite index on the label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
 
 ###assertion=match parameters=aname
 //
@@ -159,6 +159,6 @@ Drop the index named `index_name`, throws an error if the index does not exist.
 DROP INDEX index_name IF EXISTS
 ###
 
-Drop the index named `index_name` if it exists, does nothing if it does not exist.
+(★★)  Drop the index named `index_name` if it exists, does nothing if it does not exist.
 """
 }

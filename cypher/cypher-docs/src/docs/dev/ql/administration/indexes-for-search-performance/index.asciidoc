@@ -118,6 +118,9 @@ n.propertyName_n)
 | Drop a composite index without specifying a name. 
 |===
 
+[NOTE]
+The `IF [NOT] EXISTS` syntax for indexes is only available in Neo4j 4.1.3 and onwards.
+
 <<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).
 
 
