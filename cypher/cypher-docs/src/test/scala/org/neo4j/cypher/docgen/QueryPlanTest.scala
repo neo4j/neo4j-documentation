@@ -149,7 +149,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |If it finds a constraint with the given name or with the same type and schema it will stop the execution and no new constraint is created.
           |The following query will create a unique constraint with the name `uniqueness` on the `name` property of nodes with the `Country` label only if
           |no constraint named `uniqueness` or unique constraint on `(:Country {name})` already exists.
-          |Note: The `IF [NOT] EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards.""".stripMargin,
+          |Note: The `IF NOT EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards.""".stripMargin,
       queryText = """CREATE CONSTRAINT uniqueness IF NOT EXISTS ON (c:Country) ASSERT c.name is UNIQUE""",
       assertions = p => {
         val plan = p.executionPlanString()
@@ -301,7 +301,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |This will make sure no other index with the given name or schema already exists before the `CreateIndex` operator creates an index on a property for all nodes having a certain label.
           |If it finds an index with the given name or schema it will stop the execution and no new index is created.
           |The following query will create an index with the name `my_index` on the `name` property of nodes with the `Country` label only if no such index already exists.
-          |Note: The `IF [NOT] EXISTS` syntax for indexes is only available in Neo4j 4.1.3 and onwards.""".stripMargin,
+          |Note: The `IF NOT EXISTS` syntax for indexes is only available in Neo4j 4.1.3 and onwards.""".stripMargin,
       queryText = """CREATE INDEX my_index IF NOT EXISTS FOR (c:Country) ON (c.name)""",
       assertions = p => {
         val plan = p.executionPlanString()
