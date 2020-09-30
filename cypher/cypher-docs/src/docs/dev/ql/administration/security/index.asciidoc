@@ -54,7 +54,7 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 *** <<administration-security-administration-dbms-privileges-user-management, The dbms `USER MANAGEMENT` privileges>>
 *** <<administration-security-administration-dbms-privileges-database-management, The dbms `DATABASE MANAGEMENT` privileges>>
 *** <<administration-security-administration-dbms-privileges-privilege-management, The dbms `PRIVILEGE MANAGEMENT` privileges>>
-*** <<administration-security-administration-dbms-privileges-execute-procedure, The dbms `EXECUTE PROCEDURE` privileges>>
+*** <<administration-security-administration-dbms-privileges-execute, The dbms `EXECUTE` privileges>>
 *** <<administration-security-administration-dbms-privileges-all, Granting `ALL DBMS PRIVILEGES`>>
 * <<administration-built-in-roles, Built-in roles>>
 * <<administration-security-limitations, Known limitations of security>>

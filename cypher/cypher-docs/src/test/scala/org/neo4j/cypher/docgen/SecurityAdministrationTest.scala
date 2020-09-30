@@ -59,7 +59,13 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         |** <<administration-security-administration-dbms-privileges-user-management, The dbms `USER MANAGEMENT` privileges>>
         |** <<administration-security-administration-dbms-privileges-database-management, The dbms `DATABASE MANAGEMENT` privileges>>
         |** <<administration-security-administration-dbms-privileges-privilege-management, The dbms `PRIVILEGE MANAGEMENT` privileges>>
-        |** <<administration-security-administration-dbms-privileges-execute-procedure, The dbms `EXECUTE PROCEDURE` privileges>>
+        |** <<administration-security-administration-dbms-privileges-execute, The dbms `EXECUTE` privileges>>
+        |*** <<execute-procedure-subsection, The dbms `EXECUTE PROCEDURE` privileges>>
+        |*** <<boosted-execute-procedure-subsection, The dbms `EXECUTE BOOSTED PROCEDURE` privileges>>
+        |*** <<admin-execute-procedure-subsection, The dbms `EXECUTE ADMIN PROCEDURES` privileges>>
+        |*** <<execute-function-subsection, The dbms `EXECUTE USER DEFINED FUNCTION` privileges>>
+        |*** <<boosted-execute-function-subsection, The dbms `EXECUTE BOOSTED USER DEFINED FUNCTION` privileges>>
+        |*** <<name-globbing, Procedure and user defined function name-globbing>>
         |** <<administration-security-administration-dbms-privileges-all, Granting `ALL DBMS PRIVILEGES`>>
         |""".stripMargin)
     section("The `admin` role", "administration-security-administration-introduction", "enterprise-edition") {
@@ -602,7 +608,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
 
-      section("The dbms `EXECUTE PROCEDURE` privileges", "administration-security-administration-dbms-privileges-execute-procedure", "enterprise-edition") {
+      section("The dbms `EXECUTE` privileges", "administration-security-administration-dbms-privileges-execute", "enterprise-edition") {
         initQueries(
           "CREATE ROLE procedureExecutor",
           "CREATE ROLE deniedProcedureExecutor",
@@ -612,19 +618,26 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           "CREATE ROLE deniedBoostedProcedureExecutor3",
           "CREATE ROLE deniedBoostedProcedureExecutor4",
           "CREATE ROLE adminProcedureExecutor",
-          "CREATE ROLE procedureGlobbing1",
-          "CREATE ROLE procedureGlobbing2",
-          "CREATE ROLE procedureGlobbing3",
-          "CREATE ROLE procedureGlobbing4",
-          "CREATE ROLE procedureGlobbing5"
+          "CREATE ROLE functionExecutor",
+          "CREATE ROLE deniedFunctionExecutor",
+          "CREATE ROLE boostedFunctionExecutor",
+          "CREATE ROLE globbing1",
+          "CREATE ROLE globbing2",
+          "CREATE ROLE globbing3",
+          "CREATE ROLE globbing4",
+          "CREATE ROLE globbing5"
         )
-        p("The dbms privileges for procedure execution are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
-        p("include::dbms/execute-procedure-syntax.asciidoc[]")
+        p("The dbms privileges for procedure and user defined function execution are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
+        p("include::dbms/execute-syntax.asciidoc[]")
+        p(
+          """The `EXECUTE BOOSTED` privileges replace the `dbms.security.procedures.default_allowed` and `dbms.security.procedures.roles` configuration parameters for procedures and user defined functions.
+            |The configuration parameters are still honoured as a set of temporary privileges. These cannot be revoked, but will be updated on each restart
+            |with the current configuration values.""".stripMargin)
 
         section("The `EXECUTE PROCEDURE` privilege", "execute-procedure-subsection", "enterprise-edition") {
           p(
             """The ability to execute a procedure can be granted via the `EXECUTE PROCEDURE` privilege.
-              |A user with this privilege is allowed to execute the procedures matched by the <<procedure-name-globbing, name-globbing>>.
+              |A user with this privilege is allowed to execute the procedures matched by the <<name-globbing, name-globbing>>.
               |The following query shows an example of how to grant this privilege:""".stripMargin)
           query("GRANT EXECUTE PROCEDURE db.schema.* ON DBMS TO procedureExecutor", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
@@ -661,7 +674,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         section("The `EXECUTE BOOSTED PROCEDURE` privilege", "boosted-execute-procedure-subsection", "enterprise-edition") {
           p(
             """The ability to execute a procedure with elevated privileges can be granted via the `EXECUTE BOOSTED PROCEDURE` privilege.
-              |A user with this privilege is allowed to execute the procedures matched by the <<procedure-name-globbing, name-globbing>>
+              |A user with this privilege is allowed to execute the procedures matched by the <<name-globbing, name-globbing>>
               |without the execution being restricted to their other privileges.
               |The following query shows an example of how to grant this privilege:""".stripMargin)
           query("GRANT EXECUTE BOOSTED PROCEDURE db.labels, db.relationshipTypes ON DBMS TO boostedProcedureExecutor", ResultAssertions(r => {
@@ -677,11 +690,6 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             p("Lists all privileges for role 'boostedProcedureExecutor'")
             resultTable()
           }
-
-          p(
-            """This replaces the `dbms.security.procedures.default_allowed` and `dbms.security.procedures.roles` configuration parameters for procedures.
-              |The configuration parameters are still honoured as a set of temporary privileges. These cannot be revoked, but will be updated on each restart
-              |with the current configuration values.""".stripMargin)
 
           p(
             """While granting `EXECUTE BOOSTED PROCEDURE` on its own allows the procedure to be both executed and given elevated privileges during the execution,
@@ -789,12 +797,77 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           }
         }
 
-        section("Procedure name-globbing", "procedure-name-globbing", "enterprise-edition") {
+        section("The `EXECUTE USER DEFINED FUNCTION` privilege", "execute-function-subsection", "enterprise-edition") {
           p(
-            """The name-globbing for procedure names is a simplified version of globbing for filename expansions, only allowing two wildcard characters -- `*` and `?`.
+            """The ability to execute a user defined function (UDF) can be granted via the `EXECUTE USER DEFINED FUNCTION` privilege.
+              |A user with this privilege is allowed to execute the UDFs matched by the <<name-globbing, name-globbing>>.
+              |The following query shows an example of how to grant this privilege:""".stripMargin)
+          query("GRANT EXECUTE FUNCTION apoc.coll.* ON DBMS TO functionExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'functionExecutor' can then run any UDF in the `apoc.coll` namespace. The function will be run using the users own privileges.")
+          }
+          p("The resulting role should have privileges that only allow executing UDFs in the `apoc.coll` namespace:")
+          query("SHOW ROLE functionExecutor PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'functionExecutor'")
+            resultTable()
+          }
+
+          p(
+            """If we want to allow executing all but a few UDFs, we can grant `EXECUTE USER DEFINED FUNCTIONS *` and deny the unwanted functions.
+              |For example, the following queries allows for executing all UDFs except `apoc.any.property` and `apoc.any.properties`:""".stripMargin)
+          query("GRANT EXECUTE FUNCTIONS * ON DBMS TO deniedFunctionExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE FUNCTION apoc.any.prop* ON DBMS TO deniedFunctionExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p("The resulting role should have privileges that only allow executing all procedures except `apoc.any.property` and `apoc.any.properties`:")
+          query("SHOW ROLE deniedFunctionExecutor PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'deniedFunctionExecutor'")
+            resultTable()
+          }
+        }
+
+        section("The `EXECUTE BOOSTED USER DEFINED FUNCTION` privilege", "boosted-execute-function-subsection", "enterprise-edition") {
+          p(
+            """The ability to execute a user defined function (UDF) with elevated privileges can be granted via the `EXECUTE BOOSTED USER DEFINED FUNCTION` privilege.
+              |A user with this privilege is allowed to execute the UDFs matched by the <<name-globbing, name-globbing>>
+              |without the execution being restricted to their other privileges.
+              |The following query shows an example of how to grant this privilege:""".stripMargin)
+          query("GRANT EXECUTE BOOSTED FUNCTION apoc.any.properties ON DBMS TO boostedFunctionExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p(
+              """Users with the role 'boostedFunctionExecutor' can then run `apoc.any.properties` with full privileges,
+                |seeing every property on the node/relationship not just the properties that the user has `READ` privilege on.""".stripMargin)
+          }
+          p("The resulting role should have privileges that only allow executing the UDF `apoc.any.properties`, but with elevated execution:")
+          query("SHOW ROLE boostedFunctionExecutor PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'boostedFunctionExecutor'")
+            resultTable()
+          }
+
+          p(
+            """While granting `EXECUTE BOOSTED USER DEFINED FUNCTION` on its own allows the UDF to be both executed and given elevated privileges during the execution,
+              |the deny behaves slightly different and only denies the elevation and not the execution. However, having only a granted `EXECUTE BOOSTED USER DEFINED FUNCTION`
+              |and a deny `EXECUTE BOOSTED USER DEFINED FUNCTION` will deny the execution as well.
+              |This is the same behaviour as for `EXECUTE BOOSTED PROCEDURE`, for examples see <<boosted-execute-procedure-subsection>>""".stripMargin)
+        }
+
+        section("Procedure and user defined function name-globbing", "name-globbing", "enterprise-edition") {
+          p(
+            """The name-globbing for procedure and user defined function names is a simplified version of globbing for filename expansions, only allowing two wildcard characters -- `*` and `?`.
               |They are used for multiple and single character matches, where `*` means 0 or more characters and `?` matches exactly one character.""".stripMargin)
           p(
-            """For the examples below, assume we have the following procedures:
+            """The examples below only use procedures but the same rules apply to user defined function names.
+              |For the examples below, assume we have the following procedures:
               |* mine.public.exampleProcedure
               |* mine.public.exampleProcedure1
               |* mine.public.exampleProcedure42
@@ -803,39 +876,39 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
               |* mine.private.exampleProcedure2
               |* your.exampleProcedure""".stripMargin)
 
-          query("GRANT EXECUTE PROCEDURE * ON DBMS TO procedureGlobbing1", ResultAssertions(r => {
+          query("GRANT EXECUTE PROCEDURE * ON DBMS TO globbing1", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
           })) {
             statsOnlyResultTable()
-            p("Users with the role 'procedureGlobbing1' can then run procedures all the procedures.")
+            p("Users with the role 'globbing1' can then run procedures all the procedures.")
           }
 
-          query("GRANT EXECUTE PROCEDURE mine.*.exampleProcedure ON DBMS TO procedureGlobbing2", ResultAssertions(r => {
+          query("GRANT EXECUTE PROCEDURE mine.*.exampleProcedure ON DBMS TO globbing2", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
           })) {
             statsOnlyResultTable()
-            p("Users with the role 'procedureGlobbing2' can then run procedures `mine.public.exampleProcedure` and `mine.private.exampleProcedure`, but none of the others.")
+            p("Users with the role 'globbing2' can then run procedures `mine.public.exampleProcedure` and `mine.private.exampleProcedure`, but none of the others.")
           }
 
-          query("GRANT EXECUTE PROCEDURE mine.*.exampleProcedure? ON DBMS TO procedureGlobbing3", ResultAssertions(r => {
+          query("GRANT EXECUTE PROCEDURE mine.*.exampleProcedure? ON DBMS TO globbing3", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
           })) {
             statsOnlyResultTable()
-            p("Users with the role 'procedureGlobbing3' can then run procedures `mine.public.exampleProcedure1`, `mine.private.exampleProcedure1` and `mine.private.exampleProcedure2`, but none of the others.")
+            p("Users with the role 'globbing3' can then run procedures `mine.public.exampleProcedure1`, `mine.private.exampleProcedure1` and `mine.private.exampleProcedure2`, but none of the others.")
           }
 
-          query("GRANT EXECUTE PROCEDURE *.exampleProcedure ON DBMS TO procedureGlobbing4", ResultAssertions(r => {
+          query("GRANT EXECUTE PROCEDURE *.exampleProcedure ON DBMS TO globbing4", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
           })) {
             statsOnlyResultTable()
-            p("Users with the role 'procedureGlobbing4' can then run procedures `your.exampleProcedure`, `mine.public.exampleProcedure` and `mine.private.exampleProcedure`, but none of the others.")
+            p("Users with the role 'globbing4' can then run procedures `your.exampleProcedure`, `mine.public.exampleProcedure` and `mine.private.exampleProcedure`, but none of the others.")
           }
 
-          query("GRANT EXECUTE PROCEDURE mine.public.exampleProcedure* ON DBMS TO procedureGlobbing5", ResultAssertions(r => {
+          query("GRANT EXECUTE PROCEDURE mine.public.exampleProcedure* ON DBMS TO globbing5", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
           })) {
             statsOnlyResultTable()
-            p("Users with the role 'procedureGlobbing5' can then run procedures `mine.public.exampleProcedure`, `mine.public.exampleProcedure1` and `mine.public.exampleProcedure42`, but none of the others.")
+            p("Users with the role 'globbing5' can then run procedures `mine.public.exampleProcedure`, `mine.public.exampleProcedure1` and `mine.public.exampleProcedure42`, but none of the others.")
           }
         }
       }

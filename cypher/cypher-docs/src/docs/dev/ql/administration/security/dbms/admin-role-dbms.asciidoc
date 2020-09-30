@@ -15,5 +15,5 @@ See the sections on <<administration-security-administration-dbms-privileges-rol
 <<administration-security-administration-dbms-privileges-database-management, database management>>,
 <<administration-security-administration-dbms-privileges-privilege-management, privilege management>>,
 <<administration-security-administration-database-transaction, transaction management>> and
-<<administration-security-administration-dbms-privileges-execute-procedure, procedure security>> for details.
+<<administration-security-administration-dbms-privileges-execute, procedure and user defined function security>> for details.
 It is possible to make a custom role with a subset of these privileges.
