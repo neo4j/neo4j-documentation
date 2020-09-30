@@ -85,6 +85,16 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
         BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))))
   }
 
+  test("shouldParseCreateIndexWithoutName") {
+    // given
+    val query = "create index for (person:Person) on (person.age)"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create index"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq(AnyText("person:Person"))),
+        BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))))
+  }
+
   test("shouldParseDropIndexByNameIfExists") {
     // given
     val query = "drop index name if exists"

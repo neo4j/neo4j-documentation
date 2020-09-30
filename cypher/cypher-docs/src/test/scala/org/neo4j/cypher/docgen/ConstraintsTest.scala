@@ -48,6 +48,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     prepareAndTestQuery(
       title = "Create a unique constraint only if it does not already exist",
       text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+        "Note: The `IF [NOT] EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards. " +
         "The uniqueness constraint ensures that your database will never contain more than one node with a specific label and one property value.",
       prepare = _ => executePreparationQueries(List("DROP CONSTRAINT constraint_name IF EXISTS")),
       queryText = "CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (book:Book) ASSERT book.isbn IS UNIQUE",
@@ -136,6 +137,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     prepareAndTestQuery(
       title = "Create a node property existence constraint only if it does not already exist",
       text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+        "Note: The `IF [NOT] EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards. " +
         "The node property existence constraint ensures that all nodes with a certain label have a certain property.",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (book:Book) ASSERT book.isbn IS UNIQUE")),
       queryText = "CREATE CONSTRAINT constraint_name IF NOT EXISTS ON (book:Book) ASSERT exists(book.isbn)",
@@ -219,6 +221,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     prepareAndTestQuery(
       title = "Create a relationship property existence constraint only if it does not already exist",
       text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+        "Note: The `IF [NOT] EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards. " +
         "The relationship property existence constraint ensures all relationships with a certain type have a certain property.",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS ON ()-[like:LIKED]-() ASSERT exists(like.since)")),
       queryText = "CREATE CONSTRAINT constraint_name IF NOT EXISTS ON ()-[like:LIKED]-() ASSERT exists(like.day)",
@@ -303,6 +306,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     prepareAndTestQuery(
       title = "Create a node key constraint only if it does not already exist",
       text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+        "Note: The `IF [NOT] EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards. " +
         "The node key constraint ensures that all nodes with a particular label have a set of defined properties whose combined value is unique " +
         "and all properties in the set are present.",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT old_constraint_name IF NOT EXISTS ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
@@ -390,7 +394,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     testQuery(
       title = "Drop a non-existing constraint",
       text = "If it is uncertain if any constraint with a given name exists and you want to drop it if it does but not get an error should it not, use `IF EXISTS`. " +
-        "It is the same command for unique property, property existence and node key constraints.",
+        "It is the same command for unique property, property existence and node key constraints. " +
+        "Note: The `IF [NOT] EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards.",
       queryText = "DROP CONSTRAINT missing_constraint_name IF EXISTS",
       assertions = _ => assertConstraintWithNameDoesNotExists("missing_constraint_name")
     )
