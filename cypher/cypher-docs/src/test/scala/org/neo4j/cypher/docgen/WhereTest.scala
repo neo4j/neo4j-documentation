@@ -251,9 +251,9 @@ class WhereTest extends DocumentingTest {
             |You can achieve  the same effect by combining multiple patterns with `AND`.""".stripMargin)
         p(
           """Note that you cannot introduce new variables here.
-            |Although it might look very similar to the `MATCH` patterns, the `WHERE` clause is all about eliminating matched subgraphs.
+            |Although it might look very similar to the `MATCH` patterns, the `WHERE` clause is all about eliminating matched paths.
             |`MATCH (a)-[*]->(b)` is very different from `WHERE (a)-[*]->(b)`.
-            |The first will produce a subgraph for every path it can find between `a` and `b`, whereas the latter will eliminate any matched subgraphs where `a` and `b` do not have a directed relationship chain between them.""".stripMargin)
+            |The first will produce a path for every path it can find between `a` and `b`, whereas the latter will eliminate any matched paths where `a` and `b` do not have a directed relationship chain between them.""".stripMargin)
         query(
           """MATCH (timothy:Person {name: 'Timothy'}), (other:Person)
             |WHERE other.name IN ['Andy', 'Peter'] AND (timothy)<--(other)

@@ -43,7 +43,7 @@ class PredicateFunctionsTest extends DocumentingTest {
         |       (bob)-[:MARRIED]->(eskil)""")
     synopsis(
       """Predicates are boolean functions that return true or false for a given set of non-null input.
-        |They are most commonly used to filter out subgraphs in the `WHERE` part of a query.""".stripMargin)
+        |They are most commonly used to filter out path in the `WHERE` part of a query.""".stripMargin)
     p(
       """Functions:
         |
