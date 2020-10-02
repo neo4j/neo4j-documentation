@@ -60,7 +60,7 @@ class UsingTest extends DocumentingTest {
       graphViz()
       query(s"$matchString RETURN 1 AS $columnName", assertIntegersReturned(1)) {
         p("""The following query will be used in some of the examples on this page. It has intentionally been constructed in
-            |such a way that the statistical information will be inaccurate for the particular paths that this query
+            |such a way that the statistical information will be inaccurate for the particular path that this query
             |matches. For this reason, it can be improved by supplying planner hints.""")
         profileExecutionPlan()
       }
