@@ -91,6 +91,6 @@ MERGE
 
 RETURN r, b###
 
-`MERGE` finds or creates subgraphs attached to the node.
+`MERGE` finds or creates paths attached to the node.
 """
 }

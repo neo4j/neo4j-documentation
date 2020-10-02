@@ -32,7 +32,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         |Privileges control the access rights to graph elements using a combined whitelist/blacklist mechanism.
         |It is possible to grant access, or deny access, or a combination of the two.
         |The user will be able to access the resource if they have a grant (whitelist) and do not have a deny (blacklist) relevant to that resource.
-        |All other combinations of `GRANT` and `DENY` will result in the matching subgraph being inaccessible.
+        |All other combinations of `GRANT` and `DENY` will result in the matching path being inaccessible.
         |What this means in practice depends on whether we are talking about a <<administration-security-reads, read privilege>> or a <<administration-security-writes, write privilege>>.
         |
         |* If a entity is not accessible due to <<administration-security-reads, read privileges>>, the data will become invisible to attempts to read it.
