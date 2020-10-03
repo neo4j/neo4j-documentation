@@ -43,7 +43,7 @@ These include index and constraint management commands.
 * <<administration-security, Security>>
 ** <<administration-security-introduction, Introduction>>
 ** <<administration-security-users-and-roles, User and role management>>
-** <<administration-security-subgraph, Graph and subgraph access control>>
+** <<administration-security-subgraph, Graph and sub-graph access control>>
 ** <<administration-security-reads, Read privileges>>
 ** <<administration-security-writes, Write privileges>>
 ** <<administration-security-administration, Security of administration>>
