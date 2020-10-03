@@ -65,6 +65,14 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       optionalResultExplanation = "Note that the index name needs to be unique. ",
       assertions = _ => assertIndexWithNameExists("index_name", "Person", List("surname"))
     )
+    testQuery(
+      title = "Create a single-property index only if it does not already exist",
+      text = "If it is unknown if an index exists or not but we want to make sure it does, we add `IF NOT EXISTS`. " +
+      "Note: The `IF NOT EXISTS` syntax for indexes is only available in Neo4j 4.1.3 and onwards.",
+      queryText = "CREATE INDEX index_name IF NOT EXISTS FOR (n:Person) ON (n.surname)",
+      optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same name, same schema or both.",
+      assertions = _ => assertIndexWithNameExists("index_name", "Person", List("surname"))
+    )
   }
 
   @Test def create_index_on_a_label_composite_property() {
@@ -122,6 +130,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       prepare = _ => executePreparationQueries(List("CREATE INDEX index_name FOR (n:Person) ON (n.surname)")),
       queryText = "DROP INDEX index_name",
       assertions = _ => assertIndexWithNameDoesNotExists("index_name")
+    )
+    testQuery(
+      title = "Drop a non-existing index",
+      text = "If it is uncertain if an index exists and you want to drop it if it does but not get an error should it not, use `IF EXISTS`. " +
+      "Note: The `IF EXISTS` syntax for indexes is only available in Neo4j 4.1.3 and onwards.",
+      queryText = "DROP INDEX missing_index_name IF EXISTS",
+      assertions = _ => assertIndexWithNameDoesNotExists("missing_index_name")
     )
   }
 

@@ -56,7 +56,26 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
         NonBreakingKeywords("assert"), AnyText("person.age"), NonBreakingKeywords("is unique"))
   }
 
-  test("shouldParseCreatIndexWithName") {
+  test("shouldParseCreateConstraintIfNotExists") {
+    // given
+    val query = "create constraint if not exists on (person:Person) assert person.age is unique"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create constraint"), NonBreakingKeywords("if not exists"), BreakingKeywords("on"), GroupToken("(", ")",
+        Seq(AnyText("person:Person"))), NonBreakingKeywords("assert"), AnyText("person.age"), NonBreakingKeywords("is unique"))
+  }
+
+  test("shouldParseDropConstraintByName") {
+    // given
+    val query = "drop constraint name"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("drop constraint"), AnyText("name"))
+  }
+
+  test("shouldParseCreateIndexWithName") {
     // given
     val query = "create index name for (person:Person) on (person.age)"
 
@@ -64,6 +83,25 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     parsing(query) shouldGive
       Seq(BreakingKeywords("create index"), AnyText("name"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq(AnyText("person:Person"))),
         BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))))
+  }
+
+  test("shouldParseCreateIndexWithoutName") {
+    // given
+    val query = "create index for (person:Person) on (person.age)"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create index"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq(AnyText("person:Person"))),
+        BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))))
+  }
+
+  test("shouldParseDropIndexByNameIfExists") {
+    // given
+    val query = "drop index name if exists"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("drop index"), AnyText("name"), NonBreakingKeywords("if exists"))
   }
 
   test("shouldParseAscAsKeyword") {

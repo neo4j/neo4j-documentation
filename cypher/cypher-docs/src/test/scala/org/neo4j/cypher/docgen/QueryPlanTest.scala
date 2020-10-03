@@ -140,6 +140,26 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def doNothingIfExistsForConstraint() {
+    profileQuery(
+      title = "Create Constraint only if it does not already exist",
+      text =
+        """To not get an error creating the same constraint twice, we use the `DoNothingIfExists` operator for constraints.
+          |This will make sure no other constraint with the given name or another constraint of the same type and schema already exists before the specific `CreateConstraint` operator creates the constraint.
+          |If it finds a constraint with the given name or with the same type and schema it will stop the execution and no new constraint is created.
+          |The following query will create a unique constraint with the name `uniqueness` on the `name` property of nodes with the `Country` label only if
+          |no constraint named `uniqueness` or unique constraint on `(:Country {name})` already exists.
+          |Note: The `IF NOT EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards.""".stripMargin,
+      queryText = """CREATE CONSTRAINT uniqueness IF NOT EXISTS ON (c:Country) ASSERT c.name is UNIQUE""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("CreateConstraint"))
+        assertThat(plan, containsString("uniqueness"))
+        assertThat(plan, containsString("DoNothingIfExists(CONSTRAINT)"))
+      }
+    )
+  }
+
   @Test def createNodePropertyExistenceConstraint() {
     profileQuery(
       title = "Create Node Property Existence Constraint",
@@ -269,13 +289,36 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def doNothingIfExistsForIndex() {
+    executePreparationQueries {
+      List("CREATE INDEX my_index FOR (c:Country) ON (c.name)")
+    }
+
+    profileQuery(
+      title = "Create Index only if it does not already exist",
+      text =
+        """To not get an error creating the same index twice, we use the `DoNothingIfExists` operator for indexes.
+          |This will make sure no other index with the given name or schema already exists before the `CreateIndex` operator creates an index on a property for all nodes having a certain label.
+          |If it finds an index with the given name or schema it will stop the execution and no new index is created.
+          |The following query will create an index with the name `my_index` on the `name` property of nodes with the `Country` label only if no such index already exists.
+          |Note: The `IF NOT EXISTS` syntax for indexes is only available in Neo4j 4.1.3 and onwards.""".stripMargin,
+      queryText = """CREATE INDEX my_index IF NOT EXISTS FOR (c:Country) ON (c.name)""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("CreateIndex"))
+        assertThat(plan, containsString("my_index"))
+        assertThat(plan, containsString("DoNothingIfExists(INDEX)"))
+      }
+    )
+  }
+
   @Test def dropIndex() {
     executePreparationQueries {
       List("CREATE INDEX FOR (c:Country) ON (c.name)")
     }
 
     profileQuery(
-      title = "Drop Index",
+      title = "Drop Index by schema",
       text =
         """The `DropIndex` operator removes an index from a property for all nodes having a certain label.
           |The following query will drop an index on the `name` property of nodes with the `Country` label.""".stripMargin,

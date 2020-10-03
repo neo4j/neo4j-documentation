@@ -108,24 +108,26 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-cache-properties, CacheProperties>>                 | Reads node or relationship properties and caches them. | | |
 | <<query-plan-cartesian-product, CartesianProduct>>                 | Produces a cartesian product of the inputs from the left-hand and right-hand operators.  | | |
 | <<query-plan-conditional-apply, ConditionalApply>>                         | Performs a nested loop. If a variable is not `null`, the right-hand side will be executed.  | | |
-| <<query-plan-create-index, CreateIndex>>              | Creates an index on a property for all nodes having a certain label.  | Y | Y |
-| <<query-plan-create-node-key-constraint, CreateNodeKeyConstraint>>     |  Creates a node key constraint on a set of properties for all nodes having a certain label.  | Y | Y |
+| <<query-plan-create-index, CreateIndex>>              | Creates an index on a property for all nodes having a certain label.  | | Y |
+| <<query-plan-create-node-key-constraint, CreateNodeKeyConstraint>>     |  Creates a node key constraint on a set of properties for all nodes having a certain label.  | | Y |
 | <<query-plan-create-nodes---relationships, Create>>              | Creates nodes and relationships.  | | Y |
-| <<query-plan-create-node-property-existence-constraint, CreateNodePropertyExistenceConstraint>>     |  Creates an existence constraint on a property for all nodes having a certain label.  | Y | Y |
-| <<query-plan-create-relationship-property-existence-constraint, CreateRelationshipPropertyExistenceConstraint>>     | Creates an existence constraint on a property for all relationships of a certain type.  | Y | Y |
-| <<query-plan-create-unique-constraint, CreateUniqueConstraint>>                  | Creates a unique constraint on a property for all nodes having a certain label.  | Y | Y |
+| <<query-plan-create-node-property-existence-constraint, CreateNodePropertyExistenceConstraint>>     |  Creates an existence constraint on a property for all nodes having a certain label.  | | Y |
+| <<query-plan-create-relationship-property-existence-constraint, CreateRelationshipPropertyExistenceConstraint>>     | Creates an existence constraint on a property for all relationships of a certain type.  | | Y |
+| <<query-plan-create-unique-constraint, CreateUniqueConstraint>>                  | Creates a unique constraint on a property for all nodes having a certain label.  | | Y |
 | <<query-plan-delete, Delete>>                                          | Deletes a node or relationship.  | | Y |
 | <<query-plan-detach-delete, DetachDelete>>               | Deletes a node and its relationships.  | | Y |
 | <<query-plan-directed-relationship-by-id-seek, DirectedRelationshipByIdSeek>>  | Reads one or more relationships by id from the relationship store.  | Y | |
 | <<query-plan-distinct, Distinct>>                                          | Drops duplicate rows from the incoming stream of rows.  | | | Eager
-| <<query-plan-drop-index, DropIndex>> (deprecated syntax) | Drops an index from a property for all nodes having a certain label.  | Y | Y |
+| <<query-plan-create-constraint-only-if-it-does-not-already-exist, DoNothingIfExists(CONSTRAINT)>> | Checks if a constraint already exists, if it does then it stops the execution, if not it continues | Y | |
+| <<query-plan-create-index-only-if-it-does-not-already-exist, DoNothingIfExists(INDEX)>> | Checks if an index already exists, if it does then it stops the execution, if not it continues | Y | |
+| <<query-plan-drop-index-by-schema, DropIndex>> (deprecated syntax) | Drops an index from a property for all nodes having a certain label.  | Y | Y | Deprecated
 | <<query-plan-drop-index-by-name, DropIndex>> (new syntax) | Drops an index using its name.  | Y | Y |
 | <<query-plan-drop-constraint-by-name, DropConstraint>>     |  Drops a constraint using its name.  | Y | Y |
-| <<query-plan-drop-node-key-constraint, DropNodeKeyConstraint>>     |  Drops a node key constraint from a set of properties for all nodes having a certain label.  | Y | Y |
-| <<query-plan-drop-node-property-existence-constraint, DropNodePropertyExistenceConstraint>>     | Drops an existence constraint from a property for all nodes having a certain label.  | Y | Y |
-| <<query-plan-drop-relationship-property-existence-constraint, DropRelationshipPropertyExistenceConstraint>>     | Drops an existence constraint from a property for all relationships of a certain type.  | Y | Y |
+| <<query-plan-drop-node-key-constraint, DropNodeKeyConstraint>>     |  Drops a node key constraint from a set of properties for all nodes having a certain label.  | Y | Y | Deprecated
+| <<query-plan-drop-node-property-existence-constraint, DropNodePropertyExistenceConstraint>>     | Drops an existence constraint from a property for all nodes having a certain label.  | Y | Y | Deprecated
+| <<query-plan-drop-relationship-property-existence-constraint, DropRelationshipPropertyExistenceConstraint>>     | Drops an existence constraint from a property for all relationships of a certain type.  | Y | Y | Deprecated
 | <<query-plan-drop-result, DropResult>>     | Produces zero rows when an expression is guaranteed to produce an empty result.  |  |  |
-| <<query-plan-drop-unique-constraint, DropUniqueConstraint>>                  | Drops a unique constraint from a property for all nodes having a certain label.  | Y | Y |
+| <<query-plan-drop-unique-constraint, DropUniqueConstraint>>                  | Drops a unique constraint from a property for all nodes having a certain label.  | Y | Y | Deprecated
 | <<query-plan-eager, Eager>>                                                | For isolation purposes, `Eager` ensures that operations affecting subsequent operations are executed fully for the whole dataset before continuing execution.  | | | Eager
 | <<query-plan-eager-aggregation, EagerAggregation>>                         | Evaluates a grouping expression. | | | Eager
 | <<query-plan-empty-result, EmptyResult>>                                   | Eagerly loads all incoming data and discards it. | | |
