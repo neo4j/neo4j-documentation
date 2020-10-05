@@ -204,6 +204,10 @@ include::../ql/query-plan/node-left-right-outer-hash-join.asciidoc[]
 
 include::../ql/query-plan/triadic-selection.asciidoc[]
 
+include::../ql/query-plan/triadic-build.asciidoc[]
+
+include::../ql/query-plan/triadic-filter.asciidoc[]
+
 include::../ql/query-plan/cartesian-product.asciidoc[]
 
 include::../ql/query-plan/foreach.asciidoc[]

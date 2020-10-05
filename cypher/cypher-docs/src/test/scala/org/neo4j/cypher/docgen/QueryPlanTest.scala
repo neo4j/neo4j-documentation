@@ -1245,6 +1245,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  private val triadicSelectionQuery =
+    """MATCH (me:Person)-[:FRIENDS_WITH]-()-[:FRIENDS_WITH]-(other)
+      |WHERE NOT (me)-[:FRIENDS_WITH]-(other)
+      |RETURN other.name""".stripMargin
+
   @Test def triadicSelection() {
     profileQuery(
       title = "Triadic Selection",
@@ -1255,10 +1260,36 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |friend-of-friends are already connected to me.
           |The example finds the names of all friends of my friends that are not already my friends.""".stripMargin,
       queryText =
-        """MATCH (me:Person)-[:FRIENDS_WITH]-()-[:FRIENDS_WITH]-(other)
-          |WHERE NOT (me)-[:FRIENDS_WITH]-(other)
-          |RETURN other.name""".stripMargin,
+        "CYPHER runtime=slotted " + triadicSelectionQuery,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("TriadicSelection"))
+    )
+  }
+
+  @Test def triadicBuild() {
+    profileQuery(
+      title = "Triadic Build",
+      text =
+        """The `TriadicBuild` operator is used in conjunction with `TriadicFilter` to solve triangular queries, such as the very
+          |common 'find my friend-of-friends that are not already my friend'. These two operators are specific to Pipelined
+          |runtime and together perform the same logic as `TriadicSelection` does for other runtimes.
+          |`TriadicBuild` builds a set of all friends, which is later used by `TriadicFilter`.
+          |The example finds the names of all friends of my friends that are not already my friends.""".stripMargin,
+      queryText = "CYPHER runtime=pipelined " + triadicSelectionQuery,
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("TriadicBuild"))
+    )
+  }
+
+  @Test def triadicFilter() {
+    profileQuery(
+      title = "Triadic Filter",
+      text =
+        """The `TriadicFilter` operator is used in conjunction with `TriadicBuild` to solve triangular queries, such as the very
+          |common 'find my friend-of-friends that are not already my friend'. These two operators are specific to Pipelined
+          |runtime and together perform the same logic as `TriadicSelection` does for other runtimes.
+          |`TriadicFilter` uses a set of friends previously built by `TriadicBuild` to check if the friend-of-friends are already connected to me.
+          |The example finds the names of all friends of my friends that are not already my friends.""".stripMargin,
+      queryText = "CYPHER runtime=pipelined " + triadicSelectionQuery,
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("TriadicFilter"))
     )
   }
 
