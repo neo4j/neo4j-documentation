@@ -180,13 +180,13 @@ This option affects how the runtime evaluates expressions. The possible values a
 
 [[cypher-operator-engine]]
 === Cypher operator engine
-This query option affects whether the pipelined runtime attempts to fuse groups of operators into pipelines. The possible values are:
+This query option affects whether the pipelined runtime attempts to generate compiled code for groups of operators. The possible values are:
 [options="header"]
 |===
 | Query option | Description | Default
-| `operatorEngine=default`     | Attempt to fuse operators when applicable. | X
-| `operatorEngine=interpreted` | Never attempt to fuse operators. |
-| `operatorEngine=compiled`    | Always attempt to fuse operators. Cannot be used together with `runtime=interpreted` or `runtime=slotted` |
+| `operatorEngine=default`     | Attempt to generate compiled operators when applicable. | X
+| `operatorEngine=interpreted` | Never attempt to generate compiled operators. |
+| `operatorEngine=compiled`    | Always attempt to generate compiled operators. Cannot be used together with `runtime=interpreted` or `runtime=slotted` |
 |===
 
 [[cypher-interpreted-pipes-fallback]]
