@@ -24,6 +24,11 @@ To read more about the execution plan operators mentioned in this chapter, see <
 * <<cypher-query-options,Cypher query options>>
 ** <<cypher-version,Cypher version>>
 ** <<cypher-runtime,Cypher runtime>>
+** <<cypher-connect-components-planner,Cypher connect-components planner>>
+** <<cypher-update-strategy,Cypher update strategy>>
+** <<cypher-expression-engine,Cypher expression engine>>
+** <<cypher-operator-engine,Cypher operator engine>>
+** <<cypher-interpreted-pipes-fallback,Cypher interpreted pipes fallback>>
 ** <<cypher-replanning,Cypher replanning>>
 * <<how-do-i-profile-a-query,Profiling a query>>
 * <<query-tuning-indexes,The use of indexes>>
@@ -63,7 +68,8 @@ Here we detail the available versions:
 |===
 | Query option | Description | Default
 | `3.5` | This will force the query to use Neo4j Cypher 3.5. |
-| `4.0` | This will force the query to use Neo4j Cypher 4.0. As this is the default version, it is not necessary to use this option explicitly. | X
+| `4.1` | This will force the query to use Neo4j Cypher 4.1. |
+| `4.2` | This will force the query to use Neo4j Cypher 4.2. As this is the default version, it is not necessary to use this option explicitly. | X
 |===
 
 [WARNING]
@@ -124,6 +130,181 @@ In Enterprise Edition, the Cypher query planner selects the runtime, falling bac
 * If the pipelined runtime does not support the query, then fall back to use the slotted runtime.
 * Finally, if the slotted runtime does not support the query, fall back to the interpreted runtime.
   The interpreted runtime supports all queries, and is the only option in Neo4j Community Edition.
+
+
+[[cypher-planner]]
+=== Cypher planner
+The Cypher planner takes a Cypher query and computes an execution plan that solves it.
+For any given query there is likely a number of execution plan candidates that each solve the query in a different way.
+The planner uses a search algorithm to find the execution plan with the lowest estimated execution cost.
+
+This table describes the available planner options:
+
+[options="header",cols="m,a,a"]
+|===
+| Query option
+| Description
+| Default
+
+| planner=cost
+| Use cost based planning with default limits on plan search space and time.
+| X
+
+| planner=idp
+| Synonym for `planner=cost`.
+|
+
+| planner=dp
+| Use cost based planning without limits on plan search space and time to perform an exhaustive search for the best execution plan.
+
+Note that using this option may significantly increase the planning time of the query.
+|
+|===
+
+
+[[cypher-connect-components-planner]]
+=== Cypher connect-components planner
+One part of the Cypher planner is responsible for combining sub-plans for separate patterns into larger plans - a task referred to as _connecting components_.
+
+This table describes the available query options for the connect-components planner:
+
+[options="header",cols="m,a,a"]
+|===
+| Query option
+| Description
+| Default
+
+| connectComponentsPlanner=greedy
+| Use a greedy approach when combining sub-plans.
+| X
+
+| connectComponentsPlanner=idp
+| Use the cost based IDP search algorithm when combining sub-plans.
+
+Note that using this option can significantly increase the planning time of the query.
+|
+|===
+
+
+[[cypher-update-strategy]]
+=== Cypher update strategy
+This option affects the eagerness of updating queries.
+
+The possible values are:
+
+[options="header",cols="m,a,a"]
+|===
+| Query option
+| Description
+| Default
+
+| updateStrategy=default
+| Update queries are executed eagerly when needed.
+| X
+
+| updateStrategy=eager
+| Update queries are always executed eagerly.
+|
+|===
+
+
+[[cypher-expression-engine]]
+=== Cypher expression engine
+This option affects how the runtime evaluates expressions.
+
+The possible values are:
+
+[options="header",cols="m,a,a"]
+|===
+| Query option
+| Description
+| Default
+
+| expressionEngine=default
+| Compile expressions and use the compiled expression engine when needed.
+| X
+
+| expressionEngine=interpreted
+| Always use the _interpreted_ expression engine.
+|
+
+| expressionEngine=compiled
+| Always compile expressions and use the _compiled_ expression engine.
+
+Cannot be used together with `runtime=interpreted`.
+|
+|===
+
+
+[[cypher-operator-engine]]
+=== Cypher operator engine
+This query option affects whether the pipelined runtime attempts to generate compiled code for groups of operators.
+
+The possible values are:
+
+[options="header",cols="m,a,a"]
+|===
+| Query option
+| Description
+| Default
+
+| operatorEngine=default
+| Attempt to generate compiled operators when applicable.
+| X
+
+| operatorEngine=interpreted
+| Never attempt to generate compiled operators.
+|
+
+| operatorEngine=compiled
+| Always attempt to generate _compiled_ operators.
+
+Cannot be used together with `runtime=interpreted` or `runtime=slotted`.
+|
+|===
+
+
+[[cypher-interpreted-pipes-fallback]]
+=== Cypher interpreted pipes fallback
+This query option affects how the pipelined runtime behaves for operators it does not directly support.
+
+The available options are:
+
+[options="header",cols="m,a,a"]
+|===
+| Query option
+| Description
+| Default
+
+| interpretedPipesFallback=default
+| Equivalent to `interpretedPipesFallback=whitelisted_plans_only`
+| X
+
+| interpretedPipesFallback=disabled
+| If the plan contains any operators not supported by the pipelined runtime then another runtime is chosen to execute the entire plan.
+
+Cannot be used together with `runtime=interpreted` or `runtime=slotted`
+|
+
+| interpretedPipesFallback=whitelisted_plans_only
+| Parts of the execution plan can be executed on another runtime.
+Only certain operators are allowed to execute on another runtime.
+
+Cannot be used together with `runtime=interpreted` or `runtime=slotted`.
+|
+
+| interpretedPipesFallback=all
+| Parts of the execution plan may be executed on another runtime.
+Any operator is allowed to execute on another runtime.
+Queries with this option set might produce incorrect results, or fail.
+
+Cannot be used together with `runtime=interpreted` or `runtime=slotted`.
+
+[WARNING]
+This setting is experimental, and using it in a production environment is discouraged.
+
+|
+|===
 
 
 [[cypher-replanning]]
