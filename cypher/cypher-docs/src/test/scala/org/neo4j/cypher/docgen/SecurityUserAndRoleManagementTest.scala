@@ -161,10 +161,10 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
               |When first starting a Neo4j DBMS there are a number of built-in roles:
               |
               |* `reader` - can perform traverse and read operations on all databases except `system`.
-              |* `editor` - can perform traverse, read and write operations on all databases except `system`, but cannot make new labels or relationship types.
+              |* `editor` - can perform traverse, read, and write operations on all databases except `system`, but cannot make new labels or relationship types.
               |* `publisher` - can do the same as `editor`, but also create new labels and relationship types.
               |* `architect` - can do the same as `publisher` as well as create and manage indexes and constraints.
-              |* `admin` - can do the same as all the above, as well as manage databases, users, roles and privileges.
+              |* `admin` - can do the same as all the above, as well as manage databases, users, roles, and privileges.
               |
               |More information about the built-in roles can be found in <<operations-manual#auth-built-in-roles, Operations Manual -> Built-in roles>>
               |""".stripMargin)
