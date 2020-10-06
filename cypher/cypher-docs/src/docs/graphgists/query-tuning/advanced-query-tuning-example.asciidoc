@@ -105,9 +105,9 @@ With native indexes, however, we can leverage the fact that indexes store the pr
 In this case, it means that the names can be looked up directly from the index.
 This allows Cypher to avoid the second call to the database to find the property, which can save time on very large queries.
 
-If we profile the above query, we see that the `NodeIndexScan` in the `Variables` column contains `cache[p.name]`,
+If we profile the above query, we see that the `NodeIndexSeekByRange` in the `Details` column contains `cache[p.name]`,
 which means that `p.name` is retrieved from the index.
-We can also see that the `Projection` has no `DB Hits`, which means it does not have to access the database again.
+We can also see that the `OrderedAggregation` has no `DB Hits`, which means it does not have to access the database again.
 
 [source, cypher]
 ----
@@ -119,7 +119,7 @@ RETURN p.name, count(m)
 //profile
 
 If we change the query, such that it can no longer use an index, we will see that there will be no `cache[p.name]` in the Variables, and that the
-`Projection` now has `DB Hits`, since it accesses the database again to retrieve the name.
+`EagerAggregation` now has `DB Hits`, since it accesses the database again to retrieve the name.
 
 [source, cypher]
 ----
@@ -130,21 +130,17 @@ RETURN p.name, count(m)
 
 //profile
 
-
-It is important to note that not all property types are supported, because not all are supported by native indexes.
-Additionally, some property types such as the spatial type `Point`, are indexed in an index that is designed to be approximate and cannot return the values.
-For non-native indexes and the spatial type `Point`, there will still be a second database access to retrieve those values.
-In indexes with mixed values, only those values that cannot be looked up from the index will trigger another database access action.
+For non-native indexes there will still be a second database access to retrieve those values.
 
 Predicates that can be used to enable this optimization are:
 
-* Existence (`WHERE exists(n.name)`)
+* Existence (e.g. `WHERE exists(n.name)`)
 * Equality (e.g. `WHERE n.name = 'Tom Hanks'`)
-* Range (eg. `WHERE n.uid > 1000 AND n.uid < 2000`)
-* Prefix (eg. `WHERE n.name STARTS WITH 'Tom'`)
-* Suffix (eg. `WHERE n.name ENDS WITH 'Hanks'`)
-* Substring (eg. `WHERE n.name CONTAINS 'a'`)
-* Several predicates of the above types combined using `OR`, given that all of them are on the same property (eg. `WHERE n.prop < 10 OR n.prop = 'infinity'` )
+* Range (e.g. `WHERE n.uid > 1000 AND n.uid < 2000`)
+* Prefix (e.g. `WHERE n.name STARTS WITH 'Tom'`)
+* Suffix (e.g. `WHERE n.name ENDS WITH 'Hanks'`)
+* Substring (e.g. `WHERE n.name CONTAINS 'a'`)
+* Several predicates of the above types combined using `OR`, given that all of them are on the same property (e.g. `WHERE n.prop < 10 OR n.prop = 'infinity'` )
 
 [NOTE]
 If there is an existence constraint on the property, no predicate is required to trigger the optimization. For example, `CREATE CONSTRAINT constraint_name ON (p:Person) ASSERT exists(p.name)`
@@ -165,7 +161,7 @@ RETURN count(DISTINCT p.name) AS numberOfNames
 //profile
 
 Note that the `NodeIndexScan` in the `Variables` column contains `cache[p.name]` and that the `EagerAggregation` has no `DB Hits`.
-In this case, the semantics of aggregating functions works like an implicit existence constraint because `Person` nodes without the property `name` will not affect the result of an aggregation.
+In this case, the semantics of aggregating functions works like an implicit existence predicate because `Person` nodes without the property `name` will not affect the result of an aggregation.
 
 [[advanced-query-tuning-example-index-backed-order-by]]
 == Index-backed order by
@@ -174,54 +170,26 @@ Now consider the following refinement to the query:
 
 [source, cypher]
 ----
+PROFILE
 MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WHERE p.name STARTS WITH 'Tom'
 RETURN p.name, count(m) ORDER BY p.name
 ----
 
-//table
+//profile
 
 We are asking for the results in ascending alphabetical order.
 The native index happens to store String properties in ascending alphabetical order, and Cypher knows this.
 In Neo4j 3.4 and earlier, Cypher would plan a `Sort` operation to sort the results, which means building a collection in memory and running a sort algorithm on it.
 For large result sets this can be expensive in terms of both memory and time.
-If you are using the native index, Cypher will recognise that the index already returns data in the correct order, and skip the `Sort` operation.
-
-Indexes storing values of the spatial type `Point`, and non-native indexes, cannot be relied on to return the values in the correct order.
-This means that for Cypher to enable this optimization, the query needs a predicate that limits the type of the property to some type that is guaranteed to be in the right order.
-
-To demonstrate this effect, let's remove the String prefix predicate so that Cypher no longer knows the type of the property, and replace it with an existence predicate.
-Now the database can no longer guarantee the order.
-If we profile the query we will see the `Sort` operation:
-
-[source, cypher]
-----
-PROFILE
-MATCH (p:Person)-[:ACTED_IN]->(m:Movie) USING INDEX p:Person(name) WHERE exists(p.name)
-RETURN p.name, count(m) ORDER BY p.name
-----
-
-//profile
+In Neo4j 3.5 and later Cypher will recognise that the index already returns data in the correct order, and skip the `Sort` operation.
 
 The `Order` column describes the order of rows after each operator.
-We see that the order is undefined until the `Sort` operator.
-Now if we add back the predicate that gives us the property type information,
-we will see the `Sort` operation is no longer there:
-
-[source, cypher]
-----
-PROFILE
-MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WHERE p.name STARTS WITH 'Tom'
-RETURN p.name, count(m) ORDER BY p.name
-----
-
-//profile
-
-We also see that the `Order` column contains `p.name ASC` from the index seek operation, meaning that the rows are ordered by `p.name` in ascending order.
+We see that the `Order` column contains `p.name ASC` from the index seek operation, meaning that the rows are ordered by `p.name` in ascending order.
 
 _Index-backed order by_ can also be used for queries that expect their results is descending order, but with slightly lower performance.
 
 [NOTE]
-In cases where the Cypher planner is unable to remove the `Sort` operator, like in the first example, the planner can utilize knowledge of _required order_ after each operator to plan the `Sort` operator at a point in the plan with optimal cardinality.
+In cases where the Cypher planner is unable to remove the `Sort` operator, the planner can utilize knowledge of the `ORDER BY` clause to plan the `Sort` operator at a point in the plan with optimal cardinality.
 
 [[advanced-query-tuning-example-indexed-backed-order-by-min-and-max]]
 === `min()` and `max()`
@@ -231,38 +199,21 @@ Consider the following query which returns the fist actor in alphabetical order:
 
 [source, cypher]
 ----
-MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WHERE p.name STARTS WITH ''
+PROFILE
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
 RETURN min(p.name) AS name
 ----
 
 //table
 
-To demonstrate the effect of _index-backed order by_, let’s remove the String prefix predicate so that Cypher no longer knows the type of the property, and replace it with an existence predicate.
-Now the database can no longer guarantee the order. If we profile the query we will see the `EagerAggregation` operation:
 
-[source, cypher]
-----
-PROFILE
-MATCH (p:Person)-[:ACTED_IN]->(m:Movie) USING INDEX p:Person(name) WHERE exists(p.name)
-RETURN min(p.name) AS name
-----
+Aggregations are usually using the `EagerAggregation` operation.
+This would mean scanning all nodes in the index to find the name that is first in alphabetic order.
+Instead, the query is planned with `Projection` followed by `Limit` followed by `Optional`.
+This will simply pick the first value from the index.
 
 //profile
 
-Now if we add back the predicate that gives us the property type information, we will see that the `EagerAggregation` operation gets replaced by `Projection` followed by `Limit` followed by `Optional`:
-
-[source, cypher]
-----
-PROFILE
-MATCH (p:Person)-[:ACTED_IN]->(m:Movie) WHERE p.name STARTS WITH ''
-RETURN min(p.name) AS name
-----
-
-//profile
-
-In the first case, all nodes in the index are scanned to find the name that is first in alphabetic order.
-In the second case, we will simply pick the first value from the index.
-This is reflected in the fact that the `total database access` is lower, indicating a faster query.
 For large datasets, this can improve performance dramatically.
 
 _Index-backed order by_ can also be used for corresponding queries with the `max` function, but with slightly lower performance.
@@ -270,24 +221,28 @@ _Index-backed order by_ can also be used for corresponding queries with the `max
 [[advanced-query-tuning-example-indexed-backed-order-by-restrictions]]
 === Restrictions
 
-The optimization can only work on native indexes, and only if we query for a specific type, in order to rule out the spatial type `Point`.
+The optimization can only work on native indexes.
+It does not work for predicates only querying for the spatial type `Point`.
 Predicates that can be used to enable this optimization are:
 
+* Existence (e.g.`WHERE exists(n.name)`)
 * Equality (e.g. `WHERE n.name = 'Tom Hanks'`)
-* Range (eg. `WHERE n.uid > 1000 AND n.uid < 2000`)
-* Prefix (eg. `WHERE n.name STARTS WITH 'Tom'`)
-* Suffix (eg. `WHERE n.name ENDS WITH 'Hanks'`)
-* Substring (eg. `WHERE n.name CONTAINS 'a'`)
+* Range (e.g. `WHERE n.uid > 1000 AND n.uid < 2000`)
+* Prefix (e.g. `WHERE n.name STARTS WITH 'Tom'`)
+* Suffix (e.g. `WHERE n.name ENDS WITH 'Hanks'`)
+* Substring (e.g. `WHERE n.name CONTAINS 'a'`)
 
 Predicates that will not work:
 
-* Several predicates combined using `OR` because the property type might differ between the predicates
-* Existence (eg. `WHERE exists(n.email)`) because no property type information is given
+* Several predicates combined using `OR`
+* Equality or range predicates querying for points (e.g. `WHERE n.place > point({ x: 1, y: 2 })`)
+* Spatial distance predicates (e.g. `WHERE distance(n.place, point({ x: 1, y: 2 })) < 2`)
+
 
 [NOTE]
 ====
-As of Neo4j 4.1, predicates with parameters, such as `WHERE n.prop > $param`, can trigger _index-backed order by_.
-The only exception are queries with any parameters of type `Float` or `Point`.
+If there is an existence constraint on the property, no predicate is required to trigger the optimization. For example, `CREATE CONSTRAINT constraint_name ON (p:Person) ASSERT exists(p.name)`
 
-An existence constraint does not include any type information, and will thus not be enough to trigger _index-backed order by_.
+As of Neo4j {neo4j-version-exact}, predicates with parameters, such as `WHERE n.prop > $param`, can trigger _index-backed order by_.
+The only exception are queries with parameters of type `Point`.
 ====
