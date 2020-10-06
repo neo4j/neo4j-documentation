@@ -181,9 +181,14 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
               |When first starting a Neo4j DBMS there are a number of built-in roles:
               |
 <<<<<<< HEAD
+<<<<<<< HEAD
               |* `PUBLIC` - a role that all users have granted, by default it gives access to the default database
               |* `reader` - can perform traverse and read operations on all databases except `system`.
               |* `editor` - can perform traverse, read, and write operations on all databases except `system`, but cannot make new labels or relationship types.
+=======
+              |* `reader` - can perform traverse and read operations on all databases except `system`.
+              |* `editor` - can perform traverse, read, and write operations on all databases except `system`, but cannot make new labels or relationship types.
+>>>>>>> c5ad854918... updated built-in roles to include traverse (#682)
 =======
               |* `reader` - can perform traverse and read operations on all databases except `system`.
               |* `editor` - can perform traverse, read, and write operations on all databases except `system`, but cannot make new labels or relationship types.
