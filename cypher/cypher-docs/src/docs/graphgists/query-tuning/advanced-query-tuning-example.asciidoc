@@ -83,11 +83,6 @@ CREATE INDEX FOR (p:Person) ON (p.name)
 CALL db.awaitIndexes
 ----
 
-[source, cypher]
-----
-CALL db.indexes
-----
-
 //table
 
 [[advanced-query-tuning-example-index-backed-property-lookup]]
