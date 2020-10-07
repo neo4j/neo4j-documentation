@@ -82,7 +82,6 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Creating databases", "administration-databases-create-database", "enterprise-edition") {
       p("Databases can be created using `CREATE DATABASE`.")
-      p("include::create-databases-syntax.asciidoc[]")
       query("CREATE DATABASE customers", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
       })) {
@@ -177,12 +176,17 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       assertStats(r, systemUpdates = 1)
     })) {
       resultTable()
+      p(
+        """The `success` column provides an aggregate status of whether or not the command is considered
+          |successful and thus every row will have the same value. The intention of this column is to make it
+          |easy to determine, for example in a script, whether or not the command completed successfully without
+          |timing out.""".stripMargin
+       )
     }
     note {
       p(
-        """Interrupting a command with a `WAIT` clause whilst it is waiting for the command
-          |to complete will not cancel the command - it will continue to run to completion in the
-          |background.""".stripMargin)
+        """A command with a `WAIT` clause may be interrupted whilst it is waiting to complete. In this event
+          |the command will continue to execute in the background and will not be aborted.""".stripMargin)
     }
   }.build()
 

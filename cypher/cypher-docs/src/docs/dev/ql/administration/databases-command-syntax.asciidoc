@@ -13,6 +13,7 @@ SHOW { DATABASE db \| DATABASES \| DEFAULT DATABASE }
 | Create Database
 | [source]
 CREATE DATABASE name [IF NOT EXISTS] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+CREATE [OR REPLACE] DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 |Stop Database
 | [source]
 STOP DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
