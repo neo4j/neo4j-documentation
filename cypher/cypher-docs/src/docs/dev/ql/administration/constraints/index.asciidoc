@@ -85,6 +85,7 @@ Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error wil
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName) 
 ASSERT n.propertyName IS UNIQUE
+[OPTIONS "{" option: value[,...] "}"]
 ----
 | Create a unique node property constraint.
 .4+.^| Best practice is to give the constraint a name when it is created.
@@ -95,6 +96,9 @@ The constraint name must be unique among both indexes and constraints.
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
 With `IF NOT EXISTS`, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
 It may still throw an error should a conflicting index or constraint exist.
+
+Index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
+
 | [source, cypher]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
@@ -118,6 +122,7 @@ n.propertyName_2,
 …
 n.propertyName_n)
 IS NODE KEY
+[OPTIONS "{" option: value[,...] "}"]
 ----
 | [enterprise-edition]#Create a node key constraint.#
 | [source, cypher]
@@ -178,13 +183,13 @@ include::create-a-unique-constraint.asciidoc[leveloffset=+2]
 
 include::create-a-unique-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
 
+include::create-a-unique-constraint-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+2]
+
 include::create-a-node-that-complies-with-unique-property-constraints.asciidoc[leveloffset=+2]
 
 include::create-a-node-that-violates-a-unique-property-constraint.asciidoc[leveloffset=+2]
 
 include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes.asciidoc[leveloffset=+2]
-
-
 
 
 [role=enterprise-edition]
@@ -228,6 +233,10 @@ include::failure-to-create-a-relationship-property-existence-constraint-due-to-e
 include::create-a-node-key-constraint.asciidoc[leveloffset=+2]
 
 include::create-a-node-key-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
+
+include::create-a-node-key-constraint-with-specified-index-provider.asciidoc[leveloffset=+2]
+
+include::create-a-node-key-constraint-with-specified-index-configuration.asciidoc[leveloffset=+2]
 
 include::create-a-node-that-complies-with-node-key-constraints.asciidoc[leveloffset=+2]
 

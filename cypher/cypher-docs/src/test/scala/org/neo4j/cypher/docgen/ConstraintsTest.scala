@@ -56,6 +56,23 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
         "Assuming no such constraints existed:",
       assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
     )
+    testQuery(
+      title = "Create a unique constraint with specified index provider and configuration",
+      text =
+        """To create a unique constraint with a specific index provider and configuration for the backing index, the `OPTIONS` clause is used.
+          |Valid values for the index provider is `native-btree-1.0` and `lucene+native-3.0`, default if nothing is specified is `native-btree-1.0`.
+          |Valid configuration settings are `spatial.cartesian.min`, `spatial.cartesian.max`, `spatial.cartesian-3d.min`, `spatial.cartesian-3d.max`,
+          |`spatial.wgs-84.min`, `spatial.wgs-84.max`, `spatial.wgs-84-3d.min`, and `spatial.wgs-84-3d.max`.
+          |Non-specified settings get their respective default values.""".stripMargin,
+      queryText =
+        """CREATE CONSTRAINT constraint_with_options ON (n:Label) ASSERT n.prop IS UNIQUE
+          |OPTIONS {
+          | indexProvider: 'lucene+native-3.0',
+          | indexConfig: {`spatial.wgs-84.min`: [-100.0, -80.0], `spatial.wgs-84.max`: [100.0, 80.0]}
+          |}""".stripMargin,
+      optionalResultExplanation = "Specifying index provider and configuration can be done individually.",
+      assertions = _ => assertConstraintWithNameExists("constraint_with_options", "Label", List("prop"))
+    )
   }
 
   @Test def list_constraints() {
@@ -304,6 +321,35 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       optionalResultExplanation = "Note no constraint will be created if any other constraint with that name or another node key constraint on the same schema already exists. " +
         "Assuming a node key constraint on `(:Person {firstname, surname})` already existed:",
       assertions = _ => assertConstraintWithNameExists("old_constraint_name", "Person", List("firstname", "surname"))
+    )
+  }
+
+  @Test def create_node_key_constraint_with_provider() {
+    testQuery(
+      title = "Create a node key constraint with specified index provider",
+      text =
+        """To create a node key constraint with a specific index provider for the backing index, the `OPTIONS` clause is used.
+          |Valid values for the index provider is `native-btree-1.0` and `lucene+native-3.0`, default if nothing is specified is `native-btree-1.0`.""".stripMargin,
+      queryText =
+        """CREATE CONSTRAINT constraint_with_provider ON (n:Label) ASSERT (n.prop1) IS NODE KEY OPTIONS {indexProvider: 'native-btree-1.0'}""".stripMargin,
+      optionalResultExplanation = "Can be combined with specifying index configuration.",
+      assertions = _ => assertConstraintWithNameExists("constraint_with_provider", "Label", List("prop1"))
+    )
+  }
+
+  @Test def create_node_key_constraint_with_config() {
+    testQuery(
+      title = "Create a node key constraint with specified index configuration",
+      text =
+        """To create a node key constraint with a specific index configuration for the backing index, the `OPTIONS` clause is used.
+          |Valid configuration settings are `spatial.cartesian.min`, `spatial.cartesian.max`, `spatial.cartesian-3d.min`, `spatial.cartesian-3d.max`,
+          |`spatial.wgs-84.min`, `spatial.wgs-84.max`, `spatial.wgs-84-3d.min`, and `spatial.wgs-84-3d.max`.
+          |Non-specified settings get their respective default values.""".stripMargin,
+      queryText =
+        """CREATE CONSTRAINT constraint_with_config ON (n:Label) ASSERT (n.prop2) IS NODE KEY
+          |OPTIONS {indexConfig: {`spatial.cartesian.min`: [-100.0, -100.0], `spatial.cartesian.max`: [100.0, 100.0]}}""".stripMargin,
+      optionalResultExplanation = "Can be combined with specifying index provider.",
+      assertions = _ => assertConstraintWithNameExists("constraint_with_config", "Label", List("prop2"))
     )
   }
 

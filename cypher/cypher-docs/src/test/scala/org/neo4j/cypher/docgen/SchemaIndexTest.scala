@@ -26,9 +26,9 @@ import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.{DPPlannerName, IDPPlannerName}
 import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
+import org.neo4j.cypher.internal.util.Foldable.FoldableAny
 import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
 import org.neo4j.graphdb.Label
-import org.neo4j.cypher.internal.util.Foldable.FoldableAny
 
 import scala.collection.JavaConverters._
 
@@ -72,6 +72,28 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same name, same schema or both.",
       assertions = _ => assertIndexWithNameExists("index_name", "Person", List("surname"))
     )
+    testQuery(
+      title = "Create a single-property index with specified index provider",
+      text =
+        """To create a single property index with a specific index provider, the `OPTIONS` clause is used.
+          |Valid values for the index provider is `native-btree-1.0` and `lucene+native-3.0`, default if nothing is specified is `native-btree-1.0`.""".stripMargin,
+      queryText = "CREATE BTREE INDEX index_with_provider FOR (n:Label) ON (n.prop1) OPTIONS {indexProvider: 'native-btree-1.0'}",
+      optionalResultExplanation = "Can be combined with specifying index configuration.",
+      assertions = _ => assertIndexWithNameExists("index_with_provider", "Label", List("prop1"))
+    )
+    testQuery(
+      title = "Create a single-property index with specified index configuration",
+      text =
+        """To create a single property index with a specific index configuration, the `OPTIONS` clause is used.
+          |Valid configuration settings are `spatial.cartesian.min`, `spatial.cartesian.max`, `spatial.cartesian-3d.min`, `spatial.cartesian-3d.max`,
+          |`spatial.wgs-84.min`, `spatial.wgs-84.max`, `spatial.wgs-84-3d.min`, and `spatial.wgs-84-3d.max`.
+          |Non-specified settings get their respective default values.""".stripMargin,
+      queryText =
+        """CREATE BTREE INDEX index_with_config FOR (n:Label) ON (n.prop2)
+          |OPTIONS {indexConfig: {`spatial.cartesian.min`: [-100.0, -100.0], `spatial.cartesian.max`: [100.0, 100.0]}}""".stripMargin,
+      optionalResultExplanation = "Can be combined with specifying index provider.",
+      assertions = _ => assertIndexWithNameExists("index_with_config", "Label", List("prop2"))
+    )
   }
 
   @Test def create_index_on_a_label_composite_property() {
@@ -85,6 +107,26 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       queryText = "CREATE INDEX index_name FOR (n:Person) ON (n.age, n.country)",
       optionalResultExplanation = "Note that the index name needs to be unique. ",
       assertions = _ => assertIndexWithNameExists("index_name", "Person", List("age", "country"))
+    )
+  }
+
+  @Test def create_composite_index_with_options() {
+    testQuery(
+      title = "Create a composite index with specified index provider and configuration",
+      text =
+        """To create a composite index with a specific index provider and configuration, the `OPTIONS` clause is used.
+          |Valid values for the index provider is `native-btree-1.0` and `lucene+native-3.0`, default if nothing is specified is `native-btree-1.0`.
+          |Valid configuration settings are `spatial.cartesian.min`, `spatial.cartesian.max`, `spatial.cartesian-3d.min`, `spatial.cartesian-3d.max`,
+          |`spatial.wgs-84.min`, `spatial.wgs-84.max`, `spatial.wgs-84-3d.min`, and `spatial.wgs-84-3d.max`.
+          |Non-specified settings get their respective default values.""".stripMargin,
+      queryText =
+        """CREATE INDEX index_with_options FOR (n:Label) ON (n.prop1, n.prop2)
+          |OPTIONS {
+          | indexProvider: 'lucene+native-3.0',
+          | indexConfig: {`spatial.wgs-84.min`: [-100.0, -80.0], `spatial.wgs-84.max`: [100.0, 80.0]}
+          |}""".stripMargin,
+      optionalResultExplanation = "Specifying index provider and configuration can be done individually.",
+      assertions = _ => assertIndexWithNameExists("index_with_options", "Label", List("prop1", "prop2"))
     )
   }
 

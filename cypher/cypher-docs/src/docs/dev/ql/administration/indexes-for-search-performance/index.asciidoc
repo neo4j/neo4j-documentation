@@ -12,7 +12,11 @@ This section explains how to manage indexes used for search performance.
 * <<administration-indexes-examples, Examples>>
 ** <<administration-indexes-create-a-single-property-index, Create a single-property index>>
 ** <<administration-indexes-create-a-single-property-index-only-if-it-does-not-already-exist, Create a single-property index only if it does not already exist>>
+** <<administration-indexes-create-a-single-property-index-with-specified-index-provider, Create a single-property index with specified index provider>>
+** <<administration-indexes-create-a-single-property-index-with-specified-index-configuration, Create a single-property index with specified index configuration>>
+** <<administration-indexes-create-a-single-property-index-with-specified-index-configuration, Create a single-property index with specified index configuration>>
 ** <<administration-indexes-create-a-composite-index, Create a composite index>>
+** <<administration-indexes-create-a-composite-index-with-specified-index-provider-and-configuration, Create a composite index with specified index provider and configuration>>
 ** <<administration-indexes-drop-an-index, Drop an index>>
 ** <<administration-indexes-drop-a-non-existing-index, Drop a non-existing index>>
 ** <<administration-indexes-list-indexes, List indexes>>
@@ -61,9 +65,10 @@ Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error wil
 
 | [source, cypher]
 ----
-CREATE INDEX [index_name] [IF NOT EXISTS]
+CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 ON (n.propertyName)
+[OPTIONS "{" option: value[,...] "}"]
 ----
 | Create a single-property index.
 .2+.^| Best practice is to give the index a name when it is created.
@@ -75,6 +80,8 @@ The command is optionally idempotent, with the default behavior to throw an erro
 With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name, schema or both already exist.
 It may still throw an error should a conflicting constraint exist.
 
+Index provider and configuration can be specified using the `OPTIONS` clause.
+
 | [source, cypher]
 ----
 CREATE INDEX [index_name] [IF NOT EXISTS]
@@ -83,6 +90,7 @@ ON (n.propertyName_1,
     n.propertyName_2,
     …
     n.propertyName_n)
+[OPTIONS "{" option: value[,...] "}"]
 ----
 | Create a composite index.
 
@@ -186,7 +194,13 @@ include::../indexes/create-a-single-property-index.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-single-property-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
 
+include::../indexes/create-a-single-property-index-with-specified-index-provider.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-single-property-index-with-specified-index-configuration.asciidoc[leveloffset=+1]
+
 include::../indexes/create-a-composite-index.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-composite-index-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+1]
 
 include::../indexes/drop-an-index.asciidoc[leveloffset=+1]
 
