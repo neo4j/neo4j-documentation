@@ -57,8 +57,8 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("name" -> "Alice", "firstname" -> "Alice", "surname" -> "Johnson"),
-    "B" -> Map("name" -> "Bobo", "firstname" -> "Bobo", "surname" -> "Baumann"))
+    "A" -> Map("name" -> "Alice", "firstname" -> "Alice", "surname" -> "Johnson", "age" -> 15),
+    "B" -> Map("name" -> "Bobo", "firstname" -> "Bobo", "surname" -> "Baumann", "age" -> 11))
 
   override def parameters(name: String): Map[String, Any] =
     name match {
@@ -92,6 +92,16 @@ Create a unique property constraint on the label `Person` and property `age` wit
 If any other node with that label is updated or created with a `age` that
 already exists, the write operation will fail.
 This constraint will create an accompanying index.
+
+###assertion=create-unique-property-constraint
+//
+
+CREATE CONSTRAINT ON (p:Person)
+       ASSERT p.surname IS UNIQUE
+       OPTIONS {indexProvider: 'native-btree-1.0'}
+###
+
+Create a unique property constraint on the label `Person` and property `surname` with the index provider `native-btree-1.0` for the accompanying index.
 
 ###assertion=create-property-existence-constraint
 //
@@ -162,6 +172,16 @@ If a node with that label is created without both `name` and `surname`
 or if the combination of the two is not unique,
 or if the `name` and/or `surname` labels on an existing node with the `Person` label
 is modified to violate these constraints, the write operation will fail.
+
+###assertion=create-node-key-constraint
+//
+
+CREATE CONSTRAINT node_key_with_config ON (p:Person)
+      ASSERT (p.name, p.age) IS NODE KEY
+      OPTIONS {indexConfig: {`spatial.wgs-84.min`: [-100.0, -100.0], `spatial.wgs-84.max`: [100.0, 100.0]}}
+###
+
+(★) Create a node key constraint on the label `Person` and properties `name` and `age` with the name `node_key_with_config` and updated `spatial.wgs-84` settings for the accompanying index.
 
 """).concat("""
 ###assertion=drop-named-constraint

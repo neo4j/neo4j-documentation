@@ -87,6 +87,15 @@ Create an index on the label `Person` and property `age` with the name `index_na
 ###assertion=create-index
 //
 
+CREATE INDEX FOR (p:Person) ON (p.surname)
+OPTIONS {indexProvider: 'native-btree-1.0', indexConfig: {`spatial.cartesian.min`: [-100.0, -100.0], `spatial.cartesian.max`: [100.0, 100.0]}}
+###
+
+Create an index on the label `Person` and property `surname` with the index provider `native-btree-1.0` and updated `spatial.cartesian` settings.
+
+###assertion=create-index
+//
+
 CREATE INDEX FOR (p:Person) ON (p.name, p.age)
 ###
 

@@ -43,6 +43,12 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `0X...`                     | Syntax        | Deprecated   | Only `0x...` (lowercase x) will be supported.
 | `SET [PLAINTEXT \| ENCRYPTED] PASSWORD` | Syntax | Added | For `CREATE USER` and `ALTER USER` it is now possible to set (or update) a password when the plaintext password is unknown, but the encrypted password is available.
 | <<administration-security-administration-dbms-privileges-execute, EXECUTE>> privileges | Functionality | Added | New Cypher commands for administering privileges for executing procedures and user defined functions.
+| `CREATE [BTREE] INDEX ... [OPTIONS {...}]`            | Syntax | Added | Allows setting index provider and index configuration when creating an index.
+| `CREATE CONSTRAINT ... IS NODE KEY [OPTIONS {...}]`   | Syntax | Added | Allows setting index provider and index configuration for the backing index when creating a node key constraint.
+| `CREATE CONSTRAINT ... IS UNIQUE [OPTIONS {...}]`     | Syntax | Added | Allows setting index provider and index configuration for the backing index when creating a uniqueness constraint.
+| `db.createIndex`                      | Procedure | Deprecated | Replaced by `CREATE INDEX` command.
+| `db.createNodeKey`                    | Procedure | Deprecated | Replaced by `CREATE CONSTRAINT ... IS NODE KEY` command.
+| `db.createUniquePropertyConstraint`   | Procedure | Deprecated | Replaced by `CREATE CONSTRAINT ... IS UNIQUE` command.
 |===
 
 [[cypher-deprecations-additions-removals-4.1.3]]
