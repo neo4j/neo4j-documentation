@@ -868,13 +868,15 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           p(
             """The examples below only use procedures but the same rules apply to user defined function names.
               |For the examples below, assume we have the following procedures:
+              |
               |* mine.public.exampleProcedure
               |* mine.public.exampleProcedure1
               |* mine.public.exampleProcedure42
               |* mine.private.exampleProcedure
               |* mine.private.exampleProcedure1
               |* mine.private.exampleProcedure2
-              |* your.exampleProcedure""".stripMargin)
+              |* your.exampleProcedure
+              |""".stripMargin)
 
           query("GRANT EXECUTE PROCEDURE * ON DBMS TO globbing1", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
@@ -916,6 +918,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       section("Granting `ALL DBMS PRIVILEGES`", "administration-security-administration-dbms-privileges-all", "enterprise-edition") {
         p(
           """The right to perform the following privileges can be achieved with a single command:
+            |
             |* create roles
             |* drop roles
             |* assign roles
