@@ -67,6 +67,15 @@ ALTER CURRENT USER SET PASSWORD FROM $old TO $new
 
 Change the password of the logged-in user. The user will not be required to change this password on the next login.
 
+###assertion=show-nothing
+// shows nothing since we can't log in as a user, and have auth disabled
+
+SHOW CURRENT USER
+###
+
+List the currently logged in user, their status, roles and if they need to change their password. +
+(★) Status and roles are Enterprise Edition only.
+
 ###assertion=show-one
 //
 

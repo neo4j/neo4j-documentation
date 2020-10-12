@@ -18,6 +18,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
     p(
       """
         |* <<administration-security-users, User Management>>
+        |** <<administration-security-users-show-current, List current user>>
         |** <<administration-security-users-show, Listing users>>
         |** <<administration-security-users-create, Creating users>>
         |** <<administration-security-users-alter, Modifying users>>
@@ -36,6 +37,18 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       p("Users can be created and managed using a set of Cypher administration commands executed against the `system` database.")
       p("When connected to the DBMS over bolt, administration commands are automatically routed to the `system` database.")
       p("include::user-management-syntax.asciidoc[]")
+      section("List current user", "administration-security-users-show-current") {
+        initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED")
+        p("The currently logged in user can be seen using `SHOW CURRENT USER` which will produce a table with four columns:")
+        p("include::list-users-table-columns.asciidoc[]")
+        login("jake", "abc123")
+        query("SHOW CURRENT USER", assertUsersShown(Seq("jake"))) {
+          resultTable()
+        }
+        note {
+          p("This command is only supported for a logged in user and will return an empty result if authorization has been disabled.")
+        }
+      }
       section("Listing users", "administration-security-users-show") {
         p("Available users can be seen using `SHOW USERS` which will produce a table of users with four columns:")
         p("include::list-users-table-columns.asciidoc[]")
