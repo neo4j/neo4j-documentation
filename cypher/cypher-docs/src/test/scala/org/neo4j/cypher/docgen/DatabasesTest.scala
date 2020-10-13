@@ -26,6 +26,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<administration-databases-stop-database, Stopping databases>>
         |* <<administration-databases-start-database, Starting databases>>
         |* <<administration-databases-drop-database, Deleting databases>>
+        |* <<administration-wait-nowait, Waiting for completion>>
         |""".stripMargin)
     section("Introduction", "administration-databases-introduction") {
       p(
@@ -33,10 +34,10 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
           |All multi-database administrative commands must be run against the `system` database.
           |These administrative commands are automatically routed to the `system` database when connected to the DBMS over Bolt.""".stripMargin)
+      p("include::databases-command-syntax.asciidoc[]")
     }
     section("Listing databases", "administration-databases-show-databases") {
       p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
-      p("include::show-databases-syntax.asciidoc[]")
       p("All available databases can be seen using the command `SHOW DATABASES`.")
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
@@ -158,6 +159,35 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         assertStats(r, systemUpdates = 0)
       })) {}
 
+    }
+    section(title="Waiting for completion", id="administration-wait-nowait", role = "enterprise-edition") {
+      p("""Aside from `SHOW DATABASES`, the database management commands all accept an optional
+          |`WAIT`/`NOWAIT` clause. The `WAIT`/`NOWAIT` clause allows a user to specify whether to wait
+          |for the command to complete before returning. The options are:
+          |
+          |* `WAIT n SECONDS` - Wait the specified number of seconds (n) for the command to complete
+          |before returning.
+          |* `WAIT` - Wait for the default period for the command to complete before returning.
+          |* `NOWAIT` - Return immediately.
+          |
+          |The default behaviour is `NOWAIT`, so if no clause is specified the command will return
+          |immediately whilst the action is performed in the background. """.stripMargin)
+    }
+    query("CREATE DATABASE slow WAIT 5 SECONDS", ResultAssertions((r) => {
+      assertStats(r, systemUpdates = 1)
+    })) {
+      resultTable()
+      p(
+        """The `success` column provides an aggregate status of whether or not the command is considered
+          |successful and thus every row will have the same value. The intention of this column is to make it
+          |easy to determine, for example in a script, whether or not the command completed successfully without
+          |timing out.""".stripMargin
+       )
+    }
+    note {
+      p(
+        """A command with a `WAIT` clause may be interrupted whilst it is waiting to complete. In this event
+          |the command will continue to execute in the background and will not be aborted.""".stripMargin)
     }
   }.build()
 

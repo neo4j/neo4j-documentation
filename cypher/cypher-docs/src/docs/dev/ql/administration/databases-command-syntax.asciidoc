@@ -1,0 +1,27 @@
+The syntax of the database management commands is as follows:
+
+.Command syntax
+[options="header", width="100%", cols="1,5a"]
+|===
+| Command | Syntax
+| Show Database
+| [source]
+SHOW { DATABASE db \| DATABASES \| DEFAULT DATABASE }
+[YIELD { * \| field1[, ...] } [ORDER BY field1[, ...]] [SKIP n] [LIMIT n]]
+[WHERE expression]
+[RETURN field1[, ...] [ORDER BY field1[, ...]] [SKIP n] [LIMIT n]]
+| Create Database
+| [source]
+CREATE DATABASE name [IF NOT EXISTS] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+CREATE [OR REPLACE] DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+|Stop Database
+| [source]
+STOP DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+|Start Database
+| [source]
+STOP DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+|Drop Database
+| [source]
+DROP DATABASE name [IF EXISTS] [{DUMP\|DESTROY} [DATA]] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+|===
+

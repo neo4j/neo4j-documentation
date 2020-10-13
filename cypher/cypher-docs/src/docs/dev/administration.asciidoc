@@ -21,6 +21,7 @@ These include index and constraint management commands.
 ** <<administration-databases-stop-database, Stopping databases>>
 ** <<administration-databases-start-database, Starting databases>>
 ** <<administration-databases-drop-database, Deleting databases>>
+** <<administration-wait-nowait, Waiting for completion>>
 
 * <<administration-indexes-search-performance, Indexes for search performance>>
 ** <<administration-indexes-introduction, Introduction>>
