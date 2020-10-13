@@ -141,10 +141,14 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       }
       section("Deleting users", "administration-security-users-drop") {
         p("Users can be deleted using `DROP USER`.")
-        query("DROP USER jake", ResultAssertions((r) => {
+        query("DROP USER jake", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
+        }
+        note {
+          p(
+            "Deleting a user will not automatically terminate associated connections, sessions, transactions, or queries.")
         }
         p("When a user has been deleted, it will no longer appear on the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
