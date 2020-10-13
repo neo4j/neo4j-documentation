@@ -181,7 +181,8 @@ CREATE CONSTRAINT node_key_with_config ON (p:Person)
       OPTIONS {indexConfig: {`spatial.wgs-84.min`: [-100.0, -100.0], `spatial.wgs-84.max`: [100.0, 100.0]}}
 ###
 
-(★) Create a node key constraint on the label `Person` and properties `name` and `age` with the name `node_key_with_config` and updated `spatial.wgs-84` settings for the accompanying index.
+(★) Create a node key constraint on the label `Person` and properties `name` and `age` with the name `node_key_with_config` and given `spatial.wgs-84` settings for the accompanying index.
+The other index settings will have their default values.
 
 """).concat("""
 ###assertion=drop-named-constraint
