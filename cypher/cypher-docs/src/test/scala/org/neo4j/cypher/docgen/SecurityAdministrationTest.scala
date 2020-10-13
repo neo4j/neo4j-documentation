@@ -2,7 +2,7 @@ package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
 
-class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTestSupport {
+class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTestSupport with PrivilegesTestBase {
   override def outputPath = "target/docs/dev/ql/administration/security/"
 
   override def doc: Document = new DocBuilder {
@@ -59,6 +59,13 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         |** <<administration-security-administration-dbms-privileges-user-management, The dbms `USER MANAGEMENT` privileges>>
         |** <<administration-security-administration-dbms-privileges-database-management, The dbms `DATABASE MANAGEMENT` privileges>>
         |** <<administration-security-administration-dbms-privileges-privilege-management, The dbms `PRIVILEGE MANAGEMENT` privileges>>
+        |** <<administration-security-administration-dbms-privileges-execute, The dbms `EXECUTE` privileges>>
+        |*** <<execute-procedure-subsection, The dbms `EXECUTE PROCEDURE` privileges>>
+        |*** <<boosted-execute-procedure-subsection, The dbms `EXECUTE BOOSTED PROCEDURE` privileges>>
+        |*** <<admin-execute-procedure-subsection, The dbms `EXECUTE ADMIN PROCEDURES` privileges>>
+        |*** <<execute-function-subsection, The dbms `EXECUTE USER DEFINED FUNCTION` privileges>>
+        |*** <<boosted-execute-function-subsection, The dbms `EXECUTE BOOSTED USER DEFINED FUNCTION` privileges>>
+        |*** <<name-globbing, Procedure and user defined function name-globbing>>
         |** <<administration-security-administration-dbms-privileges-all, Granting `ALL DBMS PRIVILEGES`>>
         |""".stripMargin)
     section("The `admin` role", "administration-security-administration-introduction", "enterprise-edition") {
@@ -84,7 +91,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p(
           """For example, granting the ability to access the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
-        query("GRANT ACCESS ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
+        query("GRANT ACCESS ON DATABASE neo4j TO regularUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -94,7 +101,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("include::database/deny-database-access-syntax.asciidoc[]")
 
         p("For example, denying the ability to access to the database `neo4j` to the role `regularUsers` is done using the following query.")
-        query("DENY ACCESS ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
+        query("DENY ACCESS ON DATABASE neo4j TO regularUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -115,7 +122,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p(
           """For example, granting the ability to start the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
-        query("GRANT START ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
+        query("GRANT START ON DATABASE neo4j TO regularUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -125,7 +132,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("include::database/deny-database-start-syntax.asciidoc[]")
 
         p("For example, denying the ability to start to the database `neo4j` to the role `regularUsers` is done using the following query.")
-        query("DENY START ON DATABASE system TO regularUsers", ResultAssertions((r) => {
+        query("DENY START ON DATABASE system TO regularUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -137,7 +144,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p(
           """For example, granting the ability to stop the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
-        query("GRANT STOP ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
+        query("GRANT STOP ON DATABASE neo4j TO regularUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -147,7 +154,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("include::database/deny-database-stop-syntax.asciidoc[]")
 
         p("For example, denying the ability to stop to the database `neo4j` to the role `regularUsers` is done using the following query.")
-        query("DENY STOP ON DATABASE system TO regularUsers", ResultAssertions((r) => {
+        query("DENY STOP ON DATABASE system TO regularUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -177,7 +184,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p(
           """For example, granting the ability to create indexes on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
-        query("GRANT CREATE INDEX ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
+        query("GRANT CREATE INDEX ON DATABASE neo4j TO regularUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -191,7 +198,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p(
           """For example, granting the ability to create constraints on the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
-        query("GRANT CREATE CONSTRAINT ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
+        query("GRANT CREATE CONSTRAINT ON DATABASE neo4j TO regularUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -205,7 +212,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p(
           """For example, granting the ability to create new properties on nodes or relationships in the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
-        query("GRANT CREATE NEW PROPERTY NAME ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
+        query("GRANT CREATE NEW PROPERTY NAME ON DATABASE neo4j TO regularUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -224,7 +231,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p(
           """For example, granting the abilities above on the database `neo4j` to the role `databaseAdminUsers` is done using the following query.""".stripMargin)
-        query("GRANT ALL DATABASE PRIVILEGES ON DATABASE neo4j TO databaseAdminUsers", ResultAssertions((r) => {
+        query("GRANT ALL DATABASE PRIVILEGES ON DATABASE neo4j TO databaseAdminUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -249,7 +256,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p(
           """For example, granting the ability to list transactions for user `jake` in the database `neo4j` to the role `regularUsers` is done using the following query.""".stripMargin)
-        query("GRANT SHOW TRANSACTION (jake) ON DATABASE neo4j TO regularUsers", ResultAssertions((r) => {
+        query("GRANT SHOW TRANSACTION (jake) ON DATABASE neo4j TO regularUsers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -266,48 +273,48 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       section("Using a custom role to manage DBMS privileges", "administration-security-administration-dbms-custom", "enterprise-edition") {
         p("include::dbms/admin-role-dbms-custom.asciidoc[]")
         p("First we copy the 'admin' role:")
-        query("CREATE ROLE usermanager AS COPY OF admin", ResultAssertions((r) => {
+        query("CREATE ROLE usermanager AS COPY OF admin", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
         p("Then we DENY ACCESS to normal databases:")
-        query("DENY ACCESS ON DATABASE * TO usermanager", ResultAssertions((r) => {
+        query("DENY ACCESS ON DATABASE * TO usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("And DENY START and STOP for normal databases:")
-        query("DENY START ON DATABASE * TO usermanager", ResultAssertions((r) => {
+        query("DENY START ON DATABASE * TO usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("DENY STOP ON DATABASE * TO usermanager", ResultAssertions((r) => {
+        query("DENY STOP ON DATABASE * TO usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("And DENY index and constraint management:")
-        query("DENY INDEX MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions((r) => {
+        query("DENY INDEX MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("DENY CONSTRAINT MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions((r) => {
+        query("DENY CONSTRAINT MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("And finally DENY label, relationship type and property name:")
-        query("DENY NAME MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions((r) => {
+        query("DENY NAME MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
 
         p("The resulting role should have privileges that only allow the DBMS capabilities, like user and role management:")
-        query("SHOW ROLE usermanager PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE usermanager PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'usermanager'")
           resultTable()
         }
@@ -318,74 +325,74 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("include::dbms/role-management-syntax.asciidoc[]")
 
         p("The ability to add roles can be granted via the `CREATE ROLE` privilege. The following query shows an example of this:")
-        query("GRANT CREATE ROLE ON DBMS TO roleAdder", ResultAssertions((r) => {
+        query("GRANT CREATE ROLE ON DBMS TO roleAdder", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow adding roles:")
-        query("SHOW ROLE roleAdder PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE roleAdder PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'roleAdder'")
           resultTable()
         }
 
         p("The ability to delete roles can be granted via the `DROP ROLE` privilege. The following query shows an example of this:")
-        query("GRANT DROP ROLE ON DBMS TO roleDropper", ResultAssertions((r) => {
+        query("GRANT DROP ROLE ON DBMS TO roleDropper", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow deleting roles:")
-        query("SHOW ROLE roleDropper PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE roleDropper PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'roleDropper'")
           resultTable()
         }
 
         p("The ability to assign roles to users can be granted via the `ASSIGN ROLE` privilege. The following query shows an example of this:")
-        query("GRANT ASSIGN ROLE ON DBMS TO roleAssigner", ResultAssertions((r) => {
+        query("GRANT ASSIGN ROLE ON DBMS TO roleAssigner", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow assigning/granting roles:")
-        query("SHOW ROLE roleAssigner PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE roleAssigner PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'roleAssigner'")
           resultTable()
         }
 
         p("The ability to remove roles from users can be granted via the `REMOVE ROLE` privilege. The following query shows an example of this:")
-        query("GRANT REMOVE ROLE ON DBMS TO roleRemover", ResultAssertions((r) => {
+        query("GRANT REMOVE ROLE ON DBMS TO roleRemover", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow removing/revoking roles:")
-        query("SHOW ROLE roleRemover PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE roleRemover PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'roleRemover'")
           resultTable()
         }
 
         p("The ability to show roles can be granted via the `SHOW ROLE` privilege. A user with this privilege is allowed to execute the `SHOW ROLES` and `SHOW POPULATED ROLES` administration commands. " +
           "For the `SHOW ROLES WITH USERS` and `SHOW POPULATED ROLES WITH USERS` administration commands, both this privilege and the `SHOW USER` privilege are required. The following query shows an example of how to grant the `SHOW ROLE` privilege:")
-        query("GRANT SHOW ROLE ON DBMS TO roleShower", ResultAssertions((r) => {
+        query("GRANT SHOW ROLE ON DBMS TO roleShower", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow showing roles:")
-        query("SHOW ROLE roleShower PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE roleShower PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'roleShower'")
           resultTable()
         }
 
         p("All of the above mentioned privileges can be granted via the `ROLE MANAGEMENT` privilege. The following query shows an example of this:")
-        query("GRANT ROLE MANAGEMENT ON DBMS TO roleManager", ResultAssertions((r) => {
+        query("GRANT ROLE MANAGEMENT ON DBMS TO roleManager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have all privileges to manage roles:")
-        query("SHOW ROLE roleManager PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE roleManager PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'roleManager'")
           resultTable()
         }
@@ -396,77 +403,77 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("include::dbms/user-management-syntax.asciidoc[]")
 
         p("The ability to add users can be granted via the `CREATE USER` privilege. The following query shows an example of this:")
-        query("GRANT CREATE USER ON DBMS TO userAdder", ResultAssertions((r) => {
+        query("GRANT CREATE USER ON DBMS TO userAdder", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow adding users:")
-        query("SHOW ROLE userAdder PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE userAdder PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'userAdder'")
           resultTable()
         }
 
         p("The ability to delete users can be granted via the `DROP USER` privilege. The following query shows an example of this:")
-        query("GRANT DROP USER ON DBMS TO userDropper", ResultAssertions((r) => {
+        query("GRANT DROP USER ON DBMS TO userDropper", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow deleting users:")
-        query("SHOW ROLE userDropper PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE userDropper PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'userDropper'")
           resultTable()
         }
 
         p("The ability to modify users can be granted via the `ALTER USER` privilege. The following query shows an example of this:")
-        query("GRANT ALTER USER ON DBMS TO userModifier", ResultAssertions((r) => {
+        query("GRANT ALTER USER ON DBMS TO userModifier", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow modifying users:")
-        query("SHOW ROLE userModifier PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE userModifier PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'userModifier'")
           resultTable()
         }
         p("A user that is granted `ALTER USER` is allowed to run the `ALTER USER` administration command with one or several of the `SET PASSWORD`, `SET PASSWORD CHANGE [NOT] REQUIRED` and `SET STATUS` parts:")
-        query("ALTER USER jake SET PASSWORD 'secret' SET STATUS SUSPENDED", ResultAssertions((r) => {
+        query("ALTER USER jake SET PASSWORD 'secret' SET STATUS SUSPENDED", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
 
         p("The ability to modify users' passwords and whether those passwords must be changed upon first login can be granted via the `SET PASSWORDS` privilege. The following query shows an example of this:")
-        query("GRANT SET PASSWORDS ON DBMS TO passwordModifier", ResultAssertions((r) => {
+        query("GRANT SET PASSWORDS ON DBMS TO passwordModifier", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow modifying users' passwords and whether those passwords must be changed upon first login:")
-        query("SHOW ROLE passwordModifier PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE passwordModifier PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'passwordModifier'")
           resultTable()
         }
         p("A user that is granted `SET PASSWORDS` is allowed to run the `ALTER USER` administration command with one or both of the `SET PASSWORD` and `SET PASSWORD CHANGE [NOT] REQUIRED` parts:")
-        query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED", ResultAssertions((r) => {
+        query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The ability to modify the account status of users can be granted via the `SET USER STATUS` privilege. The following query shows an example of this:")
-        query("GRANT SET USER STATUS ON DBMS TO statusModifier", ResultAssertions((r) => {
+        query("GRANT SET USER STATUS ON DBMS TO statusModifier", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow modifying the account status of users:")
-        query("SHOW ROLE statusModifier PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE statusModifier PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'statusModifier'")
           resultTable()
         }
         p("A user that is granted `SET USER STATUS` is allowed to run the `ALTER USER` administration command with only the `SET STATUS` part:")
-        query("ALTER USER jake SET STATUS ACTIVE", ResultAssertions((r) => {
+        query("ALTER USER jake SET STATUS ACTIVE", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -477,25 +484,25 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         p("The ability to show users can be granted via the `SHOW USER` privilege. The following query shows an example of this:")
-        query("GRANT SHOW USER ON DBMS TO userShower", ResultAssertions((r) => {
+        query("GRANT SHOW USER ON DBMS TO userShower", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow showing users:")
-        query("SHOW ROLE userShower PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE userShower PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'userShower'")
           resultTable()
         }
 
         p("All of the above mentioned privileges can be granted via the `USER MANAGEMENT` privilege. The following query shows an example of this:")
-        query("GRANT USER MANAGEMENT ON DBMS TO userManager", ResultAssertions((r) => {
+        query("GRANT USER MANAGEMENT ON DBMS TO userManager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have all privileges to manage users:")
-        query("SHOW ROLE userManager PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE userManager PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'userManager'")
           resultTable()
         }
@@ -506,37 +513,37 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p("include::dbms/database-management-syntax.asciidoc[]")
 
         p("The ability to create databases can be granted via the `CREATE DATABASE` privilege. The following query shows an example of this:")
-        query("GRANT CREATE DATABASE ON DBMS TO databaseAdder", ResultAssertions((r) => {
+        query("GRANT CREATE DATABASE ON DBMS TO databaseAdder", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow creating databases:")
-        query("SHOW ROLE databaseAdder PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE databaseAdder PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'databaseAdder'")
           resultTable()
         }
 
         p("The ability to delete databases can be granted via the `DROP DATABASE` privilege. The following query shows an example of this:")
-        query("GRANT DROP DATABASE ON DBMS TO databaseDropper", ResultAssertions((r) => {
+        query("GRANT DROP DATABASE ON DBMS TO databaseDropper", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow deleting databases:")
-        query("SHOW ROLE databaseDropper PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE databaseDropper PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'databaseDropper'")
           resultTable()
         }
 
         p("Both of the above mentioned privileges can be granted via the `DATABASE MANAGEMENT` privilege. The following query shows an example of this:")
-        query("GRANT DATABASE MANAGEMENT ON DBMS TO databaseManager", ResultAssertions((r) => {
+        query("GRANT DATABASE MANAGEMENT ON DBMS TO databaseManager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have all privileges to manage databases:")
-        query("SHOW ROLE databaseManager PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE databaseManager PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'databaseManager'")
           resultTable()
         }
@@ -548,13 +555,13 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         p("The ability to list privileges can be granted via the `SHOW PRIVILEGE` privilege. A user with this privilege is allowed to execute the `SHOW PRIVILEGES` and `SHOW ROLE roleName PRIVILEGES` administration commands. " +
           "For the `SHOW USER username PRIVILEGES` administration command, both this privilege and the `SHOW USER` privilege are required. The following query shows an example of how to grant the `SHOW PRIVILEGE` privilege:")
-        query("GRANT SHOW PRIVILEGE ON DBMS TO privilegeShower", ResultAssertions((r) => {
+        query("GRANT SHOW PRIVILEGE ON DBMS TO privilegeShower", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow showing privileges:")
-        query("SHOW ROLE privilegeShower PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE privilegeShower PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'privilegeShower'")
           resultTable()
         }
@@ -565,50 +572,373 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             "It is only possible for a user to show their own privileges. Other users' privileges cannot be listed when using a non-native auth provider.")
         }
         p("The ability to assign privileges to roles can be granted via the `ASSIGN PRIVILEGE` privilege. A user with this privilege is allowed to execute GRANT and DENY administration commands. The following query shows an example of how to grant this privilege:")
-        query("GRANT ASSIGN PRIVILEGE ON DBMS TO privilegeAssigner", ResultAssertions((r) => {
+        query("GRANT ASSIGN PRIVILEGE ON DBMS TO privilegeAssigner", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow assigning privileges:")
-        query("SHOW ROLE privilegeAssigner PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE privilegeAssigner PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'privilegeAssigner'")
           resultTable()
         }
 
         p("The ability to remove privileges from roles can be granted via the `REMOVE PRIVILEGE` privilege. A user with this privilege is allowed to execute REVOKE administration commands. The following query shows an example of how to grant this privilege:")
-        query("GRANT REMOVE PRIVILEGE ON DBMS TO privilegeRemover", ResultAssertions((r) => {
+        query("GRANT REMOVE PRIVILEGE ON DBMS TO privilegeRemover", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have privileges that only allow removing privileges:")
-        query("SHOW ROLE privilegeRemover PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE privilegeRemover PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'privilegeRemover'")
           resultTable()
         }
 
         p("All of the above mentioned privileges can be granted via the `PRIVILEGE MANAGEMENT` privilege. The following query shows an example of this:")
-        query("GRANT PRIVILEGE MANAGEMENT ON DBMS TO privilegeManager", ResultAssertions((r) => {
+        query("GRANT PRIVILEGE MANAGEMENT ON DBMS TO privilegeManager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
         p("The resulting role should have all privileges to manage privileges:")
-        query("SHOW ROLE privilegeManager PRIVILEGES", assertPrivilegeShown(Seq(Map()))) {
+        query("SHOW ROLE privilegeManager PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'privilegeManager'")
           resultTable()
         }
       }
 
+      section("The dbms `EXECUTE` privileges", "administration-security-administration-dbms-privileges-execute", "enterprise-edition") {
+        initQueries(
+          "CREATE ROLE procedureExecutor",
+          "CREATE ROLE deniedProcedureExecutor",
+          "CREATE ROLE boostedProcedureExecutor",
+          "CREATE ROLE deniedBoostedProcedureExecutor1",
+          "CREATE ROLE deniedBoostedProcedureExecutor2",
+          "CREATE ROLE deniedBoostedProcedureExecutor3",
+          "CREATE ROLE deniedBoostedProcedureExecutor4",
+          "CREATE ROLE adminProcedureExecutor",
+          "CREATE ROLE functionExecutor",
+          "CREATE ROLE deniedFunctionExecutor",
+          "CREATE ROLE boostedFunctionExecutor",
+          "CREATE ROLE globbing1",
+          "CREATE ROLE globbing2",
+          "CREATE ROLE globbing3",
+          "CREATE ROLE globbing4",
+          "CREATE ROLE globbing5"
+        )
+        p("The dbms privileges for procedure and user defined function execution are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
+        p("include::dbms/execute-syntax.asciidoc[]")
+        p(
+          """The `EXECUTE BOOSTED` privileges replace the `dbms.security.procedures.default_allowed` and `dbms.security.procedures.roles` configuration parameters for procedures and user defined functions.
+            |The configuration parameters are still honoured as a set of temporary privileges. These cannot be revoked, but will be updated on each restart
+            |with the current configuration values.""".stripMargin)
+
+        section("The `EXECUTE PROCEDURE` privilege", "execute-procedure-subsection", "enterprise-edition") {
+          p(
+            """The ability to execute a procedure can be granted via the `EXECUTE PROCEDURE` privilege.
+              |A user with this privilege is allowed to execute the procedures matched by the <<name-globbing, name-globbing>>.
+              |The following query shows an example of how to grant this privilege:""".stripMargin)
+          query("GRANT EXECUTE PROCEDURE db.schema.* ON DBMS TO procedureExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'procedureExecutor' can then run any procedure in the `db.schema` namespace. The procedure will be run using the users own privileges.")
+          }
+          p("The resulting role should have privileges that only allow executing procedures in the `db.schema` namespace:")
+          query("SHOW ROLE procedureExecutor PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'procedureExecutor'")
+            resultTable()
+          }
+
+          p(
+            """If we want to allow executing all but a few procedures, we can grant `EXECUTE PROCEDURES *` and deny the unwanted procedures.
+              |For example, the following queries allows for executing all procedures except `dbms.killTransaction` and `dbms.killTransactions`:""".stripMargin)
+          query("GRANT EXECUTE PROCEDURE * ON DBMS TO deniedProcedureExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE PROCEDURE dbms.killTransaction* ON DBMS TO deniedProcedureExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p("The resulting role should have privileges that only allow executing all procedures except `dbms.killTransaction` and `dbms.killTransactions`:")
+          query("SHOW ROLE deniedProcedureExecutor PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'deniedProcedureExecutor'")
+            resultTable()
+          }
+        }
+
+        section("The `EXECUTE BOOSTED PROCEDURE` privilege", "boosted-execute-procedure-subsection", "enterprise-edition") {
+          p(
+            """The ability to execute a procedure with elevated privileges can be granted via the `EXECUTE BOOSTED PROCEDURE` privilege.
+              |A user with this privilege is allowed to execute the procedures matched by the <<name-globbing, name-globbing>>
+              |without the execution being restricted to their other privileges.
+              |The following query shows an example of how to grant this privilege:""".stripMargin)
+          query("GRANT EXECUTE BOOSTED PROCEDURE db.labels, db.relationshipTypes ON DBMS TO boostedProcedureExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 2)
+          })) {
+            statsOnlyResultTable()
+            p(
+              """Users with the role 'boostedProcedureExecutor' can then run `db.labels` and `db.relationshipTypes` with full privileges,
+                |seeing everything in the graph not just the labels and types that the user has `TRAVERSE` privilege on.""".stripMargin)
+          }
+          p("The resulting role should have privileges that only allow executing procedures `db.labels` and `db.relationshipTypes`, but with elevated execution:")
+          query("SHOW ROLE boostedProcedureExecutor PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'boostedProcedureExecutor'")
+            resultTable()
+          }
+
+          p(
+            """While granting `EXECUTE BOOSTED PROCEDURE` on its own allows the procedure to be both executed and given elevated privileges during the execution,
+              |the deny behaves slightly different and only denies the elevation and not the execution. However, having only a granted `EXECUTE BOOSTED PROCEDURE`
+              |and a deny `EXECUTE BOOSTED PROCEDURE` will deny the execution as well. This is explained through the examples below:""".stripMargin)
+
+          p("Example 1: Grant `EXECUTE PROCEDURE` and deny `EXECUTE BOOSTED PROCEDURE`")
+          query("GRANT EXECUTE PROCEDURE * ON DBMS TO deniedBoostedProcedureExecutor1", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE BOOSTED PROCEDURE db.labels ON DBMS TO deniedBoostedProcedureExecutor1", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p(
+            """The resulting role should have privileges that allow executing all procedures using the users own privileges,
+              |as well as blocking `db.labels` from being elevated. The deny `EXECUTE BOOSTED PROCEDURE` does not block execution of `db.labels`.""".stripMargin)
+          query("SHOW ROLE deniedBoostedProcedureExecutor1 PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'deniedBoostedProcedureExecutor1'")
+            resultTable()
+          }
+
+          p("Example 2: Grant `EXECUTE BOOSTED PROCEDURE` and deny `EXECUTE PROCEDURE`")
+          query("GRANT EXECUTE BOOSTED PROCEDURE * ON DBMS TO deniedBoostedProcedureExecutor2", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE PROCEDURE db.labels ON DBMS TO deniedBoostedProcedureExecutor2", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p(
+            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+              |except `db.labels` which is not allowed to execute at all:""".stripMargin)
+          query("SHOW ROLE deniedBoostedProcedureExecutor2 PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'deniedBoostedProcedureExecutor2'")
+            resultTable()
+          }
+
+          p("Example 3: Grant `EXECUTE BOOSTED PROCEDURE` and deny `EXECUTE BOOSTED PROCEDURE`")
+          query("GRANT EXECUTE BOOSTED PROCEDURE * ON DBMS TO deniedBoostedProcedureExecutor3", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE BOOSTED PROCEDURE db.labels ON DBMS TO deniedBoostedProcedureExecutor3", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p(
+            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+              |except `db.labels` which is not allowed to execute at all:""".stripMargin)
+          query("SHOW ROLE deniedBoostedProcedureExecutor3 PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'deniedBoostedProcedureExecutor3'")
+            resultTable()
+          }
+
+          p("Example 4: Grant `EXECUTE PROCEDURE` and `EXECUTE BOOSTED PROCEDURE` and deny `EXECUTE BOOSTED PROCEDURE`")
+          query("GRANT EXECUTE PROCEDURE db.labels ON DBMS TO deniedBoostedProcedureExecutor4", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("GRANT EXECUTE BOOSTED PROCEDURE * ON DBMS TO deniedBoostedProcedureExecutor4", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE BOOSTED PROCEDURE db.labels ON DBMS TO deniedBoostedProcedureExecutor4", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p(
+            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+              |except `db.labels` which is only allowed to execute using the users own privileges:""".stripMargin)
+          query("SHOW ROLE deniedBoostedProcedureExecutor4 PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'deniedBoostedProcedureExecutor4'")
+            resultTable()
+          }
+        }
+
+        section("The `EXECUTE ADMIN PROCEDURES` privilege", "admin-execute-procedure-subsection", "enterprise-edition") {
+          p(
+            """The ability to execute admin procedures (annotated with `@Admin`) can be granted via the `EXECUTE ADMIN PROCEDURES` privilege.
+              |This privilege is equivalent with granting <<boosted-execute-procedure-subsection, the `EXECUTE BOOSTED PROCEDURE` privilege>> on each of the admin procedures.
+              |Any new admin procedures that gets added are automatically included in this privilege.
+              |The following query shows an example of how to grant this privilege:""".stripMargin)
+          query("GRANT EXECUTE ADMIN PROCEDURES ON DBMS TO adminProcedureExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'adminProcedureExecutor' can then run any admin procedure with elevated privileges.")
+          }
+          p("The resulting role should have privileges that allows executing all admin procedures:")
+          query("SHOW ROLE adminProcedureExecutor PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'adminProcedureExecutor'")
+            resultTable()
+          }
+        }
+
+        section("The `EXECUTE USER DEFINED FUNCTION` privilege", "execute-function-subsection", "enterprise-edition") {
+          p(
+            """The ability to execute a user defined function (UDF) can be granted via the `EXECUTE USER DEFINED FUNCTION` privilege.
+              |A user with this privilege is allowed to execute the UDFs matched by the <<name-globbing, name-globbing>>.
+              |The following query shows an example of how to grant this privilege:""".stripMargin)
+          query("GRANT EXECUTE FUNCTION apoc.coll.* ON DBMS TO functionExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'functionExecutor' can then run any UDF in the `apoc.coll` namespace. The function will be run using the users own privileges.")
+          }
+          p("The resulting role should have privileges that only allow executing UDFs in the `apoc.coll` namespace:")
+          query("SHOW ROLE functionExecutor PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'functionExecutor'")
+            resultTable()
+          }
+
+          p(
+            """If we want to allow executing all but a few UDFs, we can grant `EXECUTE USER DEFINED FUNCTIONS *` and deny the unwanted functions.
+              |For example, the following queries allows for executing all UDFs except `apoc.any.property` and `apoc.any.properties`:""".stripMargin)
+          query("GRANT EXECUTE FUNCTIONS * ON DBMS TO deniedFunctionExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          query("DENY EXECUTE FUNCTION apoc.any.prop* ON DBMS TO deniedFunctionExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+          }
+          p("The resulting role should have privileges that only allow executing all procedures except `apoc.any.property` and `apoc.any.properties`:")
+          query("SHOW ROLE deniedFunctionExecutor PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'deniedFunctionExecutor'")
+            resultTable()
+          }
+        }
+
+        section("The `EXECUTE BOOSTED USER DEFINED FUNCTION` privilege", "boosted-execute-function-subsection", "enterprise-edition") {
+          p(
+            """The ability to execute a user defined function (UDF) with elevated privileges can be granted via the `EXECUTE BOOSTED USER DEFINED FUNCTION` privilege.
+              |A user with this privilege is allowed to execute the UDFs matched by the <<name-globbing, name-globbing>>
+              |without the execution being restricted to their other privileges.
+              |The following query shows an example of how to grant this privilege:""".stripMargin)
+          query("GRANT EXECUTE BOOSTED FUNCTION apoc.any.properties ON DBMS TO boostedFunctionExecutor", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p(
+              """Users with the role 'boostedFunctionExecutor' can then run `apoc.any.properties` with full privileges,
+                |seeing every property on the node/relationship not just the properties that the user has `READ` privilege on.""".stripMargin)
+          }
+          p("The resulting role should have privileges that only allow executing the UDF `apoc.any.properties`, but with elevated execution:")
+          query("SHOW ROLE boostedFunctionExecutor PRIVILEGES", NoAssertions) {
+            p("Lists all privileges for role 'boostedFunctionExecutor'")
+            resultTable()
+          }
+
+          p(
+            """While granting `EXECUTE BOOSTED USER DEFINED FUNCTION` on its own allows the UDF to be both executed and given elevated privileges during the execution,
+              |the deny behaves slightly different and only denies the elevation and not the execution. However, having only a granted `EXECUTE BOOSTED USER DEFINED FUNCTION`
+              |and a deny `EXECUTE BOOSTED USER DEFINED FUNCTION` will deny the execution as well.
+              |This is the same behaviour as for `EXECUTE BOOSTED PROCEDURE`, for examples see <<boosted-execute-procedure-subsection>>""".stripMargin)
+        }
+
+        section("Procedure and user defined function name-globbing", "name-globbing", "enterprise-edition") {
+          p(
+            """The name-globbing for procedure and user defined function names is a simplified version of globbing for filename expansions, only allowing two wildcard characters -- `*` and `?`.
+              |They are used for multiple and single character matches, where `*` means 0 or more characters and `?` matches exactly one character.""".stripMargin)
+          p(
+            """The examples below only use procedures but the same rules apply to user defined function names.
+              |For the examples below, assume we have the following procedures:
+              |
+              |* mine.public.exampleProcedure
+              |* mine.public.exampleProcedure1
+              |* mine.public.exampleProcedure42
+              |* mine.private.exampleProcedure
+              |* mine.private.exampleProcedure1
+              |* mine.private.exampleProcedure2
+              |* your.exampleProcedure
+              |""".stripMargin)
+
+          query("GRANT EXECUTE PROCEDURE * ON DBMS TO globbing1", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'globbing1' can then run procedures all the procedures.")
+          }
+
+          query("GRANT EXECUTE PROCEDURE mine.*.exampleProcedure ON DBMS TO globbing2", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'globbing2' can then run procedures `mine.public.exampleProcedure` and `mine.private.exampleProcedure`, but none of the others.")
+          }
+
+          query("GRANT EXECUTE PROCEDURE mine.*.exampleProcedure? ON DBMS TO globbing3", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'globbing3' can then run procedures `mine.public.exampleProcedure1`, `mine.private.exampleProcedure1` and `mine.private.exampleProcedure2`, but none of the others.")
+          }
+
+          query("GRANT EXECUTE PROCEDURE *.exampleProcedure ON DBMS TO globbing4", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'globbing4' can then run procedures `your.exampleProcedure`, `mine.public.exampleProcedure` and `mine.private.exampleProcedure`, but none of the others.")
+          }
+
+          query("GRANT EXECUTE PROCEDURE mine.public.exampleProcedure* ON DBMS TO globbing5", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 1)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'globbing5' can then run procedures `mine.public.exampleProcedure`, `mine.public.exampleProcedure1` and `mine.public.exampleProcedure42`, but none of the others.")
+          }
+        }
+      }
+
       section("Granting `ALL DBMS PRIVILEGES`", "administration-security-administration-dbms-privileges-all", "enterprise-edition") {
         p(
-          """The right to create, drop, assign, remove and show roles, create, alter, drop and show users, create and drop databases and show, assign and remove privileges can be achieved with a single command:""".stripMargin)
+          """The right to perform the following privileges can be achieved with a single command:
+            |
+            |* create roles
+            |* drop roles
+            |* assign roles
+            |* remove roles
+            |* show roles
+            |* create users
+            |* alter users
+            |* drop users
+            |* show users
+            |* create databases
+            |* drop databases
+            |* show privileges
+            |* assign privileges
+            |* remove privileges
+            |* execute all procedures with elevated privileges""".stripMargin)
         p("include::dbms/all-management-syntax.asciidoc[]")
 
         p(
           """For example, granting the abilities above to the role `dbmsManager` is done using the following query.""".stripMargin)
-        query("GRANT ALL DBMS PRIVILEGES ON DBMS TO dbmsManager", ResultAssertions((r) => {
+        query("GRANT ALL DBMS PRIVILEGES ON DBMS TO dbmsManager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -623,16 +953,4 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       }
     }
   }.build()
-
-  private def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]) = ResultAssertions(p => {
-    val found = p.toList.filter { row =>
-      val m = expected.filter { expectedRow =>
-        expectedRow.forall {
-          case (k, v) => row.contains(k) && row(k) == v
-        }
-      }
-      m.nonEmpty
-    }
-    found.nonEmpty should be(true)
-  })
 }

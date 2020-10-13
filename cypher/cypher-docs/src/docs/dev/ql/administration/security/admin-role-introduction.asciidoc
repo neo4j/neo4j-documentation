@@ -5,13 +5,12 @@ These include the rights to perform the following classes of tasks:
 ** Manage access to a database and the right to start and stop a database
 ** Manage <<administration-indexes-search-performance, indexes>> and <<administration-constraints, constraints>>
 ** Allow the creation of labels, relationship types or property names
+** Manage transactions
 * Manage <<administration-security-administration-dbms-privileges, DBMS security>> for controlling the rights to perform actions on the entire system:
 ** Manage <<administration-databases, multiple databases>>
 ** Manage <<administration-security-users-and-roles, users and roles>>
 ** Change configuration parameters
-** Manage transactions
 ** Manage sub-graph privileges
 ** Manage procedure security
 
-These rights are conferred using privileges that can be  managed using `GRANT`, `DENY` and `REVOKE` commands, with the exception of changing configuration parameters and procedure security.
-Those are only available within the built-in `admin` role, or in the case of procedure security, through the `dbms.security.procedures.default_allowed` and `dbms.security.procedures.roles` configuration parameters.
+These rights are conferred using privileges that can be  managed using `GRANT`, `DENY` and `REVOKE` commands.

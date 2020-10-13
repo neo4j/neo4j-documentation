@@ -9,6 +9,11 @@ These include:
 * Manage procedure security
 
 The easiest way to enable a user to perform these tasks is to grant them the `admin` role.
-All of these privileges, except change configuration parameters and manage procedure security, are also assignable using Cypher commands.
-See the sections on <<administration-security-administration-dbms-privileges-role-management, role management>>, <<administration-security-administration-dbms-privileges-user-management, user management>>, <<administration-security-administration-dbms-privileges-database-management, database management>>, <<administration-security-administration-dbms-privileges-privilege-management, privilege management>> and <<administration-security-administration-database-transaction, transaction management>> for details.
+All of these privileges are also assignable using Cypher commands.
+See the sections on <<administration-security-administration-dbms-privileges-role-management, role management>>,
+<<administration-security-administration-dbms-privileges-user-management, user management>>,
+<<administration-security-administration-dbms-privileges-database-management, database management>>,
+<<administration-security-administration-dbms-privileges-privilege-management, privilege management>>,
+<<administration-security-administration-database-transaction, transaction management>> and
+<<administration-security-administration-dbms-privileges-execute, procedure and user defined function security>> for details.
 It is possible to make a custom role with a subset of these privileges.
