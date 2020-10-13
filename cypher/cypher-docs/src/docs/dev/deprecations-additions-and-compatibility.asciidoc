@@ -42,7 +42,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `0...`                      | Syntax        | Deprecated   | Replaced by `0o...` (see above).
 | `0X...`                     | Syntax        | Deprecated   | Only `0x...` (lowercase x) will be supported.
 | `SET [PLAINTEXT \| ENCRYPTED] PASSWORD` | Syntax | Added | For `CREATE USER` and `ALTER USER` it is now possible to set (or update) a password when the plaintext password is unknown, but the encrypted password is available.
-| <<administration-security-administration-dbms-privileges-execute, EXECUTE>> privileges | Functionality | Added | New Cypher commands for administering privileges for executing procedures and user defined functions
+| <<administration-security-administration-dbms-privileges-execute, EXECUTE>> privileges | Functionality | Added | New Cypher commands for administering privileges for executing procedures and user defined functions.
 |===
 
 [[cypher-deprecations-additions-removals-4.1.3]]
