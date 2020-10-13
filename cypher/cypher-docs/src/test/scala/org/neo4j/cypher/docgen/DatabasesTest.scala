@@ -26,6 +26,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<administration-databases-stop-database, Stopping databases>>
         |* <<administration-databases-start-database, Starting databases>>
         |* <<administration-databases-drop-database, Deleting databases>>
+        |* <<administration-wait-nowait, Waiting for completion>>
         |""".stripMargin)
     section("Introduction", "administration-databases-introduction") {
       p(
@@ -159,7 +160,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       })) {}
 
     }
-    section(title="WAIT / NOWAIT", id="administration-wait-nowait", role = "enterprise-edition") {
+    section(title="Waiting for completion", id="administration-wait-nowait", role = "enterprise-edition") {
       p("""Aside from `SHOW DATABASES`, the database management commands all accept an optional
           |`WAIT`/`NOWAIT` clause. The `WAIT`/`NOWAIT` clause allows a user to specify whether to wait
           |for the command to complete before returning. The options are:
