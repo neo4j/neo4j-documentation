@@ -28,6 +28,13 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         """Neo4j allows the same server to manage multiple databases. The metadata for these databases,
           |including the associated security model, is maintained in a special database called the `system` database.
           |All multi-database administrative commands need to be executing against the `system` database.""".stripMargin)
+      note {
+        p(
+          """Note that database names have an exception to the <<cypher-manual#cypher-naming, standard Cypher restrictions on valid identifiers>>.
+            |Database names are also allowed to include dots without the need to escape the name via backticks.
+            |For example, `foo.bar.baz` is a valid database name.
+            |""".stripMargin)
+      }
     }
     section("Listing databases", "administration-databases-show-databases") {
       p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
