@@ -60,9 +60,12 @@ The actions triggering a database hit are listed in <<execution-plans-dbhits>>.
 `Page Cache Hits`, `Page Cache Misses`, `Page Cache Hit Ratio`::
 These metrics are only shown for some queries when using Neo4j Enterprise Edition.
 The page cache is used to cache data and avoid accessing disk, so having a high number of `hits` and a low number of `misses` will typically make the query run faster.
+Whenever several operators are fused together for more efficient execution we can no longer associate this metric with a given operator and then nothing will appear here.
+
 `Time`::
 `Time` is only shown for some operators when using the `pipelined` runtime.
 The number shown is the time in milliseconds it took to execute the given operator.
+Whenever several operators are fused together for more efficient execution we can no longer associate a duration with a given operator and then nothing will appear here.
 
 To produce an efficient plan for a query, the Cypher query planner requires information about the Neo4j database.
 This information includes which indexes and constraints are available, as well as various statistics maintained by the database.
