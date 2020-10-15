@@ -36,8 +36,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |These administrative commands are automatically routed to the `system` database when connected to the DBMS over Bolt.""".stripMargin)
       note {
         p(
-          """Note that database names have an exception to the <<cypher-manual#cypher-naming, standard Cypher restrictions on valid identifiers>>.
-            |Database names are also allowed to include dots without the need to escape the name via backticks.
+          """Note that database names are an exception to the <<cypher-manual#cypher-naming, standard Cypher restrictions on valid identifiers>>.
+            |Database names may also include dots without the need to escape the name with backticks.
             |For example, `foo.bar.baz` is a valid database name.
             |""".stripMargin)
       }
