@@ -75,6 +75,13 @@ SHOW USER PRIVILEGES
 
 Lists all privileges of the currently logged in user, and the role that they are assigned to.
 
+###assertion=show-two
+//
+
+SHOW PRIVILEGES AS COMMANDS
+###
+
+List all privileges in the system as Cypher commands.
 """
   }
 }
