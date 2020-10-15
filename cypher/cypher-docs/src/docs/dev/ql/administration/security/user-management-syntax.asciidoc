@@ -17,7 +17,7 @@ SHOW USERS
 
 | [source, cypher]
 ----
-SHOW USER[S] [name1[, name2]] PRIVILEGES
+SHOW USER[S] [name1[, name2]] PRIVILEGES [AS [REVOKE] COMMAND[S]]
     [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
     [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]

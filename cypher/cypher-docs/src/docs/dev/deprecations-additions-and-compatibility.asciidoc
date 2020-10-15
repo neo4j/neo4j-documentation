@@ -33,6 +33,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 [options="header"]
 |===
 | Feature     | Type | Change | Details
+| `SHOW PRIVILEGES [AS [REVOKE] COMMAND[S]]` | Functionality | Added | Privileges can now be shown as Cypher commands
 | `SHOW ROLE name PRIVILEGES` | Functionality | Updated | Can now handle multiple roles, `SHOW ROLES n1, n2, ... PRIVILEGES`
 | `SHOW USER name PRIVILEGES` | Functionality | Updated | Can now handle multiple users, `SHOW USERS n1, n2, ... PRIVILEGES`
 | `round(expression, precision)` | Functionality | Updated | round()-function can now take an additional argument to specify rounding precision.
