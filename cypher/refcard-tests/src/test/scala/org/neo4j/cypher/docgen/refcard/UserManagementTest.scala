@@ -73,7 +73,7 @@ Change the password of the logged-in user. The user will not be required to chan
 SHOW CURRENT USER
 ###
 
-List the currently logged in user, their status, roles and if they need to change their password. +
+List the currently logged-in user, their status, roles and whether they need to change their password. +
 (★) Status and roles are Enterprise Edition only.
 
 ###assertion=show-one
