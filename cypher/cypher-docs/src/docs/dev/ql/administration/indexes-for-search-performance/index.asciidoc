@@ -14,7 +14,6 @@ This section explains how to manage indexes used for search performance.
 ** <<administration-indexes-create-a-single-property-index-only-if-it-does-not-already-exist, Create a single-property index only if it does not already exist>>
 ** <<administration-indexes-create-a-single-property-index-with-specified-index-provider, Create a single-property index with specified index provider>>
 ** <<administration-indexes-create-a-single-property-index-with-specified-index-configuration, Create a single-property index with specified index configuration>>
-** <<administration-indexes-create-a-single-property-index-with-specified-index-configuration, Create a single-property index with specified index configuration>>
 ** <<administration-indexes-create-a-composite-index, Create a composite index>>
 ** <<administration-indexes-create-a-composite-index-with-specified-index-provider-and-configuration, Create a composite index with specified index provider and configuration>>
 ** <<administration-indexes-drop-an-index, Drop an index>>
