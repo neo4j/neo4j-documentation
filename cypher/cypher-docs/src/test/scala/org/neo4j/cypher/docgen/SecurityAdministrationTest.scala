@@ -178,8 +178,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       }
       section("The `INDEX MANAGEMENT` privileges", "administration-security-administration-database-indexes", "enterprise-edition") {
         p(
-          """Indexes can be created or deleted with the `CREATE INDEX` and `DROP INDEX` commands.
-            |The privilege to do this can be granted with `GRANT CREATE INDEX` and `GRANT DROP INDEX` commands.""".stripMargin)
+          """Indexes can be created, deleted, or listed with the `CREATE INDEX`, `DROP INDEX`, and `SHOW INDEXES` commands.
+            |The privilege to do this can be granted with `GRANT CREATE INDEX`, `GRANT DROP INDEX`, and `GRANT SHOW INDEX` commands.
+            |The privilege to do all three can be granted with `GRANT INDEX MANAGEMENT` command.""".stripMargin)
         p("include::database/index-management-syntax.asciidoc[]")
 
         p(
@@ -192,8 +193,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       }
       section("The `CONSTRAINT MANAGEMENT` privileges", "administration-security-administration-database-constraints", "enterprise-edition") {
         p(
-          """Constraints can be created or deleted with the `CREATE CONSTRAINT` and `DROP CONSTRAINT` commands.
-            |The privilege to do this can be granted with `GRANT CREATE CONSTRAINT` and `GRANT DROP CONSTRAINT` commands.""".stripMargin)
+          """Constraints can be created, deleted, or listed with the `CREATE CONSTRAINT`, `DROP CONSTRAINT` and `SHOW CONSTRAINTS` commands.
+            |The privilege to do this can be granted with `GRANT CREATE CONSTRAINT`, `GRANT DROP CONSTRAINT`, `GRANT SHOW CONSTRAINT` commands.
+            |The privilege to do all three can be granted with `GRANT CONSTRAINT MANAGEMENT` command.""".stripMargin)
         p("include::database/constraint-management-syntax.asciidoc[]")
 
         p(
