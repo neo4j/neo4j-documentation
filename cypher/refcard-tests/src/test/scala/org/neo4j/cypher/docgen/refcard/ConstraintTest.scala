@@ -53,6 +53,9 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
       case "match" =>
         assertStats(result, nodesCreated = 0)
         assert(result.toList.size === 1)
+      case "show" =>
+        assertStats(result)
+        assert(result.toList.size === 2)
     }
   }
 
@@ -145,6 +148,14 @@ CREATE CONSTRAINT relationship_exists ON ()-[l:LIKED]-()
 (★) Create a relationship property existence constraint on the type `LIKED` and property `since` with the name `relationship_exists`.
 If a relationship with that type is created without a `since`, or if the `since` property is
 removed from an existing relationship with the `LIKED` type, the write operation will fail.
+
+###assertion=show
+//
+
+SHOW UNIQUE CONSTRAINTS VERBOSE
+###
+
+List all unique constraints.
 
 """.concat(if (!versionFenceAllowsThisTest("3.2.9")) "" else """
 ###assertion=create-node-key-constraint

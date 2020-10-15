@@ -103,9 +103,9 @@ With `IF EXISTS`, no error is thrown and nothing happens should the index not ex
 
 | [source, cypher]
 ----
-CALL db.indexes
+SHOW [ALL\|BTREE] INDEX[ES] [BRIEF\|VERBOSE [OUTPUT]]
 ----
-| List all indexes in the database. 
+| List indexes in the database, either all or btree only.
 | 
 
 | [source, cypher]

@@ -80,9 +80,15 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "List constraints",
-      text = "Calling the built-in procedure `db.constraints` will list all constraints, including their names.",
-      queryText = "CALL db.constraints",
+      text =
+        """Listing all constraints can be done with `SHOW CONSTRAINTS`, which will produce a table with these columns:
+          |include::list-constraints-table-columns.asciidoc[]""".stripMargin,
+      queryText = "SHOW CONSTRAINTS",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
+      optionalResultExplanation =
+        """To show all columns, use `SHOW CONSTRAINTS VERBOSE`.
+          |To show only one type of constraint use the filtering keyword,
+          |for example to show unique constraints, use `SHOW UNIQUE CONSTRAINTS`.""".stripMargin,
       assertions = p => assert(p.size == 1)
     )
   }
