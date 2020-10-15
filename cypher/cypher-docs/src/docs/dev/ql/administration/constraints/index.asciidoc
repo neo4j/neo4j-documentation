@@ -134,9 +134,9 @@ DROP CONSTRAINT constraint_name [IF EXISTS]
 With `IF EXISTS`, no error is thrown and nothing happens should the constraint not exist.
 | [source, cypher]
 ----
-CALL db.constraints
+SHOW [ALL\|UNIQUE\|NODE EXIST[S]\|RELATIONSHIP EXIST[S]\|EXIST[S]\|NODE KEY] CONSTRAINT[S] [BRIEF\|VERBOSE [OUTPUT]]
 ----
-| List all constraints in the database.
+| List constraints in the database, either all or filtered on type.
 |
 | [source, cypher]
 ----

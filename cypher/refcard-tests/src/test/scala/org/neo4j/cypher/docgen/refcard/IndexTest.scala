@@ -50,6 +50,9 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
       case "match" =>
         assertStats(result, nodesCreated = 0)
         assert(result.toList.size === 1)
+      case "show" =>
+        assertStats(result)
+        assert(result.toList.size === 3)
     }
   }
 
@@ -109,6 +112,14 @@ CREATE INDEX IF NOT EXISTS FOR (p:Person) ON (p.name, p.age)
 ###
 
 Create a composite index on the label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
+
+###assertion=show
+//
+
+SHOW INDEXES
+###
+
+List all indexes.
 
 ###assertion=match parameters=aname
 //

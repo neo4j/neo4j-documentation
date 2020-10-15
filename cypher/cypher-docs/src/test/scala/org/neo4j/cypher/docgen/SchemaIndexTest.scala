@@ -133,11 +133,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def list_indexes() {
     prepareAndTestQuery(
       title = "List indexes",
-      text = "Calling the built-in procedure `db.indexes` will list all indexes, including their names.",
+      text =
+        """Listing all indexes can be done with `SHOW INDEXES`, which will produce a table with these columns:
+          |include::list-indexes-table-columns.asciidoc[]""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
-      queryText = "CALL db.indexes",
-      optionalResultExplanation = "",
-      assertions = (p) => assertEquals(3, p.size)
+      queryText = "SHOW INDEXES",
+      optionalResultExplanation = "To show all columns, use `SHOW INDEXES VERBOSE`. To show only `BTREE` indexes, use `SHOW BTREE INDEXES`.",
+      assertions = p => assertEquals(3, p.size)
     )
   }
 
