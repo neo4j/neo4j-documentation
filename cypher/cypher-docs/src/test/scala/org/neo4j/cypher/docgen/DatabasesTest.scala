@@ -33,6 +33,13 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
           |All multi-database administrative commands must be run against the `system` database.
           |These administrative commands are automatically routed to the `system` database when connected to the DBMS over Bolt.""".stripMargin)
+      note {
+        p(
+          """Note that database names are an exception to the <<cypher-manual#cypher-naming, standard Cypher restrictions on valid identifiers>>.
+            |Database names may also include dots without the need to escape the name with backticks.
+            |For example, `foo.bar.baz` is a valid database name.
+            |""".stripMargin)
+      }
     }
     section("Listing databases", "administration-databases-show-databases") {
       p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
