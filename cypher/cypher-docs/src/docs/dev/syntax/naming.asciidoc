@@ -24,6 +24,8 @@ For example, `MATCH (  a  ) RETURN a` is equivalent to `MATCH (a) RETURN a`.
 [NOTE]
 Non-alphabetic characters, including numbers, symbols and whitespace characters, *can* be used in names, but *must* be escaped using backticks.
 For example: `++`^n`++`, `++`1first`++`, `++`$$n`++`, and `++`my variable has spaces`++`.
+Database names are an exception and may include dots without the need for escaping.
+For example: naming a database `foo.bar.baz` is perfectly valid.
 
 == Scoping and namespace rules
 
