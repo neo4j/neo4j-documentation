@@ -181,7 +181,7 @@ We are asking for the results in ascending alphabetical order.
 The native index happens to store String properties in ascending alphabetical order, and Cypher knows this.
 In Neo4j 3.4 and earlier, Cypher would plan a `Sort` operation to sort the results, which means building a collection in memory and running a sort algorithm on it.
 For large result sets this can be expensive in terms of both memory and time.
-In Neo4j 3.5 and later Cypher will recognise that the index already returns data in the correct order, and skip the `Sort` operation.
+In Neo4j 3.5 and later, Cypher will recognize that the index already returns data in the correct order, and skip the `Sort` operation.
 
 The `Order` column describes the order of rows after each operator.
 We see that the `Order` column contains `p.name ASC` from the index seek operation, meaning that the rows are ordered by `p.name` in ascending order.
