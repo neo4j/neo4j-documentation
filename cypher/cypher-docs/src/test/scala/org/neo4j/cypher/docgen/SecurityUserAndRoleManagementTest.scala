@@ -46,7 +46,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           resultTable()
         }
         note {
-          p("This command is only supported for a logged in user and will return an empty result if authorization has been disabled.")
+          p("This command is only supported for a logged-in user and will return an empty result if authorization has been disabled.")
         }
       }
       section("Listing users", "administration-security-users-show") {
