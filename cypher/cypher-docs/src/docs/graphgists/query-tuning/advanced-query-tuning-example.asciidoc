@@ -209,7 +209,7 @@ RETURN min(p.name) AS name
 
 Aggregations are usually using the `EagerAggregation` operation.
 This would mean scanning all nodes in the index to find the name that is first in alphabetic order.
-Instead, the query is planned with `Projection` followed by `Limit` followed by `Optional`.
+Instead, the query is planned with `Projection`, followed by `Limit`, followed by `Optional`.
 This will simply pick the first value from the index.
 
 //profile
