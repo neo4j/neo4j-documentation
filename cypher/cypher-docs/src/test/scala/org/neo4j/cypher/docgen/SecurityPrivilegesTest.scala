@@ -165,7 +165,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         resultTable()
       }
 
-      p("It's also possible to have privileges output as revoke commands. " +
+      p("It is also possible to have privileges output as revoke commands. " +
         "For more on revoke commands, please see <<administration-security-subgraph-revoke, The REVOKE command>>.")
       query("SHOW ROLE reader PRIVILEGES AS REVOKE COMMANDS", assertPrivilegeShown(Seq(
         Map("command" -> "REVOKE GRANT ACCESS ON DATABASE * FROM `reader`"),
