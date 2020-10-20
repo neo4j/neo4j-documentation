@@ -50,6 +50,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `db.createIndex`                      | Procedure | Deprecated | Replaced by `CREATE INDEX` command.
 | `db.createNodeKey`                    | Procedure | Deprecated | Replaced by `CREATE CONSTRAINT ... IS NODE KEY` command.
 | `db.createUniquePropertyConstraint`   | Procedure | Deprecated | Replaced by `CREATE CONSTRAINT ... IS UNIQUE` command.
+| `SHOW CURRENT USER`      | Syntax     | Added     | New Cypher command for showing current logged-in user and roles.
 |===
 
 [[cypher-deprecations-additions-removals-4.1.3]]

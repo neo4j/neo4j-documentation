@@ -5,6 +5,18 @@
 
 | [source, cypher]
 ----
+SHOW CURRENT USER
+    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
+    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+----
+| List the current user.
+| None
+| `+`
+| `+`
+
+| [source, cypher]
+----
 SHOW USERS
     [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
