@@ -55,7 +55,7 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
         assert(result.toList.size === 1)
       case "show" =>
         assertStats(result)
-        assert(result.toList.size === 2)
+        assert(result.toList.size === 3)
     }
   }
 

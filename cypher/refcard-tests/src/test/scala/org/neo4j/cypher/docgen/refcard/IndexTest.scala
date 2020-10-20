@@ -52,7 +52,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
         assert(result.toList.size === 1)
       case "show" =>
         assertStats(result)
-        assert(result.toList.size === 3)
+        assert(result.toList.size === 4)
     }
   }
 
