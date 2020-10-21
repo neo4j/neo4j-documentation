@@ -37,12 +37,12 @@
 | `+`
 
 | `ownedIndexId`
-| The id of the index associated to the constraint.
+| The id of the index associated to the constraint, or `null` if no index is associated with the constraint.
 | `+`
 | `+`
 
 | `options`
-| The options passed to `CREATE` command.
+| The options passed to `CREATE` command, for the index associated to the constraint, or `null` if no index is associated with the constraint.
 |
 | `+`
 

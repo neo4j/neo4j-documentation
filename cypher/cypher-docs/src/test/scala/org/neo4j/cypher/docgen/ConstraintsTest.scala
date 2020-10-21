@@ -82,7 +82,10 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "List constraints",
       text =
         """Listing all constraints can be done with `SHOW CONSTRAINTS`, which will produce a table with the following columns:
-          |include::list-constraints-table-columns.asciidoc[]""".stripMargin,
+          |include::list-constraints-table-columns.asciidoc[]
+          |
+          |The old built-in procedures for listing constraints, such as `db.constraints`, works as before and are not affected by the
+          |<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>.""".stripMargin,
       queryText = "SHOW CONSTRAINTS",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
       optionalResultExplanation =
