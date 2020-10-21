@@ -134,7 +134,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     prepareAndTestQuery(
       title = "List indexes",
       text =
-        """Listing all indexes can be done with `SHOW INDEXES`, which will produce a table with these columns:
+        """Listing all indexes can be done with `SHOW INDEXES`, which will produce a table with the following columns:
           |include::list-indexes-table-columns.asciidoc[]""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "SHOW INDEXES",

@@ -6,47 +6,47 @@
 | Brief output
 | Verbose output
 
-| id
+| `id`
 | The id of the constraint.
 | `+`
 | `+`
 
-| name
+| `name`
 | Name of the constraint (explicitly set by the user or automatically assigned).
 | `+`
 | `+`
 
-| type
+| `type`
 | The ConstraintType of this constraint (`UNIQUENESS`, `NODE_PROPERTY_EXISTENCE`, `NODE_KEY`, or `RELATIONSHIP_PROPERTY_EXISTENCE`).
 | `+`
 | `+`
 
-| entityType
+| `entityType`
 | Type of entities this constraint represents (nodes or relationship).
 | `+`
 | `+`
 
-| labelsOrTypes
+| `labelsOrTypes`
 | The labels or relationship types of this constraint.
 | `+`
 | `+`
 
-| properties
+| `properties`
 | The properties of this constraint.
 | `+`
 | `+`
 
-| ownedIndexId
+| `ownedIndexId`
 | The id of the index associated to the constraint.
 | `+`
 | `+`
 
-| options
+| `options`
 | The options passed to `CREATE` command.
 |
 | `+`
 
-| createStatement
+| `createStatement`
 | Statement used to create the constraint.
 |
 | `+`
