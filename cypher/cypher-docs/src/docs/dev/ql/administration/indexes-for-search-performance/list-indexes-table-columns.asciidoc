@@ -6,67 +6,67 @@
 | Brief output
 | Verbose output
 
-| id
+| `id`
 | The id of the index.
 | `+`
 | `+`
 
-| name
+| `name`
 | Name of the index (explicitly set by the user or automatically assigned).
 | `+`
 | `+`
 
-| state
+| `state`
 | Current state of the index.
 | `+`
 | `+`
 
-| populationPercent
+| `populationPercent`
 | % of index population.
 | `+`
 | `+`
 
-| uniqueness
+| `uniqueness`
 | Tells if the index is only meant to allow one value per key.
 | `+`
 | `+`
 
-| type
+| `type`
 | The IndexType of this index (`BTREE` or `FULLTEXT`).
 | `+`
 | `+`
 
-| entityType
+| `entityType`
 | Type of entities this index represents (nodes or relationship).
 | `+`
 | `+`
 
-| labelsOrTypes
+| `labelsOrTypes`
 | The labels or relationship types of this index.
 | `+`
 | `+`
 
-| properties
+| `properties`
 | The properties of this index.
 | `+`
 | `+`
 
-| indexProvider
+| `indexProvider`
 | The index provider for this index.
 | `+`
 | `+`
 
-| options
+| `options`
 | The options passed to `CREATE` command.
 |
 | `+`
 
-| failureMessage
+| `failureMessage`
 | The failure description of a failed index.
 |
 | `+`
 
-| createStatement
+| `createStatement`
 | Statement used to create the index.
 |
 | `+`
