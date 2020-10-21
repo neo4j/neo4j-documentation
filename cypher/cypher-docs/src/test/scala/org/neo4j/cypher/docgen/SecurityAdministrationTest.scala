@@ -190,6 +190,10 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
+
+        p(
+          """The `SHOW INDEXES` privilege is only affecting the <administration-indexes-list-indexes, `SHOW INDEXES` command>
+            | and not the old procedures for listing indexes, such as `db.indexes`.""".stripMargin)
       }
       section("The `CONSTRAINT MANAGEMENT` privileges", "administration-security-administration-database-constraints", "enterprise-edition") {
         p(
@@ -205,6 +209,10 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
+
+        p(
+          """The `SHOW CONSTRAINTS` privilege is only affecting the <administration-constraints-list-constraint, `SHOW CONSTRAINTS` command>
+            | and not the old procedures for listing constraints, such as `db.constraints`.""".stripMargin)
       }
       section("The `NAME MANAGEMENT` privileges", "administration-security-administration-database-tokens", "enterprise-edition") {
         p(
