@@ -46,6 +46,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-remove, REMOVE>>                    | Writing     |  Remove properties and labels from nodes and relationships.
 |<<query-return, RETURN ... [AS]>>                    | Projecting   |  Defines what to include in the query result set.
 |<<query-set, SET>>                          | Writing     |  Update labels on nodes and properties on nodes and relationships.
+|<<administration-constraints-list-constraint, SHOW [ALL\|UNIQUE\|NODE EXIST[S]\|RELATIONSHIP EXIST[S]\|EXIST[S]\|NODE KEY] CONSTRAINT[S] [BRIEF\|VERBOSE [OUTPUT]]>> | Schema | List constraints in the database, either all or filtered on type.
+|<<administration-indexes-list-indexes, SHOW [ALL\|BTREE] INDEX[ES] [BRIEF\|VERBOSE [OUTPUT]]>> | Schema | List indexes in the database, either all or B-tree only.
 |<<query-skip, SKIP>>                            | Reading/Writing | A sub-clause defining from which row to start including the rows in the output.
 |<<query-union, UNION>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are removed.
 |<<query-union, UNION ALL>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are retained.
@@ -320,13 +322,13 @@ The following commands are only executable against the `system` database:
 |===
 |Name                                                                                                     | Category              | Description
 | <<administration-security-administration-database-access, ACCESS>>                                      | Database              | Determines whether a user can access a specific database.
-| <<administration-security-administration-database-all, ALL DATABASE PRIVILEGES>>                        | Database and schema   | Determines whether a user is allowed to access, create and drop indexes and constraints, create new labels, types and property names on a specific database.
+| <<administration-security-administration-database-all, ALL DATABASE PRIVILEGES>>                        | Database and schema   | Determines whether a user is allowed to access, create, drop, and list indexes and constraints, create new labels, types and property names on a specific database.
 | <<administration-security-administration-dbms-privileges-all, ALL DBMS PRIVILEGES>>                     | DBMS                  | Determines whether a user is allowed to perform role, user, database and privilege management.
 | <<administration-security-writes-all, ALL GRAPH PRIVILEGES>>                                            | GRAPH                 | Determines whether a user is allowed to perform reads and writes.
 | <<administration-security-administration-dbms-privileges-user-management, ALTER USER>>                  | DBMS                  | Determines whether the user can modify users.
 | <<administration-security-administration-dbms-privileges-privilege-management, ASSIGN PRIVILEGE>>       | DBMS                  | Determines whether the user can assign privileges using the GRANT and DENY commands.
 | <<administration-security-administration-dbms-privileges-role-management, ASSIGN ROLE>>                 | DBMS                  | Determines whether the user can grant roles.
-| <<administration-security-administration-database-constraints, CONSTRAINT MANAGEMENT>>                  | Schema                | Determines whether a user is allowed to create and drop constraints on a specific database.
+| <<administration-security-administration-database-constraints, CONSTRAINT MANAGEMENT>>                  | Schema                | Determines whether a user is allowed to create, drop, and list constraints on a specific database.
 | <<administration-security-writes-create, CREATE>>                                                       | GRAPH                 | Determines whether the user can create a new element (node, relationship or both).
 | <<administration-security-administration-database-constraints, CREATE CONSTRAINT>>                      | Schema                | Determines whether a user is allowed to create constraints on a specific database.
 | <<administration-security-administration-dbms-privileges-database-management, CREATE DATABASE>>         | DBMS                  | Determines whether the user can create new databases.
@@ -343,7 +345,7 @@ The following commands are only executable against the `system` database:
 | <<administration-security-administration-database-indexes, DROP INDEX>>                                 | Schema                | Determines whether a user is allowed to drop indexes on a specific database.
 | <<administration-security-administration-dbms-privileges-role-management, DROP ROLE>>                   | DBMS                  | Determines whether the user can delete roles.
 | <<administration-security-administration-dbms-privileges-user-management, DROP USER>>                   | DBMS                  | Determines whether the user can delete users.
-| <<administration-security-administration-database-indexes, INDEX MANAGEMENT>>                           | Schema                | Determines whether a user is allowed to create and drop indexes on a specific database.
+| <<administration-security-administration-database-indexes, INDEX MANAGEMENT>>                           | Schema                | Determines whether a user is allowed to create, drop, and list indexes on a specific database.
 | <<administration-security-reads-match, MATCH>>                                                          | GRAPH                 | Determines whether the properties of an element (node, relationship or both) can be read and the element can be found and traversed while executing queries on the specified graph.
 | <<administration-security-writes-merge, MERGE>>                                                         | GRAPH                 | Determines whether the user can find, read, create and set properties on an element (node, relationship or both).
 | <<administration-security-administration-database-tokens, NAME MANAGEMENT>>                             | Schema                | Determines whether a user is allowed to create new labels, types and property names on a specific database.
@@ -357,6 +359,8 @@ The following commands are only executable against the `system` database:
 | <<administration-security-administration-dbms-privileges-user-management, SET PASSWORDS>>               | DBMS                  | Determines whether the user can modify users' passwords and whether those passwords must be changed upon first login.
 | <<administration-security-writes-set-property, SET PROPERTY>>                                           | GRAPH                 | Determines whether the user can set a property to an element (node, relationship or both) using the SET clause.
 | <<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>>             | DBMS                  | Determines whether the user can modify the account status of users.
+| <<administration-security-administration-database-constraints, SHOW CONSTRAINT>>                        | Schema                | Determines whether the user is allowed to list constraints.
+| <<administration-security-administration-database-indexes, SHOW INDEX>>                                 | Schema                | Determines whether the user is allowed to list indexes.
 | <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>>         | DBMS                  | Determines whether the user can get information about privileges assigned to users and roles.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>                   | DBMS                  | Determines whether the user can get information about existing and assigned roles.
 | <<administration-security-administration-database-transaction, SHOW TRANSACTION>>                       | Database              | Determines whether a user is allowed to list transactions and queries.
