@@ -137,7 +137,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         """Listing all indexes can be done with `SHOW INDEXES`, which will produce a table with the following columns:
           |include::list-indexes-table-columns.asciidoc[]
           |
-          |The old built-in procedures for listing indexes, such as `db.indexes`, works as before and are not affected by the
+          |The old built-in procedures for listing indexes, such as `db.indexes`, work as before and are not affected by the
           |<<administration-security-administration-database-indexes, `SHOW INDEXES` privilege>>.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "SHOW INDEXES",
