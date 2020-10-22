@@ -138,7 +138,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           |include::list-indexes-table-columns.asciidoc[]
           |
           |The old built-in procedures for listing indexes, such as `db.indexes`, works as before and are not affected by the
-          |<administration-security-administration-database-indexes, `SHOW INDEXES` privilege>.""".stripMargin,
+          |<<administration-security-administration-database-indexes, `SHOW INDEXES` privilege>>.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "SHOW INDEXES",
       optionalResultExplanation = "To show all columns, use `SHOW INDEXES VERBOSE`. To show only `BTREE` indexes, use `SHOW BTREE INDEXES`.",
