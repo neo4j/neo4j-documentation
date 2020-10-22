@@ -41,7 +41,7 @@ For example, you can specify that the graph must contain a node for a user with 
 If there isn't a node with the correct name, a new node will be created and its name property set.
 
 [NOTE]
-For performance reasons, creating a schema index on the label or property is highly recommended when using `MERGE`.
+For performance reasons, creating a schema index on the label and property is highly recommended when using `MERGE`.
 See <<administration-indexes-search-performance>> for more information.
 
 When using `MERGE` on full patterns, the behavior is that either the whole pattern matches, or the whole pattern is created.
