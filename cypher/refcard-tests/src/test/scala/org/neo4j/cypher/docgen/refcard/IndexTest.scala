@@ -24,11 +24,14 @@ import java.util.concurrent.TimeUnit
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 import org.neo4j.graphdb.Transaction
+import org.neo4j.graphdb.schema.IndexSettingImpl.{SPATIAL_CARTESIAN_MAX, SPATIAL_CARTESIAN_MIN}
+import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 
 class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "INDEX"
   override val linkId = "administration/indexes-for-search-performance"
+  private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
 
   //noinspection RedundantDefaultArgument
   // Disable warnings for redundant default argument since its used for clarification of the `assertStats` when nothing should have happened
@@ -70,7 +73,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
         Map()
     }
 
-  def text = """
+  def text = s"""
 ###assertion=create-index
 //
 
@@ -91,10 +94,10 @@ Create an index on the label `Person` and property `age` with the name `index_na
 //
 
 CREATE INDEX FOR (p:Person) ON (p.surname)
-OPTIONS {indexProvider: 'native-btree-1.0', indexConfig: {`spatial.cartesian.min`: [-100.0, -100.0], `spatial.cartesian.max`: [100.0, 100.0]}}
+OPTIONS {indexProvider: '$nativeProvider', indexConfig: {`${SPATIAL_CARTESIAN_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_CARTESIAN_MAX.getSettingName}`: [100.0, 100.0]}}
 ###
 
-Create an index on the label `Person` and property `surname` with the index provider `native-btree-1.0` and given `spatial.cartesian` settings.
+Create an index on the label `Person` and property `surname` with the index provider `$nativeProvider` and given `spatial.cartesian` settings.
 The other index settings will have their default values.
 
 ###assertion=create-index
@@ -124,19 +127,19 @@ List all indexes.
 ###assertion=match parameters=aname
 //
 
-MATCH (n:Person) WHERE n.name = $value
+MATCH (n:Person) WHERE n.name = $$value
 
 RETURN n
 ###
 
 An index can be automatically used for the equality comparison.
-Note that for example `toLower(n.name) = $value` will not use an index.
+Note that for example `toLower(n.name) = $$value` will not use an index.
 
 ###assertion=match parameters=aname
 //
 
 MATCH (n:Person)
-WHERE n.name IN [$value]
+WHERE n.name IN [$$value]
 
 RETURN n
 ###
@@ -147,7 +150,7 @@ An index can automatically be used for the `IN` list checks.
 //
 
 MATCH (n:Person)
-WHERE n.name = $value and n.age = $value2
+WHERE n.name = $$value and n.age = $$value2
 
 RETURN n
 ###
@@ -160,7 +163,7 @@ Note that there needs to be predicates on all properties of the composite index 
 
 MATCH (n:Person)
 USING INDEX n:Person(name)
-WHERE n.name = $value
+WHERE n.name = $$value
 
 RETURN n
 ###
