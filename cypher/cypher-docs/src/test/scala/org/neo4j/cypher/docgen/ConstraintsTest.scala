@@ -25,7 +25,10 @@ import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.junit.Test
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.exceptions.CypherExecutionException
+import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.graphdb.{ConstraintViolationException, Label, RelationshipType}
+import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
+import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
 import scala.collection.JavaConverters._
 
@@ -37,6 +40,16 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
 
+  private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
+  private val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
+  private val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
+  private val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
+  private val cartesian3dMin = SPATIAL_CARTESIAN_3D_MIN.getSettingName
+  private val cartesian3dMax = SPATIAL_CARTESIAN_3D_MAX.getSettingName
+  private val wgsMin = SPATIAL_WGS84_MIN.getSettingName
+  private val wgsMax = SPATIAL_WGS84_MAX.getSettingName
+  private val wgs3dMin = SPATIAL_WGS84_3D_MIN.getSettingName
+  private val wgs3dMax = SPATIAL_WGS84_3D_MAX.getSettingName
 
   @Test def create_unique_constraint() {
     testQuery(
@@ -59,16 +72,16 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     testQuery(
       title = "Create a unique constraint with specified index provider and configuration",
       text =
-        """To create a unique constraint with a specific index provider and configuration for the backing index, the `OPTIONS` clause is used.
-          |Valid values for the index provider is `native-btree-1.0` and `lucene+native-3.0`, default if nothing is specified is `native-btree-1.0`.
-          |Valid configuration settings are `spatial.cartesian.min`, `spatial.cartesian.max`, `spatial.cartesian-3d.min`, `spatial.cartesian-3d.max`,
-          |`spatial.wgs-84.min`, `spatial.wgs-84.max`, `spatial.wgs-84-3d.min`, and `spatial.wgs-84-3d.max`.
+        s"""To create a unique constraint with a specific index provider and configuration for the backing index, the `OPTIONS` clause is used.
+          |Valid values for the index provider is `$nativeProvider` and `$nativeLuceneProvider`, default if nothing is specified is `$nativeProvider`.
+          |Valid configuration settings are `$cartesianMin`, `$cartesianMax`, `$cartesian3dMin`, `$cartesian3dMax`,
+          |`$wgsMin`, `$wgsMax`, `$wgs3dMin`, and `$wgs3dMax`.
           |Non-specified settings get their respective default values.""".stripMargin,
       queryText =
-        """CREATE CONSTRAINT constraint_with_options ON (n:Label) ASSERT n.prop IS UNIQUE
+        s"""CREATE CONSTRAINT constraint_with_options ON (n:Label) ASSERT n.prop IS UNIQUE
           |OPTIONS {
-          | indexProvider: 'lucene+native-3.0',
-          | indexConfig: {`spatial.wgs-84.min`: [-100.0, -80.0], `spatial.wgs-84.max`: [100.0, 80.0]}
+          | indexProvider: '$nativeLuceneProvider',
+          | indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}
           |}""".stripMargin,
       optionalResultExplanation = "Specifying index provider and configuration can be done individually.",
       assertions = _ => assertConstraintWithNameExists("constraint_with_options", "Label", List("prop"))
@@ -337,10 +350,10 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     testQuery(
       title = "Create a node key constraint with specified index provider",
       text =
-        """To create a node key constraint with a specific index provider for the backing index, the `OPTIONS` clause is used.
-          |Valid values for the index provider is `native-btree-1.0` and `lucene+native-3.0`, default if nothing is specified is `native-btree-1.0`.""".stripMargin,
+        s"""To create a node key constraint with a specific index provider for the backing index, the `OPTIONS` clause is used.
+          |Valid values for the index provider is `$nativeProvider` and `$nativeLuceneProvider`, default if nothing is specified is `$nativeProvider`.""".stripMargin,
       queryText =
-        """CREATE CONSTRAINT constraint_with_provider ON (n:Label) ASSERT (n.prop1) IS NODE KEY OPTIONS {indexProvider: 'native-btree-1.0'}""".stripMargin,
+        s"""CREATE CONSTRAINT constraint_with_provider ON (n:Label) ASSERT (n.prop1) IS NODE KEY OPTIONS {indexProvider: '$nativeProvider'}""".stripMargin,
       optionalResultExplanation = "Can be combined with specifying index configuration.",
       assertions = _ => assertConstraintWithNameExists("constraint_with_provider", "Label", List("prop1"))
     )
@@ -350,13 +363,13 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     testQuery(
       title = "Create a node key constraint with specified index configuration",
       text =
-        """To create a node key constraint with a specific index configuration for the backing index, the `OPTIONS` clause is used.
-          |Valid configuration settings are `spatial.cartesian.min`, `spatial.cartesian.max`, `spatial.cartesian-3d.min`, `spatial.cartesian-3d.max`,
-          |`spatial.wgs-84.min`, `spatial.wgs-84.max`, `spatial.wgs-84-3d.min`, and `spatial.wgs-84-3d.max`.
+        s"""To create a node key constraint with a specific index configuration for the backing index, the `OPTIONS` clause is used.
+          |Valid configuration settings are `$cartesianMin`, `$cartesianMax`, `$cartesian3dMin`, `$cartesian3dMax`,
+          |`$wgsMin`, `$wgsMax`, `$wgs3dMin`, and `$wgs3dMax`.
           |Non-specified settings get their respective default values.""".stripMargin,
       queryText =
-        """CREATE CONSTRAINT constraint_with_config ON (n:Label) ASSERT (n.prop2) IS NODE KEY
-          |OPTIONS {indexConfig: {`spatial.cartesian.min`: [-100.0, -100.0], `spatial.cartesian.max`: [100.0, 100.0]}}""".stripMargin,
+        s"""CREATE CONSTRAINT constraint_with_config ON (n:Label) ASSERT (n.prop2) IS NODE KEY
+          |OPTIONS {indexConfig: {`$cartesianMin`: [-100.0, -100.0], `$cartesianMax`: [100.0, 100.0]}}""".stripMargin,
       optionalResultExplanation = "Can be combined with specifying index provider.",
       assertions = _ => assertConstraintWithNameExists("constraint_with_config", "Label", List("prop2"))
     )
