@@ -104,7 +104,10 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       optionalResultExplanation =
         """To show all columns, use `SHOW CONSTRAINTS VERBOSE`.
           |To show only one type of constraint use the filtering keyword,
-          |for example to show unique constraints, use `SHOW UNIQUE CONSTRAINTS`.""".stripMargin,
+          |for example to show unique constraints, use `SHOW UNIQUE CONSTRAINTS`.
+          |
+          |One of the output columns from `SHOW CONSTRAINTS` is the name of the constraint.
+          |This can be used to drop the constraint with the <<administration-constraints-drop-constraint, `DROP CONSTRAINT` command>>.""".stripMargin,
       assertions = p => assert(p.size == 1)
     )
   }
@@ -441,8 +444,10 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Drop a constraint",
-      text = "A constraint can be dropped using the name with the `DROP CONSTRAINT constraint_name` command. " +
-        "It is the same command for unique property, property existence and node key constraints.",
+      text =
+        """A constraint can be dropped using the name with the `DROP CONSTRAINT constraint_name` command.
+          |It is the same command for unique property, property existence and node key constraints.
+          |The name of the constraint can be found using <<administration-constraints-list-constraint, `SHOW CONSTRAINTS`>>, given in the output column `name`.""".stripMargin,
       queryText = "DROP CONSTRAINT constraint_name",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
       assertions = _ => assertConstraintWithNameDoesNotExists("constraint_name")

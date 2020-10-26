@@ -154,7 +154,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           |<<administration-security-administration-database-indexes, `SHOW INDEXES` privilege>>.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "SHOW INDEXES",
-      optionalResultExplanation = "To show all columns, use `SHOW INDEXES VERBOSE`. To show only `BTREE` indexes, use `SHOW BTREE INDEXES`.",
+      optionalResultExplanation =
+        """To show all columns, use `SHOW INDEXES VERBOSE`. To show only `BTREE` indexes, use `SHOW BTREE INDEXES`.
+          |One of the output columns from `SHOW INDEXES` is the name of the index.
+          |This can be used to drop the index with the <<administration-indexes-drop-an-index, `DROP INDEX` command>>.""".stripMargin,
       assertions = p => assertEquals(3, p.size)
     )
   }
@@ -185,7 +188,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def drop_index() {
     prepareAndTestQuery(
       title = "Drop an index",
-      text = "An index on all nodes that have a label and property/properties combination can be dropped using the name with the `DROP INDEX index_name` command.",
+      text =
+        """An index on all nodes that have a label and property/properties combination can be dropped using the name with the `DROP INDEX index_name` command.
+          |The name of the index can be found using <<administration-indexes-list-indexes, `SHOW INDEXES`>>, given in the output column `name`.""".stripMargin,
       prepare = _ => executePreparationQueries(List("CREATE INDEX index_name FOR (n:Person) ON (n.surname)")),
       queryText = "DROP INDEX index_name",
       assertions = _ => assertIndexWithNameDoesNotExists("index_name")
