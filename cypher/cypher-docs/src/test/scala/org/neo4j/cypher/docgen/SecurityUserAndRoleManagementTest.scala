@@ -256,6 +256,13 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         })) {
           statsOnlyResultTable()
         }
+        note {
+          p("""The following naming rules apply:""")
+          p("""
+          |* The first character must be an ASCII alphabetic character.
+          |* Subsequent characters can be ASCII alphabetic, numeric characters, and underscore.
+          """.stripMargin)
+        }
         p("A role can also be copied, keeping its privileges, using `CREATE ROLE AS COPY OF`.")
         query("CREATE ROLE mysecondrole AS COPY OF myrole", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
