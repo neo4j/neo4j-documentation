@@ -13,7 +13,7 @@ Since full-text indexes are not automatically used by Cypher, this does not lead
 Users need to explicitly call procedures to use these indexes.
 The problem is only that if this behavior is not understood by the user, they might expect the full text index to return the same results that a different, but semantically similar, Cypher query does.
 
-==== Example with denylisted properties
+==== Example with denied properties
 
 Consider the following example.
 The database has nodes with labels `:User` and `:Person`, and these have properties `name` and `surname`.
@@ -36,7 +36,7 @@ The composite and fulltext indexes behave in different ways and are focused on d
 A key difference is that full-text indexes are backed by Lucene, and will use the Lucene syntax for querying the index.
 
 This has consequences for users restricted on the labels or properties involved in the indexes.
-Ideally, if the labels and properties in the index are denylisted, we can correctly return zero results from both native indexes and full-text indexes.
+Ideally, if the labels and properties in the index are denied, we can correctly return zero results from both native indexes and full-text indexes.
 However, there are borderline cases where this is not as simple.
 
 Imagine the following nodes were added to the database:
@@ -50,7 +50,7 @@ CREATE (:User:Person {name:'Mandy', surname:'Smith'});
 CREATE (:User:Person {name:'Joe', surname:'Andy'});
 ----
 
-Consider denylisting on the label `:Person`.
+Consider denying the label `:Person`.
 
 [source, cypher]
 ----
@@ -103,7 +103,7 @@ The steps taken by the query engine would be:
 
 This difference in results is due to the `OR` relationship between the two properties in the index creation.
 
-==== Denylisting properties
+==== Denying properties
 
 Now consider denying access on properties, like the `surname` property:
 
@@ -119,7 +119,7 @@ Now we run the same queries again:
 MATCH (n:User) WHERE n.name CONTAINS 'ndy' RETURN n.name;
 ----
 
-This query operates exactly as before, returning the same two results, because nothing in this query relates to the denylisted property.
+This query operates exactly as before, returning the same two results, because nothing in this query relates to the denied property.
 
 However, for the query targeting the composite index, things have changed.
 
@@ -128,7 +128,7 @@ However, for the query targeting the composite index, things have changed.
 MATCH (n:User) WHERE n.name CONTAINS 'ndy' AND n.surname IS NOT NULL RETURN n.name;
 ----
 
-Since the `surname` property is denylisted, it will appear to always be `null` and the composite index empty. Therefore, the query returns no result.
+Since the `surname` property is denied, it will appear to always be `null` and the composite index empty. Therefore, the query returns no result.
 
 Now consider the full-text index query:
 
@@ -145,7 +145,7 @@ We know that the earlier query returned a match for `Joe Andy` which should now 
 So, in order to never return results the user should not be able to see, we have to block all results.
 The steps taken by the query engine would be:
 
-* Determine if the full-text index includes denylisted properties
+* Determine if the full-text index includes denied properties
 * If yes, return an empty results stream, otherwise process as before
 
 The query will therefore return zero results in this case, rather than simply returning the results `Andy` and `Sandy` which might be expected.
