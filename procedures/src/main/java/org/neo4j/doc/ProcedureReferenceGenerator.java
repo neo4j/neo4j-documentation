@@ -155,7 +155,7 @@ public class ProcedureReferenceGenerator {
             this.signature = (String) row.get("signature");
             this.description = (String) row.get("description");
             this.mode = (String) row.get("mode");
-            this.roles = (List<String>) row.get("roles");
+            this.roles = (List<String>) row.get("defaultBuiltInRoles");
             this.enterpriseOnly = false;
         }
 
