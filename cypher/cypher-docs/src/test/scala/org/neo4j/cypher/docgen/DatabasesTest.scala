@@ -97,7 +97,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |* The first character must be an ASCII alphabetic character.
             |* Subsequent characters can be ASCII alphabetic (`mydatabase`), numeric characters (`mydatabase2`), dots (`main.db`), and dashes (enclosed within backticks, e.g., `CREATE DATABASE ++`main-db`++`).
             |* Names cannot end with dots or dashes.
-            |* Names that begin with an underscore and with the prefix `system` are reserved for internal use.
+            |* Names that begin with an underscore or with the prefix `system` are reserved for internal use.
           """.stripMargin)
      }
       p("When a database has been created, it will show up in the listing provided by the command `SHOW DATABASES`.")
