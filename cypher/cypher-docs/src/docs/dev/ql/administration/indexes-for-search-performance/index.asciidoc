@@ -83,7 +83,7 @@ Index provider and configuration can be specified using the `OPTIONS` clause.
 
 | [source, cypher]
 ----
-CREATE INDEX [index_name] [IF NOT EXISTS]
+CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 ON (n.propertyName_1,
     n.propertyName_2,
