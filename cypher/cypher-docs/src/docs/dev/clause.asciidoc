@@ -163,8 +163,8 @@ These comprise clauses used to manage databases, schema and security; further de
 |===
 |Clause                                                                | Description
 |<<administration-databases,CREATE \| DROP \| START \| STOP DATABASE>> | Create, drop, start or stop a database.
-|<<administration-indexes-syntax,CREATE \| DROP INDEX>>                | Create or drop a constraint pertaining to either a node label or relationship type, and a property.
-|<<administration-constraints-syntax,CREATE \| DROP CONSTRAINT>>       | Create or drop an index on all nodes with a particular label and property.
+|<<administration-indexes-syntax,CREATE \| DROP INDEX>>                | Create or drop an index on all nodes with a particular label and property.
+|<<administration-constraints-syntax,CREATE \| DROP CONSTRAINT>>       | Create or drop a constraint pertaining to either a node label or relationship type, and a property.
 |<<administration-security,Users, roles, privileges>>                  | Manage users, roles and privileges for database, graph and sub-graph access control.
 |===
 
