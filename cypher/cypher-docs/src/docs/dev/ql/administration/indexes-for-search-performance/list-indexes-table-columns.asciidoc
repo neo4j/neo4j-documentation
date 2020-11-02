@@ -1,3 +1,5 @@
+Listing all indexes can be done with `SHOW INDEXES`, which will produce a table with the following columns:
+
 .List indexes output
 [options="header", width="100%", cols="1a,4,^.^,^"]
 |===
