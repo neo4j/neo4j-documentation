@@ -1409,4 +1409,19 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       }
       )
   }
+
+  @Test def shortestPath() {
+    profileQuery(
+      title = "Shortest path",
+      text =
+        """The `ShortestPath` operator finds one or all shortest paths between two previously matches node variables.
+      """.stripMargin,
+      queryText =
+        """MATCH (andy:Person {name: 'Andy'}),(mattias:Person {name: 'Mattias'}), p = shortestPath((andy)-[*]-(mattias))
+          |RETURN p""".stripMargin,
+      assertions = p => {
+        assertThat(p.executionPlanDescription().toString, containsString("ShortestPath"))
+      }
+    )
+  }
 }

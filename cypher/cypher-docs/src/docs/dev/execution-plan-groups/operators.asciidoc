@@ -252,6 +252,8 @@ include::../ql/query-plan/project-endpoints.asciidoc[]
 
 include::../ql/query-plan/projection.asciidoc[]
 
+include::../ql/query-plan/shortest-path.asciidoc[]
+
 include::../ql/query-plan/empty-row.asciidoc[]
 
 include::../ql/query-plan/procedure-call.asciidoc[]
