@@ -94,8 +94,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     prepareAndTestQuery(
       title = "List constraints",
       text =
-        """Listing all constraints can be done with `SHOW CONSTRAINTS`, which will produce a table with the following columns:
-          |include::list-constraints-table-columns.asciidoc[]
+        """include::list-constraints-table-columns.asciidoc[]
           |
           |The old built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the
           |<<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>>.""".stripMargin,
