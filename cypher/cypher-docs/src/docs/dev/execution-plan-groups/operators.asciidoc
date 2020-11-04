@@ -1,6 +1,7 @@
 [[execution-plans-operators]]
 = Execution plan operators in detail
-:page-no-toc:
+:page-hide-toc: true
+
 [abstract]
 All operators are listed here, grouped by the similarity of their characteristics.
 
