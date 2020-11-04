@@ -346,8 +346,8 @@ The following commands are only executable against the `system` database:
 | <<administration-security-administration-dbms-privileges-role-management, DROP ROLE>>                   | DBMS                  | Determines whether the user can delete roles.
 | <<administration-security-administration-dbms-privileges-user-management, DROP USER>>                   | DBMS                  | Determines whether the user can delete users.
 | <<admin-execute-procedure-subsection, EXECUTE ADMIN PROCEDURE>>                                         | DBMS                  | Determines whether the user can execute admin procedures.
-| <<boosted-execute-procedure-subsection, EXECUTE BOOSTED FUNCTION>>                                      | DBMS                  | Determines whether the user can execute functions with elevated privileges.
-| <<boosted-execute-function-subsection, EXECUTE BOOSTED PROCEDURE>>                                      | DBMS                  | Determines whether the user can execute procedures with elevated privileges.
+| <<boosted-execute-function-subsection, EXECUTE BOOSTED FUNCTION>>                                      | DBMS                  | Determines whether the user can execute functions with elevated privileges.
+| <<boosted-execute-procedure-subsection, EXECUTE BOOSTED PROCEDURE>>                                      | DBMS                  | Determines whether the user can execute procedures with elevated privileges.
 | <<execute-function-subsection, EXECUTE FUNCTION>>                                                       | DBMS                  | Determines whether the user can execute functions.
 | <<execute-procedure-subsection, EXECUTE PROCEDURE>>                                                     | DBMS                  | Determines whether the user can execute procedures.
 | <<administration-security-administration-database-indexes, INDEX MANAGEMENT>>                           | Schema                | Determines whether a user is allowed to create, drop, and list indexes on a specific database.
