@@ -13,10 +13,12 @@ The components of the database privilege commands are:
 ** `STOP` - allows the specified database to be stopped.
 ** `CREATE INDEX` - allows indexes to be created on the specified database.
 ** `DROP INDEX` - allows indexes to be deleted on the specified database.
-** `INDEX [MANAGEMENT]` - allows indexes to be created and deleted on the specified database.
+** `SHOW INDEX` - allows indexes to be listed on the specified database.
+** `INDEX [MANAGEMENT]` - allows indexes to be created, deleted, and listed on the specified database.
 ** `CREATE CONSTRAINT` - allows constraints to be created on the specified database.
 ** `DROP CONSTRAINT` - allows constraints to be deleted on the specified database.
-** `CONSTRAINT [MANAGEMENT]` - allows constraints to be created and deleted on the specified database.
+** `SHOW CONSTRAINT` - allows constraints to be listed on the specified database.
+** `CONSTRAINT [MANAGEMENT]` - allows constraints to be created, deleted, and listed on the specified database.
 ** `CREATE NEW [NODE] LABEL` - allows labels to be created so that future nodes can be assigned them.
 ** `CREATE NEW [RELATIONSHIP] TYPE` - allows relationship types to be created, so that future relationships can be created with these types.
 ** `CREATE NEW [PROPERTY] NAME` - allows property names to be created, so that nodes and relationships can have properties with these names assigned.

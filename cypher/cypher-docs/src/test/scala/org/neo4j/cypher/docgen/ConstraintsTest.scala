@@ -446,7 +446,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text =
         """A constraint can be dropped using the name with the `DROP CONSTRAINT constraint_name` command.
           |It is the same command for unique property, property existence and node key constraints.
-          |The name of the constraint can be found using <<administration-constraints-list-constraint, `SHOW CONSTRAINTS`>>, given in the output column `name`.""".stripMargin,
+          |The name of the constraint can be found using the <<administration-constraints-list-constraint, `SHOW CONSTRAINTS` command>>, given in the output column `name`.""".stripMargin,
       queryText = "DROP CONSTRAINT constraint_name",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
       assertions = _ => assertConstraintWithNameDoesNotExists("constraint_name")
