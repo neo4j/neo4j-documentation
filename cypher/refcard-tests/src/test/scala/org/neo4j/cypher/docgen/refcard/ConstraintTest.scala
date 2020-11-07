@@ -22,11 +22,14 @@ package org.neo4j.cypher.docgen.refcard
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 import org.neo4j.graphdb.Transaction
+import org.neo4j.graphdb.schema.IndexSettingImpl.{SPATIAL_WGS84_MAX, SPATIAL_WGS84_MIN}
+import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "CONSTRAINT"
   override val linkId = "administration/constraints"
+  private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
 
   //noinspection RedundantDefaultArgument
   // Disable warnings for redundant default argument since its used for clarification of the `assertStats` when nothing should have happened
@@ -53,6 +56,9 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
       case "match" =>
         assertStats(result, nodesCreated = 0)
         assert(result.toList.size === 1)
+      case "show" =>
+        assertStats(result)
+        assert(result.toList.size === 3)
     }
   }
 
@@ -68,7 +74,7 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
         Map()
     }
 
-  def text: String = """
+  def text: String = s"""
 ###assertion=create-unique-property-constraint
 //
 
@@ -98,10 +104,10 @@ This constraint will create an accompanying index.
 
 CREATE CONSTRAINT ON (p:Person)
        ASSERT p.surname IS UNIQUE
-       OPTIONS {indexProvider: 'native-btree-1.0'}
+       OPTIONS {indexProvider: '$nativeProvider'}
 ###
 
-Create a unique property constraint on the label `Person` and property `surname` with the index provider `native-btree-1.0` for the accompanying index.
+Create a unique property constraint on the label `Person` and property `surname` with the index provider `$nativeProvider` for the accompanying index.
 
 ###assertion=create-property-existence-constraint
 //
@@ -146,7 +152,15 @@ CREATE CONSTRAINT relationship_exists ON ()-[l:LIKED]-()
 If a relationship with that type is created without a `since`, or if the `since` property is
 removed from an existing relationship with the `LIKED` type, the write operation will fail.
 
-""".concat(if (!versionFenceAllowsThisTest("3.2.9")) "" else """
+###assertion=show
+//
+
+SHOW UNIQUE CONSTRAINTS VERBOSE
+###
+
+List all unique constraints.
+
+""".concat(if (!versionFenceAllowsThisTest("3.2.9")) "" else s"""
 ###assertion=create-node-key-constraint
 //
 
@@ -178,7 +192,7 @@ is modified to violate these constraints, the write operation will fail.
 
 CREATE CONSTRAINT node_key_with_config ON (p:Person)
       ASSERT (p.name, p.age) IS NODE KEY
-      OPTIONS {indexConfig: {`spatial.wgs-84.min`: [-100.0, -100.0], `spatial.wgs-84.max`: [100.0, 100.0]}}
+      OPTIONS {indexConfig: {`${SPATIAL_WGS84_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_WGS84_MAX.getSettingName}`: [100.0, 100.0]}}
 ###
 
 (★) Create a node key constraint on the label `Person` and properties `name` and `age` with the name `node_key_with_config` and given `spatial.wgs-84` settings for the accompanying index.
