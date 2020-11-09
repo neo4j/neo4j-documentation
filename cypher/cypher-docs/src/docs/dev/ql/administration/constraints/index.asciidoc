@@ -103,14 +103,14 @@ Index provider and configuration for the backing index can be specified using th
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName) 
-ASSERT EXISTS (n.propertyName)
+ASSERT n.propertyName IS NOT NULL
 ----
 | [enterprise-edition]#Create a node property existence constraint.#
 | [source, cypher]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON ()-[R:RELATIONSHIP_TYPE]-() 
-ASSERT EXISTS (R.propertyName)
+ASSERT R.propertyName IS NOT NULL
 ----
 | [enterprise-edition]#Create a relationship property existence constraint.#
 | [source, cypher]

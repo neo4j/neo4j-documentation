@@ -107,7 +107,7 @@ Create a unique property constraint on the label `Person` and property `surname`
 //
 
 CREATE CONSTRAINT ON (p:Person)
-       ASSERT exists(p.name)
+       ASSERT p.name IS NOT NULL
 ###
 
 (★) Create a node property existence constraint on the label `Person` and property `name`, throws an error if the constraint already exists.
@@ -118,7 +118,7 @@ removed from an existing node with the `Person` label, the write operation will 
 //
 
 CREATE CONSTRAINT node_exists IF NOT EXISTS ON (p:Person)
-       ASSERT exists(p.name)
+       ASSERT p.name IS NOT NULL
 ###
 
 (★) If a node property existence constraint on the label `Person` and property `name` or any constraint with the name `node_exists` already exist then nothing happens.
@@ -128,7 +128,7 @@ If no such constraint exists, then it will be created.
 //
 
 CREATE CONSTRAINT ON ()-[l:LIKED]-()
-       ASSERT exists(l.when)
+       ASSERT l.when IS NOT NULL
 ###
 
 (★) Create a relationship property existence constraint on the type `LIKED` and property `when`.
@@ -139,7 +139,7 @@ removed from an existing relationship with the `LIKED` type, the write operation
 //
 
 CREATE CONSTRAINT relationship_exists ON ()-[l:LIKED]-()
-       ASSERT exists(l.since)
+       ASSERT l.since IS NOT NULL
 ###
 
 (★) Create a relationship property existence constraint on the type `LIKED` and property `since` with the name `relationship_exists`.
