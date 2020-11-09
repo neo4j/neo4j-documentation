@@ -145,10 +145,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def list_indexes() {
     prepareAndTestQuery(
-      title = "List indexes",
+      title = "`SHOW INDEXES`",
       text =
-        """include::list-indexes-table-columns.asciidoc[]
-          |
+        """
           |The old built-in procedures for listing indexes, such as `db.indexes`, work as before and are not affected by the
           |<<administration-security-administration-database-indexes, `SHOW INDEXES` privilege>>.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
