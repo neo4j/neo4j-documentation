@@ -89,7 +89,7 @@ public class JUnitDocIT
         // When I create property existence constraint
         try ( Transaction tx = db.beginTx() )
         {
-            try ( Result result = tx.execute( "CREATE CONSTRAINT ON (user:User) ASSERT exists(user.name)" ) )
+            try ( Result result = tx.execute( "CREATE CONSTRAINT ON (user:User) ASSERT user.name IS NOT NULL" ) )
             {
                 // nothing to-do
             }
