@@ -145,7 +145,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def list_indexes() {
     prepareAndTestQuery(
-      title = "`SHOW INDEXES`",
+      title = "Options for listing indexes",
       text =
         """
           |The old built-in procedures for listing indexes, such as `db.indexes`, work as before and are not affected by the

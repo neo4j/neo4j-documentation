@@ -284,7 +284,7 @@ Listing all indexes can be done with `SHOW INDEXES`, which will produce a table 
 |===
 
 
-include::../indexes/list-indexes.asciidoc[leveloffset=+2]
+include::../indexes/options-for-listing-indexes.asciidoc[leveloffset=+2]
 
 [role=deprecated]
 [[administration-indexes-examples-deprecated-syntax]]
