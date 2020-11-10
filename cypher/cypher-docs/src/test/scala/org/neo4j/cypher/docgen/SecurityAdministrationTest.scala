@@ -75,7 +75,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       p("include::database/admin-role-database.asciidoc[]")
       p("include::database/admin-database-syntax.asciidoc[]")
       p("image::grant-privileges-database.png[title=\"Syntax of GRANT and DENY Database Privileges\"]")
-      // image source: https://docs.google.com/drawings/d/1ukniqD0-LPYm5Xw0PrdXdp66Hbmt3xKElBZ8kIbkdYc/edit?usp=sharing
+      // image source: https://docs.google.com/drawings/d/1OEo-s6zv0psAR16DOm61Du1iQRhyQsIFL6llDq0jgJk/edit?usp=sharing
       section("The database `ACCESS` privilege", "administration-security-administration-database-access", "enterprise-edition") {
         p(
           """The `ACCESS` privilege enables users to connect to a database.
@@ -261,6 +261,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       p(
         """All DBMS privileges are relevant system-wide. Like user management, they do not belong to one specific database or graph.
           |For more details on the differences between graphs, databases and the DBMS, refer to <<neo4j-databases-graphs>>.""".stripMargin)
+      p("image::grant-privileges-dbms.png[title=\"Syntax of GRANT and DENY DBMS Privileges\"]")
+      // image source: https://docs.google.com/drawings/d/1rr_sDbfi29n18pdFE_utoFoIMZTlrhPLju8Wl1TFmtM/edit?usp=sharing
       p("include::dbms/admin-role-dbms.asciidoc[]")
 
       section("Using a custom role to manage DBMS privileges", "administration-security-administration-dbms-custom", "enterprise-edition") {
