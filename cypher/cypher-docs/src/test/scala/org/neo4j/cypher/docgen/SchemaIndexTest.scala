@@ -29,6 +29,9 @@ import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
 import org.neo4j.cypher.internal.util.Foldable.FoldableAny
 import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
 import org.neo4j.graphdb.Label
+import org.neo4j.graphdb.schema.IndexSettingImpl._
+import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
+import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
 import scala.collection.JavaConverters._
 
@@ -111,19 +114,29 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def create_composite_index_with_options() {
+    val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
+    val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
+    val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
+    val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
+    val cartesian3dMin = SPATIAL_CARTESIAN_3D_MIN.getSettingName
+    val cartesian3dMax = SPATIAL_CARTESIAN_3D_MAX.getSettingName
+    val wgsMin = SPATIAL_WGS84_MIN.getSettingName
+    val wgsMax = SPATIAL_WGS84_MAX.getSettingName
+    val wgs3dMin = SPATIAL_WGS84_3D_MIN.getSettingName
+    val wgs3dMax = SPATIAL_WGS84_3D_MAX.getSettingName
     testQuery(
       title = "Create a composite index with specified index provider and configuration",
       text =
-        """To create a composite index with a specific index provider and configuration, the `OPTIONS` clause is used.
-          |Valid values for the index provider is `native-btree-1.0` and `lucene+native-3.0`, default if nothing is specified is `native-btree-1.0`.
-          |Valid configuration settings are `spatial.cartesian.min`, `spatial.cartesian.max`, `spatial.cartesian-3d.min`, `spatial.cartesian-3d.max`,
-          |`spatial.wgs-84.min`, `spatial.wgs-84.max`, `spatial.wgs-84-3d.min`, and `spatial.wgs-84-3d.max`.
+        s"""To create a composite index with a specific index provider and configuration, the `OPTIONS` clause is used.
+          |Valid values for the index provider is `$nativeProvider` and `$nativeLuceneProvider`, default if nothing is specified is `$nativeProvider`.
+          |Valid configuration settings are `$cartesianMin`, `$cartesianMax`, `$cartesian3dMin`, `$cartesian3dMax`,
+          |`$wgsMin`, `$wgsMax`, `$wgs3dMin`, and `$wgs3dMax`.
           |Non-specified settings get their respective default values.""".stripMargin,
       queryText =
-        """CREATE INDEX index_with_options FOR (n:Label) ON (n.prop1, n.prop2)
+        s"""CREATE INDEX index_with_options FOR (n:Label) ON (n.prop1, n.prop2)
           |OPTIONS {
-          | indexProvider: 'lucene+native-3.0',
-          | indexConfig: {`spatial.wgs-84.min`: [-100.0, -80.0], `spatial.wgs-84.max`: [100.0, 80.0]}
+          | indexProvider: '$nativeLuceneProvider',
+          | indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}
           |}""".stripMargin,
       optionalResultExplanation = "Specifying index provider and configuration can be done individually.",
       assertions = _ => assertIndexWithNameExists("index_with_options", "Label", List("prop1", "prop2"))
@@ -133,11 +146,18 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def list_indexes() {
     prepareAndTestQuery(
       title = "List indexes",
-      text = "Calling the built-in procedure `db.indexes` will list all indexes, including their names.",
+      text =
+        """include::list-indexes-table-columns.asciidoc[]
+          |
+          |The old built-in procedures for listing indexes, such as `db.indexes`, work as before and are not affected by the
+          |<<administration-security-administration-database-indexes, `SHOW INDEXES` privilege>>.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
-      queryText = "CALL db.indexes",
-      optionalResultExplanation = "",
-      assertions = (p) => assertEquals(3, p.size)
+      queryText = "SHOW INDEXES",
+      optionalResultExplanation =
+        """To show all columns, use `SHOW INDEXES VERBOSE`. To show only `BTREE` indexes, use `SHOW BTREE INDEXES`.
+          |One of the output columns from `SHOW INDEXES` is the name of the index.
+          |This can be used to drop the index with the <<administration-indexes-drop-an-index, `DROP INDEX` command>>.""".stripMargin,
+      assertions = p => assertEquals(3, p.size)
     )
   }
 
@@ -167,7 +187,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def drop_index() {
     prepareAndTestQuery(
       title = "Drop an index",
-      text = "An index on all nodes that have a label and property/properties combination can be dropped using the name with the `DROP INDEX index_name` command.",
+      text =
+        """An index on all nodes that have a label and property/properties combination can be dropped using the name with the `DROP INDEX index_name` command.
+          |The name of the index can be found using the <<administration-indexes-list-indexes, `SHOW INDEXES` command>>, given in the output column `name`.""".stripMargin,
       prepare = _ => executePreparationQueries(List("CREATE INDEX index_name FOR (n:Person) ON (n.surname)")),
       queryText = "DROP INDEX index_name",
       assertions = _ => assertIndexWithNameDoesNotExists("index_name")
