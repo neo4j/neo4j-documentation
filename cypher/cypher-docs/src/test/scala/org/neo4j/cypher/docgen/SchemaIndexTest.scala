@@ -132,8 +132,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def list_indexes() {
     prepareAndTestQuery(
-      title = "List indexes",
-      text = "Calling the built-in procedure `db.indexes` will list all indexes, including their names.",
+      title = "Options for listing indexes",
+      text =
+        """
+          |The old built-in procedures for listing indexes, such as `db.indexes`, work as before and are not affected by the
+          |<<administration-security-administration-database-indexes, `SHOW INDEXES` privilege>>.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "CALL db.indexes",
       optionalResultExplanation = "",

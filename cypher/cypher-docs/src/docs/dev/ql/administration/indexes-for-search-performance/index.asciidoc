@@ -45,7 +45,7 @@ Cypher enables the creation of indexes on one or more properties for all nodes t
 
 Differences in the usage patterns between composite and single-property indexes are described in <<administration-indexes-single-vs-composite-index>>.
 
-The following is true for indexes: 
+The following is true for indexes:
 
 * Best practice is to give the index a name when it is created.
 If the index is not explicitly named, it will get an auto-generated name.
@@ -105,8 +105,8 @@ With `IF EXISTS`, no error is thrown and nothing happens should the index not ex
 ----
 CALL db.indexes
 ----
-| List all indexes in the database. 
-| 
+| List indexes in the database, either all or B-tree only.
+|
 
 | [source, cypher]
 ----
@@ -122,7 +122,7 @@ n.propertyName_2,
 …
 n.propertyName_n)
 ----
-| Drop a composite index without specifying a name. 
+| Drop a composite index without specifying a name.
 |===
 
 <<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).
@@ -205,7 +205,86 @@ include::../indexes/drop-an-index.asciidoc[leveloffset=+1]
 
 include::../indexes/drop-a-non-existing-index.asciidoc[leveloffset=+1]
 
-include::../indexes/list-indexes.asciidoc[leveloffset=+1]
+=== List indexes
+
+Listing all indexes can be done with `SHOW INDEXES`, which will produce a table with the following columns:
+
+.List indexes output
+[options="header", width="100%", cols="1a,4,^.^,^"]
+|===
+| Column
+| Description
+| Brief output
+| Verbose output
+
+| `id`
+| The id of the index.
+| `+`
+| `+`
+
+| `name`
+| Name of the index (explicitly set by the user or automatically assigned).
+| `+`
+| `+`
+
+| `state`
+| Current state of the index.
+| `+`
+| `+`
+
+| `populationPercent`
+| % of index population.
+| `+`
+| `+`
+
+| `uniqueness`
+| Tells if the index is only meant to allow one value per key.
+| `+`
+| `+`
+
+| `type`
+| The IndexType of this index (`BTREE` or `FULLTEXT`).
+| `+`
+| `+`
+
+| `entityType`
+| Type of entities this index represents (nodes or relationship).
+| `+`
+| `+`
+
+| `labelsOrTypes`
+| The labels or relationship types of this index.
+| `+`
+| `+`
+
+| `properties`
+| The properties of this index.
+| `+`
+| `+`
+
+| `indexProvider`
+| The index provider for this index.
+| `+`
+| `+`
+
+| `options`
+| The options passed to `CREATE` command.
+|
+| `+`
+
+| `failureMessage`
+| The failure description of a failed index.
+|
+| `+`
+
+| `createStatement`
+| Statement used to create the index.
+|
+| `+`
+|===
+
+
+include::../indexes/options-for-listing-indexes.asciidoc[leveloffset=+2]
 
 [role=deprecated]
 [[administration-indexes-examples-deprecated-syntax]]
