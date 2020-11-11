@@ -80,6 +80,14 @@ Grant privilege to drop indexes on a specified database to a role.
 ###assertion=update-one
 //
 
+GRANT SHOW INDEX ON DATABASE * TO my_role
+###
+
+Grant privilege to show indexes on all databases to a role.
+
+###assertion=update-one
+//
+
 DENY INDEX MANAGEMENT ON DATABASE bar TO my_role
 ###
 
@@ -100,6 +108,14 @@ DENY DROP CONSTRAINT ON DATABASE * TO my_role
 ###
 
 Deny privilege to drop constraints on all databases to a role.
+
+###assertion=update-one
+//
+
+DENY SHOW CONSTRAINT ON DATABASE foo TO my_role
+###
+
+Deny privilege to show constraints on a specified database to a role.
 
 ###assertion=update-two
 //

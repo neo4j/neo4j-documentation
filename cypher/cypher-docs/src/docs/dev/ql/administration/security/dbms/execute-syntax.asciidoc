@@ -16,7 +16,7 @@ GRANT EXECUTE BOOSTED PROCEDURE[S] name-globbing[,...]
 | Enable the specified roles to execute the given procedures with elevated privileges.
 
 | [source, cypher]
-GRANT ADMIN[ISTRATOR] PROCEDURES
+GRANT EXECUTE ADMIN[ISTRATOR] PROCEDURES
     ON DBMS
     TO role[, ...]
 | Enable the specified roles to execute procedures annotated with `@Admin`.
