@@ -144,6 +144,8 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-let-select-or-anti-semi-apply, LetSelectOrAntiSemiApply>>     | Performs a nested loop. Tests for the absence of a pattern predicate that is combined with other predicates. | | |
 | <<query-plan-let-semi-apply, LetSemiApply>>                                | Performs a nested loop. Tests for the presence of a pattern predicate in queries containing multiple pattern predicates. | | |
 | <<query-plan-limit, Limit>>                                                | Returns the first 'n' rows from the incoming input. | | |
+| <<query-plan-list-constraints, ListConstraints>>                           | List constraints with either verbose of brief output. | Y | |
+| <<query-plan-list-indexes, ListIndexes>>                                   | List indexes with either verbose of brief output. | Y | |
 | <<query-plan-load-csv, LoadCSV>>                                                  | Loads data from a CSV source into the query. | Y | |
 | <<query-plan-lock-nodes, LockNodes>>                                                | Locks the start and end node when creating a relationship. | | |
 | <<query-plan-merge-create-node, MergeCreateNode>>            | Creates the node when failing to find the node. | Y | Y |
@@ -248,8 +250,10 @@ We list below all the actions that trigger one or more database hits:
 ** Add an index
 ** Drop an index
 ** Get the reference of an index
+** Listing indexes
 ** Create a constraint
 ** Drop a constraint
+** Listing constraints
 
 * Call a procedure
 * Call a user-defined function
