@@ -144,8 +144,6 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-let-select-or-anti-semi-apply, LetSelectOrAntiSemiApply>>     | Performs a nested loop. Tests for the absence of a pattern predicate that is combined with other predicates. | | |
 | <<query-plan-let-semi-apply, LetSemiApply>>                                | Performs a nested loop. Tests for the presence of a pattern predicate in queries containing multiple pattern predicates. | | |
 | <<query-plan-limit, Limit>>                                                | Returns the first 'n' rows from the incoming input. | | |
-| <<query-plan-list-constraints, ListConstraints>>                           | List constraints with either verbose of brief output. | Y | |
-| <<query-plan-list-indexes, ListIndexes>>                                   | List indexes with either verbose of brief output. | Y | |
 | <<query-plan-load-csv, LoadCSV>>                                                  | Loads data from a CSV source into the query. | Y | |
 | <<query-plan-lock-nodes, LockNodes>>                                                | Locks the start and end node when creating a relationship. | | |
 | <<query-plan-merge-create-node, MergeCreateNode>>            | Creates the node when failing to find the node. | Y | Y |
@@ -184,6 +182,8 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-set-node-properties-from-map, SetNodePropertiesFromMap>>          | Sets properties from a map on a node. | | Y |
 | <<query-plan-set-property, SetProperty>>          | Sets a property on a node or relationship. | | Y |
 | <<query-plan-set-relationship-properties-from-map, SetRelationshipPropertiesFromMap>>    | Sets properties from a map on a relationship. | | Y |
+| <<query-plan-list-constraints, ShowConstraints>>                           | List constraints with either verbose of brief output. | Y | |
+| <<query-plan-list-indexes, ShowIndexes>>                                   | List indexes with either verbose of brief output. | Y | |
 | <<query-plan-skip, Skip>>                                                  | Skips 'n' rows from the incoming rows. | | |
 | <<query-plan-sort, Sort>>                                                  | Sorts rows by a provided key. | | | Eager
 | <<query-plan-top, Top>>                                                    | Returns the first 'n' rows sorted by a provided key. | | | Eager
