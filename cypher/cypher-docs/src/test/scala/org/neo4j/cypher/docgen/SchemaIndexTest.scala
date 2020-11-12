@@ -145,16 +145,16 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def list_indexes() {
     prepareAndTestQuery(
-      title = "Options for listing indexes",
+      title = "Example for listing indexes",
       text =
         """
-          |The old built-in procedures for listing indexes, such as `db.indexes`, work as before and are not affected by the
-          |<<administration-security-administration-database-indexes, `SHOW INDEXES` privilege>>.""".stripMargin,
+          |To list all indexes with the brief output columns, the `SHOW INDEXES` command can be used.
+          |Filtering the output on index type is available for `BTREE` indexes, using `SHOW BTREE INDEXES`.
+          |If all columns are wanted, use `SHOW INDEXES VERBOSE`.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "SHOW INDEXES",
       optionalResultExplanation =
-        """To show all columns, use `SHOW INDEXES VERBOSE`. To show only `BTREE` indexes, use `SHOW BTREE INDEXES`.
-          |One of the output columns from `SHOW INDEXES` is the name of the index.
+        """One of the output columns from `SHOW INDEXES` is the name of the index.
           |This can be used to drop the index with the <<administration-indexes-drop-an-index, `DROP INDEX` command>>.""".stripMargin,
       assertions = p => assertEquals(3, p.size)
     )
