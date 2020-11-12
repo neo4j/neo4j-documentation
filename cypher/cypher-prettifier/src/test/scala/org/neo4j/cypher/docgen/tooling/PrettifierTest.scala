@@ -109,6 +109,12 @@ class PrettifierTest extends Suite
     )
   }
 
+  test("should not break CREATE CONSTRAINT ... IS NOT NULL") {
+    actual("create constraint on (person:Person) assert person.age is not null") should equal(
+      expected("CREATE CONSTRAINT ON (person:Person) ASSERT person.age IS NOT NULL")
+    )
+  }
+
   test("should not break DROP CONSTRAINT by name") {
     actual("drop constraint name") should equal(
       expected("DROP CONSTRAINT name")
