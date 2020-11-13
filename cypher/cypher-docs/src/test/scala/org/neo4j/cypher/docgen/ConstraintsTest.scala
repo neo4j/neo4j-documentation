@@ -26,7 +26,9 @@ import org.junit.Test
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.exceptions.CypherExecutionException
 import org.neo4j.graphdb.schema.IndexSettingImpl._
-import org.neo4j.graphdb.{ConstraintViolationException, Label, RelationshipType}
+import org.neo4j.graphdb.ConstraintViolationException
+import org.neo4j.graphdb.Label
+import org.neo4j.graphdb.RelationshipType
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
@@ -96,7 +98,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text =
         """include::list-constraints-table-columns.asciidoc[]
           |
-          |The old built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the
+          |Note that the old deprecated built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the
           |<<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>>.""".stripMargin,
       queryText = "SHOW CONSTRAINTS",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
