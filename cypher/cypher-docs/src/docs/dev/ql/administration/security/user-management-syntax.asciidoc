@@ -46,6 +46,7 @@ CREATE USER name [IF NOT EXISTS]
   SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
+  [SET DEFAULT DATABASE databaseName]
 ----
 | Create a new user.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>>
@@ -58,6 +59,7 @@ CREATE OR REPLACE USER name
   SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
+  [SET DEFAULT DATABASE databaseName]
 ----
 | Create a new user, or if a user with the same name exists, replace it.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>> and
@@ -74,10 +76,12 @@ ALTER USER name SET {
 PASSWORD CHANGE [NOT] REQUIRED
             [SET STATUS {ACTIVE \| SUSPENDED}] \|
 STATUS {ACTIVE \| SUSPENDED}
+            [SET DEFAULT DATABASE databaseName]
 ----
 | Modify the settings for an existing user.
-| <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>> and/or
-<<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>>
+| <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>>,
+<<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>> and/or
+<<administration-security-administration-dbms-privileges-user-management, SET USER DEFAULT DATABASE>>
 | `+`
 | `+`
 
