@@ -19,7 +19,9 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import org.neo4j.cypher.internal.parser.{Base, Strings, WSChar}
+import org.neo4j.cypher.internal.parser.Base
+import org.neo4j.cypher.internal.parser.Strings
+import org.neo4j.cypher.internal.parser.WSChar
 import org.neo4j.exceptions.SyntaxException
 import org.parboiled.scala._
 
@@ -94,7 +96,8 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("BRIEF OUTPUT") |
         keyword("BRIEF") |
         keyword("VERBOSE OUTPUT") |
-        keyword("VERBOSE")
+        keyword("VERBOSE") |
+        keyword("OPTIONS")
     ) ~> NonBreakingKeywords
   }
 

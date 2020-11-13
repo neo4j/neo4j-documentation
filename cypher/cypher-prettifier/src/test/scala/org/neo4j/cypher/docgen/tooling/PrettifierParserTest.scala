@@ -19,6 +19,9 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MAX
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MIN
+import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 import org.parboiled.scala.Rule1
 
 class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxToken]] {
@@ -66,6 +69,26 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
         Seq(AnyText("person:Person"))), NonBreakingKeywords("assert"), AnyText("person.age"), NonBreakingKeywords("is unique"))
   }
 
+  test("shouldParseCreateConstraintWithOptions") {
+    // given
+    val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
+    val query = s"create constraint on (person:Person) assert person.age is unique options {indexProvider: '$nativeProvider'}"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create constraint on"), GroupToken("(", ")", Seq(AnyText("person:Person"))), NonBreakingKeywords("assert"), AnyText("person.age"),
+        NonBreakingKeywords("is unique"), NonBreakingKeywords("options"), GroupToken("{", "}", Seq(AnyText("indexProvider:"), EscapedText(nativeProvider, '\''))))
+  }
+
+  test("shouldParseDropConstraintByName") {
+    // given
+    val query = "drop constraint name"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("drop constraint"), AnyText("name"))
+  }
+
   test("shouldParseShowConstraints") {
     // given
     Seq(
@@ -82,15 +105,6 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     }
   }
 
-  test("shouldParseDropConstraintByName") {
-    // given
-    val query = "drop constraint name"
-
-    // when then
-    parsing(query) shouldGive
-      Seq(BreakingKeywords("drop constraint"), AnyText("name"))
-  }
-
   test("shouldParseCreateIndexWithName") {
     // given
     val query = "create index name for (person:Person) on (person.age)"
@@ -99,6 +113,23 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     parsing(query) shouldGive
       Seq(BreakingKeywords("create index"), AnyText("name"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq(AnyText("person:Person"))),
         BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))))
+  }
+
+  test("shouldParseCreateIndexWithOptions") {
+    // given
+    val wgsMin = SPATIAL_WGS84_MIN.getSettingName
+    val wgsMax = SPATIAL_WGS84_MAX.getSettingName
+    val query = s"create index for (person:Person) on (person.age) options {indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}}"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create index"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq(AnyText("person:Person"))), BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))),
+        NonBreakingKeywords("options"), GroupToken("{", "}", Seq(AnyText("indexConfig:"), GroupToken("{", "}", Seq(
+          AnyText(s"`$wgsMin`:"), GroupToken("[", "]", Seq(AnyText("-100.0,"), AnyText("-80.0"))),
+          Comma,
+          AnyText(s"`$wgsMax`:"), GroupToken("[", "]", Seq(AnyText("100.0,"), AnyText("80.0")))
+        ))))
+      )
   }
 
   test("shouldParseDropIndexByNameIfExists") {
