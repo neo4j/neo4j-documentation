@@ -34,6 +34,12 @@ GRANT SET USER STATUS
 | Enable the specified roles to modify the account status of users.
 
 | [source, cypher]
+GRANT SET USER DEFAULT DATABASE
+ON DBMS
+TO role[, ...]
+| Enable the specified roles to modify a user's default database.
+
+| [source, cypher]
 GRANT SHOW USER
 ON DBMS
 TO role[, ...]
