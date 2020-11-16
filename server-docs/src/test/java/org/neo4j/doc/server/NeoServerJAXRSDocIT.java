@@ -79,6 +79,7 @@ public class NeoServerJAXRSDocIT extends ExclusiveWebContainerTestBase
                 .withThirdPartyJaxRsPackage( "org.dummy.doc.web.service",
                         DummyThirdPartyWebService.DUMMY_WEB_SERVICE_MOUNT_POINT )
                 .usingDataDir( new File( folder, name.getMethodName() ).getAbsolutePath() )
+                .onRandomPorts()
                 .build();
 
         URI thirdPartyServiceUri = new URI( webContainer.getBaseUri()
