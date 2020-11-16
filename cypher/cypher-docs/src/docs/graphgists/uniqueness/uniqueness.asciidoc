@@ -1,34 +1,107 @@
 [[cypher-result-uniqueness]]
-= Cypher Result Uniqueness
+= Cypher path matching
 
-While pattern matching, Neo4j Cypher makes sure to not include matches where the same graph relationship is found multiple times in a single path matching a particular pattern.
-This is called _relationship isomorphism_ and is a very effective way of reducing the result set size and preventing infinite traversals.
-To understand this better, let's consider a few alternative options for uniqueness:
+:description: Cypher path matching uses relationship isomorphis, the same relationship cannot be returned more than once in the same result record. 
 
-* _homomorphism_
-** No uniqueness checks are made.
-If the query is looking for paths of length `n` and the graph is composed of only two nodes `a` and `b`, connected by one relationship, a path of length `n` will be returned repeating the two nodes over and over.
-For example `MATCH p=()-[*5]-() RETURN nodes(p)` could return `[a,b,a,b,a,b]` as well as `[b,a,b,a,b,a]`.
-* _node isomoprphism_
-** The same node cannot be returned more than once in the same result record. In the above two-node example, only paths of length 1 can be found. The path `[a,b,a]` would be filtered out because of duplication of node `b`, as would any other paths longer than length 1.
-* _relationship isomorphism_
-** The same relationship cannot be returned more than once in the same result record. In the above two-node example, only paths of length 1 can be found. The single relationship between `a` and `b` can only exist once in the path result.
 
-As can be seen in the above examples, in the case of variable length pattern expressions, it is particularly important to have a uniqueness check, or an infinite number of result records could be found.
+While pattern matching, **Neo4j Cypher** makes sure to not include matches where the same graph relationship is found multiple times in a single path matching a particular pattern.
 
-Cypher makes use of _relationship isomorphism_.
-For example: looking for a user's friends of friends should not return said user.
+Neo4j Cypher makes use of **relationship isomorphism** for path matching and is a very effective way of reducing the result set size and preventing infinite traversals.
+
+[NOTE]
+====
+In Neo4j all relationships have a direction.
+However, you can have the notion of undirected relationships at query time.
+====
+
+In the case of variable length pattern expressions, it is particularly important to have a constraint check, or an infinite number of result records could be found.
+
+To understand this better, let us consider a few alternative options:
+
+
+== Homomorphism
+
+**Constraints:** No constraints for path matching.
+
+
+.Homomorphism
+====
+The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `(a)&#x2D;&#x2D;&#x3E;(b)`.
+
+If the query is looking for paths of length `n` and do not care about the direction, a path of length `n` will be returned repeating the two nodes over and over.
+
+For example, find all paths with 5 relationships and do not care about the relationship direction.
+
+[source, cypher]
+----
+MATCH p=()-[*5]-() RETURN nodes(p)
+----
+
+could return the two resulting records `[a,b,a,b,a,b]` as well as `[b,a,b,a,b,a]`.
+====
+
+
+== Node isomorphism
+
+**Constraints:** The same node cannot be returned more than once for each path matching record.
+
+In the above two-node example, `(a)&#x2D;&#x2D;&#x3E;(b)`, only paths of length 1 can be found with the node isomorphism constraint.
+
+
+.Node isomorphism
+====
+The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `(a)&#x2D;&#x2D;&#x3E;(b)`.
+
+[source, cypher]
+----
+MATCH p=()-[*1]-() RETURN nodes(p)
+----
+
+could return the two resulting records `[a, b]` as well as `[b, a]`.
+====
+
+
+== Relationship isomorphism
+
+**Constraints:** The same relationship cannot be returned more than once for each path matching record.
+
+In the above two-node example, `(a)&#x2D;&#x2D;&#x3E;(b)`, only paths of length 1 can be found with the relationship isomorphism constraint.
+
+
+.Relationship isomorphism
+====
+The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `(a)&#x2D;&#x2D;&#x3E;(b)`.
+
+[source, cypher]
+----
+MATCH p=()-[*1]-() RETURN nodes(p)
+----
+
+could return the two resulting records `[a, b]` as well as `[b, a]`.
+====
+
+
+== Cypher path matching examples
+
+Cypher makes use of relationship isomorphism for path matching.
+
+
+.Friend of friends
+====
+Looking for a user's friends of friends should not return said user.
 
 To demonstrate this, let's create a few nodes and relationships:
+
+**Query 1, create data.**
 
 //setup
 [source, cypher]
 ----
 CREATE (adam:User {name: 'Adam'}),
-  (pernilla:User {name: 'Pernilla'}),
-  (david:User {name: 'David'}),
-  (adam)-[:FRIEND]->(pernilla),
-  (pernilla)-[:FRIEND]->(david)
+(pernilla:User {name: 'Pernilla'}),
+(david:User {name: 'David'}),
+(adam)-[:FRIEND]->(pernilla),
+(pernilla)-[:FRIEND]->(david)
 ----
 
 [source, querytest]
@@ -44,7 +117,10 @@ Which gives us the following graph:
 
 //console
 
+
 Now let's look for friends of friends of Adam:
+
+**Query 2, friend of friends of Adam.**
 
 [source, cypher]
 ----
@@ -65,6 +141,8 @@ In this query, Cypher makes sure to not return matches where the pattern relatio
 This is however not always desired.
 If the query should return the user, it is possible to spread the matching over multiple `MATCH` clauses, like so:
 
+**Query 3, multiple MATCH clauses.**
+
 [source, cypher]
 ----
 MATCH (user:User {name: 'Adam'})-[r1:FRIEND]-(friend)
@@ -81,7 +159,9 @@ Adam
 
 //table
 
-Note that while the following query looks similar to the previous one, it is actually equivalent to the one before.
+Note that while the following query (Query 4) looks similar to the previous one (Query 3), it is actually equivalent to the one before (Query 2).
+
+**Query 4, equvilent to query 2.**
 
 [source, cypher]
 ----
@@ -101,5 +181,4 @@ David
 
 //table
 
-
-
+====
