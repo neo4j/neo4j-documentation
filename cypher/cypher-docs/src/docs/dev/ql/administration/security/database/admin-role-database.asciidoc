@@ -22,9 +22,9 @@ The components of the database privilege commands are:
 ** `CREATE NEW [PROPERTY] NAME` - allows property names to be created, so that nodes and relationships can have properties with these names assigned.
 ** `NAME [MANAGEMENT]` - allows all of the name management capabilities: node labels, relationship types, and property names.
 ** `ALL [[DATABASE] PRIVILEGES]` - allows access, index, constraint, and name management for the specified database.
-** `SHOW TRANSACTION {* | user[, ...]}` -  allows listing transactions and queries for the specified users on the specified database.
-** `TERMINATE TRANSACTION {* | user[, ...]}` - allows ending transactions and queries for the specified users on the specified database.
-** `TRANSACTION [MANAGEMENT] {* | user[, ...]}` - allows listing and ending transactions and queries for the specified users on the specified database.
+** `SHOW TRANSACTION (* | user[, ...])` -  allows listing transactions and queries for the specified users on the specified database.
+** `TERMINATE TRANSACTION (* | user[, ...])` - allows ending transactions and queries for the specified users on the specified database.
+** `TRANSACTION [MANAGEMENT] (* | user[, ...])` - allows listing and ending transactions and queries for the specified users on the specified database.
 
 * _name_
 ** The database to associate the privilege with.
