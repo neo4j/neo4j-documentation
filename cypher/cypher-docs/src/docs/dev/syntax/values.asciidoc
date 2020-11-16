@@ -69,13 +69,26 @@ Structural types comprise:
    ** Id
    ** Type
    ** Map (of properties)
-   ** Id of the start and end nodes
+   ** Id of the start node
+   ** Id of the end node
 * Paths
    ** An alternating sequence of nodes and relationships
 
-NOTE: Nodes, relationships, and paths are returned as a result of pattern matching.
+[NOTE]
+====
+Nodes, relationships, and paths are returned as a result of pattern matching.
+====
 
-NOTE: Labels are not values but are a form of pattern syntax.
+[NOTE]
+====
+Labels are not values but are a form of pattern syntax.
+====
+
+[NOTE]
+====
+In Neo4j all relationships have a direction.
+However, you can have the notion of undirected relationships at query time.
+====
 
 
 [[composite-types]]
