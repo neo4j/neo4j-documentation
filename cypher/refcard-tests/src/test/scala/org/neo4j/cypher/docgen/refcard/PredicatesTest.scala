@@ -79,11 +79,11 @@ RETURN n, m###
 
 Use comparison operators.
 
-###assertion=returns-three
+###assertion=returns-one parameters=anothername
 MATCH (n)
 WHERE
 
-exists(n.property)
+toString(n.property) = $value
 
 RETURN n###
 
@@ -125,17 +125,17 @@ WHERE id(n) = %A% AND id(m) = %B%
 OPTIONAL MATCH (n)-[variable]->(m)
 WHERE
 
-variable IS NULL
+variable IS NOT NULL
 
 RETURN n, m###
 
-Check if something is `null`.
+Check if something is not `null`, e.g. that a property exists.
 
 ###assertion=returns-one parameters=aname
 MATCH (n)
 WHERE
 
-NOT exists(n.property) OR n.property = $value
+n.property IS NULL OR n.property = $value
 
 RETURN n###
 
@@ -175,7 +175,7 @@ String matching.
 
 ###assertion=returns-one parameters=regex
 MATCH (n)
-WHERE exists(n.property) AND
+WHERE n.property IS NOT NULL AND
 
 n.property =~ 'Tim.*'
 
@@ -205,7 +205,7 @@ Exclude matches to `(n)-[:KNOWS]->(m)` from the result.
 
 ###assertion=returns-one parameters=names
 MATCH (n)
-WHERE exists(n.property) AND
+WHERE n.property IS NOT NULL AND
 
 n.property IN [$value1, $value2]
 
