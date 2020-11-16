@@ -34,7 +34,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   override def parent: Option[String] = Some("Administration")
   override def section: String = "Constraints"
 
-  override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
+  override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory)
+    .setConfig(databaseConfig()).build()
 
 
   @Test def create_unique_constraint() {

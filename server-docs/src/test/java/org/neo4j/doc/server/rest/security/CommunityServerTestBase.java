@@ -59,6 +59,7 @@ public class CommunityServerTestBase extends ExclusiveWebContainerTestBase
         webContainer = builder()
                 .usingDataDir( folder.getAbsolutePath() )
                 .withProperty( GraphDatabaseSettings.auth_enabled.name(), Boolean.toString( authEnabled ) )
+                .onRandomPorts()
                 .build();
     }
 

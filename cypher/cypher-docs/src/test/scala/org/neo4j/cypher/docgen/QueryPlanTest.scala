@@ -29,7 +29,8 @@ import org.neo4j.dbms.api.DatabaseManagementService
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
-  override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
+  override protected def newDatabaseManagementService(directory: File): DatabaseManagementService =
+    new EnterpriseDatabaseManagementServiceBuilder(directory).setConfig(databaseConfig()).build()
 
   override val setupQueries = List(
     """CREATE (me:Person {name: 'me'})
