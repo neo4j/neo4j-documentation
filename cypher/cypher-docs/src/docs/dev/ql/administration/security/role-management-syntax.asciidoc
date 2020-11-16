@@ -40,7 +40,7 @@ CREATE ROLE name [IF NOT EXISTS] [AS COPY OF name]
 ----
 CREATE OR REPLACE ROLE name [AS COPY OF name]
 ----
-| Create a new role.
+| Recreate a role, or create a new role if no such role exists.
 | <<administration-security-administration-dbms-privileges-role-management, CREATE ROLE>> and
 <<administration-security-administration-dbms-privileges-role-management, DROP ROLE>>
 
@@ -63,4 +63,5 @@ GRANT ROLE name[, ...] TO user[, ...]
 REVOKE ROLE name[, ...] FROM user[, ...]
 ----
 | Remove roles from users.
+| <<administration-security-administration-dbms-privileges-role-management, REMOVE ROLE>>
 |===
