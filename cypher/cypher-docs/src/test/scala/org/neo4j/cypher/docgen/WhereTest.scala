@@ -145,13 +145,13 @@ class WhereTest extends DocumentingTest {
         }
       }
       section("Property existence checking", "property-existence-checking") {
-        p("Use the `exists()` function to only include nodes or relationships in which a property exists.")
-        query("MATCH (n:Person)\nWHERE exists(n.belt)\nRETURN n.name, n.belt", ResultAssertions((r) => {
+        p("Use the `IS NOT NULL` predicate to only include nodes or relationships in which a property exists.")
+        query("MATCH (n:Person)\nWHERE n.belt IS NOT NULL\nRETURN n.name, n.belt", ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Andy", "n.belt" -> "white")))
         })) {
           p("The name and belt for the *'Andy'* node are returned because he is the only one with a `belt` property.")
           important {
-            p("The `has()` function has been superseded by `exists()` and has been removed.")
+            p("The `exists()` function has been deprecated and has been superseded by `IS NOT NULL`.")
           }
           resultTable()
         }

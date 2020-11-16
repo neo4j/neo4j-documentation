@@ -32,7 +32,7 @@ An expression in Cypher can be:
 * A path-pattern: `+(a)-->()<--(b)+`.
 * An operator application: `1 + 2` and `3 < 4`.
 * A predicate expression is an expression that returns true or false: `a.prop = 'Hello'`, `length(p) > 10`,
-`exists(a.name)`.
+`a.name IS NOT NULL`.
 * An existential subquery is an expression that returns true or false:
 `EXISTS {
   MATCH (n)-[r]->(p)
