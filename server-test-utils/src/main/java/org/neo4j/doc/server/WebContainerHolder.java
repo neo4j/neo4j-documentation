@@ -106,7 +106,7 @@ public final class WebContainerHolder extends Thread
     {
         if ( builder == null )
         {
-            builder = CommunityWebContainerBuilder.builder();
+            builder = CommunityWebContainerBuilder.serverOnRandomPorts();
         }
     }
 
