@@ -59,7 +59,7 @@ CREATE OR REPLACE USER name
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
 ----
-| Create a new user.
+| Recreate a user, or create a new user if no such user exists.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>> and
 <<administration-security-administration-dbms-privileges-user-management, DROP USER>>
 | `+`
