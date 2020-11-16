@@ -20,17 +20,22 @@
 package org.neo4j.cypher.docgen.tooling
 
 import java.io.File
+import java.lang.Boolean.FALSE
 import java.lang.Boolean.TRUE
 
+import com.neo4j.configuration.OnlineBackupSettings
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import com.neo4j.kernel.enterprise.api.security.EnterpriseAuthManager
 import org.apache.commons.io.FileUtils
 import org.neo4j.configuration.GraphDatabaseSettings
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
+import org.neo4j.configuration.helpers.SocketAddress
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultSubscriber}
-import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.javacompat.ResultSubscriber
+import org.neo4j.cypher.ExecutionEngineHelper
+import org.neo4j.cypher.GraphIcing
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.graphdb.config.Setting
 import org.neo4j.internal.kernel.api.security.SecurityContext.AUTH_DISABLED
@@ -66,7 +71,11 @@ class RestartableDatabase(init: RunnableInitialization)
   private def createAndStartIfNecessary() {
     if (graph == null) {
       dbFolder = new File("target/example-db" + System.nanoTime())
-      val config: Map[Setting[_], Object] = Map(GraphDatabaseSettings.auth_enabled -> TRUE)
+      val config: Map[Setting[_], Object] = Map(
+        GraphDatabaseSettings.auth_enabled -> TRUE,
+        OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
+        OnlineBackupSettings.online_backup_enabled ->  FALSE
+      )
       managementService = new EnterpriseDatabaseManagementServiceBuilder(dbFolder).setConfig(config.asJava).build()
 
       //    managementService = graphDatabaseFactory(Files.createTempDirectory("test").getParent.toFile).impermanent().setConfig(config.asJava).setInternalLogProvider(logProvider).build()

@@ -21,11 +21,14 @@ package org.neo4j.cypher.docgen
 
 import java.io.{ByteArrayOutputStream, File, PrintWriter, StringWriter}
 import java.nio.charset.StandardCharsets
+import java.util
 import java.util.concurrent.TimeUnit
 
+import com.neo4j.configuration.OnlineBackupSettings
 import org.apache.commons.io.FileUtils
 import org.junit.{After, Before}
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
+import org.neo4j.configuration.helpers.SocketAddress
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
@@ -40,6 +43,7 @@ import org.neo4j.doc.test.GraphDescription
 import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.exceptions.Neo4jException
 import org.neo4j.graphdb._
+import org.neo4j.graphdb.config.Setting
 import org.neo4j.internal.kernel.api.security.SecurityContext
 import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.impl.api.index.IndexingService
@@ -544,7 +548,15 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     hardReset()
   }
 
-  protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new DatabaseManagementServiceBuilder(directory).build()
+  protected def databaseConfig(): util.Map[Setting[_], Object] =
+    Map[Setting[_], Object](
+      OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
+      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
+    ).asJava
+
+  protected def newDatabaseManagementService(directory: File): DatabaseManagementService = {
+    new DatabaseManagementServiceBuilder(directory).setConfig(databaseConfig()).build()
+  }
 
   override def hardReset() {
     tearDown()

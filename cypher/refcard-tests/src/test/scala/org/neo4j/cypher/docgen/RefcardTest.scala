@@ -22,11 +22,13 @@ package org.neo4j.cypher.docgen
 import java.io._
 import java.nio.charset.StandardCharsets
 
+import com.neo4j.configuration.OnlineBackupSettings
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.apache.commons.io.FileUtils
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
+import org.neo4j.configuration.helpers.SocketAddress
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
 import org.neo4j.cypher.internal.ExecutionEngine
@@ -36,6 +38,7 @@ import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription}
 import org.neo4j.exceptions.{InternalException, Neo4jException}
 import org.neo4j.graphdb._
+import org.neo4j.graphdb.config.Setting
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
@@ -286,7 +289,13 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   protected def cleanGraph: Unit = GraphDatabaseServiceCleaner.cleanDatabaseContent(db.getGraphDatabaseService)
 
-  protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
+  protected def newDatabaseManagementService(directory: File): DatabaseManagementService =
+    new EnterpriseDatabaseManagementServiceBuilder(directory)
+      .setConfig(Map[Setting[_], Object](
+        OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
+        OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
+      ).asJava)
+      .build()
 
 }
 

@@ -19,6 +19,7 @@
 package org.neo4j.examples.backup;
 
 import com.neo4j.backup.OnlineBackup;
+import com.neo4j.configuration.OnlineBackupSettings;
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder;
 import org.junit.After;
 import org.junit.Before;
@@ -26,8 +27,11 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Collections;
 
+import org.neo4j.configuration.helpers.SocketAddress;
 import org.neo4j.dbms.api.DatabaseManagementService;
+import org.neo4j.test.ports.PortAuthority;
 
 import static org.junit.Assert.assertTrue;
 
@@ -36,12 +40,15 @@ public class TestBackup
     private static final File databaseDirectory = new File( "target/backup-store" );
     private static final File backupDirectory = new File( "target/backup-destination" );
     private DatabaseManagementService managementService;
+    private int backupPort = PortAuthority.allocatePort();
 
     @Before
     public void before()
     {
         backupDirectory.mkdirs();
-        managementService = new EnterpriseDatabaseManagementServiceBuilder( databaseDirectory ).build();
+        managementService = new EnterpriseDatabaseManagementServiceBuilder( databaseDirectory )
+                .setConfig( Collections.singletonMap( OnlineBackupSettings.online_backup_listen_address, new SocketAddress( "127.0.0.1", backupPort)))
+                .build();
     }
 
     @After
@@ -57,7 +64,7 @@ public class TestBackup
     public void fullBackup()
     {
         // tag::onlineBackup[]
-        var backup = OnlineBackup.from( "127.0.0.1" );
+        var backup = OnlineBackup.from( "127.0.0.1", backupPort );
 
         var backupResult = backup.backup( "neo4j", backupDirectory.toPath() );
         assertTrue( "Should be consistent", backupResult.isConsistent() );
@@ -69,7 +76,7 @@ public class TestBackup
     {
         // tag::backupNonDefaults[]
         var out = new ByteArrayOutputStream();
-        var backup = OnlineBackup.from( "127.0.0.1" )
+        var backup = OnlineBackup.from( "127.0.0.1", backupPort )
                 .withFallbackToFullBackup( false )
                 .withConsistencyCheck( true )
                 .withOutputStream( out );
