@@ -150,6 +150,14 @@ class PredicateFunctionsTest extends DocumentingTest {
         p("The ages of all nodes with that have the empty string as the `eyes` property.")
         resultTable()
       }
+      note {
+        p(
+          """`isEmpty`, like most other Cypher functions, returns `null` if `null is passed in to the function.
+            |That means that a predicate `isEmpty(n.eyes)` will filter out all nodes where the `eyes` property is not set.
+            |Thus, `isEmpty` is not suited to test for null values.
+            | `IS NULL` or `IS NOT NULL` should be used for that purpose.
+            |""".stripMargin)
+      }
     }
     section("none()", "functions-none") {
       p("`none()` returns true if the predicate holds for no element in the given list." +
