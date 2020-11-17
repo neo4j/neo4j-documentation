@@ -151,7 +151,7 @@ class WhereTest extends DocumentingTest {
         })) {
           p("The name and belt for the *'Andy'* node are returned because he is the only one with a `belt` property.")
           important {
-            p("The `exists()` function has been deprecated and has been superseded by `IS NOT NULL`.")
+            p("The `exists()` function has been deprecated for property existence checking and has been superseded by `IS NOT NULL`.")
           }
           resultTable()
         }
