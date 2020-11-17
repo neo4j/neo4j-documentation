@@ -290,8 +290,8 @@ These features will result in runtime errors. See the table at <<cypher-deprecat
 Neo4j {neo4j-version} supports the following versions of the Cypher language:
 
 * Neo4j Cypher 3.5
-* Neo4j Cypher 4.1
 * Neo4j Cypher 4.2
+* Neo4j Cypher 4.3
 
 [TIP]
 Each release of Neo4j supports a limited number of old Cypher Language Versions.
