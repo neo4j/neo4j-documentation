@@ -1,0 +1,24 @@
+.Show privileges command syntax
+[options="header", width="100%", cols="3a,2"]
+|===
+| Command | Description
+
+| [source, cypher]
+SHOW [ALL] PRIVILEGES
+    [YIELD field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
+| List all privileges.
+
+| [source, cypher]
+SHOW ROLE role PRIVILEGES
+    [YIELD field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
+| List privileges for a specific role.
+
+| [source, cypher]
+SHOW USER [user] PRIVILEGES
+    [YIELD field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
+| List privileges for a specific user, or the current user.
+
+|===
