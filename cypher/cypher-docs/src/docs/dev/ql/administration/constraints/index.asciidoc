@@ -104,7 +104,7 @@ ASSERT EXISTS (n.propertyName)
 | [source, cypher]
 ----
 CREATE CONSTRAINT [constraint_name]
-ON ()-[R:RELATIONSHIP_TYPE]-() 
+ON ()-"["R:RELATIONSHIP_TYPE"]"-()
 ASSERT EXISTS (R.propertyName)
 ----
 | [enterprise-edition]#Create a relationship property existence constraint.#
@@ -149,7 +149,7 @@ ASSERT EXISTS (n.propertyName)
 | [source, cypher]
 ----
 DROP CONSTRAINT
-ON ()-[R:RELATIONSHIP_TYPE]-() 
+ON ()-"["R:RELATIONSHIP_TYPE"]"-()
 ASSERT EXISTS (R.propertyName)
 ----
 | Drop a relationship property existence constraint without specifying a name.
