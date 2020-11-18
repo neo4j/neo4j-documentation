@@ -7,6 +7,7 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 --
 
 * <<administration-security-introduction, Introduction>>
+* <<administration-security-syntax-rules, Syntax summaries>>
 * <<administration-security-users-and-roles, User and role management>>
 ** <<administration-security-users, User management>>
 *** <<administration-security-users-show-current, Listing current user>>
@@ -86,6 +87,69 @@ Instead they are defined in terms of their underlying _privileges_ and they can 
 In addition, any new roles created can by assigned any combination of _privileges_ to create the specific access control desired.
 A major additional capability is _sub-graph_ access control whereby read-access to the graph can be limited to specific combinations of label, relationship-type and property.
 
+[[administration-security-syntax-rules]]
+== Syntax summaries
+Almost all administration commands have variations in the commands. Parts of the command that are optional or can have multiple values are most common.
+To show all versions of a command, a summary of the syntax will be presented. These summaries will use some special characters to indicate such variations.
+
+The special characters and their meaning are as follows:
+
+.Special characters in syntax summeries
+[options="header", width="100%", cols="1a,3,3"]
+|===
+| Character | Meaning | Example
+
+| `\|`
+| Or, used to indicate alternative parts of a command. Needs to be part of a grouping.
+| If the syntax needs to specify either a name or `*`, this can be indicated with `name \| *`.
+
+| `{` and `}`
+| Used to group parts of the command, common together with `\|`.
+| To use the `or` in the syntax summary it needs to be in a group, `{name \| *}`.
+
+| `[` and `]`
+| Used to indicate an optional part of the command. It also groups alternatives together, when there can be either of the alternatives or nothing.
+| If a keyword in the syntax can either be in singular or plural, we can indicate that the `S` is optional with `GRAPH[S]`.
+
+| `...`
+| Repeated pattern, the command part immediately before this is repeated.
+| A comma separated list of names would be `name[, ...]`.
+
+| `"`
+| When a special character is part of the syntax itself, we surround it with `"` to indicate this.
+| To include `{` in the syntax use `"{" { name \| * } "}"`, here we get either `{*}` or `{name}`.
+
+|===
+
+Any other characters do not have any special meaning, therefore not needing to be escaped.
+An example that uses all special characters is granting the `READ` privilege:
+
+[source, cypher]
+----
+GRANT READ
+    "{" { * | property[, ...] } "}"
+    ON {DEFAULT GRAPH | GRAPH[S] {name[, ...] | *}}
+        [
+            ELEMENT[S] { * | label-or-rel-type-name[,...] }
+            | NODE[S] { * | label-name[,...] }
+            | RELATIONSHIP[S] { * | rel-type-name[,...] }
+        ]
+    TO role[, ...]
+----
+
+Some things to notice about this command is that it includes `{` and `}` in the syntax, and between them has a grouping of either a list of properties or the character `*`.
+It also has multiple optional parts, including the entity part of the command which is the grouping following the graph name.
+
+In difference, there is no need to escape any characters in the node property existence constraint creation command.
+This since `(` and `)` are not special characters and `[` and `]` are not part of the command,
+but indicate that the constraint name and `IF NOT EXISTS` are optional.
+
+[source, cypher]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
+ON (n:LabelName)
+ASSERT n.propertyName IS NOT NULL
+----
 
 include::administration-security-users-and-roles.adoc[leveloffset=+1]
 
