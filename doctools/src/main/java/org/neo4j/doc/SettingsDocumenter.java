@@ -135,7 +135,7 @@ public class SettingsDocumenter
     {
         out.printf("[[%s]]%n" +
                    ".%s%n" +
-                   "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
+                   "[cols=\"<1s,<4\", options=\"noheader\"]%n" +
                    "|===%n" +
                    "|Description a|%s%n" +
                    "|Valid values a|%s%n",
