@@ -96,7 +96,7 @@ public class SettingsDocumenterTest
             "ifndef::nonhtmloutput[]%n" +
             "[[config_public.default]]%n" +
             ".public.default%n" +
-            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
+            "[cols=\"<1s,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public with default.%n" +
             "|Valid values a|public.default is an integer%n" +
@@ -107,7 +107,7 @@ public class SettingsDocumenterTest
             "ifdef::nonhtmloutput[]%n" +
             "[[config_public.default]]%n" +
             ".public.default%n" +
-            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
+            "[cols=\"<1s,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public with default.%n" +
             "|Valid values a|public.default is an integer%n" +
@@ -118,7 +118,7 @@ public class SettingsDocumenterTest
             "ifndef::nonhtmloutput[]%n" +
             "[[config_public.deprecated]]%n" +
             ".public.deprecated%n" +
-            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
+            "[cols=\"<1s,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public deprecated.%n" +
             "|Valid values a|public.deprecated is a boolean%n" +
@@ -130,7 +130,7 @@ public class SettingsDocumenterTest
             "ifdef::nonhtmloutput[]%n" +
             "[[config_public.deprecated]]%n" +
             ".public.deprecated%n" +
-            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
+            "[cols=\"<1s,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public deprecated.%n" +
             "|Valid values a|public.deprecated is a boolean%n" +
@@ -142,7 +142,7 @@ public class SettingsDocumenterTest
             "ifndef::nonhtmloutput[]%n" +
             "[[config_public.nodefault]]%n" +
             ".public.nodefault%n" +
-            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
+            "[cols=\"<1s,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public nodefault.%n" +
             "|Valid values a|public.nodefault is a string%n" +
@@ -152,7 +152,7 @@ public class SettingsDocumenterTest
             "ifdef::nonhtmloutput[]%n" +
             "[[config_public.nodefault]]%n" +
             ".public.nodefault%n" +
-            "[cols=\"<1h,<4\", options=\"noheader\"]%n" +
+            "[cols=\"<1s,<4\", options=\"noheader\"]%n" +
             "|===%n" +
             "|Description a|Public nodefault.%n" +
             "|Valid values a|public.nodefault is a string%n" +
@@ -176,16 +176,16 @@ public class SettingsDocumenterTest
                 "* <<config_animal.giraffe.<id>.spot_count,animal.giraffe.<id>.spot_count>>: Number of spots this giraffe has, in number.\n" +
                 "* <<config_animal.giraffe.<id>.type,animal.giraffe.<id>.type>>: Animal type.\n" + "endif::nonhtmloutput[]\n" + "\n" + "\n" +
                 "// end::config-org.neo4j.doc.SettingsDocumenterTest-Giraffe[]\n" + "\n" + "ifndef::nonhtmloutput[]\n" +
-                "[[config_animal.giraffe.<id>.spot_count]]\n" + ".animal.giraffe.<id>.spot_count\n" + "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" +
+                "[[config_animal.giraffe.<id>.spot_count]]\n" + ".animal.giraffe.<id>.spot_count\n" + "[cols=\"<1s,<4\", options=\"noheader\"]\n" + "|===\n" +
                 "|Description a|Number of spots this giraffe has, in number.\n" + "|Valid values a|animal.giraffe.<id>.spot_count, an integer\n" +
                 "|Default value m|12\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" + "ifdef::nonhtmloutput[]\n" +
-                "[[config_animal.giraffe.<id>.spot_count]]\n" + ".animal.giraffe.<id>.spot_count\n" + "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" +
+                "[[config_animal.giraffe.<id>.spot_count]]\n" + ".animal.giraffe.<id>.spot_count\n" + "[cols=\"<1s,<4\", options=\"noheader\"]\n" + "|===\n" +
                 "|Description a|Number of spots this giraffe has, in number.\n" + "|Valid values a|animal.giraffe.<id>.spot_count, an integer\n" +
                 "|Default value m|12\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" + "ifndef::nonhtmloutput[]\n" + "[[config_animal.giraffe.<id>.type]]\n" +
-                ".animal.giraffe.<id>.type\n" + "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" + "|Description a|Animal type.\n" +
+                ".animal.giraffe.<id>.type\n" + "[cols=\"<1s,<4\", options=\"noheader\"]\n" + "|===\n" + "|Description a|Animal type.\n" +
                 "|Valid values a|animal.giraffe.<id>.type, a string\n" + "|Default value m|mammal\n" + "|===\n" + "endif::nonhtmloutput[]\n" + "\n" +
                 "ifdef::nonhtmloutput[]\n" + "[[config_animal.giraffe.<id>.type]]\n" + ".animal.giraffe.<id>.type\n" +
-                "[cols=\"<1h,<4\", options=\"noheader\"]\n" + "|===\n" + "|Description a|Animal type.\n" +
+                "[cols=\"<1s,<4\", options=\"noheader\"]\n" + "|===\n" + "|Description a|Animal type.\n" +
                 "|Valid values a|animal.giraffe.<id>.type, a string\n" + "|Default value m|mammal\n" + "|===\n" + "endif::nonhtmloutput[]\n\n";
         if(System.getProperty("os.name").toLowerCase().startsWith( "windows" )){
             assertThat( result, equalTo( linuxString.replaceAll( "\n","\r\n" ) ));
