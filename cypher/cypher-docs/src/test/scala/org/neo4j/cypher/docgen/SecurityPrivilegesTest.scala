@@ -136,14 +136,14 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
           Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "graph" -> "neo4j")
         ))) {
-          p("Lists all privileges for role 'regularUsers'")
+          p("Lists all privileges for role 'regularUsers'.")
           resultTable()
         }
         query("SHOW ROLES regularUsers, noAccessUsers PRIVILEGES", assertPrivilegeShown(Seq(
           Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "graph" -> "neo4j"),
           Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers", "graph" -> "neo4j")
         ))) {
-          p("Lists all privileges for roles 'regularUsers' and 'noAccessUsers'")
+          p("Lists all privileges for roles 'regularUsers' and 'noAccessUsers'.")
           resultTable()
         }
 
@@ -193,14 +193,14 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         query("SHOW USER jake PRIVILEGES", assertPrivilegeShown(Seq(
           Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
         ))) {
-          p("Lists all privileges for user 'jake'")
+          p("Lists all privileges for user 'jake'.")
           resultTable()
         }
         query("SHOW USERS jake, joe PRIVILEGES", assertPrivilegeShown(Seq(
           Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake"),
           Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers", "user" -> "joe")
         ))) {
-          p("Lists all privileges for users 'jake' and 'joe'")
+          p("Lists all privileges for users 'jake' and 'joe'.")
           resultTable()
         }
 
