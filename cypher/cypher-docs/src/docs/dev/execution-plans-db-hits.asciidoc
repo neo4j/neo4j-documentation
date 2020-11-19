@@ -1,0 +1,63 @@
+[[execution-plans-dbhits]]
+= Database hits (DbHits)
+
+Each operator will send a request to the storage engine to do work such as retrieving or updating data.
+A _database hit_ is an abstract unit of this storage engine work.
+
+We list below all the actions that trigger one or more database hits:
+
+* Create actions
+** Create a node
+** Create a relationship
+** Create a new node label
+** Create a new relationship type
+** Create a new ID for property keys with the same name
+
+* Delete actions
+** Delete a node
+** Delete a relationship
+
+* Update actions
+** Set one or more labels on a node
+** Remove one or more labels from a node
+
+* Node-specific actions
+** Get a node by its ID
+** Get the degree of a node
+** Determine whether a node is dense
+** Determine whether a label is set on a node
+** Get the labels of a node
+** Get a property of a node
+** Get an existing node label
+** Get the name of a label by its ID, or its ID by its name
+
+* Relationship-specific actions
+** Get a relationship by its ID
+** Get a property of a relationship
+** Get an existing relationship type
+** Get a relationship type name by its ID, or its ID by its name
+
+
+* General actions
+** Get the name of a property key by its ID, or its ID by the key name
+** Find a node or relationship through an index seek or index scan
+** Find a path in a variable-length expand
+** Find a shortest path
+** Ask the count store for a value
+
+
+* Schema actions
+** Add an index
+** Drop an index
+** Get the reference of an index
+** Create a constraint
+** Drop a constraint
+
+* Call a procedure
+* Call a user-defined function
+
+[NOTE]
+--
+The presented value can vary slightly depending on the <<cypher-runtime, Cypher runtime>> that was used to execute the query.
+In the pipelined runtime the number of _database hits_ will typically be higher since it uses a more accurate way of measuring.
+--
