@@ -145,7 +145,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def list_indexes() {
     prepareAndTestQuery(
-      title = "Example for listing indexes",
+      title = "Example of listing indexes",
       text =
         """
           |To list all indexes with the brief output columns, the `SHOW INDEXES` command can be used.
