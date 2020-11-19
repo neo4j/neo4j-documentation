@@ -118,7 +118,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
           Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers")
         ))) {
-          p("Lists all privileges for role 'regularUsers'")
+          p("Lists all privileges for role 'regularUsers'.")
           resultTable()
         }
       }
@@ -133,7 +133,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         query("SHOW USER jake PRIVILEGES", assertPrivilegeShown(Seq(
           Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
         ))) {
-          p("Lists all privileges for user 'jake'")
+          p("Lists all privileges for user 'jake'.")
           resultTable()
         }
 
