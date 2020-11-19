@@ -94,12 +94,11 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "List constraints",
+      title = "Example of listing constraints",
       text =
-        """include::list-constraints-table-columns.asciidoc[]
-          |
-          |Note that the deprecated built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the
-          |<<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>>.""".stripMargin,
+        """
+          |To list all constraints with the brief output columns, the `SHOW CONSTRAINTS` command can be used.
+          |.""".stripMargin,
       queryText = "SHOW CONSTRAINTS",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
       optionalResultExplanation =

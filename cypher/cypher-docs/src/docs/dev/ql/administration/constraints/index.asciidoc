@@ -62,7 +62,7 @@ Creating a constraint has the following implications on indexes:
 * If a unique property constraint is dropped and the single-property index on the property is still required, the index will need to be created explicitly.
 * If a node key constraint is dropped and the composite-property index on the properties is still required, the index will need to be created explicitly.
 
-Additionally, the following is true for constraints: 
+Additionally, the following is true for constraints:
 
 * A given label can have multiple constraints, and unique and property existence constraints can be combined on the same property.
 * Adding constraints is an atomic operation that can take a while -- all existing data has to be scanned before Neo4j can turn the constraint 'on'.
@@ -83,7 +83,7 @@ Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error wil
 | [source, cypher]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON (n:LabelName) 
+ON (n:LabelName)
 ASSERT n.propertyName IS UNIQUE
 [OPTIONS "{" option: value[,...] "}"]
 ----
@@ -102,21 +102,21 @@ Index provider and configuration for the backing index can be specified using th
 | [source, cypher]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON (n:LabelName) 
+ON (n:LabelName)
 ASSERT EXISTS (n.propertyName)
 ----
 | [enterprise-edition]#Create a node property existence constraint.#
 | [source, cypher]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON ()-[R:RELATIONSHIP_TYPE]-() 
+ON ()-[R:RELATIONSHIP_TYPE]-()
 ASSERT EXISTS (R.propertyName)
 ----
 | [enterprise-edition]#Create a relationship property existence constraint.#
 | [source, cypher]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON (n:LabelName) 
+ON (n:LabelName)
 ASSERT (n.propertyName_1,
 n.propertyName_2,
 …
@@ -141,7 +141,7 @@ SHOW [ALL\|UNIQUE\|NODE EXIST[S]\|RELATIONSHIP EXIST[S]\|EXIST[S]\|NODE KEY] CON
 | [source, cypher]
 ----
 DROP CONSTRAINT
-ON (n:LabelName) 
+ON (n:LabelName)
 ASSERT n.propertyName IS UNIQUE
 ----
 | Drop a unique constraint without specifying a name.
@@ -149,21 +149,21 @@ ASSERT n.propertyName IS UNIQUE
 | [source, cypher]
 ----
 DROP CONSTRAINT
-ON (n:LabelName) 
+ON (n:LabelName)
 ASSERT EXISTS (n.propertyName)
 ----
 | Drop an exists constraint without specifying a name.
 | [source, cypher]
 ----
 DROP CONSTRAINT
-ON ()-[R:RELATIONSHIP_TYPE]-() 
+ON ()-[R:RELATIONSHIP_TYPE]-()
 ASSERT EXISTS (R.propertyName)
 ----
 | Drop a relationship property existence constraint without specifying a name.
 | [source, cypher]
 ----
 DROP CONSTRAINT
-ON (n:LabelName) 
+ON (n:LabelName)
 ASSERT (n.propertyName_1,
 n.propertyName_2,
 …
@@ -252,9 +252,70 @@ include::drop-a-constraint.asciidoc[leveloffset=+2]
 
 include::drop-a-non-existing-constraint.asciidoc[leveloffset=+2]
 
+
 [[administration-constraints-list-constraint]]
 === List constraints
-include::list-constraints.asciidoc[leveloffset=+2]
+
+Listing all constraints can be done with `SHOW CONSTRAINTS`, which will produce a table with the following columns:
+
+.List constraints output
+[options="header", width="100%", cols="1a,4,^.^,^"]
+|===
+| Column
+| Description
+| Brief output
+| Verbose output
+
+| `id`
+| The id of the constraint.
+| `+`
+| `+`
+
+| `name`
+| Name of the constraint (explicitly set by the user or automatically assigned).
+| `+`
+| `+`
+
+| `type`
+| The ConstraintType of this constraint (`UNIQUENESS`, `NODE_PROPERTY_EXISTENCE`, `NODE_KEY`, or `RELATIONSHIP_PROPERTY_EXISTENCE`).
+| `+`
+| `+`
+
+| `entityType`
+| Type of entities this constraint represents (nodes or relationship).
+| `+`
+| `+`
+
+| `labelsOrTypes`
+| The labels or relationship types of this constraint.
+| `+`
+| `+`
+
+| `properties`
+| The properties of this constraint.
+| `+`
+| `+`
+
+| `ownedIndexId`
+| The id of the index associated to the constraint, or `null` if no index is associated with the constraint.
+| `+`
+| `+`
+
+| `options`
+| The options passed to `CREATE` command, for the index associated to the constraint, or `null` if no index is associated with the constraint.
+|
+| `+`
+
+| `createStatement`
+| Statement used to create the constraint.
+|
+| `+`
+|===
+
+[NOTE]
+Note that the deprecated built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the <<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>>.
+
+include::example-of-listing-constraints.asciidoc[leveloffset=+2]
 
 
 [role=deprecated]
