@@ -7,9 +7,9 @@ The syntax of the database management commands is as follows:
 | Show Database
 | [source]
 SHOW { DATABASE db \| DATABASES \| DEFAULT DATABASE }
-[YIELD { * \| field1[, ...] } [ORDER BY field1[, ...]] [SKIP n] [LIMIT n]]
+[YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 [WHERE expression]
-[RETURN field1[, ...] [ORDER BY field1[, ...]] [SKIP n] [LIMIT n]]
+[RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 | Create Database
 | [source]
 CREATE DATABASE name [IF NOT EXISTS] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]

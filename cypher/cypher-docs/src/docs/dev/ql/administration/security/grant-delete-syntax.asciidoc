@@ -7,5 +7,5 @@ GRANT DELETE ON {DEFAULT GRAPH | GRAPH[S] { * | graph-name[,...] }}
         | NODE[S] { * | label-name[,...] }
         | RELATIONSHIP[S] { * | rel-type-name[,...] }
     ]
-    TO grantee[,...]
+    TO role[,...]
 -----

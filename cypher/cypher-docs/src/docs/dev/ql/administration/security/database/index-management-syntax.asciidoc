@@ -5,14 +5,14 @@
 
 | [source, cypher]
 GRANT {CREATE \| DROP \| SHOW} INDEX[ES]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}}
-    TO role [, ...]
+    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    TO role[, ...]
 | Enable the specified roles to create, delete, or show indexes in the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT INDEX[ES] [MANAGEMENT]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}}
-    TO role [, ...]
+    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    TO role[, ...]
 | Enable the specified roles to manage indexes in the default database, specific database(s), or all databases.
 
 |===
