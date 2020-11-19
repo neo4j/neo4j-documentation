@@ -2,11 +2,11 @@
 [source, cypher]
 -----
 DENY TRAVERSE
-    ON {DEFAULT GRAPH | GRAPH[S] {name [, ...] | *}}
+    ON {DEFAULT GRAPH | GRAPH[S] {name[, ...] | *}}
         [
             ELEMENT[S] { * | label-or-rel-type-name[,...] }
             | NODE[S] { * | label-name[,...] }
             | RELATIONSHIP[S] { * | rel-type-name[,...] }
         ]
-    TO role [, ...]
+    TO role[, ...]
 -----

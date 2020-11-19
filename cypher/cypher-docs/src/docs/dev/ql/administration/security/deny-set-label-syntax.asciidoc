@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher]
 -----
-DENY SET LABEL {label [, ...] | *}
-    ON {DEFAULT GRAPH | GRAPH[S] {name [, ...] | *}}
-    TO role [, ...]
+DENY SET LABEL {label[, ...] | *}
+    ON {DEFAULT GRAPH | GRAPH[S] {name[, ...] | *}}
+    TO role[, ...]
 -----

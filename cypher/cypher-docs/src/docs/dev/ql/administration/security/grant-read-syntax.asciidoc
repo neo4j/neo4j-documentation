@@ -2,12 +2,12 @@
 [source, cypher]
 -----
 GRANT READ
-    "{" { * | properties } "}"
-    ON {DEFAULT GRAPH | GRAPH[S] {name [, ...] | *}}
+    "{" { * | property[, ...] } "}"
+    ON {DEFAULT GRAPH | GRAPH[S] {name[, ...] | *}}
         [
             ELEMENT[S] { * | label-or-rel-type-name[,...] }
             | NODE[S] { * | label-name[,...] }
             | RELATIONSHIP[S] { * | rel-type-name[,...] }
         ]
-    TO role [, ...]
+    TO role[, ...]
 -----
