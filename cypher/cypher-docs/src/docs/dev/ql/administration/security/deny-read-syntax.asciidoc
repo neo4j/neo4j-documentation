@@ -2,12 +2,12 @@
 [source, cypher]
 -----
 DENY READ
-    "{" { * | properties } "}"
+    "{" { * | property[, ...] } "}"
     ON GRAPH[S] {name | *}
         [
             ELEMENT[S] { * | label-or-rel-type-name[,...] }
             | NODE[S] { * | label-name[,...] }
             | RELATIONSHIP[S] { * | rel-type-name[,...] }
         ]
-    TO roles
+    TO role[, ...]
 -----
