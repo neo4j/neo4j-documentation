@@ -166,7 +166,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint with the name `existence` on a property for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
-      queryText = """CREATE CONSTRAINT existence ON (p:Person) ASSERT exists(p.name)""",
+      queryText = """CREATE CONSTRAINT existence ON (p:Person) ASSERT p.name IS NOT NULL""",
       assertions = p => {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("CreateConstraint"))
@@ -177,7 +177,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def dropNodePropertyExistenceConstraint() {
     executePreparationQueries {
-      List("CREATE CONSTRAINT ON (p:Person) ASSERT exists(p.name)")
+      List("CREATE CONSTRAINT ON (p:Person) ASSERT p.name IS NOT NULL")
     }
 
     profileQuery(
@@ -231,7 +231,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint with the name `existence` on a property for all relationships of a certain type.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
-      queryText = """CREATE CONSTRAINT existence ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
+      queryText = """CREATE CONSTRAINT existence ON ()-[l:LIKED]-() ASSERT l.when IS NOT NULL""",
       assertions = p => {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("CreateConstraint"))
@@ -242,7 +242,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def dropRelationshipPropertyExistenceConstraint() {
     executePreparationQueries {
-      List("CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)")
+      List("CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT l.when IS NOT NULL")
     }
 
     profileQuery(
@@ -1408,5 +1408,20 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         assertThat(p.executionPlanDescription().toString, containsString("Expand(All)"))
       }
       )
+  }
+
+  @Test def shortestPath() {
+    profileQuery(
+      title = "Shortest path",
+      text =
+        """The `ShortestPath` operator finds one or all shortest paths between two previously matches node variables.
+      """.stripMargin,
+      queryText =
+        """MATCH (andy:Person {name: 'Andy'}),(mattias:Person {name: 'Mattias'}), p = shortestPath((andy)-[*]-(mattias))
+          |RETURN p""".stripMargin,
+      assertions = p => {
+        assertThat(p.executionPlanDescription().toString, containsString("ShortestPath"))
+      }
+    )
   }
 }
