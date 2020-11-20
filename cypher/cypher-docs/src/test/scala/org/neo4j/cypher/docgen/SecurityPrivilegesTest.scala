@@ -153,9 +153,9 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p("include::deny-match-syntax.asciidoc[]")
 
       p(
-        """Please note that the effect of denying a `MATCH` privilege depends on whether concrete property keys are specified or a `*`.
+        """Please note that the effect of denying a `MATCH` privilege depends on whether concrete property keys are specified or a `+*+`.
           |If you specify concrete property keys then `DENY MATCH` will only deny reading those properties. Finding the elements to traverse would still be allowed.
-          |If you specify `*` instead then both traversal of the element and all property reads will be disallowed.
+          |If you specify `+*+` instead then both traversal of the element and all property reads will be disallowed.
           |The following queries will show examples for this.""".stripMargin)
 
       p(
