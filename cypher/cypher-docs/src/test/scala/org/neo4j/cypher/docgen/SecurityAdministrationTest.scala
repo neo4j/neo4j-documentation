@@ -875,8 +875,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
         section("Procedure and user defined function name-globbing", "name-globbing", "enterprise-edition") {
           p(
-            """The name-globbing for procedure and user defined function names is a simplified version of globbing for filename expansions, only allowing two wildcard characters -- `*` and `?`.
-              |They are used for multiple and single character matches, where `*` means 0 or more characters and `?` matches exactly one character.""".stripMargin)
+            """The name-globbing for procedure and user defined function names is a simplified version of globbing for filename expansions, only allowing two wildcard characters -- `+*+` and `?`.
+              |They are used for multiple and single character matches, where `+*+` means 0 or more characters and `?` matches exactly one character.""".stripMargin)
           p(
             """The examples below only use procedures but the same rules apply to user defined function names.
               |For the examples below, assume we have the following procedures:
