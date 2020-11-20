@@ -66,6 +66,22 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
         Seq(AnyText("person:Person"))), NonBreakingKeywords("assert"), AnyText("person.age"), NonBreakingKeywords("is unique"))
   }
 
+  test("shouldParseShowConstraints") {
+    // given
+    Seq(
+      ("show constraint", Seq(BreakingKeywords("show constraint"))),
+      ("show unique constraint brief", Seq(BreakingKeywords("show unique constraint"), NonBreakingKeywords("brief"))),
+      ("show node key constraints", Seq(BreakingKeywords("show node key constraints"))),
+      ("show node exists constraints verbose", Seq(BreakingKeywords("show node exists constraints"), NonBreakingKeywords("verbose"))),
+      ("show relationship exist constraint", Seq(BreakingKeywords("show relationship exist constraint"))),
+      ("show exists constraint verbose output", Seq(BreakingKeywords("show exists constraint"), NonBreakingKeywords("verbose output"))),
+      ("show all constraints brief output", Seq(BreakingKeywords("show all constraints"), NonBreakingKeywords("brief output"))),
+    ).foreach { case (query, result) =>
+      // when then
+      parsing(query) shouldGive result
+    }
+  }
+
   test("shouldParseDropConstraintByName") {
     // given
     val query = "drop constraint name"
@@ -92,6 +108,20 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     // when then
     parsing(query) shouldGive
       Seq(BreakingKeywords("drop index"), AnyText("name"), NonBreakingKeywords("if exists"))
+  }
+
+  test("shouldParseShowIndexes") {
+    // given
+    Seq(
+      ("show index", Seq(BreakingKeywords("show index"))),
+      ("show indexes brief", Seq(BreakingKeywords("show indexes"), NonBreakingKeywords("brief"))),
+      ("show all indexes", Seq(BreakingKeywords("show all indexes"))),
+      ("show btree index", Seq(BreakingKeywords("show btree index"))),
+      ("show btree index verbose output", Seq(BreakingKeywords("show btree index"), NonBreakingKeywords("verbose output"))),
+    ).foreach { case (query, result) =>
+      // when then
+      parsing(query) shouldGive result
+    }
   }
 
   test("shouldParseAscAsKeyword") {

@@ -205,9 +205,10 @@ include::../indexes/drop-an-index.asciidoc[leveloffset=+1]
 
 include::../indexes/drop-a-non-existing-index.asciidoc[leveloffset=+1]
 
+[[administration-indexes-list-indexes]]
 === List indexes
 
-Listing all indexes can be done with `SHOW INDEXES`, which will produce a table with the following columns:
+Listing indexes can be done with `SHOW INDEXES`, which will produce a table with the following columns:
 
 .List indexes output
 [options="header", width="100%", cols="1a,4,^.^,^"]
@@ -283,8 +284,10 @@ Listing all indexes can be done with `SHOW INDEXES`, which will produce a table 
 | `+`
 |===
 
+[NOTE]
+The deprecated built-in procedures for listing indexes, such as `db.indexes`, work as before and are not affected by the <<administration-security-administration-database-indexes, `SHOW INDEXES` privilege>>.
 
-include::../indexes/options-for-listing-indexes.asciidoc[leveloffset=+2]
+include::../indexes/example-of-listing-indexes.asciidoc[leveloffset=+2]
 
 [role=deprecated]
 [[administration-indexes-examples-deprecated-syntax]]

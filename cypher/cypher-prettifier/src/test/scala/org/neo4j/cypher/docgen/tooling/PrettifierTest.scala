@@ -20,10 +20,7 @@
 package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.GraphIcing
-import org.scalatest.Assertions
-import org.scalatest.FunSuiteLike
-import org.scalatest.Matchers
-import org.scalatest.Suite
+import org.scalatest.{Assertions, FunSuiteLike, Matchers, Suite}
 
 class PrettifierTest extends Suite
                      with FunSuiteLike
@@ -57,6 +54,12 @@ class PrettifierTest extends Suite
 
   test("should not break DROP INDEX IF EXISTS by name") {
     actual("drop index name if exists") should equal(expected("DROP INDEX name IF EXISTS"))
+  }
+
+  test("should not break SHOW INDEXES") {
+    actual("show indexes") should equal(expected("SHOW INDEXES"))
+    actual("show all indexes brief output") should equal(expected("SHOW ALL INDEXES BRIEF OUTPUT"))
+    actual("show btree index verbose") should equal(expected("SHOW BTREE INDEX VERBOSE"))
   }
 
   test("should not break on ASC") {
@@ -119,6 +122,16 @@ class PrettifierTest extends Suite
     actual("drop constraint name if exists") should equal(
       expected("DROP CONSTRAINT name IF EXISTS")
     )
+  }
+
+  test("should not break SHOW CONSTRAINTS") {
+    actual("show constraints") should equal(expected("SHOW CONSTRAINTS"))
+    actual("show unique constraint") should equal(expected("SHOW UNIQUE CONSTRAINT"))
+    actual("show node key constraints verbose output") should equal(expected("SHOW NODE KEY CONSTRAINTS VERBOSE OUTPUT"))
+    actual("show node exists constraints") should equal(expected("SHOW NODE EXISTS CONSTRAINTS"))
+    actual("show relationship exist constraint brief") should equal(expected("SHOW RELATIONSHIP EXIST CONSTRAINT BRIEF"))
+    actual("show exists constraint") should equal(expected("SHOW EXISTS CONSTRAINT"))
+    actual("show all constraints") should equal(expected("SHOW ALL CONSTRAINTS"))
   }
 
   test("should break ON CREATE") {
