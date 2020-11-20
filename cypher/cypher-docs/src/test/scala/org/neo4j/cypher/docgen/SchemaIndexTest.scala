@@ -24,10 +24,12 @@ import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.internal.plandescription.Arguments.Planner
-import org.neo4j.cypher.internal.planner.spi.{DPPlannerName, IDPPlannerName}
+import org.neo4j.cypher.internal.planner.spi.DPPlannerName
+import org.neo4j.cypher.internal.planner.spi.IDPPlannerName
 import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
 import org.neo4j.cypher.internal.util.Foldable.FoldableAny
-import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
+import org.neo4j.cypher.GraphIcing
+import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
@@ -149,8 +151,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text =
         """
           |To list all indexes with the brief output columns, the `SHOW INDEXES` command can be used.
-          |Filtering the output on index type is available for `BTREE` indexes, using `SHOW BTREE INDEXES`.
-          |If all columns are wanted, use `SHOW INDEXES VERBOSE`.""".stripMargin,
+          |If all columns are wanted, use `SHOW INDEXES VERBOSE`.
+          |Filtering the output on index type is available for `BTREE` indexes, using `SHOW BTREE INDEXES`.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "SHOW INDEXES",
       optionalResultExplanation =

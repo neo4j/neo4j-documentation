@@ -25,10 +25,10 @@ import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.junit.Test
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.exceptions.CypherExecutionException
-import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.graphdb.ConstraintViolationException
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.RelationshipType
+import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
@@ -98,15 +98,13 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text =
         """
           |To list all constraints with the brief output columns, the `SHOW CONSTRAINTS` command can be used.
-          |.""".stripMargin,
+          |If all columns are wanted, use `SHOW CONSTRAINTS VERBOSE`.
+          |Filtering the output on constraint type is available for all types, the filtering keywords are listed in the <<administration-constraints-syntax, syntax table>>.
+          |As an example, to show only unique constraints, use `SHOW UNIQUE CONSTRAINTS`.""".stripMargin,
       queryText = "SHOW CONSTRAINTS",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
       optionalResultExplanation =
-        """To show all columns, use `SHOW CONSTRAINTS VERBOSE`.
-          |To show only one type of constraint use the filtering keyword,
-          |for example to show unique constraints, use `SHOW UNIQUE CONSTRAINTS`.
-          |
-          |One of the output columns from `SHOW CONSTRAINTS` is the name of the constraint.
+        """One of the output columns from `SHOW CONSTRAINTS` is the name of the constraint.
           |This can be used to drop the constraint with the <<administration-constraints-drop-constraint, `DROP CONSTRAINT` command>>.""".stripMargin,
       assertions = p => assert(p.size == 1)
     )

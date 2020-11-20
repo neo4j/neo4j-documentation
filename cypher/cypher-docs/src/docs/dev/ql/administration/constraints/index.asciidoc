@@ -252,7 +252,6 @@ include::drop-a-constraint.asciidoc[leveloffset=+2]
 
 include::drop-a-non-existing-constraint.asciidoc[leveloffset=+2]
 
-
 [[administration-constraints-list-constraint]]
 === List constraints
 
@@ -313,7 +312,7 @@ Listing all constraints can be done with `SHOW CONSTRAINTS`, which will produce 
 |===
 
 [NOTE]
-Note that the deprecated built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the <<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>>.
+The deprecated built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the <<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>>.
 
 include::example-of-listing-constraints.asciidoc[leveloffset=+2]
 
