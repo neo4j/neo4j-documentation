@@ -182,6 +182,8 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-set-node-properties-from-map, SetNodePropertiesFromMap>>          | Sets properties from a map on a node. | | Y |
 | <<query-plan-set-property, SetProperty>>          | Sets a property on a node or relationship. | | Y |
 | <<query-plan-set-relationship-properties-from-map, SetRelationshipPropertiesFromMap>>    | Sets properties from a map on a relationship. | | Y |
+| <<query-plan-list-constraints, ShowConstraints>>                           | List constraints with either verbose of brief output. | Y | |
+| <<query-plan-list-indexes, ShowIndexes>>                                   | List indexes with either verbose of brief output. | Y | |
 | <<query-plan-skip, Skip>>                                                  | Skips 'n' rows from the incoming rows. | | |
 | <<query-plan-sort, Sort>>                                                  | Sorts rows by a provided key. | | | Eager
 | <<query-plan-top, Top>>                                                    | Returns the first 'n' rows sorted by a provided key. | | | Eager
@@ -248,8 +250,10 @@ We list below all the actions that trigger one or more database hits:
 ** Add an index
 ** Drop an index
 ** Get the reference of an index
+** Listing indexes
 ** Create a constraint
 ** Drop a constraint
+** Listing constraints
 
 * Call a procedure
 * Call a user-defined function
