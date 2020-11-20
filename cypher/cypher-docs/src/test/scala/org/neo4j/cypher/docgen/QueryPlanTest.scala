@@ -274,6 +274,23 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def showConstraints() {
+    executePreparationQueries {
+      List("CREATE CONSTRAINT name ON (c:Country) ASSERT c.name is UNIQUE")
+    }
+
+    profileQuery(
+      title = "List constraints",
+      text =
+        """The `ShowConstraints` operator lists constraints. It may include filtering on constraint type and can have either brief or verbose output.""".stripMargin,
+      queryText = """SHOW CONSTRAINTS""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("ShowConstraints"))
+      }
+    )
+  }
+
   @Test def createIndex() {
     profileQuery(
       title = "Create Index",
@@ -340,6 +357,23 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("DropIndex"))
         assertThat(plan, containsString("name"))
+      }
+    )
+  }
+
+  @Test def showIndexes() {
+    executePreparationQueries {
+      List("CREATE INDEX name FOR (c:Country) ON (c.name)")
+    }
+
+    profileQuery(
+      title = "List indexes",
+      text =
+        """The `ShowIndexes` operator lists indexes. It may include filtering on index type and can have either brief or verbose output.""".stripMargin,
+      queryText = """SHOW INDEXES BRIEF""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("ShowIndexes"))
       }
     )
   }
