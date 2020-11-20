@@ -255,7 +255,7 @@ include::drop-a-non-existing-constraint.asciidoc[leveloffset=+2]
 [[administration-constraints-list-constraint]]
 === List constraints
 
-Listing all constraints can be done with `SHOW CONSTRAINTS`, which will produce a table with the following columns:
+Listing constraints can be done with `SHOW CONSTRAINTS`, which will produce a table with the following columns:
 
 .List constraints output
 [options="header", width="100%", cols="1a,4,^.^,^"]
