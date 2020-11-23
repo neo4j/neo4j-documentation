@@ -39,14 +39,14 @@ Where the components are:
 +
 allows the specified entities to be found
 +
-** `READ +{props}+`
+** `READ`
 +
 allows the specified properties to be read on the found entities.
 Note that granting property READ access does not imply that the entities with that property can be found.
 For example if there is also a DENY on it, the entity will not be found.
 The props can be `+*+` which means all properties.
 +
-** `MATCH +{props}+`
+** `MATCH`
 +
 this combines both TRAVERSE and READ allowing an entity to be found and its properties read.
 +
@@ -66,7 +66,7 @@ this privilege can only be assigned to all nodes, relationships and properties i
 *** `ELEMENTS` label (both nodes and relationships).
 ** The label or type can be `+*+` which means all labels or types.
 ** Multiple labels or types can be specified, comma-separated.
-** Defaults to `ELEMENTS +*+` if omitted.
+** Defaults to `ELEMENTS` `+*+` if omitted.
 * _roles_
 ** The role or roles to associate the privilege with, comma-separated.
 
