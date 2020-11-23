@@ -99,11 +99,11 @@ The special characters and their meaning are as follows:
 
 | `\|`
 | Or, used to indicate alternative parts of a command. Needs to be part of a grouping.
-| If the syntax needs to specify either a name or `*`, this can be indicated with `name \| *`.
+| If the syntax needs to specify either a name or `*`, this can be indicated with `* \| name`.
 
 | `{` and `}`
 | Used to group parts of the command, common together with `\|`.
-| To use the `or` in the syntax summary it needs to be in a group, `{name \| *}`.
+| To use the `or` in the syntax summary it needs to be in a group, `{* \| name}`.
 
 | `[` and `]`
 | Used to indicate an optional part of the command. It also groups alternatives together, when there can be either of the alternatives or nothing.
@@ -115,7 +115,7 @@ The special characters and their meaning are as follows:
 
 | `"`
 | When a special character is part of the syntax itself, we surround it with `"` to indicate this.
-| To include `{` in the syntax use `"{" { name \| * } "}"`, here we get either `{*}` or `{name}`.
+| To include `{` in the syntax use `"{" { * \| name } "}"`, here we get either `{*}` or `{name}`.
 
 |===
 
@@ -126,7 +126,7 @@ An example that uses all special characters is granting the `READ` privilege:
 ----
 GRANT READ
     "{" { * | property[, ...] } "}"
-    ON GRAPH[S] {name[, ...] | *}
+    ON GRAPH[S] {* | name[, ...]}
         [
             ELEMENT[S] { * | label-or-rel-type-name[,...] }
             | NODE[S] { * | label-name[,...] }
