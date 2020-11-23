@@ -125,7 +125,7 @@ class PredicateFunctionsTest extends DocumentingTest {
         """MATCH (n)
           |WHERE NOT isEmpty(n.array)
           |RETURN n.name AS name""".stripMargin, ResultAssertions(r => {
-          r.toList should equal(List(Map("name" -> "Alice"), Map("name" -> "Bob"), Map("name" -> "Charlie"), Map("name" -> "Daniel"), Map("name" -> "Eskil"), Map("name" -> null)))
+          r.toList should equal(List(Map("name" -> "Eskil")))
         })) {
         p("The names of all nodes with the `array` property being non-empty are returned.")
         resultTable()
@@ -135,9 +135,9 @@ class PredicateFunctionsTest extends DocumentingTest {
         """MATCH (n)
           |WHERE NOT isEmpty(properties(n))
           |RETURN n.name AS name""".stripMargin, ResultAssertions(r => {
-          r.toList should equal(List(Map("name" -> "Eskil")))
+          r.toList should equal(List(Map("name" -> "Alice"), Map("name" -> "Bob"), Map("name" -> "Charlie"), Map("name" -> "Daniel"), Map("name" -> "Eskil"), Map("name" -> null)))
         })) {
-        p("The names of all nodes with that have at least one property are returned. Not that this includes nodes not having the `name` property.")
+        p("The names of all nodes with that have at least one property are returned. Note that this includes nodes not having the `name` property.")
         resultTable()
       }
       function("isEmpty(string)", "A Boolean.", ("string", "An expression that returns a string."))
