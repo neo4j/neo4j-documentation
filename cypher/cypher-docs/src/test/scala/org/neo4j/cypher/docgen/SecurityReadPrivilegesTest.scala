@@ -28,8 +28,8 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
         |There are three separate read privileges:
         |
         |* `TRAVERSE` - enables the specified entities to be found.
-        |* `READ +{props}+` - enables the specified properties on the found entities to be read.
-        |* `MATCH +{props}+` - combines both `TRAVERSE` and `READ`, enabling an entity to be found and its properties read.
+        |* `READ` - enables the specified properties on the found entities to be read.
+        |* `MATCH` - combines both `TRAVERSE` and `READ`, enabling an entity to be found and its properties read.
         |""".stripMargin)
 
     section("The `TRAVERSE` privilege", "administration-security-reads-traverse", "enterprise-edition") {
