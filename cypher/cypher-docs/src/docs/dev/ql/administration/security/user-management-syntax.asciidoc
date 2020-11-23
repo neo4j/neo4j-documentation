@@ -43,7 +43,7 @@ CREATE OR REPLACE USER name
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
 ----
-| Create a new user, replacing an existing user if one exists with the same name.
+| Create a new user, or if a user with the same name exists, replace it.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>> and
 <<administration-security-administration-dbms-privileges-user-management, DROP USER>>
 | `+`
