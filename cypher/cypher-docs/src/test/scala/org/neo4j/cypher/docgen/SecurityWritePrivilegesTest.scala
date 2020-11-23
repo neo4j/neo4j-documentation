@@ -34,9 +34,9 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
         |
         |* `CREATE` - allows creating nodes and relationships.
         |* `DELETE` - allows deleting nodes and relationships.
-        |* `SET LABEL labels` - allows setting the specified node labels using the `SET` clause.
-        |* `REMOVE LABEL labels` - allows removing the specified node labels using the `REMOVE` clause.
-        |* `SET PROPERTY +{props}+` - allows setting properties on nodes and relationships.
+        |* `SET LABEL` - allows setting the specified node labels using the `SET` clause.
+        |* `REMOVE LABEL` - allows removing the specified node labels using the `REMOVE` clause.
+        |* `SET PROPERTY` - allows setting properties on nodes and relationships.
         |
         |There are also compound privileges which combine the above specific privileges:
         |
