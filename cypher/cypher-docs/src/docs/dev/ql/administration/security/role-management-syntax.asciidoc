@@ -40,7 +40,7 @@ CREATE ROLE name [IF NOT EXISTS] [AS COPY OF name]
 ----
 CREATE OR REPLACE ROLE name [AS COPY OF name]
 ----
-| Create a new role, replacing an existing role if one exists with the same name.
+| Create a new role, or if a role with the same name exists, replace it.
 | <<administration-security-administration-dbms-privileges-role-management, CREATE ROLE>> and
 <<administration-security-administration-dbms-privileges-role-management, DROP ROLE>>
 
