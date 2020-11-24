@@ -25,6 +25,7 @@ import org.neo4j.configuration.Config
 import org.neo4j.configuration.GraphDatabaseSettings.{DEFAULT_DATABASE_NAME, SYSTEM_DATABASE_NAME}
 import org.neo4j.cypher.internal.cache.ExecutorBasedCaffeineCacheFactory
 import org.neo4j.cypher.internal.compiler.CypherPlannerConfiguration
+import org.neo4j.cypher.internal.config.CypherConfiguration
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, MonitoringCacheTracer}
 import org.neo4j.cypher.internal.tracing.TimingCompilationTracer
 import org.neo4j.cypher.internal.{ExecutionEngine, _}
@@ -64,14 +65,14 @@ object ExecutionEngineFactory {
     val isSystemDatabase = spi.graphAPI.databaseName().equals(SYSTEM_DATABASE_NAME)
     val queryService = new GraphDatabaseCypherService(spi.graphAPI)
     val cypherConfig = CypherConfiguration.fromConfig(spi.config)
-    val plannerConfig = cypherConfig.toCypherPlannerConfiguration(spi.config, isSystemDatabase)
-    val runtimeConfig = cypherConfig.toCypherRuntimeConfiguration
+    val plannerConfig = CypherPlannerConfiguration.fromCypherConfiguration(cypherConfig, spi.config, isSystemDatabase)
+    val runtimeConfig = CypherRuntimeConfiguration.fromCypherConfiguration(cypherConfig)
     val compilerFactory = newCompatibilityFactory(queryService, plannerConfig, runtimeConfig)
     val cacheFactory = new ExecutorBasedCaffeineCacheFactory((_:Runnable).run())
     val cacheTracer = new MonitoringCacheTracer(spi.monitors.newMonitor(classOf[ExecutionEngineQueryCacheMonitor]))
     val tracer = new TimingCompilationTracer(spi.monitors.newMonitor(classOf[TimingCompilationTracer.EventListener]))
     if (isSystemDatabase) {
-      val innerPlannerConfig: CypherPlannerConfiguration = cypherConfig.toCypherPlannerConfiguration(spi.config, planSystemCommands = false)
+      val innerPlannerConfig: CypherPlannerConfiguration = CypherPlannerConfiguration.fromCypherConfiguration(cypherConfig, spi.config, planSystemCommands = false)
       val innerCompilerFactory: CompilerFactory = newCompatibilityFactory(queryService, innerPlannerConfig, runtimeConfig)
       // The following lines are only needed for the ContextSwitchingSystemGraphQueryExecutor, which is only needed for some specific cases
 //      val inner: JavaExecutionEngine = new JavaExecutionEngine(queryService, spi.logProvider, innerCompilerFactory)

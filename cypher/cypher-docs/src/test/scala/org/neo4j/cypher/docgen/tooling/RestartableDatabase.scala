@@ -20,13 +20,16 @@
 package org.neo4j.cypher.docgen.tooling
 
 import java.io.File
-import java.lang.Boolean.TRUE
+import java.lang.Boolean.{FALSE, TRUE}
+import java.nio.file.Path
 
+import com.neo4j.configuration.OnlineBackupSettings
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import com.neo4j.kernel.enterprise.api.security.EnterpriseAuthManager
 import org.apache.commons.io.FileUtils
 import org.neo4j.configuration.GraphDatabaseSettings
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
+import org.neo4j.configuration.helpers.SocketAddress
 import org.neo4j.cypher.docgen.ExecutionEngineFactory
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultSubscriber}
@@ -50,7 +53,7 @@ class RestartableDatabase(init: RunnableInitialization)
 
   var managementService: DatabaseManagementService = _
   var authManager: EnterpriseAuthManager = _
-  var dbFolder: File = _
+  var dbFolder: Path = _
   var graph: GraphDatabaseCypherService = null
   val graphs: mutable.Map[String, MetaData] = mutable.Map.empty
   var eengine: ExecutionEngine = null
@@ -65,8 +68,12 @@ class RestartableDatabase(init: RunnableInitialization)
 
   private def createAndStartIfNecessary() {
     if (graph == null) {
-      dbFolder = new File("target/example-db" + System.nanoTime())
-      val config: Map[Setting[_], Object] = Map(GraphDatabaseSettings.auth_enabled -> TRUE)
+      dbFolder = new File("target/example-db" + System.nanoTime()).toPath
+      val config: Map[Setting[_], Object] = Map(
+        GraphDatabaseSettings.auth_enabled -> TRUE,
+        OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
+        OnlineBackupSettings.online_backup_enabled ->  FALSE
+      )
       managementService = new EnterpriseDatabaseManagementServiceBuilder(dbFolder).setConfig(config.asJava).build()
 
       //    managementService = graphDatabaseFactory(Files.createTempDirectory("test").getParent.toFile).impermanent().setConfig(config.asJava).setInternalLogProvider(logProvider).build()
@@ -148,7 +155,7 @@ class RestartableDatabase(init: RunnableInitialization)
   private def restart() {
     if (graph == null) return
     managementService.shutdown()
-    FileUtils.deleteQuietly(dbFolder)
+    FileUtils.deleteQuietly(dbFolder.toFile)
     graphs.clear()
     graph = null
     eengine = null

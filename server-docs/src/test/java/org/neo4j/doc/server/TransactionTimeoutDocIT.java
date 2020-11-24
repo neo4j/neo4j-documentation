@@ -52,7 +52,10 @@ public class TransactionTimeoutDocIT extends ExclusiveWebContainerTestBase
     public void shouldHonorReallyLowSessionTimeout() throws Exception
     {
         // Given
-        webContainer = builder().withProperty( ServerSettings.transaction_idle_timeout.name(), "1" ).usingDataDir( folder.getAbsolutePath() ).build();
+        webContainer = builder()
+                .withProperty( ServerSettings.transaction_idle_timeout.name(), "1" )
+                .onRandomPorts()
+                .usingDataDir( folder.getAbsolutePath() ).build();
 
         String tx = HTTP.POST( txURI(), Collections.singletonList(map("statement", "CREATE (n)"))).location();
 

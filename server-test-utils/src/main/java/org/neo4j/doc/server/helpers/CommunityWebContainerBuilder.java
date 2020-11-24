@@ -31,6 +31,7 @@ import org.neo4j.common.DependencyResolver;
 import org.neo4j.configuration.Config;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.configuration.SettingValueParsers;
+import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.configuration.connectors.HttpConnector;
 import org.neo4j.configuration.connectors.HttpsConnector;
 import org.neo4j.configuration.helpers.SocketAddress;
@@ -62,6 +63,7 @@ public class CommunityWebContainerBuilder
     private final LogProvider logProvider;
     private SocketAddress address = new SocketAddress( "localhost", HttpConnector.DEFAULT_PORT );
     private SocketAddress httpsAddress = new SocketAddress( "localhost", HttpsConnector.DEFAULT_PORT );
+    private SocketAddress boltAddress = new SocketAddress( "localhost", BoltConnector.DEFAULT_PORT );
     private String maxThreads;
     private String dataDir;
     private String dbUri = "/db";
@@ -166,6 +168,8 @@ public class CommunityWebContainerBuilder
         properties.put( HttpsConnector.enabled.name(), String.valueOf( httpsEnabled ) );
         properties.put( HttpsConnector.listen_address.name(), httpsAddress.toString() );
 
+        properties.put( BoltConnector.listen_address.name(), boltAddress.toString() );
+
         properties.put( GraphDatabaseSettings.neo4j_home.name(), temporaryFolder.toAbsolutePath().toString() );
 
         properties.put( GraphDatabaseSettings.auth_enabled.name(), FALSE );
@@ -251,6 +255,7 @@ public class CommunityWebContainerBuilder
     {
         this.onHttpsAddress( ANY_ADDRESS );
         this.onAddress( ANY_ADDRESS );
+        this.onBoltAddress( ANY_ADDRESS );
         return this;
     }
 
@@ -263,6 +268,12 @@ public class CommunityWebContainerBuilder
     public CommunityWebContainerBuilder onHttpsAddress( SocketAddress address )
     {
         this.httpsAddress = address;
+        return this;
+    }
+
+    public CommunityWebContainerBuilder onBoltAddress( SocketAddress address )
+    {
+        this.boltAddress = address;
         return this;
     }
 
