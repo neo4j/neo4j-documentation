@@ -61,10 +61,10 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       // image source: https://docs.google.com/drawings/d/1dueKAcaQORul-_Ocb5jK9bUkWgtQfdLdFw4uo7PFjTs/edit
     }
     section("Listing privileges", "administration-security-subgraph-show", "enterprise-edition") {
-      p("Available privileges for can be seen using the different `SHOW PRIVILEGES` commands.")
+      p("Available privileges can be displayed using the different `SHOW PRIVILEGES` commands.")
       p("include::show-privileges-syntax.asciidoc[]")
       section("Examples for listing all privileges", "administration-security-subgraph-show-all") {
-        p("Available privileges for all roles can be seen using `SHOW PRIVILEGES`.")
+        p("Available privileges for all roles can be displayed using `SHOW PRIVILEGES`.")
         p("include::show-all-privileges-syntax.asciidoc[]")
         query("SHOW PRIVILEGES", assertPrivilegeShown(Seq(
           Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
@@ -74,7 +74,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
             """Lists all privileges for all roles.
               |The table contains columns describing the privilege:
               |
-              |* access: whether the privilege is granted or denied (whitelist or blacklist)
+              |* access: whether the privilege is granted or denied
               |* action: which type of privilege this is: traverse, read, match, write, a database privilege, a dbms privilege or admin
               |* resource: what type of scope this privilege applies to: the entire dbms, a database, a graph or sub-graph access
               |* graph: the specific database or graph this privilege applies to
@@ -94,7 +94,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
               |
               |* The number of columns returned has been reduced with the `YIELD` clause.
               |* The order of the returned columns has been changed.
-              |* The results have been filtered to only return the 'admin' role using a `WHERE` clause.
+              |* The results have been filtered to only return the `admin` role using a `WHERE` clause.
               |* The results are ordered by the 'action' column using `ORDER BY`.
               |
               |`SKIP` and `LIMIT` can also be used to paginate the results.
@@ -108,22 +108,22 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
           Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers", "graph" -> "neo4j")
         ))) {
           p(
-            """In this example the `WHERE` clause is used to filter privileges down to those that target specific graphs only.""".stripMargin)
+            """In this example, the `WHERE` clause is used to filter privileges down to those that target specific graphs only.""".stripMargin)
           resultTable()
         }
       }
       section("Examples for listing privileges for specific role", "administration-security-subgraph-show-role") {
-        p("Available privileges for a particular role can be seen using `SHOW ROLE name PRIVILEGES`.")
+        p("Available privileges for a particular role can be displayed using `SHOW ROLE name PRIVILEGES`.")
         p("include::show-role-privileges-syntax.asciidoc[]")
         query("SHOW ROLE regularUsers PRIVILEGES", assertPrivilegeShown(Seq(
           Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers")
         ))) {
-          p("Lists all privileges for role 'regularUsers'.")
+          p("Lists all privileges for role `regularUsers`.")
           resultTable()
         }
       }
       section("Examples for listing privileges for specific user", "administration-security-subgraph-show-user") {
-        p("Available privileges for a particular user can be seen using `SHOW USER name PRIVILEGES`.")
+        p("Available privileges for a particular user can be displayed using `SHOW USER name PRIVILEGES`.")
         note {
           p("Please note that if a non-native auth provider like LDAP is in use, `SHOW USER PRIVILEGES` will only work in a limited capacity; " +
             "It is only possible for a user to show their own privileges. Other users' privileges cannot be listed when using a non-native auth provider.")
@@ -133,7 +133,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         query("SHOW USER jake PRIVILEGES", assertPrivilegeShown(Seq(
           Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers", "user" -> "jake")
         ))) {
-          p("Lists all privileges for user 'jake'.")
+          p("Lists all privileges for user `jake`.")
           resultTable()
         }
 
