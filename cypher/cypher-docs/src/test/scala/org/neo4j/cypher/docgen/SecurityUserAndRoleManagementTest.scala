@@ -94,7 +94,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           }
         }
         p("The created user will appear on the list provided by `SHOW USERS`.")
-        query("SHOW USERS YIELD user, suspended, passwordChangeRequired, roles, requestedDefaultDatabase WHERE user = 'jake'", assertUsersShown(Seq("jake"))) {
+        query("SHOW USERS YIELD user, suspended, passwordChangeRequired, roles, defaultDatabase WHERE user = 'jake'", assertUsersShown(Seq("jake"))) {
           p(
             """In this example we also:
               |
