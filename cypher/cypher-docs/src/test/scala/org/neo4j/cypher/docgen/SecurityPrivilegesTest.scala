@@ -74,12 +74,12 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
             """Lists all privileges for all roles.
               |The table contains columns describing the privilege:
               |
-              |* access: whether the privilege is granted or denied
-              |* action: which type of privilege this is: traverse, read, match, write, a database privilege, a dbms privilege or admin
-              |* resource: what type of scope this privilege applies to: the entire dbms, a database, a graph or sub-graph access
-              |* graph: the specific database or graph this privilege applies to
-              |* segment: for sub-graph access control, this describes the scope in terms of labels or relationship types
-              |* role: the role the privilege is granted to
+              |* `access`: whether the privilege is granted or denied
+              |* `action`: which type of privilege this is: traverse, read, match, write, a database privilege, a dbms privilege or admin
+              |* `resource`: what type of scope this privilege applies to: the entire dbms, a database, a graph or sub-graph access
+              |* `graph`: the specific database or graph this privilege applies to
+              |* `segment`: for sub-graph access control, this describes the scope in terms of labels or relationship types
+              |* `role`: the role the privilege is granted to
               |""".stripMargin)
           resultTable()
         }
@@ -95,7 +95,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
               |* The number of columns returned has been reduced with the `YIELD` clause.
               |* The order of the returned columns has been changed.
               |* The results have been filtered to only return the `admin` role using a `WHERE` clause.
-              |* The results are ordered by the 'action' column using `ORDER BY`.
+              |* The results are ordered by the `action` column using `ORDER BY`.
               |
               |`SKIP` and `LIMIT` can also be used to paginate the results.
               |""".stripMargin)
