@@ -3,10 +3,7 @@
 
 :description: Cypher path matching uses relationship isomorphis, the same relationship cannot be returned more than once in the same result record. 
 
-
-While pattern matching, **Neo4j Cypher** makes sure to not include matches where the same graph relationship is found multiple times in a single path matching a particular pattern.
-
-Neo4j Cypher makes use of **relationship isomorphism** for path matching and is a very effective way of reducing the result set size and preventing infinite traversals.
+**Neo4j Cypher** makes use of **relationship isomorphism** for path matching and is a very effective way of reducing the result set size and preventing infinite traversals.
 
 [NOTE]
 ====
@@ -30,14 +27,14 @@ The graph is composed of only two nodes `(a)` and `(b)`, connected by one relati
 
 If the query is looking for paths of length `n` and do not care about the direction, a path of length `n` will be returned repeating the two nodes over and over.
 
-For example, find all paths with 5 relationships and do not care about the relationship direction.
+For example, find all paths with 5 relationships and do not care about the relationship direction:
 
 [source, cypher]
 ----
 MATCH p=()-[*5]-() RETURN nodes(p)
 ----
 
-could return the two resulting records `[a,b,a,b,a,b]` as well as `[b,a,b,a,b,a]`.
+This will return the two resulting records `[a,b,a,b,a,b]`, as well as `[b,a,b,a,b,a]`.
 ====
 
 
@@ -45,7 +42,7 @@ could return the two resulting records `[a,b,a,b,a,b]` as well as `[b,a,b,a,b,a]
 
 **Constraints:** The same node cannot be returned more than once for each path matching record.
 
-In the above two-node example, `(a)&#x2D;&#x2D;&#x3E;(b)`, only paths of length 1 can be found with the node isomorphism constraint.
+In another two-node example, such as `(a)&#x2D;&#x2D;&#x3E;(b)`; only paths of length 1 can be found with the node isomorphism constraint.
 
 
 .Node isomorphism
@@ -57,7 +54,7 @@ The graph is composed of only two nodes `(a)` and `(b)`, connected by one relati
 MATCH p=()-[*1]-() RETURN nodes(p)
 ----
 
-could return the two resulting records `[a, b]` as well as `[b, a]`.
+This will return the two resulting records `[a, b]`, as well as `[b, a]`.
 ====
 
 
@@ -65,7 +62,7 @@ could return the two resulting records `[a, b]` as well as `[b, a]`.
 
 **Constraints:** The same relationship cannot be returned more than once for each path matching record.
 
-In the above two-node example, `(a)&#x2D;&#x2D;&#x3E;(b)`, only paths of length 1 can be found with the relationship isomorphism constraint.
+In another two-node example, such as `(a)&#x2D;&#x2D;&#x3E;(b)`; only paths of length 1 can be found with the relationship isomorphism constraint.
 
 
 .Relationship isomorphism
@@ -77,11 +74,11 @@ The graph is composed of only two nodes `(a)` and `(b)`, connected by one relati
 MATCH p=()-[*1]-() RETURN nodes(p)
 ----
 
-could return the two resulting records `[a, b]` as well as `[b, a]`.
+This will return the two resulting records `[a, b]`, as well as `[b, a]`.
 ====
 
 
-== Cypher path matching examples
+== Cypher path matching example
 
 Cypher makes use of relationship isomorphism for path matching.
 
@@ -159,7 +156,7 @@ Adam
 
 //table
 
-Note that while the following query (Query 4) looks similar to the previous one (Query 3), it is actually equivalent to the one before (Query 2).
+Note that while the following **Query 4** looks similar to **Query 3**, it is actually equivalent to **Query 2**.
 
 **Query 4, equvilent to query 2.**
 
