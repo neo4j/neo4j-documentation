@@ -38,8 +38,7 @@ If you delete a database and create a new one with the same name, the new one wi
 ** The _name_ component can be `+*+`, which means all databases.
 Databases created after this command execution will also be associated with these privileges.
 ** The `DATABASE[S] _name_` part of the command may be replaced by `DEFAULT DATABASE`. This refers to
-   the default database configured for a user, or in the event that this database is unavailable
-   or if that user does not have a default database configured, the system wide default.
+   the default database configured for a user or, if that user does not have a default database configured, the system wide default.
    If the user's default database changes for any reason after this command execution, the new
    one will be associated with these privileges. This can be quite powerful as it allows permissions to be switched
    from one database to another simply by changing a user's default database.
