@@ -62,8 +62,10 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p("image::grant-privileges-overview.png[title=\"GRANT and DENY Syntax\"]")
       // image source: https://docs.google.com/drawings/d/1i5btHUV8VIW7-6j52hFBo2DA38tgzrMnIGRJiBAaJn8/edit?usp=sharing
       p("A more detailed syntax illustration would be the image below for graph privileges.")
-      p("image::grant-privileges-graph.png[title=\"Syntax of GRANT and DENY Graph Privileges\"]")
+      p("image::grant-privileges-graph.png[title=\"Syntax of GRANT and DENY Graph Privileges. The `{` and `}` are part of the syntax and not used for grouping.\"]")
       // image source: https://docs.google.com/drawings/d/1ZSJz-xd9s_uS6SXYv_3kjxCKKZ5kpzfk-M40fNxGdQo/edit?usp=sharing
+      p("image::privilege-hierarchy-graph.png[title=\"Graph privileges hierarchy\"]")
+      // image source: https://docs.google.com/drawings/d/17wwrawGb5D5ZsnIVqwPImbtQdyVkzUH3LOqIA4ZMuwY/edit?usp=sharing
     }
     section("Listing privileges", "administration-security-subgraph-show", "enterprise-edition") {
       p("Available privileges can be displayed using the different `SHOW PRIVILEGES` commands.")
