@@ -46,8 +46,10 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     }
     section("The `GRANT`, `DENY` and `REVOKE` commands", "administration-security-subgraph-introduction", "enterprise-edition") {
       p("include::grant-deny-syntax.asciidoc[]")
-      p("image::grant-privileges-graph.png[title=\"GRANT and DENY Syntax\"]")
+      p("image::grant-privileges-graph.png[title=\"GRANT and DENY Syntax. The `{` and `}` are part of the syntax and not used for grouping.\"]")
       // image source: https://docs.google.com/drawings/d/10PrJ2xb0fvT0I_i5P0thmSEReIcsZD8cJqJMV7FS7yg/edit?usp=sharing
+      p("image::privilege-hierarchy-graph.png[title=\"Graph privileges hierarchy\"]")
+      // image source:https://docs.google.com/drawings/d/1bChOmVPoIhJO4ygyngZ06K4eXIbvGUDZ6BBAi0qdskA/edit?usp=sharing
     }
     section("Listing privileges", "administration-security-subgraph-show", "enterprise-edition") {
       p("Available privileges for all roles can be seen using `SHOW PRIVILEGES`.")
