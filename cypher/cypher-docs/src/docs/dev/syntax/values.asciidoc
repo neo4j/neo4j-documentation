@@ -17,7 +17,7 @@ These fall into several categories which will be described in detail in the foll
 * [*] Can be stored as properties
 * [*] Can be constructed with <<cypher-expressions, Cypher literals>>
 
-Property types are composed of:
+The property types:
 
 * **Number**, an abstract type, which has the subtypes **Integer** and **Float**
 * **String**
@@ -59,33 +59,29 @@ Examples are:
 * [ ] Cannot be stored as properties
 * [ ] Cannot be constructed with <<cypher-expressions, Cypher literals>>
 
-Structural types are composed of:
+The structural types:
 
-* **Node:**
-   ** Id
-   ** Label(s)
-   ** Map (of properties)
-* **Relationship:**
-   ** Id
-   ** Type
-   ** Map (of properties)
-   ** Id of the start node
-   ** Id of the end node
+* **Node**
+** Id
+** Label(s)
++
+[NOTE]
+====
+Labels are not values but are a form of pattern syntax.
+====
+** Map (of properties)
+* **Relationship**
+** Id
+** Type
+** Map (of properties)
+** Id of the start node
+** Id of the end node
 * **Path**, an alternating sequence of nodes and relationships
 
 
 [NOTE]
 ====
 Nodes, relationships, and paths are returned as a result of pattern matching.
-====
-
-[NOTE]
-====
-Labels are not values but are a form of pattern syntax.
-====
-
-[NOTE]
-====
 In Neo4j, all relationships have a direction.
 However, you can have the notion of undirected relationships at query time.
 ====
@@ -99,14 +95,17 @@ However, you can have the notion of undirected relationships at query time.
 * [ ] Cannot be stored as properties
 * [*] Can be constructed with <<cypher-expressions, Cypher literals>>
 
-Composite types are composed of:
+The composite types:
 
-* **Lists** are heterogeneous, ordered collections of values, each of which has any property, structural or composite type.
-* **Maps** are heterogeneous, unordered collections of (key, value) pairs, where:
-   ** the key is a String
-   ** the value has any property, structural or composite type
+* **List**, a heterogeneous, ordered collection of values, each of which has any property, structural or composite type.
+* **Map**, a heterogeneous, unordered collection of (_Key_, _Value_) pairs.
+** _Key_ is a String
+** _Value_ has any property, structural or composite type
 
-NOTE: Composite values can also contain `null`.
+[NOTE]
+====
+Composite values can also contain `null`.
+====
 
 '''
 
