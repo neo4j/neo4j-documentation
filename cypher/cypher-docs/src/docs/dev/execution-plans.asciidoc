@@ -6,19 +6,11 @@
 This section describes the characteristics of query execution plans and provides details about each of the operators.
 --
 
-* <<execution-plan-introduction, Introduction>>
-* <<execution-plan-operators-summary, Execution plan operators>>
-* <<execution-plans-dbhits, Database hits (DbHits)>>
-* <<execution-plans-operators, Execution plan operators in detail>>
-* <<query-shortestpath-planning, Shortest path planning>>
-
 [NOTE]
 For information on replanning, see <<cypher-replanning>>.
 
-
 [[execution-plan-introduction]]
-== Introduction
-
+.Introduction
 The task of executing a query is decomposed into _operators_, each of which implements a specific piece of work.
 The operators are combined into a tree-like structure called an _execution plan_.
 Each operator in the execution plan is represented as a node in the tree.
@@ -86,11 +78,3 @@ In particular, see <<how-do-i-profile-a-query>> for how to view the execution pl
 For a deeper understanding of how each operator works, refer to <<execution-plan-operators-summary>> and the linked sections per operator.
 Please remember that the statistics of the particular database where the queries run will decide the plan used.
 There is no guarantee that a specific query will always be solved with the same plan.
-
-include::execution-plans-operator-summary.asciidoc[leveloffset=+1]
-
-include::execution-plans-db-hits.asciidoc[leveloffset=+1]
-
-include::execution-plan-groups/operators.asciidoc[leveloffset=+1]
-
-include::execution-plan-groups/query-shortestpath-planning.adoc[leveloffset=+1]
