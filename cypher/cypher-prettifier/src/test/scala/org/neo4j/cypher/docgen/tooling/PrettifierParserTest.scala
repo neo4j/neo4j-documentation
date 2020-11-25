@@ -19,6 +19,9 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MAX
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MIN
+import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 import org.parboiled.scala.Rule1
 
 class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxToken]] {
@@ -77,6 +80,17 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
         NonBreakingKeywords("is"), NonBreakingKeywords("not"), NonBreakingKeywords("null"))
   }
 
+  test("shouldParseCreateConstraintWithOptions") {
+    // given
+    val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
+    val query = s"create constraint on (person:Person) assert person.age is unique options {indexProvider: '$nativeProvider'}"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create constraint on"), GroupToken("(", ")", Seq(AnyText("person:Person"))), NonBreakingKeywords("assert"), AnyText("person.age"),
+        NonBreakingKeywords("is unique"), NonBreakingKeywords("options"), GroupToken("{", "}", Seq(AnyText("indexProvider:"), EscapedText(nativeProvider, '\''))))
+  }
+
   test("shouldParseDropConstraintByName") {
     // given
     val query = "drop constraint name"
@@ -84,6 +98,22 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     // when then
     parsing(query) shouldGive
       Seq(BreakingKeywords("drop constraint"), AnyText("name"))
+  }
+
+  test("shouldParseShowConstraints") {
+    // given
+    Seq(
+      ("show constraint", Seq(BreakingKeywords("show constraint"))),
+      ("show unique constraint brief", Seq(BreakingKeywords("show unique constraint"), NonBreakingKeywords("brief"))),
+      ("show node key constraints", Seq(BreakingKeywords("show node key constraints"))),
+      ("show node exists constraints verbose", Seq(BreakingKeywords("show node exists constraints"), NonBreakingKeywords("verbose"))),
+      ("show relationship exist constraint", Seq(BreakingKeywords("show relationship exist constraint"))),
+      ("show exists constraint verbose output", Seq(BreakingKeywords("show exists constraint"), NonBreakingKeywords("verbose output"))),
+      ("show all constraints brief output", Seq(BreakingKeywords("show all constraints"), NonBreakingKeywords("brief output"))),
+    ).foreach { case (query, result) =>
+      // when then
+      parsing(query) shouldGive result
+    }
   }
 
   test("shouldParseCreateIndexWithName") {
@@ -96,6 +126,23 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
         BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))))
   }
 
+  test("shouldParseCreateIndexWithOptions") {
+    // given
+    val wgsMin = SPATIAL_WGS84_MIN.getSettingName
+    val wgsMax = SPATIAL_WGS84_MAX.getSettingName
+    val query = s"create index for (person:Person) on (person.age) options {indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}}"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create index"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq(AnyText("person:Person"))), BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))),
+        NonBreakingKeywords("options"), GroupToken("{", "}", Seq(AnyText("indexConfig:"), GroupToken("{", "}", Seq(
+          AnyText(s"`$wgsMin`:"), GroupToken("[", "]", Seq(AnyText("-100.0,"), AnyText("-80.0"))),
+          Comma,
+          AnyText(s"`$wgsMax`:"), GroupToken("[", "]", Seq(AnyText("100.0,"), AnyText("80.0")))
+        ))))
+      )
+  }
+
   test("shouldParseDropIndexByNameIfExists") {
     // given
     val query = "drop index name if exists"
@@ -103,6 +150,20 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     // when then
     parsing(query) shouldGive
       Seq(BreakingKeywords("drop index"), AnyText("name"), NonBreakingKeywords("if exists"))
+  }
+
+  test("shouldParseShowIndexes") {
+    // given
+    Seq(
+      ("show index", Seq(BreakingKeywords("show index"))),
+      ("show indexes brief", Seq(BreakingKeywords("show indexes"), NonBreakingKeywords("brief"))),
+      ("show all indexes", Seq(BreakingKeywords("show all indexes"))),
+      ("show btree index", Seq(BreakingKeywords("show btree index"))),
+      ("show btree index verbose output", Seq(BreakingKeywords("show btree index"), NonBreakingKeywords("verbose output"))),
+    ).foreach { case (query, result) =>
+      // when then
+      parsing(query) shouldGive result
+    }
   }
 
   test("shouldParseAscAsKeyword") {

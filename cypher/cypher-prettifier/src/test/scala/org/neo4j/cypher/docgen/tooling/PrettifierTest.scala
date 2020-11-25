@@ -20,6 +20,9 @@
 package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.GraphIcing
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MAX
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MIN
+import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 import org.scalatest.Assertions
 import org.scalatest.FunSuiteLike
 import org.scalatest.Matchers
@@ -43,6 +46,12 @@ class PrettifierTest extends Suite
     actual("create index if not exists for (p:Person) on (p.name)") should equal(expected("CREATE INDEX IF NOT EXISTS FOR (p:Person)%nON (p.name)"))
   }
 
+  test("may break CREATE INDEX FOR ... OPTIONS") {
+    val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
+    actual(s"create index for (p:Person) on (p.name) options {indexProvider: '$nativeProvider'}") should equal(
+      expected(s"CREATE INDEX FOR (p:Person)%nON (p.name) OPTIONS { indexProvider: '$nativeProvider' }"))
+  }
+
   test("may break CREATE INDEX FOR with name") {
     actual("create index name for (p:Person) on (p.name)") should equal(expected("CREATE INDEX name FOR (p:Person)%nON (p.name)"))
   }
@@ -57,6 +66,12 @@ class PrettifierTest extends Suite
 
   test("should not break DROP INDEX IF EXISTS by name") {
     actual("drop index name if exists") should equal(expected("DROP INDEX name IF EXISTS"))
+  }
+
+  test("should not break SHOW INDEXES") {
+    actual("show indexes") should equal(expected("SHOW INDEXES"))
+    actual("show all indexes brief output") should equal(expected("SHOW ALL INDEXES BRIEF OUTPUT"))
+    actual("show btree index verbose") should equal(expected("SHOW BTREE INDEX VERBOSE"))
   }
 
   test("should not break on ASC") {
@@ -109,6 +124,14 @@ class PrettifierTest extends Suite
     )
   }
 
+  test("may break CREATE CONSTRAINT ... OPTIONS with name") {
+    val wgsMin = SPATIAL_WGS84_MIN.getSettingName
+    val wgsMax = SPATIAL_WGS84_MAX.getSettingName
+    actual(s"create constraint name on (person:Person) assert person.age is unique options {indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}}") should equal(
+      expected(s"CREATE CONSTRAINT name%nON (person:Person) ASSERT person.age IS UNIQUE OPTIONS { indexConfig: { `$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}}")
+    )
+  }
+
   test("should not break CREATE CONSTRAINT ... IS NOT NULL") {
     actual("create constraint on (person:Person) assert person.age is not null") should equal(
       expected("CREATE CONSTRAINT ON (person:Person) ASSERT person.age IS NOT NULL")
@@ -125,6 +148,16 @@ class PrettifierTest extends Suite
     actual("drop constraint name if exists") should equal(
       expected("DROP CONSTRAINT name IF EXISTS")
     )
+  }
+
+  test("should not break SHOW CONSTRAINTS") {
+    actual("show constraints") should equal(expected("SHOW CONSTRAINTS"))
+    actual("show unique constraint") should equal(expected("SHOW UNIQUE CONSTRAINT"))
+    actual("show node key constraints verbose output") should equal(expected("SHOW NODE KEY CONSTRAINTS VERBOSE OUTPUT"))
+    actual("show node exists constraints") should equal(expected("SHOW NODE EXISTS CONSTRAINTS"))
+    actual("show relationship exist constraint brief") should equal(expected("SHOW RELATIONSHIP EXIST CONSTRAINT BRIEF"))
+    actual("show exists constraint") should equal(expected("SHOW EXISTS CONSTRAINT"))
+    actual("show all constraints") should equal(expected("SHOW ALL CONSTRAINTS"))
   }
 
   test("should break ON CREATE") {
