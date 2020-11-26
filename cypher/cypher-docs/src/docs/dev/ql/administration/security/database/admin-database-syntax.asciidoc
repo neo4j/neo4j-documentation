@@ -70,13 +70,13 @@ GRANT ALL [[DATABASE] PRIVILEGES]
 | Grant the specified roles all privileges for the default database, specific database(s), or all databases.
 
 | [source, cypher]
-GRANT {SHOW \| TERMINATE} TRANSACTION[S] [(* \| user[, ...])]
+GRANT {SHOW \| TERMINATE} TRANSACTION[S] [( {* \| user[, ...]} )]
 ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}}
 TO role[, ...]
 | Grant the specified roles the privilege to list and end the transactions and queries of all users or a particular user(s) in the default database, specific database(s), or all databases.
 
 | [source, cypher]
-GRANT TRANSACTION [MANAGEMENT] [(* \| user[, ...])]
+GRANT TRANSACTION [MANAGEMENT] [( {* \| user[, ...]} )]
 ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}}
 TO role[, ...]
 | Grant the specified roles the privilege to manage the transactions and queries of all users or a particular user(s) in the default database, specific database(s), or all databases.

@@ -4,19 +4,19 @@
 | Command | Description
 
 | [source, cypher]
-GRANT SHOW TRANSACTION[S] [(* \| user[, ...])]
+GRANT SHOW TRANSACTION[S] [( {* \| user[, ...]} )]
     ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...]\| *}}
     TO role [, ...]
 | Enable the specified roles to list transactions and queries for user(s) or all users in the default database, specific database(s), or all databases.
 
 | [source, cypher]
-GRANT TERMINATE TRANSACTION[S] [(* \| user[, ...])]
+GRANT TERMINATE TRANSACTION[S] [( {* \| user[, ...]} )]
     ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...]\| *}}
     TO role [, ...]
 | Enable the specified roles to end running transactions and queries for user(s) or all users in the default database, specific database(s), or all databases.
 
 | [source, cypher]
-GRANT TRANSACTION [MANAGEMENT] [(* \| user[, ...])]
+GRANT TRANSACTION [MANAGEMENT] [( {* \| user[, ...]} )]
     ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...]\| *}}
     TO role [, ...]
 | Enable the specified roles to manage transactions and queries for user(s) or all users in the default database, specific database(s), or all databases.
