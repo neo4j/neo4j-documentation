@@ -85,7 +85,7 @@ Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error wil
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName)
 ASSERT n.propertyName IS UNIQUE
-[OPTIONS "{" option: value[,...] "}"]
+[OPTIONS "{" option: value[, ...] "}"]
 ----
 | Create a unique node property constraint.
 .4+.^| Best practice is to give the constraint a name when it is created.
@@ -122,7 +122,7 @@ n.propertyName_2,
 …
 n.propertyName_n)
 IS NODE KEY
-[OPTIONS "{" option: value[,...] "}"]
+[OPTIONS "{" option: value[, ...] "}"]
 ----
 | [enterprise-edition]#Create a node key constraint.#
 | [source, cypher]
