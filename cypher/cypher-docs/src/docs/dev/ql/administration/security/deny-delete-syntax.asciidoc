@@ -1,11 +1,11 @@
 .Command syntax
 [source, cypher]
 -----
-DENY DELETE ON GRAPH[S] { * | graph-name[,...] }
+DENY DELETE ON GRAPH[S] { * | graph-name[, ...] }
     [
-        ELEMENT[S] { * | label-or-rel-type-name[,...] }
-        | NODE[S] { * | label-name[,...] }
-        | RELATIONSHIP[S] { * | rel-type-name[,...] }
+        ELEMENT[S] { * | label-or-rel-type-name[, ...] }
+        | NODE[S] { * | label-name[, ...] }
+        | RELATIONSHIP[S] { * | rel-type-name[, ...] }
     ]
-    TO role[,...]
+    TO role[, ...]
 -----
