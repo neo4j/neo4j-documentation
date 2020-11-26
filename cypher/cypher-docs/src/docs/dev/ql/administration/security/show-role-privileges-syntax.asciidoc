@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher]
 -----
-SHOW ROLE[S] role1[, role2] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
+SHOW ROLE[S] role[, ...] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
     [YIELD { * | field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
     [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
