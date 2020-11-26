@@ -945,7 +945,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             |* show privileges
             |* assign privileges
             |* remove privileges
-            |* execute all procedures with elevated privileges""".stripMargin)
+            |* execute all procedures with elevated privileges
+            |* execute all user defined functions with elevated privileges""".stripMargin)
         p("include::dbms/all-management-syntax.asciidoc[]")
 
         p(
