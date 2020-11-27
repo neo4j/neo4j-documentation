@@ -10,7 +10,7 @@ This section provides an introduction to the Cypher query language.
 * <<neo4j-databases-graphs, Neo4j databases and graphs>>
 * <<cypher-querying-updating-administering, Querying, updating and administering>>
 * <<query-transactions, Transactions>>
-* <<cypher-result-uniqueness, Result uniqueness>>
+* <<cypher-result-uniqueness, Cypher path matching>>
 
 include::cypher-introduction.asciidoc[leveloffset=+1]
 
