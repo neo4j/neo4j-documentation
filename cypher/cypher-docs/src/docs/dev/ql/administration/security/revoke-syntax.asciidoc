@@ -3,5 +3,5 @@
 -----
 REVOKE
     [ GRANT | DENY ] privilege
-    FROM roles
+    FROM role[, ...]
 -----
