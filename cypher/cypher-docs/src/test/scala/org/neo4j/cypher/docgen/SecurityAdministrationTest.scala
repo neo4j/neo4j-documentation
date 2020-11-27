@@ -53,6 +53,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
     section("Database administration", "administration-security-administration-database-privileges", "enterprise-edition") {
       synopsis("This section explains how to use Cypher to manage privileges for Neo4j database administrative rights.")
       p("include::database/admin-role-database.asciidoc[]")
+      p("The hierarchy between the different database privileges is shown in the image below.")
       p("image::privilege-hierarchy-database.png[title=\"Database privileges hierarchy\"]")
       // image source: https://docs.google.com/drawings/d/1FiM6j0i-HHKf-1MnvZkJOgUdIK3nc4Y1w1Jr9P9OuiI/edit?usp=sharing
       p("include::database/admin-database-syntax.asciidoc[]")
