@@ -2,6 +2,6 @@
 [source, cypher]
 -----
 SHOW USER [user] PRIVILEGES
-    [YIELD field1[, field2] [ORDER BY field1 [, field2]] [SKIP n] [LIMIT n]]
+    [YIELD field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
 -----

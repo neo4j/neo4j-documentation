@@ -2,12 +2,12 @@
 [source, cypher]
 -----
 GRANT MATCH
-    "{" { * | properties } "}"
-    ON GRAPH[S] {name [, ...] | *}
+    "{" { * | property[, ...] } "}"
+    ON GRAPH[S] {name[, ...] | *}
         [
-            ELEMENT[S] { * | label-or-rel-type-name[,...] }
-            | NODE[S] { * | label-name[,...] }
-            | RELATIONSHIP[S] { * | rel-type-name[,...] }
+            ELEMENT[S] { * | label-or-rel-type-name[, ...] }
+            | NODE[S] { * | label-name[, ...] }
+            | RELATIONSHIP[S] { * | rel-type-name[, ...] }
         ]
-    TO role [, ...]
+    TO role[, ...]
 -----
