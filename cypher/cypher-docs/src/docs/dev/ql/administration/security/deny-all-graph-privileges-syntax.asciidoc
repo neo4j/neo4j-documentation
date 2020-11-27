@@ -2,6 +2,6 @@
 [source, cypher]
 -----
 DENY ALL [ [ GRAPH ] PRIVILEGES ]
-    ON {DEFAULT GRAPH | GRAPH[S] {name [, ...] | * }}
-    TO role [, ...]
+    ON {DEFAULT GRAPH | GRAPH[S] {name[, ...] | * }}
+    TO role[, ...]
 -----

@@ -1,11 +1,11 @@
 .Command syntax
 [source, cypher]
 -----
-DENY CREATE ON {DEFAULT GRAPH | GRAPH[S] { * | graph-name[,...] }}
+DENY CREATE ON {DEFAULT GRAPH | GRAPH[S] { * | graph-name[, ...] }}
     [
-        ELEMENT[S] { * | label-or-rel-type-name[,...] }
-        | NODE[S] { * | label-name[,...] }
-        | RELATIONSHIP[S] { * | rel-type-name[,...] }
+        ELEMENT[S] { * | label-or-rel-type-name[, ...] }
+        | NODE[S] { * | label-name[, ...] }
+        | RELATIONSHIP[S] { * | rel-type-name[, ...] }
     ]
-    TO grantee[,...]
+    TO role[, ...]
 -----
