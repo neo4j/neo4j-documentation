@@ -7,7 +7,7 @@
 
 [NOTE]
 ====
-In Neo4j all relationships have a direction.
+In Neo4j, all relationships have a direction.
 However, you can have the notion of undirected relationships at query time.
 ====
 
