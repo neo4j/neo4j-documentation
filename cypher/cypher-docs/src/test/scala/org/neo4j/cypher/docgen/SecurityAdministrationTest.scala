@@ -80,6 +80,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
     }
     section("Database administration", "administration-security-administration-database-privileges", "enterprise-edition") {
       p("include::database/admin-role-database.asciidoc[]")
+      p("The hierarchy between the different database privileges is shown in the image below.")
       p("image::privilege-hierarchy-database.png[title=\"Database privileges hierarchy\"]")
       // image source: https://docs.google.com/drawings/d/133kmiDPpYChvePEttV7unJSJCrrMx9Ftz7TwQn12GHg/edit?usp=sharing
       p("include::database/admin-database-syntax.asciidoc[]")
@@ -282,7 +283,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           |For more details on the differences between graphs, databases and the DBMS, refer to <<neo4j-databases-graphs>>.""".stripMargin)
       p("image::grant-privileges-dbms.png[title=\"Syntax of GRANT and DENY DBMS Privileges\"]")
       // image source: https://docs.google.com/drawings/d/1f-p5uaTCT3SxUyorUEFdtu-3WUCpxQdavUiv9-Iq0_8/edit?usp=sharing
-      p("image::privilege-hierarchy-dbms.png[title=\"Dbms privileges hierarchy\"]")
+      p("image::privilege-hierarchy-dbms.png[title=\"DBMS privileges hierarchy\"]")
       // image source: https://docs.google.com/drawings/d/1G9AiDCuY6KORc4jiU7Jxy3SaseM4WmalTlsyhjolc94/edit?usp=sharing
       p("include::dbms/admin-role-dbms.asciidoc[]")
 

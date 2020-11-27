@@ -59,11 +59,13 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     }
     section("The `GRANT`, `DENY` and `REVOKE` commands", "administration-security-subgraph-introduction", "enterprise-edition") {
       p("include::grant-deny-syntax.asciidoc[]")
+      p("The general grant and deny syntax is illustrated in the image below.")
       p("image::grant-privileges-overview.png[title=\"GRANT and DENY Syntax\"]")
       // image source: https://docs.google.com/drawings/d/1eTTHb6fpWM2ynWrz5pxv148mowFeg4NyMmjeGVqDjOw/edit?usp=sharing
       p("A more detailed syntax illustration would be the image below for graph privileges.")
       p("image::grant-privileges-graph.png[title=\"Syntax of GRANT and DENY Graph Privileges. The `{` and `}` are part of the syntax and not used for grouping.\"]")
       // image source: https://docs.google.com/drawings/d/1dXrMiM3gnhVCjePw9WtLDiF6-TFg02mlkGSU9CFspfQ/edit?usp=sharing
+      p("The below image shows the hierarchy between the different graph privileges.")
       p("image::privilege-hierarchy-graph.png[title=\"Graph privileges hierarchy\"]")
       // image source: https://docs.google.com/drawings/d/1sOUfZoEOI0JcQrB6VY-V9JrjHKPq8fxUUmFODXq8HKI/edit?usp=sharing
     }
