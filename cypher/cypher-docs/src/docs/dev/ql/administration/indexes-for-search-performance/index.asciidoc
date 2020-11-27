@@ -67,7 +67,7 @@ Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error wil
 CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 ON (n.propertyName)
-[OPTIONS "{" option: value[,...] "}"]
+[OPTIONS "{" option: value[, ...] "}"]
 ----
 | Create a single-property index.
 .2+.^| Best practice is to give the index a name when it is created.
@@ -89,7 +89,7 @@ ON (n.propertyName_1,
     n.propertyName_2,
     …
     n.propertyName_n)
-[OPTIONS "{" option: value[,...] "}"]
+[OPTIONS "{" option: value[, ...] "}"]
 ----
 | Create a composite index.
 
