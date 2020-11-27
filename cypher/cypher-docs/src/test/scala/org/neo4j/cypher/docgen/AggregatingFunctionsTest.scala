@@ -249,7 +249,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       query("MATCH (n:Person) RETURN percentileCont(n.age, 0.4)", ResultAssertions((r) => {
         r.toList.head("percentileCont(n.age, 0.4)") should equal(29L)
       })) {
-        p("The 40th percentile of the values in the property `age` is returned, calculated with a weighted average. In this case, 0.4 is the median, or 40th percentile.")
+        p("The 40th percentile of the values in the property `age` is returned, calculated with a weighted average.")
         resultTable()
       }
     }

@@ -92,7 +92,12 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("YIELD") |
         keyword("FOR") |
         keyword("IF NOT EXISTS") |
-        keyword("IF EXISTS")
+        keyword("IF EXISTS") |
+        keyword("BRIEF OUTPUT") |
+        keyword("BRIEF") |
+        keyword("VERBOSE OUTPUT") |
+        keyword("VERBOSE") |
+        keyword("OPTIONS")
     ) ~> NonBreakingKeywords
   }
 
@@ -110,10 +115,12 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("CREATE INDEX") | // These are for the named versions, sadly they will break the query on the ON keyword
         keyword("DROP INDEX ON") | // Deprecated
         keyword("DROP INDEX") |
+        showIndexBreakingKeyword |
         keyword("CREATE CONSTRAINT ON") |
         keyword("CREATE CONSTRAINT") | // These are for the named versions, sadly they will break the query on the ON keyword
         keyword("DROP CONSTRAINT ON") | // Deprecated
         keyword("DROP CONSTRAINT") |
+        showConstraintBreakingKeyword |
         keyword("USING PERIODIC COMMIT") |
         keyword("USING INDEX") |
         keyword("USING SCAN") |
@@ -141,6 +148,38 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("UNION") |
         keyword("UNWIND")
     ) ~> BreakingKeywords
+  }
+
+  private def showConstraintBreakingKeyword: Rule0 = rule("showConstraintBreakingKeyword") {
+    keyword("SHOW CONSTRAINT") |
+    keyword("SHOW CONSTRAINTS") |
+    keyword("SHOW UNIQUE CONSTRAINT") |
+    keyword("SHOW UNIQUE CONSTRAINTS") |
+    keyword("SHOW NODE KEY CONSTRAINT") |
+    keyword("SHOW NODE KEY CONSTRAINTS") |
+    keyword("SHOW NODE EXIST CONSTRAINT") |
+    keyword("SHOW NODE EXIST CONSTRAINTS") |
+    keyword("SHOW NODE EXISTS CONSTRAINT") |
+    keyword("SHOW NODE EXISTS CONSTRAINTS") |
+    keyword("SHOW RELATIONSHIP EXIST CONSTRAINT") |
+    keyword("SHOW RELATIONSHIP EXIST CONSTRAINTS") |
+    keyword("SHOW RELATIONSHIP EXISTS CONSTRAINT") |
+    keyword("SHOW RELATIONSHIP EXISTS CONSTRAINTS") |
+    keyword("SHOW EXIST CONSTRAINT") |
+    keyword("SHOW EXIST CONSTRAINTS") |
+    keyword("SHOW EXISTS CONSTRAINT") |
+    keyword("SHOW EXISTS CONSTRAINTS") |
+    keyword("SHOW ALL CONSTRAINT") |
+    keyword("SHOW ALL CONSTRAINTS")
+  }
+
+  private def showIndexBreakingKeyword: Rule0 = rule("showIndexBreakingKeyword") {
+    keyword("SHOW INDEX") |
+    keyword("SHOW INDEXES") |
+    keyword("SHOW ALL INDEX") |
+    keyword("SHOW ALL INDEXES") |
+    keyword("SHOW BTREE INDEX") |
+    keyword("SHOW BTREE INDEXES")
   }
 
   def joinWithUpdatingBreakingKeywords: Rule1[BreakingKeywords] =
