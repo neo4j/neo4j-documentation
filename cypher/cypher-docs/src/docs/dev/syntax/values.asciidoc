@@ -17,13 +17,13 @@ These fall into several categories which will be described in detail in the foll
 * [*] Can be stored as properties
 * [*] Can be constructed with <<cypher-expressions, Cypher literals>>
 
-Property types comprise:
+The property types:
 
-* Number, an abstract type, which has the subtypes _Integer_ and _Float_
-* String
-* Boolean
-* The spatial type _Point_
-* Temporal types: _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_
+* **Number**, an abstract type, which has the subtypes **Integer** and **Float**
+* **String**
+* **Boolean**
+* The spatial type **Point**
+* Temporal types: **Date**, **Time**, **LocalTime**, **DateTime**, **LocalDateTime** and **Duration**
 
 The adjective _numeric_, when used in the context of describing  Cypher functions or expressions, indicates that any type of Number applies (Integer or Float).
 
@@ -59,23 +59,32 @@ Examples are:
 * [ ] Cannot be stored as properties
 * [ ] Cannot be constructed with <<cypher-expressions, Cypher literals>>
 
-Structural types comprise:
+The structural types:
 
-* Nodes, comprising:
-   ** Id
-   ** Label(s)
-   ** Map (of properties)
-* Relationships, comprising:
-   ** Id
-   ** Type
-   ** Map (of properties)
-   ** Id of the start and end nodes
-* Paths
-   ** An alternating sequence of nodes and relationships
+* **Node**
+** Id
+** Label(s)
++
+[NOTE]
+====
+Labels are not values but are a form of pattern syntax.
+====
+** Map (of properties)
+* **Relationship**
+** Id
+** Type
+** Map (of properties)
+** Id of the start node
+** Id of the end node
+* **Path**, an alternating sequence of nodes and relationships
 
-NOTE: Nodes, relationships, and paths are returned as a result of pattern matching.
 
-NOTE: Labels are not values but are a form of pattern syntax.
+[NOTE]
+====
+Nodes, relationships, and paths are returned as a result of pattern matching.
+In Neo4j, all relationships have a direction.
+However, you can have the notion of undirected relationships at query time.
+====
 
 
 [[composite-types]]
@@ -86,14 +95,17 @@ NOTE: Labels are not values but are a form of pattern syntax.
 * [ ] Cannot be stored as properties
 * [*] Can be constructed with <<cypher-expressions, Cypher literals>>
 
-Composite types comprise:
+The composite types:
 
-* *Lists* are heterogeneous, ordered collections of values, each of which has any property, structural or composite type.
-* *Maps* are heterogeneous, unordered collections of (key, value) pairs, where:
-   ** the key is a String
-   ** the value has any property, structural or composite type
+* **List**, a heterogeneous, ordered collection of values, each of which has any property, structural or composite type.
+* **Map**, a heterogeneous, unordered collection of (_Key_, _Value_) pairs.
+** _Key_ is a String
+** _Value_ has any property, structural or composite type
 
-NOTE: Composite values can also contain `null`.
+[NOTE]
+====
+Composite values can also contain `null`.
+====
 
 '''
 
