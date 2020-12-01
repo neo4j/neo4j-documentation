@@ -3,5 +3,5 @@
 -----
 GRANT WRITE
     ON GRAPH[S] {name | *}
-    TO roles
+    TO role[, ...]
 -----
