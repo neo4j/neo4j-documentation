@@ -9,23 +9,23 @@ The syntax is:
 | Command | Description
 
 | [source, cypher]
-GRANT database-privilege ON DATABASE[S] {dbname \| *} TO role[, ...]
+GRANT database-privilege ON DATABASE[S] {* \| dbname} TO role[, ...]
 | Grant a privilege to one or multiple roles
 
 | [source, cypher]
-DENY database-privilege ON DATABASE[S] {dbname \| *} TO role[, ...]
+DENY database-privilege ON DATABASE[S] {* \| dbname} TO role[, ...]
 | Deny a privilege to one or multiple roles
 
 | [source, cypher]
-REVOKE GRANT database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
+REVOKE GRANT database-privilege ON DATABASE[S] {* \| dbname} FROM role[, ...]
 | Revoke a granted privilege from one or multiple roles
 
 | [source, cypher]
-REVOKE DENY database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
+REVOKE DENY database-privilege ON DATABASE[S] {* \| dbname} FROM role[, ...]
 | Revoke a denied privilege from one or multiple roles
 
 | [source, cypher]
-REVOKE database-privilege ON DATABASE[S] {dbname \| *} FROM role[, ...]
+REVOKE database-privilege ON DATABASE[S] {* \| dbname} FROM role[, ...]
 | Revoke a granted or denied privilege from one or multiple roles
 |===
 

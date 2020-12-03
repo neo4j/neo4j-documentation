@@ -2,6 +2,6 @@
 [source, cypher]
 -----
 DENY WRITE
-    ON GRAPH[S] {name | *}
+    ON GRAPH[S] { * | name }
     TO role[, ...]
 -----
