@@ -1,8 +1,8 @@
 .Command syntax
 [source, cypher]
 -----
-DENY SET PROPERTY "{" { * | property-name[, ...] } "}"
-    ON {DEFAULT GRAPH | GRAPH[S] { * | graph-name[, ...] }}
+DENY SET PROPERTY "{" { * | property[, ...] } "}"
+    ON {DEFAULT GRAPH | GRAPH[S] { * | name[, ...] }}
         [
             ELEMENT[S] { * | label-or-rel-type[, ...] }
             | NODE[S] { * | label[, ...] }

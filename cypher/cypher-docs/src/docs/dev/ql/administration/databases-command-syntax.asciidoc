@@ -6,7 +6,7 @@ The syntax of the database management commands is as follows:
 | Command | Syntax
 | Show Database
 | [source]
-SHOW { DATABASE db \| DATABASES \| DEFAULT DATABASE }
+SHOW { DATABASE name \| DATABASES \| DEFAULT DATABASE }
 [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 [WHERE expression]
 [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
