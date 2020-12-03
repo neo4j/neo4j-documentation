@@ -74,6 +74,7 @@ ALTER USER name SET {
 PASSWORD CHANGE [NOT] REQUIRED
             [SET STATUS {ACTIVE \| SUSPENDED}] \|
 STATUS {ACTIVE \| SUSPENDED}
+}
 ----
 | Modify the settings for an existing user.
 | <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>> and/or
