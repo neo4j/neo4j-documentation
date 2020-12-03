@@ -2,6 +2,6 @@
 [source, cypher]
 -----
 DENY STOP
-    ON DATABASE[S] {* | dbname}
+    ON DATABASE[S] {* | name}
     TO role[, ...]
 -----
