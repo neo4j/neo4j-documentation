@@ -2,6 +2,6 @@
 [source, cypher]
 -----
 DENY ALL [ [ GRAPH ] PRIVILEGES ]
-    ON GRAPH[S] {name[, ...] | * }
+    ON GRAPH[S] { * | name[, ...] }
     TO role[, ...]
 -----
