@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher]
 -----
-GRANT SET LABEL {label[, ...] | *}
-    ON {DEFAULT GRAPH | GRAPH[S] {name[, ...] | *}}
+GRANT SET LABEL { * | label[, ...] }
+    ON {DEFAULT GRAPH | GRAPH[S] { * | name[, ...] }}
     TO role[, ...]
 -----

@@ -5,79 +5,79 @@
 
 | [source, cypher]
 GRANT ACCESS
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles the privilege to access the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT {START \| STOP}
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles the privilege to start and stop the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT {CREATE \| DROP \| SHOW} INDEX[ES]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles the privilege to create, delete, or show indexes on the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT INDEX[ES] [MANAGEMENT]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles the privilege to manage indexes on the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT {CREATE \| DROP \| SHOW} CONSTRAINT[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles the privilege to create, delete, or show constraints on the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT CONSTRAINT[S] [MANAGEMENT]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles the privilege to manage constraints on the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT CREATE NEW [NODE] LABEL[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles the privilege to create new node labels in the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT CREATE NEW [RELATIONSHIP] TYPE[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles the privilege to create new relationships types in the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT CREATE NEW [PROPERTY] NAME[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles the privilege to create new property names in the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT NAME [MANAGEMENT]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles the privilege to manage new labels, relationship types, and property names in the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT ALL [[DATABASE] PRIVILEGES]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Grant the specified roles all privileges for the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT {SHOW \| TERMINATE} TRANSACTION[S] [( {* \| user[, ...]} )]
-ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
 TO role[, ...]
 | Grant the specified roles the privilege to list and end the transactions and queries of all users or a particular user(s) in the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT TRANSACTION [MANAGEMENT] [( {* \| user[, ...]} )]
-ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
 TO role[, ...]
 | Grant the specified roles the privilege to manage the transactions and queries of all users or a particular user(s) in the default database, specific database(s), or all databases.
 
