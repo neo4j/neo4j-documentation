@@ -1,5 +1,6 @@
 [[execution-plans-operators]]
 = Execution plan operators in detail
+:page-toclevels: -1
 
 [abstract]
 All operators are listed here, grouped by the similarity of their characteristics.
