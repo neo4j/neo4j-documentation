@@ -2,7 +2,7 @@
 [source, cypher]
 -----
 GRANT TRAVERSE
-    ON GRAPH[S] {name[, ...] | *}
+    ON GRAPH[S] { * | name[, ...] }
         [
             ELEMENT[S] { * | label-or-rel-type-name[, ...] }
             | NODE[S] { * | label-name[, ...] }
