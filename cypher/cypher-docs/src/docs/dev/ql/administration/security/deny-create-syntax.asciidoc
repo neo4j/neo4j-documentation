@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher]
 -----
-DENY CREATE ON GRAPH[S] { * | graph-name[, ...] }
+DENY CREATE ON GRAPH[S] { * | name[, ...] }
     [
         ELEMENT[S] { * | label-or-rel-type-name[, ...] }
         | NODE[S] { * | label-name[, ...] }

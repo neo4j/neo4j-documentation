@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher]
 -----
-SHOW ROLE role PRIVILEGES
+SHOW ROLE name PRIVILEGES
     [YIELD field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
 -----

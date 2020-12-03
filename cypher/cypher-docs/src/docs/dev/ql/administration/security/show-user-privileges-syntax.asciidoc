@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher]
 -----
-SHOW USER [user] PRIVILEGES
+SHOW USER [name] PRIVILEGES
     [YIELD field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
 -----
