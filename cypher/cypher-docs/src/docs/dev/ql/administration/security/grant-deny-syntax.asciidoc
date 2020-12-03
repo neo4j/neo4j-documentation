@@ -67,7 +67,7 @@ this privilege can only be assigned to all nodes, relationships and properties i
 ** The label or type can be `+*+` which means all labels or types.
 ** Multiple labels or types can be specified, comma-separated.
 ** Defaults to `ELEMENTS` `+*+` if omitted.
-* _roles_
+* _role[, ...]_
 ** The role or roles to associate the privilege with, comma-separated.
 
 

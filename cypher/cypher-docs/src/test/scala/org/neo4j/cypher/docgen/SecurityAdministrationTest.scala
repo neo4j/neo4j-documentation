@@ -1,11 +1,6 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.graphdb.Label
-import org.neo4j.kernel.api.KernelTransaction.Type
-import org.neo4j.kernel.api.security.AnonymousContext
-
-import scala.collection.JavaConverters._
 
 class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql/administration/security/"
@@ -184,7 +179,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       }
       section("The `NAME MANAGEMENT` privileges", "administration-security-administration-database-tokens", "enterprise-edition") {
         p(
-          """The right to create new labels, relationship types or propery names is different from the right to create nodes, relationships or properties.
+          """The right to create new labels, relationship types or property names is different from the right to create nodes, relationships or properties.
             |The latter is managed using database `WRITE` privileges, while the former is managed using specific `GRANT/DENY CREATE NEW ...` commands for each type.""".stripMargin)
         p("include::database/name-management-syntax.asciidoc[]")
 
