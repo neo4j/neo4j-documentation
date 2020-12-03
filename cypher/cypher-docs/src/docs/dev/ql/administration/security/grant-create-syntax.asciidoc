@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher]
 -----
-GRANT CREATE ON {DEFAULT GRAPH | GRAPH[S] { * | graph-name[, ...] }}
+GRANT CREATE ON {DEFAULT GRAPH | GRAPH[S] { * | name[, ...] }}
     [
         ELEMENT[S] { * | label-or-rel-type-name[, ...] }
         | NODE[S] { * | label-name[, ...] }
