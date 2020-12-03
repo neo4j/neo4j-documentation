@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher]
 -----
-SHOW { DATABASE db | DATABASES | DEFAULT DATABASE }
+SHOW { DATABASE name | DATABASES | DEFAULT DATABASE }
     [YIELD field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
 -----

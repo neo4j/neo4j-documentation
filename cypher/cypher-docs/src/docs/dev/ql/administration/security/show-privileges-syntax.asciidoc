@@ -10,13 +10,13 @@ SHOW [ALL] PRIVILEGES
 | List all privileges.
 
 | [source, cypher]
-SHOW ROLE role PRIVILEGES
+SHOW ROLE name PRIVILEGES
     [YIELD field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
 | List privileges for a specific role.
 
 | [source, cypher]
-SHOW USER [user] PRIVILEGES
+SHOW USER [name] PRIVILEGES
     [YIELD field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
 | List privileges for a specific user, or the current user.
