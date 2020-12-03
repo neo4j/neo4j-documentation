@@ -36,7 +36,7 @@ Graphs created after this command execution will also be associated with these p
 ** Defaults to `ELEMENTS` `+*+` if omitted.
 ** Some of the commands for write privileges do not allow an _entity_ part, see  <<administration-security-writes, Write privileges>> for details.
 
-* _roles_
+* _role[, ...]_
 ** The role or roles to associate the privilege with, comma-separated.
 
 .Privilege command syntax
