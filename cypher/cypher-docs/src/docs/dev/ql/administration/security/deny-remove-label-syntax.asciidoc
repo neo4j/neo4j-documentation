@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher]
 -----
-DENY REMOVE LABEL {label[, ...] | *}
-    ON {DEFAULT GRAPH | GRAPH[S] {name[, ...] | *}}
+DENY REMOVE LABEL { * | label[, ...] }
+    ON {DEFAULT GRAPH | GRAPH[S] { * | name[, ...] }}
     TO role[, ...]
 -----

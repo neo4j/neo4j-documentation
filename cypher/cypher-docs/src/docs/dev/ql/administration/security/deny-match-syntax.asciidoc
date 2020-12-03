@@ -3,7 +3,7 @@
 -----
 DENY MATCH
     "{" { * | property[, ...] } "}"
-    ON {DEFAULT GRAPH | GRAPH[S] {name[, ...] | *}}
+    ON {DEFAULT GRAPH | GRAPH[S] { * | name[, ...] }}
         [
             ELEMENT[S] { * | label-or-rel-type[, ...] }
             | NODE[S] { * | label[, ...] }
