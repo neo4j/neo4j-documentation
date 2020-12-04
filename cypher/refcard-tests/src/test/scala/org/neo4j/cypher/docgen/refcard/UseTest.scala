@@ -24,25 +24,23 @@ import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTest
 import org.neo4j.graphdb.Transaction
 
 class UseTest extends RefcardTest with QueryStatisticsTestSupport {
-  val graphDescription = List("ROOT KNOWS A:Person", "A KNOWS B:Person", "B KNOWS C:Person", "C KNOWS ROOT")
+  val graphDescription = List()
   val title = "USE"
   override val linkId = "clauses/use"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {}
 
-
-
   def text = """
 ###dontrun
-//
+// Can't be run since the USE clause is not available in embedded or http sessions.
 
 USE myDatabase
 ###
 
-Select `myDatabase` to execute query or query part against.
+Select `myDatabase` to execute query, or query part, against.
 
 ###dontrun
-//
+// Can't be run since the USE clause is not available in embedded or http sessions.
 
 USE neo4j
 MATCH (n:Person)-[:KNOWS]->(m:Person)
