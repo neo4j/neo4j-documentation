@@ -1,11 +1,6 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.graphdb.Label
-import org.neo4j.kernel.api.KernelTransaction.Type
-import org.neo4j.kernel.api.security.AnonymousContext
-
-import scala.collection.JavaConverters._
 
 class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql/administration/security/"
@@ -58,6 +53,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
     section("Database administration", "administration-security-administration-database-privileges", "enterprise-edition") {
       synopsis("This section explains how to use Cypher to manage privileges for Neo4j database administrative rights.")
       p("include::database/admin-role-database.asciidoc[]")
+      p("The hierarchy between the different database privileges is shown in the image below.")
+      p("image::privilege-hierarchy-database.png[title=\"Database privileges hierarchy\"]")
+      // image source: https://docs.google.com/drawings/d/1FiM6j0i-HHKf-1MnvZkJOgUdIK3nc4Y1w1Jr9P9OuiI/edit?usp=sharing
       p("include::database/admin-database-syntax.asciidoc[]")
       p("image::grant-privileges-database.png[title=\"Syntax of GRANT and DENY Database Privileges\"]")
       // image source: https://docs.google.com/drawings/d/1Zc5eawW58r4CI8e4FeYnA8cwUyIJX-7B4Eecj-qkd_8/edit
@@ -285,6 +283,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
 
       section("The dbms `ROLE MANAGEMENT` privileges", "administration-security-administration-dbms-privileges-role-management", "enterprise-edition") {
         p("The dbms privileges for role management are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
+        p("image::privilege-hierarchy-dbms.png[title=\"Role management privileges hierarchy\"]")
+        // image source: https://docs.google.com/drawings/d/1mga20ZSTrh41a_rJRs1MV3sx8PxEBk2s1b7mduoRtrc/edit?usp=sharing
         p("include::dbms/role-management-syntax.asciidoc[]")
 
         p("The ability to add roles can be granted via the `CREATE ROLE` privilege. The following query shows an example of this:")
