@@ -5,26 +5,26 @@
 
 | [source, cypher]
 GRANT CREATE NEW [NODE] LABEL[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}}
-    TO role [, ...]
+    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    TO role[, ...]
 | Enable the specified roles to create new node labels in the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT CREATE NEW [RELATIONSHIP] TYPE[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}}
-    TO role [, ...]
+    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    TO role[, ...]
 | Enable the specified roles to create new relationship types in the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT CREATE NEW [PROPERTY] NAME[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}}
-    TO role [, ...]
+    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    TO role[, ...]
 | Enable the specified roles to create new property names in the default database, specific database(s), or all databases.
 
 | [source, cypher]
 GRANT NAME [MANAGEMENT]
-    ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}}
-    TO role [, ...]
+    ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}}
+    TO role[, ...]
 | Enable the specified roles to create new labels, relationship types, and property names in the default database, specific database(s), or all databases.
 
 |===

@@ -6,12 +6,6 @@
 This section provides an introduction to the Cypher query language.
 --
 
-* <<cypher-introduction, What is Cypher?>>
-* <<neo4j-databases-graphs, Neo4j databases and graphs>>
-* <<cypher-querying-updating-administering, Querying, updating and administering>>
-* <<query-transactions, Transactions>>
-* <<cypher-result-uniqueness, Result uniqueness>>
-
 include::cypher-introduction.asciidoc[leveloffset=+1]
 
 include::databases-and-graphs.asciidoc[leveloffset=+1]
@@ -22,6 +16,3 @@ include::query-transactions.asciidoc[leveloffset=+1]
 
 include::../../parsed-graphgists/uniqueness/uniqueness.asciidoc[leveloffset=+1]
 
-//:leveloffset: 2
-
-// aggregation ?

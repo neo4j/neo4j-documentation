@@ -39,6 +39,7 @@ These functions return either true or false for the given arguments.
 |<<functions-all,all()>>          | Tests whether the predicate holds for all elements in a list.
 |<<functions-any,any()>>          | Tests whether the predicate holds for at least one element in a list.
 |<<functions-exists,exists()>>    | Returns true if a match for the pattern exists in the graph, or if the specified property exists in the node, relationship or map.
+|<<functions-isEmpty, isEmpty()>> | Returns true if the given list or map contains no elements or if the given string contains no characters.
 |<<functions-none,none()>>        | Returns true if the predicate holds for no element in a list.
 |<<functions-single,single()>>    | Returns true if the predicate holds for exactly one of the elements in a list.
 |===
