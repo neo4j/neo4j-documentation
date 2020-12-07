@@ -13,7 +13,7 @@ Since full-text indexes are not automatically used by Cypher, this does not lead
 Users need to explicitly call procedures to use these indexes.
 The problem is only that if this behavior is not understood by the user, they might expect the full text index to return the same results that a different, but semantically similar, Cypher query does.
 
-==== Example with denied properties
+=== Example with denied properties
 
 Consider the following example.
 The database has nodes with labels `:User` and `:Person`, and these have properties `name` and `surname`.
@@ -103,7 +103,7 @@ The steps taken by the query engine would be:
 
 This difference in results is due to the `OR` relationship between the two properties in the index creation.
 
-==== Denying properties
+=== Denying properties
 
 Now consider denying access on properties, like the `surname` property:
 
