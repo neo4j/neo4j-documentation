@@ -94,6 +94,7 @@ class PredicateFunctionsTest extends DocumentingTest {
     section("exists()", "functions-exists") {
       p("`exists()` returns true if a match for the given pattern exists in the graph, or if the specified property exists in the node, relationship or map." +
         " `null` is returned if the input argument is `null`.")
+      note(p("The `exists()` functions has been deprecated for property checks. Use <<property-existence-checking, `IS NOT NULL`>> instead."))
       function("exists(pattern-or-property)", "A Boolean.", ("pattern-or-property", "A pattern or a property (in the form 'variable.prop')."))
       query(
         """MATCH (n)

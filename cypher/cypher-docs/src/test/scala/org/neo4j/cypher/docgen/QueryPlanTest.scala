@@ -736,7 +736,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(title = "Node Index Scan",
                  text = """
                           |The `NodeIndexScan` operator examines all values stored in an index, returning all nodes with a particular label having a specified property.""".stripMargin,
-                 queryText = "MATCH (l:Location) WHERE exists(l.name) RETURN l",
+                 queryText = "MATCH (l:Location) WHERE l.name IS NOT NULL RETURN l",
                  assertions = p => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
     )
   }

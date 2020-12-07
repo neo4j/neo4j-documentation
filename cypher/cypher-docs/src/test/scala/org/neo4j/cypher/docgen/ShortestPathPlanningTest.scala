@@ -83,7 +83,7 @@ class ShortestPathPlanningTest extends DocumentingTest {
         """MATCH (KevinB:Person {name: 'Kevin Bacon'} ),
           |      (Al:Person {name: 'Al Pacino'}),
           |      p = shortestPath((KevinB)-[:ACTED_IN*]-(Al))
-          |WHERE all(r IN relationships(p) WHERE exists(r.role))
+          |WHERE all(r IN relationships(p) WHERE r.role IS NOT NULL)
           |RETURN p""", assertShortestPathLength) {
         p(
           """This query can be evaluated with the fast algorithm -- there are no predicates that need to see the whole

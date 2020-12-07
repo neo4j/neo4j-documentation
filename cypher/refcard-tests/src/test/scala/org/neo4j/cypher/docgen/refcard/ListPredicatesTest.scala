@@ -51,7 +51,7 @@ WHERE id(n) = %A% AND id(m) = %B%
 WITH nodes(path) AS coll, n, m
 WHERE
 
-all(x IN coll WHERE exists(x.property))
+all(x IN coll WHERE x.property IS NOT NULL)
 
 RETURN n,m###
 
@@ -63,7 +63,7 @@ WHERE id(n) = %A% AND id(m) = %B%
 WITH nodes(path) AS coll, n, m
 WHERE
 
-any(x IN coll WHERE exists(x.property))
+any(x IN coll WHERE x.property IS NOT NULL)
 
 RETURN n, m###
 
@@ -75,7 +75,7 @@ WHERE id(n) = %A% AND id(m) = %B%
 WITH nodes(path) AS coll, n, m
 WHERE
 
-none(x IN coll WHERE exists(x.property))
+none(x IN coll WHERE x.property IS NOT NULL)
 
 RETURN n, m###
 
@@ -87,7 +87,7 @@ WHERE id(n) = %A% AND id(m) = %B%
 WITH nodes(path) AS coll, n, m
 WHERE
 
-single(x IN coll WHERE exists(x.property))
+single(x IN coll WHERE x.property IS NOT NULL)
 
 RETURN n, m###
 

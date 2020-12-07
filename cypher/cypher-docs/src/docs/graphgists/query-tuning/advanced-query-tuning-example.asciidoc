@@ -134,7 +134,7 @@ For non-native indexes there will still be a second database access to retrieve 
 
 Predicates that can be used to enable this optimization are:
 
-* Existence (e.g. `WHERE exists(n.name)`)
+* Existence (e.g. `WHERE n.name IS NOT NULL`)
 * Equality (e.g. `WHERE n.name = 'Tom Hanks'`)
 * Range (e.g. `WHERE n.uid > 1000 AND n.uid < 2000`)
 * Prefix (e.g. `WHERE n.name STARTS WITH 'Tom'`)
@@ -225,7 +225,7 @@ The optimization can only work on native indexes.
 It does not work for predicates only querying for the spatial type `Point`.
 Predicates that can be used to enable this optimization are:
 
-* Existence (e.g.`WHERE exists(n.name)`)
+* Existence (e.g.`WHERE n.name IS NOT NULL`)
 * Equality (e.g. `WHERE n.name = 'Tom Hanks'`)
 * Range (e.g. `WHERE n.uid > 1000 AND n.uid < 2000`)
 * Prefix (e.g. `WHERE n.name STARTS WITH 'Tom'`)
