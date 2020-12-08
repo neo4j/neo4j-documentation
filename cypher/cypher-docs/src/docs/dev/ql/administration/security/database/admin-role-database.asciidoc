@@ -3,7 +3,7 @@ The `DENY` command allows an administrator to deny a privilege to a role in orde
 The `REVOKE` command allows an administrator to remove a previously granted or denied privilege.
 The syntax is:
 
-.Privilege command syntax
+.General database privilege command syntax
 [options="header", width="100%", cols="3a,2"]
 |===
 | Command | Description
@@ -30,7 +30,7 @@ REVOKE database-privilege ON DATABASE[S] {* \| name} FROM role[, ...]
 |===
 
 [NOTE]
-These commands are very similar to the <<administration-security-subgraph-introduction, graph-privileges>> except for the use of the term `DATABASE`, no `entity` and and the set of available _database-privileges_ differs from the _graph-privileges_.
+These commands are very similar to the <<administration-security-subgraph-introduction, graph-privileges>> except for the use of the term `DATABASE`, no `entity` and the set of available _database-privileges_ differs from the _graph-privileges_.
 
 Where the components are:
 
