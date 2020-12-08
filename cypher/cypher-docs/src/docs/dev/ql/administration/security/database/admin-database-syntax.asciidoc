@@ -1,4 +1,4 @@
-.Database management command syntax
+.Database privilege command syntax
 [options="header", width="100%", cols="3a,2"]
 |===
 | Command | Description
