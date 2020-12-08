@@ -1,9 +1,9 @@
 .User management command syntax
-[options="header", width="100%", cols="5a,3,2,^,^."]
+[options="header", width="100%", cols="7a,3,2"]
 |===
-| Command | Description | Required privilege | Community Edition | Enterprise Edition
+| Command | Description | Required privilege
 
-| [source, cypher]
+| [source]
 ----
 SHOW CURRENT USER
     [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
@@ -12,10 +12,8 @@ SHOW CURRENT USER
 ----
 | List the current user.
 | None
-| `+`
-| `+`
 
-| [source, cypher]
+| [source]
 ----
 SHOW USERS
     [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
@@ -24,10 +22,8 @@ SHOW USERS
 ----
 | List all users.
 | <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
-| `+`
-| `+`
 
-| [source, cypher]
+| [source]
 ----
 SHOW USER[S] [name[, ...]] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
     [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
@@ -37,10 +33,8 @@ SHOW USER[S] [name[, ...]] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
 | List the privileges granted to the specified users or the current user, if no user is specified.
 | <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>> and
 <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
-| `-`
-| `+`
 
-| [source, cypher]
+| [source]
 ----
 CREATE USER name [IF NOT EXISTS]
   SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
@@ -50,10 +44,8 @@ CREATE USER name [IF NOT EXISTS]
 ----
 | Create a new user.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>>
-| `+`
-| `+`
 
-| [source, cypher]
+| [source]
 ----
 CREATE OR REPLACE USER name
   SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
@@ -64,38 +56,36 @@ CREATE OR REPLACE USER name
 | Create a new user, or if a user with the same name exists, replace it.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>> and
 <<administration-security-administration-dbms-privileges-user-management, DROP USER>>
-| `+`
-| `+`
 
-| [source, cypher]
+| [source]
 ----
 ALTER USER name SET {
-[PLAINTEXT \| ENCRYPTED] PASSWORD password
-            [[SET PASSWORD] CHANGE [NOT] REQUIRED]
-            [SET STATUS {ACTIVE \| SUSPENDED} ] \|
+  [PLAINTEXT \| ENCRYPTED] PASSWORD password
+  [[SET PASSWORD] CHANGE [NOT] REQUIRED]
+  [SET STATUS {ACTIVE \| SUSPENDED} ]
+  [SET DEFAULT DATABASE databaseName] \|
 PASSWORD CHANGE [NOT] REQUIRED
-            [SET STATUS {ACTIVE \| SUSPENDED}] \|
+  [SET STATUS {ACTIVE \| SUSPENDED}]
+  [SET DEFAULT DATABASE databaseName] \|
 STATUS {ACTIVE \| SUSPENDED}
-            [SET DEFAULT DATABASE databaseName]
+  [SET DEFAULT DATABASE databaseName] \|
+DEFAULT DATABASE databaseName
+}
 ----
 | Modify the settings for an existing user.
 | <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>>,
 <<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>> and/or
 <<administration-security-administration-dbms-privileges-user-management, SET USER DEFAULT DATABASE>>
-| `+`
-| `+`
 
-| [source, cypher]
+| [source]
 ----
 ALTER CURRENT USER SET PASSWORD FROM original TO password
 ----
 | Change the current user's password.
 | None
-| `+`
-| `+`
 
 |
-[source, cypher]
+[source]
 ----
 DROP USER name [IF EXISTS]
 ----
@@ -104,3 +94,7 @@ DROP USER name [IF EXISTS]
 | `+`
 | `+`
 |===
+[NOTE]
+====
+[enterprise-edition]#The `SHOW USER[S] PRIVILEGES` command is an enterprise feature.#
+====
