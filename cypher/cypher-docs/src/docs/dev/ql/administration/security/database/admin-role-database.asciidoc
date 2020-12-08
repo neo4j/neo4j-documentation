@@ -29,9 +29,6 @@ REVOKE database-privilege ON DATABASE[S] {* \| name} FROM role[, ...]
 | Revoke a granted or denied privilege from one or multiple roles
 |===
 
-[NOTE]
-These commands are very similar to the <<administration-security-subgraph-introduction, graph-privileges>> except for the use of the term `DATABASE`, no `entity` and the set of available _database-privileges_ differs from the _graph-privileges_.
-
 Where the components are:
 
 * _database-privilege_
