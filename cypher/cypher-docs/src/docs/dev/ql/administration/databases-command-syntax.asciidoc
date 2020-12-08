@@ -1,6 +1,6 @@
 The syntax of the database management commands is as follows:
 
-.Command syntax
+.Database management command syntax
 [options="header", width="100%", cols="1,5a"]
 |===
 | Command | Syntax
