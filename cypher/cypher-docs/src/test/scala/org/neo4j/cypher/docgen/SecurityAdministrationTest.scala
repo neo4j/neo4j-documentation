@@ -216,7 +216,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       }
       section("The `NAME MANAGEMENT` privileges", "administration-security-administration-database-tokens", "enterprise-edition") {
         p(
-          """The right to create new labels, relationship types or property names is different from the right to create nodes, relationships or properties.
+          """The right to create new labels, relationship types, and property names is different from the right to create nodes, relationships, and properties.
             |The latter is managed using database `WRITE` privileges, while the former is managed using specific `GRANT/DENY CREATE NEW ...` commands for each type.""".stripMargin)
         p("include::database/name-management-syntax.asciidoc[]")
 
