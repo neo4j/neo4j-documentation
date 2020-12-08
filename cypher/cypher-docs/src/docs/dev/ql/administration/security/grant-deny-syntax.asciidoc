@@ -33,7 +33,7 @@ Graphs created after this command execution will also be associated with these p
 * _role[, ...]_
 ** The role or roles to associate the privilege with, comma-separated.
 
-.Privilege command syntax
+.General graph privilege command syntax
 [options="header", width="100%", cols="3a,2"]
 |===
 | Command | Description
