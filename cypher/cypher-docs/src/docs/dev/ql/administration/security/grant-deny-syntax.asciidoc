@@ -29,9 +29,6 @@ REVOKE graph-privilege ON GRAPH[S] {* \| name} [entity] FROM role[, ...]
 | Revoke a granted or denied privilege from one or multiple roles
 |===
 
-[NOTE]
-These commands are almost identical to the <<administration-security-administration-introduction, database-privileges>> except for the use of the term `GRAPH`, the addition of an `entity` term, and the set of available _database-privileges_ differs from the _graph-privileges_.
-
 Where the components are:
 
 * _graph-privilege_
