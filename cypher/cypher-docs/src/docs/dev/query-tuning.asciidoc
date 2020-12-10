@@ -176,13 +176,13 @@ This table describes the available query options for the connect-components plan
 
 | connectComponentsPlanner=greedy
 | Use a greedy approach when combining sub-plans.
-| X
+|
 
 | connectComponentsPlanner=idp
 | Use the cost based IDP search algorithm when combining sub-plans.
 
-Note that using this option can significantly increase the planning time of the query.
-|
+Note that using this option can increase the planning time of the query, but will usually find better plans.
+| X
 |===
 
 
