@@ -81,7 +81,7 @@ object DocsExecutionResult {
 
     val statistics = in.getQueryStatistics match {
       case s:QueryStatistics => s
-      case _ => QueryStatistics()
+      case s => QueryStatistics(s)
     }
 
     new DocsExecutionResult(

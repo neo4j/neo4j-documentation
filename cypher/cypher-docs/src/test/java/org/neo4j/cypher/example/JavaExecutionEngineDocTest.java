@@ -442,11 +442,11 @@ public class JavaExecutionEngineDocTest
             List<Map<String,Object>> maps = asList( n1, n2 );
             params.put( "props", maps );
             String query = "UNWIND $props AS properties CREATE (n:Person) SET n = properties RETURN n";
-            transaction.execute( query, params );
+            Result result = transaction.execute( query, params );
             // end::create_multiple_nodes_from_map[]
             dumpToFile( "create_multiple_nodes_from_map", query, params );
-
-            Result result = transaction.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
+            result.close();
+            result = transaction.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
             assertThat( count( result ), is( 2L ) );
 
             result = transaction.execute( "MATCH (n:Person) WHERE n.children = 3 RETURN n" );
