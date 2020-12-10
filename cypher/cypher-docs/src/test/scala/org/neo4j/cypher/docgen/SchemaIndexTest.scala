@@ -292,7 +292,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescription(p)("person:Person(firstname, highScore) WHERE firstname > $autostring_0 AND exists(highScore)")
+          checkPlanDescription(p)("person:Person(firstname, highScore) WHERE firstname > $autostring_0 AND highScore IS NOT NULL")
       }
     )
   }
@@ -327,13 +327,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "When the `WHERE` clause contains multiple inequality (range) comparisons for the same property, these can be combined " +
         "in a single index range seek. " +
         "That single range seek created in the following query will then use the composite index `Person(highScore, name)` if it exists.",
-      queryText = "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 AND exists(person.name) RETURN person",
+      queryText = "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 AND person.name IS NOT NULL RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("person:Person(highScore, name) WHERE highScore > $autoint_0 AND highScore < $autoint_1 AND exists(name)")
+          checkPlanDescriptionArgument(p)("person:Person(highScore, name) WHERE highScore > $autoint_0 AND highScore < $autoint_1 AND name IS NOT NULL")
       }
     )
   }
@@ -432,12 +432,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "However, if the predicate on `person.firstname` is a equality check " +
         "then a `STARTS WITH` on `person.surname` would also use the index (without rewrites). " +
         "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
-      queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' AND exists(person.surname) RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' AND person.surname IS NOT NULL RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescription(p)("person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND exists(surname)")
+          checkPlanDescription(p)("person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND surname IS NOT NULL")
       }
     )
   }
@@ -486,7 +486,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           "this is still faster than not using an index in the first place. " +
           "Any (non-existence check) predicate on `person.age` will also be rewritten as existence check with a filter. " +
           "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
-      queryText = "MATCH (person:Person) WHERE person.surname ENDS WITH '300' AND exists(person.age) RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.surname ENDS WITH '300' AND person.age IS NOT NULL RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -539,7 +539,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           "this is still faster than not using an index in the first place. " +
           "Any (non-existence check) predicate on `person.age` will also be rewritten as existence check with a filter. " +
           "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
-      queryText = "MATCH (person:Person) WHERE person.surname CONTAINS '300' AND exists(person.age) RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.surname CONTAINS '300' AND person.age IS NOT NULL RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
@@ -548,16 +548,16 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_index_with_exists_property() {
+  @Test def use_index_with_property_is_not_null() {
     // Need to make index preferable in terms of cost
     executePreparationQueries((0 to 250).map { i =>
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Existence check using `exists` (single-property index)",
+      title = "Existence check using `IS NOT NULL` (single-property index)",
       text =
-        "The `exists(p.firstname)` predicate in the following query will use the `Person(firstname)` index, if it exists. ",
-      queryText = "MATCH (p:Person) WHERE exists(p.firstname) RETURN p",
+        "The `p.firstname IS NOT NULL` predicate in the following query will use the `Person(firstname)` index, if it exists. ",
+      queryText = "MATCH (p:Person) WHERE p.firstname IS NOT NULL RETURN p",
       assertions = {
         (p) =>
           assertEquals(2, p.size)
@@ -566,18 +566,18 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_index_with_exists_property_composite() {
+  @Test def use_index_with_property_is_not_null_composite() {
     executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.firstname, p.surname)"))
     // Need to make index preferable in terms of cost
     executePreparationQueries((0 to 250).map { i =>
       "CREATE (:Person)"
     }.toList)
     profileQuery(
-      title = "Existence check using `exists` (composite index)",
+      title = "Existence check using `IS NOT NULL` (composite index)",
       text =
-        "The `exists(p.firstname)` and `exists(p.surname)` predicate in the following query will use the `Person(firstname,surname)` index, if it exists. " +
+        "The `p.firstname IS NOT NULL` and `p.surname IS NOT NULL` predicates in the following query will use the `Person(firstname,surname)` index, if it exists. " +
         "Any (non-existence check) predicate on `person.surname` will be rewritten as existence check with a filter.",
-      queryText = "MATCH (p:Person) WHERE exists(p.firstname) AND exists(p.surname) RETURN p",
+      queryText = "MATCH (p:Person) WHERE p.firstname IS NOT NULL AND p.surname IS NOT NULL RETURN p",
       assertions = {
         (p) =>
           assertEquals(2, p.size)
@@ -612,12 +612,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries. " +
         "Any following (non-existence check) predicates (here on property `p.name` for index `:Person(place,name)`) " +
         "will be rewritten as existence check with a filter.",
-      queryText = "MATCH (p:Person) WHERE distance(p.place, point({x: 1, y: 2})) < 2 AND exists(p.name) RETURN p.place",
+      queryText = "MATCH (p:Person) WHERE distance(p.place, point({x: 1, y: 2})) < 2 AND p.name IS NOT NULL RETURN p.place",
       assertions = {
         (p) =>
           assertEquals(9, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("p:Person(place, name) WHERE distance(place, point($autoint_0, $autoint_1)) < $autoint_2 AND exists(name)")
+          checkPlanDescriptionArgument(p)("p:Person(place, name) WHERE distance(place, point($autoint_0, $autoint_1)) < $autoint_2 AND name IS NOT NULL")
       }
     )
   }
@@ -656,12 +656,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "will be rewritten as existence check with a filter. " +
         "For index `:Person(firstname,place)`, if the predicate on `firstname` is equality or list membership then the bounded range is handled as a range itself. " +
         "If the predicate on `firstname` is anything else then the bounded range is rewritten to existence and filter.",
-      queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.place < point({x: 2, y: 6}) AND exists(person.firstname) RETURN person",
+      queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.place < point({x: 2, y: 6}) AND person.firstname IS NOT NULL RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("person:Person(place, firstname) WHERE place > point({x: $autoint_0, y: $autoint_1}) AND place < point({x: $autoint_2, y: $autoint_3}) AND exists(firstname)")
+          checkPlanDescriptionArgument(p)("person:Person(place, firstname) WHERE place > point({x: $autoint_0, y: $autoint_1}) AND place < point({x: $autoint_2, y: $autoint_3}) AND firstname IS NOT NULL")
       }
     )
   }

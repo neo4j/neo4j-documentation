@@ -79,6 +79,10 @@ For a deeper understanding of how each operator works, refer to <<execution-plan
 Please remember that the statistics of the particular database where the queries run will decide the plan used.
 There is no guarantee that a specific query will always be solved with the same plan.
 
+include::execution-plans-operator-summary.asciidoc[leveloffset=+1]
+
+include::execution-plans-db-hits.asciidoc[leveloffset=+1]
+
 include::execution-plan-groups/operators.asciidoc[leveloffset=+1]
 
 include::execution-plan-groups/query-shortestpath-planning.adoc[leveloffset=+1]

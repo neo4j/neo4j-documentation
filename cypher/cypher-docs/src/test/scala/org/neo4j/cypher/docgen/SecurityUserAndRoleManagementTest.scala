@@ -38,7 +38,10 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       p("When connected to the DBMS over bolt, administration commands are automatically routed to the `system` database.")
       p("include::user-management-syntax.asciidoc[]")
       section("Listing current user", "administration-security-users-show-current") {
-        initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED")
+        initQueries(
+          "CREATE DATABASE anotherDefault",
+          "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED"
+        )
         p("The currently logged-in user can be seen using `SHOW CURRENT USER` which will produce a table with four columns:")
         p("include::list-users-table-columns.asciidoc[]")
         login("jake", "abc123")
@@ -67,23 +70,31 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Creating users", "administration-security-users-create") {
         p("Users can be created using `CREATE USER`.")
         p("include::user-management-syntax-create-user.asciidoc[]")
-        p("If the optional `SET PASSWORD CHANGE [NOT] REQUIRED` is omitted then the default is `CHANGE REQUIRED`. " +
-          "The default for `SET STATUS` is `ACTIVE`. The `password` can either be a string value or a string parameter. " +
-          "The optional `PLAINTEXT` in `SET PLAINTEXT PASSWORD` has the same behaviour as `SET PASSWORD`. " +
-          "The optional `ENCRYPTED` can be used to create a user when the plaintext password is unknown but the encrypted password is available (e.g. from a database backup). " +
-          "With `ENCRYPTED`, the password string is expected to be on the format `<encryption-version>,<hash>,<salt>`."
+        p("""
+            | * For `SET PASSWORD`:
+            | ** If the optional `SET PASSWORD CHANGE [NOT] REQUIRED` is omitted then the default is `CHANGE REQUIRED`.
+            | ** The optional `PLAINTEXT` in `SET PLAINTEXT PASSWORD` has the same behaviour as `SET PASSWORD`.
+            | ** The optional `ENCRYPTED` can be used to create a user when the plaintext password is unknown but the encrypted password is available
+            |    (e.g. from a database backup). In this case the password string is expected to be on the format `<encryption-version>,<hash>,<salt>`.
+            | * The default for `SET STATUS` is `ACTIVE`. The `password` can either be a string value or a string parameter.
+            | * `SET DEFAULT DATABASE` can be used to configure a default database at a user level which takes precedence over the system wide default.
+          """.stripMargin
         )
-        p("For example, we can create the user `jake` in a suspended state and the requirement to change his password.")
-        query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED", ResultAssertions((r) => {
+        p(
+          """For example, we can create the user `jake` in a suspended state, with the default database `anotherDefault`
+            |and the requirement to change his password.""".stripMargin)
+        query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED SET DEFAULT DATABASE anotherDefault", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
           note {
-            p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` part of the command is only available in Enterprise Edition.#")
+            p(
+              """[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` and `SET DEFAULT DATABASE anotherDefault` parts of the command are
+                |only available in Enterprise Edition.#""".stripMargin)
           }
         }
         p("The created user will appear on the list provided by `SHOW USERS`.")
-        query("SHOW USERS YIELD user, suspended, passwordChangeRequired, roles WHERE user = 'jake'", assertUsersShown(Seq("jake"))) {
+        query("SHOW USERS YIELD user, suspended, passwordChangeRequired, roles, defaultDatabase WHERE user = 'jake'", assertUsersShown(Seq("jake"))) {
           p(
             """In this example we also:
               |
@@ -128,13 +139,24 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Modifying users", "administration-security-users-alter") {
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
-        p("The `password` can either be a string value or a string parameter, and must not be identical to the old password. " +
-          "The optional `PLAINTEXT` in `SET PLAINTEXT PASSWORD` has the same behaviour as `SET PASSWORD`. " +
-          "The optional `ENCRYPTED` can be used to update a user's password when the plaintext password is unknown but the encrypted password is available (e.g. from a database backup). " +
-          "With `ENCRYPTED`, the password string is expected to be on the format `<encryption-version>,<hash>,<salt>`."
+        p("""
+            | * For `SET PASSWORD`:
+            | ** The `password` can either be a string value or a string parameter, and must not be identical to the old password.
+            | ** The optional `PLAINTEXT` in `SET PLAINTEXT PASSWORD` has the same behaviour as `SET PASSWORD`.
+            | ** The optional `ENCRYPTED` can be used to update a user's password when the plaintext password is unknown but the encrypted password
+            |    is available (e.g. from a database backup).
+            | ** With `ENCRYPTED`, the password string is expected to be on the format `<encryption-version>,<hash>,<salt>`.
+            | * `SET DEFAULT DATABASE` can be used to configure a default database at a user level which takes precedence over the system wide default.
+          """.stripMargin
         )
         p("For example, we can modify the user `jake` with a new password and active status as well as remove the requirement to change his password.")
         query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("Or we may decide to assign the user `jake` a different default database.")
+        query("ALTER USER jake SET DEFAULT DATABASE anotherDefault", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -145,7 +167,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             |For example, leaving out the `CHANGE [NOT] REQUIRED` part of the query will leave that unchanged.""".stripMargin)
         }
         note {
-          p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` part of the command is only available in Enterprise Edition.#")
+          p(
+            """[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` and `SET DEFAULT DATABASE anotherDefault` parts of these commands are
+              |only available in Enterprise Edition.#""".stripMargin)
         }
         p("The changes to the user will appear on the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {

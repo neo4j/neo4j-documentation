@@ -44,9 +44,9 @@ include::ql/administration/indexes/substring-search-using-contains-single-proper
 
 include::ql/administration/indexes/substring-search-using-contains-composite-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/existence-check-using-exists-single-property-index.asciidoc[leveloffset=2]
+include::ql/administration/indexes/existence-check-using-is-not-null-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/existence-check-using-exists-composite-index.asciidoc[leveloffset=2]
+include::ql/administration/indexes/existence-check-using-is-not-null-composite-index.asciidoc[leveloffset=2]
 
 include::ql/administration/indexes/spatial-distance-searches-single-property-index.asciidoc[leveloffset=2]
 

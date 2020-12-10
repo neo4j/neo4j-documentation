@@ -24,9 +24,9 @@ The components of the database privilege commands are:
 ** `CREATE NEW [PROPERTY] NAME` - allows property names to be created, so that nodes and relationships can have properties with these names assigned.
 ** `NAME [MANAGEMENT]` - allows all of the name management capabilities: node labels, relationship types, and property names.
 ** `ALL [[DATABASE] PRIVILEGES]` - allows access, index, constraint, and name management for the specified database.
-** `SHOW TRANSACTION {* | user[, ...]}` -  allows listing transactions and queries for the specified users on the specified database.
-** `TERMINATE TRANSACTION {* | user[, ...]}` - allows ending transactions and queries for the specified users on the specified database.
-** `TRANSACTION [MANAGEMENT] {* | user[, ...]}` - allows listing and ending transactions and queries for the specified users on the specified database.
+** `SHOW TRANSACTION` -  allows listing transactions and queries for the specified users on the specified database.
+** `TERMINATE TRANSACTION` - allows ending transactions and queries for the specified users on the specified database.
+** `TRANSACTION [MANAGEMENT]` - allows listing and ending transactions and queries for the specified users on the specified database.
 
 * _name_
 ** The database to associate the privilege with.
@@ -37,8 +37,11 @@ If you delete a database and create a new one with the same name, the new one wi
 ====
 ** The _name_ component can be `+*+`, which means all databases.
 Databases created after this command execution will also be associated with these privileges.
-** The `DATABASE[S] _name_` part of the command can be replaced by `DEFAULT DATABASE`.
-  If you restart the server and choose a new default database after this command execution, the new one will be associated with these privileges.
+** The `DATABASE[S] _name_` part of the command may be replaced by `DEFAULT DATABASE`. This refers to
+   the default database configured for a user or, if that user does not have a default database configured, the system wide default.
+   If the user's default database changes for any reason after this command execution, the new
+   one will be associated with these privileges. This can be quite powerful as it allows permissions to be switched
+   from one database to another simply by changing a user's default database.
 
 * _role[, ...]_
 ** The role or roles to associate the privilege with, comma-separated.
@@ -49,23 +52,23 @@ Databases created after this command execution will also be associated with thes
 | Command | Description
 
 | [source, cypher]
-GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}} TO role[, ...]
+GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}} TO role[, ...]
 | Grant a privilege to one or multiple roles.
 
 | [source, cypher]
-DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}} TO role[, ...]
+DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}} TO role[, ...]
 | Deny a privilege to one or multiple roles.
 
 | [source, cypher]
-REVOKE GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}} FROM role[, ...]
+REVOKE GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}} FROM role[, ...]
 | Revoke a granted privilege from one or multiple roles.
 
 | [source, cypher]
-REVOKE DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}} FROM role[, ...]
+REVOKE DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}} FROM role[, ...]
 | Revoke a denied privilege from one or multiple roles.
 
 | [source, cypher]
-REVOKE database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {name [, ...] \| *}} FROM role[, ...]
+REVOKE database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {name[, ...] \| *}} FROM role[, ...]
 | Revoke a granted or denied privilege from one or multiple roles.
 |===
 

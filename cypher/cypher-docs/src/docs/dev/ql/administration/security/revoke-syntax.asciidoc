@@ -2,6 +2,6 @@
 [source, cypher]
 -----
 REVOKE
-    [ { GRANT | DENY } ] graph-privilege
-    FROM role [, ...]
+    [ GRANT | DENY ] graph-privilege
+    FROM role[, ...]
 -----

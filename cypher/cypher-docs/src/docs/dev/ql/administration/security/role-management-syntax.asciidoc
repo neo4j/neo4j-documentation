@@ -6,9 +6,9 @@
 | [source, cypher]
 ----
 SHOW [ALL\|POPULATED] ROLES
-    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
-    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 | List roles.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>
@@ -16,9 +16,9 @@ SHOW [ALL\|POPULATED] ROLES
 | [source, cypher]
 ----
 SHOW [ALL\|POPULATED] ROLES WITH USERS
-    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
-    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 | List roles and users assigned to them.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> and
@@ -26,10 +26,10 @@ SHOW [ALL\|POPULATED] ROLES WITH USERS
 
 | [source, cypher]
 ----
-SHOW ROLE[S] name1[, name2] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
-    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+SHOW ROLE[S] name[, ...] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
+    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
-    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 | List the privileges granted to the specified roles.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE PRIVILEGES>>
@@ -45,7 +45,7 @@ CREATE ROLE name [IF NOT EXISTS] [AS COPY OF name]
 ----
 CREATE OR REPLACE ROLE name [AS COPY OF name]
 ----
-| Create a new role.
+| Create a new role, or if a role with the same name exists, replace it.
 | <<administration-security-administration-dbms-privileges-role-management, CREATE ROLE>> and
 <<administration-security-administration-dbms-privileges-role-management, DROP ROLE>>
 
@@ -68,4 +68,5 @@ GRANT ROLE name[, ...] TO user[, ...]
 REVOKE ROLE name[, ...] FROM user[, ...]
 ----
 | Remove roles from users.
+| <<administration-security-administration-dbms-privileges-role-management, REMOVE ROLE>>
 |===

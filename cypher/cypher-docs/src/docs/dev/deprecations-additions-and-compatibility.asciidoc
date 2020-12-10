@@ -38,6 +38,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT rel.property IS NOT NULL` | Syntax | Added | New syntax for creating relationship property existence constraints.
 | `CREATE CONSTRAINT [name] ON (node:Label) ASSERT exists(node.property)`   | Syntax | Deprecated | Replaced by `CREATE CONSTRAINT [name] ON (node:Label) ASSERT node.property IS NOT NULL`
 | `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT exists(rel.property)` | Syntax | Deprecated | Replaced by `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT rel.property IS NOT NULL`
+| `exists(prop)` | Syntax | Deprecated | Replaced by `prop IS NOT NULL`
+| `NOT exists(prop)` | Syntax | Deprecated | Replaced by `prop IS NULL`
 |===
 
 [[cypher-deprecations-additions-removals-4.2]]

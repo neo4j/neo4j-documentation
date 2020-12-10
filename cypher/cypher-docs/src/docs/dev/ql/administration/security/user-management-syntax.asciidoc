@@ -6,9 +6,9 @@
 | [source, cypher]
 ----
 SHOW CURRENT USER
-    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
-    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 | List the current user.
 | None
@@ -18,9 +18,9 @@ SHOW CURRENT USER
 | [source, cypher]
 ----
 SHOW USERS
-    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
-    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 | List all users.
 | <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
@@ -29,10 +29,10 @@ SHOW USERS
 
 | [source, cypher]
 ----
-SHOW USER[S] [name1[, name2]] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
-    [YIELD { * \| field1[, ...] } [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+SHOW USER[S] [name[, ...]] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
+    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
-    [RETURN field1[, ...] [ORDER BY field1 [, ...]] [SKIP n] [LIMIT n]]
+    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 | List the privileges granted to the specified users or the current user, if no user is specified.
 | <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>> and
@@ -46,6 +46,7 @@ CREATE USER name [IF NOT EXISTS]
   SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
+  [SET DEFAULT DATABASE databaseName]
 ----
 | Create a new user.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>>
@@ -58,8 +59,9 @@ CREATE OR REPLACE USER name
   SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
+  [SET DEFAULT DATABASE databaseName]
 ----
-| Create a new user.
+| Create a new user, or if a user with the same name exists, replace it.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>> and
 <<administration-security-administration-dbms-privileges-user-management, DROP USER>>
 | `+`
@@ -74,10 +76,12 @@ ALTER USER name SET {
 PASSWORD CHANGE [NOT] REQUIRED
             [SET STATUS {ACTIVE \| SUSPENDED}] \|
 STATUS {ACTIVE \| SUSPENDED}
+            [SET DEFAULT DATABASE databaseName]
 ----
 | Modify the settings for an existing user.
-| <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>> and/or
-<<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>>
+| <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>>,
+<<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>> and/or
+<<administration-security-administration-dbms-privileges-user-management, SET USER DEFAULT DATABASE>>
 | `+`
 | `+`
 

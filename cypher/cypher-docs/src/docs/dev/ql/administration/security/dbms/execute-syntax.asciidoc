@@ -4,13 +4,13 @@
 | Command | Description
 
 | [source, cypher]
-GRANT EXECUTE PROCEDURE[S] name-globbing[,...]
+GRANT EXECUTE PROCEDURE[S] name-globbing[, ...]
     ON DBMS
     TO role[, ...]
 | Enable the specified roles to execute the given procedures.
 
 | [source, cypher]
-GRANT EXECUTE BOOSTED PROCEDURE[S] name-globbing[,...]
+GRANT EXECUTE BOOSTED PROCEDURE[S] name-globbing[, ...]
     ON DBMS
     TO role[, ...]
 | Enable the specified roles to execute the given procedures with elevated privileges.
@@ -22,13 +22,13 @@ GRANT EXECUTE ADMIN[ISTRATOR] PROCEDURES
 | Enable the specified roles to execute procedures annotated with `@Admin`.
 
 | [source, cypher]
-GRANT EXECUTE [USER [DEFINED]] FUNCTION[S] name-globbing[,...]
+GRANT EXECUTE [USER [DEFINED]] FUNCTION[S] name-globbing[, ...]
 ON DBMS
 TO role[, ...]
 | Enable the specified roles to execute the given user defined functions.
 
 | [source, cypher]
-GRANT EXECUTE BOOSTED [USER [DEFINED]] FUNCTION[S] name-globbing[,...]
+GRANT EXECUTE BOOSTED [USER [DEFINED]] FUNCTION[S] name-globbing[, ...]
 ON DBMS
 TO role[, ...]
 | Enable the specified roles to execute the given user defined functions with elevated privileges.

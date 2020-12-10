@@ -32,9 +32,10 @@ class PredicateFunctionsTest extends DocumentingTest {
         |       (alice {name:'Alice', age: 38, eyes: 'brown'}),
         |       (bob {name: 'Bob', age: 25, eyes: 'blue'}),
         |       (charlie {name: 'Charlie', age: 53, eyes: 'green'}),
-        |       (daniel {name: 'Daniel', age: 54, eyes: 'brown'}),
+        |       (daniel {name: 'Daniel', age: 54, eyes: 'brown', array: []}),
         |       (eskil {name: 'Eskil', age: 41, eyes: 'blue', array: ['one', 'two', 'three']}),
-        |       (frank {age: 61, eyes: 'brown'}),
+        |       (frank {age: 61, eyes: ''}),
+        |       (grace),
         |
         |       (alice)-[:KNOWS]->(bob),
         |       (alice)-[:KNOWS]->(charlie),
@@ -50,6 +51,7 @@ class PredicateFunctionsTest extends DocumentingTest {
         |* <<functions-all,all()>>
         |* <<functions-any,any()>>
         |* <<functions-exists,exists()>>
+        |* <<functions-isEmpty,isEmpty()>>
         |* <<functions-none,none()>>
         |* <<functions-single,single()>>""")
     graphViz()
@@ -92,6 +94,7 @@ class PredicateFunctionsTest extends DocumentingTest {
     section("exists()", "functions-exists") {
       p("`exists()` returns true if a match for the given pattern exists in the graph, or if the specified property exists in the node, relationship or map." +
         " `null` is returned if the input argument is `null`.")
+      note(p("The `exists()` functions has been deprecated for property checks. Use <<property-existence-checking, `IS NOT NULL`>> instead."))
       function("exists(pattern-or-property)", "A Boolean.", ("pattern-or-property", "A pattern or a property (in the form 'variable.prop')."))
       query(
         """MATCH (n)
@@ -114,6 +117,47 @@ class PredicateFunctionsTest extends DocumentingTest {
         p("Three nodes are returned: one with a name property, one without a name property, and one that does not exist (e.g., is `null`)." +
           " This query exemplifies the behavior of `exists()` when operating on `null` nodes.")
         resultTable()
+      }
+    }
+    section("isEmpty()", "functions-isEmpty") {
+      p("`isEmpty()` returns true if the given list or map contains no elements or if the given string contains no characters.")
+      function("isEmpty(list)", "A Boolean.", ("list", "An expression that returns a list."))
+      query(
+        """MATCH (n)
+          |WHERE NOT isEmpty(n.array)
+          |RETURN n.name AS name""".stripMargin, ResultAssertions(r => {
+          r.toList should equal(List(Map("name" -> "Eskil")))
+        })) {
+        p("The names of all nodes with the `array` property being non-empty are returned.")
+        resultTable()
+      }
+      function("isEmpty(map)", "A Boolean.", ("map", "An expression that returns a map."))
+      query(
+        """MATCH (n)
+          |WHERE NOT isEmpty(properties(n))
+          |RETURN n.name AS name""".stripMargin, ResultAssertions(r => {
+          r.toList should equal(List(Map("name" -> "Alice"), Map("name" -> "Bob"), Map("name" -> "Charlie"), Map("name" -> "Daniel"), Map("name" -> "Eskil"), Map("name" -> null)))
+        })) {
+        p("The names of all nodes with that have at least one property are returned. Note that this includes nodes not having the `name` property.")
+        resultTable()
+      }
+      function("isEmpty(string)", "A Boolean.", ("string", "An expression that returns a string."))
+      query(
+        """MATCH (n)
+          |WHERE isEmpty(n.eyes)
+          |RETURN n.age AS age""".stripMargin, ResultAssertions(r => {
+          r.toList should equal(List(Map("age" -> 61)))
+        })) {
+        p("The ages of all nodes with that have the empty string as the `eyes` property.")
+        resultTable()
+      }
+      note {
+        p(
+          """`isEmpty`, like most other Cypher functions, returns `null` if `null is passed in to the function.
+            |That means that a predicate `isEmpty(n.eyes)` will filter out all nodes where the `eyes` property is not set.
+            |Thus, `isEmpty` is not suited to test for null values.
+            | `IS NULL` or `IS NOT NULL` should be used for that purpose.
+            |""".stripMargin)
       }
     }
     section("none()", "functions-none") {
