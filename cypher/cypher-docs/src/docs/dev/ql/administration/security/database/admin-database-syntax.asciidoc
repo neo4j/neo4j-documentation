@@ -67,6 +67,6 @@ GRANT NAME [MANAGEMENT]
 GRANT ALL [[DATABASE] PRIVILEGES]
     ON DATABASE[S] {* \| name}
     TO role[, ...]
-| Enable the specified role or roles to perform all of the above database actions on the database `name` or all databases.
+| Enable the specified role or roles to access, start, and stop, as well as perform index, constraint, and name management on the database `name` or all databases.
 
 |===

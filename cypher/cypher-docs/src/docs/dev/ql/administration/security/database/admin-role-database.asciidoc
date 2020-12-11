@@ -86,7 +86,7 @@ allows all of the name management capabilities: node labels, relationship types 
 +
 ** `ALL [[DATABASE] PRIVILEGES]`
 +
-allows all of the above privileges to be enabled for the specified database.
+allows access, start, stop, index, constraint, and name management for the specified database.
 +
 * _name_
 ** The database to associate the privilege with.
