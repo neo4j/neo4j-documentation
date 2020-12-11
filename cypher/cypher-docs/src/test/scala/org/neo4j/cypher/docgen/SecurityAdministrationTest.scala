@@ -385,7 +385,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
-        p("All of the above mentioned privileges can be granted via the `ROLE MANAGEMENT` privilege. The following query shows an example of this:")
+        p(
+          """All of the above mentioned privileges, creating, deleting, assigning, removing and listing roles, can be granted via the `ROLE MANAGEMENT` privilege.
+            |The following query shows an example of this:""".stripMargin)
         query("GRANT ROLE MANAGEMENT ON DBMS TO roleManager", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -495,7 +497,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
-        p("All of the above mentioned privileges can be granted via the `USER MANAGEMENT` privilege. The following query shows an example of this:")
+        p(
+          """All of the above mentioned privileges, creating, deleting, modifying, and listing users, can be granted via the `USER MANAGEMENT` privilege.
+            |The following query shows an example of this:""".stripMargin)
         query("GRANT USER MANAGEMENT ON DBMS TO userManager", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -536,7 +540,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
-        p("Both of the above mentioned privileges can be granted via the `DATABASE MANAGEMENT` privilege. The following query shows an example of this:")
+        p(
+          """Both of the above mentioned privileges, creating and deleting databases, can be granted via the `DATABASE MANAGEMENT` privilege.
+            |The following query shows an example of this:""".stripMargin)
         query("GRANT DATABASE MANAGEMENT ON DBMS TO databaseManager", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -595,7 +601,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
-        p("All of the above mentioned privileges can be granted via the `PRIVILEGE MANAGEMENT` privilege. The following query shows an example of this:")
+        p(
+          """All of the above mentioned privileges, listing, assigning, and removing privileges, can be granted via the `PRIVILEGE MANAGEMENT` privilege.
+            |The following query shows an example of this:""".stripMargin)
         query("GRANT PRIVILEGE MANAGEMENT ON DBMS TO privilegeManager", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
