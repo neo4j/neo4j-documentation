@@ -4,9 +4,9 @@
 DENY SET PROPERTY "{" { * | property-name[, ...] } "}"
     ON {DEFAULT GRAPH | GRAPH[S] { * | graph-name[, ...] }}
         [
-            ELEMENT[S] { * | label-or-rel-type-name[, ...] }
-            | NODE[S] { * | label-name[, ...] }
-            | RELATIONSHIP[S] { * | rel-type-name[, ...] }
+            ELEMENT[S] { * | label-or-rel-type[, ...] }
+            | NODE[S] { * | label[, ...] }
+            | RELATIONSHIP[S] { * | rel-type[, ...] }
         ]
     TO role[, ...]
 -----
