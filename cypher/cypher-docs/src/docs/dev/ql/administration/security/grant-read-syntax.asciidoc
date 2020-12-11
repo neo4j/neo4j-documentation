@@ -5,9 +5,9 @@ GRANT READ
     "{" { * | property[, ...] } "}"
     ON {DEFAULT GRAPH | GRAPH[S] {name[, ...] | *}}
         [
-            ELEMENT[S] { * | label-or-rel-type-name[, ...] }
-            | NODE[S] { * | label-name[, ...] }
-            | RELATIONSHIP[S] { * | rel-type-name[, ...] }
+            ELEMENT[S] { * | label-or-rel-type[, ...] }
+            | NODE[S] { * | label[, ...] }
+            | RELATIONSHIP[S] { * | rel-type[, ...] }
         ]
     TO role[, ...]
 -----
