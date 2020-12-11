@@ -196,7 +196,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       }
       section("Granting all database administration privileges", "administration-security-administration-database-all", "enterprise-edition") {
         p(
-          """Conferring the right to perform all of the above tasks can be achieved with a single command:""".stripMargin)
+          """Conferring the right to access, start, and stop, as well as perform index, constraint, and name management can be achieved with a single command:""".stripMargin)
         p("include::database/all-management-syntax.asciidoc[]")
 
         p(
@@ -347,7 +347,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
-        p("All of the above mentioned privileges can be granted via the `ROLE MANAGEMENT` privilege. The following query shows an example of this:")
+        p("All of the above mentioned privileges, creating, deleting, assigning, removing and listing roles, can be granted via the `ROLE MANAGEMENT` privilege. The following query shows an example of this:")
         query("GRANT ROLE MANAGEMENT ON DBMS TO roleManager", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
