@@ -1,8 +1,9 @@
 .Command syntax
-[source, cypher]
+[source]
 -----
 CREATE [OR REPLACE] USER name [IF NOT EXISTS]
       SET [PLAINTEXT | ENCRYPTED] PASSWORD password
       [[SET PASSWORD] CHANGE [NOT] REQUIRED]
       [SET STATUS {ACTIVE | SUSPENDED}]
+      [SET DEFAULT DATABASE databaseName]
 -----
