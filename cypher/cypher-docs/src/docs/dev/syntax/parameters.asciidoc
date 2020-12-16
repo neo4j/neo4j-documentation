@@ -42,7 +42,7 @@ For example:
   For more information refer to <<operations-manual#cypher-shell-parameters, Operations Manual -> Cypher Shell - Query Parameters>>.
 * For Neo4j Browser use the same syntax as Cypher Shell, `:param name => 'Joe'`.
 * When using drivers, the syntax is dependent on the language choice.
-  See the examples in <<driver-manual#driver-transactions, Driver Manual -> Transactions>>.
+  See the examples in _Transactions_ in the link:{docs-base-uri}[Neo4j Driver manuals].
 * For usage via the Neo4j HTTP API, see the <<http-api#http-api, HTTP API documentation>>.
 
 We provide below a comprehensive list of examples of parameter usage.
