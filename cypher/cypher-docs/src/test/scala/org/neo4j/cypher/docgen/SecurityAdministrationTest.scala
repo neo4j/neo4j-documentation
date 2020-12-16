@@ -347,7 +347,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
-        p("All of the above mentioned privileges, creating, deleting, assigning, removing and listing roles, can be granted via the `ROLE MANAGEMENT` privilege. The following query shows an example of this:")
+        p("The privileges to create, delete, assign, remove, and list roles can be granted via the `ROLE MANAGEMENT` privilege. The following query shows an example of this:")
         query("GRANT ROLE MANAGEMENT ON DBMS TO roleManager", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
