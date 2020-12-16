@@ -50,9 +50,9 @@ The following points give some details on how the comparison is performed.
  Cypher prescribes that, after the primary order of point in time, instant values be ordered by effective time zone offset, from west (negative offset from UTC) to east (positive offset from UTC).
  This has the effect that times that represent the same point in time will be ordered with the time with the earliest local time first.
  If two instant values represent the same point in time, and have the same time zone offset, but a different named time zone (this is possible for _DateTime_ only, since _Time_ only has an offset), these values are not considered equal, and ordered by the time zone identifier, alphabetically, as its third ordering component.
+ If the type, point in time, offset, and time zone name are all equal, then the values are equal, and any difference in order is impossible to observe.
  ** <<cypher-temporal-durations, _Duration_>> values cannot be compared, since the length of a _day_, _month_ or _year_ is not known without knowing which _day_, _month_ or _year_ it is.
  Since _Duration_ values are not comparable, the result of applying a comparison operator between two _Duration_ values is `null`.
- If the type, point in time, offset, and time zone name are all equal, then the values are equal, and any difference in order is impossible to observe.
 * *Ordering* of temporal values:
  ** `ORDER BY` requires all values to be orderable.
  ** Temporal instances are ordered after spatial instances and before strings.
