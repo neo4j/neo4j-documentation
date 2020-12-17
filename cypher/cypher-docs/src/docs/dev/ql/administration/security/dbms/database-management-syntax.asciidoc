@@ -19,6 +19,6 @@ GRANT DROP DATABASE
 GRANT DATABASE MANAGEMENT
     ON DBMS
     TO role[, ...]
-| Enable the specified roles to manage databases.
+| Enable the specified roles to create and delete databases.
 
 |===
