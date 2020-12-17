@@ -25,7 +25,7 @@ For memory configuration in Neo4j, see the <<operations-manual#memory-configurat
 
 For examples of the API's used to start and commit transactions, refer to the API specific documentation:
 
-* For information on using transactions with a Neo4j driver, see the <<driver-manual#driver-session-api, Neo4j Driver manual -> The session API>>.
+* For information on using transactions with a Neo4j driver, see _The session API_ in the link:{docs-base-uri}[Neo4j Driver manuals].
 * For information on using transactions over the HTTP API, see the <<http-api#http-api-actions, HTTP API documentation -> Using the HTTP API>>.
 * For information on using transactions within the embedded Core API, see the <<java-reference#cypher-java, Java Reference -> Executing Cypher queries from Java>>.
 
@@ -42,7 +42,7 @@ A DBMS-level transaction is a container for database transactions.
 A database transaction is started when the first query to a specific database is issued.
 Database transactions opened inside a DBMS-level transaction are committed or rolled back when the DBMS-level transaction is committed or rolled back.
 
-For an example of how queries to multiple databases can be issued in one transaction, see <<driver-manual#driver-databases, Driver Manual -> Databases and execution context>>.
+For an example of how queries to multiple databases can be issued in one transaction, see _Databases and execution context_ in the link:{docs-base-uri}[Neo4j Driver manuals].
 
 DBMS transactions have the following limitations:
 
