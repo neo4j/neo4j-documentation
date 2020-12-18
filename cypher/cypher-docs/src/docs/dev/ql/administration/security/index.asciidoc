@@ -99,15 +99,15 @@ These summaries will use some special characters to indicate such variations.
 
 The special characters and their meaning are as follows:
 
-.Special characters in syntax summeries
-[options="header", width="100%", cols="1a^,3a,3a"]
+.Special characters in syntax summaries
+[options="header", width="100%", cols="1a^,3a,3a,3"]
 |===
 | Character | Meaning | Example
 
 | `\|`
 | Or, used to indicate alternative parts of a command.
 Needs to be part of a grouping.
-| If the syntax needs to specify either a name or `*`, this can be indicated with `* \| name`.
+| If the syntax needs to specify either a name or `+*+`, this can be indicated with `* \| name`.
 
 | `{` and `}`
 | Used to group parts of the command, common together with `\|`.
@@ -128,7 +128,7 @@ It also groups alternatives together, when there can be either of the alternativ
 
 |===
 
-There are no other characters that need to be escaped.
+The special characters in the table above, are the only ones which needs to be escaped using `"` in the syntax summaries.
 
 An example that uses all special characters is granting the `READ` privilege:
 
