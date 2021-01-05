@@ -554,22 +554,41 @@ class TemporalTest extends DocumentingTest {
             ||===
             |
             |""")
-        p("The following query shows how to extract the components of a _Duration_ value:")
+        p("The following query shows how to extract the month based components of a _Duration_ value:")
         query(
-          """WITH duration({years: 1, months:4, days: 111, hours: 1, minutes: 1, seconds: 1, nanoseconds: 111111111}) AS d
-            |RETURN d.years, d.quarters, d.quartersOfYear, d.months, d.monthsOfYear, d.monthsOfQuarter, d.weeks, d.days, d.daysOfWeek, d.hours,
-            |   d.minutes, d.minutesOfHour, d.seconds, d.secondsOfMinute, d.milliseconds, d.millisecondsOfSecond, d.microseconds,
-            |   d.microsecondsOfSecond, d.nanoseconds, d.nanosecondsOfSecond""".stripMargin, ResultAssertions((r) => {
+          """WITH duration({years: 1, months:5, days: 111, minutes: 42}) AS d
+            |RETURN d.years, d.quarters, d.quartersOfYear, d.months, d.monthsOfYear, d.monthsOfQuarter""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "d.years" -> 1,
               "d.quarters" -> 5,
               "d.quartersOfYear" -> 1,
-              "d.months" -> 16,
-              "d.monthsOfYear" -> 4,
-              "d.monthsOfQuarter" -> 1,
-              "d.weeks" -> 15,
-              "d.days" -> 111,
-              "d.daysOfWeek" -> 6,
+              "d.months" -> 17,
+              "d.monthsOfYear" -> 5,
+              "d.monthsOfQuarter" -> 2
+            )))
+
+          })) {
+          resultTable()
+        }
+        p("The following query shows how to extract the day based components of a _Duration_ value:")
+        query(
+          """WITH duration({months:5, days: 25, hours: 1}) AS d
+            |RETURN d.weeks, d.days, d.daysOfWeek""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map(
+              "d.weeks" -> 3,
+              "d.days" -> 25,
+              "d.daysOfWeek" -> 4
+            )))
+
+          })) {
+          resultTable()
+        }
+        p("The following query shows how to extract the second based components of a _Duration_ value:")
+        query(
+          """WITH duration({years: 1, months:1, days:1, hours: 1, minutes: 1, seconds: 1, nanoseconds: 111111111}) AS d
+            |RETURN d.hours, d.minutes, d.minutesOfHour, d.seconds, d.secondsOfMinute, d.milliseconds, d.millisecondsOfSecond, d.microseconds,
+            |   d.microsecondsOfSecond, d.nanoseconds, d.nanosecondsOfSecond""".stripMargin, ResultAssertions((r) => {
+            r.toList should equal(List(Map(
               "d.hours" -> 1,
               "d.minutes" -> 61,
               "d.minutesOfHour" -> 1,
