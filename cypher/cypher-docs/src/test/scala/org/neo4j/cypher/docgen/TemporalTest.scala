@@ -342,9 +342,11 @@ class TemporalTest extends DocumentingTest {
             || `instant.week` | The _week-of-the-year_ component footnote:[The https://en.wikipedia.org/wiki/ISO_week_date#First_week[first week of any year] is the week that contains the first Thursday of the year, and thus always contains January 4.] | Integer | `1` to `53` | X | X | X |  |
             || `instant.weekYear` | The _year_ that the _week-of-year_ component belongs to footnote:[For dates from December 29, this could be the next year, and for dates until January 3 this could be the previous year, depending on how week 1 begins.] | Integer | At least 4 digits. For more information, see the <<cypher-temporal-year, rules for using the `Year` component>> | X | X | X |  |
             || `instant.dayOfQuarter` | The _day-of-the-quarter_ component  | Integer | `1` to `92` | X | X | X |  |
+            || `instant.quarterDay` | The _day-of-the-quarter_ component (alias for `instant.dayOfQuarter`)  | Integer | `1` to `92` | X | X | X |  |
             || `instant.day` |  The _day-of-the-month_ component | Integer | `1` to `31` | X | X | X |  |
             || `instant.ordinalDay` | The _day-of-the-year_ component  | Integer | `1` to `366` | X | X | X |  |
             || `instant.dayOfWeek` | The _day-of-the-week_ component (the first day of the week is _Monday_) | Integer | `1` to `7` | X | X | X  | |
+            || `instant.weekDay` | The _day-of-the-week_ component (alias for `instant.dayOfWeek`) | Integer | `1` to `7` | X | X | X  | |
             || `instant.hour` |  The _hour_ component  | Integer | `0` to `23` |   | X  | X | X | X
             || `instant.minute` | The _minute_ component | Integer | `0` to `59` |  | X | X  | X | X
             || `instant.second` | The _second_ component | Integer | `0` to `60` |  | X | X  | X | X
@@ -521,7 +523,9 @@ class TemporalTest extends DocumentingTest {
             ||===
             || Component      | Component Group | Description | Type | Details
             || `duration.years` | Months | The total number of _years_ | Integer | Each set of `4` _quarters_ is counted as `1` _year_; each set of `12` _months_ is counted as `1` _year_.
+            || `duration.quarters` | Months | The total number of _quarters_ | Integer | Each _year_ is counted as `4` _quarters_; each set of `3` _months_ is counted as `1` _quarter_.
             || `duration.months` | Months | The total number of _months_ | Integer | Each _year_ is counted as `12` _months_; each _quarter_ is counted as `3` _months_.
+            || `duration.weeks` | Days | The total number of _weeks_ | Integer | Each set of `7` _days_ is counted as `1` _week_.
             || `duration.days` | Days | The total number of _days_ | Integer | Each _week_ is counted as `7` _days_.
             || `duration.hours` | Seconds | The total number of _hours_ | Integer | Each set of `60` _minutes_ is counted as `1` _hour_; each set of `3600` _seconds_ is counted as `1` _hour_.
             || `duration.minutes` | Seconds | The total number of _minutes_ | Integer | Each _hour_ is counted as `60` _minutes_; each set of `60` _seconds_ is counted as `1` _minute_.
@@ -538,37 +542,45 @@ class TemporalTest extends DocumentingTest {
             |[options="header"]
             ||===
             || Component      | Component Group | Description | Type
+            || `duration.quartersOfYear` | Months | The number of _quarters_ in the group that do not make a whole _year_ | Integer
             || `duration.monthsOfYear` | Months | The number of _months_ in the group that do not make a whole _year_ | Integer
-            || `duration.minutesOfHour` | Seconds | The total number of _minutes_ in the group that do not make a whole _hour_ | Integer
-            || `duration.secondsOfMinute` | Seconds | The total number of _seconds_ in the group that do not make a whole _minute_ | Integer
-            || `duration.millisecondsOfSecond` | Seconds | The total number of _milliseconds_ in the group that do not make a whole _second_ | Integer
-            || `duration.microsecondsOfSecond` | Seconds | The total number of _microseconds_ in the group that do not make a whole _second_ | Integer
-            || `duration.nanosecondsOfSecond` | Seconds | The total number of _nanoseconds_ in the group that do not make a whole _second_ | Integer
+            || `duration.monthsOfQuarter` | Months | The number of _months_ in the group that do not make a whole _quarter_ | Integer
+            || `duration.daysOfWeek` | Days | The number of _days_ in the group that do not make a whole _week_ | Integer
+            || `duration.minutesOfHour` | Seconds | The number of _minutes_ in the group that do not make a whole _hour_ | Integer
+            || `duration.secondsOfMinute` | Seconds | The number of _seconds_ in the group that do not make a whole _minute_ | Integer
+            || `duration.millisecondsOfSecond` | Seconds | The number of _milliseconds_ in the group that do not make a whole _second_ | Integer
+            || `duration.microsecondsOfSecond` | Seconds | The number of _microseconds_ in the group that do not make a whole _second_ | Integer
+            || `duration.nanosecondsOfSecond` | Seconds | The number of _nanoseconds_ in the group that do not make a whole _second_ | Integer
             ||===
             |
             |""")
         p("The following query shows how to extract the components of a _Duration_ value:")
         query(
           """WITH duration({years: 1, months:4, days: 111, hours: 1, minutes: 1, seconds: 1, nanoseconds: 111111111}) AS d
-            |RETURN d.years, d.months, d.monthsOfYear, d.days, d.hours,
+            |RETURN d.years, d.quarters, d.quartersOfYear, d.months, d.monthsOfYear, d.monthsOfQuarter, d.weeks, d.days, d.daysOfWeek, d.hours,
             |   d.minutes, d.minutesOfHour, d.seconds, d.secondsOfMinute, d.milliseconds, d.millisecondsOfSecond, d.microseconds,
             |   d.microsecondsOfSecond, d.nanoseconds, d.nanosecondsOfSecond""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
-              "d.nanosecondsOfSecond" -> 111111111,
-              "d.milliseconds" -> 3661111,
-              "d.secondsOfMinute" -> 1,
-              "d.millisecondsOfSecond" -> 111,
-              "d.minutesOfHour" -> 1,
-              "d.days" -> 111,
-              "d.microseconds" -> 3661111111L,
-              "d.nanoseconds" -> 3661111111111L,
-              "d.microsecondsOfSecond" -> 111111,
               "d.years" -> 1,
+              "d.quarters" -> 5,
+              "d.quartersOfYear" -> 1,
               "d.months" -> 16,
-              "d.minutes" -> 61,
+              "d.monthsOfYear" -> 4,
+              "d.monthsOfQuarter" -> 1,
+              "d.weeks" -> 15,
+              "d.days" -> 111,
+              "d.daysOfWeek" -> 6,
               "d.hours" -> 1,
+              "d.minutes" -> 61,
+              "d.minutesOfHour" -> 1,
               "d.seconds" -> 3661,
-              "d.monthsOfYear" -> 4
+              "d.secondsOfMinute" -> 1,
+              "d.milliseconds" -> 3661111,
+              "d.millisecondsOfSecond" -> 111,
+              "d.microseconds" -> 3661111111L,
+              "d.microsecondsOfSecond" -> 111111,
+              "d.nanoseconds" -> 3661111111111L,
+              "d.nanosecondsOfSecond" -> 111111111
             )))
 
           })) {
