@@ -102,8 +102,6 @@ include::parameters.asciidoc[leveloffset=+1]
 
 include::../ql/query-operators.adoc[leveloffset=+1]
 
-include::comparison.asciidoc[leveloffset=+1]
-
 include::comments.asciidoc[leveloffset=+1]
 
 include::../ql/cypher-patterns.adoc[leveloffset=+1]
