@@ -98,7 +98,7 @@ These summaries will use some special characters to indicate such variations.
 The special characters and their meaning are as follows:
 
 .Special characters in syntax summaries
-[options="header", width="100%", cols="1a^,3a,3a,3"]
+[options="header", width="100%", cols="1a,3a,3a"]
 |===
 | Character | Meaning | Example
 
