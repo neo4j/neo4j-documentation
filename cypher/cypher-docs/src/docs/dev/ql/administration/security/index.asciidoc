@@ -128,7 +128,7 @@ It also groups alternatives together, when there can be either of the alternativ
 
 |===
 
-The special characters in the table above, are the only ones which needs to be escaped using `"` in the syntax summaries.
+The special characters in the table above are the only ones that need to be escaped using `"` in the syntax summaries.
 
 An example that uses all special characters is granting the `READ` privilege:
 
