@@ -542,7 +542,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
       }
       p("More details on lists can be found in <<cypher-lists-general>>.")
-      p("include::comparison.asciidoc[]")
+      p("include::../syntax/comparison.asciidoc[]")
     }
 
   }.build()
