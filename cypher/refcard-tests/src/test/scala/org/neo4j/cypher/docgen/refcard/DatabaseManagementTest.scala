@@ -68,6 +68,17 @@ List information about the database `myDatabase`.
 ###assertion=show-one
 //
 
+SHOW DATABASES
+YIELD name, currentStatus
+WHERE name CONTAINS 'my' AND currentStatus = 'online'
+###
+
+List information about databases, filtered by name and online status and further refined by conditions on these.
+
+
+###assertion=show-one
+//
+
 SHOW DEFAULT DATABASE
 ###
 

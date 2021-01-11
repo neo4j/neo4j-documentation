@@ -44,6 +44,16 @@ List all privileges in the system, and the roles that they are assigned to.
 ###assertion=show-one
 //
 
+SHOW PRIVILEGES
+YIELD role, action, access
+WHERE role = 'my_role'
+###
+
+List information about privileges, filtered by role, action and access and further refined by the name of the role.
+
+###assertion=show-one
+//
+
 SHOW ROLE my_role PRIVILEGES
 ###
 
