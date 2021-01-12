@@ -19,7 +19,7 @@ CREATE [OR REPLACE] DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 STOP DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 |Start Database
 | [source]
-STOP DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+SART DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 |Drop Database
 | [source]
 DROP DATABASE name [IF EXISTS] [{DUMP\|DESTROY} [DATA]] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
