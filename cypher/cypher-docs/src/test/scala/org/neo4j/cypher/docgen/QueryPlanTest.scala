@@ -1323,7 +1323,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           | In an analogous manner to the <<query-plan-apply, Apply>> operator, it takes a row from the left-hand side and, using the <<query-plan-argument, Argument>> operator, provides it to the operator tree on the right-hand side.
           | `Foreach` will yield all the rows coming in from the left-hand side; all results from the right-hand side are pulled in and discarded.""".stripMargin,
       queryText =
-        """FOREACH (value IN [1,2,3] |
+        """CYPHER runtime=slotted FOREACH (value IN [1,2,3] |
           |CREATE (:Person {age: value})
           |)""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("Foreach"))
@@ -1336,7 +1336,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `EmptyRow` operator returns a single row with no columns.""".stripMargin,
       queryText =
-        """FOREACH (value IN [1,2,3] |
+        """CYPHER runtime=slotted FOREACH (value IN [1,2,3] |
           |CREATE (:Person {age: value})
           |)""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("EmptyRow"))
