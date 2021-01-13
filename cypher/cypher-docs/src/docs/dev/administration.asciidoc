@@ -42,6 +42,7 @@ These include index and constraint management commands.
 
 * <<administration-security, Security>>
 ** <<administration-security-introduction, Introduction>>
+** <<administration-security-syntax-rules, Syntax summaries>>
 ** <<administration-security-users-and-roles, User and role management>>
 ** <<administration-security-subgraph, Graph and sub-graph access control>>
 ** <<administration-security-reads, Read privileges>>
