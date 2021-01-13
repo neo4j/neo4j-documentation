@@ -83,7 +83,7 @@ class LimitTest extends DocumentingTest with QueryStatisticsTestSupport {
         """The use of LIMIT in a query will not stop side effects, like `CREATE`, `DELETE` or `SET`, from happening. This behaviour was undefined in versions before 4.3.""".stripMargin
       )
       query(
-        """CREATE (n {name: 'Survivor'})
+        """CREATE (n)
           |RETURN n
           |LIMIT 0""".stripMargin,
         ResultAssertions((r) => {
@@ -95,8 +95,8 @@ class LimitTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
       query(
-        """MATCH (n {name: 'Survivor'})
-          |SET n.age = "2 queries"
+        """MATCH (n {name: 'A'})
+          |SET n.age = 60
           |RETURN n
           |LIMIT 0""".stripMargin,
         ResultAssertions((r) => {
