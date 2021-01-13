@@ -19,9 +19,10 @@
  */
 package org.neo4j.cypher.docgen
 
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
-class LimitTest extends DocumentingTest {
+class LimitTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql"
 
   override def doc = new DocBuilder {
@@ -43,6 +44,7 @@ class LimitTest extends DocumentingTest {
       """* <<limit-introduction, Introduction>>
         |* <<limit-subset-rows, Return a subset of the rows>>
         |* <<limit-subset-rows-using-expression, Using an expression with `LIMIT` to return a subset of the rows>>
+        |* <<limit-will-not-stop-side-effects, `LIMIT` will not stop side effects>>
       """.stripMargin)
     section("Introduction", "limit-introduction") {
       p("""`LIMIT` accepts any expression that evaluates to a positive integer -- however the expression cannot refer to nodes or relationships.""")
@@ -73,6 +75,36 @@ class LimitTest extends DocumentingTest {
           r.toSet should contain(Map("n.name" -> "A"))
         })) {
         p("Returns one to three top items.")
+        resultTable()
+      }
+    }
+    section("`LIMIT` will not stop side effects", "limit-will-not-stop-side-effects") {
+      p(
+        """The use of LIMIT in a query will not stop side effects, like `CREATE`, `DELETE` or `SET`, from happening. This behaviour was undefined in versions before 4.3.""".stripMargin
+      )
+      query(
+        """CREATE (n {name: 'Survivor'})
+          |RETURN n
+          |LIMIT 0""".stripMargin,
+        ResultAssertions((r) => {
+          r.size shouldBe 0
+          assertStats(r, nodesCreated = 1)
+        })
+      ) {
+        p("Returns nothing but creates one node.")
+        resultTable()
+      }
+      query(
+        """MATCH (n {name: 'Survivor'})
+          |SET n.age = "2 queries"
+          |RETURN n
+          |LIMIT 0""".stripMargin,
+        ResultAssertions((r) => {
+          r.size shouldBe 0
+          assertStats(r, propertiesWritten = 1)
+        })
+      ) {
+        p("Returns nothing but writes one property.")
         resultTable()
       }
     }
