@@ -43,6 +43,9 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<query-operators-comparison, Comparison operators>>
         | ** <<syntax-comparing-two-numbers, Comparing two numbers>>
         | ** <<syntax-using-starts-with-to-filter-names, Using `STARTS WITH` to filter names>>
+        | ** <<cypher-comparison, Equality and comparison of values>>
+        | ** <<cypher-ordering, Ordering and comparison of values>>
+        | ** <<cypher-operations-chaining, Chaining comparison operations>>
         |* <<query-operators-boolean, Boolean operators>>
         | ** <<syntax-using-boolean-operators-to-filter-numbers, Using boolean operators to filter numbers>>
         |* <<query-operators-string, String operators>>
@@ -54,16 +57,13 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<query-operators-map, Map operators>>
         | ** <<syntax-accessing-the-value-of-a-nested-map, Statically accessing the value of a nested map by key using the `.` operator">>
         | ** <<syntax-accessing-dynamic-map-parameter, Dynamically accessing the value of a map by key using the `[]` operator and a parameter>>
-        | ** <<syntax-using-in-with-nested-list-subscripting, Using `IN` with `[]` on a nested list>>
         |* <<query-operators-list, List operators>>
         | ** <<syntax-concatenating-two-lists, Concatenating two lists using `+`>>
         | ** <<syntax-using-in-to-check-if-a-number-is-in-a-list, Using `IN` to check if a number is in a list>>
         | ** <<syntax-using-in-for-more-complex-list-membership-operations, Using `IN` for more complex list membership operations>>
         | ** <<syntax-accessing-elements-in-a-list, Accessing elements in a list using the `[]` operator>>
         | ** <<syntax-accessing-element-in-a-list-parameter, Dynamically accessing an element in a list using the `[]` operator and a parameter>>
-        |* <<cypher-comparison, Equality and comparison of values>>
-        |* <<cypher-ordering, Ordering and comparison of values>>
-        |* <<cypher-operations-chaining, Chaining comparison operations>>
+        | ** <<syntax-using-in-with-nested-list-subscripting, Using `IN` with `[]` on a nested list>>
       """.stripMargin)
     section("Operators at a glance", "query-operators-summary") {
       p(
@@ -245,6 +245,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
       }
       p("""<<query-where-string>> contains more information regarding the string-specific comparison operators as well as additional examples illustrating the usage thereof.""")
+      p("include::../syntax/comparison.asciidoc[leveloffset=+1]")
     }
     section("Boolean operators", "query-operators-boolean") {
       p(
@@ -542,7 +543,6 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
       }
       p("More details on lists can be found in <<cypher-lists-general>>.")
-      p("include::../syntax/comparison.asciidoc[]")
     }
 
   }.build()
