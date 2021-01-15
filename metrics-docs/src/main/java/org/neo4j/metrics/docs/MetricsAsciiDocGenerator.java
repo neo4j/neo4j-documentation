@@ -22,9 +22,12 @@
  */
 package org.neo4j.metrics.docs;
 
+import com.neo4j.metrics.source.Metrics;
+
 import java.lang.reflect.Field;
 
 import org.neo4j.annotations.documented.Documented;
+import org.neo4j.internal.helpers.ArrayUtil;
 
 import static org.apache.commons.text.StringEscapeUtils.escapeHtml4;
 
@@ -32,38 +35,33 @@ public class MetricsAsciiDocGenerator
 {
     private static final String NEW_LINE = System.lineSeparator();
 
-    public void generateDocsFor( String metricsResource, StringBuilder builder )
+    public void generateDocsFor( Metrics metricsClass, StringBuilder builder )
     {
-        Class<?> clazz;
-        try
+        Class<? extends Metrics> clazz = metricsClass.getClass();
+        Documented documented = clazz.getAnnotation( Documented.class );
+        if ( documented == null )
         {
-            clazz = Class.forName( metricsResource );
+            throw new IllegalStateException( "Missing Documented annotation on the class: " + metricsClass );
         }
-        catch ( ClassNotFoundException e )
-        {
-            throw new RuntimeException( "Couldn't load metrics class: ", e );
-        }
-
-        {
-            Documented documented =  clazz.getAnnotation( Documented.class );
-            if ( documented == null )
-            {
-                throw new IllegalStateException( "Missing Documented annotation on the class: " + metricsResource );
-            }
-            builder.append( documented.value() ).append( NEW_LINE ).append( NEW_LINE );
-        }
+        builder.append( documented.value() ).append( NEW_LINE ).append( NEW_LINE );
 
         Field[] fields = clazz.getDeclaredFields();
+        Class superclass = clazz.getSuperclass();
+        while ( superclass != null )
+        {
+            fields = ArrayUtil.concat( fields, superclass.getDeclaredFields() );
+            superclass = superclass.getSuperclass();
+        }
+
         if ( existsDocumentedFields( fields ) )
         {
-
             builder.append( "[options=\"header\",cols=\"<1m,<4\"]" ).append( NEW_LINE );
             builder.append( "|===" ).append( NEW_LINE );
             builder.append( "|Name |Description" ).append( NEW_LINE );
 
             for ( Field field : fields )
             {
-                documentField( builder, clazz, field );
+                documentField( builder, metricsClass, clazz, field );
             }
 
             builder.append( "|===" ).append( NEW_LINE );
@@ -83,14 +81,14 @@ public class MetricsAsciiDocGenerator
         return false;
     }
 
-    private void documentField( StringBuilder builder, Class clazz, Field field )
+    private void documentField( StringBuilder builder, Metrics metricsClass, Class<? extends Metrics> clazz, Field field )
     {
         Documented documented = field.getAnnotation( Documented.class );
         field.setAccessible( true );
         if ( documented != null )
         {
             String fieldValue = getStaticFieldValue( clazz, field );
-            String documentedValue = escapeHtml4( "<prefix>." + fieldValue );
+            String documentedValue = escapeHtml4( "<prefix>." + metricsClass.modifyDocumentedMetricName( fieldValue ) );
             builder.append( "|" ).append( documentedValue )
                     .append( "|" ).append( documented.value() )
                     .append( NEW_LINE );

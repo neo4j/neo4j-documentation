@@ -27,34 +27,17 @@
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
                                     <arg value="--output=${project.build.directory}/docs/ops/available-metrics.asciidoc" />
-                                    <arg value="com.neo4j.metrics.source.db.StoreSizeMetrics" />
-                                    <arg value="com.neo4j.metrics.source.db.CheckPointingMetrics" />
-                                    <arg value="com.neo4j.metrics.source.db.EntityCountMetrics" />
-                                    <arg value="com.neo4j.metrics.source.db.PageCacheMetrics" />
-                                    <arg value="com.neo4j.metrics.source.db.TransactionMetrics" />
-                                    <arg value="com.neo4j.metrics.source.db.CypherMetrics" />
-                                    <arg value="com.neo4j.metrics.source.db.TransactionLogsMetrics" />
-                                    <arg value="com.neo4j.metrics.source.db.BoltMetrics" />
-                                    <arg value="com.neo4j.metrics.source.db.DatabaseCountMetrics" />
-                                    <arg value="com.neo4j.metrics.source.db.DatabaseOperationCountMetrics" />
-                                    <arg value="com.neo4j.metrics.source.server.ServerMetrics" />
+                                    <arg value="GENERAL" />
                                 </java>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
                                     <arg value="--output=${project.build.directory}/docs/ops/jvm-metrics.asciidoc" />
-                                    <!-- keep this one separate as it's a bit special compared to the others -->
-                                    <arg value="com.neo4j.metrics.source.jvm.JvmMetrics" />
-                                    <arg value="com.neo4j.metrics.source.jvm.GCMetrics" />
-                                    <arg value="com.neo4j.metrics.source.jvm.JVMMemoryBuffersMetrics" />
-                                    <arg value="com.neo4j.metrics.source.jvm.JVMMemoryPoolMetrics" />
-                                    <arg value="com.neo4j.metrics.source.jvm.ThreadMetrics" />
+                                    <arg value="JVM" />
                                 </java>
                                 <java classname="org.neo4j.metrics.docs.GenerateMetricsDocumentation"
                                       classpathref="maven.test.classpath" failonerror="true" fork="true">
                                     <arg value="--output=${project.build.directory}/docs/ops/cc-metrics.asciidoc" />
-                                    <arg value="com.neo4j.metrics.source.causalclustering.RaftCoreMetrics" />
-                                    <arg value="com.neo4j.metrics.source.causalclustering.ReadReplicaMetrics" />
-                                    <arg value="com.neo4j.metrics.source.causalclustering.DiscoveryCoreMetrics" />
+                                    <arg value="CAUSAL_CLUSTERING" />
                                 </java>
                             </target>
                         </configuration>
