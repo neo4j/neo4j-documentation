@@ -37,9 +37,6 @@ This section describes the syntax of the Cypher query language.
  ** <<query-operators-temporal, Temporal operators>>
  ** <<query-operators-list, List operators>>
  ** <<query-operators-property, Property operators>>
- ** <<cypher-comparison, Equality and comparison of values>>
- ** <<cypher-ordering, Ordering and comparison of values>>
- ** <<cypher-operations-chaining, Chaining comparison operations>>
 * <<cypher-comments, Comments>>
 * <<cypher-patterns, Patterns>>
  ** <<cypher-pattern-node, Patterns for nodes>>
