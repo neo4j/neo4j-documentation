@@ -333,7 +333,7 @@ class TemporalTest extends DocumentingTest {
         p(
           """
             |.Components of temporal instant values and where they are supported
-            |[options="header"]
+            |[options="header", cols="2,2,1,2,1,1,1,1,1"]
             ||===
             || Component      | Description  | Type | Range/Format   | Date | DateTime | LocalDateTime | Time | LocalTime
             || `instant.year` | The `year` component represents the https://en.wikipedia.org/wiki/Astronomical_year_numbering[astronomical year number] of the instant footnote:[This is in accordance with the https://en.wikipedia.org/wiki/Gregorian_calendar[Gregorian calendar]; i.e. years AD/CE start at year 1, and the year before that (year 1 BC/BCE) is 0, while year 2 BCE is -1 etc.] | Integer | At least 4 digits. For more information, see the <<cypher-temporal-year, rules for using the `Year` component>> | X | X | X |  |
@@ -380,33 +380,52 @@ class TemporalTest extends DocumentingTest {
           })) {
           resultTable()
         }
-        p("The following query shows how to extract the components of a _DateTime_ value:")
+        p("The following query shows how to extract the date related components of a _DateTime_ value:")
         query(
           """WITH datetime({year:1984, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone:'Europe/Stockholm'}) as d
-            |RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.dayOfWeek, d.dayOfQuarter,
-            |   d.hour, d.minute, d.second, d.millisecond, d.microsecond, d.nanosecond,
-            |   d.timezone, d.offset, d.offsetMinutes, d.epochSeconds, d.epochMillis""".stripMargin, ResultAssertions((r) => {
+            |RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.dayOfWeek, d.dayOfQuarter""".stripMargin,
+          ResultAssertions((r) => {
             r.toList should equal(List(Map(
-              "d.second" -> 14,
-              "d.hour" -> 12,
-              "d.microsecond" -> 645876,
-              "d.weekYear" -> 1984,
-              "d.offsetMinutes" -> 60,
-              "d.quarter" -> 4,
               "d.year" -> 1984,
-              "d.week" -> 45,
-              "d.offset" -> "+01:00",
-              "d.day" -> 11,
-              "d.millisecond" -> 645,
-              "d.minute" -> 31,
-              "d.dayOfWeek" -> 7,
-              "d.timezone" -> "Europe/Stockholm",
-              "d.dayOfQuarter" -> 42,
-              "d.epochSeconds" -> 469020674,
-              "d.ordinalDay" -> 316,
-              "d.epochMillis" -> 469020674645L,
+              "d.quarter" -> 4,
               "d.month" -> 11,
+              "d.week" -> 45,
+              "d.weekYear" -> 1984,
+              "d.day" -> 11,
+              "d.ordinalDay" -> 316,
+              "d.dayOfWeek" -> 7,
+              "d.dayOfQuarter" -> 42
+            )))
+          })) {
+          resultTable()
+        }
+        p("The following query shows how to extract the time related components of a _DateTime_ value:")
+        query(
+          """WITH datetime({year:1984, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone:'Europe/Stockholm'}) as d
+            |RETURN d.hour, d.minute, d.second, d.millisecond, d.microsecond, d.nanosecond""".stripMargin,
+          ResultAssertions((r) => {
+            r.toList should equal(List(Map(
+              "d.hour" -> 12,
+              "d.minute" -> 31,
+              "d.second" -> 14,
+              "d.millisecond" -> 645,
+              "d.microsecond" -> 645876,
               "d.nanosecond" -> 645876123
+            )))
+          })) {
+          resultTable()
+        }
+        p("The following query shows how to extract the epoch time and timezone related components of a _DateTime_ value:")
+        query(
+          """WITH datetime({year:1984, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone:'Europe/Stockholm'}) as d
+            |RETURN d.timezone, d.offset, d.offsetMinutes, d.epochSeconds, d.epochMillis""".stripMargin,
+          ResultAssertions((r) => {
+            r.toList should equal(List(Map(
+              "d.timezone" -> "Europe/Stockholm",
+              "d.offset" -> "+01:00",
+              "d.offsetMinutes" -> 60,
+              "d.epochSeconds" -> 469020674,
+              "d.epochMillis" -> 469020674645L
             )))
           })) {
           resultTable()
@@ -519,7 +538,7 @@ class TemporalTest extends DocumentingTest {
         p(
           """
             |.Components of _Duration_ values and how they are truncated within their component group
-            |[options="header"]
+            |[options="header", cols="3,2,2,1,3"]
             ||===
             || Component      | Component Group | Description | Type | Details
             || `duration.years` | Months | The total number of _years_ | Integer | Each set of `4` _quarters_ is counted as `1` _year_; each set of `12` _months_ is counted as `1` _year_.
@@ -539,7 +558,7 @@ class TemporalTest extends DocumentingTest {
         p(
           """It is also possible to access the smaller (less significant) components of a component group bounded by the largest (most significant) component of the group:
             |
-            |[options="header"]
+            |[options="header", cols="3,2,3,1"]
             ||===
             || Component      | Component Group | Description | Type
             || `duration.quartersOfYear` | Months | The number of _quarters_ in the group that do not make a whole _year_ | Integer
@@ -583,22 +602,32 @@ class TemporalTest extends DocumentingTest {
           })) {
           resultTable()
         }
-        p("The following query shows how to extract the second based components of a _Duration_ value:")
+        p("The following query shows how to extract the most significant second based components of a _Duration_ value:")
         query(
           """WITH duration({years: 1, months:1, days:1, hours: 1, minutes: 1, seconds: 1, nanoseconds: 111111111}) AS d
-            |RETURN d.hours, d.minutes, d.minutesOfHour, d.seconds, d.secondsOfMinute, d.milliseconds, d.millisecondsOfSecond, d.microseconds,
-            |   d.microsecondsOfSecond, d.nanoseconds, d.nanosecondsOfSecond""".stripMargin, ResultAssertions((r) => {
+            |RETURN d.hours, d.minutes, d.seconds, d.milliseconds, d.microseconds, d.nanoseconds""".stripMargin, ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "d.hours" -> 1,
               "d.minutes" -> 61,
-              "d.minutesOfHour" -> 1,
               "d.seconds" -> 3661,
-              "d.secondsOfMinute" -> 1,
               "d.milliseconds" -> 3661111,
-              "d.millisecondsOfSecond" -> 111,
               "d.microseconds" -> 3661111111L,
+              "d.nanoseconds" -> 3661111111111L
+            )))
+
+          })) {
+          resultTable()
+        }
+        p("The following query shows how to extract the less significant second based components of a _Duration_ value:")
+        query(
+          """WITH duration({years: 1, months:1, days:1, hours: 1, minutes: 1, seconds: 1, nanoseconds: 111111111}) AS d
+            |RETURN d.minutesOfHour, d.secondsOfMinute, d.millisecondsOfSecond, d.microsecondsOfSecond, d.nanosecondsOfSecond""".stripMargin,
+          ResultAssertions((r) => {
+            r.toList should equal(List(Map(
+              "d.minutesOfHour" -> 1,
+              "d.secondsOfMinute" -> 1,
+              "d.millisecondsOfSecond" -> 111,
               "d.microsecondsOfSecond" -> 111111,
-              "d.nanoseconds" -> 3661111111111L,
               "d.nanosecondsOfSecond" -> 111111111
             )))
 
