@@ -22,11 +22,18 @@
  */
 package org.neo4j.metrics.docs;
 
+import com.neo4j.metrics.source.MetricGroup;
+import com.neo4j.metrics.source.Metrics;
+
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import org.neo4j.internal.helpers.Args;
 import org.neo4j.io.fs.FileUtils;
+import org.neo4j.service.Services;
 
 public class GenerateMetricsDocumentation
 {
@@ -36,25 +43,34 @@ public class GenerateMetricsDocumentation
     {
         Args args = Args.withFlags( OUTPUT_FILE_FLAG ).parse( input );
 
-        List<String> metricsClassNames = args.orphans();
-        if ( metricsClassNames.isEmpty() )
+        List<String> metricGroups = args.orphans();
+        if ( metricGroups.size() != 1 )
         {
-            System.out.println( "Usage: GenerateMetricsDocumentation [--output file] className..." );
+            System.out.println( "Usage: GenerateMetricsDocumentation [--output file] metricGroup" );
             System.exit( 1 );
         }
+        MetricGroup metricGroup = MetricGroup.valueOf( metricGroups.get( 0 ) );
 
         MetricsAsciiDocGenerator generator = new MetricsAsciiDocGenerator();
         StringBuilder builder = new StringBuilder();
-        for ( String className : metricsClassNames )
+
+        Collection<Metrics> metricsClasses = Services.loadAll( Metrics.class );
+        ArrayList<Metrics> sortedMetrics = new ArrayList<>( metricsClasses );
+        sortedMetrics.sort( Comparator.comparing( ( metric ) -> metric.getClass().getName() ) );
+
+        for ( Metrics metricsClass : sortedMetrics )
         {
-            generator.generateDocsFor( className, builder );
+            if ( metricGroup.equals( metricsClass.getGroup() ) )
+            {
+                generator.generateDocsFor( metricsClass, builder );
+            }
         }
 
         String outputFileName = args.get( OUTPUT_FILE_FLAG );
         if ( outputFileName != null )
         {
             Path output = Path.of( outputFileName );
-            System.out.println( "Saving docs for '" + metricsClassNames + "' in '" + output.toAbsolutePath() + "'." );
+            System.out.println( "Saving docs for '" + metricGroups + "' metrics in '" + output.toAbsolutePath() + "'." );
             FileUtils.writeToFile( output, builder.toString(), false );
         }
         else
