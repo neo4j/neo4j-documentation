@@ -59,20 +59,13 @@ CREATE OR REPLACE USER name
 
 | [source]
 ----
-ALTER USER name SET {
-[PLAINTEXT \| ENCRYPTED] PASSWORD password
+ALTER USER name
+  [SET [PLAINTEXT \| ENCRYPTED] PASSWORD password]
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED} ]
-  [SET DEFAULT DATABASE name] \|
-PASSWORD CHANGE [NOT] REQUIRED
-  [SET STATUS {ACTIVE \| SUSPENDED}]
-  [SET DEFAULT DATABASE name] \|
-STATUS {ACTIVE \| SUSPENDED}
-  [SET DEFAULT DATABASE name] \|
-DEFAULT DATABASE name
-}
+  [SET DEFAULT DATABASE name]
 ----
-| Modify the settings for an existing user.
+| Modify the settings for an existing user. At least one `SET` clause is required.
 | <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>>,
 <<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>> and/or
 <<administration-security-administration-dbms-privileges-user-management, SET USER DEFAULT DATABASE>>

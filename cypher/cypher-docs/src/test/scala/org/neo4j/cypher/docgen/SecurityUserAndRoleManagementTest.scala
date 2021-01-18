@@ -71,12 +71,15 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p("Users can be created using `CREATE USER`.")
         p("include::user-management-syntax-create-user.asciidoc[]")
         p("""
+            | * The `SET PASSWORD CHANGE [NOT] REQUIRED`, `SET STATUS` and `SET DEFAULT DATABASE` clauses can be applied in any order.
             | * For `SET PASSWORD`:
-            | ** If the optional `SET PASSWORD CHANGE [NOT] REQUIRED` is omitted then the default is `CHANGE REQUIRED`.
+            | ** The `password` can either be a string value or a string parameter.
             | ** The optional `PLAINTEXT` in `SET PLAINTEXT PASSWORD` has the same behaviour as `SET PASSWORD`.
             | ** The optional `ENCRYPTED` can be used to create a user when the plaintext password is unknown but the encrypted password is available
             |    (e.g. from a database backup). In this case the password string is expected to be on the format `<encryption-version>,<hash>,<salt>`.
-            | * The default for `SET STATUS` is `ACTIVE`. The `password` can either be a string value or a string parameter.
+            | * If the optional `SET PASSWORD CHANGE [NOT] REQUIRED` is omitted then the default is `CHANGE REQUIRED`.
+            |   The `SET PASSWORD` part is only optional if it directly follows the `SET PASSWORD` clause.
+            | * The default for `SET STATUS` is `ACTIVE`.
             | * `SET DEFAULT DATABASE` can be used to configure a default database at a user level which takes precedence over the system wide default.
           """.stripMargin
         )
@@ -140,12 +143,15 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
         p("""
+            | * At least one of the `SET` clauses are required for the command.
+            | * The `SET PASSWORD CHANGE [NOT] REQUIRED`, `SET STATUS` and `SET DEFAULT DATABASE` clauses can be applied in any order.
+            |   The `SET PASSWORD` clause must come first if used.
             | * For `SET PASSWORD`:
             | ** The `password` can either be a string value or a string parameter, and must not be identical to the old password.
             | ** The optional `PLAINTEXT` in `SET PLAINTEXT PASSWORD` has the same behaviour as `SET PASSWORD`.
             | ** The optional `ENCRYPTED` can be used to update a user's password when the plaintext password is unknown but the encrypted password
-            |    is available (e.g. from a database backup).
-            | ** With `ENCRYPTED`, the password string is expected to be on the format `<encryption-version>,<hash>,<salt>`.
+            |    is available (e.g. from a database backup). In this case the password string is expected to be on the format `<encryption-version>,<hash>,<salt>`.
+            | * For `SET PASSWORD CHANGE [NOT] REQUIRED`, the `SET PASSWORD` is only optional if it directly follows the `SET PASSWORD` clause.
             | * `SET DEFAULT DATABASE` can be used to configure a default database at a user level which takes precedence over the system wide default.
           """.stripMargin
         )
