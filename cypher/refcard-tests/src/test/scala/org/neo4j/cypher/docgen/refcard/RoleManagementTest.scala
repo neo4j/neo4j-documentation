@@ -70,6 +70,16 @@ SHOW ROLES
 
 List all roles in the system.
 
+###assertion=show-two
+//
+
+SHOW ROLES
+YIELD role
+WHERE role CONTAINS 'my'
+###
+
+List roles, filtered by the name of the role and further refined by whether the name contains 'my'.
+
 ###assertion=show-one
 //
 
