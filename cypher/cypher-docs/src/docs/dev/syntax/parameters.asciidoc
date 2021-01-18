@@ -3,6 +3,7 @@
 
 
 * <<cypher-parameters-introduction,Introduction>>
+* <<cypher-parameters-auto-parameterization,Auto-Parameterization>>
 * <<cypher-parameters-string-literal,String literal>>
 * <<cypher-parameters-regular-expression,Regular expression>>
 * <<cypher-parameters-case-sensitive-pattern-matching,Case-sensitive string pattern matching>>
@@ -54,6 +55,20 @@ The old parameter syntax `+{param}+` was deprecated in Neo4j 3.0 and removed ent
 Using it will result in a syntax error.
 However, it is still possible to use it, with warnings, if you prefix the query with `CYPHER 3.5`.
 See <<cypher-compatibility, Cypher Compatibility>> for further information.
+====
+
+[[cypher-parameters-auto-parameterization]]
+== Auto-Parameterization
+
+When a query does not use parameters, Cypher will try to infer parameters anyway.
+Each literal in the query is replaced with a parameter.
+This increases the re-usability of the computed plan for queries that are identical except for the literals.
+It is not recommended to rely on this behavior - users should rather use parameters where they think it is appropriate.
+
+[NOTE]
+====
+If at least one parameter is used in the query, auto-parameterization is turned off for that query.
+This means that any remaining literals will not be turned into parameters.
 ====
 
 
