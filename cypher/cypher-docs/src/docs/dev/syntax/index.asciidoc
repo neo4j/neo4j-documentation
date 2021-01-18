@@ -28,16 +28,14 @@ This section describes the syntax of the Cypher query language.
 * <<query-operators, Operators>>
  ** <<query-operators-summary, Operators at a glance>>
  ** <<query-operators-aggregation, Aggregation operators>>
+ ** <<query-operators-property, Property operators>>
  ** <<query-operators-mathematical, Mathematical operators>>
  ** <<query-operators-comparison, Comparison operators>>
  ** <<query-operators-boolean, Boolean operators>>
  ** <<query-operators-string, String operators>>
  ** <<query-operators-temporal, Temporal operators>>
+ ** <<query-operators-map, Map operators>>
  ** <<query-operators-list, List operators>>
- ** <<query-operators-property, Property operators>>
- ** <<cypher-comparison, Equality and comparison of values>>
- ** <<cypher-ordering, Ordering and comparison of values>>
- ** <<cypher-operations-chaining, Chaining comparison operations>>
 * <<cypher-comments, Comments>>
 * <<cypher-patterns, Patterns>>
  ** <<cypher-pattern-node, Patterns for nodes>>
@@ -100,19 +98,17 @@ include::parameters.asciidoc[leveloffset=+1]
 
 include::../ql/query-operators.adoc[leveloffset=+1]
 
-include::comparison.asciidoc[leveloffset=+1]
-
 include::comments.asciidoc[leveloffset=+1]
 
 include::../ql/cypher-patterns.adoc[leveloffset=+1]
 
 include::../ql/cypher-temporal.adoc[leveloffset=+1]
 
+include::../ql/cypher-spatial.adoc[leveloffset=+1]
+
 include::../ql/cypher-lists.adoc[leveloffset=+1]
 
 include::../ql/cypher-maps.adoc[leveloffset=+1]
-
-include::../ql/cypher-spatial.adoc[leveloffset=+1]
 
 include::working-with-null.asciidoc[leveloffset=+1]
 
