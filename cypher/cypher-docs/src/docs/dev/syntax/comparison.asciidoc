@@ -104,5 +104,3 @@ Is equivalent to:
 ----
 a < b AND b = c AND c <= d AND d <> e
 ----
-
-For other comparison operators, see <<query-operators-comparison>>.
