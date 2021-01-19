@@ -80,7 +80,9 @@ class LimitTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("`LIMIT` will not stop side effects", "limit-will-not-stop-side-effects") {
       p(
-        """The use of LIMIT in a query will not stop side effects, like `CREATE`, `DELETE` or `SET`, from happening. This behaviour was undefined in versions before 4.3.""".stripMargin
+        """The use of LIMIT in a query will not stop side effects, like `CREATE`, `DELETE` or `SET`, from happening if
+          |the limit is in the same query part as the side effect. This behaviour was undefined in versions before
+          |4.3.""".stripMargin
       )
       query(
         """CREATE (n)
@@ -105,6 +107,22 @@ class LimitTest extends DocumentingTest with QueryStatisticsTestSupport {
         })
       ) {
         p("Returns nothing but writes one property.")
+        resultTable()
+      }
+      p(
+        "If we want to limit the number of updates we can split the query using the WITH clause."
+      )
+      query(
+        """MATCH (n)
+          |WITH n LIMIT 1
+          |SET n.locked = true
+          |RETURN n""".stripMargin,
+        ResultAssertions((r) => {
+          r.size shouldBe 1
+          assertStats(r, propertiesWritten = 1)
+        })
+      ) {
+        p("Writes `locked` property on one node and return that node.")
         resultTable()
       }
     }
