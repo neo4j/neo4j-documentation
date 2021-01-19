@@ -85,6 +85,17 @@ SHOW USERS
 List all users in the system, their status, roles and if they need to change their password. +
 (★) Status and roles are Enterprise Edition only.
 
+###assertion=show-one
+//
+
+SHOW USERS
+YIELD user, suspended
+WHERE suspended = true
+###
+
+List users in the system, filtered by their name and status and further refined by whether they are suspended. +
+(★) Status is Enterprise Edition only.
+
 ###assertion=update-one
 //
 

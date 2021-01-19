@@ -60,6 +60,16 @@ List all databases in the system and information about them.
 ###assertion=show-one
 //
 
+SHOW DATABASES
+YIELD name, currentStatus
+WHERE name CONTAINS 'my' AND currentStatus = 'online'
+###
+
+List information about databases, filtered by name and online status and further refined by conditions on these.
+
+###assertion=show-one
+//
+
 SHOW DATABASE myDatabase
 ###
 
