@@ -20,24 +20,20 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
+import org.scalatest.matchers.Matcher
 
 class UsingTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/"
   override def doc = new DocBuilder {
     doc("Planner hints and the USING keyword", "query-using")
     initQueries(
-      "CREATE INDEX FOR (n:Scientist) ON (n.name)",
-      "CREATE INDEX FOR (n:Science) ON (n.name)",
-
-      """CREATE
-        |(liskov:Scientist {name: 'Liskov', born: 1939})-[:KNOWS]->(wing:Scientist {name: 'Wing', born: 1956})-[:RESEARCHED]->(cs:Science {name: 'Computer Science'})<-[:RESEARCHED]-(conway:Scientist {name: 'Conway', born: 1938}),
-        |(liskov)-[:RESEARCHED]->(cs),
-        |(wing)-[:RESEARCHED]->(:Science {name: 'Engineering'}),
-        |(chemistry:Science {name: 'Chemistry'})<-[:RESEARCHED]-(:Scientist {name: 'Curie', born: 1867}),
-        |(chemistry)<-[:RESEARCHED]-(:Scientist {name: 'Arden'}),
-        |(chemistry)<-[:RESEARCHED]-(:Scientist {name: 'Franklin'}),
-        |(chemistry)<-[:RESEARCHED]-(:Scientist {name: 'Harrison'})
-      """
+      """FOREACH(i IN range(1, 100) |
+        |  CREATE (:Scientist {born: 1800 + i})-[:RESEARCHED]->(:Science)<-[:INVENTED_BY]-(:Pioneer {born: 500 + (i % 50)})-[:LIVES_IN]->(:City)-[:PART_OF]->(:Country {formed: 400 + i})
+        |)
+        |""".stripMargin,
+      "CREATE INDEX FOR (s:Scientist) ON (s.born)",
+      "CREATE INDEX FOR (p:Pioneer) ON (p.born)",
+      "CREATE INDEX FOR (c:Country) ON (c.formed)",
     )
     synopsis("A planner hint is used to influence the decisions of the planner when building an execution plan for a query. Planner hints are specified in a query with the `USING` keyword.")
     caution {
@@ -56,12 +52,10 @@ class UsingTest extends DocumentingTest {
           |Moreover, in some circumstances (albeit rarely) it is better not to use an index at all.""")
       p("""Neo4j can be forced to use a specific starting point through the `USING` keyword. This is called giving a planner hint.
           |There are four types of planner hints: index hints, scan hints, join hints, and the `PERIODIC COMMIT` query hint.""")
-      p("The following graph is used for the examples below:")
-      graphViz()
-      query(s"$matchString RETURN 1 AS $columnName", assertIntegersReturned(1)) {
-        p("""The following query will be used in some of the examples on this page. It has intentionally been constructed in
-            |such a way that the statistical information will be inaccurate for the particular path that this query
-            |matches. For this reason, it can be improved by supplying planner hints.""")
+      query(s"$matchString RETURN *", assertPlan(AND(OR(ShouldUseIndexSeekOn("s"), ShouldUseIndexSeekOn("cc")), ShouldNotUseJoins))) {
+        p(
+          """The query above will be used in some of the examples on this page.
+            |Without any hints, one index and no join is used.""")
         profileExecutionPlan()
       }
     }
@@ -70,36 +64,31 @@ class UsingTest extends DocumentingTest {
           |This can be beneficial in cases where the index statistics are not accurate for the specific values that
           |the query at hand is known to use, which would result in the planner picking a non-optimal index.
           |To supply an index hint, use `USING INDEX variable:Label(property)` or `USING INDEX SEEK variable:Label(property)` after the applicable `MATCH` clause.""")
+      p(
+        """`USING INDEX` can be fulfilled by either a `NodeIndexScan` or a `NodeIndexSeek`.
+          |`USING INDEX SEEK` can only be fulfilled by a `NodeIndexSeek`.""")
       p("""It is possible to supply several index hints, but keep in mind that several starting points
           |will require the use of a potentially expensive join later in the query plan.""")
       section("Query using an index hint") {
-        p("""The query above will not naturally pick an index to solve the plan.
-            |This is because the graph is very small, and label scans are faster for small databases.
-            |In general, however, query performance is ranked by the dbhit metric, and we see that using an index is
-            |slightly better for this query.""")
-        query(s"$matchString USING INDEX liskov:Scientist(name) RETURN liskov.born AS $columnName",
-              assertIntegersReturned(1939)) {
-          p("Returns the year *'Barbara Liskov'* was born.")
-          profileExecutionPlan()
-        }
-      }
-      section("Query using an index seek hint") {
-        p(
-          """Similar to the index (scan) hint, but an index seek will be used rather than an index scan.
-            |Index seeks require no post filtering, they are most efficient when a relatively small number of nodes have the specified value on the queried property.""")
-        query(s"$matchString USING INDEX SEEK liskov:Scientist(name) RETURN liskov.born AS $columnName",
-          assertIntegersReturned(1939)) {
-          p("Returns the year *'Barbara Liskov'* was born.")
+        p("""The query above can be tuned to pick a different index as the starting point.""")
+        query(
+          s"""$matchString
+             |USING INDEX p:Pioneer(born)
+             |RETURN *""",
+          assertPlan(AND(ShouldUseIndexSeekOn("p"), ShouldNotUseJoins))) {
           profileExecutionPlan()
         }
       }
       section("Query using multiple index hints") {
         p("""Supplying one index hint changed the starting point of the query, but the plan is still linear, meaning it
             |only has one starting point. If we give the planner yet another index hint, we force it to use two starting points,
-            |one at each end of the match. It will then join these two branches using a join operator. """)
-        query(s"$matchString USING INDEX liskov:Scientist(name) USING INDEX conway:Scientist(name) RETURN liskov.born AS $columnName",
-              assertIntegersReturned(1939)) {
-          p("Returns the year *'Barbara Liskov'* was born, using a slightly better plan.")
+            |one at each end of the match. It will then join these two branches using a join operator.""")
+        query(
+          s"""$matchString
+             |USING INDEX s:Scientist(born)
+             |USING INDEX cc:Country(formed)
+             |RETURN *""",
+          assertPlan(AND(AND(AND(ShouldUseIndexSeekOn("s"), ShouldUseIndexSeekOn("cc")), NOT(ShouldUseIndexSeekOn("p"))), NOT(ShouldUseJoinOn("p"))))) {
           profileExecutionPlan()
         }
       }
@@ -107,15 +96,14 @@ class UsingTest extends DocumentingTest {
     section("Scan hints", "query-using-scan-hint") {
       p("""If your query matches large parts of an index, it might be faster to scan the label and filter out nodes that do not match.
           |To do this, you can use `USING SCAN variable:Label` after the applicable `MATCH` clause.
-          |This will force Cypher to not use an index that could have been used, and instead do a label scan.""")
+          |This will force Cypher to not use an index that could have been used, and instead do a label scan.
+          |You can use the same hint to enforce a starting point where no index is applicable.""")
       section("Hinting a label scan") {
-        p("""If the best performance is to be had by scanning all nodes in a label and then filtering on that set, use `USING SCAN`.""")
-        query(s"""MATCH (s:Scientist)
-                 |USING SCAN s:Scientist
-                 |WHERE s.born < 1939
-                 |RETURN s.born AS $columnName""",
-              assertIntegersReturned(1938, 1867)) {
-          p("Returns all scientists born before *'1939'*.")
+        query(
+          s"""$matchString
+             |USING SCAN s:Scientist
+             |RETURN *""",
+          assertPlan(ShouldUseLabelScanOn("s"))) {
           profileExecutionPlan()
         }
       }
@@ -129,28 +117,34 @@ class UsingTest extends DocumentingTest {
           |potentially pick a very bad starting point. This will negatively affect query performance. In other cases,
           |the hint might force the planner to pick a _seemingly_ bad starting point, which in reality proves to be a very good one.""")
       section("Hinting a join on a single node") {
-        p("""In the example above using multiple index hints, we saw that the planner chose to do a join on the `cs` node.
-            |This means that the relationship between `wing` and `cs` was traversed in the outgoing direction, which is better
-            |statistically because the pattern `()-[:RESEARCHED]->(:Science)` is more common than the pattern `(:Scientist)-[:RESEARCHED]->()`.
-            |However, in the actual graph, the `cs` node only has two such relationships, so expanding from it will be beneficial
-            |to expanding from the `wing` node. We can force the join to happen on `wing` instead with a join hint.""")
+        p("""In the example above using multiple index hints, we saw that the planner chose to do a join, but not on the `p` node.
+            |By supplying a join hint in an#ddition to the index hints, we can enforce the join to happen on the `p` node.""")
         query(s"""$matchString
-              |USING INDEX liskov:Scientist(name)
-              |USING INDEX conway:Scientist(name)
-              |USING JOIN ON wing
-              |RETURN wing.born AS $columnName""",
-              assertIntegersReturnedAndUsingHashJoin(1956)) {
-          p("Returns the birth date of *'Jeanette Wing'*, using a slightly better plan.")
+              |USING INDEX s:Scientist(born)
+              |USING INDEX cc:Country(formed)
+              |USING JOIN ON p
+              |RETURN *""",
+          assertPlan(AND(AND(ShouldUseIndexSeekOn("s"), ShouldUseIndexSeekOn("cc")), ShouldUseJoinOn("p")))) {
           profileExecutionPlan()
         }
       }
-      section("Hinting a join on multiple nodes") {
-        p("The query planner can be made to produce a join between several specific points. This requires the query to expand from the same node from several directions.")
-        query(s"""MATCH (liskov:Scientist {name:'Liskov'})-[:KNOWS]->(wing:Scientist {name:'Wing'})-[:RESEARCHED]->(cs:Science {name:'Computer Science'})<-[:RESEARCHED]-(liskov)
-              |USING INDEX liskov:Scientist(name)
-              |USING JOIN ON liskov, cs
-              |RETURN wing.born AS $columnName""", assertIntegersReturnedAndUsingHashJoin(1956)) {
-          p("Returns the birth date of *'Jeanette Wing'*.")
+      section("Hinting a join for an OPTIONAL MATCH") {
+        p(
+          """A join hint can also be used to force the planner to pick a `NodeLeftOuterHashJoin` or `NodeRightOuterHashJoin` to solve an `OPTIONAL MATCH`.
+            |In most cases, the planner will rather use an `OptionalExpand`.""".stripMargin)
+        query(s"""MATCH (s:Scientist {born: 1850})
+                 |OPTIONAL MATCH (s)-[:RESEARCHED]->(sc:Science)
+                 |RETURN *""",
+          assertPlan(ShouldNotUseJoins)) {
+          p("Without any hint, the planner did not use a join to solve the `OPTIONAL MATCH`.")
+          profileExecutionPlan()
+        }
+        query(s"""MATCH (s:Scientist {born: 1850})
+                 |OPTIONAL MATCH (s)-[:RESEARCHED]->(sc:Science)
+                 |USING JOIN ON s
+                 |RETURN *""",
+          assertPlan(ShouldUseJoinOn("s"))) {
+          p("Now the planner uses a join to solve the `OPTIONAL MATCH`.")
           profileExecutionPlan()
         }
       }
@@ -174,16 +168,42 @@ class UsingTest extends DocumentingTest {
     }
   }.build()
 
-  private def columnName = "column"
-  private def matchString =
-    "MATCH (liskov:Scientist {name:'Liskov'})-[:KNOWS]->(wing:Scientist)-[:RESEARCHED]->(cs:Science {name:'Computer Science'})<-[:RESEARCHED]-(conway:Scientist {name: 'Conway'})"
+  private def matchString = "MATCH (s:Scientist {born: 1850})-[:RESEARCHED]->(sc:Science)<-[:INVENTED_BY]-(p:Pioneer {born: 525})-[:LIVES_IN]->(c:City)-[:PART_OF]->(cc:Country {formed: 411})"
 
-  private def assertIntegersReturned(values: Long*) = ResultAssertions(result => {
-    result.columnAs[Long](columnName).toSet should equal(values.toSet)
-  })
+  sealed trait PlanAssertion {
+    def matcher: Matcher[String]
+  }
 
-  private def assertIntegersReturnedAndUsingHashJoin(values: Long*) = ResultAssertions(result => {
-    result.columnAs[String](columnName).toSet should equal(values.toSet)
-    result.executionPlanDescription().toString should include("NodeHashJoin")
+  case class ShouldUseIndexSeekOn(variable: String) extends PlanAssertion {
+    override def matcher: Matcher[String] = include regex s"NodeIndexSeek\\s*\\|\\s*$variable".r
+  }
+
+  case class ShouldUseLabelScanOn(variable: String) extends PlanAssertion {
+    override def matcher: Matcher[String] = include regex s"NodeByLabelScan\\s*\\|\\s*$variable".r
+  }
+
+  case class ShouldUseJoinOn(variable: String) extends PlanAssertion {
+    override def matcher: Matcher[String] = include regex s"Node(LeftOuter|RightOuter)?HashJoin\\s*\\|\\s*$variable".r
+  }
+
+  case object ShouldNotUseJoins extends PlanAssertion {
+    override def matcher: Matcher[String] = not(include("Join"))
+  }
+
+  case class AND(l: PlanAssertion, r: PlanAssertion) extends PlanAssertion {
+    override def matcher: Matcher[String] = l.matcher.and(r.matcher)
+  }
+
+  case class OR(l: PlanAssertion, r: PlanAssertion) extends PlanAssertion {
+    override def matcher: Matcher[String] = l.matcher.or(r.matcher)
+  }
+
+  case class NOT(p: PlanAssertion) extends PlanAssertion {
+    override def matcher: Matcher[String] = not(p.matcher)
+  }
+
+  private def assertPlan(assertion: PlanAssertion) = ResultAssertions(result => {
+    val planString = result.executionPlanDescription().toString
+    planString should assertion.matcher
   })
 }
