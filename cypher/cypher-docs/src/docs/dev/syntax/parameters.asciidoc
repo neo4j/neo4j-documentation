@@ -3,7 +3,7 @@
 
 
 * <<cypher-parameters-introduction,Introduction>>
-* <<cypher-parameters-auto-parameterization,Auto-Parameterization>>
+* <<cypher-parameters-auto-parameterization,Auto-parameterization>>
 * <<cypher-parameters-string-literal,String literal>>
 * <<cypher-parameters-regular-expression,Regular expression>>
 * <<cypher-parameters-case-sensitive-pattern-matching,Case-sensitive string pattern matching>>
@@ -58,7 +58,7 @@ See <<cypher-compatibility, Cypher Compatibility>> for further information.
 ====
 
 [[cypher-parameters-auto-parameterization]]
-== Auto-Parameterization
+== Auto-parameterization
 
 When a query does not use parameters, Cypher will try to infer parameters anyway.
 Each literal in the query is replaced with a parameter.
@@ -136,4 +136,3 @@ include::includes/exampleWithParameterForMultipleNodeIds.asciidoc[]
 == Calling procedures
 
 include::includes/exampleWithParameterProcedureCall.asciidoc[]
-
