@@ -34,6 +34,12 @@ GRANT SET USER STATUS
 | Enable the specified roles to modify the account status of users.
 
 | [source, cypher]
+GRANT SET USER NAME
+ON DBMS
+TO role[, ...]
+| Enable the specified roles to modify the name of users.
+
+| [source, cypher]
 GRANT SHOW USER
 ON DBMS
 TO role[, ...]

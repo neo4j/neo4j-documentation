@@ -16,6 +16,12 @@ GRANT DROP ROLE
 | Enable the specified roles to delete roles.
 
 | [source, cypher]
+GRANT ALTER ROLE
+ON DBMS
+TO role[, ...]
+| Enable the specified roles to change name of roles.
+
+| [source, cypher]
 GRANT ASSIGN ROLE
     ON DBMS
     TO role[, ...]

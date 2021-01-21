@@ -34,6 +34,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       "CREATE ROLE noAccessUsers",
       "CREATE ROLE roleAdder",
       "CREATE ROLE roleDropper",
+      "CREATE ROLE roleModifier",
       "CREATE ROLE roleAssigner",
       "CREATE ROLE roleRemover",
       "CREATE ROLE roleShower",
@@ -43,6 +44,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       "CREATE ROLE userModifier",
       "CREATE ROLE passwordModifier",
       "CREATE ROLE statusModifier",
+      "CREATE ROLE nameModifier",
       "CREATE ROLE userShower",
       "CREATE ROLE userManager",
       "CREATE ROLE databaseAdder",
@@ -384,6 +386,18 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
+        p("The ability to modify roles can be granted via the `ALTER ROLE` privilege. The following query shows an example of this:")
+        query("GRANT ALTER ROLE ON DBMS TO roleModifier", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow altering roles:")
+        query("SHOW ROLE roleModifier PRIVILEGES", NoAssertions) {
+          p("Lists all privileges for role 'roleModifier'")
+          resultTable()
+        }
+
         p("The ability to assign roles to users can be granted via the `ASSIGN ROLE` privilege. The following query shows an example of this:")
         query("GRANT ASSIGN ROLE ON DBMS TO roleAssigner", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -422,7 +436,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         p(
-          """The privileges to create, delete, assign, remove, and list roles can be granted via the `ROLE MANAGEMENT` privilege.
+          """The privileges to create, delete, alter, assign, remove, and list roles can be granted via the `ROLE MANAGEMENT` privilege.
             |The following query shows an example of this:""".stripMargin)
         query("GRANT ROLE MANAGEMENT ON DBMS TO roleManager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -475,13 +489,15 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           p("Lists all privileges for role 'userModifier'")
           resultTable()
         }
-        p("A user that is granted `ALTER USER` is allowed to run the `ALTER USER` administration command with one or several of the `SET PASSWORD`, `SET PASSWORD CHANGE [NOT] REQUIRED` and `SET STATUS` parts:")
+        p("A user that is granted `ALTER USER` is allowed to run the `ALTER USER` administration command with one or several of the `SET PASSWORD`, `SET PASSWORD CHANGE [NOT] REQUIRED`, `SET STATUS` and `SET NAME` clauses:")
         query("ALTER USER jake SET PASSWORD 'secret' SET STATUS SUSPENDED", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-
+        note {
+          p("The `SET NAME` clause is only available when using native authentication and authorization.")
+        }
         p("The ability to modify users' passwords and whether those passwords must be changed upon first login can be granted via the `SET PASSWORDS` privilege. The following query shows an example of this:")
         query("GRANT SET PASSWORDS ON DBMS TO passwordModifier", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -516,9 +532,29 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
+        p("The ability to modify the name of users can be granted via the `SET USER NAME` privilege. The following query shows an example of this:")
+        query("GRANT SET USER NAME ON DBMS TO nameModifier", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow modifying the name of users:")
+        query("SHOW ROLE nameModifier PRIVILEGES", NoAssertions) {
+          p("Lists all privileges for role 'nameModifier'")
+          resultTable()
+        }
+        p("A user that is granted `SET USER NAME` is allowed to run the `ALTER USER` administration command with only the `SET NAME` part:")
+        query("ALTER USER jake SET NAME jakob", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        note {
+          p("The `SET NAME` clause is only available when using native authentication and authorization.")
+        }
 
         note {
-          p("Note that the combination of the `SET PASSWORDS` and the `SET USER STATUS` privilege actions is equivalent to the `ALTER USER` privilege action.")
+          p("Note that the combination of the `SET PASSWORDS`, `SET USER STATUS` and the `SET USER NAME` privilege actions is equivalent to the `ALTER USER` privilege action.")
         }
 
         p("The ability to show users can be granted via the `SHOW USER` privilege. The following query shows an example of this:")

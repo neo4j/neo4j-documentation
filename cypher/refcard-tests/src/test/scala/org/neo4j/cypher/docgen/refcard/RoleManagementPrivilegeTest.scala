@@ -50,6 +50,14 @@ Grant the privilege to delete roles to a role.
 ###assertion=update-one
 //
 
+GRANT ALTER ROLE ON DBMS TO my_role
+###
+
+Grant the privilege to alter roles to a role.
+
+###assertion=update-one
+//
+
 DENY ASSIGN ROLE ON DBMS TO my_role
 ###
 

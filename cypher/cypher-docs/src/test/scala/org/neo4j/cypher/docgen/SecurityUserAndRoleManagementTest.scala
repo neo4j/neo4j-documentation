@@ -26,6 +26,7 @@ import org.neo4j.kernel.api.security.AnonymousContext
 
 import scala.collection.JavaConverters._
 
+//noinspection RedundantDefaultArgument
 class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql/administration/security/"
 
@@ -48,6 +49,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         |** <<administration-security-roles-show, Listing roles>>
         |** <<administration-security-roles-create, Creating roles>>
         |** <<administration-security-roles-drop, Deleting roles>>
+        |** <<administration-security-roles-alter, Modifying roles>>
         |** <<administration-security-roles-grant, Assigning roles>>
         |** <<administration-security-roles-revoke, Revoking roles>>
         |""".stripMargin)
@@ -99,7 +101,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           """.stripMargin
         )
         p("For example, we can create the user `jake` in a suspended state and the requirement to change his password.")
-        query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED", ResultAssertions((r) => {
+        query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -155,7 +157,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p("include::user-management-syntax-alter-user.asciidoc[]")
         p("""
             | * At least one of the `SET` clauses are required for the command.
-            | * The `SET PASSWORD CHANGE [NOT] REQUIRED` and `SET STATUS` clauses can be applied in any order.
+            | * The `SET PASSWORD CHANGE [NOT] REQUIRED`, `SET STATUS`, and `SET NAME` clauses can be applied in any order.
             |   The `SET PASSWORD` clause must come first, if used.
             | * For `SET PASSWORD`:
             | ** The `password` can either be a string value or a string parameter, and must not be identical to the old password.
@@ -166,10 +168,19 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           """.stripMargin
         )
         p("For example, we can modify the user `jake` with a new password and active status as well as remove the requirement to change his password.")
-        query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {
+        query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
+        }
+        p("We may decide to rename user `jake` to `jacob`.")
+        query("ALTER USER jake SET NAME jacob", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        note {
+          p("The `SET NAME` part of the command is only available when using native authentication and authorization.")
         }
         note{
           p(
@@ -191,7 +202,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             |The old password is required in addition to the new one, and either or both can be a string value or a string parameter.
             |When a user executes this command it will change their password as well as set the `CHANGE NOT REQUIRED` flag.""".stripMargin)
         login("jake", "abc123")
-        query("ALTER CURRENT USER SET PASSWORD FROM 'abc123' TO '123xyz'", ResultAssertions((r) => {
+        query("ALTER CURRENT USER SET PASSWORD FROM 'abc123' TO '123xyz'", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -201,6 +212,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
       }
       section("Deleting users", "administration-security-users-drop") {
+        initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED")
         p("Users can be deleted using `DROP USER`.")
         query("DROP USER jake", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -283,7 +295,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       }
       section("Creating roles", "administration-security-roles-create", "enterprise-edition") {
         p("Roles can be created using `CREATE ROLE`.")
-        query("CREATE ROLE myrole", ResultAssertions((r) => {
+        query("CREATE ROLE myrole", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -296,7 +308,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           """.stripMargin)
         }
         p("A role can also be copied, keeping its privileges, using `CREATE ROLE AS COPY OF`.")
-        query("CREATE ROLE mysecondrole AS COPY OF myrole", ResultAssertions((r) => {
+        query("CREATE ROLE mysecondrole AS COPY OF myrole", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -326,7 +338,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Deleting roles", "administration-security-roles-drop", "enterprise-edition") {
         p("Roles can be deleted using `DROP ROLE` command.")
         initQueries("CREATE ROLE mysecondrole")
-        query("DROP ROLE mysecondrole", ResultAssertions((r) => {
+        query("DROP ROLE mysecondrole", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -343,10 +355,25 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           statsOnlyResultTable()
         }
       }
+      section("Modifying roles", "administration-security-roles-alter", "enterprise-edition") {
+        p("Roles can be renamed using `ALTER ROLE` command.")
+        initQueries("CREATE ROLE mythirdrole")
+        query("ALTER ROLE mythirdrole SET NAME myfourthrole", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        query("SHOW ROLES", assertAllNodesShown("Role", column = "role")) {
+          resultTable()
+        }
+        note {
+          p("The `SET NAME` clause is only available when using native authentication and authorization.")
+        }
+      }
       section("Assigning roles to users", "administration-security-roles-grant", "enterprise-edition") {
         p("Users can be given access rights by assigning them roles using `GRANT ROLE`.")
         initQueries("CREATE ROLE myrole", "CREATE ROLE role1", "CREATE ROLE role2")
-        query("GRANT ROLE myrole TO jake", ResultAssertions((r) => {
+        query("GRANT ROLE myrole TO jake", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -369,7 +396,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p("Users can lose access rights by revoking roles from them using `REVOKE ROLE`.")
         initQueries("CREATE ROLE myrole", "GRANT ROLE myrole TO jake",
           "CREATE ROLE role1", "CREATE ROLE role2", "GRANT ROLES role1, role2 TO user1, user2, user3")
-        query("REVOKE ROLE myrole FROM jake", ResultAssertions((r) => {
+        query("REVOKE ROLE myrole FROM jake", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()

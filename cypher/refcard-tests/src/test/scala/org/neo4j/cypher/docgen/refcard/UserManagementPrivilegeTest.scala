@@ -77,6 +77,14 @@ Revoke the granted privilege to alter the account status of users from a role.
 ###assertion=update-one
 //
 
+DENY SET USER NAME ON DBMS TO my_role
+###
+
+Deny the privilege to alter the name of users to a role.
+
+###assertion=update-one
+//
+
 REVOKE DENY SHOW USER ON DBMS FROM my_role
 ###
 

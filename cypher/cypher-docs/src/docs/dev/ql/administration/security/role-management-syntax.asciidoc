@@ -58,6 +58,13 @@ DROP ROLE name [IF EXISTS]
 
 | [source, cypher]
 ----
+ALTER ROLE name SET NAME name
+----
+| Change the name of a role.
+| <<administration-security-administration-dbms-privileges-role-management, ALTER ROLE>>
+
+| [source, cypher]
+----
 GRANT ROLE name[, ...] TO user[, ...]
 ----
 | Assign roles to users.

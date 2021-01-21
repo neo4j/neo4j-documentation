@@ -99,7 +99,15 @@ List users in the system, filtered by their name and status and further refined 
 ###assertion=update-one
 //
 
-DROP USER alice
+ALTER USER alice SET NAME alice_delete
+###
+
+Set the name of the user alice to alice_delete.
+
+###assertion=update-one
+//
+
+DROP USER alice_delete
 ###
 
 Delete the user.
