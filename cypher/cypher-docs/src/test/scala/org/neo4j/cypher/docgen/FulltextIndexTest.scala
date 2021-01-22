@@ -19,19 +19,10 @@ class FulltextIndexTest extends DocumentingTest {
       createTitleAndDescriptionFulltextIndex,
       awaitIndexesOnline)
     synopsis("This section describes how to use full-text indexes, to enable full-text search.")
-    p(
-      """
-        | * <<administration-indexes-fulltext-search-introduction, Introduction>>
-        | * <<administration-indexes-fulltext-search-manage, Procedures to manage full-text indexes>>
-        | * <<administration-indexes-fulltext-search-create-and-configure, Create and configure full-text indexes>>
-        | * <<administration-indexes-fulltext-search-query, Query full-text indexes>>
-        | * <<administration-indexes-fulltext-search-drop, Drop full-text indexes>>
-        |"""
-    )
     section("Introduction", "administration-indexes-fulltext-search-introduction") {
       p(
         """
-          |Full-text indexes are powered by the http://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
+          |Full-text indexes are powered by the link:http://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
           |A full-text index allows you to write queries that match within the _contents_ of indexed string properties.
           |For instance, the btree indexes described in previous sections can only do exact matching or prefix matches on strings.
           |A full-text index will instead tokenize the indexed string values, so it can match _terms_ anywhere within the strings.
