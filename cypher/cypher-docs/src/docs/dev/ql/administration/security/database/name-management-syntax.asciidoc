@@ -3,25 +3,25 @@
 |===
 | Command | Description
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT CREATE NEW [NODE] LABEL[S]
     ON DATABASE[S] {* \| name}
     TO role[, ...]
 | Enable the specified role or roles to create new labels for nodes in the database `name` or all databases
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT CREATE NEW [RELATIONSHIP] TYPE[S]
     ON DATABASE[S] {* \| name}
     TO role[, ...]
 | Enable the specified role or roles to create new types for relationships in the database `name` or all databases
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT CREATE NEW [PROPERTY] NAME[S]
     ON DATABASE[S] {* \| name}
     TO role[, ...]
 | Enable the specified role or roles to create new names for properties in the database `name` or all databases
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT NAME [MANAGEMENT]
     ON DATABASE[S] {* \| name}
     TO role[, ...]

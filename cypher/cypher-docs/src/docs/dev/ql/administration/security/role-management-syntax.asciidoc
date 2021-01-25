@@ -3,27 +3,27 @@
 |===
 | Command | Description
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 SHOW [ALL\|POPULATED] ROLES [WITH USERS]
 | List roles
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 SHOW ROLE name PRIVILEGES
 | List the privileges granted to a role
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 CREATE [OR REPLACE] ROLE name [IF NOT EXISTS] [AS COPY OF name]
 | Create a new role
 
-| [source, cypher]
+|[source, cypher, role=noplay]
 DROP ROLE name [IF EXISTS]
 | Drop (remove) an existing role
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT ROLE name[, ...] TO user[, ...]
 | Assign one or multiple roles to one or multiple users
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 REVOKE ROLE name[, ...] FROM user[, ...]
 | Remove one or multiple roles from one or multiple users
 |===

@@ -1,5 +1,5 @@
 .Command syntax
-[source, cypher]
+[source, cypher, role=noplay]
 -----
 DENY MATCH
     "{" { * | property[, ...] } "}"

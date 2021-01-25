@@ -57,7 +57,7 @@ An error will be thrown if you attempt to create the same index twice.
 |===
 | Command | Description | Comment
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CREATE INDEX [index_name]
 FOR (n:LabelName)
@@ -72,7 +72,7 @@ The index name must be unique among both indexes and constraints.
 Index creation is not idempotent.
 An error will be thrown if you attempt to create the same index twice.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CREATE INDEX [index_name]
 FOR (n:LabelName)
@@ -83,28 +83,28 @@ ON (n.propertyName_1,
 ----
 | Create a composite index.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP INDEX index_name
 ----
 | Drop an index
 | 
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CALL db.indexes
 ----
 | List all indexes in the database. 
 | 
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP INDEX ON :LabelName(propertyName)
 ----
 | Drop a single-property index without specifying a name.
 .2+.^| [deprecated]#This syntax is deprecated.#
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP INDEX ON :LabelName (n.propertyName_1,
 n.propertyName_2,
