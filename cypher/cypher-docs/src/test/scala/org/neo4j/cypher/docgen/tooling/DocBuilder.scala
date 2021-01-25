@@ -79,7 +79,7 @@ trait DocBuilder {
   }
 
   def functionWithCypherStyleFormatting(syntax: String, arguments: (String, String)*): Unit = {
-    val formattedSyntax = if (!syntax.isEmpty) Array("*Syntax:*", "[source, cypher]", syntax).mkString("\n", "\n", "") else ""
+    val formattedSyntax = if (!syntax.isEmpty) Array("*Syntax:*", "[source, cypher, role=noplay]", syntax).mkString("\n", "\n", "") else ""
     current.addContent(Function(formattedSyntax, "", arguments))
   }
 
