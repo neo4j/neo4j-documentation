@@ -3,7 +3,7 @@
 |===
 | Command | Description | Required privilege | Community Edition | Enterprise Edition
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 SHOW USERS
     [YIELD field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
@@ -14,7 +14,7 @@ SHOW USERS
 | `+`
 | `+`
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 SHOW USER [name] PRIVILEGES
 ----
@@ -24,7 +24,7 @@ SHOW USER [name] PRIVILEGES
 | `-`
 | `+`
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CREATE USER name [IF NOT EXISTS]
   SET PASSWORD password
@@ -36,7 +36,7 @@ CREATE USER name [IF NOT EXISTS]
 | `+`
 | `+`
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CREATE OR REPLACE USER name
   SET PASSWORD password
@@ -49,7 +49,7 @@ CREATE OR REPLACE USER name
 | `+`
 | `+`
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 ALTER USER name SET {
 PASSWORD password
@@ -66,7 +66,7 @@ STATUS {ACTIVE \| SUSPENDED}
 | `+`
 | `+`
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 ALTER CURRENT USER SET PASSWORD FROM original TO password
 ----
@@ -76,7 +76,7 @@ ALTER CURRENT USER SET PASSWORD FROM original TO password
 | `+`
 
 |
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 DROP USER name [IF EXISTS]
 ----

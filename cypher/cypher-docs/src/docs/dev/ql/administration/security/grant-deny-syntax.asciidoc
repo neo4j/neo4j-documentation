@@ -38,23 +38,23 @@ Graphs created after this command execution will also be associated with these p
 |===
 | Command | Description
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT graph-privilege ON GRAPH[S] {* \| name[, ...]} [entity] TO role[, ...]
 | Grant a privilege to one or multiple roles.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 DENY graph-privilege ON GRAPH[S] {* \| name[, ...]} [entity] TO role[, ...]
 | Deny a privilege to one or multiple roles.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 REVOKE GRANT graph-privilege ON GRAPH[S] {* \| name[, ...]} [entity] FROM role[, ...]
 | Revoke a granted privilege from one or multiple roles.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 REVOKE DENY graph-privilege ON GRAPH[S] {* \| name[, ...]} [entity] FROM role[, ...]
 | Revoke a denied privilege from one or multiple roles.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 REVOKE graph-privilege ON GRAPH[S] {* \| name[, ...]} [entity] FROM role[, ...]
 | Revoke a granted or denied privilege from one or multiple roles.
 |===
