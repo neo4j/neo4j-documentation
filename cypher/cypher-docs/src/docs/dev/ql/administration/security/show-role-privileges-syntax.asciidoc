@@ -1,5 +1,5 @@
 .Command syntax
-[source, cypher]
+[source, cypher, role=noplay]
 -----
 SHOW ROLE name PRIVILEGES
     [YIELD field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
