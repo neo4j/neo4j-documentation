@@ -27,7 +27,7 @@ The `USE` clause can not be used together with the <<load-csv-importing-large-am
 
 The `USE` clause can only appear as the prefix of schema commands, or as the first clause of queries:
 
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 USE <graph>
 <other clauses>
@@ -44,7 +44,7 @@ When running queries against a Fabric database, the `USE` clause can also appear
 
 * Union parts:
 +
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 USE <graph>
 <other clauses>
@@ -55,7 +55,7 @@ USE <graph>
 
 * Subqueries:
 +
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 CALL {
   USE <graph>
