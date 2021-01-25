@@ -93,14 +93,14 @@ This syntax extends to all equality and inequality comparisons, as well as exten
 
 For example:
 
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 a < b = c <= d <> e
 ----
 
 Is equivalent to:
 
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 a < b AND b = c AND c <= d AND d <> e
 ----

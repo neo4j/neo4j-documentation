@@ -73,7 +73,7 @@ Accessing a list or a map with `null` will result in `null`:
 
 Using parameters to pass in the bounds, such as `a[$lower..$upper]`, may result in a `null` for the lower or upper bound (or both).
 The following workaround will prevent this from happening by setting the absolute minimum and maximum bound values:
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 a[coalesce($lower,0)..coalesce($upper,size(a))]
 ----
