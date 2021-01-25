@@ -31,7 +31,7 @@ The `USE` clause can only appear as the first clause of:
 
 * Queries:
 +
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 USE <graph>
 <other clauses>
@@ -39,7 +39,7 @@ USE <graph>
 
 * Union parts:
 +
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 USE <graph>
 <other clauses>
@@ -50,7 +50,7 @@ USE <graph>
 
 * Subqueries:
 +
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 CALL {
   USE <graph>
