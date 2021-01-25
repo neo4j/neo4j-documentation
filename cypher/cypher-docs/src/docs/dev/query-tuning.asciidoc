@@ -348,7 +348,7 @@ Once the new plan is complete, it replaces the existing one in the query cache.
 The replan option is prepended to queries.
 For example:
 
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 CYPHER replan=force MATCH ...
 ----
@@ -358,7 +358,7 @@ This can be useful to schedule replanning of queries which are expensive to plan
 Using `EXPLAIN` will make sure the query is only planned, but not executed.
 For example:
 
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 CYPHER replan=force EXPLAIN MATCH ...
 ----
