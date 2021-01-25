@@ -3,13 +3,13 @@
 |===
 | Command | Description
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT {CREATE \| DROP} INDEX[ES]
     ON DATABASE[S] {* \| name}
     TO role[, ...]
 | Enable the specified role or roles to create or delete indexes on the database `name` or all databases
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT INDEX[ES] [MANAGEMENT]
     ON DATABASE[S] {* \| name}
     TO role[, ...]
