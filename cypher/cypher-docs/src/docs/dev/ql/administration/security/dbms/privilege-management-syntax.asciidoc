@@ -3,25 +3,25 @@
 |===
 | Command | Description
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT SHOW PRIVILEGE
     ON DBMS
     TO role[, ...]
 | Enable the specified roles to list privileges.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT ASSIGN PRIVILEGE
     ON DBMS
     TO role[, ...]
 | Enable the specified roles to assign privileges using the `GRANT` and `DENY` commands.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT REMOVE PRIVILEGE
     ON DBMS
     TO role[, ...]
 | Enable the specified roles to remove privileges using the `REVOKE` command.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT PRIVILEGE MANAGEMENT
     ON DBMS
     TO role[, ...]

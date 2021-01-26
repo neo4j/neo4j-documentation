@@ -1,5 +1,5 @@
 .Command syntax
-[source, cypher]
+[source, cypher, role=noplay]
 -----
 SHOW USER[S] [name[, ...]] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
     [YIELD { * | field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
