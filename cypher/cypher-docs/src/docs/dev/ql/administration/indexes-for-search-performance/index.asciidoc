@@ -62,7 +62,7 @@ Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error wil
 |===
 | Command | Description | Comment
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
@@ -81,7 +81,7 @@ It may still throw an error should a conflicting constraint exist.
 
 Index provider and configuration can be specified using the `OPTIONS` clause.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
@@ -93,7 +93,7 @@ ON (n.propertyName_1,
 ----
 | Create a composite index.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP INDEX index_name [IF EXISTS]
 ----
@@ -101,21 +101,21 @@ DROP INDEX index_name [IF EXISTS]
 | The command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same index twice.
 With `IF EXISTS`, no error is thrown and nothing happens should the index not exist.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 SHOW [ALL\|BTREE] INDEX[ES] [BRIEF\|VERBOSE [OUTPUT]]
 ----
 | List indexes in the database, either all or B-tree only.
 |
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP INDEX ON :LabelName(propertyName)
 ----
 | Drop a single-property index without specifying a name.
 .2+.^| [deprecated]#This syntax is deprecated.#
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP INDEX ON :LabelName (n.propertyName_1,
 n.propertyName_2,

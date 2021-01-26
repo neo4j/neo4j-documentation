@@ -48,23 +48,23 @@ Databases created after this command execution will also be associated with thes
 |===
 | Command | Description
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}} TO role[, ...]
 | Grant a privilege to one or multiple roles.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}} TO role[, ...]
 | Deny a privilege to one or multiple roles.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 REVOKE GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}} FROM role[, ...]
 | Revoke a granted privilege from one or multiple roles.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 REVOKE DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}} FROM role[, ...]
 | Revoke a denied privilege from one or multiple roles.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 REVOKE database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}} FROM role[, ...]
 | Revoke a granted or denied privilege from one or multiple roles.
 |===

@@ -3,19 +3,19 @@
 |===
 | Command | Description
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT SHOW TRANSACTION[S] [( {* \| user[, ...]} )]
     ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Enable the specified roles to list transactions and queries for user(s) or all users in the default database, specific database(s), or all databases.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT TERMINATE TRANSACTION[S] [( {* \| user[, ...]} )]
     ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
 | Enable the specified roles to end running transactions and queries for user(s) or all users in the default database, specific database(s), or all databases.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 GRANT TRANSACTION [MANAGEMENT] [( {* \| user[, ...]} )]
     ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]

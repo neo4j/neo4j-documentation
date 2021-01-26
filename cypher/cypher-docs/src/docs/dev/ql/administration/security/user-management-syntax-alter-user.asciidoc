@@ -1,5 +1,5 @@
 .Command syntax
-[source]
+[source, cypher, role=noplay]
 -----
 ALTER USER name
       [SET [PLAINTEXT | ENCRYPTED] PASSWORD password]

@@ -3,7 +3,7 @@
 |===
 | Command | Description | Required privilege
 
-| [source]
+| [source, cypher, role=noplay]
 ----
 SHOW CURRENT USER
     [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
@@ -13,7 +13,7 @@ SHOW CURRENT USER
 | List the current user.
 | None
 
-| [source]
+| [source, cypher, role=noplay]
 ----
 SHOW USERS
     [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
@@ -23,7 +23,7 @@ SHOW USERS
 | List all users.
 | <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
 
-| [source]
+| [source, cypher, role=noplay]
 ----
 SHOW USER[S] [name[, ...]] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
     [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
@@ -34,7 +34,7 @@ SHOW USER[S] [name[, ...]] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
 | <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>> and
 <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
 
-| [source]
+| [source, cypher, role=noplay]
 ----
 CREATE USER name [IF NOT EXISTS]
   SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
@@ -44,7 +44,7 @@ CREATE USER name [IF NOT EXISTS]
 | Create a new user.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>>
 
-| [source]
+| [source, cypher, role=noplay]
 ----
 CREATE OR REPLACE USER name
   SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
@@ -55,7 +55,7 @@ CREATE OR REPLACE USER name
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>> and
 <<administration-security-administration-dbms-privileges-user-management, DROP USER>>
 
-| [source]
+| [source, cypher, role=noplay]
 ----
 ALTER USER name
   [SET [PLAINTEXT \| ENCRYPTED] PASSWORD password]
@@ -66,7 +66,7 @@ ALTER USER name
 | <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>> and/or
 <<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>>
 
-| [source]
+| [source, cypher, role=noplay]
 ----
 ALTER CURRENT USER SET PASSWORD FROM original TO password
 ----
@@ -74,7 +74,7 @@ ALTER CURRENT USER SET PASSWORD FROM original TO password
 | None
 
 |
-[source]
+[source, cypher, role=noplay]
 ----
 DROP USER name [IF EXISTS]
 ----
