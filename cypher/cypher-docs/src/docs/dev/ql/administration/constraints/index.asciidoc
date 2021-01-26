@@ -80,7 +80,7 @@ Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error wil
 |===
 | Command | Description | Comment
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName)
@@ -99,21 +99,21 @@ It may still throw an error should a conflicting index or constraint exist.
 
 Index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
 
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName)
 ASSERT EXISTS (n.propertyName)
 ----
 | [enterprise-edition]#Create a node property existence constraint.#
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON ()-"["R:RELATIONSHIP_TYPE"]"-()
 ASSERT EXISTS (R.propertyName)
 ----
 | [enterprise-edition]#Create a relationship property existence constraint.#
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName)
@@ -125,20 +125,20 @@ IS NODE KEY
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 | [enterprise-edition]#Create a node key constraint.#
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT constraint_name [IF EXISTS]
 ----
 | Drop a constraint.
 | The command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same constraint twice.
 With `IF EXISTS`, no error is thrown and nothing happens should the constraint not exist.
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 SHOW [ALL\|UNIQUE\|NODE EXIST[S]\|RELATIONSHIP EXIST[S]\|EXIST[S]\|NODE KEY] CONSTRAINT[S] [BRIEF\|VERBOSE [OUTPUT]]
 ----
 | List constraints in the database, either all or filtered on type.
 |
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT
 ON (n:LabelName)
@@ -146,21 +146,21 @@ ASSERT n.propertyName IS UNIQUE
 ----
 | Drop a unique constraint without specifying a name.
 .4+.^| [deprecated]#This syntax is deprecated.#
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT
 ON (n:LabelName)
 ASSERT EXISTS (n.propertyName)
 ----
 | Drop an exists constraint without specifying a name.
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT
 ON ()-"["R:RELATIONSHIP_TYPE"]"-()
 ASSERT EXISTS (R.propertyName)
 ----
 | Drop a relationship property existence constraint without specifying a name.
-| [source, cypher]
+| [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT
 ON (n:LabelName)
