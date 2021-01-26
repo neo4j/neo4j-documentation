@@ -47,6 +47,7 @@
         <module>doctools</module>
         <module>graphviz</module>
         <module>procedures</module>
+        <module>functions</module>
         <module>jmx</module>
         <module>test-framework</module>
         <module>server-test-utils</module>
