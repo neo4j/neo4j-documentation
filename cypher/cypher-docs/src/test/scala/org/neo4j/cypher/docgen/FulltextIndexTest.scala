@@ -22,7 +22,7 @@ class FulltextIndexTest extends DocumentingTest {
     section("Introduction", "administration-indexes-fulltext-search-introduction") {
       p(
         """
-          |Full-text indexes are powered by the link:http://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
+          |Full-text indexes are powered by the link:https://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
           |A full-text index allows you to write queries that match within the _contents_ of indexed string properties.
           |For instance, the btree indexes described in previous sections can only do exact matching or prefix matches on strings.
           |A full-text index will instead tokenize the indexed string values, so it can match _terms_ anywhere within the strings.
@@ -64,14 +64,15 @@ class FulltextIndexTest extends DocumentingTest {
           |While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.
           |"""
       )
-      p("For information on how to configure full-text indexes, refer to <<operations-manual#index-configuration-fulltext,  Operations Manual -> Indexes to support full-text search>>.")
+      p("For information on how to configure full-text indexes, refer to <<operations-manual#index-configuration-fulltext, Operations Manual -> Indexes to support full-text search>>.")
     }
     section("Procedures to manage full-text indexes", "administration-indexes-fulltext-search-manage") {
       p(
         """
-          |Full-text indexes are managed through built-in procedures.
-          |The most common procedures are listed in the table below:
-          |"""
+        |Full-text indexes are managed through built-in procedures, see <<operations-manual#neo4j-procedures, Operations Manual -> Procedures>> for a complete reference.
+        |
+        |The procedures for managing full-text indexes are listed in the table below:
+        |"""
       )
       p(
         """
@@ -150,7 +151,7 @@ class FulltextIndexTest extends DocumentingTest {
       }
       p(
         """
-          |Full-text indexes are powered by the http://lucene.apache.org/[Apache Lucene] indexing and search library.
+          |Full-text indexes are powered by the link:https://lucene.apache.org/[Apache Lucene] indexing and search library.
           |This means that we can use Lucene's full-text query language to express what we wish to search for.
           |For instance, if we are only interested in exact matches, then we can quote the string we are searching for.""")
       query("""call db.index.fulltext.queryNodes("titlesAndDescriptions", "\\\"Full Metal Jacket\\\"") yield node, score return node.title, score""", ResultAssertions(r => {
@@ -170,7 +171,7 @@ class FulltextIndexTest extends DocumentingTest {
       })) {
         resultTable()
       }
-      p("A complete description of the Lucene query syntax can be found in the https://lucene.apache.org/core/8_2_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description[Lucene documentation].")
+      p("A complete description of the Lucene query syntax can be found in the link:https://lucene.apache.org/core/8_2_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description[Lucene documentation].")
     }
 
     section("Drop full-text indexes", "administration-indexes-fulltext-search-drop") {
