@@ -45,7 +45,7 @@ class ForeachTest extends DocumentingTest with QueryStatisticsTestSupport {
       graphViz()
     }
     section("Mark all nodes along a path", "foreach-mark-all-nodes-along-a-path") {
-      p("This query will set the property `marked` to true on all nodes along a path.")
+      p("This query will set the property `marked` to `true` on all nodes along a path.")
       query(
         """MATCH p=(start)-[*]->(finish)
           #WHERE start.name = 'A' AND finish.name = 'D'
