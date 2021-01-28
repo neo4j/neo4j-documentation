@@ -58,7 +58,7 @@ public class ReadOnlyDocTest
         }
         new DatabaseManagementServiceBuilder( dir ).build().shutdown();
         // tag::createReadOnlyInstance[]
-        managementService = new DatabaseManagementServiceBuilder( dir ).setConfig( GraphDatabaseSettings.read_only, true ).build();
+        managementService = new DatabaseManagementServiceBuilder( dir ).setConfig( GraphDatabaseSettings.read_only_database_default, true ).build();
         graphDb = managementService.database( DEFAULT_DATABASE_NAME );
         // end::createReadOnlyInstance[]
     }
