@@ -43,10 +43,11 @@ class CallTest extends DocumentingTest {
           #The latter form is available only in a so-called standalone procedure call, when the whole query consists of a single `CALL` clause.""".stripMargin('#'))
       p("""Most procedures return a stream of records with a fixed set of result fields, similar to how running a Cypher query returns a stream of records.
           #The `YIELD` sub-clause is used to explicitly select which of the available result fields are returned as newly-bound variables from the procedure call to the user or for further processing by the remaining query.
-          #Thus, in order to be able to use `YIELD`, the names (and types) of the output parameters need be known in advance.
+          #Thus, in order to be able to use `YIELD` for explicit columns, the names (and types) of the output parameters need be known in advance.
           #Each yielded result field may optionally be renamed using aliasing (i.e., `resultFieldName AS newName`).
           #All new variables bound by a procedure call are added to the set of variables already bound in the current scope.
-          #It is an error if a procedure call tries to rebind a previously bound variable (i.e., a procedure call cannot shadow a variable that was previously bound in the current scope).""".stripMargin('#'))
+          #It is an error if a procedure call tries to rebind a previously bound variable (i.e., a procedure call cannot shadow a variable that was previously bound in the current scope).
+          #In a standalone procedure call, `YIELD *` can be used to select all non-deprecated columns. In this case, the name of the output parameters does not need to be known in advance.""".stripMargin('#'))
       p("For more information on how to determine the input parameters for the `CALL` procedure and the output parameters for the `YIELD` procedure, see <<call-view-the-signature-for-a-procedure>>.")
       p("Inside a larger query, the records returned from a procedure call with an explicit `YIELD` may be further filtered using a `WHERE` sub-clause followed by a predicate (similar to `WITH ... WHERE ...`).")
       p("""If the called procedure declares at least one result field, `YIELD` may generally not be omitted.
@@ -139,6 +140,13 @@ class CallTest extends DocumentingTest {
           #That is, arguments that are written out directly in the statement text, and a trailing default argument that is provided by the procedure itself.""".stripMargin('#'))
       query("CALL dbms.security.createUser('example_username', 'example_password')", assertEmpty) {
         p("Since our example procedure does not return any result, the result is empty.")
+      }
+    }
+
+    section("Call a procedure using `CALL YIELD *`", "call-call-a-procedure-call-yield-star") {
+      p("This calls the built-in procedure `db.labels` to count all labels used in the database.")
+      query("CALL db.labels() YIELD *", assertNotEmpty) {
+        p("If the procedure have deprecated return columns, those are not returned.")
       }
     }
 

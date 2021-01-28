@@ -22,14 +22,16 @@ package org.neo4j.cypher.docgen.refcard
 import org.junit.Before
 import org.neo4j.collection.RawIterator
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 import org.neo4j.internal.kernel.api.exceptions.ProcedureException
 import org.neo4j.internal.kernel.api.procs.Neo4jTypes
 import org.neo4j.internal.kernel.api.procs.ProcedureSignature._
 import org.neo4j.kernel.api.procedure.CallableProcedure.BasicProcedure
 import org.neo4j.kernel.api.procedure.Context
-import org.neo4j.kernel.api.{Kernel, ResourceTracker}
+import org.neo4j.kernel.api.Kernel
+import org.neo4j.kernel.api.ResourceTracker
 import org.neo4j.values.AnyValue
 
 class CallTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -80,6 +82,14 @@ CALL db.labels() YIELD label
 
 This shows a standalone call to the built-in procedure `db.labels` to list all labels used in the database.
 Note that required procedure arguments are given explicitly in brackets after the procedure name.
+
+### assertion=labels
+//
+
+CALL db.labels() YIELD *
+###
+
+Standalone calls may use `YIELD *` to return all non-deprecated columns.
 
 ### assertion=arg parameters=arg
 //
