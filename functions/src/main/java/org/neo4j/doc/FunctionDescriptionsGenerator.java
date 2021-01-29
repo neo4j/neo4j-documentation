@@ -36,12 +36,15 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 
+import static java.lang.String.format;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class FunctionDescriptionsGenerator
 {
 
     private final Neo4jInstance neo;
+    private static final Map<String, String> referenceExceptions = Map.of( "functions-datetime-fromepoch", "functions-datetime-timestamp",
+                                                                           "functions-datetime-fromepochmillis", "functions-datetime-timestamp");
 
     enum Category
     {
@@ -112,25 +115,37 @@ public class FunctionDescriptionsGenerator
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream( baos );
 
-        enterpriseFunctions.keySet().stream().sorted().forEach( category ->
-                                                                {
-                                                                    String categoryRef = category.asciiReference();
-                                                                    out.print( "[[header-query-functions-" + categoryRef + "]]\n" );
-                                                                    out.print( "**<<query-functions-" + categoryRef + ", " + category + " functions>>**\n\n" );
-                                                                    out.print( category.description()+"\n\n" );
-                                                                    out.print( "[options=\"header\"]\n" );
-                                                                    out.print( "|===\n" );
-                                                                    out.print( "| Function | Description\n" );
-                                                                    List<FunctionDescription> functionDescriptions = enterpriseFunctions.get( category );
-                                                                    Collections.sort( functionDescriptions );
-                                                                    for ( FunctionDescription f : functionDescriptions )
-                                                                    {
-                                                                        out.print( f.row() );
-                                                                    }
-                                                                    out.print( "|===\n\n" );
-                                                                } );
+        enterpriseFunctions.keySet().stream().sorted().forEach( category -> outputCategory( enterpriseFunctions, out, category ) );
         out.flush();
         return baos.toString();
+    }
+
+    private void outputCategory( Map<Category,List<FunctionDescription>> enterpriseFunctions, PrintStream out, Category category )
+    {
+        String categoryRef = category.asciiReference();
+        out.print( "[[header-query-functions-" + categoryRef + "]]\n" );
+        out.print( "**<<query-functions-" + categoryRef + ", " + category + " functions>>**\n\n" );
+        out.print( category.description() + "\n\n" );
+        out.print( "[options=\"header\"]\n" );
+        out.print( "|===\n" );
+        out.print( "| Function | Signature | Description\n" );
+        List<FunctionDescription> functionDescriptions = enterpriseFunctions.get( category );
+        Collections.sort( functionDescriptions );
+        String lastName = null;
+        for ( FunctionDescription f : functionDescriptions )
+        {
+            boolean isFirstRow = lastName == null || !lastName.equals( f.name );
+            if (isFirstRow) {
+                long sameNameCount = functionDescriptions.stream()
+                                                         .filter( fd -> fd.name.equals( f.name ) )
+                                                         .count();
+                out.print( f.firstRow( (int) sameNameCount ) );
+            } else {
+                out.print( f.row() );
+            }
+            lastName = f.name;
+        }
+        out.print( "|===\n\n" );
     }
 
     private Map<Category,List<FunctionDescription>> enterpriseEditionFunctions() throws IOException
@@ -184,12 +199,12 @@ public class FunctionDescriptionsGenerator
             setName( (String) row.get( "name" ) );
             this.description = (String) row.get( "description" );
             this.category = Category.parse( (String) row.get( "category" ), this.name, this.description );
-            this.signature = (String) row.get( "signature" );
+            this.signature = asciiDocFriendly( (String) row.get( "signature" ) );
         }
 
         void setName( String name )
         {
-            this.name = name.endsWith( "()" ) ? name : name + "()";
+            this.name = asciiDocFriendly( (name.endsWith( "()" ) ? name : name + "()").replace( '_', ' ' ) );
         }
 
         Category category()
@@ -200,6 +215,11 @@ public class FunctionDescriptionsGenerator
         String signature()
         {
             return signature;
+        }
+
+        private String asciiDocFriendly( String str )
+        {
+            return str.replace( " | ", " \\| " );
         }
 
         @Override
@@ -233,7 +253,17 @@ public class FunctionDescriptionsGenerator
 
         public String row()
         {
-            return "| <<functions-" + name.toLowerCase().replace( "()", "" ) + "," + name + ">>  | " + description + "\n";
+            return format( "| %s | %s%n", signature, description );
+        }
+
+        public String firstRow( int sameNameCount )
+        {
+            String referenceName = "functions-" + name.toLowerCase().replace( "()", "" ).replace( '.', '-' );
+            if (referenceExceptions.containsKey( referenceName )) {
+                referenceName = referenceExceptions.get( referenceName );
+            }
+            return format( "1.%s+| <<%s,%s>>  | %s | %s%n",
+                           sameNameCount, referenceName, name, signature, description );
         }
 
         @Override
