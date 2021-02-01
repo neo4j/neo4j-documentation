@@ -89,17 +89,20 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
 
   def asciidocSubstitutions: String = null
   def createCypherSnippet(query: String): String = {
-    val escapedQuery = query.trim().replace("\\", "\\\\")
-    val prettifiedQuery = Prettifier(escapedQuery, keepMyNewlines = false)
+    //val escapedQuery = query.trim().replace("\\", "\\\\")
+    val escapedQuery = query.trim()
+    //Prettifier is broken
+    //val prettifiedQuery = Prettifier(escapedQuery, keepMyNewlines = false)
     if (asciidocSubstitutions != null) {
-      AsciidocHelper.createCypherSnippetFromPreformattedQueryWithCustomSubstitutions(prettifiedQuery, true, asciidocSubstitutions)
+      AsciidocHelper.createCypherSnippetFromPreformattedQueryWithCustomSubstitutions(escapedQuery, true, asciidocSubstitutions)
     } else {
-      AsciidocHelper.createCypherSnippetFromPreformattedQuery(prettifiedQuery, true)
+      AsciidocHelper.createCypherSnippetFromPreformattedQuery(escapedQuery, true)
     }
   }
 
   def prepareFormatting(query: String): String = {
-    val str = Prettifier(query.trim(), keepMyNewlines = false)
+    //val str = Prettifier(query.trim(), keepMyNewlines = false)
+    val str = query.trim()
     if ((str takeRight 1) == ";") {
       str
     } else {
