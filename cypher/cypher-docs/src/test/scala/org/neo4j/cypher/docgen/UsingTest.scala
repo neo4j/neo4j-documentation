@@ -118,7 +118,7 @@ class UsingTest extends DocumentingTest {
           |the hint might force the planner to pick a _seemingly_ bad starting point, which in reality proves to be a very good one.""")
       section("Hinting a join on a single node") {
         p("""In the example above using multiple index hints, we saw that the planner chose to do a join, but not on the `p` node.
-            |By supplying a join hint in an#ddition to the index hints, we can enforce the join to happen on the `p` node.""")
+            |By supplying a join hint in addition to the index hints, we can enforce the join to happen on the `p` node.""")
         query(s"""$matchString
               |USING INDEX s:Scientist(born)
               |USING INDEX cc:Country(formed)
