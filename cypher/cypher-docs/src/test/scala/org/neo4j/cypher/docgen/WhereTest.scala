@@ -252,7 +252,7 @@ class WhereTest extends DocumentingTest {
         p(
           """Note that you cannot introduce new variables here.
             |Although it might look very similar to the `MATCH` patterns, the `WHERE` clause is all about eliminating matched paths.
-            |`MATCH (a)-[*]->(b)` is very different from `WHERE (a)-[*]->(b)`.
+            |`+MATCH (a)-[*]->(b)+` is very different from `+WHERE (a)-[*]->(b)+`.
             |The first will produce a path for every path it can find between `a` and `b`, whereas the latter will eliminate any matched paths where `a` and `b` do not have a directed relationship chain between them.""".stripMargin)
         query(
           """MATCH (timothy:Person {name: 'Timothy'}), (other:Person)
