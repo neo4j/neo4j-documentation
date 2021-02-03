@@ -137,9 +137,9 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<functions-date-ordinal, date({year [, ordinalDay]})>> | Temporal  | Returns an ordinal (Year-Day) _Date_.
 | <<functions-date-create-string, date(string)>> | Temporal  | Returns a _Date_ by parsing a string.
 | <<functions-date-temporal, date(+{map}+)>>  | Temporal | Returns a _Date_ from a map of another temporal value's components.
-| <<functions-date-current-realtime, date.realtime()>> | Temporal  | Returns the current _Date_ using the `realtime` clock.
-| <<functions-date-current-statement, date.statement()>> | Temporal  | Returns the current _Date_ using the `statement` clock.
-| <<functions-date-current-transaction, date.transaction()>> | Temporal  | Returns the current _Date_ using the `transaction` clock.
+| <<functions-date-realtime, date.realtime()>> | Temporal  | Returns the current _Date_ using the `realtime` clock.
+| <<functions-date-statement, date.statement()>> | Temporal  | Returns the current _Date_ using the `statement` clock.
+| <<functions-date-transaction, date.transaction()>> | Temporal  | Returns the current _Date_ using the `transaction` clock.
 | <<functions-date-truncate, date.truncate()>> | Temporal  | Returns a _Date_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
 | <<functions-datetime-current, datetime()>> | Temporal  | Returns the current _DateTime_.
 | <<functions-datetime-calendar, datetime({year [, month, day, ...]})>> | Temporal  | Returns a calendar (Year-Month-Day) _DateTime_.
@@ -149,13 +149,13 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<functions-datetime-create-string, datetime(string)>> | Temporal  | Returns a _DateTime_ by parsing a string.
 | <<functions-datetime-temporal, datetime(+{map}+)>> | Temporal  | Returns a _DateTime_ from a map of another temporal value's components.
 | <<functions-datetime-timestamp, datetime(+{epochSeconds}+)>>  | Temporal | Returns a _DateTime_ from a timestamp.
-| <<functions-datetime-current-realtime, datetime.realtime()>>  | Temporal | Returns the current _DateTime_ using the `realtime` clock.
-| <<functions-datetime-current-statement, datetime.statement()>> | Temporal  | Returns the current _DateTime_ using the `statement` clock.
-| <<functions-datetime-current-transaction, datetime.transaction()>> | Temporal  | Returns the current _DateTime_ using the `transaction` clock.
+| <<functions-datetime-realtime, datetime.realtime()>>  | Temporal | Returns the current _DateTime_ using the `realtime` clock.
+| <<functions-datetime-statement, datetime.statement()>> | Temporal  | Returns the current _DateTime_ using the `statement` clock.
+| <<functions-datetime-transaction, datetime.transaction()>> | Temporal  | Returns the current _DateTime_ using the `transaction` clock.
 | <<functions-datetime-truncate, datetime.truncate()>>  | Temporal | Returns a _DateTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
 |<<functions-degrees, degrees()>>               | Trigonometric     | Converts radians to degrees.
 |<<functions-distance, distance()>>              | Spatial           | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
-| <<functions-duration-create-components, duration(+{map}+)>> | Temporal | Returns a _Duration_ from a map of its components.
+| <<functions-duration, duration(+{map}+)>> | Temporal | Returns a _Duration_ from a map of its components.
 | <<functions-duration-create-string, duration(string)>> | Temporal | Returns a _Duration_ by parsing a string.
 | <<functions-duration-between, duration.between()>> | Temporal | Returns a _Duration_ equal to the difference between two given instants.
 | <<functions-duration-indays, duration.inDays()>> | Temporal | Returns a _Duration_ equal to the difference in whole days or weeks between two given instants.
@@ -182,17 +182,17 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<functions-localdatetime-ordinal, localdatetime({year [, ordinalDay, ...]})>> | Temporal  | Returns an ordinal (Year-Day) _LocalDateTime_.
 | <<functions-localdatetime-create-string, localdatetime(string)>> | Temporal  | Returns a _LocalDateTime_ by parsing a string.
 | <<functions-localdatetime-temporal, localdatetime(+{map}+)>> | Temporal  | Returns a _LocalDateTime_ from a map of another temporal value's components.
-| <<functions-localdatetime-current-realtime, localdatetime.realtime()>> | Temporal  | Returns the current _LocalDateTime_ using the `realtime` clock.
-| <<functions-localdatetime-current-statement, localdatetime.statement()>> | Temporal  | Returns the current _LocalDateTime_ using the `statement` clock.
-| <<functions-localdatetime-current-transaction, localdatetime.transaction()>> | Temporal  | Returns the current _LocalDateTime_ using the `transaction` clock.
+| <<functions-localdatetime-realtime, localdatetime.realtime()>> | Temporal  | Returns the current _LocalDateTime_ using the `realtime` clock.
+| <<functions-localdatetime-statement, localdatetime.statement()>> | Temporal  | Returns the current _LocalDateTime_ using the `statement` clock.
+| <<functions-localdatetime-transaction, localdatetime.transaction()>> | Temporal  | Returns the current _LocalDateTime_ using the `transaction` clock.
 | <<functions-localdatetime-truncate, localdatetime.truncate()>> | Temporal  | Returns a _LocalDateTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
 | <<functions-localtime-current, localtime()>> | Temporal   | Returns the current _LocalTime_.
 | <<functions-localtime-create, localtime({hour [, minute, second, ...]})>> | Temporal   | Returns a _LocalTime_ with the specified component values.
 | <<functions-localtime-create-string, localtime(string)>> | Temporal   | Returns a _LocalTime_ by parsing a string.
 | <<functions-localtime-temporal, localtime({time [, hour, ...]})>> | Temporal   | Returns a _LocalTime_ from a map of another temporal value's components.
-| <<functions-localtime-current-realtime, localtime.realtime()>> | Temporal   | Returns the current _LocalTime_ using the `realtime` clock.
-| <<functions-localtime-current-statement, localtime.statement()>> | Temporal   | Returns the current _LocalTime_ using the `statement` clock.
-| <<functions-localtime-current-transaction, localtime.transaction()>> | Temporal   | Returns the current _LocalTime_ using the `transaction` clock.
+| <<functions-localtime-realtime, localtime.realtime()>> | Temporal   | Returns the current _LocalTime_ using the `realtime` clock.
+| <<functions-localtime-statement, localtime.statement()>> | Temporal   | Returns the current _LocalTime_ using the `statement` clock.
+| <<functions-localtime-transaction, localtime.transaction()>> | Temporal   | Returns the current _LocalTime_ using the `transaction` clock.
 | <<functions-localtime-truncate, localtime.truncate()>> | Temporal   | Returns a _LocalTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
 |<<functions-log, log()>>                       | Logarithmic       | Returns the natural logarithm of a number.
 |<<functions-log10, log10()>>                   | Logarithmic       | Returns the common logarithm (base 10) of a number.
@@ -242,9 +242,9 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<functions-time-create, time({hour [, minute, ...]})>>  | Temporal  | Returns a _Time_ with the specified component values.
 | <<functions-time-create-string, time(string)>> | Temporal   | Returns a _Time_ by parsing a string.
 | <<functions-time-temporal, time({time [, hour, ..., timezone]})>> | Temporal   | Returns a _Time_ from a map of another temporal value's components.
-| <<functions-time-current-realtime, time.realtime()>> | Temporal   | Returns the current _Time_ using the `realtime` clock.
-| <<functions-time-current-statement, time.statement()>> | Temporal   | Returns the current _Time_ using the `statement` clock.
-| <<functions-time-current-transaction, time.transaction()>> | Temporal   | Returns the current _Time_ using the `transaction` clock.
+| <<functions-time-realtime, time.realtime()>> | Temporal   | Returns the current _Time_ using the `realtime` clock.
+| <<functions-time-statement, time.statement()>> | Temporal   | Returns the current _Time_ using the `statement` clock.
+| <<functions-time-transaction, time.transaction()>> | Temporal   | Returns the current _Time_ using the `transaction` clock.
 | <<functions-time-truncate, time.truncate()>> | Temporal   | Returns a _Time_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
 |<<functions-timestamp, timestamp()>>            | Scalar            | Returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
 |<<functions-toboolean, toBoolean()>>                | Scalar            | Converts a string value to a boolean value.
