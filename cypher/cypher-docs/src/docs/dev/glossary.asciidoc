@@ -169,7 +169,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-haversin, haversin()>>             | Trigonometric     | Returns half the versine of a number.
 |<<functions-head, head()>>                      | Scalar            | Returns the first element in a list.
 |<<functions-id, id()>>                          | Scalar            | Returns the id of a relationship or node.
-|<<functions-isEmpty, isEmpty()>>                          | Predicate            | Returns true if the given list or map contains no elements or if the given string contains no characters.
+|<<functions-isempty, isEmpty()>>                          | Predicate            | Returns true if the given list or map contains no elements or if the given string contains no characters.
 |<<functions-keys, keys()>>                      | List              | Returns a list containing the string representations for all the property names of a node, relationship, or map.
 |<<functions-labels, labels()>>                  | List              | Returns a list containing the string representations for all the labels of a node.
 |<<functions-last, last()>>                      | Scalar            | Returns the last element in a list.
@@ -219,7 +219,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-reverse-list, reverse()>>           | List              | Returns a list in which the order of all elements in the original list have been reversed.
 |<<functions-reverse, reverse()>>                | String            | Returns a string in which the order of all characters in the original string have been reversed.
 |<<functions-right, right()>>                    | String            | Returns a string containing the specified number of rightmost characters of the original string.
-|<<functions-round1, round()>>                   | Numeric           | Returns the value of the given number rounded to the nearest integer, with half-way values always rounded up.
+|<<functions-round, round()>>                   | Numeric           | Returns the value of the given number rounded to the nearest integer, with half-way values always rounded up.
 |<<functions-round2, round(), with precision>>   | Numeric           | Returns the value of the given number rounded with the specified precision, with half-values always being rounded up.
 |<<functions-round3, round(), with precision and rounding mode>>  | Numeric           | Returns the value of the given number rounded with the specified precision and the specified rounding mode.
 |<<functions-rtrim, rTrim()>>                    | String            | Returns the original string with trailing whitespace removed.
