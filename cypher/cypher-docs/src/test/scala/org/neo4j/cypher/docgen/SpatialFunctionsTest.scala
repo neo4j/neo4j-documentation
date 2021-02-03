@@ -76,7 +76,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       """Functions:
         |
         |* <<functions-distance,distance()>>
-        |* <<functions-point-wgs84-2d,point() - WGS 84 2D>>
+        |* <<functions-point,point() - WGS 84 2D>>
         |* <<functions-point-wgs84-3d,point() - WGS 84 3D>>
         |* <<functions-point-cartesian-2d,point() - Cartesian 2D>>
         |* <<functions-point-cartesian-3d,point() - Cartesian 3D>>
@@ -130,7 +130,7 @@ class SpatialFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("point() - WGS 84 2D", "functions-point-wgs84-2d") {
+    section("point() - WGS 84 2D", "functions-point") {
       p("`point({longitude | x, latitude | y [, crs][, srid]})` returns a 2D point in the _WGS 84_ CRS corresponding to the given coordinate values.")
       function("point({longitude | x, latitude | y [, crs][, srid]})", "A 2D point in _WGS 84_.", ("A single map consisting of the following:", ""), ("longitude/x", "A numeric expression that represents the longitude/x value in decimal degrees"), ("latitude/y", "A numeric expression that represents the latitude/y value in decimal degrees"), ("crs", "The optional string 'WGS-84'"), ("srid", "The optional number 4326"))
       considerations("If any argument provided to `point()` is `null`, `null` will be returned.", "If the coordinates are specified using `latitude` and `longitude`, the `crs` or `srid` fields are optional and inferred to be `'WGS-84'` (srid=4326).", "If the coordinates are specified using `x` and `y`, then either the `crs` or `srid` field is required if a geographic CRS is desired.")

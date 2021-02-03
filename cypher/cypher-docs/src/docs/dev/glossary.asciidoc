@@ -206,7 +206,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-pi, pi()>>                         | Trigonometric     | Returns the mathematical constant _pi_.
 |<<functions-point-cartesian-2d, point() - Cartesian 2D>>  | Spatial           | Returns a 2D point object, given two coordinate values in the Cartesian coordinate system.
 |<<functions-point-cartesian-3d,point() - Cartesian 3D>> | Spatial           | Returns a 3D point object, given three coordinate values in the Cartesian coordinate system.
-|<<functions-point-wgs84-2d, point() - WGS 84 2D>>          | Spatial           | Returns a 2D point object, given two coordinate values in the WGS 84 coordinate system.
+|<<functions-point, point() - WGS 84 2D>>          | Spatial           | Returns a 2D point object, given two coordinate values in the WGS 84 coordinate system.
 |<<functions-point-wgs84-3d,point() - WGS 84 3D>> | Spatial         |  Returns a 3D point object, given three coordinate values in the WGS 84 coordinate system.
 |<<functions-properties, properties()>>          | Scalar            | Returns a map containing all the properties of a node or relationship.
 |<<functions-radians, radians()>>               | Trigonometric     | Converts degrees to radians.
