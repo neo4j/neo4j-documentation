@@ -20,6 +20,7 @@
 package org.neo4j.cypher.docgen
 
 import org.hamcrest.CoreMatchers._
+import org.hamcrest.Matcher
 import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
@@ -150,6 +151,20 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def indexes_are_case_sensitive() {
+    profileQuery(
+      title = "Indexes are case sensitive",
+      text = "Note that indexes are case sensitive, that means we cannot use indexes for queries using `toLower` and `toUpper`. For example, the following query cannot use an index:",
+      queryText = "MATCH (person:Person) WHERE toLower(person.firstname) = 'andy' RETURN person",
+      assertions = {
+        (p) =>
+          assertEquals(1, p.size)
+
+          checkNotInPlanDescription(p)("NodeIndexSeek")
       }
     )
   }
@@ -614,16 +629,24 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   private def checkPlanDescription(result: DocsExecutionResult)(costString: String): Unit = {
+   checkPlanDescription(result, containsString(costString))
+  }
+
+  private def checkNotInPlanDescription(result: DocsExecutionResult)(costString: String): Unit = {
+    checkPlanDescription(result, not(containsString(costString)))
+  }
+
+  private def checkPlanDescription(result: DocsExecutionResult, costMatcher: Matcher[String]): Unit = {
     val planDescription = result.executionPlanDescription()
     val plannerArgument = planDescription.arguments.find(a => a.name == "planner")
 
     plannerArgument match {
       case Some(Planner(IDPPlannerName.name)) =>
-        assertThat(planDescription.toString, containsString(costString))
+        assertThat(planDescription.toString, costMatcher)
       case Some(Planner(DPPlannerName.name)) =>
-        assertThat(planDescription.toString, containsString(costString))
+        assertThat(planDescription.toString, costMatcher)
       case Some(Planner(name)) if name.equals("COST") =>
-        assertThat(planDescription.toString, containsString(costString))
+        assertThat(planDescription.toString, costMatcher)
 
       case x =>
         fail(s"Couldn't determine used planner: $x")
