@@ -1,5 +1,5 @@
 .List users output
-[options="header", width="100%", cols="2a,4,^.^,^.^"]
+[options="header", width="100%", cols="1a,4,^.^,^"]
 |===
 | Column
 | Description
@@ -23,13 +23,6 @@
 
 | suspended
 | If `true`, the user is currently suspended (cannot log in).
-| `-`
-|`+`
-
-| defaultDatabase
-| The default database configured for this user. If the user does not have a default database configured
-this will be `null`. If this database is unavailable and the user does not specify a database to use they will 
-not be able to log in. 
 | `-`
 |`+`
 |===
