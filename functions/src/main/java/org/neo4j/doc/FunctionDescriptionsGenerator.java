@@ -124,7 +124,7 @@ public class FunctionDescriptionsGenerator
     {
         String categoryRef = category.asciiReference();
         out.print( "[[header-query-functions-" + categoryRef + "]]\n" );
-        out.print( "**<<query-functions-" + categoryRef + ", " + category + " functions>>**\n\n" );
+        out.print( "**<<query-functions-" + categoryRef + ", " + category.name().replace('_', ' ') + " functions>>**\n\n" );
         out.print( category.description() + "\n\n" );
         out.print( "[options=\"header\"]\n" );
         out.print( "|===\n" );
