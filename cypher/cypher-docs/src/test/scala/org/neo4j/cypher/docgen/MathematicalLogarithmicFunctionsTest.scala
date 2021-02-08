@@ -26,7 +26,7 @@ class MathematicalLogarithmicFunctionsTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/functions"
 
   override def doc = new DocBuilder {
-    doc("Mathematical functions - logarithmic", "query-functions-mathematical-logarithmic")
+    doc("Mathematical functions - logarithmic", "query-functions-logarithmic")
     synopsis("These functions all operate on numeric expressions only, and will return an error if used on any other values. See also <<query-operators-mathematical>>.")
     p(
       """Functions:

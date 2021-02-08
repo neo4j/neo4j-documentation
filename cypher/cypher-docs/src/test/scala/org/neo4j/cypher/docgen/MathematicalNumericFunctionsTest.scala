@@ -26,7 +26,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/functions"
 
   override def doc = new DocBuilder {
-    doc("Mathematical functions - numeric", "query-functions-mathematical-numeric")
+    doc("Mathematical functions - numeric", "query-functions-numeric")
     initQueries(
       """CREATE (alice:A {name:'Alice', age: 38, eyes: 'brown'}),
         |       (bob:B {name: 'Bob', age: 25, eyes: 'blue'}),

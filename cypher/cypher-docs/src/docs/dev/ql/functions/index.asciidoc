@@ -11,9 +11,9 @@ This section contains information on all functions in the Cypher query language.
 * Scalar functions [<<header-query-functions-scalar, Summary>>|<<query-functions-scalar, Detail>>]
 * Aggregating functions [<<header-query-functions-aggregating, Summary>>|<<query-functions-aggregating, Detail>>]
 * List functions [<<header-query-functions-list, Summary>>|<<query-functions-list, Detail>>]
-* Mathematical functions - numeric [<<header-query-functions-numeric, Summary>>|<<query-functions-mathematical-numeric, Detail>>]
-* Mathematical functions - logarithmic [<<header-query-functions-logarithmic, Summary>>|<<query-functions-mathematical-logarithmic, Detail>>]
-* Mathematical functions - trigonometric [<<header-query-functions-trigonometric, Summary>>|<<query-functions-mathematical-trigonometric, Detail>>]
+* Mathematical functions - numeric [<<header-query-functions-numeric, Summary>>|<<query-functions-numeric, Detail>>]
+* Mathematical functions - logarithmic [<<header-query-functions-logarithmic, Summary>>|<<query-functions-logarithmic, Detail>>]
+* Mathematical functions - trigonometric [<<header-query-functions-trigonometric, Summary>>|<<query-functions-trigonometric, Detail>>]
 * String functions [<<header-query-functions-string, Summary>>|<<query-functions-string, Detail>>]
 * Temporal functions - instant types [<<header-query-functions-temporal-instant-types, Summary>>|<<query-functions-temporal-instant-types, Detail>>]
 * Temporal functions - duration [<<header-query-functions-temporal-duration, Summary>>|<<query-functions-duration, Detail>>]
@@ -314,15 +314,15 @@ include::query-functions-list.adoc[leveloffset=+1]
 
 //Mathematical functions - numeric
 
-include::query-functions-mathematical-numeric.adoc[leveloffset=+1]
+include::query-functions-numeric.adoc[leveloffset=+1]
 
 //Mathematical functions - logarithmic
 
-include::query-functions-mathematical-logarithmic.adoc[leveloffset=+1]
+include::query-functions-logarithmic.adoc[leveloffset=+1]
 
 //Mathematical functions - trigonometric
 
-include::query-functions-mathematical-trigonometric.adoc[leveloffset=+1]
+include::query-functions-trigonometric.adoc[leveloffset=+1]
 
 //String functions
 
