@@ -330,7 +330,7 @@ include::query-functions-string.adoc[leveloffset=+1]
 
 //Temporal functions - instant types
 
-include::query-functions-temporal.adoc[leveloffset=+1]
+include::query-functions-temporal-instant-types.adoc[leveloffset=+1]
 
 //Temporal functions - duration
 

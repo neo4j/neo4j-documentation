@@ -34,7 +34,7 @@ class TemporalFunctionsTest extends DocumentingTest {
       override def get(): ZoneId = ZoneOffset.UTC
     }
 
-    doc("Temporal functions - instant types", "query-functions-temporal")
+    doc("Temporal functions - instant types", "query-functions-temporal-instant-types")
     synopsis(
       """Cypher provides functions allowing for the creation and manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, and _LocalDateTime_.""".stripMargin)
     note {
