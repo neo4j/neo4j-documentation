@@ -67,6 +67,13 @@ class CallTest extends DocumentingTest {
 
     section("Call a procedure using `CALL`", "call-call-a-procedure-using-call") {
       p("This calls the built-in procedure `db.labels`, which lists all labels used in the database.")
+      query("CALL db.labels()", assertNotEmpty) {
+        resultTable()
+      }
+      p("Cypher allows the omission of parentheses on procedures of arity-0 (no arguments).")
+      note{
+        p("Best practice is to use parentheses for procedures.")
+      }
       query("CALL db.labels", assertNotEmpty) {
         resultTable()
       }
@@ -87,13 +94,14 @@ class CallTest extends DocumentingTest {
 
     section("Call a procedure using a quoted namespace and name", "call-call-a-procedure-using-a-quoted-namespace-and-name") {
       p("This calls the built-in procedure `db.labels`, which lists all labels used in the database.")
+      query("CALL `db`.`labels()`", assertNotEmpty){}
       query("CALL `db`.`labels`", assertNotEmpty){}
     }
 
     section("Call a procedure with literal arguments", "call-call-a-procedure-with-literal-arguments") {
       p("""This calls the example procedure `dbms.security.createUser` using literal arguments.
           #The arguments are written out directly in the statement text.""".stripMargin('#'))
-      query("CALL dbms.security.createUser('johnsmith', 'h6u4%kr', false)", assertEmpty) {
+      query("CALL dbms.security.createUser('example_username', 'example_password', false)", assertEmpty) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
@@ -101,14 +109,26 @@ class CallTest extends DocumentingTest {
     section("Call a procedure with parameter arguments", "call-call-a-procedure-with-parameter-arguments") {
       p("""This calls the example procedure `dbms.security.createUser` using parameters as arguments.
           #Each procedure argument is taken to be the value of a corresponding statement parameter with the same name (or null if no such parameter has been given).""".stripMargin('#'))
-      query("CALL dbms.security.createUser", assertEmpty, ("username", "johnsmith"), ("password", "h6u4%kr"), ("requirePasswordChange", false)) {
+      note{
+        p("""Examples that use parameter arguments shows the given parameters in JSON format; the exact manner in which they are to be submitted depends upon the driver being used.
+          #See <<cypher-parameters>>, for more about querying with parameters""".stripMargin('#'))
+      }
+      query("CALL dbms.security.createUser($username, $password, $requirePasswordChange)", assertEmpty, ("username", "example_username1"), ("password", "example_password"), ("requirePasswordChange", false)) {
+        p("Since our example procedure does not return any result, the result is empty.")
+      }
+      p("Cypher allows the omission of parentheses for procedures with arity-n (n arguments), Cypher implicitly passes the parameter arguments.")
+      note{
+        p("""Best practice is to use parentheses for procedures.
+            #Omission of parantheses is available only in a so-called standalone procedure call, when the whole query consists of a single `CALL` clause.""".stripMargin('#'))
+      }
+      query("CALL dbms.security.createUser", assertEmpty, ("username", "example_username2"), ("password", "example_password"), ("requirePasswordChange", false)) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
 
     section("Call a procedure with mixed literal and parameter arguments", "call-call-a-procedure-with-mixed-literal-and-parameter-arguments") {
       p("This calls the example procedure `dbms.security.createUser` using both literal and parameter arguments.")
-      query("CALL dbms.security.createUser('username', $password, 'requirePasswordChange')", assertEmpty, ("password", "h6u4%kr")) {
+      query("CALL dbms.security.createUser('example_username3', $password, false)", assertEmpty, ("password", "example_password")) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
@@ -117,7 +137,7 @@ class CallTest extends DocumentingTest {
       p(
         """This calls the example procedure `dbms.security.createUser` using literal arguments.
           #That is, arguments that are written out directly in the statement text, and a trailing default argument that is provided by the procedure itself.""".stripMargin('#'))
-      query("CALL dbms.security.createUser('johnsmith', 'h6u4%kr')", assertEmpty) {
+      query("CALL dbms.security.createUser('example_username4', 'example_password')", assertEmpty) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
