@@ -44,10 +44,10 @@ class CallTest extends DocumentingTest {
       p("""Most procedures return a stream of records with a fixed set of result fields, similar to how running a Cypher query returns a stream of records.
           #The `YIELD` sub-clause is used to explicitly select which of the available result fields are returned as newly-bound variables from the procedure call to the user or for further processing by the remaining query.
           #Thus, in order to be able to use `YIELD`, the names (and types) of the output parameters need be known in advance.
-          #Each yielded result field may optionally be renamed using aliasing (i.e. `resultFieldName AS newName`).
+          #Each yielded result field may optionally be renamed using aliasing (i.e., `resultFieldName AS newName`).
           #All new variables bound by a procedure call are added to the set of variables already bound in the current scope.
-          #It is an error if a procedure call tries to rebind a previously bound variable (i.e. a procedure call cannot shadow a variable that was previously bound in the current scope).""".stripMargin('#'))
-      p("<<call-view-the-signature-for-a-procedure, This section>> explains how to determine a procedure's input parameters (needed for `CALL`) and output parameters (needed for `YIELD`).")
+          #It is an error if a procedure call tries to rebind a previously bound variable (i.e., a procedure call cannot shadow a variable that was previously bound in the current scope).""".stripMargin('#'))
+      p("For more information on how to determine the input parameters for the `CALL` procedure and the output parameters for the `YIELD` procedure, see <<call-view-the-signature-for-a-procedure>>.")
       p("Inside a larger query, the records returned from a procedure call with an explicit `YIELD` may be further filtered using a `WHERE` sub-clause followed by a predicate (similar to `WITH ... WHERE ...`).")
       p("""If the called procedure declares at least one result field, `YIELD` may generally not be omitted.
           #However `YIELD` may always be omitted in a standalone procedure call.
@@ -55,7 +55,7 @@ class CallTest extends DocumentingTest {
       p("""Neo4j supports the notion of `VOID` procedures.
           #A `VOID` procedure is a procedure that does not declare any result fields and returns no result records and that has explicitly been declared as `VOID`.
           #Calling a `VOID` procedure may only have a side effect and thus does neither allow nor require the use of `YIELD`.
-          #Calling a `VOID` procedure in the middle of a larger query will simply pass on each input record (i.e. it acts like `WITH *` in terms of the record stream).""".stripMargin('#'))
+          #Calling a `VOID` procedure in the middle of a larger query will simply pass on each input record (i.e., it acts like `WITH *` in terms of the record stream).""".stripMargin('#'))
       note {
         p("""Neo4j comes with a number of built-in procedures.
             #For a list of these, see <<operations-manual#neo4j-procedures, Operations Manual -> Procedures>>.""".stripMargin('#'))
@@ -113,7 +113,7 @@ class CallTest extends DocumentingTest {
         p("""Examples that use parameter arguments shows the given parameters in JSON format; the exact manner in which they are to be submitted depends upon the driver being used.
           #See <<cypher-parameters>>, for more about querying with parameters""".stripMargin('#'))
       }
-      query("CALL dbms.security.createUser($username, $password, $requirePasswordChange)", assertEmpty, ("username", "example_username1"), ("password", "example_password"), ("requirePasswordChange", false)) {
+      query("CALL dbms.security.createUser($username, $password, $requirePasswordChange)", assertEmpty, ("username", "example_username"), ("password", "example_password"), ("requirePasswordChange", false)) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
       p("Cypher allows the omission of parentheses for procedures with arity-n (n arguments), Cypher implicitly passes the parameter arguments.")
@@ -121,14 +121,14 @@ class CallTest extends DocumentingTest {
         p("""Best practice is to use parentheses for procedures.
             #Omission of parantheses is available only in a so-called standalone procedure call, when the whole query consists of a single `CALL` clause.""".stripMargin('#'))
       }
-      query("CALL dbms.security.createUser", assertEmpty, ("username", "example_username2"), ("password", "example_password"), ("requirePasswordChange", false)) {
+      query("CALL dbms.security.createUser", assertEmpty, ("username", "example_username"), ("password", "example_password"), ("requirePasswordChange", false)) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
 
     section("Call a procedure with mixed literal and parameter arguments", "call-call-a-procedure-with-mixed-literal-and-parameter-arguments") {
       p("This calls the example procedure `dbms.security.createUser` using both literal and parameter arguments.")
-      query("CALL dbms.security.createUser('example_username3', $password, false)", assertEmpty, ("password", "example_password")) {
+      query("CALL dbms.security.createUser('example_username', $password, false)", assertEmpty, ("password", "example_password")) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
@@ -137,7 +137,7 @@ class CallTest extends DocumentingTest {
       p(
         """This calls the example procedure `dbms.security.createUser` using literal arguments.
           #That is, arguments that are written out directly in the statement text, and a trailing default argument that is provided by the procedure itself.""".stripMargin('#'))
-      query("CALL dbms.security.createUser('example_username4', 'example_password')", assertEmpty) {
+      query("CALL dbms.security.createUser('example_username', 'example_password')", assertEmpty) {
         p("Since our example procedure does not return any result, the result is empty.")
       }
     }
