@@ -26,17 +26,14 @@ class WhereTest extends DocumentingTest {
 
   override def doc = new DocBuilder {
     doc("WHERE", "query-where")
-    initQueries(
-      """CREATE (andy:Swedish:Person {name: 'Andy', age: 36, belt: 'white'}),
-        |       (timothy:Person {name: 'Timothy', age: 25, address: 'Sweden/Malmo'}),
-        |       (peter:Person {name: 'Peter', age: 35, email: 'peter_n@example.com'}),
-        |
-        |       (andy)-[:KNOWS {since: 2012}]->(timothy),
-        |       (andy)-[:KNOWS {since: 1999}]->(peter),
-        |       (andy)-[:HAS_DOG {since: 2016}]->(:Dog {name:'Andy'}),
-        |       (fido:Dog {name:'Fido'})<-[:HAS_DOG {since: 2010}]-(peter)-[:HAS_DOG {since: 2018}]->(:Dog {name:'Ozzy'}),
-        |       (fido)-[:HAS_TOY]->(:Toy{name:'Banana'})
-      """.stripMargin)
+    initQueries("""CREATE (andy:Swedish:Person {name: 'Andy', age: 36, belt: 'white'}),
+                  #(timothy:Person {name: 'Timothy', age: 25, address: 'Sweden/Malmo'}),
+                  #(peter:Person {name: 'Peter', age: 35, email: 'peter_n@example.com'}),
+                  #(andy)-[:KNOWS {since: 2012}]->(timothy),
+                  #(andy)-[:KNOWS {since: 1999}]->(peter),
+                  #(andy)-[:HAS_DOG {since: 2016}]->(:Dog {name:'Andy'}),
+                  #(fido:Dog {name:'Fido'})<-[:HAS_DOG {since: 2010}]-(peter)-[:HAS_DOG {since: 2018}]->(:Dog {name:'Ozzy'}),
+                  #(fido)-[:HAS_TOY]->(:Toy{name:'Banana'})""".stripMargin('#'))
     synopsis("`WHERE` adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.")
     p(
       """
@@ -218,23 +215,25 @@ class WhereTest extends DocumentingTest {
       section("Escaping in regular expressions", "escaping-in-regular-expressions") {
         p(
           """Characters like `.` or `*` have special meaning in a regular expression.
-            |To use these as ordinary characters, without special meaning, escape them.""".stripMargin)
+            #To use these as ordinary characters, without special meaning, escape them.""".stripMargin('#'))
         query(
           """MATCH (n:Person)
-            |WHERE n.email =~ '.*\\\\.com'
-            |RETURN n.name, n.age, n.email""".stripMargin, ResultAssertions((r) => {
+            #WHERE n.email =~ '.*\\.com'
+            #RETURN n.name, n.age, n.email""".stripMargin('#'), ResultAssertions((r) => {
             r.toList should equal(List(Map("n.name" -> "Peter", "n.age" -> 35l, "n.email" -> "peter_n@example.com")))
           })) {
-          p("The name, age and email for the *'Peter'* node are returned because his email ends with *'.com'*.")
+          p("The name, age and email for the 'Peter' node are returned because his email ends with '.com'.")
           resultTable()
         }
       }
       section("Case-insensitive regular expressions", "case-insensitive-regular-expressions") {
         p("By pre-pending a regular expression with `(?i)`, the whole expression becomes case-insensitive.")
-        query("MATCH (n:Person)\nWHERE n.name =~ '(?i)AND.*'\nRETURN n.name, n.age", ResultAssertions((r) => {
+        query("""MATCH (n:Person)
+                #WHERE n.name =~ '(?i)AND.*'
+                #RETURN n.name, n.age""".stripMargin('#'), ResultAssertions((r) => {
           r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l)))
         })) {
-          p("The name and age for the *'Andy'* node are returned because his name starts with *'AND'* irrespective of casing.")
+          p("The name and age for the 'Andy' node are returned because his name starts with 'AND' irrespective of casing.")
           resultTable()
         }
       }
