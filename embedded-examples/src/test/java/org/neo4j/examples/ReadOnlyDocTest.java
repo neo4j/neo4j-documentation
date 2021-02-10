@@ -31,9 +31,11 @@ import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.WriteOperationsNotAllowedException;
+import org.neo4j.internal.helpers.Exceptions;
+import org.neo4j.kernel.api.exceptions.ReadOnlyDbException;
 import org.neo4j.io.fs.FileUtils;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
@@ -84,8 +86,9 @@ public class ReadOnlyDocTest
             fail( "expected exception" );
         }
         // then
-        catch ( WriteOperationsNotAllowedException e )
+        catch ( Exception e )
         {
+            assertTrue( "Exception cause should be ReadOnlyDbException!", Exceptions.contains( e, c -> c instanceof ReadOnlyDbException ) );
             // ok
         }
     }
