@@ -311,7 +311,9 @@ case class Query(queryText: String,
                  database: Option[String] = None,
                  login: Option[(String, String)] = None) extends Content with DatabaseQuery {
 
-  val prettified = if (preformatted) queryText else Prettifier(queryText).toString
+  //Prettifier is broken
+  //val prettified = if (preformatted) queryText else Prettifier(queryText).toString
+  val prettified = queryText
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
   override def asciiDoc(level: Int) = {
