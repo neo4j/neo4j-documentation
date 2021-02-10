@@ -25,12 +25,13 @@ class FulltextIndexTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/administration/indexes"
 
   override def doc: Document = new DocBuilder {
-    private val createMatrixMovieNode = """create (m:Movie {title: "The Matrix"}) return m.title"""
-    private val createJacketMovies = """create (:Movie {title: "Full Metal Jacket"}), (:Movie {title: "The Jacket"}), (:Movie {title: "Yellow Jacket"}), (:Movie {title: "Full Moon High"}), (:Movie {title: "Metallica Through The Never", description: "The movie follows the young roadie Trip through his surreal adventure with the band."}) """
-    private val createTitleAndDescriptionFulltextIndex = """call db.index.fulltext.createNodeIndex("titlesAndDescriptions", ["Movie","Book"], ["title","description"])"""
-    private val awaitIndexesOnline = """call db.awaitIndexes(1000)"""
-    private val queryForMatrixNode = """call db.index.fulltext.queryNodes("titlesAndDescriptions", "matrix") yield node, score return node.title, node.description, score"""
-    private val createRelationshipFulltextIndexWithConfig = """call db.index.fulltext.createRelationshipIndex("taggedByRelationshipIndex", ["TAGGED_AS"], ["taggedByUser"], {analyzer: "url_or_email", eventually_consistent: "true"})"""
+    private val createMatrixMovieNode = """CREATE (m:Movie {title: "The Matrix"}) RETURN m.title"""
+    private val createJacketMovies = """CREATE (:Movie {title: "Full Metal Jacket"}), (:Movie {title: "The Jacket"}), (:Movie {title: "Yellow Jacket"}), (:Movie {title: "Full Moon High"}), (:Movie {title: "Metallica Through The Never", description: "The movie follows the young roadie Trip through his surreal adventure with the band."}) """
+    private val createTitleAndDescriptionFulltextIndex = """CALL db.index.fulltext.createNodeIndex("titlesAndDescriptions", ["Movie", "Book"], ["title", "description"])"""
+    private val awaitIndexesOnline = """CALL db.awaitIndexes(1000)"""
+    private val queryForMatrixNode = """CALL db.index.fulltext.queryNodes("titlesAndDescriptions", "matrix") YIELD node, score
+                                       #RETURN node.title, node.description, score""".stripMargin('#')
+    private val createRelationshipFulltextIndexWithConfig = """CALL db.index.fulltext.createRelationshipIndex("taggedByRelationshipIndex", ["TAGGED_AS"], ["taggedByUser"], {analyzer: "url_or_email", eventually_consistent: "true"})"""
     doc("Indexes for full-text search", "administration-indexes-fulltext-search")
     initQueries(
       createMatrixMovieNode,
@@ -39,60 +40,42 @@ class FulltextIndexTest extends DocumentingTest {
       awaitIndexesOnline)
     synopsis("This section describes how to use full-text indexes, to enable full-text search.")
     section("Introduction", "administration-indexes-fulltext-search-introduction") {
-      p(
-        """
-          |Full-text indexes are powered by the link:https://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
-          |A full-text index allows you to write queries that match within the _contents_ of indexed string properties.
-          |For instance, the btree indexes described in previous sections can only do exact matching or prefix matches on strings.
-          |A full-text index will instead tokenize the indexed string values, so it can match _terms_ anywhere within the strings.
-          |How the indexed strings are tokenized and broken into terms, is determined by what analyzer the full-text index is configured with.
-          |For instance, the _swedish_ analyzer knows how to tokenize and stem Swedish words, and will avoid indexing Swedish stop words.
-          |The complete list of stop words for each analyzer is included in the result of the `db.index.fulltext.listAvailableAnalyzers` procedure.
-          |"""
-      )
+      p("""Full-text indexes are powered by the link:https://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
+          #A full-text index allows you to write queries that match within the _contents_ of indexed string properties.
+          #For instance, the btree indexes described in previous sections can only do exact matching or prefix matches on strings.
+          #A full-text index will instead tokenize the indexed string values, so it can match _terms_ anywhere within the strings.
+          #How the indexed strings are tokenized and broken into terms, is determined by what analyzer the full-text index is configured with.
+          #For instance, the _swedish_ analyzer knows how to tokenize and stem Swedish words, and will avoid indexing Swedish stop words.
+          #The complete list of stop words for each analyzer is included in the result of the `db.index.fulltext.listAvailableAnalyzers` procedure.
+          #""".stripMargin('#'))
       p("Full-text indexes:")
+      p("""* support the indexing of both nodes and relationships.
+          #* support configuring custom analyzers, including analyzers that are not included with Lucene itself.
+          #* can be queried using the Lucene query language.
+          #* can return the _score_ for each result from a query.
+          #* are kept up to date automatically, as nodes and relationships are added, removed, and modified.
+          #* will automatically populate newly created indexes with the existing data in a store.
+          #* can be checked by the consistency checker, and they can be rebuilt if there is a problem with them.
+          #* are a projection of the store, and can only index nodes and relationships by the contents of their properties.
+          #* can support any number of documents in a single index.
+          #* are created, dropped, and updated transactionally, and is automatically replicated throughout a cluster.
+          #* can be accessed via Cypher procedures.
+          #* can be configured to be _eventually consistent_, in which index updating is moved from the commit path to a background thread.
+          #Using this feature, it is possible to work around the slow Lucene writes from the performance critical commit process, thus removing the main bottlenecks for Neo4j write performance.""".stripMargin('#'))
+      p("""At first sight, the construction of full-text indexes can seem similar to regular indexes.
+          #However there are some things that are interesting to note:
+          #In contrast to <<administration-indexes-introduction, btree indexes>>, a full-text index""".stripMargin('#'))
       p(
-        """
-          |* support the indexing of both nodes and relationships.
-          |* support configuring custom analyzers, including analyzers that are not included with Lucene itself.
-          |* can be queried using the Lucene query language.
-          |* can return the _score_ for each result from a query.
-          |* are kept up to date automatically, as nodes and relationships are added, removed, and modified.
-          |* will automatically populate newly created indexes with the existing data in a store.
-          |* can be checked by the consistency checker, and they can be rebuilt if there is a problem with them.
-          |* are a projection of the store, and can only index nodes and relationships by the contents of their properties.
-          |* can support any number of documents in a single index.
-          |* are created, dropped, and updated transactionally, and is automatically replicated throughout a cluster.
-          |* can be accessed via Cypher procedures.
-          |* can be configured to be _eventually consistent_, in which index updating is moved from the commit path to a background thread.
-          |Using this feature, it is possible to work around the slow Lucene writes from the performance critical commit process, thus removing the main bottlenecks for Neo4j write performance.
-          |"""
-      )
-      p(
-        """
-          |At first sight, the construction of full-text indexes can seem similar to regular indexes.
-          |However there are some things that are interesting to note:
-          |In contrast to <<administration-indexes-introduction, btree indexes>>, a full-text index
-          |"""
-      )
-      p(
-        """
-          |* can be applied to more than one label.
-          |* can be applied to relationship types (one or more).
-          |* can be applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-index, _composite index_>>) but with an important difference:
-          |While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.
-          |"""
-      )
+        """* can be applied to more than one label.
+          #* can be applied to relationship types (one or more).
+          #* can be applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-index, _composite index_>>) but with an important difference:
+          #While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.""".stripMargin('#'))
       p("For information on how to configure full-text indexes, refer to <<operations-manual#index-configuration-fulltext, Operations Manual -> Indexes to support full-text search>>.")
     }
     section("Procedures to manage full-text indexes", "administration-indexes-fulltext-search-manage") {
-      p(
-        """
-        |Full-text indexes are managed through built-in procedures, see <<operations-manual#neo4j-procedures, Operations Manual -> Procedures>> for a complete reference.
-        |
-        |The procedures for managing full-text indexes are listed in the table below:
-        |"""
-      )
+      p("""Full-text indexes are managed through built-in procedures, see <<operations-manual#neo4j-procedures, Operations Manual -> Procedures>> for a complete reference.
+          #
+          #The procedures for managing full-text indexes are listed in the table below:""".stripMargin('#'))
       p(
         """
           |[options="header"]
@@ -111,13 +94,9 @@ class FulltextIndexTest extends DocumentingTest {
     }
 
     section("Create and configure full-text indexes", "administration-indexes-fulltext-search-create-and-configure") {
-      p(
-        """
-          |Full-text indexes are created with the `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex` procedures.
-          |An index must be given a unique name when created, which is used to reference the specific index when querying or dropping it.
-          |A full-text index applies to a list of labels or a list of relationship types, for node and relationship indexes respectively, and then a list of property names.
-          |"""
-      )
+      p("""Full-text indexes are created with the `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex` procedures.
+          #An index must be given a unique name when created, which is used to reference the specific index when querying or dropping it.
+          #A full-text index applies to a list of labels or a list of relationship types, for node and relationship indexes respectively, and then a list of property names.""".stripMargin('#'))
       p("For instance, if we have a movie with a title.")
       query(createMatrixMovieNode, ResultAssertions(r => {
         r.size should equal(1)
@@ -132,38 +111,32 @@ class FulltextIndexTest extends DocumentingTest {
       })) {
         resultTable()
       }
-      p(
-        """
-          |The same is true for full-text indexes on relationships.
-          |Though a relationship can only have one type, a relationship full-text index can index multiple types, and all relationships will be included that match one of the relationship types, and at least one of the indexed properties.""")
-      p(
-        """
-          |The `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex` procedures take an optional fourth argument, called `config`.
-          |The `config` parameter is a map from string to string, and can be used to set index-specific configuration settings.
-          |The `analyzer` setting can be used to configure an index-specific analyzer.
-          |The possible values for the `analyzer` setting can be listed with the `db.index.fulltext.listAvailableAnalyzers` procedure.
-          |The `eventually_consistent` setting, if set to `"true"`, will put the index in an _eventually consistent_ update mode.
-          |this means that updates will be applied in a background thread "as soon as possible", instead of during transaction commit like other indexes.
-        """)
+      p("""The same is true for full-text indexes on relationships.
+          #Though a relationship can only have one type, a relationship full-text index can index multiple types, and all relationships will be included that match one of the relationship types, and at least one of the indexed properties.""".stripMargin('#'))
+      p("""The `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex` procedures take an optional fourth argument, called `config`.
+          #The `config` parameter is a map from string to string, and can be used to set index-specific configuration settings.
+          #The `analyzer` setting can be used to configure an index-specific analyzer.
+          #The possible values for the `analyzer` setting can be listed with the `db.index.fulltext.listAvailableAnalyzers` procedure.
+          #The `eventually_consistent` setting, if set to `"true"`, will put the index in an _eventually consistent_ update mode.
+          #This means that updates will be applied in a background thread "as soon as possible", instead of during transaction commit like other indexes.""".stripMargin('#'))
       query(createRelationshipFulltextIndexWithConfig, ResultAssertions(r => {})) {
         p(
-          """
-            |In this example, an eventually consistent relationship full-text index is created for the `TAGGED_AS` relationship type, and the `taggedByUser` property, and the index uses the `url_or_email` analyzer.
-            |This could, for instance, be a system where people are assigning tags to documents, and where the index on the `taggedByUser` property will allow them to quickly find all of the documents they have tagged.
-            |Had it not been for the relationship index, one would have had to add artificial connective nodes between the tags and the documents in the data model, just so these nodes could be indexed.""")
+          """In this example, an eventually consistent relationship full-text index is created for the `TAGGED_AS` relationship type, and the `taggedByUser` property, and the index uses the `url_or_email` analyzer.
+            #This could, for instance, be a system where people are assigning tags to documents, and where the index on the `taggedByUser` property will allow them to quickly find all of the documents they have tagged.
+            #Had it not been for the relationship index, one would have had to add artificial connective nodes between the tags and the documents in the data model, just so these nodes could be indexed.""".stripMargin('#'))
         resultTable()
       }
     }
 
     section("Query full-text indexes", "administration-indexes-fulltext-search-query") {
       p(
-        """
-          |Full-text indexes will, in addition to any exact matches, also return _approximate_ matches to a given query.
-          |Both the property values that are indexed, and the queries to the index, are processed through the analyzer such that the index can find that don't _exactly_ matches.
-          |The `score` that is returned alongside each result entry, represents how well the index thinks that entry matches the given query.
-          |The results are always returned in _descending score order_, where the best matching result entry is put first.
-          |To illustrate, in the example below, we search our movie database for "Full Metal Jacket", and even though there is an exact match as the first result, we also get three other less interesting results:""")
-      query("""call db.index.fulltext.queryNodes("titlesAndDescriptions", "Full Metal Jacket") yield node, score return node.title, score""", ResultAssertions(r => {
+        """Full-text indexes will, in addition to any exact matches, also return _approximate_ matches to a given query.
+          #Both the property values that are indexed, and the queries to the index, are processed through the analyzer such that the index can find that don't _exactly_ matches.
+          #The `score` that is returned alongside each result entry, represents how well the index thinks that entry matches the given query.
+          #The results are always returned in _descending score order_, where the best matching result entry is put first.
+          #To illustrate, in the example below, we search our movie database for `"Full Metal Jacket"`, and even though there is an exact match as the first result, we also get three other less interesting results:""".stripMargin('#'))
+      query("""CALL db.index.fulltext.queryNodes("titlesAndDescriptions", "Full Metal Jacket") YIELD node, score
+              #RETURN node.title, score""".stripMargin('#'), ResultAssertions(r => {
         r.size should equal(4)
       })) {
         resultTable()
@@ -173,19 +146,22 @@ class FulltextIndexTest extends DocumentingTest {
           |Full-text indexes are powered by the link:https://lucene.apache.org/[Apache Lucene] indexing and search library.
           |This means that we can use Lucene's full-text query language to express what we wish to search for.
           |For instance, if we are only interested in exact matches, then we can quote the string we are searching for.""")
-      query("""call db.index.fulltext.queryNodes("titlesAndDescriptions", "\\\"Full Metal Jacket\\\"") yield node, score return node.title, score""", ResultAssertions(r => {
+      query("""CALL db.index.fulltext.queryNodes("titlesAndDescriptions", '"Full Metal Jacket"') YIELD node, score
+              #RETURN node.title, score""".stripMargin('#'), ResultAssertions(r => {
         r.size should equal(1)
       })) {
-        p("When we put \"Full Metal Jacket\" in quotes, Lucene only gives us exact matches.")
+        p("""When we put "Full Metal Jacket" in quotes, Lucene only gives us exact matches.""")
         resultTable()
       }
       p("Lucene also allows us to use logical operators, such as `AND` and `OR`, to search for terms:")
-      query("""call db.index.fulltext.queryNodes("titlesAndDescriptions", 'full AND metal') yield node, score return node.title, score""", ResultAssertions(r => {})) {
-        p("Only the \"Full Metal Jacket\" movie in our database has both the words \"full\" and \"metal\".")
+      query("""CALL db.index.fulltext.queryNodes("titlesAndDescriptions", 'full AND metal') YIELD node, score
+              #RETURN node.title, score""".stripMargin('#'), ResultAssertions(r => {})) {
+        p("""Only the `Full Metal Jacket` movie in our database has both the words `full` and `metal`.""")
         resultTable()
       }
       p("It is also possible to search for only specific properties, by putting the property name and a colon in front of the text being searched for.")
-      query("""call db.index.fulltext.queryNodes("titlesAndDescriptions", 'description:"surreal adventure"') yield node, score return node.title, node.description, score""", ResultAssertions(r => {
+      query("""CALL db.index.fulltext.queryNodes("titlesAndDescriptions", 'description:"surreal adventure"') YIELD node, score
+              #RETURN node.title, node.description, score""".stripMargin('#'), ResultAssertions(r => {
         r.size should equal(1)
       })) {
         resultTable()
