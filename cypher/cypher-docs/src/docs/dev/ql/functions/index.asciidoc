@@ -36,14 +36,14 @@ These functions return either true or false for the given arguments.
 [options="header"]
 |===
 | Function | Signature | Description
-1.1+| <<functions-all,all()>>  | all(variable :: VARIABLE IN list :: LIST OF ANY? WHERE predicate :: ANY?) :: (BOOLEAN?) | Returns true if the predicate holds for all elements in the given list.
-1.1+| <<functions-any,any()>>  | any(variable :: VARIABLE IN list :: LIST OF ANY? WHERE predicate :: ANY?) :: (BOOLEAN?) | Returns true if the predicate holds for at least one element in the given list.
-1.1+| <<functions-exists,exists()>>  | exists(input :: ANY?) :: (BOOLEAN?) | Returns true if a match for the pattern exists in the graph, or if the specified property exists in the node, relationship or map.
-1.3+| <<functions-isempty,isEmpty()>>  | isEmpty(input :: LIST? OF ANY?) :: (BOOLEAN?) | Checks whether a list is empty.
-| isEmpty(input :: MAP?) :: (BOOLEAN?) | Checks whether a map is empty.
-| isEmpty(input :: STRING?) :: (BOOLEAN?) | Checks whether a string is empty.
-1.1+| <<functions-none,none()>>  | none(variable :: VARIABLE IN list :: LIST OF ANY? WHERE predicate :: ANY?) :: (BOOLEAN?) | Returns true if the predicate holds for no element in the given list.
-1.1+| <<functions-single,single()>>  | single(variable :: VARIABLE IN list :: LIST OF ANY? WHERE predicate :: ANY?) :: (BOOLEAN?) | Returns true if the predicate holds for exactly one of the elements in the given list.
+1.1+| <<functions-all,`all()`>>  | `all(variable :: VARIABLE IN list :: LIST OF ANY? WHERE predicate :: ANY?) :: (BOOLEAN?)` | Returns true if the predicate holds for all elements in the given list.
+1.1+| <<functions-any,`any()`>>  | `any(variable :: VARIABLE IN list :: LIST OF ANY? WHERE predicate :: ANY?) :: (BOOLEAN?)` | Returns true if the predicate holds for at least one element in the given list.
+1.1+| <<functions-exists,`exists()`>>  | `exists(input :: ANY?) :: (BOOLEAN?)` | Returns true if a match for the pattern exists in the graph, or if the specified property exists in the node, relationship or map.
+1.3+| <<functions-isempty,`isEmpty()`>>  | `isEmpty(input :: LIST? OF ANY?) :: (BOOLEAN?)` | Checks whether a list is empty.
+| `isEmpty(input :: MAP?) :: (BOOLEAN?)` | Checks whether a map is empty.
+| `isEmpty(input :: STRING?) :: (BOOLEAN?)` | Checks whether a string is empty.
+1.1+| <<functions-none,`none()`>>  | `none(variable :: VARIABLE IN list :: LIST OF ANY? WHERE predicate :: ANY?) :: (BOOLEAN?)` | Returns true if the predicate holds for no element in the given list.
+1.1+| <<functions-single,`single()`>>  | `single(variable :: VARIABLE IN list :: LIST OF ANY? WHERE predicate :: ANY?) :: (BOOLEAN?)` | Returns true if the predicate holds for exactly one of the elements in the given list.
 |===
 
 [[header-query-functions-scalar]]
@@ -54,26 +54,26 @@ These functions return a single value.
 [options="header"]
 |===
 | Function | Signature | Description
-1.1+| <<functions-coalesce,coalesce()>>  | coalesce(input :: ANY?) :: (ANY?) | Returns the first non-null value in a list of expressions.
-1.1+| <<functions-endnode,endNode()>>  | endNode(input :: RELATIONSHIP?) :: (NODE?) | Returns the end node of a relationship.
-1.1+| <<functions-head,head()>>  | head(list :: LIST? OF ANY?) :: (ANY?) | Returns the first element in a list.
-1.2+| <<functions-id,id()>>  | id(input :: NODE?) :: (INTEGER?) | Returns the id of a node.
-| id(input :: RELATIONSHIP?) :: (INTEGER?) | Returns the id of a relationship.
-1.1+| <<functions-last,last()>>  | last(list :: LIST? OF ANY?) :: (ANY?) | Returns the last element in a list.
-1.1+| <<functions-length,length()>>  | length(input :: PATH?) :: (INTEGER?) | Returns the length of a path.
-1.3+| <<functions-properties,properties()>>  | properties(input :: MAP?) :: (MAP?) | Returns a map containing all the properties of a map.
-| properties(input :: NODE?) :: (MAP?) | Returns a map containing all the properties of a node.
-| properties(input :: RELATIONSHIP?) :: (MAP?) | Returns a map containing all the properties of a relationship.
-1.1+| <<functions-randomuuid,randomUUID()>>  | randomUUID() :: (STRING?) | Generates a random UUID.
-1.2+| <<functions-size,size()>>  | size(input :: LIST? OF ANY?) :: (INTEGER?) | Returns the number of items in a list.
-| size(input :: STRING?) :: (INTEGER?) | Returns the number of Unicode characters in a string.
-1.1+| <<functions-startnode,startNode()>>  | startNode(input :: RELATIONSHIP?) :: (NODE?) | Returns the start node of a relationship.
-1.1+| <<functions-toboolean,toBoolean()>>  | toBoolean(input :: STRING?) :: (BOOLEAN?) | Converts a string value to a boolean value.
-1.2+| <<functions-tofloat,toFloat()>>  | toFloat(input :: NUMBER?) :: (FLOAT?) | Converts an integer value to a floating point value.
-| toFloat(input :: STRING?) :: (FLOAT?) | Converts a string value to a floating point value.
-1.2+| <<functions-tointeger,toInteger()>>  | toInteger(input :: NUMBER?) :: (INTEGER?) | Converts a floating point value to an integer value.
-| toInteger(input :: STRING?) :: (INTEGER?) | Converts a string value to an integer value.
-1.1+| <<functions-type,type()>>  | type(input :: RELATIONSHIP?) :: (STRING?) | Returns the string representation of the relationship type.
+1.1+| <<functions-coalesce,`coalesce()`>>  | `coalesce(input :: ANY?) :: (ANY?)` | Returns the first non-null value in a list of expressions.
+1.1+| <<functions-endnode,`endNode()`>>  | `endNode(input :: RELATIONSHIP?) :: (NODE?)` | Returns the end node of a relationship.
+1.1+| <<functions-head,`head()`>>  | `head(list :: LIST? OF ANY?) :: (ANY?)` | Returns the first element in a list.
+1.2+| <<functions-id,`id()`>>  | `id(input :: NODE?) :: (INTEGER?)` | Returns the id of a node.
+| `id(input :: RELATIONSHIP?) :: (INTEGER?)` | Returns the id of a relationship.
+1.1+| <<functions-last,`last()`>>  | `last(list :: LIST? OF ANY?) :: (ANY?)` | Returns the last element in a list.
+1.1+| <<functions-length,`length()`>>  | `length(input :: PATH?) :: (INTEGER?)` | Returns the length of a path.
+1.3+| <<functions-properties,`properties()`>>  | `properties(input :: MAP?) :: (MAP?)` | Returns a map containing all the properties of a map.
+| `properties(input :: NODE?) :: (MAP?)` | Returns a map containing all the properties of a node.
+| `properties(input :: RELATIONSHIP?) :: (MAP?)` | Returns a map containing all the properties of a relationship.
+1.1+| <<functions-randomuuid,`randomUUID()`>>  | `randomUUID() :: (STRING?)` | Generates a random UUID.
+1.2+| <<functions-size,`size()`>>  | `size(input :: LIST? OF ANY?) :: (INTEGER?)` | Returns the number of items in a list.
+| `size(input :: STRING?) :: (INTEGER?)` | Returns the number of Unicode characters in a string.
+1.1+| <<functions-startnode,`startNode()`>>  | `startNode(input :: RELATIONSHIP?) :: (NODE?)` | Returns the start node of a relationship.
+1.1+| <<functions-toboolean,`toBoolean()`>>  | `toBoolean(input :: STRING?) :: (BOOLEAN?)` | Converts a string value to a boolean value.
+1.2+| <<functions-tofloat,`toFloat()`>>  | `toFloat(input :: NUMBER?) :: (FLOAT?)` | Converts an integer value to a floating point value.
+| `toFloat(input :: STRING?) :: (FLOAT?)` | Converts a string value to a floating point value.
+1.2+| <<functions-tointeger,`toInteger()`>>  | `toInteger(input :: NUMBER?) :: (INTEGER?)` | Converts a floating point value to an integer value.
+| `toInteger(input :: STRING?) :: (INTEGER?)` | Converts a string value to an integer value.
+1.1+| <<functions-type,`type()`>>  | `type(input :: RELATIONSHIP?) :: (STRING?)` | Returns the string representation of the relationship type.
 |===
 
 [[header-query-functions-aggregating]]
@@ -84,21 +84,21 @@ These functions take multiple values as arguments, and calculate and return an a
 [options="header"]
 |===
 | Function | Signature | Description
-1.3+| <<functions-avg,avg()>>  | avg(input :: DURATION?) :: (DURATION?) | Returns the average of a set of duration values.
-| avg(input :: FLOAT?) :: (FLOAT?) | Returns the average of a set of floating point values.
-| avg(input :: INTEGER?) :: (INTEGER?) | Returns the average of a set of integer values.
-1.1+| <<functions-collect,collect()>>  | collect(input :: ANY?) :: (LIST? OF ANY?) | Returns a list containing the values returned by an expression.
-1.1+| <<functions-count,count()>>  | count(input :: ANY?) :: (INTEGER?) | Returns the number of values or rows.
-1.1+| <<functions-max,max()>>  | max(input :: ANY?) :: (ANY?) | Returns the maximum value in a set of values.
-1.1+| <<functions-min,min()>>  | min(input :: ANY?) :: (ANY?) | Returns the minimum value in a set of values.
-1.1+| <<functions-percentilecont,percentileCont()>>  | percentileCont(input :: FLOAT?, percentile :: FLOAT?) :: (FLOAT?) | Returns the percentile of a value over a group using linear interpolation.
-1.2+| <<functions-percentiledisc,percentileDisc()>>  | percentileDisc(input :: FLOAT?, percentile :: FLOAT?) :: (FLOAT?) | Returns the nearest floating point value to the given percentile over a group using a rounding method.
-| percentileDisc(input :: INTEGER?, percentile :: FLOAT?) :: (INTEGER?) | Returns the nearest integer value to the given percentile over a group using a rounding method.
-1.1+| <<functions-stdev,stdev()>>  | stdev(input :: FLOAT?) :: (FLOAT?) | Returns the standard deviation for the given value over a group for a sample of a population.
-1.1+| <<functions-stdevp,stdevp()>>  | stdevp(input :: FLOAT?) :: (FLOAT?) | Returns the standard deviation for the given value over a group for an entire population.
-1.3+| <<functions-sum,sum()>>  | sum(input :: DURATION?) :: (DURATION?) | Returns the sum of a set of durations
-| sum(input :: FLOAT?) :: (FLOAT?) | Returns the sum of a set of floats
-| sum(input :: INTEGER?) :: (INTEGER?) | Returns the sum of a set of integers
+1.3+| <<functions-avg,`avg()`>>  | `avg(input :: DURATION?) :: (DURATION?)` | Returns the average of a set of duration values.
+| `avg(input :: FLOAT?) :: (FLOAT?)` | Returns the average of a set of floating point values.
+| `avg(input :: INTEGER?) :: (INTEGER?)` | Returns the average of a set of integer values.
+1.1+| <<functions-collect,`collect()`>>  | `collect(input :: ANY?) :: (LIST? OF ANY?)` | Returns a list containing the values returned by an expression.
+1.1+| <<functions-count,`count()`>>  | `count(input :: ANY?) :: (INTEGER?)` | Returns the number of values or rows.
+1.1+| <<functions-max,`max()`>>  | `max(input :: ANY?) :: (ANY?)` | Returns the maximum value in a set of values.
+1.1+| <<functions-min,`min()`>>  | `min(input :: ANY?) :: (ANY?)` | Returns the minimum value in a set of values.
+1.1+| <<functions-percentilecont,`percentileCont()`>>  | `percentileCont(input :: FLOAT?, percentile :: FLOAT?) :: (FLOAT?)` | Returns the percentile of a value over a group using linear interpolation.
+1.2+| <<functions-percentiledisc,`percentileDisc()`>>  | `percentileDisc(input :: FLOAT?, percentile :: FLOAT?) :: (FLOAT?)` | Returns the nearest floating point value to the given percentile over a group using a rounding method.
+| `percentileDisc(input :: INTEGER?, percentile :: FLOAT?) :: (INTEGER?)` | Returns the nearest integer value to the given percentile over a group using a rounding method.
+1.1+| <<functions-stdev,`stdev()`>>  | `stdev(input :: FLOAT?) :: (FLOAT?)` | Returns the standard deviation for the given value over a group for a sample of a population.
+1.1+| <<functions-stdevp,`stdevp()`>>  | `stdevp(input :: FLOAT?) :: (FLOAT?)` | Returns the standard deviation for the given value over a group for an entire population.
+1.3+| <<functions-sum,`sum()`>>  | `sum(input :: DURATION?) :: (DURATION?)` | Returns the sum of a set of durations
+| `sum(input :: FLOAT?) :: (FLOAT?)` | Returns the sum of a set of floats
+| `sum(input :: INTEGER?) :: (INTEGER?)` | Returns the sum of a set of integers
 |===
 
 [[header-query-functions-list]]
@@ -110,17 +110,17 @@ Further details and examples of lists may be found in <<cypher-lists>>.
 [options="header"]
 |===
 | Function | Signature | Description
-1.3+| <<functions-keys,keys()>>  | keys(input :: MAP?) :: (LIST? OF STRING?) | Returns a list containing the string representations for all the property names of a map.
-| keys(input :: NODE?) :: (LIST? OF STRING?) | Returns a list containing the string representations for all the property names of a node.
-| keys(input :: RELATIONSHIP?) :: (LIST? OF STRING?) | Returns a list containing the string representations for all the property names of a relationship
-1.1+| <<functions-labels,labels()>>  | labels(input :: NODE?) :: (LIST? OF STRING?) | Returns a list containing the string representations for all the labels of a node.
-1.1+| <<functions-nodes,nodes()>>  | nodes(input :: PATH?) :: (LIST? OF NODE?) | Returns a list containing all the nodes in a path.
-1.2+| <<functions-range,range()>>  | range(start :: INTEGER?, end :: INTEGER?) :: (LIST? OF INTEGER?) | Returns a list comprising all integer values within a specified range.
-| range(start :: INTEGER?, end :: INTEGER?, step :: INTEGER?) :: (LIST? OF INTEGER?) | Returns a list comprising all integer values within a specified range created with step length.
-1.1+| <<functions-reduce,reduce()>>  | reduce(accumulator :: VARIABLE = initial :: ANY?, variable :: VARIABLE IN list :: LIST OF ANY? \| expression :: ANY) :: (ANY?) | Runs an expression against individual elements of a list, storing the result of the expression in an accumulator.
-1.1+| <<functions-relationships,relationships()>>  | relationships(input :: PATH?) :: (LIST? OF RELATIONSHIP?) | Returns a list containing all the relationships in a path.
-1.1+| <<functions-reverse,reverse()>>  | reverse(input :: LIST? OF ANY?) :: (LIST? OF ANY?) | Returns a list in which the order of all elements in the original list have been reversed.
-1.1+| <<functions-tail,tail()>>  | tail(input :: LIST? OF ANY?) :: (LIST? OF ANY?) | Returns all but the first element in a list.
+1.3+| <<functions-keys,`keys()`>>  | `keys(input :: MAP?) :: (LIST? OF STRING?)` | Returns a list containing the string representations for all the property names of a map.
+| `keys(input :: NODE?) :: (LIST? OF STRING?)` | Returns a list containing the string representations for all the property names of a node.
+| `keys(input :: RELATIONSHIP?) :: (LIST? OF STRING?)` | Returns a list containing the string representations for all the property names of a relationship
+1.1+| <<functions-labels,`labels()`>>  | `labels(input :: NODE?) :: (LIST? OF STRING?)` | Returns a list containing the string representations for all the labels of a node.
+1.1+| <<functions-nodes,`nodes()`>>  | `nodes(input :: PATH?) :: (LIST? OF NODE?)` | Returns a list containing all the nodes in a path.
+1.2+| <<functions-range,`range()`>>  | `range(start :: INTEGER?, end :: INTEGER?) :: (LIST? OF INTEGER?)` | Returns a list comprising all integer values within a specified range.
+| `range(start :: INTEGER?, end :: INTEGER?, step :: INTEGER?) :: (LIST? OF INTEGER?)` | Returns a list comprising all integer values within a specified range created with step length.
+1.1+| <<functions-reduce,`reduce()`>>  | `reduce(accumulator :: VARIABLE = initial :: ANY?, variable :: VARIABLE IN list :: LIST OF ANY? \| expression :: ANY) :: (ANY?)` | Runs an expression against individual elements of a list, storing the result of the expression in an accumulator.
+1.1+| <<functions-relationships,`relationships()`>>  | `relationships(input :: PATH?) :: (LIST? OF RELATIONSHIP?)` | Returns a list containing all the relationships in a path.
+1.1+| <<functions-reverse,`reverse()`>>  | `reverse(input :: LIST? OF ANY?) :: (LIST? OF ANY?)` | Returns a list in which the order of all elements in the original list have been reversed.
+1.1+| <<functions-tail,`tail()`>>  | `tail(input :: LIST? OF ANY?) :: (LIST? OF ANY?)` | Returns all but the first element in a list.
 |===
 
 [[header-query-functions-numeric]]
@@ -131,16 +131,16 @@ These functions all operate on numerical expressions only, and will return an er
 [options="header"]
 |===
 | Function | Signature | Description
-1.2+| <<functions-abs,abs()>>  | abs(input :: FLOAT?) :: (FLOAT?) | Returns the absolute value of a floating point number.
-| abs(input :: INTEGER?) :: (INTEGER?) | Returns the absolute value of an integer.
-1.1+| <<functions-ceil,ceil()>>  | ceil(input :: FLOAT?) :: (FLOAT?) | Returns the smallest floating point number that is greater than or equal to a number and equal to a mathematical integer.
-1.1+| <<functions-floor,floor()>>  | floor(input :: FLOAT?) :: (FLOAT?) | Returns the largest floating point number that is less than or equal to a number and equal to a mathematical integer.
-1.1+| <<functions-rand,rand()>>  | rand() :: (FLOAT?) | Returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. [0,1).
-1.3+| <<functions-round,round()>>  | round(input :: FLOAT?) :: (FLOAT?) | Returns the value of a number rounded to the nearest integer.
-| round(value :: FLOAT?, precision :: NUMBER?) :: (FLOAT?) | Returns the value of a number rounded to the specified precision using rounding mode HALF_UP.
-| round(value :: FLOAT?, precision :: NUMBER?, mode :: STRING?) :: (FLOAT?) | Returns the value of a number rounded to the specified precision with the specified rounding mode.
-1.2+| <<functions-sign,sign()>>  | sign(input :: FLOAT?) :: (INTEGER?) | Returns the signum of a floating point number: 0 if the number is 0, -1 for any negative number, and 1 for any positive number.
-| sign(input :: INTEGER?) :: (INTEGER?) | Returns the signum of an integer number: 0 if the number is 0, -1 for any negative number, and 1 for any positive number.
+1.2+| <<functions-abs,`abs()`>>  | `abs(input :: FLOAT?) :: (FLOAT?)` | Returns the absolute value of a floating point number.
+| `abs(input :: INTEGER?) :: (INTEGER?)` | Returns the absolute value of an integer.
+1.1+| <<functions-ceil,`ceil()`>>  | `ceil(input :: FLOAT?) :: (FLOAT?)` | Returns the smallest floating point number that is greater than or equal to a number and equal to a mathematical integer.
+1.1+| <<functions-floor,`floor()`>>  | `floor(input :: FLOAT?) :: (FLOAT?)` | Returns the largest floating point number that is less than or equal to a number and equal to a mathematical integer.
+1.1+| <<functions-rand,`rand()`>>  | `rand() :: (FLOAT?)` | Returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. [0,1).
+1.3+| <<functions-round,`round()`>>  | `round(input :: FLOAT?) :: (FLOAT?)` | Returns the value of a number rounded to the nearest integer.
+| `round(value :: FLOAT?, precision :: NUMBER?) :: (FLOAT?)` | Returns the value of a number rounded to the specified precision using rounding mode HALF_UP.
+| `round(value :: FLOAT?, precision :: NUMBER?, mode :: STRING?) :: (FLOAT?)` | Returns the value of a number rounded to the specified precision with the specified rounding mode.
+1.2+| <<functions-sign,`sign()`>>  | `sign(input :: FLOAT?) :: (INTEGER?)` | Returns the signum of a floating point number: 0 if the number is 0, -1 for any negative number, and 1 for any positive number.
+| `sign(input :: INTEGER?) :: (INTEGER?)` | Returns the signum of an integer number: 0 if the number is 0, -1 for any negative number, and 1 for any positive number.
 |===
 
 [[header-query-functions-logarithmic]]
@@ -151,11 +151,11 @@ These functions all operate on numerical expressions only, and will return an er
 [options="header"]
 |===
 | Function | Signature | Description
-1.1+| <<functions-e,e()>>  | e() :: (FLOAT?) | Returns the base of the natural logarithm, e.
-1.1+| <<functions-exp,exp()>>  | exp(input :: FLOAT?) :: (FLOAT?) | Returns e^n, where e is the base of the natural logarithm, and n is the value of the argument expression.
-1.1+| <<functions-log,log()>>  | log(input :: FLOAT?) :: (FLOAT?) | Returns the natural logarithm of a number.
-1.1+| <<functions-log10,log10()>>  | log10(input :: FLOAT?) :: (FLOAT?) | Returns the common logarithm (base 10) of a number.
-1.1+| <<functions-sqrt,sqrt()>>  | sqrt(input :: FLOAT?) :: (FLOAT?) | Returns the square root of a number.
+1.1+| <<functions-e,`e()`>>  | `e() :: (FLOAT?)` | Returns the base of the natural logarithm, e.
+1.1+| <<functions-exp,`exp()`>>  | `exp(input :: FLOAT?) :: (FLOAT?)` | Returns e^n, where e is the base of the natural logarithm, and n is the value of the argument expression.
+1.1+| <<functions-log,`log()`>>  | `log(input :: FLOAT?) :: (FLOAT?)` | Returns the natural logarithm of a number.
+1.1+| <<functions-log10,`log10()`>>  | `log10(input :: FLOAT?) :: (FLOAT?)` | Returns the common logarithm (base 10) of a number.
+1.1+| <<functions-sqrt,`sqrt()`>>  | `sqrt(input :: FLOAT?) :: (FLOAT?)` | Returns the square root of a number.
 |===
 
 [[header-query-functions-trigonometric]]
@@ -168,18 +168,18 @@ All trigonometric functions operate on radians, unless otherwise specified.
 [options="header"]
 |===
 | Function | Signature | Description
-1.1+| <<functions-acos,acos()>>  | acos(input :: FLOAT?) :: (FLOAT?) | Returns the arccosine of a number in radians.
-1.1+| <<functions-asin,asin()>>  | asin(input :: FLOAT?) :: (FLOAT?) | Returns the arcsine of a number in radians.
-1.1+| <<functions-atan,atan()>>  | atan(input :: FLOAT?) :: (FLOAT?) | Returns the arctangent of a number in radians.
-1.1+| <<functions-atan2,atan2()>>  | atan2(y :: FLOAT?, x :: FLOAT?) :: (FLOAT?) | Returns the arctangent2 of a set of coordinates in radians.
-1.1+| <<functions-cos,cos()>>  | cos(input :: FLOAT?) :: (FLOAT?) | Returns the cosine  of a number.
-1.1+| <<functions-cot,cot()>>  | cot(input :: FLOAT?) :: (FLOAT?) | Returns the cotangent of a number.
-1.1+| <<functions-degrees,degrees()>>  | degrees(input :: FLOAT?) :: (FLOAT?) | Converts radians to degrees.
-1.1+| <<functions-haversin,haversin()>>  | haversin(input :: FLOAT?) :: (FLOAT?) | Returns half the versine of a number.
-1.1+| <<functions-pi,pi()>>  | pi() :: (FLOAT?) | Returns the mathematical constant pi.
-1.1+| <<functions-radians,radians()>>  | radians(input :: FLOAT?) :: (FLOAT?) | Converts degrees to radians.
-1.1+| <<functions-sin,sin()>>  | sin(input :: FLOAT?) :: (FLOAT?) | Returns the sine of a number.
-1.1+| <<functions-tan,tan()>>  | tan(input :: FLOAT?) :: (FLOAT?) | Returns the tangent of a number.
+1.1+| <<functions-acos,`acos()`>>  | `acos(input :: FLOAT?) :: (FLOAT?)` | Returns the arccosine of a number in radians.
+1.1+| <<functions-asin,`asin()`>>  | `asin(input :: FLOAT?) :: (FLOAT?)` | Returns the arcsine of a number in radians.
+1.1+| <<functions-atan,`atan()`>>  | `atan(input :: FLOAT?) :: (FLOAT?)` | Returns the arctangent of a number in radians.
+1.1+| <<functions-atan2,`atan2()`>>  | `atan2(y :: FLOAT?, x :: FLOAT?) :: (FLOAT?)` | Returns the arctangent2 of a set of coordinates in radians.
+1.1+| <<functions-cos,`cos()`>>  | `cos(input :: FLOAT?) :: (FLOAT?)` | Returns the cosine  of a number.
+1.1+| <<functions-cot,`cot()`>>  | `cot(input :: FLOAT?) :: (FLOAT?)` | Returns the cotangent of a number.
+1.1+| <<functions-degrees,`degrees()`>>  | `degrees(input :: FLOAT?) :: (FLOAT?)` | Converts radians to degrees.
+1.1+| <<functions-haversin,`haversin()`>>  | `haversin(input :: FLOAT?) :: (FLOAT?)` | Returns half the versine of a number.
+1.1+| <<functions-pi,`pi()`>>  | `pi() :: (FLOAT?)` | Returns the mathematical constant pi.
+1.1+| <<functions-radians,`radians()`>>  | `radians(input :: FLOAT?) :: (FLOAT?)` | Converts degrees to radians.
+1.1+| <<functions-sin,`sin()`>>  | `sin(input :: FLOAT?) :: (FLOAT?)` | Returns the sine of a number.
+1.1+| <<functions-tan,`tan()`>>  | `tan(input :: FLOAT?) :: (FLOAT?)` | Returns the tangent of a number.
 |===
 
 [[header-query-functions-string]]
@@ -190,20 +190,20 @@ These functions are used to manipulate strings or to create a string representat
 [options="header"]
 |===
 | Function | Signature | Description
-1.1+| <<functions-left,left()>>  | left(original :: STRING?, length :: INTEGER?) :: (STRING?) | Returns a string containing the specified number of leftmost characters of the original string.
-1.1+| <<functions-ltrim,ltrim()>>  | ltrim(input :: STRING?) :: (STRING?) | Returns the original string with leading whitespace removed.
-1.1+| <<functions-replace,replace()>>  | replace(original :: STRING?, search :: STRING?, replace :: STRING?) :: (STRING?) | Returns a string in which all occurrences of a specified search string in the original string have been replaced by another (specified) replace string.
-1.1+| <<functions-reverse,reverse()>>  | reverse(input :: STRING?) :: (STRING?) | Returns a string in which the order of all characters in the original string have been reversed.
-1.1+| <<functions-right,right()>>  | right(original :: STRING?, length :: INTEGER?) :: (STRING?) | Returns a string containing the specified number of rightmost characters of the original string.
-1.1+| <<functions-rtrim,rtrim()>>  | rtrim(input :: STRING?) :: (STRING?) | Returns the original string with trailing whitespace removed.
-1.2+| <<functions-split,split()>>  | split(original :: STRING?, splitDelimiter :: STRING?) :: (LIST? OF STRING?) | Returns a list of strings resulting from the splitting of the original string around matches of the given delimiter.
-| split(original :: STRING?, splitDelimiters :: LIST? OF STRING?) :: (LIST? OF STRING?) | Returns a list of strings resulting from the splitting of the original string around matches of any of the given delimiters.
-1.2+| <<functions-substring,substring()>>  | substring(original :: STRING?, start :: INTEGER?) :: (STRING?) | Returns a substring of the original string, beginning with a 0-based index start.
-| substring(original :: STRING?, start :: INTEGER?, length :: INTEGER?) :: (STRING?) | Returns a substring of length 'length' of the original string, beginning with a 0-based index start.
-1.1+| <<functions-tolower,toLower()>>  | toLower(input :: STRING?) :: (STRING?) | Returns the original string in lowercase.
-1.1+| <<functions-tostring,toString()>>  | toString(input :: ANY?) :: (STRING?) | Converts an integer, float, boolean or temporal type (i.e. Date, Time, LocalTime, DateTime, LocalDateTime or Duration) value to a string.
-1.1+| <<functions-toupper,toUpper()>>  | toUpper(input :: STRING?) :: (STRING?) | Returns the original string in uppercase.
-1.1+| <<functions-trim,trim()>>  | trim(input :: STRING?) :: (STRING?) | Returns the original string with leading and trailing whitespace removed.
+1.1+| <<functions-left,`left()`>>  | `left(original :: STRING?, length :: INTEGER?) :: (STRING?)` | Returns a string containing the specified number of leftmost characters of the original string.
+1.1+| <<functions-ltrim,`ltrim()`>>  | `ltrim(input :: STRING?) :: (STRING?)` | Returns the original string with leading whitespace removed.
+1.1+| <<functions-replace,`replace()`>>  | `replace(original :: STRING?, search :: STRING?, replace :: STRING?) :: (STRING?)` | Returns a string in which all occurrences of a specified search string in the original string have been replaced by another (specified) replace string.
+1.1+| <<functions-reverse,`reverse()`>>  | `reverse(input :: STRING?) :: (STRING?)` | Returns a string in which the order of all characters in the original string have been reversed.
+1.1+| <<functions-right,`right()`>>  | `right(original :: STRING?, length :: INTEGER?) :: (STRING?)` | Returns a string containing the specified number of rightmost characters of the original string.
+1.1+| <<functions-rtrim,`rtrim()`>>  | `rtrim(input :: STRING?) :: (STRING?)` | Returns the original string with trailing whitespace removed.
+1.2+| <<functions-split,`split()`>>  | `split(original :: STRING?, splitDelimiter :: STRING?) :: (LIST? OF STRING?)` | Returns a list of strings resulting from the splitting of the original string around matches of the given delimiter.
+| `split(original :: STRING?, splitDelimiters :: LIST? OF STRING?) :: (LIST? OF STRING?)` | Returns a list of strings resulting from the splitting of the original string around matches of any of the given delimiters.
+1.2+| <<functions-substring,`substring()`>>  | `substring(original :: STRING?, start :: INTEGER?) :: (STRING?)` | Returns a substring of the original string, beginning with a 0-based index start.
+| `substring(original :: STRING?, start :: INTEGER?, length :: INTEGER?) :: (STRING?)` | Returns a substring of length 'length' of the original string, beginning with a 0-based index start.
+1.1+| <<functions-tolower,`toLower()`>>  | `toLower(input :: STRING?) :: (STRING?)` | Returns the original string in lowercase.
+1.1+| <<functions-tostring,`toString()`>>  | `toString(input :: ANY?) :: (STRING?)` | Converts an integer, float, boolean or temporal type (i.e. Date, Time, LocalTime, DateTime, LocalDateTime or Duration) value to a string.
+1.1+| <<functions-toupper,`toUpper()`>>  | `toUpper(input :: STRING?) :: (STRING?)` | Returns the original string in uppercase.
+1.1+| <<functions-trim,`trim()`>>  | `trim(input :: STRING?) :: (STRING?)` | Returns the original string with leading and trailing whitespace removed.
 |===
 
 [[header-query-functions-temporal-instant-types]]
@@ -214,33 +214,33 @@ Values of the <<cypher-temporal, temporal types>> -- _Date_, _Time_, _LocalTime_
 [options="header"]
 |===
 | Function | Signature | Description
-1.1+| <<functions-date,date()>>  | date(input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATE?) | Create a Date instant.
-1.1+| <<functions-date-realtime,date.realtime()>>  | date.realtime(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATE?) | Get the current Date instant using the realtime clock.
-1.1+| <<functions-date-statement,date.statement()>>  | date.statement(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATE?) | Get the current Date instant using the statement clock.
-1.1+| <<functions-date-transaction,date.transaction()>>  | date.transaction(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATE?) | Get the current Date instant using the transaction clock.
-1.1+| <<functions-date-truncate,date.truncate()>>  | date.truncate(unit :: STRING?, input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?, fields = null :: MAP?) :: (DATE?) | Truncate the input temporal value to a Date instant using the specified unit.
-1.1+| <<functions-datetime,datetime()>>  | datetime(input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATETIME?) | Create a DateTime instant.
-1.1+| <<functions-datetime-timestamp,datetime.fromepoch()>>  | datetime.fromepoch(seconds :: NUMBER?, nanoseconds :: NUMBER?) :: (DATETIME?) | Create a DateTime given the seconds and nanoseconds since the start of the epoch.
-1.1+| <<functions-datetime-timestamp,datetime.fromepochmillis()>>  | datetime.fromepochmillis(milliseconds :: NUMBER?) :: (DATETIME?) | Create a DateTime given the milliseconds since the start of the epoch.
-1.1+| <<functions-datetime-realtime,datetime.realtime()>>  | datetime.realtime(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATETIME?) | Get the current DateTime instant using the realtime clock.
-1.1+| <<functions-datetime-statement,datetime.statement()>>  | datetime.statement(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATETIME?) | Get the current DateTime instant using the statement clock.
-1.1+| <<functions-datetime-transaction,datetime.transaction()>>  | datetime.transaction(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATETIME?) | Get the current DateTime instant using the transaction clock.
-1.1+| <<functions-datetime-truncate,datetime.truncate()>>  | datetime.truncate(unit :: STRING?, input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?, fields = null :: MAP?) :: (DATETIME?) | Truncate the input temporal value to a DateTime instant using the specified unit.
-1.1+| <<functions-localdatetime,localdatetime()>>  | localdatetime(input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALDATETIME?) | Create a LocalDateTime instant.
-1.1+| <<functions-localdatetime-realtime,localdatetime.realtime()>>  | localdatetime.realtime(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALDATETIME?) | Get the current LocalDateTime instant using the realtime clock.
-1.1+| <<functions-localdatetime-statement,localdatetime.statement()>>  | localdatetime.statement(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALDATETIME?) | Get the current LocalDateTime instant using the statement clock.
-1.1+| <<functions-localdatetime-transaction,localdatetime.transaction()>>  | localdatetime.transaction(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALDATETIME?) | Get the current LocalDateTime instant using the transaction clock.
-1.1+| <<functions-localdatetime-truncate,localdatetime.truncate()>>  | localdatetime.truncate(unit :: STRING?, input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?, fields = null :: MAP?) :: (LOCALDATETIME?) | Truncate the input temporal value to a LocalDateTime instant using the specified unit.
-1.1+| <<functions-localtime,localtime()>>  | localtime(input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALTIME?) | Create a LocalTime instant.
-1.1+| <<functions-localtime-realtime,localtime.realtime()>>  | localtime.realtime(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALTIME?) | Get the current LocalTime instant using the realtime clock.
-1.1+| <<functions-localtime-statement,localtime.statement()>>  | localtime.statement(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALTIME?) | Get the current LocalTime instant using the statement clock.
-1.1+| <<functions-localtime-transaction,localtime.transaction()>>  | localtime.transaction(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALTIME?) | Get the current LocalTime instant using the transaction clock.
-1.1+| <<functions-localtime-truncate,localtime.truncate()>>  | localtime.truncate(unit :: STRING?, input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?, fields = null :: MAP?) :: (LOCALTIME?) | Truncate the input temporal value to a LocalTime instant using the specified unit.
-1.1+| <<functions-time,time()>>  | time(input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (TIME?) | Create a Time instant.
-1.1+| <<functions-time-realtime,time.realtime()>>  | time.realtime(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (TIME?) | Get the current Time instant using the realtime clock.
-1.1+| <<functions-time-statement,time.statement()>>  | time.statement(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (TIME?) | Get the current Time instant using the statement clock.
-1.1+| <<functions-time-transaction,time.transaction()>>  | time.transaction(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (TIME?) | Get the current Time instant using the transaction clock.
-1.1+| <<functions-time-truncate,time.truncate()>>  | time.truncate(unit :: STRING?, input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?, fields = null :: MAP?) :: (TIME?) | Truncate the input temporal value to a Time instant using the specified unit.
+1.1+| <<functions-date,`date()`>>  | `date(input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATE?)` | Create a Date instant.
+1.1+| <<functions-date-realtime,`date.realtime()`>>  | `date.realtime(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATE?)` | Get the current Date instant using the realtime clock.
+1.1+| <<functions-date-statement,`date.statement()`>>  | `date.statement(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATE?)` | Get the current Date instant using the statement clock.
+1.1+| <<functions-date-transaction,`date.transaction()`>>  | `date.transaction(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATE?)` | Get the current Date instant using the transaction clock.
+1.1+| <<functions-date-truncate,`date.truncate()`>>  | `date.truncate(unit :: STRING?, input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?, fields = null :: MAP?) :: (DATE?)` | Truncate the input temporal value to a Date instant using the specified unit.
+1.1+| <<functions-datetime,`datetime()`>>  | `datetime(input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATETIME?)` | Create a DateTime instant.
+1.1+| <<functions-datetime-timestamp,`datetime.fromepoch()`>>  | `datetime.fromepoch(seconds :: NUMBER?, nanoseconds :: NUMBER?) :: (DATETIME?)` | Create a DateTime given the seconds and nanoseconds since the start of the epoch.
+1.1+| <<functions-datetime-timestamp,`datetime.fromepochmillis()`>>  | `datetime.fromepochmillis(milliseconds :: NUMBER?) :: (DATETIME?)` | Create a DateTime given the milliseconds since the start of the epoch.
+1.1+| <<functions-datetime-realtime,`datetime.realtime()`>>  | `datetime.realtime(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATETIME?)` | Get the current DateTime instant using the realtime clock.
+1.1+| <<functions-datetime-statement,`datetime.statement()`>>  | `datetime.statement(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATETIME?)` | Get the current DateTime instant using the statement clock.
+1.1+| <<functions-datetime-transaction,`datetime.transaction()`>>  | `datetime.transaction(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (DATETIME?)` | Get the current DateTime instant using the transaction clock.
+1.1+| <<functions-datetime-truncate,`datetime.truncate()`>>  | `datetime.truncate(unit :: STRING?, input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?, fields = null :: MAP?) :: (DATETIME?)` | Truncate the input temporal value to a DateTime instant using the specified unit.
+1.1+| <<functions-localdatetime,`localdatetime()`>>  | `localdatetime(input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALDATETIME?)` | Create a LocalDateTime instant.
+1.1+| <<functions-localdatetime-realtime,`localdatetime.realtime()`>>  | `localdatetime.realtime(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALDATETIME?)` | Get the current LocalDateTime instant using the realtime clock.
+1.1+| <<functions-localdatetime-statement,`localdatetime.statement()`>>  | `localdatetime.statement(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALDATETIME?)` | Get the current LocalDateTime instant using the statement clock.
+1.1+| <<functions-localdatetime-transaction,`localdatetime.transaction()`>>  | `localdatetime.transaction(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALDATETIME?)` | Get the current LocalDateTime instant using the transaction clock.
+1.1+| <<functions-localdatetime-truncate,`localdatetime.truncate()`>>  | `localdatetime.truncate(unit :: STRING?, input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?, fields = null :: MAP?) :: (LOCALDATETIME?)` | Truncate the input temporal value to a LocalDateTime instant using the specified unit.
+1.1+| <<functions-localtime,`localtime()`>>  | `localtime(input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALTIME?)` | Create a LocalTime instant.
+1.1+| <<functions-localtime-realtime,`localtime.realtime()`>>  | `localtime.realtime(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALTIME?)` | Get the current LocalTime instant using the realtime clock.
+1.1+| <<functions-localtime-statement,`localtime.statement()`>>  | `localtime.statement(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALTIME?)` | Get the current LocalTime instant using the statement clock.
+1.1+| <<functions-localtime-transaction,`localtime.transaction()`>>  | `localtime.transaction(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (LOCALTIME?)` | Get the current LocalTime instant using the transaction clock.
+1.1+| <<functions-localtime-truncate,`localtime.truncate()`>>  | `localtime.truncate(unit :: STRING?, input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?, fields = null :: MAP?) :: (LOCALTIME?)` | Truncate the input temporal value to a LocalTime instant using the specified unit.
+1.1+| <<functions-time,`time()`>>  | `time(input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (TIME?)` | Create a Time instant.
+1.1+| <<functions-time-realtime,`time.realtime()`>>  | `time.realtime(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (TIME?)` | Get the current Time instant using the realtime clock.
+1.1+| <<functions-time-statement,`time.statement()`>>  | `time.statement(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (TIME?)` | Get the current Time instant using the statement clock.
+1.1+| <<functions-time-transaction,`time.transaction()`>>  | `time.transaction(timezone = DEFAULT_TEMPORAL_ARGUMENT :: ANY?) :: (TIME?)` | Get the current Time instant using the transaction clock.
+1.1+| <<functions-time-truncate,`time.truncate()`>>  | `time.truncate(unit :: STRING?, input = DEFAULT_TEMPORAL_ARGUMENT :: ANY?, fields = null :: MAP?) :: (TIME?)` | Truncate the input temporal value to a Time instant using the specified unit.
 |===
 
 [[header-query-functions-temporal-duration]]
@@ -251,11 +251,11 @@ Duration values of the <<cypher-temporal, temporal types>> can be created manipu
 [options="header"]
 |===
 | Function | Signature | Description
-1.1+| <<functions-duration,duration()>>  | duration(input :: ANY?) :: (DURATION?) | Construct a Duration value.
-1.1+| <<functions-duration-between,duration.between()>>  | duration.between(from :: ANY?, to :: ANY?) :: (DURATION?) | Compute the duration between the 'from' instant (inclusive) and the 'to' instant (exclusive) in logical units.
-1.1+| <<functions-duration-indays,duration.inDays()>>  | duration.inDays(from :: ANY?, to :: ANY?) :: (DURATION?) | Compute the duration between the 'from' instant (inclusive) and the 'to' instant (exclusive) in days.
-1.1+| <<functions-duration-inmonths,duration.inMonths()>>  | duration.inMonths(from :: ANY?, to :: ANY?) :: (DURATION?) | Compute the duration between the 'from' instant (inclusive) and the 'to' instant (exclusive) in months.
-1.1+| <<functions-duration-inseconds,duration.inSeconds()>>  | duration.inSeconds(from :: ANY?, to :: ANY?) :: (DURATION?) | Compute the duration between the 'from' instant (inclusive) and the 'to' instant (exclusive) in seconds.
+1.1+| <<functions-duration,`duration()`>>  | `duration(input :: ANY?) :: (DURATION?)` | Construct a Duration value.
+1.1+| <<functions-duration-between,`duration.between()`>>  | `duration.between(from :: ANY?, to :: ANY?) :: (DURATION?)` | Compute the duration between the 'from' instant (inclusive) and the 'to' instant (exclusive) in logical units.
+1.1+| <<functions-duration-indays,`duration.inDays()`>>  | `duration.inDays(from :: ANY?, to :: ANY?) :: (DURATION?)` | Compute the duration between the 'from' instant (inclusive) and the 'to' instant (exclusive) in days.
+1.1+| <<functions-duration-inmonths,`duration.inMonths()`>>  | `duration.inMonths(from :: ANY?, to :: ANY?) :: (DURATION?)` | Compute the duration between the 'from' instant (inclusive) and the 'to' instant (exclusive) in months.
+1.1+| <<functions-duration-inseconds,`duration.inSeconds()`>>  | `duration.inSeconds(from :: ANY?, to :: ANY?) :: (DURATION?)` | Compute the duration between the 'from' instant (inclusive) and the 'to' instant (exclusive) in seconds.
 |===
 
 [[header-query-functions-spatial]]
@@ -266,8 +266,8 @@ These functions are used to specify 2D or 3D points in a geographic or cartesian
 [options="header"]
 |===
 | Function | Signature | Description
-1.1+| <<functions-distance,distance()>>  | distance(from :: POINT?, to :: POINT?) :: (FLOAT?) | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
-1.1+| <<functions-point,point()>>  | point(input :: MAP?) :: (POINT?) | Returns a 2D or 3D point object, given two or respectively three coordinate values in the Cartesian coordinate system or WGS 84 geographic coordinate system.
+1.1+| <<functions-distance,`distance()`>>  | `distance(from :: POINT?, to :: POINT?) :: (FLOAT?)` | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
+1.1+| <<functions-point,`point()`>>  | `point(input :: MAP?) :: (POINT?)` | Returns a 2D or 3D point object, given two or respectively three coordinate values in the Cartesian coordinate system or WGS 84 geographic coordinate system.
 |===
 
 [[header-query-functions-load-csv]]
@@ -278,8 +278,8 @@ LOAD CSV functions can be used to get information about the file that is process
 [options="header"]
 |===
 | Function | Signature | Description
-1.1+| <<functions-file,file()>>  | file() :: (STRING?) | Returns the absolute path of the file that LOAD CSV is using.
-1.1+| <<functions-linenumber,linenumber()>>  | linenumber() :: (INTEGER?) | Returns the line number that LOAD CSV is currently using.
+1.1+| <<functions-file,`file()`>>  | `file() :: (STRING?)` | Returns the absolute path of the file that LOAD CSV is using.
+1.1+| <<functions-linenumber,`linenumber()`>>  | `linenumber() :: (INTEGER?)` | Returns the line number that LOAD CSV is currently using.
 |===
 
 
