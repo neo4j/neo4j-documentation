@@ -51,10 +51,10 @@ public class FunctionDescriptionsGenerator
         Predicate( "These functions return either true or false for the given arguments." ),
         Scalar( "These functions return a single value." ),
         Aggregating( "These functions take multiple values as arguments, and calculate and return an aggregated value from them." ),
-        List( "These functions return lists of other values.\nFurther details and examples of lists may be found in <<cypher-lists>>." ),
+        List( "These functions return lists of other values.%nFurther details and examples of lists may be found in <<cypher-lists>>." ),
         Numeric( "These functions all operate on numerical expressions only, and will return an error if used on any other values." ),
         Logarithmic( "These functions all operate on numerical expressions only, and will return an error if used on any other values." ),
-        Trigonometric( "These functions all operate on numerical expressions only, and will return an error if used on any other values.\n\n" +
+        Trigonometric( "These functions all operate on numerical expressions only, and will return an error if used on any other values.%n%n" +
                        "All trigonometric functions operate on radians, unless otherwise specified." ),
         String( "These functions are used to manipulate strings or to create a string representation of another value." ),
         Temporal_instant_types( "Values of the <<cypher-temporal, temporal types>> -- _Date_, _Time_, _LocalTime_, _DateTime_, and _LocalDateTime_ -- can be created manipulated using the following functions:" ),
@@ -123,12 +123,12 @@ public class FunctionDescriptionsGenerator
     private void outputCategory( Map<Category,List<FunctionDescription>> enterpriseFunctions, PrintStream out, Category category )
     {
         String categoryRef = category.asciiReference();
-        out.print( "[[header-query-functions-" + categoryRef + "]]\n" );
-        out.print( "**<<query-functions-" + categoryRef + ", " + category.name().replace('_', ' ') + " functions>>**\n\n" );
-        out.print( category.description() + "\n\n" );
-        out.print( "[options=\"header\"]\n" );
-        out.print( "|===\n" );
-        out.print( "| Function | Signature | Description\n" );
+        out.printf( "[[header-query-functions-" + categoryRef + "]]%n" );
+        out.printf( "**<<query-functions-" + categoryRef + ", " + category.name().replace('_', ' ') + " functions>>**%n%n" );
+        out.printf( category.description() + "%n%n" );
+        out.printf( "[options=\"header\"]%n" );
+        out.printf( "|===%n" );
+        out.printf( "| Function | Signature | Description%n" );
         List<FunctionDescription> functionDescriptions = enterpriseFunctions.get( category );
         Collections.sort( functionDescriptions );
         String lastName = null;
@@ -139,13 +139,13 @@ public class FunctionDescriptionsGenerator
                 long sameNameCount = functionDescriptions.stream()
                                                          .filter( fd -> fd.name.equals( f.name ) )
                                                          .count();
-                out.print( f.firstRow( (int) sameNameCount ) );
+                out.printf( f.firstRow( (int) sameNameCount ) );
             } else {
-                out.print( f.row() );
+                out.printf( f.row() );
             }
             lastName = f.name;
         }
-        out.print( "|===\n\n" );
+        out.printf( "|===%n%n" );
     }
 
     private Map<Category,List<FunctionDescription>> enterpriseEditionFunctions() throws IOException
@@ -253,7 +253,7 @@ public class FunctionDescriptionsGenerator
 
         public String row()
         {
-            return format( "| %s | %s%n", signature, description );
+            return format( "| `%s` | %s%n", signature, description );
         }
 
         public String firstRow( int sameNameCount )
@@ -262,7 +262,7 @@ public class FunctionDescriptionsGenerator
             if (referenceExceptions.containsKey( referenceName )) {
                 referenceName = referenceExceptions.get( referenceName );
             }
-            return format( "1.%s+| <<%s,%s>>  | %s | %s%n",
+            return format( "1.%s+| <<%s,`%s`>>  | `%s` | %s%n",
                            sameNameCount, referenceName, name, signature, description );
         }
 
