@@ -41,6 +41,10 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `exists(prop)` | Syntax | Deprecated | Replaced by `prop IS NOT NULL`
 | `NOT exists(prop)` | Syntax | Deprecated | Replaced by `prop IS NULL`
 | `ALTER USER name IF EXISTS ...` | Syntax | Added | Makes altering users idempotent. If no user with the name exists no error will be thrown.
+| `SHOW INDEXES WHERE ...`              | Functionality | Updated    | Now allows filtering for `SHOW INDEXES`
+| `SHOW INDEXES YIELD ... [RETURN ...]` | Functionality | Updated    | Now allows `YIELD` and `RETURN` clauses to `SHOW INDEXES` to change the output.
+| `BRIEF [OUTPUT]` for `SHOW INDEXES`   | Syntax        | Deprecated | Replaced by default output columns
+| `VERBOSE [OUTPUT]` for `SHOW INDEXES` | Syntax        | Deprecated | Replaced by `YIELD *`
 |===
 
 [[cypher-deprecations-additions-removals-4.2]]
@@ -69,9 +73,9 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `SHOW [ALL \| BTREE] INDEX[ES] [BRIEF \| VERBOSE [OUTPUT]]`                                                                        | Functionality | Added | New Cypher commands for listing indexes.
 | `SHOW [ALL \| UNIQUE \| NODE EXIST[S] \| RELATIONSHIP EXIST[S] \| EXIST[S] \| NODE KEY] CONSTRAINT[S] [BRIEF \| VERBOSE [OUTPUT]]` | Functionality | Added | New Cypher commands for listing constraints.
 | `db.indexes`                | Procedure     | Deprecated | Replaced by `SHOW INDEXES`
-| `db.indexDetails`           | Procedure     | Deprecated | Replaced by `SHOW INDEXES VERBOSE`
+| `db.indexDetails`           | Procedure     | Deprecated | Replaced by `SHOW INDEXES YIELD *`
 | `db.constraints`            | Procedure     | Deprecated | Replaced by `SHOW CONSTRAINTS`
-| `db.schemaStatements`       | Procedure     | Deprecated | Replaced by `SHOW INDEXES VERBOSE` and `SHOW CONSTRAINTS VERBOSE`
+| `db.schemaStatements`       | Procedure     | Deprecated | Replaced by `SHOW INDEXES YIELD *` and `SHOW CONSTRAINTS VERBOSE`
 | `SHOW INDEX` privilege      | Functionality | Added      | New Cypher command for administering privilege for listing indexes.
 | `SHOW CONSTRAINT` privilege | Functionality | Added      | New Cypher command for administering privilege for listing constraints.
 |===

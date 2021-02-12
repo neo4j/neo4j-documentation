@@ -156,9 +156,12 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     // given
     Seq(
       ("show index", Seq(BreakingKeywords("show index"))),
-      ("show indexes brief", Seq(BreakingKeywords("show indexes"), NonBreakingKeywords("brief"))),
       ("show all indexes", Seq(BreakingKeywords("show all indexes"))),
       ("show btree index", Seq(BreakingKeywords("show btree index"))),
+      ("show index yield *", Seq(BreakingKeywords("show index"), NonBreakingKeywords("yield"), AnyText("*"))),
+      ("show index where type = 'BTREE'", Seq(BreakingKeywords("show index"), BreakingKeywords("where"), AnyText("type"), AnyText("="), EscapedText("BTREE", '\''))),
+      // deprecated
+      ("show indexes brief", Seq(BreakingKeywords("show indexes"), NonBreakingKeywords("brief"))),
       ("show btree index verbose output", Seq(BreakingKeywords("show btree index"), NonBreakingKeywords("verbose output"))),
     ).foreach { case (query, result) =>
       // when then

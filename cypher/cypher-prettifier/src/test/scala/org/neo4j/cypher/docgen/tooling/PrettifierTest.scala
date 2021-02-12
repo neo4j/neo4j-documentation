@@ -70,8 +70,14 @@ class PrettifierTest extends Suite
 
   test("should not break SHOW INDEXES") {
     actual("show indexes") should equal(expected("SHOW INDEXES"))
+    actual("show btree index yield *") should equal(expected("SHOW BTREE INDEX YIELD *"))
+    // deprecated
     actual("show all indexes brief output") should equal(expected("SHOW ALL INDEXES BRIEF OUTPUT"))
     actual("show btree index verbose") should equal(expected("SHOW BTREE INDEX VERBOSE"))
+  }
+
+  test("may break SHOW INDEXES with WHERE") {
+    actual("show all indexes where type = 'BTREE'") should equal(expected("SHOW ALL INDEXES%nWHERE type = 'BTREE'"))
   }
 
   test("should not break on ASC") {

@@ -19,13 +19,13 @@
  */
 package org.neo4j.cypher.docgen
 
-import java.io.File
-
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.dbms.api.DatabaseManagementService
+
+import java.io.File
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
@@ -369,8 +369,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "List indexes",
       text =
-        """The `ShowIndexes` operator lists indexes. It may include filtering on index type and can have either brief or verbose output.""".stripMargin,
-      queryText = """SHOW INDEXES BRIEF""",
+        """The `ShowIndexes` operator lists indexes. It may include filtering on index type and can have either default or full output.""".stripMargin,
+      queryText = """SHOW INDEXES""",
       assertions = p => {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("ShowIndexes"))
