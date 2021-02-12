@@ -2,19 +2,6 @@
 = Parameters
 
 
-* <<cypher-parameters-introduction,Introduction>>
-* <<cypher-parameters-string-literal,String literal>>
-* <<cypher-parameters-regular-expression,Regular expression>>
-* <<cypher-parameters-case-sensitive-pattern-matching,Case-sensitive string pattern matching>>
-* <<cypher-parameters-create-node-with-properties,Create node with properties>>
-* <<cypher-parameters-create-multiple-nodes-with-properties,Create multiple nodes with properties>>
-* <<cypher-parameters-setting-all-properties-on-a-node,Setting all properties on a node>>
-* <<cypher-parameters-skip-and-limit,`SKIP` and `LIMIT`>>
-* <<cypher-parameters-node-id,Node id>>
-* <<cypher-parameters-multiple-node-ids,Multiple node ids>>
-* <<cypher-parameters-call-procedure,Calling procedures>>
-
-
 [[cypher-parameters-introduction]]
 == Introduction
 
@@ -38,9 +25,9 @@ Parameters may consist of letters and numbers, and any combination of these, but
 Setting parameters when running a query is dependent on the client environment.
 For example:
 
-* To set a parameter in Cypher Shell use `:param name => 'Joe'`.
+* To set a parameter in Cypher Shell use `+:param name => 'Joe'+`.
   For more information refer to <<operations-manual#cypher-shell-parameters, Operations Manual -> Cypher Shell - Query Parameters>>.
-* For Neo4j Browser use the same syntax as Cypher Shell, `:param name => 'Joe'`.
+* For Neo4j Browser use the same syntax as Cypher Shell, `+:param name => 'Joe'+`.
 * When using drivers, the syntax is dependent on the language choice.
   See the examples in <<driver-manual#driver-transactions, Driver Manual -> Transactions>>.
 * For usage via the Neo4j HTTP API, see the <<http-api#http-api, HTTP API documentation>>.
