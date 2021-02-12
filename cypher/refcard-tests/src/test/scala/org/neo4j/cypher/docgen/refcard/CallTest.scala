@@ -28,10 +28,10 @@ import org.neo4j.graphdb.Transaction
 import org.neo4j.internal.kernel.api.exceptions.ProcedureException
 import org.neo4j.internal.kernel.api.procs.Neo4jTypes
 import org.neo4j.internal.kernel.api.procs.ProcedureSignature._
-import org.neo4j.kernel.api.procedure.CallableProcedure.BasicProcedure
-import org.neo4j.kernel.api.procedure.Context
 import org.neo4j.kernel.api.Kernel
 import org.neo4j.kernel.api.ResourceTracker
+import org.neo4j.kernel.api.procedure.CallableProcedure.BasicProcedure
+import org.neo4j.kernel.api.procedure.Context
 import org.neo4j.values.AnyValue
 
 class CallTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -89,7 +89,7 @@ Note that required procedure arguments are given explicitly in brackets after th
 CALL db.labels() YIELD *
 ###
 
-Standalone calls may use `YIELD *` to return all non-deprecated columns.
+Standalone calls may use `YIELD *` to return all columns.
 
 ### assertion=arg parameters=arg
 //

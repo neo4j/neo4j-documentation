@@ -47,12 +47,12 @@ class CallTest extends DocumentingTest {
           #Each yielded result field may optionally be renamed using aliasing (i.e., `resultFieldName AS newName`).
           #All new variables bound by a procedure call are added to the set of variables already bound in the current scope.
           #It is an error if a procedure call tries to rebind a previously bound variable (i.e., a procedure call cannot shadow a variable that was previously bound in the current scope).
-          #In a standalone procedure call, `+YIELD *+` can be used to select all non-deprecated columns. In this case, the name of the output parameters does not need to be known in advance.""".stripMargin('#'))
+          #In a standalone procedure call, `+YIELD *+` can be used to select all columns. In this case, the name of the output parameters does not need to be known in advance.""".stripMargin('#'))
       p("For more information on how to determine the input parameters for the `CALL` procedure and the output parameters for the `YIELD` procedure, see <<call-view-the-signature-for-a-procedure>>.")
       p("Inside a larger query, the records returned from a procedure call with an explicit `YIELD` may be further filtered using a `WHERE` sub-clause followed by a predicate (similar to `WITH ... WHERE ...`).")
       p("""If the called procedure declares at least one result field, `YIELD` may generally not be omitted.
           #However `YIELD` may always be omitted in a standalone procedure call.
-          #In this case, all non-deprecated result fields are yielded as newly-bound variables from the procedure call to the user.""".stripMargin('#'))
+          #In this case, all result fields are yielded as newly-bound variables from the procedure call to the user.""".stripMargin('#'))
       p("""Neo4j supports the notion of `VOID` procedures.
           #A `VOID` procedure is a procedure that does not declare any result fields and returns no result records and that has explicitly been declared as `VOID`.
           #Calling a `VOID` procedure may only have a side effect and thus does neither allow nor require the use of `YIELD`.
@@ -146,7 +146,7 @@ class CallTest extends DocumentingTest {
     section("Call a procedure using `+CALL YIELD *+`", "call-call-a-procedure-call-yield-star") {
       p("This calls the built-in procedure `db.labels` to count all labels used in the database.")
       query("CALL db.labels() YIELD *", assertNotEmpty) {
-        p("If the procedure has deprecated return columns, those columns are not returned.")
+        p("If the procedure has deprecated return columns, those columns are also returned.")
       }
     }
 
