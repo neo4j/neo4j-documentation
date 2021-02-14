@@ -241,7 +241,7 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 | <<functions-properties, properties()>>  | Function  | Added  |
 | <<query-call,CALL [\...YIELD]>>   | Clause  | Added  |
 | <<functions-point-cartesian-2d,point() - Cartesian 2D>> | Function | Added |
-| <<functions-point,point() - WGS 84 2D>> | Function | Added |
+| <<functions-point-wgs84-2d,point() - WGS 84 2D>> | Function | Added |
 | <<functions-distance,distance()>> | Function | Added |
 | <<java-reference#extending-neo4j-procedures, User-defined procedures>> | Functionality | Added |
 | <<functions-tostring, toString()>>   | Function  | Extended | Now also allows Boolean values as input

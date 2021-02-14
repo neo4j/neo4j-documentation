@@ -81,7 +81,7 @@ class SpatialTest extends DocumentingTest {
             | ** A 2D geographic point in the _WGS 84_ CRS is specified in one of two ways:
             |  *** `longitude` and `latitude` (if these are specified, and the `crs` is not, then the `crs` is assumed to be `WGS-84`)
             |  *** `x` and `y` (in this case the `crs` must be specified, or will be assumed to be `Cartesian`)
-            | ** Specifying this CRS can be done using either the name 'wgs-84' or the SRID 4326 as described in <<functions-point,Point(WGS-84)>>
+            | ** Specifying this CRS can be done using either the name 'wgs-84' or the SRID 4326 as described in <<functions-point-wgs84-2d,Point(WGS-84)>>
             |* http://spatialreference.org/ref/epsg/4979/[WGS 84 3D]
             | ** A 3D geographic point in the _WGS 84_ CRS is specified one of in two ways:
             |  *** `longitude`, `latitude` and either `height` or `z` (if these are specified, and the `crs` is not, then the `crs` is assumed to be `WGS-84-3D`)
