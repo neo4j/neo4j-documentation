@@ -26,7 +26,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/functions"
 
   override def doc = new DocBuilder {
-    doc("Mathematical functions - numeric", "query-functions-mathematical-numeric")
+    doc("Mathematical functions - numeric", "query-functions-numeric")
     initQueries(
       """CREATE (alice:A {name:'Alice', age: 38, eyes: 'brown'}),
         |       (bob:B {name: 'Bob', age: 25, eyes: 'blue'}),
@@ -47,7 +47,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
         |* <<functions-ceil, ceil()>>
         |* <<functions-floor, floor()>>
         |* <<functions-rand, rand()>>
-        |* <<functions-round1, round()>>
+        |* <<functions-round, round()>>
         |* <<functions-round2, round(), with precision>>
         |* <<functions-round3, round(), with precision and rounding mode>>
         |* <<functions-sign, sign()>>
@@ -99,7 +99,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("round()", "functions-round1") {
+    section("round()", "functions-round") {
       p("`round()` returns the value of the given number rounded to the nearest integer, with half-way values always rounded up.")
       function("round(expression)", "A Float.", ("expression", "A numeric expression to be rounded."))
       considerations("`round(null)` returns `null`.")

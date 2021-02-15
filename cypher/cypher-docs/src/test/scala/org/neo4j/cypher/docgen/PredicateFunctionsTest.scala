@@ -51,7 +51,7 @@ class PredicateFunctionsTest extends DocumentingTest {
         |* <<functions-all,all()>>
         |* <<functions-any,any()>>
         |* <<functions-exists,exists()>>
-        |* <<functions-isEmpty,isEmpty()>>
+        |* <<functions-isempty,isEmpty()>>
         |* <<functions-none,none()>>
         |* <<functions-single,single()>>""")
     graphViz()
@@ -119,7 +119,7 @@ class PredicateFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("isEmpty()", "functions-isEmpty") {
+    section("isEmpty()", "functions-isempty") {
       p("`isEmpty()` returns true if the given list or map contains no elements or if the given string contains no characters.")
       function("isEmpty(list)", "A Boolean.", ("list", "An expression that returns a list."))
       query(

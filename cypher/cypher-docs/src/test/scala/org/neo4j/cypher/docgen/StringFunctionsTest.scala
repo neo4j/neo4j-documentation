@@ -32,7 +32,7 @@ class StringFunctionsTest extends DocumentingTest {
         #The exception to this rule is `toString()`, which also accepts numbers, booleans and temporal values (i.e. _Date_, _Time_. _LocalTime_, _DateTime_, _LocalDateTime_  or _Duration_ values).""".stripMargin('#'))
     p("Functions taking a string as input all operate on _Unicode characters_ rather than on a standard `char[]`. For example, the `size()` function applied to any _Unicode character_ will return *1*, even if the character does not fit in the 16 bits of one `char`.")
     note {
-      p("""When `toString()` is applied to a temporal value, it returns a string representation suitable for parsing by the corresponding <<query-functions-temporal, temporal functions>>.
+      p("""When `toString()` is applied to a temporal value, it returns a string representation suitable for parsing by the corresponding <<query-functions-temporal-instant-types, temporal functions>>.
           #This string will therefore be formatted according to the https://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format.""".stripMargin('#'))
     }
     p("""See also <<query-operators-string>>.""")

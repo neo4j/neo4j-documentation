@@ -54,7 +54,7 @@ class TemporalTest extends DocumentingTest {
         |* <<cypher-temporal-index, Temporal indexing>>
       """.stripMargin)
     note {
-      p("""Refer to <<query-functions-temporal>> for information regarding temporal _functions_ allowing for the creation and manipulation of temporal values.""")
+      p("""Refer to <<query-functions-temporal-instant-types>> for information regarding temporal _functions_ allowing for the creation and manipulation of temporal values.""")
       p("""Refer to <<query-operators-temporal>> for information regarding temporal _operators_.""")
       p("""Refer to <<cypher-ordering>> for information regarding the comparison and ordering of temporal values.""")
     }
@@ -639,7 +639,7 @@ class TemporalTest extends DocumentingTest {
     section("Examples", "cypher-temporal-examples") {
       p(
         """The following examples illustrate the use of some of the temporal functions and operators.
-          |Refer to <<query-functions-temporal>> and <<query-operators-temporal>> for more details.
+          |Refer to <<query-functions-temporal-instant-types>> and <<query-operators-temporal>> for more details.
         """.stripMargin)
       p("Create a _Duration_ representing 1.5 _days_:")
       query(

@@ -34,7 +34,7 @@ class TemporalFunctionsTest extends DocumentingTest {
       override def get(): ZoneId = ZoneOffset.UTC
     }
 
-    doc("Temporal functions - instant types", "query-functions-temporal")
+    doc("Temporal functions - instant types", "query-functions-temporal-instant-types")
     synopsis(
       """Cypher provides functions allowing for the creation and manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, and _LocalDateTime_.""".stripMargin)
     note {
@@ -100,10 +100,10 @@ class TemporalFunctionsTest extends DocumentingTest {
             ||===
             || Type                   | default | transaction | statement | realtime
             || Date  | <<functions-date-current, date()>> | <<functions-date-current-transaction, date.transaction()>>  | <<functions-date-current-statement, date.statement()>> | <<functions-date-current-realtime, date.realtime()>>
-            || Time | <<functions-time-current, time()>> | <<functions-time-current-transaction, time.transaction()>> | <<functions-time-current-statement, time.statement()>> | <<functions-time-current-realtime, time.realtime()>>
-            || LocalTime | <<functions-localtime-current, localtime()>> | <<functions-localtime-current-transaction, localtime.transaction()>> | <<functions-localtime-current-statement, localtime.statement()>> | <<functions-localtime-current-realtime, localtime.realtime()>>
-            || DateTime | <<functions-datetime-current, datetime()>> | <<functions-datetime-current-transaction, datetime.transaction()>> | <<functions-datetime-current-statement, datetime.statement()>> | <<functions-datetime-current-realtime, datetime.realtime()>>
-            || LocalDateTime | <<functions-localdatetime-current, localdatetime()>> | <<functions-localdatetime-current-transaction, localdatetime.transaction()>> | <<functions-localdatetime-current-statement, localdatetime.statement()>> | <<functions-localdatetime-current-realtime, localdatetime.realtime()>>
+            || Time | <<functions-time-current, time()>> | <<functions-time-transaction, time.transaction()>> | <<functions-time-statement, time.statement()>> | <<functions-time-realtime, time.realtime()>>
+            || LocalTime | <<functions-localtime-current, localtime()>> | <<functions-localtime-transaction, localtime.transaction()>> | <<functions-localtime-statement, localtime.statement()>> | <<functions-localtime-realtime, localtime.realtime()>>
+            || DateTime | <<functions-datetime-current, datetime()>> | <<functions-datetime-transaction, datetime.transaction()>> | <<functions-datetime-statement, datetime.statement()>> | <<functions-datetime-realtime, datetime.realtime()>>
+            || LocalDateTime | <<functions-localdatetime-current, localdatetime()>> | <<functions-localdatetime-transaction, localdatetime.transaction()>> | <<functions-localdatetime-statement, localdatetime.statement()>> | <<functions-localdatetime-realtime, localdatetime.realtime()>>
             ||===
             |
             |""")
@@ -198,7 +198,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           p("""The current date in California is returned.""")
           resultTable()
         }
-        section("date.transaction()", "functions-date-current-transaction") {
+        section("date.transaction()", "functions-date-transaction") {
           p(
             """`date.transaction()` returns the current _Date_ value using the `transaction` clock.
               |This value will be the same for each invocation within the same transaction.
@@ -216,7 +216,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("date.statement()", "functions-date-current-statement") {
+        section("date.statement()", "functions-date-statement") {
           p("""`date.statement()` returns the current _Date_ value using the `statement` clock.
               |This value will be the same for each invocation within the same statement.
               |However, a different value may be produced for different statements within the same transaction.""".stripMargin)
@@ -233,7 +233,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("date.realtime()", "functions-date-current-realtime") {
+        section("date.realtime()", "functions-date-realtime") {
           p(
             """`date.realtime()` returns the current _Date_ value using the `realtime` clock.
               |This value will be the live clock of the system.
@@ -467,7 +467,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           p("""The current date and time of day in California is returned.""")
           resultTable()
         }
-        section("datetime.transaction()", "functions-datetime-current-transaction") {
+        section("datetime.transaction()", "functions-datetime-transaction") {
           p("""`datetime.transaction()` returns the current _DateTime_ value using the `transaction` clock.
               |This value will be the same for each invocation within the same transaction.
               |However, a different value may be produced for different transactions.""".stripMargin)
@@ -492,7 +492,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("datetime.statement()", "functions-datetime-current-statement") {
+        section("datetime.statement()", "functions-datetime-statement") {
           p("""`datetime.statement()` returns the current _DateTime_ value using the `statement` clock.
               |This value will be the same for each invocation within the same statement.
               |However, a different value may be produced for different statements within the same transaction.""".stripMargin)
@@ -508,7 +508,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("datetime.realtime()", "functions-datetime-current-realtime") {
+        section("datetime.realtime()", "functions-datetime-realtime") {
           p("""`datetime.realtime()` returns the current _DateTime_ value using the `realtime` clock.
               |This value will be the live clock of the system.""".stripMargin)
           function("+datetime.realtime([{timezone}])+",
@@ -873,7 +873,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           p("""The current local date and time in California is returned.""")
           resultTable()
         }
-        section("localdatetime.transaction()", "functions-localdatetime-current-transaction") {
+        section("localdatetime.transaction()", "functions-localdatetime-transaction") {
           p("""`localdatetime.transaction()` returns the current _LocalDateTime_ value using the `transaction` clock.
               |This value will be the same for each invocation within the same transaction.
               |However, a different value may be produced for different transactions.""".stripMargin)
@@ -889,7 +889,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("localdatetime.statement()", "functions-localdatetime-current-statement") {
+        section("localdatetime.statement()", "functions-localdatetime-statement") {
           p("""`localdatetime.statement()` returns the current _LocalDateTime_ value using the `statement` clock.
               |This value will be the same for each invocation within the same statement.
               |However, a different value may be produced for different statements within the same transaction.""".stripMargin)
@@ -905,7 +905,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("localdatetime.realtime()", "functions-localdatetime-current-realtime") {
+        section("localdatetime.realtime()", "functions-localdatetime-realtime") {
           p("""`localdatetime.realtime()` returns the current _LocalDateTime_ value using the `realtime` clock.
               |This value will be the live clock of the system.""".stripMargin)
           function("+localdatetime.realtime([{timezone}])+",
@@ -1132,7 +1132,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           p("""The current local time in California is returned.""")
           resultTable()
         }
-        section("localtime.transaction()", "functions-localtime-current-transaction") {
+        section("localtime.transaction()", "functions-localtime-transaction") {
           p("""`localtime.transaction()` returns the current _LocalTime_ value using the `transaction` clock.
               |This value will be the same for each invocation within the same transaction.
               |However, a different value may be produced for different transactions.""".stripMargin)
@@ -1148,7 +1148,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("localtime.statement()", "functions-localtime-current-statement") {
+        section("localtime.statement()", "functions-localtime-statement") {
           p("""`localtime.statement()` returns the current _LocalTime_ value using the `statement` clock.
               |This value will be the same for each invocation within the same statement.
               |However, a different value may be produced for different statements within the same transaction.""".stripMargin)
@@ -1171,7 +1171,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("localtime.realtime()", "functions-localtime-current-realtime") {
+        section("localtime.realtime()", "functions-localtime-realtime") {
           p("""`localtime.realtime()` returns the current _LocalTime_ value using the `realtime` clock.
               |This value will be the live clock of the system.""".stripMargin)
           function("+localtime.realtime([{timezone}])+",
@@ -1323,7 +1323,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           p("""The current time of day in California is returned.""")
           resultTable()
         }
-        section("time.transaction()", "functions-time-current-transaction") {
+        section("time.transaction()", "functions-time-transaction") {
           p("""`time.transaction()` returns the current _Time_ value using the `transaction` clock.
               |This value will be the same for each invocation within the same transaction.
               |However, a different value may be produced for different transactions.""".stripMargin)
@@ -1339,7 +1339,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("time.statement()", "functions-time-current-statement") {
+        section("time.statement()", "functions-time-statement") {
           p("""`time.statement()` returns the current _Time_ value  using the `statement` clock.
               |This value will be the same for each invocation within the same statement.
               |However, a different value may be produced for different statements within the same transaction.""".stripMargin)
@@ -1363,7 +1363,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("time.realtime()", "functions-time-current-realtime") {
+        section("time.realtime()", "functions-time-realtime") {
           p("""`time.realtime()` returns the current _Time_ value using the `realtime` clock.
               |This value will be the live clock of the system.""".stripMargin)
           function("+time.realtime([{timezone}])+",

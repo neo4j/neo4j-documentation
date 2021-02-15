@@ -34,7 +34,7 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
       override def get(): ZoneId = ZoneOffset.UTC
     }
 
-    doc("Temporal functions - duration", "functions-duration")
+    doc("Temporal functions - duration", "query-functions-duration")
     synopsis(
       """Cypher provides functions allowing for the creation and manipulation of values for a _Duration_ temporal type.""".stripMargin)
     note {
@@ -44,13 +44,13 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
         """
         |duration():
         |
-        |* <<functions-duration-create-components, Creating a _Duration_ from duration components>>
+        |* <<functions-duration, Creating a _Duration_ from duration components>>
         |* <<functions-duration-create-string, Creating a _Duration_ from a string>>
         |* <<functions-duration-computing, Computing the _Duration_ between two temporal instants>>
       """.stripMargin)
       p(
         """Information regarding specifying and accessing components of a _Duration_ value can be found <<cypher-temporal-durations, here>>.""".stripMargin)
-    section("Creating a _Duration_ from duration components", "functions-duration-create-components") {
+    section("Creating a _Duration_ from duration components", "functions-duration") {
       p(
         """`duration()` can construct a _Duration_ from a map of its components in the same way as the temporal instant types.
           |
