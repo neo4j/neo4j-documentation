@@ -40,59 +40,6 @@ class TemporalFunctionsTest extends DocumentingTest {
     note {
       p("""See also <<cypher-temporal>> and <<query-operators-temporal>>.""")
     }
-    p(
-      """
-        |<<functions-temporal-instant-type, Temporal instant types>>
-        |
-        |* <<functions-temporal-create-overview, An overview of temporal instant type creation>>
-        |* <<functions-temporal-clock-overview, Controlling which clock to use>>
-        |* <<functions-temporal-truncate-overview, Truncating temporal values>>
-      """.stripMargin)
-      p(
-        """
-        |Functions:
-        |
-        |* <<functions-date, date()>>
-        |** <<functions-date-current, Getting the current _Date_>>
-        |** <<functions-date-calendar, Creating a calendar (Year-Month-Day) _Date_>>
-        |** <<functions-date-week, Creating a week (Year-Week-Day) _Date_>>
-        |** <<functions-date-quarter, Creating a quarter (Year-Quarter-Day) _Date_>>
-        |** <<functions-date-ordinal, Creating an ordinal (Year-Day) _Date_>>
-        |** <<functions-date-create-string, Creating a _Date_ from a string>>
-        |** <<functions-date-temporal, Creating a _Date_ using other temporal values as components>>
-        |** <<functions-date-truncate, Truncating a _Date_>>
-        |* <<functions-datetime, datetime()>>
-        |** <<functions-datetime-current, Getting the current _DateTime_>>
-        |** <<functions-datetime-calendar, Creating a calendar (Year-Month-Day) _DateTime_>>
-        |** <<functions-datetime-week, Creating a week (Year-Week-Day) _DateTime_>>
-        |** <<functions-datetime-quarter, Creating a quarter (Year-Quarter-Day) _DateTime_>>
-        |** <<functions-datetime-ordinal, Creating an ordinal (Year-Day) _DateTime_>>
-        |** <<functions-datetime-create-string, Creating a _DateTime_ from a string>>
-        |** <<functions-datetime-temporal, Creating a _DateTime_ using other temporal values as components>>
-        |** <<functions-datetime-timestamp, Creating a _DateTime_ from a timestamp>>
-        |** <<functions-datetime-truncate, Truncating a _DateTime_>>
-        |* <<functions-localdatetime, localdatetime()>>
-        |** <<functions-localdatetime-current, Getting the current _LocalDateTime_>>
-        |** <<functions-localdatetime-calendar, Creating a calendar (Year-Month-Day) _LocalDateTime_>>
-        |** <<functions-localdatetime-week, Creating a week (Year-Week-Day) _LocalDateTime_>>
-        |** <<functions-localdatetime-quarter, Creating a quarter (Year-Quarter-Day) _DateTime_>>
-        |** <<functions-localdatetime-ordinal, Creating an ordinal (Year-Day) _LocalDateTime_>>
-        |** <<functions-localdatetime-create-string, Creating a _LocalDateTime_ from a string>>
-        |** <<functions-localdatetime-temporal, Creating a _LocalDateTime_ using other temporal values as components>>
-        |** <<functions-localdatetime-truncate, Truncating a _LocalDateTime_>>
-        |* <<functions-localtime, localtime()>>
-        |** <<functions-localtime-current, Getting the current _LocalTime_>>
-        |** <<functions-localtime-create, Creating a _LocalTime_>>
-        |** <<functions-localtime-create-string, Creating a _LocalTime_ from a string>>
-        |** <<functions-localtime-temporal, Creating a _LocalTime_ using other temporal values as components>>
-        |** <<functions-localtime-truncate, Truncating a _LocalTime_>>
-        |* <<functions-time, time()>>
-        |** <<functions-time-current, Getting the current _Time_>>
-        |** <<functions-time-create, Creating a _Time_>>
-        |** <<functions-time-create-string, Creating a _Time_ from a string>>
-        |** <<functions-time-temporal, Creating a _Time_ using other temporal values as components>>
-        |** <<functions-time-truncate, Truncating a _Time_>>
-      """.stripMargin)
     section("Temporal instant types", "functions-temporal-instant-type") {
       synopsis("""An introduction to temporal instant types, including descriptions of creation functions, clocks, and truncation.""".stripMargin)
       section("An overview of temporal instant type creation", "functions-temporal-create-overview") {
@@ -132,8 +79,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         note {
           p(
             """All the temporal instant types -- including those that do not contain time zone information support such as _Date_, _LocalTime_ and _DateTime_ -- allow for a time zone to specified for the functions that retrieve the current instant.
-     This allows for the retrieval of the current instant in the specified time zone.
-          |""")
+              #This allows for the retrieval of the current instant in the specified time zone.""".stripMargin('#'))
         }
       }
       section("Controlling which clock to use", "functions-temporal-clock-overview") {
@@ -145,9 +91,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |A different time may be produced for different transactions.
             |* `statement`: The same instant is produced for each invocation within the same statement.
             |A different time may be produced for different statements within the same transaction.
-            |* `realtime`: The instant produced will be the live clock of the system.
-            |
-      """.stripMargin)
+            |* `realtime`: The instant produced will be the live clock of the system.""".stripMargin)
         p(
           """
             |The following table lists the different sub-functions for specifying the clock to be used when creating the current temporal instant value:
@@ -230,11 +174,13 @@ class TemporalFunctionsTest extends DocumentingTest {
           |* <<functions-date-truncate, Truncating a _Date_>>
         """.stripMargin)
       section("Getting the current _Date_", "functions-date-current") {
-        p(
-          """`date()` returns the current _Date_ value.
-            |If no time zone parameter is specified, the local time zone will be used.
-          """.stripMargin)
-        function("date([ +{timezone}+ ])", "A Date.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        p("""`date()` returns the current _Date_ value.
+            #If no time zone parameter is specified, the local time zone will be used.""".stripMargin('#'))
+        function("+date([{timezone}])+",
+          "A Date.",
+          ("A single map consisting of the following:", ""),
+          ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>")
+        )
         considerations("If no parameters are provided, `date()` must be invoked (`date({})` is invalid).")
         query(
           """RETURN date() AS currentDate""".stripMargin, ResultAssertions((r) => {
@@ -258,7 +204,10 @@ class TemporalFunctionsTest extends DocumentingTest {
               |This value will be the same for each invocation within the same transaction.
               |However, a different value may be produced for different transactions.
             """.stripMargin)
-          function("date.transaction([ +{timezone}+ ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+          function("+date.transaction([{timezone}])+",
+            "A Date.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>")
+          )
           query(
             """RETURN date.transaction() AS currentDate""".stripMargin, ResultAssertions((r) => {
               val now = r.columnAs[LocalDate]("currentDate").next()
@@ -268,14 +217,16 @@ class TemporalFunctionsTest extends DocumentingTest {
           }
         }
         section("date.statement()", "functions-date-current-statement") {
-          p(
-            """`date.statement()` returns the current _Date_ value using the `statement` clock.
+          p("""`date.statement()` returns the current _Date_ value using the `statement` clock.
               |This value will be the same for each invocation within the same statement.
-              |However, a different value may be produced for different statements within the same transaction.
-            """.stripMargin)
-          function("date.statement([ +{timezone}+ ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+              |However, a different value may be produced for different statements within the same transaction.""".stripMargin)
+          function("+date.statement([{timezone}])+",
+            "A Date.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>")
+          )
           query(
-            """RETURN date.statement() AS currentDate""".stripMargin, ResultAssertions((r) => {
+            """RETURN date.statement() AS currentDate""",
+            ResultAssertions((r) => {
               val now = r.columnAs[LocalDate]("currentDate").next()
               now should be(a[LocalDate])
             })) {
@@ -287,16 +238,21 @@ class TemporalFunctionsTest extends DocumentingTest {
             """`date.realtime()` returns the current _Date_ value using the `realtime` clock.
               |This value will be the live clock of the system.
             """.stripMargin)
-          function("date.realtime([ +{timezone}+ ])", "A Date.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+          function("+date.realtime([{timezone}])+",
+            "A Date.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>")
+          )
           query(
-            """RETURN date.realtime() AS currentDate""".stripMargin, ResultAssertions((r) => {
+            """RETURN date.realtime() AS currentDate""",
+            ResultAssertions((r) => {
               val now = r.columnAs[LocalDate]("currentDate").next()
               now should be(a[LocalDate])
             })) {
             resultTable()
           }
           query(
-            """RETURN date.realtime('America/Los Angeles') AS currentDateInLA""".stripMargin, ResultAssertions((r) => {
+            """RETURN date.realtime('America/Los Angeles') AS currentDateInLA""",
+            ResultAssertions((r) => {
               val now = r.columnAs[LocalDate]("currentDateInLA").next()
               now should be(a[LocalDate])
             })) {
@@ -487,10 +443,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`datetime()` returns the current _DateTime_ value.
             |If no time zone parameter is specified, the default time zone will be used.
           """.stripMargin)
-        function("datetime([ +{timezone}+ ])", "A DateTime.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("+datetime([{timezone}])+",
+          "A DateTime.",
+          ("A single map consisting of the following:", ""),
+          ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>")
+        )
         considerations("If no parameters are provided, `datetime()` must be invoked (`datetime({})` is invalid).")
         query(
-          """RETURN datetime() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
+          """RETURN datetime() AS currentDateTime""",
+          ResultAssertions((r) => {
             val now = r.columnAs[ZonedDateTime]("currentDateTime").next()
             now should be(a[ZonedDateTime])
           })) {
@@ -498,7 +459,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         query(
-          """RETURN datetime( {timezone: 'America/Los Angeles'} ) AS currentDateTimeInLA""".stripMargin, ResultAssertions((r) => {
+          """RETURN datetime({timezone: 'America/Los Angeles'}) AS currentDateTimeInLA""",
+          ResultAssertions((r) => {
             val now = r.columnAs[ZonedDateTime]("currentDateTimeInLA").next()
             now should be(a[ZonedDateTime])
           })) {
@@ -506,21 +468,24 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         section("datetime.transaction()", "functions-datetime-current-transaction") {
-          p(
-            """`datetime.transaction()` returns the current _DateTime_ value using the `transaction` clock.
+          p("""`datetime.transaction()` returns the current _DateTime_ value using the `transaction` clock.
               |This value will be the same for each invocation within the same transaction.
-              |However, a different value may be produced for different transactions.
-            """.stripMargin)
-          function("datetime.transaction([ +{timezone}+ ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+              |However, a different value may be produced for different transactions.""".stripMargin)
+          function("+datetime.transaction([{timezone}])+",
+            "A DateTime.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>")
+          )
           query(
-            """RETURN datetime.transaction() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
+            """RETURN datetime.transaction() AS currentDateTime""",
+            ResultAssertions((r) => {
               val now = r.columnAs[ZonedDateTime]("currentDateTime").next()
               now should be(a[ZonedDateTime])
             })) {
             resultTable()
           }
           query(
-            """RETURN datetime.transaction('America/Los Angeles') AS currentDateTimeInLA""".stripMargin, ResultAssertions((r) => {
+            """RETURN datetime.transaction('America/Los Angeles') AS currentDateTimeInLA""",
+            ResultAssertions((r) => {
               val now = r.columnAs[ZonedDateTime]("currentDateTimeInLA").next()
               now should be(a[ZonedDateTime])
             })) {
@@ -528,14 +493,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           }
         }
         section("datetime.statement()", "functions-datetime-current-statement") {
-          p(
-            """`datetime.statement()` returns the current _DateTime_ value using the `statement` clock.
+          p("""`datetime.statement()` returns the current _DateTime_ value using the `statement` clock.
               |This value will be the same for each invocation within the same statement.
-              |However, a different value may be produced for different statements within the same transaction.
-            """.stripMargin)
-          function("datetime.statement([ +{timezone}+ ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+              |However, a different value may be produced for different statements within the same transaction.""".stripMargin)
+          function("+datetime.statement([{timezone}])+",
+            "A DateTime.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
-            """RETURN datetime.statement() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
+            """RETURN datetime.statement() AS currentDateTime""",
+            ResultAssertions((r) => {
               val now = r.columnAs[ZonedDateTime]("currentDateTime").next()
               now should be(a[ZonedDateTime])
             })) {
@@ -543,11 +509,11 @@ class TemporalFunctionsTest extends DocumentingTest {
           }
         }
         section("datetime.realtime()", "functions-datetime-current-realtime") {
-          p(
-            """`datetime.realtime()` returns the current _DateTime_ value using the `realtime` clock.
-              |This value will be the live clock of the system.
-            """.stripMargin)
-          function("datetime.realtime([ +{timezone}+ ])", "A DateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+          p("""`datetime.realtime()` returns the current _DateTime_ value using the `realtime` clock.
+              |This value will be the live clock of the system.""".stripMargin)
+          function("+datetime.realtime([{timezone}])+",
+            "A DateTime.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
             """RETURN datetime.realtime() AS currentDateTime""".stripMargin, ResultAssertions((r) => {
               val now = r.columnAs[ZonedDateTime]("currentDateTime").next()
@@ -882,14 +848,16 @@ class TemporalFunctionsTest extends DocumentingTest {
           |* <<functions-localdatetime-truncate, Truncating a _LocalDateTime_>>
         """.stripMargin)
       section("Getting the current _LocalDateTime_", "functions-localdatetime-current") {
-        p(
-          """`localdatetime()` returns the current _LocalDateTime_ value.
-            |If no time zone parameter is specified, the local time zone will be used.
-          """.stripMargin)
-        function("localdatetime([ +{timezone}+ ])", "A LocalDateTime.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        p("""`localdatetime()` returns the current _LocalDateTime_ value.
+            |If no time zone parameter is specified, the local time zone will be used.""".stripMargin)
+        function("+localdatetime([{timezone}])+",
+          "A LocalDateTime.",
+          ("A single map consisting of the following:", ""),
+          ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         considerations("If no parameters are provided, `localdatetime()` must be invoked (`localdatetime({})` is invalid).")
         query(
-          """RETURN localdatetime() AS now""".stripMargin, ResultAssertions((r) => {
+          """RETURN localdatetime() AS now""",
+          ResultAssertions((r) => {
             val now = r.columnAs[LocalDateTime]("now").next()
             now should be(a[LocalDateTime])
           })) {
@@ -897,7 +865,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         query(
-          """RETURN localdatetime({timezone: 'America/Los Angeles'}) AS now""".stripMargin, ResultAssertions((r) => {
+          """RETURN localdatetime({timezone: 'America/Los Angeles'}) AS now""",
+          ResultAssertions((r) => {
             val now = r.columnAs[LocalDateTime]("now").next()
             now should be(a[LocalDateTime])
           })) {
@@ -905,14 +874,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         section("localdatetime.transaction()", "functions-localdatetime-current-transaction") {
-          p(
-            """`localdatetime.transaction()` returns the current _LocalDateTime_ value using the `transaction` clock.
+          p("""`localdatetime.transaction()` returns the current _LocalDateTime_ value using the `transaction` clock.
               |This value will be the same for each invocation within the same transaction.
-              |However, a different value may be produced for different transactions.
-            """.stripMargin)
-          function("localdatetime.transaction([ +{timezone}+ ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+              |However, a different value may be produced for different transactions.""".stripMargin)
+          function("+localdatetime.transaction([{timezone}])+",
+            "A LocalDateTime.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
-            """RETURN localdatetime.transaction() AS now""".stripMargin, ResultAssertions((r) => {
+            """RETURN localdatetime.transaction() AS now""",
+            ResultAssertions((r) => {
               val now = r.columnAs[LocalDateTime]("now").next()
               now should be(a[LocalDateTime])
             })) {
@@ -920,14 +890,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           }
         }
         section("localdatetime.statement()", "functions-localdatetime-current-statement") {
-          p(
-            """`localdatetime.statement()` returns the current _LocalDateTime_ value using the `statement` clock.
+          p("""`localdatetime.statement()` returns the current _LocalDateTime_ value using the `statement` clock.
               |This value will be the same for each invocation within the same statement.
-              |However, a different value may be produced for different statements within the same transaction.
-            """.stripMargin)
-          function("localdatetime.statement([ +{timezone}+ ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+              |However, a different value may be produced for different statements within the same transaction.""".stripMargin)
+          function("+localdatetime.statement([{timezone}])+",
+            "A LocalDateTime.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
-            """RETURN localdatetime.statement() AS now""".stripMargin, ResultAssertions((r) => {
+            """RETURN localdatetime.statement() AS now""",
+            ResultAssertions((r) => {
               val now = r.columnAs[LocalDateTime]("now").next()
               now should be(a[LocalDateTime])
             })) {
@@ -935,20 +906,22 @@ class TemporalFunctionsTest extends DocumentingTest {
           }
         }
         section("localdatetime.realtime()", "functions-localdatetime-current-realtime") {
-          p(
-            """`localdatetime.realtime()` returns the current _LocalDateTime_ value using the `realtime` clock.
-              |This value will be the live clock of the system.
-            """.stripMargin)
-          function("localdatetime.realtime([ +{timezone}+ ])", "A LocalDateTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+          p("""`localdatetime.realtime()` returns the current _LocalDateTime_ value using the `realtime` clock.
+              |This value will be the live clock of the system.""".stripMargin)
+          function("+localdatetime.realtime([{timezone}])+",
+            "A LocalDateTime.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
-            """RETURN localdatetime.realtime() AS now""".stripMargin, ResultAssertions((r) => {
+            """RETURN localdatetime.realtime() AS now""",
+            ResultAssertions((r) => {
               val now = r.columnAs[LocalDateTime]("now").next()
               now should be(a[LocalDateTime])
             })) {
             resultTable()
           }
           query(
-            """RETURN localdatetime.realtime('America/Los Angeles') AS nowInLA""".stripMargin, ResultAssertions((r) => {
+            """RETURN localdatetime.realtime('America/Los Angeles') AS nowInLA""",
+            ResultAssertions((r) => {
               val now = r.columnAs[LocalDateTime]("nowInLA").next()
               now should be(a[LocalDateTime])
             })) {
@@ -1134,14 +1107,16 @@ class TemporalFunctionsTest extends DocumentingTest {
           |* <<functions-localtime-truncate, Truncating a _LocalTime_>>
         """.stripMargin)
       section("Getting the current _LocalTime_", "functions-localtime-current") {
-        p(
-          """`localtime()` returns the current _LocalTime_ value.
-            |If no time zone parameter is specified, the local time zone will be used.
-          """.stripMargin)
-        function("localtime([ +{timezone}+ ])", "A LocalTime.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        p("""`localtime()` returns the current _LocalTime_ value.
+            |If no time zone parameter is specified, the local time zone will be used.""".stripMargin)
+        function("+localtime([{timezone}])+",
+          "A LocalTime.",
+          ("A single map consisting of the following:", ""),
+          ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         considerations("If no parameters are provided, `localtime()` must be invoked (`localtime({})` is invalid).")
         query(
-          """RETURN localtime() AS now""".stripMargin, ResultAssertions((r) => {
+          """RETURN localtime() AS now""",
+          ResultAssertions((r) => {
             val now = r.columnAs[LocalTime]("now").next()
             now should be(a[LocalTime])
           })) {
@@ -1149,7 +1124,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         query(
-          """RETURN localtime( {timezone: 'America/Los Angeles'} ) AS nowInLA""".stripMargin, ResultAssertions((r) => {
+          """RETURN localtime({timezone: 'America/Los Angeles'}) AS nowInLA""",
+          ResultAssertions((r) => {
             val now = r.columnAs[LocalTime]("nowInLA").next()
             now should be(a[LocalTime])
           })) {
@@ -1157,14 +1133,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         section("localtime.transaction()", "functions-localtime-current-transaction") {
-          p(
-            """`localtime.transaction()` returns the current _LocalTime_ value using the `transaction` clock.
+          p("""`localtime.transaction()` returns the current _LocalTime_ value using the `transaction` clock.
               |This value will be the same for each invocation within the same transaction.
-              |However, a different value may be produced for different transactions.
-            """.stripMargin)
-          function("localtime.transaction([ +{timezone}+ ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+              |However, a different value may be produced for different transactions.""".stripMargin)
+          function("+localtime.transaction([{timezone}])+",
+            "A LocalTime.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
-            """RETURN localtime.transaction() AS now""".stripMargin, ResultAssertions((r) => {
+            """RETURN localtime.transaction() AS now""",
+            ResultAssertions((r) => {
               val now = r.columnAs[LocalTime]("now").next()
               now should be(a[LocalTime])
             })) {
@@ -1172,14 +1149,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           }
         }
         section("localtime.statement()", "functions-localtime-current-statement") {
-          p(
-            """`localtime.statement()` returns the current _LocalTime_ value using the `statement` clock.
+          p("""`localtime.statement()` returns the current _LocalTime_ value using the `statement` clock.
               |This value will be the same for each invocation within the same statement.
-              |However, a different value may be produced for different statements within the same transaction.
-            """.stripMargin)
-          function("localtime.statement([ +{timezone}+ ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+              |However, a different value may be produced for different statements within the same transaction.""".stripMargin)
+          function("+localtime.statement([{timezone}])+",
+            "A LocalTime.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
-            """RETURN localtime.statement() AS now""".stripMargin, ResultAssertions((r) => {
+            """RETURN localtime.statement() AS now""",
+            ResultAssertions((r) => {
               val now = r.columnAs[LocalTime]("now").next()
               now should be(a[LocalTime])
             })) {
@@ -1194,13 +1172,14 @@ class TemporalFunctionsTest extends DocumentingTest {
           }
         }
         section("localtime.realtime()", "functions-localtime-current-realtime") {
-          p(
-            """`localtime.realtime()` returns the current _LocalTime_ value using the `realtime` clock.
-              |This value will be the live clock of the system.
-            """.stripMargin)
-          function("localtime.realtime([ +{timezone}+ ])", "A LocalTime.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+          p("""`localtime.realtime()` returns the current _LocalTime_ value using the `realtime` clock.
+              |This value will be the live clock of the system.""".stripMargin)
+          function("+localtime.realtime([{timezone}])+",
+            "A LocalTime.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
-            """RETURN localtime.realtime() AS now""".stripMargin, ResultAssertions((r) => {
+            """RETURN localtime.realtime() AS now""",
+            ResultAssertions((r) => {
               val now = r.columnAs[LocalTime]("now").next()
               now should be(a[LocalTime])
             })) {
@@ -1320,13 +1299,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           |* <<functions-time-truncate, Truncating a _Time_>>
         """.stripMargin)
       section("Getting the current _Time_", "functions-time-current") {
-        p(
-          """`time()` returns the current _Time_ value.
+        p("""`time()` returns the current _Time_ value.
             |If no time zone parameter is specified, the local time zone will be used.""".stripMargin)
-        function("time([ +{timezone}+ ])", "A Time.", ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+        function("+time([{timezone}])+",
+          "A Time.",
+          ("A single map consisting of the following:", ""), ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
         considerations("If no parameters are provided, `time()` must be invoked (`time({})` is invalid).")
         query(
-          """RETURN time() AS currentTime""".stripMargin, ResultAssertions((r) => {
+          """RETURN time() AS currentTime""",
+          ResultAssertions((r) => {
             val now = r.columnAs[OffsetTime]("currentTime").next()
             now should be(a[OffsetTime])
           })) {
@@ -1334,7 +1315,8 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         query(
-          """RETURN time( {timezone: 'America/Los Angeles'} ) AS currentTimeInLA""".stripMargin, ResultAssertions((r) => {
+          """RETURN time({timezone: 'America/Los Angeles'}) AS currentTimeInLA""",
+          ResultAssertions((r) => {
             val now = r.columnAs[OffsetTime]("currentTimeInLA").next()
             now should be(a[OffsetTime])
           })) {
@@ -1342,14 +1324,15 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         section("time.transaction()", "functions-time-current-transaction") {
-          p(
-            """`time.transaction()` returns the current _Time_ value using the `transaction` clock.
+          p("""`time.transaction()` returns the current _Time_ value using the `transaction` clock.
               |This value will be the same for each invocation within the same transaction.
-              |However, a different value may be produced for different transactions.
-            """.stripMargin)
-          function("time.transaction([ +{timezone}+ ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+              |However, a different value may be produced for different transactions.""".stripMargin)
+          function("+time.transaction([{timezone}])+",
+            "A Time.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
-            """RETURN time.transaction() AS currentTime""".stripMargin, ResultAssertions((r) => {
+            """RETURN time.transaction() AS currentTime""",
+            ResultAssertions((r) => {
               val now = r.columnAs[OffsetTime]("currentTime").next()
               now should be(a[OffsetTime])
             })) {
@@ -1357,21 +1340,23 @@ class TemporalFunctionsTest extends DocumentingTest {
           }
         }
         section("time.statement()", "functions-time-current-statement") {
-          p(
-            """`time.statement()` returns the current _Time_ value  using the `statement` clock.
+          p("""`time.statement()` returns the current _Time_ value  using the `statement` clock.
               |This value will be the same for each invocation within the same statement.
-              |However, a different value may be produced for different statements within the same transaction.
-            """.stripMargin)
-          function("time.statement([ +{timezone}+ ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+              |However, a different value may be produced for different statements within the same transaction.""".stripMargin)
+          function("+time.statement([{timezone}])+",
+            "A Time.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
-            """RETURN time.statement() AS currentTime""".stripMargin, ResultAssertions((r) => {
+            """RETURN time.statement() AS currentTime""",
+            ResultAssertions((r) => {
               val now = r.columnAs[OffsetTime]("currentTime").next()
               now should be(a[OffsetTime])
             })) {
             resultTable()
           }
           query(
-            """RETURN time.statement('America/Los Angeles') AS currentTimeInLA""".stripMargin, ResultAssertions((r) => {
+            """RETURN time.statement('America/Los Angeles') AS currentTimeInLA""",
+            ResultAssertions((r) => {
               val now = r.columnAs[OffsetTime]("currentTimeInLA").next()
               now should be(a[OffsetTime])
             })) {
@@ -1379,13 +1364,14 @@ class TemporalFunctionsTest extends DocumentingTest {
           }
         }
         section("time.realtime()", "functions-time-current-realtime") {
-          p(
-            """`time.realtime()` returns the current _Time_ value using the `realtime` clock.
-              |This value will be the live clock of the system.
-            """.stripMargin)
-          function("time.realtime([ +{timezone}+ ])", "A Time.", ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
+          p("""`time.realtime()` returns the current _Time_ value using the `realtime` clock.
+              |This value will be the live clock of the system.""".stripMargin)
+          function("+time.realtime([{timezone}])+",
+            "A Time.",
+            ("timezone", "A string expression that represents the <<cypher-temporal-specify-time-zone, time zone>>"))
           query(
-            """RETURN time.realtime() AS currentTime""".stripMargin, ResultAssertions((r) => {
+            """RETURN time.realtime() AS currentTime""",
+            ResultAssertions((r) => {
               val now = r.columnAs[OffsetTime]("currentTime").next()
               now should be(a[OffsetTime])
             })) {
@@ -1507,8 +1493,8 @@ class TemporalFunctionsTest extends DocumentingTest {
             |   time.truncate('minute', t) AS truncMinute,
             |   time.truncate('second', t) AS truncSecond,
             |   time.truncate('millisecond', t, {nanosecond:2}) AS truncMillisecond,
-            |   time.truncate('microsecond', t) AS truncMicrosecond
-            |""".stripMargin, ResultAssertions((r) => {
+            |   time.truncate('microsecond', t) AS truncMicrosecond""".stripMargin,
+            ResultAssertions((r) => {
             r.toList should equal(List(Map(
               "truncDay" -> TimeValue.parse("00:00-01:00", defaultZoneSupplier).asObjectCopy(),
               "truncHour" -> TimeValue.parse("12:00-01:00", defaultZoneSupplier).asObjectCopy(),
