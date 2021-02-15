@@ -13,14 +13,14 @@ This table comprises all the execution plan operators ordered lexicographically.
 |===
 |Name                                                                       | Description | Leaf? | Updating? | Considerations
 | <<query-plan-all-nodes-scan, AllNodesScan>>                                | Reads all nodes from the node store. | Y | |
-| <<query-plan-anti-conditional-apply, AntiConditionalApply>>                | Performs a nested loop. If a variable is `null`, the right-hand side will be executed. | | |
+| <<query-plan-either, Either>>                | Executes the left-hand side or if that is empty it executes the right-hand side. | | |
 | <<query-plan-anti-semi-apply, AntiSemiApply>>                              | Performs a nested loop. Tests for the absence of a pattern predicate. | | |
 | <<query-plan-apply, Apply>>                                                | Performs a nested loop. Yields rows from both the left-hand and right-hand side operators.  | | |
 | <<query-plan-argument, Argument>>                                | Indicates the variable to be used as an argument to the right-hand side of an `Apply` operator.  | Y | |
 | <<query-plan-assert-same-node, AssertSameNode>>                            | Used to ensure that no unique constraints are violated.  | | |
 | <<query-plan-cache-properties, CacheProperties>>                 | Reads node or relationship properties and caches them. | | |
 | <<query-plan-cartesian-product, CartesianProduct>>                 | Produces a cartesian product of the inputs from the left-hand and right-hand operators.  | | |
-| <<query-plan-conditional-apply, ConditionalApply>>                         | Performs a nested loop. If a variable is not `null`, the right-hand side will be executed.  | | |
+| <<query-plan-on-match-apply, OnMatchApply>>                         | Executes the left-hand side and for each row it produces it executes its right-hand side.  | | |
 | <<query-plan-create-index, CreateIndex>>              | Creates an index on a property for all nodes having a certain label.  | | Y |
 | <<query-plan-create-node-key-constraint, CreateNodeKeyConstraint>>     |  Creates a node key constraint on a set of properties for all nodes having a certain label.  | | Y |
 | <<query-plan-create-nodes---relationships, Create>>              | Creates nodes and relationships.  | | Y |

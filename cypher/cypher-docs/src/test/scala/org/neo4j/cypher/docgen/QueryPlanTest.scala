@@ -1181,31 +1181,30 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def conditionalApply() {
+  @Test def onMatchApply() {
     profileQuery(
-      title = "Conditional Apply",
+      title = "OnMatchApply",
       text =
-        """The `ConditionalApply` operator checks whether a variable is not `null`, and if so, the right child operator will be executed.
+        """The `OnMatchApply` operator executes its left-hand side and foreach row it produces from the left-hand side it executes the right-hand side.
           |This operator is a variation of the <<query-plan-apply, Apply>> operator.
         """.stripMargin,
       queryText =
         """MERGE (p:Person {name: 'Andy'})
           |ON MATCH SET p.exists = true""".stripMargin,
-      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("ConditionalApply"))
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("OnMatchApply"))
     )
   }
 
-  @Test def antiConditionalApply() {
+  @Test def either() {
     profileQuery(
-      title = "Anti Conditional Apply",
+      title = "Either",
       text =
-        """The `AntiConditionalApply` operator checks whether a variable is `null`, and if so, the right child operator will be executed.
-          |This operator is a variation of the <<query-plan-apply, Apply>> operator.
+        """The `Either` operator executes either the left-hand side or if the left-hand side does not produce any results, it executes its right-hand side.
         """.stripMargin,
       queryText =
         """MERGE (p:Person {name: 'Andy'})
           |ON CREATE SET p.exists = true""".stripMargin,
-      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("AntiConditionalApply"))
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("Either"))
     )
   }
 
