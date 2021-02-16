@@ -54,6 +54,14 @@ Set a new password for a user. This user will not be required to change this pas
 ###assertion=update-one parameters=update
 //
 
+ALTER USER alice IF EXISTS SET PASSWORD CHANGE REQUIRED
+###
+
+Required to change the password on the next login for a user, if the user exists.
+
+###assertion=update-one parameters=update
+//
+
 ALTER USER alice SET STATUS SUSPENDED
 ###
 

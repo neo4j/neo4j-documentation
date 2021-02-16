@@ -183,6 +183,13 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
           resultTable()
         }
+        p("This command is optionally idempotent, with the default behavior to throw an exception if the user does not exists. " +
+          "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the user not exist.")
+        query("ALTER USER nonExistingUser IF EXISTS SET PASSWORD 'abc123'", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 0)
+        })) {
+          statsOnlyResultTable()
+        }
       }
       section("Changing the current user's password", "administration-security-users-alter-password") {
         initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED")
