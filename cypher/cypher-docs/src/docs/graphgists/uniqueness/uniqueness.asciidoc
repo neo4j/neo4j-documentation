@@ -23,7 +23,7 @@ To understand this better, let us consider a few alternative options:
 
 .Homomorphism
 ====
-The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `+(a)->(b)+`.
+The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `+(a:Node)-[r:R]->(b:Node)+`.
 
 If the query is looking for paths of length `n` and do not care about the direction, a path of length `n` will be returned repeating the two nodes over and over.
 
@@ -42,12 +42,12 @@ This will return the two resulting records `[a,b,a,b,a,b]`, as well as `[b,a,b,a
 
 **Constraints:** The same node cannot be returned more than once for each path matching record.
 
-In another two-node example, such as `+(a)->(b)+`; only paths of length 1 can be found with the node isomorphism constraint.
+In another two-node example, such as `+(a:Node)-[r:R]->(b:Node)+`; only paths of length 1 can be found with the node isomorphism constraint.
 
 
 .Node isomorphism
 ====
-The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `+(a)->(b)+`.
+The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `+(a:Node)-[r:R]->(b:Node)+`.
 
 [source, cypher]
 ----
@@ -62,12 +62,12 @@ This will return the two resulting records `[a, b]`, as well as `[b, a]`.
 
 **Constraints:** The same relationship cannot be returned more than once for each path matching record.
 
-In another two-node example, such as `+(a)->(b)+`; only paths of length 1 can be found with the relationship isomorphism constraint.
+In another two-node example, such as `+(a:Node)-[r:R]->(b:Node)+`; only paths of length 1 can be found with the relationship isomorphism constraint.
 
 
 .Relationship isomorphism
 ====
-The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `+(a)->(b)+`.
+The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `+(a:Node)-[r:R]->(b:Node)+`.
 
 [source, cypher]
 ----
