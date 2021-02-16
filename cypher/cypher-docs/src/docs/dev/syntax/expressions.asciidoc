@@ -12,8 +12,10 @@
 == Expressions in general
 
 [NOTE]
+====
 Most expressions in Cypher evaluate to `null` if any of their inner expressions are `null`.
 Notable exceptions are the operators `IS NULL` and `IS NOT NULL`.
+====
 
 An expression in Cypher can be:
 
@@ -25,21 +27,20 @@ An expression in Cypher can be:
 * A variable: `n`, `x`, `rel`, `myFancyVariable`, `++`A name with weird stuff in it[]!`++`.
 * A property: `n.prop`, `x.prop`, `rel.thisProperty`, `++myFancyVariable.`(weird property name)`++`.
 * A dynamic property: `n["prop"]`, `rel[n.city + n.zip]`, `map[coll[0]]`.
-* A parameter: `$param`, `$0`
-* A list of expressions: `['a', 'b']`, `[1, 2, 3]`, `['a', 2, n.property, $param]`, `[ ]`.
+* A parameter: `$param`, `$0`.
+* A list of expressions: `['a', 'b']`, `[1, 2, 3]`, `['a', 2, n.property, $param]`, `[]`.
 * A function call: `length(p)`, `nodes(p)`.
-* An aggregate function: `avg(x.prop)`, `count(*)`.
-* A path-pattern: `+(a)-->()<--(b)+`.
-* An operator application: `1 + 2` and `3 < 4`.
-* A predicate expression is an expression that returns true or false: `a.prop = 'Hello'`, `length(p) > 10`,
-`exists(a.name)`.
+* An aggregate function: `avg(x.prop)`, `+count(*)+`.
+* A path-pattern: `+(a)-[r]->(b)+`, `+(a)-[r]-(b)+`, `+(a)--(b)+`, `+(a)-->()<--(b)+`.
+* An operator application: `1 + 2`, `3 < 4`.
+* A predicate expression is an expression that returns true or false: `a.prop = 'Hello'`, `length(p) > 10`, `exists(a.name)`.
 * An existential subquery is an expression that returns true or false:
 `EXISTS {
   MATCH (n)-[r]->(p)
   WHERE p.name = 'Sven'
 }`.
-* A regular expression: `a.name =~ 'Tim.*'`
-* A case-sensitive string matching expression: `a.surname STARTS WITH 'Sven'`, `a.surname ENDS WITH 'son'` or `a.surname CONTAINS 'son'`
+* A regular expression: `a.name =~ 'Tim.*'`.
+* A case-sensitive string matching expression: `a.surname STARTS WITH 'Sven'`, `a.surname ENDS WITH 'son'` or `a.surname CONTAINS 'son'`.
 * A `CASE` expression.
 
 
