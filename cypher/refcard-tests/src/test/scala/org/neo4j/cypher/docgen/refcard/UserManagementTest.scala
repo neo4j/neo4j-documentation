@@ -57,7 +57,7 @@ Set a new password for a user. This user will not be required to change this pas
 ALTER USER alice IF EXISTS SET PASSWORD CHANGE REQUIRED
 ###
 
-Required to change the password on the next login for a user, if the user exists.
+If the specified user exists, force this user to change their password on the next login.
 
 ###assertion=update-one parameters=update
 //
