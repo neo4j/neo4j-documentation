@@ -30,9 +30,9 @@ For example: naming a database `foo.bar.baz` is perfectly valid.
 == Scoping and namespace rules
 
 * Node labels, relationship types and property names may re-use names.
-** The following query -- with `a` for the label, type and property name -- is valid: `CREATE (a:a {a: 'a'})-[r:a]->(b:a {a: 'a'})`.
+** The following query -- with `a` for the label, type and property name -- is valid: `+CREATE (a:a {a: 'a'})-[r:a]->(b:a {a: 'a'})+`.
 * Variables for nodes and relationships must not re-use names within the same query scope.
-** The following query is not valid as the node and relationship both have the name `a`: `CREATE (a)-[a]->(b)`.
+** The following query is not valid as the node and relationship both have the name `a`: `+CREATE (a)-[a]->(b)+`.
 
 
 == Recommendations

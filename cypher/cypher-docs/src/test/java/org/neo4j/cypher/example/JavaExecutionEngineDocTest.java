@@ -142,7 +142,7 @@ public class JavaExecutionEngineDocTest
         sb.append( "\n.Parameters\n[source,javascript]\n----\n" )
                 .append( prettifiedJson )
                 .append( "\n----\n\n.Query\n" )
-                .append( AsciidocHelper.createAsciiDocSnippet( "cypher", Prettifier.apply( query, false ) ) );
+                .append( AsciidocHelper.createAsciiDocSnippet( "cypher", query ) );
         AsciiDocGenerator.dumpToSeparateFile( docsTargetDir, id, sb.toString() );
     }
 
@@ -152,7 +152,12 @@ public class JavaExecutionEngineDocTest
         try ( Transaction transaction = db.beginTx() )
         {
             // tag::JavaQuery[]
-            Result result = transaction.execute( "MATCH (n) WHERE id(n) = 0 AND 1 = 1 RETURN n" );
+            String query =
+                "MATCH (n)" + "\n" +
+                "WHERE id(n) = 0 AND 1 = 1" + "\n" +
+                "RETURN n";
+
+            Result result = transaction.execute( query );
 
             assertThat( result.columns(), hasItem( "n" ) );
             Iterator<Node> n_column = result.columnAs( "n" );
@@ -173,7 +178,12 @@ public class JavaExecutionEngineDocTest
             Node bobNode = transaction.getNodeById( bobNodeId );
             Node johanNode = transaction.getNodeById( johanNodeId );
 
-            Result result = transaction.execute( "MATCH (n)-->(friend) WHERE id(n) = 0 RETURN collect(friend)" );
+            String query =
+                "MATCH (n)-->(friend)" + "\n" +
+                "WHERE id(n) = 0" + "\n" +
+                "RETURN collect(friend)";
+
+            Result result = transaction.execute( query );
 
             Iterable<Node> friends = (Iterable<Node>) result.columnAs( "collect(friend)" ).next();
             assertThat( friends, hasItems( bobNode, johanNode ) );
@@ -188,11 +198,14 @@ public class JavaExecutionEngineDocTest
         createTenNodes();
         try ( Transaction transaction = db.beginTx() )
         {
-            String q = "MATCH (one), (two), (three), (four), (five), (six), (seven), (eight), (nine), (ten) " +
-                    "WHERE id(one) = 1 AND id(two) = 2 AND id(three) = 3 AND id(four) = 4 AND id(five) = 5 " +
-                    "AND id(six) = 6 AND id(seven) = 7 AND id(eight) = 8 AND id(nine) = 9 AND id(ten) = 10 " +
-                    "RETURN one, two, three, four, five, six, seven, eight, nine, ten";
-            Result result = transaction.execute( q );
+            String query =
+                "MATCH (one), (two), (three), (four), (five), (six), (seven), (eight), (nine), (ten)" + "\n" +
+                "WHERE id(one) = 1 AND id(two) = 2 AND id(three) = 3 AND id(four) = 4 AND id(five) = 5" + "\n" +
+                "AND id(six) = 6 AND id(seven) = 7 AND id(eight) = 8 AND id(nine) = 9 AND id(ten) = 10" + "\n" +
+                "RETURN one, two, three, four, five, six, seven, eight, nine, ten";
+
+            Result result = transaction.execute( query );
+
             Pattern pattern = Pattern.compile( "one.*two.*three.*four.*five.*six.*seven.*eight.*nine.*ten" );
             assertTrue( pattern.matcher( result.resultAsString() ).find() );
             transaction.commit();
@@ -219,7 +232,12 @@ public class JavaExecutionEngineDocTest
             // tag::exampleWithParameterForNodeId[]
             Map<String,Object> params = new HashMap<>();
             params.put( "id", 0 );
-            String query = "MATCH (n) WHERE id(n) = $id RETURN n.name";
+
+            String query =
+                "MATCH (n)" + "\n" +
+                "WHERE id(n) = $id" + "\n" +
+                "RETURN n.name";
+
             Result result = transaction.execute( query, params );
             // end::exampleWithParameterForNodeId[]
 
@@ -239,7 +257,12 @@ public class JavaExecutionEngineDocTest
             // tag::exampleWithParameterForMultipleNodeIds[]
             Map<String,Object> params = new HashMap<>();
             params.put( "ids", asList( 0, 1, 2 ) );
-            String query = "MATCH (n) WHERE id(n) IN $ids RETURN n.name";
+
+            String query =
+                "MATCH (n)" + "\n" +
+                "WHERE id(n) IN $ids" + "\n" +
+                "RETURN n.name";
+
             Result result = transaction.execute( query, params );
             // end::exampleWithParameterForMultipleNodeIds[]
 
@@ -266,7 +289,12 @@ public class JavaExecutionEngineDocTest
             // tag::exampleWithStringLiteralAsParameter[]
             Map<String,Object> params = new HashMap<>();
             params.put( "name", "Johan" );
-            String query = "MATCH (n:Person) WHERE n.name = $name RETURN n";
+
+            String query =
+                "MATCH (n:Person)" + "\n" +
+                "WHERE n.name = $name" + "\n" +
+                "RETURN n";
+
             Result result = transaction.execute( query, params );
             // end::exampleWithStringLiteralAsParameter[]
 
@@ -286,7 +314,11 @@ public class JavaExecutionEngineDocTest
             // tag::exampleWithShortSyntaxStringLiteralAsParameter[]
             Map<String,Object> params = new HashMap<>();
             params.put( "name", "Johan" );
-            String query = "MATCH (n:Person {name: $name}) RETURN n";
+
+            String query =
+                "MATCH (n:Person {name: $name})" + "\n" +
+                "RETURN n";
+
             Result result = transaction.execute( query, params );
             // end::exampleWithShortSyntaxStringLiteralAsParameter[]
 
@@ -306,10 +338,14 @@ public class JavaExecutionEngineDocTest
             // tag::exampleWithParameterForNodeObject[]
             Map<String,Object> params = new HashMap<>();
             params.put( "node", bobNode );
-            String query = "MATCH (n:Person) WHERE n = $node RETURN n.name";
+
+            String query =
+                "MATCH (n:Person)" + "\n" +
+                "WHERE n = $node" + "\n" +
+                "RETURN n.name";
+
             Result result = transaction.execute( query, params );
             // end::exampleWithParameterForNodeObject[]
-
             assertThat( result.columns(), hasItem( "n.name" ) );
             Iterator<Object> n_column = result.columnAs( "n.name" );
             assertEquals( "Bob", n_column.next() );
@@ -326,7 +362,13 @@ public class JavaExecutionEngineDocTest
             Map<String,Object> params = new HashMap<>();
             params.put( "s", 1 );
             params.put( "l", 1 );
-            String query = "MATCH (n:Person) RETURN n.name SKIP $s LIMIT $l";
+
+            String query =
+                "MATCH (n:Person)" + "\n" +
+                "RETURN n.name" + "\n" +
+                "SKIP $s" + "\n" +
+                "LIMIT $l";
+
             Result result = transaction.execute( query, params );
             // end::exampleWithParameterForSkipLimit[]
 
@@ -346,9 +388,15 @@ public class JavaExecutionEngineDocTest
             // tag::exampleWithParameterRegularExpression[]
             Map<String,Object> params = new HashMap<>();
             params.put( "regex", ".*h.*" );
-            String query = "MATCH (n:Person) WHERE n.name =~ $regex RETURN n.name";
+
+            String query =
+                "MATCH (n:Person)" + "\n" +
+                "WHERE n.name =~ $regex" + "\n" +
+                "RETURN n.name";
+
             Result result = transaction.execute( query, params );
             // end::exampleWithParameterRegularExpression[]
+
             dumpToFile( "exampleWithParameterRegularExpression", query, params );
 
             assertThat( result.columns(), hasItem( "n.name" ) );
@@ -369,9 +417,15 @@ public class JavaExecutionEngineDocTest
             // tag::exampleWithParameterCSCIStringPatternMatching[]
             Map<String,Object> params = new HashMap<>();
             params.put( "name", "Michael" );
-            String query = "MATCH (n:Person) WHERE n.name STARTS WITH $name RETURN n.name";
+
+            String query =
+                "MATCH (n:Person)" + "\n" +
+                "WHERE n.name STARTS WITH $name" + "\n" +
+                "RETURN n.name";
+
             Result result = transaction.execute( query, params );
             // end::exampleWithParameterCSCIStringPatternMatching[]
+
             dumpToFile( "exampleWithParameterCSCIStringPatternMatching", query, params );
 
             assertThat( result.columns(), hasItem( "n.name" ) );
@@ -389,9 +443,12 @@ public class JavaExecutionEngineDocTest
             // tag::exampleWithParameterProcedureCall[]
             Map<String,Object> params = new HashMap<>();
             params.put( "indexname", "My index" );
+
             String query = "CALL db.resampleIndex($indexname)";
+
             Result result = transaction.execute( query, params );
             // end::exampleWithParameterProcedureCall[]
+
             dumpToFile( "exampleWithParameterProcedureCall", query, params );
 
             assert result.columns().isEmpty();
@@ -411,9 +468,12 @@ public class JavaExecutionEngineDocTest
 
             Map<String,Object> params = new HashMap<>();
             params.put( "props", props );
+
             String query = "CREATE ($props)";
+
             transaction.execute( query, params );
             // end::create_node_from_map[]
+
             dumpToFile( "create_node_from_map", query, params );
 
             Result result = transaction.execute( "MATCH (n) WHERE n.name = 'Andy' AND n.position = 'Developer' RETURN n" );
@@ -441,9 +501,16 @@ public class JavaExecutionEngineDocTest
             Map<String,Object> params = new HashMap<>();
             List<Map<String,Object>> maps = asList( n1, n2 );
             params.put( "props", maps );
-            String query = "UNWIND $props AS properties CREATE (n:Person) SET n = properties RETURN n";
+
+            String query =
+                "UNWIND $props AS properties" + "\n" +
+                "CREATE (n:Person)" + "\n" +
+                "SET n = properties" + "\n" +
+                "RETURN n";
+
             Result result = transaction.execute( query, params );
             // end::create_multiple_nodes_from_map[]
+
             dumpToFile( "create_multiple_nodes_from_map", query, params );
             result.close();
             result = transaction.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
@@ -461,7 +528,7 @@ public class JavaExecutionEngineDocTest
     @Test
     public void set_properties_on_a_node_from_a_map() throws Exception
     {
-        try ( Transaction tx = db.beginTx() )
+        try ( Transaction transaction = db.beginTx() )
         {
             // tag::set_properties_on_a_node_from_a_map[]
             Map<String, Object> n1 = new HashMap<>();
@@ -471,13 +538,18 @@ public class JavaExecutionEngineDocTest
             Map<String, Object> params = new HashMap<>();
             params.put( "props", n1 );
 
-            String query = "MATCH (n:Person) WHERE n.name='Michaela' SET n = $props";
-            tx.execute( query, params );
+            String query =
+                "MATCH (n:Person)" + "\n" +
+                "WHERE n.name = 'Michaela'" + "\n" +
+                "SET n = $props";
+
+            transaction.execute( query, params );
             // end::set_properties_on_a_node_from_a_map[]
+
             dumpToFile( "set_properties_on_a_node_from_a_map", query, params );
 
-            tx.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
-            assertThat( tx.getNodeById( michaelaNodeId ).getProperty( "name" ).toString(), is( "Andy" ) );
+            transaction.execute( "MATCH (n:Person) WHERE n.name IN ['Andy', 'Michael'] AND n.position = 'Developer' RETURN n" );
+            assertThat( transaction.getNodeById( michaelaNodeId ).getProperty( "name" ).toString(), is( "Andy" ) );
         }
     }
 
@@ -494,7 +566,11 @@ public class JavaExecutionEngineDocTest
             params.put( "props", props );
 
             String query =
-                    "MATCH (n) WHERE id(n) = 0 " + "MERGE p = (n)-[:REL]->({name: $props.name, position: $props.position}) " + "RETURN last(nodes(p)) AS X";
+                "MATCH (n)" + "\n" +
+                "WHERE id(n) = 0" + "\n" +
+                "MERGE p = (n)-[:REL]->({name: $props.name, position: $props.position})" + "\n" +
+                "RETURN last(nodes(p)) AS X";
+
             Result result = transaction.execute( query, params );
             assertThat( count( result ), is( 1L ) );
             transaction.commit();
@@ -518,9 +594,11 @@ public class JavaExecutionEngineDocTest
             params.put( "props1", props1 );
             params.put( "props2", props2 );
 
-            String query = "MATCH (n) WHERE id(n) = 0 " +
-                    "MERGE p = (n)-[:REL]->({name: $props1.name, position: $props1.position})-[:LER]->({name: $props2.name, awesome: $props2.awesome}) " +
-                    "RETURN p";
+            String query =
+                "MATCH (n) WHERE id(n) = 0 " + "\n" +
+                "MERGE p = (n)-[:REL]->({name: $props1.name, position: $props1.position})-[:LER]->({name: $props2.name, awesome: $props2.awesome})" + "\n" +
+                "RETURN p";
+
             Result result = transaction.execute( query, params );
             assertThat( count( result ), is( 1L ) );
             transaction.commit();
@@ -547,12 +625,12 @@ public class JavaExecutionEngineDocTest
 
     private void makeFriends( Long aId, Long bId )
     {
-        try ( Transaction tx = db.beginTx() )
+        try ( Transaction transaction = db.beginTx() )
         {
-            Node a = tx.getNodeById( aId );
-            Node b = tx.getNodeById( bId );
+            Node a = transaction.getNodeById( aId );
+            Node b = transaction.getNodeById( bId );
             a.createRelationshipTo( b, RelationshipType.withName( "friend" ) );
-            tx.commit();
+            transaction.commit();
         }
     }
 }
