@@ -28,59 +28,67 @@ class CaseExpressionsTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("`CASE` expressions", "query-syntax-case")
     runtime("interpreted")
-    initQueries(
-      """CREATE (alice:A {name:'Alice', age: 38, eyes: 'brown'}),
-        |       (bob:B {name: 'Bob', age: 25, eyes: 'blue'}),
-        |       (charlie:C {name: 'Charlie', age: 53, eyes: 'green'}),
-        |       (daniel:D {name: 'Daniel', eyes: 'brown'}),
-        |       (eskil:E {name: 'Eskil', age: 41, eyes: 'blue', array: ['one', 'two', 'three']}),
-        |
-        |       (alice)-[:KNOWS]->(bob),
-        |       (alice)-[:KNOWS]->(charlie),
-        |       (bob)-[:KNOWS]->(daniel),
-        |       (charlie)-[:KNOWS]->(daniel),
-        |       (bob)-[:MARRIED]->(eskil)""")
-    p(
-      """Generic conditional expressions may be expressed using the well-known `CASE` construct.
-        |Two variants of `CASE` exist within Cypher: the simple form, which allows an expression to be compared against multiple values, and the generic form, which allows multiple conditional statements to be expressed.
-      """.stripMargin)
+    initQueries("""CREATE
+                  #  (alice:A {name:'Alice', age: 38, eyes: 'brown'}),
+                  #  (bob:B {name: 'Bob', age: 25, eyes: 'blue'}),
+                  #  (charlie:C {name: 'Charlie', age: 53, eyes: 'green'}),
+                  #  (daniel:D {name: 'Daniel', eyes: 'brown'}),
+                  #  (eskil:E {name: 'Eskil', age: 41, eyes: 'blue', array: ['one', 'two', 'three']}),
+                  #  (alice)-[:KNOWS]->(bob),
+                  #  (alice)-[:KNOWS]->(charlie),
+                  #  (bob)-[:KNOWS]->(daniel),
+                  #  (charlie)-[:KNOWS]->(daniel),
+                  #  (bob)-[:MARRIED]->(eskil)""".stripMargin('#'))
+    p("""Generic conditional expressions may be expressed using the well-known `CASE` construct.
+        #Two variants of `CASE` exist within Cypher: the simple form, which allows an expression to be compared against multiple values, and the generic form, which allows multiple conditional statements to be expressed.""".stripMargin('#'))
     p("The following graph is used for the examples below:")
     graphViz()
     section("Simple `CASE` form: comparing an expression against multiple values", "syntax-simple-case") {
-      p(
-        """The expression is calculated, and compared in order with the `WHEN` clauses until a match is found.
-          |If no match is found, the expression in the `ELSE` clause is returned.
-          |However, if there is no `ELSE` case and no match is found, `null` will be returned.""".stripMargin)
-      functionWithCypherStyleFormatting(
-        "CASE test \n WHEN value THEN result \n  [WHEN ...] \n  [ELSE default] \nEND", ("test", "A valid expression."), ("value", "An expression whose result will be compared to `test`."), ("result", "This is the expression returned as output if `value` matches `test`."), ("default", "If no match is found, `default` is returned."))
-      query(
-        """MATCH (n)
-          |RETURN
-          |CASE n.eyes
-          |WHEN 'blue'  THEN 1
-          |WHEN 'brown' THEN 2
-          |ELSE 3
-          |END AS result""".stripMargin, ResultAssertions((r) => {
+      p("""The expression is calculated, and compared in order with the `WHEN` clauses until a match is found.
+          #If no match is found, the expression in the `ELSE` clause is returned.
+          #However, if there is no `ELSE` case and no match is found, `null` will be returned.""".stripMargin('#'))
+      functionWithCypherStyleFormatting("""CASE test
+                                          #  WHEN value THEN result
+                                          #  [WHEN ...]
+                                          #  [ELSE default]
+                                          #END""".stripMargin('#'),
+      ("test", "A valid expression."),
+      ("value", "An expression whose result will be compared to `test`."),
+      ("result", "This is the expression returned as output if `value` matches `test`."),
+      ("default", "If no match is found, `default` is returned."))
+      query("""MATCH (n)
+              #RETURN
+              #CASE n.eyes
+              #  WHEN 'blue'  THEN 1
+              #  WHEN 'brown' THEN 2
+              #  ELSE 3
+              #END AS result""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList should equal(List(Map("result" -> 2), Map("result" -> 1), Map("result" -> 3), Map("result" -> 2), Map("result" -> 1)))
-        })) {
+      })) {
         resultTable()
       }
     }
     section("Generic `CASE` form: allowing for multiple conditionals to be expressed", "syntax-generic-case") {
-      p(
-        """The predicates are evaluated in order until a `true` value is found, and the result value is used.
-          |If no match is found, the expression in the `ELSE` clause is returned.
-          |However, if there is no `ELSE` case and no match is found, `null` will be returned.""".stripMargin)
-      functionWithCypherStyleFormatting(
-        "CASE \nWHEN predicate THEN result \n  [WHEN ...] \n  [ELSE default] \nEND", ("predicate", "A predicate that is tested to find a valid alternative."), ("result", "This is the expression returned as output if `predicate` evaluates to `true`."), ("default", "If no match is found, `default` is returned."))
-      query(
-        """MATCH (n)
-          |RETURN
-          |CASE
-          |WHEN n.eyes = 'blue'  THEN 1
-          |WHEN n.age < 40       THEN 2
-          |ELSE 3
-          |END AS result""".stripMargin, ResultAssertions((r) => {
+      p("""The predicates are evaluated in order until a `true` value is found, and the result value is used.
+          #If no match is found, the expression in the `ELSE` clause is returned.
+          #However, if there is no `ELSE` case and no match is found, `null` will be returned.""".stripMargin('#'))
+      functionWithCypherStyleFormatting("""CASE
+                                          #  WHEN predicate THEN result
+                                          #  [WHEN ...]
+                                          #  [ELSE default]
+                                          #END""".stripMargin('#'),
+      ("predicate", "A predicate that is tested to find a valid alternative."),
+      ("result", "This is the expression returned as output if `predicate` evaluates to `true`."),
+      ("default", "If no match is found, `default` is returned."))
+      query("""MATCH (n)
+              #RETURN
+              #CASE
+              #  WHEN n.eyes = 'blue' THEN 1
+              #  WHEN n.age < 40      THEN 2
+              #  ELSE 3
+              #END AS result""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList should equal(List(Map("result" -> 2), Map("result" -> 1), Map("result" -> 3), Map("result" -> 3), Map("result" -> 1)))
         })) {
         resultTable()
@@ -89,31 +97,31 @@ class CaseExpressionsTest extends DocumentingTest {
     section("Distinguishing between when to use the simple and generic `CASE` forms", "syntax-distinguish-case") {
       p(
         """Owing to the close similarity between the syntax of the two forms, sometimes it may not be clear at the outset as to which form to use.
-          |We illustrate this scenario by means of the following query, in which there is an expectation that `age_10_years_ago` is `-1` if `n.age` is `null`:
-        """.stripMargin)
-      query(
-        """MATCH (n)
-          |RETURN n.name,
-          |CASE n.age
-          |WHEN n.age IS NULL THEN -1
-          |ELSE n.age - 10
-          |END AS age_10_years_ago""".stripMargin, ResultAssertions((r) => {
+          #We illustrate this scenario by means of the following query, in which there is an expectation that `age_10_years_ago` is `-1` if `n.age` is `null`:
+        """.stripMargin('#'))
+      query("""MATCH (n)
+              #RETURN n.name,
+              #CASE n.age
+              #  WHEN n.age IS NULL THEN -1
+              #  ELSE n.age - 10
+              #END AS age_10_years_ago""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList should equal(List(Map("age_10_years_ago" -> 28, "n.name" -> "Alice"), Map("age_10_years_ago" -> 15, "n.name" -> "Bob"), Map("age_10_years_ago" -> 43, "n.name" -> "Charlie"), Map("age_10_years_ago" -> null, "n.name" -> "Daniel"), Map("age_10_years_ago" -> 31, "n.name" -> "Eskil")))
         })) {
         p("""However, as this query is written using the simple `CASE` form, instead of `age_10_years_ago` being `-1` for the node named `Daniel`, it is `null`.
-          |This is because a comparison is made between `n.age` and `n.age IS NULL`.
-          |As `n.age IS NULL` is a boolean value, and `n.age` is an integer value, the `WHEN n.age IS NULL THEN -1` branch is never taken.
-          |This results in the `ELSE n.age - 10` branch being taken instead, returning `null`.""".stripMargin)
+            #This is because a comparison is made between `n.age` and `n.age IS NULL`.
+            #As `n.age IS NULL` is a boolean value, and `n.age` is an integer value, the `WHEN n.age IS NULL THEN -1` branch is never taken.
+            #This results in the `ELSE n.age - 10` branch being taken instead, returning `null`.""".stripMargin('#'))
         resultTable()
       }
       p("""The corrected query, behaving as expected, is given by the following generic `CASE` form:""")
-      query(
-        """MATCH (n)
-          |RETURN n.name,
-          |CASE
-          |WHEN n.age IS NULL THEN -1
-          |ELSE n.age - 10
-          |END AS age_10_years_ago""".stripMargin, ResultAssertions((r) => {
+      query("""MATCH (n)
+              #RETURN n.name,
+              #CASE
+              #  WHEN n.age IS NULL THEN -1
+              #  ELSE n.age - 10
+              #END AS age_10_years_ago""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList should equal(List(Map("age_10_years_ago" -> 28, "n.name" -> "Alice"), Map("age_10_years_ago" -> 15, "n.name" -> "Bob"), Map("age_10_years_ago" -> 43, "n.name" -> "Charlie"), Map("age_10_years_ago" -> -1, "n.name" -> "Daniel"), Map("age_10_years_ago" -> 31, "n.name" -> "Eskil")))
         })) {
         p("""We now see that the `age_10_years_ago` correctly returns `-1` for the node named `Daniel`.""".stripMargin)
