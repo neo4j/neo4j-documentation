@@ -269,7 +269,7 @@ class TemporalTest extends DocumentingTest {
             resultTable()
           }
           p("Parsing a _LocalDateTime_ using the _ordinal date_ format:")
-          query("""RETURN localdatetime('2015185T19:32:24') as theLocalDateTime""",
+          query("""RETURN localdatetime('2015185T19:32:24') AS theLocalDateTime""",
           ResultAssertions((r) => {
               r.toList should equal(List(Map("theLocalDateTime" -> LocalDateTimeValue.parse("2015185T19:32:24").asObjectCopy())))
             })) {
@@ -329,7 +329,7 @@ class TemporalTest extends DocumentingTest {
             || `instant.epochSeconds` | The number of seconds between `1970-01-01T00:00:00+0000` and the instant footnote:[For the _nanosecond_ part of the _epoch_ offset, the regular _nanosecond_ component (`instant.nanosecond`) can be used.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |  |   | |
             ||===""")
         p("The following query shows how to extract the components of a _Date_ value:")
-        query("""WITH date({year: 1984, month: 10, day: 11}) As d
+        query("""WITH date({year: 1984, month: 10, day: 11}) AS d
                 #RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.dayOfWeek, d.dayOfQuarter""".stripMargin('#'),
         ResultAssertions((r) => {
             r.toList should equal(List(Map(
@@ -351,7 +351,7 @@ class TemporalTest extends DocumentingTest {
                 #  year: 1984, month: 11, day: 11,
                 #  hour: 12, minute: 31, second: 14, nanosecond: 645876123,
                 #  timezone: 'Europe/Stockholm'
-                #}) as d
+                #}) AS d
                 #RETURN d.year, d.quarter, d.month, d.week, d.weekYear, d.day, d.ordinalDay, d.dayOfWeek, d.dayOfQuarter""".stripMargin('#'),
           ResultAssertions((r) => {
             r.toList should equal(List(Map(
@@ -373,7 +373,7 @@ class TemporalTest extends DocumentingTest {
                 #  year: 1984, month: 11, day: 11,
                 #  hour: 12, minute: 31, second: 14, nanosecond: 645876123,
                 #  timezone: 'Europe/Stockholm'
-                #}) as d
+                #}) AS d
                 #RETURN d.hour, d.minute, d.second, d.millisecond, d.microsecond, d.nanosecond""".stripMargin('#'),
           ResultAssertions((r) => {
             r.toList should equal(List(Map(
@@ -392,7 +392,7 @@ class TemporalTest extends DocumentingTest {
                 #  year: 1984, month: 11, day: 11,
                 #  hour: 12, minute: 31, second: 14, nanosecond: 645876123,
                 #  timezone: 'Europe/Stockholm'
-                #}) as d
+                #}) AS d
                 #RETURN d.timezone, d.offset, d.offsetMinutes, d.epochSeconds, d.epochMillis""".stripMargin('#'),
           ResultAssertions((r) => {
             r.toList should equal(List(Map(
@@ -627,14 +627,14 @@ class TemporalTest extends DocumentingTest {
         resultTable()
       }
       p("Get the first _Date_ of the current year:")
-      query("""RETURN date.truncate('year') as day""",
+      query("""RETURN date.truncate('year') AS day""",
       ResultAssertions((r) => {
           r.toList.head("day").asInstanceOf[LocalDate].get(ChronoField.DAY_OF_YEAR) should equal(1)
         })) {
         resultTable()
       }
       p("Get the _Date_ of the Thursday in the week of a specific date:")
-      query("""RETURN date.truncate('week', date('2019-10-01'), {dayOfWeek: 4}) as thursday""",
+      query("""RETURN date.truncate('week', date('2019-10-01'), {dayOfWeek: 4}) AS thursday""",
       ResultAssertions((r) => {
           r.toList.head("thursday").asInstanceOf[LocalDate] should equal(LocalDate.of(2019, 10, 3))
         })) {
