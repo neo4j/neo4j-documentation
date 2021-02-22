@@ -40,6 +40,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT exists(rel.property)` | Syntax | Deprecated | Replaced by `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT rel.property IS NOT NULL`
 | `exists(prop)` | Syntax | Deprecated | Replaced by `prop IS NOT NULL`
 | `NOT exists(prop)` | Syntax | Deprecated | Replaced by `prop IS NULL`
+| `ALTER USER name IF EXISTS ...` | Syntax | Added | Makes altering users idempotent. If no user with the name exists no error will be thrown.
 |===
 
 [[cypher-deprecations-additions-removals-4.2]]

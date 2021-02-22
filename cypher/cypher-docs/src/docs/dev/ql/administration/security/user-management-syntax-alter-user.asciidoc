@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher, role=noplay]
 -----
-ALTER USER name
+ALTER USER name [IF EXISTS]
       [SET [PLAINTEXT | ENCRYPTED] PASSWORD password]
       [[SET PASSWORD] CHANGE [NOT] REQUIRED]
       [SET STATUS {ACTIVE | SUSPENDED}]
