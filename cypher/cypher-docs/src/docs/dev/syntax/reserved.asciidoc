@@ -98,9 +98,9 @@ If any reserved keyword is escaped -- i.e. is encapsulated by backticks ```, suc
 
 == Literals
 
-* `FALSE`
-* `NULL`
-* `TRUE`
+* `false`
+* `null`
+* `true`
 
 == Reserved for future use
 
