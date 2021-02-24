@@ -29,9 +29,14 @@ This set is refined and augmented by subsequent parts of the query.
 
 [options="header"]
 |===
-|Clause                                     |   Description
-|<<query-match,MATCH>>                      |   Specify the patterns to search for in the database.
-|<<query-optional-match,OPTIONAL MATCH>>    |   Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
+|Clause |Description
+
+m|<<query-match, MATCH>>
+|Specify the patterns to search for in the database.
+
+m|<<query-optional-match, OPTIONAL MATCH>>
+|Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
+
 |===
 
 
@@ -43,10 +48,20 @@ The returned expressions may all be aliased using `AS`.
 
 [options="header"]
 |===
-|Clause                      |   Description
-|<<query-return,RETURN ... [AS]>>     | Defines what to include in the query result set.
-|<<query-with,WITH ... [AS]>>         | Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
-|<<query-unwind,UNWIND ... [AS]>>                    | Expands a list into a sequence of rows.
+|Clause |Description
+
+//RETURN ... [AS]
+m|<<query-return, RETURN +++...+++ [AS]>>
+|Defines what to include in the query result set.
+
+//WITH ... [AS]
+m|<<query-with, WITH +++...+++ [AS]>>
+|Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
+
+//UNWIND ... [AS]
+m|<<query-unwind, UNWIND +++...+++ [AS]>>
+|Expands a list into a sequence of rows.
+
 |===
 
 
@@ -57,12 +72,25 @@ These comprise sub-clauses that must operate as part of reading clauses.
 
 [options="header"]
 |===
-|Sub-clause                                         | Description
-|<<query-where,WHERE>>                          | Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.
-|<<existential-subqueries, WHERE EXISTS {...}>> | An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
-|<<query-order,ORDER BY [ASC[ENDING] \| DESC[ENDING]]>>                       | A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in either ascending (the default) or descending order.
-|<<query-skip,SKIP>>                            | Defines from which row to start including the rows in the output.
-|<<query-limit,LIMIT>>                          | Constrains the number of rows in the output.
+|Sub-clause | Description
+
+m|<<query-where, WHERE>>
+|Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.
+
+//WHERE EXISTS { ... }
+m|<<existential-subqueries, WHERE EXISTS +++{ ... }+++>>
+|An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
+
+//ORDER BY [ASC[ENDING] | DESC[ENDING]]
+m|<<query-order, ORDER BY &#91;ASC&#91;ENDING&#93; &#124; DESC&#91;ENDING&#93;&#93;>>
+|A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in either ascending (the default) or descending order.
+
+m|<<query-skip, SKIP>>
+|Defines from which row to start including the rows in the output.
+
+m|<<query-limit, LIMIT>>
+|Constrains the number of rows in the output.
+
 |===
 
 
@@ -74,11 +102,20 @@ More details regarding the usage of these -- and query tuning in general -- can 
 
 [options="header"]
 |===
-|Hint                                       | Description
-|<<query-using-index-hint,USING INDEX>>       | Index hints are used to specify which index, if any, the planner should use as a starting point.
-|<<query-using-index-hint, USING INDEX SEEK>>  | Index seek hint instructs the planner to use an index seek for this clause.
-|<<query-using-scan-hint,USING SCAN>>         | Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
-|<<query-using-join-hint,USING JOIN>>         | Join hints are used to enforce a join operation at specified points.
+|Hint |Description
+
+m|<<query-using-index-hint, USING INDEX>>
+|Index hints are used to specify which index, if any, the planner should use as a starting point.
+
+m|<<query-using-index-hint, USING INDEX SEEK>>
+|Index seek hint instructs the planner to use an index seek for this clause.
+
+m|<<query-using-scan-hint, USING SCAN>>
+|Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
+
+m|<<query-using-join-hint, USING JOIN>>
+|Join hints are used to enforce a join operation at specified points.
+
 |===
 
 
@@ -89,13 +126,30 @@ These comprise clauses that write the data to the database.
 
 [options="header"]
 |===
-|Clause                                     |   Description
-|<<query-create,CREATE>>                    |   Create nodes and relationships.
-|<<query-delete,DELETE>>                    |   Delete nodes, relationships or paths. Any node to be deleted must also have all associated relationships explicitly deleted.
-|<<query-delete,DETACH DELETE>>             |   Delete a node or set of nodes. All associated relationships will automatically be deleted.
-|<<query-set,SET>>                          |   Update labels on nodes and properties on nodes and relationships.
-|<<query-remove,REMOVE>>                    |   Remove properties and labels from nodes and relationships.
-|<<query-foreach,FOREACH>>                  |   Update data within a list, whether components of a path, or the result of aggregation.
+|Clause |Description
+
+m|<<query-create, CREATE>>
+|Create nodes and relationships.
+
+m|<<query-delete, DELETE>>
+a|
+Delete nodes, relationships or paths.
+Any node to be deleted must also have all associated relationships explicitly deleted.
+
+m|<<query-delete, DETACH DELETE>>
+a|
+Delete a node or set of nodes.
+All associated relationships will automatically be deleted.
+
+m|<<query-set, SET>>
+|Update labels on nodes and properties on nodes and relationships.
+
+m|<<query-remove, REMOVE>>
+|Remove properties and labels from nodes and relationships.
+
+m|<<query-foreach, FOREACH>>
+|Update data within a list, whether components of a path, or the result of aggregation.
+
 |===
 
 
@@ -106,11 +160,21 @@ These comprise clauses that both read data from and write data to the database.
 
 [options="header"]
 |===
-|Clause                                             |   Description
-|<<query-merge,MERGE>>                              |   Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
-|--- <<query-merge-on-create-on-match,ON CREATE>>   | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
-|--- <<query-merge-on-create-on-match,ON MATCH>>    | Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
-|<<query-call,CALL [...YIELD]>>                      | Invokes a procedure deployed in the database and return any results.
+|Clause |Description
+
+m|<<query-merge, MERGE>>
+|Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
+
+m|--- <<query-merge-on-create-on-match, ON CREATE>>
+|Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
+
+m|--- <<query-merge-on-create-on-match, ON MATCH>>
+|Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
+
+//CALL ... [YIELD ... ]
+m|<<query-call, CALL +++...+++ &#91;YIELD +++...+++ &#93;>>
+|Invokes a procedure deployed in the database and return any results.
+
 |===
 
 
@@ -119,9 +183,18 @@ These comprise clauses that both read data from and write data to the database.
 
 [options="header"]
 |===
-|Clause                             |   Description
-|<<query-union,UNION>>              | Combines the result of multiple queries into a single result set. Duplicates are removed.
-|<<query-union,UNION ALL>>          | Combines the result of multiple queries into a single result set. Duplicates are retained.
+|Clause |Description
+
+m|<<query-union, UNION>>
+a|
+Combines the result of multiple queries into a single result set.
+Duplicates are removed.
+
+m|<<query-union, UNION ALL>>
+a|
+Combines the result of multiple queries into a single result set.
+Duplicates are retained.
+
 |===
 
 [[header-subquery-clauses]]
@@ -129,8 +202,12 @@ These comprise clauses that both read data from and write data to the database.
 
 [options="header"]
 |===
-|Clause                             |   Description
-|<<query-call-subquery,CALL { ... }>>   | Evaluates a subquery, typically used for post-union processing or aggregations.
+|Clause |Description
+
+//CALL { ... }
+m|<<query-call-subquery, CALL +++{ ... }+++>>
+|Evaluates a subquery, typically used for post-union processing or aggregations.
+
 |===
 
 [[header-multiple-graphs-clauses]]
@@ -138,8 +215,11 @@ These comprise clauses that both read data from and write data to the database.
 
 [options="header"]
 |===
-|Clause                             |   Description
-|<<query-use,USE>>                  | [fabric]#Determines which graph a query, or query part, is executed against.#
+|Clause |Description
+
+m|<<query-use, USE>>
+|[fabric]#Determines which graph a query, or query part, is executed against.#
+
 |===
 
 
@@ -148,9 +228,14 @@ These comprise clauses that both read data from and write data to the database.
 
 [options="header"]
 |===
-|Clause                              |   Description
-|<<query-load-csv,LOAD CSV>>                        |   Use when importing data from CSV files.
-|--- <<query-using-periodic-commit-hint,USING PERIODIC COMMIT>>        | This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
+|Clause |Description
+
+m|<<query-load-csv, LOAD CSV>>
+|Use when importing data from CSV files.
+
+m|--- <<query-using-periodic-commit-hint, USING PERIODIC COMMIT>>
+|This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
+
 |===
 
 
@@ -161,11 +246,21 @@ These comprise clauses used to manage databases, schema and security; further de
 
 [options="header"]
 |===
-|Clause                                                                | Description
-|<<administration-databases,CREATE \| DROP \| START \| STOP DATABASE>> | Create, drop, start or stop a database.
-|<<administration-indexes-syntax,CREATE \| DROP INDEX>>                | Create or drop an index on all nodes with a particular label and property.
-|<<administration-constraints-syntax,CREATE \| DROP CONSTRAINT>>       | Create or drop a constraint pertaining to either a node label or relationship type, and a property.
-|<<administration-security,Users, roles, privileges>>                  | Manage users, roles and privileges for database, graph and sub-graph access control.
+|Clause |Description
+
+m|<<administration-databases, CREATE \| DROP \| START \| STOP DATABASE>>
+|Create, drop, start or stop a database.
+
+m|<<administration-indexes-syntax, CREATE \| DROP INDEX>>
+|Create or drop an index on all nodes with a particular label and property.
+
+m|<<administration-constraints-syntax, CREATE \| DROP CONSTRAINT>>
+|Create or drop a constraint pertaining to either a node label or relationship type, and a property.
+
+//Users, roles, privileges
+|<<administration-security, Users&#44; roles&#44; privileges>>
+|Manage users, roles and privileges for database, graph and sub-graph access control.
+
 |===
 
 
