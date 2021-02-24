@@ -27,19 +27,17 @@ class MapsTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("Maps", "cypher-maps")
     initQueries(
-      """CREATE (charlie:Person {name: 'Charlie Sheen',  realName: 'Carlos Irwin Estévez'}),
-                |(martin:Person {name: 'Martin Sheen'}),
-                |(wallstreet:Movie {title: 'Wall Street', year: 1987}),
-                |(reddawn:Movie {title: 'Red Dawn', year: 1984}),
-                |(apocalypsenow:Movie {title: 'Apocalypse Now', year: 1979}),
-                |
-                |(charlie)-[:ACTED_IN]->(wallstreet),
-                |(charlie)-[:ACTED_IN]->(reddawn),
-                |(charlie)-[:ACTED_IN]->(apocalypsenow),
-                |(martin)-[:ACTED_IN]->(wallstreet),
-                |(martin)-[:ACTED_IN]->(apocalypsenow)
-
-      """.stripMargin)
+      """CREATE
+        #  (charlie:Person {name: 'Charlie Sheen', realName: 'Carlos Irwin Estévez'}),
+        #  (martin:Person {name: 'Martin Sheen'}),
+        #  (wallstreet:Movie {title: 'Wall Street', year: 1987}),
+        #  (reddawn:Movie {title: 'Red Dawn', year: 1984}),
+        #  (apocalypsenow:Movie {title: 'Apocalypse Now', year: 1979}),
+        #  (charlie)-[:ACTED_IN]->(wallstreet),
+        #  (charlie)-[:ACTED_IN]->(reddawn),
+        #  (charlie)-[:ACTED_IN]->(apocalypsenow),
+        #  (martin)-[:ACTED_IN]->(wallstreet),
+        #  (martin)-[:ACTED_IN]->(apocalypsenow)""".stripMargin('#'))
     synopsis("This section describes how to use maps in Cyphers.")
     p(
       """* <<cypher-literal-maps, Literal maps>>
@@ -59,9 +57,10 @@ class MapsTest extends DocumentingTest {
           |If returned through an <<http-api#http-api, HTTP API call>>, a JSON object will be returned.
           |If returned in Java, an object of type `java.util.Map<String,Object>` will be returned.
           |""".stripMargin)
-      query(
-        """RETURN { key: 'Value', listKey: [{ inner: 'Map1' }, { inner: 'Map2' }]}""", ResultAssertions((r) => {
-          r.toList should equal(List(Map("{ key: 'Value', listKey: [{ inner: 'Map1' }, { inner: 'Map2' }]}" -> Map("key" -> "Value", "listKey" -> List(Map("inner" -> "Map1"), Map("inner" -> "Map2"))))))
+      query("""RETURN {key: 'Value', listKey: [{inner: 'Map1'}, {inner: 'Map2'}]}""",
+      ResultAssertions((r) => {
+          r.toList should equal(
+            List(Map("{key: 'Value', listKey: [{inner: 'Map1'}, {inner: 'Map2'}]}" -> Map("key" -> "Value", "listKey" -> List(Map("inner" -> "Map1"), Map("inner" -> "Map2"))))))
         })) {
         resultTable()
       }
@@ -73,7 +72,7 @@ class MapsTest extends DocumentingTest {
       p(
         """A map projection begins with the variable bound to the graph entity to be projected from, and contains a body of comma-separated map elements, enclosed by `{` and  `}`.
         """)
-      p("`map_variable {map_element, [, ...n]}`")
+      p("`+map_variable {map_element, [, ...n]}+`")
       p(
         """A map element projects one or more key-value pairs to the map projection.
           |There exist four different types of map projection elements:
@@ -93,8 +92,10 @@ class MapsTest extends DocumentingTest {
           """Find *'Charlie Sheen'* and return data about him and the movies he has acted in.
             |This example shows an example of map projection with a literal entry, which in turn also uses map projection inside the aggregating `collect()`.""")
         query("""MATCH (actor:Person {name: 'Charlie Sheen'})-[:ACTED_IN]->(movie:Movie)
-            |RETURN actor{ .name, .realName, movies: collect(movie{ .title, .year })}""".stripMargin, ResultAssertions((r) => {
-            r.toList should equal(List(Map("actor" -> Map("name" -> "Charlie Sheen", "realName" -> "Carlos Irwin Estévez", "movies" -> List(Map("title" -> "Apocalypse Now", "year" -> 1979), Map("title" -> "Red Dawn", "year" -> 1984), Map("title" -> "Wall Street", "year" -> 1987))))))
+                #RETURN actor{.name, .realName, movies: collect(movie{.title, .year})}""".stripMargin('#'),
+        ResultAssertions((r) => {
+            r.toList should equal(
+              List(Map("actor" -> Map("name" -> "Charlie Sheen", "realName" -> "Carlos Irwin Estévez", "movies" -> List(Map("title" -> "Apocalypse Now", "year" -> 1979), Map("title" -> "Red Dawn", "year" -> 1984), Map("title" -> "Wall Street", "year" -> 1987))))))
           })) {
           resultTable()
         }
@@ -102,9 +103,10 @@ class MapsTest extends DocumentingTest {
           """Find all persons that have acted in movies, and show number for each.
             |This example introduces an variable with the count, and uses a variable selector to project the value.""")
         query("""MATCH (actor:Person)-[:ACTED_IN]->(movie:Movie)
-            |WITH actor, count(movie) as nrOfMovies
-            |RETURN actor{ .name, nrOfMovies}""".stripMargin, ResultAssertions((r) => {
-            r.toSet should equal(Set(Map("actor" -> Map("name" -> "Charlie Sheen", "nrOfMovies" -> 3)), Map("actor" -> Map("name" -> "Martin Sheen", "nrOfMovies" -> 2))))
+                #WITH actor, count(movie) AS nbrOfMovies
+                #RETURN actor{.name, nbrOfMovies}""".stripMargin('#'),
+        ResultAssertions((r) => {
+            r.toSet should equal(Set(Map("actor" -> Map("name" -> "Charlie Sheen", "nbrOfMovies" -> 3)), Map("actor" -> Map("name" -> "Martin Sheen", "nbrOfMovies" -> 2))))
           })) {
           resultTable()
         }
@@ -114,7 +116,8 @@ class MapsTest extends DocumentingTest {
             |Since this property does not exist on the node, a `null` value is projected instead.""")
         query(
           """MATCH (actor:Person {name: 'Charlie Sheen'})
-            |RETURN actor{.*, .age}""".stripMargin, ResultAssertions((r) => {
+            #RETURN actor{.*, .age}""".stripMargin('#'),
+        ResultAssertions((r) => {
             r.toList should equal(List(Map("actor" -> Map("name" -> "Charlie Sheen", "realName" -> "Carlos Irwin Estévez", "age" -> null))))
           })) {
           resultTable()
