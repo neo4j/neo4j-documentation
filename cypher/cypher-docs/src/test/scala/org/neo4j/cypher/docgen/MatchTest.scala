@@ -170,7 +170,7 @@ class MatchTest extends DocumentingTest {
       }
       section("Match on multiple relationship types", "match-on-multiple-rel-types") {
         p("To match on one of multiple types, you can specify this by chaining them together with the pipe symbol `|`.")
-        query("""MATCH (wallstreet {title: 'Wall Street'})<-[:ACTED_IN | :DIRECTED]-(person)
+        query("""MATCH (wallstreet {title: 'Wall Street'})<-[:ACTED_IN|:DIRECTED]-(person)
                 #RETURN person.name""".stripMargin('#'),
         assertEveryoneConnectedToWallStreetIsFound) {
           p("Returns nodes with an `ACTED_IN` or `DIRECTED` relationship to *'Wall Street'*.")
@@ -223,11 +223,11 @@ class MatchTest extends DocumentingTest {
       }
       section("Variable length relationships", "varlength-rels") {
         p("""Nodes that are a variable number of `+relationship->node+` hops away can be found using the following syntax:
-            #`+-[:TYPE * minHops..maxHops]->+`.
+            #`+-[:TYPE*minHops..maxHops]->+`.
             #`minHops` and `maxHops` are optional and default to 1 and infinity respectively.
             #When no bounds are given the dots may be omitted.
             #The dots may also be omitted when setting only one bound and this implies a fixed length pattern.""".stripMargin('#'))
-        query("""MATCH (charlie {name: 'Charlie Sheen'})-[:ACTED_IN * 1..3]-(movie:Movie)
+        query("""MATCH (charlie {name: 'Charlie Sheen'})-[:ACTED_IN*1..3]-(movie:Movie)
                 #RETURN movie.title""".stripMargin('#'),
         assertAllMoviesAreReturned) {
           p("Returns all movies related to *'Charlie Sheen'* by 1 to 3 hops.")
@@ -236,7 +236,7 @@ class MatchTest extends DocumentingTest {
       }
       section("Variable length relationships with multiple relationship types", "varlength-rels-multiple-types") {
         p("Variable length relationships can be combined with multiple relationship types. In this case the `*minHops..maxHops` applies to all relationship types as well as any combination of them.")
-        query("""MATCH (charlie {name: 'Charlie Sheen'})-[:ACTED_IN | DIRECTED * 2]-(person:Person)
+        query("""MATCH (charlie {name: 'Charlie Sheen'})-[:ACTED_IN|DIRECTED*2]-(person:Person)
                 #RETURN person.name""".stripMargin('#'),
         assertEveryoneConnectedToWallStreetButCharlieIsFound) {
           p("Returns all people related to *'Charlie Sheen'* by 2 hops with any combination of the relationship types `ACTED_IN` and `DIRECTED`.")
@@ -245,7 +245,7 @@ class MatchTest extends DocumentingTest {
       }
       section("Relationship variable in variable length relationships", "rel-variable-in-varlength-rels") {
         p("When the connection between two nodes is of variable length, the list of relationships comprising the connection can be returned using the following syntax:")
-        query("""MATCH p = (actor {name: 'Charlie Sheen'})-[:ACTED_IN * 2]-(co_actor)
+        query("""MATCH p = (actor {name: 'Charlie Sheen'})-[:ACTED_IN*2]-(co_actor)
                 #RETURN relationships(p)""".stripMargin('#'),
         assertActedInRelationshipsAreReturned) {
           p("Returns a list of relationships.")
@@ -259,17 +259,16 @@ class MatchTest extends DocumentingTest {
             #  (martin:Person {name: 'Martin Sheen'})
             #CREATE (charlie)-[:X {blocked: false}]->(:UNBLOCKED)<-[:X {blocked: false}]-(martin)
             #CREATE (charlie)-[:X {blocked: true}]->(:BLOCKED)<-[:X {blocked: false}]-(martin)""".stripMargin('#')
-        p("""A variable length relationship with properties defined on in it means that all
-            |relationships in the path must have the property set to the given value. In this query,
-            |there are two paths between *'Charlie Sheen'* and his father *'Martin Sheen'*. One of them includes a
-            |*'blocked'* relationship and the other doesn't. In this case we first alter the original
-            |graph by using the following query to add `BLOCKED` and `UNBLOCKED` relationships:""")
+        p("""A variable length relationship with properties defined on in it means that all relationships in the path must have the property set to the given value.
+            #In this query, there are two paths between *'Charlie Sheen'* and his father *'Martin Sheen'*.
+            #One of them includes a *'blocked'* relationship and the other does not.
+            #In this case we first alter the original graph by using the following query to add `BLOCKED` and `UNBLOCKED` relationships:""".stripMargin('#'))
         query(initQuery, assertBlockingRelationshipsAdded) {
           p("This means that we are starting out with the following graph: ")
           graphViz()
         }
         query(
-          """MATCH p = (charlie:Person)-[ * {blocked:false}]-(martin:Person)
+          """MATCH p = (charlie:Person)-[* {blocked:false}]-(martin:Person)
             #WHERE charlie.name = 'Charlie Sheen' AND martin.name = 'Martin Sheen'
             #RETURN p""".stripMargin('#'),
         assertBlockingRelationshipsAdded) {
@@ -283,7 +282,7 @@ class MatchTest extends DocumentingTest {
           """Using variable length paths that have the lower bound zero means that two variables can point to the same node.
             |If the path length between two nodes is zero, they are by definition the same node.
             |Note that when matching zero length paths the result may contain a match even when matching on a relationship type not in use.""")
-        query("""MATCH (wallstreet:Movie {title: 'Wall Street'})-[ * 0..1]-(x)
+        query("""MATCH (wallstreet:Movie {title: 'Wall Street'})-[*0..1]-(x)
                 #RETURN x""".stripMargin('#'),
         assertLabelStats("x", Map("Movie" -> 1, "Person" -> 4))) {
           p("Returns the movie itself as well as actors and directors one relationship away")
@@ -300,8 +299,7 @@ class MatchTest extends DocumentingTest {
         }
       }
       section("Matching on a bound relationship", "match-on-bound-rel") {
-        p("""When your pattern contains a bound relationship, and that relationship pattern doesn’t
-            | specify direction, Cypher will try to match the relationship in both directions.""")
+        p("""When your pattern contains a bound relationship, and that relationship pattern does not specify direction, Cypher will try to match the relationship in both directions.""")
         query("""MATCH (a)-[r]-(b)
                 #WHERE id(r) = 0
                 #RETURN a, b""".stripMargin('#'),
@@ -313,39 +311,34 @@ class MatchTest extends DocumentingTest {
     }
     section("Shortest path", "query-shortest-path") {
       section("Single shortest path", "single-shortest-path") {
-        p("Finding a single shortest path between two nodes is as easy as using the `shortestPath` function. It's done like this:")
+        p("Finding a single shortest path between two nodes is as easy as using the `shortestPath` function. It is done like this:")
         query(
           """MATCH
             #  (martin:Person {name: 'Martin Sheen'}),
             #  (oliver:Person {name: 'Oliver Stone'}),
-            #  p = shortestPath((martin)-[ * ..15]-(oliver))
+            #  p = shortestPath((martin)-[*..15]-(oliver))
             #RETURN p""".stripMargin('#'),
         assertShortestPathLength) {
           p(
             """This means: find a single shortest path between two nodes, as long as the path is max 15 relationships long.
-              |Within the parentheses you define a single link of a path -- the starting node, the connecting relationship
-              |and the end node. Characteristics describing the relationship like relationship type, max hops and direction
-              |are all used when finding the shortest path. If there is a `WHERE` clause following the match of a
-              |`shortestPath`, relevant predicates will be included in the `shortestPath`.
-              |If the predicate is a `none()` or `all()` on the relationship elements of the path,
-              |it will be used during the search to improve performance (see <<query-shortestpath-planning>>).""")
+              #Within the parentheses you define a single link of a path -- the starting node, the connecting relationship and the end node.
+              #Characteristics describing the relationship like relationship type, max hops and direction are all used when finding the shortest path.
+              #If there is a `WHERE` clause following the match of a `shortestPath`, relevant predicates will be included in the `shortestPath`.
+              #If the predicate is a `none()` or `all()` on the relationship elements of the path, it will be used during the search to improve performance (see <<query-shortestpath-planning>>).""".stripMargin('#'))
           resultTable()
         }
       }
       section("Single shortest path with predicates", "single-shortest-path-with-predicates") {
-        p("""Predicates used in the `WHERE` clause that apply to the shortest path pattern are evaluated before deciding
-          |what the shortest matching path is.""")
+        p("""Predicates used in the `WHERE` clause that apply to the shortest path pattern are evaluated before deciding what the shortest matching path is.""")
         query(
           """MATCH
             #  (charlie:Person {name: 'Charlie Sheen'}),
             #  (martin:Person {name: 'Martin Sheen'}),
-            #  p = shortestPath((charlie)-[ * ]-(martin))
+            #  p = shortestPath((charlie)-[*]-(martin))
             #WHERE none(r IN relationships(p) WHERE type(r) = 'FATHER')
             #RETURN p""".stripMargin('#'),
         assertShortestPathLength) {
-          p(
-            """This query will find the shortest path between *'Charlie Sheen'* and *'Martin Sheen'*, and the `WHERE` predicate
-              |will ensure that we don't consider the father/son relationship between the two.""")
+          p("""This query will find the shortest path between *'Charlie Sheen'* and *'Martin Sheen'*, and the `WHERE` predicate will ensure that we do not consider the father/son relationship between the two.""")
           resultTable()
         }
       }
@@ -354,7 +347,7 @@ class MatchTest extends DocumentingTest {
         query("""MATCH
                 #  (martin:Person {name: 'Martin Sheen'} ),
                 #  (michael:Person {name: 'Michael Douglas'}),
-                #  p = allShortestPaths((martin)-[ * ]-(michael))
+                #  p = allShortestPaths((martin)-[*]-(michael))
                 #RETURN p""".stripMargin('#'),
         assertAllShortestPaths) {
           p("Finds the two shortest paths between *'Martin Sheen'* and *'Michael Douglas'*.")
@@ -379,11 +372,10 @@ class MatchTest extends DocumentingTest {
         }
       }
       section("Relationship by id", "match-rel-by-id") {
-        p("""
-            |Search for relationships by id can be done with the `id()` function in a predicate.
-            |
-            |This is not recommended practice. See <<match-node-by-id>> for more information on the use of Neo4j ids.
-            |""")
+        p("""Search for relationships by id can be done with the `id()` function in a predicate.
+            #
+            #This is not the recommended practice.
+            #See <<match-node-by-id>> for more information on the use of Neo4j ids.""".stripMargin('#'))
         query("""MATCH ()-[r]->()
                 #WHERE id(r) = 0
                 #RETURN r""".stripMargin('#'),
