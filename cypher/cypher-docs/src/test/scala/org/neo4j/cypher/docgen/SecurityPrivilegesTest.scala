@@ -91,6 +91,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     section("Listing privileges", "administration-security-subgraph-show", "enterprise-edition") {
       p("Available privileges can be displayed using the different `SHOW PRIVILEGES` commands.")
       p("include::show-privileges-syntax.asciidoc[]")
+      p("When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.")
       section("Examples for listing all privileges", "administration-security-subgraph-show-all") {
         p("Available privileges for all roles can be displayed using `SHOW PRIVILEGES`.")
         p("include::show-all-privileges-syntax.asciidoc[]")
