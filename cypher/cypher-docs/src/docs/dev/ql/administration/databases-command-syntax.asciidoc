@@ -7,7 +7,11 @@ The syntax of the database management commands is as follows:
 | Show Database
 | [source]
 SHOW { DATABASE name \| DATABASES \| DEFAULT DATABASE }
-[YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+[WHERE expression]
+
+[source]
+SHOW { DATABASE name \| DATABASES \| DEFAULT DATABASE }
+YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]
 [WHERE expression]
 [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 | Create Database
@@ -19,7 +23,7 @@ CREATE [OR REPLACE] DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 STOP DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 |Start Database
 | [source]
-SART DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+START DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 |Drop Database
 | [source]
 DROP DATABASE name [IF EXISTS] [{DUMP\|DESTROY} [DATA]] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
