@@ -25,6 +25,8 @@ SHOW [ALL\|POPULATED] ROLES WITH USERS
 | [source, cypher, role=noplay]
 ----
 SHOW ROLE name PRIVILEGES
+    [YIELD field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
 ----
 | List the privileges granted to a role.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE PRIVILEGES>>

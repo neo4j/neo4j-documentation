@@ -17,6 +17,8 @@ SHOW USERS
 | [source, cypher, role=noplay]
 ----
 SHOW USER [name] PRIVILEGES
+    [YIELD field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
 ----
 | List the privileges granted to a user.
 | <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>> and
