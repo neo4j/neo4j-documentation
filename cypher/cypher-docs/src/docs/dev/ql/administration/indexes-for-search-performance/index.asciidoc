@@ -109,7 +109,7 @@ SHOW [ALL\|BTREE] INDEX[ES]
     [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 | List indexes in the database, either all or B-tree only.
-|
+| When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
 
 | [source, cypher, role=noplay]
 ----
