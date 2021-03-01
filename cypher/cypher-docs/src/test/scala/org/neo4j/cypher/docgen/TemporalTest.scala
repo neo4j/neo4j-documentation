@@ -54,7 +54,7 @@ class TemporalTest extends DocumentingTest {
     note {
       p("""Refer to <<query-functions-temporal>> for information regarding temporal _functions_ allowing for the creation and manipulation of temporal values.""")
       p("""Refer to <<query-operators-temporal>> for information regarding temporal _operators_.""")
-      p("""Refer to <<cypher-ordering>> for information regarding the comparison and ordering of temporal values.""")
+      p("""Refer to <<cypher-ordering, Ordering and comparison of values>> for information regarding the comparison and ordering of temporal values.""")
     }
     section("Introduction", "cypher-temporal-introduction") {
       p(

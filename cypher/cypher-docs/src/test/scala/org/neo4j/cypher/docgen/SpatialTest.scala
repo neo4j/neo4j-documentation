@@ -41,7 +41,7 @@ class SpatialTest extends DocumentingTest {
         |""".stripMargin)
     note{
       p("""Refer to <<query-functions-spatial>> for information regarding spatial _functions_ allowing for the creation and manipulation of spatial values.""")
-      p("""Refer to <<cypher-ordering>> for information regarding the comparison and ordering of spatial values.""")
+      p("""Refer to <<cypher-ordering, Ordering and comparison of values>> for information regarding the comparison and ordering of spatial values.""")
     }
     section("Introduction", "cypher-spatial-introduction") {
       p(
@@ -71,7 +71,7 @@ class SpatialTest extends DocumentingTest {
         """
           |Data within different coordinate systems are entirely incomparable, and cannot be implicitly converted from one to the other.
           |This is true even if they are both cartesian or both geographic. For example, if you search for 3D points using a 2D range, you will get no results.
-          |However, they can be ordered, as discussed in more detail in the section on <<cypher-ordering, Cypher ordering>>.
+          |However, they can be ordered, as discussed in more detail in <<cypher-ordering, Ordering and comparison of values>>.
         """.stripMargin)
       section("Geographic coordinate reference systems", "cypher-spatial-crs-geographic") {
         p(

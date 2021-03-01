@@ -45,9 +45,8 @@ class OrderByTest extends DocumentingTest {
         |* <<order-null, Ordering `null`>>
       """.stripMargin)
     section("Introduction", "order-introduction") {
-      p(
-        """Note that you cannot sort on nodes or relationships, just on properties on these.
-          |`ORDER BY` relies on comparisons to sort the output, see <<cypher-ordering>>.""".stripMargin)
+      p("""Note that you cannot sort on nodes or relationships, just on properties on these.
+          #`ORDER BY` relies on comparisons to sort the output, see <<cypher-ordering, Ordering and comparison of values>>.""".stripMargin('#'))
       p(
         """In terms of scope of variables, `ORDER BY` follows special rules, depending on if the projecting `RETURN` or `WITH` clause is either aggregating or `DISTINCT`.
            If it is an aggregating or `DISTINCT` projection, only the variables available in the projection are available.
