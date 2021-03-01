@@ -27,19 +27,18 @@ class WithTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("WITH", "query-with")
     initQueries(
-      """CREATE (a {name: 'Anders'}),
-                (b {name: 'Bossman'}),
-                (c {name: 'Ceasar'}),
-                (d {name: 'David'}),
-                (e {name: 'George'}),
-
-                (a)-[:KNOWS]->(b),
-                (a)-[:BLOCKS]->(c),
-                (d)-[:KNOWS]->(a),
-                (b)-[:KNOWS]->(e),
-                (c)-[:KNOWS]->(e),
-                (b)-[:BLOCKS]->(d)
-      """.stripMargin)
+      """CREATE
+        #  (a {name: 'Anders'}),
+        #  (b {name: 'Bossman'}),
+        #  (c {name: 'Ceasar'}),
+        #  (d {name: 'David'}),
+        #  (e {name: 'George'}),
+        #  (a)-[:KNOWS]->(b),
+        #  (a)-[:BLOCKS]->(c),
+        #  (d)-[:KNOWS]->(a),
+        #  (b)-[:KNOWS]->(e),
+        #  (c)-[:KNOWS]->(e),
+        #  (b)-[:BLOCKS]->(d)""".stripMargin('#'))
     synopsis("The `WITH` clause allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.")
     note {
       p("It is important to note that `WITH` affects variables in scope. Any variables not included in the `WITH` clause are not carried over to the rest of the query.")
@@ -69,13 +68,12 @@ class WithTest extends DocumentingTest {
       graphViz()
     }
     section("Filter on aggregate function results", "with-filter-on-aggregate-function-results") {
-      p(
-        """Aggregated results have to pass through a `WITH` clause to be able to filter on.""".stripMargin)
-      query(
-        """MATCH (david {name: 'David'})--(otherPerson)-->()
-          |WITH otherPerson, count(*) AS foaf
-          |WHERE foaf > 1
-          |RETURN otherPerson.name""".stripMargin, ResultAssertions((r) => {
+      p("""Aggregated results have to pass through a `WITH` clause to be able to filter on.""")
+      query("""MATCH (david {name: 'David'})--(otherPerson)-->()
+              #WITH otherPerson, count(*) AS foaf
+              #WHERE foaf > 1
+              #RETURN otherPerson.name""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList should equal(List(Map("otherPerson.name" -> "Anders")))
         })) {
         p("The name of the person connected to *'David'* with the at least more than one outgoing relationship will be returned by the query.")
@@ -83,14 +81,13 @@ class WithTest extends DocumentingTest {
       }
     }
     section("Sort results before using collect on them", "with-sort-results-before-using-collect-on-them") {
-      p(
-        """You can sort your results before passing them to collect, thus sorting the resulting list.""".stripMargin)
-      query(
-        """MATCH (n)
-          |WITH n
-          |ORDER BY n.name DESC
-          |LIMIT 3
-          |RETURN collect(n.name)""".stripMargin, ResultAssertions((r) => {
+      p("""You can sort your results before passing them to collect, thus sorting the resulting list.""")
+      query("""MATCH (n)
+              #WITH n
+              #ORDER BY n.name DESC
+              #LIMIT 3
+              #RETURN collect(n.name)""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList should equal(List(Map("collect(n.name)" -> List("George", "David", "Ceasar"))))
         })) {
         p("A list of the names of people in reverse order, limited to 3, is returned in a list.")
@@ -98,18 +95,17 @@ class WithTest extends DocumentingTest {
       }
     }
     section("Limit branching of a path search", "with-limit-branching-of-path-search") {
-      p(
-        """You can match paths, limit to a certain number, and then match again using those paths as a base, as well as any number of similar limited searches.""".stripMargin)
-      query(
-        """MATCH (n {name: 'Anders'})--(m)
-          |WITH m
-          |ORDER BY m.name DESC
-          |LIMIT 1
-          |MATCH (m)--(o)
-          |RETURN o.name""".stripMargin, ResultAssertions((r) => {
+      p("""You can match paths, limit to a certain number, and then match again using those paths as a base, as well as any number of similar limited searches.""")
+      query("""MATCH (n {name: 'Anders'})--(m)
+              #WITH m
+              #ORDER BY m.name DESC
+              #LIMIT 1
+              #MATCH (m)--(o)
+              #RETURN o.name""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toSet should equal(Set(Map("o.name" -> "Bossman"), Map("o.name" -> "Anders")))
         })) {
-        p("Starting at *'Anders'*, find all matching nodes, order by name descending and get the top result, then find all the nodes connected to that top result, and return their names.")
+        p("""Starting at *'Anders'*, find all matching nodes, order by name descending and get the top result, then find all the nodes connected to that top result, and return their names.""")
         resultTable()
       }
     }
