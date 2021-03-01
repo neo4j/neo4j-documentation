@@ -23,14 +23,14 @@ import org.hamcrest.CoreMatchers._
 import org.hamcrest.Matcher
 import org.junit.Assert._
 import org.junit.Test
+import org.neo4j.cypher.GraphIcing
+import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.DPPlannerName
 import org.neo4j.cypher.internal.planner.spi.IDPPlannerName
 import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
 import org.neo4j.cypher.internal.util.Foldable.FoldableAny
-import org.neo4j.cypher.GraphIcing
-import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
@@ -148,17 +148,29 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def list_indexes() {
     prepareAndTestQuery(
-      title = "Example of listing indexes",
+      title = "Listing all indexes",
       text =
         """
-          |To list all indexes with the brief output columns, the `SHOW INDEXES` command can be used.
-          |If all columns are wanted, use `SHOW INDEXES VERBOSE`.
-          |Filtering the output on index type is available for `BTREE` indexes, using `SHOW BTREE INDEXES`.""".stripMargin,
+          |To list all indexes with the default output columns, the `SHOW INDEXES` command can be used.
+          |If all columns are wanted, use `SHOW INDEXES YIELD *`.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "SHOW INDEXES",
       optionalResultExplanation =
         """One of the output columns from `SHOW INDEXES` is the name of the index.
           |This can be used to drop the index with the <<administration-indexes-drop-an-index, `DROP INDEX` command>>.""".stripMargin,
+      assertions = p => assertEquals(3, p.size)
+    )
+    prepareAndTestQuery(
+      title = "Listing indexes with filtering",
+      text =
+        """
+          |One way of filtering the output from `SHOW INDEXES` is to use the `BTREE` keyword to only list `BTREE` indexes.
+          |Another is to use the `WHERE` clause, for example to only show indexes not belonging to constraints.""".stripMargin,
+      prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
+      queryText = "SHOW BTREE INDEXES WHERE uniqueness = 'NONUNIQUE'",
+      optionalResultExplanation =
+        """This will only return the default output columns.
+          |To get all columns, use `SHOW INDEXES YIELD * WHERE ...`.""".stripMargin,
       assertions = p => assertEquals(3, p.size)
     )
   }
