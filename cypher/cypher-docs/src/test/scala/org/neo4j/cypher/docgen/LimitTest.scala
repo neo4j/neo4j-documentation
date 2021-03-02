@@ -27,68 +27,58 @@ class LimitTest extends DocumentingTest with QueryStatisticsTestSupport {
 
   override def doc = new DocBuilder {
     doc("LIMIT", "query-limit")
-    initQueries(
-      """CREATE (a {name: 'A'}),
-                (b {name: 'B'}),
-                (c {name: 'C'}),
-                (d {name: 'D'}),
-                (e {name: 'E'}),
-
-                (a)-[:KNOWS]->(b),
-                (a)-[:KNOWS]->(c),
-                (a)-[:KNOWS]->(d),
-                (a)-[:KNOWS]->(e)
-      """.stripMargin)
-    synopsis("`LIMIT` constrains the number of rows in the output.")
-    p(
-      """* <<limit-introduction, Introduction>>
-        |* <<limit-subset-rows, Return a subset of the rows>>
-        |* <<limit-subset-rows-using-expression, Using an expression with `LIMIT` to return a subset of the rows>>
-        |* <<limit-will-not-stop-side-effects, `LIMIT` will not stop side effects>>
-      """.stripMargin)
+    initQueries("""CREATE
+                  #  (a {name: 'A'}),
+                  #  (b {name: 'B'}),
+                  #  (c {name: 'C'}),
+                  #  (d {name: 'D'}),
+                  #  (e {name: 'E'}),
+                  #  (a)-[:KNOWS]->(b),
+                  #  (a)-[:KNOWS]->(c),
+                  #  (a)-[:KNOWS]->(d),
+                  #  (a)-[:KNOWS]->(e)""".stripMargin('#'))
+    synopsis("`LIMIT` constrains the number of returned rows.")
+    p("""* <<limit-introduction, Introduction>>
+        #* <<limit-subset-rows, Return a subset of the rows>>
+        #* <<limit-subset-rows-using-expression, Using an expression with `LIMIT` to return a subset of the rows>>
+        #* <<limit-will-not-stop-side-effects, `LIMIT` will not stop side effects>>""".stripMargin('#'))
     section("Introduction", "limit-introduction") {
       p("""`LIMIT` accepts any expression that evaluates to a positive integer -- however the expression cannot refer to nodes or relationships.""")
       graphViz()
     }
-    section("Return a subset of the rows", "limit-subset-rows") {
-      p(
-        """To return a subset of the result, starting from the top, use this syntax:""".stripMargin)
-      query(
-        """MATCH (n)
-          |RETURN n.name
-          |ORDER BY n.name
-          |LIMIT 3""".stripMargin, ResultAssertions((r) => {
+    section("Return a limited subset of the rows", "limit-subset-rows") {
+      p("""To return a limited subset of the rows, use this syntax:""")
+      query("""MATCH (n)
+              #RETURN n.name
+              #ORDER BY n.name
+              #LIMIT 3""".stripMargin('#'),
+      ResultAssertions((r) => {
         r.toList should equal(List(Map("n.name" -> "A"), Map("n.name" -> "B"), Map("n.name" -> "C")))
       })) {
-        p("The top three items are returned by the example query.")
+        p("Limit to 3 rows by the example query.")
         resultTable()
       }
     }
     section("Using an expression with `LIMIT` to return a subset of the rows", "limit-subset-rows-using-expression") {
-      p(
-        """Limit accepts any expression that evaluates to a positive integer as long as it is not referring to any external variables:""".stripMargin)
-      query(
-        """MATCH (n)
-          |RETURN n.name
-          |ORDER BY n.name
-          |LIMIT toInteger(3 * rand()) + 1""".stripMargin, ResultAssertions((r) => {
+      p("""Limit accepts any expression that evaluates to a positive integer as long as it is not referring to any external variables:""")
+      query("""MATCH (n)
+              #RETURN n.name
+              #ORDER BY n.name
+              #LIMIT 1 + toInteger(3 * rand())""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toSet should contain(Map("n.name" -> "A"))
         })) {
-        p("Returns one to three top items.")
+        p("Limit 1 row plus randomly 0, 1, or 2. So randomly limit to 1, 2, or 3 rows.")
         resultTable()
       }
     }
     section("`LIMIT` will not stop side effects", "limit-will-not-stop-side-effects") {
-      p(
-        """The use of `LIMIT` in a query will not stop side effects, like `CREATE`, `DELETE` or `SET`, from happening if
-          |the limit is in the same query part as the side effect. This behaviour was undefined in versions before
-          |4.3.""".stripMargin
-      )
-      query(
-        """CREATE (n)
-          |RETURN n
-          |LIMIT 0""".stripMargin,
-        ResultAssertions((r) => {
+      p("""The use of `LIMIT` in a query will not stop side effects, like `CREATE`, `DELETE` or `SET`, from happening if the limit is in the same query part as the side effect.
+          #This behaviour was undefined in versions before `4.3`.""".stripMargin('#'))
+      query("""CREATE (n)
+              #RETURN n
+              #LIMIT 0""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.size shouldBe 0
           assertStats(r, nodesCreated = 1)
         })
@@ -96,12 +86,11 @@ class LimitTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("This query returns nothing, but creates one node:")
         resultTable()
       }
-      query(
-        """MATCH (n {name: 'A'})
-          |SET n.age = 60
-          |RETURN n
-          |LIMIT 0""".stripMargin,
-        ResultAssertions((r) => {
+      query("""MATCH (n {name: 'A'})
+              #SET n.age = 60
+              #RETURN n
+              #LIMIT 0""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.size shouldBe 0
           assertStats(r, propertiesWritten = 1)
         })
@@ -109,15 +98,12 @@ class LimitTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("This query returns nothing, but writes one property:")
         resultTable()
       }
-      p(
-        "If we want to limit the number of updates we can split the query using the `WITH` clause:"
-      )
-      query(
-        """MATCH (n)
-          |WITH n LIMIT 1
-          |SET n.locked = true
-          |RETURN n""".stripMargin,
-        ResultAssertions((r) => {
+      p("If we want to limit the number of updates we can split the query using the `WITH` clause:")
+      query("""MATCH (n)
+              #WITH n LIMIT 1
+              #SET n.locked = true
+              #RETURN n""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.size shouldBe 1
           assertStats(r, propertiesWritten = 1)
         })
