@@ -27,57 +27,48 @@ class OrderByTest extends DocumentingTest {
   override def doc = new DocBuilder {
     doc("ORDER BY", "query-order")
     initQueries(
-      """
-        |CREATE (a {name: 'A', age: 34, length: 170}),
-        |       (b {name: 'B', age: 36}),
-        |       (c {name: 'C', age: 32, length: 185}),
-        |
-        |       (a)-[:KNOWS]->(b),
-        |       (b)-[:KNOWS]->(c)
-      """.stripMargin
+      """CREATE
+        #  (a {name: 'A', age: 34, length: 170}),
+        #  (b {name: 'B', age: 36}),
+        #  (c {name: 'C', age: 32, length: 185}),
+        #  (a)-[:KNOWS]->(b),
+        #  (b)-[:KNOWS]->(c)""".stripMargin('#')
     )
     synopsis("`ORDER BY` is a sub-clause following `RETURN` or `WITH`, and it specifies that the output should be sorted and how.")
-    p(
-      """* <<order-introduction, Introduction>>
-        |* <<order-nodes-by-property, Order nodes by property>>
-        |* <<order-nodes-by-multiple-properties, Order nodes by multiple properties>>
-        |* <<order-nodes-in-descending-order, Order nodes in descending order>>
-        |* <<order-null, Ordering `null`>>
-        |* <<order-with, Ordering in a `WITH` clause>>
-      """.stripMargin)
+    p("""* <<order-introduction, Introduction>>
+        #* <<order-nodes-by-property, Order nodes by property>>
+        #* <<order-nodes-by-multiple-properties, Order nodes by multiple properties>>
+        #* <<order-nodes-in-descending-order, Order nodes in descending order>>
+        #* <<order-null, Ordering `null`>>
+        #* <<order-with, Ordering in a `WITH` clause>>""".stripMargin('#'))
     section("Introduction", "order-introduction") {
       p(
         """Note that you cannot sort on nodes or relationships, just on properties on these.
-          |`ORDER BY` relies on comparisons to sort the output, see <<cypher-ordering>>.""".stripMargin)
-      p(
-        """In terms of scope of variables, `ORDER BY` follows special rules, depending on if the projecting `RETURN` or `WITH` clause is either aggregating or `DISTINCT`.
-           If it is an aggregating or `DISTINCT` projection, only the variables available in the projection are available.
-           If the projection does not alter the output cardinality (which aggregation and `DISTINCT` do), variables available from before the projecting clause are also available.
-           When the projection clause shadows already existing variables, only the new variables are available.
-        """.stripMargin)
-      p(
-        """Lastly, it is not allowed to use aggregating expressions in the `ORDER BY` sub-clause if they are not also listed in the projecting clause.
-           This last rule is to make sure that `ORDER BY` does not change the results, only the order of them.
-        """.stripMargin)
-      p(
-        """The performance of Cypher queries using `ORDER BY` on node properties can be influenced by the existence and use of an index for finding the nodes.
-          | If the index can provide the nodes in the order requested in the query, Cypher can avoid the use of an expensive `Sort` operation.
-          | Read more about this capability in <<query-tuning-indexes>>.
-        """.stripMargin
-      )
+          #`ORDER BY` relies on comparisons to sort the output, see <<cypher-ordering, Ordering and comparison of values>>.""".stripMargin('#'))
+      p("""In terms of scope of variables, `ORDER BY` follows special rules, depending on if the projecting `RETURN` or `WITH` clause is either aggregating or `DISTINCT`.
+           #If it is an aggregating or `DISTINCT` projection, only the variables available in the projection are available.
+           #If the projection does not alter the output cardinality (which aggregation and `DISTINCT` do), variables available from before the projecting clause are also available.
+           #When the projection clause shadows already existing variables, only the new variables are available.""".stripMargin('#'))
+      p("""Lastly, it is not allowed to use aggregating expressions in the `ORDER BY` sub-clause if they are not also listed in the projecting clause.
+           #This last rule is to make sure that `ORDER BY` does not change the results, only the order of them.""".stripMargin('#'))
+      p("""The performance of Cypher queries using `ORDER BY` on node properties can be influenced by the existence and use of an index for finding the nodes.
+          #If the index can provide the nodes in the order requested in the query, Cypher can avoid the use of an expensive `Sort` operation.
+          #Read more about this capability in <<query-tuning-indexes>>.""".stripMargin('#'))
       p("The following graph is used for the examples below:")
       graphViz()
     }
     
-    note(p("Strings that contain special characters can have inconsistent or non-deterministic ordering in Neo4j. For details, see <<property-types-sip-note>>."))
+    note(
+      p("""Strings that contain special characters can have inconsistent or non-deterministic ordering in Neo4j.
+          #For details, see <<property-types-sip-note>>.""".stripMargin('#'))
+    )
 
     section("Order nodes by property", "order-nodes-by-property") {
-      p(
-        """`ORDER BY` is used to sort the output.""".stripMargin)
-      query(
-        """MATCH (n)
-          |RETURN n.name, n.age
-          |ORDER BY n.name""".stripMargin, ResultAssertions((r) => {
+      p("""`ORDER BY` is used to sort the output.""")
+      query("""MATCH (n)
+              #RETURN n.name, n.age
+              #ORDER BY n.name""".stripMargin('#'),
+      ResultAssertions((r) => {
         r.toList should equal(List(Map("n.name" -> "A", "n.age" -> 34), Map("n.name" -> "B", "n.age" -> 36), Map("n.name" -> "C", "n.age" -> 32)))
       })) {
         p("The nodes are returned, sorted by their name.")
@@ -85,13 +76,12 @@ class OrderByTest extends DocumentingTest {
       }
     }
     section("Order nodes by multiple properties", "order-nodes-by-multiple-properties") {
-      p(
-        """You can order by multiple properties by stating each variable in the `ORDER BY` clause.
-          |Cypher will sort the result by the first variable listed, and for equals values, go to the next property in the `ORDER BY` clause, and so on.""".stripMargin)
-      query(
-        """MATCH (n)
-          |RETURN n.name, n.age
-          |ORDER BY n.age, n.name""".stripMargin, ResultAssertions((r) => {
+      p("""You can order by multiple properties by stating each variable in the `ORDER BY` clause.
+          #Cypher will sort the result by the first variable listed, and for equals values, go to the next property in the `ORDER BY` clause, and so on.""".stripMargin('#'))
+      query("""MATCH (n)
+              #RETURN n.name, n.age
+              #ORDER BY n.age, n.name""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList should equal(List(Map("n.age" -> 32, "n.name" -> "C"), Map("n.age" -> 34, "n.name" -> "A"), Map("n.age" -> 36, "n.name" -> "B")))
         })) {
         p("This returns the nodes, sorted first by their age, and then by their name.")
@@ -99,12 +89,11 @@ class OrderByTest extends DocumentingTest {
       }
     }
     section("Order nodes in descending order", "order-nodes-in-descending-order") {
-      p(
-        """By adding `DESC[ENDING]` after the variable to sort on, the sort will be done in reverse order.""".stripMargin)
-      query(
-        """MATCH (n)
-          |RETURN n.name, n.age
-          |ORDER BY n.name DESC""".stripMargin, ResultAssertions((r) => {
+      p("""By adding `DESC[ENDING]` after the variable to sort on, the sort will be done in reverse order.""")
+      query("""MATCH (n)
+              #RETURN n.name, n.age
+              #ORDER BY n.name DESC""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList should equal(List(Map("n.age" -> 32, "n.name" -> "C"), Map("n.age" -> 36, "n.name" -> "B"), Map("n.age" -> 34, "n.name" -> "A")))
         })) {
         p("The example returns the nodes, sorted by their name in reverse order.")
@@ -112,12 +101,11 @@ class OrderByTest extends DocumentingTest {
       }
     }
     section("Ordering `null`", "order-null") {
-      p(
-        """When sorting the result set, `null` will always come at the end of the result set for ascending sorting, and first when doing descending sort.""".stripMargin)
-      query(
-        """MATCH (n)
-          |RETURN n.length, n.name, n.age
-          |ORDER BY n.length""".stripMargin, ResultAssertions((r) => {
+      p("""When sorting the result set, `null` will always come at the end of the result set for ascending sorting, and first when doing descending sort.""")
+      query("""MATCH (n)
+              #RETURN n.length, n.name, n.age
+              #ORDER BY n.length""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList should equal(List(Map("n.age" -> 34, "n.name" -> "A", "n.length" -> 170), Map("n.age" -> 32, "n.name" -> "C", "n.length" -> 185), Map("n.age" -> 36, "n.name" -> "B", "n.length" -> null)))
         })) {
         p("The nodes are returned sorted by the length property, with a node without that property last.")
@@ -125,17 +113,16 @@ class OrderByTest extends DocumentingTest {
       }
     }
     section("Ordering in a `WITH` clause", "order-with") {
-      p(
-        """When `ORDER BY` is present on a `WITH` clause , the immediately following clause will receive records in the specified order.
-          |The order is not guaranteed to be retained after the following clause, unless that also has an `ORDER BY` subclause.
-          |The ordering guarantee can be useful to exploit by operations which depend on the order in which they consume values.
-          |For example, this can be used to control the order of items in the list produced by the `collect()` aggregating function.
-          |The `MERGE` and `SET` clauses also have ordering dependencies which can be controlled this way.
-          |""".stripMargin)
-      query(
-        """MATCH (n)
-          |WITH n ORDER BY n.age
-          |RETURN collect(n.name) AS names""".stripMargin, ResultAssertions((r) => {
+      p("""When `ORDER BY` is present on a `WITH` clause , the immediately following clause will receive records in the specified order.
+          #The order is not guaranteed to be retained after the following clause, unless that also has an `ORDER BY` subclause.
+          #The ordering guarantee can be useful to exploit by operations which depend on the order in which they consume values.
+          #For example, this can be used to control the order of items in the list produced by the `collect()` aggregating function.
+          #The `MERGE` and `SET` clauses also have ordering dependencies which can be controlled this way.
+          #""".stripMargin('#'))
+      query("""MATCH (n)
+              #WITH n ORDER BY n.age
+              #RETURN collect(n.name) AS names""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList should equal(List(Map("names" -> List("C", "A", "B"))))
         })) {
         p("The list of names built from the `collect` aggregating function contains the names in order of the `age` property.")
