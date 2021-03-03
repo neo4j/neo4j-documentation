@@ -27,13 +27,14 @@ class ForeachTest extends DocumentingTest with QueryStatisticsTestSupport {
 
   override def doc = new DocBuilder {
     doc("FOREACH", "query-foreach")
-    initQueries("""CREATE (a:Person {name: 'A'}),
-                  #(b:Person {name: 'B'}),
-                  #(c:Person {name: 'C'}),
-                  #(d:Person {name: 'D'}),
-                  #(a)-[:KNOWS]->(b),
-                  #(b)-[:KNOWS]->(c),
-                  #(c)-[:KNOWS]->(d)""".stripMargin('#'))
+    initQueries("""CREATE
+                  #  (a:Person {name: 'A'}),
+                  #  (b:Person {name: 'B'}),
+                  #  (c:Person {name: 'C'}),
+                  #  (d:Person {name: 'D'}),
+                  #  (a)-[:KNOWS]->(b),
+                  #  (b)-[:KNOWS]->(c),
+                  #  (c)-[:KNOWS]->(d)""".stripMargin('#'))
     synopsis("The `FOREACH` clause is used to update data within a collection whether components of a path, or result of aggregation.")
     section("Introduction", "query-foreach-introduction") {
       p("""Lists and paths are key concepts in Cypher.
@@ -46,13 +47,14 @@ class ForeachTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Mark all nodes along a path", "foreach-mark-all-nodes-along-a-path") {
       p("This query will set the property `marked` to `true` on all nodes along a path.")
-      query(
-        """MATCH p=(start)-[*]->(finish)
-          #WHERE start.name = 'A' AND finish.name = 'D'
-          #FOREACH (n IN nodes(p) | SET n.marked = true)""".stripMargin('#'), ResultAssertions((r) => {
+      query("""MATCH p=(start)-[*]->(finish)
+              #WHERE start.name = 'A' AND finish.name = 'D'
+              #FOREACH (n IN nodes(p) | SET n.marked = true)""".stripMargin('#'),
+      ResultAssertions((r) => {
           r.toList.length should equal(0);  assertStats(r, propertiesWritten = 4)
         })) {
-        statsOnlyResultTable()
+        resultTable()
+        //statsOnlyResultTable()
       }
     }
   }.build()
