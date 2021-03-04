@@ -56,7 +56,7 @@ For example, a file URL will typically look like `+file:///myfile.csv+` or `+fil
 See the examples below for further details.
 
 [[csv-file-format]]
-= CSV file format
+== CSV file format
 
 The CSV file to use with `LOAD CSV` must have the following characteristics:
 
@@ -83,6 +83,40 @@ include::import-data-containing-escaped-characters.asciidoc[]
 
 include::using-linenumber-with-load-csv.asciidoc[]
 
-include::using-file-with-load-csv.asciidoc[]
+//This example was outputting the team city path
+//include::using-file-with-load-csv.asciidoc[]
 
+[[load-csv-using-file-with-load-csv]]
+== Using file() with LOAD CSV ==
+For certain scenarios, like debugging a problem with a csv file, it may be useful to get the absolute path of the file that `LOAD CSV` is operating on.
+The `file()` function provides exactly that or `null` if called without a `LOAD CSV` context.
 
+.artists.csv
+[source]
+----
+1,ABBA,1992
+2,Roxette,1986
+3,Europe,1979
+4,The Cardigans,1992
+----
+
+.Query
+[source, cypher, subs=attributes+]
+----
+LOAD CSV FROM 'file:///artists.csv' AS line
+RETURN DISTINCT file() AS path
+----
+
+Since `LOAD CSV` can temporary download a file to process it, it is important to note that `file()` will always return the path on disk.
+If `LOAD CSV` is invoked with a `file:///` URL that points to your disk `file()` will return that same path.
+
+.Result
+[queryresult]
+----
++------------------------------------------+
+| path                                     |
++------------------------------------------+
+| "/home/example/neo4j/import/artists.csv" |
++------------------------------------------+
+1 row
+----
