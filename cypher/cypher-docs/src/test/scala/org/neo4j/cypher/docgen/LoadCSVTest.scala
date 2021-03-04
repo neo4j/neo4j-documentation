@@ -117,7 +117,7 @@ class LoadCSVTest extends DocumentingTestBase with QueryStatisticsTestSupport wi
                #You can specify which delimiter your file uses, using `FIELDTERMINATOR`.
                #Hexadecimal representation of the unicode character encoding can be used if prepended by `{backslash}u`.
                #The encoding must be written with four digits.
-               #For example, `{backslash}u002C` is equivalent to `;`.
+               #For example, `{backslash}u003B` is equivalent to `;` (SEMICOLON).
                #
                #.artists-fieldterminator.csv
                #[source]
