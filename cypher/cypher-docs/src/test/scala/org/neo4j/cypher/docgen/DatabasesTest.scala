@@ -60,6 +60,13 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
+      note {
+        p(
+          """Note that the results of this command are filtered according to the `ACCESS` privileges the user has.
+            |However, a user with `CREATE/DROP DATABASE` or `DATABASE MANAGEMENT` privileges can see all databases regardless of their `ACCESS` privileges.
+            |If a user has not been granted `ACCESS` privilege to any databases, the command can still be executed but will only return the `system` database, which is always visible.
+            |""".stripMargin)
+          }
       p("A particular database can be seen using the command `SHOW DATABASE name`.")
       query("SHOW DATABASE system", assertDatabaseShown("system")) {
         resultTable()
