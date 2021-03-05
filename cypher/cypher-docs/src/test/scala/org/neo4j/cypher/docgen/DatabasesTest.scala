@@ -61,6 +61,13 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
+      note {
+        p(
+          """Note that the results of this command are filtered according to the `ACCESS` privileges the user has.
+            |However, a user with `CREATE/DROP DATABASE` or `DATABASE MANAGEMENT` privileges can see all databases regardless of their `ACCESS` privileges.
+            |If a user has not been granted `ACCESS` privilege to any databases, the command can still be executed but will only return the `system` database, which is always visible.
+            |""".stripMargin)
+          }
       p("The number of databases can be seen using a `count()` aggregation with `YIELD` and `RETURN`.")
       query("SHOW DATABASES YIELD * RETURN count(*) as count", ResultAssertions({ r: DocsExecutionResult =>
         r.columnAs[Int]("count").toSet should be(Set(4))
