@@ -35,8 +35,7 @@ class CallTest extends DocumentingTest {
       p("Procedures are called using the `CALL` clause.")
       tip {
         p("""The `CALL` clause is also used to evaluate a subquery.
-            #For descriptions of the `CALL` clause in this context, refer to <<query-call-subquery>>.
-          """.stripMargin('#'))
+            #For descriptions of the `CALL` clause in this context, refer to <<query-call-subquery>>.""".stripMargin('#'))
       }
       p("""Each procedure call needs to specify all required procedure arguments.
           #This may be done either explicitly, by using a comma-separated list wrapped in parentheses after the procedure name, or implicitly by using available query parameters as procedure call arguments.
@@ -49,7 +48,7 @@ class CallTest extends DocumentingTest {
           #It is an error if a procedure call tries to rebind a previously bound variable (i.e., a procedure call cannot shadow a variable that was previously bound in the current scope).
           #In a standalone procedure call, `+YIELD *+` can be used to select all columns. In this case, the name of the output parameters does not need to be known in advance.""".stripMargin('#'))
       p("For more information on how to determine the input parameters for the `CALL` procedure and the output parameters for the `YIELD` procedure, see <<call-view-the-signature-for-a-procedure>>.")
-      p("Inside a larger query, the records returned from a procedure call with an explicit `YIELD` may be further filtered using a `WHERE` sub-clause followed by a predicate (similar to `WITH ... WHERE ...`).")
+      p("Inside a larger query, the records returned from a procedure call with an explicit `YIELD` may be further filtered using a `WHERE` sub-clause followed by a predicate (similar to `+WITH ... WHERE ...+`).")
       p("""If the called procedure declares at least one result field, `YIELD` may generally not be omitted.
           #However `YIELD` may always be omitted in a standalone procedure call.
           #In this case, all result fields are yielded as newly-bound variables from the procedure call to the user.""".stripMargin('#'))
@@ -60,8 +59,7 @@ class CallTest extends DocumentingTest {
       note {
         p("""Neo4j comes with a number of built-in procedures.
             #For a list of these, see <<operations-manual#neo4j-procedures, Operations Manual -> Procedures>>.""".stripMargin('#'))
-        p(
-          """Users can also develop custom procedures and deploy to the database.
+        p("""Users can also develop custom procedures and deploy to the database.
             #See <<java-reference#extending-neo4j-procedures-and-functions, Java Reference -> Procedures and functions>> for details.""".stripMargin('#'))
       }
     }
@@ -84,10 +82,9 @@ class CallTest extends DocumentingTest {
       p("""To `CALL` a procedure, its input parameters need to be known, and to use `YIELD`, its output parameters need to be known.
           #The built-in procedure `dbms.procedures` returns the name, signature and description for all procedures.
           #The following query can be used to return the signature for a particular procedure:""".stripMargin('#'))
-      query(
-        """CALL dbms.procedures() YIELD name, signature
-          #WHERE name='dbms.listConfig'
-          #RETURN signature""".stripMargin('#'), assertNotEmpty) {
+      query("""CALL dbms.procedures() YIELD name, signature
+              #WHERE name='dbms.listConfig'
+              #RETURN signature""".stripMargin('#'), assertNotEmpty) {
         p("We can see that the `dbms.listConfig` has one input parameter, `searchString`, and three output parameters, `name`, `description` and `value`.")
         resultTable()
       }
@@ -135,8 +132,7 @@ class CallTest extends DocumentingTest {
     }
 
     section("Call a procedure with literal and default arguments", "call-call-a-procedure-with-literal-and-default-arguments") {
-      p(
-        """This calls the example procedure `dbms.security.createUser` using literal arguments.
+      p("""This calls the example procedure `dbms.security.createUser` using literal arguments.
           #That is, arguments that are written out directly in the statement text, and a trailing default argument that is provided by the procedure itself.""".stripMargin('#'))
       query("CALL dbms.security.createUser('example_username', 'example_password')", assertEmpty) {
         p("Since our example procedure does not return any result, the result is empty.")
@@ -160,10 +156,9 @@ class CallTest extends DocumentingTest {
 
     section("Call a procedure and filter its results", "call-call-a-procedure-and-filter-its-results") {
       p("This calls the built-in procedure `db.labels` to count all in-use labels in the database that contain the word 'User'.")
-      query(
-        """CALL db.labels() YIELD label
-          #WHERE label CONTAINS 'User'
-          #RETURN count(label) AS numLabels""".stripMargin('#'), assertNotEmpty) {
+      query("""CALL db.labels() YIELD label
+              #WHERE label CONTAINS 'User'
+              #RETURN count(label) AS numLabels""".stripMargin('#'), assertNotEmpty) {
         p("Since the procedure call is part of a larger query, all outputs must be named explicitly.")
       }
     }
@@ -172,7 +167,8 @@ class CallTest extends DocumentingTest {
       p("This calls the built-in procedure `db.propertyKeys` as part of counting the number of nodes per property key that is currently used in the database.")
       query("""CALL db.propertyKeys() YIELD propertyKey AS prop
               #MATCH (n)
-              #WHERE n[prop] IS NOT null RETURN prop, count(n) AS numNodes""".stripMargin('#'), assertNotEmpty) {
+              #WHERE n[prop] IS NOT NULL
+              #RETURN prop, count(n) AS numNodes""".stripMargin('#'), assertNotEmpty) {
         p("Since the procedure call is part of a larger query, all outputs must be named explicitly.")
       }
     }
