@@ -64,8 +64,7 @@ class CallSubqueryTest extends DocumentingTest {
 
     section("Importing variables into subqueries", "subquery-correlated-importing") {
       p("""Variables are imported into a subquery using an importing `WITH` clause.
-          #As the subquery is evaluated for each incoming input row, the imported variables get bound to the corresponding values from the input row in each evaluation.
-          #""".stripMargin('#'))
+          #As the subquery is evaluated for each incoming input row, the imported variables get bound to the corresponding values from the input row in each evaluation.""".stripMargin('#'))
 
       query("""UNWIND [0, 1, 2] AS x
               #CALL {
