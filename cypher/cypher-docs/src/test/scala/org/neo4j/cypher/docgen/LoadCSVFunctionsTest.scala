@@ -29,27 +29,22 @@ class LoadCSVFunctionsTest extends DocumentingTest {
     doc("LOAD CSV functions", "query-functions-load-csv")
     synopsis("LOAD CSV functions can be used to get information about the file that is processed by `LOAD CSV`.")
     important {
-      p(
-        """The functions described on this page are only useful when run on a query that uses `LOAD CSV`. In all other contexts they will always return `null`.""")
+      p("""The functions described on this page are only useful when run on a query that uses `LOAD CSV`.
+          #In all other contexts they will always return `null`.""".stripMargin('#'))
     }
-    p(
-      """Functions:
-        |
-        |* <<functions-linenumber, linenumber()>>
-        |* <<functions-file, file()>>""")
+    p("""Functions:
+        #
+        #* <<functions-linenumber, linenumber()>>
+        #* <<functions-file, file()>>""".stripMargin('#'))
     section("linenumber()", "functions-linenumber") {
-      p(
-        "`linenumber()` returns the line number that `LOAD CSV` is currently using.")
+      p("`linenumber()` returns the line number that `LOAD CSV` is currently using.")
       function("linenumber()", "An Integer.")
       considerations("`null` will be returned if this function is called without a `LOAD CSV` context.")
-      //TODO: Add Query and Result here when CSV support in DocumentingTest is done (needs to happen when porting LoadCSVTest.java)
     }
     section("file()", "functions-file") {
-      p(
-        """`file()` returns the absolute path of the file that `LOAD CSV` is using.""".stripMargin)
+      p("`file()` returns the absolute path of the file that `LOAD CSV` is using.")
       function("file()", "A String.")
       considerations("`null` will be returned if this function is called without a `LOAD CSV` context.")
-      //TODO: Add Query and Result here when CSV support in DocumentingTest is done (needs to happen when porting LoadCSVTest.java)
     }
   }.build()
 }
