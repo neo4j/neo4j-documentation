@@ -93,7 +93,8 @@ class CallSubqueryTest extends DocumentingTest {
               #  LIMIT 1
               #UNION
               #  MATCH (p:Person)
-              #  RETURN p ORDER BY p.age DESC
+              #  RETURN p
+              #  ORDER BY p.age DESC
               #  LIMIT 1
               #}
               #RETURN p.name, p.age
