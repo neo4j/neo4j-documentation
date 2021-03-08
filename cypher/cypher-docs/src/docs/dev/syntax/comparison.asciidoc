@@ -63,7 +63,26 @@ The following points give some details on how the comparison is performed.
  A leap year occurs on a year with an ordinal number divisible by `4`, that is not divisible by `100`, unless it divisible by `400`.
  This means that over `400` years there are `((365 * 4 + 1) * 25 - 1) * 4 + 1 = 146097` days, which means an average of `365.2425` days per year.].
 * Comparing for ordering when one argument is `null` (e.g. `null < 3` is `null`).
-
+* *Ordering* of values with *different* types:
+ ** The ordering is, in ascending order, defined according to the following list:
+  *** <<cypher-literal-maps, `Map`>>
+  *** <<structural-types, `Node`>>
+  *** <<structural-types, `Relationship`>>
+  *** <<cypher-lists, `List`>>
+  *** <<cypher-pattern-path-variables, `Path`>>
+  *** <<cypher-temporal-introduction, `DateTime`>>
+  *** <<cypher-temporal-introduction, `LocalDateTime`>>
+  *** <<cypher-temporal-introduction, `Date`>>
+  *** <<cypher-temporal-introduction, `Time`>>
+  *** <<cypher-temporal-introduction, `LocalTime`>>
+  *** <<cypher-temporal-introduction, `Duration`>>
+  *** <<cypher-expressions-general, `String`>>
+  *** <<cypher-expressions-general, `Boolean`>>
+  *** <<cypher-expressions-general, `Number`>>
+ ** The value `null` is considered larger than any value.
+* *Ordering* of composite type values:
+ ** For the <<composite-types, composite types>> (e.g. maps and lists), elements of the containers are compared pairwise for ordering and thus determine the ordering of two container types.
+For example, `[1, 'foo', 3]` is ordered before `[1, 2, 'bar']` since `'foo'` is ordered before `2`.
 
 [[cypher-operations-chaining]]
 == Chaining comparison operations
