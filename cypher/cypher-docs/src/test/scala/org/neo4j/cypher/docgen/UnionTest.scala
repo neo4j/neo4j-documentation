@@ -26,37 +26,38 @@ class UnionTest extends DocumentingTest {
 
   override def doc = new DocBuilder {
     doc("UNION", "query-union")
-    initQueries("""CREATE (ah:Actor {name: 'Anthony Hopkins'}),
-                  |       (hm:Actor {name: 'Helen Mirren'}),
-                  |       (hitchcock:Actor {name: 'Hitchcock'}),
-                  |       (hitchcockMovie:Movie {title: 'Hitchcock'}),
-                  |       (ah)-[:KNOWS]->(hm),
-                  |       (ah)-[:ACTS_IN]->(hitchcockMovie),
-                  |       (hm)-[:ACTS_IN]->(hitchcockMovie)""")
+    initQueries("""CREATE
+                  #  (ah:Actor {name: 'Anthony Hopkins'}),
+                  #  (hm:Actor {name: 'Helen Mirren'}),
+                  #  (hitchcock:Actor {name: 'Hitchcock'}),
+                  #  (hitchcockMovie:Movie {title: 'Hitchcock'}),
+                  #  (ah)-[:KNOWS]->(hm),
+                  #  (ah)-[:ACTS_IN]->(hitchcockMovie),
+                  #  (hm)-[:ACTS_IN]->(hitchcockMovie)""".stripMargin('#'))
     synopsis("The `UNION` clause is used to combine the result of multiple queries.")
-    p(
-      """* <<union-introduction, Introduction>>
-        |* <<union-combine-queries-retain-duplicates, Combine two queries and retain duplicates>>
-        |* <<union-combine-queries-remove-duplicates, Combine two queries and remove duplicates>>
-      """.stripMargin)
+    p("""* <<union-introduction, Introduction>>
+        #* <<union-combine-queries-retain-duplicates, Combine two queries and retain duplicates>>
+        #* <<union-combine-queries-remove-duplicates, Combine two queries and remove duplicates>>""".stripMargin('#'))
     section("Introduction", "union-introduction") {
       p("`UNION` combines the results of two or more queries into a single result set that includes all the rows that belong to all queries in the union.")
-      p("""The number and the names of the columns must be identical in all queries combined by using `UNION`.""")
-      p(
-        """To keep all the result rows, use `UNION ALL`.
-          |Using just `UNION` will combine and remove duplicates from the result set.""".stripMargin)
+      p("The number and the names of the columns must be identical in all queries combined by using `UNION`.")
+      p("""To keep all the result rows, use `UNION ALL`.
+          #Using just `UNION` will combine and remove duplicates from the result set.""".stripMargin('#'))
       graphViz()
     }
     section("Combine two queries and retain duplicates", "union-combine-queries-retain-duplicates") {
-      p(
-        """Combining the results from two queries is done using `UNION ALL`.""".stripMargin)
-      query(
-        """MATCH (n:Actor)
-          |RETURN n.name AS name
-          |UNION ALL
-          |MATCH (n:Movie)
-          |RETURN n.title AS name""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("name" -> "Anthony Hopkins"), Map("name" -> "Helen Mirren"), Map("name" -> "Hitchcock"), Map("name" -> "Hitchcock")))
+      p("Combining the results from two queries is done using `UNION ALL`.")
+      query("""MATCH (n:Actor)
+              #RETURN n.name AS name
+              #UNION ALL
+              #MATCH (n:Movie)
+              #RETURN n.title AS name""".stripMargin('#'),
+      ResultAssertions((r) => {
+          r.toList should equal(List(
+            Map("name" -> "Anthony Hopkins"),
+            Map("name" -> "Helen Mirren"),
+            Map("name" -> "Hitchcock"),
+            Map("name" -> "Hitchcock")))
         })) {
         p("The combined result is returned, including duplicates.")
         resultTable()
@@ -64,15 +65,17 @@ class UnionTest extends DocumentingTest {
     }
 
     section("Combine two queries and remove duplicates", "union-combine-queries-remove-duplicates") {
-      p(
-        """By not including `ALL` in the `UNION`, duplicates are removed from the combined result set""".stripMargin)
-      query(
-        """MATCH (n:Actor)
-          |RETURN n.name AS name
-          |UNION
-          |MATCH (n:Movie)
-          |RETURN n.title AS name""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("name" -> "Anthony Hopkins"), Map("name" -> "Helen Mirren"), Map("name" -> "Hitchcock")))
+      p("By not including `ALL` in the `UNION`, duplicates are removed from the combined result set")
+      query("""MATCH (n:Actor)
+              #RETURN n.name AS name
+              #UNION
+              #MATCH (n:Movie)
+              #RETURN n.title AS name""".stripMargin('#'),
+      ResultAssertions((r) => {
+          r.toList should equal(List(
+            Map("name" -> "Anthony Hopkins"),
+            Map("name" -> "Helen Mirren"),
+            Map("name" -> "Hitchcock")))
         })) {
         p("The combined result is returned, without duplicates.")
         resultTable()
