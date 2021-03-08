@@ -26,7 +26,6 @@ import java.io.File
 import org.junit.Assert._
 
 class LoadCSVTest extends DocumentingTestBase with QueryStatisticsTestSupport with SoftReset {
-  //TODO: Whenever this is ported to DocumentingTest, please go to LoadCSVFunctionsTest and add example queries
 
   override protected def getGraphvizStyle: GraphStyle =
     AsciiDocSimpleStyle.withAutomaticRelationshipTypeColors()
@@ -70,85 +69,77 @@ class LoadCSVTest extends DocumentingTestBase with QueryStatisticsTestSupport wi
   )
 
   urls = Map(
-    "%ARTIST%" -> (baseUrl + artist.getName),
-    "%ARTIS_WITH_HEADER%" -> (baseUrl + artistWithHeaders.getName),
-    "%ARTIST_WITH_FIELD_DELIMITER%" -> (baseUrl + artistFieldTerminator.getName),
-    "%ARTIST_WITH_ESCAPE_CHAR%" -> (baseUrl + artistsWithEscapeChar.getName)
+    "%ARTIST%" -> ("""file:///""" + artist.getName),
+    "%ARTIS_WITH_HEADER%" -> ("""file:///""" + artistWithHeaders.getName),
+    "%ARTIST_WITH_FIELD_DELIMITER%" -> ("""file:///""" + artistFieldTerminator.getName),
+    "%ARTIST_WITH_ESCAPE_CHAR%" -> ("""file:///""" + artistsWithEscapeChar.getName)
   )
 
   @Test def should_import_data_from_a_csv_file() {
     testQuery(
       title = "Import data from a CSV file",
-      text = """
-To import data from a CSV file into Neo4j, you can use `LOAD CSV` to get the data into your query.
-Then you write it to your database using the normal updating clauses of Cypher.
-
-.artists.csv
-[source]
-----
-include::csv-files/artists.csv[]
-----
-""",
-      queryText = s"LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
-      optionalResultExplanation =
-        """
-A new node with the `Artist` label is created for each row in the CSV file.
-In addition, two columns from the CSV file are set as properties on the nodes.""",
+      text = """To import data from a CSV file into Neo4j, you can use `LOAD CSV` to get the data into your query.
+               #Then you write it to your database using the normal updating clauses of Cypher.
+               #
+               #.artists.csv
+               #[source]
+               #----
+               #include::csv-files/artists.csv[]
+               #----""".stripMargin('#'),
+      queryText = """LOAD CSV FROM '%ARTIST%' AS line
+                    #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
+      optionalResultExplanation = """A new node with the `Artist` label is created for each row in the CSV file.
+                                    #In addition, two columns from the CSV file are set as properties on the nodes.""".stripMargin('#'),
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
 
   @Test def should_import_data_from_a_csv_file_with_headers() {
     testQuery(
       title = "Import data from a CSV file containing headers",
-      text = """
-When your CSV file has headers, you can view each row in the file as a map instead of as an array of strings.
-
-.artists-with-headers.csv
-[source]
-----
-include::csv-files/artists-with-headers.csv[]
-----
-""",
-      queryText = s"LOAD CSV WITH HEADERS FROM '%ARTIS_WITH_HEADER%' AS line CREATE (:Artist {name: line.Name, year: toInteger(line.Year)})",
-      optionalResultExplanation = """
-This time, the file starts with a single row containing column names.
-Indicate this using `WITH HEADERS` and you can access specific fields by their corresponding column name.""",
+      text = """When your CSV file has headers, you can view each row in the file as a map instead of as an array of strings.
+               #
+               #.artists-with-headers.csv
+               #[source]
+               #----
+               #include::csv-files/artists-with-headers.csv[]
+               #----""".stripMargin('#'),
+      queryText = """LOAD CSV WITH HEADERS FROM '%ARTIS_WITH_HEADER%' AS line
+                    #CREATE (:Artist {name: line.Name, year: toInteger(line.Year)})""".stripMargin('#'),
+      optionalResultExplanation = """This time, the file starts with a single row containing column names.
+                                    #Indicate this using `WITH HEADERS` and you can access specific fields by their corresponding column name.""".stripMargin('#'),
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
 
   @Test def should_import_data_from_a_csv_file_with_custom_field_terminator() {
     testQuery(
       title = "Import data from a CSV file with a custom field delimiter",
-      text = """
-Sometimes, your CSV file has other field delimiters than commas.
-You can specify which delimiter your file uses, using `FIELDTERMINATOR`.
-Hexadecimal representation of the unicode character encoding can be used if prepended by `{backslash}u`.
-The encoding must be written with four digits.
-For example, `{backslash}u002C` is equivalent to `;`.
-
-.artists-fieldterminator.csv
-[source]
-----
-include::csv-files/artists-fieldterminator.csv[]
-----
-""",
-      queryText = s"LOAD CSV FROM '%ARTIST_WITH_FIELD_DELIMITER%' AS line FIELDTERMINATOR ';' CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
-      optionalResultExplanation =
-        "As values in this file are separated by a semicolon, a custom `FIELDTERMINATOR` is specified in the `LOAD CSV` clause.",
+      text = """Sometimes, your CSV file has other field delimiters than commas.
+               #You can specify which delimiter your file uses, using `FIELDTERMINATOR`.
+               #Hexadecimal representation of the unicode character encoding can be used if prepended by `{backslash}u`.
+               #The encoding must be written with four digits.
+               #For example, `{backslash}u003B` is equivalent to `;` (SEMICOLON).
+               #
+               #.artists-fieldterminator.csv
+               #[source]
+               #----
+               #include::csv-files/artists-fieldterminator.csv[]
+               #----
+               #""".stripMargin('#'),
+      queryText = """LOAD CSV FROM '%ARTIST_WITH_FIELD_DELIMITER%' AS line FIELDTERMINATOR ';'
+                    #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
+      optionalResultExplanation = "As values in this file are separated by a semicolon, a custom `FIELDTERMINATOR` is specified in the `LOAD CSV` clause.",
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
 
   @Test def should_import_data_from_a_csv_file_with_periodic_commit() {
     testQuery(
       title = "Importing large amounts of data",
-      text = """
-If the CSV file contains a significant number of rows (approaching hundreds of thousands or millions), `USING PERIODIC COMMIT`
-can be used to instruct Neo4j to perform a commit after a number of rows.
-This reduces the memory overhead of the transaction state.
-By default, the commit will happen every 1000 rows.
-For more information, see <<query-using-periodic-commit-hint>>.
-""",
-      queryText = s"USING PERIODIC COMMIT LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
+      text = """If the CSV file contains a significant number of rows (approaching hundreds of thousands or millions), `USING PERIODIC COMMIT` can be used to instruct Neo4j to perform a commit after a number of rows.
+               #This reduces the memory overhead of the transaction state.
+               #By default, the commit will happen every 1000 rows.
+               #For more information, see <<query-using-periodic-commit-hint>>.""".stripMargin('#'),
+      queryText = """USING PERIODIC COMMIT LOAD CSV FROM '%ARTIST%' AS line
+                    #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
       optionalResultExplanation = "",
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
@@ -156,8 +147,9 @@ For more information, see <<query-using-periodic-commit-hint>>.
   @Test def should_import_data_from_a_csv_file_with_periodic_commit_after_500_rows() {
     testQuery(
       title = "Setting the rate of periodic commits",
-      text = """You can set the number of rows as in the example, where it is set to 500 rows.""",
-      queryText = s"USING PERIODIC COMMIT 500 LOAD CSV FROM '%ARTIST%' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
+      text = "You can set the number of rows as in the example, where it is set to 500 rows.",
+      queryText = """USING PERIODIC COMMIT 500 LOAD CSV FROM '%ARTIST%' AS line
+                    #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
       optionalResultExplanation = "",
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
@@ -165,19 +157,21 @@ For more information, see <<query-using-periodic-commit-hint>>.
   @Test def should_import_data_from_a_csv_file_which_uses_the_escape_char() {
     testQuery(
       title = "Import data containing escaped characters",
-      text = """
-In this example, we both have additional quotes around the values, as well as escaped quotes inside one value.
-
-.artists-with-escaped-char.csv
-[source]
-----
-include::csv-files/artists-with-escaped-char.csv[]
-----
-""",
-      queryText = s"LOAD CSV FROM '%ARTIST_WITH_ESCAPE_CHAR%' AS line CREATE (a:Artist {name: line[1], year: toInteger(line[2])}) RETURN a.name AS name, a.year as year, size(a.name) AS size",
-      optionalResultExplanation = """
-Note that strings are wrapped in quotes in the output here.
-You can see that when comparing to the length of the string in this case!""",
+      text = """In this example, we both have additional quotes around the values, as well as escaped quotes inside one value.
+               #
+               #.artists-with-escaped-char.csv
+               #[source]
+               #----
+               #include::csv-files/artists-with-escaped-char.csv[]
+               #----""".stripMargin('#'),
+      queryText = """LOAD CSV FROM '%ARTIST_WITH_ESCAPE_CHAR%' AS line
+                    #CREATE (a:Artist {name: line[1], year: toInteger(line[2])})
+                    #RETURN
+                    #  a.name AS name,
+                    #  a.year AS year,
+                    #  size(a.name) AS size""".stripMargin('#'),
+      optionalResultExplanation = """Note that strings are wrapped in quotes in the output here.
+                                    #You can see that when comparing to the length of the string in this case!""".stripMargin('#'),
       assertions = (p) => assertEquals(List(Map("name" -> """The "Symbol"""", "year" -> 1992, "size" -> 12)), p.toList)
     )
   }
@@ -185,17 +179,17 @@ You can see that when comparing to the length of the string in this case!""",
   @Test def should_use_csv_function_linenumber() {
     testQuery(
       title = "Using linenumber() with LOAD CSV",
-      text = """
-For certain scenarios, like debugging a problem with a csv file, it may be useful to get the current line number that `LOAD CSV` is operating on.
-The `linenumber()` function provides exactly that or `null` if called without a `LOAD CSV` context.
-
-.artists.csv
-[source]
-----
-include::csv-files/artists.csv[]
-----
-""",
-      queryText = s"LOAD CSV FROM '%ARTIST%' AS line RETURN linenumber() as number, line",
+      text = """For certain scenarios, like debugging a problem with a csv file, it may be useful to get the current line number that `LOAD CSV` is operating on.
+               #The `linenumber()` function provides exactly that or `null` if called without a `LOAD CSV` context.
+               #
+               #.artists.csv
+               #[source]
+               #----
+               #include::csv-files/artists.csv[]
+               #----
+               #""".stripMargin('#'),
+      queryText = """LOAD CSV FROM '%ARTIST%' AS line
+                    #RETURN linenumber() AS number, line""".stripMargin('#'),
       optionalResultExplanation = "",
       assertions = p =>
         assertEquals(List(
@@ -207,23 +201,23 @@ include::csv-files/artists.csv[]
     )
   }
 
+  /* This outputs the file location of team city!!!
   @Test def should_use_csv_function_file() {
     testQuery(
       title = "Using file() with LOAD CSV",
-      text = """
-For certain scenarios, like debugging a problem with a csv file, it may be useful to get the absolute path of the file that `LOAD CSV` is operating on.
-The `file()` function provides exactly that or `null` if called without a `LOAD CSV` context.
-
-.artists.csv
-[source]
-----
-include::csv-files/artists.csv[]
-----
-""",
-      queryText = s"LOAD CSV FROM '%ARTIST%' AS line RETURN DISTINCT file() as path",
-      optionalResultExplanation = "Since `LOAD CSV` can temporary download a file to process it, it is important to note that " +
-        "`file()` will always return the path on disk. This is why you see different URIs in this example. " +
-        "If `LOAD CSV` is invoked with a `file:///` URL that points to your disk `file()` will return that same path.",
+      text = """For certain scenarios, like debugging a problem with a csv file, it may be useful to get the absolute path of the file that `LOAD CSV` is operating on.
+               #The `file()` function provides exactly that or `null` if called without a `LOAD CSV` context.
+               #
+               #.artists.csv
+               #[source]
+               #----
+               #include::csv-files/artists.csv[]
+               #----""".stripMargin('#'),
+      queryText = """LOAD CSV FROM '%ARTIST%' AS line
+                    #RETURN DISTINCT file() AS path""".stripMargin('#'),
+      optionalResultExplanation = """Since `LOAD CSV` can temporary download a file to process it, it is important to note that `file()` will always return the path on disk.
+                                    #This is why you see different URIs in this example.
+                                    #If `LOAD CSV` is invoked with a `file:///` URL that points to your disk `file()` will return that same path.""".stripMargin('#'),
       assertions = p => {
         val list = p.toList
         assertEquals(1, list.size)
@@ -231,5 +225,5 @@ include::csv-files/artists.csv[]
         assertTrue(path.endsWith("artists.csv"))
       }
     )
-  }
+  }*/
 }
