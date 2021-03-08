@@ -124,7 +124,7 @@ class LoadCSVTest extends DocumentingTestBase with QueryStatisticsTestSupport wi
                #----
                #include::csv-files/artists-fieldterminator.csv[]
                #----
-               #""",
+               #""".stripMargin('#'),
       queryText = """LOAD CSV FROM '%ARTIST_WITH_FIELD_DELIMITER%' AS line FIELDTERMINATOR ';'
                     #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
       optionalResultExplanation = "As values in this file are separated by a semicolon, a custom `FIELDTERMINATOR` is specified in the `LOAD CSV` clause.",
