@@ -5,26 +5,26 @@
 
 | [source, cypher, role=noplay]
 GRANT CREATE NEW [NODE] LABEL[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
+    ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
-| Enable the specified roles to create new node labels in the default database, specific database(s), or all databases.
+| Enable the specified roles to create new node labels in the home database, specific database(s), or all databases.
 
 | [source, cypher, role=noplay]
 GRANT CREATE NEW [RELATIONSHIP] TYPE[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
+    ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
-| Enable the specified roles to create new relationship types in the default database, specific database(s), or all databases.
+| Enable the specified roles to create new relationship types in the home database, specific database(s), or all databases.
 
 | [source, cypher, role=noplay]
 GRANT CREATE NEW [PROPERTY] NAME[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
+    ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
-| Enable the specified roles to create new property names in the default database, specific database(s), or all databases.
+| Enable the specified roles to create new property names in the home database, specific database(s), or all databases.
 
 | [source, cypher, role=noplay]
 GRANT NAME [MANAGEMENT]
-    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
+    ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
-| Enable the specified roles to create new labels, relationship types, and property names in the default database, specific database(s), or all databases.
+| Enable the specified roles to create new labels, relationship types, and property names in the home database, specific database(s), or all databases.
 
 |===

@@ -2,6 +2,6 @@
 [source, cypher, role=noplay]
 -----
 GRANT ALL [ [ GRAPH ] PRIVILEGES ]
-    ON {DEFAULT GRAPH | GRAPH[S] { * | name[, ...] }}
+    ON {HOME GRAPH | GRAPH[S] { * | name[, ...] }}
     TO role[, ...]
 -----

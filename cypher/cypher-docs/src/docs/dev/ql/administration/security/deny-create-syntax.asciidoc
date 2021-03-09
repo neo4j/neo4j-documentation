@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher, role=noplay]
 -----
-DENY CREATE ON {DEFAULT GRAPH | GRAPH[S] { * | name[, ...] }}
+DENY CREATE ON {HOME GRAPH | GRAPH[S] { * | name[, ...] }}
     [
         ELEMENT[S] { * | label-or-rel-type[, ...] }
         | NODE[S] { * | label[, ...] }

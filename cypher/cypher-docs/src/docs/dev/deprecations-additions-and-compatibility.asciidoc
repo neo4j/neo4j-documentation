@@ -45,6 +45,11 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `SHOW INDEXES YIELD ... [RETURN ...]` | Functionality | Updated    | Now allows `YIELD` and `RETURN` clauses to `SHOW INDEXES` to change the output.
 | `BRIEF [OUTPUT]` for `SHOW INDEXES`   | Syntax        | Deprecated | Replaced by default output columns
 | `VERBOSE [OUTPUT]` for `SHOW INDEXES` | Syntax        | Deprecated | Replaced by `YIELD *`
+| `ALTER USER ... SET/REMOVE HOME DATABASE`     | Syntax        | Added         | Now allows setting and removing home database for user
+| `CREATE USER ... SET HOME DATABASE`           | Syntax        | Added         | Now allows setting home database for user
+| `SHOW HOME DATABASE`                          | Syntax        | Added         | New syntax for showing the home database of the current user
+| `ON DEFAULT DATABASE` for privilege commands  | Syntax        | Deprecated    | Replaced by `ON HOME DATABASE`
+| `ON DEFAULT GRAPH` for privilege commands     | Syntax        | Deprecated    | Replaced by `ON HOME GRAPH`
 |===
 
 [[cypher-deprecations-additions-removals-4.2]]

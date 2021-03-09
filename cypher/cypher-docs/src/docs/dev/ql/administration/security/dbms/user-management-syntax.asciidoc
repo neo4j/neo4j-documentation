@@ -28,6 +28,12 @@ GRANT SET PASSWORD[S]
 | Enable the specified roles to modify users' passwords and whether those passwords must be changed upon first login.
 
 | [source, cypher, role=noplay]
+GRANT SET USER HOME DATABASE
+ON DBMS
+TO role[, ...]
+| Enable the specified roles to modify users' home database.
+
+| [source, cypher, role=noplay]
 GRANT SET USER STATUS
     ON DBMS
     TO role[, ...]

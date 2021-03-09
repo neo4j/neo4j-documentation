@@ -52,7 +52,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
       section("How to recreate the `PUBLIC` role", "administration-built-in-roles-public-recreate") {
         initQueries(
           // setup so that later when the grant query gets executed, it will show systemUpdates: 1
-          "REVOKE GRANT ACCESS ON DEFAULT DATABASE FROM PUBLIC",
+          "REVOKE GRANT ACCESS ON HOME DATABASE FROM PUBLIC",
           "REVOKE EXECUTE PROCEDURES * ON DBMS FROM PUBLIC",
           "REVOKE EXECUTE USER DEFINED FUNCTIONS * ON DBMS FROM PUBLIC"
         )
@@ -60,7 +60,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           """The `PUBLIC` role can not be dropped and thus there is no need to recreate the role itself.
             |To restore the role to its original capabilities, two steps are needed. First, all `GRANT` or `DENY` privileges on this role should be revoked (see output of `SHOW ROLE PUBLIC PRIVILEGES AS REVOKE COMMANDS` on what to revoke).
             |Secondly, the following queries must be run:""".stripMargin)
-        query("GRANT ACCESS ON DEFAULT DATABASE TO PUBLIC", ResultAssertions(r => {
+        query("GRANT ACCESS ON HOME DATABASE TO PUBLIC", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()

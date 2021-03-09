@@ -136,7 +136,7 @@ An example that uses all special characters is granting the `READ` privilege:
 ----
 GRANT READ
     "{" { * | property[, ...] } "}"
-    ON {DEFAULT GRAPH | GRAPH[S] { * | name[, ...] }}
+    ON {HOME GRAPH | GRAPH[S] { * | name[, ...] }}
         [
             ELEMENT[S] { * | label-or-rel-type[, ...] }
             | NODE[S] { * | label[, ...] }
