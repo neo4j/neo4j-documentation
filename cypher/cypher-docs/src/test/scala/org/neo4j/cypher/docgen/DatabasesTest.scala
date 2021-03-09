@@ -82,6 +82,10 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DEFAULT DATABASE", assertDatabaseShown("neo4j")) {
         resultTable()
       }
+      p("The home database for the current user can be seen using the command `SHOW HOME DATABASE`.")
+      query("SHOW HOME DATABASE", assertDatabaseShown("neo4j")) {
+        resultTable()
+      }
       p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`.")
       query("SHOW DATABASES YIELD name, currentStatus, requestedStatus ORDER BY currentStatus WHERE name CONTAINS 'e'",
         assertDatabaseShown("neo4j", "system", "movies")) {

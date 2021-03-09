@@ -244,7 +244,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         }
         query("SHOW USER jake PRIVILEGES AS COMMANDS", assertPrivilegeShown(Seq(
           Map("command" -> "GRANT ACCESS ON DATABASE `neo4j` TO $role"),
-          Map("command" -> "GRANT ACCESS ON DEFAULT DATABASE TO $role"),
+          Map("command" -> "GRANT ACCESS ON HOME DATABASE TO $role"),
           Map("command" -> "GRANT EXECUTE PROCEDURE * ON DBMS TO $role"),
         ))) {
           resultTable()
@@ -262,15 +262,15 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
 
     section("The `REVOKE` command", "administration-security-subgraph-revoke", "enterprise-edition") {
       initQueries(
-        "GRANT TRAVERSE ON DEFAULT GRAPH NODES Post TO regularUsers",
-        "GRANT TRAVERSE ON DEFAULT GRAPH NODES Payments TO regularUsers",
-        "DENY TRAVERSE ON DEFAULT GRAPH NODES Payments TO regularUsers"
+        "GRANT TRAVERSE ON HOME GRAPH NODES Post TO regularUsers",
+        "GRANT TRAVERSE ON HOME GRAPH NODES Payments TO regularUsers",
+        "DENY TRAVERSE ON HOME GRAPH NODES Payments TO regularUsers"
       )
       p("Privileges that were granted or denied earlier can be revoked using the `REVOKE` command. ")
       p("include::revoke-syntax.asciidoc[]")
 
       p("An example usage of the `REVOKE` command is given here:")
-      query("REVOKE GRANT TRAVERSE ON DEFAULT GRAPH NODES Post FROM regularUsers", ResultAssertions(r => {
+      query("REVOKE GRANT TRAVERSE ON HOME GRAPH NODES Post FROM regularUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
@@ -278,7 +278,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p(
         """While it can be explicitly specified that revoke should remove a `GRANT` or `DENY`, it is also possible to revoke either one by not specifying at all as the next example demonstrates.
           |Because of this, if there happen to be a `GRANT` and a `DENY` on the same privilege, it would remove both.""".stripMargin)
-      query("REVOKE TRAVERSE ON DEFAULT GRAPH NODES Payments FROM regularUsers", ResultAssertions(r => {
+      query("REVOKE TRAVERSE ON HOME GRAPH NODES Payments FROM regularUsers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 2)
       })) {
         statsOnlyResultTable()

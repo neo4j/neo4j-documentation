@@ -50,10 +50,10 @@ Deny `read` privilege on a specified property, on all relationships with a speci
 ###assertion=update-two
 //
 
-GRANT MATCH {*} ON DEFAULT GRAPH ELEMENTS Label TO my_role
+GRANT MATCH {*} ON HOME GRAPH ELEMENTS Label TO my_role
 ###
 
-Grant `read` privilege on all properties and `traverse` privilege in the default graph, to a role.
+Grant `read` privilege on all properties and `traverse` privilege in the home graph, to a role.
 Here, both privileges apply to all nodes and relationships with a specified label/type in the graph.
 
 """

@@ -46,6 +46,7 @@ CREATE USER name [IF NOT EXISTS]
   SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
+  [SET HOME DATABASE name]
 ----
 | Create a new user.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>>
@@ -56,6 +57,7 @@ CREATE OR REPLACE USER name
   SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
+  [SET HOME DATABASE name]
 ----
 | Create a new user, or if a user with the same name exists, replace it.
 | <<administration-security-administration-dbms-privileges-user-management, CREATE USER>> and
@@ -67,10 +69,13 @@ ALTER USER name [IF EXISTS]
   [SET [PLAINTEXT \| ENCRYPTED] PASSWORD password]
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED} ]
+  [SET HOME DATABASE name]
+  [REMOVE HOME DATABASE]
 ----
-| Modify the settings for an existing user. At least one `SET` clause is required.
-| <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>> and/or
-<<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>>
+| Modify the settings for an existing user. At least one `SET` or `REMOVE` clause is required.
+| <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>>,
+<<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>> and/or
+<<administration-security-administration-dbms-privileges-user-management, SET USER HOME DATABASE>>
 
 | [source, cypher, role=noplay]
 ----

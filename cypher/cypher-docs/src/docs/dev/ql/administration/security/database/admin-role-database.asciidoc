@@ -37,8 +37,10 @@ If you delete a database and create a new one with the same name, the new one wi
 ====
 ** The _name_ component can be `+*+`, which means all databases.
 Databases created after this command execution will also be associated with these privileges.
-** The `DATABASE[S] _name_` part of the command can be replaced by `DEFAULT DATABASE`.
-  If you restart the server and choose a new default database after this command execution, the new one will be associated with these privileges.
+** The `DATABASE[S] _name_` part of the command can be replaced by `HOME DATABASE`.
+This refers to the home database configured for a user or, if that user does not have a home database configured, the default database.
+If the user's home database changes for any reason after this command execution, the new one will be associated with these privileges.
+This can be quite powerful as it allows permissions to be switched from one database to another simply by changing a user's home database.
 
 * _role[, ...]_
 ** The role or roles to associate the privilege with, comma-separated.
@@ -49,23 +51,23 @@ Databases created after this command execution will also be associated with thes
 | Command | Description
 
 | [source, cypher, role=noplay]
-GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}} TO role[, ...]
+GRANT database-privilege ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}} TO role[, ...]
 | Grant a privilege to one or multiple roles.
 
 | [source, cypher, role=noplay]
-DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}} TO role[, ...]
+DENY database-privilege ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}} TO role[, ...]
 | Deny a privilege to one or multiple roles.
 
 | [source, cypher, role=noplay]
-REVOKE GRANT database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}} FROM role[, ...]
+REVOKE GRANT database-privilege ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}} FROM role[, ...]
 | Revoke a granted privilege from one or multiple roles.
 
 | [source, cypher, role=noplay]
-REVOKE DENY database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}} FROM role[, ...]
+REVOKE DENY database-privilege ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}} FROM role[, ...]
 | Revoke a denied privilege from one or multiple roles.
 
 | [source, cypher, role=noplay]
-REVOKE database-privilege ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}} FROM role[, ...]
+REVOKE database-privilege ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}} FROM role[, ...]
 | Revoke a granted or denied privilege from one or multiple roles.
 |===
 

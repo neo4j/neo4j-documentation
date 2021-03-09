@@ -1,7 +1,7 @@
 .Command syntax
 [source, cypher, role=noplay]
 -----
-GRANT DELETE ON {DEFAULT GRAPH | GRAPH[S] { * | name[, ...] }}
+GRANT DELETE ON {HOME GRAPH | GRAPH[S] { * | name[, ...] }}
     [
         ELEMENT[S] { * | label-or-rel-type[, ...] }
         | NODE[S] { * | label[, ...] }

@@ -57,7 +57,10 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       p("When connected to the DBMS over bolt, administration commands are automatically routed to the `system` database.")
       p("include::user-management-syntax.asciidoc[]")
       section("Listing current user", "administration-security-users-show-current") {
-        initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED")
+        initQueries(
+          "CREATE DATABASE anotherDb",
+          "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED"
+        )
         p("The currently logged-in user can be seen using `SHOW CURRENT USER` which will produce a table with four columns:")
         p("include::list-users-table-columns.asciidoc[]")
         login("jake", "abc123")
@@ -98,17 +101,17 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             | * The default for `SET STATUS` is `ACTIVE`.
           """.stripMargin
         )
-        p("For example, we can create the user `jake` in a suspended state and the requirement to change his password.")
-        query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED", ResultAssertions((r) => {
+        p("For example, we can create the user `jake` in a suspended state, with the home database `anotherDb` and the requirement to change his password.".stripMargin)
+        query("CREATE USER jake SET PASSWORD 'abc' CHANGE REQUIRED SET STATUS SUSPENDED SET HOME DATABASE anotherDb", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
           note {
-            p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` part of the command is only available in Enterprise Edition.#")
+            p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` and `SET HOME DATABASE` parts of the command are only available in Enterprise Edition.#")
           }
         }
         p("The created user will appear on the list provided by `SHOW USERS`.")
-        query("SHOW USERS YIELD user, suspended, passwordChangeRequired, roles WHERE user = 'jake'", assertUsersShown(Seq("jake"))) {
+        query("SHOW USERS YIELD user, suspended, passwordChangeRequired, roles, home WHERE user = 'jake'", assertUsersShown(Seq("jake"))) {
           p(
             """In this example we also:
               |
@@ -154,8 +157,8 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
         p("""
-            | * At least one of the `SET` clauses are required for the command.
-            | * The `SET PASSWORD CHANGE [NOT] REQUIRED` and `SET STATUS` clauses can be applied in any order.
+            | * `SET` and `REMOVE` clauses cannot be combined in the same command.
+            | * The `SET PASSWORD CHANGE [NOT] REQUIRED`, `SET STATUS`, and `SET HOME DATABASE` clauses can be applied in any order.
             |   The `SET PASSWORD` clause must come first, if used.
             | * For `SET PASSWORD`:
             | ** The `password` can either be a string value or a string parameter, and must not be identical to the old password.
@@ -163,10 +166,24 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             | ** The optional `ENCRYPTED` can be used to update a user's password when the plaintext password is unknown but the encrypted password
             |    is available (e.g. from a database backup). In this case the password string is expected to be in the format of `<encryption-version>,<hash>,<salt>`.
             | * For `SET PASSWORD CHANGE [NOT] REQUIRED`, the `SET PASSWORD` is only optional if it directly follows the `SET PASSWORD` clause.
+            | * `SET HOME DATABASE` can be used to configure a home database for a user. If no home database is set the default database will used as home database for the user.
+            | * `REMOVE HOME DATABASE` is used to unset the home database for a user. This will result in the default database being used as home database for the user.
           """.stripMargin
         )
         p("For example, we can modify the user `jake` with a new password and active status as well as remove the requirement to change his password.")
         query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("Or we may decide to assign the user `jake` a different home database.")
+        query("ALTER USER jake SET HOME DATABASE anotherDb", ResultAssertions((r) => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("Or remove the home database from the user `jake`.")
+        query("ALTER USER jake REMOVE HOME DATABASE", ResultAssertions((r) => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -177,7 +194,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             |For example, leaving out the `CHANGE [NOT] REQUIRED` part of the query will leave that unchanged.""".stripMargin)
         }
         note {
-          p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}` part of the command is only available in Enterprise Edition.#")
+          p("[enterprise-edition]#The `SET STATUS {ACTIVE | SUSPENDED}`, `SET HOME DATABASE`, and `REMOVE HOME DATABASE` parts of the command are only available in Enterprise Edition.#")
         }
         p("The changes to the user will appear on the list provided by `SHOW USERS`.")
         query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
@@ -241,7 +258,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p(
           """There exists a special built-in role, `PUBLIC`, which is assigned to all users.
             |This role cannot be dropped or revoked from any user, but its privileges may be modified.
-            |By default, it is assigned the <<administration-security-administration-database-access, ACCESS>> privilege on the default database.
+            |By default, it is assigned the <<administration-security-administration-database-access, ACCESS>> privilege on the home database.
             |""".stripMargin)
         p("""In contrast to the `PUBLIC` role, the other built-in roles can be granted, revoked, dropped and re-created.""")
       }
@@ -252,7 +269,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             """This is the same command as `SHOW ALL ROLES`.
               |When first starting a Neo4j DBMS there are a number of built-in roles:
               |
-              |* `PUBLIC` - a role that all users have granted, by default it gives access to the default database
+              |* `PUBLIC` - a role that all users have granted, by default it gives access to the home database
               |* `reader` - can perform traverse and read operations on all databases except `system`.
               |* `editor` - can perform traverse, read, and write operations on all databases except `system`, but cannot make new labels or relationship types.
               |* `publisher` - can do the same as `editor`, but also create new labels and relationship types.

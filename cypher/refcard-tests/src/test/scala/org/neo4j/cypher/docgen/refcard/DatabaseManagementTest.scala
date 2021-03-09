@@ -83,6 +83,14 @@ SHOW DEFAULT DATABASE
 
 List information about the default database.
 
+###assertion=show-one
+//
+
+SHOW HOME DATABASE
+###
+
+List information about the current users home database.
+
 ###assertion=update-one
 //
 

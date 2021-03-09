@@ -5,14 +5,14 @@
 
 | [source, cypher, role=noplay]
 GRANT {CREATE \| DROP \| SHOW} CONSTRAINT[S]
-    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
+    ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
-| Enable the specified roles to create, delete, or show constraints on the default database, specific database(s), or all databases.
+| Enable the specified roles to create, delete, or show constraints on the home database, specific database(s), or all databases.
 
 | [source, cypher, role=noplay]
 GRANT CONSTRAINT[S] [MANAGEMENT]
-    ON {DEFAULT DATABASE \| DATABASE[S] {* \| name[, ...]}}
+    ON {HOME DATABASE \| DATABASE[S] {* \| name[, ...]}}
     TO role[, ...]
-| Enable the specified roles to manage constraints on the default database, specific database(s), or all databases.
+| Enable the specified roles to manage constraints on the home database, specific database(s), or all databases.
 
 |===

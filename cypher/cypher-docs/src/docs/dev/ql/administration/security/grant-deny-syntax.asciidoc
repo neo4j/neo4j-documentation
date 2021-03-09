@@ -20,6 +20,10 @@ If you delete a database and create a new one with the same name, the new one wi
 ** It can be `+*+` which means all graphs.
 Graphs created after this command execution will also be associated with these privileges.
 
+** `HOME GRAPH` refers to the graph associated with the home database for that user. The default database will be used as home database if a user does not have a home database configured.
+If the user's home database changes for any reason after privileges have been created then these privileges will be associated with the graph attached to the new database.
+This can be quite powerful as it allows permissions to be switched from one graph to another simply by changing a user's home database.
+
 * _entity_
 ** The graph elements this privilege applies to:
 *** `NODES` label (nodes with the specified label(s)).
@@ -39,23 +43,23 @@ Graphs created after this command execution will also be associated with these p
 | Command | Description
 
 | [source, cypher, role=noplay]
-GRANT graph-privilege ON {DEFAULT GRAPH \| GRAPH[S] {* \| name[, ...]}} [entity] TO role[, ...]
+GRANT graph-privilege ON {HOME GRAPH \| GRAPH[S] {* \| name[, ...]}} [entity] TO role[, ...]
 | Grant a privilege to one or multiple roles.
 
 | [source, cypher, role=noplay]
-DENY graph-privilege ON {DEFAULT GRAPH \| GRAPH[S] {* \| name[, ...]}} [entity] TO role[, ...]
+DENY graph-privilege ON {HOME GRAPH \| GRAPH[S] {* \| name[, ...]}} [entity] TO role[, ...]
 | Deny a privilege to one or multiple roles.
 
 | [source, cypher, role=noplay]
-REVOKE GRANT graph-privilege ON {DEFAULT GRAPH \| GRAPH[S] {* \| name[, ...]}} [entity] FROM role[, ...]
+REVOKE GRANT graph-privilege ON {HOME GRAPH \| GRAPH[S] {* \| name[, ...]}} [entity] FROM role[, ...]
 | Revoke a granted privilege from one or multiple roles.
 
 | [source, cypher, role=noplay]
-REVOKE DENY graph-privilege ON {DEFAULT GRAPH \| GRAPH[S] {* \| name[, ...]}} [entity] FROM role[, ...]
+REVOKE DENY graph-privilege ON {HOME GRAPH \| GRAPH[S] {* \| name[, ...]}} [entity] FROM role[, ...]
 | Revoke a denied privilege from one or multiple roles.
 
 | [source, cypher, role=noplay]
-REVOKE graph-privilege ON {DEFAULT GRAPH \| GRAPH[S] {* \| name[, ...]}} [entity] FROM role[, ...]
+REVOKE graph-privilege ON {HOME GRAPH \| GRAPH[S] {* \| name[, ...]}} [entity] FROM role[, ...]
 | Revoke a granted or denied privilege from one or multiple roles.
 |===
 
