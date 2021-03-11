@@ -179,7 +179,7 @@ class ScalarFunctionsTest extends DocumentingTest {
           #If the argument is already a map, it is returned unchanged.""".stripMargin('#'))
       function("properties(expression)",
         "A Map.",
-        ("expression", "An expression that returns a *node*, a *relationship*, or a *map*."))
+        ("expression", "An expression that returns a node, a relationship, or a map."))
       considerations("`properties(null)` returns `null`.")
       query("""CREATE (p:Person {name: 'Stefan', city: 'Berlin'})
               #RETURN properties(p)""".stripMargin('#'),
@@ -207,7 +207,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       p("The function `size()` returns the number of elements in a list.")
       function("size(list)",
         "An Integer.",
-        ("list", "An expression that returns a *list*."))
+        ("list", "An expression that returns a list."))
       considerations("`size(null)` returns `null`.")
       query("RETURN size(['Alice', 'Bob'])",
       ResultAssertions((r) => {
@@ -246,7 +246,7 @@ class ScalarFunctionsTest extends DocumentingTest {
           r.toList should equal(List(Map("size(a.name)" -> 7)))
         })) {
         resultTable()
-        p("The number of characters in the string *'Charlie'* is returned.")
+        p("The number of characters in the string `'Charlie'` is returned.")
       }
     }
     section("startNode()", "functions-startnode") {
