@@ -43,13 +43,6 @@ class ScalarFunctionsTest extends DocumentingTest {
         #  (charlie)-[:KNOWS]->(daniel),
         #  (bob)-[:MARRIED]->(eskil)""".stripMargin('#'))
     synopsis("Scalar functions return a single value.")
-    important {
-      p("""The `length()` and `size()` functions are quite similar, and so it is important to take note of the difference.
-          #
-          #The function `length()` only works for <<functions-length, paths>>.
-          #
-          #The function `size()` only works for the three types: <<functions-size-of-string, strings>>, <<functions-size, lists>> and <<functions-size-of-pattern-expression, pattern expressions>>.""".stripMargin('#'))
-    }
     p("""Functions:
         #
         #* <<functions-coalesce, coalesce()>>
@@ -69,6 +62,13 @@ class ScalarFunctionsTest extends DocumentingTest {
         #* <<functions-tofloat, toFloat()>>
         #* <<functions-tointeger, toInteger()>>
         #* <<functions-type, type()>>""".stripMargin('#'))
+    important {
+      p("""The `length()` and `size()` functions are quite similar, and so it is important to take note of the difference.
+          #
+          #The function `length()` only works for <<functions-length, paths>>.
+          #
+          #The function `size()` only works for the three types: <<functions-size-of-string, strings>>, <<functions-size, lists>> and <<functions-size-of-pattern-expression, pattern expressions>>.""".stripMargin('#'))
+    }
     graphViz()
     section("coalesce()", "functions-coalesce") {
       p("The function `coalesce()` returns the first non-`null` value in the given list of expressions.")
