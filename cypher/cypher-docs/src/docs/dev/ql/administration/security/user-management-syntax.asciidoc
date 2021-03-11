@@ -72,7 +72,7 @@ ALTER USER name [IF EXISTS]
   [SET HOME DATABASE name]
   [REMOVE HOME DATABASE]
 ----
-| Modify the settings for an existing user. At least one `SET` or `REMOVE` clause is required.
+| Modify the settings for an existing user. At least one `SET` or `REMOVE` clause is required. `SET` and `REMOVE` clauses cannot be combined in the same command.
 | <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>>,
 <<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>> and/or
 <<administration-security-administration-dbms-privileges-user-management, SET USER HOME DATABASE>>

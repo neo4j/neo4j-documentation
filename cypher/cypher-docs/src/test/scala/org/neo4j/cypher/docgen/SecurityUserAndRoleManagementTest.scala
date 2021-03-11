@@ -157,6 +157,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
         p("""
+            | * At least one `SET` or `REMOVE` clause is required for the command.
             | * `SET` and `REMOVE` clauses cannot be combined in the same command.
             | * The `SET PASSWORD CHANGE [NOT] REQUIRED`, `SET STATUS`, and `SET HOME DATABASE` clauses can be applied in any order.
             |   The `SET PASSWORD` clause must come first, if used.

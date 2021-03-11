@@ -48,6 +48,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `ALTER USER ... SET/REMOVE HOME DATABASE`     | Syntax        | Added         | Now allows setting and removing home database for user
 | `CREATE USER ... SET HOME DATABASE`           | Syntax        | Added         | Now allows setting home database for user
 | `SHOW HOME DATABASE`                          | Syntax        | Added         | New syntax for showing the home database of the current user
+| `ON HOME DATABASE` for privilege commands     | Syntax        | Added         | New syntax for privileges affecting home database
+| `ON HOME GRAPH` for privilege commands        | Syntax        | Added         | New syntax for privileges affecting home graph
 | `ON DEFAULT DATABASE` for privilege commands  | Syntax        | Deprecated    | Replaced by `ON HOME DATABASE`
 | `ON DEFAULT GRAPH` for privilege commands     | Syntax        | Deprecated    | Replaced by `ON HOME GRAPH`
 |===
