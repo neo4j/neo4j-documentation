@@ -77,6 +77,14 @@ Revoke the granted privilege to alter the account status of users from a role.
 ###assertion=update-one
 //
 
+GRANT SET USER HOME DATABASE ON DBMS TO my_role
+###
+
+Grant the privilege alter the home database of users to a role.
+
+###assertion=update-one
+//
+
 REVOKE DENY SHOW USER ON DBMS FROM my_role
 ###
 

@@ -43,6 +43,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       "CREATE ROLE userModifier",
       "CREATE ROLE passwordModifier",
       "CREATE ROLE statusModifier",
+      "CREATE ROLE homeModifier",
       "CREATE ROLE userShower",
       "CREATE ROLE userManager",
       "CREATE ROLE databaseAdder",
@@ -54,7 +55,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       "CREATE ROLE privilegeManager",
       "CREATE ROLE dbmsManager",
       "GRANT ROLE regularUsers TO jake",
-      "DENY ACCESS ON DATABASE neo4j TO noAccessUsers"
+      "DENY ACCESS ON DATABASE neo4j TO noAccessUsers",
+      "CREATE DATABASE otherDb"
     )
     synopsis("This section explains how to use Cypher to manage Neo4j administrative privileges.")
     p(
@@ -516,9 +518,31 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
+        p("The ability to modify the home database of users can be granted via the `SET USER HOME DATABASE` privilege. The following query shows an example of this:")
+        query("GRANT SET USER HOME DATABASE ON DBMS TO statusModifier", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow modifying the home database of users:")
+        query("SHOW ROLE statusModifier PRIVILEGES", NoAssertions) {
+          p("Lists all privileges for role 'statusModifier'")
+          resultTable()
+        }
+        p("A user that is granted `SET USER HOME DATABASE` is allowed to run the `ALTER USER` administration command with only the `SET HOME DATABASE` or `REMOVE HOME DATABASE` part:")
+        query("ALTER USER jake SET HOME DATABASE otherDb", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        query("ALTER USER jake REMOVE HOME DATABASE", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
 
         note {
-          p("Note that the combination of the `SET PASSWORDS` and the `SET USER STATUS` privilege actions is equivalent to the `ALTER USER` privilege action.")
+          p("Note that the combination of the `SET PASSWORDS`, `SET USER STATUS`, and the `SET USER HOME DATABASE` privilege actions is equivalent to the `ALTER USER` privilege action.")
         }
 
         p("The ability to show users can be granted via the `SHOW USER` privilege. The following query shows an example of this:")
