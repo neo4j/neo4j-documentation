@@ -40,24 +40,30 @@ class PrettifierTest extends Suite
 
   test("may break CREATE INDEX FOR") {
     actual("create index for (p:Person) on (p.name)") should equal(expected("CREATE INDEX FOR (p:Person)%nON (p.name)"))
+    actual("create index for ()-[k:KNOWS]-() ON (k.since)") should equal(expected("CREATE INDEX FOR ()-[k:KNOWS]-()%nON (k.since)"))
   }
 
   test("may break CREATE INDEX IF NOT EXISTS FOR") {
     actual("create index if not exists for (p:Person) on (p.name)") should equal(expected("CREATE INDEX IF NOT EXISTS FOR (p:Person)%nON (p.name)"))
+    actual("create index if not exists for ()-[k:KNOWS]-() ON (k.since)") should equal(expected("CREATE INDEX IF NOT EXISTS FOR ()-[k:KNOWS]-()%nON (k.since)"))
   }
 
   test("may break CREATE INDEX FOR ... OPTIONS") {
     val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
     actual(s"create index for (p:Person) on (p.name) options {indexProvider: '$nativeProvider'}") should equal(
       expected(s"CREATE INDEX FOR (p:Person)%nON (p.name) OPTIONS { indexProvider: '$nativeProvider' }"))
+    actual(s"create index for ()-[k:KNOWS]-() ON (k.since) options {indexProvider: '$nativeProvider'}") should equal(
+      expected(s"CREATE INDEX FOR ()-[k:KNOWS]-()%nON (k.since) OPTIONS { indexProvider: '$nativeProvider' }"))
   }
 
   test("may break CREATE INDEX FOR with name") {
     actual("create index name for (p:Person) on (p.name)") should equal(expected("CREATE INDEX name FOR (p:Person)%nON (p.name)"))
+    actual("create index name for ()-[k:KNOWS]-() ON (k.since)") should equal(expected("CREATE INDEX name FOR ()-[k:KNOWS]-()%nON (k.since)"))
   }
 
   test("may break CREATE INDEX IF NOT EXISTS FOR with name") {
     actual("create index name if not exists for (p:Person) on (p.name)") should equal(expected("CREATE INDEX name IF NOT EXISTS FOR (p:Person)%nON (p.name)"))
+    actual("create index name if not exists for ()-[k:KNOWS]-() ON (k.since)") should equal(expected("CREATE INDEX name IF NOT EXISTS FOR ()-[k:KNOWS]-()%nON (k.since)"))
   }
 
   test("should not break DROP INDEX by name") {

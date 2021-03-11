@@ -295,7 +295,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Index",
       text =
-        """The `CreateIndex` operator creates an index on a property for all nodes having a certain label.
+        """The `CreateIndex` operator creates an index on a property for all nodes or relationships having a certain label or relationship type.
           |The following query will create an index with the name `my_index` on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """CREATE INDEX my_index FOR (c:Country) ON (c.name)""",
       assertions = p => {
@@ -308,17 +308,17 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def doNothingIfExistsForIndex() {
     executePreparationQueries {
-      List("CREATE INDEX my_index FOR (c:Country) ON (c.name)")
+      List("CREATE INDEX my_index FOR ()-[k:KNOWS]-() ON (k.since)")
     }
 
     profileQuery(
       title = "Create Index only if it does not already exist",
       text =
         """To not get an error creating the same index twice, we use the `DoNothingIfExists` operator for indexes.
-          |This will make sure no other index with the given name or schema already exists before the `CreateIndex` operator creates an index on a property for all nodes having a certain label.
+          |This will make sure no other index with the given name or schema already exists before the `CreateIndex` operator creates an index on a property for all nodes or relationships having a certain label or relationship type.
           |If it finds an index with the given name or schema it will stop the execution and no new index is created.
-          |The following query will create an index with the name `my_index` on the `name` property of nodes with the `Country` label only if no such index already exists.""".stripMargin,
-      queryText = """CREATE INDEX my_index IF NOT EXISTS FOR (c:Country) ON (c.name)""",
+          |The following query will create an index with the name `my_index` on the `since` property of relationships with the `KNOWS` relationship type only if no such index already exists.""".stripMargin,
+      queryText = """CREATE INDEX my_index IF NOT EXISTS FOR ()-[k:KNOWS]-() ON (k.since)""",
       assertions = p => {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("CreateIndex"))

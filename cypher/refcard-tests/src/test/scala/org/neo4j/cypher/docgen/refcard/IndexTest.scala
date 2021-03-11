@@ -19,13 +19,15 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import java.util.concurrent.TimeUnit
-
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
-import org.neo4j.graphdb.schema.IndexSettingImpl.{SPATIAL_CARTESIAN_MAX, SPATIAL_CARTESIAN_MIN}
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MAX
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MIN
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
+
+import java.util.concurrent.TimeUnit
 
 class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
@@ -80,15 +82,15 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
 CREATE INDEX FOR (p:Person) ON (p.name)
 ###
 
-Create an index on the label `Person` and property `name`.
+Create an index on nodes with label `Person` and property `name`.
 
 ###assertion=create-index
 //
 
-CREATE INDEX index_name FOR (p:Person) ON (p.age)
+CREATE INDEX index_name FOR ()-[k:KNOWS]-() ON (k.since)
 ###
 
-Create an index on the label `Person` and property `age` with the name `index_name`.
+Create an index on relationships with type `KNOWS` and property `since` with the name `index_name`.
 
 ###assertion=create-index
 //
@@ -97,7 +99,7 @@ CREATE INDEX FOR (p:Person) ON (p.surname)
 OPTIONS {indexProvider: '$nativeProvider', indexConfig: {`${SPATIAL_CARTESIAN_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_CARTESIAN_MAX.getSettingName}`: [100.0, 100.0]}}
 ###
 
-Create an index on the label `Person` and property `surname` with the index provider `$nativeProvider` and given `spatial.cartesian` settings.
+Create an index on nodes with label `Person` and property `surname` with the index provider `$nativeProvider` and given `spatial.cartesian` settings.
 The other index settings will have their default values.
 
 ###assertion=create-index
@@ -106,7 +108,7 @@ The other index settings will have their default values.
 CREATE INDEX FOR (p:Person) ON (p.name, p.age)
 ###
 
-Create a composite index on the label `Person` and the properties `name` and `age`, throws an error if the index already exist.
+Create a composite index on nodes with label `Person` and the properties `name` and `age`, throws an error if the index already exist.
 
 ###assertion=create-existing-index
 //
@@ -114,7 +116,7 @@ Create a composite index on the label `Person` and the properties `name` and `ag
 CREATE INDEX IF NOT EXISTS FOR (p:Person) ON (p.name, p.age)
 ###
 
-Create a composite index on the label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
+Create a composite index on nodes with label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
 
 ###assertion=show
 //
