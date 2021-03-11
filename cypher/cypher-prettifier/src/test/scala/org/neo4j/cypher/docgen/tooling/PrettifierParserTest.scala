@@ -116,7 +116,7 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     }
   }
 
-  test("shouldParseCreateIndexWithName") {
+  test("shouldParseCreateNodeIndexWithName") {
     // given
     val query = "create index name for (person:Person) on (person.age)"
 
@@ -124,6 +124,16 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     parsing(query) shouldGive
       Seq(BreakingKeywords("create index"), AnyText("name"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq(AnyText("person:Person"))),
         BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))))
+  }
+
+  test("shouldParseCreateRelIndexWithName") {
+    // given
+    val query = "create index name for ()-[k:KNOWS]-() on (k.since)"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create index"), AnyText("name"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq.empty), AnyText("-"), GroupToken("[", "]", Seq(AnyText("k:KNOWS"))),
+        AnyText("-"), GroupToken("(", ")", Seq.empty), BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("k.since"))))
   }
 
   test("shouldParseCreateIndexWithOptions") {

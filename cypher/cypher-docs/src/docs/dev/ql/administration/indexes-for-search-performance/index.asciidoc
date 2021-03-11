@@ -10,11 +10,13 @@ This section explains how to manage indexes used for search performance.
 * <<administration-indexes-syntax, Syntax>>
 * <<administration-indexes-single-vs-composite-index, Composite index limitations>>
 * <<administration-indexes-examples, Examples>>
-** <<administration-indexes-create-a-single-property-index, Create a single-property index>>
+** <<administration-indexes-create-a-single-property-index-for-nodes, Create a single-property index for nodes>>
+** <<administration-indexes-create-a-single-property-index-for-relationships, Create a single-property index for relationships>>
 ** <<administration-indexes-create-a-single-property-index-only-if-it-does-not-already-exist, Create a single-property index only if it does not already exist>>
 ** <<administration-indexes-create-a-single-property-index-with-specified-index-provider, Create a single-property index with specified index provider>>
 ** <<administration-indexes-create-a-single-property-index-with-specified-index-configuration, Create a single-property index with specified index configuration>>
-** <<administration-indexes-create-a-composite-index, Create a composite index>>
+** <<administration-indexes-create-a-composite-index-for-nodes, Create a composite index for nodes>>
+** <<administration-indexes-create-a-composite-index-for-relationships, Create a composite index for relationships>>
 ** <<administration-indexes-create-a-composite-index-with-specified-index-provider-and-configuration, Create a composite index with specified index provider and configuration>>
 ** <<administration-indexes-drop-an-index, Drop an index>>
 ** <<administration-indexes-drop-a-non-existing-index, Drop a non-existing index>>
@@ -38,10 +40,10 @@ This comes at the cost of additional storage space and slower writes, so decidin
 Once an index has been created, it will be managed and kept up to date by the DBMS.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
 
-Cypher enables the creation of indexes on one or more properties for all nodes that have a given label:
+Cypher enables the creation of indexes on one or more properties for all nodes or relationships that have a given label or relationship type:
 
-* An index that is created on a single property for any given label is called a _single-property index_.
-* An index that is created on more than one property for any given label is called a _composite index_.
+* An index that is created on a single property for any given label or relationship type is called a _single-property index_.
+* An index that is created on more than one property for any given label or relationship type is called a _composite index_.
 
 Differences in the usage patterns between composite and single-property indexes are described in <<administration-indexes-single-vs-composite-index>>.
 
@@ -69,8 +71,8 @@ FOR (n:LabelName)
 ON (n.propertyName)
 [OPTIONS "{" option: value[, ...] "}"]
 ----
-| Create a single-property index.
-.2+.^| Best practice is to give the index a name when it is created.
+| Create a single-property index on nodes.
+.4+.^| Best practice is to give the index a name when it is created.
 If the index is not explicitly named, it will get an auto-generated name.
 
 The index name must be unique among both indexes and constraints.
@@ -84,6 +86,15 @@ Index provider and configuration can be specified using the `OPTIONS` clause.
 | [source, cypher, role=noplay]
 ----
 CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
+FOR ()-[r:TYPE_NAME]-()
+ON (r.propertyName)
+[OPTIONS "{" option: value[, ...] "}"]
+----
+| Create a single-property index on relationships.
+
+| [source, cypher, role=noplay]
+----
+CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 ON (n.propertyName_1,
     n.propertyName_2,
@@ -91,13 +102,25 @@ ON (n.propertyName_1,
     n.propertyName_n)
 [OPTIONS "{" option: value[, ...] "}"]
 ----
-| Create a composite index.
+| Create a composite index on nodes.
+
+| [source, cypher, role=noplay]
+----
+CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
+FOR ()-[r:TYPE_NAME]-()
+ON (r.propertyName_1,
+    r.propertyName_2,
+    …
+    r.propertyName_n)
+[OPTIONS "{" option: value[, ...] "}"]
+----
+| Create a composite index on relationships.
 
 | [source, cypher, role=noplay]
 ----
 DROP INDEX index_name [IF EXISTS]
 ----
-| Drop an index
+| Drop an index, either a node or a relationship index.
 | The command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same index twice.
 With `IF EXISTS`, no error is thrown and nothing happens should the index not exist.
 
@@ -115,7 +138,7 @@ SHOW [ALL\|BTREE] INDEX[ES]
 ----
 DROP INDEX ON :LabelName(propertyName)
 ----
-| Drop a single-property index without specifying a name.
+| Drop a single-property index on nodes without specifying a name.
 .2+.^| [deprecated]#This syntax is deprecated.#
 
 | [source, cypher, role=noplay]
@@ -125,7 +148,7 @@ n.propertyName_2,
 …
 n.propertyName_n)
 ----
-| Drop a composite index without specifying a name.
+| Drop a composite index on nodes without specifying a name.
 |===
 
 <<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).
@@ -156,7 +179,7 @@ they need to be for the first properties defined by the index.
 However, the `suffix search` and `substring search` predicates are always planned as existence check and a filter and
 any predicates following after will therefore also be planned as such.
 
-For example, an index on `:Label(prop1,prop2,prop3,prop4,prop5,prop6)` and predicates:
+For example, an index on nodes with `:Label(prop1,prop2,prop3,prop4,prop5,prop6)` and predicates:
 
 ```
 WHERE n.prop1 = 'x' AND n.prop2 = 1 AND n.prop3 > 5 AND n.prop4 < 'e' AND n.prop5 = true AND n.prop6 IS NOT NULL
@@ -170,7 +193,7 @@ WHERE n.prop1 = 'x' AND n.prop2 = 1 AND n.prop3 > 5 AND n.prop4 IS NOT NULL AND 
 
 with filters on `n.prop4 < 'e'` and `n.prop5 = true`, since `n.prop3` has a `range search` predicate.
 
-And an index on `:Label(prop1,prop2)` with predicates:
+And an index on nodes with `:Label(prop1,prop2)` with predicates:
 
 ```
 WHERE n.prop1 ENDS WITH 'x' AND n.prop2 = false
@@ -192,7 +215,9 @@ To get this kind of fallback behavior, it is necessary to create additional inde
 [[administration-indexes-examples]]
 == Examples
 
-include::../indexes/create-a-single-property-index.asciidoc[leveloffset=+1]
+include::../indexes/create-a-single-property-index-for-nodes.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-single-property-index-for-relationships.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-single-property-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
 
@@ -200,7 +225,9 @@ include::../indexes/create-a-single-property-index-with-specified-index-provider
 
 include::../indexes/create-a-single-property-index-with-specified-index-configuration.asciidoc[leveloffset=+1]
 
-include::../indexes/create-a-composite-index.asciidoc[leveloffset=+1]
+include::../indexes/create-a-composite-index-for-nodes.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-composite-index-for-relationships.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-composite-index-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+1]
 
@@ -301,6 +328,9 @@ include::../indexes/listing-indexes-with-filtering.asciidoc[leveloffset=+2]
 [role=deprecated]
 [[administration-indexes-examples-deprecated-syntax]]
 === Deprecated syntax
+
+[NOTE]
+This syntax does not support dropping relationship property indexes, these can only be dropped by name.
 
 include::../indexes/drop-a-single-property-index.asciidoc[leveloffset=+2]
 
