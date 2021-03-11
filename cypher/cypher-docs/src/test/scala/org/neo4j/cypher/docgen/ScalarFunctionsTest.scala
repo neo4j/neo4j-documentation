@@ -65,8 +65,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     important {
       p("""The `length()` and `size()` functions are quite similar, and so it is important to take note of the difference.
           #
-          #* The function `length()` only works for <<functions-length, paths>>.
-          #* The function `size()` only works for the three types: <<functions-size-of-string, strings>>, <<functions-size, lists>> and <<functions-size-of-pattern-expression, pattern expressions>>.""".stripMargin('#'))
+          #Function `length()`:: Only works for <<functions-length, paths>>.
+          #Function `size()`:: Only works for the three types: <<functions-size-of-string, strings>>, <<functions-size, lists>>, and <<functions-size-of-pattern-expression, pattern expressions>>.""".stripMargin('#'))
     }
     graphViz()
     section("coalesce()", "functions-coalesce") {
@@ -120,8 +120,9 @@ class ScalarFunctionsTest extends DocumentingTest {
       p("The function `id()` returns the id of a relationship or node.")
       note {
         p("""Neo4j implements the id so that:
-            #* Every node in a database has a unique id compared to other nodes in the same database.
-            #* Every relationship in a database has a unique id compared to other relationships in the same database.""".stripMargin('#'))
+            #
+            #Node:: Every node in a database has a unique id compared to other nodes in the same database.
+            #Relationship:: Every relationship in a database has a unique id compared to other relationships in the same database.""".stripMargin('#'))
       }
       function("id(expression)",
         "An Integer.",
