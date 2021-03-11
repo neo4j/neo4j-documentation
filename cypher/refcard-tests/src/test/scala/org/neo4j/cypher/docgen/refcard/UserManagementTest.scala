@@ -68,6 +68,14 @@ ALTER USER alice SET STATUS SUSPENDED
 (★) Change the user status to suspended. Use `SET STATUS ACTIVE` to reactivate the user.
 
 ###dontrun
+//
+
+ALTER USER alice SET HOME DATABASE otherDb
+###
+
+(★) Change the home database of user to otherDb. Use `REMOVE HOME DATABASE` to have the default database be home for the user again.
+
+###dontrun
 // Can't be run since we can't log in as a user, and have auth disabled
 
 ALTER CURRENT USER SET PASSWORD FROM $old TO $new

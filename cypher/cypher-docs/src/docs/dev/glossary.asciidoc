@@ -365,6 +365,7 @@ The following commands are only executable against the `system` database:
 | <<administration-security-writes-set-label, SET LABEL>>                                                 | GRAPH                 | Determines whether the user can set a label to a node using the SET clause.
 | <<administration-security-administration-dbms-privileges-user-management, SET PASSWORDS>>               | DBMS                  | Determines whether the user can modify users' passwords and whether those passwords must be changed upon first login.
 | <<administration-security-writes-set-property, SET PROPERTY>>                                           | GRAPH                 | Determines whether the user can set a property to an element (node, relationship or both) using the SET clause.
+| <<administration-security-administration-dbms-privileges-user-management, SET USER HOME DATABASE>>      | DBMS                  | Determines whether the user can modify the home database of users.
 | <<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>>             | DBMS                  | Determines whether the user can modify the account status of users.
 | <<administration-security-administration-database-constraints, SHOW CONSTRAINT>>                        | Schema                | Determines whether the user is allowed to list constraints.
 | <<administration-security-administration-database-indexes, SHOW INDEX>>                                 | Schema                | Determines whether the user is allowed to list indexes.
