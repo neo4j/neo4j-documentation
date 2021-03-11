@@ -73,7 +73,7 @@ ALTER USER alice SET STATUS SUSPENDED
 ALTER USER alice SET HOME DATABASE otherDb
 ###
 
-(★) Change the home database of user to otherDb. Use `REMOVE HOME DATABASE` to have the default database be home for the user again.
+(★) Change the home database of user to otherDb. Use `REMOVE HOME DATABASE` to unset the home database for the user and fallback to the default database.
 
 ###dontrun
 // Can't be run since we can't log in as a user, and have auth disabled
