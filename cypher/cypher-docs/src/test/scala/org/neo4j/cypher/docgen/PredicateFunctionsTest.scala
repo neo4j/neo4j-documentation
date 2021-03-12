@@ -91,7 +91,7 @@ class PredicateFunctionsTest extends DocumentingTest {
           r.toList.length should equal(1)
           //r.columnAs[String]("n.name").toList.head should equal("Eskil")
         })) {
-        p("The query return nodes with the property `liked_colors` with the value of a list containing at least one element with the value `'yellow'`.")
+        p("The query return nodes with the property `liked_colors` (a list), where at least one element has the value `'yellow'`.")
         resultTable()
       }
     }
