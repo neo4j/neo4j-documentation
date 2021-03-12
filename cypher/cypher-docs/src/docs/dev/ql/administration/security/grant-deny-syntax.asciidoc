@@ -20,7 +20,8 @@ If you delete a database and create a new one with the same name, the new one wi
 ** It can be `+*+` which means all graphs.
 Graphs created after this command execution will also be associated with these privileges.
 
-** `HOME GRAPH` refers to the graph associated with the home database for that user. The default database will be used as home database if a user does not have a home database configured.
+** `HOME GRAPH` refers to the graph associated with the home database for that user. 
+The default database will be used as home database if a user does not have a home database configured.
 If the user's home database changes for any reason after privileges have been created then these privileges will be associated with the graph attached to the new database.
 This can be quite powerful as it allows permissions to be switched from one graph to another simply by changing a user's home database.
 
