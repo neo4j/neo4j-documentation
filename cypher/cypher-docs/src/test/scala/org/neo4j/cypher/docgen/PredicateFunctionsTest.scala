@@ -194,7 +194,7 @@ class PredicateFunctionsTest extends DocumentingTest {
       ResultAssertions(r => {
           r.toList.length should equal(1)
         })) {
-        p("In every returned path there is exacly one node that has a property `eyes` with the value `'blue'`.")
+        p("In every returned path there is exactly one node that has a property `eyes` with the value `'blue'`.")
         resultTable()
       }
     }
