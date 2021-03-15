@@ -151,16 +151,16 @@ class UsingTest extends DocumentingTest {
     }
     section("`PERIODIC COMMIT` query hint", "query-using-periodic-commit-hint") {
       p("""Importing large amounts of data using <<query-load-csv, `LOAD CSV`>> with a single Cypher query may fail due to memory constraints.
-          |This will manifest itself as an `OutOfMemoryError`.""")
+          #This will manifest itself as an `OutOfMemoryError`.""".stripMargin('#'))
       p("""For this situation _only,_ Cypher provides the global `USING PERIODIC COMMIT` query hint for updating queries using `LOAD CSV`.
-          |If required, the limit for the number of rows per commit may be set as follows: `USING PERIODIC COMMIT 500`.""")
+          #If required, the limit for the number of rows per commit may be set as follows: `USING PERIODIC COMMIT 500`.""".stripMargin('#'))
       p("""`PERIODIC COMMIT` will process the rows until the number of rows reaches a limit.
-          |Then the current transaction will be committed and replaced with a newly opened transaction.
-          |If no limit is set, a default value will be used.""")
-      p("""See <<load-csv-importing-large-amounts-of-data>> in <<query-load-csv>> for examples of `USING PERIODIC COMMIT` with and without setting the number of rows per commit.""")
+          #Then the current transaction will be committed and replaced with a newly opened transaction.
+          #If no limit is set, a default value will be used.""".stripMargin('#'))
+      p("See <<load-csv-importing-large-amounts-of-data, Importing large amounts of data>> in <<query-load-csv>> for examples of `USING PERIODIC COMMIT` with and without setting the number of rows per commit.")
       important {
         p("""Using `PERIODIC COMMIT` will prevent running out of memory when importing large amounts of data.
-                |However, it will also break transactional isolation and thus it should only be used where needed.""")
+            #However, it will also break transactional isolation and thus it should only be used where needed.""".stripMargin('#'))
       }
       note {
         p("The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` clause.")
