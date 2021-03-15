@@ -55,25 +55,22 @@ class AggregatingFunctionsTest extends DocumentingTest {
         #* <<functions-stdevp,stDevP()>>
         #* <<functions-sum,sum() - Numeric values>>
         #* <<functions-sum-duration,sum() - Durations>>""".stripMargin('#'))
-    p("""Aggregating functions take a set of values and calculate an aggregated value over them.
-        #Examples are `avg()` that calculates the average of multiple numeric values, or `min()` that finds the smallest numeric or string value in a set of values.
-        #When we say below that an aggregating function operates on a _set of values_, we mean these to be the result of the application of the inner expression (such as `n.age`) to all the records within the same aggregation group.""".stripMargin('#'))
     p("""Aggregation can be computed over all the matching paths, or it can be further divided by introducing grouping keys.
-        #These are non-aggregate expressions, that are used to group the values going into the aggregate functions.""".stripMargin('#'))
+        #Grouping keys are non-aggregate expressions, that are used to group the values going into the aggregate functions.""".stripMargin('#'))
     p("Assume we have the following return statement:")
     p("""[source, cypher]
         #----
         #RETURN n, count(*)
         #----""".stripMargin('#'))
-    p("""We have two return expressions: `n`, and `count(*)`.
+    p("""We have two return expressions: `n`, and `+count(*)+`.
         #The first, `n`, is not an aggregate function, and so it will be the grouping key.
-        #The latter, `count(*)` is an aggregate expression.
+        #The latter, `+count(*)+` is an aggregate expression.
         #The matching paths will be divided into different buckets, depending on the grouping key.
         #The aggregate function will then be run on these buckets, calculating an aggregate value per bucket.""".stripMargin('#'))
     p("To use aggregations to sort the result set, the aggregation must be included in the `RETURN` to be used in the `ORDER BY`.")
     p("""The `DISTINCT` operator works in conjunction with aggregation.
         #It is used to make all values unique before running them through an aggregate function.
-        #More information about `DISTINCT` may be found <<query-operators-aggregation,here>>.""".stripMargin('#'))
+        #More information about `DISTINCT` may be found in <<query-operators-aggregation, Syntax -> Aggregation operators>>.""".stripMargin('#'))
     p("The following graph is used for the examples below:")
     graphViz()
     section("avg() - Numeric values", "functions-avg") {
@@ -165,7 +162,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       section("Using `count(expression)` to return the number of values") {
         p("Instead of simply returning the number of rows with `count(*)`, it may be more useful to return the actual number of values returned by an expression.")
         query("""MATCH (n {name: 'A'})-->(x)
-                #RETURN count(x)""",
+                #RETURN count(x)""".stripMargin('#'),
         ResultAssertions((r) => {
           r.toList should equal(List(Map("count(x)" -> 3L)))
         })) {
