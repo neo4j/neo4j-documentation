@@ -119,10 +119,11 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("id()", "functions-id") {
       p("The function `id()` returns the id of a relationship or node.")
       note {
+        //The note has been approved by kernel team.
         p("""Neo4j implements the id so that:
             #
-            #Node:: Every node in a database has a unique id compared to other nodes in the same database.
-            #Relationship:: Every relationship in a database has a unique id compared to other relationships in the same database.""".stripMargin('#'))
+            #Node:: Every node in a database has a unique id compared to other nodes in the same database, the uniqueness is guaranteed within the scope of a single transaction.
+            #Relationship:: Every relationship in a database has a unique id compared to other relationships in the same database, the uniqueness is guaranteed within the scope of a single transaction.""".stripMargin('#'))
       }
       function("id(expression)",
         "An Integer.",
