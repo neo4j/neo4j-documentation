@@ -108,8 +108,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       }
     }
     section("collect()", "functions-collect") {
-      p("""The function `collect()` returns a list containing the values returned by an expression.
-          #Using this function aggregates data by amalgamating multiple records or values into a single list.""".stripMargin('#'))
+      p("The function `collect()` returns a single aggregated list containing the values returned by an expression.")
       function("collect(expression)",
         "A list containing heterogeneous elements; the types of the elements are determined by the values returned by `expression`.",
         ("expression", "An expression returning a set of values."))
