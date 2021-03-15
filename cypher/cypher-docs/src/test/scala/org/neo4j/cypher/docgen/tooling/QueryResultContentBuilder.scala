@@ -45,9 +45,9 @@ class QueryResultContentBuilder(valueFormatter: Any => String)
       ResultRow(values)
     }
 
-    val footerRows = if (rowCount == 1) "1 row" else s"$rowCount rows"
+    val footerRows = s"Rows: $rowCount"
     val footer = if (result.queryStatistics().containsUpdates)
-      footerRows + ", " + result.queryStatistics().toString
+      footerRows + "\n" + result.queryStatistics().toString
     else
       footerRows
 
