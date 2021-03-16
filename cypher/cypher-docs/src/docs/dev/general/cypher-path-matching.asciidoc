@@ -1,7 +1,10 @@
 [[cypher-result-uniqueness]]
 = Cypher path matching
 
-:description: Cypher path matching uses relationship isomorphism, the same relationship cannot be returned more than once in the same result record. 
+[abstract]
+--
+Cypher path matching uses relationship isomorphism, the same relationship cannot be returned more than once in the same result record. 
+--
 
 **Neo4j Cypher** makes use of **relationship isomorphism** for path matching and is a very effective way of reducing the result set size and preventing infinite traversals.
 
@@ -14,6 +17,16 @@ However, you can have the notion of undirected relationships at query time.
 In the case of variable length pattern expressions, it is particularly important to have a constraint check, or an infinite number of result records could be found.
 
 To understand this better, let us consider a few alternative options:
+
+Homomorphism::
+No constraints for path matching.
+
+Node isomorphism::
+The same node cannot be returned more than once for each path matching record.
+
+Relationship isomorphism::
+The same relationship cannot be returned more than once for each path matching record.
+Cypher makes use of relationship isomorphism for path matching.
 
 
 == Homomorphism
@@ -29,12 +42,13 @@ If the query is looking for paths of length `n` and do not care about the direct
 
 For example, find all paths with 5 relationships and do not care about the relationship direction:
 
-[source, cypher]
+[source, role=noheader]
 ----
-MATCH p=()-[*5]-() RETURN nodes(p)
+MATCH p = ()-[*5]-()
+RETURN nodes(p)
 ----
 
-This will return the two resulting records `[a,b,a,b,a,b]`, as well as `[b,a,b,a,b,a]`.
+This will return the two resulting records if *homomorphism* was used, `[a,b,a,b,a,b]`, as well as `[b,a,b,a,b,a]`.
 ====
 
 
@@ -49,12 +63,13 @@ In another two-node example, such as `+(a:Node)-[r:R]->(b:Node)+`; only paths of
 ====
 The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `+(a:Node)-[r:R]->(b:Node)+`.
 
-[source, cypher]
+[source, role=noheader]
 ----
-MATCH p=()-[*1]-() RETURN nodes(p)
+MATCH p = ()-[*1]-()
+RETURN nodes(p)
 ----
 
-This will return the two resulting records `[a, b]`, as well as `[b, a]`.
+This will return the two resulting records if *node isomorphism* was used, `[a, b]`, as well as `[b, a]`.
 ====
 
 
@@ -69,9 +84,10 @@ In another two-node example, such as `+(a:Node)-[r:R]->(b:Node)+`; only paths of
 ====
 The graph is composed of only two nodes `(a)` and `(b)`, connected by one relationship, `+(a:Node)-[r:R]->(b:Node)+`.
 
-[source, cypher]
+[source, cypher, role=noplay]
 ----
-MATCH p=()-[*1]-() RETURN nodes(p)
+MATCH p = ()-[*1]-()
+RETURN nodes(p)
 ----
 
 This will return the two resulting records `[a, b]`, as well as `[b, a]`.
@@ -91,17 +107,17 @@ To demonstrate this, let's create a few nodes and relationships:
 
 **Query 1, create data.**
 
-//setup
-[source, cypher]
+[source, cypher, role=noplay]
 ----
-CREATE (adam:User {name: 'Adam'}),
-(pernilla:User {name: 'Pernilla'}),
-(david:User {name: 'David'}),
-(adam)-[:FRIEND]->(pernilla),
-(pernilla)-[:FRIEND]->(david)
+CREATE
+  (adam:User {name: 'Adam'}),
+  (pernilla:User {name: 'Pernilla'}),
+  (david:User {name: 'David'}),
+  (adam)-[:FRIEND]->(pernilla),
+  (pernilla)-[:FRIEND]->(david)
 ----
 
-[source, querytest]
+[source, role=noheader]
 ----
 Nodes created: 3
 Relationships created: 2
@@ -110,28 +126,51 @@ Properties set: 3
 
 Which gives us the following graph:
 
-//graph
 
-//console
+["dot", "cypherdoc--13303421.svg", "neoviz"]
+----
+N0 [
+  label = "{User|name = \'Adam\'\l}"
+]
+N1 [
+  label = "{User|name = \'Pernilla\'\l}"
+]
+N2 [
+  label = "{User|name = \'David\'\l}"
+]
+N0 -> N1 [
+  color = "#2e3436"
+  fontcolor = "#2e3436"
+  label = "FRIEND\n"
+]
+N1 -> N2 [
+  color = "#2e3436"
+  fontcolor = "#2e3436"
+  label = "FRIEND\n"
+]
+----
 
 
 Now let's look for friends of friends of Adam:
 
 **Query 2, friend of friends of Adam.**
 
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 MATCH (user:User {name: 'Adam'})-[r1:FRIEND]-()-[r2:FRIEND]-(friend_of_a_friend)
 RETURN friend_of_a_friend.name AS fofName
 ----
 
-[source, querytest]
+[source, role=noheader]
 ----
-David
-1 row
-----
++---------+
+| fofName |
++---------+
+| "David" |
++---------+
 
-//table
+Rows: 1
+----
 
 In this query, Cypher makes sure to not return matches where the pattern relationships `r1` and `r2` point to the same graph relationship.
 
@@ -140,42 +179,49 @@ If the query should return the user, it is possible to spread the matching over 
 
 **Query 3, multiple MATCH clauses.**
 
-[source, cypher]
+[source, cypher, role=noplay]
 ----
 MATCH (user:User {name: 'Adam'})-[r1:FRIEND]-(friend)
 MATCH (friend)-[r2:FRIEND]-(friend_of_a_friend)
 RETURN friend_of_a_friend.name AS fofName
 ----
 
-[source, querytest]
+[source, role=noheader]
 ----
-2 rows
-David
-Adam
++---------+
+| fofName |
++---------+
+| "David" |
+| "Adam"  |
++---------+
+
+Rows: 2
 ----
 
-//table
 
 Note that while the following **Query 4** looks similar to **Query 3**, it is actually equivalent to **Query 2**.
 
 **Query 4, equvilent to query 2.**
 
-[source, cypher]
+[source, cypher, role=noplay]
 ----
-MATCH (user:User {name: 'Adam'})-[r1:FRIEND]-(friend),
-      (friend)-[r2:FRIEND]-(friend_of_a_friend)
+MATCH
+  (user:User {name: 'Adam'})-[r1:FRIEND]-(friend),
+  (friend)-[r2:FRIEND]-(friend_of_a_friend)
 RETURN friend_of_a_friend.name AS fofName
 ----
 
 Here, the `MATCH` clause has a single pattern with two paths, while the previous query has two distinct patterns.
 
-
-[source, querytest]
+[source, role=noheader]
 ----
-David
-1 row
-----
++---------+
+| fofName |
++---------+
+| "David" |
++---------+
 
-//table
+Rows: 1
+----
 
 ====
