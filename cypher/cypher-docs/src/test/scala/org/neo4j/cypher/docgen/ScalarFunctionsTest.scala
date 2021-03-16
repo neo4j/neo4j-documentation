@@ -73,7 +73,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       p("The function `coalesce()` returns the first non-`null` value in the given list of expressions.")
       function("coalesce(expression [, expression]*)",
         "The type of the value returned will be that of the first non-`null` expression.",
-        ("expression", "An expression which may return `null`."))
+        ("expression", "An expression that may return `null`."))
       considerations("`null` will be returned if all the arguments are `null`.")
       query("""MATCH (a)
               #WHERE a.name = 'Alice'
@@ -103,7 +103,8 @@ class ScalarFunctionsTest extends DocumentingTest {
       function("head(expression)",
         "The type of the value returned will be that of the first element of the list.",
         ("expression", "An expression that returns a list."))
-      considerations("`head(null)` returns `null`.",
+      considerations(
+        "`head(null)` returns `null`.",
         "`head([])` returns `null`.",
         "If the first element in `list` is `null`, `head(list)` will return `null`.")
       query("""MATCH (a)
@@ -117,13 +118,18 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("id()", "functions-id") {
-      p("The function `id()` returns the id of a relationship or node.")
+      p("The function `id()` returns an identifier, the function can be utilized for a relationship or a node.")
       note {
         //The note has been approved by kernel team.
         p("""Neo4j implements the id so that:
             #
-            #Node:: Every node in a database has a unique id compared to other nodes in the same database, the uniqueness is guaranteed within the scope of a single transaction.
-            #Relationship:: Every relationship in a database has a unique id compared to other relationships in the same database, the uniqueness is guaranteed within the scope of a single transaction.""".stripMargin('#'))
+            #Node::
+            #Every node in a database has an identifier.
+            #The identifier for a node is guaranteed to be unique among other nodes' identifiers in the same database, within the scope of a single transaction.
+            #
+            #Relationship::
+            #Every relationship in a database has an identifier.
+            #The identifier for a relationship is guaranteed to be unique among other relationships' identifiers in the same database, within the scope of a single transaction.""".stripMargin('#'))
       }
       function("id(expression)",
         "An Integer.",
@@ -139,7 +145,7 @@ class ScalarFunctionsTest extends DocumentingTest {
             Map("id(a)" -> 3),
             Map("id(a)" -> 4)))
         })) {
-        p("The node id for each of the nodes is returned.")
+        p("The node identifier for each of the nodes is returned.")
         resultTable()
       }
     }
@@ -148,7 +154,8 @@ class ScalarFunctionsTest extends DocumentingTest {
       function("last(expression)",
         "The type of the value returned will be that of the last element of the list.",
         ("expression", "An expression that returns a list."))
-      considerations("`last(null)` returns `null`.",
+      considerations(
+        "`last(null)` returns `null`.",
         "`last([])` returns `null`.",
         "If the last element in `list` is `null`, `last(list)` will return `null`.")
       query("""MATCH (a)
@@ -181,11 +188,11 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("properties()", "functions-properties") {
-      p("""The function `properties()` returns a map containing all the properties of a node or relationship.
+      p("""The function `properties()` returns a map containing all the properties, the function can be utilized for a relationship or a node.
           #If the argument is already a map, it is returned unchanged.""".stripMargin('#'))
       function("properties(expression)",
         "A Map.",
-        ("expression", "An expression that returns a node, a relationship, or a map."))
+        ("expression", "An expression that returns a relationship, a node, or a map."))
       considerations("`properties(null)` returns `null`.")
       query("""CREATE (p:Person {name: 'Stefan', city: 'Berlin'})
               #RETURN properties(p)""".stripMargin('#'),
@@ -224,9 +231,8 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("size() applied to pattern expression", "functions-size-of-pattern-expression") {
-      p("""This is the same function `size()` as described above, but instead of passing in a list directly, a pattern expression can be provided that can be used in a match query to provide a new set of results.
-          #These results are a _list_ of paths.
-          #The size of the result is calculated, not the length of the expression itself.""".stripMargin('#'))
+      p("""This is the same function `size()` as described above, but you pass in a pattern expression, instead of a list.
+          #The function size will then calculate on a _list_ of paths.""".stripMargin('#'))
       function("size(pattern expression)",
         ("pattern expression", "A pattern expression that returns a list."))
       query("""MATCH (a)
@@ -236,7 +242,7 @@ class ScalarFunctionsTest extends DocumentingTest {
           r.toList should equal(List(Map("fof" -> 3)))
         })) {
         resultTable()
-        p("The number of paths matching the pattern expression is returned.")
+        p("The number of paths matching the pattern expression is returned. (The size of the list of paths).")
       }
     }
     section("size() applied to string", "functions-size-of-string") {
@@ -270,8 +276,10 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("timestamp()", "functions-timestamp") {
-      p("""The function `timestamp()` returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.
-          #It is the equivalent of `datetime().epochMillis`.""".stripMargin('#'))
+      p("The function `timestamp()` returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.")
+      note {
+        p("It is the equivalent of `datetime().epochMillis`.")
+      }
       function("timestamp()",
         "An Integer.")
       considerations("`timestamp()` will return the same value during one entire query, even for long-running queries.")
@@ -291,8 +299,9 @@ class ScalarFunctionsTest extends DocumentingTest {
       p("The function `toBoolean()` converts a string value to a boolean value.")
       function("toBoolean(expression)",
         "A Boolean.",
-        ("expression", "An expression that returns a boolean or string value."))
-      considerations("`toBoolean(null)` returns `null`.",
+        ("expression", "An expression that returns a boolean or a string value."))
+      considerations(
+        "`toBoolean(null)` returns `null`.",
         "If `expression` is a boolean value, it will be returned unchanged.",
         "If the parsing fails, `null` will be returned.")
       query("RETURN toBoolean('true'), toBoolean('not a boolean')",
@@ -303,9 +312,12 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("toFloat()", "functions-tofloat") {
-      p("The function `toFloat()` converts an integer or string value to a floating point number.")
-      function("toFloat(expression)", "A Float.", ("expression", "An expression that returns a numeric or string value."))
-      considerations("`toFloat(null)` returns `null`.",
+      p("The function `toFloat()` converts an integer or a string value to a floating point number.")
+      function("toFloat(expression)",
+        "A Float.",
+        ("expression", "An expression that returns a numeric or a string value."))
+      considerations(
+        "`toFloat(null)` returns `null`.",
         "If `expression` is a floating point number, it will be returned unchanged.",
         "If the parsing fails, `null` will be returned.")
       query("RETURN toFloat('11.5'), toFloat('not a number')",
@@ -316,11 +328,12 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("toInteger()", "functions-tointeger") {
-      p("The function `toInteger()` converts a floating point or string value to an integer value.")
+      p("The function `toInteger()` converts a floating point or a string value to an integer value.")
       function("toInteger(expression)",
         "An Integer.",
-        ("expression", "An expression that returns a numeric or string value."))
-      considerations("`toInteger(null)` returns `null`.",
+        ("expression", "An expression that returns a numeric or a string value."))
+      considerations(
+        "`toInteger(null)` returns `null`.",
         "If `expression` is an integer value, it will be returned unchanged.",
         "If the parsing fails, `null` will be returned.")
       query("RETURN toInteger('42'), toInteger('not a number')",
