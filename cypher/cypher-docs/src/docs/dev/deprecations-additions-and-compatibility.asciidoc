@@ -41,10 +41,18 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `exists(prop)` | Syntax | Deprecated | Replaced by `prop IS NOT NULL`
 | `NOT exists(prop)` | Syntax | Deprecated | Replaced by `prop IS NULL`
 | `ALTER USER name IF EXISTS ...` | Syntax | Added | Makes altering users idempotent. If no user with the name exists no error will be thrown.
-| `SHOW INDEXES WHERE ...`              | Functionality | Updated    | Now allows filtering for `SHOW INDEXES`
-| `SHOW INDEXES YIELD ... [RETURN ...]` | Functionality | Updated    | Now allows `YIELD` and `RETURN` clauses to `SHOW INDEXES` to change the output.
-| `BRIEF [OUTPUT]` for `SHOW INDEXES`   | Syntax        | Deprecated | Replaced by default output columns
-| `VERBOSE [OUTPUT]` for `SHOW INDEXES` | Syntax        | Deprecated | Replaced by `YIELD *`
+| `SHOW INDEXES WHERE ...`                              | Functionality | Updated    | Now allows filtering for `SHOW INDEXES`
+| `SHOW CONSTRAINTS WHERE ...`                          | Functionality | Updated    | Now allows filtering for `SHOW CONSTRAINTS`
+| `SHOW INDEXES YIELD ... [WHERE ...] [RETURN ...]`     | Functionality | Updated    | Now allows `YIELD`, `WHERE` and `RETURN` clauses to `SHOW INDEXES` to change the output.
+| `SHOW CONSTRAINTS YIELD ... [WHERE ...] [RETURN ...]` | Functionality | Updated    | Now allows `YIELD`, `WHERE` and `RETURN` clauses to `SHOW CONSTRAINTS` to change the output.
+| `BRIEF [OUTPUT]` for `SHOW INDEXES` and `SHOW CONSTRAINTS`   | Syntax | Deprecated | Replaced by default output columns
+| `VERBOSE [OUTPUT]` for `SHOW INDEXES` and `SHOW CONSTRAINTS` | Syntax | Deprecated | Replaced by `YIELD *`
+| `SHOW [PROPERTY] EXIST[ENCE] CONSTRAINTS`                    | Syntax | Updated    | New syntax for filtering `SHOW CONSTRAINTS` on property existence constraints. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
+| `SHOW NODE [PROPERTY] EXIST[ENCE] CONSTRAINTS`               | Syntax | Updated    | New syntax for filtering `SHOW CONSTRAINTS` on node property existence constraints. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
+| `SHOW REL[ATIONSHIP] [PROPERTY] EXIST[ENCE] CONSTRAINTS`     | Syntax | Updated    | New syntax for filtering `SHOW CONSTRAINTS` on relationship property existence constraints. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
+| `SHOW EXISTS CONSTRAINTS`              | Syntax | Deprecated | Replaced by `SHOW [PROPERTY] EXIST[ENCE] CONSTRAINTS`.  Still allows `BRIEF` and `VERBOSE` but not `YIELD` or `WHERE`.
+| `SHOW NODE EXISTS CONSTRAINTS`         | Syntax | Deprecated | Replaced by `SHOW NODE [PROPERTY] EXIST[ENCE] CONSTRAINTS`.  Still allows `BRIEF` and `VERBOSE` but not `YIELD` or `WHERE`.
+| `SHOW RELATIONSHIP EXISTS CONSTRAINTS` | Syntax | Deprecated | Replaced by `SHOW RELATIONSHIP [PROPERTY] EXIST[ENCE] CONSTRAINTS`.  Still allows `BRIEF` and `VERBOSE` but not `YIELD` or `WHERE`.
 | `ALTER USER ... SET/REMOVE HOME DATABASE`     | Syntax        | Added         | Now allows setting and removing home database for user
 | `CREATE USER ... SET HOME DATABASE`           | Syntax        | Added         | Now allows setting home database for user
 | `SHOW HOME DATABASE`                          | Syntax        | Added         | New syntax for showing the home database of the current user
@@ -89,7 +97,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `db.indexes`                | Procedure     | Deprecated | Replaced by `SHOW INDEXES`
 | `db.indexDetails`           | Procedure     | Deprecated | Replaced by `SHOW INDEXES YIELD *`
 | `db.constraints`            | Procedure     | Deprecated | Replaced by `SHOW CONSTRAINTS`
-| `db.schemaStatements`       | Procedure     | Deprecated | Replaced by `SHOW INDEXES YIELD *` and `SHOW CONSTRAINTS VERBOSE`
+| `db.schemaStatements`       | Procedure     | Deprecated | Replaced by `SHOW INDEXES YIELD *` and `SHOW CONSTRAINTS YIELD *`
 | `SHOW INDEX` privilege      | Functionality | Added      | New Cypher command for administering privilege for listing indexes.
 | `SHOW CONSTRAINT` privilege | Functionality | Added      | New Cypher command for administering privilege for listing constraints.
 |===

@@ -134,10 +134,13 @@ DROP CONSTRAINT constraint_name [IF EXISTS]
 With `IF EXISTS`, no error is thrown and nothing happens should the constraint not exist.
 | [source, cypher, role=noplay]
 ----
-SHOW [ALL\|UNIQUE\|NODE EXIST[S]\|RELATIONSHIP EXIST[S]\|EXIST[S]\|NODE KEY] CONSTRAINT[S] [BRIEF\|VERBOSE [OUTPUT]]
+SHOW [ALL\|UNIQUE\|NODE [PROPERTY] EXIST[ENCE]\|RELATIONSHIP [PROPERTY] EXIST[ENCE]\|[PROPERTY] EXIST[ENCE]\|NODE KEY] CONSTRAINT[S]
+    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
+    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 | List constraints in the database, either all or filtered on type.
-|
+| When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
 | [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT
@@ -262,8 +265,8 @@ Listing constraints can be done with `SHOW CONSTRAINTS`, which will produce a ta
 |===
 | Column
 | Description
-| Brief output
-| Verbose output
+| Default output
+| Full output
 
 | `id`
 | The id of the constraint.
@@ -311,10 +314,16 @@ Listing constraints can be done with `SHOW CONSTRAINTS`, which will produce a ta
 | `+`
 |===
 
+Listing constraints also allows for `WHERE` and `YIELD` clauses to filter the returned rows and columns.
+
 [NOTE]
 The deprecated built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the <<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>>.
 
-include::example-of-listing-constraints.asciidoc[leveloffset=+2]
+==== Listing constraints examples
+
+include::listing-all-constraints.asciidoc[leveloffset=+2]
+
+include::listing-constraints-with-filtering.asciidoc[leveloffset=+2]
 
 
 [role=deprecated]

@@ -95,18 +95,33 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
 
     prepareAndTestQuery(
-      title = "Example of listing constraints",
+      title = "Listing all constraints",
       text =
         """
-          |To list all constraints with the brief output columns, the `SHOW CONSTRAINTS` command can be used.
-          |If all columns are wanted, use `SHOW CONSTRAINTS VERBOSE`.
-          |Filtering the output on constraint type is available for all types, the filtering keywords are listed in the <<administration-constraints-syntax, syntax table>>.
-          |As an example, to show only unique constraints, use `SHOW UNIQUE CONSTRAINTS`.""".stripMargin,
+          |To list all constraints with the default output columns, the `SHOW CONSTRAINTS` command can be used.
+          |If all columns are wanted, use `SHOW CONSTRAINTS YIELD *`.""".stripMargin,
       queryText = "SHOW CONSTRAINTS",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
       optionalResultExplanation =
         """One of the output columns from `SHOW CONSTRAINTS` is the name of the constraint.
           |This can be used to drop the constraint with the <<administration-constraints-drop-constraint, `DROP CONSTRAINT` command>>.""".stripMargin,
+      assertions = p => assert(p.size == 1)
+    )
+
+    prepareAndTestQuery(
+      title = "Listing constraints with filtering",
+      text =
+        """
+          |One way of filtering the output from `SHOW CONSTRAINTS` by constraint type is the use of type keywords,
+          |listed in the <<administration-constraints-syntax, syntax table>>.
+          |As an example, to show only unique node property constraints, use `SHOW UNIQUE CONSTRAINTS`.
+          |Another, more flexible way of filtering the output is to use the `WHERE` clause.
+          |An example is to only show constraints on relationships.""".stripMargin,
+      queryText = "SHOW EXISTENCE CONSTRAINTS WHERE entityType = 'RELATIONSHIP'",
+      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON ()-[knows:KNOWS]-() ASSERT knows.since IS NOT NULL")),
+      optionalResultExplanation =
+        """This will only return the default output columns.
+          |To get all columns, use `SHOW INDEXES YIELD * WHERE ...`.""".stripMargin,
       assertions = p => assert(p.size == 1)
     )
   }
