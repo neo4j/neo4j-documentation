@@ -35,6 +35,8 @@ class AggregatingFunctionsTest extends DocumentingTest {
         #  (c:Person {name: 'C', age: 44, eyes: 'blue'}),
         #  (d1:Person {name: 'D', eyes: 'brown'}),
         #  (d2:Person {name: 'D'}),
+        #  (book:Book {name: 'Cypher'}),
+        #  (a)-[:READS]->(book),
         #  (a)-[:KNOWS]->(d1),
         #  (a)-[:KNOWS]->(c),
         #  (a)-[:KNOWS]->(b),
@@ -63,7 +65,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         #RETURN n, count(*)
         #----""".stripMargin('#'))
     p("""We have two return expressions: `n`, and `+count(*)+`.
-        #The first, `n`, is not an aggregate function, and so it will be the grouping key.
+        #The first, `n`, is not an aggregate function, so it will be the grouping key.
         #The latter, `+count(*)+` is an aggregate expression.
         #The matching paths will be divided into different buckets, depending on the grouping key.
         #The aggregate function will then be run on these buckets, calculating an aggregate value per bucket.""".stripMargin('#'))
@@ -141,20 +143,22 @@ class AggregatingFunctionsTest extends DocumentingTest {
         query("""MATCH (n {name: 'A'})-->(x)
                 #RETURN labels(n), n.age, count(*)""".stripMargin('#'),
         ResultAssertions((r) => {
-          r.toList should equal(List(Map("labels(n)" -> List("Person"), "n.age" -> 13L, "count(*)" -> 3L)))
+          r.toList should equal(List(Map("labels(n)" -> List("Person"), "n.age" -> 13L, "count(*)" -> 4L)))
         })) {
           p("The labels and `age` property of the start node `n` and the number of nodes related to `n` are returned.")
           resultTable()
         }
       }
       section("Using `count(*)` to group and count relationship types") {
-        p("The function `count(*)` can be used to group relationship types and return the number.")
+        p("The function `count(*)` can be used to group the type of matched relationships and return the number.")
         query("""MATCH (n {name: 'A'})-[r]->()
                 #RETURN type(r), count(*)""".stripMargin('#'),
         ResultAssertions((r) => {
-          r.toList should equal(List(Map("type(r)" -> "KNOWS", "count(*)" -> 3L)))
+          r.toList should equal(List(
+            Map("type(r)" -> "KNOWS", "count(*)" -> 3L),
+            Map("type(r)" -> "READS", "count(*)" -> 1L)))
         })) {
-          p("The relationship types and their group count are returned.")
+          p("The type of matched relationships are grouped and the group count are returned.")
           resultTable()
         }
       }
@@ -163,9 +167,9 @@ class AggregatingFunctionsTest extends DocumentingTest {
         query("""MATCH (n {name: 'A'})-->(x)
                 #RETURN count(x)""".stripMargin('#'),
         ResultAssertions((r) => {
-          r.toList should equal(List(Map("count(x)" -> 3L)))
+          r.toList should equal(List(Map("count(x)" -> 4L)))
         })) {
-          p("The number of nodes connected to the start node is returned.")
+          p("The number of nodes that are connected directly (one relationship) to the node, with the name `'A'`, is returned.")
           resultTable()
         }
       }
@@ -176,7 +180,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         ResultAssertions((r) => {
           r.toList should equal(List(Map("count(n.age)" -> 3L)))
         })) {
-          p("The number of nodes having the label `Person` and a property `age` is returned.") //It is the total age returned
+          p("The number of nodes with the label `Person` and a property `age` is returned. (If you want the sum, use `sum(n.age)`)")
           resultTable()
         }
       }
@@ -211,8 +215,10 @@ class AggregatingFunctionsTest extends DocumentingTest {
       ResultAssertions((r) => {
         r.toList.head("max(val)") should equal(1L)
       })) {
-        p("""The highest of all the values in the mixed set -- in this case, the numeric value `1` -- is returned.
-            #Note that the (string) value `"99"`, which may _appear_ at first glance to be the highest value in the list, is considered to be a lower value than `1` as the latter is a string.""".stripMargin('#'))
+        p("The highest of all the values in the mixed set -- in this case, the numeric value `1` -- is returned.")
+        note {
+          p("The value `'99'` (a string), is considered to be a lower value than `1` (an integer), because `'99'` is a string.")
+        }
         resultTable()
       }
       query("""UNWIND [[1, 'a', 89], [1, 2]] AS val
@@ -220,7 +226,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       ResultAssertions((r) => {
         r.toList.head("max(val)") should equal(List(1L, 2L))
       })) {
-        p("""The highest of all the lists in the set -- in this case, the list `[1, 2]` -- is returned, as the number `2` is considered to be a higher value than the string `"a"`, even though the list `[1, 'a', 89]` contains more elements.""")
+        p("""The highest of all the lists in the set -- in this case, the list `[1, 2]` -- is returned, as the number `2` is considered to be a higher value than the string `'a'`, even though the list `[1, 'a', 89]` contains more elements.""")
         resultTable()
       }
       query("""MATCH (n:Person)
