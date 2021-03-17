@@ -14,5 +14,5 @@ include::querying-updating-administering.asciidoc[leveloffset=+1]
 
 include::query-transactions.asciidoc[leveloffset=+1]
 
-include::../../parsed-graphgists/uniqueness/uniqueness.asciidoc[leveloffset=+1]
+include::cypher-path-matching.asciidoc[leveloffset=+1]
 
