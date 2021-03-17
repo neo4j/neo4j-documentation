@@ -118,7 +118,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("id()", "functions-id") {
-      p("The function `id()` returns an identifier, the function can be utilized for a relationship or a node.")
+      p("The function `id()` returns an identifier; the function can be utilized for a relationship or a node.")
       note {
         //The note has been approved by kernel team.
         p("""Neo4j implements the id so that:
@@ -188,7 +188,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("properties()", "functions-properties") {
-      p("""The function `properties()` returns a map containing all the properties, the function can be utilized for a relationship or a node.
+      p("""The function `properties()` returns a map containing all the properties; the function can be utilized for a relationship or a node.
           #If the argument is already a map, it is returned unchanged.""".stripMargin('#'))
       function("properties(expression)",
         "A Map.",
