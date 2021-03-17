@@ -20,9 +20,11 @@
 package org.neo4j.cypher.docgen.refcard
 
 import org.neo4j.cypher.docgen.RefcardTest
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
-import org.neo4j.graphdb.schema.IndexSettingImpl.{SPATIAL_WGS84_MAX, SPATIAL_WGS84_MIN}
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MAX
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MIN
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -155,7 +157,7 @@ removed from an existing relationship with the `LIKED` type, the write operation
 ###assertion=show
 //
 
-SHOW UNIQUE CONSTRAINTS VERBOSE
+SHOW UNIQUE CONSTRAINTS YIELD *
 ###
 
 List all unique constraints.

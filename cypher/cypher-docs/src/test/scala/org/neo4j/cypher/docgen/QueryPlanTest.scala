@@ -282,7 +282,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "List constraints",
       text =
-        """The `ShowConstraints` operator lists constraints. It may include filtering on constraint type and can have either brief or verbose output.""".stripMargin,
+        """The `ShowConstraints` operator lists constraints. It may include filtering on constraint type and can have either default or full output.""".stripMargin,
       queryText = """SHOW CONSTRAINTS""",
       assertions = p => {
         val plan = p.executionPlanString()

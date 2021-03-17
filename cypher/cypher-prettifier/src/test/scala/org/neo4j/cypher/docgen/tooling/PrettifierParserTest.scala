@@ -104,12 +104,40 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     // given
     Seq(
       ("show constraint", Seq(BreakingKeywords("show constraint"))),
-      ("show unique constraint brief", Seq(BreakingKeywords("show unique constraint"), NonBreakingKeywords("brief"))),
+      ("show all constraints", Seq(BreakingKeywords("show all constraints"))),
+      ("show unique constraint", Seq(BreakingKeywords("show unique constraint"))),
       ("show node key constraints", Seq(BreakingKeywords("show node key constraints"))),
-      ("show node exists constraints verbose", Seq(BreakingKeywords("show node exists constraints"), NonBreakingKeywords("verbose"))),
+
+      ("show exist constraint", Seq(BreakingKeywords("show exist constraint"))),
+      ("show existence constraint", Seq(BreakingKeywords("show existence constraint"))),
+      ("show property exist constraint", Seq(BreakingKeywords("show property exist constraint"))),
+      ("show property existence constraint", Seq(BreakingKeywords("show property existence constraint"))),
+
+      ("show node exist constraints", Seq(BreakingKeywords("show node exist constraints"))),
+      ("show node existence constraints", Seq(BreakingKeywords("show node existence constraints"))),
+      ("show node property exist constraints", Seq(BreakingKeywords("show node property exist constraints"))),
+      ("show node property existence constraints", Seq(BreakingKeywords("show node property existence constraints"))),
+
       ("show relationship exist constraint", Seq(BreakingKeywords("show relationship exist constraint"))),
-      ("show exists constraint verbose output", Seq(BreakingKeywords("show exists constraint"), NonBreakingKeywords("verbose output"))),
-      ("show all constraints brief output", Seq(BreakingKeywords("show all constraints"), NonBreakingKeywords("brief output"))),
+      ("show relationship existence constraint", Seq(BreakingKeywords("show relationship existence constraint"))),
+      ("show relationship property exist constraint", Seq(BreakingKeywords("show relationship property exist constraint"))),
+      ("show relationship property existence constraint", Seq(BreakingKeywords("show relationship property existence constraint"))),
+
+      ("show rel exist constraint", Seq(BreakingKeywords("show rel exist constraint"))),
+      ("show rel existence constraint", Seq(BreakingKeywords("show rel existence constraint"))),
+      ("show rel property exist constraint", Seq(BreakingKeywords("show rel property exist constraint"))),
+      ("show rel property existence constraint", Seq(BreakingKeywords("show rel property existence constraint"))),
+
+      ("show constraint yield *", Seq(BreakingKeywords("show constraint"), NonBreakingKeywords("yield"), AnyText("*"))),
+      ("show constraint where type = 'UNIQUE'", Seq(BreakingKeywords("show constraint"), BreakingKeywords("where"), AnyText("type"), AnyText("="), EscapedText("UNIQUE", '\''))),
+
+      // deprecated
+
+      ("show constraints brief output", Seq(BreakingKeywords("show constraints"), NonBreakingKeywords("brief output"))),
+      ("show constraints verbose", Seq(BreakingKeywords("show constraints"), NonBreakingKeywords("verbose"))),
+      ("show exists constraint", Seq(BreakingKeywords("show exists constraint"))),
+      ("show node exists constraint", Seq(BreakingKeywords("show node exists constraint"))),
+      ("show relationship exists constraint", Seq(BreakingKeywords("show relationship exists constraint"))),
     ).foreach { case (query, result) =>
       // when then
       parsing(query) shouldGive result

@@ -173,13 +173,44 @@ class PrettifierTest extends Suite
   }
 
   test("should not break SHOW CONSTRAINTS") {
-    actual("show constraints") should equal(expected("SHOW CONSTRAINTS"))
-    actual("show unique constraint") should equal(expected("SHOW UNIQUE CONSTRAINT"))
-    actual("show node key constraints verbose output") should equal(expected("SHOW NODE KEY CONSTRAINTS VERBOSE OUTPUT"))
-    actual("show node exists constraints") should equal(expected("SHOW NODE EXISTS CONSTRAINTS"))
-    actual("show relationship exist constraint brief") should equal(expected("SHOW RELATIONSHIP EXIST CONSTRAINT BRIEF"))
-    actual("show exists constraint") should equal(expected("SHOW EXISTS CONSTRAINT"))
+    actual("show constraint") should equal(expected("SHOW CONSTRAINT"))
     actual("show all constraints") should equal(expected("SHOW ALL CONSTRAINTS"))
+    actual("show unique constraint") should equal(expected("SHOW UNIQUE CONSTRAINT"))
+    actual("show node key constraints") should equal(expected("SHOW NODE KEY CONSTRAINTS"))
+
+    actual("show exist constraints") should equal(expected("SHOW EXIST CONSTRAINTS"))
+    actual("show existence constraint") should equal(expected("SHOW EXISTENCE CONSTRAINT"))
+    actual("show property exist constraints") should equal(expected("SHOW PROPERTY EXIST CONSTRAINTS"))
+    actual("show property existence constraint") should equal(expected("SHOW PROPERTY EXISTENCE CONSTRAINT"))
+
+    actual("show node exist constraints") should equal(expected("SHOW NODE EXIST CONSTRAINTS"))
+    actual("show node existence constraint") should equal(expected("SHOW NODE EXISTENCE CONSTRAINT"))
+    actual("show node property exist constraints") should equal(expected("SHOW NODE PROPERTY EXIST CONSTRAINTS"))
+    actual("show node property existence constraint") should equal(expected("SHOW NODE PROPERTY EXISTENCE CONSTRAINT"))
+
+    actual("show relationship exist constraints") should equal(expected("SHOW RELATIONSHIP EXIST CONSTRAINTS"))
+    actual("show relationship existence constraint") should equal(expected("SHOW RELATIONSHIP EXISTENCE CONSTRAINT"))
+    actual("show relationship property exist constraints") should equal(expected("SHOW RELATIONSHIP PROPERTY EXIST CONSTRAINTS"))
+    actual("show relationship property existence constraint") should equal(expected("SHOW RELATIONSHIP PROPERTY EXISTENCE CONSTRAINT"))
+
+    actual("show rel exist constraint") should equal(expected("SHOW REL EXIST CONSTRAINT"))
+    actual("show rel existence constraints") should equal(expected("SHOW REL EXISTENCE CONSTRAINTS"))
+    actual("show rel property exist constraint") should equal(expected("SHOW REL PROPERTY EXIST CONSTRAINT"))
+    actual("show rel property existence constraints") should equal(expected("SHOW REL PROPERTY EXISTENCE CONSTRAINTS"))
+
+    actual("show constraint yield *") should equal(expected("SHOW CONSTRAINT YIELD *"))
+
+    // deprecated
+
+    actual("show constraints brief") should equal(expected("SHOW CONSTRAINTS BRIEF"))
+    actual("show constraints verbose output") should equal(expected("SHOW CONSTRAINTS VERBOSE OUTPUT"))
+    actual("show exists constraint") should equal(expected("SHOW EXISTS CONSTRAINT"))
+    actual("show node exists constraint") should equal(expected("SHOW NODE EXISTS CONSTRAINT"))
+    actual("show relationship exists constraint") should equal(expected("SHOW RELATIONSHIP EXISTS CONSTRAINT"))
+  }
+
+  test("may break SHOW CONSTRAINTS with WHERE") {
+    actual("show constraints where type = 'UNIQUE'") should equal(expected("SHOW CONSTRAINTS%nWHERE type = 'UNIQUE'"))
   }
 
   test("should break ON CREATE") {
