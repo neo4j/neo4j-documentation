@@ -58,7 +58,7 @@ include::ql/administration/administration-databases.adoc[leveloffset=+1]
 
 include::ql/administration/indexes-for-search-performance/index.asciidoc[leveloffset=+1]
 
-include::ql/administration/indexes-for-full-text-search/index.asciidoc[leveloffset=+1]
+include::ql/administration/indexes/indexes-for-full-text-search/index.asciidoc[leveloffset=+1]
 
 include::ql/administration/constraints/index.asciidoc[leveloffset=+1]
 
