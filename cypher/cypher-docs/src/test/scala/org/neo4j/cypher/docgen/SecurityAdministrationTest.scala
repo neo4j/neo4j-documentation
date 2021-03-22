@@ -33,14 +33,16 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       "CREATE ROLE databaseAdminUsers",
       "CREATE ROLE noAccessUsers",
       "CREATE ROLE roleAdder",
+      "CREATE ROLE roleNameModifier",
       "CREATE ROLE roleDropper",
       "CREATE ROLE roleAssigner",
       "CREATE ROLE roleRemover",
       "CREATE ROLE roleShower",
       "CREATE ROLE roleManager",
       "CREATE ROLE userAdder",
-      "CREATE ROLE userDropper",
+      "CREATE ROLE userNameModifier",
       "CREATE ROLE userModifier",
+      "CREATE ROLE userDropper",
       "CREATE ROLE passwordModifier",
       "CREATE ROLE statusModifier",
       "CREATE ROLE homeModifier",
@@ -374,6 +376,18 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
+        p("The ability to rename roles can be granted via the `RENAME ROLE` privilege. The following query shows an example of this:")
+        query("GRANT RENAME ROLE ON DBMS TO roleNameModifier", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow renaming roles:")
+        query("SHOW ROLE roleNameModifier PRIVILEGES", NoAssertions) {
+          p("Lists all privileges for role 'roleNameModifier'")
+          resultTable()
+        }
+
         p("The ability to delete roles can be granted via the `DROP ROLE` privilege. The following query shows an example of this:")
         query("GRANT DROP ROLE ON DBMS TO roleDropper", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -424,7 +438,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         p(
-          """The privileges to create, delete, assign, remove, and list roles can be granted via the `ROLE MANAGEMENT` privilege.
+          """The privileges to create, rename, delete, assign, remove, and list roles can be granted via the `ROLE MANAGEMENT` privilege.
             |The following query shows an example of this:""".stripMargin)
         query("GRANT ROLE MANAGEMENT ON DBMS TO roleManager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -454,15 +468,15 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
 
-        p("The ability to delete users can be granted via the `DROP USER` privilege. The following query shows an example of this:")
-        query("GRANT DROP USER ON DBMS TO userDropper", ResultAssertions(r => {
+        p("The ability to rename users can be granted via the `RENAME USER` privilege. The following query shows an example of this:")
+        query("GRANT RENAME USER ON DBMS TO userNameModifier", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow deleting users:")
-        query("SHOW ROLE userDropper PRIVILEGES", NoAssertions) {
-          p("Lists all privileges for role 'userDropper'")
+        p("The resulting role should have privileges that only allow renaming users:")
+        query("SHOW ROLE userNameModifier PRIVILEGES", NoAssertions) {
+          p("Lists all privileges for role 'userNameModifier'")
           resultTable()
         }
 
@@ -545,6 +559,18 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           p("Note that the combination of the `SET PASSWORDS`, `SET USER STATUS`, and the `SET USER HOME DATABASE` privilege actions is equivalent to the `ALTER USER` privilege action.")
         }
 
+        p("The ability to delete users can be granted via the `DROP USER` privilege. The following query shows an example of this:")
+        query("GRANT DROP USER ON DBMS TO userDropper", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("The resulting role should have privileges that only allow deleting users:")
+        query("SHOW ROLE userDropper PRIVILEGES", NoAssertions) {
+          p("Lists all privileges for role 'userDropper'")
+          resultTable()
+        }
+
         p("The ability to show users can be granted via the `SHOW USER` privilege. The following query shows an example of this:")
         query("GRANT SHOW USER ON DBMS TO userShower", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -558,7 +584,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         p(
-          """The privileges to create, delete, modify, and list users can be granted via the `USER MANAGEMENT` privilege.
+          """The privileges to create, rename, modify, delete, and list users can be granted via the `USER MANAGEMENT` privilege.
             |The following query shows an example of this:""".stripMargin)
         query("GRANT USER MANAGEMENT ON DBMS TO userManager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)

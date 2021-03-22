@@ -57,6 +57,13 @@ CREATE OR REPLACE ROLE name [AS COPY OF name]
 
 | [source, cypher, role=noplay]
 ----
+RENAME ROLE name [IF EXISTS] TO otherName
+----
+| Change the name of a role.
+| <<administration-security-administration-dbms-privileges-role-management, RENAME ROLE>>
+
+| [source, cypher, role=noplay]
+----
 DROP ROLE name [IF EXISTS]
 ----
 | Remove a role.

@@ -45,10 +45,10 @@ Grant the privilege to create users to a role.
 ###assertion=update-one
 //
 
-GRANT DROP USER ON DBMS TO my_role
+GRANT RENAME USER ON DBMS TO my_role
 ###
 
-Grant the privilege to delete users to a role.
+Grant the privilege to rename users to a role.
 
 ###assertion=update-one
 //
@@ -81,6 +81,14 @@ GRANT SET USER HOME DATABASE ON DBMS TO my_role
 ###
 
 Grant the privilege alter the home database of users to a role.
+
+###assertion=update-one
+//
+
+GRANT DROP USER ON DBMS TO my_role
+###
+
+Grant the privilege to delete users to a role.
 
 ###assertion=update-one
 //

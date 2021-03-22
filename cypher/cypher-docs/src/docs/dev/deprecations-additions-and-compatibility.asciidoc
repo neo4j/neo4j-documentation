@@ -67,6 +67,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `SHOW FULLTEXT INDEXES`   | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on fulltext indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
 | `SHOW LOOKUP INDEXES`     | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on lookup indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
 | `CREATE DATABASE ... [OPTIONS {...}]` | Syntax  | Added | New syntax to pass options to `CREATE DATABASE`.  This can be used to specify a specific cluster node to seed data from.
+| `RENAME ROLE` | Syntax | Added | New Cypher command for changing the name of a role
+| `RENAME USER` | Syntax | Added | New Cypher command for changing the name of a user
 |===
 
 [[cypher-deprecations-additions-removals-4.2]]

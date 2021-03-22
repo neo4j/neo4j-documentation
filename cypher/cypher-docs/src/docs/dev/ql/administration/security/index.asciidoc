@@ -13,6 +13,7 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 *** <<administration-security-users-show-current, Listing current user>>
 *** <<administration-security-users-show, Listing users>>
 *** <<administration-security-users-create, Creating users>>
+*** <<administration-security-users-rename, Renaming users>>
 *** <<administration-security-users-alter, Modifying users>>
 *** <<administration-security-users-alter-password, Changing the current user's password>>
 *** <<administration-security-users-drop, Deleting users>>
@@ -20,6 +21,7 @@ This section explains how to use Cypher to manage Neo4j role-based access contro
 *** <<administration-security-roles-public, The `PUBLIC` role>>
 *** <<administration-security-roles-show, Listing roles>>
 *** <<administration-security-roles-create, Creating roles>>
+*** <<administration-security-roles-rename, Renaming roles>>
 *** <<administration-security-roles-drop, Deleting roles>>
 *** <<administration-security-roles-grant, Assigning roles>>
 *** <<administration-security-roles-revoke, Revoking roles>>

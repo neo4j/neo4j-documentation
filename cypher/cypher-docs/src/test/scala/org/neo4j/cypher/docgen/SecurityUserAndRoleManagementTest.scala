@@ -26,6 +26,7 @@ import org.neo4j.kernel.api.security.AnonymousContext
 
 import scala.collection.JavaConverters._
 
+//noinspection RedundantDefaultArgument
 class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql/administration/security/"
 
@@ -40,6 +41,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         |** <<administration-security-users-show-current, Listing current user>>
         |** <<administration-security-users-show, Listing users>>
         |** <<administration-security-users-create, Creating users>>
+        | ** <<administration-security-users-rename, Renaming users>>
         |** <<administration-security-users-alter, Modifying users>>
         |** <<administration-security-users-alter-password, Changing the current user's password>>
         |** <<administration-security-users-drop, Deleting users>>
@@ -47,6 +49,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         |** <<administration-security-roles-public, The `PUBLIC` role>>
         |** <<administration-security-roles-show, Listing roles>>
         |** <<administration-security-roles-create, Creating roles>>
+        |** <<administration-security-roles-rename, Renaming roles>>
         |** <<administration-security-roles-drop, Deleting roles>>
         |** <<administration-security-roles-grant, Assigning roles>>
         |** <<administration-security-roles-revoke, Revoking roles>>
@@ -153,6 +156,20 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
         }
       }
+      section("Renaming users", "administration-security-users-rename") {
+        p("Users can be renamed using `RENAME USER` command.")
+        query("RENAME USER jake TO bob", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        query("SHOW USERS", assertAllNodesShown("User", column = "user")) {
+          resultTable()
+        }
+        note {
+          p("The `RENAME USER` clause is only available when using native authentication and authorization.")
+        }
+      }
       section("Modifying users", "administration-security-users-alter") {
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
@@ -171,20 +188,20 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             | * `REMOVE HOME DATABASE` is used to unset the home database for a user. This will result in the default database being used as home database for the user.
           """.stripMargin
         )
-        p("For example, we can modify the user `jake` with a new password and active status as well as remove the requirement to change his password.")
-        query("ALTER USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions((r) => {
+        p("For example, we can modify the user `bob` with a new password and active status as well as remove the requirement to change his password.")
+        query("ALTER USER bob SET PASSWORD 'abc123' CHANGE NOT REQUIRED SET STATUS ACTIVE", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        p("Or we may decide to assign the user `jake` a different home database.")
-        query("ALTER USER jake SET HOME DATABASE anotherDb", ResultAssertions((r) => {
+        p("Or we may decide to assign the user `bob` a different home database.")
+        query("ALTER USER bob SET HOME DATABASE anotherDb", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        p("Or remove the home database from the user `jake`.")
-        query("ALTER USER jake REMOVE HOME DATABASE", ResultAssertions((r) => {
+        p("Or remove the home database from the user `bob`.")
+        query("ALTER USER bob REMOVE HOME DATABASE", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -210,13 +227,13 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
       }
       section("Changing the current user's password", "administration-security-users-alter-password") {
-        initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED")
+        initQueries("CREATE USER bob SET PASSWORD 'abc123' CHANGE NOT REQUIRED")
         p(
           """Users can change their own password using `ALTER CURRENT USER SET PASSWORD`.
             |The old password is required in addition to the new one, and either or both can be a string value or a string parameter.
             |When a user executes this command it will change their password as well as set the `CHANGE NOT REQUIRED` flag.""".stripMargin)
-        login("jake", "abc123")
-        query("ALTER CURRENT USER SET PASSWORD FROM 'abc123' TO '123xyz'", ResultAssertions((r) => {
+        login("bob", "abc123")
+        query("ALTER CURRENT USER SET PASSWORD FROM 'abc123' TO '123xyz'", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -227,7 +244,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       }
       section("Deleting users", "administration-security-users-drop") {
         p("Users can be deleted using `DROP USER`.")
-        query("DROP USER jake", ResultAssertions(r => {
+        query("DROP USER bob", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -242,7 +259,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
         p("This command is optionally idempotent, with the default behavior to throw an exception if the user does not exists. " +
           "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the user not exist.")
-        query("DROP USER jake IF EXISTS", ResultAssertions(r => {
+        query("DROP USER bob IF EXISTS", ResultAssertions(r => {
           assertStats(r, systemUpdates = 0)
         })) {
           statsOnlyResultTable()
@@ -250,7 +267,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       }
     }
     section("Role Management", "administration-security-roles", "enterprise-edition") {
-      initQueries("CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED",
+      initQueries("CREATE USER bob SET PASSWORD 'abc123' CHANGE NOT REQUIRED",
         "CREATE USER user1 SET PASSWORD 'abc'", "CREATE USER user2 SET PASSWORD 'abc'", "CREATE USER user3 SET PASSWORD 'abc'")
       p("Roles can be created and managed using a set of Cypher administration commands executed against the `system` database.")
       p("When connected to the DBMS over bolt, administration commands are automatically routed to the `system` database.")
@@ -308,7 +325,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       }
       section("Creating roles", "administration-security-roles-create", "enterprise-edition") {
         p("Roles can be created using `CREATE ROLE`.")
-        query("CREATE ROLE myrole", ResultAssertions((r) => {
+        query("CREATE ROLE myrole", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -321,7 +338,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           """.stripMargin)
         }
         p("A role can also be copied, keeping its privileges, using `CREATE ROLE AS COPY OF`.")
-        query("CREATE ROLE mysecondrole AS COPY OF myrole", ResultAssertions((r) => {
+        query("CREATE ROLE mysecondrole AS COPY OF myrole", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -348,10 +365,23 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
         }
       }
+      section("Renaming roles", "administration-security-roles-rename", "enterprise-edition") {
+        p("Roles can be renamed using `RENAME ROLE` command.")
+        query("RENAME ROLE mysecondrole TO mythirdrole", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        query("SHOW ROLES", assertAllNodesShown("Role", column = "role")) {
+          resultTable()
+        }
+        note {
+          p("The `RENAME ROLE` clause is only available when using native authentication and authorization.")
+        }
+      }
       section("Deleting roles", "administration-security-roles-drop", "enterprise-edition") {
         p("Roles can be deleted using `DROP ROLE` command.")
-        initQueries("CREATE ROLE mysecondrole")
-        query("DROP ROLE mysecondrole", ResultAssertions((r) => {
+        query("DROP ROLE mythirdrole", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -362,7 +392,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
         p("This command is optionally idempotent, with the default behavior to throw an exception if the role does not exists. " +
           "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the role not exist.")
-        query("DROP ROLE mysecondrole IF EXISTS", ResultAssertions(r => {
+        query("DROP ROLE mythirdrole IF EXISTS", ResultAssertions(r => {
           assertStats(r, systemUpdates = 0)
         })) {
           statsOnlyResultTable()
@@ -371,7 +401,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       section("Assigning roles to users", "administration-security-roles-grant", "enterprise-edition") {
         p("Users can be given access rights by assigning them roles using `GRANT ROLE`.")
         initQueries("CREATE ROLE myrole", "CREATE ROLE role1", "CREATE ROLE role2")
-        query("GRANT ROLE myrole TO jake", ResultAssertions((r) => {
+        query("GRANT ROLE myrole TO bob", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -392,9 +422,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
       }
       section("Revoking roles from users", "administration-security-roles-revoke", "enterprise-edition") {
         p("Users can lose access rights by revoking roles from them using `REVOKE ROLE`.")
-        initQueries("CREATE ROLE myrole", "GRANT ROLE myrole TO jake",
+        initQueries("CREATE ROLE myrole", "GRANT ROLE myrole TO bob",
           "CREATE ROLE role1", "CREATE ROLE role2", "GRANT ROLES role1, role2 TO user1, user2, user3")
-        query("REVOKE ROLE myrole FROM jake", ResultAssertions((r) => {
+        query("REVOKE ROLE myrole FROM bob", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()

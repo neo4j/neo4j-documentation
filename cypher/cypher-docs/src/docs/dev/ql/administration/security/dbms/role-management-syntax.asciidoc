@@ -10,6 +10,12 @@ GRANT CREATE ROLE
 | Enable the specified roles to create new roles.
 
 | [source, cypher, role=noplay]
+GRANT RENAME ROLE
+    ON DBMS
+    TO role[, ...]
+| Enable the specified roles to change name of roles.
+
+| [source, cypher, role=noplay]
 GRANT DROP ROLE
     ON DBMS
     TO role[, ...]

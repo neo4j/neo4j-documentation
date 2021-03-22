@@ -10,10 +10,10 @@ GRANT CREATE USER
 | Enable the specified roles to create new users.
 
 | [source, cypher, role=noplay]
-GRANT DROP USER
+GRANT RENAME USER
     ON DBMS
     TO role[, ...]
-| Enable the specified roles to delete users.
+| Enable the specified roles to change name of users.
 
 | [source, cypher, role=noplay]
 GRANT ALTER USER
@@ -39,7 +39,13 @@ GRANT SET USER STATUS
     TO role[, ...]
 | Enable the specified roles to modify the account status of users.
 
-| [source, cypher, role´´oplay]
+| [source, cypher, role=noplay]
+GRANT DROP USER
+    ON DBMS
+    TO role[, ...]
+| Enable the specified roles to delete users.
+
+| [source, cypher, role=noplay]
 GRANT SHOW USER
 ON DBMS
 TO role[, ...]
