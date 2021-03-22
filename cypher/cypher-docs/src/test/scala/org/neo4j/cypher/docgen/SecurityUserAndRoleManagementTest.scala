@@ -155,6 +155,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         note {
           p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
         }
+        note {
+          p("User names are case sensitive.")
+        }
       }
       section("Renaming users", "administration-security-users-rename") {
         p("Users can be renamed using `RENAME USER` command.")
@@ -363,6 +366,9 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
         note {
           p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
+        }
+        note {
+          p("Role names are case sensitive.")
         }
       }
       section("Renaming roles", "administration-security-roles-rename", "enterprise-edition") {
