@@ -46,10 +46,16 @@ CREATE ROLE my_second_role IF NOT EXISTS AS COPY OF my_role
 
 Create a role named `my_second_role`, unless it already exists, as a copy of the existing `my_role`.
 
+###assertion=update-one
+//
+RENAME ROLE my_second_role TO my_other_role
+###
+Rename a role named `my_second_role` to `my_other_role`.
+
 ###assertion=update-two
 //
 
-GRANT ROLE my_role, my_second_role TO alice
+GRANT ROLE my_role, my_other_role TO alice
 ###
 
 Assign roles to a user.
@@ -57,7 +63,7 @@ Assign roles to a user.
 ###assertion=update-one
 //
 
-REVOKE ROLE my_second_role FROM alice
+REVOKE ROLE my_other_role FROM alice
 ###
 
 Remove a specified role from a user.

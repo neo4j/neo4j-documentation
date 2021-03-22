@@ -42,6 +42,14 @@ Grant the privilege to create roles to a role.
 ###assertion=update-one
 //
 
+GRANT RENAME ROLE ON DBMS TO my_role
+###
+
+Grant the privilege to rename roles to a role.
+
+###assertion=update-one
+//
+
 GRANT DROP ROLE ON DBMS TO my_role
 ###
 
