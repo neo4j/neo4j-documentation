@@ -1,12 +1,16 @@
 [[cypher-reserved]]
 = Reserved keywords
 
-We provide here a listing of reserved words, grouped by the categories from which they are drawn,
-all of which have a special meaning in Cypher.
+[abstract]
+--
+Reserved keywords in Cypher.
+These are words that have a special meaning in Cypher.
+--
+
+We provide here a listing of reserved words, grouped by the categories from which they are drawn, all of which have a special meaning in Cypher.
 In addition to this, we list a number of words that are reserved for future use.
 
-These reserved words are not permitted to be used as identifiers in the
-following contexts:
+These reserved words are not permitted to be used as identifiers in the following contexts:
 
 * Variables
 * Function names

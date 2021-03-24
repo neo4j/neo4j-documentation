@@ -1,12 +1,17 @@
 [[cypher-parameters]]
 = Parameters
 
+[abstract]
+--
+Cypher supports parameterized queries.
+A parameterized query is a query in which placeholders are used for parameters and the parameter values are supplied at execution time.
+--
 
 [[cypher-parameters-introduction]]
 == Introduction
 
 Cypher supports querying with parameters.
-This means developers don't have to resort to string building to create a query.
+This means developers do not have to resort to string building to create a query.
 Additionally, parameters make caching of execution plans much easier for Cypher, thus leading to faster query execution times.
 
 Parameters can be used for:

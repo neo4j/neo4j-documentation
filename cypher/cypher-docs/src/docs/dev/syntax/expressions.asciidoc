@@ -1,6 +1,11 @@
 [[cypher-expressions]]
 = Expressions
 
+[abstract]
+--
+Overview of expressions in Cypher with examples.
+--
+
 * <<cypher-expressions-general, Expressions in general>>
 * <<cypher-expressions-string-literals, Note on string literals>>
 * <<query-syntax-case, `CASE` expressions>>

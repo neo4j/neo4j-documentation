@@ -1,6 +1,11 @@
 [[cypher-variables]]
 = Variables
 
+[abstract]
+--
+Overview of variables in Cypher.
+--
+
 When you reference parts of a pattern or a query, you do so by naming them.
 The names you give the different parts are called variables.
 

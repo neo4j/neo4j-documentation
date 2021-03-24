@@ -1,6 +1,12 @@
 [[cypher-working-with-null]]
 = Working with `null`
 
+[abstract]
+--
+Cypher supports the `null` value.
+Conceptually, `null` means **a missing unknown value** and it is treated somewhat differently from other values.
+--
+
 * <<cypher-null-intro, Introduction to `null` in Cypher>>
 * <<cypher-null-logical-operators, Logical operations with `null`>>
 * <<cypher-null-in-operator, The `IN` operator and `null`>>
@@ -12,7 +18,7 @@
 == Introduction to `null` in Cypher
 
 In Cypher, `null` is used to represent missing or undefined values.
-Conceptually, `null` means 'a missing unknown value' and it is treated somewhat differently from other values.
+Conceptually, `null` means **a missing unknown value** and it is treated somewhat differently from other values.
 For example getting a property from a node that does not have said property produces `null`.
 Most expressions that take `null` as input will produce `null`.
 This includes boolean expressions that are used as predicates in the `WHERE` clause.
@@ -26,7 +32,7 @@ So the expression `null` = `null` yields `null` and not `true`.
 [[cypher-null-logical-operators]]
 == Logical operations with `null`
 
-The logical operators (`AND`, `OR`, `XOR`, `NOT`) treat `null` as the 'unknown' value of three-valued logic.
+The logical operators (`AND`, `OR`, `XOR`, `NOT`) treat `null` as the **unknown value** of three-valued logic.
 
 include::boolean-operator-table.asciidoc[]
 
