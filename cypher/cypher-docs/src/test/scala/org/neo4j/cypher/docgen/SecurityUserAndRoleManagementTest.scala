@@ -170,7 +170,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           resultTable()
         }
         note {
-          p("The `RENAME USER` clause is only available when using native authentication and authorization.")
+          p("The `RENAME USER` command is only available when using native authentication and authorization.")
         }
       }
       section("Modifying users", "administration-security-users-alter") {
@@ -382,7 +382,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           resultTable()
         }
         note {
-          p("The `RENAME ROLE` clause is only available when using native authentication and authorization.")
+          p("The `RENAME ROLE` command is only available when using native authentication and authorization.")
         }
       }
       section("Deleting roles", "administration-security-roles-drop", "enterprise-edition") {

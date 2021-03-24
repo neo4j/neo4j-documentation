@@ -42,14 +42,14 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
 
 | [source, cypher, role=noplay]
 ----
-CREATE ROLE name [IF NOT EXISTS] [AS COPY OF name]
+CREATE ROLE name [IF NOT EXISTS] [AS COPY OF otherName]
 ----
 | Create a new role.
 | <<administration-security-administration-dbms-privileges-role-management, CREATE ROLE>>
 
 | [source, cypher, role=noplay]
 ----
-CREATE OR REPLACE ROLE name [AS COPY OF name]
+CREATE OR REPLACE ROLE name [AS COPY OF otherName]
 ----
 | Create a new role, or if a role with the same name exists, replace it.
 | <<administration-security-administration-dbms-privileges-role-management, CREATE ROLE>> and
