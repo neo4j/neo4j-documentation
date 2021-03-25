@@ -122,6 +122,83 @@ class CallSubqueryTest extends DocumentingTest {
       }
     }
 
+   section("Correlated subqueries", "subquery-correlated"){
+   p(
+"""
+[NOTE]
+====
+This functionality is currently only available in Neo4j Fabric, see <<operations-manual#fabric, Operations Manual -> Fabric>>.
+====
+
+A correlated subquery is a subquery that uses variables defined outside of the `CALL` clause.
+To be able to use a variable in this way, the variable must be explicitly imported into the subquery.
+
+[role=fabric]
+[[subquery-correlated-importing]]
+=== Importing variables into subqueries
+
+Variables are imported into a subquery using an importing `WITH` clause.
+As the subquery is evaluated for each incoming input row, the imported variables get bound to the corresponding values from the input row in each evaluation.
+
+.Query.
+[source, cypher]
+----
+UNWIND [0, 1, 2] AS x
+CALL {
+  WITH x
+  RETURN x * 10 AS y
+}
+RETURN x, y
+----
+
+.Result
+[role="queryresult",options="header,footer",cols="2*<m"]
+||===
+|| +x+ | +y+
+|| +0+ | +0+
+|| +1+ | +10+
+|| +2+ | +20+
+2+d|Rows: 3
+||===
+
+
+An importing `WITH` clause must:
+
+* Consist only of simple references to outside variables - e.g. `WITH x, y, z`.
+  Aliasing or expressions are not supported in importing `WITH` clauses - e.g. `WITH a AS b` or `WITH a + 1 AS b`.
+* Be the first clause of a subquery (or the second clause, if directly following a `USE` clause).
+
+[role=fabric]
+[[subquery-correlated-aggregation]]
+=== Aggregation on imported variables
+
+Aggregations in subqueries are scoped to the subquery evaluation, also for imported variables, as shown in the following example:
+
+.Query.
+[source, cypher]
+----
+UNWIND [0, 1, 2] AS x
+CALL {
+  WITH x
+  RETURN max(x) AS xMax
+}
+RETURN x, xMax
+----
+
+.Result
+[role="queryresult",options="header,footer",cols="2*<m"]
+||===
+|| +x+ | +xMax+
+|| +0+ | +0+
+|| +1+ | +1+
+|| +2+ | +2+
+2+d|Rows: 3
+||===
+
+The aggregation `max(x)` observes only a single value of `x` in each evaluation of the subquery, and thus simply evaluates to that same value.
+"""
+)
+   }
   }.build()
 }
 
