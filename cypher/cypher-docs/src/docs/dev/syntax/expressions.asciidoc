@@ -3,7 +3,7 @@
 
 [abstract]
 --
-Overview of expressions in Cypher with examples.
+This section contains an overview of expressions in Cypher with examples.
 --
 
 * <<cypher-expressions-general, Expressions in general>>

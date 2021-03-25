@@ -3,7 +3,7 @@
 
 [abstract]
 --
-Rules and recommendations for the naming of node labels, relationship types, property names, <<cypher-variables, variables>>, indexes, and constraints.
+This section describes rules and recommendations for the naming of node labels, relationship types, property names, variables, indexes, and constraints.
 --
 
 == Naming rules

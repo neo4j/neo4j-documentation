@@ -3,8 +3,7 @@
 
 [abstract]
 --
-Cypher supports the `null` value.
-Conceptually, `null` means **a missing unknown value** and it is treated somewhat differently from other values.
+This section describes working with the `null` value.
 --
 
 * <<cypher-null-intro, Introduction to `null` in Cypher>>

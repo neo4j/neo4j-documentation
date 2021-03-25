@@ -3,19 +3,22 @@
 
 [abstract]
 --
-Overview of data types in Cypher.
-Property types (Integer, Float, String, Boolean, Point, Date, Time, LocalTime, DateTime, LocalDateTime, Duration).
-Structural types (Node, Relationship, Path).
-Composite types (List, Map).
+This section provides an overview of data types in Cypher.
 --
 
 Cypher provides first class support for a number of data types.
 
 These fall into several categories which will be described in detail in the following subsections:
 
-* Property types
-* Structural types
-* Composite types
+Property types::
+Integer, Float, String, Boolean, Point, Date, Time, LocalTime, DateTime, LocalDateTime, and Duration.
+
+Structural types::
+Node, Relationship, and Path.
+
+Composite types::
+List and Map.
+
 
 [[property-types]]
 == Property types

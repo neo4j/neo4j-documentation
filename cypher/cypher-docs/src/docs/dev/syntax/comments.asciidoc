@@ -3,12 +3,11 @@
 
 [abstract]
 --
-Cypher supports comments in a query.
-A comment begin with double slash (`//`) and continue to the end of the line.
-Comments do not execute, they are for humans to read.
+This section describes how how to use comments in Cypher.
 --
 
-To add comments to your queries, use double slash (`//`).
+A comment begin with double slash (`//`) and continue to the end of the line.
+Comments do not execute, they are for humans to read.
 
 Examples:
 
