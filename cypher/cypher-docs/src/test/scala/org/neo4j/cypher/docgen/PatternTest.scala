@@ -243,7 +243,7 @@ class PatternTest extends DocumentingTest {
         resultTable()
       }
       p(
-        """This query finds data in the graph which a shape that fits the pattern: specifically a node (with the name property *'Filipa'*) and then the `KNOWS` related nodes, one or two hops away.
+        """This query finds data in the graph with a shape that fits the pattern: specifically a node (with the name property *'Filipa'*) and then the `KNOWS` related nodes, one or two hops away.
           |This is a typical example of finding first and second degree friends.""".stripMargin)
       p("Note that variable length relationships cannot be used with `CREATE` and `MERGE`.")
     }
