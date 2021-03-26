@@ -29,7 +29,7 @@ class WithTest extends DocumentingTest {
     initQueries(
       """CREATE (a {name: 'Anders'}),
                 (b {name: 'Bossman'}),
-                (c {name: 'Ceasar'}),
+                (c {name: 'Caesar'}),
                 (d {name: 'David'}),
                 (e {name: 'George'}),
 
@@ -91,7 +91,7 @@ class WithTest extends DocumentingTest {
           |ORDER BY n.name DESC
           |LIMIT 3
           |RETURN collect(n.name)""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("collect(n.name)" -> List("George", "David", "Ceasar"))))
+          r.toList should equal(List(Map("collect(n.name)" -> List("George", "David", "Caesar"))))
         })) {
         p("A list of the names of people in reverse order, limited to 3, is returned in a list.")
         resultTable()
