@@ -36,7 +36,7 @@ class DocumentationTestBaseTest extends DocumentingTestBase with QueryStatistics
   override val properties = Map(
     "A" -> Map("name" -> "Anders"),
     "B" -> Map("name" -> "Bossman"),
-    "C" -> Map("name" -> "Ceasar"),
+    "C" -> Map("name" -> "Caesar"),
     "D" -> Map("name" -> "David"),
     "E" -> Map("name" -> "George"))
 
@@ -65,7 +65,7 @@ class DocumentationTestBaseTest extends DocumentingTestBase with QueryStatistics
     assert(graphLines.contains("David"))
     assert(graphLines.contains("George"))
     assert(graphLines.contains("Bossman"))
-    assert(graphLines.contains("Ceasar"))
+    assert(graphLines.contains("Caesar"))
     assert(graphLines.contains("KNOWS"))
     assert(graphLines.contains("BLOCKS"))
   }
