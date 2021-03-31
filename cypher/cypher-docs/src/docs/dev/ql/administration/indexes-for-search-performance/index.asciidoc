@@ -126,12 +126,12 @@ With `IF EXISTS`, no error is thrown and nothing happens should the index not ex
 
 | [source, cypher, role=noplay]
 ----
-SHOW [ALL\|BTREE] INDEX[ES]
+SHOW [ALL\|BTREE\|FULLTEXT] INDEX[ES]
     [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
     [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
-| List indexes in the database, either all or B-tree only.
+| List indexes in the database, either all or filtered on B-tree or fulltext indexes.
 | When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
 
 | [source, cypher, role=noplay]
