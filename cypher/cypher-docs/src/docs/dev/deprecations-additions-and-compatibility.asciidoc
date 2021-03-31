@@ -54,6 +54,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `ON DEFAULT DATABASE` for privilege commands  | Syntax        | Deprecated    | Replaced by `ON HOME DATABASE`
 | `ON DEFAULT GRAPH` for privilege commands     | Syntax        | Deprecated    | Replaced by `ON HOME GRAPH`
 | `CREATE INDEX [name] FOR ()-[r:TYPE]-() ON (r.prop)` | Functionality | Added | Allows creating indexes on relationships.
+| `SHOW FULLTEXT INDEXES`   | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on fulltext indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
 |===
 
 [[cypher-deprecations-additions-removals-4.2]]

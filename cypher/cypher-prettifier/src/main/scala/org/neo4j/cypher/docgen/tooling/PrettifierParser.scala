@@ -179,7 +179,9 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
     keyword("SHOW ALL INDEX") |
     keyword("SHOW ALL INDEXES") |
     keyword("SHOW BTREE INDEX") |
-    keyword("SHOW BTREE INDEXES")
+    keyword("SHOW BTREE INDEXES") |
+    keyword("SHOW FULLTEXT INDEX") |
+    keyword("SHOW FULLTEXT INDEXES")
   }
 
   def joinWithUpdatingBreakingKeywords: Rule1[BreakingKeywords] =
