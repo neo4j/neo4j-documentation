@@ -41,6 +41,7 @@ import org.neo4j.graphdb._
 import org.neo4j.graphdb.config.Setting
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
+import org.neo4j.kernel.impl.index.schema.RelationshipTypeScanStoreSettings
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.visualization.asciidoc.AsciidocHelper
@@ -293,7 +294,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     new EnterpriseDatabaseManagementServiceBuilder(directory)
       .setConfig(Map[Setting[_], Object](
         OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
-        OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
+        OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
+        RelationshipTypeScanStoreSettings.enable_relationship_property_indexes -> java.lang.Boolean.TRUE
       ).asJava)
       .build()
 

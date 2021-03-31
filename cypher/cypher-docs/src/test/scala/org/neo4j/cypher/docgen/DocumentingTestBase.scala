@@ -49,6 +49,7 @@ import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
+import org.neo4j.kernel.impl.index.schema.RelationshipTypeScanStoreSettings
 import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySubscriber, QuerySubscriberAdapter}
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.values.virtual.VirtualValues
@@ -554,7 +555,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   protected def databaseConfig(): util.Map[Setting[_], Object] =
     Map[Setting[_], Object](
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
-      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
+      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
+      RelationshipTypeScanStoreSettings.enable_relationship_property_indexes -> java.lang.Boolean.TRUE
     ).asJava
 
   protected def newDatabaseManagementService(directory: File): DatabaseManagementService = {
