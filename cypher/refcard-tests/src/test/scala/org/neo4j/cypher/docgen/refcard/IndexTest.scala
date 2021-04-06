@@ -91,8 +91,6 @@ CREATE INDEX index_name FOR ()-[k:KNOWS]-() ON (k.since)
 ###
 
 Create an index on relationships with type `KNOWS` and property `since` with the name `index_name`.
-Relationship property indexes is a feature under development. If you want to try it out you need to set `unsupported.dbms.enable_relationship_property_indexes` setting in the _neo4j.conf_ file.
-Please note that no guarantees are made about functionality until the feature is complete.
 
 ###assertion=create-index
 //

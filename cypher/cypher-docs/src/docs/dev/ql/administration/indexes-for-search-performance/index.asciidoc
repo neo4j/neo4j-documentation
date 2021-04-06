@@ -219,10 +219,6 @@ include::../indexes/create-a-single-property-index-for-nodes.asciidoc[leveloffse
 
 include::../indexes/create-a-single-property-index-for-relationships.asciidoc[leveloffset=+1]
 
-[NOTE]
-Relationship property indexes is a feature under development. If you want to try it out you need to set `unsupported.dbms.enable_relationship_property_indexes` setting in the _neo4j.conf_ file.
-Please note that no guarantees are made about functionality until the feature is complete.
-
 include::../indexes/create-a-single-property-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-single-property-index-with-specified-index-provider.asciidoc[leveloffset=+1]
@@ -232,10 +228,6 @@ include::../indexes/create-a-single-property-index-with-specified-index-configur
 include::../indexes/create-a-composite-index-for-nodes.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-composite-index-for-relationships.asciidoc[leveloffset=+1]
-
-[NOTE]
-Relationship property indexes is a feature under development. If you want to try it out you need to set `unsupported.dbms.enable_relationship_property_indexes` setting in the _neo4j.conf_ file.
-Please note that no guarantees are made about functionality until the feature is complete.
 
 include::../indexes/create-a-composite-index-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+1]
 
