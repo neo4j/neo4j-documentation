@@ -18,6 +18,8 @@ This section explains how to manage indexes used for search performance.
 ** <<administration-indexes-create-a-composite-index-for-nodes, Create a composite index for nodes>>
 ** <<administration-indexes-create-a-composite-index-for-relationships, Create a composite index for relationships>>
 ** <<administration-indexes-create-a-composite-index-with-specified-index-provider-and-configuration, Create a composite index with specified index provider and configuration>>
+** <<administration-indexes-create-a-lookup-index-for-nodes, Create a lookup index for nodes>>
+** <<administration-indexes-create-a-lookup-index-for-relationships, Create a lookup index for relationships>>
 ** <<administration-indexes-drop-an-index, Drop an index>>
 ** <<administration-indexes-drop-a-non-existing-index, Drop a non-existing index>>
 ** <<administration-indexes-list-indexes, List indexes>>
@@ -72,7 +74,9 @@ ON (n.propertyName)
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 | Create a single-property index on nodes.
-.4+.^| Best practice is to give the index a name when it is created.
+
+Index provider and configuration can be specified using the `OPTIONS` clause.
+.6+.^| Best practice is to give the index a name when it is created.
 If the index is not explicitly named, it will get an auto-generated name.
 
 The index name must be unique among both indexes and constraints.
@@ -80,8 +84,6 @@ The index name must be unique among both indexes and constraints.
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same index twice.
 With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name, schema or both already exist.
 It may still throw an error should a conflicting constraint exist.
-
-Index provider and configuration can be specified using the `OPTIONS` clause.
 
 | [source, cypher, role=noplay]
 ----
@@ -91,6 +93,8 @@ ON (r.propertyName)
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 | Create a single-property index on relationships.
+
+Index provider and configuration can be specified using the `OPTIONS` clause.
 
 | [source, cypher, role=noplay]
 ----
@@ -104,6 +108,8 @@ ON (n.propertyName_1,
 ----
 | Create a composite index on nodes.
 
+Index provider and configuration can be specified using the `OPTIONS` clause.
+
 | [source, cypher, role=noplay]
 ----
 CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
@@ -115,6 +121,30 @@ ON (r.propertyName_1,
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 | Create a composite index on relationships.
+
+Index provider and configuration can be specified using the `OPTIONS` clause.
+
+| [source, cypher, role=noplay]
+----
+CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
+FOR (n)
+ON EACH labels(n)
+[OPTIONS "{" "}"]
+----
+| Create a lookup index on nodes.
+
+Lookup indexes have no available values for the `OPTIONS` clause.
+
+| [source, cypher, role=noplay]
+----
+CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
+FOR ()-[r]-()
+ON [EACH] type(r)
+[OPTIONS "{" "}"]
+----
+| Create a lookup index on relationships.
+
+Lookup indexes have no available values for the `OPTIONS` clause.
 
 | [source, cypher, role=noplay]
 ----
@@ -230,6 +260,10 @@ include::../indexes/create-a-composite-index-for-nodes.asciidoc[leveloffset=+1]
 include::../indexes/create-a-composite-index-for-relationships.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-composite-index-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-lookup-index-for-nodes.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-lookup-index-for-relationships.asciidoc[leveloffset=+1]
 
 include::../indexes/drop-an-index.asciidoc[leveloffset=+1]
 

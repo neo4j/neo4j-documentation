@@ -19,21 +19,36 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
+import com.neo4j.configuration.OnlineBackupSettings
+import org.neo4j.configuration.helpers.SocketAddress
 import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
+import org.neo4j.graphdb.config.Setting
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MAX
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MIN
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
+import org.neo4j.kernel.impl.index.schema.RelationshipTypeScanStoreSettings
 
+import java.util
 import java.util.concurrent.TimeUnit
+import scala.collection.JavaConverters._
 
 class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "INDEX"
   override val linkId = "administration/indexes-for-search-performance"
   private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
+
+  override protected def databaseConfig(): util.Map[Setting[_], Object] = {
+    Map[Setting[_], Object](
+      OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
+      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
+      RelationshipTypeScanStoreSettings.enable_relationship_property_indexes -> java.lang.Boolean.TRUE,
+      RelationshipTypeScanStoreSettings.enable_scan_stores_as_token_indexes -> java.lang.Boolean.TRUE
+    ).asJava
+  }
 
   //noinspection RedundantDefaultArgument
   // Disable warnings for redundant default argument since its used for clarification of the `assertStats` when nothing should have happened
@@ -57,7 +72,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
         assert(result.toList.size === 1)
       case "show" =>
         assertStats(result)
-        assert(result.toList.size === 4)
+        assert(result.toList.size === 6)
     }
   }
 
@@ -117,6 +132,22 @@ CREATE INDEX IF NOT EXISTS FOR (p:Person) ON (p.name, p.age)
 ###
 
 Create a composite index on nodes with label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
+
+###assertion=create-index
+//
+
+CREATE LOOKUP INDEX lookup_index_name FOR (n) ON EACH labels(n)
+###
+
+Create a lookup index on nodes with any label with the name `lookup_index_name`.
+
+###assertion=create-index
+//
+
+CREATE LOOKUP INDEX FOR ()-[r]-() ON EACH type(r)
+###
+
+Create a lookup index on relationships with any type.
 
 ###assertion=show
 //

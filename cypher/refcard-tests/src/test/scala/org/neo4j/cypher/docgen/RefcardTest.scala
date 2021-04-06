@@ -21,6 +21,7 @@ package org.neo4j.cypher.docgen
 
 import java.io._
 import java.nio.charset.StandardCharsets
+import java.util
 
 import com.neo4j.configuration.OnlineBackupSettings
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
@@ -292,12 +293,14 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   protected def newDatabaseManagementService(directory: File): DatabaseManagementService =
     new EnterpriseDatabaseManagementServiceBuilder(directory)
-      .setConfig(Map[Setting[_], Object](
-        OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
-        OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
-        RelationshipTypeScanStoreSettings.enable_relationship_property_indexes -> java.lang.Boolean.TRUE
-      ).asJava)
+      .setConfig(databaseConfig())
       .build()
 
+  protected def databaseConfig(): util.Map[Setting[_], Object] = {
+    Map[Setting[_], Object](
+      OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
+      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
+    ).asJava
+  }
 }
 
