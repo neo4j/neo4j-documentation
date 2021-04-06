@@ -227,7 +227,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     prepareAndTestQuery(
       title = "Drop an index",
       text =
-        """An index on all nodes or relationships that have a label/type and property/properties combination can be dropped using the name with the `DROP INDEX index_name` command.
+        """An index can be dropped using the name with the `DROP INDEX index_name` command. This command can drop node, relationship or lookup indexes.
           |The name of the index can be found using the <<administration-indexes-list-indexes, `SHOW INDEXES` command>>, given in the output column `name`.""".stripMargin,
       prepare = _ => executePreparationQueries(List("CREATE INDEX index_name FOR (n:Person) ON (n.surname)")),
       queryText = "DROP INDEX index_name",

@@ -150,7 +150,7 @@ Lookup indexes have no available values for the `OPTIONS` clause.
 ----
 DROP INDEX index_name [IF EXISTS]
 ----
-| Drop an index, either a node or a relationship index.
+| Drop an index, either a node, a relationship or a lookup index.
 | The command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same index twice.
 With `IF EXISTS`, no error is thrown and nothing happens should the index not exist.
 
