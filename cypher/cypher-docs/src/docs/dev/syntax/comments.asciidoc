@@ -1,7 +1,15 @@
 [[cypher-comments]]
 = Comments
 
-To add comments to your queries, use double slash. Examples:
+[abstract]
+--
+This section describes how how to use comments in Cypher.
+--
+
+A comment begin with double slash (`//`) and continue to the end of the line.
+Comments do not execute, they are for humans to read.
+
+Examples:
 
 [source, cypher]
 ----
