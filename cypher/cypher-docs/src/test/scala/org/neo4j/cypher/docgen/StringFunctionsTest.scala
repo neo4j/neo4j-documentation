@@ -48,6 +48,7 @@ class StringFunctionsTest extends DocumentingTest {
         #* <<functions-substring,substring()>>
         #* <<functions-tolower,toLower()>>
         #* <<functions-tostring,toString()>>
+        #* <<functions-tostringornull,toStringOrNull()>>
         #* <<functions-toupper,toUpper()>>
         #* <<functions-trim,trim()>>""".stripMargin('#'))
     section("left()", "functions-left") {
@@ -153,9 +154,10 @@ class StringFunctionsTest extends DocumentingTest {
     }
     section("toString()", "functions-tostring") {
       p(
-        """`toString()` converts an integer, float or boolean value to a string.""".stripMargin)
+        """`toString()` converts an integer, float, boolean, point, duration, date, time, localtime, localdatetime or datetime value to a string.""".stripMargin)
       function("toString(expression)", "A String.", ("expression", "An expression that returns a number, a boolean, or a string."))
-      considerations("`toString(null)` returns `null`", "If `expression` is a string, it will be returned unchanged.")
+      considerations("`toString(null)` returns `null`", "If `expression` is a string, it will be returned unchanged.",
+        "This function will throw an error if provided with an expression that is not an integer, float, string, boolean, point, duration, date, time, localtime, localdatetime or datetime value.")
       query(
         """RETURN toString(11.5),
           #toString('already a string'),
@@ -170,6 +172,35 @@ class StringFunctionsTest extends DocumentingTest {
             "dateString" -> "1984-10-11",
             "datetimeString" -> "1984-10-11T12:31:14.341+01:00[Europe/Stockholm]",
             "durationString" -> "PT11M")
+          ))
+        })) {
+        resultTable()
+      }
+    }
+    section("toStringOrNull()", "functions-tostringornull") {
+      p("The function `toStringOrNull()` converts an integer, float, boolean, point, duration, date, time, localtime, localdatetime or datetime value to a string.")
+      function("toStringOrNull(expression)",
+        "A String or `null`.",
+        ("expression", "Any expression that returns a value."))
+      considerations(
+        "`toStringOrNull(null)` returns `null`.",
+        "If the `expression` is not  an integer, float, string, boolean, point, duration, date, time, localtime, localdatetime or datetime value, `null` will be returned.")
+      query(
+        """RETURN toStringOrNull(11.5),
+          #toStringOrNull('already a string'),
+          #toStringOrNull(true),
+          #toStringOrNull(date({year:1984, month:10, day:11})) AS dateString,
+          #toStringOrNull(datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 341, timezone: 'Europe/Stockholm'})) AS datetimeString,
+          #toStringOrNull(duration({minutes: 12, seconds: -60})) AS durationString,
+          #toStringOrNull(['A', 'B', 'C']) AS list""".stripMargin('#'), ResultAssertions((r) => {
+          r.toList should equal(List(Map(
+            "toStringOrNull(11.5)" -> "11.5",
+            "toStringOrNull('already a string')" -> "already a string",
+            "toStringOrNull(true)" -> "true",
+            "dateString" -> "1984-10-11",
+            "datetimeString" -> "1984-10-11T12:31:14.341+01:00[Europe/Stockholm]",
+            "durationString" -> "PT11M",
+            "list" -> null)
           ))
         })) {
         resultTable()

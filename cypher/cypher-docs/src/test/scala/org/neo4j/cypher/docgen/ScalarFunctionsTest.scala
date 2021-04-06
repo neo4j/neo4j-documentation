@@ -59,8 +59,11 @@ class ScalarFunctionsTest extends DocumentingTest {
         #* <<functions-startnode, startNode()>>
         #* <<functions-timestamp, timestamp()>>
         #* <<functions-toboolean, toBoolean()>>
+        #* <<functions-tobooleanornull, toBooleanOrNull()>>
         #* <<functions-tofloat, toFloat()>>
+        #* <<functions-tofloatornull, toFloatOrNull()>>
         #* <<functions-tointeger, toInteger()>>
+        #* <<functions-tointegerornull, toIntegerOrNull()>>
         #* <<functions-type, type()>>""".stripMargin('#'))
     important {
       p("""The `length()` and `size()` functions are quite similar, and so it is important to take note of the difference.
@@ -296,17 +299,37 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("toBoolean()", "functions-toboolean") {
-      p("The function `toBoolean()` converts a string value to a boolean value.")
+      p("The function `toBoolean()` converts a string, integer or boolean value to a boolean value.")
       function("toBoolean(expression)",
         "A Boolean.",
-        ("expression", "An expression that returns a boolean or a string value."))
+        ("expression", "An expression that returns a boolean, string or integer value."))
       considerations(
         "`toBoolean(null)` returns `null`.",
         "If `expression` is a boolean value, it will be returned unchanged.",
-        "If the parsing fails, `null` will be returned.")
-      query("RETURN toBoolean('true'), toBoolean('not a boolean')",
+        "If the parsing fails, `null` will be returned.",
+        "If `expression` is the integer value `0`, `false` will be returned. For any other integer value `true` will be returned.",
+        "This function will throw an error if provided with an expression that is not a string, integer or boolean value.")
+      query("RETURN toBoolean('true'), toBoolean('not a boolean'), toBoolean(0)",
       ResultAssertions((r) => {
-          r.toList should equal(List(Map("toBoolean('true')" -> true, "toBoolean('not a boolean')" -> null)))
+          r.toList should equal(List(Map("toBoolean('true')" -> true, "toBoolean('not a boolean')" -> null, "toBoolean(0)" -> false)))
+        })) {
+        resultTable()
+      }
+    }
+    section("toBooleanOrNull()", "functions-tobooleanornull") {
+      p("The function `toBooleanOrNull()` converts a string, integer or boolean value to a boolean value. For any other input value, `null` will be returned.")
+      function("toBooleanOrNull(expression)",
+        "A Boolean or `null`.",
+        ("expression", "Any expression that returns a value."))
+      considerations(
+        "`toBooleanOrNull(null)` returns `null`.",
+        "If `expression` is a boolean value, it will be returned unchanged.",
+        "If the parsing fails, `null` will be returned.",
+        "If `expression` is the integer value `0`, `false` will be returned. For any other integer value `true` will be returned.",
+        "If the `expression` is not a string, integer or boolean value, `null` will be returned.")
+      query("RETURN toBooleanOrNull('true'), toBooleanOrNull('not a boolean'), toBooleanOrNull(0), toBooleanOrNull(1.5)",
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("toBooleanOrNull('true')" -> true, "toBooleanOrNull('not a boolean')" -> null, "toBooleanOrNull(0)" -> false, "toBooleanOrNull(1.5)" -> null)))
         })) {
         resultTable()
       }
@@ -319,7 +342,8 @@ class ScalarFunctionsTest extends DocumentingTest {
       considerations(
         "`toFloat(null)` returns `null`.",
         "If `expression` is a floating point number, it will be returned unchanged.",
-        "If the parsing fails, `null` will be returned.")
+        "If the parsing fails, `null` will be returned.",
+        "This function will throw an error if provided with an expression that is not an integer, floating point or a string value.")
       query("RETURN toFloat('11.5'), toFloat('not a number')",
       ResultAssertions((r) => {
           r.toList should equal(List(Map("toFloat('11.5')" -> 11.5, "toFloat('not a number')" -> null)))
@@ -327,18 +351,55 @@ class ScalarFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
+    section("toFloatOrNull()", "functions-tofloatornull") {
+      p("The function `toFloatOrNull()` converts an integer or a string value to a floating point number. For any other input value, `null` will be returned.")
+      function("toFloatOrNull(expression)",
+        "A Float or `null`.",
+        ("expression", "Any expression that returns a value."))
+      considerations(
+        "`toFloatOrNull(null)` returns `null`.",
+        "If `expression` is a floating point number, it will be returned unchanged.",
+        "If the parsing fails, `null` will be returned.",
+        "If the `expression` is not an integer, floating point or a string value, `null` will be returned.")
+      query("RETURN toFloatOrNull('11.5'), toFloatOrNull('not a number'), toFloatOrNull(true)",
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("toFloatOrNull('11.5')" -> 11.5, "toFloatOrNull('not a number')" -> null, "toFloatOrNull(true)" -> null)))
+        })) {
+        resultTable()
+      }
+    }
     section("toInteger()", "functions-tointeger") {
-      p("The function `toInteger()` converts a floating point or a string value to an integer value.")
+      p("The function `toInteger()` converts a boolean, floating point or a string value to an integer value.")
       function("toInteger(expression)",
         "An Integer.",
-        ("expression", "An expression that returns a numeric or a string value."))
+        ("expression", "An expression that returns a boolean, numeric or a string value."))
       considerations(
         "`toInteger(null)` returns `null`.",
         "If `expression` is an integer value, it will be returned unchanged.",
-        "If the parsing fails, `null` will be returned.")
-      query("RETURN toInteger('42'), toInteger('not a number')",
+        "If the parsing fails, `null` will be returned.",
+        "If `expression` is the boolean value `false`, `0` will be returned. If `expression` is the boolean value `true`, `1` will be returned.",
+        "This function will throw an error if provided with an expression that is not a boolean, floating point, integer or a string value.")
+      query("RETURN toInteger('42'), toInteger('not a number'), toInteger(true)",
       ResultAssertions((r) => {
-          r.toList should equal(List(Map("toInteger('42')" -> 42, "toInteger('not a number')" -> null)))
+          r.toList should equal(List(Map("toInteger('42')" -> 42, "toInteger('not a number')" -> null, "toInteger(true)" -> 1)))
+        })) {
+        resultTable()
+      }
+    }
+    section("toIntegerOrNull()", "functions-tointegerornull") {
+      p("The function `toIntegerOrNull()` converts a boolean, floating point or a string value to an integer value. For any other input value, `null` will be returned.")
+      function("toIntegerOrNull(expression)",
+        "An Integer or `null`.",
+        ("expression", "Any expression that returns a value."))
+      considerations(
+        "`toIntegerOrNull(null)` returns `null`.",
+        "If `expression` is an integer value, it will be returned unchanged.",
+        "If the parsing fails, `null` will be returned.",
+        "If `expression` is the boolean value `false`, `0` will be returned. If `expression` is the boolean value `true`, `1` will be returned.",
+        "If the `expression` is not a boolean, floating point, integer or a string value, `null` will be returned.")
+      query("RETURN toIntegerOrNull('42'), toIntegerOrNull('not a number'), toIntegerOrNull(true), toIntegerOrNull(['A', 'B', 'C'])",
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("toIntegerOrNull('42')" -> 42, "toIntegerOrNull('not a number')" -> null, "toIntegerOrNull(true)" -> 1, "toIntegerOrNull(['A', 'B', 'C'])" -> null)))
         })) {
         resultTable()
       }
