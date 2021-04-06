@@ -78,6 +78,7 @@ class PrettifierTest extends Suite
     actual("show indexes") should equal(expected("SHOW INDEXES"))
     actual("show btree index yield *") should equal(expected("SHOW BTREE INDEX YIELD *"))
     actual("show fulltext indexes") should equal(expected("SHOW FULLTEXT INDEXES"))
+    actual("show lookup indexes") should equal(expected("SHOW LOOKUP INDEXES"))
     // deprecated
     actual("show all indexes brief output") should equal(expected("SHOW ALL INDEXES BRIEF OUTPUT"))
     actual("show btree index verbose") should equal(expected("SHOW BTREE INDEX VERBOSE"))

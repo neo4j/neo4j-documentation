@@ -49,7 +49,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-return, RETURN ... [AS]>>                    | Projecting   |  Defines what to include in the query result set.
 |<<query-set, SET>>                          | Writing     |  Update labels on nodes and properties on nodes and relationships.
 |<<administration-constraints-list-constraint, SHOW [ALL\|UNIQUE\|NODE EXIST[S]\|RELATIONSHIP EXIST[S]\|EXIST[S]\|NODE KEY] CONSTRAINT[S] [BRIEF\|VERBOSE [OUTPUT]]>> | Schema | List constraints in the database, either all or filtered on type.
-|<<administration-indexes-list-indexes, SHOW [ALL\|BTREE\|FULLTEXT] INDEX[ES]>> | Schema | List indexes in the database, either all or filtered on B-tree or fulltext indexes. Also allows `WHERE` and `YIELD` clauses.
+|<<administration-indexes-list-indexes, SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP] INDEX[ES]>> | Schema | List indexes in the database, either all or filtered on B-tree, fulltext or lookup indexes. Also allows `WHERE` and `YIELD` clauses.
 |<<query-skip, SKIP>>                            | Reading/Writing | A sub-clause defining from which row to start including the rows in the output.
 |<<query-union, UNION>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are removed.
 |<<query-union, UNION ALL>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are retained.

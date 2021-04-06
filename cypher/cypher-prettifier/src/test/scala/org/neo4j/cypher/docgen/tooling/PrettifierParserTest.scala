@@ -169,6 +169,7 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
       ("show all indexes", Seq(BreakingKeywords("show all indexes"))),
       ("show btree index", Seq(BreakingKeywords("show btree index"))),
       ("show fulltext index", Seq(BreakingKeywords("show fulltext index"))),
+      ("show lookup index", Seq(BreakingKeywords("show lookup index"))),
       ("show index yield *", Seq(BreakingKeywords("show index"), NonBreakingKeywords("yield"), AnyText("*"))),
       ("show index where type = 'BTREE'", Seq(BreakingKeywords("show index"), BreakingKeywords("where"), AnyText("type"), AnyText("="), EscapedText("BTREE", '\''))),
       // deprecated
