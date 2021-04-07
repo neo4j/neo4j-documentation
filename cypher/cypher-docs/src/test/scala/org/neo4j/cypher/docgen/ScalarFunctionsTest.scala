@@ -308,7 +308,7 @@ class ScalarFunctionsTest extends DocumentingTest {
         "If `expression` is a boolean value, it will be returned unchanged.",
         "If the parsing fails, `null` will be returned.",
         "If `expression` is the integer value `0`, `false` will be returned. For any other integer value `true` will be returned.",
-        "This function will throw an error if provided with an expression that is not a string, integer or boolean value.")
+        "This function will return an error if provided with an expression that is not a string, integer or boolean value.")
       query("RETURN toBoolean('true'), toBoolean('not a boolean'), toBoolean(0)",
       ResultAssertions((r) => {
           r.toList should equal(List(Map("toBoolean('true')" -> true, "toBoolean('not a boolean')" -> null, "toBoolean(0)" -> false)))
@@ -343,7 +343,7 @@ class ScalarFunctionsTest extends DocumentingTest {
         "`toFloat(null)` returns `null`.",
         "If `expression` is a floating point number, it will be returned unchanged.",
         "If the parsing fails, `null` will be returned.",
-        "This function will throw an error if provided with an expression that is not an integer, floating point or a string value.")
+        "This function will return an error if provided with an expression that is not an integer, floating point or a string value.")
       query("RETURN toFloat('11.5'), toFloat('not a number')",
       ResultAssertions((r) => {
           r.toList should equal(List(Map("toFloat('11.5')" -> 11.5, "toFloat('not a number')" -> null)))
@@ -378,7 +378,7 @@ class ScalarFunctionsTest extends DocumentingTest {
         "If `expression` is an integer value, it will be returned unchanged.",
         "If the parsing fails, `null` will be returned.",
         "If `expression` is the boolean value `false`, `0` will be returned. If `expression` is the boolean value `true`, `1` will be returned.",
-        "This function will throw an error if provided with an expression that is not a boolean, floating point, integer or a string value.")
+        "This function will return an error if provided with an expression that is not a boolean, floating point, integer or a string value.")
       query("RETURN toInteger('42'), toInteger('not a number'), toInteger(true)",
       ResultAssertions((r) => {
           r.toList should equal(List(Map("toInteger('42')" -> 42, "toInteger('not a number')" -> null, "toInteger(true)" -> 1)))

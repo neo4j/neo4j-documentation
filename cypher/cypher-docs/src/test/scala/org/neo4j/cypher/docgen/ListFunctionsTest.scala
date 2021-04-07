@@ -52,7 +52,12 @@ class ListFunctionsTest extends DocumentingTest {
         |* <<functions-reduce,reduce()>>
         |* <<functions-relationships,relationships()>>
         |* <<functions-reverse-list, reverse()>>
-        |* <<functions-tail,tail()>>""")
+        |* <<functions-tail,tail()>>
+        |* <<functions-tobooleanlist,toBooleanList()>>
+        |* <<functions-tofloatlist,toFloatList()>>
+        |* <<functions-tointegerlist,toIntegerList()>>
+        |* <<functions-tostringlist,toStringList()>>
+        |""")
     graphViz()
 
 
@@ -164,6 +169,82 @@ class ListFunctionsTest extends DocumentingTest {
           r.columnAs[Iterable[_]]("tail(a.array)").toList.head should equal(Array("two", "three"))
         })) {
         p("The property named `array` and a list comprising all but the first element of the `array` property are returned.")
+        resultTable()
+      }
+    }
+    section("toBooleanList()", "functions-tobooleanlist") {
+      p("""`toBooleanList()` converts a list of values and returns a list of boolean values. If any values are not convertible to boolean they will be null in the list returned.""")
+      function("toBooleanList(list)", "A list containing the converted elements; depending on the input value a converted value is either a boolean value or `null`.", ("list", "An expression that returns a list."))
+      considerations("Any `null` element in `list` is preserved.",
+        "Any boolean value in `list` is preserved.",
+        "If the `list` is `null`, `null` will be returned.",
+        "If the `list` is not a list, an error will be returned.",
+        "The conversion for each value in `original` is done according to the <<functions-tobooleanornull,`toBooleanOrNull()` function>>.")
+      query(
+        """RETURN toBooleanList(null) as noList,
+          |toBooleanList([null, null]) as nullsInList,
+          |toBooleanList(['a string', true, 'false', null, ['A','B']]) as mixedList""".stripMargin, ResultAssertions((r) => {
+          r.columnAs[Iterable[_]]("noList").toList.head should equal(null)
+          r.columnAs[Iterable[_]]("nullsInList").toList.head should equal(Array(null, null))
+          r.columnAs[Iterable[_]]("mixedList").toList.head should equal(Array(null, true, false, null, null))
+        })) {
+        resultTable()
+      }
+    }
+    section("toFloatList()", "functions-tofloatlist") {
+      p("""`toFloatList()` converts a list of values and returns a list of floating point values. If any values are not convertible to floating point they will be `null` in the list returned.""")
+      function("toFloatList(list)", "A list containing the converted elements; depending on the input value a converted value is either a floating point value or `null`.", ("list", "An expression that returns a list."))
+      considerations("Any `null` element in `list` is preserved.",
+        "Any floating point value in `list` is preserved.",
+        "If the `list` is `null`, `null` will be returned.",
+        "If the `list` is not a list, an error will be returned.",
+        "The conversion for each value in `original` is done according to the <<functions-tofloatornull,`toFloatOrNull()` function>>.")
+      query(
+        """RETURN toFloatList(null) as noList,
+          |toFloatList([null, null]) as nullsInList,
+          |toFloatList(['a string', 2.5, '3.14159', null, ['A','B']]) as mixedList""".stripMargin, ResultAssertions((r) => {
+          r.columnAs[Iterable[_]]("noList").toList.head should equal(null)
+          r.columnAs[Iterable[_]]("nullsInList").toList.head should equal(Array(null, null))
+          r.columnAs[Iterable[_]]("mixedList").toList.head should equal(Array(null, 2.5, 3.14159, null, null))
+        })) {
+        resultTable()
+      }
+    }
+    section("toIntegerList()", "functions-tointegerlist") {
+      p("""`toIntegerList()` converts a list of values and returns a list of integer values. If any values are not convertible to integer they will be `null` in the list returned.""")
+      function("toIntegerList(list)", "A list containing the converted elements; depending on the input value a converted value is either a integer value or `null`.", ("list", "An expression that returns a list."))
+      considerations("Any `null` element in `list` is preserved.",
+        "Any integer value in `list` is preserved.",
+        "If the `list` is `null`, `null` will be returned.",
+        "If the `list` is not a list, an error will be returned.",
+        "The conversion for each value in `original` is done according to the <<functions-tointegerornull,`toIntegerOrNull()` function>>.")
+      query(
+        """RETURN toIntegerList(null) as noList,
+          |toIntegerList([null, null]) as nullsInList,
+          |toIntegerList(['a string', 2, '5', null, ['A','B']]) as mixedList""".stripMargin, ResultAssertions((r) => {
+          r.columnAs[Iterable[_]]("noList").toList.head should equal(null)
+          r.columnAs[Iterable[_]]("nullsInList").toList.head should equal(Array(null, null))
+          r.columnAs[Iterable[_]]("mixedList").toList.head should equal(Array(null, 2, 5, null, null))
+        })) {
+        resultTable()
+      }
+    }
+    section("toStringList()", "functions-tostringlist") {
+      p("""`toStringList()` converts a list of values and returns a list of string values. If any values are not convertible to string they will be `null` in the list returned.""")
+      function("toStringList(list)", "A list containing the converted elements; depending on the input value a converted value is either a string value or `null`.", ("list", "An expression that returns a list."))
+      considerations("Any `null` element in `list` is preserved.",
+        "Any string value in `list` is preserved.",
+        "If the `list` is `null`, `null` will be returned.",
+        "If the `list` is not a list, an error will be returned.",
+        "The conversion for each value in `original` is done according to the <<functions-tostringornull,`toStringOrNull()` function>>.")
+      query(
+        """RETURN toStringList(null) as noList,
+          |toStringList([null, null]) as nullsInList,
+          |toStringList(['already a string', 2, date({year:1955, month:11, day:5}), null, ['A','B']]) as mixedList""".stripMargin, ResultAssertions((r) => {
+          r.columnAs[Iterable[_]]("noList").toList.head should equal(null)
+          r.columnAs[Iterable[_]]("nullsInList").toList.head should equal(Array(null, null))
+          r.columnAs[Iterable[_]]("mixedList").toList.head should equal(Array("already a string", "2", "1955-11-05", null, null))
+        })) {
         resultTable()
       }
     }

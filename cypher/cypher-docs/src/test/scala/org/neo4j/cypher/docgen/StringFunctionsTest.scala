@@ -157,7 +157,7 @@ class StringFunctionsTest extends DocumentingTest {
         """`toString()` converts an integer, float, boolean, point, duration, date, time, localtime, localdatetime or datetime value to a string.""".stripMargin)
       function("toString(expression)", "A String.", ("expression", "An expression that returns a number, a boolean, or a string."))
       considerations("`toString(null)` returns `null`", "If `expression` is a string, it will be returned unchanged.",
-        "This function will throw an error if provided with an expression that is not an integer, float, string, boolean, point, duration, date, time, localtime, localdatetime or datetime value.")
+        "This function will return an error if provided with an expression that is not an integer, float, string, boolean, point, duration, date, time, localtime, localdatetime or datetime value.")
       query(
         """RETURN toString(11.5),
           #toString('already a string'),
