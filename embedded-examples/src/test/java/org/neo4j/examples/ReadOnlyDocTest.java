@@ -31,6 +31,7 @@ import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.WriteOperationsNotAllowedException;
 import org.neo4j.internal.helpers.Exceptions;
 import org.neo4j.kernel.api.exceptions.ReadOnlyDbException;
 import org.neo4j.io.fs.FileUtils;
@@ -78,8 +79,7 @@ public class ReadOnlyDocTest
     public void makeSureDbIsOnlyReadable()
     {
         // when
-        Transaction tx = graphDb.beginTx();
-        try
+        try ( Transaction tx = graphDb.beginTx() )
         {
             tx.createNode();
             tx.commit();
@@ -88,7 +88,7 @@ public class ReadOnlyDocTest
         // then
         catch ( Exception e )
         {
-            assertTrue( "Exception cause should be ReadOnlyDbException!", Exceptions.contains( e, c -> c instanceof ReadOnlyDbException ) );
+            assertTrue( "Database should be in read only mode", Exceptions.contains( e, c -> c instanceof WriteOperationsNotAllowedException ) );
             // ok
         }
     }
