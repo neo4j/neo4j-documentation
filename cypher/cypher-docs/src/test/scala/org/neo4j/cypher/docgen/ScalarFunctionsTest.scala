@@ -335,7 +335,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("toFloat()", "functions-tofloat") {
-      p("The function `toFloat()` converts an integer or a string value to a floating point number.")
+      p("The function `toFloat()` converts an integer, floating point or a string value to a floating point number.")
       function("toFloat(expression)",
         "A Float.",
         ("expression", "An expression that returns a numeric or a string value."))
@@ -352,7 +352,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("toFloatOrNull()", "functions-tofloatornull") {
-      p("The function `toFloatOrNull()` converts an integer or a string value to a floating point number. For any other input value, `null` will be returned.")
+      p("The function `toFloatOrNull()` converts an integer, floating point or a string value to a floating point number. For any other input value, `null` will be returned.")
       function("toFloatOrNull(expression)",
         "A Float or `null`.",
         ("expression", "Any expression that returns a value."))
@@ -369,7 +369,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("toInteger()", "functions-tointeger") {
-      p("The function `toInteger()` converts a boolean, floating point or a string value to an integer value.")
+      p("The function `toInteger()` converts a boolean, integer, floating point or a string value to an integer value.")
       function("toInteger(expression)",
         "An Integer.",
         ("expression", "An expression that returns a boolean, numeric or a string value."))
@@ -387,7 +387,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("toIntegerOrNull()", "functions-tointegerornull") {
-      p("The function `toIntegerOrNull()` converts a boolean, floating point or a string value to an integer value. For any other input value, `null` will be returned.")
+      p("The function `toIntegerOrNull()` converts a boolean, integer, floating point or a string value to an integer value. For any other input value, `null` will be returned.")
       function("toIntegerOrNull(expression)",
         "An Integer or `null`.",
         ("expression", "Any expression that returns a value."))

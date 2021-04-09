@@ -68,12 +68,15 @@ These functions return a single value.
 1.2+| <<functions-size,`size()`>>  | `size(input :: LIST? OF ANY?) :: (INTEGER?)` | Returns the number of items in a list.
 | `size(input :: STRING?) :: (INTEGER?)` | Returns the number of Unicode characters in a string.
 1.1+| <<functions-startnode,`startNode()`>>  | `startNode(input :: RELATIONSHIP?) :: (NODE?)` | Returns the start node of a relationship.
-1.1+| <<functions-toboolean,`toBoolean()`>>  | `toBoolean(input :: STRING?) :: (BOOLEAN?)` | Converts a string value to a boolean value.
+1.3+| <<functions-toboolean,`toBoolean()`>>  | `toBoolean(input :: STRING?) :: (BOOLEAN?)` | Converts a string value to a boolean value.
+| `toInteger(input :: BOOLEAN?) :: (BOOLEAN?)` | Converts a boolean value to a boolean value.
+| `toInteger(input :: INTEGER?) :: (BOOLEAN?)` | Converts an integer value to a boolean value.
 1.1+| <<functions-tobooleanornull,`toBooleanOrNull()`>>  | `toBooleanOrNull(input :: ANY?) :: (BOOLEAN?)` | Converts a value to a boolean value, or null if the value cannot be converted.
-1.2+| <<functions-tofloat,`toFloat()`>>  | `toFloat(input :: NUMBER?) :: (FLOAT?)` | Converts an integer value to a floating point value.
+1.2+| <<functions-tofloat,`toFloat()`>>  | `toFloat(input :: NUMBER?) :: (FLOAT?)` | Converts a number value to a floating point value.
 | `toFloat(input :: STRING?) :: (FLOAT?)` | Converts a string value to a floating point value.
 1.1+| <<functions-tofloatornull,`toFloatOrNull()`>>  | `toFloatOrNull(input :: ANY?) :: (FLOAT?)` | Converts a value to a floating point value, or null if the value cannot be converted.
-1.2+| <<functions-tointeger,`toInteger()`>>  | `toInteger(input :: NUMBER?) :: (INTEGER?)` | Converts a number value to an integer value.
+1.3+| <<functions-tointeger,`toInteger()`>>  | `toInteger(input :: NUMBER?) :: (INTEGER?)` | Converts a number value to an integer value.
+| `toInteger(input :: BOOLEAN?) :: (INTEGER?)` | Converts a boolean value to an integer value.
 | `toInteger(input :: STRING?) :: (INTEGER?)` | Converts a string value to an integer value.
 1.1+| <<functions-tointegerornull,`toIntegerOrNull()`>>  | `toIntegerOrNull(input :: ANY?) :: (INTEGER?)` | Converts a value to an integer value, or null if the value cannot be converted.
 1.1+| <<functions-type,`type()`>>  | `type(input :: RELATIONSHIP?) :: (STRING?)` | Returns the string representation of the relationship type.
@@ -124,10 +127,10 @@ Further details and examples of lists may be found in <<cypher-lists>>.
 1.1+| <<functions-relationships,`relationships()`>>  | `relationships(input :: PATH?) :: (LIST? OF RELATIONSHIP?)` | Returns a list containing all the relationships in a path.
 1.1+| <<functions-reverse,`reverse()`>>  | `reverse(input :: LIST? OF ANY?) :: (LIST? OF ANY?)` | Returns a list in which the order of all elements in the original list have been reversed.
 1.1+| <<functions-tail,`tail()`>>  | `tail(input :: LIST? OF ANY?) :: (LIST? OF ANY?)` | Returns all but the first element in a list.
-1.1+| <<functions-tobooleanlist,`toBooleanList()`>>  | `toBooleanList(input :: LIST? OF ANY?) :: (LIST? OF BOOLEAN?)` | "Converts a list of values to a list of boolean values. If any values are not convertible to boolean they will be null in the list returned.
-1.1+| <<functions-tofloatlist,`toFloatList()`>>  | `toFloatList(input :: LIST? OF ANY?) :: (LIST? OF FLOAT?)` | "Converts a list of values to a list of floating point values. If any values are not convertible to boolean they will be null in the list returned.
-1.1+| <<functions-tointegerlist,`toIntegerList()`>>  | `toIntegerList(input :: LIST? OF ANY?) :: (LIST? OF INTEGER?)` | "Converts a list of values to a list of integer values. If any values are not convertible to boolean they will be null in the list returned.
-1.1+| <<functions-tostringlist,`toStringList()`>>  | `toStringList(input :: LIST? OF ANY?) :: (LIST? OF STRING?)` | "Converts a list of values to a list of string values. If any values are not convertible to boolean they will be null in the list returned.
+1.1+| <<functions-tobooleanlist,`toBooleanList()`>>  | `toBooleanList(input :: LIST? OF ANY?) :: (LIST? OF BOOLEAN?)` | Converts a list of values to a list of boolean values. If any values are not convertible to boolean they will be null in the list returned.
+1.1+| <<functions-tofloatlist,`toFloatList()`>>  | `toFloatList(input :: LIST? OF ANY?) :: (LIST? OF FLOAT?)` | Converts a list of values to a list of floating point values. If any values are not convertible to floating point they will be null in the list returned.
+1.1+| <<functions-tointegerlist,`toIntegerList()`>>  | `toIntegerList(input :: LIST? OF ANY?) :: (LIST? OF INTEGER?)` | Converts a list of values to a list of integer values. If any values are not convertible to integer they will be null in the list returned.
+1.1+| <<functions-tostringlist,`toStringList()`>>  | `toStringList(input :: LIST? OF ANY?) :: (LIST? OF STRING?)` | Converts a list of values to a list of string values. If any values are not convertible to string they will be null in the list returned.
 |===
 
 [[header-query-functions-numeric]]
@@ -208,8 +211,8 @@ These functions are used to manipulate strings or to create a string representat
 1.2+| <<functions-substring,`substring()`>>  | `substring(original :: STRING?, start :: INTEGER?) :: (STRING?)` | Returns a substring of the original string, beginning with a 0-based index start.
 | `substring(original :: STRING?, start :: INTEGER?, length :: INTEGER?) :: (STRING?)` | Returns a substring of length 'length' of the original string, beginning with a 0-based index start.
 1.1+| <<functions-tolower,`toLower()`>>  | `toLower(input :: STRING?) :: (STRING?)` | Returns the original string in lowercase.
-1.1+| <<functions-tostring,`toString()`>>  | `toString(input :: ANY?) :: (STRING?)` | Converts an integer, float, boolean or temporal type (i.e. Date, Time, LocalTime, DateTime, LocalDateTime or Duration) value to a string.
-1.1+| <<functions-tostringornull,`toStringOrNull()`>>  | `toStringOrNull(input :: ANY?) :: (STRING?)` | Converts an integer, float, boolean or temporal type (i.e. Date, Time, LocalTime, DateTime, LocalDateTime or Duration) value to a string, or null if the value cannot be converted.
+1.1+| <<functions-tostring,`toString()`>>  | `toString(input :: ANY?) :: (STRING?)` | Converts an integer, float, boolean, point or temporal type (i.e. Date, Time, LocalTime, DateTime, LocalDateTime or Duration) value to a string.
+1.1+| <<functions-tostringornull,`toStringOrNull()`>>  | `toStringOrNull(input :: ANY?) :: (STRING?)` | Converts an integer, float, boolean, point or temporal type (i.e. Date, Time, LocalTime, DateTime, LocalDateTime or Duration) value to a string, or null if the value cannot be converted.
 1.1+| <<functions-toupper,`toUpper()`>>  | `toUpper(input :: STRING?) :: (STRING?)` | Returns the original string in uppercase.
 1.1+| <<functions-trim,`trim()`>>  | `trim(input :: STRING?) :: (STRING?)` | Returns the original string with leading and trailing whitespace removed.
 |===

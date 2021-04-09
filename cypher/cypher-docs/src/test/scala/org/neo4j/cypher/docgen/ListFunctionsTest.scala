@@ -179,7 +179,7 @@ class ListFunctionsTest extends DocumentingTest {
         "Any boolean value in `list` is preserved.",
         "If the `list` is `null`, `null` will be returned.",
         "If the `list` is not a list, an error will be returned.",
-        "The conversion for each value in `original` is done according to the <<functions-tobooleanornull,`toBooleanOrNull()` function>>.")
+        "The conversion for each value in `list` is done according to the <<functions-tobooleanornull,`toBooleanOrNull()` function>>.")
       query(
         """RETURN toBooleanList(null) as noList,
           |toBooleanList([null, null]) as nullsInList,
@@ -198,7 +198,7 @@ class ListFunctionsTest extends DocumentingTest {
         "Any floating point value in `list` is preserved.",
         "If the `list` is `null`, `null` will be returned.",
         "If the `list` is not a list, an error will be returned.",
-        "The conversion for each value in `original` is done according to the <<functions-tofloatornull,`toFloatOrNull()` function>>.")
+        "The conversion for each value in `list` is done according to the <<functions-tofloatornull,`toFloatOrNull()` function>>.")
       query(
         """RETURN toFloatList(null) as noList,
           |toFloatList([null, null]) as nullsInList,
@@ -217,7 +217,7 @@ class ListFunctionsTest extends DocumentingTest {
         "Any integer value in `list` is preserved.",
         "If the `list` is `null`, `null` will be returned.",
         "If the `list` is not a list, an error will be returned.",
-        "The conversion for each value in `original` is done according to the <<functions-tointegerornull,`toIntegerOrNull()` function>>.")
+        "The conversion for each value in `list` is done according to the <<functions-tointegerornull,`toIntegerOrNull()` function>>.")
       query(
         """RETURN toIntegerList(null) as noList,
           |toIntegerList([null, null]) as nullsInList,
@@ -236,7 +236,7 @@ class ListFunctionsTest extends DocumentingTest {
         "Any string value in `list` is preserved.",
         "If the `list` is `null`, `null` will be returned.",
         "If the `list` is not a list, an error will be returned.",
-        "The conversion for each value in `original` is done according to the <<functions-tostringornull,`toStringOrNull()` function>>.")
+        "The conversion for each value in `list` is done according to the <<functions-tostringornull,`toStringOrNull()` function>>.")
       query(
         """RETURN toStringList(null) as noList,
           |toStringList([null, null]) as nullsInList,

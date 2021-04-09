@@ -154,8 +154,8 @@ class StringFunctionsTest extends DocumentingTest {
     }
     section("toString()", "functions-tostring") {
       p(
-        """`toString()` converts an integer, float, boolean, point, duration, date, time, localtime, localdatetime or datetime value to a string.""".stripMargin)
-      function("toString(expression)", "A String.", ("expression", "An expression that returns a number, a boolean, or a string."))
+        """`toString()` converts an integer, float, boolean, string, point, duration, date, time, localtime, localdatetime or datetime value to a string.""".stripMargin)
+      function("toString(expression)", "A String.", ("expression", "An expression that returns a number, a boolean, string, temporal or spatial value."))
       considerations("`toString(null)` returns `null`", "If `expression` is a string, it will be returned unchanged.",
         "This function will return an error if provided with an expression that is not an integer, float, string, boolean, point, duration, date, time, localtime, localdatetime or datetime value.")
       query(
@@ -178,7 +178,7 @@ class StringFunctionsTest extends DocumentingTest {
       }
     }
     section("toStringOrNull()", "functions-tostringornull") {
-      p("The function `toStringOrNull()` converts an integer, float, boolean, point, duration, date, time, localtime, localdatetime or datetime value to a string.")
+      p("The function `toStringOrNull()` converts an integer, float, boolean, string, point, duration, date, time, localtime, localdatetime or datetime value to a string.")
       function("toStringOrNull(expression)",
         "A String or `null`.",
         ("expression", "Any expression that returns a value."))
