@@ -55,7 +55,7 @@ class LookupIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "A named lookup index for all nodes that have any label can be created with `CREATE LOOKUP INDEX index_name FOR (n) ON EACH labels(n)`. " +
         "Note that the index is not immediately available, but will be created in the background.",
       queryText = "CREATE LOOKUP INDEX node_lookup_index FOR (n) ON EACH labels(n)",
-      optionalResultExplanation = "Note that the index name needs to be unique.",
+      optionalResultExplanation = "Note that it can only be created once and that the index name needs to be unique.",
       assertions = _ => assertLookupIndexExists("node_lookup_index", isNodeIndex = true)
     )
     testQuery(
@@ -63,7 +63,7 @@ class LookupIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "A named index for all relationships that have any relationship type can be created with `CREATE LOOKUP INDEX index_name FOR ()-[r]-() ON EACH type(r)`. " +
         "Note that the index is not immediately available, but will be created in the background.",
       queryText = "CREATE LOOKUP INDEX rel_lookup_index FOR ()-[r]-() ON EACH type(r)",
-      optionalResultExplanation = "Note that the index name needs to be unique.",
+      optionalResultExplanation = "Note that it can only be created once and that the index name needs to be unique.",
       assertions = _ => assertLookupIndexExists("rel_lookup_index", isNodeIndex = false)
     )
   }

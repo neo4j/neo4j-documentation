@@ -129,22 +129,20 @@ Index provider and configuration can be specified using the `OPTIONS` clause.
 CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
 FOR (n)
 ON EACH labels(n)
-[OPTIONS "{" "}"]
 ----
 | Create a lookup index on nodes.
 
-Lookup indexes have no available values for the `OPTIONS` clause.
+Lookup indexes do not support any `OPTIONS` values.
 
 | [source, cypher, role=noplay]
 ----
 CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
 FOR ()-[r]-()
 ON [EACH] type(r)
-[OPTIONS "{" "}"]
 ----
 | Create a lookup index on relationships.
 
-Lookup indexes have no available values for the `OPTIONS` clause.
+Lookup indexes do not support any `OPTIONS` values.
 
 | [source, cypher, role=noplay]
 ----
