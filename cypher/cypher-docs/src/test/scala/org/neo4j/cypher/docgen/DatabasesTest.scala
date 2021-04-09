@@ -154,8 +154,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("The create database command can have a map of options, e.g. `OPTIONS { key : 'value'}`")
         p(
           """
-            |[subs=none]
+            |[options="header"]
             ||===
+            || Key | Value | Description
             || `existingData` | `use` | Controls how the system handles existing data on disk when creating the database.
             |Currently this is only supported with `existingDataSeedInstance` and must be set to `use` which indicates the existing data files should be used for the new database.
             || `existingDataSeedInstance` | instance ID of the cluster node | Defines which instance is used for seeding the data of the created database.
