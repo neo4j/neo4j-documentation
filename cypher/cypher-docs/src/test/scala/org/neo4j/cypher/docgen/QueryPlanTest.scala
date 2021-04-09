@@ -1181,29 +1181,19 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def onMatchApply() {
+  @Test def merge() {
     profileQuery(
-      title = "OnMatchApply",
+      title = "Merge",
       text =
-        """The `OnMatchApply` operator executes its left-hand side and foreach row it produces from the left-hand side it executes the right-hand side.
-          |This operator is a variation of the <<query-plan-apply, Apply>> operator.
+        """The `Merge` operator will either read or create nodes and/or relationships.
+           |
+           |If matches are found it will execute the provided `ON MATCH` operations foreach incoming row.
+           |If no matches are found instead nodes and relationships are created and all `ON CREATE` operations are run.
         """.stripMargin,
       queryText =
         """MERGE (p:Person {name: 'Andy'})
-          |ON MATCH SET p.exists = true""".stripMargin,
-      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("OnMatchApply"))
-    )
-  }
-
-  @Test def either() {
-    profileQuery(
-      title = "Either",
-      text =
-        """The `Either` operator executes either the left-hand side or if the left-hand side does not produce any results, it executes its right-hand side.
-        """.stripMargin,
-      queryText =
-        """MERGE (p:Person {name: 'Andy'})
-          |ON CREATE SET p.exists = true""".stripMargin,
+          |ON MATCH SET p.existed = true
+          |ON CREATE SET p.existed = false""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("Either"))
     )
   }
