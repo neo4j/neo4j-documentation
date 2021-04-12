@@ -1,7 +1,10 @@
 [[cypher-naming]]
 = Naming rules and recommendations
 
-This section describes rules and recommendations for the naming of node labels, relationship types, property names, <<cypher-variables, variables>>, indexes and constraints.
+[abstract]
+--
+This section describes rules and recommendations for the naming of node labels, relationship types, property names, variables, indexes, and constraints.
+--
 
 == Naming rules
 
@@ -22,10 +25,12 @@ This section describes rules and recommendations for the naming of node labels, 
 For example, `MATCH (  a  ) RETURN a` is equivalent to `MATCH (a) RETURN a`.
 
 [NOTE]
+====
 Non-alphabetic characters, including numbers, symbols and whitespace characters, *can* be used in names, but *must* be escaped using backticks.
 For example: `++`^n`++`, `++`1first`++`, `++`$$n`++`, and `++`my variable has spaces`++`.
 Database names are an exception and may include dots without the need for escaping.
 For example: naming a database `foo.bar.baz` is perfectly valid.
+====
 
 == Scoping and namespace rules
 
