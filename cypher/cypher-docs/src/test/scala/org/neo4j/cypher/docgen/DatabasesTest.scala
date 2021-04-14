@@ -42,6 +42,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<administration-databases-introduction, Introduction>>
         |* <<administration-databases-show-databases, Listing databases>>
         |* <<administration-databases-create-database, Creating databases>>
+        |** <<administration-databases-create-database-existing, Handling existing databases>>
+        |** <<administration-databases-create-database-options, Options>>
         |* <<administration-databases-stop-database, Stopping databases>>
         |* <<administration-databases-start-database, Starting databases>>
         |* <<administration-databases-drop-database, Deleting databases>>
