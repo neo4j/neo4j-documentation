@@ -112,10 +112,10 @@ public class Main
         }
     }
 
-    private static Path getDestinationDir( String name ) throws IOException
+    private static Path getDestinationDir( String name )
     {
         Path file = Paths.get(name);
-        if ( Files.exists(file) && file.isAbsolute() )
+        if ( Files.exists( file ) && file.isAbsolute() && !Files.isDirectory( file ) )
         {
             throw new IllegalArgumentException(
                     String.format("Destination directory must either not exist or be a directory: [%s]", file)
