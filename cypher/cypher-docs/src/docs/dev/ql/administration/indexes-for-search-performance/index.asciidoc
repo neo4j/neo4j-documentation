@@ -148,7 +148,7 @@ Lookup indexes do not support any `OPTIONS` values.
 ----
 DROP INDEX index_name [IF EXISTS]
 ----
-| Drop an index, either a node, a relationship or a lookup index.
+| Drop an index, either a node, a relationship, or a lookup index.
 | The command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same index twice.
 With `IF EXISTS`, no error is thrown and nothing happens should the index not exist.
 
@@ -159,7 +159,7 @@ SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP] INDEX[ES]
     [WHERE expression]
     [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
-| List indexes in the database, either all or filtered on B-tree, fulltext or lookup indexes.
+| List indexes in the database, either all or filtered on B-tree, fulltext, or lookup indexes.
 | When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
 
 | [source, cypher, role=noplay]

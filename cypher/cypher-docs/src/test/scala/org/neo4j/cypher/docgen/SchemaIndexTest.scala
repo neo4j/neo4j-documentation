@@ -188,8 +188,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         """
           |One way of filtering the output from `SHOW INDEXES` by index type is the use of type keywords,
           |listed in the <<administration-indexes-syntax, syntax table>>.
-          |As an example, to show only B-tree indexes, use `SHOW BTREE INDEXES`.
-          |Another, more flexible way of filtering the output is to use the `WHERE` clause.
+          |For example, to show only B-tree indexes, use `SHOW BTREE INDEXES`.
+          |Another more flexible way of filtering the output is to use the `WHERE` clause.
           |An example is to only show indexes not belonging to constraints.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for ()-[r:KNOWS]-() on (r.since)")),
       queryText = "SHOW BTREE INDEXES WHERE uniqueness = 'NONUNIQUE'",
