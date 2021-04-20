@@ -321,9 +321,9 @@ The deprecated built-in procedures for listing constraints, such as `db.constrai
 
 ==== Listing constraints examples
 
-include::listing-all-constraints.asciidoc[leveloffset=+2]
+include::listing-all-constraints.asciidoc[leveloffset=+3]
 
-include::listing-constraints-with-filtering.asciidoc[leveloffset=+2]
+include::listing-constraints-with-filtering.asciidoc[leveloffset=+3]
 
 
 [role=deprecated]

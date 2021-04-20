@@ -353,9 +353,9 @@ The deprecated built-in procedures for listing indexes, such as `db.indexes`, wo
 
 ==== Listing indexes examples
 
-include::../indexes/listing-all-indexes.asciidoc[leveloffset=+2]
+include::../indexes/listing-all-indexes.asciidoc[leveloffset=+4]
 
-include::../indexes/listing-indexes-with-filtering.asciidoc[leveloffset=+2]
+include::../indexes/listing-indexes-with-filtering.asciidoc[leveloffset=+4]
 
 [role=deprecated]
 [[administration-indexes-examples-deprecated-syntax]]
