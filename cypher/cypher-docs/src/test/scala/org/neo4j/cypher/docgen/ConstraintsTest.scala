@@ -114,8 +114,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
         """
           |One way of filtering the output from `SHOW CONSTRAINTS` by constraint type is the use of type keywords,
           |listed in the <<administration-constraints-syntax, syntax table>>.
-          |As an example, to show only unique node property constraints, use `SHOW UNIQUE CONSTRAINTS`.
-          |Another, more flexible way of filtering the output is to use the `WHERE` clause.
+          |For example, to show only unique node property constraints, use `SHOW UNIQUE CONSTRAINTS`.
+          |Another more flexible way of filtering the output is to use the `WHERE` clause.
           |An example is to only show constraints on relationships.""".stripMargin,
       queryText = "SHOW EXISTENCE CONSTRAINTS WHERE entityType = 'RELATIONSHIP'",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON ()-[knows:KNOWS]-() ASSERT knows.since IS NOT NULL")),
