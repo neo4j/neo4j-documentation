@@ -505,29 +505,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def mergeCreateNode() {
-    profileQuery(
-      title = "Merge Create Node",
-      text =
-        """The `MergeCreateNode` operator is used when creating a node as a result of a <<query-merge, MERGE>> clause failing to find the node.""".stripMargin,
-      queryText =
-        """MERGE (:Person {name: 'Sally'})""".stripMargin,
-      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("MergeCreateNode"))
-    )
-  }
-
-  @Test def mergeCreateRelationship() {
-    profileQuery(
-      title = "Merge Create Relationship",
-      text =
-        """The `MergeCreateRelationship` operator is used when creating a relationship as a result of a <<query-merge, MERGE>> clause failing to find the relationship.""".stripMargin,
-      queryText =
-        """MATCH (s:Person {name: 'Sally'})
-          |MERGE (s)-[:FRIENDS_WITH]->(s)""".stripMargin,
-      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("MergeCreateRelationship"))
-    )
-  }
-
   @Test def removeLabels() {
     profileQuery(
       title = "Remove Labels",
@@ -1194,7 +1171,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """MERGE (p:Person {name: 'Andy'})
           |ON MATCH SET p.existed = true
           |ON CREATE SET p.existed = false""".stripMargin,
-      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("Either"))
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("Merge"))
     )
   }
 
