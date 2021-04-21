@@ -228,10 +228,14 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |* `WAIT n SECONDS` - Wait the specified number of seconds (n) for the command to complete
           |before returning.
           |* `WAIT` - Wait for the default period for the command to complete before returning.
-          |* `NOWAIT` - Return immediately.
-          |
-          |The default behaviour is `NOWAIT`, so if no clause is specified the command will return
-          |immediately whilst the action is performed in the background. """.stripMargin)
+          |* `NOWAIT` - Return immediately.""")
+      p(
+        """A command using a `WAIT` clause will automatically commit the current transaction when it executes successfully as the
+          |command needs to run immediately for it to be possible to `WAIT` for it to complete. Any subsequent commands executed will
+          |therefore be performed in a new transaction. This is different to the usual transactional behaviour and for this reason
+          |it is recommended that these commands be run in their own transaction. The default behaviour is `NOWAIT`, so if no clause
+          |is specified the command will return immediately whilst the action is performed in the background and the transaction will
+          |not be affected. """.stripMargin)
     }
     query("CREATE DATABASE slow WAIT 5 SECONDS", ResultAssertions((r) => {
       assertStats(r, systemUpdates = 1)
