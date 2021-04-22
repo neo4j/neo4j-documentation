@@ -42,6 +42,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<administration-databases-introduction, Introduction>>
         |* <<administration-databases-show-databases, Listing databases>>
         |* <<administration-databases-create-database, Creating databases>>
+        |** <<administration-databases-create-database-existing, Handling existing databases>>
+        |** <<administration-databases-create-database-options, Options>>
         |* <<administration-databases-stop-database, Stopping databases>>
         |* <<administration-databases-start-database, Starting databases>>
         |* <<administration-databases-drop-database, Deleting databases>>
@@ -134,19 +136,35 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
-      p("This command is optionally idempotent, with the default behavior to throw an exception if the database already exists. " +
-        "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database already exist. " +
-        "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created.")
-      query("CREATE DATABASE customers IF NOT EXISTS", ResultAssertions(r => {
-        assertStats(r, systemUpdates = 0)
-      })) {}
-      query("CREATE OR REPLACE DATABASE customers", ResultAssertions(r => {
-        assertStats(r, systemUpdates = 2)
-      })) {
-        p("This is equivalent to running `DROP DATABASE customers IF EXISTS` followed by `CREATE DATABASE customers`.")
+      section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
+        p("This command is optionally idempotent, with the default behavior to throw an exception if the database already exists. " +
+          "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database already exist. " +
+          "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created.")
+        query("CREATE DATABASE customers IF NOT EXISTS", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 0)
+        })) {}
+        query("CREATE OR REPLACE DATABASE customers", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 2)
+        })) {
+          p("This is equivalent to running `DROP DATABASE customers IF EXISTS` followed by `CREATE DATABASE customers`.")
+        }
+        note {
+          p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
+        }
       }
-      note {
-        p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
+      section("Options", "administration-databases-create-database-options", "enterprise-edition") {
+        p("The create database command can have a map of options, e.g. `OPTIONS { key : 'value'}`")
+        p(
+          """
+            |[options="header"]
+            ||===
+            || Key | Value | Description
+            || `existingData` | `use` | Controls how the system handles existing data on disk when creating the database.
+            |Currently this is only supported with `existingDataSeedInstance` and must be set to `use` which indicates the existing data files should be used for the new database.
+            || `existingDataSeedInstance` | instance ID of the cluster node | Defines which instance is used for seeding the data of the created database.
+            |The instance id can be taken from the id column of the `dbms.cluster.overview()` procedure. Can only be used in clusters.
+            ||===
+            |""")
       }
     }
     section("Stopping databases", "administration-databases-stop-database", "enterprise-edition") {
