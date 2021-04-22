@@ -128,12 +128,32 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
 
   test("shouldParseCreateRelIndexWithName") {
     // given
-    val query = "create index name for ()-[k:KNOWS]-() on (k.since)"
+    val query = "create btree index name for ()-[k:KNOWS]-() on (k.since)"
 
     // when then
     parsing(query) shouldGive
-      Seq(BreakingKeywords("create index"), AnyText("name"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq.empty), AnyText("-"), GroupToken("[", "]", Seq(AnyText("k:KNOWS"))),
+      Seq(BreakingKeywords("create btree index"), AnyText("name"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq.empty), AnyText("-"), GroupToken("[", "]", Seq(AnyText("k:KNOWS"))),
         AnyText("-"), GroupToken("(", ")", Seq.empty), BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("k.since"))))
+  }
+
+  test("shouldParseCreateNodeLookupIndex") {
+    // given
+    val query = "create lookup index for (person) on each labels(person)"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create lookup index"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq(AnyText("person"))),
+        BreakingKeywords("on"), NonBreakingKeywords("each"), AnyText("labels"), GroupToken("(", ")", Seq(AnyText("person"))))
+  }
+
+  test("shouldParseCreateRelLookupIndexWithName") {
+    // given
+    val query = "create lookup index name for ()-[k]-() on each type(k)"
+
+    // when then
+    parsing(query) shouldGive
+      Seq(BreakingKeywords("create lookup index"), AnyText("name"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq.empty), AnyText("-"), GroupToken("[", "]", Seq(AnyText("k"))),
+        AnyText("-"), GroupToken("(", ")", Seq.empty), BreakingKeywords("on"), NonBreakingKeywords("each"), AnyText("type"), GroupToken("(", ")", Seq(AnyText("k"))))
   }
 
   test("shouldParseCreateIndexWithOptions") {
@@ -168,6 +188,8 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
       ("show index", Seq(BreakingKeywords("show index"))),
       ("show all indexes", Seq(BreakingKeywords("show all indexes"))),
       ("show btree index", Seq(BreakingKeywords("show btree index"))),
+      ("show fulltext index", Seq(BreakingKeywords("show fulltext index"))),
+      ("show lookup index", Seq(BreakingKeywords("show lookup index"))),
       ("show index yield *", Seq(BreakingKeywords("show index"), NonBreakingKeywords("yield"), AnyText("*"))),
       ("show index where type = 'BTREE'", Seq(BreakingKeywords("show index"), BreakingKeywords("where"), AnyText("type"), AnyText("="), EscapedText("BTREE", '\''))),
       // deprecated

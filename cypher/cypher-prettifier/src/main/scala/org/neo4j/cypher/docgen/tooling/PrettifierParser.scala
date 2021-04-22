@@ -97,7 +97,8 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("BRIEF") |
         keyword("VERBOSE OUTPUT") |
         keyword("VERBOSE") |
-        keyword("OPTIONS")
+        keyword("OPTIONS") |
+        keyword("EACH")
     ) ~> NonBreakingKeywords
   }
 
@@ -113,6 +114,8 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("ORDER BY") |
         keyword("CREATE INDEX ON") | // Deprecated
         keyword("CREATE INDEX") | // These are for the named versions, sadly they will break the query on the ON keyword
+        keyword("CREATE BTREE INDEX") | // Sadly these will break the query on the ON keyword
+        keyword("CREATE LOOKUP INDEX") | // Sadly these will break the query on the ON keyword
         keyword("DROP INDEX ON") | // Deprecated
         keyword("DROP INDEX") |
         showIndexBreakingKeyword |
@@ -179,7 +182,11 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
     keyword("SHOW ALL INDEX") |
     keyword("SHOW ALL INDEXES") |
     keyword("SHOW BTREE INDEX") |
-    keyword("SHOW BTREE INDEXES")
+    keyword("SHOW BTREE INDEXES") |
+    keyword("SHOW FULLTEXT INDEX") |
+    keyword("SHOW FULLTEXT INDEXES") |
+    keyword("SHOW LOOKUP INDEX") |
+    keyword("SHOW LOOKUP INDEXES")
   }
 
   def joinWithUpdatingBreakingKeywords: Rule1[BreakingKeywords] =

@@ -53,7 +53,11 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `ON HOME GRAPH` for privilege commands        | Syntax        | Added         | New syntax for privileges affecting home graph
 | `ON DEFAULT DATABASE` for privilege commands  | Syntax        | Deprecated    | Replaced by `ON HOME DATABASE`
 | `ON DEFAULT GRAPH` for privilege commands     | Syntax        | Deprecated    | Replaced by `ON HOME GRAPH`
-| `CREATE INDEX [name] FOR ()-[r:TYPE]-() ON (r.prop)` | Functionality | Added | Allows creating indexes on relationships.
+| `CREATE [BTREE] INDEX [name] FOR ()-[r:TYPE]-() ON (r.prop) [OPTIONS {...}]`  | Functionality | Added | Allows creating indexes on relationships with a particular relationship type and property combination. They can be dropped by using their name.
+| `CREATE LOOKUP INDEX [name] FOR (n) ON EACH labels(n) [OPTIONS {}]`           | Functionality | Added | Create lookup index for nodes with any labels. They can be dropped by using their name.
+| `CREATE LOOKUP INDEX [name] FOR ()-[r]-() ON [EACH] type(r) [OPTIONS {}]`     | Functionality | Added | Create lookup index for relationships with any types. They can be dropped by using their name.
+| `SHOW FULLTEXT INDEXES`   | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on fulltext indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
+| `SHOW LOOKUP INDEXES`     | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on lookup indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
 |===
 
 [[cypher-deprecations-additions-removals-4.2]]

@@ -40,12 +40,16 @@ class PrettifierTest extends Suite
 
   test("may break CREATE INDEX FOR") {
     actual("create index for (p:Person) on (p.name)") should equal(expected("CREATE INDEX FOR (p:Person)%nON (p.name)"))
-    actual("create index for ()-[k:KNOWS]-() ON (k.since)") should equal(expected("CREATE INDEX FOR ()-[k:KNOWS]-()%nON (k.since)"))
+    actual("create btree index for ()-[k:KNOWS]-() ON (k.since)") should equal(expected("CREATE BTREE INDEX FOR ()-[k:KNOWS]-()%nON (k.since)"))
+    actual("create lookup index for (p) on each labels(p)") should equal(expected("CREATE LOOKUP INDEX FOR (p)%nON EACH labels(p)"))
+    actual("create lookup index for ()-[k]-() ON type(k)") should equal(expected("CREATE LOOKUP INDEX FOR ()-[k]-()%nON type(k)"))
   }
 
   test("may break CREATE INDEX IF NOT EXISTS FOR") {
-    actual("create index if not exists for (p:Person) on (p.name)") should equal(expected("CREATE INDEX IF NOT EXISTS FOR (p:Person)%nON (p.name)"))
+    actual("create btree index if not exists for (p:Person) on (p.name)") should equal(expected("CREATE BTREE INDEX IF NOT EXISTS FOR (p:Person)%nON (p.name)"))
     actual("create index if not exists for ()-[k:KNOWS]-() ON (k.since)") should equal(expected("CREATE INDEX IF NOT EXISTS FOR ()-[k:KNOWS]-()%nON (k.since)"))
+    actual("create lookup index if not exists for (p) on each labels(p)") should equal(expected("CREATE LOOKUP INDEX IF NOT EXISTS FOR (p)%nON EACH labels(p)"))
+    actual("create lookup index if not exists for ()-[k]-() ON each type(k)") should equal(expected("CREATE LOOKUP INDEX IF NOT EXISTS FOR ()-[k]-()%nON EACH type(k)"))
   }
 
   test("may break CREATE INDEX FOR ... OPTIONS") {
@@ -57,13 +61,17 @@ class PrettifierTest extends Suite
   }
 
   test("may break CREATE INDEX FOR with name") {
-    actual("create index name for (p:Person) on (p.name)") should equal(expected("CREATE INDEX name FOR (p:Person)%nON (p.name)"))
+    actual("create btree index name for (p:Person) on (p.name)") should equal(expected("CREATE BTREE INDEX name FOR (p:Person)%nON (p.name)"))
     actual("create index name for ()-[k:KNOWS]-() ON (k.since)") should equal(expected("CREATE INDEX name FOR ()-[k:KNOWS]-()%nON (k.since)"))
+    actual("create lookup index name for (p) on each labels(p)") should equal(expected("CREATE LOOKUP INDEX name FOR (p)%nON EACH labels(p)"))
+    actual("create lookup index name for ()-[k]-() ON each type(k)") should equal(expected("CREATE LOOKUP INDEX name FOR ()-[k]-()%nON EACH type(k)"))
   }
 
   test("may break CREATE INDEX IF NOT EXISTS FOR with name") {
     actual("create index name if not exists for (p:Person) on (p.name)") should equal(expected("CREATE INDEX name IF NOT EXISTS FOR (p:Person)%nON (p.name)"))
-    actual("create index name if not exists for ()-[k:KNOWS]-() ON (k.since)") should equal(expected("CREATE INDEX name IF NOT EXISTS FOR ()-[k:KNOWS]-()%nON (k.since)"))
+    actual("create btree index name if not exists for ()-[k:KNOWS]-() ON (k.since)") should equal(expected("CREATE BTREE INDEX name IF NOT EXISTS FOR ()-[k:KNOWS]-()%nON (k.since)"))
+    actual("create lookup index name if not exists for (p) on each labels(p)") should equal(expected("CREATE LOOKUP INDEX name IF NOT EXISTS FOR (p)%nON EACH labels(p)"))
+    actual("create lookup index name if not exists for ()-[k]-() ON type(k)") should equal(expected("CREATE LOOKUP INDEX name IF NOT EXISTS FOR ()-[k]-()%nON type(k)"))
   }
 
   test("should not break DROP INDEX by name") {
@@ -77,6 +85,8 @@ class PrettifierTest extends Suite
   test("should not break SHOW INDEXES") {
     actual("show indexes") should equal(expected("SHOW INDEXES"))
     actual("show btree index yield *") should equal(expected("SHOW BTREE INDEX YIELD *"))
+    actual("show fulltext indexes") should equal(expected("SHOW FULLTEXT INDEXES"))
+    actual("show lookup indexes") should equal(expected("SHOW LOOKUP INDEXES"))
     // deprecated
     actual("show all indexes brief output") should equal(expected("SHOW ALL INDEXES BRIEF OUTPUT"))
     actual("show btree index verbose") should equal(expected("SHOW BTREE INDEX VERBOSE"))

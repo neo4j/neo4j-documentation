@@ -186,8 +186,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Listing indexes with filtering",
       text =
         """
-          |One way of filtering the output from `SHOW INDEXES` is to use the `BTREE` keyword to only list `BTREE` indexes.
-          |Another is to use the `WHERE` clause, for example to only show indexes not belonging to constraints.""".stripMargin,
+          |One way of filtering the output from `SHOW INDEXES` by index type is the use of type keywords,
+          |listed in the <<administration-indexes-syntax, syntax table>>.
+          |For example, to show only B-tree indexes, use `SHOW BTREE INDEXES`.
+          |Another more flexible way of filtering the output is to use the `WHERE` clause.
+          |An example is to only show indexes not belonging to constraints.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for ()-[r:KNOWS]-() on (r.since)")),
       queryText = "SHOW BTREE INDEXES WHERE uniqueness = 'NONUNIQUE'",
       optionalResultExplanation =
@@ -224,7 +227,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     prepareAndTestQuery(
       title = "Drop an index",
       text =
-        """An index on all nodes or relationships that have a label/type and property/properties combination can be dropped using the name with the `DROP INDEX index_name` command.
+        """An index can be dropped using the name with the `DROP INDEX index_name` command. This command can drop node, relationship or lookup indexes.
           |The name of the index can be found using the <<administration-indexes-list-indexes, `SHOW INDEXES` command>>, given in the output column `name`.""".stripMargin,
       prepare = _ => executePreparationQueries(List("CREATE INDEX index_name FOR (n:Person) ON (n.surname)")),
       queryText = "DROP INDEX index_name",

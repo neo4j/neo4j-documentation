@@ -36,6 +36,7 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.ConstraintType;
 import org.neo4j.graphdb.schema.IndexDefinition;
+import org.neo4j.graphdb.schema.IndexType;
 import org.neo4j.internal.helpers.collection.Iterables;
 
 import static org.neo4j.internal.helpers.collection.Iterables.single;
@@ -87,32 +88,48 @@ public class SubGraphExporter
         {
             if ( !index.isConstraintIndex() )
             {
-                Iterator<String> propertyKeys = index.getPropertyKeys().iterator();
-                if ( !propertyKeys.hasNext() )
+                if ( index.getIndexType().equals( IndexType.LOOKUP ) )
                 {
-                    throw new IllegalStateException( "Indexes should have at least one property key" );
-                }
-                String id = propertyKeys.next();
-                if ( propertyKeys.hasNext() )
-                {
-                    throw new RuntimeException( "Exporting compound indexes is not implemented yet" );
-                }
-
-                if ( !index.isMultiTokenIndex() )
-                {
-                    String key = quote( id );
+                    String name = quote( index.getName() );
                     if ( index.isNodeIndex() )
                     {
-                        String label = quote( single( index.getLabels() ).name() );
-                        result.add( "create index for (n:" + label + ") ON (n." + key + ")" );
+                        result.add( "CREATE LOOKUP INDEX " + name + " FOR (n) ON EACH labels(n)" );
                     }
                     else
                     {
-                        String relType = quote( single( index.getRelationshipTypes() ).name() );
-                        result.add( "create index for ()-[r:" + relType + "]-() ON (r." + key + ")" );
+                        result.add( "CREATE LOOKUP INDEX " + name + " FOR ()-[r]-() ON EACH type(r)" );
                     }
                 }
-                // We don't know how to deal with multi-token indexes here, so we just ignore them.
+                else
+                {
+                    Iterator<String> propertyKeys = index.getPropertyKeys().iterator();
+                    if ( !propertyKeys.hasNext() )
+                    {
+                        throw new IllegalStateException( "Indexes should have at least one property key" );
+                    }
+                    String id = propertyKeys.next();
+                    if ( propertyKeys.hasNext() )
+                    {
+                        throw new RuntimeException( "Exporting compound indexes is not implemented yet" );
+                    }
+
+                    if ( !index.isMultiTokenIndex() )
+                    {
+                        String name = quote( index.getName() );
+                        String key = quote( id );
+                        if ( index.isNodeIndex() )
+                        {
+                            String label = quote( single( index.getLabels() ).name() );
+                            result.add( "create index " + name + " for (n:" + label + ") ON (n." + key + ")" );
+                        }
+                        else
+                        {
+                            String relType = quote( single( index.getRelationshipTypes() ).name() );
+                            result.add( "create index " + name + " for ()-[r:" + relType + "]-() ON (r." + key + ")" );
+                        }
+                    }
+                    // We don't know how to deal with multi-token indexes here, so we just ignore them.
+                }
             }
         }
         Collections.sort( result );
@@ -153,9 +170,10 @@ public class SubGraphExporter
                 throw new RuntimeException( "Exporting compound constraints is not implemented yet" );
             }
 
+            String name = quote( constraint.getName() );
             String key = quote( id );
             String label = quote( constraint.getLabel().name() );
-            result.add( "create constraint on (n:" + label + ") assert n." + key + " is unique" );
+            result.add( "create constraint " + name + " on (n:" + label + ") assert n." + key + " is unique" );
         }
         Collections.sort( result );
         return result;
