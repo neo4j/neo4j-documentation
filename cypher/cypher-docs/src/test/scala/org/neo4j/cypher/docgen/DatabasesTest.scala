@@ -234,8 +234,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |command needs to run immediately for it to be possible to `WAIT` for it to complete. Any subsequent commands executed will
           |therefore be performed in a new transaction. This is different to the usual transactional behaviour and for this reason
           |it is recommended that these commands be run in their own transaction. The default behaviour is `NOWAIT`, so if no clause
-          |is specified the command will return immediately whilst the action is performed in the background and the transaction will
-          |not be affected. """.stripMargin)
+          |is specified the transaction will behave normally and the action is performed in the background post-commit.""".stripMargin)
     }
     query("CREATE DATABASE slow WAIT 5 SECONDS", ResultAssertions((r) => {
       assertStats(r, systemUpdates = 1)
