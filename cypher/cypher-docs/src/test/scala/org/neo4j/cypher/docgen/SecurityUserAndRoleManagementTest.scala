@@ -160,7 +160,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         }
       }
       section("Renaming users", "administration-security-users-rename") {
-        p("Users can be renamed using `RENAME USER` command.")
+        p("Users can be renamed using the `RENAME USER` command.")
         query("RENAME USER jake TO bob", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
