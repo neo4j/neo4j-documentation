@@ -13,7 +13,7 @@ GRANT CREATE USER
 GRANT RENAME USER
     ON DBMS
     TO role[, ...]
-| Enable the specified roles to change name of users.
+| Enable the specified roles to change the name of users.
 
 | [source, cypher, role=noplay]
 GRANT ALTER USER
