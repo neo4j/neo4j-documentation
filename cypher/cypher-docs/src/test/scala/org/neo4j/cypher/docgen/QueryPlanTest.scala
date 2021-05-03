@@ -1304,7 +1304,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `EmptyRow` operator returns a single row with no columns.""".stripMargin,
       queryText =
         """CYPHER runtime=slotted FOREACH (value IN [1,2,3] |
-          |CREATE (:Person {age: value})
+          |MERGE (:Person {age: value})
           |)""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("EmptyRow"))
     )
