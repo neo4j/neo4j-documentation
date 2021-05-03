@@ -28,6 +28,16 @@ Related information may be found in <<query-operators>>.
 * Functions taking a string as input all operate on _Unicode characters_ rather than on a standard `char[]`.
   For example, the `size()` function applied to any _Unicode character_ will return *1*, even if the character does not fit in the 16 bits of one `char`.
 
+.List available functions
+====
+To list the available functions, run the following <<query-listing-functions, Cypher query>>:
+
+[source, cypher]
+----
+SHOW FUNCTIONS
+----
+====
+
 [[header-query-functions-predicate]]
 **<<query-functions-predicate, Predicate functions>>**
 

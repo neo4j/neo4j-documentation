@@ -75,7 +75,7 @@ Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error wil
 [[administration-constraints-syntax]]
 == Syntax
 
-.Syntax for managing indexes
+.Syntax for managing constraints
 [options="header", width="100%", cols="5a,3, 3a"]
 |===
 | Command | Description | Comment

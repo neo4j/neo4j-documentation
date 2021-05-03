@@ -16,6 +16,7 @@ This section contains information on all the clauses in the Cypher query languag
 * <<header-subquery-clauses,Subquery clauses>>
 * <<header-multiple-graphs-clauses,Multiple graphs>>
 * <<header-importing-clauses,Importing data>>
+* <<header-listing-clauses,Listing clauses>>
 * <<header-administration-clauses,Administration clauses>>
 
 
@@ -239,6 +240,22 @@ m|--- <<query-using-periodic-commit-hint, USING PERIODIC COMMIT>>
 |===
 
 
+[[header-listing-clauses]]
+**Listing clauses**
+
+[options="header"]
+|===
+|Clause |Description
+
+m|<<query-listing-functions, SHOW FUNCTIONS>>
+|Lists the available functions.
+
+m|<<query-listing-procedures, SHOW PROCEDURES>>
+|Lists the available procedures.
+
+|===
+
+
 [[header-administration-clauses]]
 **Administration clauses**
 
@@ -314,3 +331,8 @@ include::query-use.adoc[leveloffset=+1]
 
 //Importing
 include::ql/load-csv/index.asciidoc[leveloffset=+1]
+
+//Listing
+include::ql/listing/query-listing-functions.adoc[leveloffset=+1]
+
+include::ql/listing/query-listing-procedures.adoc[leveloffset=+1]

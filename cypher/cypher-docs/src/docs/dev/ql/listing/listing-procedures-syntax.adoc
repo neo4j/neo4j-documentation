@@ -1,0 +1,39 @@
+.Syntax for listing procedures
+[options="header", width="100%", cols="5a,3, 3a, 3a"]
+|===
+| Command | Description | Required privilege | Comment
+
+| [source, cypher, role=noplay]
+----
+SHOW PROCEDURE[S]
+    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
+    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+----
+| List all procedures.
+|
+.2+.^| When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+
+| [source, cypher, role=noplay]
+----
+SHOW PROCEDURE[S] EXECUTABLE [BY CURRENT USER]
+    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
+    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+----
+| List procedures that the current user can execute.
+|
+
+| [source, cypher, role=noplay]
+----
+SHOW PROCEDURE[S] EXECUTABLE BY username
+    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+    [WHERE expression]
+    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+----
+| List procedures that the specified user can execute.
+| <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
+| This command cannot be used for LDAP users.
+
+When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+|===
