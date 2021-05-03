@@ -198,7 +198,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text =
         """
           |To list all indexes with the default output columns, the `SHOW INDEXES` command can be used.
-          |If all columns are wanted, use `SHOW INDEXES YIELD *`.""".stripMargin,
+          |If all columns are required, use `SHOW INDEXES YIELD *`.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "SHOW INDEXES",
       optionalResultExplanation =

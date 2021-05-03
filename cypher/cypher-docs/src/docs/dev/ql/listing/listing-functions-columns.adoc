@@ -1,0 +1,62 @@
+.List functions output
+[options="header", width="100%", cols="1a,4,^.^,^"]
+|===
+| Column
+| Description
+| Default output
+| Full output
+
+| `name`
+| The name of the function.
+| `+`
+| `+`
+
+| `category`
+| The function category, for example scalar or string.
+| `+`
+| `+`
+
+| `description`
+| The function description.
+| `+`
+| `+`
+
+| `signature`
+| The signature of the function.
+|
+| `+`
+
+| `isBuiltIn`
+| Whether the function is built-in or user-defined.
+|
+| `+`
+
+| `argumentDescription`
+| List of the arguments for the function, as map of strings with name, type, default, and description.
+|
+| `+`
+
+| `returnDescription`
+| The return value type.
+|
+| `+`
+
+| `aggregating`
+| Whether the function is aggregating or not.
+|
+| `+`
+
+| `rolesExecution`
+| List of roles permitted to execute this function.
+
+Will be `null` without the <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> privilege.
+|
+| `+`
+
+| `rolesBoostedExecution`
+| List of roles permitted to use boosted mode when executing this function.
+
+Will be `null` without the <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> privilege.
+|
+| `+`
+|===
