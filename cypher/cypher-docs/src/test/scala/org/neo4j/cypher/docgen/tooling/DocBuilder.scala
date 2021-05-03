@@ -115,6 +115,14 @@ trait DocBuilder {
     }.get.setLogin((name, password))
   }
 
+  def logout(): Unit = {
+    scope.collectFirst {
+      case section: SectionScope => section
+      case doc: DocScope => doc
+      case query: QueryScope => query
+    }.get.unsetLogin()
+  }
+
   def resultTable(): Unit = {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q
@@ -263,6 +271,10 @@ object DocBuilder {
 
     def setLogin(login: (String, String)): Unit = {
       _login = Some(login)
+    }
+
+    def unsetLogin(): Unit = {
+      _login = None
     }
 
     def toContent: Content
