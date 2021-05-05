@@ -61,9 +61,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `ON HOME GRAPH` for privilege commands        | Syntax        | Added         | New syntax for privileges affecting home graph
 | `ON DEFAULT DATABASE` for privilege commands  | Syntax        | Deprecated    | Replaced by `ON HOME DATABASE`
 | `ON DEFAULT GRAPH` for privilege commands     | Syntax        | Deprecated    | Replaced by `ON HOME GRAPH`
-| `CREATE [BTREE] INDEX [name] FOR ()-[r:TYPE]-() ON (r.prop) [OPTIONS {...}]`  | Functionality | Added | Allows creating indexes on relationships with a particular relationship type and property combination. They can be dropped by using their name.
-| `CREATE LOOKUP INDEX [name] FOR (n) ON EACH labels(n) [OPTIONS {}]`           | Functionality | Added | Create lookup index for nodes with any labels. They can be dropped by using their name.
-| `CREATE LOOKUP INDEX [name] FOR ()-[r]-() ON [EACH] type(r) [OPTIONS {}]`     | Functionality | Added | Create lookup index for relationships with any types. They can be dropped by using their name.
+| `CREATE INDEX FOR ()-[r:TYPE]-() ...`         | Functionality | Added         | Allows creating indexes on relationships with a particular relationship type and property combination. They can be dropped by using their name.
+| `CREATE LOOKUP INDEX ...`                     | Functionality | Added         | Create lookup index for nodes with any labels or relationships with any types. They can be dropped by using their name.
 | `SHOW FULLTEXT INDEXES`   | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on fulltext indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
 | `SHOW LOOKUP INDEXES`     | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on lookup indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
 | `CREATE DATABASE ... [OPTIONS {...}]` | Syntax  | Added | New syntax to pass options to `CREATE DATABASE`.  This can be used to specify a specific cluster node to seed data from.
@@ -71,6 +70,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `RENAME USER` | Functionality | Added | New Cypher command for changing the name of a user.
 | `SHOW PROCEDURE[S] [EXECUTABLE [BY {CURRENT USER | username}]] [YIELD ...] [WHERE ...] [RETURN ...]`                                  | Functionality | Added | New Cypher commands for listing procedures.
 | `SHOW [ALL \| BUILT IN \| USER DEFINED] FUNCTION[S] [EXECUTABLE [BY {CURRENT USER | username}]] [YIELD ...] [WHERE ...] [RETURN ...]` | Functionality | Added | New Cypher commands for listing functions.
+| `CREATE FULLTEXT INDEX ...`   | Syntax | Added | Allows creating fulltext indexes on nodes or relationships. They can be dropped by using their name.
 |===
 
 [[cypher-deprecations-additions-removals-4.2]]

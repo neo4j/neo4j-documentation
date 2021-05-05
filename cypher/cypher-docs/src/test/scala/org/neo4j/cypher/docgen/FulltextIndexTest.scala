@@ -23,6 +23,7 @@ import org.neo4j.cypher.docgen.tooling.DocBuilder
 import org.neo4j.cypher.docgen.tooling.Document
 import org.neo4j.cypher.docgen.tooling.DocumentingTest
 import org.neo4j.cypher.docgen.tooling.ResultAssertions
+import org.neo4j.kernel.impl.index.schema.FulltextIndexProviderFactory
 
 class FulltextIndexTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/administration/indexes"
@@ -30,11 +31,12 @@ class FulltextIndexTest extends DocumentingTest {
   override def doc: Document = new DocBuilder {
     private val createMatrixMovieNode = """CREATE (m:Movie {title: "The Matrix"}) RETURN m.title"""
     private val createJacketMovies = """CREATE (:Movie {title: "Full Metal Jacket"}), (:Movie {title: "The Jacket"}), (:Movie {title: "Yellow Jacket"}), (:Movie {title: "Full Moon High"}), (:Movie {title: "Metallica Through The Never", description: "The movie follows the young roadie Trip through his surreal adventure with the band."}) """
-    private val createTitleAndDescriptionFulltextIndex = """CALL db.index.fulltext.createNodeIndex("titlesAndDescriptions", ["Movie", "Book"], ["title", "description"])"""
+    private val createTitleAndDescriptionFulltextIndex = "CREATE FULLTEXT INDEX titlesAndDescriptions FOR (n:Movie|Book) ON EACH [n.title, n.description]"
     private val awaitIndexesOnline = """CALL db.awaitIndexes(1000)"""
     private val queryForMatrixNode = """CALL db.index.fulltext.queryNodes("titlesAndDescriptions", "matrix") YIELD node, score
                                        #RETURN node.title, node.description, score""".stripMargin('#')
-    private val createRelationshipFulltextIndexWithConfig = """CALL db.index.fulltext.createRelationshipIndex("taggedByRelationshipIndex", ["TAGGED_AS"], ["taggedByUser"], {analyzer: "url_or_email", eventually_consistent: "true"})"""
+    private val createRelationshipFulltextIndexWithConfig = "CREATE FULLTEXT INDEX taggedByRelationshipIndex FOR ()-[r:TAGGED_AS]-() ON EACH [r.taggedByUser] OPTIONS {indexConfig: {`fulltext.analyzer`: 'url_or_email', `fulltext.eventually_consistent`: true}}"
+
     doc("Indexes for full-text search", "administration-indexes-fulltext-search")
     initQueries(
       createMatrixMovieNode,
@@ -70,36 +72,38 @@ class FulltextIndexTest extends DocumentingTest {
           #In contrast to <<administration-indexes-introduction, btree indexes>>, a full-text index""".stripMargin('#'))
       p(
         """* can be applied to more than one label.
-          #* can be applied to relationship types (one or more).
+          #* can be applied to more than one relationship type.
           #* can be applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-index-for-nodes, _composite index_>>) but with an important difference:
           #While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.""".stripMargin('#'))
       p("For information on how to configure full-text indexes, refer to <<operations-manual#index-configuration-fulltext, Operations Manual -> Indexes to support full-text search>>.")
     }
-    section("Procedures to manage full-text indexes", "administration-indexes-fulltext-search-manage") {
-      p("""Full-text indexes are managed through built-in procedures, see <<operations-manual#neo4j-procedures, Operations Manual -> Procedures>> for a complete reference.
+    section("Procedures and commands to manage full-text indexes", "administration-indexes-fulltext-search-manage") {
+      p("""Full-text indexes are managed through commands and used through built-in procedures, see <<operations-manual#neo4j-procedures, Operations Manual -> Procedures>> for a complete reference.
           #
-          #The procedures for managing full-text indexes are listed in the table below:""".stripMargin('#'))
+          #The commands and procedures for full-text indexes are listed in the table below:""".stripMargin('#'))
       p(
         """
           |[options="header"]
           ||===
-          || Usage                               | Procedure                                                 | Description
-          || Create full-text node index         | `db.index.fulltext.createNodeIndex`                       | Create a node fulltext index for the given labels and properties. The optional 'config' map parameter can be used to supply settings to the index. Supported settings are 'analyzer', for specifying what analyzer to use when indexing and querying. Use the `db.index.fulltext.listAvailableAnalyzers` procedure to see what options are available. And 'eventually_consistent' which can be set to 'true' to make this index eventually consistent, such that updates from committing transactions are applied in a background thread.
-          || Create full-text relationship index | `db.index.fulltext.createRelationshipIndex`               | Create a relationship fulltext index for the given relationship types and properties. The optional 'config' map parameter can be used to supply settings to the index. Supported settings are 'analyzer', for specifying what analyzer to use when indexing and querying. Use the `db.index.fulltext.listAvailableAnalyzers` procedure to see what options are available. And 'eventually_consistent' which can be set to 'true' to make this index eventually consistent, such that updates from committing transactions are applied in a background thread.
+          || Usage                               | Procedure/Command                                         | Description
+          || Create full-text node index         | `CREATE FULLTEXT INDEX ...`                               | Create a node fulltext index for the given labels and properties. The optional 'options' map can be used to supply provider and settings to the index. Supported settings are 'fulltext.analyzer', for specifying what analyzer to use when indexing and querying. Use the `db.index.fulltext.listAvailableAnalyzers` procedure to see what options are available. And 'fulltext.eventually_consistent' which can be set to 'true' to make this index eventually consistent, such that updates from committing transactions are applied in a background thread.
+          || Create full-text relationship index | `CREATE FULLTEXT INDEX ...`                               | Create a relationship fulltext index for the given relationship types and properties. The optional 'options' map can be used to supply provider and settings to the index. Supported settings are 'fulltext.analyzer', for specifying what analyzer to use when indexing and querying. Use the `db.index.fulltext.listAvailableAnalyzers` procedure to see what options are available. And 'fulltext.eventually_consistent' which can be set to 'true' to make this index eventually consistent, such that updates from committing transactions are applied in a background thread.
           || List available analyzers            | `db.index.fulltext.listAvailableAnalyzers`                | List the available analyzers that the full-text indexes can be configured with.
           || Use full-text node index            | `db.index.fulltext.queryNodes`                            | Query the given full-text index. Returns the matching nodes and their Lucene query score, ordered by score.
           || Use full-text relationship index    | `db.index.fulltext.queryRelationships`                    | Query the given full-text index. Returns the matching relationships and their Lucene query score, ordered by score.
-          || Drop full-text index                | `db.index.fulltext.drop`                                  | Drop the specified index.
+          || Drop full-text index                | `DROP INDEX ...`                                          | Drop the specified index.
           || Eventually consistent indexes       | `db.index.fulltext.awaitEventuallyConsistentIndexRefresh` | Wait for the updates from recently committed transactions to be applied to any eventually-consistent full-text indexes.
+          || Listing all fulltext indexes        | `SHOW FULLTEXT INDEXES`                                   | Lists all fulltext indexes, see <<administration-indexes-list-indexes, the `SHOW INDEXES` command>> for details.
           ||===
           |"""
       )
     }
 
     section("Create and configure full-text indexes", "administration-indexes-fulltext-search-create-and-configure") {
-      p("""Full-text indexes are created with the `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex` procedures.
-          #An index must be given a unique name when created, which is used to reference the specific index when querying or dropping it.
+      p("""Full-text indexes are created with the `CREATE FULLTEXT INDEX` command.
+          #An index can be given a unique name when created (or get a generated one), which is used to reference the specific index when querying or dropping it.
           #A full-text index applies to a list of labels or a list of relationship types, for node and relationship indexes respectively, and then a list of property names.""".stripMargin('#'))
+      p("include::../indexes-for-full-text-search/create-fulltext-syntax.asciidoc[]")
       p("For instance, if we have a movie with a title.")
       query(createMatrixMovieNode, ResultAssertions(r => {
         r.size should equal(1)
@@ -116,11 +120,12 @@ class FulltextIndexTest extends DocumentingTest {
       }
       p("""The same is true for full-text indexes on relationships.
           #Though a relationship can only have one type, a relationship full-text index can index multiple types, and all relationships will be included that match one of the relationship types, and at least one of the indexed properties.""".stripMargin('#'))
-      p("""The `db.index.fulltext.createNodeIndex` and `db.index.fulltext.createRelationshipIndex` procedures take an optional fourth argument, called `config`.
-          #The `config` parameter is a map from string to string, and can be used to set index-specific configuration settings.
-          #The `analyzer` setting can be used to configure an index-specific analyzer.
-          #The possible values for the `analyzer` setting can be listed with the `db.index.fulltext.listAvailableAnalyzers` procedure.
-          #The `eventually_consistent` setting, if set to `"true"`, will put the index in an _eventually consistent_ update mode.
+      p(s"""The `CREATE FULLTEXT INDEX` command take an optional clause, called `options`. This have two parts, the `indexProvider` and `indexConfig`.
+          #The provider can only have the default value, `'${FulltextIndexProviderFactory.DESCRIPTOR.name()}'`.
+          #The `indexConfig` is a map from string to string and booleans, and can be used to set index-specific configuration settings.
+          #The `fulltext.analyzer` setting can be used to configure an index-specific analyzer.
+          #The possible values for the `fulltext.analyzer` setting can be listed with the `db.index.fulltext.listAvailableAnalyzers` procedure.
+          #The `fulltext.eventually_consistent` setting, if set to `true`, will put the index in an _eventually consistent_ update mode.
           #This means that updates will be applied in a background thread "as soon as possible", instead of during transaction commit like other indexes.""".stripMargin('#'))
       query(createRelationshipFulltextIndexWithConfig, ResultAssertions(r => {})) {
         p(
@@ -173,9 +178,10 @@ class FulltextIndexTest extends DocumentingTest {
     }
 
     section("Drop full-text indexes", "administration-indexes-fulltext-search-drop") {
-      p("A full-text node index is dropped by using the procedure  `db.index.fulltext.drop`.")
+      initQueries(createRelationshipFulltextIndexWithConfig)
+      p("A full-text node index is dropped by using the <<administration-indexes-drop-an-index, same command as for other indexes>>, `DROP INDEX`.")
       p("In the following example, we will drop the `taggedByRelationshipIndex` that we created previously:")
-      query("CALL db.index.fulltext.drop(\"taggedByRelationshipIndex\")", ResultAssertions(r => {})) {
+      query("DROP INDEX taggedByRelationshipIndex", ResultAssertions(r => {})) {
         resultTable()
       }
     }
