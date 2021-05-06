@@ -230,9 +230,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |* `WAIT` - Wait for the default period for the command to complete before returning.
           |* `NOWAIT` - Return immediately.""")
       p(
-        """A command using a `WAIT` clause will automatically commit the current transaction when it executes successfully as the
+        """A command using a `WAIT` clause will automatically commit the current transaction when it executes successfully, as the
           |command needs to run immediately for it to be possible to `WAIT` for it to complete. Any subsequent commands executed will
-          |therefore be performed in a new transaction. This is different to the usual transactional behaviour and for this reason
+          |therefore be performed in a new transaction. This is different to the usual transactional behaviour, and for this reason
           |it is recommended that these commands be run in their own transaction. The default behaviour is `NOWAIT`, so if no clause
           |is specified the transaction will behave normally and the action is performed in the background post-commit.""".stripMargin)
     }
