@@ -209,7 +209,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       })) {}
       p("The `DROP DATABASE` command will remove a database entirely. " +
         "However, you can request that a dump of the store files is produced first, and stored in the path configured using the `dbms.directories.dumps.root` setting (by default `<neo4j-home>/data/dumps`). " +
-        "This can be achieved by appending `DUMP DATA` to the command (or `DESTROY DATA` to explicitly request the default behaviour). " +
+        "This can be achieved by appending `DUMP DATA` to the command (or `DESTROY DATA` to explicitly request the default behavior). " +
         "These dumps are equivalent to those produced by `neo4j-admin dump` and can be similarly restored using `neo4j-admin load`.")
       query("DROP DATABASE customers DUMP DATA", ResultAssertions(r => {
         assertStats(r, systemUpdates = 0)
@@ -232,8 +232,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """A command using a `WAIT` clause will automatically commit the current transaction when it executes successfully, as the
           |command needs to run immediately for it to be possible to `WAIT` for it to complete. Any subsequent commands executed will
-          |therefore be performed in a new transaction. This is different to the usual transactional behaviour, and for this reason
-          |it is recommended that these commands be run in their own transaction. The default behaviour is `NOWAIT`, so if no clause
+          |therefore be performed in a new transaction. This is different to the usual transactional behavior, and for this reason
+          |it is recommended that these commands be run in their own transaction. The default behavior is `NOWAIT`, so if no clause
           |is specified the transaction will behave normally and the action is performed in the background post-commit.""".stripMargin)
     }
     query("CREATE DATABASE slow WAIT 5 SECONDS", ResultAssertions((r) => {
