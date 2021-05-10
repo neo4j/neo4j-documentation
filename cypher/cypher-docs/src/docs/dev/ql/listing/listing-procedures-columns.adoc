@@ -42,19 +42,19 @@
 | `+`
 
 | `admin`
-| If it is or isn't an admin procedure.
+| `true` if this procedure is an admin procedure.
 |
 | `+`
 
 | `rolesExecution`
-| List of roles who can execute this procedure.
+| List of roles permitted to execute this procedure.
 
 Will be `null` without the <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> privilege.
 |
 | `+`
 
 | `rolesBoostedExecution`
-| List of roles who will use boosted mode when executing this procedure.
+| List of roles permitted to use boosted mode when executing this procedure.
 
 Will be `null` without the <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> privilege.
 |

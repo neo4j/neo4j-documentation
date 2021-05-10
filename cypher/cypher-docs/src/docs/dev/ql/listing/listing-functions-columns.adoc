@@ -42,19 +42,19 @@
 | `+`
 
 | `aggregating`
-| If the function is aggregating or not.
+| Whether the function is aggregating or not.
 |
 | `+`
 
 | `rolesExecution`
-| List of roles who can execute this function.
+| List of roles permitted to execute this function.
 
 Will be `null` without the <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> privilege.
 |
 | `+`
 
 | `rolesBoostedExecution`
-| List of roles who will use boosted mode when executing this function.
+| List of roles permitted to use boosted mode when executing this function.
 
 Will be `null` without the <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> privilege.
 |

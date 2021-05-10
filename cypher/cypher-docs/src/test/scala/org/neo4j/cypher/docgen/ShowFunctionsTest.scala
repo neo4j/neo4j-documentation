@@ -35,7 +35,7 @@ class ShowFunctionsTest extends DocumentingTest {
       section("Listing all functions") {
         p(
           """To list all available functions with the default output columns, the `SHOW FUNCTIONS` command can be used.
-            |If all columns are wanted, use `SHOW FUNCTIONS YIELD *`.""".stripMargin)
+            |If all columns are required, use `SHOW FUNCTIONS YIELD *`.""".stripMargin)
         query("SHOW FUNCTIONS", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "category", "description")
         })) {

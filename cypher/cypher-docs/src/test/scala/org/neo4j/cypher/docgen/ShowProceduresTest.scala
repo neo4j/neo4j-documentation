@@ -35,7 +35,7 @@ class ShowProceduresTest extends DocumentingTest {
       section("Listing all procedures") {
         p(
           """To list all available procedures with the default output columns, the `SHOW PROCEDURES` command can be used.
-            |If all columns are wanted, use `SHOW PROCEDURES YIELD *`.""".stripMargin)
+            |If all columns are required, use `SHOW PROCEDURES YIELD *`.""".stripMargin)
         query("SHOW PROCEDURES", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem")
         })) {
@@ -60,7 +60,7 @@ class ShowProceduresTest extends DocumentingTest {
         )
         database("neo4j")
         p(
-          """The listed procedures can also be filtered on whether a user can execute them.
+          """The listed procedures can also be filtered by whether a user can execute them.
             |This filtering is only available through the `EXECUTABLE` clause and not through the `WHERE` clause.
             |This is due to using the users privileges instead of just filtering on the available output columns.""".stripMargin)
         p(
@@ -76,7 +76,7 @@ class ShowProceduresTest extends DocumentingTest {
         }
         p("Notice that the two roles columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> privilege.")
         logout()
-        p("The second versions is to filter for a specific user:")
+        p("The second version filters the list to only contain procedures executable by a specific user:")
         query("SHOW PROCEDURES EXECUTABLE BY jake", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem")
         })) {

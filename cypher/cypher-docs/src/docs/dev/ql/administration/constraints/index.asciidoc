@@ -12,7 +12,7 @@ This section explains how to manage constraints used for ensuring data integrity
 ** <<administration-constraints-prop-exist-rels, Relationship property existence constraints>>
 ** <<administration-constraints-node-key, Node key constraints>>
 ** <<administration-constraints-drop-constraint, Drop a constraint by name>>
-** <<administration-constraints-list-constraint, List constraints>>
+** <<administration-constraints-list-constraint, Listing constraints>>
 ** <<administration-constraints-deprecated-syntax, Deprecated syntax>>
 
 [[administration-constraints-introduction]]
@@ -256,7 +256,7 @@ include::drop-a-constraint.asciidoc[leveloffset=+2]
 include::drop-a-non-existing-constraint.asciidoc[leveloffset=+2]
 
 [[administration-constraints-list-constraint]]
-=== List constraints
+=== Listing constraints
 
 Listing constraints can be done with `SHOW CONSTRAINTS`, which will produce a table with the following columns:
 
