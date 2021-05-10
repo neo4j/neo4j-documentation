@@ -22,7 +22,7 @@ This section explains how to manage indexes used for search performance.
 ** <<administration-indexes-create-a-lookup-index-for-relationships, Create a lookup index for relationships>>
 ** <<administration-indexes-drop-an-index, Drop an index>>
 ** <<administration-indexes-drop-a-non-existing-index, Drop a non-existing index>>
-** <<administration-indexes-list-indexes, List indexes>>
+** <<administration-indexes-list-indexes, Listing indexes>>
 ** <<administration-indexes-examples-deprecated-syntax, Deprecated syntax>>
 
 This section describes how to manage indexes.
@@ -268,7 +268,7 @@ include::../indexes/drop-an-index.asciidoc[leveloffset=+1]
 include::../indexes/drop-a-non-existing-index.asciidoc[leveloffset=+1]
 
 [[administration-indexes-list-indexes]]
-=== List indexes
+=== Listing indexes
 
 Listing indexes can be done with `SHOW INDEXES`, which will produce a table with the following columns:
 
