@@ -39,7 +39,7 @@ class ShowProceduresTest extends DocumentingTest {
         query("SHOW PROCEDURES", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem")
         })) {
-          resultTable()
+          limitedResultTable(List("name", "description", "mode", "worksOnSystem"), 15)
         }
       }
       section("Listing procedures with filtering on output columns") {
@@ -50,7 +50,7 @@ class ShowProceduresTest extends DocumentingTest {
           p.columns should contain theSameElementsAs Array("name", "admin")
           p.columnAs[Boolean]("admin").foreach(_ should be(true))
         })) {
-          resultTable()
+          limitedResultTable(List("name", "admin"), 7)
         }
       }
       section("Listing procedures with other filtering") {
@@ -72,7 +72,7 @@ class ShowProceduresTest extends DocumentingTest {
           p.columnAs[List[String]]("rolesExecution").foreach(_ should be(null))
           p.columnAs[List[String]]("rolesBoostedExecution").foreach(_ should be(null))
         })) {
-          resultTable()
+          limitedResultTable(List("name", "description", "rolesExecution", "rolesBoostedExecution"))
         }
         p("Notice that the two roles columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> privilege.")
         logout()
@@ -80,7 +80,7 @@ class ShowProceduresTest extends DocumentingTest {
         query("SHOW PROCEDURES EXECUTABLE BY jake", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem")
         })) {
-          resultTable()
+          limitedResultTable(List("name", "description", "mode", "worksOnSystem"))
         }
       }
     }

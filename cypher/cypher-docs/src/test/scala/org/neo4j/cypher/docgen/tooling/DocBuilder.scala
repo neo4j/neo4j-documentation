@@ -130,6 +130,21 @@ trait DocBuilder {
     queryScope.addContent(new TablePlaceHolder(queryScope.assertions, queryScope.params:_*))
   }
 
+  /**Print a smaller version of the result without changing the query.
+   * Can limit the amount of printed rows and columns.
+   * Will print the given columns in the given order.
+   *
+   * @param wantedColumns the columns to be displayed, in the wanted display order
+   * @param rows          the number of result rows to display
+   */
+  def limitedResultTable(wantedColumns: List[String], rows: Int = 10): Unit = {
+    assert(rows > 0, "Cannot display less than one row")
+    val queryScope = scope.collectFirst {
+      case q: QueryScope => q
+    }.get
+    queryScope.addContent(new LimitedTablePlaceHolder(wantedColumns, rows, queryScope.assertions, queryScope.params:_*))
+  }
+
   def statsOnlyResultTable(): Unit = {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q

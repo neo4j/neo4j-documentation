@@ -39,7 +39,7 @@ class ShowFunctionsTest extends DocumentingTest {
         query("SHOW FUNCTIONS", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "category", "description")
         })) {
-          resultTable()
+          limitedResultTable(List("name", "category", "description"), 20)
         }
       }
       section("Listing functions with filtering on output columns") {
@@ -53,7 +53,7 @@ class ShowFunctionsTest extends DocumentingTest {
           p.columnAs[String]("name").foreach(_ should startWith("a"))
           p.columnAs[Boolean]("isBuiltIn").foreach(_ should be(true))
         })) {
-          resultTable()
+          limitedResultTable(List("name", "isBuiltIn"), 15)
         }
       }
       section("Listing functions with other filtering") {
@@ -75,7 +75,7 @@ class ShowFunctionsTest extends DocumentingTest {
           p.columnAs[List[String]]("rolesExecution").foreach(_ should be(null))
           p.columnAs[List[String]]("rolesBoostedExecution").foreach(_ should be(null))
         })) {
-          resultTable()
+          limitedResultTable(List("name", "category", "description", "rolesExecution", "rolesBoostedExecution"))
         }
         p("Notice that the two roles columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> privilege.")
         logout()
@@ -83,7 +83,7 @@ class ShowFunctionsTest extends DocumentingTest {
         query("SHOW FUNCTIONS EXECUTABLE BY jake", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "category", "description")
         })) {
-          resultTable()
+          limitedResultTable(List("name", "category", "description"))
         }
       }
     }

@@ -132,3 +132,13 @@ class ValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) ext
     serialize(x, ctx)
   }
 }
+
+class LimitedValueFormatter(db: GraphDatabaseQueryService, tx: InternalTransaction) extends ValueFormatter(db, tx) {
+  override def apply(x: Any): String = x match {
+    case LimitedValueFormatter.NO_VALUE => ""
+    case _ => super.apply(x)
+  }
+}
+object LimitedValueFormatter {
+  object NO_VALUE
+}

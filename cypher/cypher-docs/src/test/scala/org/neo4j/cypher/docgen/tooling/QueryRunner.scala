@@ -95,6 +95,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
   private def runSingleQuery(dbms: RestartableDatabase, query: DatabaseQuery, assertions: QueryAssertions, content: TablePlaceHolder): QueryRunResult = {
     val format: (InternalTransaction) => (DocsExecutionResult) => Content = (tx: InternalTransaction) => content match {
       case _: StatsOnlyTablePlaceHolder => statsOnly(_)
+      case l: LimitedTablePlaceHolder => new LimitedQueryResultContentBuilder(l.wantedColumns, l.rows, new LimitedValueFormatter(dbms.getInnerDb, tx))
       case _ => formatter(dbms.getInnerDb, tx)(_)
     }
 
