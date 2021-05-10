@@ -26,10 +26,10 @@ import org.junit.Test
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.internal.logical.plans.NodeIndexSeek
 import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.DPPlannerName
 import org.neo4j.cypher.internal.planner.spi.IDPPlannerName
-import org.neo4j.cypher.internal.runtime.interpreted.pipes.IndexSeekByRange
 import org.neo4j.cypher.internal.util.Foldable.FoldableAny
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.schema.IndexSettingImpl._
@@ -460,7 +460,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       assertions = {
         (p) =>
           assertEquals(1, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString(IndexSeekByRange.name))
+          assertThat(p.executionPlanDescription().toString, containsString(NodeIndexSeek.PLAN_DESCRIPTION_INDEX_SEEK_RANGE_NAME))
       }
     )
   }
