@@ -35,7 +35,7 @@ class ShowProceduresTest extends DocumentingTest {
       section("Listing all procedures") {
         p(
           """To list all available procedures with the default output columns, the `SHOW PROCEDURES` command can be used.
-            |If all columns are required, use `SHOW PROCEDURES YIELD *`.""".stripMargin)
+            #If all columns are required, use `SHOW PROCEDURES YIELD *`.""".stripMargin('#'))
         query("SHOW PROCEDURES", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem")
         })) {
@@ -45,7 +45,7 @@ class ShowProceduresTest extends DocumentingTest {
       section("Listing procedures with filtering on output columns") {
         p(
           """The listed procedures can be filtered in multiple ways, one way is to use the `WHERE` clause.
-            |For example getting the name of all admin procedures:""".stripMargin)
+            #For example getting the name of all admin procedures:""".stripMargin('#'))
         query("SHOW PROCEDURES YIELD name, admin WHERE admin", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "admin")
           p.columnAs[Boolean]("admin").foreach(_ should be(true))
@@ -61,11 +61,11 @@ class ShowProceduresTest extends DocumentingTest {
         database("neo4j")
         p(
           """The listed procedures can also be filtered by whether a user can execute them.
-            |This filtering is only available through the `EXECUTABLE` clause and not through the `WHERE` clause.
-            |This is due to using the users privileges instead of just filtering on the available output columns.""".stripMargin)
+            #This filtering is only available through the `EXECUTABLE` clause and not through the `WHERE` clause.
+            #This is due to using the users privileges instead of just filtering on the available output columns.""".stripMargin('#'))
         p(
           """There are two versions of the `EXECUTABLE` clause.
-            |The first one is to filter for the current user:""".stripMargin)
+            #The first one is to filter for the current user:""".stripMargin('#'))
         login("jake", "abc123")
         query("SHOW PROCEDURES EXECUTABLE BY CURRENT USER YIELD *", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem", "signature", "argumentDescription", "returnDescription", "admin", "rolesExecution", "rolesBoostedExecution", "option")

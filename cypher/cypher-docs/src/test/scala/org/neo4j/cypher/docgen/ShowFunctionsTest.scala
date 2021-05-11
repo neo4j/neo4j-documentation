@@ -35,7 +35,7 @@ class ShowFunctionsTest extends DocumentingTest {
       section("Listing all functions") {
         p(
           """To list all available functions with the default output columns, the `SHOW FUNCTIONS` command can be used.
-            |If all columns are required, use `SHOW FUNCTIONS YIELD *`.""".stripMargin)
+            #If all columns are required, use `SHOW FUNCTIONS YIELD *`.""".stripMargin('#'))
         query("SHOW FUNCTIONS", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "category", "description")
         })) {
@@ -45,9 +45,9 @@ class ShowFunctionsTest extends DocumentingTest {
       section("Listing functions with filtering on output columns") {
         p(
           """The listed functions can be filtered in multiple ways.
-            |One way is through the type keywords, `BUILT IN` and `USER DEFINED`.
-            |Another more flexible way is to use the `WHERE` clause.
-            |For example getting the name of all built-in functions starting on the letter 'a':""".stripMargin)
+            #One way is through the type keywords, `BUILT IN` and `USER DEFINED`.
+            #Another more flexible way is to use the `WHERE` clause.
+            #For example getting the name of all built-in functions starting on the letter 'a':""".stripMargin('#'))
         query("SHOW BUILT IN FUNCTIONS YIELD name, isBuiltIn WHERE name STARTS WITH 'a'", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "isBuiltIn")
           p.columnAs[String]("name").foreach(_ should startWith("a"))
@@ -64,11 +64,11 @@ class ShowFunctionsTest extends DocumentingTest {
         database("neo4j")
         p(
           """The listed functions can also be filtered on whether a user can execute them.
-            |This filtering is only available through the `EXECUTABLE` clause and not through the `WHERE` clause.
-            |This is due to using the users privileges instead of just filtering on the available output columns.""".stripMargin)
+            #This filtering is only available through the `EXECUTABLE` clause and not through the `WHERE` clause.
+            #This is due to using the users privileges instead of just filtering on the available output columns.""".stripMargin('#'))
         p(
           """There are two versions of the `EXECUTABLE` clause.
-            |The first one is to filter for the current user:""".stripMargin)
+            #The first one is to filter for the current user:""".stripMargin('#'))
         login("jake", "abc123")
         query("SHOW FUNCTIONS EXECUTABLE BY CURRENT USER YIELD *", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("name", "category", "description", "signature", "isBuiltIn", "argumentDescription", "returnDescription", "aggregating", "rolesExecution", "rolesBoostedExecution")
