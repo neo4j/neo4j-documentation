@@ -588,6 +588,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
   }
 
   @Test def nodeByLabelScan() {
+    executePreparationQueries {
+      List("CREATE LOOKUP INDEX lookup_index_name FOR (n) ON EACH labels(n)")
+    }
+
     profileQuery(
       title = "Node By Label Scan",
       text = """The `NodeByLabelScan` operator fetches all nodes with a specific label from the node label index.""".stripMargin,
