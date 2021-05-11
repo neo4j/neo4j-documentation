@@ -22,7 +22,6 @@ package org.neo4j.cypher.docgen.tooling
 import java.io.File
 import java.lang.Boolean.{FALSE, TRUE}
 import java.nio.file.Path
-
 import com.neo4j.configuration.OnlineBackupSettings
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import com.neo4j.kernel.enterprise.api.security.EnterpriseAuthManager
@@ -36,6 +35,7 @@ import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultS
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.graphdb.config.Setting
+import org.neo4j.internal.kernel.api.connectioninfo.ClientConnectionInfo
 import org.neo4j.internal.kernel.api.security.SecurityContext.AUTH_DISABLED
 import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.api.procedure.GlobalProcedures
@@ -116,7 +116,7 @@ class RestartableDatabase(init: RunnableInitialization)
     createAndStartIfNecessary()
     selectDatabase(database)
     val loginContext = _login match {
-      case Some((name, password)) => authManager.login(AuthToken.newBasicAuthToken(name, password))
+      case Some((name, password)) => authManager.login(AuthToken.newBasicAuthToken(name, password), ClientConnectionInfo.EMBEDDED_CONNECTION)
       case _ => AUTH_DISABLED
     }
     graph.beginTransaction(Type.IMPLICIT, loginContext)
