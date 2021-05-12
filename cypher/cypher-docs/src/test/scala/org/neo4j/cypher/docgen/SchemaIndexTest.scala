@@ -42,7 +42,7 @@ import scala.collection.JavaConverters._
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
 
   //need a couple of 'Person' to make index operations more efficient than label scans
-  override val setupQueries = (1 to 20 map (_ => """CREATE (:Person)""")).toList
+  override val setupQueries: List[String] = (1 to 20 map (_ => """CREATE (:Person)""")).toList
 
   override def graphDescription = List(
     "andy:Person KNOWS john:Person"
@@ -59,7 +59,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     "CREATE INDEX FOR (p:Person) ON (p.highScore)"
   )
 
-  override def parent = Some("Administration")
+  override def parent: Option[String] = Some("Administration")
   override def section = "Indexes"
 
 
@@ -230,8 +230,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "An index on all nodes that have a label and single property combination can be dropped with `DROP INDEX ON :Label(property)`.",
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "DROP INDEX ON :Person(firstname)",
-      optionalResultExplanation = "",
-      assertions = (p) => assertIndexesOnLabels("Person", List(List("location"), List("highScore")))
+      assertions = _ => assertIndexesOnLabels("Person", List(List("location"), List("highScore")))
     )
   }
 
@@ -242,8 +241,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "The following statement will drop a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.age, p.country)")),
       queryText = "DROP INDEX ON :Person(age, country)",
-      optionalResultExplanation = "",
-      assertions = (p) => assertIndexesOnLabels("Person", List(List("firstname"), List("location"), List("highScore")))
+      assertions = _ => assertIndexesOnLabels("Person", List(List("firstname"), List("location"), List("highScore")))
     )
   }
 
@@ -271,7 +269,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "In the example below, the query will use a `Person(firstname)` index, if it exists. ",
       queryText = "MATCH (person:Person {firstname: 'Andy'}) RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
@@ -287,7 +285,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "For example, if indexes exist on both `:Label(p1)` and `:Label(p2)`, `MATCH (n:Label) WHERE n.p1 = 1 OR n.p2 = 2 RETURN n` will use both indexes. ",
       queryText = "MATCH (person:Person) WHERE person.firstname = 'Andy' RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
@@ -301,7 +299,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "Note that indexes are case sensitive, that means we cannot use indexes for queries using `toLower` and `toUpper`. For example, the following query cannot use an index:",
       queryText = "MATCH (person:Person) WHERE toLower(person.firstname) = 'andy' RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
 
           checkNotInPlanDescription(p)("NodeIndexSeek")
@@ -323,7 +321,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "as the query does not contain a predicate on the `country` property. " +
       "It will only be backed by an index on the `Person` label and `age` property defined thus: `:Person(age)`; i.e. a single-property index. ",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
@@ -334,7 +332,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_where_using_range_comparisons() {
     // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 300).map { i =>
+    executePreparationQueries((0 to 300).map { _ =>
       "CREATE (:Person)"
     }.toList)
     profileQuery(
@@ -342,7 +340,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause.",
       queryText = "MATCH (person:Person) WHERE person.firstname > 'B' RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
@@ -353,7 +351,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def use_index_with_where_using_range_comparisons_composite() {
     executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.firstname, p.highScore)"))
     // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 300).map { i =>
+    executePreparationQueries((0 to 300).map { _ =>
       "CREATE (:Person)"
     }.toList)
     profileQuery(
@@ -364,7 +362,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "as described in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname > 'B' AND person.highScore > 10000 RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
@@ -375,7 +373,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_where_using_multiple_range_comparisons() {
     // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 300).map { i =>
+    executePreparationQueries((0 to 300).map { _ =>
       "CREATE (:Person)"
     }.toList)
     profileQuery(
@@ -384,7 +382,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "in a single index range seek.",
       queryText = "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
@@ -395,7 +393,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def use_index_with_where_using_multiple_range_comparisons_composite() {
     executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.highScore, p.name)"))
     // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 300).map { i =>
+    executePreparationQueries((0 to 300).map { _ =>
       "CREATE (:Person)"
     }.toList)
     profileQuery(
@@ -405,7 +403,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "That single range seek created in the following query will then use the composite index `Person(highScore, name)` if it exists.",
       queryText = "MATCH (person:Person) WHERE 10000 < person.highScore < 20000 AND person.name IS NOT NULL RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
@@ -431,7 +429,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "The `IN` predicate on `person.firstname` in the following query will use the single-property index `Person(firstname)` if it exists. ",
       queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andy', 'John'] RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(2, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
@@ -458,7 +456,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "The `IN` predicates on `person.age` and `person.country` in the following query will use the composite index `Person(age, country)` if it exists. ",
       queryText = "MATCH (person:Person) WHERE person.age IN [10, 20, 35] AND person.country IN ['Sweden', 'USA', 'UK'] RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
@@ -469,7 +467,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_starts_with() {
     executePreparationQueries {
-      val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
+      val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
       val b = (0 to 300).map { i => s"CREATE (:Person {firstname: '$i'})" }.toList
       a ++ b
     }
@@ -482,7 +480,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "The `STARTS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists.",
       queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
           assertThat(p.executionPlanDescription().toString, containsString(NodeIndexSeek.PLAN_DESCRIPTION_INDEX_SEEK_RANGE_NAME))
       }
@@ -493,7 +491,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.firstname, p.surname)"))
 
     executePreparationQueries {
-      val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
+      val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
       val b = (0 to 300).map { i => s"CREATE (:Person {firstname: '$i', surname: '${-i}'})" }.toList
       a ++ b
     }
@@ -510,7 +508,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
       queryText = "MATCH (person:Person) WHERE person.firstname STARTS WITH 'And' AND person.surname IS NOT NULL RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
           checkPlanDescription(p)("person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND surname IS NOT NULL")
@@ -520,7 +518,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_ends_with() {
     executePreparationQueries {
-      val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
+      val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
       val b = (0 to 300).map { i => s"CREATE (:Person {firstname: '$i'})" }.toList
       a ++ b
     }
@@ -536,7 +534,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           "Composite indexes are currently not able to support `ENDS WITH`. ",
       queryText = "MATCH (person:Person) WHERE person.firstname ENDS WITH 'hn' RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
           assertThat(p.executionPlanDescription().toString, containsString("NodeIndexEndsWithScan"))
       }
@@ -564,7 +562,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
       queryText = "MATCH (person:Person) WHERE person.surname ENDS WITH '300' AND person.age IS NOT NULL RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
           assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
       }
@@ -573,7 +571,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_contains() {
     executePreparationQueries {
-      val a = (0 to 100).map { i => "CREATE (:Person)" }.toList
+      val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
       val b = (0 to 300).map { i => s"CREATE (:Person {firstname: '$i'})" }.toList
       a ++ b
     }
@@ -589,7 +587,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           "Composite indexes are currently not able to support `CONTAINS`. ",
       queryText = "MATCH (person:Person) WHERE person.firstname CONTAINS 'h' RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
           assertThat(p.executionPlanDescription().toString, containsString("NodeIndexContainsScan"))
       }
@@ -617,7 +615,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
       queryText = "MATCH (person:Person) WHERE person.surname CONTAINS '300' AND person.age IS NOT NULL RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
           assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
       }
@@ -626,7 +624,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_property_is_not_null() {
     // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 250).map { i =>
+    executePreparationQueries((0 to 250).map { _ =>
       "CREATE (:Person)"
     }.toList)
     profileQuery(
@@ -635,7 +633,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "The `p.firstname IS NOT NULL` predicate in the following query will use the `Person(firstname)` index, if it exists. ",
       queryText = "MATCH (p:Person) WHERE p.firstname IS NOT NULL RETURN p",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(2, p.size)
           assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
       }
@@ -645,7 +643,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def use_index_with_property_is_not_null_composite() {
     executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.firstname, p.surname)"))
     // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 250).map { i =>
+    executePreparationQueries((0 to 250).map { _ =>
       "CREATE (:Person)"
     }.toList)
     profileQuery(
@@ -655,7 +653,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "Any (non-existence check) predicate on `person.surname` will be rewritten as existence check with a filter.",
       queryText = "MATCH (p:Person) WHERE p.firstname IS NOT NULL AND p.surname IS NOT NULL RETURN p",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(2, p.size)
           assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
       }
@@ -671,7 +669,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries.",
       queryText = "MATCH (p:Person) WHERE distance(p.location, point({x: 1, y: 2})) < 2 RETURN p.location",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(9, p.size)
           assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeekByRange"))
       }
@@ -690,7 +688,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "will be rewritten as existence check with a filter.",
       queryText = "MATCH (p:Person) WHERE distance(p.place, point({x: 1, y: 2})) < 2 AND p.name IS NOT NULL RETURN p.place",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(9, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
           checkPlanDescriptionArgument(p)("p:Person(place, name) WHERE distance(place, point($autoint_0, $autoint_1)) < $autoint_2 AND name IS NOT NULL")
@@ -710,7 +708,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "The ability to do index seeks on bounded ranges works even with the 2D and 3D spatial `Point` types.",
       queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.location < point({x: 2, y: 6}) RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
       }
@@ -734,7 +732,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "If the predicate on `firstname` is anything else then the bounded range is rewritten to existence and filter.",
       queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.place < point({x: 2, y: 6}) AND person.firstname IS NOT NULL RETURN person",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
           checkPlanDescriptionArgument(p)("person:Person(place, firstname) WHERE place > point({x: $autoint_0, y: $autoint_1}) AND place < point({x: $autoint_2, y: $autoint_3}) AND firstname IS NOT NULL")
@@ -742,7 +740,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  def assertIndexesOnLabels(label: String, expectedIndexes: List[List[String]]) {
+  //noinspection SameParameterValue
+  private def assertIndexesOnLabels(label: String, expectedIndexes: List[List[String]]) {
     val transaction = graphOps.beginTx()
     try {
       val indexDefs = transaction.schema.getIndexes(Label.label(label)).asScala.toList
@@ -753,7 +752,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     }
   }
 
-  def assertIndexWithNameExists(name: String, expectedEntity: String, expectedProperties: List[String]) {
+  private def assertIndexWithNameExists(name: String, expectedEntity: String, expectedProperties: List[String]) {
     val transaction = graphOps.beginTx()
     try {
       val indexDef = transaction.schema.getIndexByName(name)
@@ -777,7 +776,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     }
   }
 
-  def assertIndexWithNameDoesNotExists(name: String) {
+  private def assertIndexWithNameDoesNotExists(name: String) {
     val transaction = graphOps.beginTx()
     try {
       assertThrows[IllegalArgumentException](transaction.schema.getIndexByName(name))
