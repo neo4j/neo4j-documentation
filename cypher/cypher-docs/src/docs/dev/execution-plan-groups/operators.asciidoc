@@ -305,7 +305,7 @@ include::../ql/query-plan/drop-relationship-property-existence-constraint.asciid
 
 include::../ql/query-plan/drop-constraint-by-name.asciidoc[]
 
-include::../ql/query-plan/list-constraints.asciidoc[]
+include::../ql/query-plan/listing-constraints.asciidoc[]
 
 include::../ql/query-plan/create-index.asciidoc[]
 
@@ -316,7 +316,7 @@ include::../ql/query-plan/drop-index-by-schema.asciidoc[]
 
 include::../ql/query-plan/drop-index-by-name.asciidoc[]
 
-include::../ql/query-plan/list-indexes.asciidoc[]
+include::../ql/query-plan/listing-indexes.asciidoc[]
 
 include::../ql/query-plan/listing-functions.asciidoc[]
 
