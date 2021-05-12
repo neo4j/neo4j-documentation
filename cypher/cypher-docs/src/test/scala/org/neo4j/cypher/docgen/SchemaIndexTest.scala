@@ -256,13 +256,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_relationship_index() {
-    prepareAndTestQuery(
+    profileQuery(
       title = "A simple relationship index example",
       text = "In this example, the query will use a `KNOWS(since)` relationship index, if it exists. ",
       queryText = "MATCH ()-[relationship:KNOWS { since: 1992 } ]->() RETURN relationship",
-      prepare = _ => executePreparationQueries(List(
+      prepare = Some(_ => executePreparationQueries(List(
         "create index for ()-[r:KNOWS]-() on (r.since)",
-      )),
+      ))),
       assertions = {
         p =>
           assertEquals(1, p.size)

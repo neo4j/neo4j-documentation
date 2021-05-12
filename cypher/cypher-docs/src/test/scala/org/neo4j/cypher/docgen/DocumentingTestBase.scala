@@ -195,8 +195,13 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     internalTestQuery(title, text, queryText, optionalResultExplanation, None, Some(prepare), Map.empty, Seq.empty, assertions)
   }
 
-  def profileQuery(title: String, text: String, queryText: String, realQuery: Option[String] = None, assertions: DocsExecutionResult => Unit) {
-    internalProfileQuery(title, text, queryText, realQuery, None, None, assertions)
+  def profileQuery(title: String,
+                   text: String,
+                   queryText: String,
+                   realQuery: Option[String] = None,
+                   prepare: Option[GraphDatabaseCypherService => Unit] = None,
+                   assertions: DocsExecutionResult => Unit) {
+    internalProfileQuery(title, text, queryText, realQuery, None, prepare, assertions)
   }
 
   private def internalProfileQuery(title: String,
