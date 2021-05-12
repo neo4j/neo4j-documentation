@@ -92,9 +92,9 @@ This table comprises all the execution plan operators ordered lexicographically.
 | <<query-plan-set-node-properties-from-map, SetNodePropertiesFromMap>>          | Sets properties from a map on a node. | | Y |
 | <<query-plan-set-property, SetProperty>>          | Sets a property on a node or relationship. | | Y |
 | <<query-plan-set-relationship-properties-from-map, SetRelationshipPropertiesFromMap>>    | Sets properties from a map on a relationship. | | Y |
-| <<query-plan-list-constraints, ShowConstraints>>      | Lists the available constraints. | Y | |
+| <<query-plan-listing-constraints, ShowConstraints>>      | Lists the available constraints. | Y | |
 | <<query-plan-listing-functions, ShowFunctions>>              | Lists the available functions. | Y | |
-| <<query-plan-list-indexes, ShowIndexes>>              | Lists the available indexes. | Y | |
+| <<query-plan-listing-indexes, ShowIndexes>>              | Lists the available indexes. | Y | |
 | <<query-plan-listing-procedures, ShowProcedures>>              | Lists the available procedures. | Y | |
 | <<query-plan-skip, Skip>>                                                  | Skips 'n' rows from the incoming rows. | | |
 | <<query-plan-sort, Sort>>                                                  | Sorts rows by a provided key. | | | Eager

@@ -280,7 +280,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "List constraints",
+      title = "Listing constraints",
       text =
         """The `ShowConstraints` operator lists constraints. It may include filtering on constraint type and can have either default or full output.""".stripMargin,
       queryText = """SHOW CONSTRAINTS""",
@@ -368,7 +368,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "List indexes",
+      title = "Listing indexes",
       text =
         """The `ShowIndexes` operator lists indexes. It may include filtering on index type and can have either default or full output.""".stripMargin,
       queryText = """SHOW INDEXES""",
