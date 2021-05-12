@@ -41,7 +41,8 @@ import scala.collection.JavaConverters._
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
 
   //need a couple of 'Person' to make index operations more efficient than label scans
-  override val setupQueries = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++ Seq("create ()-[:KNOWS { since: 1992 } ]->()")
+  override val setupQueries = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++
+    Seq("create ()-[:KNOWS { since: 1992, lastMet: 2021 } ]->()")
 
   override def graphDescription = List(
     "andy:Person KNOWS john:Person"
@@ -303,6 +304,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_where_using_equality_composite() {
+    // TODO: this probably also should be a profileQuery but that one does not support optionalResultExplanation (atm).
     prepareAndTestQuery(
       title = "Equality check using `WHERE` (composite index)",
       text = "A query containing equality comparisons for all the properties of a composite index will automatically be backed by the same index. " +
@@ -326,42 +328,36 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_where_using_range_comparisons() {
-    // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 300).map { i =>
-      "CREATE (:Person)"
-    }.toList)
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.since)"))
     profileQuery(
       title = "Range comparisons using `WHERE` (single-property index)",
       text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause.",
-      queryText = "MATCH (person:Person) WHERE person.firstname > 'B' RETURN person",
+      queryText = "MATCH ()<-[r:KNOWS]-() WHERE r.since < 2011 RETURN r",
       assertions = {
-        (p) =>
+        p =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("DirectedRelationshipIndexSeek")
       }
     )
   }
 
   @Test def use_index_with_where_using_range_comparisons_composite() {
-    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.firstname, p.highScore)"))
-    // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 300).map { i =>
-      "CREATE (:Person)"
-    }.toList)
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.since, r.lastMet)"))
     profileQuery(
       title = "Range comparisons using `WHERE` (composite index)",
       text = "Composite indexes are also automatically used for inequality (range) comparisons of indexed properties in the `WHERE` clause. " +
         "Equality or list membership check predicates may precede the range predicate. " +
         "However, predicates after the range predicate may be rewritten as an existence check predicate and a filter " +
         "as described in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
-      queryText = "MATCH (person:Person) WHERE person.firstname > 'B' AND person.highScore > 10000 RETURN person",
+      queryText = "MATCH ()-[r:KNOWS]-() WHERE r.since < 2011 AND r.lastMet > 2019 RETURN r",
       assertions = {
-        (p) =>
-          assertEquals(1, p.size)
+        p =>
+          // asserting to get that one relationship twice (both directions)
+          assertEquals(2, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescription(p)("person:Person(firstname, highScore) WHERE firstname > $autostring_0 AND highScore IS NOT NULL")
+          checkPlanDescription(p)("UndirectedRelationshipIndexSeek")
+          checkPlanDescription(p)("r:KNOWS(since, lastMet) WHERE since < $autoint_0 AND lastMet IS NOT NULL")
       }
     )
   }
