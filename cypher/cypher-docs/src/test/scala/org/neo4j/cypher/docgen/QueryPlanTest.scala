@@ -856,13 +856,13 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def lockNodes() {
+  @Test def lockingMerge() {
     profileQuery(
-      title = "Lock Nodes",
+      title = "Locking Merge",
       text =
-        """The `LockNodes` operator locks the start and end node when creating a relationship.""".stripMargin,
+        """The `LockingMerge` operator is just like a normal `Merge` but will lock the start and end node when creating a relationship if necessary.""".stripMargin,
       queryText = """MATCH (s:Person {name: 'me'}) MERGE (s)-[:FRIENDS_WITH]->(s)""",
-      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("LockNodes"))
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("LockingMerge"))
     )
   }
 
