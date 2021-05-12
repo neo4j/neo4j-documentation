@@ -856,6 +856,17 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def exhaustiveLimit() {
+    profileQuery(
+      title = "Exhaustive Limit",
+      text =
+        """The `ExhaustiveLimit` operator is just like a normal `Limit` but will always exhaust the input.
+          |Used when combining `LIMIT` and updates""".stripMargin,
+      queryText = """MATCH (p:Person) SET p.seen=true RETURN p LIMIT 3""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("ExhaustiveLimit"))
+    )
+  }
+
   @Test def lockingMerge() {
     profileQuery(
       title = "Locking Merge",
