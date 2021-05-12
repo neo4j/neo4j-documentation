@@ -23,10 +23,10 @@ import java.io.{ByteArrayOutputStream, File, PrintWriter, StringWriter}
 import java.nio.charset.StandardCharsets
 import java.util
 import java.util.concurrent.TimeUnit
-
 import com.neo4j.configuration.OnlineBackupSettings
 import org.apache.commons.io.FileUtils
 import org.junit.{After, Before}
+import org.neo4j.configuration.GraphDatabaseInternalSettings
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.configuration.helpers.SocketAddress
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
@@ -556,7 +556,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     Map[Setting[_], Object](
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
       OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
-      RelationshipTypeScanStoreSettings.enable_relationship_property_indexes -> java.lang.Boolean.TRUE
+      RelationshipTypeScanStoreSettings.enable_relationship_property_indexes -> java.lang.Boolean.TRUE,
+      GraphDatabaseInternalSettings.cypher_enable_planning_relationship_indexes -> java.lang.Boolean.TRUE,
     ).asJava
 
   protected def newDatabaseManagementService(directory: File): DatabaseManagementService = {

@@ -41,7 +41,7 @@ import scala.collection.JavaConverters._
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
 
   //need a couple of 'Person' to make index operations more efficient than label scans
-  override val setupQueries = (1 to 20 map (_ => """CREATE (:Person)""")).toList
+  override val setupQueries = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++ Seq("create ()-[:KNOWS { since: 1992 } ]->()")
 
   override def graphDescription = List(
     "andy:Person KNOWS john:Person"
@@ -243,14 +243,31 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index() {
     profileQuery(
-      title = "A simple example",
-      text = "In the example below, the query will use a `Person(firstname)` index, if it exists. ",
+      title = "A simple node index example",
+      text = "In the example below, the query will use a `Person(firstname)` node index, if it exists. ",
       queryText = "MATCH (person:Person {firstname: 'Andy'}) RETURN person",
       assertions = {
         (p) =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_relationship_index() {
+    prepareAndTestQuery(
+      title = "A simple relationship index example",
+      text = "In this example, the query will use a `KNOWS(since)` relationship index, if it exists. ",
+      queryText = "MATCH ()-[relationship:KNOWS { since: 1992 } ]->() RETURN relationship",
+      prepare = _ => executePreparationQueries(List(
+        "create index for ()-[r:KNOWS]-() on (r.since)",
+      )),
+      assertions = {
+        p =>
+          assertEquals(1, p.size)
+
+          checkPlanDescription(p)("DirectedRelationshipIndexSeek")
       }
     )
   }
