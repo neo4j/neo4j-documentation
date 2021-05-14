@@ -299,9 +299,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   protected def databaseConfig(): util.Map[Setting[_], Object] = {
     Map[Setting[_], Object](
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
-      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
-      RelationshipTypeScanStoreSettings.enable_relationship_property_indexes -> java.lang.Boolean.TRUE,
-      RelationshipTypeScanStoreSettings.enable_scan_stores_as_token_indexes -> java.lang.Boolean.TRUE
+      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
     ).asJava
   }
 }
