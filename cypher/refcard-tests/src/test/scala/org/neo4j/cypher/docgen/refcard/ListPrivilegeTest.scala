@@ -53,38 +53,6 @@ WHERE role = 'my_role'
 
 List information about privileges, filtered by role, action and access and further refined by the name of the role.
 
-###assertion=show-one
-//
-
-SHOW ROLE my_role PRIVILEGES
-###
-
-List all privileges assigned to a role.
-
-###assertion=show-two
-//
-
-SHOW ROLE my_role, my_second_role PRIVILEGES
-###
-
-List all privileges assigned to each of the multiple roles.
-
-###assertion=show-one
-//
-
-SHOW USER alice PRIVILEGES
-###
-
-List all privileges of a user, and the role that they are assigned to.
-
-###assertion=show-nothing
-//
-
-SHOW USER PRIVILEGES
-###
-
-Lists all privileges of the currently logged in user, and the role that they are assigned to.
-
 ###assertion=show-two
 //
 
@@ -92,6 +60,38 @@ SHOW PRIVILEGES AS COMMANDS
 ###
 
 List all privileges in the system as Cypher commands.
+
+###assertion=show-one
+//
+
+SHOW ROLE my_role PRIVILEGES AS COMMANDS
+###
+
+List all privileges assigned to a role as Cypher commands.
+
+###assertion=show-two
+//
+
+SHOW ROLE my_role, my_second_role PRIVILEGES AS COMMANDS
+###
+
+List all privileges assigned to each of the multiple roles as Cypher commands.
+
+###assertion=show-one
+//
+
+SHOW USER alice PRIVILEGES AS COMMANDS
+###
+
+List all privileges of a user, and the role that they are assigned to as Cypher commands.
+
+###assertion=show-nothing
+//
+
+SHOW USER PRIVILEGES AS COMMANDS
+###
+
+Lists all privileges of the currently logged in user, and the role that they are assigned to as Cypher commands.
 """
   }
 }

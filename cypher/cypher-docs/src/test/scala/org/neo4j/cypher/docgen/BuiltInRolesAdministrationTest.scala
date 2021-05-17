@@ -45,7 +45,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
     section("The `PUBLIC` role", "administration-built-in-roles-public", "enterprise-edition") {
       p("All users are granted the `PUBLIC` role, and it can not be revoked or dropped. By default, it gives access to the default database and allows executing all procedures and user defined functions.")
       section("Privileges of the `PUBLIC` role", "administration-built-in-roles-public-privileges") {
-        query("SHOW ROLE PUBLIC PRIVILEGES", ResultAssertions(p => true)) {
+        query("SHOW ROLE PUBLIC PRIVILEGES AS COMMANDS", ResultAssertions(_ => true)) {
           resultTable()
         }
       }
@@ -79,7 +79,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         p("The resulting `PUBLIC` role now has the same privileges as the " +
           "original built-in `PUBLIC` role.")
 
-//        query("SHOW ROLE PUBLIC PRIVILEGES", ResultAssertions(p => true)) {
+//        query("SHOW ROLE PUBLIC PRIVILEGES AS COMMANDS", ResultAssertions(_ => true)) {
 //          resultTable()
 //        }
       }
@@ -87,7 +87,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
     section("The `reader` role", "administration-built-in-roles-reader", "enterprise-edition") {
       p("The `reader` role can perform read-only queries on all graphs except for the `system` database.")
       section("Privileges of the `reader` role", "administration-built-in-roles-reader-privileges") {
-        query("SHOW ROLE reader PRIVILEGES", ResultAssertions(p => true)) {
+        query("SHOW ROLE reader PRIVILEGES AS COMMANDS", ResultAssertions(_ => true)) {
           resultTable()
         }
       }
@@ -99,17 +99,17 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
             |To restore the role to its original capabilities two steps are needed. First, if not already done, execute `DROP ROLE reader`.
             |Secondly, the following queries must be run:""".stripMargin)
 
-        query("CREATE ROLE reader", ResultAssertions((r) => {
+        query("CREATE ROLE reader", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT ACCESS ON DATABASE * TO reader", ResultAssertions((r) => {
+        query("GRANT ACCESS ON DATABASE * TO reader", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT MATCH {*} ON GRAPH * TO reader", ResultAssertions((r) => {
+        query("GRANT MATCH {*} ON GRAPH * TO reader", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
@@ -118,7 +118,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         p("The resulting `reader` role now has the same privileges as the " +
           "original built-in `reader` role.")
 
-//        query("SHOW ROLE reader PRIVILEGES", ResultAssertions(p => true)) {
+//        query("SHOW ROLE reader PRIVILEGES AS COMMANDS", ResultAssertions(_ => true)) {
 //          resultTable()
 //        }
       }
@@ -126,7 +126,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
     section("The `editor` role", "administration-built-in-roles-editor", "enterprise-edition") {
       p("The `editor` role can perform read and write operations on all graphs except for the `system` database, but can not make new labels, property keys or relationship types.")
       section("Privileges of the `editor` role", "administration-built-in-roles-editor-privileges") {
-        query("SHOW ROLE editor PRIVILEGES", ResultAssertions(p => true)) {
+        query("SHOW ROLE editor PRIVILEGES AS COMMANDS", ResultAssertions(_ => true)) {
           resultTable()
         }
       }
@@ -137,22 +137,22 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           """
             |To restore the role to its original capabilities two steps are needed. First, if not already done, execute `DROP ROLE editor`.
             |Secondly, the following queries must be run:""".stripMargin)
-        query("CREATE ROLE editor", ResultAssertions((r) => {
+        query("CREATE ROLE editor", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT ACCESS ON DATABASE * TO editor", ResultAssertions((r) => {
+        query("GRANT ACCESS ON DATABASE * TO editor", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT MATCH {*} ON GRAPH * TO editor", ResultAssertions((r) => {
+        query("GRANT MATCH {*} ON GRAPH * TO editor", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT WRITE ON GRAPH * TO editor", ResultAssertions((r) => {
+        query("GRANT WRITE ON GRAPH * TO editor", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
@@ -161,7 +161,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         p("The resulting `editor` role now has the same privileges as the " +
           "original built-in `editor` role.")
 
-//        query("SHOW ROLE editor PRIVILEGES", ResultAssertions(p => true)) {
+//        query("SHOW ROLE editor PRIVILEGES AS COMMANDS", ResultAssertions(_ => true)) {
 //          resultTable()
 //        }
       }
@@ -169,7 +169,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
     section("The `publisher` role", "administration-built-in-roles-publisher", "enterprise-edition") {
       p("The `publisher` role can do the same as <<administration-built-in-roles-editor,`editor`>>, but can also create new labels, property keys and relationship types.")
       section("Privileges of the `publisher` role", "administration-built-in-roles-publisher-privileges") {
-        query("SHOW ROLE publisher PRIVILEGES", ResultAssertions(p => true)) {
+        query("SHOW ROLE publisher PRIVILEGES AS COMMANDS", ResultAssertions(_ => true)) {
           resultTable()
         }
       }
@@ -180,27 +180,27 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           """
             |To restore the role to its original capabilities two steps are needed. First, if not already done, execute `DROP ROLE publisher`.
             |Secondly, the following queries must be run:""".stripMargin)
-        query("CREATE ROLE publisher", ResultAssertions((r) => {
+        query("CREATE ROLE publisher", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT ACCESS ON DATABASE * TO publisher", ResultAssertions((r) => {
+        query("GRANT ACCESS ON DATABASE * TO publisher", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT MATCH {*} ON GRAPH * TO publisher", ResultAssertions((r) => {
+        query("GRANT MATCH {*} ON GRAPH * TO publisher", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT WRITE ON GRAPH * TO publisher", ResultAssertions((r) => {
+        query("GRANT WRITE ON GRAPH * TO publisher", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT NAME MANAGEMENT ON DATABASE * TO publisher", ResultAssertions((r) => {
+        query("GRANT NAME MANAGEMENT ON DATABASE * TO publisher", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -209,7 +209,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         p("The resulting `publisher` role now has the same privileges as the " +
           "original built-in `publisher` role.")
 
-//        query("SHOW ROLE publisher PRIVILEGES", ResultAssertions(p => true)) {
+//        query("SHOW ROLE publisher PRIVILEGES AS COMMANDS", ResultAssertions(_ => true)) {
 //          resultTable()
 //        }
       }
@@ -217,7 +217,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
     section("The `architect` role", "administration-built-in-roles-architect", "enterprise-edition") {
       p("The `architect` role can do the same as the <<administration-built-in-roles-publisher,`publisher`>>, as well as create and manage indexes and constraints.")
       section("Privileges of the `architect` role", "administration-built-in-roles-architect-privileges") {
-        query("SHOW ROLE architect PRIVILEGES",ResultAssertions(p => true)) {
+        query("SHOW ROLE architect PRIVILEGES AS COMMANDS",ResultAssertions(_ => true)) {
           resultTable()
         }
       }
@@ -228,37 +228,37 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           """
             |To restore the role to its original capabilities two steps are needed. First, if not already done, execute `DROP ROLE architect`.
             |Secondly, the following queries must be run:""".stripMargin)
-        query("CREATE ROLE architect", ResultAssertions((r) => {
+        query("CREATE ROLE architect", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT ACCESS ON DATABASE * TO architect", ResultAssertions((r) => {
+        query("GRANT ACCESS ON DATABASE * TO architect", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT MATCH {*} ON GRAPH * TO architect", ResultAssertions((r) => {
+        query("GRANT MATCH {*} ON GRAPH * TO architect", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT WRITE ON GRAPH * TO architect", ResultAssertions((r) => {
+        query("GRANT WRITE ON GRAPH * TO architect", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT NAME MANAGEMENT ON DATABASE * TO architect", ResultAssertions((r) => {
+        query("GRANT NAME MANAGEMENT ON DATABASE * TO architect", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT INDEX MANAGEMENT ON DATABASE * TO architect", ResultAssertions((r) => {
+        query("GRANT INDEX MANAGEMENT ON DATABASE * TO architect", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT CONSTRAINT MANAGEMENT ON DATABASE * TO architect", ResultAssertions((r) => {
+        query("GRANT CONSTRAINT MANAGEMENT ON DATABASE * TO architect", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -266,7 +266,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
         p("The resulting `architect` role now has the same privileges as the " +
           "original built-in `architect` role.")
 
-//        query("SHOW ROLE architect PRIVILEGES", ResultAssertions(p => true)) {
+//        query("SHOW ROLE architect PRIVILEGES AS COMMANDS", ResultAssertions(_ => true)) {
 //          resultTable()
 //        }
       }
@@ -274,7 +274,7 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
     section("The `admin` role", "administration-built-in-roles-admin", "enterprise-edition") {
       p("The `admin` role can do the same as the <<administration-built-in-roles-architect,`architect`>>, as well as manage databases, users, roles and privileges.")
       section("Privileges of the `admin` role", "administration-built-in-roles-admin-privileges") {
-        query("SHOW ROLE admin PRIVILEGES",ResultAssertions(p => true)) {
+        query("SHOW ROLE admin PRIVILEGES AS COMMANDS",ResultAssertions(_ => true)) {
           resultTable()
         }
       }
@@ -285,54 +285,52 @@ class BuiltInRolesAdministrationTest extends DocumentingTest with QueryStatistic
           """
             |To restore the role to its original capabilities two steps are needed. First, if not already done, execute `DROP ROLE admin`.
             |Secondly, the following queries must be run in order to set up the privileges:""".stripMargin)
-        query("CREATE ROLE admin", ResultAssertions((r) => {
+        query("CREATE ROLE admin", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT ALL DBMS PRIVILEGES ON DBMS TO admin", ResultAssertions((r) => {
+        query("GRANT ALL DBMS PRIVILEGES ON DBMS TO admin", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT TRANSACTION MANAGEMENT ON DATABASE * TO admin", ResultAssertions((r) => {
+        query("GRANT TRANSACTION MANAGEMENT ON DATABASE * TO admin", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT START ON DATABASE * TO admin", ResultAssertions((r) => {
+        query("GRANT START ON DATABASE * TO admin", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT STOP ON DATABASE * TO admin", ResultAssertions((r) => {
+        query("GRANT STOP ON DATABASE * TO admin", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT MATCH {*} ON GRAPH * TO admin", ResultAssertions((r) => {
+        query("GRANT MATCH {*} ON GRAPH * TO admin", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT WRITE ON GRAPH * TO admin", ResultAssertions((r) => {
+        query("GRANT WRITE ON GRAPH * TO admin", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
         })) {
           statsOnlyResultTable()
         }
-        query("GRANT ALL ON DATABASE * TO admin", ResultAssertions((r) => {
+        query("GRANT ALL ON DATABASE * TO admin", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
 
-        p("The queries above are enough to grant most of the full admin capabilities. " +
-          "Please note that the result of executing `SHOW ROLE admin PRIVILEGES` now appears to be slightly different from " +
-          "the privileges shown for the original built-in `admin` role. This does not make any functional difference.")
+        p("The resulting `admin` role now has the same privileges as the original built-in `admin` role.")
 
-        query("SHOW ROLE admin PRIVILEGES",ResultAssertions(p => true)) {
-          resultTable()
-        }
+//        query("SHOW ROLE admin PRIVILEGES AS COMMANDS",ResultAssertions(_ => true)) {
+//          resultTable()
+//        }
 
         p("Additional information about restoring the admin role can be found in the <<operations-manual#recover-admin-role, Operations Manual -> Recover the admin role>>.")
       }
