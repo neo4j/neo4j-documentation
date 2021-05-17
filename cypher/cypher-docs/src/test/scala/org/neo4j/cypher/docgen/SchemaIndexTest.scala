@@ -41,8 +41,10 @@ import scala.collection.JavaConverters._
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
 
-  //need a couple of 'Person' to make index operations more efficient than label scans
-  override val setupQueries: List[String] = (1 to 20 map (_ => """CREATE (:Person)""")).toList
+  //need a couple of 'Person' and 'KNOWS' to make index operations more efficient than label and relType scans
+  override val setupQueries: List[String] = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++
+  //some additonal data
+    Seq("create ()-[:KNOWS {since: 1992, metIn: 'Malmo', lastMet: 2021, lastMetIn: 'Stockholm'}]->()")
 
   override def graphDescription = List(
     "andy:Person KNOWS john:Person"
@@ -265,14 +267,31 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index() {
     profileQuery(
-      title = "A simple example",
-      text = "In the example below, the query will use a `Person(firstname)` index, if it exists. ",
+      title = "A simple node index example",
+      text = "In the example below, the query will use a `Person(firstname)` node index, if it exists. ",
       queryText = "MATCH (person:Person {firstname: 'Andy'}) RETURN person",
       assertions = {
         p =>
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_relationship_index() {
+    profileQuery(
+      title = "A simple relationship index example",
+      text = "In this example, the query will use a `KNOWS(since)` relationship index, if it exists. ",
+      queryText = "MATCH (person)-[relationship:KNOWS { since: 1992 } ]->(friend) RETURN person, friend",
+      prepare = Some(_ => executePreparationQueries(List(
+        "create index for ()-[r:KNOWS]-() on (r.since)",
+      ))),
+      assertions = {
+        p =>
+          assertEquals(1, p.size)
+
+          checkPlanDescription(p)("DirectedRelationshipIndexSeek")
       }
     )
   }
@@ -331,42 +350,36 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_where_using_range_comparisons() {
-    // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 300).map { _ =>
-      "CREATE (:Person)"
-    }.toList)
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.since)"))
     profileQuery(
       title = "Range comparisons using `WHERE` (single-property index)",
       text = "Single-property indexes are also automatically used for inequality (range) comparisons of an indexed property in the `WHERE` clause.",
-      queryText = "MATCH (person:Person) WHERE person.firstname > 'B' RETURN person",
+      queryText = "MATCH (friend)<-[r:KNOWS]-(person) WHERE r.since < 2011 RETURN friend, person",
       assertions = {
         p =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("DirectedRelationshipIndexSeek")
       }
     )
   }
 
   @Test def use_index_with_where_using_range_comparisons_composite() {
-    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.firstname, p.highScore)"))
-    // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 300).map { _ =>
-      "CREATE (:Person)"
-    }.toList)
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.since, r.lastMet)"))
     profileQuery(
       title = "Range comparisons using `WHERE` (composite index)",
       text = "Composite indexes are also automatically used for inequality (range) comparisons of indexed properties in the `WHERE` clause. " +
         "Equality or list membership check predicates may precede the range predicate. " +
         "However, predicates after the range predicate may be rewritten as an existence check predicate and a filter " +
         "as described in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
-      queryText = "MATCH (person:Person) WHERE person.firstname > 'B' AND person.highScore > 10000 RETURN person",
+      queryText = "MATCH ()-[r:KNOWS]-() WHERE r.since < 2011 AND r.lastMet > 2019 RETURN r.since",
       assertions = {
         p =>
-          assertEquals(1, p.size)
+          // asserting to get that one relationship twice (both directions)
+          assertEquals(2, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescription(p)("person:Person(firstname, highScore) WHERE firstname > $autostring_0 AND highScore IS NOT NULL")
+          checkPlanDescription(p)("UndirectedRelationshipIndexSeek")
+          checkPlanDescription(p)("r:KNOWS(since, lastMet) WHERE since < $autoint_0 AND lastMet IS NOT NULL")
       }
     )
   }
@@ -413,54 +426,36 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_single_property_index_with_in() {
-
-    executePreparationQueries(
-      List(
-        "FOREACH (x IN range(0, 100) | CREATE (:Person) )",
-        "FOREACH (x IN range(0, 400) | CREATE (:Person {firstname: x}) )"
-      )
-    )
-
-    sampleAllIndexesAndWait()
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.since)"))
 
     profileQuery(
       title = "List membership check using `IN` (single-property index)",
       text =
-        "The `IN` predicate on `person.firstname` in the following query will use the single-property index `Person(firstname)` if it exists. ",
-      queryText = "MATCH (person:Person) WHERE person.firstname IN ['Andy', 'John'] RETURN person",
+        "The `IN` predicate on `r.since` in the following query will use the single-property index `KNOWS(since)` if it exists. ",
+      queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.since IN [1992, 2017] RETURN person, friend",
       assertions = {
         p =>
-          assertEquals(2, p.size)
+          assertEquals(1, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescription(p)("DirectedRelationshipIndexSeek")
       }
     )
   }
 
   @Test def use_composite_index_with_in() {
-
-    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.age, p.country)"))
-
-    executePreparationQueries(
-      List(
-        "FOREACH (x IN range(0, 100) | CREATE (:Person) )",
-        "FOREACH (x IN range(0, 400) | CREATE (:Person {age: x, country: x}) )"
-      )
-    )
-
-    sampleAllIndexesAndWait()
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.since, r.lastMet)"))
 
     profileQuery(
       title = "List membership check using `IN` (composite index)",
       text =
-        "The `IN` predicates on `person.age` and `person.country` in the following query will use the composite index `Person(age, country)` if it exists. ",
-      queryText = "MATCH (person:Person) WHERE person.age IN [10, 20, 35] AND person.country IN ['Sweden', 'USA', 'UK'] RETURN person",
+        "The `IN` predicates on `r.since` and `r.lastMet` in the following query will use the composite index `KNOWS(since, lastMet)` if it exists. ",
+      queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.since IN [1992, 2017] AND r.lastMet IN [2002, 2021] RETURN person, friend",
       assertions = {
         p =>
           assertEquals(1, p.size)
 
-          checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescription(p)("person:Person(age, country) WHERE age IN $autolist_0 AND country IN $autolist_1")
+          checkPlanDescription(p)("DirectedRelationshipIndexSeek")
+          checkPlanDescription(p)("r:KNOWS(since, lastMet) WHERE since IN $autolist_0 AND lastMet IN $autolist_1")
       }
     )
   }
@@ -517,54 +512,41 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_ends_with() {
-    executePreparationQueries {
-      val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
-      val b = (0 to 300).map { i => s"CREATE (:Person {firstname: '$i'})" }.toList
-      a ++ b
-    }
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.metIn)"))
 
     sampleAllIndexesAndWait()
 
     profileQuery(
       title = "Suffix search using `ENDS WITH` (single-property index)",
       text =
-        "The `ENDS WITH` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
-          "All values stored in the `Person(firstname)` index will be searched, and entries ending with `'hn'` will be returned. " +
-          "This means that although the search will not be optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place. " +
-          "Composite indexes are currently not able to support `ENDS WITH`. ",
-      queryText = "MATCH (person:Person) WHERE person.firstname ENDS WITH 'hn' RETURN person",
+        "The `ENDS WITH` predicate on `r.metIn` in the following query will use the `KNOWS(metIn)` index, if it exists. " +
+          "All values stored in the `KNOWS(metIn)` index will be searched, and entries ending with `'mo'` will be returned. " +
+          "This means that although the search will not be optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place.",
+      queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.metIn ENDS WITH 'mo' RETURN person, friend",
       assertions = {
         p =>
           assertEquals(1, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexEndsWithScan"))
+          assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexEndsWithScan"))
       }
     )
   }
 
   @Test def use_index_with_ends_with_composite() {
-    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.surname, p.age)"))
-
-    executePreparationQueries {
-      val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
-      val b = (0 to 300).map { i => s"CREATE (:Person {age: $i, surname: '${-i}'})" }.toList
-      a ++ b
-    }
-
-    sampleAllIndexesAndWait()
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.metIn, r.lastMetIn)"))
 
     profileQuery(
       title = "Suffix search using `ENDS WITH` (composite index)",
       text =
-        "The `ENDS WITH` predicate on `person.surname` in the following query will use the `Person(surname,age)` index, if it exists. " +
+        "The `ENDS WITH` predicate on `r.metIn` in the following query will use the `KNOWS(metIn,lastMetIn)` index, if it exists. " +
           "However, it will be rewritten as existence check and a filter due to the index not supporting actual suffix searches for composite indexes, " +
           "this is still faster than not using an index in the first place. " +
-          "Any (non-existence check) predicate on `person.age` will also be rewritten as existence check with a filter. " +
+          "Any (non-existence check) predicate on `KNOWS.lastMetIn` will also be rewritten as existence check with a filter. " +
           "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
-      queryText = "MATCH (person:Person) WHERE person.surname ENDS WITH '300' AND person.age IS NOT NULL RETURN person",
+      queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.metIn ENDS WITH 'mo' AND r.lastMetIn IS NOT NULL RETURN person, friend",
       assertions = {
         p =>
           assertEquals(1, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
+          assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexScan"))
       }
     )
   }
@@ -623,19 +605,16 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_property_is_not_null() {
-    // Need to make index preferable in terms of cost
-    executePreparationQueries((0 to 250).map { _ =>
-      "CREATE (:Person)"
-    }.toList)
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.since)"))
     profileQuery(
       title = "Existence check using `IS NOT NULL` (single-property index)",
       text =
-        "The `p.firstname IS NOT NULL` predicate in the following query will use the `Person(firstname)` index, if it exists. ",
-      queryText = "MATCH (p:Person) WHERE p.firstname IS NOT NULL RETURN p",
+        "The `r.since IS NOT NULL` predicate in the following query will use the `KNOWS(since)` index, if it exists. ",
+      queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.since IS NOT NULL RETURN person, friend",
       assertions = {
         p =>
-          assertEquals(2, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
+          assertEquals(1, p.size)
+          assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexScan"))
       }
     )
   }
@@ -662,16 +641,19 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index_with_distance_query() {
     executePreparationQueries(
-      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y}) } )").toList)
+      (for(_ <- 1 to 300) yield s"CREATE ()-[:SOME_TYPE]->()").toList ++
+      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE ()-[:KNOWS {lastMetPoint: point({x:$x, y:$y})}]->()").toList)
+
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.lastMetPoint)"))
     profileQuery(
       title = "Spatial distance searches (single-property index)",
       text =
         "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries.",
-      queryText = "MATCH (p:Person) WHERE distance(p.location, point({x: 1, y: 2})) < 2 RETURN p.location",
+      queryText = "MATCH ()-[r:KNOWS]->() WHERE distance(r.lastMetPoint, point({x: 1, y: 2})) < 2 RETURN r.lastMetPoint",
       assertions = {
         p =>
           assertEquals(9, p.size)
-          assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeekByRange"))
+          assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexSeekByRange"))
       }
     )
   }

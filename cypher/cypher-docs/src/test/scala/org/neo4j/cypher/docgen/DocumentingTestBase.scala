@@ -19,25 +19,27 @@
  */
 package org.neo4j.cypher.docgen
 
-import java.io.{ByteArrayOutputStream, File, PrintWriter, StringWriter}
-import java.nio.charset.StandardCharsets
-import java.util
-import java.util.concurrent.TimeUnit
-
 import com.neo4j.configuration.OnlineBackupSettings
 import org.apache.commons.io.FileUtils
-import org.junit.{After, Before}
+import org.junit.After
+import org.junit.Before
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.configuration.helpers.SocketAddress
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
-import org.neo4j.cypher.export.{DatabaseSubGraph, SubGraphExporter}
+import org.neo4j.cypher.export.DatabaseSubGraph
+import org.neo4j.cypher.export.SubGraphExporter
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl, ResultSubscriber}
-import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.javacompat.GraphImpl
+import org.neo4j.cypher.internal.javacompat.ResultSubscriber
+import org.neo4j.cypher.internal.runtime.RuntimeJavaValueConverter
+import org.neo4j.cypher.internal.runtime.isGraphKernelResultValue
 import org.neo4j.cypher.internal.util.Eagerly
-import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
-import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
+import org.neo4j.cypher.ExecutionEngineHelper
+import org.neo4j.cypher.GraphIcing
+import org.neo4j.dbms.api.DatabaseManagementService
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder
 import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.doc.test.GraphDescription
 import org.neo4j.doc.tools.AsciiDocGenerator
@@ -49,14 +51,25 @@ import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
-import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySubscriber, QuerySubscriberAdapter}
+import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
+import org.neo4j.kernel.impl.query.QuerySubscriber
+import org.neo4j.kernel.impl.query.QuerySubscriberAdapter
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.values.virtual.VirtualValues
 import org.neo4j.visualization.asciidoc.AsciidocHelper
-import org.neo4j.visualization.graphviz.{AsciiDocStyle, GraphStyle, GraphvizWriter}
+import org.neo4j.visualization.graphviz.AsciiDocStyle
+import org.neo4j.visualization.graphviz.GraphStyle
+import org.neo4j.visualization.graphviz.GraphvizWriter
 import org.neo4j.walk.Walker
 import org.scalatest.junit.JUnitSuite
 
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.nio.charset.StandardCharsets
+import java.util
+import java.util.concurrent.TimeUnit
 import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
@@ -194,8 +207,13 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     internalTestQuery(title, text, queryText, optionalResultExplanation, None, Some(prepare), Map.empty, Seq.empty, assertions)
   }
 
-  def profileQuery(title: String, text: String, queryText: String, realQuery: Option[String] = None, assertions: DocsExecutionResult => Unit) {
-    internalProfileQuery(title, text, queryText, realQuery, None, None, assertions)
+  def profileQuery(title: String,
+                   text: String,
+                   queryText: String,
+                   realQuery: Option[String] = None,
+                   prepare: Option[GraphDatabaseCypherService => Unit] = None,
+                   assertions: DocsExecutionResult => Unit) {
+    internalProfileQuery(title, text, queryText, realQuery, None, prepare, assertions)
   }
 
   private def internalProfileQuery(title: String,
