@@ -1191,11 +1191,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def assertSameNode() {
+  @Test def assertingMultiNodeIndexSeek() {
     profileQuery(
-      title = "Assert Same Node",
+      title = "Asserting Multi Node Index Seek",
       text =
-        """The `AssertSameNode` operator is used to ensure that no unique constraints are violated.
+        """The `AssertingMultiNodeIndexSeek` operator is used to ensure that no unique constraints are violated.
           |The example looks for the presence of a team with the supplied name and id, and if one does not exist,
           |it will be created. Owing to the existence of two unique constraints
           |on `:Team(name)` and `:Team(id)`, any node that would be found by the `UniqueIndexSeek`
@@ -1203,6 +1203,22 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """.stripMargin,
       queryText =
         """MERGE (t:Team {name: 'Engineering', id: 42})""".stripMargin,
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("AssertingMultiNodeIndexSeek"))
+    )
+  }
+
+  @Test def assertSameNode() {
+    profileQuery(
+      title = "Assert Same Node",
+      text =
+        """The `AssertSameNode` operator is used to ensure that no unique constraints are violated in the slotted and interpreted runtime.
+          |The example looks for the presence of a team with the supplied name and id, and if one does not exist,
+          |it will be created. Owing to the existence of two unique constraints
+          |on `:Team(name)` and `:Team(id)`, any node that would be found by the `UniqueIndexSeek`
+          |must be the very same node, or the constraints would be violated.
+        """.stripMargin,
+      queryText =
+        """CYPHER runtime=slotted MERGE (t:Team {name: 'Engineering', id: 42})""".stripMargin,
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("AssertSameNode"))
     )
   }
