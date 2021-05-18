@@ -721,8 +721,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             """The ability to execute a procedure with elevated privileges can be granted via the `EXECUTE BOOSTED PROCEDURE` privilege.
               |A user with this privilege is allowed to execute the procedures matched by the <<name-globbing, name-globbing>>
               |without the execution being restricted to their other privileges.
-              |There is no need for an individual `EXECUTE PROCEDURE` privilege for the procedures either,
-              |instead the `EXECUTE BOOSTED PROCEDURE` will include an implicit `EXECUTE PROCEDURE` for them.
+              |There is no need for granting an individual `EXECUTE PROCEDURE` privilege for the procedures either,
+              |instead granting the `EXECUTE BOOSTED PROCEDURE` will include an implicit `EXECUTE PROCEDURE` grant for them.
+              |A denied `EXECUTE PROCEDURE` will still deny executing the procedure.
               |The following query shows an example of how to grant this privilege:""".stripMargin)
           query("GRANT EXECUTE BOOSTED PROCEDURE db.labels, db.relationshipTypes ON DBMS TO boostedProcedureExecutor", ResultAssertions(r => {
             assertStats(r, systemUpdates = 2)
@@ -835,10 +836,10 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
               |the `myProc` procedure would return the result `A` and `B`.""".stripMargin)
           p(
             """With the privileges from example 2, granted `EXECUTE BOOSTED PROCEDURE *` and denied `EXECUTE PROCEDURE myProc`,
-              |the `myProc` procedure would throw an error on no access to the procedure.""".stripMargin)
+              |execution of the `myProc` procedure would not be allowed.""".stripMargin)
           p(
             """With the privileges from example 3, granted `EXECUTE BOOSTED PROCEDURE *` and denied `EXECUTE BOOSTED PROCEDURE myProc`,
-              |the `myProc` procedure would throw an error on no access to the procedure.""".stripMargin)
+              |execution of the `myProc` procedure would not be allowed.""".stripMargin)
           p(
             """With the privileges from example 4, granted `EXECUTE PROCEDURE myProc` and `EXECUTE BOOSTED PROCEDURE *` and denied `EXECUTE BOOSTED PROCEDURE myProc`,
               |the `myProc` procedure would return the result `A` and `B`.""".stripMargin)
@@ -871,12 +872,12 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
               |This time as an admin procedure, which gives the result `A`, `B` and `C` when allowed to execute.""".stripMargin)
           p(
             """Lets start with a user only granted the `EXECUTE PROCEDURE myProc` privilege,
-              |the `myProc` procedure would throw an error on no access to the procedure.""".stripMargin)
+              |execution of the `myProc` procedure would not be allowed.""".stripMargin)
           p(
             """However for a user granted `EXECUTE BOOSTED PROCEDURE myProc` or `EXECUTE ADMIN PROCEDURES`,
               |the `myProc` procedure would return the result `A`, `B` and `C`.""".stripMargin)
           p(
-            """Any denied execute privilege would result in the no access error.
+            """Any denied execute privilege would result in the procedure not being allowed to execute.
               |It does not matter if it is `EXECUTE PROCEDURE`, `EXECUTE BOOSTED PROCEDURE` or `EXECUTE ADMIN PROCEDURES` that is denied.""".stripMargin)
         }
 
@@ -927,8 +928,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             """The ability to execute a user defined function (UDF) with elevated privileges can be granted via the `EXECUTE BOOSTED USER DEFINED FUNCTION` privilege.
               |A user with this privilege is allowed to execute the UDFs matched by the <<name-globbing, name-globbing>>
               |without the execution being restricted to their other privileges.
-              |There is no need for an individual `EXECUTE USER DEFINED FUNCTION` privilege for the functions either,
-              |instead the `EXECUTE BOOSTED USER DEFINED FUNCTION` will include an implicit `EXECUTE USER DEFINED FUNCTION` for them.
+              |There is no need for granting an individual `EXECUTE USER DEFINED FUNCTION` privilege for the functions either,
+              |instead granting the `EXECUTE BOOSTED USER DEFINED FUNCTION` will include an implicit `EXECUTE USER DEFINED FUNCTION` grant for them.
+              |A denied `EXECUTE USER DEFINED FUNCTION` will still deny executing the function.
               |The following query shows an example of how to grant this privilege:""".stripMargin)
           query("GRANT EXECUTE BOOSTED FUNCTION apoc.any.properties ON DBMS TO boostedFunctionExecutor", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
