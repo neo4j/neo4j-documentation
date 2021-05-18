@@ -38,6 +38,14 @@ class ListPrivilegeTest extends AdministrationCommandTestBase {
 ###assertion=show-two
 //
 
+SHOW PRIVILEGES AS COMMANDS
+###
+
+List all privileges in the system as Cypher commands.
+
+###assertion=show-two
+//
+
 SHOW PRIVILEGES
 ###
 
@@ -52,14 +60,6 @@ WHERE role = 'my_role'
 ###
 
 List information about privileges, filtered by role, action and access and further refined by the name of the role.
-
-###assertion=show-two
-//
-
-SHOW PRIVILEGES AS COMMANDS
-###
-
-List all privileges in the system as Cypher commands.
 
 ###assertion=show-one
 //
@@ -91,7 +91,7 @@ List all privileges of a user, and the role that they are assigned to as Cypher 
 SHOW USER PRIVILEGES AS COMMANDS
 ###
 
-Lists all privileges of the currently logged in user, and the role that they are assigned to as Cypher commands.
+List all privileges of the currently logged in user, and the role that they are assigned to as Cypher commands.
 """
   }
 }

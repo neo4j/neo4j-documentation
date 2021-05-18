@@ -157,7 +157,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
           resultTable()
         }
 
-        p("Available privileges can also be output as Cypher commands with the optional `AS COMMAND[S]`.")
+        p("Available privileges can also be output as Cypher commands, by appending `AS COMMAND[S]` to the show command.")
         query("SHOW PRIVILEGES AS COMMANDS", assertPrivilegeShown(Seq(
           // Only checks admin and public, the rest should be there as well
           Map("command" -> "GRANT ACCESS ON HOME DATABASE TO `PUBLIC`"),
@@ -191,8 +191,9 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
           resultTable()
         }
 
-        p("It is also possible to have privileges output as revoke commands. " +
-          "For more on revoke commands, please see <<administration-security-subgraph-revoke, The REVOKE command>>.")
+        p(
+          """It is also possible to get the privilege commands formatted for revoking instead of granting or denying the privileges.
+            |For more info about revoking privileges, please see <<administration-security-subgraph-revoke, The REVOKE command>>.""".stripMargin)
         query("SHOW PRIVILEGES AS REVOKE COMMANDS", assertPrivilegeShown(Seq(
           // Only checks reader and editor, the rest should be there as well
           Map("command" -> "REVOKE GRANT ACCESS ON DATABASE * FROM `reader`"),
@@ -240,7 +241,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
           resultTable()
         }
 
-        p("Of course, the output can also be processed using `YIELD` / `WHERE` / `RETURN`.")
+        p("Also here can the output be processed using `YIELD` / `WHERE` / `RETURN`.")
         query("SHOW ROLE architect PRIVILEGES AS COMMANDS WHERE command CONTAINS 'MATCH'", assertPrivilegeShown(Seq(
           Map("command" -> "GRANT MATCH {*} ON GRAPH * NODE * TO `architect`"),
           Map("command" -> "GRANT MATCH {*} ON GRAPH * RELATIONSHIP * TO `architect`"),
@@ -248,8 +249,8 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
           resultTable()
         }
 
-        p("It is also possible to have privileges output as revoke commands. " +
-          "For more on revoke commands, please see <<administration-security-subgraph-revoke, The REVOKE command>>.")
+        p("""Once again is it possible to get the privilege commands formatted for revoking instead of granting or denying the privileges.
+            |For more info about revoking privileges, please see <<administration-security-subgraph-revoke, The REVOKE command>>.""".stripMargin)
         query("SHOW ROLE reader PRIVILEGES AS REVOKE COMMANDS", assertPrivilegeShown(Seq(
           Map("command" -> "REVOKE GRANT ACCESS ON DATABASE * FROM `reader`"),
           Map("command" -> "REVOKE GRANT MATCH {*} ON GRAPH * NODE * FROM `reader`"),
@@ -300,7 +301,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         }
 
         p("Like other `SHOW` commands, the output can also be processed using `YIELD` / `WHERE` / `RETURN`. " +
-          "Additionally, just as with other privileges, it is also possible to show user privileges as revoke commands.")
+          "Additionally, just as with other privileges, it is also possible to show the commands for revoking the privileges.")
         query("SHOW USER jake PRIVILEGES AS REVOKE COMMANDS WHERE command CONTAINS 'EXECUTE'", assertPrivilegeShown(Seq(
           Map("command" -> "REVOKE GRANT EXECUTE PROCEDURE * ON DBMS FROM $role"),
         ))) {
