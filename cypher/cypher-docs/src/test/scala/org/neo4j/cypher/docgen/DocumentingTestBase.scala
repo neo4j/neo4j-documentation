@@ -555,8 +555,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   protected def databaseConfig(): util.Map[Setting[_], Object] =
     Map[Setting[_], Object](
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
-      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
-      RelationshipTypeScanStoreSettings.enable_relationship_property_indexes -> java.lang.Boolean.TRUE
+      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
     ).asJava
 
   protected def newDatabaseManagementService(directory: File): DatabaseManagementService = {
