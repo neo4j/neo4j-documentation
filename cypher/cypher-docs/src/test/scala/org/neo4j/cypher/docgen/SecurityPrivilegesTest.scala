@@ -92,6 +92,19 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       p("Available privileges can be displayed using the different `SHOW PRIVILEGES` commands.")
       p("include::show-privileges-syntax.asciidoc[]")
       p("When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.")
+      p(
+        """To get an easy overview of the existing privileges it is recommended to use the `AS COMMANDS` version of the show command.
+          |This will return the privileges as the commands that was granted or denied.
+          |
+          |Omitting the `AS COMMANDS` clause instead gives the result as multiple columns describing the privilege:
+          |
+          |* `access`: whether the privilege is granted or denied
+          |* `action`: which type of privilege this is, for example traverse, read, index management, or role management
+          |* `resource`: what type of scope this privilege applies to: the entire dbms, a database, a graph or sub-graph access
+          |* `graph`: the specific database or graph this privilege applies to
+          |* `segment`: when applicable, the scope this privilege applies to: labels, relationship types, procedures, functions, or transactions
+          |* `role`: the role the privilege is granted to
+          |""".stripMargin)
       section("Examples for listing all privileges", "administration-security-subgraph-show-all") {
         p("Available privileges for all roles can be displayed using `SHOW PRIVILEGES`.")
         p("include::show-all-privileges-syntax.asciidoc[]")
@@ -99,17 +112,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
           Map("access" -> "GRANTED", "action" -> "access", "role" -> "regularUsers"),
           Map("access" -> "DENIED", "action" -> "access", "role" -> "noAccessUsers")
         ))) {
-          p(
-            """Lists all privileges for all roles.
-              |The table contains columns describing the privilege:
-              |
-              |* `access`: whether the privilege is granted or denied
-              |* `action`: which type of privilege this is: traverse, read, match, write, a database privilege, a dbms privilege or admin
-              |* `resource`: what type of scope this privilege applies to: the entire dbms, a database, a graph or sub-graph access
-              |* `graph`: the specific database or graph this privilege applies to
-              |* `segment`: for sub-graph access control, this describes the scope in terms of labels or relationship types
-              |* `role`: the role the privilege is granted to
-              |""".stripMargin)
+          p("Lists all privileges for all roles.")
           resultTable()
         }
 
