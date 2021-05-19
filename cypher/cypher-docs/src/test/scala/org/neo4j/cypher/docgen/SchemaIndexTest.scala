@@ -67,7 +67,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Create a single-property index for nodes",
       text = "A named index on a single property for all nodes that have a particular label can be created with `CREATE INDEX index_name FOR (n:Label) ON (n.property)`. " +
-        "Note that the index is not immediately available, but will be created in the background.",
+        "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE INDEX node_index_name FOR (n:Person) ON (n.surname)",
       optionalResultExplanation = "Note that the index name needs to be unique.",
       assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("surname"))
@@ -75,7 +75,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Create a single-property index for relationships",
       text = "A named index on a single property for all relationships that have a particular relationship type can be created with `CREATE INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
-        "Note that the index is not immediately available, but will be created in the background.",
+        "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE INDEX rel_index_name FOR ()-[r:KNOWS]-() ON (r.since)",
       optionalResultExplanation = "Note that the index name needs to be unique.",
       assertions = _ => assertIndexWithNameExists("rel_index_name", "KNOWS", List("since"))
@@ -117,7 +117,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "A named index on multiple properties for all nodes that have a particular label -- i.e. a composite index -- can be created with " +
       "`CREATE INDEX index_name FOR (n:Label) ON (n.prop1, ..., n.propN)`. " +
       "Only nodes labeled with the specified label and which contain all the properties in the index definition will be added to the index. " +
-      "Note that the composite index is not immediately available, but will be created in the background. " +
+      "Note that the composite index is not immediately available, but is created in the background. " +
       "The following statement will create a named composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
       queryText = "CREATE INDEX node_index_name FOR (n:Person) ON (n.age, n.country)",
       optionalResultExplanation = "Note that the index name needs to be unique.",
@@ -131,7 +131,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "A named index on multiple properties for all relationships that have a particular relationship type -- i.e. a composite index -- can be created with " +
       "`CREATE INDEX index_name FOR ()-[r:TYPE]-() ON (r.prop1, ..., r.propN)`. " +
       "Only relationships labeled with the specified type and which contain all the properties in the index definition will be added to the index. " +
-      "Note that the composite index is not immediately available, but will be created in the background. " +
+      "Note that the composite index is not immediately available, but is created in the background. " +
       "The following statement will create a named composite index on all relationships labeled with `PURCHASED` and which have both a `date` and `amount` property: ",
       queryText = "CREATE INDEX rel_index_name FOR ()-[r:PURCHASED]-() ON (r.date, r.amount)",
       optionalResultExplanation = "Note that the index name needs to be unique.",
@@ -176,16 +176,16 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
     testQuery(
       title = "Create a lookup index for nodes",
-      text = "A named lookup index for all nodes that have any label can be created with `CREATE LOOKUP INDEX index_name FOR (n) ON EACH labels(n)`. " +
-        "Note that the index is not immediately available, but will be created in the background.",
+      text = "A named lookup index for all nodes with one or more labels can be created with `CREATE LOOKUP INDEX index_name FOR (n) ON EACH labels(n)`. " +
+        "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE LOOKUP INDEX node_lookup_index FOR (n) ON EACH labels(n)",
       optionalResultExplanation = "Note that it can only be created once and that the index name must be unique.",
       assertions = _ => assertLookupIndexExists("node_lookup_index", isNodeIndex = true)
     )
     testQuery(
       title = "Create a lookup index for relationships",
-      text = "A named index for all relationships that have any relationship type can be created with `CREATE LOOKUP INDEX index_name FOR ()-[r]-() ON EACH type(r)`. " +
-        "Note that the index is not immediately available, but will be created in the background.",
+      text = "A named index for all relationships with any relationship type can be created with `CREATE LOOKUP INDEX index_name FOR ()-[r]-() ON EACH type(r)`. " +
+        "Note that the index is not immediately available, but is created in the background.",
       queryText = "CREATE LOOKUP INDEX rel_lookup_index FOR ()-[r]-() ON EACH type(r)",
       optionalResultExplanation = "Note that it can only be created once and that the index name must be unique.",
       assertions = _ => assertLookupIndexExists("rel_lookup_index", isNodeIndex = false)
