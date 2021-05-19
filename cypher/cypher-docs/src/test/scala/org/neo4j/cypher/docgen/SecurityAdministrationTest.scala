@@ -947,7 +947,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           }
 
           note {
-            p("The `EXECUTE BOOSTED USER DEFINED FUNCTION` privileges actually do apply to built-in functions allowing them to be executed with elevated privileges.")
+            p("The `EXECUTE BOOSTED USER DEFINED FUNCTION` privileges do not apply to built-in functions, elevated privileges would have no effect on these functions.")
           }
 
           p(

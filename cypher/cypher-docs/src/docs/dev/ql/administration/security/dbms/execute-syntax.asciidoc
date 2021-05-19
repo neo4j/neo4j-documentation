@@ -31,6 +31,6 @@ TO role[, ...]
 GRANT EXECUTE BOOSTED [USER [DEFINED]] FUNCTION[S] name-globbing[, ...]
 ON DBMS
 TO role[, ...]
-| Enable the specified roles to execute the given functions with elevated privileges.
+| Enable the specified roles to execute the given user defined functions with elevated privileges.
 
 |===
