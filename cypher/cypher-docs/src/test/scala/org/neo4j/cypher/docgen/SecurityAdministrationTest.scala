@@ -310,9 +310,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         p(
           """If it is desired to have an administrator with a subset of privileges that includes all DBMS privileges, but not all database privileges, this can be achieved in multiple ways.
             |One way is to copy the `admin` role and revoking or denying the unwanted privileges.
-            |A second version is to build the custom administrator from scratch by granting the wanted privileges instead.
+            |A second option is to build a custom administrator from scratch by granting the wanted privileges instead.
             |""".stripMargin)
-        p("As an example, lets create an administrator using the second method that can only manage users and roles.")
+        p("As an example, let's create an administrator that can only manage users and roles by using the latter option.")
         p("First we create the new role:")
         query("CREATE ROLE usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -339,11 +339,11 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         p(
-          """However, this role don't allow all DBMS capabilities.
-            |It is for example missing privilege management, creating and dropping databases as well as executing admin procedures.
+          """However, this role doesn't allow all DBMS capabilities.
+            |For example, the role is missing privilege management, creating and dropping databases as well as executing admin procedures.
             |We can make a more powerful administrator by granting a different set of privileges.
-            |Lets create an administrator that can do almost all DBMS capabilities, not including database management, but also some limited database capabilities like managing transactions.""".stripMargin)
-        p("We start again with creating a new role:")
+            |Let's create an administrator that can perform almost all DBMS capabilities, excluding database management, but also with some limited database capabilities, such as managing transactions.""".stripMargin)
+        p("Again, we start with creating a new role:")
         query("CREATE ROLE customAdministrator", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
