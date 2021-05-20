@@ -319,13 +319,13 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("Then we GRANT USER MANAGEMENT:")
+        p("Then we grant the privilege to manage users:")
         query("GRANT USER MANAGEMENT ON DBMS TO usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        p("And GRANT ROLE MANAGEMENT:")
+        p("And to manage roles:")
         query("GRANT ROLE MANAGEMENT ON DBMS TO usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -349,19 +349,19 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("Then we GRANT ALL DBMS PRIVILEGES:")
+        p("Then we grant the privilege for all DBMS capabilities:")
         query("GRANT ALL DBMS PRIVILEGES ON DBMS TO customAdministrator", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        p("And DENY DATABASE MANAGEMENT:")
+        p("And explicitly deny the privilege to manage databases:")
         query("DENY DATABASE MANAGEMENT ON DBMS TO customAdministrator", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        p("Thereafter we GRANT TRANSACTION MANAGEMENT:")
+        p("Thereafter we grant the transaction management privilege:")
         query("GRANT TRANSACTION MANAGEMENT (*) ON DATABASE * TO customAdministrator", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
