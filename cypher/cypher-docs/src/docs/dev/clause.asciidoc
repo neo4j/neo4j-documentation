@@ -16,7 +16,7 @@ This section contains information on all the clauses in the Cypher query languag
 * <<header-subquery-clauses,Subquery clauses>>
 * <<header-multiple-graphs-clauses,Multiple graphs>>
 * <<header-importing-clauses,Importing data>>
-* <<header-listing-clauses,Listing clauses>>
+* <<header-listing-procs-functions,Listing functions and procedures>>
 * <<header-administration-clauses,Administration clauses>>
 
 
@@ -240,8 +240,8 @@ m|--- <<query-using-periodic-commit-hint, USING PERIODIC COMMIT>>
 |===
 
 
-[[header-listing-clauses]]
-**Listing clauses**
+[[header-listing-procs-functions]]
+**Listing functions and procedures**
 
 [options="header"]
 |===
