@@ -49,7 +49,6 @@ import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
-import org.neo4j.kernel.impl.index.schema.RelationshipTypeScanStoreSettings
 import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySubscriber, QuerySubscriberAdapter}
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.values.virtual.VirtualValues
