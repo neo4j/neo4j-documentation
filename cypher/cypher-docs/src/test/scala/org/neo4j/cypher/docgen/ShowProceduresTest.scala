@@ -26,7 +26,7 @@ class ShowProceduresTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/listing"
 
   override def doc: Document = new DocBuilder {
-    doc("Listing procedures", "query-listing-procedures")
+    doc("SHOW PROCEDURES", "query-listing-procedures")
     p("Listing the available procedures can be done with `SHOW PROCEDURES`.")
     p("include::listing-procedures-syntax.asciidoc[]")
     p("This command will produce a table with the following columns:")

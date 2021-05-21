@@ -26,7 +26,7 @@ class ShowFunctionsTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/listing"
 
   override def doc: Document = new DocBuilder {
-    doc("Listing functions", "query-listing-functions")
+    doc("SHOW FUNCTIONS", "query-listing-functions")
     p("Listing the available functions can be done with `SHOW FUNCTIONS`.")
     p("include::listing-functions-syntax.asciidoc[]")
     p("This command will produce a table with the following columns:")
