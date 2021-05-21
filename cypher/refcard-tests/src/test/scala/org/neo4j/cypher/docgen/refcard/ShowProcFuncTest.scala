@@ -27,7 +27,7 @@ import org.neo4j.graphdb.Transaction
 class ShowProcFuncTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List()
   val title = "SHOW FUNCTIONS and PROCEDURES"
-  override val linkId = "clauses/#header-listing-clauses"
+  override val linkId = "clauses/#header-listing-procs-functions"
 
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
