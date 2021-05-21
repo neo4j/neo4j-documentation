@@ -28,12 +28,13 @@ class UsingTest extends DocumentingTest {
     doc("Planner hints and the USING keyword", "query-using")
     initQueries(
       """FOREACH(i IN range(1, 100) |
-        |  CREATE (:Scientist {born: 1800 + i})-[:RESEARCHED]->(:Science)<-[:INVENTED_BY]-(:Pioneer {born: 500 + (i % 50)})-[:LIVES_IN]->(:City)-[:PART_OF]->(:Country {formed: 400 + i})
+        |  CREATE (:Scientist {born: 1800 + i})-[:RESEARCHED]->(:Science)<-[:INVENTED_BY {year: 530 + (i % 50)}]-(:Pioneer {born: 500 + (i % 50)})-[:LIVES_IN]->(:City)-[:PART_OF]->(:Country {formed: 400 + i})
         |)
         |""".stripMargin,
       "CREATE INDEX FOR (s:Scientist) ON (s.born)",
       "CREATE INDEX FOR (p:Pioneer) ON (p.born)",
       "CREATE INDEX FOR (c:Country) ON (c.formed)",
+      "CREATE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.year)",
     )
     synopsis("A planner hint is used to influence the decisions of the planner when building an execution plan for a query. Planner hints are specified in a query with the `USING` keyword.")
     caution {
@@ -52,7 +53,7 @@ class UsingTest extends DocumentingTest {
           |Moreover, in some circumstances (albeit rarely) it is better not to use an index at all.""")
       p("""Neo4j can be forced to use a specific starting point through the `USING` keyword. This is called giving a planner hint.
           |There are four types of planner hints: index hints, scan hints, join hints, and the `PERIODIC COMMIT` query hint.""")
-      query(s"$matchString RETURN *", assertPlan(AND(OR(ShouldUseIndexSeekOn("s"), ShouldUseIndexSeekOn("cc")), ShouldNotUseJoins))) {
+      query(s"$matchString RETURN *", assertPlan(AND(OR(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), ShouldNotUseJoins))) {
         p(
           """The query above will be used in some of the examples on this page.
             |Without any hints, one index and no join is used.""")
@@ -60,22 +61,34 @@ class UsingTest extends DocumentingTest {
       }
     }
     section("Index hints", "query-using-index-hint") {
-      p("""Index hints are used to specify which index, if any, the planner should use as a starting point.
+      p("""Index hints are used to specify which index, the planner should use as a starting point.
           |This can be beneficial in cases where the index statistics are not accurate for the specific values that
           |the query at hand is known to use, which would result in the planner picking a non-optimal index.
-          |To supply an index hint, use `USING INDEX variable:Label(property)` or `USING INDEX SEEK variable:Label(property)` after the applicable `MATCH` clause.""")
+          |To supply an index hint, use `USING INDEX variable:Label(property)` or `USING INDEX SEEK variable:Label(property)` after the applicable `MATCH` clause for node indexes,
+          |and `USING INDEX variable:RELATIONSHIP_TYPE(property)` or `USING INDEX SEEK variable:RELATIONSHIP_TYPE(property)` for relationship indexes.""")
       p(
-        """`USING INDEX` can be fulfilled by either a `NodeIndexScan` or a `NodeIndexSeek`.
-          |`USING INDEX SEEK` can only be fulfilled by a `NodeIndexSeek`.""")
+        """`USING INDEX` can be fulfilled by any of the following plans:
+          |`NodeIndexScan`, `DirectedRelationshipIndexScan`, `UndirectedRelationshipIndexScan`, `NodeIndexSeek`, `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`.
+          |`USING INDEX SEEK` can only be fulfilled by `NodeIndexSeek`, `DirectedRelationshipIndexSeek` or `UndirectedRelationshipIndexSeek`.""")
       p("""It is possible to supply several index hints, but keep in mind that several starting points
           |will require the use of a potentially expensive join later in the query plan.""")
-      section("Query using an index hint") {
+      section("Query using a node index hint") {
         p("""The query above can be tuned to pick a different index as the starting point.""")
         query(
           s"""$matchString
              |USING INDEX p:Pioneer(born)
              |RETURN *""",
-          assertPlan(AND(ShouldUseIndexSeekOn("p"), ShouldNotUseJoins))) {
+          assertPlan(AND(ShouldUseNodeIndexSeekOn("p"), ShouldNotUseJoins))) {
+          profileExecutionPlan()
+        }
+      }
+      section("Query using a relationship index hint") {
+        p("""The query above can be tuned to pick a relationship index as the starting point.""")
+        query(
+          s"""$matchString
+             |USING INDEX i:INVENTED_BY(year)
+             |RETURN *""",
+          assertPlan(AND(ShouldUseRelationshipIndexSeekOn("i"), ShouldNotUseJoins))) {
           profileExecutionPlan()
         }
       }
@@ -88,15 +101,16 @@ class UsingTest extends DocumentingTest {
              |USING INDEX s:Scientist(born)
              |USING INDEX cc:Country(formed)
              |RETURN *""",
-          assertPlan(AND(AND(AND(ShouldUseIndexSeekOn("s"), ShouldUseIndexSeekOn("cc")), NOT(ShouldUseIndexSeekOn("p"))), NOT(ShouldUseJoinOn("p"))))) {
+          assertPlan(AND(AND(AND(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), NOT(ShouldUseNodeIndexSeekOn("p"))), NOT(ShouldUseJoinOn("p"))))) {
           profileExecutionPlan()
         }
       }
     }
     section("Scan hints", "query-using-scan-hint") {
-      p("""If your query matches large parts of an index, it might be faster to scan the label and filter out nodes that do not match.
-          |To do this, you can use `USING SCAN variable:Label` after the applicable `MATCH` clause.
-          |This will force Cypher to not use an index that could have been used, and instead do a label scan.
+      p("""If your query matches large parts of an index, it might be faster to scan the label or relationship type and filter out rows that do not match.
+          |To do this, you can use `USING SCAN variable:Label` after the applicable `MATCH` clause for node indexes,
+          |and `USING SCAN variable:RELATIONSHIP_TYPE` for relationship indexes.
+          |This will force Cypher to not use an index that could have been used, and instead do a label scan/relationship type scan.
           |You can use the same hint to enforce a starting point where no index is applicable.""")
       section("Hinting a label scan") {
         query(
@@ -104,6 +118,15 @@ class UsingTest extends DocumentingTest {
              |USING SCAN s:Scientist
              |RETURN *""",
           assertPlan(ShouldUseLabelScanOn("s"))) {
+          profileExecutionPlan()
+        }
+      }
+      section("Hinting a relationship type scan") {
+        query(
+          s"""$matchString
+             |USING SCAN i:INVENTED_BY
+             |RETURN *""",
+          assertPlan(ShouldUseRelationshipTypeScanOn("i"))) {
           profileExecutionPlan()
         }
       }
@@ -124,7 +147,7 @@ class UsingTest extends DocumentingTest {
               |USING INDEX cc:Country(formed)
               |USING JOIN ON p
               |RETURN *""",
-          assertPlan(AND(AND(ShouldUseIndexSeekOn("s"), ShouldUseIndexSeekOn("cc")), ShouldUseJoinOn("p")))) {
+          assertPlan(AND(AND(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), ShouldUseJoinOn("p")))) {
           profileExecutionPlan()
         }
       }
@@ -168,18 +191,26 @@ class UsingTest extends DocumentingTest {
     }
   }.build()
 
-  private def matchString = "MATCH (s:Scientist {born: 1850})-[:RESEARCHED]->(sc:Science)<-[:INVENTED_BY]-(p:Pioneer {born: 525})-[:LIVES_IN]->(c:City)-[:PART_OF]->(cc:Country {formed: 411})"
+  private def matchString = "MATCH (s:Scientist {born: 1850})-[:RESEARCHED]->(sc:Science)<-[i:INVENTED_BY {year: 560}]-(p:Pioneer {born: 525})-[:LIVES_IN]->(c:City)-[:PART_OF]->(cc:Country {formed: 411})"
 
   sealed trait PlanAssertion {
     def matcher: Matcher[String]
   }
 
-  case class ShouldUseIndexSeekOn(variable: String) extends PlanAssertion {
+  case class ShouldUseNodeIndexSeekOn(variable: String) extends PlanAssertion {
     override def matcher: Matcher[String] = include regex s"NodeIndexSeek\\s*\\|\\s*$variable".r
+  }
+
+  case class ShouldUseRelationshipIndexSeekOn(variable: String) extends PlanAssertion {
+    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek\\s*\\|\\s*$variable".r
   }
 
   case class ShouldUseLabelScanOn(variable: String) extends PlanAssertion {
     override def matcher: Matcher[String] = include regex s"NodeByLabelScan\\s*\\|\\s*$variable".r
+  }
+
+  case class ShouldUseRelationshipTypeScanOn(variable: String) extends PlanAssertion {
+    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipTypeScan\\s*\\|\\s*$variable".r
   }
 
   case class ShouldUseJoinOn(variable: String) extends PlanAssertion {
