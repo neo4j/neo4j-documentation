@@ -11,7 +11,7 @@ Therefore, it is important to have a fundamental understanding of how the indexe
 This section describes the query plans that result from different index scenarios.
 
 Node indexes and relationship indexes operate in the same way.
-Therefore, we will use node and relationship indexes interchangeably in this section.
+Therefore, node and relationship indexes are used interchangeably in this section.
 
 Please refer to <<administration-indexes-search-performance>> for instructions on how to create and maintain the indexes themselves.
 
