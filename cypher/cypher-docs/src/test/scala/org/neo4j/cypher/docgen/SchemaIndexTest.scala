@@ -267,8 +267,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_index() {
     profileQuery(
-      title = "A simple node index example",
-      text = "In the example below, the query will use a `Person(firstname)` node index, if it exists. ",
+      title = "Node index example",
+      text = "In the example below, the query uses a `Person(firstname)` node index, if it exists. ",
       queryText = "MATCH (person:Person {firstname: 'Andy'}) RETURN person",
       assertions = {
         p =>
@@ -281,8 +281,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_relationship_index() {
     profileQuery(
-      title = "A simple relationship index example",
-      text = "In this example, the query will use a `KNOWS(since)` relationship index, if it exists. ",
+      title = "Relationship index example",
+      text = "In this example, the query uses a `KNOWS(since)` relationship index, if it exists. ",
       queryText = "MATCH (person)-[relationship:KNOWS { since: 1992 } ]->(friend) RETURN person, friend",
       prepare = Some(_ => executePreparationQueries(List(
         "create index for ()-[r:KNOWS]-() on (r.since)",
@@ -379,7 +379,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           assertEquals(2, p.size)
 
           checkPlanDescription(p)("UndirectedRelationshipIndexSeek")
-          checkPlanDescription(p)("r:KNOWS(since, lastMet) WHERE since < $autoint_0 AND lastMet IS NOT NULL")
       }
     )
   }
@@ -455,7 +454,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("DirectedRelationshipIndexSeek")
-          checkPlanDescription(p)("r:KNOWS(since, lastMet) WHERE since IN $autolist_0 AND lastMet IN $autolist_1")
       }
     )
   }
@@ -519,9 +517,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Suffix search using `ENDS WITH` (single-property index)",
       text =
-        "The `ENDS WITH` predicate on `r.metIn` in the following query will use the `KNOWS(metIn)` index, if it exists. " +
-          "All values stored in the `KNOWS(metIn)` index will be searched, and entries ending with `'mo'` will be returned. " +
-          "This means that although the search will not be optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place.",
+        "The `ENDS WITH` predicate on `r.metIn` in the following query uses the `KNOWS(metIn)` index, if it exists. " +
+          "All values stored in the `KNOWS(metIn)` index are searched, and entries ending with `'mo'` are returned. " +
+          "This means that although the search is not optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place.",
       queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.metIn ENDS WITH 'mo' RETURN person, friend",
       assertions = {
         p =>
@@ -537,10 +535,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Suffix search using `ENDS WITH` (composite index)",
       text =
-        "The `ENDS WITH` predicate on `r.metIn` in the following query will use the `KNOWS(metIn,lastMetIn)` index, if it exists. " +
-          "However, it will be rewritten as existence check and a filter due to the index not supporting actual suffix searches for composite indexes, " +
+        "The `ENDS WITH` predicate on `r.metIn` in the following query uses the `KNOWS(metIn,lastMetIn)` index, if it exists. " +
+          "However, it is rewritten as existence check and a filter due to the index not supporting actual suffix searches for composite indexes, " +
           "this is still faster than not using an index in the first place. " +
-          "Any (non-existence check) predicate on `KNOWS.lastMetIn` will also be rewritten as existence check with a filter. " +
+          "Any (non-existence check) predicate on `KNOWS.lastMetIn` is also rewritten as existence check with a filter. " +
           "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
       queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.metIn ENDS WITH 'mo' AND r.lastMetIn IS NOT NULL RETURN person, friend",
       assertions = {
@@ -609,7 +607,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Existence check using `IS NOT NULL` (single-property index)",
       text =
-        "The `r.since IS NOT NULL` predicate in the following query will use the `KNOWS(since)` index, if it exists. ",
+        "The `r.since IS NOT NULL` predicate in the following query uses the `KNOWS(since)` index, if it exists. ",
       queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.since IS NOT NULL RETURN person, friend",
       assertions = {
         p =>
