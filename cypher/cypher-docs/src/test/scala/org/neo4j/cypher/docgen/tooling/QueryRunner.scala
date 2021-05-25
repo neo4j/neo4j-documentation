@@ -21,9 +21,7 @@ package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.exceptions.InternalException
-import org.neo4j.internal.kernel.api.security.SecurityContext.AUTH_DISABLED
 import org.neo4j.kernel.GraphDatabaseQueryService
-import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 
 import scala.collection.immutable.Iterable
@@ -53,8 +51,9 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
 
         val dbms = new RestartableDatabase(init)
         try {
-          if (dbms.failures.nonEmpty) dbms.failures
-          else {
+          if (dbms.failures.nonEmpty) {
+            dbms.failures
+          } else {
             val result = placeHolders.map { queryAndPlaceHolder =>
               try {
                 queryAndPlaceHolder match {
@@ -85,7 +84,9 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
             }
             result
           }
-        } finally dbms.shutdown()
+        } finally {
+          dbms.shutdown()
+        }
     }
 
     TestRunResult(results.toSeq)
@@ -101,39 +102,33 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
     val tx: InternalTransaction = dbms.beginTx(query.database)
     try {
       val result: Either[Throwable, InternalTransaction => Content] =
-        try {
-          val resultTry = Try(dbms.executeWithParams(tx, query.runnable, content.params: _*))
-          (assertions, resultTry) match {
-            // *** Success conditions
+        (assertions, Try(dbms.executeWithParams(tx, query.runnable, content.params: _*))) match {
+          // *** Success conditions
 
-            case (ResultAssertions(f), Success(r)) =>
-              f(r)
-              Right(format(_)(r))
+          case (ResultAssertions(f), Success(r)) =>
+            f(r)
+            Right(format(_)(r))
 
-            case (ResultAndDbAssertions(f), Success(r)) =>
-              f(r, dbms.getInnerDb)
-              Right(format(_)(r))
+          case (ResultAndDbAssertions(f), Success(r)) =>
+            f(r, dbms.getInnerDb)
+            Right(format(_)(r))
 
-            case (NoAssertions, Success(r)) =>
-              Right(format(_)(r))
+          case (NoAssertions, Success(r)) =>
+            Right(format(_)(r))
 
-            // *** Error conditions
-            case (ErrorAssertions(f), Failure(exception: Throwable)) =>
-              val errorResult = Try(f(exception))
-              errorResult match {
-                case Success(_) => Right(_ => errorOnly(exception))
-                case _ => Left(exception)
-              }
+          // *** Error conditions
+          case (ErrorAssertions(f), Failure(exception: Throwable)) =>
+            val errorResult = Try(f(exception))
+            errorResult match {
+              case Success(_) => Right(_ => errorOnly(exception))
+              case _ => Left(exception)
+            }
 
-            case (_, Failure(exception: Throwable)) =>
-              Left(exception)
+          case (_, Failure(exception: Throwable)) =>
+            Left(exception)
 
-            case x =>
-              throw new InternalException(s"Did not see this one coming $x")
-          }
-        } catch {
-          case e: Throwable =>
-            Left(e)
+          case x =>
+            Left(new InternalException(s"Did not see this one coming $x"))
         }
 
       val runResult = QueryRunResult(query.prettified, content, result.right.map(contentBuilder => contentBuilder(tx)))
@@ -149,25 +144,23 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
                                  assertions: QueryAssertions,
                                  placeHolder: QueryResultPlaceHolder): RunResult = {
     val result: Either[Throwable, ExecutionPlan] =
-      try {
-        (assertions, Try(database.executeWithParams(query.explain))) match {
-          case (ResultAssertions(f), Success(inner)) =>
-            f(inner)
-            Right(ExecutionPlan(inner.executionPlanDescription().toString))
+      (assertions, Try(database.executeWithParams(query.explain))) match {
+        case (ResultAssertions(f), Success(inner)) =>
+          f(inner)
+          Right(ExecutionPlan(inner.executionPlanDescription().toString))
 
-          case (ResultAndDbAssertions(f), Success(inner)) =>
-            f(inner, database.getInnerDb)
-            Right(ExecutionPlan(inner.executionPlanDescription().toString))
+        case (ResultAndDbAssertions(f), Success(inner)) =>
+          f(inner, database.getInnerDb)
+          Right(ExecutionPlan(inner.executionPlanDescription().toString))
 
-          case (NoAssertions, Success(inner)) =>
-            Right(ExecutionPlan(inner.executionPlanDescription().toString))
+        case (NoAssertions, Success(inner)) =>
+          Right(ExecutionPlan(inner.executionPlanDescription().toString))
 
-          case x =>
-            throw new InternalException(s"Did not see this one coming $x")
-        }
-      } catch {
-        case e: Throwable =>
-          Left(e)
+        case (_, Failure(exception: Throwable)) =>
+          Left(exception)
+
+        case x =>
+          Left(new InternalException(s"Did not see this one coming $x"))
       }
     ExecutionPlanRunResult(query.prettified, placeHolder, result)
   }
@@ -175,24 +168,27 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
   private def profileSingleQuery(database: RestartableDatabase,
                                  query: DatabaseQuery,
                                  assertions: QueryAssertions,
-                                 placeHolder: QueryResultPlaceHolder) = {
-    val profilingAttempt = Try(database.executeWithParams(query.profile))
-    val planString = (assertions, profilingAttempt) match {
+                                 placeHolder: QueryResultPlaceHolder): ExecutionPlanRunResult = {
+    val result: Either[Throwable, String] =
+      (assertions, Try(database.executeWithParams(query.profile))) match {
       case (ResultAssertions(f), Success(result)) =>
         f(result)
-        result.executionPlanDescription().toString
+        Right(result.executionPlanDescription().toString)
 
       case (ResultAndDbAssertions(f), Success(result)) =>
         f(result, database.getInnerDb)
-        result.executionPlanDescription().toString
+        Right(result.executionPlanDescription().toString)
 
       case (NoAssertions, Success(inner)) =>
-        inner.executionPlanDescription().toString
+        Right(inner.executionPlanDescription().toString)
+
+      case (_, Failure(exception: Throwable)) =>
+        Left(exception)
 
       case x =>
-        throw new InternalException(s"Did not see this one coming $x")
+        Left(new InternalException(s"Did not see this one coming $x"))
     }
-    ExecutionPlanRunResult(query.prettified, placeHolder, Right(ExecutionPlan(planString)))
+    ExecutionPlanRunResult(query.prettified, placeHolder, result.map(ExecutionPlan))
   }
 }
 
