@@ -311,51 +311,70 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       p("include::dbms/admin-role-dbms.asciidoc[]")
 
       section("Using a custom role to manage DBMS privileges", "administration-security-administration-dbms-custom", "enterprise-edition") {
-        p("include::dbms/admin-role-dbms-custom.asciidoc[]")
-        p("First we copy the 'admin' role:")
-        query("CREATE ROLE usermanager AS COPY OF admin", ResultAssertions(r => {
-          assertStats(r, systemUpdates = 2)
-        })) {
-          statsOnlyResultTable()
-        }
-        p("Then we DENY ACCESS to normal databases:")
-        query("DENY ACCESS ON DATABASE * TO usermanager", ResultAssertions(r => {
+        p(
+          """If it is desired to have an administrator with a subset of privileges that includes all DBMS privileges, but not all database privileges, this can be achieved in multiple ways.
+            |One way is to copy the `admin` role and revoking or denying the unwanted privileges.
+            |A second option is to build a custom administrator from scratch by granting the wanted privileges instead.
+            |""".stripMargin)
+        p("As an example, let's create an administrator that can only manage users and roles by using the latter option.")
+        p("First we create the new role:")
+        query("CREATE ROLE usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        p("And DENY START and STOP for normal databases:")
-        query("DENY START ON DATABASE * TO usermanager", ResultAssertions(r => {
+        p("Then we grant the privilege to manage users:")
+        query("GRANT USER MANAGEMENT ON DBMS TO usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
-        query("DENY STOP ON DATABASE * TO usermanager", ResultAssertions(r => {
-          assertStats(r, systemUpdates = 1)
-        })) {
-          statsOnlyResultTable()
-        }
-        p("And DENY index and constraint management:")
-        query("DENY INDEX MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions(r => {
-          assertStats(r, systemUpdates = 1)
-        })) {
-          statsOnlyResultTable()
-        }
-        query("DENY CONSTRAINT MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions(r => {
-          assertStats(r, systemUpdates = 1)
-        })) {
-          statsOnlyResultTable()
-        }
-        p("And finally DENY label, relationship type and property name:")
-        query("DENY NAME MANAGEMENT ON DATABASE * TO usermanager", ResultAssertions(r => {
+        p("And to manage roles:")
+        query("GRANT ROLE MANAGEMENT ON DBMS TO usermanager", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
 
-        p("The resulting role should have privileges that only allow the DBMS capabilities, like user and role management:")
+        p("The resulting role has privileges that only allow user and role management:")
         query("SHOW ROLE usermanager PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'usermanager'")
+          resultTable()
+        }
+
+        p(
+          """However, this role doesn't allow all DBMS capabilities.
+            |For example, the role is missing privilege management, creating and dropping databases as well as executing admin procedures.
+            |We can make a more powerful administrator by granting a different set of privileges.
+            |Let's create an administrator that can perform almost all DBMS capabilities, excluding database management, but also with some limited database capabilities, such as managing transactions.""".stripMargin)
+        p("Again, we start by creating a new role:")
+        query("CREATE ROLE customAdministrator", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("Then we grant the privilege for all DBMS capabilities:")
+        query("GRANT ALL DBMS PRIVILEGES ON DBMS TO customAdministrator", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("And explicitly deny the privilege to manage databases:")
+        query("DENY DATABASE MANAGEMENT ON DBMS TO customAdministrator", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        p("Thereafter we grant the transaction management privilege:")
+        query("GRANT TRANSACTION MANAGEMENT (*) ON DATABASE * TO customAdministrator", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+
+        p("The resulting role has privileges that allow all DBMS privileges except creating and dropping databases, as well as managing transactions:")
+        query("SHOW ROLE customAdministrator PRIVILEGES", NoAssertions) {
+          p("Lists all privileges for role 'customAdministrator'")
           resultTable()
         }
       }
