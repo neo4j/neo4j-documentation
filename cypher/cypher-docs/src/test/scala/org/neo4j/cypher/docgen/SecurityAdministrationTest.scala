@@ -353,7 +353,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           statsOnlyResultTable()
         }
 
-        p("The resulting role should have privileges that only allow the DBMS capabilities, like user and role management:")
+        p("The resulting role has privileges that only allow the DBMS capabilities, like user and role management:")
         query("SHOW ROLE usermanager PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'usermanager'")
           resultTable()
@@ -370,7 +370,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow adding roles:")
+        p("The resulting role has privileges that only allow adding roles:")
         query("SHOW ROLE roleAdder PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'roleAdder'")
           resultTable()
@@ -382,7 +382,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow renaming roles:")
+        p("The resulting role has privileges that only allow renaming roles:")
         query("SHOW ROLE roleNameModifier PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'roleNameModifier'")
           resultTable()
@@ -394,7 +394,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow deleting roles:")
+        p("The resulting role has privileges that only allow deleting roles:")
         query("SHOW ROLE roleDropper PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'roleDropper'")
           resultTable()
@@ -406,7 +406,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow assigning/granting roles:")
+        p("The resulting role has privileges that only allow assigning/granting roles:")
         query("SHOW ROLE roleAssigner PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'roleAssigner'")
           resultTable()
@@ -418,7 +418,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow removing/revoking roles:")
+        p("The resulting role has privileges that only allow removing/revoking roles:")
         query("SHOW ROLE roleRemover PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'roleRemover'")
           resultTable()
@@ -431,7 +431,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow showing roles:")
+        p("The resulting role has privileges that only allow showing roles:")
         query("SHOW ROLE roleShower PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'roleShower'")
           resultTable()
@@ -445,7 +445,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have all privileges to manage roles:")
+        p("The resulting role has all privileges to manage roles:")
         query("SHOW ROLE roleManager PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'roleManager'")
           resultTable()
@@ -462,7 +462,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow adding users:")
+        p("The resulting role has privileges that only allow adding users:")
         query("SHOW ROLE userAdder PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'userAdder'")
           resultTable()
@@ -474,7 +474,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow renaming users:")
+        p("The resulting role has privileges that only allow renaming users:")
         query("SHOW ROLE userNameModifier PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'userNameModifier'")
           resultTable()
@@ -486,7 +486,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow modifying users:")
+        p("The resulting role has privileges that only allow modifying users:")
         query("SHOW ROLE userModifier PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'userModifier'")
           resultTable()
@@ -504,7 +504,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow modifying users' passwords and whether those passwords must be changed upon first login:")
+        p("The resulting role has privileges that only allow modifying users' passwords and whether those passwords must be changed upon first login:")
         query("SHOW ROLE passwordModifier PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'passwordModifier'")
           resultTable()
@@ -521,7 +521,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow modifying the account status of users:")
+        p("The resulting role has privileges that only allow modifying the account status of users:")
         query("SHOW ROLE statusModifier PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'statusModifier'")
           resultTable()
@@ -538,7 +538,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow modifying the home database of users:")
+        p("The resulting role has privileges that only allow modifying the home database of users:")
         query("SHOW ROLE statusModifier PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'statusModifier'")
           resultTable()
@@ -565,7 +565,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow deleting users:")
+        p("The resulting role has privileges that only allow deleting users:")
         query("SHOW ROLE userDropper PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'userDropper'")
           resultTable()
@@ -577,7 +577,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow showing users:")
+        p("The resulting role has privileges that only allow showing users:")
         query("SHOW ROLE userShower PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'userShower'")
           resultTable()
@@ -591,7 +591,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have all privileges to manage users:")
+        p("The resulting role has all privileges to manage users:")
         query("SHOW ROLE userManager PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'userManager'")
           resultTable()
@@ -608,7 +608,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow creating databases:")
+        p("The resulting role has privileges that only allow creating databases:")
         query("SHOW ROLE databaseAdder PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'databaseAdder'")
           resultTable()
@@ -620,7 +620,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow deleting databases:")
+        p("The resulting role has privileges that only allow deleting databases:")
         query("SHOW ROLE databaseDropper PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'databaseDropper'")
           resultTable()
@@ -634,7 +634,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have all privileges to manage databases:")
+        p("The resulting role has all privileges to manage databases:")
         query("SHOW ROLE databaseManager PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'databaseManager'")
           resultTable()
@@ -652,7 +652,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow showing privileges:")
+        p("The resulting role has privileges that only allow showing privileges:")
         query("SHOW ROLE privilegeShower PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'privilegeShower'")
           resultTable()
@@ -669,7 +669,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow assigning privileges:")
+        p("The resulting role has privileges that only allow assigning privileges:")
         query("SHOW ROLE privilegeAssigner PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'privilegeAssigner'")
           resultTable()
@@ -681,7 +681,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have privileges that only allow removing privileges:")
+        p("The resulting role has privileges that only allow removing privileges:")
         query("SHOW ROLE privilegeRemover PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'privilegeRemover'")
           resultTable()
@@ -695,7 +695,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         })) {
           statsOnlyResultTable()
         }
-        p("The resulting role should have all privileges to manage privileges:")
+        p("The resulting role has all privileges to manage privileges:")
         query("SHOW ROLE privilegeManager PRIVILEGES AS COMMANDS", NoAssertions) {
           p("Lists all privileges for role 'privilegeManager'")
           resultTable()
@@ -737,9 +737,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             assertStats(r, systemUpdates = 1)
           })) {
             statsOnlyResultTable()
-            p("Users with the role 'procedureExecutor' can then run any procedure in the `db.schema` namespace. The procedure will be run using the users own privileges.")
+            p("Users with the role 'procedureExecutor' can then run any procedure in the `db.schema` namespace. The procedure is run using the user's own privileges.")
           }
-          p("The resulting role should have privileges that only allow executing procedures in the `db.schema` namespace:")
+          p("The resulting role has privileges that only allow executing procedures in the `db.schema` namespace:")
           query("SHOW ROLE procedureExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'procedureExecutor'")
             resultTable()
@@ -758,7 +758,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           })) {
             statsOnlyResultTable()
           }
-          p("The resulting role should have privileges that only allow executing all procedures except `dbms.killTransaction` and `dbms.killTransactions`:")
+          p("The resulting role has privileges that only allow executing all procedures except `dbms.killTransaction` and `dbms.killTransactions`:")
           query("SHOW ROLE deniedProcedureExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedProcedureExecutor'")
             resultTable()
@@ -779,7 +779,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
               """Users with the role 'boostedProcedureExecutor' can then run `db.labels` and `db.relationshipTypes` with full privileges,
                 |seeing everything in the graph not just the labels and types that the user has `TRAVERSE` privilege on.""".stripMargin)
           }
-          p("The resulting role should have privileges that only allow executing procedures `db.labels` and `db.relationshipTypes`, but with elevated execution:")
+          p("The resulting role has privileges that only allow executing procedures `db.labels` and `db.relationshipTypes`, but with elevated execution:")
           query("SHOW ROLE boostedProcedureExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'boostedProcedureExecutor'")
             resultTable()
@@ -802,7 +802,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
           }
           p(
-            """The resulting role should have privileges that allow executing all procedures using the users own privileges,
+            """The resulting role has privileges that allow executing all procedures using the user's own privileges,
               |as well as blocking `db.labels` from being elevated. The deny `EXECUTE BOOSTED PROCEDURE` does not block execution of `db.labels`.""".stripMargin)
           query("SHOW ROLE deniedBoostedProcedureExecutor1 PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedBoostedProcedureExecutor1'")
@@ -821,7 +821,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
           }
           p(
-            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+            """The resulting role has privileges that allow executing all procedures with elevated privileges
               |except `db.labels` which is not allowed to execute at all:""".stripMargin)
           query("SHOW ROLE deniedBoostedProcedureExecutor2 PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedBoostedProcedureExecutor2'")
@@ -840,7 +840,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
           }
           p(
-            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+            """The resulting role has privileges that allow executing all procedures with elevated privileges
               |except `db.labels` which is not allowed to execute at all:""".stripMargin)
           query("SHOW ROLE deniedBoostedProcedureExecutor3 PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedBoostedProcedureExecutor3'")
@@ -864,8 +864,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
           }
           p(
-            """The resulting role should have privileges that allow executing all procedures with elevated privileges
-              |except `db.labels` which is only allowed to execute using the users own privileges:""".stripMargin)
+            """The resulting role has privileges that allow executing all procedures with elevated privileges
+              |except `db.labels` which is only allowed to execute using the user's own privileges:""".stripMargin)
           query("SHOW ROLE deniedBoostedProcedureExecutor4 PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedBoostedProcedureExecutor4'")
             resultTable()
@@ -884,7 +884,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
             p("Users with the role 'adminProcedureExecutor' can then run any admin procedure with elevated privileges.")
           }
-          p("The resulting role should have privileges that allows executing all admin procedures:")
+          p("The resulting role has privileges that allow executing all admin procedures:")
           query("SHOW ROLE adminProcedureExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'adminProcedureExecutor'")
             resultTable()
@@ -900,9 +900,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             assertStats(r, systemUpdates = 1)
           })) {
             statsOnlyResultTable()
-            p("Users with the role 'functionExecutor' can then run any UDF in the `apoc.coll` namespace. The function will be run using the users own privileges.")
+            p("Users with the role 'functionExecutor' can then run any UDF in the `apoc.coll` namespace. The function is run using the user's own privileges.")
           }
-          p("The resulting role should have privileges that only allow executing UDFs in the `apoc.coll` namespace:")
+          p("The resulting role has privileges that only allow executing UDFs in the `apoc.coll` namespace:")
           query("SHOW ROLE functionExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'functionExecutor'")
             resultTable()
@@ -921,7 +921,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           })) {
             statsOnlyResultTable()
           }
-          p("The resulting role should have privileges that only allow executing all procedures except `apoc.any.property` and `apoc.any.properties`:")
+          p("The resulting role has privileges that only allow executing all procedures except `apoc.any.property` and `apoc.any.properties`:")
           query("SHOW ROLE deniedFunctionExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedFunctionExecutor'")
             resultTable()
@@ -942,7 +942,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
               """Users with the role 'boostedFunctionExecutor' can then run `apoc.any.properties` with full privileges,
                 |seeing every property on the node/relationship not just the properties that the user has `READ` privilege on.""".stripMargin)
           }
-          p("The resulting role should have privileges that only allow executing the UDF `apoc.any.properties`, but with elevated execution:")
+          p("The resulting role has privileges that only allow executing the UDF `apoc.any.properties`, but with elevated execution:")
           query("SHOW ROLE boostedFunctionExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'boostedFunctionExecutor'")
             resultTable()
