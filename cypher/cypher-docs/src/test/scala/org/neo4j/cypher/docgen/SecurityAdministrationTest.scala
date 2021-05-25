@@ -332,7 +332,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           statsOnlyResultTable()
         }
 
-        p("The resulting role should have privileges that only allow user and role management:")
+        p("The resulting role has privileges that only allow user and role management:")
         query("SHOW ROLE usermanager PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'usermanager'")
           resultTable()
@@ -343,7 +343,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             |For example, the role is missing privilege management, creating and dropping databases as well as executing admin procedures.
             |We can make a more powerful administrator by granting a different set of privileges.
             |Let's create an administrator that can perform almost all DBMS capabilities, excluding database management, but also with some limited database capabilities, such as managing transactions.""".stripMargin)
-        p("Again, we start with creating a new role:")
+        p("Again, we start by creating a new role:")
         query("CREATE ROLE customAdministrator", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -368,7 +368,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           statsOnlyResultTable()
         }
 
-        p("The resulting role should have privileges that allow all DBMS privileges except creating and dropping databases, as well as managing transactions:")
+        p("The resulting role has privileges that allow all DBMS privileges except creating and dropping databases, as well as managing transactions:")
         query("SHOW ROLE customAdministrator PRIVILEGES", NoAssertions) {
           p("Lists all privileges for role 'customAdministrator'")
           resultTable()
