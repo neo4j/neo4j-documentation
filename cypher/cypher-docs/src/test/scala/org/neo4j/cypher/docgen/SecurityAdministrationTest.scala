@@ -737,17 +737,17 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             assertStats(r, systemUpdates = 1)
           })) {
             statsOnlyResultTable()
-            p("Users with the role 'procedureExecutor' can then run any procedure in the `db.schema` namespace. The procedure will be run using the users own privileges.")
+            p("Users with the role 'procedureExecutor' can then run any procedure in the `db.schema` namespace. The procedure will be run using the user's own privileges.")
           }
-          p("The resulting role should have privileges that only allow executing procedures in the `db.schema` namespace:")
-          query("SHOW ROLE procedureExecutor PRIVILEGES", NoAssertions) {
+          p("The resulting role has privileges that only allow executing procedures in the `db.schema` namespace:")
+          query("SHOW ROLE procedureExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'procedureExecutor'")
             resultTable()
           }
 
           p(
             """If we want to allow executing all but a few procedures, we can grant `EXECUTE PROCEDURES *` and deny the unwanted procedures.
-              |For example, the following queries allows for executing all procedures except `dbms.killTransaction` and `dbms.killTransactions`:""".stripMargin)
+              |For example, the following queries allow for executing all procedures, except those starting with `dbms.killTransaction`:""".stripMargin)
           query("GRANT EXECUTE PROCEDURE * ON DBMS TO deniedProcedureExecutor", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
           })) {
@@ -758,10 +758,11 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           })) {
             statsOnlyResultTable()
           }
-          p("The resulting role should have privileges that only allow executing all procedures except `dbms.killTransaction` and `dbms.killTransactions`:")
-          query("SHOW ROLE deniedProcedureExecutor PRIVILEGES", NoAssertions) {
+          p("The resulting role has privileges that only allow executing all procedures except those starting with `dbms.killTransaction`:")
+          query("SHOW ROLE deniedProcedureExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedProcedureExecutor'")
             resultTable()
+            p("The `dbms.killTransaction` and `dbms.killTransactions` are blocked, as well as any other procedures starting with `dbms.killTransaction`.")
           }
         }
 
@@ -770,6 +771,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             """The ability to execute a procedure with elevated privileges can be granted via the `EXECUTE BOOSTED PROCEDURE` privilege.
               |A user with this privilege is allowed to execute the procedures matched by the <<name-globbing, name-globbing>>
               |without the execution being restricted to their other privileges.
+              |There is no need to grant an individual `EXECUTE PROCEDURE` privilege for the procedures either,
+              |as granting the `EXECUTE BOOSTED PROCEDURE` includes an implicit `EXECUTE PROCEDURE` grant for them.
+              |A denied `EXECUTE PROCEDURE` still denies executing the procedure.
               |The following query shows an example of how to grant this privilege:""".stripMargin)
           query("GRANT EXECUTE BOOSTED PROCEDURE db.labels, db.relationshipTypes ON DBMS TO boostedProcedureExecutor", ResultAssertions(r => {
             assertStats(r, systemUpdates = 2)
@@ -779,16 +783,16 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
               """Users with the role 'boostedProcedureExecutor' can then run `db.labels` and `db.relationshipTypes` with full privileges,
                 |seeing everything in the graph not just the labels and types that the user has `TRAVERSE` privilege on.""".stripMargin)
           }
-          p("The resulting role should have privileges that only allow executing procedures `db.labels` and `db.relationshipTypes`, but with elevated execution:")
-          query("SHOW ROLE boostedProcedureExecutor PRIVILEGES", NoAssertions) {
+          p("The resulting role has privileges that only allow executing procedures `db.labels` and `db.relationshipTypes`, but with elevated execution:")
+          query("SHOW ROLE boostedProcedureExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'boostedProcedureExecutor'")
             resultTable()
           }
 
           p(
             """While granting `EXECUTE BOOSTED PROCEDURE` on its own allows the procedure to be both executed and given elevated privileges during the execution,
-              |the deny behaves slightly different and only denies the elevation and not the execution. However, having only a granted `EXECUTE BOOSTED PROCEDURE`
-              |and a deny `EXECUTE BOOSTED PROCEDURE` will deny the execution as well. This is explained through the examples below:""".stripMargin)
+              |the deny behaves slightly differently and only denies the elevation and not the execution. However, a user with only a granted `EXECUTE BOOSTED PROCEDURE`
+              |and a denied `EXECUTE BOOSTED PROCEDURE` will deny the execution as well. This is explained through the examples below:""".stripMargin)
 
           p("Example 1: Grant `EXECUTE PROCEDURE` and deny `EXECUTE BOOSTED PROCEDURE`")
           query("GRANT EXECUTE PROCEDURE * ON DBMS TO deniedBoostedProcedureExecutor1", ResultAssertions(r => {
@@ -802,9 +806,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
           }
           p(
-            """The resulting role should have privileges that allow executing all procedures using the users own privileges,
+            """The resulting role has privileges that allow executing all procedures using the users own privileges,
               |as well as blocking `db.labels` from being elevated. The deny `EXECUTE BOOSTED PROCEDURE` does not block execution of `db.labels`.""".stripMargin)
-          query("SHOW ROLE deniedBoostedProcedureExecutor1 PRIVILEGES", NoAssertions) {
+          query("SHOW ROLE deniedBoostedProcedureExecutor1 PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedBoostedProcedureExecutor1'")
             resultTable()
           }
@@ -821,9 +825,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
           }
           p(
-            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+            """The resulting role has privileges that allow executing all procedures with elevated privileges
               |except `db.labels` which is not allowed to execute at all:""".stripMargin)
-          query("SHOW ROLE deniedBoostedProcedureExecutor2 PRIVILEGES", NoAssertions) {
+          query("SHOW ROLE deniedBoostedProcedureExecutor2 PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedBoostedProcedureExecutor2'")
             resultTable()
           }
@@ -840,9 +844,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
           }
           p(
-            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+            """The resulting role has privileges that allow executing all procedures with elevated privileges
               |except `db.labels` which is not allowed to execute at all:""".stripMargin)
-          query("SHOW ROLE deniedBoostedProcedureExecutor3 PRIVILEGES", NoAssertions) {
+          query("SHOW ROLE deniedBoostedProcedureExecutor3 PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedBoostedProcedureExecutor3'")
             resultTable()
           }
@@ -864,12 +868,35 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
           }
           p(
-            """The resulting role should have privileges that allow executing all procedures with elevated privileges
+            """The resulting role has privileges that allow executing all procedures with elevated privileges
               |except `db.labels` which is only allowed to execute using the users own privileges:""".stripMargin)
-          query("SHOW ROLE deniedBoostedProcedureExecutor4 PRIVILEGES", NoAssertions) {
+          query("SHOW ROLE deniedBoostedProcedureExecutor4 PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedBoostedProcedureExecutor4'")
             resultTable()
           }
+
+          p("Example 5: How would the privileges from example 1-4 affect the output of a procedure?")
+          p(
+            """Let's assume there exists a procedure called `myProc`.
+              |This procedure gives the result `A` and `B` for a user with `EXECUTE PROCEDURE` privilege
+              |and `A`, `B` and `C` for a user with `EXECUTE BOOSTED PROCEDURE` privilege.
+              |Now, let's adapt the privileges in examples 1 to 4 to apply to this procedure and show what is returned.""".stripMargin)
+          p(
+            """With the privileges from example 1, granted `EXECUTE PROCEDURE *` and denied `EXECUTE BOOSTED PROCEDURE myProc`,
+              |the `myProc` procedure returns the result `A` and `B`.""".stripMargin)
+          p(
+            """With the privileges from example 2, granted `EXECUTE BOOSTED PROCEDURE *` and denied `EXECUTE PROCEDURE myProc`,
+              |execution of the `myProc` procedure is not allowed.""".stripMargin)
+          p(
+            """With the privileges from example 3, granted `EXECUTE BOOSTED PROCEDURE *` and denied `EXECUTE BOOSTED PROCEDURE myProc`,
+              |execution of the `myProc` procedure is not allowed.""".stripMargin)
+          p(
+            """With the privileges from example 4, granted `EXECUTE PROCEDURE myProc` and `EXECUTE BOOSTED PROCEDURE *` and denied `EXECUTE BOOSTED PROCEDURE myProc`,
+              |the `myProc` procedure returns the result `A` and `B`.""".stripMargin)
+          p(
+            """For comparison, when only granted `EXECUTE BOOSTED PROCEDURE myProc`,
+              |the `myProc` procedure returns the result `A`, `B` and `C`,
+              |without needing to be granted the `EXECUTE PROCEDURE myProc` privilege.""".stripMargin)
         }
 
         section("The `EXECUTE ADMIN PROCEDURES` privilege", "admin-execute-procedure-subsection", "enterprise-edition") {
@@ -884,11 +911,24 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
             p("Users with the role 'adminProcedureExecutor' can then run any admin procedure with elevated privileges.")
           }
-          p("The resulting role should have privileges that allows executing all admin procedures:")
-          query("SHOW ROLE adminProcedureExecutor PRIVILEGES", NoAssertions) {
+          p("The resulting role has privileges that allows executing all admin procedures:")
+          query("SHOW ROLE adminProcedureExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'adminProcedureExecutor'")
             resultTable()
           }
+
+          p(
+            """To compare this with the `EXECUTE PROCEDURE` and `EXECUTE BOOSTED PROCEDURE` privileges, let's revisit the `myProc` procedure.
+              |This time as an admin procedure, which gives the result `A`, `B` and `C` when allowed to execute.""".stripMargin)
+          p(
+            """Let's start with a user only granted the `EXECUTE PROCEDURE myProc` privilege,
+              |execution of the `myProc` procedure is not allowed.""".stripMargin)
+          p(
+            """However, for a user granted `EXECUTE BOOSTED PROCEDURE myProc` or `EXECUTE ADMIN PROCEDURES`,
+              |the `myProc` procedure returns the result `A`, `B` and `C`.""".stripMargin)
+          p(
+            """Any denied execute privilege results in the procedure not being allowed to execute.
+              |It does not matter whether `EXECUTE PROCEDURE`, `EXECUTE BOOSTED PROCEDURE` or `EXECUTE ADMIN PROCEDURES` is denied.""".stripMargin)
         }
 
         section("The `EXECUTE USER DEFINED FUNCTION` privilege", "execute-function-subsection", "enterprise-edition") {
@@ -900,17 +940,21 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             assertStats(r, systemUpdates = 1)
           })) {
             statsOnlyResultTable()
-            p("Users with the role 'functionExecutor' can then run any UDF in the `apoc.coll` namespace. The function will be run using the users own privileges.")
+            p("Users with the role 'functionExecutor' can then run any UDF in the `apoc.coll` namespace. The function is run using the user's own privileges.")
           }
-          p("The resulting role should have privileges that only allow executing UDFs in the `apoc.coll` namespace:")
-          query("SHOW ROLE functionExecutor PRIVILEGES", NoAssertions) {
+          p("The resulting role has privileges that only allow executing UDFs in the `apoc.coll` namespace:")
+          query("SHOW ROLE functionExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'functionExecutor'")
             resultTable()
           }
 
+          note {
+            p("The `EXECUTE USER DEFINED FUNCTION` privileges do not apply to built-in functions which are always executable.")
+          }
+
           p(
             """If we want to allow executing all but a few UDFs, we can grant `EXECUTE USER DEFINED FUNCTIONS *` and deny the unwanted functions.
-              |For example, the following queries allows for executing all UDFs except `apoc.any.property` and `apoc.any.properties`:""".stripMargin)
+              |For example, the following queries allow for executing all UDFs except those starting with `apoc.any.prop`:""".stripMargin)
           query("GRANT EXECUTE FUNCTIONS * ON DBMS TO deniedFunctionExecutor", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
           })) {
@@ -921,10 +965,11 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           })) {
             statsOnlyResultTable()
           }
-          p("The resulting role should have privileges that only allow executing all procedures except `apoc.any.property` and `apoc.any.properties`:")
-          query("SHOW ROLE deniedFunctionExecutor PRIVILEGES", NoAssertions) {
+          p("The resulting role has privileges that only allow executing all procedures except those starting with `apoc.any.prop`:")
+          query("SHOW ROLE deniedFunctionExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'deniedFunctionExecutor'")
             resultTable()
+            p("The `apoc.any.property` and `apoc.any.properties` is blocked, as well as any other procedures starting with `apoc.any.prop`.")
           }
         }
 
@@ -933,6 +978,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             """The ability to execute a user defined function (UDF) with elevated privileges can be granted via the `EXECUTE BOOSTED USER DEFINED FUNCTION` privilege.
               |A user with this privilege is allowed to execute the UDFs matched by the <<name-globbing, name-globbing>>
               |without the execution being restricted to their other privileges.
+              |There is no need to grant an individual `EXECUTE USER DEFINED FUNCTION` privilege for the functions either,
+              |as granting the `EXECUTE BOOSTED USER DEFINED FUNCTION` includes an implicit `EXECUTE USER DEFINED FUNCTION` grant for them.
+              |A denied `EXECUTE USER DEFINED FUNCTION` still denies executing the function.
               |The following query shows an example of how to grant this privilege:""".stripMargin)
           query("GRANT EXECUTE BOOSTED FUNCTION apoc.any.properties ON DBMS TO boostedFunctionExecutor", ResultAssertions(r => {
             assertStats(r, systemUpdates = 1)
@@ -942,17 +990,21 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
               """Users with the role 'boostedFunctionExecutor' can then run `apoc.any.properties` with full privileges,
                 |seeing every property on the node/relationship not just the properties that the user has `READ` privilege on.""".stripMargin)
           }
-          p("The resulting role should have privileges that only allow executing the UDF `apoc.any.properties`, but with elevated execution:")
-          query("SHOW ROLE boostedFunctionExecutor PRIVILEGES", NoAssertions) {
+          p("The resulting role has privileges that only allow executing the UDF `apoc.any.properties`, but with elevated execution:")
+          query("SHOW ROLE boostedFunctionExecutor PRIVILEGES AS COMMANDS", NoAssertions) {
             p("Lists all privileges for role 'boostedFunctionExecutor'")
             resultTable()
           }
 
+          note {
+            p("The `EXECUTE BOOSTED USER DEFINED FUNCTION` privileges do not apply to built-in functions, as they have no concept of elevated privileges.")
+          }
+
           p(
             """While granting `EXECUTE BOOSTED USER DEFINED FUNCTION` on its own allows the UDF to be both executed and given elevated privileges during the execution,
-              |the deny behaves slightly different and only denies the elevation and not the execution. However, having only a granted `EXECUTE BOOSTED USER DEFINED FUNCTION`
-              |and a deny `EXECUTE BOOSTED USER DEFINED FUNCTION` will deny the execution as well.
-              |This is the same behaviour as for `EXECUTE BOOSTED PROCEDURE`, for examples see <<boosted-execute-procedure-subsection>>""".stripMargin)
+              |the deny behaves slightly differently and only denies the elevation and not the execution. However, a user with only a granted `EXECUTE BOOSTED USER DEFINED FUNCTION`
+              |and a denied `EXECUTE BOOSTED USER DEFINED FUNCTION` denies the execution as well.
+              |This is the same behavior as for `EXECUTE BOOSTED PROCEDURE`, for examples see <<boosted-execute-procedure-subsection>>""".stripMargin)
         }
 
         section("Procedure and user defined function name-globbing", "name-globbing", "enterprise-edition") {
