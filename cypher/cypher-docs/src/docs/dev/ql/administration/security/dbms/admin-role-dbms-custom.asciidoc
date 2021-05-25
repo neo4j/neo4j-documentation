@@ -1,2 +1,0 @@
-If it is desired to have an administrator with a subset of privileges that includes all DBMS privileges, but not all database privileges, this can be achieved by copying the `admin` role and revoking or denying some privileges.
-// For example, let's assume we want an administrator that is able to perform user and role management, but cannot write to normal databases, or manage indexes or constraints.
