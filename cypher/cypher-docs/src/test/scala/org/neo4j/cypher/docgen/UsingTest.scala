@@ -202,7 +202,7 @@ class UsingTest extends DocumentingTest {
   }
 
   case class ShouldUseRelationshipIndexSeekOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek\\s*\\|\\s*$variable".r
+    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek\\s*\\|\\s*\\(\\w*\\)-\\[$variable".r
   }
 
   case class ShouldUseLabelScanOn(variable: String) extends PlanAssertion {
@@ -210,7 +210,7 @@ class UsingTest extends DocumentingTest {
   }
 
   case class ShouldUseRelationshipTypeScanOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipTypeScan\\s*\\|\\s*$variable".r
+    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipTypeScan\\s*\\|\\s*\\(\\w*\\)-\\[$variable".r
   }
 
   case class ShouldUseJoinOn(variable: String) extends PlanAssertion {
