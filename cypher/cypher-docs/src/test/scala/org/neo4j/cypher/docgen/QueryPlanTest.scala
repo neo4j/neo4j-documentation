@@ -741,11 +741,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
   }
 
   @Test def undirectedRelationshipIndexRangeSeek() {
-    profileQuery(title = "Directed Relationship Index Seek By Range",
+    profileQuery(title = "Undirected Relationship Index Seek By Range",
       text =
         """The `UndirectedRelationshipIndexSeekByRange` operator finds relationships and their start and end nodes using an index seek where the value of the property matches a given prefix string.
           |`UndirectedRelationshipIndexSeekByRange` can be used for `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`.""".stripMargin,
-      queryText = "MATCH (candidate: Person)-[r:WORKS_IN]->(location) WHERE r.duration > 100 RETURN candidate",
+      queryText = "MATCH (candidate: Person)-[r:WORKS_IN]-(location) WHERE r.duration > 100 RETURN candidate",
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedRelationshipIndexSeekByRange"))
     )
   }
