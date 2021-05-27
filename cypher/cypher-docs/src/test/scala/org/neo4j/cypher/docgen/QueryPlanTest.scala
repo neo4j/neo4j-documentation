@@ -71,21 +71,21 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
        CREATE (remoting:Team {name: 'Team Remoting'})
        CREATE (other:Team {name: 'Other'})
 
-       CREATE (me)-[:WORKS_IN {duration: 190}]->(london)
-       CREATE (bob)-[:WORKS_IN {duration: 187}]->(london)
-       CREATE (andy)-[:WORKS_IN {duration: 150}]->(london)
-       CREATE (mattias)-[:WORKS_IN {duration: 230}]->(london)
-       CREATE (lovis)-[:WORKS_IN {duration: 230}]->(sf)
-       CREATE (pontus)-[:WORKS_IN {duration: 230}]->(malmo)
-       CREATE (max)-[:WORKS_IN {duration: 230}]->(newyork)
-       CREATE (konstantin)-[:WORKS_IN {duration: 230}]->(london)
-       CREATE (stefan)-[:WORKS_IN {duration: 230}]->(london)
-       CREATE (stefan)-[:WORKS_IN {duration: 230}]->(berlin)
-       CREATE (mats)-[:WORKS_IN {duration: 230}]->(malmo)
-       CREATE (petra)-[:WORKS_IN {duration: 230}]->(london)
-       CREATE (craig)-[:WORKS_IN {duration: 230}]->(malmo)
-       CREATE (steven)-[:WORKS_IN {duration: 230}]->(malmo)
-       CREATE (chris)-[:WORKS_IN {duration: 230}]->(madrid)
+       CREATE (me)-[:WORKS_IN {duration: 190, title: 'senior sales engineer'}]->(london)
+       CREATE (bob)-[:WORKS_IN {duration: 187, title: 'junior developer'}]->(london)
+       CREATE (andy)-[:WORKS_IN {duration: 150, title: ''}]->(london)
+       CREATE (mattias)-[:WORKS_IN {duration: 230, title: 'senior developer'}]->(london)
+       CREATE (lovis)-[:WORKS_IN {duration: 230, title: 'junior developer'}]->(sf)
+       CREATE (pontus)-[:WORKS_IN {duration: 230, title: 'junior developer'}]->(malmo)
+       CREATE (max)-[:WORKS_IN {duration: 230, title: 'field engineer'}]->(newyork)
+       CREATE (konstantin)-[:WORKS_IN {duration: 230, title: 'frontend developer'}]->(london)
+       CREATE (stefan)-[:WORKS_IN {duration: 230, title: 'chief architect'}]->(london)
+       CREATE (stefan)-[:WORKS_IN {duration: 230, title: 'language architect'}]->(berlin)
+       CREATE (mats)-[:WORKS_IN {duration: 230, title: 'senior developer'}]->(malmo)
+       CREATE (petra)-[:WORKS_IN {duration: 230, title: 'language architect'}]->(london)
+       CREATE (craig)-[:WORKS_IN {duration: 230, title: 'senior developer'}]->(malmo)
+       CREATE (steven)-[:WORKS_IN {duration: 230, title: 'junior developer'}]->(malmo)
+       CREATE (chris)-[:WORKS_IN {duration: 230, title: 'field engineer'}]->(madrid)
        CREATE (london)-[:IN]->(england)
        CREATE (me)-[:FRIENDS_WITH]->(andy)
        CREATE (andy)-[:FRIENDS_WITH]->(bob)
@@ -94,6 +94,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
   override val setupConstraintQueries = List(
     "CREATE INDEX FOR (n:Location) ON (n.name)",
     "CREATE INDEX FOR (n:Person) ON (n.name)",
+    "CREATE INDEX FOR ()-[r:WORKS_IN]-() ON (r.duration)",
+    "CREATE INDEX FOR ()-[r:WORKS_IN]-() ON (r.title)",
     "CREATE CONSTRAINT ON (team:Team) ASSERT team.name is UNIQUE",
     "CREATE CONSTRAINT ON (team:Team) ASSERT team.id is UNIQUE"
   )
@@ -627,6 +629,32 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def directedRelationshipTypeScan() {
+    executePreparationQueries {
+      List("CREATE LOOKUP INDEX rel_lookup_index_name FOR ()-[r]-() ON EACH type(r)")
+    }
+
+    profileQuery(
+      title = "Directed Relationship Type Scan",
+      text = """The `DirectedRelationshipTypeScan` operator fetches all relationships and their start and end nodes with a specific type from the relationship type index.""".stripMargin,
+      queryText = """MATCH ()-[r: FRIENDS_WITH]->() RETURN r""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipTypeScan"))
+    )
+  }
+
+  @Test def undirectedRelationshipTypeScan() {
+    executePreparationQueries {
+      List("CREATE LOOKUP INDEX rel_lookup_index_name FOR ()-[r]-() ON EACH type(r)")
+    }
+
+    profileQuery(
+      title = "Undirected Relationship Type Scan",
+      text = """The `UndirectedRelationshipTypeScan` operator fetches all relationships and their start and end nodes with a specific type from the relationship type index.""".stripMargin,
+      queryText = """MATCH ()-[r: FRIENDS_WITH]-() RETURN r""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedRelationshipTypeScan"))
+    )
+  }
+
   @Test def nodeByIndexSeek() {
     profileQuery(
       title = "Node Index Seek",
@@ -670,6 +698,28 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def directedRelationshipIndexSeek() {
+    profileQuery(
+      title = "Directed Relationship Index Seek",
+      text =
+        """The `DirectedRelationshipIndexSeek` operator finds relationships and their start and end nodes using an index seek.
+          |The relationship variable and the index used is shown in the arguments of the operator.""".stripMargin,
+      queryText = """MATCH (candidate)-[r:WORKS_IN]->() WHERE r.title = 'chief architect' RETURN candidate""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexSeek"))
+    )
+  }
+
+  @Test def undirectedRelationshipIndexSeek() {
+    profileQuery(
+      title = "Relationship Index Seek",
+      text =
+        """The `UndirectedRelationshipIndexSeek` operator finds relationships and their start and end nodes using an index seek.
+          |The relationship variable and the index used is shown in the arguments of the operator.""".stripMargin,
+      queryText = """MATCH (candidate)-[r:WORKS_IN]-() WHERE r.title = 'chief architect' RETURN candidate""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedRelationshipIndexSeek"))
+    )
+  }
+
   @Test def argument() {
     profileQuery(
       title = "Argument",
@@ -704,6 +754,26 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
                      |If the index is a unique index, the operator is instead called `NodeUniqueIndexSeekByRange`.""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE l.name STARTS WITH 'Lon' RETURN l",
                  assertions = p => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeekByRange"))
+    )
+  }
+
+  @Test def directedRelationshipIndexRangeSeek() {
+    profileQuery(title = "Directed Relationship Index Seek By Range",
+      text =
+        """The `DirectedRelationshipIndexSeekByRange` operator finds relationships and their start and end nodes using an index seek where the value of the property matches a given prefix string.
+          |`DirectedRelationshipIndexSeekByRange` can be used for `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`.""".stripMargin,
+      queryText = "MATCH (candidate: Person)-[r:WORKS_IN]->(location) WHERE r.duration > 100 RETURN candidate",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexSeekByRange"))
+    )
+  }
+
+  @Test def undirectedRelationshipIndexRangeSeek() {
+    profileQuery(title = "Undirected Relationship Index Seek By Range",
+      text =
+        """The `UndirectedRelationshipIndexSeekByRange` operator finds relationships and their start and end nodes using an index seek where the value of the property matches a given prefix string.
+          |`UndirectedRelationshipIndexSeekByRange` can be used for `STARTS WITH` and comparison operators such as `<`, `>`, `\<=` and `>=`.""".stripMargin,
+      queryText = "MATCH (candidate: Person)-[r:WORKS_IN]-(location) WHERE r.duration > 100 RETURN candidate",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedRelationshipIndexSeekByRange"))
     )
   }
 
@@ -766,6 +836,76 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
                | filter.""".stripMargin,
       queryText = "MATCH (l:Location) WHERE l.name ENDS WITH 'al' RETURN l",
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexEndsWithScan"))
+    )
+  }
+
+  @Test def directedRelationshipIndexScan() {
+    profileQuery(title = "Directed Relationship Index Scan",
+      text = """
+               |The `DirectedRelationshipIndexScan` operator examines all values stored in an index, returning all relationships and their start and end nodes with a particular relationship type having a specified property.""".stripMargin,
+      queryText = "MATCH ()-[r: WORKS_IN]->() WHERE r.title IS NOT NULL RETURN r",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexScan"))
+    )
+  }
+
+  @Test def undirectedRelationshipIndexScan() {
+    profileQuery(title = "Undirected Relationship Index Scan",
+      text = """
+               |The `UndirectedRelationshipIndexScan` operator examines all values stored in an index, returning all relationships and their start and end nodes with a particular relationship type having a specified property.""".stripMargin,
+      queryText = "MATCH ()-[r: WORKS_IN]-() WHERE r.title IS NOT NULL RETURN r",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedRelationshipIndexScan"))
+    )
+  }
+
+  @Test def directedRelationshipIndexContainsScan() {
+    profileQuery(title = "Directed Relationship Index Contains Scan",
+      text = """
+               |The `DirectedRelationshipIndexContainsScan` operator examines all values stored in an index, searching for entries
+               | containing a specific string; for example, in queries including `CONTAINS`.
+               | Although this is slower than an index seek (since all entries need to be
+               | examined), it is still faster than the indirection resulting from a type scan using `DirectedRelationshipTypeScan`, and a property store
+               | filter.""".stripMargin,
+      queryText = "MATCH ()-[r: WORKS_IN]->() WHERE r.title CONTAINS 'senior' RETURN r",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexContainsScan"))
+    )
+  }
+
+  @Test def undirectedRelationshipIndexContainsScan() {
+    profileQuery(title = "Undirected Relationship Index Contains Scan",
+      text = """
+               |The `UndirectedRelationshipIndexContainsScan` operator examines all values stored in an index, searching for entries
+               | containing a specific string; for example, in queries including `CONTAINS`.
+               | Although this is slower than an index seek (since all entries need to be
+               | examined), it is still faster than the indirection resulting from a type scan using `DirectedRelationshipTypeScan`, and a property store
+               | filter.""".stripMargin,
+      queryText = "MATCH ()-[r: WORKS_IN]-() WHERE r.title CONTAINS 'senior' RETURN r",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedRelationshipIndexContainsScan"))
+    )
+  }
+
+  @Test def directedRelationshipIndexEndsWithScan() {
+    profileQuery(title = "Directed Relationship Index Ends With Scan",
+      text = """
+               |The `DirectedRelationshipIndexEndsWithScan` operator examines all values stored in an index, searching for entries
+               | ending in a specific string; for example, in queries containing `ENDS WITH`.
+               | Although this is slower than an index seek (since all entries need to be
+               | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
+               | filter.""".stripMargin,
+      queryText = "MATCH ()-[r: WORKS_IN]->() WHERE r.title ENDS WITH 'developer' RETURN r",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexEndsWithScan"))
+    )
+  }
+
+  @Test def undirectedRelationshipIndexEndsWithScan() {
+    profileQuery(title = "Undirected Relationship Index Ends With Scan",
+      text = """
+               |The `UndirectedRelationshipIndexEndsWithScan` operator examines all values stored in an index, searching for entries
+               | ending in a specific string; for example, in queries containing `ENDS WITH`.
+               | Although this is slower than an index seek (since all entries need to be
+               | examined), it is still faster than the indirection resulting from a label scan using `NodeByLabelScan`, and a property store
+               | filter.""".stripMargin,
+      queryText = "MATCH ()-[r: WORKS_IN]-() WHERE r.title ENDS WITH 'developer' RETURN r",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedRelationshipIndexEndsWithScan"))
     )
   }
 
