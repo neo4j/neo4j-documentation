@@ -660,7 +660,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Node Index Seek",
       text =
         """The `NodeIndexSeek` operator finds nodes using an index seek.
-          |The node variable and the index used is shown in the arguments of the operator.
+          |The node variable and the index used are shown in the arguments of the operator.
           |If the index is a unique index, the operator is instead called <<query-plan-node-unique-index-seek, NodeUniqueIndexSeek>>.""".stripMargin,
       queryText = """MATCH (location:Location {name: 'Malmo'}) RETURN location""",
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexSeek"))
@@ -670,7 +670,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
   @Test def nodeByUniqueIndexSeek() {
     profileQuery(
       title = "Node Unique Index Seek",
-      text = """The `NodeUniqueIndexSeek` operator finds nodes using an index seek within a unique index. The node variable and the index used is shown in the arguments of the operator.
+      text = """The `NodeUniqueIndexSeek` operator finds nodes using an index seek within a unique index. The node variable and the index used are shown in the arguments of the operator.
                |If the index is not unique, the operator is instead called <<query-plan-node-index-seek, NodeIndexSeek>>.
                |If the index seek is used to solve a <<query-merge, MERGE>> clause, it will also be marked with `(Locking)`.
                |This makes it clear that any nodes returned from the index will be locked in order to prevent concurrent conflicting updates.""".stripMargin,
@@ -703,7 +703,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Directed Relationship Index Seek",
       text =
         """The `DirectedRelationshipIndexSeek` operator finds relationships and their start and end nodes using an index seek.
-          |The relationship variable and the index used is shown in the arguments of the operator.""".stripMargin,
+          |The relationship variable and the index used are shown in the arguments of the operator.""".stripMargin,
       queryText = """MATCH (candidate)-[r:WORKS_IN]->() WHERE r.title = 'chief architect' RETURN candidate""",
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexSeek"))
     )
@@ -714,7 +714,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       title = "Relationship Index Seek",
       text =
         """The `UndirectedRelationshipIndexSeek` operator finds relationships and their start and end nodes using an index seek.
-          |The relationship variable and the index used is shown in the arguments of the operator.""".stripMargin,
+          |The relationship variable and the index used are shown in the arguments of the operator.""".stripMargin,
       queryText = """MATCH (candidate)-[r:WORKS_IN]-() WHERE r.title = 'chief architect' RETURN candidate""",
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedRelationshipIndexSeek"))
     )
@@ -801,7 +801,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }.toList)
     profileQuery(title = "Node Index Scan",
                  text = """
-                          |The `NodeIndexScan` operator examines all values stored in an index, returning all nodes with a particular label having a specified property.""".stripMargin,
+                          |The `NodeIndexScan` operator examines all values stored in an index, returning all nodes with a particular label and a specified property.""".stripMargin,
                  queryText = "MATCH (l:Location) WHERE l.name IS NOT NULL RETURN l",
                  assertions = p => assertThat(p.executionPlanDescription().toString, containsString("NodeIndexScan"))
     )
@@ -842,7 +842,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
   @Test def directedRelationshipIndexScan() {
     profileQuery(title = "Directed Relationship Index Scan",
       text = """
-               |The `DirectedRelationshipIndexScan` operator examines all values stored in an index, returning all relationships and their start and end nodes with a particular relationship type having a specified property.""".stripMargin,
+               |The `DirectedRelationshipIndexScan` operator examines all values stored in an index, returning all relationships and their start and end nodes with a particular relationship type and a specified property.""".stripMargin,
       queryText = "MATCH ()-[r: WORKS_IN]->() WHERE r.title IS NOT NULL RETURN r",
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DirectedRelationshipIndexScan"))
     )
@@ -851,7 +851,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
   @Test def undirectedRelationshipIndexScan() {
     profileQuery(title = "Undirected Relationship Index Scan",
       text = """
-               |The `UndirectedRelationshipIndexScan` operator examines all values stored in an index, returning all relationships and their start and end nodes with a particular relationship type having a specified property.""".stripMargin,
+               |The `UndirectedRelationshipIndexScan` operator examines all values stored in an index, returning all relationships and their start and end nodes with a particular relationship type and a specified property.""".stripMargin,
       queryText = "MATCH ()-[r: WORKS_IN]-() WHERE r.title IS NOT NULL RETURN r",
       assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedRelationshipIndexScan"))
     )
