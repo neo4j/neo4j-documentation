@@ -47,7 +47,7 @@ class FulltextIndexTest extends DocumentingTest {
     section("Introduction", "administration-indexes-fulltext-search-introduction") {
       p("""Full-text indexes are powered by the link:https://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
           #A full-text index allows you to write queries that match within the _contents_ of indexed string properties.
-          #For instance, the btree indexes described in previous sections can only do exact matching or prefix matches on strings.
+          #For instance, the b-tree indexes described in previous sections can only do exact matching or prefix matches on strings.
           #A full-text index will instead tokenize the indexed string values, so it can match _terms_ anywhere within the strings.
           #How the indexed strings are tokenized and broken into terms, is determined by what analyzer the full-text index is configured with.
           #For instance, the _swedish_ analyzer knows how to tokenize and stem Swedish words, and will avoid indexing Swedish stop words.
@@ -69,7 +69,7 @@ class FulltextIndexTest extends DocumentingTest {
           #Using this feature, it is possible to work around the slow Lucene writes from the performance critical commit process, thus removing the main bottlenecks for Neo4j write performance.""".stripMargin('#'))
       p("""At first sight, the construction of full-text indexes can seem similar to regular indexes.
           #However there are some things that are interesting to note:
-          #In contrast to <<administration-indexes-introduction, btree indexes>>, a full-text index""".stripMargin('#'))
+          #In contrast to <<administration-indexes-introduction, b-tree indexes>>, a full-text index""".stripMargin('#'))
       p(
         """* can be applied to more than one label.
           #* can be applied to more than one relationship type.

@@ -18,8 +18,8 @@ This section explains how to manage indexes used for search performance.
 ** <<administration-indexes-create-a-composite-index-for-nodes, Create a composite index for nodes>>
 ** <<administration-indexes-create-a-composite-index-for-relationships, Create a composite index for relationships>>
 ** <<administration-indexes-create-a-composite-index-with-specified-index-provider-and-configuration, Create a composite index with specified index provider and configuration>>
-** <<administration-indexes-create-a-lookup-index-for-nodes, Create a lookup index for nodes>>
-** <<administration-indexes-create-a-lookup-index-for-relationships, Create a lookup index for relationships>>
+** <<administration-indexes-create-a-node-label-lookup-index, Create a node label lookup index>>
+** <<administration-indexes-create-a-relationship-type-lookup-index, Create a relationship type lookup index>>
 ** <<administration-indexes-drop-an-index, Drop an index>>
 ** <<administration-indexes-drop-a-non-existing-index, Drop a non-existing index>>
 ** <<administration-indexes-list-indexes, Listing indexes>>
@@ -130,9 +130,9 @@ CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
 FOR (n)
 ON EACH labels(n)
 ----
-| Create a lookup index on nodes.
+| Create a node label lookup index.
 
-Lookup indexes do not support any `OPTIONS` values.
+Token lookup indexes do not support any `OPTIONS` values.
 
 | [source, cypher, role=noplay]
 ----
@@ -140,15 +140,15 @@ CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
 FOR ()-"["r"]"-()
 ON [EACH] type(r)
 ----
-| Create a lookup index on relationships.
+| Create a relationship type lookup index.
 
-Lookup indexes do not support any `OPTIONS` values.
+Token lookup indexes do not support any `OPTIONS` values.
 
 | [source, cypher, role=noplay]
 ----
 DROP INDEX index_name [IF EXISTS]
 ----
-| Drop an index, either a node, a relationship, or a lookup index.
+| Drop an index, either a b-tree, fulltext, or token lookup index.
 | The command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same index twice.
 With `IF EXISTS`, no error is thrown and nothing happens should the index not exist.
 
@@ -159,7 +159,7 @@ SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP] INDEX[ES]
     [WHERE expression]
     [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
-| List indexes in the database, either all or filtered on B-tree, fulltext, or lookup indexes.
+| List indexes in the database, either all or filtered on b-tree, fulltext, or token lookup indexes.
 | When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
 
 | [source, cypher, role=noplay]
@@ -259,9 +259,9 @@ include::../indexes/create-a-composite-index-for-relationships.asciidoc[leveloff
 
 include::../indexes/create-a-composite-index-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+1]
 
-include::../indexes/create-a-lookup-index-for-nodes.asciidoc[leveloffset=+1]
+include::../indexes/create-a-node-label-lookup-index.asciidoc[leveloffset=+1]
 
-include::../indexes/create-a-lookup-index-for-relationships.asciidoc[leveloffset=+1]
+include::../indexes/create-a-relationship-type-lookup-index.asciidoc[leveloffset=+1]
 
 include::../indexes/drop-an-index.asciidoc[leveloffset=+1]
 
