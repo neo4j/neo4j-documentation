@@ -62,9 +62,9 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `ON DEFAULT DATABASE` for privilege commands  | Syntax        | Deprecated    | Replaced by `ON HOME DATABASE`
 | `ON DEFAULT GRAPH` for privilege commands     | Syntax        | Deprecated    | Replaced by `ON HOME GRAPH`
 | `CREATE INDEX FOR ()-[r:TYPE]-() ...`         | Functionality | Added         | Allows creating indexes on relationships with a particular relationship type and property combination. They can be dropped by using their name.
-| `CREATE LOOKUP INDEX ...`                     | Functionality | Added         | Create lookup index for nodes with any labels or relationships with any types. They can be dropped by using their name.
+| `CREATE LOOKUP INDEX ...`                     | Functionality | Added         | Create token lookup index for nodes with any labels or relationships with any relationship type. They can be dropped by using their name.
 | `SHOW FULLTEXT INDEXES`   | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on fulltext indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
-| `SHOW LOOKUP INDEXES`     | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on lookup indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
+| `SHOW LOOKUP INDEXES`     | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on token lookup indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
 | `CREATE DATABASE ... [OPTIONS {...}]` | Syntax  | Added | New syntax to pass options to `CREATE DATABASE`.  This can be used to specify a specific cluster node to seed data from.
 | `RENAME ROLE` | Functionality | Added | New Cypher command for changing the name of a role.
 | `RENAME USER` | Functionality | Added | New Cypher command for changing the name of a user.
