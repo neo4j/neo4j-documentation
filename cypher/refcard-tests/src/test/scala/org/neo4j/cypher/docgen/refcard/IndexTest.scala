@@ -125,7 +125,7 @@ Create a composite index on nodes with label `Person` and the properties `name` 
 CREATE LOOKUP INDEX lookup_index_name FOR (n) ON EACH labels(n)
 ###
 
-Create a lookup index on nodes with any label with the name `lookup_index_name`.
+Create a token lookup index with the name `lookup_index_name` on nodes with any label .
 
 ###assertion=create-index
 //
@@ -133,7 +133,7 @@ Create a lookup index on nodes with any label with the name `lookup_index_name`.
 CREATE LOOKUP INDEX FOR ()-[r]-() ON EACH type(r)
 ###
 
-Create a lookup index on relationships with any type.
+Create a token lookup index on relationships with any relationship type.
 
 ###assertion=create-index
 //

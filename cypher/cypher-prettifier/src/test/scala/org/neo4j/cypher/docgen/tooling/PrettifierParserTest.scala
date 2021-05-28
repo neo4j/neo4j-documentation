@@ -164,7 +164,7 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
         AnyText("-"), GroupToken("(", ")", Seq.empty), BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("k.since"))))
   }
 
-  test("shouldParseCreateNodeLookupIndex") {
+  test("shouldParseCreateNodeLabelLookupIndex") {
     // given
     val query = "create lookup index for (person) on each labels(person)"
 
@@ -174,7 +174,7 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
         BreakingKeywords("on"), NonBreakingKeywords("each"), AnyText("labels"), GroupToken("(", ")", Seq(AnyText("person"))))
   }
 
-  test("shouldParseCreateRelLookupIndexWithName") {
+  test("shouldParseCreateRelTypeLookupIndexWithName") {
     // given
     val query = "create lookup index name for ()-[k]-() on each type(k)"
 
