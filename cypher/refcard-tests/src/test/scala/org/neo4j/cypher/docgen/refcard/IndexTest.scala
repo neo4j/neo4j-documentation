@@ -23,6 +23,7 @@ import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
+import org.neo4j.graphdb.schema.IndexSettingImpl.FULLTEXT_ANALYZER
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MAX
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MIN
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
@@ -57,7 +58,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
         assert(result.toList.size === 1)
       case "show" =>
         assertStats(result)
-        assert(result.toList.size === 6)
+        assert(result.toList.size === 8)
     }
   }
 
@@ -133,6 +134,24 @@ CREATE LOOKUP INDEX FOR ()-[r]-() ON EACH type(r)
 ###
 
 Create a lookup index on relationships with any type.
+
+###assertion=create-index
+//
+
+CREATE FULLTEXT INDEX node_fulltext_index_name FOR (n:Friend) ON EACH [n.name]
+OPTIONS {indexConfig: {`${FULLTEXT_ANALYZER.getSettingName}`: 'swedish'}}
+###
+
+Create a fulltext index on nodes with the name `node_fulltext_index_name` and analyzer `swedish`. Fulltext indexes on nodes can only be used by from the procedure `db.index.fulltext.queryNodes`.
+The other index settings will have their default values.
+
+###assertion=create-index
+//
+
+CREATE FULLTEXT INDEX rel_fulltext_index_name FOR ()-[r:HAS_PET|BROUGHT_PET]-() ON EACH [r.since, r.price]
+###
+
+Create a fulltext index on relationships with the name `rel_fulltext_index_name`. Fulltext indexes on relationships can only be used by from the procedure `db.index.fulltext.queryRelationships`.
 
 ###assertion=show
 //

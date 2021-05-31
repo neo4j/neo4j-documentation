@@ -83,12 +83,12 @@ The index name must be unique among both indexes and constraints.
 
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same index twice.
 With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name, schema or both already exist.
-It may still throw an error should a conflicting constraint exist.
+It may still throw an error should a constraint with the same name exist.
 
 | [source, cypher, role=noplay]
 ----
 CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
-FOR ()-[r:TYPE_NAME]-()
+FOR ()-"["r:TYPE_NAME"]"-()
 ON (r.propertyName)
 [OPTIONS "{" option: value[, ...] "}"]
 ----
@@ -113,7 +113,7 @@ Index provider and configuration can be specified using the `OPTIONS` clause.
 | [source, cypher, role=noplay]
 ----
 CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
-FOR ()-[r:TYPE_NAME]-()
+FOR ()-"["r:TYPE_NAME"]"-()
 ON (r.propertyName_1,
     r.propertyName_2,
     …
@@ -137,7 +137,7 @@ Lookup indexes do not support any `OPTIONS` values.
 | [source, cypher, role=noplay]
 ----
 CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
-FOR ()-[r]-()
+FOR ()-"["r"]"-()
 ON [EACH] type(r)
 ----
 | Create a lookup index on relationships.
@@ -306,7 +306,7 @@ Listing indexes can be done with `SHOW INDEXES`, which will produce a table with
 | `+`
 
 | `type`
-| The IndexType of this index (`BTREE` or `FULLTEXT`).
+| The IndexType of this index (`BTREE`, `FULLTEXT`, or `LOOKUP`).
 | `+`
 | `+`
 
