@@ -31,10 +31,23 @@ Replacement syntax for deprecated and removed features are also indicated.
 
 [[cypher-deprecations-additions-removals-4.3]]
 === Version 4.3
-[options="header"]
+[cols="4", options="header"]
 |===
-| Feature     | Type | Change | Details
-| `CREATE CONSTRAINT [name] ON (node:Label) ASSERT node.property IS NOT NULL`   | Syntax | Added | New syntax for creating node property existence constraints.
+| Feature
+| Type
+| Change
+| Details
+
+a|
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [name] ON (node:Label)
+ASSERT node.property IS NOT NULL
+----
+| Syntax
+| Added
+| New syntax for creating node property existence constraints.
+
 | `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT rel.property IS NOT NULL` | Syntax | Added | New syntax for creating relationship property existence constraints.
 | `CREATE CONSTRAINT [name] ON (node:Label) ASSERT exists(node.property)`   | Syntax | Deprecated | Replaced by `CREATE CONSTRAINT [name] ON (node:Label) ASSERT node.property IS NOT NULL`
 | `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT exists(rel.property)` | Syntax | Deprecated | Replaced by `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT rel.property IS NOT NULL`
@@ -68,8 +81,8 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `CREATE DATABASE ... [OPTIONS {...}]` | Syntax  | Added | New syntax to pass options to `CREATE DATABASE`.  This can be used to specify a specific cluster node to seed data from.
 | `RENAME ROLE` | Functionality | Added | New Cypher command for changing the name of a role.
 | `RENAME USER` | Functionality | Added | New Cypher command for changing the name of a user.
-| `SHOW PROCEDURE[S] [EXECUTABLE [BY {CURRENT USER | username}]] [YIELD ...] [WHERE ...] [RETURN ...]`                                  | Functionality | Added | New Cypher commands for listing procedures.
-| `SHOW [ALL \| BUILT IN \| USER DEFINED] FUNCTION[S] [EXECUTABLE [BY {CURRENT USER | username}]] [YIELD ...] [WHERE ...] [RETURN ...]` | Functionality | Added | New Cypher commands for listing functions.
+| `SHOW PROCEDURE[S] [EXECUTABLE [BY {CURRENT USER \| username}]] [YIELD ...] [WHERE ...] [RETURN ...]`                                  | Functionality | Added | New Cypher commands for listing procedures.
+| `SHOW [ALL \| BUILT IN \| USER DEFINED] FUNCTION[S] [EXECUTABLE [BY {CURRENT USER \| username}]] [YIELD ...] [WHERE ...] [RETURN ...]` | Functionality | Added | New Cypher commands for listing functions.
 | `CREATE FULLTEXT INDEX ...`   | Syntax | Added | Allows creating fulltext indexes on nodes or relationships. They can be dropped by using their name.
 |===
 
