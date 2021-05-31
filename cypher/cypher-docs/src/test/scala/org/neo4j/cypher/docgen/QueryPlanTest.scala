@@ -297,8 +297,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Index",
       text =
-        """The `CreateIndex` operator creates an index. This index can either be on a property for all nodes or relationships having a certain label or relationship type,
-          |or it can be a lookup index for all nodes or relationships having any label or relationship type.
+        """The `CreateIndex` operator creates an index. This index can either be a b-tree, fulltext, or lookup index.
           |The following query will create an index with the name `my_index` on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """CREATE INDEX my_index FOR (c:Country) ON (c.name)""",
       assertions = p => {

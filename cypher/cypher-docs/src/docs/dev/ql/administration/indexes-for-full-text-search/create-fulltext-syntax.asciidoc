@@ -1,0 +1,33 @@
+.Syntax for creating fulltext indexes
+[options="header", width="100%", cols="5a,3, 3a"]
+|===
+| Command | Description | Comment
+
+| [source, cypher, role=noplay]
+----
+CREATE FULLTEXT INDEX [index_name] [IF NOT EXISTS]
+FOR (n:LabelName[\|...])
+ON EACH "[" n.propertyName[, ...] "]"
+[OPTIONS "{" option: value[, ...] "}"]
+----
+| Create a fulltext index on nodes.
+.2+.^| Best practice is to give the index a name when it is created. This name is needed for both dropping and querying the index.
+If the index is not explicitly named, it will get an auto-generated name.
+
+The index name must be unique among all indexes and constraints.
+
+Index provider and configuration can be specified using the `OPTIONS` clause.
+
+The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same index twice.
+With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name, schema or both already exist.
+It may still throw an error should a constraint with the same name exist.
+
+| [source, cypher, role=noplay]
+----
+CREATE FULLTEXT INDEX [index_name] [IF NOT EXISTS]
+FOR ()-"["r:TYPE_NAME[\|...]"]"-()
+ON EACH "[" r.propertyName[, ...] "]"
+[OPTIONS "{" option: value[, ...] "}"]
+----
+| Create a fulltext index on relationships.
+|===
