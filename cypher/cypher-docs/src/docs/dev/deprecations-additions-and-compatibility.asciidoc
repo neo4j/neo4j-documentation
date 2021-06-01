@@ -4,10 +4,10 @@
 [abstract]
 --
 Cypher is a language that is constantly evolving.
-New features get added to the language continuously, and occasionally, some features become deprecated and are subsequently removed.
+New features are added to the language continuously, and occasionally, some features become deprecated and are subsequently removed.
 --
 
-This section list all of the features which have been removed, deprecated, added, or extended in different Cypher versions.
+This section list all of the features that have been removed, deprecated, added, or extended in different Cypher versions.
 Replacement syntax for deprecated and removed features are also indicated.
 
 [[cypher-deprecations-additions-removals-4.3]]
@@ -120,7 +120,7 @@ ALTER USER name IF EXISTS ...
 ----
 a|
 Makes altering users idempotent.
-If no user with the name exists no error will be thrown.
+If the specified name does not exists, no error is thrown.
 
 
 a|
@@ -163,7 +163,7 @@ SHOW INDEXES YIELD ...
 [RETURN ...]
 ----
 a|
-Now allows `YIELD`, `WHERE` and `RETURN` clauses to `SHOW INDEXES` to change the output.
+Now allows `YIELD`, `WHERE`, and `RETURN` clauses to `SHOW INDEXES` to change the output.
 
 
 a|
@@ -176,7 +176,7 @@ SHOW CONSTRAINTS YIELD ...
 [RETURN ...]
 ----
 a|
-Now allows `YIELD`, `WHERE` and `RETURN` clauses to `SHOW CONSTRAINTS` to change the output.
+Now allows `YIELD`, `WHERE`, and `RETURN` clauses to `SHOW CONSTRAINTS` to change the output.
 
 
 a|
@@ -316,7 +316,7 @@ CREATE USER ...
 SET HOME DATABASE ...
 ----
 a|
-Now `CREATE USER` allows setting home database for user.
+`CREATE USER` now allows setting home database for user.
 
 
 a|
@@ -418,7 +418,7 @@ label:Added[]
 CREATE LOOKUP INDEX ...
 ----
 a|
-Create lookup index for nodes with any labels or relationships with any types.
+Create token lookup index for nodes with any labels or relationships with any relationship type.
 They can be dropped by using their name.
 
 
@@ -442,7 +442,7 @@ label:Updated[]
 SHOW LOOKUP INDEXES
 ----
 a|
-Now allows easy filtering for `SHOW INDEXES` on lookup indexes. +
+Now allows easy filtering for `SHOW INDEXES` on token lookup indexes. +
 Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
 
 
@@ -735,14 +735,14 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 
 [NOTE]
 ====
-The ability of Neo4j to support multiple older versions of the Cypher language has been changing.
-In versions of Neo4j before 3.5 the backwards compatibility layer included the Cypher language parser, planner and runtime.
-All supported versions of Cypher would run on the same Neo4j kernel.
-In Neo4j 3.4, however, this was changed such that the compatibility layer no longer included the runtime.
-This meant that running, for example, a `CYPHER 3.1` query inside Neo4j 3.5 would plan the query using the 3.1 planner, and run it using the 3.5 runtime and kernel.
-In Neo4j 4.0 this was changed again, such that the compatibility layer includes only the parser.
-For example, running a `CYPHER 3.5` query inside Neo4j will parse older language features, but plan using the {neo4j-version} planner, and run using the {neo4j-version} runtime and kernel.
-The primary reason for this change has been optimizations in the Cypher runtime to allow Cypher query to perform better.
+Neo4j’s ability to support multiple older versions of the Cypher language has changed over time.
+In versions prior to Neo4j 3.4, the backwards compatibility layer included the Cypher language parser, planner, and runtime.
+All supported versions of Cypher ran on the same Neo4j kernel.
+However, this changed in Neo4j 3.4 when the runtime was excluded from the compatibility layer.
+When you run, e.g. a `CYPHER 3.1` query in Neo4j 3.5, the query is planned with the 3.1 planner, but run with 3.5 runtime and kernel.
+The compatibility layer changed again in Neo4j 4.0 and it now includes only the Cypher language parser.
+When you run a `CYPHER 3.5` query, e.g., in Neo4j 4.3, Neo4j parses the older language features, but uses the 4.3 planner, runtime, and kernel to plan and run the query.
+The primary reason for these changes is the optimizations in the Cypher runtime to allow Cypher queries to perform better.
 ====
 
 Older versions of the language can still be accessed if required.
@@ -770,8 +770,9 @@ Without the `CYPHER 3.5` prefix this query would fail with a syntax error. With 
 
 [WARNING]
 ====
-In Neo4j {neo4j-version} some older language features are understood by the Cypher parser even if they are no longer supported by the Neo4j kernel.
-These features will result in runtime errors. See the table at <<cypher-deprecations-additions-removals-4.0,Cypher Version 4.0>> for the list of affected features.
+In Neo4j {neo4j-version} the Cypher parser understands some older language features, even if they are no longer supported by the Neo4j kernel.
+These features result in runtime errors.
+See the table at <<cypher-deprecations-additions-removals-4.0,Cypher Version 4.0>> for the list of affected features.
 ====
 
 
