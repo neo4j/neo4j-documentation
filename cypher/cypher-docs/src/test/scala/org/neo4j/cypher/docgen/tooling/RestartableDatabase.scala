@@ -182,12 +182,16 @@ class RestartableDatabase(init: RunnableInitialization)
       init.initCode.foreach(_.apply(graph))
 
       // Execute queries
-      init.initQueries.filter(x => x.database.isEmpty || x.database.get == database).flatMap { query =>
+      val results = init.initQueries.filter(x => x.database.isEmpty || x.database.get == database).flatMap { query =>
         //TODO: Consider supporting login for initQueries
         val q = query.prettified
         val result = Try(execute(q, Seq.empty: _*))
         result.failed.toOption.map((e: Throwable) => QueryRunResult(q, new ErrorPlaceHolder(), Left(e)))
       }
+
+      //wait for any new indexes created to come online
+      graph.awaitIndexesOnline()
+      results
     }
   }
 
