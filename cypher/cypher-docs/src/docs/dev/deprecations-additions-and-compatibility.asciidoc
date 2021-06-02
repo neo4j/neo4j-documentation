@@ -4,77 +4,528 @@
 [abstract]
 --
 Cypher is a language that is constantly evolving.
-New features get added to the language continuously, and occasionally, some features become deprecated and are subsequently removed.
+New features are added to the language continuously, and occasionally, some features become deprecated and are subsequently removed.
 --
 
-* <<cypher-deprecations-additions-removals, Removals, deprecations, additions, and extensions>>
-** <<cypher-deprecations-additions-removals-4.3, Version 4.3>>
-** <<cypher-deprecations-additions-removals-4.2, Version 4.2>>
-** <<cypher-deprecations-additions-removals-4.1.3, Version 4.1.3>>
-** <<cypher-deprecations-additions-removals-4.1, Version 4.1>>
-** <<cypher-deprecations-additions-removals-4.0, Version 4.0>>
-** <<cypher-deprecations-additions-removals-3.5, Version 3.5>>
-** <<cypher-deprecations-additions-removals-3.4, Version 3.4>>
-** <<cypher-deprecations-additions-removals-3.3, Version 3.3>>
-** <<cypher-deprecations-additions-removals-3.2, Version 3.2>>
-** <<cypher-deprecations-additions-removals-3.1, Version 3.1>>
-** <<cypher-deprecations-additions-removals-3.0, Version 3.0>>
-* <<cypher-compatibility, Compatibility>>
-* <<cypher-versions, Supported language versions>>
-
-
-[[cypher-deprecations-additions-removals]]
-== Removals, deprecations, additions, and extensions
-
-The following tables list all of the features which have been removed, deprecated, added, or extended in Cypher.
+This section list all of the features that have been removed, deprecated, added, or extended in different Cypher versions.
 Replacement syntax for deprecated and removed features are also indicated.
 
 [[cypher-deprecations-additions-removals-4.3]]
-=== Version 4.3
-[options="header"]
+== Version 4.3
+[cols="2", options="header"]
 |===
-| Feature     | Type | Change | Details
-| `CREATE CONSTRAINT [name] ON (node:Label) ASSERT node.property IS NOT NULL`   | Syntax | Added | New syntax for creating node property existence constraints.
-| `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT rel.property IS NOT NULL` | Syntax | Added | New syntax for creating relationship property existence constraints.
-| `CREATE CONSTRAINT [name] ON (node:Label) ASSERT exists(node.property)`   | Syntax | Deprecated | Replaced by `CREATE CONSTRAINT [name] ON (node:Label) ASSERT node.property IS NOT NULL`
-| `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT exists(rel.property)` | Syntax | Deprecated | Replaced by `CREATE CONSTRAINT [name] ON ()-[rel:REL]-() ASSERT rel.property IS NOT NULL`
-| `exists(prop)` | Syntax | Deprecated | Replaced by `prop IS NOT NULL`
-| `NOT exists(prop)` | Syntax | Deprecated | Replaced by `prop IS NULL`
-| `ALTER USER name IF EXISTS ...` | Syntax | Added | Makes altering users idempotent. If no user with the name exists no error will be thrown.
-| `SHOW INDEXES WHERE ...`                              | Functionality | Updated    | Now allows filtering for `SHOW INDEXES`
-| `SHOW CONSTRAINTS WHERE ...`                          | Functionality | Updated    | Now allows filtering for `SHOW CONSTRAINTS`
-| `SHOW INDEXES YIELD ... [WHERE ...] [RETURN ...]`     | Functionality | Updated    | Now allows `YIELD`, `WHERE` and `RETURN` clauses to `SHOW INDEXES` to change the output.
-| `SHOW CONSTRAINTS YIELD ... [WHERE ...] [RETURN ...]` | Functionality | Updated    | Now allows `YIELD`, `WHERE` and `RETURN` clauses to `SHOW CONSTRAINTS` to change the output.
-| `BRIEF [OUTPUT]` for `SHOW INDEXES` and `SHOW CONSTRAINTS`   | Syntax | Deprecated | Replaced by default output columns
-| `VERBOSE [OUTPUT]` for `SHOW INDEXES` and `SHOW CONSTRAINTS` | Syntax | Deprecated | Replaced by `YIELD *`
-| `SHOW [PROPERTY] EXIST[ENCE] CONSTRAINTS`                    | Syntax | Updated    | New syntax for filtering `SHOW CONSTRAINTS` on property existence constraints. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
-| `SHOW NODE [PROPERTY] EXIST[ENCE] CONSTRAINTS`               | Syntax | Updated    | New syntax for filtering `SHOW CONSTRAINTS` on node property existence constraints. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
-| `SHOW REL[ATIONSHIP] [PROPERTY] EXIST[ENCE] CONSTRAINTS`     | Syntax | Updated    | New syntax for filtering `SHOW CONSTRAINTS` on relationship property existence constraints. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
-| `SHOW EXISTS CONSTRAINTS`              | Syntax | Deprecated | Replaced by `SHOW [PROPERTY] EXIST[ENCE] CONSTRAINTS`.  Still allows `BRIEF` and `VERBOSE` but not `YIELD` or `WHERE`.
-| `SHOW NODE EXISTS CONSTRAINTS`         | Syntax | Deprecated | Replaced by `SHOW NODE [PROPERTY] EXIST[ENCE] CONSTRAINTS`.  Still allows `BRIEF` and `VERBOSE` but not `YIELD` or `WHERE`.
-| `SHOW RELATIONSHIP EXISTS CONSTRAINTS` | Syntax | Deprecated | Replaced by `SHOW RELATIONSHIP [PROPERTY] EXIST[ENCE] CONSTRAINTS`.  Still allows `BRIEF` and `VERBOSE` but not `YIELD` or `WHERE`.
-| `ALTER USER ... SET/REMOVE HOME DATABASE`     | Syntax        | Added         | Now allows setting and removing home database for user
-| `CREATE USER ... SET HOME DATABASE`           | Syntax        | Added         | Now allows setting home database for user
-| `SHOW HOME DATABASE`                          | Syntax        | Added         | New syntax for showing the home database of the current user
-| `SET USER HOME DATABASE` privilege            | Syntax        | Added         | New Cypher command for administering privilege for changing users home database
-| `ON HOME DATABASE` for privilege commands     | Syntax        | Added         | New syntax for privileges affecting home database
-| `ON HOME GRAPH` for privilege commands        | Syntax        | Added         | New syntax for privileges affecting home graph
-| `ON DEFAULT DATABASE` for privilege commands  | Syntax        | Deprecated    | Replaced by `ON HOME DATABASE`
-| `ON DEFAULT GRAPH` for privilege commands     | Syntax        | Deprecated    | Replaced by `ON HOME GRAPH`
-| `CREATE INDEX FOR ()-[r:TYPE]-() ...`         | Functionality | Added         | Allows creating indexes on relationships with a particular relationship type and property combination. They can be dropped by using their name.
-| `CREATE LOOKUP INDEX ...`                     | Functionality | Added         | Create token lookup index for nodes with any labels or relationships with any relationship type. They can be dropped by using their name.
-| `SHOW FULLTEXT INDEXES`   | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on fulltext indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
-| `SHOW LOOKUP INDEXES`     | Functionality | Updated  | Now allows easy filtering for `SHOW INDEXES` on token lookup indexes. Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
-| `CREATE DATABASE ... [OPTIONS {...}]` | Syntax  | Added | New syntax to pass options to `CREATE DATABASE`.  This can be used to specify a specific cluster node to seed data from.
-| `RENAME ROLE` | Functionality | Added | New Cypher command for changing the name of a role.
-| `RENAME USER` | Functionality | Added | New Cypher command for changing the name of a user.
-| `SHOW PROCEDURE[S] [EXECUTABLE [BY {CURRENT USER | username}]] [YIELD ...] [WHERE ...] [RETURN ...]`                                  | Functionality | Added | New Cypher commands for listing procedures.
-| `SHOW [ALL \| BUILT IN \| USER DEFINED] FUNCTION[S] [EXECUTABLE [BY {CURRENT USER | username}]] [YIELD ...] [WHERE ...] [RETURN ...]` | Functionality | Added | New Cypher commands for listing functions.
-| `CREATE FULLTEXT INDEX ...`   | Syntax | Added | Allows creating fulltext indexes on nodes or relationships. They can be dropped by using their name.
+| Feature
+| Details
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [name]
+ON (node:Label)
+ASSERT node.property IS NOT NULL
+----
+a|
+New syntax for creating node property existence constraints.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [name]
+ON ()-[rel:REL]-()
+ASSERT rel.property IS NOT NULL
+----
+a|
+New syntax for creating relationship property existence constraints.
+
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [name]
+ON (node:Label)
+ASSERT exists(node.property)
+----
+a| Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [name]
+ON (node:Label)
+ASSERT node.property IS NOT NULL
+----
+
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [name]
+ON ()-[rel:REL]-()
+ASSERT exists(rel.property)
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [name]
+ON ()-[rel:REL]-()
+ASSERT rel.property IS NOT NULL
+----
+
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+exists(prop)
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+prop IS NOT NULL
+----
+
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+NOT exists(prop)
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+prop IS NULL
+----
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+ALTER USER name IF EXISTS ...
+----
+a|
+Makes altering users idempotent.
+If the specified name does not exists, no error is thrown.
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES WHERE ...
+----
+a|
+Now allows filtering for:
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES
+----
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS WHERE ...
+----
+a|
+Now allows filtering for:
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS
+----
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES YIELD ...
+[WHERE ...]
+[RETURN ...]
+----
+a|
+Now allows `YIELD`, `WHERE`, and `RETURN` clauses to `SHOW INDEXES` to change the output.
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS YIELD ...
+[WHERE ...]
+[RETURN ...]
+----
+a|
+Now allows `YIELD`, `WHERE`, and `RETURN` clauses to `SHOW CONSTRAINTS` to change the output.
+
+
+a|
+label:syntax[]
+label:deprecated[] +
+`BRIEF [OUTPUT]` for `SHOW INDEXES` and `SHOW CONSTRAINTS`.
+a|
+Replaced by default output columns.
+
+
+a|
+label:syntax[]
+label:deprecated[] +
+`VERBOSE [OUTPUT]` for `SHOW INDEXES` and `SHOW CONSTRAINTS`.
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+YIELD *
+----
+
+
+a|
+label:syntax[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW [PROPERTY] EXIST[ENCE] CONSTRAINTS
+----
+a|
+New syntax for filtering `SHOW CONSTRAINTS` on property existence constraints. +
+Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
+
+
+a|
+label:syntax[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW NODE [PROPERTY] EXIST[ENCE] CONSTRAINTS
+----
+a|
+New syntax for filtering `SHOW CONSTRAINTS` on node property existence constraints. +
+Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
+
+
+a|
+label:syntax[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW REL[ATIONSHIP] [PROPERTY] EXIST[ENCE] CONSTRAINTS
+----
+a|
+New syntax for filtering `SHOW CONSTRAINTS` on relationship property existence constraints. +
+Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
+
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+SHOW EXISTS CONSTRAINTS
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW [PROPERTY] EXIST[ENCE] CONSTRAINTS
+----
+Still allows `BRIEF` and `VERBOSE` but not `YIELD` or `WHERE`.
+
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+SHOW NODE EXISTS CONSTRAINTS
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW NODE [PROPERTY] EXIST[ENCE] CONSTRAINTS
+----
+Still allows `BRIEF` and `VERBOSE` but not `YIELD` or `WHERE`.
+
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+SHOW RELATIONSHIP EXISTS CONSTRAINTS
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW RELATIONSHIP [PROPERTY] EXIST[ENCE] CONSTRAINTS
+----
+Still allows `BRIEF` and `VERBOSE` but not `YIELD` or `WHERE`.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+ALTER USER ...
+SET HOME DATABASE ...
+----
+a|
+Now allows setting home database for user.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+ALTER USER ...
+REMOVE HOME DATABASE
+----
+a|
+Now allows removing home database for user.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE USER ...
+SET HOME DATABASE ...
+----
+a|
+`CREATE USER` now allows setting home database for user.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SHOW HOME DATABASE
+----
+a|
+New syntax for showing the home database of the current user.
+
+
+a|
+label:syntax[]
+label:added[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+SET USER HOME DATABASE
+----
+a|
+New Cypher command for administering privilege for changing users home database.
+
+
+a|
+label:syntax[]
+label:added[] +
+For privilege commands:
+[source, cypher, role="noheader"]
+----
+ON HOME DATABASE
+----
+a|
+New syntax for privileges affecting home database.
+
+
+a|
+label:syntax[]
+label:added[] +
+For privilege commands:
+[source, cypher, role="noheader"]
+----
+ON HOME GRAPH
+----
+a|
+New syntax for privileges affecting home graph.
+
+
+a|
+label:syntax[]
+label:deprecated[] +
+For privilege commands:
+[source, cypher, role="noheader"]
+----
+ON DEFAULT DATABASE
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+ON HOME DATABASE
+----
+
+
+a|
+label:syntax[]
+label:deprecated[] +
+For privilege commands:
+[source, cypher, role="noheader"]
+----
+ON DEFAULT GRAPH
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+ON HOME GRAPH
+----
+
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE INDEX FOR ()-[r:TYPE]-() ...
+----
+a|
+Allows creating indexes on relationships with a particular relationship type and property combination.
+They can be dropped by using their name.
+
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE LOOKUP INDEX ...
+----
+a|
+Create token lookup index for nodes with any labels or relationships with any relationship type.
+They can be dropped by using their name.
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW FULLTEXT INDEXES
+----
+a|
+Now allows easy filtering for `SHOW INDEXES` on fulltext indexes. +
+Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW LOOKUP INDEXES
+----
+a|
+Now allows easy filtering for `SHOW INDEXES` on token lookup indexes. +
+Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE DATABASE ...
+[OPTIONS {...}]
+----
+a|
+New syntax to pass options to `CREATE DATABASE`.
+This can be used to specify a specific cluster node to seed data from.
+
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+RENAME ROLE
+----
+a|
+New Cypher command for changing the name of a role.
+
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+RENAME USER
+----
+a|
+New Cypher command for changing the name of a user.
+
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SHOW PROCEDURE[S]
+[EXECUTABLE [BY {CURRENT USER \| username}]]
+[YIELD ...]
+[WHERE ...]
+[RETURN ...]
+----
+a|
+New Cypher commands for listing procedures.
+
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SHOW [ALL \| BUILT IN \| USER DEFINED] FUNCTION[S]
+[EXECUTABLE [BY {CURRENT USER \| username}]]
+[YIELD ...]
+[WHERE ...]
+[RETURN ...]
+----
+a|
+New Cypher commands for listing functions.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE FULLTEXT INDEX ...
+----
+a|
+Allows creating fulltext indexes on nodes or relationships.
+They can be dropped by using their name.
 |===
 
+
 [[cypher-deprecations-additions-removals-4.2]]
-=== Version 4.2
+== Version 4.2
 [options="header"]
 |===
 | Feature     | Type | Change | Details
@@ -83,12 +534,12 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `SHOW USER name PRIVILEGES` | Functionality | Updated | Can now handle multiple users, `SHOW USERS n1, n2, ... PRIVILEGES`
 | `round(expression, precision)` | Functionality | Updated | round()-function can now take an additional argument to specify rounding precision.
 | `round(expression, precision, mode)` | Functionality | Updated | round()-function can now take two additional arguments to specify rounding precision, and rounding mode.
-| `DEFAULT GRAPH` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges, database privileges>>
+| `DEFAULT GRAPH` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges,database privileges>>
 | `0o...`                     | Syntax        | Added   | Cypher will now interpret literals with prefix `0o` as an octal integer literal.
 | `0...`                      | Syntax        | Deprecated   | Replaced by `0o...` (see above).
 | `0X...`                     | Syntax        | Deprecated   | Only `0x...` (lowercase x) will be supported.
 | `SET [PLAINTEXT \| ENCRYPTED] PASSWORD` | Syntax | Added | For `CREATE USER` and `ALTER USER` it is now possible to set (or update) a password when the plaintext password is unknown, but the encrypted password is available.
-| <<administration-security-administration-dbms-privileges-execute, EXECUTE>> privileges | Functionality | Added | New Cypher commands for administering privileges for executing procedures and user defined functions.
+| <<administration-security-administration-dbms-privileges-execute,EXECUTE>> privileges | Functionality | Added | New Cypher commands for administering privileges for executing procedures and user defined functions.
 | `CREATE [BTREE] INDEX ... [OPTIONS {...}]`            | Syntax | Added | Allows setting index provider and index configuration when creating an index.
 | `CREATE CONSTRAINT ... IS NODE KEY [OPTIONS {...}]`   | Syntax | Added | Allows setting index provider and index configuration for the backing index when creating a node key constraint.
 | `CREATE CONSTRAINT ... IS UNIQUE [OPTIONS {...}]`     | Syntax | Added | Allows setting index provider and index configuration for the backing index when creating a uniqueness constraint.
@@ -107,7 +558,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 |===
 
 [[cypher-deprecations-additions-removals-4.1.3]]
-=== Version 4.1.3
+== Version 4.1.3
 [options="header"]
 |===
 | Feature     | Type | Change | Details
@@ -118,7 +569,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 |===
 
 [[cypher-deprecations-additions-removals-4.1]]
-=== Version 4.1
+== Version 4.1
 [options="header"]
 |===
 | Feature     | Type | Change | Details
@@ -131,29 +582,29 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `SHOW ROLES` | Functionality | Added | New support for `YIELD` and `WHERE` clauses to allow filtering results.
 | `SHOW DATABASES` | Functionality | Added | New support for `YIELD` and `WHERE` clauses to allow filtering results.
 | `ALL DATABASE PRIVILEGES` | Functionality | Restricted | No longer includes the privileges `START DATABASE` and `STOP DATABASE`
-| <<administration-security-administration-database-transaction, TRANSACTION MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering transaction management
-| DBMS <<administration-security-administration-dbms-privileges-user-management, USER MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering user management
-| DBMS <<administration-security-administration-dbms-privileges-database-management, DATABASE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering database management
-| DBMS <<administration-security-administration-dbms-privileges-privilege-management, PRIVILEGE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering privilege management
+| <<administration-security-administration-database-transaction,TRANSACTION MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering transaction management
+| DBMS <<administration-security-administration-dbms-privileges-user-management,USER MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering user management
+| DBMS <<administration-security-administration-dbms-privileges-database-management,DATABASE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering database management
+| DBMS <<administration-security-administration-dbms-privileges-privilege-management,PRIVILEGE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering privilege management
 | `ALL DBMS PRIVILEGES` | Functionality | Added | New Cypher command for administering role, user, database and privilege management
 | `ALL GRAPH PRIVILEGES` | Functionality | Added | New Cypher command for administering read and write privileges
 | Write privileges | Functionality | Added | New Cypher commands for administering write privileges
-| `ON DEFAULT DATABASE` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges, database privileges>>
+| `ON DEFAULT DATABASE` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges,database privileges>>
 |===
 
 [[cypher-deprecations-additions-removals-4.0]]
-=== Version 4.0
+== Version 4.0
 [options="header"]
 |===
 | Feature     | Type | Change | Details
-| `rels()`    | Function  | Removed | Replaced by <<functions-relationships, relationships()>>
-| `toInt()`   | Function  | Removed | Replaced by <<functions-tointeger, toInteger()>>
-| `lower()`   | Function  | Removed | Replaced by <<functions-tolower, toLower()>>
-| `upper()`   | Function  | Removed | Replaced by <<functions-toupper, toUpper()>>
-| `extract()` | Function  | Removed | Replaced by <<cypher-list-comprehension, list comprehension>>
-| `filter()`  | Function  | Removed | Replaced by <<cypher-list-comprehension, list comprehension>>
-| `length()`  | Function  | Restricted | Restricted to only work on paths. See <<functions-length, length()>> for more details.
-| `size()`    | Function  | Restricted | No longer works for paths. Only works for strings, lists and pattern expressions. See <<query-functions-scalar, size()>> for more details.
+| `rels()`    | Function  | Removed | Replaced by <<functions-relationships,relationships()>>
+| `toInt()`   | Function  | Removed | Replaced by <<functions-tointeger,toInteger()>>
+| `lower()`   | Function  | Removed | Replaced by <<functions-tolower,toLower()>>
+| `upper()`   | Function  | Removed | Replaced by <<functions-toupper,toUpper()>>
+| `extract()` | Function  | Removed | Replaced by <<cypher-list-comprehension,list comprehension>>
+| `filter()`  | Function  | Removed | Replaced by <<cypher-list-comprehension,list comprehension>>
+| `length()`  | Function  | Restricted | Restricted to only work on paths. See <<functions-length,length()>> for more details.
+| `size()`    | Function  | Restricted | No longer works for paths. Only works for strings, lists and pattern expressions. See <<query-functions-scalar,size()>> for more details.
 | `CYPHER planner=rule` (Rule planner)    | Functionality | Removed | The `RULE` planner was removed in 3.2, but still possible to trigger using `START` or `CREATE UNIQUE` clauses. Now it is completely removed.
 | `CREATE UNIQUE`     | Clause | Removed | Running queries with this clause will cause a syntax error. Running with `CYPHER 3.5` will cause a runtime error due to the removal of the rule planner.
 | `START`     | Clause | Removed | Running queries with this clause will cause a syntax error. Running with `CYPHER 3.5` will cause a runtime error due to the removal of the rule planner.
@@ -162,7 +613,7 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `MATCH (n)-[:A\|:B\|:C {foo: 'bar'}]-() RETURN n`     | Syntax | Removed | Replaced by `MATCH (n)-[:A\|B\|C {foo: 'bar'}]-() RETURN n`
 | `MATCH (n)-[x:A\|:B\|:C]-() RETURN n`     | Syntax | Removed | Replaced by `MATCH (n)-[x:A\|B\|C]-() RETURN n`
 | `MATCH (n)-[x:A\|:B\|:C*]-() RETURN n`     | Syntax | Removed | Replaced by `MATCH (n)-[x:A\|B\|C*]-() RETURN n`
-| `+{parameter}+` | Syntax | Removed | Replaced by <<cypher-parameters, $parameter>>
+| `+{parameter}+` | Syntax | Removed | Replaced by <<cypher-parameters,$parameter>>
 | `CYPHER runtime=pipelined` (Pipelined runtime) | Functionality | Added| This Neo4j Enterprise Edition only feature involves a new runtime that has many performance enhancements.
 | `CYPHER runtime=compiled` (Compiled runtime) | Functionality | Removed| Replaced by the new `pipelined` runtime which covers a much wider range of queries.
 | `CREATE INDEX [name] FOR (n:Label) ON (n.prop)` | Syntax | Added | New syntax for creating indexes, which can include a name.
@@ -176,42 +627,42 @@ Replacement syntax for deprecated and removed features are also indicated.
 | `DROP CONSTRAINT ON (n:Label) ASSERT exists(n.prop)` | Syntax | Deprecated | Replaced by `DROP CONSTRAINT name`
 | `DROP CONSTRAINT ON ()-[r:Type]-() ASSERT exists(r.prop)` | Syntax | Deprecated | Replaced by `DROP CONSTRAINT name`
 | `WHERE EXISTS {...}` | Clause | Added | Existential sub-queries are sub-clauses used to filter the results of a `MATCH`, `OPTIONAL MATCH`, or `WITH` clause.
-| <<administration-databases, Multi-database administration>> | Functionality | Added | New Cypher commands for administering multiple databases
-| <<administration-security, Security administration>> | Functionality | Added | New Cypher commands for administering role-based access-control
-| <<administration-security-subgraph, Fine-grained security>> | Functionality | Added | New Cypher commands for administering dbms, database, graph and sub-graph access control
+| <<administration-databases,Multi-database administration>> | Functionality | Added | New Cypher commands for administering multiple databases
+| <<administration-security,Security administration>> | Functionality | Added | New Cypher commands for administering role-based access-control
+| <<administration-security-subgraph,Fine-grained security>> | Functionality | Added | New Cypher commands for administering dbms, database, graph and sub-graph access control
 | `USE neo4j` | Clause| Added | New clause to specify which graph a query, or query part, is executed against.
 |===
 
 
 [[cypher-deprecations-additions-removals-3.5]]
-=== Version 3.5
+== Version 3.5
 [options="header"]
 |===
 | Feature     | Type | Change | Details
 | `CYPHER runtime=compiled` (Compiled runtime)    | Functionality | Deprecated | The compiled runtime will be discontinued in the next major release. It might still be used for default queries in order to not cause regressions, but explicitly requesting it will not be possible.
-| `extract()` | Function  | Deprecated | Replaced by <<cypher-list-comprehension, list comprehension>>
-| `filter()`  | Function  | Deprecated | Replaced by <<cypher-list-comprehension, list comprehension>>
+| `extract()` | Function  | Deprecated | Replaced by <<cypher-list-comprehension,list comprehension>>
+| `filter()`  | Function  | Deprecated | Replaced by <<cypher-list-comprehension,list comprehension>>
 |===
 
 
 [[cypher-deprecations-additions-removals-3.4]]
-=== Version 3.4
+== Version 3.4
 [options="header"]
 |===
 | Feature          | Type | Change | Details
-| <<cypher-spatial, Spatial point types>> | Functionality | Amendment | A point -- irrespective of which Coordinate Reference System is used -- can be stored as a property and is able to be backed by an index. Prior to this, a point was a virtual property only.
-| <<functions-point-cartesian-3d, point() - Cartesian 3D>> | Function | Added |
-| <<functions-point-wgs84-3d, point() - WGS 84 3D>> | Function | Added |
-| <<functions-randomuuid, randomUUID()>> | Function | Added |
-| <<cypher-temporal, Temporal types>>  | Functionality | Added | Supports storing, indexing and working with the following temporal types: Date, Time, LocalTime, DateTime, LocalDateTime and Duration.
-| <<query-functions-temporal-instant-types, Temporal functions>>  | Functionality | Added | Functions allowing for the creation and manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.
-| <<query-operators-temporal, Temporal operators>>  | Functionality | Added | Operators allowing for the manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.
-|  <<functions-tostring, toString()>>   | Function  | Extended | Now also allows temporal values as input (i.e. values of type _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ or _Duration_).
+| <<cypher-spatial,Spatial point types>> | Functionality | Amendment | A point -- irrespective of which Coordinate Reference System is used -- can be stored as a property and is able to be backed by an index. Prior to this, a point was a virtual property only.
+| <<functions-point-cartesian-3d,point() - Cartesian 3D>> | Function | Added |
+| <<functions-point-wgs84-3d,point() - WGS 84 3D>> | Function | Added |
+| <<functions-randomuuid,randomUUID()>> | Function | Added |
+| <<cypher-temporal,Temporal types>>  | Functionality | Added | Supports storing, indexing and working with the following temporal types: Date, Time, LocalTime, DateTime, LocalDateTime and Duration.
+| <<query-functions-temporal-instant-types,Temporal functions>>  | Functionality | Added | Functions allowing for the creation and manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.
+| <<query-operators-temporal,Temporal operators>>  | Functionality | Added | Operators allowing for the manipulation of values for each temporal type -- _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ and _Duration_.
+|  <<functions-tostring,toString()>>   | Function  | Extended | Now also allows temporal values as input (i.e. values of type _Date_, _Time_, _LocalTime_, _DateTime_, _LocalDateTime_ or _Duration_).
 |===
 
 
 [[cypher-deprecations-additions-removals-3.3]]
-=== Version 3.3
+== Version 3.3
 [options="header"]
 |===
 | Feature          | Type | Change | Details
@@ -219,12 +670,12 @@ Replacement syntax for deprecated and removed features are also indicated.
 However, there are link:https://neo4j.com/docs/cypher-manual/3.5/schema/index/#explicit-indexes-procedures[built-in procedures for Neo4j versions 3.3 to 3.5] for accessing explicit indexes. The procedures will enable users to use the current version of Cypher and the cost planner together with these indexes.
 An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*')`.
 | `CYPHER runtime=slotted` (Faster interpreted runtime) | Functionality | Added | Neo4j Enterprise Edition only
-| <<functions-max, max()>>, <<functions-min, min()>> | Function  | Extended | Now also supports aggregation over sets containing lists of strings and/or numbers, as well as over sets containing strings, numbers, and lists of strings and/or numbers
+| <<functions-max,max()>>, <<functions-min,min()>> | Function  | Extended | Now also supports aggregation over sets containing lists of strings and/or numbers, as well as over sets containing strings, numbers, and lists of strings and/or numbers
 |===
 
 
 [[cypher-deprecations-additions-removals-3.2]]
-=== Version 3.2
+== Version 3.2
 [options="header"]
 |===
 | Feature          | Type | Change | Details
@@ -245,51 +696,54 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 
 
 [[cypher-deprecations-additions-removals-3.1]]
-=== Version 3.1
+== Version 3.1
 [options="header"]
 |===
-| Feature          | Type | Change | Details
-| `rels()`   | Function  | Deprecated | Replaced by <<functions-relationships, relationships()>>
-| `toInt()`   | Function  | Deprecated | Replaced by <<functions-tointeger, toInteger()>>
-| `lower()`   | Function  | Deprecated | Replaced by <<functions-tolower, toLower()>>
-| `upper()`   | Function  | Deprecated | Replaced by <<functions-toupper, toUpper()>>
+| Feature     | Type | Change | Details
+| `rels()`    | Function  | Deprecated | Replaced by <<functions-relationships,relationships()>>
+| `toInt()`   | Function  | Deprecated | Replaced by <<functions-tointeger,toInteger()>>
+| `lower()`   | Function  | Deprecated | Replaced by <<functions-tolower,toLower()>>
+| `upper()`   | Function  | Deprecated | Replaced by <<functions-toupper,toUpper()>>
 | <<functions-toboolean,toBoolean()>> | Function | Added |
-| <<cypher-map-projection, Map projection>> | Syntax | Added |
-| <<cypher-pattern-comprehension, Pattern comprehension>> | Syntax | Added |
-| <<java-reference#extending-neo4j-functions, User-defined functions>> | Functionality | Added |
-| <<query-call, CALL\...YIELD\...WHERE>>   | Clause  | Extended  | Records returned by `YIELD` may be filtered further using `WHERE`
+| <<cypher-map-projection,Map projection>> | Syntax | Added |
+| <<cypher-pattern-comprehension,Pattern comprehension>> | Syntax | Added |
+| <<java-reference#extending-neo4j-functions,User-defined functions>> | Functionality | Added |
+| <<query-call,CALL\...YIELD\...WHERE>>   | Clause  | Extended  | Records returned by `YIELD` may be filtered further using `WHERE`
 |===
 
 
 [[cypher-deprecations-additions-removals-3.0]]
-=== Version 3.0
+== Version 3.0
 [options="header"]
 |===
 | Feature          | Type | Change | Details
-| `has()`  | Function  | Removed | Replaced by <<functions-exists, exists()>>
-| `str()`  | Function  | Removed | Replaced by <<functions-tostring, toString()>>
-| `+{parameter}+` | Syntax | Deprecated | Replaced by <<cypher-parameters, $parameter>>
-| <<functions-properties, properties()>>  | Function  | Added  |
+| `has()`  | Function  | Removed | Replaced by <<functions-exists,exists()>>
+| `str()`  | Function  | Removed | Replaced by <<functions-tostring,toString()>>
+| `+{parameter}+` | Syntax | Deprecated | Replaced by <<cypher-parameters,$parameter>>
+| <<functions-properties,properties()>>  | Function  | Added  |
 | <<query-call,CALL [\...YIELD]>>   | Clause  | Added  |
 | <<functions-point-cartesian-2d,point() - Cartesian 2D>> | Function | Added |
 | <<functions-point-wgs84-2d,point() - WGS 84 2D>> | Function | Added |
 | <<functions-distance,distance()>> | Function | Added |
-| <<java-reference#extending-neo4j-procedures, User-defined procedures>> | Functionality | Added |
-| <<functions-tostring, toString()>>   | Function  | Extended | Now also allows Boolean values as input
+| <<java-reference#extending-neo4j-procedures,User-defined procedures>> | Functionality | Added |
+| <<functions-tostring,toString()>>   | Function  | Extended | Now also allows Boolean values as input
 |===
 
 
 [[cypher-compatibility]]
 == Compatibility
 
-NOTE: The ability of Neo4j to support multiple older versions of the Cypher language has been changing.
-In versions of Neo4j before 3.5 the backwards compatibility layer included the Cypher language parser, planner and runtime.
-All supported versions of Cypher would run on the same Neo4j kernel.
-In Neo4j 3.4, however, this was changed such that the compatibility layer no longer included the runtime.
-This meant that running, for example, a `CYPHER 3.1` query inside Neo4j 3.5 would plan the query using the 3.1 planner, and run it using the 3.5 runtime and kernel.
-In Neo4j 4.0 this was changed again, such that the compatibility layer includes only the parser.
-For example, running a `CYPHER 3.5` query inside Neo4j will parse older language features, but plan using the {neo4j-version} planner, and run using the {neo4j-version} runtime and kernel.
-The primary reason for this change has been optimizations in the Cypher runtime to allow Cypher query to perform better.
+[NOTE]
+====
+Neo4j’s ability to support multiple older versions of the Cypher language has changed over time.
+In versions prior to Neo4j 3.4, the backwards compatibility layer included the Cypher language parser, planner, and runtime.
+All supported versions of Cypher ran on the same Neo4j kernel.
+However, this changed in Neo4j 3.4 when the runtime was excluded from the compatibility layer.
+When you run, e.g. a `CYPHER 3.1` query in Neo4j 3.5, the query is planned with the 3.1 planner, but run with 3.5 runtime and kernel.
+The compatibility layer changed again in Neo4j 4.0 and it now includes only the Cypher language parser.
+When you run a `CYPHER 3.5` query, e.g., in Neo4j 4.3, Neo4j parses the older language features, but uses the 4.3 planner, runtime, and kernel to plan and run the query.
+The primary reason for these changes is the optimizations in the Cypher runtime to allow Cypher queries to perform better.
+====
 
 Older versions of the language can still be accessed if required.
 There are two ways to select which version to use in queries.
@@ -304,7 +758,7 @@ Prepending a query with `CYPHER 3.5` will execute the query with the version of 
 
 Below is an example using the older parameter syntax `+{param}+`:
 
-[source, cypher]
+[source, cypher, role="nocopy,norun"]
 ----
 CYPHER 3.5
 MATCH (n:Person)
@@ -314,8 +768,13 @@ RETURN n.name, n.age
 
 Without the `CYPHER 3.5` prefix this query would fail with a syntax error. With `CYPHER 3.5` however, it will only generate a warning and still work.
 
-WARNING: In Neo4j {neo4j-version} some older language features are understood by the Cypher parser even if they are no longer supported by the Neo4j kernel.
-These features will result in runtime errors. See the table at <<cypher-deprecations-additions-removals-4.0, Cypher Version 4.0>> for the list of affected features.
+[WARNING]
+====
+In Neo4j {neo4j-version} the Cypher parser understands some older language features, even if they are no longer supported by the Neo4j kernel.
+These features result in runtime errors.
+See the table at <<cypher-deprecations-additions-removals-4.0,Cypher Version 4.0>> for the list of affected features.
+====
+
 
 [[cypher-versions]]
 == Supported language versions
@@ -327,6 +786,8 @@ Neo4j {neo4j-version} supports the following versions of the Cypher language:
 * Neo4j Cypher 4.3
 
 [TIP]
+====
 Each release of Neo4j supports a limited number of old Cypher Language Versions.
 When you upgrade to a new release of Neo4j, please make sure that it supports the Cypher language version you need.
 If not, you may need to modify your queries to work with a newer Cypher language version.
+====
