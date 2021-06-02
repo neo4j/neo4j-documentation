@@ -162,7 +162,7 @@ public class FunctionDescriptionsGenerator
         Map<Category,List<FunctionDescription>> functions;
         try ( Transaction tx = db.beginTx() )
         {
-            String query = "CALL dbms.functions()";
+            String query = "SHOW FUNCTIONS YIELD name, description, category, signature";
             try ( Result result = tx.execute( query ) )
             {
                 functions = parseResult( result );

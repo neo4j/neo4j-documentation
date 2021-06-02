@@ -280,7 +280,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "List constraints",
+      title = "Listing constraints",
       text =
         """The `ShowConstraints` operator lists constraints. It may include filtering on constraint type and can have either default or full output.""".stripMargin,
       queryText = """SHOW CONSTRAINTS""",
@@ -368,13 +368,40 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     }
 
     profileQuery(
-      title = "List indexes",
+      title = "Listing indexes",
       text =
         """The `ShowIndexes` operator lists indexes. It may include filtering on index type and can have either default or full output.""".stripMargin,
       queryText = """SHOW INDEXES""",
       assertions = p => {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("ShowIndexes"))
+      }
+    )
+  }
+
+  @Test def showFunctions() {profileQuery(
+      title = "Listing functions",
+      text =
+        """The `ShowFunctions` operator lists functions.
+          |It may include filtering on built-in vs user-defined functions as well as if a given user can execute the function.
+          |The output can either be default or full output.""".stripMargin,
+      queryText = """SHOW FUNCTIONS""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("ShowFunctions"))
+      }
+    )
+  }
+
+  @Test def showProcedures() {profileQuery(
+      title = "Listing procedures",
+      text =
+        """The `ShowProcedures` operator lists procedures.
+          |It may include filtering on whether a given user can execute the procedure and can have either default or full output.""".stripMargin,
+      queryText = """SHOW PROCEDURES""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("ShowProcedures"))
       }
     )
   }

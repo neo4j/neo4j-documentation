@@ -99,7 +99,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text =
         """
           |To list all constraints with the default output columns, the `SHOW CONSTRAINTS` command can be used.
-          |If all columns are wanted, use `SHOW CONSTRAINTS YIELD *`.""".stripMargin,
+          |If all columns are required, use `SHOW CONSTRAINTS YIELD *`.""".stripMargin,
       queryText = "SHOW CONSTRAINTS",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
       optionalResultExplanation =

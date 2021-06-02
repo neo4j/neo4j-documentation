@@ -42,7 +42,6 @@ import org.neo4j.graphdb._
 import org.neo4j.graphdb.config.Setting
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
-import org.neo4j.kernel.impl.index.schema.RelationshipTypeScanStoreSettings
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.util.ValueUtils
 import org.neo4j.visualization.asciidoc.AsciidocHelper

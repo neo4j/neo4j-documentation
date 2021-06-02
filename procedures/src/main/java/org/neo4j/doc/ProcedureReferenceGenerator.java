@@ -42,7 +42,7 @@ import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAM
 
 public class ProcedureReferenceGenerator {
 
-    private final String query = "CALL dbms.procedures()";
+    private final String query = "SHOW PROCEDURES YIELD name, description, signature, mode, rolesExecution";
     private final String ENTERPRISE_FEATURE_ROLE_TEMPLATE = "[enterprise-edition]#%s#";
     private final Neo4jInstance neo;
     private boolean includeRolesColumn = true;
@@ -157,7 +157,7 @@ public class ProcedureReferenceGenerator {
             this.signature = (String) row.get("signature");
             this.description = (String) row.get("description");
             this.mode = (String) row.get("mode");
-            this.roles = (List<String>) row.get("defaultBuiltInRoles");
+            this.roles = (List<String>) row.get("rolesExecution");
             this.enterpriseOnly = false;
         }
 
