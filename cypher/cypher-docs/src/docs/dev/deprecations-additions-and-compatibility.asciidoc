@@ -526,36 +526,338 @@ They can be dropped by using their name.
 
 [[cypher-deprecations-additions-removals-4.2]]
 == Version 4.2
-[options="header"]
+
+[cols="2", options="header"]
 |===
-| Feature     | Type | Change | Details
-| `SHOW PRIVILEGES [AS [REVOKE] COMMAND[S]]` | Functionality | Added | Privileges can now be shown as Cypher commands
-| `SHOW ROLE name PRIVILEGES` | Functionality | Updated | Can now handle multiple roles, `SHOW ROLES n1, n2, ... PRIVILEGES`
-| `SHOW USER name PRIVILEGES` | Functionality | Updated | Can now handle multiple users, `SHOW USERS n1, n2, ... PRIVILEGES`
-| `round(expression, precision)` | Functionality | Updated | round()-function can now take an additional argument to specify rounding precision.
-| `round(expression, precision, mode)` | Functionality | Updated | round()-function can now take two additional arguments to specify rounding precision, and rounding mode.
-| `DEFAULT GRAPH` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges,database privileges>>
-| `0o...`                     | Syntax        | Added   | Cypher will now interpret literals with prefix `0o` as an octal integer literal.
-| `0...`                      | Syntax        | Deprecated   | Replaced by `0o...` (see above).
-| `0X...`                     | Syntax        | Deprecated   | Only `0x...` (lowercase x) will be supported.
-| `SET [PLAINTEXT \| ENCRYPTED] PASSWORD` | Syntax | Added | For `CREATE USER` and `ALTER USER` it is now possible to set (or update) a password when the plaintext password is unknown, but the encrypted password is available.
-| <<administration-security-administration-dbms-privileges-execute,EXECUTE>> privileges | Functionality | Added | New Cypher commands for administering privileges for executing procedures and user defined functions.
-| `CREATE [BTREE] INDEX ... [OPTIONS {...}]`            | Syntax | Added | Allows setting index provider and index configuration when creating an index.
-| `CREATE CONSTRAINT ... IS NODE KEY [OPTIONS {...}]`   | Syntax | Added | Allows setting index provider and index configuration for the backing index when creating a node key constraint.
-| `CREATE CONSTRAINT ... IS UNIQUE [OPTIONS {...}]`     | Syntax | Added | Allows setting index provider and index configuration for the backing index when creating a uniqueness constraint.
-| `db.createIndex`                      | Procedure | Deprecated | Replaced by `CREATE INDEX` command.
-| `db.createNodeKey`                    | Procedure | Deprecated | Replaced by `CREATE CONSTRAINT ... IS NODE KEY` command.
-| `db.createUniquePropertyConstraint`   | Procedure | Deprecated | Replaced by `CREATE CONSTRAINT ... IS UNIQUE` command.
-| `SHOW CURRENT USER`         | Syntax  | Added     | New Cypher command for showing current logged-in user and roles.
-| `SHOW [ALL \| BTREE] INDEX[ES] [BRIEF \| VERBOSE [OUTPUT]]`                                                                        | Functionality | Added | New Cypher commands for listing indexes.
-| `SHOW [ALL \| UNIQUE \| NODE EXIST[S] \| RELATIONSHIP EXIST[S] \| EXIST[S] \| NODE KEY] CONSTRAINT[S] [BRIEF \| VERBOSE [OUTPUT]]` | Functionality | Added | New Cypher commands for listing constraints.
-| `db.indexes`                | Procedure     | Deprecated | Replaced by `SHOW INDEXES`
-| `db.indexDetails`           | Procedure     | Deprecated | Replaced by `SHOW INDEXES YIELD *`
-| `db.constraints`            | Procedure     | Deprecated | Replaced by `SHOW CONSTRAINTS`
-| `db.schemaStatements`       | Procedure     | Deprecated | Replaced by `SHOW INDEXES YIELD *` and `SHOW CONSTRAINTS YIELD *`
-| `SHOW INDEX` privilege      | Functionality | Added      | New Cypher command for administering privilege for listing indexes.
-| `SHOW CONSTRAINT` privilege | Functionality | Added      | New Cypher command for administering privilege for listing constraints.
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SHOW PRIVILEGES [AS [REVOKE] COMMAND[S]]
+----
+a|
+Privileges can now be shown as Cypher commands.
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW ROLE name PRIVILEGES
+----
+a|
+Can now handle multiple roles.
+[source, cypher, role="noheader"]
+----
+SHOW ROLES n1, n2, ... PRIVILEGES
+----
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW USER name PRIVILEGES
+----
+a|
+Can now handle multiple users.
+[source, cypher, role="noheader"]
+----
+SHOW USERS n1, n2, ... PRIVILEGES
+----
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+round(expression, precision)
+----
+a|
+The `round()` function can now take an additional argument to specify rounding precision.
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+round(expression, precision, mode)
+----
+a|
+The `round()` function can now take two additional arguments to specify rounding precision and rounding mode.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+DEFAULT GRAPH
+----
+a|
+New optional part of the Cypher commands for <<administration-security-administration-database-privileges,database privileges>>.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+0o...
+----
+a|
+Cypher will now interpret literals with prefix `0o` as an octal integer literal.
+
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+0...
+----
+a|
+Replaced by `+0o...+` (see above).
+
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+0X...
+----
+a|
+Only `+0x...+` (lowercase x) will be supported.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SET [PLAINTEXT \| ENCRYPTED] PASSWORD
+----
+a|
+For `CREATE USER` and `ALTER USER` it is now possible to set (or update) a password when the plaintext password is unknown, but the encrypted password is available.
+
+
+a|
+label:functionality[]
+label:added[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+EXECUTE
+----
+a|
+New Cypher commands for administering privileges for executing procedures and user defined functions.
+See <<administration-security-administration-dbms-privileges-execute>>.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE [BTREE] INDEX ... [OPTIONS {...}]
+----
+a|
+Allows setting index provider and index configuration when creating an index.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ... IS NODE KEY [OPTIONS {...}]
+----
+a|
+Allows setting index provider and index configuration for the backing index when creating a node key constraint.
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ... IS UNIQUE [OPTIONS {...}]
+----
+a|
+Allows setting index provider and index configuration for the backing index when creating a uniqueness constraint.
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+db.createIndex
+----
+a|
+Replaced by `CREATE INDEX` command.
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+db.createNodeKey
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ... IS NODE KEY
+----
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+db.createUniquePropertyConstraint
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ... IS UNIQUE
+----
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SHOW CURRENT USER
+----
+a|
+New Cypher command for showing current logged-in user and roles.
+
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SHOW [ALL \| BTREE] INDEX[ES] [BRIEF \| VERBOSE [OUTPUT]]
+----
+a|
+New Cypher commands for listing indexes.
+
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SHOW [ALL \| UNIQUE \| NODE EXIST[S] \| RELATIONSHIP EXIST[S] \| EXIST[S] \| NODE KEY] CONSTRAINT[S] [BRIEF \| VERBOSE [OUTPUT]]
+----
+a|
+New Cypher commands for listing constraints.
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+db.indexes
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES
+----
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+db.indexDetails
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES YIELD *
+----
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+db.constraints
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS
+----
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+db.schemaStatements
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES YIELD *
+----
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS YIELD *
+----
+
+
+a|
+label:functionality[]
+label:added[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+SHOW INDEX
+----
+a|
+New Cypher command for administering privilege for listing indexes.
+
+
+a|
+label:functionality[]
+label:added[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINT
+----
+a|
+New Cypher command for administering privilege for listing constraints.
 |===
+
 
 [[cypher-deprecations-additions-removals-4.1.3]]
 == Version 4.1.3
