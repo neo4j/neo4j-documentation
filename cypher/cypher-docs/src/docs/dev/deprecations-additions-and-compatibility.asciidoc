@@ -614,7 +614,7 @@ label:added[]
 0o...
 ----
 a|
-Cypher will now interpret literals with prefix `0o` as an octal integer literal.
+Cypher now interprets literals with prefix `0o` as an octal integer literal.
 
 
 a|
@@ -636,7 +636,7 @@ label:deprecated[]
 0X...
 ----
 a|
-Only `+0x...+` (lowercase x) will be supported.
+Only `+0x...+` (lowercase x) is supported.
 
 
 a|
@@ -647,7 +647,7 @@ label:added[]
 SET [PLAINTEXT \| ENCRYPTED] PASSWORD
 ----
 a|
-For `CREATE USER` and `ALTER USER` it is now possible to set (or update) a password when the plaintext password is unknown, but the encrypted password is available.
+For `CREATE USER` and `ALTER USER`, it is now possible to set (or update) a password when the plaintext password is unknown, but the encrypted password is available.
 
 
 a|
