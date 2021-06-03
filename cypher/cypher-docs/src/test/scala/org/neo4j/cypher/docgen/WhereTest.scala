@@ -78,15 +78,14 @@ class WhereTest extends DocumentingTest {
       p("In the case of `WITH`, `WHERE` simply filters the results.")
       p(
         """For `MATCH` and `OPTIONAL MATCH` on the other hand, `WHERE` adds constraints to the patterns described.
-          |_It should not be seen as a filter after the matching is finished._""".stripMargin)
+          #_It should not be seen as a filter after the matching is finished._""".stripMargin('#'))
       important {
         p(
           """In the case of multiple `MATCH` / `OPTIONAL MATCH` clauses, the predicate in `WHERE` is always a part of the patterns in the directly preceding `MATCH` / `OPTIONAL MATCH`.
-            |Both results and performance may be impacted if the `WHERE` is put inside the wrong `MATCH` clause.""".stripMargin)
+            #Both results and performance may be impacted if the `WHERE` is put inside the wrong `MATCH` clause.""".stripMargin('#'))
       }
       note {
-        p(
-          """<<administration-indexes-search-performance, Indexes>> may be used to optimize queries using `WHERE` in a variety of cases.""".stripMargin)
+        p("<<administration-indexes-search-performance, Indexes>> may be used to optimize queries using `WHERE` in a variety of cases.")
       }
       p("The following graph is used for the examples below:")
       graphViz()
@@ -97,9 +96,12 @@ class WhereTest extends DocumentingTest {
             #See <<cypher-working-with-null>> for more information on how this works with `null`.""".stripMargin('#'))
         query("""MATCH (n:Person)
                 #WHERE n.name = 'Peter' XOR (n.age < 30 AND n.name = 'Timothy') OR NOT (n.name = 'Timothy' OR n.name = 'Peter')
-                #RETURN n.name, n.age""".stripMargin('#'),
+                #RETURN
+                #  n.name AS name,
+                #  n.age AS age
+                #ORDER BY name""".stripMargin('#'),
         ResultAssertions((r) => {
-            r.toList should equal(List(Map("n.name" -> "Andy", "n.age" -> 36l), Map("n.name" -> "Timothy", "n.age" -> 25l), Map("n.name" -> "Peter", "n.age" -> 35l)))
+            r.toList should equal(List(Map("name" -> "Andy", "age" -> 36l), Map("name" -> "Peter", "age" -> 35l), Map("name" -> "Timothy", "age" -> 25l)))
           })) {
           resultTable()
         }
