@@ -10,6 +10,15 @@ New features are added to the language continuously, and occasionally, some feat
 This section list all of the features that have been removed, deprecated, added, or extended in different Cypher versions.
 Replacement syntax for deprecated and removed features are also indicated.
 
+[[cypher-deprecations-additions-removals-4.4]]
+== Version 4.4
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+|===
+
+
 [[cypher-deprecations-additions-removals-4.3]]
 == Version 4.3
 [cols="2", options="header"]
@@ -1043,7 +1052,7 @@ All supported versions of Cypher ran on the same Neo4j kernel.
 However, this changed in Neo4j 3.4 when the runtime was excluded from the compatibility layer.
 When you run, e.g. a `CYPHER 3.1` query in Neo4j 3.5, the query is planned with the 3.1 planner, but run with 3.5 runtime and kernel.
 The compatibility layer changed again in Neo4j 4.0 and it now includes only the Cypher language parser.
-When you run a `CYPHER 3.5` query, e.g., in Neo4j 4.3, Neo4j parses the older language features, but uses the 4.3 planner, runtime, and kernel to plan and run the query.
+When you run a `CYPHER 3.5` query, e.g., in Neo4j 4.4, Neo4j parses the older language features, but uses the 4.4 planner, runtime, and kernel to plan and run the query.
 The primary reason for these changes is the optimizations in the Cypher runtime to allow Cypher queries to perform better.
 ====
 
@@ -1084,8 +1093,8 @@ See the table at <<cypher-deprecations-additions-removals-4.0,Cypher Version 4.0
 Neo4j {neo4j-version} supports the following versions of the Cypher language:
 
 * Neo4j Cypher 3.5
-* Neo4j Cypher 4.2
 * Neo4j Cypher 4.3
+* Neo4j Cypher 4.4
 
 [TIP]
 ====
