@@ -16,7 +16,7 @@ This section contains information on all functions in the Cypher query language.
 * Mathematical functions - trigonometric [<<header-query-functions-trigonometric, Summary>>|<<query-functions-trigonometric, Detail>>]
 * String functions [<<header-query-functions-string, Summary>>|<<query-functions-string, Detail>>]
 * Temporal functions - instant types [<<header-query-functions-temporal-instant-types, Summary>>|<<query-functions-temporal-instant-types, Detail>>]
-* Temporal functions - duration [<<header-query-functions-temporal-duration, Summary>>|<<query-functions-duration, Detail>>]
+* Temporal functions - duration [<<header-query-functions-temporal-duration, Summary>>|<<query-functions-temporal-duration, Detail>>]
 * Spatial functions [<<header-query-functions-spatial, Summary>>|<<query-functions-spatial, Detail>>]
 * LOAD CSV functions [<<header-query-functions-load-csv, Summary>>|<<query-functions-load-csv, Detail>>]
 * User-defined functions [<<header-query-functions-user-defined, Summary>>|<<query-functions-user-defined, Detail>>]
@@ -359,7 +359,7 @@ include::query-functions-temporal-instant-types.adoc[leveloffset=+1]
 
 //Temporal functions - duration
 
-include::query-functions-duration.adoc[leveloffset=+1]
+include::query-functions-temporal-duration.adoc[leveloffset=+1]
 
 //Spatial functions
 
