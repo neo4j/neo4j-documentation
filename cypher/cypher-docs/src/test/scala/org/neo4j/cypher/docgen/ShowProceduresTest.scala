@@ -28,9 +28,109 @@ class ShowProceduresTest extends DocumentingTest {
   override def doc: Document = new DocBuilder {
     doc("SHOW PROCEDURES", "query-listing-procedures")
     p("Listing the available procedures can be done with `SHOW PROCEDURES`.")
-    p("include::listing-procedures-syntax.asciidoc[]")
     p("This command will produce a table with the following columns:")
-    p("include::listing-procedures-columns.asciidoc[]")
+    p("""
+[NOTE]
+====
+The command `SHOW PROCEDURES` only output the default output; for a full output use the optional `YIELD` command.
+Full output: `SHOW PROCEDURES YIELD *`.
+====
+    """)
+    p("""
+.List procedures output
+[options="header", cols="4,6"]
+||===
+|| Column
+|| Description
+
+|m| name
+|a| The name of the procedure. label:default-output[]
+
+|m| description
+|a| The procedure description. label:default-output[]
+
+|m| mode
+|a| The procedure mode, for example `READ` or `WRITE`. label:default-output[]
+
+|m| worksOnSystem
+|a| Whether the procedure can be run on the `system` database or not. label:default-output[]
+
+|m| signature
+|a| The signature of the procedure.
+
+|m| argumentDescription
+|a| List of the arguments for the procedure, as map of strings with name, type, default, and description.
+
+|m| returnDescription
+|a| List of the returned values for the procedure, as map of strings with name, type, and description.
+
+|m| admin
+|a| `true` if this procedure is an admin procedure.
+
+|m| rolesExecution
+|a|
+List of roles permitted to execute this procedure.
+Will be `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
+
+|m| rolesBoostedExecution
+|a|
+List of roles permitted to use boosted mode when executing this procedure.
+Will be `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
+
+|m| option
+|a| Map of extra output, for example if the procedure is deprecated.
+||===
+""")
+    section("Syntax") {
+      p("""
+List all procedures::
+
+[source, cypher, role=noplay]
+----
+SHOW PROCEDURE[S]
+[YIELD { * | field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+[WHERE expression]
+[RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+----
+[NOTE]
+====
+When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+====
+
+List procedures that the current user can execute::
+
+[source, cypher, role=noplay]
+----
+SHOW PROCEDURE[S] EXECUTABLE [BY CURRENT USER]
+[YIELD { * | field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+[WHERE expression]
+[RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+----
+
+[NOTE]
+====
+When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+====
+
+List procedures that the specified user can execute::
+
+[source, cypher, role=noplay]
+----
+SHOW PROCEDURE[S] EXECUTABLE BY username
+[YIELD { * | field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+[WHERE expression]
+[RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+----
+
+Required privilege <<administration-security-administration-dbms-privileges-user-management,`SHOW USER`>>.
+This command cannot be used for LDAP users.
+
+[NOTE]
+====
+When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+====
+""".stripMargin('#'))
+        }
     section("Examples") {
       section("Listing all procedures") {
         p(
@@ -74,7 +174,7 @@ class ShowProceduresTest extends DocumentingTest {
         })) {
           limitedResultTable(List("name", "description", "rolesExecution", "rolesBoostedExecution"))
         }
-        p("Notice that the two roles columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> privilege.")
+        p("Notice that the two roles columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management,SHOW ROLE>> privilege.")
         logout()
         p("The second version filters the list to only contain procedures executable by a specific user:")
         query("SHOW PROCEDURES EXECUTABLE BY jake", ResultAssertions(p => {
