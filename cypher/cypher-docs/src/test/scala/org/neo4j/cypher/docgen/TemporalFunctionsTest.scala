@@ -99,7 +99,7 @@ class TemporalFunctionsTest extends DocumentingTest {
             |[options="header"]
             ||===
             || Type                   | default | transaction | statement | realtime
-            || Date  | <<functions-date-current, date()>> | <<functions-date-current-transaction, date.transaction()>>  | <<functions-date-current-statement, date.statement()>> | <<functions-date-current-realtime, date.realtime()>>
+            || Date  | <<functions-date-current, date()>> | <<functions-date-transaction, date.transaction()>>  | <<functions-date-statement, date.statement()>> | <<functions-date-realtime, date.realtime()>>
             || Time | <<functions-time-current, time()>> | <<functions-time-transaction, time.transaction()>> | <<functions-time-statement, time.statement()>> | <<functions-time-realtime, time.realtime()>>
             || LocalTime | <<functions-localtime-current, localtime()>> | <<functions-localtime-transaction, localtime.transaction()>> | <<functions-localtime-statement, localtime.statement()>> | <<functions-localtime-realtime, localtime.realtime()>>
             || DateTime | <<functions-datetime-current, datetime()>> | <<functions-datetime-transaction, datetime.transaction()>> | <<functions-datetime-statement, datetime.statement()>> | <<functions-datetime-realtime, datetime.realtime()>>
