@@ -31,8 +31,7 @@ If that is the case, the example queries will be prefixed with an option to choo
 // * <<query-plan-select-or-anti-semi-apply, SelectOrAntiSemiApply>>
 // * <<query-plan-let-select-or-semi-apply, LetSelectOrSemiApply>>
 // * <<query-plan-let-select-or-anti-semi-apply, LetSelectOrAntiSemiApply>>
-// * <<query-plan-conditional-apply, ConditionalApply>>
-// * <<query-plan-anti-conditional-apply, AntiConditionalApply>>
+// * <<query-plan-merge,Merge>>
 // * <<query-plan-roll-up-apply, RollUpApply>>
 // * <<query-plan-argument, Argument>>
 // * <<query-plan-expand-all, Expand(All)>>
@@ -43,7 +42,6 @@ If that is the case, the example queries will be prefixed with an option to choo
 // * <<query-plan-varlength-expand-into, VarLengthExpand(Into)>>
 // * <<query-plan-varlength-expand-pruning, VarLengthExpand(Pruning)>>
 // * <<query-plan-assert-same-node, AssertSameNode>>
-// * <<query-plan-drop-result, DropResult>>
 // * <<query-plan-empty-result, EmptyResult>>
 // * <<query-plan-produce-results, ProduceResults>>
 // * <<query-plan-load-csv, LoadCSV>>
@@ -70,7 +68,7 @@ If that is the case, the example queries will be prefixed with an option to choo
 // * <<query-plan-partial-top, PartialTop>>
 // * <<query-plan-union, Union>>
 // * <<query-plan-unwind, Unwind>>
-// * <<query-plan-lock-nodes, LockNodes>>
+// * <<query-plan-exhaustive-limit,ExhaustiveLimit>>
 // * <<query-plan-optional, Optional>>
 // * <<query-plan-project-endpoints, ProjectEndpoints>>
 // * <<query-plan-projection, Projection>>
@@ -80,8 +78,6 @@ If that is the case, the example queries will be prefixed with an option to choo
 // * <<query-plan-create-nodes---relationships, Create>>
 // * <<query-plan-delete, Delete>>
 // * <<query-plan-detach-delete, DetachDelete>>
-// * <<query-plan-merge-create-node, MergeCreateNode>>
-// * <<query-plan-merge-create-relationship, MergeCreateRelationship>>
 // * <<query-plan-set-labels, SetLabels>>
 // * <<query-plan-remove-labels, RemoveLabels>>
 // * <<query-plan-set-node-properties-from-map, SetNodePropertiesFromMap>>
@@ -146,9 +142,12 @@ include::../ql/query-plan/let-select-or-semi-apply.asciidoc[]
 
 include::../ql/query-plan/let-select-or-anti-semi-apply.asciidoc[]
 
-include::../ql/query-plan/conditional-apply.asciidoc[]
+//include::../ql/query-plan/conditional-apply.asciidoc[]
+//Changed in 4.3 to merge
+include::../ql/query-plan/merge.asciidoc[]
 
-include::../ql/query-plan/anti-conditional-apply.asciidoc[]
+//include::../ql/query-plan/anti-conditional-apply.asciidoc[]
+//Removed in 4.3 (by merge)
 
 include::../ql/query-plan/roll-up-apply.asciidoc[]
 
@@ -170,7 +169,8 @@ include::../ql/query-plan/varlength-expand-pruning.asciidoc[]
 
 include::../ql/query-plan/assert-same-node.asciidoc[]
 
-include::../ql/query-plan/drop-result.asciidoc[]
+//include::../ql/query-plan/drop-result.asciidoc[]
+//Removed in 4.3
 
 include::../ql/query-plan/empty-result.asciidoc[]
 
@@ -245,7 +245,9 @@ include::../ql/query-plan/union.asciidoc[]
 
 include::../ql/query-plan/unwind.asciidoc[]
 
-include::../ql/query-plan/lock-nodes.asciidoc[]
+//include::../ql/query-plan/lock-nodes.asciidoc[]
+//Changed in 4.3
+include::../ql/query-plan/exhaustive-limit.asciidoc[]
 
 include::../ql/query-plan/optional.asciidoc[]
 
@@ -267,9 +269,11 @@ include::../ql/query-plan/delete.asciidoc[]
 
 include::../ql/query-plan/detach-delete.asciidoc[]
 
-include::../ql/query-plan/merge-create-node.asciidoc[]
+//include::../ql/query-plan/merge-create-node.asciidoc[]
+//Removed in 4.3
 
-include::../ql/query-plan/merge-create-relationship.asciidoc[]
+//include::../ql/query-plan/merge-create-relationship.asciidoc[]
+//Removed in 4.3
 
 include::../ql/query-plan/set-labels.asciidoc[]
 
