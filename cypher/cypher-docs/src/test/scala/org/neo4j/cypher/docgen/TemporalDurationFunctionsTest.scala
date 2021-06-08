@@ -34,7 +34,7 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
       override def get(): ZoneId = ZoneOffset.UTC
     }
 
-    doc("Temporal functions - duration", "query-functions-duration")
+    doc("Temporal functions - duration", "query-functions-temporal-duration")
     synopsis(
       """Cypher provides functions allowing for the creation and manipulation of values for a _Duration_ temporal type.""".stripMargin)
     note {
