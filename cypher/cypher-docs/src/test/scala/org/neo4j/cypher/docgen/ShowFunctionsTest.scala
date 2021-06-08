@@ -28,14 +28,14 @@ class ShowFunctionsTest extends DocumentingTest {
   override def doc: Document = new DocBuilder {
     doc("SHOW FUNCTIONS", "query-listing-functions")
     p("Listing the available functions can be done with `SHOW FUNCTIONS`.")
+    p("""
+    #[NOTE]
+    #====
+    #The command `SHOW FUNCTIONS` only outputs the default output; for a full output use the optional `YIELD` command.
+    #Full output: `SHOW FUNCTIONS YIELD *`.
+    #====""".stripMargin('#'))
     p("This command will produce a table with the following columns:")
     p("""
-[NOTE]
-====
-The command `SHOW FUNCTIONS` only output the default output; for a full output use the optional `YIELD` command.
-Full output: `SHOW FUNCTIONS YIELD *`.
-====
-
 .List functions output
 [options="header", cols="4,6"]
 ||===
@@ -46,7 +46,7 @@ Full output: `SHOW FUNCTIONS YIELD *`.
 |a| The name of the function. label:default-output[]
 
 |m| category
-|a| The function category, for example scalar or string. label:default-output[]
+|a| The function category, for example `scalar` or `string`. label:default-output[]
 
 |m| description
 |a| The function description. label:default-output[]
@@ -69,12 +69,12 @@ Full output: `SHOW FUNCTIONS YIELD *`.
 |m| rolesExecution
 |a|
 List of roles permitted to execute this function.
-Will be `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
+Is `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
 
 |m| rolesBoostedExecution
 |a|
 List of roles permitted to use boosted mode when executing this function.
-Will be `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
+Is `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
 ||===""")
     section("Syntax") {
       p("""
@@ -139,8 +139,8 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
       p(
         """The listed functions can be filtered in multiple ways.
           #One way is through the type keywords, `BUILT IN` and `USER DEFINED`.
-          #Another more flexible way is to use the `WHERE` clause.
-          #For example getting the name of all built-in functions starting on the letter 'a':""".stripMargin('#'))
+          #A more flexible way is to use the `WHERE` clause.
+          #For example, getting the name of all built-in functions starting with the letter 'a':""".stripMargin('#'))
       query("""
           #SHOW BUILT IN FUNCTIONS YIELD name, isBuiltIn
           #WHERE name STARTS WITH 'a'""".stripMargin('#'),
@@ -161,9 +161,9 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
       p(
         """The listed functions can also be filtered on whether a user can execute them.
           #This filtering is only available through the `EXECUTABLE` clause and not through the `WHERE` clause.
-          #This is due to using the users privileges instead of just filtering on the available output columns.""".stripMargin('#'))
+          #This is due to using the user's privileges instead of filtering on the available output columns.""".stripMargin('#'))
       p(
-        """There are two versions of the `EXECUTABLE` clause.
+        """There are two ways to use the `EXECUTABLE` clause.
           #The first one is to filter for the current user:""".stripMargin('#'))
       login("jake", "abc123")
       query("SHOW FUNCTIONS EXECUTABLE BY CURRENT USER YIELD *", ResultAssertions(p => {
@@ -173,7 +173,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
       })) {
         limitedResultTable(List("name", "category", "description", "rolesExecution", "rolesBoostedExecution"))
       }
-      p("Notice that the two roles columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.")
+      p("Notice that the two `roles` columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.")
       logout()
       p("The second versions is to filter for a specific user:")
       query("SHOW FUNCTIONS EXECUTABLE BY jake", ResultAssertions(p => {
