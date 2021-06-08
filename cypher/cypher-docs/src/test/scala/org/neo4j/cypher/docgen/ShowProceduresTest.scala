@@ -28,14 +28,13 @@ class ShowProceduresTest extends DocumentingTest {
   override def doc: Document = new DocBuilder {
     doc("SHOW PROCEDURES", "query-listing-procedures")
     p("Listing the available procedures can be done with `SHOW PROCEDURES`.")
-    p("This command will produce a table with the following columns:")
     p("""
-[NOTE]
-====
-The command `SHOW PROCEDURES` only output the default output; for a full output use the optional `YIELD` command.
-Full output: `SHOW PROCEDURES YIELD *`.
-====
-    """)
+    #[NOTE]
+    #====
+    #The command `SHOW PROCEDURES` only outputs the default output; for a full output use the optional `YIELD` command.
+    #Full output: `SHOW PROCEDURES YIELD *`.
+    #====""".stripMargin('#'))
+    p("This command will produce a table with the following columns:")
     p("""
 .List procedures output
 [options="header", cols="4,6"]
@@ -70,15 +69,15 @@ Full output: `SHOW PROCEDURES YIELD *`.
 |m| rolesExecution
 |a|
 List of roles permitted to execute this procedure.
-Will be `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
+Is `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
 
 |m| rolesBoostedExecution
 |a|
 List of roles permitted to use boosted mode when executing this procedure.
-Will be `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
+Is `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
 
 |m| option
-|a| Map of extra output, for example if the procedure is deprecated.
+|a| Map of extra output, e.g. if the procedure is deprecated.
 ||===
 """)
     section("Syntax") {
@@ -122,7 +121,7 @@ SHOW PROCEDURE[S] EXECUTABLE BY username
 [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 
-Required privilege <<administration-security-administration-dbms-privileges-user-management,`SHOW USER`>>.
+Requires the privilege <<administration-security-administration-dbms-privileges-user-management,`SHOW USER`>>.
 This command cannot be used for LDAP users.
 
 [NOTE]
@@ -144,8 +143,11 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
     section("Listing procedures with filtering on output columns") {
       p(
         """The listed procedures can be filtered in multiple ways, one way is to use the `WHERE` clause.
-          #For example getting the name of all admin procedures:""".stripMargin('#'))
-      query("SHOW PROCEDURES YIELD name, admin WHERE admin", ResultAssertions(p => {
+          #For example, returning the names of all admin procedures:""".stripMargin('#'))
+      query("""
+        #SHOW PROCEDURES YIELD name, admin
+        #WHERE admin""".stripMargin('#'),
+      ResultAssertions(p => {
         p.columns should contain theSameElementsAs Array("name", "admin")
         p.columnAs[Boolean]("admin").foreach(_ should be(true))
       })) {
@@ -158,13 +160,11 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
         "CREATE USER jake SET PASSWORD 'abc123' CHANGE NOT REQUIRED"
       )
       database("neo4j")
-      p(
-        """The listed procedures can also be filtered by whether a user can execute them.
+      p("""The listed procedures can also be filtered by whether a user can execute them.
           #This filtering is only available through the `EXECUTABLE` clause and not through the `WHERE` clause.
-          #This is due to using the users privileges instead of just filtering on the available output columns.""".stripMargin('#'))
-      p(
-        """There are two versions of the `EXECUTABLE` clause.
-          #The first one is to filter for the current user:""".stripMargin('#'))
+          #This is due to using the user's privileges instead of filtering on the available output columns.""".stripMargin('#'))
+      p("""There are two options, how to use the `EXECUTABLE` clause.
+          #The first option, is to filter for the current user:""".stripMargin('#'))
       login("jake", "abc123")
       query("SHOW PROCEDURES EXECUTABLE BY CURRENT USER YIELD *", ResultAssertions(p => {
         p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem", "signature", "argumentDescription", "returnDescription", "admin", "rolesExecution", "rolesBoostedExecution", "option")
@@ -173,9 +173,9 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
       })) {
         limitedResultTable(List("name", "description", "rolesExecution", "rolesBoostedExecution"))
       }
-      p("Notice that the two roles columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management,SHOW ROLE>> privilege.")
+      p("Note that the two `roles` columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management,SHOW ROLE>> privilege.")
       logout()
-      p("The second version filters the list to only contain procedures executable by a specific user:")
+      p("The second option, filters the list to only contain procedures executable by a specific user:")
       query("SHOW PROCEDURES EXECUTABLE BY jake", ResultAssertions(p => {
         p.columns should contain theSameElementsAs Array("name", "description", "mode", "worksOnSystem")
       })) {

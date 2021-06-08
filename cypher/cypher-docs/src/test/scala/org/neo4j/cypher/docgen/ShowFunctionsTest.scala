@@ -163,8 +163,8 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
           #This filtering is only available through the `EXECUTABLE` clause and not through the `WHERE` clause.
           #This is due to using the user's privileges instead of filtering on the available output columns.""".stripMargin('#'))
       p(
-        """There are two ways to use the `EXECUTABLE` clause.
-          #The first one is to filter for the current user:""".stripMargin('#'))
+        """There are two options, how to use the `EXECUTABLE` clause.
+          #The first option, is to filter for the current user:""".stripMargin('#'))
       login("jake", "abc123")
       query("SHOW FUNCTIONS EXECUTABLE BY CURRENT USER YIELD *", ResultAssertions(p => {
         p.columns should contain theSameElementsAs Array("name", "category", "description", "signature", "isBuiltIn", "argumentDescription", "returnDescription", "aggregating", "rolesExecution", "rolesBoostedExecution")
@@ -175,7 +175,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
       }
       p("Notice that the two `roles` columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.")
       logout()
-      p("The second versions is to filter for a specific user:")
+      p("The second option, is to filter for a specific user:")
       query("SHOW FUNCTIONS EXECUTABLE BY jake", ResultAssertions(p => {
         p.columns should contain theSameElementsAs Array("name", "category", "description")
       })) {
