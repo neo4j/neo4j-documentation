@@ -1,0 +1,543 @@
+[[advanced-query-tuning-example]]
+= Advanced query tuning example
+
+
+[abstract]
+--
+This section describes some more subtle optimizations based on new native index capabilities
+--
+
+
+* <<advanced-query-tuning-example-introduction, Introduction>>
+* <<advanced-query-tuning-example-data-set, The data set>>
+* <<advanced-query-tuning-example-index-backed-property-lookup, Index-backed property-lookup>>
+** <<advanced-query-tuning-example-index-backed-property-lookup-aggregating-functions, Aggregating functions>>
+* <<advanced-query-tuning-example-index-backed-order-by, Index-backed order by>>
+** <<advanced-query-tuning-example-indexed-backed-order-by-min-and-max, `min()` and `max()` >>
+** <<advanced-query-tuning-example-indexed-backed-order-by-restrictions, Restrictions>>
+
+
+[[advanced-query-tuning-example-introduction]]
+== Introduction
+
+
+One of the most important and useful ways of optimizing Cypher queries involves creating appropriate indexes.
+This is described in more detail in <<administration-indexes-search-performance>>, and demonstrated in <<cypherdoc-basic-query-tuning-example>>.
+In summary, an index will be based on the combination of a `Label` and a `property`.
+Any Cypher query that searches for nodes with a specific label and some predicate on the property (equality, range or existence) will be planned to use
+the index if the cost planner deems that to be the most efficient solution.
+
+
+In order to benefit from enhancements provided by native indexes, it is useful to understand when _index-backed property lookup_ and _index-backed order by_ will come into play.
+In Neo4j 3.4 and earlier, the fact that the index contains the property value, and the results are returned in a specific order, was not used improve the performance of any later part of the query that might depend on the property value or result order.
+
+
+Let's explain how to use these features with a more advanced query tuning example.
+
+
+[NOTE]
+====
+If you are upgrading an existing store to {neo4j-version-exact}, it may be necessary to drop and re-create existing indexes.
+For information on native index support and upgrade considerations regarding indexes, see <<operations-manual#index-configuration-btree, Operations Manual -> Indexes>>.
+====
+
+
+[[advanced-query-tuning-example-data-set]]
+== The data set
+
+
+In this example we will demonstrate the impact native indexes can have on query performance under certain conditions.
+We'll use a movies dataset to illustrate this more advanced query tuning.
+
+
+
+
+
+
+
+
+ifndef::backend-pdf[]
+ifdef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
+++++
+<span class="setup-query"></span>
+++++
+endif::[]
+endif::[]
+ifndef::backend-pdf[]
+ifndef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
+++++
+<simpara role="setup-query"></simpara>
+++++
+endif::[]
+endif::[]
+
+
+[source, cypher, subs=attributes+]
+----
+LOAD CSV WITH HEADERS FROM '{csv-dir}/query-tuning/movies.csv' AS line
+MERGE (m:Movie { title: line.title })
+ON CREATE SET m.released = toInteger(line.released), m.tagline = line.tagline
+----
+
+
+
+
+ifndef::backend-pdf[]
+ifdef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
+++++
+<span class="setup-query"></span>
+++++
+endif::[]
+endif::[]
+ifndef::backend-pdf[]
+ifndef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
+++++
+<simpara role="setup-query"></simpara>
+++++
+endif::[]
+endif::[]
+
+
+[source, cypher, subs=attributes+]
+----
+LOAD CSV WITH HEADERS FROM '{csv-dir}/query-tuning/actors.csv' AS line
+MATCH (m:Movie { title: line.title })
+MERGE (p:Person { name: line.name })
+ON CREATE SET p.born = toInteger(line.born)
+MERGE (p)-[:ACTED_IN { roles:split(line.roles, ';')}]->(m)
+----
+
+
+
+
+ifndef::backend-pdf[]
+ifdef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
+++++
+<span class="setup-query"></span>
+++++
+endif::[]
+endif::[]
+ifndef::backend-pdf[]
+ifndef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
+++++
+<simpara role="setup-query"></simpara>
+++++
+endif::[]
+endif::[]
+
+
+[source, cypher, subs=attributes+]
+----
+LOAD CSV WITH HEADERS FROM '{csv-dir}/query-tuning/directors.csv' AS line
+MATCH (m:Movie { title: line.title })
+MERGE (p:Person { name: line.name })
+ON CREATE SET p.born = toInteger(line.born)
+MERGE (p)-[:DIRECTED]->(m)
+----
+
+
+
+
+[source,cypher]
+----
+CREATE INDEX FOR (p:Person)
+ON (p.name)
+----
+
+
+
+
+[source,cypher]
+----
+CALL db.awaitIndexes
+----
+
+
+
+
+[queryresult]
+----
++--------------------------------------------+
+| No data returned, and nothing was changed. |
++--------------------------------------------+
+----
+
+
+[[advanced-query-tuning-example-index-backed-property-lookup]]
+== Index-backed property-lookup
+
+
+Let’s say we want to write a query to find persons with the name 'Tom' that acted in a movie.
+
+
+[source,cypher]
+----
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE p.name STARTS WITH 'Tom'
+RETURN p.name, count(m)
+----
+
+
+
+
+[queryresult]
+----
++---------------------------+
+| p.name         | count(m) |
++---------------------------+
+| "Tom Cruise"   | 3        |
+| "Tom Hanks"    | 12       |
+| "Tom Skerritt" | 1        |
++---------------------------+
+3 rows
+----
+
+
+We have asked the database to return all the actors with the first name 'Tom'.
+There are three of them: _'Tom Cruise'_, _'Tom Skerritt'_ and _'Tom Hanks'_.
+In previous versions of Neo4j, the final clause `RETURN p.name` would cause the database to take the node `p` and look up its properties and return the value of the property `name`.
+With native indexes, however, we can leverage the fact that indexes store the property values.
+In this case, it means that the names can be looked up directly from the index.
+This allows Cypher to avoid the second call to the database to find the property, which can save time on very large queries.
+
+
+If we profile the above query, we see that the `NodeIndexSeekByRange` in the `Details` column contains `cache[p.name]`,
+which means that `p.name` is retrieved from the index.
+We can also see that the `OrderedAggregation` has no `DB Hits`, which means it does not have to access the database again.
+
+
+[source,cypher]
+----
+PROFILE
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE p.name STARTS WITH 'Tom'
+RETURN p.name, count(m)
+----
+
+
+
+
+[source]
+----
+Compiler CYPHER 4.3
+
+Planner COST
+
+Runtime INTERPRETED
+
+Runtime version 4.3
+
++-----------------------+--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| Operator              | Details                                                            | Estimated Rows | Rows | DB Hits | Memory (Bytes) | Page Cache Hits/Misses | Ordered by |
++-----------------------+--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| +ProduceResults       | `p.name`, `count(m)`                                               |              1 |    3 |       0 |                |                    0/0 | p.name ASC |
+| |                     +--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| +OrderedAggregation   | cache[p.name] AS `p.name`, count(m) AS `count(m)`                  |              1 |    3 |       0 |             24 |                    0/0 | p.name ASC |
+| |                     +--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| +Filter               | m:Movie                                                            |              1 |   16 |      16 |                |                    0/0 | p.name ASC |
+| |                     +--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| +Expand(All)          | (p)-[anon_16:ACTED_IN]->(m)                                        |              1 |   16 |      20 |                |                    0/0 | p.name ASC |
+| |                     +--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| +NodeIndexSeekByRange | p:Person(name) WHERE name STARTS WITH $autostring_0, cache[p.name] |              1 |    4 |       5 |                |                    0/0 | p.name ASC |
++-----------------------+--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+
+Total database accesses: 41, total allocated memory: 88
+
+----
+
+
+If we change the query, such that it can no longer use an index, we will see that there will be no `cache[p.name]` in the Variables, and that the
+`EagerAggregation` now has `DB Hits`, since it accesses the database again to retrieve the name.
+
+
+[source,cypher]
+----
+PROFILE
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+RETURN p.name, count(m)
+----
+
+
+
+
+[source]
+----
+Compiler CYPHER 4.3
+
+Planner COST
+
+Runtime INTERPRETED
+
+Runtime version 4.3
+
++-------------------+--------------------------------------------+----------------+------+---------+----------------+------------------------+
+| Operator          | Details                                    | Estimated Rows | Rows | DB Hits | Memory (Bytes) | Page Cache Hits/Misses |
++-------------------+--------------------------------------------+----------------+------+---------+----------------+------------------------+
+| +ProduceResults   | `p.name`, `count(m)`                       |             13 |  102 |       0 |                |                    0/0 |
+| |                 +--------------------------------------------+----------------+------+---------+----------------+------------------------+
+| +EagerAggregation | p.name AS `p.name`, count(m) AS `count(m)` |             13 |  102 |     172 |          15608 |                    0/0 |
+| |                 +--------------------------------------------+----------------+------+---------+----------------+------------------------+
+| +Filter           | p:Person                                   |            172 |  172 |     172 |                |                    0/0 |
+| |                 +--------------------------------------------+----------------+------+---------+----------------+------------------------+
+| +Expand(All)      | (m)<-[anon_16:ACTED_IN]-(p)                |            172 |  172 |     210 |                |                    0/0 |
+| |                 +--------------------------------------------+----------------+------+---------+----------------+------------------------+
+| +NodeByLabelScan  | m:Movie                                    |             38 |   38 |      39 |                |                    0/0 |
++-------------------+--------------------------------------------+----------------+------+---------+----------------+------------------------+
+
+Total database accesses: 593, total allocated memory: 15672
+
+----
+
+
+For non-native indexes there will still be a second database access to retrieve those values.
+
+
+Predicates that can be used to enable this optimization are:
+
+
+* Existence (e.g. `WHERE n.name IS NOT NULL`)
+* Equality (e.g. `WHERE n.name = 'Tom Hanks'`)
+* Range (e.g. `WHERE n.uid > 1000 AND n.uid < 2000`)
+* Prefix (e.g. `WHERE n.name STARTS WITH 'Tom'`)
+* Suffix (e.g. `WHERE n.name ENDS WITH 'Hanks'`)
+* Substring (e.g. `WHERE n.name CONTAINS 'a'`)
+* Several predicates of the above types combined using `OR`, given that all of them are on the same property (e.g. `WHERE n.prop < 10 OR n.prop = 'infinity'` )
+
+
+[NOTE]
+If there is an existence constraint on the property, no predicate is required to trigger the optimization. For example, `CREATE CONSTRAINT constraint_name ON (p:Person) ASSERT p.name IS NOT NULL`
+
+
+[[advanced-query-tuning-example-index-backed-property-lookup-aggregating-functions]]
+=== Aggregating functions
+
+
+For all <<query-functions-aggregating, built-in aggregating functions>> in Cypher, the _index-backed property-lookup_ optimization can be used even without a predicate.
+Consider this query which returns the number of distinct names of people in the movies dataset:
+
+
+[source,cypher]
+----
+PROFILE
+MATCH (p:Person)
+RETURN count(DISTINCT p.name) AS numberOfNames
+----
+
+
+
+
+[source]
+----
+Compiler CYPHER 4.3
+
+Planner COST
+
+Runtime INTERPRETED
+
+Runtime version 4.3
+
++-------------------+------------------------------------------------------+----------------+------+---------+----------------+------------------------+
+| Operator          | Details                                              | Estimated Rows | Rows | DB Hits | Memory (Bytes) | Page Cache Hits/Misses |
++-------------------+------------------------------------------------------+----------------+------+---------+----------------+------------------------+
+| +ProduceResults   | numberOfNames                                        |              1 |    1 |       0 |                |                    0/0 |
+| |                 +------------------------------------------------------+----------------+------+---------+----------------+------------------------+
+| +EagerAggregation | count(DISTINCT cache[p.name]) AS numberOfNames       |              1 |    1 |       0 |           9912 |                    0/0 |
+| |                 +------------------------------------------------------+----------------+------+---------+----------------+------------------------+
+| +NodeIndexScan    | p:Person(name) WHERE name IS NOT NULL, cache[p.name] |            125 |  125 |     126 |                |                    0/0 |
++-------------------+------------------------------------------------------+----------------+------+---------+----------------+------------------------+
+
+Total database accesses: 126, total allocated memory: 9976
+
+----
+
+
+Note that the `NodeIndexScan` in the `Variables` column contains `cache[p.name]` and that the `EagerAggregation` has no `DB Hits`.
+In this case, the semantics of aggregating functions works like an implicit existence predicate because `Person` nodes without the property `name` will not affect the result of an aggregation.
+
+
+[[advanced-query-tuning-example-index-backed-order-by]]
+== Index-backed order by
+
+
+Now consider the following refinement to the query:
+
+
+[source,cypher]
+----
+PROFILE
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+WHERE p.name STARTS WITH 'Tom'
+RETURN p.name, count(m)
+ORDER BY p.name
+----
+
+
+
+
+[source]
+----
+Compiler CYPHER 4.3
+
+Planner COST
+
+Runtime INTERPRETED
+
+Runtime version 4.3
+
++-----------------------+--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| Operator              | Details                                                            | Estimated Rows | Rows | DB Hits | Memory (Bytes) | Page Cache Hits/Misses | Ordered by |
++-----------------------+--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| +ProduceResults       | `p.name`, `count(m)`                                               |              1 |    3 |       0 |                |                    0/0 | p.name ASC |
+| |                     +--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| +OrderedAggregation   | cache[p.name] AS `p.name`, count(m) AS `count(m)`                  |              1 |    3 |       0 |             24 |                    0/0 | p.name ASC |
+| |                     +--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| +Filter               | m:Movie                                                            |              1 |   16 |      16 |                |                    0/0 | p.name ASC |
+| |                     +--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| +Expand(All)          | (p)-[anon_16:ACTED_IN]->(m)                                        |              1 |   16 |      20 |                |                    0/0 | p.name ASC |
+| |                     +--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+| +NodeIndexSeekByRange | p:Person(name) WHERE name STARTS WITH $autostring_0, cache[p.name] |              1 |    4 |       5 |                |                    0/0 | p.name ASC |
++-----------------------+--------------------------------------------------------------------+----------------+------+---------+----------------+------------------------+------------+
+
+Total database accesses: 41, total allocated memory: 88
+
+----
+
+
+We are asking for the results in ascending alphabetical order.
+The native index happens to store String properties in ascending alphabetical order, and Cypher knows this.
+In Neo4j 3.4 and earlier, Cypher would plan a `Sort` operation to sort the results, which means building a collection in memory and running a sort algorithm on it.
+For large result sets this can be expensive in terms of both memory and time.
+In Neo4j 3.5 and later, Cypher will recognize that the index already returns data in the correct order, and skip the `Sort` operation.
+
+
+The `Order` column describes the order of rows after each operator.
+We see that the `Order` column contains `p.name ASC` from the index seek operation, meaning that the rows are ordered by `p.name` in ascending order.
+
+
+_Index-backed order by_ can also be used for queries that expect their results is descending order, but with slightly lower performance.
+
+
+[NOTE]
+In cases where the Cypher planner is unable to remove the `Sort` operator, the planner can utilize knowledge of the `ORDER BY` clause to plan the `Sort` operator at a point in the plan with optimal cardinality.
+
+
+[[advanced-query-tuning-example-indexed-backed-order-by-min-and-max]]
+=== `min()` and `max()`
+
+
+For the `min` and `max` functions, the _index-backed order by_ optimization can be used to avoid aggregation and instead utilize the fact that the minimum/maximum value is the first/last one in a sorted index.
+Consider the following query which returns the fist actor in alphabetical order:
+
+
+[source,cypher]
+----
+PROFILE
+MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+RETURN min(p.name) AS name
+----
+
+
+
+
+[queryresult]
+----
++----------------+
+| name           |
++----------------+
+| "Aaron Sorkin" |
++----------------+
+1 row
+----
+
+
+Aggregations are usually using the `EagerAggregation` operation.
+This would mean scanning all nodes in the index to find the name that is first in alphabetic order.
+Instead, the query is planned with `Projection`, followed by `Limit`, followed by `Optional`.
+This will simply pick the first value from the index.
+
+
+[source]
+----
+Compiler CYPHER 4.3
+
+Planner COST
+
+Runtime INTERPRETED
+
+Runtime version 4.3
+
++-------------------+-----------------------------+----------------+------+---------+----------------+------------------------+
+| Operator          | Details                     | Estimated Rows | Rows | DB Hits | Memory (Bytes) | Page Cache Hits/Misses |
++-------------------+-----------------------------+----------------+------+---------+----------------+------------------------+
+| +ProduceResults   | name                        |              1 |    1 |       0 |                |                    0/0 |
+| |                 +-----------------------------+----------------+------+---------+----------------+------------------------+
+| +EagerAggregation | min(p.name) AS name         |              1 |    1 |     172 |             24 |                    0/0 |
+| |                 +-----------------------------+----------------+------+---------+----------------+------------------------+
+| +Filter           | p:Person                    |            172 |  172 |     172 |                |                    0/0 |
+| |                 +-----------------------------+----------------+------+---------+----------------+------------------------+
+| +Expand(All)      | (m)<-[anon_16:ACTED_IN]-(p) |            172 |  172 |     210 |                |                    0/0 |
+| |                 +-----------------------------+----------------+------+---------+----------------+------------------------+
+| +NodeByLabelScan  | m:Movie                     |             38 |   38 |      39 |                |                    0/0 |
++-------------------+-----------------------------+----------------+------+---------+----------------+------------------------+
+
+Total database accesses: 593, total allocated memory: 88
+
+----
+
+
+For large datasets, this can improve performance dramatically.
+
+
+_Index-backed order by_ can also be used for corresponding queries with the `max` function, but with slightly lower performance.
+
+
+[[advanced-query-tuning-example-indexed-backed-order-by-restrictions]]
+=== Restrictions
+
+
+The optimization can only work on native indexes.
+It does not work for predicates only querying for the spatial type `Point`.
+Predicates that can be used to enable this optimization are:
+
+
+* Existence (e.g.`WHERE n.name IS NOT NULL`)
+* Equality (e.g. `WHERE n.name = 'Tom Hanks'`)
+* Range (e.g. `WHERE n.uid > 1000 AND n.uid < 2000`)
+* Prefix (e.g. `WHERE n.name STARTS WITH 'Tom'`)
+* Suffix (e.g. `WHERE n.name ENDS WITH 'Hanks'`)
+* Substring (e.g. `WHERE n.name CONTAINS 'a'`)
+
+
+Predicates that will not work:
+
+
+* Several predicates combined using `OR`
+* Equality or range predicates querying for points (e.g. `WHERE n.place > point({ x: 1, y: 2 })`)
+* Spatial distance predicates (e.g. `WHERE distance(n.place, point({ x: 1, y: 2 })) < 2`)
+
+
+[NOTE]
+====
+If there is an existence constraint on the property, no predicate is required to trigger the optimization. 
+For example, `CREATE CONSTRAINT constraint_name ON (p:Person) ASSERT p.name IS NOT NULL`
+
+
+As of Neo4j {neo4j-version-exact}, predicates with parameters, such as `WHERE n.prop > $param`, can trigger _index-backed order by_.
+The only exception are queries with parameters of type `Point`.
+====
+
+
+ifndef::backend-pdf[]
+ifdef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
+++++
+<p class="cypherdoc-console"></p>
+++++
+endif::[]
+endif::[]
+ifndef::backend-pdf[]
+ifndef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
+++++
+<simpara role="cypherdoc-console"></simpara>
+++++
+endif::[]
+endif::[]
