@@ -383,14 +383,21 @@ Please note that _profiling your query uses more resources,_ so you should not p
 See <<execution-plans>> for a detailed explanation of each of the operators contained in an execution plan.
 
 [TIP]
+====
 Being explicit about what types and labels you expect relationships and nodes to have in your query helps Neo4j use the best possible statistical information, which leads to better execution plans.
 This means that when you know that a relationship can only be of a certain type, you should add that to the query.
 The same goes for labels, where declaring labels on both the start and end nodes of a relationship helps Neo4j find the best way to execute the statement.
+====
 
+//cypher/cypher-docs/src/docs/dev/query-tuning-indexes.asciidoc
 include::query-tuning-indexes.adoc[leveloffset=+1]
 
-include::../parsed-graphgists/query-tuning/basic-query-tuning-example.asciidoc[leveloffset=+1]
+//cypher/cypher-docs/src/docs/dev/basic-query-tuning-example.asciidoc
+include::basic-query-tuning-example.asciidoc[leveloffset=+1]
 
+//cypher/cypher-docs/src/docs/dev/advanced-query-tuning-example.asciidoc
 include::advanced-query-tuning-example.asciidoc[leveloffset=+1]
 
+//cypher/cypher-docs/src/test/scala/org/neo4j/cypher/docgen/UsingTest.scala
+//generates: cypher/cypher-docs/target/docs/dev/ql/query-using.adoc
 include::ql/query-using.adoc[leveloffset=+1]
