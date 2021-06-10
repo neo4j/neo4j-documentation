@@ -1,305 +1,823 @@
 [[cypherdoc-basic-query-tuning-example]]
-= Basic query tuning example =
+= Basic query tuning example
 
+[abstract]
+--
+This section describes how to profile a query, by using optimizations based on native index capabilities.
+--
 
 We'll start with a basic example to help you get the hang of profiling queries.
 The following examples will use a movies data set.
 
 
-Let's start by importing the data:
+[[basic-query-tuning-example-data-set]]
+== The data set
 
+In this section, examples demonstrates the impact native indexes can have on query performance under certain conditions.
+You will use a movies dataset to illustrate this more advanced query tuning.
 
+In this tutorial, you import data from the following CSV files:
 
+* _movies.csv_
+* _actors.csv_
+* _directors.csv_
 
+//cypher/cypher-docs/src/docs/graphgists/query-tuning/movies.csv
+//cypher/cypher-docs/src/docs/graphgists/query-tuning/actors.csv
+//cypher/cypher-docs/src/docs/graphgists/query-tuning/directors.csv
 
+=== Movies
 
+The _movies.csv_ file contains two columns `title`, `released` and `tagline`.
 
+The content of the _movies.csv_ file:
 
-ifndef::backend-pdf[]
-ifdef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
-++++
-<span class="setup-query"></span>
-++++
-endif::[]
-endif::[]
-ifndef::backend-pdf[]
-ifndef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
-++++
-<simpara role="setup-query"></simpara>
-++++
-endif::[]
-endif::[]
-
-
-[source, cypher, subs=attributes+]
+.movies.csv
+[source, csv, role="noheader"]
 ----
-LOAD CSV WITH HEADERS FROM '{csv-dir}/query-tuning/movies.csv' AS line
-MERGE (m:Movie { title: line.title })
-ON CREATE SET m.released = toInteger(line.released), m.tagline = line.tagline
+title,released,tagline
+Something's Gotta Give,1975,null
+Johnny Mnemonic,1995,The hottest data on earth. In the coolest head in town
+The Replacements,2000,"Pain heals, Chicks dig scars... Glory lasts forever"
+The Devil's Advocate,1997,Evil has its winning ways
+The Matrix Revolutions,2003,Everything that has a beginning has an end
+The Matrix Reloaded,2003,Free your mind
+The Matrix,1999,Welcome to the Real World
+The Matrix Revolutions,2003,Everything that has a beginning has an end
+The Matrix Reloaded,2003,Free your mind
+The Matrix,1999,Welcome to the Real World
+The Matrix Revolutions,2003,Everything that has a beginning has an end
+The Matrix Reloaded,2003,Free your mind
+The Matrix,1999,Welcome to the Real World
+V for Vendetta,2006,Freedom! Forever!
+Cloud Atlas,2012,Everything is connected
+The Matrix Revolutions,2003,Everything that has a beginning has an end
+The Matrix Reloaded,2003,Free your mind
+The Matrix,1999,Welcome to the Real World
+Speed Racer,2008,Speed has no limits
+Cloud Atlas,2012,Everything is connected
+The Matrix Revolutions,2003,Everything that has a beginning has an end
+The Matrix Reloaded,2003,Free your mind
+The Matrix,1999,Welcome to the Real World
+Ninja Assassin,2009,Prepare to enter a secret world of assassins
+V for Vendetta,2006,Freedom! Forever!
+Speed Racer,2008,Speed has no limits
+V for Vendetta,2006,Freedom! Forever!
+Speed Racer,2008,Speed has no limits
+Cloud Atlas,2012,Everything is connected
+The Matrix Revolutions,2003,Everything that has a beginning has an end
+The Matrix Reloaded,2003,Free your mind
+The Matrix,1999,Welcome to the Real World
+Ninja Assassin,2009,Prepare to enter a secret world of assassins
+V for Vendetta,2006,Freedom! Forever!
+Speed Racer,2008,Speed has no limits
+V for Vendetta,2006,Freedom! Forever!
+Ninja Assassin,2009,Prepare to enter a secret world of assassins
+Speed Racer,2008,Speed has no limits
+V for Vendetta,2006,Freedom! Forever!
+The Matrix Revolutions,2003,Everything that has a beginning has an end
+The Matrix Reloaded,2003,Free your mind
+The Matrix,1999,Welcome to the Real World
+The Matrix,1999,Welcome to the Real World
+That Thing You Do,1996,In every life there comes a time when that thing you dream becomes that thing you do
+The Devil's Advocate,1997,Evil has its winning ways
+The Devil's Advocate,1997,Evil has its winning ways
+The Devil's Advocate,1997,Evil has its winning ways
+Jerry Maguire,2000,The rest of his life begins now.
+Top Gun,1986,"I feel the need, the need for speed."
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+Something's Gotta Give,1975,null
+One Flew Over the Cuckoo's Nest,1975,"If he's crazy, what does that make you?"
+Hoffa,1992,He didn't want law. He wanted justice.
+As Good as It Gets,1997,A comedy from the heart that goes for the throat.
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+Apollo 13,1995,"Houston, we have a problem."
+Frost/Nixon,2008,400 million people were waiting for the truth.
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+Stand By Me,1995,"For some, it's the last real taste of innocence, and the first real taste of life. But for everyone, it's the time that memories are made of."
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+What Dreams May Come,1998,After life there is more. The end is just the beginning.
+As Good as It Gets,1997,A comedy from the heart that goes for the throat.
+Jerry Maguire,2000,The rest of his life begins now.
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+Hoffa,1992,He didn't want law. He wanted justice.
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+Ninja Assassin,2009,Prepare to enter a secret world of assassins
+V for Vendetta,2006,Freedom! Forever!
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+When Harry Met Sally,1998,At odds in life... in love on-line.
+Stand By Me,1995,"For some, it's the last real taste of innocence, and the first real taste of life. But for everyone, it's the time that memories are made of."
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+When Harry Met Sally,1998,At odds in life... in love on-line.
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+A Few Good Men,1992,"In the heart of the nation's capital, in a courthouse of the U.S. government, one man will stop at nothing to keep his honor, and one will stop at nothing to find the truth."
+Top Gun,1986,"I feel the need, the need for speed."
+Top Gun,1986,"I feel the need, the need for speed."
+Top Gun,1986,"I feel the need, the need for speed."
+Top Gun,1986,"I feel the need, the need for speed."
+When Harry Met Sally,1998,At odds in life... in love on-line.
+Joe Versus the Volcano,1990,"A story of love, lava and burning desire."
+Sleepless in Seattle,1993,"What if someone you never met, someone you never saw, someone you never knew was the only someone for you?"
+You've Got Mail,1998,At odds in life... in love on-line.
+Top Gun,1986,"I feel the need, the need for speed."
+Top Gun,1986,"I feel the need, the need for speed."
+Top Gun,1986,"I feel the need, the need for speed."
+Jerry Maguire,2000,The rest of his life begins now.
+Jerry Maguire,2000,The rest of his life begins now.
+Stand By Me,1995,"For some, it's the last real taste of innocence, and the first real taste of life. But for everyone, it's the time that memories are made of."
+Jerry Maguire,2000,The rest of his life begins now.
+Jerry Maguire,2000,The rest of his life begins now.
+The Green Mile,1999,Walk a mile you'll never forget.
+Jerry Maguire,2000,The rest of his life begins now.
+Jerry Maguire,2000,The rest of his life begins now.
+Jerry Maguire,2000,The rest of his life begins now.
+Jerry Maguire,2000,The rest of his life begins now.
+Jerry Maguire,2000,The rest of his life begins now.
+Jerry Maguire,2000,The rest of his life begins now.
+Stand By Me,1995,"For some, it's the last real taste of innocence, and the first real taste of life. But for everyone, it's the time that memories are made of."
+Stand By Me,1995,"For some, it's the last real taste of innocence, and the first real taste of life. But for everyone, it's the time that memories are made of."
+Stand By Me,1995,"For some, it's the last real taste of innocence, and the first real taste of life. But for everyone, it's the time that memories are made of."
+Stand By Me,1995,"For some, it's the last real taste of innocence, and the first real taste of life. But for everyone, it's the time that memories are made of."
+RescueDawn,2006,Based on the extraordinary true story of one man's fight for freedom
+Stand By Me,1995,"For some, it's the last real taste of innocence, and the first real taste of life. But for everyone, it's the time that memories are made of."
+Cast Away,2000,"At the edge of the world, his journey begins."
+Twister,1996,Don't Breathe. Don't Look Back.
+As Good as It Gets,1997,A comedy from the heart that goes for the throat.
+You've Got Mail,1998,At odds in life... in love on-line.
+As Good as It Gets,1997,A comedy from the heart that goes for the throat.
+As Good as It Gets,1997,A comedy from the heart that goes for the throat.
+What Dreams May Come,1998,After life there is more. The end is just the beginning.
+Snow Falling on Cedars,1999,First loves last. Forever.
+What Dreams May Come,1998,After life there is more. The end is just the beginning.
+What Dreams May Come,1998,After life there is more. The end is just the beginning.
+RescueDawn,2006,Based on the extraordinary true story of one man's fight for freedom
+Bicentennial Man,1999,One robot's 200 year journey to become an ordinary man.
+The Birdcage,1996,Come as you are
+What Dreams May Come,1998,After life there is more. The end is just the beginning.
+What Dreams May Come,1998,After life there is more. The end is just the beginning.
+Snow Falling on Cedars,1999,First loves last. Forever.
+Ninja Assassin,2009,Prepare to enter a secret world of assassins
+Snow Falling on Cedars,1999,First loves last. Forever.
+The Green Mile,1999,Walk a mile you'll never forget.
+Snow Falling on Cedars,1999,First loves last. Forever.
+Snow Falling on Cedars,1999,First loves last. Forever.
+You've Got Mail,1998,At odds in life... in love on-line.
+You've Got Mail,1998,At odds in life... in love on-line.
+RescueDawn,2006,Based on the extraordinary true story of one man's fight for freedom
+You've Got Mail,1998,At odds in life... in love on-line.
+A League of Their Own,1992,Once in a lifetime you get a chance to do something different.
+The Polar Express,2004,This Holiday Season… Believe
+Charlie Wilson's War,2007,A stiff drink. A little mascara. A lot of nerve. Who said they couldn't bring down the Soviet empire.
+Cast Away,2000,"At the edge of the world, his journey begins."
+Apollo 13,1995,"Houston, we have a problem."
+The Green Mile,1999,Walk a mile you'll never forget.
+The Da Vinci Code,2006,Break The Codes
+Cloud Atlas,2012,Everything is connected
+That Thing You Do,1996,In every life there comes a time when that thing you dream becomes that thing you do
+Joe Versus the Volcano,1990,"A story of love, lava and burning desire."
+Sleepless in Seattle,1993,"What if someone you never met, someone you never saw, someone you never knew was the only someone for you?"
+You've Got Mail,1998,At odds in life... in love on-line.
+That Thing You Do,1996,In every life there comes a time when that thing you dream becomes that thing you do
+Sleepless in Seattle,1993,"What if someone you never met, someone you never saw, someone you never knew was the only someone for you?"
+You've Got Mail,1998,At odds in life... in love on-line.
+When Harry Met Sally,1998,At odds in life... in love on-line.
+When Harry Met Sally,1998,At odds in life... in love on-line.
+Sleepless in Seattle,1993,"What if someone you never met, someone you never saw, someone you never knew was the only someone for you?"
+Sleepless in Seattle,1993,"What if someone you never met, someone you never saw, someone you never knew was the only someone for you?"
+Sleepless in Seattle,1993,"What if someone you never met, someone you never saw, someone you never knew was the only someone for you?"
+A League of Their Own,1992,Once in a lifetime you get a chance to do something different.
+Sleepless in Seattle,1993,"What if someone you never met, someone you never saw, someone you never knew was the only someone for you?"
+Joe Versus the Volcano,1990,"A story of love, lava and burning desire."
+The Birdcage,1996,Come as you are
+Joe Versus the Volcano,1990,"A story of love, lava and burning desire."
+When Harry Met Sally,1998,At odds in life... in love on-line.
+When Harry Met Sally,1998,At odds in life... in love on-line.
+When Harry Met Sally,1998,At odds in life... in love on-line.
+That Thing You Do,1996,In every life there comes a time when that thing you dream becomes that thing you do
+The Replacements,2000,"Pain heals, Chicks dig scars... Glory lasts forever"
+Unforgiven,1992,"It's a hell of a thing, killing a man"
+The Birdcage,1996,Come as you are
+The Replacements,2000,"Pain heals, Chicks dig scars... Glory lasts forever"
+The Replacements,2000,"Pain heals, Chicks dig scars... Glory lasts forever"
+The Replacements,2000,"Pain heals, Chicks dig scars... Glory lasts forever"
+RescueDawn,2006,Based on the extraordinary true story of one man's fight for freedom
+Twister,1996,Don't Breathe. Don't Look Back.
+RescueDawn,2006,Based on the extraordinary true story of one man's fight for freedom
+Charlie Wilson's War,2007,A stiff drink. A little mascara. A lot of nerve. Who said they couldn't bring down the Soviet empire.
+The Birdcage,1996,Come as you are
+Unforgiven,1992,"It's a hell of a thing, killing a man"
+Unforgiven,1992,"It's a hell of a thing, killing a man"
+Unforgiven,1992,"It's a hell of a thing, killing a man"
+Johnny Mnemonic,1995,The hottest data on earth. In the coolest head in town
+Johnny Mnemonic,1995,The hottest data on earth. In the coolest head in town
+Johnny Mnemonic,1995,The hottest data on earth. In the coolest head in town
+Johnny Mnemonic,1995,The hottest data on earth. In the coolest head in town
+Cloud Atlas,2012,Everything is connected
+Cloud Atlas,2012,Everything is connected
+Cloud Atlas,2012,Everything is connected
+The Da Vinci Code,2006,Break The Codes
+The Da Vinci Code,2006,Break The Codes
+The Da Vinci Code,2006,Break The Codes
+Apollo 13,1995,"Houston, we have a problem."
+Frost/Nixon,2008,400 million people were waiting for the truth.
+The Da Vinci Code,2006,Break The Codes
+V for Vendetta,2006,Freedom! Forever!
+V for Vendetta,2006,Freedom! Forever!
+V for Vendetta,2006,Freedom! Forever!
+Ninja Assassin,2009,Prepare to enter a secret world of assassins
+Speed Racer,2008,Speed has no limits
+V for Vendetta,2006,Freedom! Forever!
+Speed Racer,2008,Speed has no limits
+Speed Racer,2008,Speed has no limits
+Speed Racer,2008,Speed has no limits
+Speed Racer,2008,Speed has no limits
+Speed Racer,2008,Speed has no limits
+Ninja Assassin,2009,Prepare to enter a secret world of assassins
+Speed Racer,2008,Speed has no limits
+Ninja Assassin,2009,Prepare to enter a secret world of assassins
+The Green Mile,1999,Walk a mile you'll never forget.
+The Green Mile,1999,Walk a mile you'll never forget.
+Frost/Nixon,2008,400 million people were waiting for the truth.
+The Green Mile,1999,Walk a mile you'll never forget.
+Apollo 13,1995,"Houston, we have a problem."
+The Green Mile,1999,Walk a mile you'll never forget.
+The Green Mile,1999,Walk a mile you'll never forget.
+The Green Mile,1999,Walk a mile you'll never forget.
+Frost/Nixon,2008,400 million people were waiting for the truth.
+Frost/Nixon,2008,400 million people were waiting for the truth.
+Bicentennial Man,1999,One robot's 200 year journey to become an ordinary man.
+Frost/Nixon,2008,400 million people were waiting for the truth.
+One Flew Over the Cuckoo's Nest,1975,"If he's crazy, what does that make you?"
+Hoffa,1992,He didn't want law. He wanted justice.
+Hoffa,1992,He didn't want law. He wanted justice.
+Hoffa,1992,He didn't want law. He wanted justice.
+Apollo 13,1995,"Houston, we have a problem."
+A League of Their Own,1992,Once in a lifetime you get a chance to do something different.
+Twister,1996,Don't Breathe. Don't Look Back.
+Apollo 13,1995,"Houston, we have a problem."
+Charlie Wilson's War,2007,A stiff drink. A little mascara. A lot of nerve. Who said they couldn't bring down the Soviet empire.
+Twister,1996,Don't Breathe. Don't Look Back.
+Twister,1996,Don't Breathe. Don't Look Back.
+The Polar Express,2004,This Holiday Season… Believe
+Cast Away,2000,"At the edge of the world, his journey begins."
+One Flew Over the Cuckoo's Nest,1975,"If he's crazy, what does that make you?"
+Something's Gotta Give,1975,null
+Something's Gotta Give,1975,null
+Something's Gotta Give,1975,null
+Something's Gotta Give,1975,null
+Bicentennial Man,1999,One robot's 200 year journey to become an ordinary man.
+Charlie Wilson's War,2007,A stiff drink. A little mascara. A lot of nerve. Who said they couldn't bring down the Soviet empire.
+A League of Their Own,1992,Once in a lifetime you get a chance to do something different.
+A League of Their Own,1992,Once in a lifetime you get a chance to do something different.
+A League of Their Own,1992,Once in a lifetime you get a chance to do something different.
+A League of Their Own,1992,Once in a lifetime you get a chance to do something different.
+The Replacements,2000,"Pain heals, Chicks dig scars... Glory lasts forever"
+The Da Vinci Code,2006,Break The Codes
+The Birdcage,1996,Come as you are
+Unforgiven,1992,"It's a hell of a thing, killing a man"
+The Replacements,2000,"Pain heals, Chicks dig scars... Glory lasts forever"
+Cloud Atlas,2012,Everything is connected
+The Da Vinci Code,2006,Break The Codes
+The Replacements,2000,"Pain heals, Chicks dig scars... Glory lasts forever"
+----
+
+=== Actors
+
+The _actors.csv_ file contains two columns `title`, `roles`, `name` and `born`.
+
+The content of the _actors.csv_ file:
+
+.actors.csv
+[source, csv, role="noheader"]
+----
+title,roles,name,born
+Something's Gotta Give,Julian Mercer,Keanu Reeves,1964
+Johnny Mnemonic,Johnny Mnemonic,Keanu Reeves,1964
+The Replacements,Shane Falco,Keanu Reeves,1964
+The Devil's Advocate,Kevin Lomax,Keanu Reeves,1964
+The Matrix Revolutions,Neo,Keanu Reeves,1964
+The Matrix Reloaded,Neo,Keanu Reeves,1964
+The Matrix,Neo,Keanu Reeves,1964
+The Matrix Revolutions,Trinity,Carrie-Anne Moss,1967
+The Matrix Reloaded,Trinity,Carrie-Anne Moss,1967
+The Matrix,Trinity,Carrie-Anne Moss,1967
+The Matrix Revolutions,Morpheus,Laurence Fishburne,1961
+The Matrix Reloaded,Morpheus,Laurence Fishburne,1961
+The Matrix,Morpheus,Laurence Fishburne,1961
+V for Vendetta,V,Hugo Weaving,1960
+Cloud Atlas,Bill Smoke;Haskell Moore;Tadeusz Kesselring;Nurse Noakes;Boardman Mephi;Old Georgie,Hugo Weaving,1960
+The Matrix Revolutions,Agent Smith,Hugo Weaving,1960
+The Matrix Reloaded,Agent Smith,Hugo Weaving,1960
+The Matrix,Agent Smith,Hugo Weaving,1960
+The Matrix,Emil,Emil Eifrem,1978
+That Thing You Do,Tina,Charlize Theron,1975
+The Devil's Advocate,Mary Ann Lomax,Charlize Theron,1975
+The Devil's Advocate,John Milton,Al Pacino,1940
+Jerry Maguire,Jerry Maguire,Tom Cruise,1962
+Top Gun,Maverick,Tom Cruise,1962
+A Few Good Men,Lt. Daniel Kaffee,Tom Cruise,1962
+Something's Gotta Give,Harry Sanborn,Jack Nicholson,1937
+One Flew Over the Cuckoo's Nest,Randle McMurphy,Jack Nicholson,1937
+Hoffa,Hoffa,Jack Nicholson,1937
+As Good as It Gets,Melvin Udall,Jack Nicholson,1937
+A Few Good Men,Col. Nathan R. Jessup,Jack Nicholson,1937
+A Few Good Men,Lt. Cdr. JoAnne Galloway,Demi Moore,1962
+Apollo 13,Jack Swigert,Kevin Bacon,1958
+Frost/Nixon,Jack Brennan,Kevin Bacon,1958
+A Few Good Men,Capt. Jack Ross,Kevin Bacon,1958
+Stand By Me,Ace Merrill,Kiefer Sutherland,1966
+A Few Good Men,Lt. Jonathan Kendrick,Kiefer Sutherland,1966
+A Few Good Men,Cpl. Jeffrey Barnes,Noah Wyle,1971
+What Dreams May Come,Albert Lewis,Cuba Gooding Jr.,1968
+As Good as It Gets,Frank Sachs,Cuba Gooding Jr.,1968
+Jerry Maguire,Rod Tidwell,Cuba Gooding Jr.,1968
+A Few Good Men,Cpl. Carl Hammaker,Cuba Gooding Jr.,1968
+A Few Good Men,Lt. Sam Weinberg,Kevin Pollak,1957
+Hoffa,Frank Fitzsimmons,J.T. Walsh,1943
+A Few Good Men,Lt. Col. Matthew Andrew Markinson,J.T. Walsh,1943
+A Few Good Men,Pfc. Louden Downey,James Marshall,1967
+A Few Good Men,Dr. Stone,Christopher Guest,1948
+A Few Good Men,Man in Bar,Aaron Sorkin,1961
+Top Gun,Charlie,Kelly McGillis,1957
+Top Gun,Iceman,Val Kilmer,1959
+Top Gun,Goose,Anthony Edwards,1962
+Top Gun,Viper,Tom Skerritt,1933
+When Harry Met Sally,Sally Albright,Meg Ryan,1961
+Joe Versus the Volcano,DeDe;Angelica Graynamore;Patricia Graynamore,Meg Ryan,1961
+Sleepless in Seattle,Annie Reed,Meg Ryan,1961
+You've Got Mail,Kathleen Kelly,Meg Ryan,1961
+Top Gun,Carole,Meg Ryan,1961
+Jerry Maguire,Dorothy Boyd,Renee Zellweger,1969
+Jerry Maguire,Avery Bishop,Kelly Preston,1962
+Stand By Me,Vern Tessio,Jerry O'Connell,1974
+Jerry Maguire,Frank Cushman,Jerry O'Connell,1974
+Jerry Maguire,Bob Sugar,Jay Mohr,1970
+The Green Mile,Jan Edgecomb,Bonnie Hunt,1961
+Jerry Maguire,Laurel Boyd,Bonnie Hunt,1961
+Jerry Maguire,Marcee Tidwell,Regina King,1971
+Jerry Maguire,Ray Boyd,Jonathan Lipnicki,1990
+Stand By Me,Chris Chambers,River Phoenix,1970
+Stand By Me,Teddy Duchamp,Corey Feldman,1971
+Stand By Me,Gordie Lachance,Wil Wheaton,1972
+Stand By Me,Denny Lachance,John Cusack,1966
+RescueDawn,Admiral,Marshall Bell,1942
+Stand By Me,Mr. Lachance,Marshall Bell,1942
+Cast Away,Kelly Frears,Helen Hunt,1963
+Twister,Dr. Jo Harding,Helen Hunt,1963
+As Good as It Gets,Carol Connelly,Helen Hunt,1963
+You've Got Mail,Frank Navasky,Greg Kinnear,1963
+As Good as It Gets,Simon Bishop,Greg Kinnear,1963
+What Dreams May Come,Simon Bishop,Annabella Sciorra,1960
+Snow Falling on Cedars,Nels Gudmundsson,Max von Sydow,1929
+What Dreams May Come,The Tracker,Max von Sydow,1929
+What Dreams May Come,The Face,Werner Herzog,1942
+Bicentennial Man,Andrew Marin,Robin Williams,1951
+The Birdcage,Armand Goldman,Robin Williams,1951
+What Dreams May Come,Chris Nielsen,Robin Williams,1951
+Snow Falling on Cedars,Ishmael Chambers,Ethan Hawke,1970
+Ninja Assassin,Takeshi,Rick Yune,1971
+Snow Falling on Cedars,Kazuo Miyamoto,Rick Yune,1971
+The Green Mile,Warden Hal Moores,James Cromwell,1940
+Snow Falling on Cedars,Judge Fielding,James Cromwell,1940
+You've Got Mail,Patricia Eden,Parker Posey,1968
+You've Got Mail,Kevin Jackson,Dave Chappelle,1973
+RescueDawn,Duane,Steve Zahn,1967
+You've Got Mail,George Pappas,Steve Zahn,1967
+A League of Their Own,Jimmy Dugan,Tom Hanks,1956
+The Polar Express,Hero Boy;Father;Conductor;Hobo;Scrooge;Santa Claus,Tom Hanks,1956
+Charlie Wilson's War,Rep. Charlie Wilson,Tom Hanks,1956
+Cast Away,Chuck Noland,Tom Hanks,1956
+Apollo 13,Jim Lovell,Tom Hanks,1956
+The Green Mile,Paul Edgecomb,Tom Hanks,1956
+The Da Vinci Code,Dr. Robert Langdon,Tom Hanks,1956
+Cloud Atlas,Zachry;Dr. Henry Goose;Isaac Sachs;Dermot Hoggins,Tom Hanks,1956
+That Thing You Do,Mr. White,Tom Hanks,1956
+Joe Versus the Volcano,Joe Banks,Tom Hanks,1956
+Sleepless in Seattle,Sam Baldwin,Tom Hanks,1956
+You've Got Mail,Joe Fox,Tom Hanks,1956
+Sleepless in Seattle,Suzy,Rita Wilson,1956
+Sleepless in Seattle,Walter,Bill Pullman,1953
+Sleepless in Seattle,Greg,Victor Garber,1949
+A League of Their Own,Doris Murphy,Rosie O'Donnell,1962
+Sleepless in Seattle,Becky,Rosie O'Donnell,1962
+The Birdcage,Albert Goldman,Nathan Lane,1956
+Joe Versus the Volcano,Baw,Nathan Lane,1956
+When Harry Met Sally,Harry Burns,Billy Crystal,1948
+When Harry Met Sally,Marie,Carrie Fisher,1956
+When Harry Met Sally,Jess,Bruno Kirby,1949
+That Thing You Do,Faye Dolan,Liv Tyler,1977
+The Replacements,Annabelle Farrell,Brooke Langton,1970
+Unforgiven,Little Bill Daggett,Gene Hackman,1930
+The Birdcage,Sen. Kevin Keeley,Gene Hackman,1930
+The Replacements,Jimmy McGinty,Gene Hackman,1930
+The Replacements,Clifford Franklin,Orlando Jones,1968
+RescueDawn,Dieter Dengler,Christian Bale,1974
+Twister,Eddie,Zach Grenier,1954
+RescueDawn,Squad Leader,Zach Grenier,1954
+Unforgiven,English Bob,Richard Harris,1930
+Unforgiven,Bill Munny,Clint Eastwood,1930
+Johnny Mnemonic,Takahashi,Takeshi Kitano,1947
+Johnny Mnemonic,Jane,Dina Meyer,1968
+Johnny Mnemonic,J-Bone,Ice-T,1958
+Cloud Atlas,Luisa Rey;Jocasta Ayrs;Ovid;Meronym,Halle Berry,1966
+Cloud Atlas,Vyvyan Ayrs;Captain Molyneux;Timothy Cavendish,Jim Broadbent,1949
+The Da Vinci Code,Sir Leight Teabing,Ian McKellen,1939
+The Da Vinci Code,Sophie Neveu,Audrey Tautou,1976
+The Da Vinci Code,Silas,Paul Bettany,1971
+V for Vendetta,Evey Hammond,Natalie Portman,1981
+V for Vendetta,Eric Finch,Stephen Rea,1946
+V for Vendetta,High Chancellor Adam Sutler,John Hurt,1940
+Ninja Assassin,Ryan Maslow,Ben Miles,1967
+Speed Racer,Cass Jones,Ben Miles,1967
+V for Vendetta,Dascomb,Ben Miles,1967
+Speed Racer,Speed Racer,Emile Hirsch,1985
+Speed Racer,Pops,John Goodman,1960
+Speed Racer,Mom,Susan Sarandon,1946
+Speed Racer,Racer X,Matthew Fox,1966
+Speed Racer,Trixie,Christina Ricci,1980
+Ninja Assassin,Raizo,Rain,1982
+Speed Racer,Taejo Togokahn,Rain,1982
+Ninja Assassin,Mika Coretti,Naomie Harris,null
+The Green Mile,John Coffey,Michael Clarke Duncan,1957
+The Green Mile,Brutus 'Brutal' Howell,David Morse,1953
+Frost/Nixon,"James Reston, Jr.",Sam Rockwell,1968
+The Green Mile,'Wild Bill' Wharton,Sam Rockwell,1968
+Apollo 13,Ken Mattingly,Gary Sinise,1955
+The Green Mile,Burt Hammersmith,Gary Sinise,1955
+The Green Mile,Melinda Moores,Patricia Clarkson,1959
+Frost/Nixon,Richard Nixon,Frank Langella,1938
+Frost/Nixon,David Frost,Michael Sheen,1969
+Bicentennial Man,Rupert Burns,Oliver Platt,1960
+Frost/Nixon,Bob Zelnick,Oliver Platt,1960
+One Flew Over the Cuckoo's Nest,Martini,Danny DeVito,1944
+Hoffa,Robert 'Bobby' Ciaro,Danny DeVito,1944
+Hoffa,Peter 'Pete' Connelly,John C. Reilly,1965
+Apollo 13,Gene Kranz,Ed Harris,1950
+A League of Their Own,Bob Hinson,Bill Paxton,1955
+Twister,Bill Harding,Bill Paxton,1955
+Apollo 13,Fred Haise,Bill Paxton,1955
+Charlie Wilson's War,Gust Avrakotos,Philip Seymour Hoffman,1967
+Twister,Dustin 'Dusty' Davis,Philip Seymour Hoffman,1967
+Something's Gotta Give,Erica Barry,Diane Keaton,1946
+Charlie Wilson's War,Joanne Herring,Julia Roberts,1967
+A League of Their Own,'All the Way' Mae Mordabito,Madonna,1954
+A League of Their Own,Dottie Hinson,Geena Davis,1956
+A League of Their Own,Kit Keller,Lori Petty,1963
 ----
 
 
+=== Directors
 
+The _directors.csv_ file contains two columns `title`, `name` and `born`.
 
-ifndef::backend-pdf[]
-ifdef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
-++++
-<span class="setup-query"></span>
-++++
-endif::[]
-endif::[]
-ifndef::backend-pdf[]
-ifndef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
-++++
-<simpara role="setup-query"></simpara>
-++++
-endif::[]
-endif::[]
+The content of the _directors.csv_ file:
 
-
-[source, cypher, subs=attributes+]
+.directors.csv
+[source, csv, role="noheader"]
 ----
-LOAD CSV WITH HEADERS FROM '{csv-dir}/query-tuning/actors.csv' AS line
-MATCH (m:Movie { title: line.title })
-MERGE (p:Person { name: line.name })
+title,name,born
+Speed Racer,Andy Wachowski,1967
+Cloud Atlas,Andy Wachowski,1967
+The Matrix Revolutions,Andy Wachowski,1967
+The Matrix Reloaded,Andy Wachowski,1967
+The Matrix,Andy Wachowski,1967
+Speed Racer,Lana Wachowski,1965
+Cloud Atlas,Lana Wachowski,1965
+The Matrix Revolutions,Lana Wachowski,1965
+The Matrix Reloaded,Lana Wachowski,1965
+The Matrix,Lana Wachowski,1965
+The Devil's Advocate,Taylor Hackford,1944
+Ninja Assassin,James Marshall,1967
+V for Vendetta,James Marshall,1967
+When Harry Met Sally,Rob Reiner,1947
+Stand By Me,Rob Reiner,1947
+A Few Good Men,Rob Reiner,1947
+Top Gun,Tony Scott,1944
+Jerry Maguire,Cameron Crowe,1957
+As Good as It Gets,James L. Brooks,1940
+RescueDawn,Werner Herzog,1942
+What Dreams May Come,Vincent Ward,1956
+Snow Falling on Cedars,Scott Hicks,1953
+That Thing You Do,Tom Hanks,1956
+Sleepless in Seattle,Nora Ephron,1941
+You've Got Mail,Nora Ephron,1941
+Joe Versus the Volcano,John Patrick Stanley,1950
+The Replacements,Howard Deutch,1950
+Charlie Wilson's War,Mike Nichols,1931
+The Birdcage,Mike Nichols,1931
+Unforgiven,Clint Eastwood,1930
+Johnny Mnemonic,Robert Longo,1953
+Cloud Atlas,Tom Tykwer,1965
+Apollo 13,Ron Howard,1954
+Frost/Nixon,Ron Howard,1954
+The Da Vinci Code,Ron Howard,1954
+The Green Mile,Frank Darabont,1959
+Hoffa,Danny DeVito,1944
+Twister,Jan de Bont,1943
+The Polar Express,Robert Zemeckis,1951
+Cast Away,Robert Zemeckis,1951
+One Flew Over the Cuckoo's Nest,Milos Forman,1932
+Something's Gotta Give,Nancy Meyers,1949
+Bicentennial Man,Chris Columbus,1958
+A League of Their Own,Penny Marshall,1943
+----
+
+== Prerequisites
+
+The example uses the Linux or macOS tarball installation.
+It assumes that your current work directory is the _<neo4j-home>_ directory of the tarball installation, and the CSV files are placed in the default _import_ directory.
+
+[NOTE]
+====
+* For the default directory of other installations see, <<operations-manual#file-locations,Operations Manual -> File locations>>.
+* The import location can be configured with <<operations-manual#config_dbms.directories.import,Operations Manual -> `dbms.directories.import`>>.
+====
+
+== Importing the data
+
+Import the _movies.csv_ file::
+
+[source, cypher]
+----
+LOAD CSV WITH HEADERS FROM 'file:///movies.csv' AS line
+MERGE (m:Movie {title: line.title})
+ON CREATE SET
+  m.released = toInteger(line.released),
+  m.tagline = line.tagline
+----
+
+//[source, cypher-shell, role="nocopy,norun"]
+//----
+//bin/cypher-shell --database=neo4j --user=neo4j
+//"LOAD CSV WITH HEADERS FROM 'file:///movies.csv' AS line
+//MERGE (m:Movie {title: line.title})                                                                                                   
+//ON CREATE SET                      
+//  m.released = toInteger(line.released),
+//  m.tagline = line.tagline"             
+//----
+
+[source, output, role="noheader"]
+----
+Added 38 nodes, Set 114 properties, Added 38 labels
+----
+
+
+Import the _actors.csv_ file::
+
+[source, cypher]
+----
+LOAD CSV WITH HEADERS FROM 'file:///actors.csv' AS line
+MATCH (m:Movie {title: line.title})
+MERGE (p:Person {name: line.name})
 ON CREATE SET p.born = toInteger(line.born)
-MERGE (p)-[:ACTED_IN { roles:split(line.roles, ';')}]->(m)
+MERGE (p)-[:ACTED_IN {roles:split(line.roles, ';')}]->(m)
 ----
 
+//[source, cypher-shell, role="nocopy,norun"]
+//----
+//bin/cypher-shell --database=neo4j --user=neo4j
+//"LOAD CSV WITH HEADERS FROM 'file:///actors.csv' AS line
+//MATCH (m:Movie {title: line.title})
+//MERGE (p:Person {name: line.name})
+//ON CREATE SET p.born = toInteger(line.born)
+//MERGE (p)-[:ACTED_IN {roles:split(line.roles, ';')}]->(m)"
+//----
 
-
-
-ifndef::backend-pdf[]
-ifdef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
-++++
-<span class="setup-query"></span>
-++++
-endif::[]
-endif::[]
-ifndef::backend-pdf[]
-ifndef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
-++++
-<simpara role="setup-query"></simpara>
-++++
-endif::[]
-endif::[]
-
-
-[source, cypher, subs=attributes+]
+[source, output, role="noheader"]
 ----
-LOAD CSV WITH HEADERS FROM '{csv-dir}/query-tuning/directors.csv' AS line
-MATCH (m:Movie { title: line.title })
-MERGE (p:Person { name: line.name })
+Added 102 nodes, Created 172 relationships, Set 375 properties, Added 102 labels
+----
+
+Import the _directors.csv_ file::
+
+[source, cypher]
+----
+LOAD CSV WITH HEADERS FROM 'file:///directors.csv' AS line
+MATCH (m:Movie {title: line.title})
+MERGE (p:Person {name: line.name})
 ON CREATE SET p.born = toInteger(line.born)
 MERGE (p)-[:DIRECTED]->(m)
 ----
 
+//[source, cypher-shell, role="nocopy,norun"]
+//----
+//bin/cypher-shell --database=neo4j --user=neo4j
+//"LOAD CSV WITH HEADERS FROM 'file:///directors.csv' AS line
+//MATCH (m:Movie {title: line.title})
+//MERGE (p:Person {name: line.name})
+//ON CREATE SET p.born = toInteger(line.born)
+//MERGE (p)-[:DIRECTED]->(m)"
+//----
+
+[source, output, role="noheader"]
+----
+Added 23 nodes, Created 44 relationships, Set 46 properties, Added 23 labels
+----
 
 
+== Profile query
 
-Let's say we want to write a query to find *'Tom Hanks'*.
+Let's say you want to write a query to find *'Tom Hanks'*.
+
 The naive way of doing this would be to write the following:
 
-
-[source,cypher]
+[source, cypher]
 ----
-MATCH (p { name: 'Tom Hanks' })
+MATCH (p {name: 'Tom Hanks'})
 RETURN p
 ----
-
-
-
 
 This query will find the *'Tom Hanks'* node but as the number of nodes in the database increase it will become slower and slower.
 We can profile the query to find out why that is.
 
-
 You can learn more about the options for profiling queries in <<how-do-i-profile-a-query>> but in this case we're going to prefix our query with `PROFILE`:
 
-
-[source,cypher]
+[source, cypher]
 ----
 PROFILE
-MATCH (p { name: 'Tom Hanks' })
+MATCH (p {name: 'Tom Hanks'})
 RETURN p
 ----
 
+//[source, cypher-shell, role="nocopy,norun"]
+//----
+//bin/cypher-shell --database=neo4j --user=neo4j
+//"PROFILE
+//MATCH (p {name: 'Tom Hanks'})
+//RETURN p"
+//----
 
-
-
-[source]
+[source, output, role="noheader"]
 ----
-Compiler CYPHER 4.3
++-------------------------------------------+
+| p                                         |
++-------------------------------------------+
+| (:Person {name: "Tom Hanks", born: 1956}) |
++-------------------------------------------+
 
-Planner COST
++--------------------------------------------------------------------------------------------------------+
+| Plan      | Statement   | Version      | Planner | Runtime     | Time | DbHits | Rows | Memory (Bytes) |
++--------------------------------------------------------------------------------------------------------+
+| "PROFILE" | "READ_ONLY" | "CYPHER 4.3" | "COST"  | "PIPELINED" | 26   | 406    | 1    | 136            |
++--------------------------------------------------------------------------------------------------------+
 
-Runtime INTERPRETED
 
-Runtime version 4.3
++-----------------------+------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| Operator              | Details                | Estimated Rows | Rows | DB Hits | Memory (Bytes) | Page Cache Hits/Misses | Time (ms) | Other               |
++-----------------------+------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| +ProduceResults@neo4j | p                      |              8 |    1 |       3 |                |                        |           | Fused in Pipeline 0 |
+| |                     +------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| +Filter@neo4j         | p.name = $autostring_0 |              8 |    1 |     239 |                |                        |           | Fused in Pipeline 0 |
+| |                     +------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| +AllNodesScan@neo4j   | p                      |            163 |  163 |     164 |             72 |                    4/0 |     1.705 | Fused in Pipeline 0 |
++-----------------------+------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
 
-+-----------------+------------------------+----------------+------+---------+------------------------+
-| Operator        | Details                | Estimated Rows | Rows | DB Hits | Page Cache Hits/Misses |
-+-----------------+------------------------+----------------+------+---------+------------------------+
-| +ProduceResults | p                      |              8 |    1 |       0 |                    0/0 |
-| |               +------------------------+----------------+------+---------+------------------------+
-| +Filter         | p.name = $autostring_0 |              8 |    1 |     163 |                    0/0 |
-| |               +------------------------+----------------+------+---------+------------------------+
-| +AllNodesScan   | p                      |            163 |  163 |     164 |                    0/0 |
-+-----------------+------------------------+----------------+------+---------+------------------------+
-
-Total database accesses: 327, total allocated memory: 64
-
+1 row
 ----
-
 
 The first thing to keep in mind when reading execution plans is that you need to read from the bottom up.
 
-
 In that vein, starting from the last row, the first thing we notice is that the value in the `Rows` column seems high given there is only one node with the name property *'Tom Hanks'* in the database.
-If we look across to the `Operator` column we'll see that <<query-plan-all-nodes-scan, AllNodesScan>> has been used which means that the query planner scanned through all the nodes in the database.
+If we look across to the `Operator` column we'll see that <<query-plan-all-nodes-scan,AllNodesScan>> has been used which means that the query planner scanned through all the nodes in the database.
 
-
-// Moving up to the previous row we see the <<query-plan-filter, Filter>> operator which will check the `name` property on each of the nodes passed through by `AllNodesScan`.
-
+The <<query-plan-filter,Filter>> operator which will check the `name` property on each of the nodes passed through by `AllNodesScan`.
 
 This seems like an inefficient way of finding *'Tom Hanks'* given that we are looking at many nodes that aren't even people and therefore aren't what we're looking for.
 
-
 The solution to this problem is that whenever we're looking for a node we should specify a label to help the query planner narrow down the search space.
+
 For this query we'd need to add a `Person` label.
 
-
-[source,cypher]
+[source, cypher]
 ----
-MATCH (p:Person { name: 'Tom Hanks' })
+MATCH (p:Person {name: 'Tom Hanks'})
 RETURN p
 ----
 
-
-
-
 This query will be faster than the first one but as the number of people in our database increase we again notice that the query slows down.
 
-
 Again we can profile the query to work out why:
-
 
 [source,cypher]
 ----
 PROFILE
-MATCH (p:Person { name: 'Tom Hanks' })
+MATCH (p:Person {name: 'Tom Hanks'})
 RETURN p
 ----
 
+//[source, cypher-shell, role="nocopy,norun"]
+//----
+//bin/cypher-shell --database=neo4j --user=neo4j
+//"PROFILE
+//MATCH (p:Person {name: 'Tom Hanks'})
+//RETURN p"
+//----
 
-
-
-[source]
+[source, output, role="noheader"]
 ----
-Compiler CYPHER 4.3
++-------------------------------------------+
+| p                                         |
++-------------------------------------------+
+| (:Person {name: "Tom Hanks", born: 1956}) |
++-------------------------------------------+
 
-Planner COST
++--------------------------------------------------------------------------------------------------------+
+| Plan      | Statement   | Version      | Planner | Runtime     | Time | DbHits | Rows | Memory (Bytes) |
++--------------------------------------------------------------------------------------------------------+
+| "PROFILE" | "READ_ONLY" | "CYPHER 4.3" | "COST"  | "PIPELINED" | 33   | 379    | 1    | 136            |
++--------------------------------------------------------------------------------------------------------+
 
-Runtime INTERPRETED
 
-Runtime version 4.3
++------------------------+------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| Operator               | Details                | Estimated Rows | Rows | DB Hits | Memory (Bytes) | Page Cache Hits/Misses | Time (ms) | Other               |
++------------------------+------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| +ProduceResults@neo4j  | p                      |              6 |    1 |       3 |                |                        |           | Fused in Pipeline 0 |
+| |                      +------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| +Filter@neo4j          | p.name = $autostring_0 |              6 |    1 |     250 |                |                        |           | Fused in Pipeline 0 |
+| |                      +------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| +NodeByLabelScan@neo4j | p:Person               |            125 |  125 |     126 |             72 |                    4/0 |     0.901 | Fused in Pipeline 0 |
++------------------------+------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
 
-+------------------+------------------------+----------------+------+---------+------------------------+
-| Operator         | Details                | Estimated Rows | Rows | DB Hits | Page Cache Hits/Misses |
-+------------------+------------------------+----------------+------+---------+------------------------+
-| +ProduceResults  | p                      |              6 |    1 |       0 |                    0/0 |
-| |                +------------------------+----------------+------+---------+------------------------+
-| +Filter          | p.name = $autostring_0 |              6 |    1 |     125 |                    0/0 |
-| |                +------------------------+----------------+------+---------+------------------------+
-| +NodeByLabelScan | p:Person               |            125 |  125 |     126 |                    0/0 |
-+------------------+------------------------+----------------+------+---------+------------------------+
-
-Total database accesses: 251, total allocated memory: 64
-
+1 row
 ----
-
 
 This time the `Rows` value on the last row has reduced so we're not scanning some nodes that we were before which is a good start.
-The <<query-plan-node-by-label-scan, NodeByLabelScan>> operator indicates that we achieved this by first doing a linear scan of all the `Person` nodes in the database.
-
+The <<query-plan-node-by-label-scan,NodeByLabelScan>> operator indicates that we achieved this by first doing a linear scan of all the `Person` nodes in the database.
 
 Once we've done that we again scan through all those nodes using the `Filter` operator, comparing the name property of each one.
 
-
 This might be acceptable in some cases but if we're going to be looking up people by name frequently then we'll see better performance if we create an index on the `name` property for the `Person` label:
 
-
-[source,cypher]
+[source, cypher]
 ----
 CREATE INDEX FOR (p:Person)
 ON (p.name)
 ----
 
+[source, output, role="noheader"]
+----
+Added 1 indexes
+----
 
-
+[source, cypher]
+----
+CALL db.awaitIndexes
+----
 
 Now if we run the query again it will run more quickly:
 
-
-[source,cypher]
+[source, cypher]
 ----
-MATCH (p:Person { name: 'Tom Hanks' })
+MATCH (p:Person {name: 'Tom Hanks'})
 RETURN p
 ----
-
-
-
 
 Let's profile the query to see why that is:
 
-
-[source,cypher]
+[source, cypher]
 ----
 PROFILE
-MATCH (p:Person { name: 'Tom Hanks' })
+MATCH (p:Person {name: 'Tom Hanks'})
 RETURN p
 ----
 
+//[source, cypher-shell, role="nocopy,norun"]
+//----
+//bin/cypher-shell --database=neo4j --user=neo4j
+//"PROFILE
+//MATCH (p:Person {name: 'Tom Hanks'})
+//RETURN p"
+//----
 
-
-
-[source]
+[source, output, role="noheader"]
 ----
-Compiler CYPHER 4.3
++-------------------------------------------+
+| p                                         |
++-------------------------------------------+
+| (:Person {name: "Tom Hanks", born: 1956}) |
++-------------------------------------------+
 
-Planner COST
++--------------------------------------------------------------------------------------------------------+
+| Plan      | Statement   | Version      | Planner | Runtime     | Time | DbHits | Rows | Memory (Bytes) |
++--------------------------------------------------------------------------------------------------------+
+| "PROFILE" | "READ_ONLY" | "CYPHER 4.3" | "COST"  | "PIPELINED" | 17   | 5      | 1    | 136            |
++--------------------------------------------------------------------------------------------------------+
 
-Runtime INTERPRETED
 
-Runtime version 4.3
++-----------------------+-------------------------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| Operator              | Details                                   | Estimated Rows | Rows | DB Hits | Memory (Bytes) | Page Cache Hits/Misses | Time (ms) | Other               |
++-----------------------+-------------------------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| +ProduceResults@neo4j | p                                         |              1 |    1 |       3 |                |                        |           | Fused in Pipeline 0 |
+| |                     +-------------------------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
+| +NodeIndexSeek@neo4j  | p:Person(name) WHERE name = $autostring_0 |              1 |    1 |       2 |             72 |                    2/1 |     0.494 | Fused in Pipeline 0 |
++-----------------------+-------------------------------------------+----------------+------+---------+----------------+------------------------+-----------+---------------------+
 
-+-----------------+-------------------------------------------+----------------+------+---------+------------------------+
-| Operator        | Details                                   | Estimated Rows | Rows | DB Hits | Page Cache Hits/Misses |
-+-----------------+-------------------------------------------+----------------+------+---------+------------------------+
-| +ProduceResults | p                                         |              1 |    1 |       0 |                    0/0 |
-| |               +-------------------------------------------+----------------+------+---------+------------------------+
-| +NodeIndexSeek  | p:Person(name) WHERE name = $autostring_0 |              1 |    1 |       2 |                    0/0 |
-+-----------------+-------------------------------------------+----------------+------+---------+------------------------+
-
-Total database accesses: 2, total allocated memory: 64
-
+1 row
 ----
 
+Our execution plan is down to a single row and uses the <<query-plan-node-index-seek,Node Index Seek>> operator which does an index seek (see <<administration-indexes-search-performance>>) to find the appropriate node.
 
-Our execution plan is down to a single row and uses the <<query-plan-node-index-seek, Node Index Seek>> operator which does an index seek (see <<administration-indexes-search-performance>>) to find the appropriate node.
-
-
-ifndef::backend-pdf[]
-ifdef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
-++++
-<p class="cypherdoc-console"></p>
-++++
-endif::[]
-endif::[]
-ifndef::backend-pdf[]
-ifndef::backend-html,backend-html5,backend-xhtml11,backend-deckjs[]
-++++
-<simpara role="cypherdoc-console"></simpara>
-++++
-endif::[]
-endif::[]

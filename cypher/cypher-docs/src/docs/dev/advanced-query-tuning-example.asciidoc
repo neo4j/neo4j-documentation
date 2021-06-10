@@ -3,7 +3,7 @@
 
 [abstract]
 --
-This section describes some more subtle optimizations based on new native index capabilities
+This section describes some more subtle optimizations based on native index capabilities.
 --
 
 One of the most important and useful ways of optimizing Cypher queries involves creating appropriate indexes.
