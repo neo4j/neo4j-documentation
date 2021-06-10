@@ -34,10 +34,6 @@ In this tutorial, you import data from the following CSV files:
 * _actors.csv_
 * _directors.csv_
 
-//cypher/cypher-docs/src/docs/graphgists/query-tuning/movies.csv
-//cypher/cypher-docs/src/docs/graphgists/query-tuning/actors.csv
-//cypher/cypher-docs/src/docs/graphgists/query-tuning/directors.csv
-
 === Movies
 
 The _movies.csv_ file contains two columns `title`, `released` and `tagline`.
