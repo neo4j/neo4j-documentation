@@ -26,6 +26,7 @@ class PatternTest extends DocumentingTest {
 
   override def doc = new DocBuilder {
     doc("Patterns", "cypher-patterns")
+    synopsis("This section contains an overview of data patterns in Cypher.")
     initQueries(
       """CREATE (a {name: 'Anders'}),
                 |(b {name: 'Becky'}),
@@ -54,7 +55,7 @@ class PatternTest extends DocumentingTest {
       p(
         """Patterns and pattern-matching are at the very heart of Cypher, so being effective with Cypher requires a good understanding of patterns.""".stripMargin)
       p(
-        """Using patterns, you describe the shape of the data you're looking for.
+        """Using patterns, you describe the shape of the data you are looking for.
           |For example, in the `MATCH` clause you describe the shape with a pattern, and Cypher will figure out how to get that data for you.""".stripMargin)
       p("""The pattern describes the data using a form that is very similar to how one typically draws the shape of property graph data on a whiteboard: usually as circles (representing nodes) and arrows between them to represent relationships.""")
       p("""Patterns appear in multiple places in Cypher: in `MATCH`, `CREATE` and `MERGE` clauses, and in pattern expressions.

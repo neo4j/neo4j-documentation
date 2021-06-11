@@ -28,6 +28,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
 
   override def doc = new DocBuilder {
     doc("Operators", "query-operators")
+    synopsis("This section contains an overview of operators.")
     p(
       """* <<query-operators-summary, Operators at a glance>>
         |* <<query-operators-aggregation, Aggregation operators>>

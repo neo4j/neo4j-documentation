@@ -2,7 +2,9 @@
 = Constraints
 
 [abstract]
+--
 This section explains how to manage constraints used for ensuring data integrity.
+--
 
 * <<administration-constraints-introduction, Introduction>>
 * <<administration-constraints-syntax, Syntax>>
