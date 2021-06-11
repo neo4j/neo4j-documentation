@@ -1004,7 +1004,7 @@ ORDER BY name
 //ORDER BY name"
 //----
 
-[soruce, output, role="noheader"]
+[source, output, role="noheader"]
 ----
 +------------------------+
 | name           | count |
