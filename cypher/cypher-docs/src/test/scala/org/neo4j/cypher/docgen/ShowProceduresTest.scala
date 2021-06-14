@@ -27,6 +27,7 @@ class ShowProceduresTest extends DocumentingTest {
 
   override def doc: Document = new DocBuilder {
     doc("SHOW PROCEDURES", "query-listing-procedures")
+    synopsis("This section explains the `SHOW PROCEDURES` command.")
     p("Listing the available procedures can be done with `SHOW PROCEDURES`.")
     p("""
     #[NOTE]
