@@ -1,6 +1,11 @@
 [[execution-plan-operators-summary]]
 = Execution plan operators at a glance
 
+[abstract]
+--
+This section contains the exection plan operators at a glance.
+--
+
 //This is being included in:
 //neo4j-manual-modeling/cypherManual/docbook/content-map.xml
 
