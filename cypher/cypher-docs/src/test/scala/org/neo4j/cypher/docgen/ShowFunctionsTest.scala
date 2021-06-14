@@ -27,6 +27,7 @@ class ShowFunctionsTest extends DocumentingTest {
 
   override def doc: Document = new DocBuilder {
     doc("SHOW FUNCTIONS", "query-listing-functions")
+    synopsis("This section explains the `SHOW FUNCTIONS` command.")
     p("Listing the available functions can be done with `SHOW FUNCTIONS`.")
     p("""
     #[NOTE]

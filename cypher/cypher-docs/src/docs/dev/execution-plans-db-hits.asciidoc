@@ -1,6 +1,11 @@
 [[execution-plans-dbhits]]
 = Database hits (DbHits)
 
+[abstract]
+--
+This section contains an overview of actions that triggers database hits.
+--
+
 Each operator will send a request to the storage engine to do work such as retrieving or updating data.
 A _database hit_ is an abstract unit of this storage engine work.
 
