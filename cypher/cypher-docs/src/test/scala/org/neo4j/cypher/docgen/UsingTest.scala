@@ -28,12 +28,17 @@ class UsingTest extends DocumentingTest {
     doc("Planner hints and the USING keyword", "query-using")
     initQueries(
       """FOREACH(i IN range(1, 100) |
-        |  CREATE (:Scientist {born: 1800 + i})-[:RESEARCHED]->(:Science)<-[:INVENTED_BY {year: 530 + (i % 50)}]-(:Pioneer {born: 500 + (i % 50)})-[:LIVES_IN]->(:City)-[:PART_OF]->(:Country {formed: 400 + i})
+        |  CREATE (:Scientist {born: 1800 + i})-[:RESEARCHED]->
+        |         (:Science)<-[:INVENTED_BY {year: 530 + (i % 50)}]-
+        |         (:Pioneer {born: 500 + (i % 50)})-[:LIVES_IN]->
+        |         (:City)-[:PART_OF]->
+        |         (:Country {formed: 400 + i, name:'ACountry' + i})
         |)
         |""".stripMargin,
       "CREATE INDEX FOR (s:Scientist) ON (s.born)",
       "CREATE INDEX FOR (p:Pioneer) ON (p.born)",
       "CREATE INDEX FOR (c:Country) ON (c.formed)",
+      "CREATE INDEX FOR (c:Country) ON (c.name)",
       "CREATE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.year)",
     )
     synopsis("A planner hint is used to influence the decisions of the planner when building an execution plan for a query. Planner hints are specified in a query with the `USING` keyword.")
@@ -105,6 +110,26 @@ class UsingTest extends DocumentingTest {
           profileExecutionPlan()
         }
       }
+      section("Query using multiple index hints with a disjunction") {
+        p(
+          """Supplying multiple index hints can also be useful if the query contains a disjunction (`OR`) in the `WHERE` clause.
+            |This makes sure that all hinted indexes are used and the results are joined together with a `Union` and a `Distinct` afterwards.""".stripMargin)
+        query(
+          s"""
+             |MATCH (country:Country)
+             |USING INDEX country:Country(name)
+             |USING INDEX country:Country(formed)
+             |WHERE country.formed = 500 OR country.name STARTS WITH "A"
+             |RETURN *""",
+          assertPlan(AND(ShouldUseNodeIndexSeekOn("country"), ShouldUseUnionDistinct("country")))) {
+          profileExecutionPlan()
+        }
+        p(
+          """Cypher will usually provide a plan that uses all indexes for a disjunction without hints.
+            |It may, however, decide to plan a `NodeByLabelScan` instead, if the predicates appear to be not very selective.
+            |In this case, the index hints can be useful.
+            |""".stripMargin)
+      }
     }
     section("Scan hints", "query-using-scan-hint") {
       p("""If your query matches large parts of an index, it might be faster to scan the label or relationship type and filter out rows that do not match.
@@ -129,6 +154,26 @@ class UsingTest extends DocumentingTest {
           assertPlan(ShouldUseRelationshipTypeScanOn("i"))) {
           profileExecutionPlan()
         }
+      }
+      section("Query using multiple scan hints with a disjunction") {
+        p(
+          """Supplying multiple scan hints can also be useful if the query contains a disjunction (`OR`) in the `WHERE` clause.
+            |This makes sure that all involved label predicates are solved by a `NodeByLabelScan` and the results are joined together with a `Union` and a `Distinct` afterwards.""".stripMargin)
+        query(
+          s"""
+             |MATCH (person)
+             |USING SCAN person:Pioneer
+             |USING SCAN person:Scientist
+             |WHERE person:Pioneer OR person:Scientist
+             |RETURN *""",
+          assertPlan(AND(ShouldUseLabelScanOn("person"), ShouldUseUnionDistinct("person")))) {
+          profileExecutionPlan()
+        }
+        p(
+          """Cypher will usually provide a plan that uses scans for a disjunction without hints.
+            |It may, however, decide to plan an `AllNodeScan` followed by a `Filter` instead, if the label predicates appear to be not very selective.
+            |In this case, the scan hints can be useful.
+            |""".stripMargin)
       }
     }
     section("Join hints", "query-using-join-hint") {
@@ -215,6 +260,10 @@ class UsingTest extends DocumentingTest {
 
   case class ShouldUseJoinOn(variable: String) extends PlanAssertion {
     override def matcher: Matcher[String] = include regex s"Node(LeftOuter|RightOuter)?HashJoin\\s*\\|\\s*$variable".r
+  }
+
+  case class ShouldUseUnionDistinct(variable: String) extends PlanAssertion {
+    override def matcher: Matcher[String] = include("Union") and include regex s"Distinct\\s*\\|\\s*$variable".r
   }
 
   case object ShouldNotUseJoins extends PlanAssertion {
