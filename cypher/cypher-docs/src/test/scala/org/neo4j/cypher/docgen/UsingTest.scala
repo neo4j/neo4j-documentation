@@ -58,7 +58,9 @@ class UsingTest extends DocumentingTest {
           |Moreover, in some circumstances (albeit rarely) it is better not to use an index at all.""")
       p("""Neo4j can be forced to use a specific starting point through the `USING` keyword. This is called giving a planner hint.
           |There are four types of planner hints: index hints, scan hints, join hints, and the `PERIODIC COMMIT` query hint.""")
-      query(s"$matchString RETURN *", assertPlan(AND(OR(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), ShouldNotUseJoins))) {
+      query(
+        s"""$matchString
+           |RETURN *""", assertPlan(AND(OR(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), ShouldNotUseJoins))) {
         p(
           """The query above will be used in some of the examples on this page.
             |Without any hints, one index and no join is used.""")
@@ -236,7 +238,12 @@ class UsingTest extends DocumentingTest {
     }
   }.build()
 
-  private def matchString = "MATCH (s:Scientist {born: 1850})-[:RESEARCHED]->(sc:Science)<-[i:INVENTED_BY {year: 560}]-(p:Pioneer {born: 525})-[:LIVES_IN]->(c:City)-[:PART_OF]->(cc:Country {formed: 411})"
+  private def matchString =
+    """MATCH (s:Scientist {born: 1850})-[:RESEARCHED]->
+      |      (sc:Science)<-[i:INVENTED_BY {year: 560}]-
+      |      (p:Pioneer {born: 525})-[:LIVES_IN]->
+      |      (c:City)-[:PART_OF]->
+      |      (cc:Country {formed: 411})""".stripMargin
 
   sealed trait PlanAssertion {
     def matcher: Matcher[String]
