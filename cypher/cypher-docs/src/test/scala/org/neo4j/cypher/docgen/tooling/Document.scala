@@ -301,19 +301,15 @@ case class InitializationQuery(prettified: String,
                                database: Option[String] = None,
                                login: Option[(String, String)] = None) extends DatabaseQuery
 
-case class Query(queryText: String,
+case class Query(prettified: String,
                  assertions: QueryAssertions,
                  myInit: RunnableInitialization,
                  content: Content,
                  params: Seq[(String, Any)],
-                 preformatted: Boolean = false,
                  runtime: Option[String] = None,
                  database: Option[String] = None,
                  login: Option[(String, String)] = None) extends Content with DatabaseQuery {
 
-  //Prettifier is broken
-  //val prettified = if (preformatted) queryText else Prettifier(queryText).toString
-  val prettified = queryText
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
   override def asciiDoc(level: Int) = {

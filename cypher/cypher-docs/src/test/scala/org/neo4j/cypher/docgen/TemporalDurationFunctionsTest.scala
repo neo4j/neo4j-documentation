@@ -69,7 +69,7 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
       """.stripMargin)
       function("duration([ {years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds} ])", "A Duration.", ("A single map consisting of the following:", ""), ("years", "A numeric expression."), ("quarters", "A numeric expression."), ("months", "A numeric expression."), ("weeks", "A numeric expression."), ("days", "A numeric expression."), ("hours", "A numeric expression."), ("minutes", "A numeric expression."), ("seconds", "A numeric expression."), ("milliseconds", "A numeric expression."), ("microseconds", "A numeric expression."), ("nanoseconds", "A numeric expression."))
       considerations("At least one parameter must be provided (`duration()` and `duration({})` are invalid).", "There is no constraint on how many of the parameters are provided.", "It is possible to have a _Duration_ where the amount of a smaller unit (e.g. `seconds`) exceeds the threshold of a larger unit (e.g. `days`).", "The values of the parameters may be expressed as decimal fractions.", "The values of the parameters may be arbitrarily large.", "The values of the parameters may be negative.")
-      preformattedQuery(
+      query(
         """UNWIND [
           |  duration({days: 14, hours:16, minutes: 12}),
           |  duration({months: 5, days: 1.5}),
@@ -96,7 +96,7 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
         """`duration()` returns the _Duration_ value obtained by parsing a string representation of a temporal amount.""".stripMargin)
       function("duration(temporalAmount)", "A Duration.", ("temporalAmount", "A string representing a temporal amount."))
       considerations("`temporalAmount` must comply with either the <<cypher-temporal-specifying-durations, unit based form or date-and-time based form defined for _Durations_>>.")
-      preformattedQuery(
+      query(
         """UNWIND [
           |  duration("P14DT16H12M"),
           |  duration("P5M1.5D"),
@@ -133,7 +133,7 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
           "If `instant~1~` has a time component and `instant~2~` does not, the time component of `instant~2~` is assumed to be midnight, and vice versa.",
           "If `instant~1~` has a time zone component and `instant~2~` does not, the time zone component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
           "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  duration.between(date("1984-10-11"), date("1985-11-25")),
             |  duration.between(date("1985-11-25"), date("1984-10-11")),
@@ -167,7 +167,7 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
           "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
           "Any difference smaller than a whole month is disregarded.")
 
-        preformattedQuery(
+        query(
           """UNWIND [
             |  duration.inMonths(date("1984-10-11"), date("1985-11-25")),
             |  duration.inMonths(date("1985-11-25"), date("1984-10-11")),
@@ -198,7 +198,7 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
           "If `instant~1~` has a time zone component and `instant~2~` does not, the time zone component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
           "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
           "Any difference smaller than a whole day is disregarded.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  duration.inDays(date("1984-10-11"), date("1985-11-25")),
             |  duration.inDays(date("1985-11-25"), date("1984-10-11")),
@@ -228,7 +228,7 @@ class TemporalDurationsFunctionsTest extends DocumentingTest {
           "If `instant~1~` has a time component and `instant~2~` does not, the time component of `instant~2~` is assumed to be midnight, and vice versa.",
           "If `instant~1~` has a time zone component and `instant~2~` does not, the time zone component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.",
           "If `instant~1~` has a date component and `instant~2~` does not, the date component of `instant~2~` is assumed to be the same as that of `instant~1~`, and vice versa.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  duration.inSeconds(date("1984-10-11"), date("1984-10-12")),
             |  duration.inSeconds(date("1984-10-12"), date("1984-10-11")),
