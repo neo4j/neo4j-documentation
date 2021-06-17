@@ -265,7 +265,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`date()` returns a _Date_ value with the specified _year_, _month_ and _day_ component values.""".stripMargin)
         function("date({year [, month, day]})", "A Date.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."))
         considerations("The _day of the month_ component will default to `1` if `day` is omitted.", "The _month_ component will default to `1` if `month` is omitted.", "If `month` is omitted, `day` must also be omitted.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  date({year:1984, month:10, day:11}),
             |  date({year:1984, month:10}),
@@ -282,7 +282,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`date()` returns a _Date_ value with the specified _year_, _week_ and _dayOfWeek_ component values.""".stripMargin)
         function("date({year [, week, dayOfWeek]})", "A Date.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."))
         considerations("The _day of the week_ component will default to `1` if `dayOfWeek` is omitted.", "The _week_ component will default to `1` if `week` is omitted.", "If `week` is omitted, `dayOfWeek` must also be omitted.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  date({year:1984, week:10, dayOfWeek:3}),
             |  date({year:1984, week:10}),
@@ -299,7 +299,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`date()` returns a _Date_ value with the specified _year_, _quarter_ and _dayOfQuarter_ component values.""".stripMargin)
         function("date({year [, quarter, dayOfQuarter]})", "A Date.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."))
         considerations("The _day of the quarter_ component will default to `1` if `dayOfQuarter` is omitted.", "The _quarter_ component will default to `1` if `quarter` is omitted.", "If `quarter` is omitted, `dayOfQuarter` must also be omitted.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  date({year:1984, quarter:3, dayOfQuarter: 45}),
             |  date({year:1984, quarter:3}),
@@ -316,7 +316,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`date()` returns a _Date_ value with the specified _year_ and _ordinalDay_ component values.""".stripMargin)
         function("date({year [, ordinalDay]})", "A Date.", ("A single map consisting of the following:", ""), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."))
         considerations("The _ordinal day of the year_ component will default to `1` if `ordinalDay` is omitted.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  date({year:1984, ordinalDay:202}),
             |  date({year:1984})
@@ -335,7 +335,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>>.",
           "`temporalValue` must denote a valid date; i.e. a `temporalValue` denoting `30 February 2001` is invalid.",
           "`date(null)` returns null.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  date('2015-07-21'),
             |  date('2015-07'),
@@ -365,7 +365,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("date({date [, year, month, day, week, dayOfWeek, quarter, dayOfQuarter, ordinalDay]})", "A Date.", ("A single map consisting of the following:", ""), ("date", "A _Date_ value."), ("year", "An expression consisting of at <<cypher-temporal-year, least four digits>> that specifies the year."), ("month", "An integer between `1` and `12` that specifies the month."), ("day", "An integer between `1` and `31` that specifies the day of the month."), ("week", "An integer between `1` and `53` that specifies the week."), ("dayOfWeek", "An integer between `1` and `7` that specifies the day of the week."), ("quarter", "An integer between `1` and `4` that specifies the quarter."), ("dayOfQuarter", "An integer between `1` and `92` that specifies the day of the quarter."), ("ordinalDay", "An integer between `1` and `366` that specifies the ordinal day of the year."))
         considerations("If any of the optional parameters are provided, these will override the corresponding components of `date`.",
           "`date(dd)` may be written instead of `date({date: dd})`.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  date({year:1984, month:11, day:11}),
             |  localdatetime({year:1984, month:11, day:11, hour:12, minute:31, second:14}),
@@ -397,7 +397,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
           "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.",
           "If `temporalInstantValue` is not provided, it will be set to the current date, i.e. `date.truncate(unit)` is equivalent of `date.truncate(unit, date())`.")
-        preformattedQuery(
+        query(
           """WITH datetime({year:2017, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+01:00'}) AS d
             |RETURN date.truncate('millennium', d) AS truncMillenium,
             |       date.truncate('century', d) AS truncCentury,
@@ -537,7 +537,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.",
           "The least significant components in the set `year`, `month`, `day`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `month` and `day`, but specifying `year`, `month`, `day` and `minute` is not permitted.",
           "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 123, microsecond: 456, nanosecond: 789}),
             |  datetime({year:1984, month:10, day:11, hour:12, minute:31, second:14, millisecond: 645, timezone: '+01:00'}),
@@ -577,7 +577,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.",
           "The least significant components in the set `year`, `week`, `dayOfWeek`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `week` and `dayOfWeek`, but specifying `year`, `week`, `dayOfWeek` and `minute` is not permitted.",
           "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, millisecond: 645}),
             |  datetime({year:1984, week:10, dayOfWeek:3, hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}),
@@ -615,7 +615,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.",
           "The least significant components in the set `year`, `quarter`, `dayOfQuarter`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year`, `quarter` and `dayOfQuarter`, but specifying `year`, `quarter`, `dayOfQuarter` and `minute` is not permitted.",
           "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31, second:14, microsecond: 645876}),
             |  datetime({year:1984, quarter:3, dayOfQuarter: 45, hour:12, minute:31, second:14, timezone: '+01:00'}),
@@ -646,7 +646,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.",
           "The least significant components in the set `year`, `ordinalDay`, `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `year` and `ordinalDay`, but specifying `year`, `ordinalDay` and `minute` is not permitted.",
           "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  datetime({year:1984, ordinalDay:202, hour:12, minute:31, second:14, millisecond: 645}),
             |  datetime({year:1984, ordinalDay:202, hour:12, minute:31, second:14, timezone: '+01:00'}),
@@ -672,7 +672,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "The _timezone_ component will default to the configured default time zone if it is omitted.",
           "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.",
           "`datetime(null)` returns null.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  datetime('2015-07-21T21:40:32.142+0100'),
             |  datetime('2015-W30-2T214032.142Z'),
@@ -710,7 +710,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "Selecting a _DateTime_ as the `datetime` component and overwriting the time zone will adjust the local time to keep the same point in time.",
           "Selecting a _DateTime_ or _Time_ as the `time` component and overwriting the time zone will adjust the local time to keep the same point in time.")
         p("""The following query shows the various usages of `datetime({date [, year, ..., timezone]})`""")
-        preformattedQuery(
+        query(
           """WITH date({year:1984, month:10, day:11}) AS dd
             |RETURN datetime({date:dd, hour: 10, minute: 10, second: 10}) AS dateHHMMSS,
             |       datetime({date:dd, hour: 10, minute: 10, second: 10, timezone:'+05:00'}) AS dateHHMMSSTimezone,
@@ -726,7 +726,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         p("""The following query shows the various usages of `datetime({time [, year, ..., timezone]})`""")
-        preformattedQuery(
+        query(
           """WITH time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}) AS tt
             |RETURN datetime({year:1984, month:10, day:11, time:tt}) AS YYYYMMDDTime,
             |       datetime({year:1984, month:10, day:11, time:tt, timezone:'+05:00'}) AS YYYYMMDDTimeTimezone,
@@ -742,7 +742,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         p("""The following query shows the various usages of `datetime({date, time [, year, ..., timezone]})`; i.e. combining a _Date_ and a _Time_ value to create a single _DateTime_ value:""")
-        preformattedQuery(
+        query(
           """WITH date({year:1984, month:10, day:11}) AS dd,
             |     localtime({hour:12, minute:31, second:14, millisecond: 645}) AS tt
             |RETURN datetime({date:dd, time:tt}) as dateTime,
@@ -759,7 +759,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         p("""The following query shows the various usages of `datetime({datetime [, year, ..., timezone]})`""")
-        preformattedQuery(
+        query(
           """WITH datetime({year:1984, month:10, day:11, hour:12, timezone: 'Europe/Stockholm'}) AS dd
             |RETURN datetime({datetime:dd}) AS dateTime,
             |       datetime({datetime:dd, timezone:'+05:00'}) AS dateTimeTimezone,
@@ -813,7 +813,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
           "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.",
           "If `temporalInstantValue` is not provided, it will be set to the current date, time and timezone, i.e. `datetime.truncate(unit)` is equivalent of `datetime.truncate(unit, datetime())`.")
-        preformattedQuery(
+        query(
           """WITH datetime({year:2017, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '+03:00'}) AS d
             |RETURN datetime.truncate('millennium', d, {timezone:'Europe/Stockholm'}) AS truncMillenium,
             |       datetime.truncate('year', d, {day:5}) AS truncYear,
@@ -984,7 +984,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-date, dates>> and <<cypher-temporal-specify-time, times>>.",
           "`temporalValue` must denote a valid date and time; i.e. a `temporalValue` denoting `30 February 2001` is invalid.",
           "`localdatetime(null)` returns null.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  localdatetime('2015-07-21T21:40:32.142'),
             |  localdatetime('2015-W30-2T214032.142'),
@@ -1011,7 +1011,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         considerations("If any of the optional parameters are provided, these will override the corresponding components of `datetime`, `date` and/or `time`.",
           "`localdatetime(dd)` may be written instead of `localdatetime({datetime: dd})`.")
         p("""The following query shows the various usages of `localdatetime({date [, year, ..., nanosecond]})`""")
-        preformattedQuery(
+        query(
           """WITH date({year:1984, month:10, day:11}) AS dd
             |RETURN localdatetime({date:dd, hour: 10, minute: 10, second: 10}) AS dateHHMMSS,
             |       localdatetime({date:dd, day: 28, hour: 10, minute: 10, second: 10}) AS dateDDHHMMSS""".stripMargin, ResultAssertions((r) => {
@@ -1023,7 +1023,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         p("""The following query shows the various usages of `localdatetime({time [, year, ..., nanosecond]})`""")
-        preformattedQuery(
+        query(
           """WITH time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}) AS tt
             |RETURN localdatetime({year:1984, month:10, day:11, time:tt}) AS YYYYMMDDTime,
             |       localdatetime({year:1984, month:10, day:11, time:tt, second: 42}) AS YYYYMMDDTimeSS""".stripMargin, ResultAssertions((r) => {
@@ -1035,7 +1035,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         p("""The following query shows the various usages of `localdatetime({date, time [, year, ..., nanosecond]})`; i.e. combining a _Date_ and a _Time_ value to create a single _LocalDateTime_ value:""")
-        preformattedQuery(
+        query(
           """WITH date({year:1984, month:10, day:11}) AS dd,
             |     time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}) AS tt
             |RETURN localdatetime({date:dd, time:tt}) AS dateTime,
@@ -1048,7 +1048,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           resultTable()
         }
         p("""The following query shows the various usages of `localdatetime({datetime [, year, ..., nanosecond]})`""")
-        preformattedQuery(
+        query(
           """WITH datetime({year:1984, month:10, day:11, hour:12, timezone: '+01:00'}) as dd
             |RETURN localdatetime({datetime:dd}) as dateTime,
             |       localdatetime({datetime:dd, day: 28, second: 42}) as dateTimeDDSS""".stripMargin, ResultAssertions((r) => {
@@ -1075,7 +1075,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
           "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.",
           "If `temporalInstantValue` is not provided, it will be set to the current date and time, i.e. `localdatetime.truncate(unit)` is equivalent of `localdatetime.truncate(unit, localdatetime())`.")
-        preformattedQuery(
+        query(
           """WITH localdatetime({year:2017, month:11, day:11, hour:12, minute:31, second:14, nanosecond: 645876123}) AS d
             |RETURN localdatetime.truncate('millennium', d) AS truncMillenium,
             |       localdatetime.truncate('year', d, {day:2}) AS truncYear,
@@ -1192,7 +1192,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           """`localtime()` returns a _LocalTime_ value with the specified _hour_, _minute_, _second_, _millisecond_, _microsecond_ and _nanosecond_ component values.""".stripMargin)
         function("localtime({hour [, minute, second, millisecond, microsecond, nanosecond]})", "A LocalTime.", ("A single map consisting of the following:", ""), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
         considerations("The _hour_ component will default to `0` if `hour` is omitted.", "The _minute_ component will default to `0` if `minute` is omitted.", "The _second_ component will default to `0` if `second` is omitted.", "Any missing `millisecond`, `microsecond` or `nanosecond` values will default to `0`.", "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.", "The least significant components in the set `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `hour` and `minute`, but specifying `hour` and `second` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  localtime({hour:12, minute:31, second:14, nanosecond: 789, millisecond: 123, microsecond: 456}),
             |  localtime({hour:12, minute:31, second:14}),
@@ -1215,7 +1215,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         considerations("`temporalValue` must comply with the format defined for <<cypher-temporal-specify-time, times>>.",
           "`temporalValue` must denote a valid time; i.e. a `temporalValue` denoting `13:46:64` is invalid.",
           "`localtime(null)` returns null.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  localtime('21:40:32.142'),
             |  localtime('214032.142'),
@@ -1241,7 +1241,7 @@ class TemporalFunctionsTest extends DocumentingTest {
         function("localtime({time [, hour, ..., nanosecond]})", "A LocalTime.", ("A single map consisting of the following:", ""), ("time", "A _Time_ value."), ("hour", "An integer between `0` and `23` that specifies the hour of the day."), ("minute", "An integer between `0` and `59` that specifies the number of minutes."), ("second", "An integer between `0` and `59` that specifies the number of seconds."), ("millisecond", "An integer between `0` and `999` that specifies the number of milliseconds."), ("microsecond", "An integer between `0` and `999,999` that specifies the number of microseconds."), ("nanosecond", "An integer between `0` and `999,999,999` that specifies the number of nanoseconds."))
         considerations("If any of the optional parameters are provided, these will override the corresponding components of `time`.",
           "`localtime(tt)` may be written instead of `localtime({time: tt})`.")
-        preformattedQuery(
+        query(
           """WITH time({hour:12, minute:31, second:14, microsecond: 645876, timezone: '+01:00'}) AS tt
             |RETURN localtime({time:tt}) AS timeOnly,
             |       localtime({time:tt, second: 42}) AS timeSS""".stripMargin, ResultAssertions((r) => {
@@ -1267,7 +1267,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "Any component that is provided in `mapOfComponents` must be less significant than `unit`; i.e. if `unit` is 'second', `mapOfComponents` cannot contain information pertaining to a _minute_.", "Any component that is not contained in `mapOfComponents` and which is less significant than `unit` will be set to its <<cypher-temporal-accessing-components-temporal-instants, minimal value>>.",
           "If `mapOfComponents` is not provided, all components of the returned value which are less significant than `unit` will be set to their default values.",
           "If `temporalInstantValue` is not provided, it will be set to the current time, i.e. `localtime.truncate(unit)` is equivalent of `localtime.truncate(unit, localtime())`.")
-        preformattedQuery(
+        query(
           """WITH time({hour:12, minute:31, second:14, nanosecond: 645876123, timezone: '-01:00'}) AS t
             |RETURN localtime.truncate('day', t) AS truncDay,
             |       localtime.truncate('hour', t) AS truncHour,
@@ -1388,7 +1388,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "The _timezone_ component will default to the configured default time zone if `timezone` is omitted.",
           "If `millisecond`, `microsecond` and `nanosecond` are given in combination (as part of the same set of parameters), the individual values must be in the range `0` to `999`.",
           "The least significant components in the set `hour`, `minute`, and `second` may be omitted; i.e. it is possible to specify only `hour` and `minute`, but specifying `hour` and `second` is not permitted.", "One or more of `millisecond`, `microsecond` and `nanosecond` can only be specified as long as `second` is also specified.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  time({hour:12, minute:31, second:14, millisecond: 123, microsecond: 456, nanosecond: 789}),
             |  time({hour:12, minute:31, second:14, nanosecond: 645876123}),
@@ -1416,7 +1416,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "The _timezone_ component will default to the configured default time zone if it is omitted.",
           "`temporalValue` must denote a valid time; i.e. a `temporalValue` denoting `15:67` is invalid.",
           "`time(null)` returns null.")
-        preformattedQuery(
+        query(
           """UNWIND [
             |  time('21:40:32.142+0100'),
             |  time('214032.142Z'),
@@ -1452,7 +1452,7 @@ class TemporalFunctionsTest extends DocumentingTest {
           "`time(tt)` may be written instead of `time({time: tt})`.",
           "Selecting a _Time_ or _DateTime_ value as the `time` component also selects its time zone. If a _LocalTime_ or _LocalDateTime_ is selected instead, the default time zone is used. In any case, the time zone can be overridden explicitly.",
           "Selecting a _DateTime_ or _Time_ as the `time` component and overwriting the time zone will adjust the local time to keep the same point in time.")
-        preformattedQuery(
+        query(
           """WITH localtime({hour:12, minute:31, second:14, microsecond: 645876}) AS tt
             |RETURN time({time:tt}) AS timeOnly,
             |       time({time:tt, timezone:'+05:00'}) AS timeTimezone,

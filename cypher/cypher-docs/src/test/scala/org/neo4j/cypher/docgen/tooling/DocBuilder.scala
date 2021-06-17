@@ -222,14 +222,8 @@ trait DocBuilder {
   def important(f: => Unit) = inScope(AdmonitionScope(Important.apply), f)
 
   def query(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(innerBlockOfCode: => Unit): Unit =
-    inScope(AutoformattedQueryScope(q.stripMargin, assertions, parameters), {
-      innerBlockOfCode
-      consoleData() // Always append console data
-    })
-
-  def preformattedQuery(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(f: => Unit): Unit =
     inScope(PreformattedQueryScope(q.stripMargin, assertions, parameters), {
-      f
+      innerBlockOfCode
       consoleData() // Always append console data
     })
 }
@@ -315,12 +309,8 @@ object DocBuilder {
     def params: Seq[(String, Any)]
   }
 
-  case class AutoformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
-    override def toContent = Query(queryText, assertions, init, content, params, preformatted = false, runtime = _runtime, database = _database, login = _login)
-  }
-
   case class PreformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
-    override def toContent = Query(queryText, assertions, init, content, params, preformatted = true, runtime = _runtime, database = _database, login = _login)
+    override def toContent = Query(queryText, assertions, init, content, params, runtime = _runtime, database = _database, login = _login)
   }
 }
 

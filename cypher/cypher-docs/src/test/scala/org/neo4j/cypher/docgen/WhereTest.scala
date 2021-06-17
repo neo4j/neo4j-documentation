@@ -348,7 +348,7 @@ class WhereTest extends DocumentingTest {
     section("Using existential subqueries in `WHERE`", "existential-subqueries") {
       section("Simple existential subquery", "existential-subquery-simple-case") {
         p("""Variables introduced by the outside scope can be used in the inner `MATCH` clause. The following example shows this:""")
-        preformattedQuery("""MATCH (person:Person)
+        query("""MATCH (person:Person)
                             #WHERE EXISTS {
                             #  MATCH (person)-[:HAS_DOG]->(:Dog)
                             #}
@@ -362,7 +362,7 @@ class WhereTest extends DocumentingTest {
       section("Existential subquery with `WHERE` clause", "existential-subquery-with-where") {
         p("""A `WHERE` clause can be used in conjunction to the `MATCH`.
             #Variables introduced by the `MATCH` clause and the outside scope can be used in this scope.""".stripMargin('#'))
-        preformattedQuery("""MATCH (person:Person)
+        query("""MATCH (person:Person)
                             #WHERE EXISTS {
                             #  MATCH (person)-[:HAS_DOG]->(dog:Dog)
                             #  WHERE person.name = dog.name
@@ -378,7 +378,7 @@ class WhereTest extends DocumentingTest {
         p("""Existential subqueries can be nested like the following example shows.
             #The nesting also affects the scopes.
             #That means that it is possible to access all variables from inside the subquery which are either on the outside scope or defined in the very same subquery.""".stripMargin('#'))
-        preformattedQuery("""MATCH (person:Person)
+        query("""MATCH (person:Person)
                             #WHERE EXISTS {
                             #  MATCH (person)-[:HAS_DOG]->(dog:Dog)
                             #  WHERE EXISTS {
