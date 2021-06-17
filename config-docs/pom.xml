@@ -143,7 +143,6 @@
                                     <arg line="-o ${project.build.directory}/docs/ops/configuration-attributes.asciidoc" />
                                     <arg value="org.neo4j.server.configuration.ServerSettings" />
                                     <arg value="org.neo4j.configuration.GraphDatabaseSettings" />
-                                    <arg value="org.neo4j.dbms.DatabaseManagementSystemSettings" />
                                     <arg value="com.neo4j.configuration.MetricsSettings" />
                                     <arg value="com.neo4j.configuration.CausalClusteringSettings" />
                                     <arg value="com.neo4j.server.enterprise.EnterpriseServerSettings" />
