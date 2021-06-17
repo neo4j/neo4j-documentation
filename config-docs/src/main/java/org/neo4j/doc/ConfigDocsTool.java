@@ -103,7 +103,7 @@ public class ConfigDocsTool {
                 // If true, no filter is added. If false, require {@code SettingImpl<Object#isInternal()} to be false.
                 case "internal":
                     return null == e.getValue() || "true".equalsIgnoreCase(e.getValue())
-                            ? Stream.empty()
+                            ? Stream.of( SettingImpl::internal )
                             : Stream.of(v -> !v.internal());
                 // Include only the setting matching this name.
                 case "name":
