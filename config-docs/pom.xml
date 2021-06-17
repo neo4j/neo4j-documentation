@@ -107,6 +107,18 @@
                                     <arg file="${project.build.directory}/docs/ops/all-settings.adoc" />
                                 </java>
 
+                                <!-- All internal settings -->
+                                <java classname="org.neo4j.doc.ConfigDocsTool"
+                                      classpathref="maven.compile.classpath" failonerror="true" fork="true">
+                                    <arg value="--id=settings-reference-internal-settings" />
+                                    <arg value="--id-prefix=internal_" />
+                                    <arg value="--title=Internal settings" />
+                                    <arg value="--deprecated=true" />
+                                    <arg value="--unsupported" />
+                                    <arg value="--internal=true" />
+                                    <arg file="${project.build.directory}/docs/ops/internal-settings.adoc" />
+                                </java>
+
                                 <!-- All deprecated settings -->
                                 <java classname="org.neo4j.doc.ConfigDocsTool"
                                       classpathref="maven.compile.classpath" failonerror="true" fork="true">
