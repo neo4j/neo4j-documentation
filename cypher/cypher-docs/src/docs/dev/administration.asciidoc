@@ -36,11 +36,6 @@ These include index and constraint management commands.
 ** <<administration-indexes-fulltext-search-query, Query full-text indexes>>
 ** <<administration-indexes-fulltext-search-drop, Drop full-text indexes>>
 
-* <<administration-constraints, Constraints>>
-** <<administration-constraints-introduction, Introduction>>
-** <<administration-constraints-syntax, Syntax>>
-** <<administration-constraints-examples, Examples>>
-
 * <<administration-security, Security>>
 ** <<administration-security-introduction, Introduction>>
 ** <<administration-security-syntax-rules, Syntax summaries>>
@@ -60,7 +55,5 @@ include::ql/administration/administration-databases.adoc[leveloffset=+1]
 include::ql/administration/indexes-for-search-performance/index.asciidoc[leveloffset=+1]
 
 include::ql/administration/indexes/administration-indexes-fulltext-search.adoc[leveloffset=+1]
-
-include::ql/administration/constraints/index.asciidoc[leveloffset=+1]
 
 include::ql/administration/security/index.asciidoc[leveloffset=+1]
