@@ -1,0 +1,65 @@
+[[administration-constraints]]
+= Constraints
+
+[abstract]
+--
+This section explains how to manage constraints used for ensuring data integrity.
+--
+
+The following constraint types are available:
+
+*Unique node property constraints*::
+Unique property constraints ensure that property values are unique for all nodes with a specific label.
+Unique constraints do not mean that all nodes have to have a unique value for the properties -- nodes without the property are not subject to this rule.
+
+*[enterprise-edition]#Node property existence constraints#*::
+Node property existence constraints ensure that a property exists for all nodes with a specific label.
+Queries that try to create new nodes of the specified label, but without this property, will fail.
+The same is true for queries that try to remove the mandatory property.
+
+*[enterprise-edition]#Relationship property existence constraints#*::
+Property existence constraints ensure that a property exists for all relationships with a specific type.
+All queries that try to create relationships of the specified type, but without this property, will fail.
+The same is true for queries that try to remove the mandatory property.
+
+*[enterprise-edition]#Node key constraints#*::
+Node key constraints ensure that, for a given label and set of properties:
++
+[lowerroman]
+. All the properties exist on all the nodes with that label.
+. The combination of the property values is unique.
+
++
+Queries attempting to do any of the following will fail:
+
+* Create new nodes without all the properties or where the combination of property values is not unique.
+* Remove one of the mandatory properties.
+* Update the properties so that the combination of property values is no longer unique.
+
+
+[NOTE]
+Node key constraints, node property existence constraints and relationship property existence constraints are only available in Neo4j Enterprise Edition.
+Databases containing one of these constraint types cannot be opened using Neo4j Community Edition.
+
+Creating a constraint has the following implications on indexes:
+
+* Adding a unique property constraint on a property will also add a <<administration-indexes-create-a-single-property-index-for-nodes, single-property index>> on that property, so such an index cannot be added separately.
+* Adding a node key constraint for a set of properties will also add a <<administration-indexes-create-a-composite-index-for-nodes, composite index>> on those properties, so such an index cannot be added separately.
+* Cypher will use these indexes for lookups just like other indexes.
+  Refer to <<administration-indexes-search-performance>> for more details on indexes.
+* If a unique property constraint is dropped and the single-property index on the property is still required, the index will need to be created explicitly.
+* If a node key constraint is dropped and the composite-property index on the properties is still required, the index will need to be created explicitly.
+
+Additionally, the following is true for constraints:
+
+* A given label can have multiple constraints, and unique and property existence constraints can be combined on the same property.
+* Adding constraints is an atomic operation that can take a while -- all existing data has to be scanned before Neo4j can turn the constraint 'on'.
+* Best practice is to give the constraint a name when it is created.
+If the constraint is not explicitly named, it will get an auto-generated name.
+* The constraint name must be unique among both indexes and constraints.
+* Constraint creation is by default not idempotent, and an error will be thrown if you attempt to create the same constraint twice.
+Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error will be thrown if you attempt to create the same constraint twice.
+
+include::ql/constraints/syntax.adoc[leveloffset=+1]
+
+include::ql/constraints/examples.adoc[leveloffset=+1]
