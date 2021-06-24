@@ -1,81 +1,84 @@
 [[administration-constraints-examples]]
 = Examples
 
+
 [[administration-constraints-unique-nodes]]
 == Unique node property constraints
 
-include::create-a-unique-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-unique-constraint.asciidoc[leveloffset=+2]
 
-include::create-a-unique-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-unique-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
 
-include::create-a-unique-constraint-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-unique-constraint-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+2]
 
-include::create-a-node-that-complies-with-unique-property-constraints.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-that-complies-with-unique-property-constraints.asciidoc[leveloffset=+2]
 
-include::create-a-node-that-violates-a-unique-property-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-that-violates-a-unique-property-constraint.asciidoc[leveloffset=+2]
 
-include::failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes.asciidoc[leveloffset=+2]
+include::../administration/constraints/failure-to-create-a-unique-property-constraint-due-to-conflicting-nodes.asciidoc[leveloffset=+2]
 
 
 [role=enterprise-edition]
 [[administration-constraints-prop-exist-nodes]]
 == Node property existence constraints
 
-include::create-a-node-property-existence-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-property-existence-constraint.asciidoc[leveloffset=+2]
 
-include::create-a-node-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
 
-include::create-a-node-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+2]
 
-include::create-a-node-that-violates-a-property-existence-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-that-violates-a-property-existence-constraint.asciidoc[leveloffset=+2]
 
-include::removing-an-existence-constrained-node-property.asciidoc[leveloffset=+2]
+include::../administration/constraints/removing-an-existence-constrained-node-property.asciidoc[leveloffset=+2]
 
-include::failure-to-create-a-node-property-existence-constraint-due-to-existing-node.asciidoc[leveloffset=+2]
+include::../administration/constraints/failure-to-create-a-node-property-existence-constraint-due-to-existing-node.asciidoc[leveloffset=+2]
 
 
 [role=enterprise-edition]
 [[administration-constraints-prop-exist-rels]]
 == Relationship property existence constraints
 
-include::create-a-relationship-property-existence-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/../administration/create-a-relationship-property-existence-constraint.asciidoc[leveloffset=+2]
 
-include::create-a-relationship-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-relationship-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
 
-include::create-a-relationship-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-relationship-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+2]
 
-include::create-a-relationship-that-violates-a-property-existence-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-relationship-that-violates-a-property-existence-constraint.asciidoc[leveloffset=+2]
 
-include::removing-an-existence-constrained-relationship-property.asciidoc[leveloffset=+2]
+include::../administration/constraints/removing-an-existence-constrained-relationship-property.asciidoc[leveloffset=+2]
 
-include::failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship.asciidoc[leveloffset=+2]
+include::../administration/constraints/failure-to-create-a-relationship-property-existence-constraint-due-to-existing-relationship.asciidoc[leveloffset=+2]
 
 
 [role=enterprise-edition]
 [[administration-constraints-node-key]]
 == Node key constraints
 
-include::create-a-node-key-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-key-constraint.asciidoc[leveloffset=+2]
 
-include::create-a-node-key-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-key-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+2]
 
-include::create-a-node-key-constraint-with-specified-index-provider.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-key-constraint-with-specified-index-provider.asciidoc[leveloffset=+2]
 
-include::create-a-node-key-constraint-with-specified-index-configuration.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-key-constraint-with-specified-index-configuration.asciidoc[leveloffset=+2]
 
-include::create-a-node-that-complies-with-node-key-constraints.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-that-complies-with-node-key-constraints.asciidoc[leveloffset=+2]
 
-include::create-a-node-that-violates-a-node-key-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/create-a-node-that-violates-a-node-key-constraint.asciidoc[leveloffset=+2]
 
-include::removing-a-node-key-constrained-property.asciidoc[leveloffset=+2]
+include::../administration/constraints/removing-a-node-key-constrained-property.asciidoc[leveloffset=+2]
 
-include::failure-to-create-a-node-key-constraint-due-to-existing-node.asciidoc[leveloffset=+2]
+include::../administration/constraints/failure-to-create-a-node-key-constraint-due-to-existing-node.asciidoc[leveloffset=+2]
+
 
 [[administration-constraints-drop-constraint]]
 == Drop a constraint by name
-include::drop-a-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/drop-a-constraint.asciidoc[leveloffset=+2]
 
-include::drop-a-non-existing-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/drop-a-non-existing-constraint.asciidoc[leveloffset=+2]
+
 
 [[administration-constraints-list-constraint]]
 == Listing constraints
@@ -141,21 +144,22 @@ Listing constraints also allows for `WHERE` and `YIELD` clauses to filter the re
 [NOTE]
 The deprecated built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the <<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>>.
 
+
 === Listing constraints examples
 
-include::listing-all-constraints.asciidoc[leveloffset=+3]
+include::../administration/constraints/listing-all-constraints.asciidoc[leveloffset=+3]
 
-include::listing-constraints-with-filtering.asciidoc[leveloffset=+3]
+include::../administration/constraints/listing-constraints-with-filtering.asciidoc[leveloffset=+3]
 
 
 [role=deprecated]
 [[administration-constraints-deprecated-syntax]]
 == Deprecated syntax
 
-include::drop-a-unique-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/drop-a-unique-constraint.asciidoc[leveloffset=+2]
 
-include::drop-a-node-property-existence-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/drop-a-node-property-existence-constraint.asciidoc[leveloffset=+2]
 
-include::drop-a-relationship-property-existence-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/drop-a-relationship-property-existence-constraint.asciidoc[leveloffset=+2]
 
-include::drop-a-node-key-constraint.asciidoc[leveloffset=+2]
+include::../administration/constraints/drop-a-node-key-constraint.asciidoc[leveloffset=+2]
