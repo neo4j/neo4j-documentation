@@ -43,7 +43,7 @@ include::../administration/constraints/failure-to-create-a-node-property-existen
 [[administration-constraints-prop-exist-rels]]
 == Relationship property existence constraints
 
-include::../administration/constraints/../administration/create-a-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
+include::../administration/constraints/create-a-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
 
 include::../administration/constraints/create-a-relationship-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
 

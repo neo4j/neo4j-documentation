@@ -59,7 +59,3 @@ If the constraint is not explicitly named, it will get an auto-generated name.
 * The constraint name must be unique among both indexes and constraints.
 * Constraint creation is by default not idempotent, and an error will be thrown if you attempt to create the same constraint twice.
 Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error will be thrown if you attempt to create the same constraint twice.
-
-include::ql/constraints/syntax.adoc[leveloffset=+1]
-
-include::ql/constraints/examples.adoc[leveloffset=+1]
