@@ -1,6 +1,11 @@
 [[administration-constraints-syntax]]
 = Syntax
 
+[abstract]
+--
+Syntax for how to manage constraints used for ensuring data integrity.
+--
+
 .Syntax for managing constraints
 [options="header", width="100%", cols="5a,3, 3a"]
 |===
