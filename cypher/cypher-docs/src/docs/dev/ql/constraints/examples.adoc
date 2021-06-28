@@ -79,6 +79,7 @@ include::../administration/constraints/failure-to-create-a-node-key-constraint-d
 
 [[administration-constraints-drop-constraint]]
 == Drop a constraint by name
+
 include::../administration/constraints/drop-a-constraint.asciidoc[leveloffset=+1]
 
 include::../administration/constraints/drop-a-non-existing-constraint.asciidoc[leveloffset=+1]
