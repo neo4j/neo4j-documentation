@@ -6,6 +6,8 @@
 This section explains how to manage constraints used for ensuring data integrity.
 --
 
+== Types of constraint
+
 The following constraint types are available:
 
 *Unique node property constraints*::
@@ -40,6 +42,8 @@ Queries attempting to do any of the following will fail:
 [NOTE]
 Node key constraints, node property existence constraints and relationship property existence constraints are only available in Neo4j Enterprise Edition.
 Databases containing one of these constraint types cannot be opened using Neo4j Community Edition.
+
+== Implications on indexes
 
 Creating a constraint has the following implications on indexes:
 
