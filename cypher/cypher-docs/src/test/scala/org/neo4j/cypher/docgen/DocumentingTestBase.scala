@@ -49,7 +49,7 @@ import org.neo4j.graphdb.config.Setting
 import org.neo4j.internal.kernel.api.security.SecurityContext
 import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.impl.api.index.IndexingService
-import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
+import org.neo4j.kernel.impl.api.index.IndexSamplingMode
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.QuerySubscriber
