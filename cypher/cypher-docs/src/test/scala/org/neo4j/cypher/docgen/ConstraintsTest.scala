@@ -104,7 +104,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE")),
       optionalResultExplanation =
         """One of the output columns from `SHOW CONSTRAINTS` is the name of the constraint.
-          |This can be used to drop the constraint with the <<administration-constraints-drop-constraint, `DROP CONSTRAINT` command>>.""".stripMargin,
+          |This can be used to drop the constraint with the <<administration-constraints-syntax-drop, `DROP CONSTRAINT` command>>.""".stripMargin,
       assertions = p => assert(p.size == 1)
     )
 
@@ -113,7 +113,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text =
         """
           |One way of filtering the output from `SHOW CONSTRAINTS` by constraint type is the use of type keywords,
-          |listed in the <<administration-constraints-syntax, syntax table>>.
+          |listed in the <<administration-constraints-syntax-list, _Syntax for listing constraints_ example>>.
           |For example, to show only unique node property constraints, use `SHOW UNIQUE CONSTRAINTS`.
           |Another more flexible way of filtering the output is to use the `WHERE` clause.
           |An example is to only show constraints on relationships.""".stripMargin,
@@ -461,7 +461,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text =
         """A constraint can be dropped using the name with the `DROP CONSTRAINT constraint_name` command.
           |It is the same command for unique property, property existence and node key constraints.
-          |The name of the constraint can be found using the <<administration-constraints-list-constraint, `SHOW CONSTRAINTS` command>>, given in the output column `name`.""".stripMargin,
+          |The name of the constraint can be found using the <<administration-constraints-syntax-list, `SHOW CONSTRAINTS` command>>, given in the output column `name`.""".stripMargin,
       queryText = "DROP CONSTRAINT constraint_name",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY")),
       assertions = _ => assertConstraintWithNameDoesNotExists("constraint_name")
