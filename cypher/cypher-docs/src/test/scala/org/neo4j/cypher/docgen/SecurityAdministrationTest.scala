@@ -237,7 +237,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         p(
-          """The `SHOW CONSTRAINTS` privilege only affects the <<administration-constraints-list-constraint, `SHOW CONSTRAINTS` command>>
+          """The `SHOW CONSTRAINTS` privilege only affects the <<administration-constraints-syntax-list, `SHOW CONSTRAINTS` command>>
             | and not the old procedures for listing constraints, such as `db.constraints`.""".stripMargin)
       }
       section("The `NAME MANAGEMENT` privileges", "administration-security-administration-database-tokens", "enterprise-edition") {

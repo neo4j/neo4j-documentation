@@ -7,6 +7,7 @@ Syntax for how to manage constraints used for ensuring data integrity.
 --
 
 
+[[administration-constraints-syntax-create]]
 == Syntax for creating constraints
 
 Best practice is to give the constraint a name when it is created.
@@ -20,7 +21,7 @@ It may still throw an error should a conflicting index or constraint exist.
 
 Index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
 
-
+[discrete]
 === Create a unique node property constraint
 
 [source, cypher, role=noplay]
@@ -31,6 +32,7 @@ ASSERT n.propertyName IS UNIQUE
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
+[discrete]
 === [enterprise-edition]#Create a node property existence constraint#
 
 [source, cypher, role=noplay]
@@ -40,6 +42,7 @@ ON (n:LabelName)
 ASSERT n.propertyName IS NOT NULL
 ----
 
+[discrete]
 === [enterprise-edition]#Create a relationship property existence constraint#
 
 [source, cypher, role=noplay]
@@ -49,6 +52,7 @@ ON ()-"["R:RELATIONSHIP_TYPE"]"-()
 ASSERT R.propertyName IS NOT NULL
 ----
 
+[discrete]
 === [enterprise-edition]#Create a node key constraint#
 
 [source, cypher, role=noplay]
@@ -63,8 +67,10 @@ IS NODE KEY
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
+[[administration-constraints-syntax-drop]]
 == Syntax for dropping constraints
 
+[discrete]
 === Drop a constraint
 
 The drop command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same constraint twice.
@@ -75,6 +81,7 @@ With `IF EXISTS`, no error is thrown and nothing happens should the constraint n
 DROP CONSTRAINT constraint_name [IF EXISTS]
 ----
 
+[discrete]
 === [deprecated]#Drop a unique constraint without specifying a name#
 
 [source, cypher, role=noplay]
@@ -84,6 +91,7 @@ ON (n:LabelName)
 ASSERT n.propertyName IS UNIQUE
 ----
 
+[discrete]
 === [deprecated]#Drop an exists constraint without specifying a name#
 
 [source, cypher, role=noplay]
@@ -93,6 +101,7 @@ ON (n:LabelName)
 ASSERT EXISTS (n.propertyName)
 ----
 
+[discrete]
 === [deprecated]#Drop a relationship property existence constraint without specifying a name#
 
 [source, cypher, role=noplay]
@@ -102,6 +111,7 @@ ON ()-"["R:RELATIONSHIP_TYPE"]"-()
 ASSERT EXISTS (R.propertyName)
 ----
 
+[discrete]
 === [deprecated]#Drop a node key constraint without specifying a name#
 
 [source, cypher, role=noplay]
@@ -115,6 +125,8 @@ n.propertyName_n)
 IS NODE KEY
 ----
 
+
+[[administration-constraints-syntax-list]]
 == Syntax for listing constraints
 
 List constraints in the database, either all or filtered on type.
