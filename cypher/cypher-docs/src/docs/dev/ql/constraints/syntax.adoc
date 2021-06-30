@@ -10,19 +10,20 @@ Syntax for how to manage constraints used for ensuring data integrity.
 [[administration-constraints-syntax-create]]
 == Syntax for creating constraints
 
-Best practice is to give the constraint a name when it is created.
-If the constraint is not explicitly named, it will get an auto-generated name.
+Best practice when creating a constraint is to give the constraint a name.
+This name must be unique among both indexes and constraints.
+If a name is not explicitly given, a unique name will be auto-generated.
 
-The constraint name must be unique among both indexes and constraints.
-
-The create command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
-With `IF NOT EXISTS`, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
+The create constraint command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
+With the `IF NOT EXISTS` flag, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
 It may still throw an error should a conflicting index or constraint exist.
 
-Index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
+For constraints that are backed by an index, the index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
 
 [discrete]
 === Create a unique node property constraint
+
+This command creates a uniqueness constraint on nodes with the specified label and property.
 
 [source, cypher, role=noplay]
 ----
@@ -35,6 +36,8 @@ ASSERT n.propertyName IS UNIQUE
 [discrete]
 === [enterprise-edition]#Create a node property existence constraint#
 
+This command creates a property existence constraint on nodes with the specified label and property.
+
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
@@ -45,6 +48,8 @@ ASSERT n.propertyName IS NOT NULL
 [discrete]
 === [enterprise-edition]#Create a relationship property existence constraint#
 
+This command creates a property existence constraint on relationships with the specified relationship type and property.
+
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
@@ -54,6 +59,8 @@ ASSERT R.propertyName IS NOT NULL
 
 [discrete]
 === [enterprise-edition]#Create a node key constraint#
+
+This command creates a node key constraint on nodes with the specified label and properties.
 
 [source, cypher, role=noplay]
 ----
@@ -73,8 +80,10 @@ IS NODE KEY
 [discrete]
 === Drop a constraint
 
-The drop command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same constraint twice.
-With `IF EXISTS`, no error is thrown and nothing happens should the constraint not exist.
+The preferred way of dropping a constraint is by the name of the constraint.
+
+This drop command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same constraint twice.
+With the `IF EXISTS` flag, no error is thrown and nothing happens should the constraint not exist.
 
 [source, cypher, role=noplay]
 ----
@@ -84,6 +93,8 @@ DROP CONSTRAINT constraint_name [IF EXISTS]
 [discrete]
 === [deprecated]#Drop a unique constraint without specifying a name#
 
+An old way of dropping a uniqueness constraint was to drop the constraint by specifying the schema of the constraint.
+
 [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT
@@ -92,7 +103,9 @@ ASSERT n.propertyName IS UNIQUE
 ----
 
 [discrete]
-=== [deprecated]#Drop an exists constraint without specifying a name#
+=== [deprecated]#Drop a node property existence constraint without specifying a name#
+
+An old way of dropping a node property existence constraint was to drop the constraint by specifying the schema of the constraint.
 
 [source, cypher, role=noplay]
 ----
@@ -104,6 +117,8 @@ ASSERT EXISTS (n.propertyName)
 [discrete]
 === [deprecated]#Drop a relationship property existence constraint without specifying a name#
 
+An old way of dropping a relationship property existence constraint was to drop the constraint by specifying the schema of the constraint.
+
 [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT
@@ -113,6 +128,8 @@ ASSERT EXISTS (R.propertyName)
 
 [discrete]
 === [deprecated]#Drop a node key constraint without specifying a name#
+
+An old way of dropping a node key constraint was to drop the constraint by specifying the schema of the constraint.
 
 [source, cypher, role=noplay]
 ----
@@ -129,15 +146,81 @@ IS NODE KEY
 [[administration-constraints-syntax-list]]
 == Syntax for listing constraints
 
-List constraints in the database, either all or filtered on type.
+List constraints in the database, either all or filtered on constraint type.
+
+The simple version of the command allows for a where clause and will give back the default set of output columns.
 
 [source, cypher, role=noplay]
 ----
-SHOW [ALL\|UNIQUE\|NODE [PROPERTY] EXIST[ENCE]\|RELATIONSHIP [PROPERTY] EXIST[ENCE]\|[PROPERTY] EXIST[ENCE]\|NODE KEY] CONSTRAINT[S]
-    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+SHOW [ALL|UNIQUE|NODE [PROPERTY] EXIST[ENCE]|REL[ATIONSHIP] [PROPERTY] EXIST[ENCE]|[PROPERTY] EXIST[ENCE]|NODE KEY] CONSTRAINT[S]
+    [WHERE expression]
+----
+
+To get the full set of output columns, a yield clause is needed.
+
+[source, cypher, role=noplay]
+----
+SHOW [ALL|UNIQUE|NODE [PROPERTY] EXIST[ENCE]|REL[ATIONSHIP] [PROPERTY] EXIST[ENCE]|[PROPERTY] EXIST[ENCE]|NODE KEY] CONSTRAINT[S]
+    YIELD { * | field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]
     [WHERE expression]
     [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 
+The returned columns from the show command is:
+
+.List constraints output
+[options="header", width="100%", cols="1a,4,^.^,^"]
+|===
+| Column
+| Description
+| Default output
+| Full output
+
+| `id`
+| The id of the constraint.
+| `+`
+| `+`
+
+| `name`
+| Name of the constraint (explicitly set by the user or automatically assigned).
+| `+`
+| `+`
+
+| `type`
+| The ConstraintType of this constraint (`UNIQUENESS`, `NODE_PROPERTY_EXISTENCE`, `NODE_KEY`, or `RELATIONSHIP_PROPERTY_EXISTENCE`).
+| `+`
+| `+`
+
+| `entityType`
+| Type of entities this constraint represents (nodes or relationship).
+| `+`
+| `+`
+
+| `labelsOrTypes`
+| The labels or relationship types of this constraint.
+| `+`
+| `+`
+
+| `properties`
+| The properties of this constraint.
+| `+`
+| `+`
+
+| `ownedIndexId`
+| The id of the index associated to the constraint, or `null` if no index is associated with the constraint.
+| `+`
+| `+`
+
+| `options`
+| The options passed to `CREATE` command, for the index associated to the constraint, or `null` if no index is associated with the constraint.
+|
+| `+`
+
+| `createStatement`
+| Statement used to create the constraint.
+|
+| `+`
+|===
+
 [NOTE]
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+The deprecated built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the <<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>>.
