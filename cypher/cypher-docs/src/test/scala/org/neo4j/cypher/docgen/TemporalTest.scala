@@ -473,51 +473,31 @@ class TemporalTest extends DocumentingTest {
       }
       section("Accessing components of durations", "cypher-temporal-accessing-components-durations") {
         p(
-          """A _Duration_ can have several components.
-            |These are categorized into the following groups:
+          """A _Duration_ can have several components, each categorized into _Months_, _Days_, and _Seconds_ groups.
             |
-            |[options="header"]
+            |Components of _Duration_ values are truncated within their component groups as follows:
+            |[options="header", cols="2,3,2,1,3"]
             ||===
-            || Component group | Constituent components
-            || Months | _Years_, _Quarters_ and _Months_
-            || Days | _Weeks_ and _Days_
-            || Seconds | _Hours_, _Minutes_, _Seconds_, _Milliseconds_, _Microseconds_ and _Nanoseconds_
+            || Component Group | Component | Description | Type | Details
+            |.3+| _Months_| `duration.years` | The total number of _years_ | Integer | Each set of `4` _quarters_ is counted as `1` _year_; each set of `12` _months_ is counted as `1` _year_.
+            || `duration.quarters` | The total number of _quarters_ | Integer | Each _year_ is counted as `4` _quarters_; each set of `3` _months_ is counted as `1` _quarter_.
+            || `duration.months` | The total number of _months_ | Integer | Each _year_ is counted as `12` _months_; each_quarter_ is counted as `3` _months_.
+            |.2+| _Days_ | `duration.weeks` | The total number of _weeks_ | Integer | Each set of `7` _days_ is counted as `1` _week_.
+            || `duration.days` | The total number of _days_ | Integer | Each _week_ is counted as `7` _days_.
+            |.6+| _Seconds_ | `duration.hours` | The total number of _hours_ | Integer | Each set of `60` _minutes_ is counted as `1` _hour_; each set of `3600` _seconds_ is counted as `1` _hour_.
+            || `duration.minutes` | The total number of _minutes_ | Integer | Each _hour_ is counted as `60` _minutes_; each set of `60` _seconds_ is counted as `1` _minute_.
+            || `duration.seconds` | The total number of _seconds_ | Integer | Each _hour_ is counted as `3600` _seconds_; each _minute_ is counted as `60` _seconds_.
+            || `duration.milliseconds` | The total number of _milliseconds_ | Integer | Each set of `1000` _milliseconds_ is counted as `1` _second_.
+            || `duration.microseconds` | The total number of _microseconds_ | Integer | Each _millisecond_ is counted as `1000` _microseconds_.
+            || `duration.nanoseconds` | The total number of _nanoseconds_ | Integer | Each _microsecond_ is counted as `1000` _nanoseconds_.
             ||===""")
-        p("""Within each group, the components can be converted without any loss:
-            #
-            #* There are always `4` _quarters_ in `1` _year_.
-            #* There are always `12` _months_ in `1` _year_.
-            #* There are always `3` _months_ in `1` _quarter_.
-            #* There are always `7` _days_ in `1` _week_.
-            #* There are always `60` _minutes_ in `1` _hour_.
-            #* There are always `60` _seconds_ in `1` _minute_ (Cypher uses https://www.cl.cam.ac.uk/~mgk25/time/utc-sls/[UTC-SLS] when handling leap seconds).
-            #* There are always `1000` _milliseconds_ in `1` _second_.
-            #* There are always `1000` _microseconds_ in `1` _millisecond_.
-            #* There are always `1000` _nanoseconds_ in `1` _microsecond_.
-            #
-            #Please note that:
-            #
-            #* There are not always `24` _hours_ in `1` _day_; when switching to/from daylight savings time, a _day_ can have `23` or `25` _hours_.
-            #* There are not always the same number of _days_ in a _month_.
-            #* Due to leap years, there are not always the same number of _days_ in a _year_.""".stripMargin('#'))
-        p(
-          """
-            |.Components of _Duration_ values and how they are truncated within their component group
-            |[options="header", cols="3,2,2,1,3"]
-            ||===
-            || Component      | Component Group | Description | Type | Details
-            || `duration.years` | Months | The total number of _years_ | Integer | Each set of `4` _quarters_ is counted as `1` _year_; each set of `12` _months_ is counted as `1` _year_.
-            || `duration.quarters` | Months | The total number of _quarters_ | Integer | Each _year_ is counted as `4` _quarters_; each set of `3` _months_ is counted as `1` _quarter_.
-            || `duration.months` | Months | The total number of _months_ | Integer | Each _year_ is counted as `12` _months_; each _quarter_ is counted as `3` _months_.
-            || `duration.weeks` | Days | The total number of _weeks_ | Integer | Each set of `7` _days_ is counted as `1` _week_.
-            || `duration.days` | Days | The total number of _days_ | Integer | Each _week_ is counted as `7` _days_.
-            || `duration.hours` | Seconds | The total number of _hours_ | Integer | Each set of `60` _minutes_ is counted as `1` _hour_; each set of `3600` _seconds_ is counted as `1` _hour_.
-            || `duration.minutes` | Seconds | The total number of _minutes_ | Integer | Each _hour_ is counted as `60` _minutes_; each set of `60` _seconds_ is counted as `1` _minute_.
-            || `duration.seconds` | Seconds | The total number of _seconds_ | Integer | Each _hour_ is counted as `3600` _seconds_; each _minute_ is counted as `60` _seconds_.
-            || `duration.milliseconds` | Seconds | The total number of _milliseconds_ | Integer |
-            || `duration.microseconds` | Seconds | The total number of _microseconds_ | Integer |
-            || `duration.nanoseconds` | Seconds | The total number of _nanoseconds_ | Integer |
-            ||===""")
+        note{
+          p("""Please note that:""")
+          p("""* Cypher uses https://www.cl.cam.ac.uk/~mgk25/time/utc-sls/[UTC-SLS] when handling leap seconds.""")
+          p("""* There are not always `24` _hours_ in `1` _day_; when switching to/from daylight savings time, a _day_ can have `23` or `25` _hours_.""")
+          p("""* There are not always the same number of _days_ in a _month_.""")
+          p("""* Due to leap years, there are not always the same number of _days_ in a _year_.""")
+          }
         p(
           """It is also possible to access the smaller (less significant) components of a component group bounded by the largest (most significant) component of the group:
             |
