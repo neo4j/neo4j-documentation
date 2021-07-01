@@ -1,5 +1,6 @@
 [[administration-constraints-syntax]]
 = Syntax
+:check-mark: icon:check[]
 
 [abstract]
 --
@@ -148,7 +149,7 @@ IS NODE KEY
 
 List constraints in the database, either all or filtered on constraint type.
 
-The simple version of the command allows for a where clause and will give back the default set of output columns.
+The simple version of the command allows for a where clause and will give back the default set of output columns:
 
 [source, cypher, role=noplay]
 ----
@@ -156,7 +157,7 @@ SHOW [ALL|UNIQUE|NODE [PROPERTY] EXIST[ENCE]|REL[ATIONSHIP] [PROPERTY] EXIST[ENC
     [WHERE expression]
 ----
 
-To get the full set of output columns, a yield clause is needed.
+To get the full set of output columns, a yield clause is needed:
 
 [source, cypher, role=noplay]
 ----
@@ -169,57 +170,57 @@ SHOW [ALL|UNIQUE|NODE [PROPERTY] EXIST[ENCE]|REL[ATIONSHIP] [PROPERTY] EXIST[ENC
 The returned columns from the show command is:
 
 .List constraints output
-[options="header", width="100%", cols="1a,4,^.^,^"]
+[options="header", width="100%", cols="2m,4a,^1,^1"]
 |===
 | Column
 | Description
 | Default output
 | Full output
 
-| `id`
+| id
 | The id of the constraint.
-| `+`
-| `+`
+| {check-mark}
+| {check-mark}
 
-| `name`
+| name
 | Name of the constraint (explicitly set by the user or automatically assigned).
-| `+`
-| `+`
+| {check-mark}
+| {check-mark}
 
-| `type`
+| type
 | The ConstraintType of this constraint (`UNIQUENESS`, `NODE_PROPERTY_EXISTENCE`, `NODE_KEY`, or `RELATIONSHIP_PROPERTY_EXISTENCE`).
-| `+`
-| `+`
+| {check-mark}
+| {check-mark}
 
-| `entityType`
+| entityType
 | Type of entities this constraint represents (nodes or relationship).
-| `+`
-| `+`
+| {check-mark}
+| {check-mark}
 
-| `labelsOrTypes`
+| labelsOrTypes
 | The labels or relationship types of this constraint.
-| `+`
-| `+`
+| {check-mark}
+| {check-mark}
 
-| `properties`
+| properties
 | The properties of this constraint.
-| `+`
-| `+`
+| {check-mark}
+| {check-mark}
 
-| `ownedIndexId`
+| ownedIndexId
 | The id of the index associated to the constraint, or `null` if no index is associated with the constraint.
-| `+`
-| `+`
+| {check-mark}
+| {check-mark}
 
-| `options`
+| options
 | The options passed to `CREATE` command, for the index associated to the constraint, or `null` if no index is associated with the constraint.
 |
-| `+`
+| {check-mark}
 
-| `createStatement`
+| createStatement
 | Statement used to create the constraint.
 |
-| `+`
+| {check-mark}
 |===
 
 [NOTE]
