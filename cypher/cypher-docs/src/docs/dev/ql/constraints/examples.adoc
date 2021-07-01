@@ -117,10 +117,10 @@ include::../administration/constraints/drop-a-non-existing-constraint.asciidoc[l
 == Listing constraints
 
 [discrete]
-include::../administration/constraints/listing-all-constraints.asciidoc[leveloffset=+2]
+include::../administration/constraints/listing-all-constraints.asciidoc[leveloffset=+1]
 
 [discrete]
-include::../administration/constraints/listing-constraints-with-filtering.asciidoc[leveloffset=+2]
+include::../administration/constraints/listing-constraints-with-filtering.asciidoc[leveloffset=+1]
 
 
 [role=deprecated]
