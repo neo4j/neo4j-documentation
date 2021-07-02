@@ -19,7 +19,6 @@
 package org.neo4j.harness.enterprise.doc;
 
 import com.neo4j.harness.junit.rule.EnterpriseNeo4jRule;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -33,7 +32,6 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.schema.ConstraintDefinition;
 import org.neo4j.graphdb.schema.ConstraintType;
 import org.neo4j.harness.junit.rule.Neo4jRule;
-import org.neo4j.test.rule.TestDirectory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -42,9 +40,6 @@ import static org.neo4j.internal.helpers.collection.Iterators.count;
 
 public class JUnitDocIT
 {
-    @ClassRule
-    public static TestDirectory testDirectory = TestDirectory.testDirectory();
-
     // tag::useEnterpriseJUnitRule[]
     @Rule
     public Neo4jRule neo4j = new EnterpriseNeo4jRule()

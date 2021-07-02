@@ -19,7 +19,6 @@
 package org.neo4j.harness.enterprise.doc;
 
 import com.neo4j.harness.junit.rule.EnterpriseNeo4jRule;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -32,16 +31,12 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.harness.junit.rule.Neo4jRule;
-import org.neo4j.test.rule.TestDirectory;
 
 import static org.junit.Assert.assertEquals;
 import static org.neo4j.internal.helpers.collection.Iterators.count;
 
 public class ExtensionTestingDocIT
 {
-    @ClassRule
-    public static TestDirectory testDirectory = TestDirectory.testDirectory();
-
     @Rule
     public Neo4jRule neo4j = new EnterpriseNeo4jRule()
             .withUnmanagedExtension( "/myExtension", MyUnmanagedExtension.class )
@@ -67,7 +62,7 @@ public class ExtensionTestingDocIT
     }
 
     @Test
-    public void testMyExtension() throws Exception
+    public void testMyExtension()
     {
         // When
         HTTP.Response response = HTTP.GET( HTTP.GET( neo4j.httpURI().resolve( "myExtension" ).toString() ).location() );
@@ -77,7 +72,7 @@ public class ExtensionTestingDocIT
     }
 
     @Test
-    public void testMyExtensionWithFunctionFixture() throws Exception
+    public void testMyExtensionWithFunctionFixture()
     {
         final GraphDatabaseService graphDatabaseService = neo4j.defaultDatabaseService();
         try ( Transaction transaction = graphDatabaseService.beginTx() )

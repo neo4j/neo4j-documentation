@@ -35,9 +35,6 @@ import static org.neo4j.internal.helpers.collection.Iterators.count;
 
 public class JUnitDocIT
 {
-    @ClassRule
-    public static TestDirectory testDirectory = TestDirectory.testDirectory();
-
     // tag::useJUnitRule[]
     @Rule
     public Neo4jRule neo4j = new Neo4jRule()
