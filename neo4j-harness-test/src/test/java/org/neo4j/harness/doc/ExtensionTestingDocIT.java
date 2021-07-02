@@ -39,9 +39,6 @@ import static org.neo4j.internal.helpers.collection.Iterators.count;
 
 public class ExtensionTestingDocIT
 {
-    @ClassRule
-    public static TestDirectory testDirectory = TestDirectory.testDirectory();
-
     @Rule
     public Neo4jRule neo4j = new Neo4jRule()
             .withUnmanagedExtension( "/myExtension", MyUnmanagedExtension.class )
