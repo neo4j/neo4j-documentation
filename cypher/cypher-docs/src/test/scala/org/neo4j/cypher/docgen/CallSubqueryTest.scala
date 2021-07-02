@@ -40,7 +40,8 @@ class CallSubqueryTest extends DocumentingTest {
     p("""* <<subquery-call-introduction, Introduction>>
         #* <<subquery-correlated-importing, Importing variables into subqueries>>
         #* <<subquery-post-union, Post-union processing>>
-        #* <<subquery-aggregation, Aggregation and side-effects>>
+        #* <<subquery-aggregation, Cardinality and aggregation>>
+        #* <<subquery-unit, Unit subqueries and side-effects>>
         #* <<subquery-correlated-aggregation, Aggregation on imported variables>>""".stripMargin('#'))
     section("Introduction", "subquery-call-introduction") {
       p("""CALL allows to execute subqueries, i.e. queries inside of other queries.
@@ -49,13 +50,19 @@ class CallSubqueryTest extends DocumentingTest {
         p("""The `CALL` clause is also used for calling procedures.
             #For descriptions of the `CALL` clause in this context, refer to <<query-call>>.""".stripMargin('#'))
       }
-      p("""A subquery is evaluated for each incoming input row and may produce an arbitrary number of output rows.
-          #Every output row is then combined with the input row to build the result of the subquery.
-          #That means that a subquery will influence the number of rows.
+
+      p(
+        """Subqueries which end in a `RETURN` statement are called _returning subqueries_ while subqueries without such a return statement are called _unit
+          |subqueries_.""".stripMargin)
+      p("""A subquery is evaluated for each incoming input row. Every output row of a *returning subquery* is combined with the input row to build the result of
+          #the subquery.
+          #That means that a returning subquery will influence the number of rows.
           #If the subquery does not return any rows, there will be no rows available after the subquery.""".stripMargin('#'))
+      p(
+        """*Unit subqueries* on the other hand are thought to be called for their side-effects and not for their results and therefore do not interfere with
+          #the results of the enclosing query.""".stripMargin('#'))
       p("There are restrictions on what queries are allowed as subqueries and how they interact with the enclosing query:")
-      p("""* A subquery must end with a `RETURN` clause.
-          #* A subquery can only refer to variables from the enclosing query if they are explicitly imported.
+      p("""* A subquery can only refer to variables from the enclosing query if they are explicitly imported.
           #* A subquery cannot return variables with the same names as variables in the enclosing query.
           #* All variables that are returned from a subquery are afterwards available in the enclosing query.""".stripMargin('#'))
       p("The following graph is used for the examples below:")
@@ -64,7 +71,8 @@ class CallSubqueryTest extends DocumentingTest {
 
     section("Importing variables into subqueries", "subquery-correlated-importing") {
       p("""Variables are imported into a subquery using an importing `WITH` clause.
-          #As the subquery is evaluated for each incoming input row, the imported variables get bound to the corresponding values from the input row in each evaluation.""".stripMargin('#'))
+          #As the subquery is evaluated for each incoming input row, the imported variables get bound to the corresponding values from the input row in each
+          #evaluation.""".stripMargin('#'))
 
       query("""UNWIND [0, 1, 2] AS x
               #CALL {
@@ -79,7 +87,8 @@ class CallSubqueryTest extends DocumentingTest {
         )))) { resultTable() }
 
       p("An importing `WITH` clause must:")
-      p("""* Consist only of simple references to outside variables - e.g. `WITH x, y, z`. Aliasing or expressions are not supported in importing `WITH` clauses - e.g. `WITH a AS b` or `WITH a+1 AS b`.
+      p("""* Consist only of simple references to outside variables - e.g. `WITH x, y, z`. Aliasing or expressions are not supported in importing `WITH`
+          #clauses - e.g. `WITH a AS b` or `WITH a+1 AS b`.
           #* Be the first clause of a subquery (or the second clause, if directly following a `USE` clause).""".stripMargin('#'))
     }
 
@@ -126,23 +135,59 @@ class CallSubqueryTest extends DocumentingTest {
         )))) { resultTable() }
     }
 
-    section("Aggregation and side-effects", "subquery-aggregation") {
-      p("""Subqueries can be useful to do aggregations for each row and to isolate side-effects.
-          #This example query creates five `Clone` nodes for each existing person.
-          #The aggregation ensures that cardinality is not changed by the subquery.
-          #Without this, the result would be five times as many rows.""".stripMargin('#'))
+    section("Cardinality and aggregation", "subquery-aggregation") {
+      p(
+        """Returning subqueries change the cardinality of the query: The results of each subquery call are collected and together they give the result of the
+          |enclosing query.""".stripMargin)
+      p("""The following example lists each connected person that each person has:""")
       query("""MATCH (p:Person)
               #CALL {
-              #  UNWIND range(1, 5) AS i
-              #  CREATE (c:Clone)
-              #  RETURN count(c) AS numberOfClones
+              #  WITH p
+              #  MATCH (p)-[:FRIEND_OF]-(c:Person)
+              #  RETURN c.name AS friend
               #}
-              #RETURN p.name, numberOfClones""".stripMargin('#'),
+              #RETURN p.name, friend""".stripMargin('#'),
       ResultAssertions(r => r.toSet should equal(Set(
-          Map("p.name" -> "Alice", "numberOfClones" -> 5),
-          Map("p.name" -> "Bob", "numberOfClones" -> 5),
-          Map("p.name" -> "Charlie", "numberOfClones" -> 5),
-          Map("p.name" -> "Dora", "numberOfClones" -> 5)
+          Map("p.name" -> "Alice", "friend" -> "Bob"),
+          Map("p.name" -> "Bob", "friend" -> "Alice"),
+        )))) { resultTable() }
+      p(
+        """The number of results of the subquery changed the number of results of the enclosing query: Instead of 4 rows, one for each node), there are
+          |now 2 rows which were found for Alice and Bob respectively. The nodes for Charlie and Dora are not returned.""".stripMargin)
+      p(
+        """Besides changing the set of matched nodes, which we can also express using a simple query, we can also use the subquery to aggregate on each of
+          |the matches of the enclosing query in isolation. As we get one result for each call of the subquery, the cardinality does not differ from the
+          |enclosing query's cardinality:""".stripMargin)
+      query("""MATCH (p:Person)
+              #CALL {
+              #  WITH p
+              #  MATCH (p)--(c)
+              #  RETURN count(c) AS numberOfConnections
+              #}
+              #RETURN p.name, numberOfConnections""".stripMargin('#'),
+        ResultAssertions(r => r.toSet should equal(Set(
+          Map("p.name" -> "Alice", "numberOfConnections" -> 2),
+          Map("p.name" -> "Bob", "numberOfConnections" -> 1),
+          Map("p.name" -> "Charlie", "numberOfConnections" -> 1),
+          Map("p.name" -> "Dora", "numberOfConnections" -> 0)
+        )))) { resultTable() }
+    }
+
+    section("Unit subqueries and side-effects", "subquery-unit") {
+      p("""Unit subqueries do not return any value and are therefore used for their side effects.""")
+
+      p(
+        """This example query creates five clones of each existing person. As the subquery is a unit subquery, it does not change the cardinality of the
+          |enclosing query.""".stripMargin)
+      query("""MATCH (p:Person)
+              #CALL {
+              #  WITH p
+              #  UNWIND range (1, 5) AS i
+              #  CREATE (:Person {name: p.name})
+              #}
+              #RETURN count(*)""".stripMargin('#'),
+        ResultAssertions(r => r.toSet should equal(Set(
+          Map("count(*)" -> 4),
         )))) { resultTable() }
     }
 
