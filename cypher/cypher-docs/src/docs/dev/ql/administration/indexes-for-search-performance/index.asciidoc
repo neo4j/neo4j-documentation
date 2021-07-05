@@ -125,6 +125,10 @@ n.propertyName_n)
 | Drop a composite index without specifying a name.
 |===
 
+Creating an index requires <<administration-security-administration-database-indexes, the `CREATE INDEX` privilege>>,
+while dropping an index require <<administration-security-administration-database-indexes, the `DROP INDEX` privilege>> and
+listing indexes require <<administration-security-administration-database-indexes, the `SHOW INDEX` privilege>>.
+
 <<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).
 
 
