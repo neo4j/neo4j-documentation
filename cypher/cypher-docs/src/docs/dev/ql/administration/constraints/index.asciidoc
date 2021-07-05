@@ -171,6 +171,10 @@ IS NODE KEY
 [NOTE]
 The `IF [NOT] EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards.
 
+Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>,
+while dropping a constraint require <<administration-security-administration-database-constraints, the `DROP CONSTRAINT` privilege>>.
+Listing constraints does not require any privileges.
+
 [[administration-constraints-examples]]
 == Examples
 
