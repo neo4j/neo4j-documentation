@@ -73,7 +73,7 @@ The index name must be unique among both indexes and constraints.
 
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same index twice.
 With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name, schema or both already exist.
-It may still throw an error should a conflicting constraint exist.
+It may still throw an error should there exist conflicting data or constraints.
 
 | [source, cypher, role=noplay]
 ----
