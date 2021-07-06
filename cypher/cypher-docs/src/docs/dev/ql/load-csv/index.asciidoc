@@ -9,6 +9,7 @@
 * <<query-load-csv-introduction, Introduction>>
 * <<csv-file-format, CSV file format>>
 * <<load-csv-import-data-from-a-csv-file, Import data from a CSV file>>
+* <<load-csv-import-data-from-a-remote-csv-file, Import data from a remote CSV file>>
 * <<load-csv-import-data-from-a-csv-file-containing-headers, Import data from a CSV file containing headers>>
 * <<load-csv-import-data-from-a-csv-file-with-a-custom-field-delimiter, Import data from a CSV file with a custom field delimiter>>
 * <<load-csv-importing-large-amounts-of-data, Importing large amounts of data>>
@@ -56,6 +57,8 @@ See the examples below for further details.
 include::csv-file-format.asciidoc[leveloffset=+1]
 
 include::import-data-from-a-csv-file.asciidoc[]
+
+include::import-data-from-a-remote-csv-file.asciidoc[]
 
 include::import-data-from-a-csv-file-containing-headers.asciidoc[]
 

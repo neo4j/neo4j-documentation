@@ -95,6 +95,29 @@ In addition, two columns from the CSV file are set as properties on the nodes.""
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
 
+  @Test def should_import_data_from_remote_csv() {
+    testQuery(
+      title = "Import data from a remote CSV file",
+      text = """
+To import data from a CSV file in a remote location into Neo4j, ???.
+
+.data.neo4j.com/bands/artists.csv
+[source]
+----
+1,ABBA,1992
+2,Roxette,1986
+3,Europe,1979
+4,The Cardigans,1992
+----
+""",
+      queryText = s"LOAD CSV FROM 'http://data.neo4j.com/bands/artists.csv' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
+      optionalResultExplanation =
+        """
+A new node with the `Artist` label is created for each row in the CSV file.
+In addition, two columns from the CSV file are set as properties on the nodes.""",
+      assertions = p => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
+  }
+
   @Test def should_import_data_from_a_csv_file_with_headers() {
     testQuery(
       title = "Import data from a CSV file containing headers",
