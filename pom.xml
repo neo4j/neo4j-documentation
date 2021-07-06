@@ -6,7 +6,7 @@
 
     <groupId>org.neo4j.doc</groupId>
     <artifactId>neo4j-manual-parent</artifactId>
-    <version>4.0.12-SNAPSHOT</version>
+    <version>4.0.13-SNAPSHOT</version>
 
     <name>Neo4j - Reference Manual Build</name>
     <description>Neo4j Reference Manual Build.</description>
