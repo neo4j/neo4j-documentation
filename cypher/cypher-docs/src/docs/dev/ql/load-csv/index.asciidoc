@@ -52,6 +52,12 @@ For example, a file URL will typically look like `+file:///myfile.csv+` or `+fil
 *  If `dbms.directories.import` is set to the default value _import_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/import/myfile.csv_ and _<NEO4J_HOME>/import/myproject/myfile.csv_ respectively.
 *  If it is set to _/data/csv_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/data/csv/myfile.csv_ and _<NEO4J_HOME>/data/csv/myproject/myfile.csv_ respectively.
 
+[NOTE]
+====
+The file location is relative to the import.
+The config setting `dbms.directories.import` only applies to local disc and **not** to remote URLs.
+====
+
 See the examples below for further details.
 
 include::csv-file-format.asciidoc[leveloffset=+1]
@@ -69,5 +75,3 @@ include::importing-large-amounts-of-data.asciidoc[]
 include::setting-the-rate-of-periodic-commits.asciidoc[]
 
 include::import-data-containing-escaped-characters.asciidoc[]
-
-

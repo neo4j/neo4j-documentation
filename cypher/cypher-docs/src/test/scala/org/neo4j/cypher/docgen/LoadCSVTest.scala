@@ -99,7 +99,8 @@ In addition, two columns from the CSV file are set as properties on the nodes.""
     testQuery(
       title = "Import data from a remote CSV file",
       text = """
-To import data from a CSV file in a remote location into Neo4j, ???.
+Accordingly, you can import data from a CSV file in a remote location into Neo4j.
+Note that this applies to all variations of CSV files (see examples below for other variations). 
 
 .data.neo4j.com/bands/artists.csv
 [source]
