@@ -100,7 +100,7 @@ In addition, two columns from the CSV file are set as properties on the nodes.""
       title = "Import data from a remote CSV file",
       text = """
 Accordingly, you can import data from a CSV file in a remote location into Neo4j.
-Note that this applies to all variations of CSV files (see examples below for other variations). 
+Note that this applies to all variations of CSV files (see examples below for other variations).
 
 .data.neo4j.com/bands/artists.csv
 [source]
@@ -112,10 +112,6 @@ Note that this applies to all variations of CSV files (see examples below for ot
 ----
 """,
       queryText = s"LOAD CSV FROM 'http://data.neo4j.com/bands/artists.csv' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
-      optionalResultExplanation =
-        """
-A new node with the `Artist` label is created for each row in the CSV file.
-In addition, two columns from the CSV file are set as properties on the nodes.""",
       assertions = p => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
 
