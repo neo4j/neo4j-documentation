@@ -59,9 +59,9 @@ class CallSubqueryTest extends DocumentingTest {
           #That means that a returning subquery will influence the number of rows.
           #If the subquery does not return any rows, there will be no rows available after the subquery.""".stripMargin('#'))
       p(
-        """*Unit subqueries* on the other hand are thought to be called for their side-effects and not for their results and therefore do not interfere with
+        """*Unit subqueries* on the other hand are called for their side-effects and not for their results and do therefore not influence
           #the results of the enclosing query.""".stripMargin('#'))
-      p("There are restrictions on what queries are allowed as subqueries and how they interact with the enclosing query:")
+      p("There are restrictions on how subqueries interact with the enclosing query:")
       p("""* A subquery can only refer to variables from the enclosing query if they are explicitly imported.
           #* A subquery cannot return variables with the same names as variables in the enclosing query.
           #* All variables that are returned from a subquery are afterwards available in the enclosing query.""".stripMargin('#'))
@@ -137,9 +137,9 @@ class CallSubqueryTest extends DocumentingTest {
 
     section("Cardinality and aggregation", "subquery-aggregation") {
       p(
-        """Returning subqueries change the cardinality of the query: The results of each subquery call are collected and together they give the result of the
-          |enclosing query.""".stripMargin)
-      p("""The following example lists each connected person that each person has:""")
+        """Returning subqueries change the cardinality of the query: The results of each subquery invocation are collected and together they give the result of
+          | the `CALL` clause.""".stripMargin)
+      p("""The following example finds the names of each person's friends:""")
       query("""MATCH (p:Person)
               #CALL {
               #  WITH p
@@ -153,11 +153,11 @@ class CallSubqueryTest extends DocumentingTest {
         )))) { resultTable() }
       p(
         """The number of results of the subquery changed the number of results of the enclosing query: Instead of 4 rows, one for each node), there are
-          |now 2 rows which were found for Alice and Bob respectively. The nodes for Charlie and Dora are not returned.""".stripMargin)
+          |now 2 rows which were found for Alice and Bob respectively. No rows are returned for Charlie and Dora since they have no friends in our example
+          |graph.""".stripMargin)
       p(
-        """Besides changing the set of matched nodes, which we can also express using a simple query, we can also use the subquery to aggregate on each of
-          |the matches of the enclosing query in isolation. As we get one result for each call of the subquery, the cardinality does not differ from the
-          |enclosing query's cardinality:""".stripMargin)
+        """We can also use subqueries to perform isolated aggregations. In this example we count the number of relationships each person has. As we get one row
+          | for each invocation of the subquery, the number of rows is the same, before and after the `CALL` clause:""".stripMargin)
       query("""MATCH (p:Person)
               #CALL {
               #  WITH p
@@ -174,7 +174,7 @@ class CallSubqueryTest extends DocumentingTest {
     }
 
     section("Unit subqueries and side-effects", "subquery-unit") {
-      p("""Unit subqueries do not return any value and are therefore used for their side effects.""")
+      p("""Unit subqueries do not return any rows and are therefore used for their side effects.""")
 
       p(
         """This example query creates five clones of each existing person. As the subquery is a unit subquery, it does not change the cardinality of the
