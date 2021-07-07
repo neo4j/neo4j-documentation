@@ -77,7 +77,7 @@ The index name must be unique among both indexes and constraints.
 
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same index twice.
 With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name, schema or both already exist.
-It may still throw an error should there exist conflicting data or constraints.
+It may still throw an error if conflicting data or constraints exist.
 
 Index provider and configuration can be specified using the `OPTIONS` clause.
 
@@ -126,7 +126,7 @@ n.propertyName_n)
 |===
 
 Creating an index requires <<administration-security-administration-database-indexes, the `CREATE INDEX` privilege>>,
-while dropping an index require <<administration-security-administration-database-indexes, the `DROP INDEX` privilege>> and
+while dropping an index requires <<administration-security-administration-database-indexes, the `DROP INDEX` privilege>> and
 listing indexes require <<administration-security-administration-database-indexes, the `SHOW INDEX` privilege>>.
 
 <<query-using>> describes how to make the Cypher planner use specific indexes (especially in cases where the planner would not necessarily have used them).

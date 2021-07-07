@@ -95,7 +95,7 @@ The constraint name must be unique among both indexes and constraints.
 
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
 With `IF NOT EXISTS`, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
-It may still throw an error should there exist conflicting data, indexes, or constraints.
+It may still throw an error if conflicting data, indexes, or constraints exist.
 
 Index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
 | [source, cypher, role=noplay]
@@ -173,7 +173,7 @@ IS NODE KEY
 |===
 
 Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>,
-while dropping a constraint require <<administration-security-administration-database-constraints, the `DROP CONSTRAINT` privilege>> and
+while dropping a constraint requires <<administration-security-administration-database-constraints, the `DROP CONSTRAINT` privilege>> and
 listing constraints require <<administration-security-administration-database-constraints, the `SHOW CONSTRAINT` privilege>>.
 
 [[administration-constraints-examples]]
