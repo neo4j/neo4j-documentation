@@ -167,7 +167,7 @@ IS NODE KEY
 |===
 
 Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>,
-while dropping a constraint require <<administration-security-administration-database-constraints, the `DROP CONSTRAINT` privilege>>.
+while dropping a constraint requires <<administration-security-administration-database-constraints, the `DROP CONSTRAINT` privilege>>.
 Listing constraints does not require any privileges.
 
 [[administration-constraints-examples]]
