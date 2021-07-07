@@ -166,6 +166,10 @@ IS NODE KEY
 | Drop a node key constraint without specifying a name.
 |===
 
+Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>,
+while dropping a constraint requires <<administration-security-administration-database-constraints, the `DROP CONSTRAINT` privilege>>.
+Listing constraints does not require any privileges.
+
 [[administration-constraints-examples]]
 == Examples
 
