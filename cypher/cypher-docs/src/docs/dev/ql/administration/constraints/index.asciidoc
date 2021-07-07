@@ -93,8 +93,8 @@ If the constraint is not explicitly named, it will get an auto-generated name.
 The constraint name must be unique among both indexes and constraints.
 
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
-With `IF NOT EXISTS`, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
-It may still throw an error should there exist conflicting data, indexes, or constraints.
+With `IF NOT EXISTS`, no error is thrown and nothing happens if a constraint with the same name or same schema and constraint type already exists.
+It may still throw an error if conflicting data, indexes, or constraints exist.
 | [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
@@ -172,7 +172,7 @@ IS NODE KEY
 The `IF [NOT] EXISTS` syntax for constraints is only available in Neo4j 4.1.3 and onwards.
 
 Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>,
-while dropping a constraint require <<administration-security-administration-database-constraints, the `DROP CONSTRAINT` privilege>>.
+while dropping a constraint requires <<administration-security-administration-database-constraints, the `DROP CONSTRAINT` privilege>>.
 Listing constraints does not require any privileges.
 
 [[administration-constraints-examples]]
