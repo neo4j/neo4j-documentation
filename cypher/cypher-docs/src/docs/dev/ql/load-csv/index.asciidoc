@@ -131,4 +131,3 @@ If `LOAD CSV` is invoked with a `file:///` URL that points to your disk `file()`
 1 row
 ----
 =======
->>>>>>> 8e159f2280... Add test for LOAD CSV from remote file (#1165)
