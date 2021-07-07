@@ -89,7 +89,6 @@ include::importing-large-amounts-of-data.asciidoc[]
 include::setting-the-rate-of-periodic-commits.asciidoc[]
 
 include::import-data-containing-escaped-characters.asciidoc[]
-<<<<<<< HEAD
 
 include::using-linenumber-with-load-csv.asciidoc[]
 
