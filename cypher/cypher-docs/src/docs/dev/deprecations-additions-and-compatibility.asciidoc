@@ -920,8 +920,8 @@ New Cypher command for administering privilege for listing constraints.
 | `CYPHER runtime=compiled` (Compiled runtime) | Functionality | Removed| Replaced by the new `pipelined` runtime which covers a much wider range of queries.
 | `CREATE INDEX [name] FOR (n:Label) ON (n.prop)` | Syntax | Added | New syntax for creating indexes, which can include a name.
 | `CREATE CONSTRAINT [name] ON ...` | Syntax | Extended | The create constraint syntax can now include a name.
-| `DROP INDEX name` | Syntax | Added | New command for dropping an index by name.
-| `DROP CONSTRAINT name` | Syntax | Added | New command for dropping a constraint by name, no matter the type.
+| `DROP INDEX name` | Syntax | Added | <<administration-indexes-drop-an-index,New command>> for dropping an index by name.
+| `DROP CONSTRAINT name` | Syntax | Added | <<administration-constraints-syntax-drop,New command>> for dropping a constraint by name, no matter the type.
 | `CREATE INDEX ON :Label(prop)` | Syntax | Deprecated | Replaced by `CREATE INDEX FOR (n:Label) ON (n.prop)`
 | `DROP INDEX ON :Label(prop)` | Syntax | Deprecated | Replaced by `DROP INDEX name`
 | `DROP CONSTRAINT ON (n:Label) ASSERT (n.prop) IS NODE KEY` | Syntax | Deprecated | Replaced by `DROP CONSTRAINT name`
