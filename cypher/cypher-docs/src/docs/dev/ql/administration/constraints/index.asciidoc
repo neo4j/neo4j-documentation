@@ -96,6 +96,7 @@ The constraint name must be unique among both indexes and constraints.
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
 With `IF NOT EXISTS`, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
 It may still throw an error if conflicting data, indexes, or constraints exist.
+Examples of this would be nodes with missing properties, indexes with the same name, or constraints with same schema but a different constraint type.
 
 Index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
 | [source, cypher, role=noplay]
