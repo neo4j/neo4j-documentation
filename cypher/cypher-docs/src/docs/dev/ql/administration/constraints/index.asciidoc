@@ -95,6 +95,7 @@ The constraint name must be unique among both indexes and constraints.
 The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
 With `IF NOT EXISTS`, no error is thrown and nothing happens if a constraint with the same name or same schema and constraint type already exists.
 It may still throw an error if conflicting data, indexes, or constraints exist.
+Examples of this would be nodes with missing properties, indexes with the same name, or constraints with same schema but a different constraint type.
 | [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
