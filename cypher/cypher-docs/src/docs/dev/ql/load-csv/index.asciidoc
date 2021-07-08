@@ -9,7 +9,6 @@
 * <<query-load-csv-introduction, Introduction>>
 * <<csv-file-format, CSV file format>>
 * <<load-csv-import-data-from-a-csv-file, Import data from a CSV file>>
-* <<load-csv-import-data-from-a-remote-csv-file, Import data from a remote CSV file>>
 * <<load-csv-import-data-from-a-csv-file-containing-headers, Import data from a CSV file containing headers>>
 * <<load-csv-import-data-from-a-csv-file-with-a-custom-field-delimiter, Import data from a CSV file with a custom field delimiter>>
 * <<load-csv-importing-large-amounts-of-data, Importing large amounts of data>>
@@ -54,12 +53,6 @@ For example, a file URL will typically look like `+file:///myfile.csv+` or `+fil
 *  If `dbms.directories.import` is set to the default value _import_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/import/myfile.csv_ and _<NEO4J_HOME>/import/myproject/myfile.csv_ respectively.
 *  If it is set to _/data/csv_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/data/csv/myfile.csv_ and _<NEO4J_HOME>/data/csv/myproject/myfile.csv_ respectively.
 
-[NOTE]
-====
-The file location is relative to the import.
-The config setting `dbms.directories.import` only applies to local disc and **not** to remote URLs.
-====
-
 See the examples below for further details.
 
 [[csv-file-format]]
@@ -77,8 +70,6 @@ The CSV file to use with `LOAD CSV` must have the following characteristics:
 * a double quote must be in a quoted string and escaped, either with the escape character or a second double quote.
 
 include::import-data-from-a-csv-file.asciidoc[]
-
-include::import-data-from-a-remote-csv-file.asciidoc[]
 
 include::import-data-from-a-csv-file-containing-headers.asciidoc[]
 
@@ -129,4 +120,3 @@ If `LOAD CSV` is invoked with a `file:///` URL that points to your disk `file()`
 +------------------------------------------+
 1 row
 ----
-=======
