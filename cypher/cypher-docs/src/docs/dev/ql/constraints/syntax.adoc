@@ -18,7 +18,7 @@ If a name is not explicitly given, a unique name will be auto-generated.
 The create constraint command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
 With the `IF NOT EXISTS` flag, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
 It may still throw an error if conflicting data, indexes, or constraints exist.
-Examples of this would be nodes with missing properties, indexes with the same name, or constraints with same schema but a different constraint type.
+Examples of this are nodes with missing properties, indexes with the same name, or constraints with same schema but a different constraint type.
 
 For constraints that are backed by an index, the index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
 
@@ -155,7 +155,7 @@ IS NODE KEY
 List constraints in the database, either all or filtered on constraint type.
 This requires <<administration-security-administration-database-constraints, the `SHOW CONSTRAINT` privilege>>.
 
-The simple version of the command allows for a where clause and will give back the default set of output columns:
+The simple version of the command allows for a `WHERE` clause and will give back the default set of output columns:
 
 [source, cypher, role=noplay]
 ----
