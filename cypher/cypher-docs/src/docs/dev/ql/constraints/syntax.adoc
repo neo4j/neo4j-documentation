@@ -27,13 +27,21 @@ Creating a constraint requires <<administration-security-administration-database
 [discrete]
 === Create a unique node property constraint
 
-This command creates a uniqueness constraint on nodes with the specified label and property.
+This command creates a uniqueness constraint on nodes with the specified label and properties.
 
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName)
 ASSERT n.propertyName IS UNIQUE
+[OPTIONS "{" option: value[, ...] "}"]
+----
+
+[source, cypher, role=noplay]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
+ON (n:LabelName)
+ASSERT (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
@@ -110,6 +118,13 @@ An old way of dropping a uniqueness constraint was to drop the constraint by spe
 DROP CONSTRAINT
 ON (n:LabelName)
 ASSERT n.propertyName IS UNIQUE
+----
+
+[source, cypher, role=noplay]
+----
+DROP CONSTRAINT
+ON (n:LabelName)
+ASSERT (n.propertyName_1, … n.propertyName_n) IS UNIQUE
 ----
 
 [discrete]

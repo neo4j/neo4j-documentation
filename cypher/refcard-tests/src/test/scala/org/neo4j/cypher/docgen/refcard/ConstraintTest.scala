@@ -93,11 +93,11 @@ This constraint will create an accompanying index.
 //
 
 CREATE CONSTRAINT uniqueness ON (p:Person)
-       ASSERT p.age IS UNIQUE
+       ASSERT (p.firstname, p.age) IS UNIQUE
 ###
 
-Create a unique property constraint on the label `Person` and property `age` with the name `uniqueness`.
-If any other node with that label is updated or created with a `age` that
+Create a unique property constraint on the label `Person` and properties `firstname` and `age` with the name `uniqueness`.
+If any other node with that label is updated or created with a `firstname` and `age` combination that
 already exists, the write operation will fail.
 This constraint will create an accompanying index.
 

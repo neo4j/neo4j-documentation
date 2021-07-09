@@ -16,6 +16,40 @@ Replacement syntax for deprecated and removed features are also indicated.
 |===
 | Feature
 | Details
+
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
+ON (n:LabelName)
+ASSERT (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
+[OPTIONS "{" option: value[, ...] "}"]
+----
+a|
+Unique property constraints now allow multiple properties, ensuring the combination of property values are unique.
+
+
+a|
+label:functionality[]
+label:added[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT
+ON (n:LabelName)
+ASSERT (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
+----
+a|
+Unique property constraints now allow multiple properties.
+
+Replaced by:
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT name [IF EXISTS]
+----
 |===
 
 

@@ -81,13 +81,13 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
           |`$wgsMin`, `$wgsMax`, `$wgs3dMin`, and `$wgs3dMax`.
           |Non-specified settings get their respective default values.""".stripMargin,
       queryText =
-        s"""CREATE CONSTRAINT constraint_with_options ON (n:Label) ASSERT n.prop IS UNIQUE
+        s"""CREATE CONSTRAINT constraint_with_options ON (n:Label) ASSERT (n.prop1, n.prop2) IS UNIQUE
           |OPTIONS {
           | indexProvider: '$nativeLuceneProvider',
           | indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}
           |}""".stripMargin,
       optionalResultExplanation = "Specifying index provider and configuration can be done individually.",
-      assertions = _ => assertConstraintWithNameExists("constraint_with_options", "Label", List("prop"))
+      assertions = _ => assertConstraintWithNameExists("constraint_with_options", "Label", List("prop1", "prop2"))
     )
   }
 
