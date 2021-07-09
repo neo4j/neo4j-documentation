@@ -70,11 +70,15 @@ This command creates a node key constraint on nodes with the specified label and
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName)
-ASSERT (n.propertyName_1,
-n.propertyName_2,
-…
-n.propertyName_n)
-IS NODE KEY
+ASSERT n.propertyName IS NODE KEY
+[OPTIONS "{" option: value[, ...] "}"]
+----
+
+[source, cypher, role=noplay]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
+ON (n:LabelName)
+ASSERT (n.propertyName_1, …, n.propertyName_n) IS NODE KEY
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
@@ -141,11 +145,14 @@ An old way of dropping a node key constraint was to drop the constraint by speci
 ----
 DROP CONSTRAINT
 ON (n:LabelName)
-ASSERT (n.propertyName_1,
-n.propertyName_2,
-…
-n.propertyName_n)
-IS NODE KEY
+ASSERT n.propertyName IS NODE KEY
+----
+
+[source, cypher, role=noplay]
+----
+DROP CONSTRAINT
+ON (n:LabelName)
+ASSERT (n.propertyName_1, … n.propertyName_n) IS NODE KEY
 ----
 
 

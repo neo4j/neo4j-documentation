@@ -173,21 +173,23 @@ CREATE CONSTRAINT ON (p:Person)
 (★) Create a node key constraint on the label `Person` and properties `firstname` and `surname`.
 If a node with that label is created without both `firstname` and `surname`
 or if the combination of the two is not unique,
-or if the `firstname` and/or `surname` labels on an existing node with the `Person` label
+or if the `firstname` and/or `surname` properties on an existing node with the `Person` label
 is modified to violate these constraints, the write operation will fail.
+This constraint will create an accompanying index.
 
 ###assertion=create-node-key-constraint
 //
 
 CREATE CONSTRAINT node_key ON (p:Person)
-      ASSERT (p.name, p.surname) IS NODE KEY
+      ASSERT p.firstname IS NODE KEY
 ###
 
-(★) Create a node key constraint on the label `Person` and properties `name` and `surname` with the name `node_key`.
-If a node with that label is created without both `name` and `surname`
-or if the combination of the two is not unique,
-or if the `name` and/or `surname` labels on an existing node with the `Person` label
+(★) Create a node key constraint on the label `Person` and property `firstname` with the name `node_key`.
+If a node with that label is created without the `firstname` property
+or if the value is not unique,
+or if the `firstname` property on an existing node with the `Person` label
 is modified to violate these constraints, the write operation will fail.
+This constraint will create an accompanying index.
 
 ###assertion=create-node-key-constraint
 //
@@ -208,6 +210,7 @@ DROP CONSTRAINT uniqueness
 ###
 
 Drop the constraint with the name `uniqueness`, throws an error if the constraint does not exist.
+If the constraint has an accompanying index, that will also be dropped.
 
 ###assertion=drop-non-existing-constraint
 //
@@ -216,5 +219,6 @@ DROP CONSTRAINT uniqueness IF EXISTS
 ###
 
 Drop the constraint with the name `uniqueness` if it exists, does nothing if it does not exist.
+If the constraint has an accompanying index, that will also be dropped.
 """)
 }
