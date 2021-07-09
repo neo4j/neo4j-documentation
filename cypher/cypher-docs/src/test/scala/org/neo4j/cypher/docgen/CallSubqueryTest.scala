@@ -40,7 +40,7 @@ class CallSubqueryTest extends DocumentingTest {
     p("""* <<subquery-call-introduction, Introduction>>
         #* <<subquery-correlated-importing, Importing variables into subqueries>>
         #* <<subquery-post-union, Post-union processing>>
-        #* <<subquery-aggregation, Cardinality and aggregation>>
+        #* <<subquery-aggregation, Aggregations>>
         #* <<subquery-unit, Unit subqueries and side-effects>>
         #* <<subquery-correlated-aggregation, Aggregation on imported variables>>""".stripMargin('#'))
     section("Introduction", "subquery-call-introduction") {
@@ -135,11 +135,11 @@ class CallSubqueryTest extends DocumentingTest {
         )))) { resultTable() }
     }
 
-    section("Cardinality and aggregation", "subquery-aggregation") {
+    section("Aggregations", "subquery-aggregation") {
       p(
-        """Returning subqueries change the cardinality of the query: The results of each subquery invocation are collected and together they give the result of
-          | the `CALL` clause.""".stripMargin)
-      p("""The following example finds the names of each person's friends:""")
+        """Returning subqueries change the number of results of the query: The results of each subquery invocation are collected and together they give the
+          |result of the `CALL` clause.""".stripMargin)
+      p("""The following example finds the name of each person and the names of their friends:""")
       query("""MATCH (p:Person)
               #CALL {
               #  WITH p
@@ -177,7 +177,7 @@ class CallSubqueryTest extends DocumentingTest {
       p("""Unit subqueries do not return any rows and are therefore used for their side effects.""")
 
       p(
-        """This example query creates five clones of each existing person. As the subquery is a unit subquery, it does not change the cardinality of the
+        """This example query creates five clones of each existing person. As the subquery is a unit subquery, it does not change the number of rows of the
           |enclosing query.""".stripMargin)
       query("""MATCH (p:Person)
               #CALL {
