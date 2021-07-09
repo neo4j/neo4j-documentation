@@ -17,9 +17,12 @@ If a name is not explicitly given, a unique name will be auto-generated.
 
 The create constraint command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
 With the `IF NOT EXISTS` flag, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
-It may still throw an error should a conflicting index or constraint exist.
+It may still throw an error if conflicting data, indexes, or constraints exist.
+Examples of this would be nodes with missing properties, indexes with the same name, or constraints with same schema but a different constraint type.
 
 For constraints that are backed by an index, the index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
+
+Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>.
 
 [discrete]
 === Create a unique node property constraint
@@ -86,6 +89,8 @@ The preferred way of dropping a constraint is by the name of the constraint.
 This drop command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same constraint twice.
 With the `IF EXISTS` flag, no error is thrown and nothing happens should the constraint not exist.
 
+Dropping a constraint requires <<administration-security-administration-database-constraints, the `DROP CONSTRAINT` privilege>>.
+
 [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT constraint_name [IF EXISTS]
@@ -148,6 +153,7 @@ IS NODE KEY
 == Syntax for listing constraints
 
 List constraints in the database, either all or filtered on constraint type.
+This requires <<administration-security-administration-database-constraints, the `SHOW CONSTRAINT` privilege>>.
 
 The simple version of the command allows for a where clause and will give back the default set of output columns:
 
