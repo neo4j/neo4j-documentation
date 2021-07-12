@@ -117,7 +117,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Unique Constraint",
       text =
-        """The `CreateUniqueConstraint` operator creates a unique constraint on a property for all nodes having a certain label.
+        """The `CreateUniqueConstraint` operator creates a unique constraint on a set of properties for all nodes having a certain label.
           |The following query will create a unique constraint with the name `uniqueness` on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """CREATE CONSTRAINT uniqueness ON (c:Country) ASSERT c.name is UNIQUE""",
       assertions = p => {
@@ -136,7 +136,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Drop Unique Constraint",
       text =
-        """The `DropUniqueConstraint` operator removes a unique constraint from a property for all nodes having a certain label.
+        """The `DropUniqueConstraint` operator removes a unique constraint from all nodes having a certain set of properties and label.
           |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """DROP CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
       assertions = p => assertThat(p.executionPlanString(), containsString("DropConstraint"))
@@ -211,7 +211,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def dropNodePropertyExistenceConstraint2() {
+  @Test def dropNodeKeyConstraint() {
     executePreparationQueries {
       List("CREATE CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY")
     }

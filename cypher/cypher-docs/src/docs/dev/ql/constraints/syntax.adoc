@@ -101,7 +101,7 @@ The preferred way of dropping a constraint is by the name of the constraint.
 This drop command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same constraint twice.
 With the `IF EXISTS` flag, no error is thrown and nothing happens should the constraint not exist.
 
-Dropping a constraint requires <<administration-security-administration-database-constraints, the `DROP CONSTRAINT` privilege>>.
+Dropping a constraint requires the <<administration-security-administration-database-constraints, `DROP CONSTRAINT`>>  privilege.
 
 [source, cypher, role=noplay]
 ----
@@ -175,7 +175,7 @@ ASSERT (n.propertyName_1, … n.propertyName_n) IS NODE KEY
 == Syntax for listing constraints
 
 List constraints in the database, either all or filtered on constraint type.
-This requires <<administration-security-administration-database-constraints, the `SHOW CONSTRAINT` privilege>>.
+This requires  the<<administration-security-administration-database-constraints, `SHOW CONSTRAINT` >> privilege.
 
 The simple version of the command allows for a `WHERE` clause and will give back the default set of output columns:
 

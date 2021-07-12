@@ -13,7 +13,7 @@ The following constraint types are available:
 *Unique node property constraints*::
 Unique property constraints ensure that property values are unique for all nodes with a specific label.
 For unique property constraints on multiple properties, the combination of the property values is unique.
-Unique constraints do not mean that all nodes have to have a unique value for the properties -- nodes without all properties are not subject to this rule.
+Unique constraints do not require all nodes to have a unique value for the properties listed -- nodes without all properties are not subject to this rule.
 
 *[enterprise-edition]#Node property existence constraints#*::
 Node property existence constraints ensure that a property exists for all nodes with a specific label.
@@ -48,11 +48,11 @@ Databases containing one of these constraint types cannot be opened using Neo4j 
 
 Creating a constraint has the following implications on indexes:
 
-* Adding a node key or unique property constraint on a single property will also add a <<administration-indexes-create-a-single-property-index-for-nodes, single-property index>> on that property, so such an index cannot be added separately.
-* Adding a node key or unique property constraint for a set of properties will also add a <<administration-indexes-create-a-composite-index-for-nodes, composite index>> on those properties, so such an index cannot be added separately.
+* Adding a node key or unique property constraint on a single property also adds a <<administration-indexes-create-a-single-property-index-for-nodes, single-property index>> on that property and therefore, such an index cannot be added separately.
+* Adding a node key or unique property constraint for a set of properties also adds a <<administration-indexes-create-a-composite-index-for-nodes, composite index>> on those properties and therefore,  such an index cannot be added separately.
 * Cypher will use these indexes for lookups just like other indexes.
   Refer to <<administration-indexes-search-performance>> for more details on indexes.
-* If a node key or unique property constraint is dropped and the backing index is still required, the index will need to be created explicitly.
+* If a node key or unique property constraint is dropped and the backing index is still required, the index need to be created explicitly.
 
 Additionally, the following is true for constraints:
 

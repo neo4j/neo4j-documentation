@@ -29,7 +29,7 @@ ASSERT (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 a|
-Unique property constraints now allow multiple properties, ensuring the combination of property values are unique.
+Unique property constraints now allow multiple properties, ensuring that the combination of property values are unique.
 
 
 a|
