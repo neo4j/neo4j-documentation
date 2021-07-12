@@ -137,8 +137,8 @@ class CallSubqueryTest extends DocumentingTest {
 
     section("Aggregations", "subquery-aggregation") {
       p(
-        """Returning subqueries change the number of results of the query: The results of each subquery invocation are collected and together they give the
-          |result of the `CALL` clause.""".stripMargin)
+        """Returning subqueries change the number of results of the query: The result of the `CALL` clause is the combined result of evaluating the subquery
+          |for each input row.""".stripMargin)
       p("""The following example finds the name of each person and the names of their friends:""")
       query("""MATCH (p:Person)
               #CALL {
@@ -157,7 +157,7 @@ class CallSubqueryTest extends DocumentingTest {
           |graph.""".stripMargin)
       p(
         """We can also use subqueries to perform isolated aggregations. In this example we count the number of relationships each person has. As we get one row
-          | for each invocation of the subquery, the number of rows is the same, before and after the `CALL` clause:""".stripMargin)
+          | from each evaluation of the subquery, the number of rows is the same, before and after the `CALL` clause:""".stripMargin)
       query("""MATCH (p:Person)
               #CALL {
               #  WITH p
