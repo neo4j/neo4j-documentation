@@ -160,7 +160,9 @@ Note that this applies to all variations of CSV files (see examples below for ot
                #By default, the commit will happen every 1000 rows.
                #For more information, see <<query-using-periodic-commit-hint>>.
                #
-               #Note: The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` clause.""".stripMargin('#'),
+               #Note: The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` query hint.
+               #
+               #Note: Queries with the `PERIODIC COMMIT` query hint can not be routed by <<operations-manual#causal-clustering-routing, Server-side routing>>.""".stripMargin('#'),
       queryText = """USING PERIODIC COMMIT LOAD CSV FROM '%ARTIST%' AS line
                     #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
       optionalResultExplanation = "",
