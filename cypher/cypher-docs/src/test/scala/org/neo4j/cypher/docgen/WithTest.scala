@@ -41,10 +41,15 @@ class WithTest extends DocumentingTest {
         #  (b)-[:BLOCKS]->(d)""".stripMargin('#'))
     synopsis("The `WITH` clause allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.")
     note {
-      p("It is important to note that `WITH` affects variables in scope. Any variables not included in the `WITH` clause are not carried over to the rest of the query.")
+      p(
+        """It is important to note that `WITH` affects variables in scope. Any variables not included in the `WITH` clause are not carried over to the rest of the query.
+          |The wildcard `*` can be used to include all variables that are currently in scope.
+          |""".stripMargin)
     }
     p(
       """* <<with-introduction, Introduction>>
+        |* <<with-introduce-variables, Introducing variables for expressions>>
+        |* <<with-wildcard, Using the wildcard to carry over variables>>
         |* <<with-filter-on-aggregate-function-results, Filter on aggregate function results>>
         |* <<with-sort-results-before-using-collect-on-them, Sort results before using collect on them>>
         |* <<with-limit-branching-of-path-search, Limit branching of a path search>>
@@ -52,20 +57,47 @@ class WithTest extends DocumentingTest {
     section("Introduction", "with-introduction") {
       p(
         """Using `WITH`, you can manipulate the output before it is passed on to the following query parts.
-          |The manipulations can be of the shape and/or number of entries in the result set.""".stripMargin)
+          |Manipulations can be done to the shape and/or number of entries in the result set.""".stripMargin)
       p(
         """One common usage of `WITH` is to limit the number of entries that are then passed on to other `MATCH` clauses.
           |By combining `ORDER BY` and `LIMIT`, it's possible to get the top X entries by some criteria, and then bring in additional data from the graph.""".stripMargin)
       p(
+        """`WITH` can also be used to introduce new variables containing the results of expressions, for use in the following query parts.
+          |For convenience, the wildcard `*` expands to all variables that are currently in scope, and carries them over to the next query part.""".stripMargin)
+      p(
         """Another use is to filter on aggregated values.
           |`WITH` is used to introduce aggregates which can then be used in predicates in `WHERE`.
-          |These aggregate expressions create new bindings in the results.
-          |`WITH` can also, like `RETURN`, alias expressions that are introduced into the results using the aliases as the binding name.""".stripMargin)
+          |These aggregate expressions create new bindings in the results.""".stripMargin)
       p(
         """`WITH` is also used to separate reading from updating of the graph.
           |Every part of a query must be either read-only or write-only.
           |When going from a writing part to a reading part, the switch must be done with a `WITH` clause.""".stripMargin)
       graphViz()
+    }
+    section("Introducing variables for expressions", "with-introduce-variables") {
+      p("""You can introduce new variables for the result of evaluating expressions.""")
+      query("""MATCH (george {name: 'George'})<--(otherPerson)
+              #WITH otherPerson, toUpper(otherPerson.name) AS upperCaseName
+              #WHERE upperCaseName STARTS WITH 'C'
+              #RETURN otherPerson.name""".stripMargin('#'),
+      ResultAssertions((r) => {
+          r.toList should equal(List(Map("otherPerson.name" -> "Caesar")))
+        })) {
+        p("This query returns the name of persons connected to *'George'* whose name starts with a `C`, regardless of capitalization.")
+        resultTable()
+      }
+    }
+    section("Using the wildcard to carry over variables", "with-wildcard") {
+      p("""You can use the wildcard `*` to carry over all variables that are in scope, in addition to introducing new variables.""")
+      query("""MATCH (person)-[r]->(otherPerson)
+              #WITH *, typeOf(r) AS connectionType
+              #RETURN person.name, otherPerson.name, connectionType""".stripMargin('#'),
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("person.name" -> "Caesar", "otherPerson.name" -> "George")))
+        })) {
+        p("This query returns the names of all related persons and the type of relationship between them.")
+        resultTable()
+      }
     }
     section("Filter on aggregate function results", "with-filter-on-aggregate-function-results") {
       p("""Aggregated results have to pass through a `WITH` clause to be able to filter on.""")
