@@ -19,8 +19,7 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
-import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, QueryStatisticsTestSupport, ResultAssertions}
 
 class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
 
@@ -85,6 +84,11 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
       p("""When using `MERGE` on full patterns, the behavior is that either the whole pattern matches, or the whole pattern is created.
           #`MERGE` will not partially use existing patterns -- it is all or nothing.
           #If partial matches are needed, this can be accomplished by splitting a pattern up into multiple `MERGE` clauses.""".stripMargin('#'))
+      important {
+        p("""Under concurrent updates, `MERGE` only guarantees existence of the `MERGE` pattern, but not uniqueness.
+            #To guarantee uniqueness of nodes with certain properties, a <<administration-constraints, unique constraint>> should be used.
+            #See <<query-merge-using-unique-constraints, Using unique constraints with `MERGE`>> to see how `MERGE` can be used in combination with a unique constraint.""".stripMargin('#'))
+      }
       p("""As with `MATCH`, `MERGE` can match multiple occurrences of a pattern.
           #If there are multiple matches, they will all be passed on to later stages of the query.""".stripMargin('#'))
       p("""The last part of `MERGE` is the `ON CREATE` and `ON MATCH`.
