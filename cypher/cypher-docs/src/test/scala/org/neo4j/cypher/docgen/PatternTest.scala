@@ -19,12 +19,13 @@
  */
 package org.neo4j.cypher.docgen
 
+import org.neo4j.cypher.docgen.tooling.Document
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 
 class PatternTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/"
 
-  override def doc = new DocBuilder {
+  override def doc: Document = new DocBuilder {
     doc("Patterns", "cypher-patterns")
     synopsis("This section contains an overview of data patterns in Cypher.")
     initQueries(
@@ -199,7 +200,7 @@ class PatternTest extends DocumentingTest {
           |(a)-[*2]->(b)
           |----
           |""")
-      p("""This describes a graph of three nodes and two relationship, all in one path (a path of length 2).
+      p("""This describes a subgraph of three nodes and two relationships, all in one path (a path of length 2).
           |This is equivalent to:""")
       p("""[source, cypher, role=noplay]
           |----
@@ -227,7 +228,7 @@ class PatternTest extends DocumentingTest {
           |(a)-[*..5]->(b)
           |----
           |""")
-      p("""Both bounds can be omitted, allowing paths of any length to be described:""")
+      p("""Omitting both bounds is equivalent to specifying a minimum of 1, allowing paths of any positive length to be described:""")
       p("""[source, cypher, role=noplay]
           |----
           |(a)-[*]->(b)
@@ -238,7 +239,7 @@ class PatternTest extends DocumentingTest {
       query(
         """MATCH (me)-[:KNOWS*1..2]-(remote_friend)
           |WHERE me.name = 'Filipa'
-          |RETURN remote_friend.name""".stripMargin, ResultAssertions((r) => {
+          |RETURN remote_friend.name""".stripMargin, ResultAssertions(r => {
           r.toList should equal(List(Map("remote_friend.name" -> "Dilshad"), Map("remote_friend.name" -> "Anders")))
         })) {
         resultTable()
