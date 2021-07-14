@@ -233,7 +233,12 @@ class UsingTest extends DocumentingTest {
             #However, it will also break transactional isolation and thus it should only be used where needed.""".stripMargin('#'))
       }
       note {
-        p("The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` clause.")
+        p("The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` query hint.")
+      }
+      note {
+        p(
+          """Queries with the `PERIODIC COMMIT` query hint can not be routed by <<operations-manual#causal-clustering-routing, Server-side routing>>.
+            |Such queries must rely on standard client-side routing, done by the Neo4j Driver.""".stripMargin)
       }
     }
   }.build()
