@@ -101,7 +101,7 @@ Tests for the absence of a pattern predicate.
 |
 
 | <<query-plan-create-unique-constraint,CreateUniqueConstraint>>
-| Creates a unique constraint on a property for all nodes having a certain label.
+| Creates a unique constraint on a set of properties for all nodes having a certain label.
 |
 | label:yes[]
 |
@@ -179,7 +179,7 @@ Tests for the absence of a pattern predicate.
 | label:deprecated[]
 
 | <<query-plan-drop-unique-constraint,DropUniqueConstraint>>
-| Drops a unique constraint from a property for all nodes having a certain label.
+| Drops a unique constraint from a set of properties for all nodes having a certain label.
 | label:yes[]
 | label:yes[]
 | label:deprecated[]

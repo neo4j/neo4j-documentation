@@ -56,7 +56,7 @@ However it is worth listing up-front the key areas that are not supported in the
 | Feature | Enterprise | Community
 | <<administration-databases, Multi-database>> | Any number of user databases | Only `system` and one user database
 | Role-based security | <<administration-security, User, Role and Privilege management>> for flexible access control and <<administration-security-subgraph, sub-graph access control>>. | <<administration-security-users, Multi-user management>>. All users have full access rights.
-| Constraints | <<administration-constraints-prop-exist-nodes, Existence constraints>> and <<administration-constraints-node-key, multi-property `NODE KEY` constraints>>.  | Only <<administration-constraints-unique-nodes, single property uniqueness constraints>>
+| Constraints | <<administration-constraints-prop-exist-nodes, Existence constraints>>, <<administration-constraints-unique-nodes, uniqueness constraints>>, and <<administration-constraints-node-key, `NODE KEY` constraints>>.  | Only <<administration-constraints-unique-nodes, uniqueness constraints>>
 |===
 
 

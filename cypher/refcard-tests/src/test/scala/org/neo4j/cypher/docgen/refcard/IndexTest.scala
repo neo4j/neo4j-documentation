@@ -91,7 +91,7 @@ Create an index on nodes with label `Person` and property `name`.
 CREATE INDEX index_name FOR ()-[k:KNOWS]-() ON (k.since)
 ###
 
-Create an index on relationships with type `KNOWS` and property `since` with the name `index_name`.
+Create an index with the name `index_name` on relationships with type `KNOWS` and property `since`.
 
 ###assertion=create-index
 //
@@ -125,7 +125,7 @@ Create a composite index on nodes with label `Person` and the properties `name` 
 CREATE LOOKUP INDEX lookup_index_name FOR (n) ON EACH labels(n)
 ###
 
-Create a token lookup index with the name `lookup_index_name` on nodes with any label .
+Create a token lookup index with the name `lookup_index_name` on nodes with any label.
 
 ###assertion=create-index
 //

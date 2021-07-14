@@ -17,20 +17,31 @@ If a name is not explicitly given, a unique name will be auto-generated.
 
 The create constraint command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same constraint twice.
 With the `IF NOT EXISTS` flag, no error is thrown and nothing happens should a constraint with the same name or same schema and constraint type already exist.
-It may still throw an error should a conflicting index or constraint exist.
+It may still throw an error if conflicting data, indexes, or constraints exist.
+Examples of this are nodes with missing properties, indexes with the same name, or constraints with same schema but a different constraint type.
 
 For constraints that are backed by an index, the index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
+
+Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>.
 
 [discrete]
 === Create a unique node property constraint
 
-This command creates a uniqueness constraint on nodes with the specified label and property.
+This command creates a uniqueness constraint on nodes with the specified label and properties.
 
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName)
 ASSERT n.propertyName IS UNIQUE
+[OPTIONS "{" option: value[, ...] "}"]
+----
+
+[source, cypher, role=noplay]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
+ON (n:LabelName)
+ASSERT (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
@@ -67,11 +78,15 @@ This command creates a node key constraint on nodes with the specified label and
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 ON (n:LabelName)
-ASSERT (n.propertyName_1,
-n.propertyName_2,
-…
-n.propertyName_n)
-IS NODE KEY
+ASSERT n.propertyName IS NODE KEY
+[OPTIONS "{" option: value[, ...] "}"]
+----
+
+[source, cypher, role=noplay]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
+ON (n:LabelName)
+ASSERT (n.propertyName_1, …, n.propertyName_n) IS NODE KEY
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
@@ -85,6 +100,8 @@ The preferred way of dropping a constraint is by the name of the constraint.
 
 This drop command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same constraint twice.
 With the `IF EXISTS` flag, no error is thrown and nothing happens should the constraint not exist.
+
+Dropping a constraint requires the <<administration-security-administration-database-constraints, `DROP CONSTRAINT`>>  privilege.
 
 [source, cypher, role=noplay]
 ----
@@ -101,6 +118,13 @@ An old way of dropping a uniqueness constraint was to drop the constraint by spe
 DROP CONSTRAINT
 ON (n:LabelName)
 ASSERT n.propertyName IS UNIQUE
+----
+
+[source, cypher, role=noplay]
+----
+DROP CONSTRAINT
+ON (n:LabelName)
+ASSERT (n.propertyName_1, … n.propertyName_n) IS UNIQUE
 ----
 
 [discrete]
@@ -136,11 +160,14 @@ An old way of dropping a node key constraint was to drop the constraint by speci
 ----
 DROP CONSTRAINT
 ON (n:LabelName)
-ASSERT (n.propertyName_1,
-n.propertyName_2,
-…
-n.propertyName_n)
-IS NODE KEY
+ASSERT n.propertyName IS NODE KEY
+----
+
+[source, cypher, role=noplay]
+----
+DROP CONSTRAINT
+ON (n:LabelName)
+ASSERT (n.propertyName_1, … n.propertyName_n) IS NODE KEY
 ----
 
 
@@ -148,8 +175,9 @@ IS NODE KEY
 == Syntax for listing constraints
 
 List constraints in the database, either all or filtered on constraint type.
+This requires  the<<administration-security-administration-database-constraints, `SHOW CONSTRAINT` >> privilege.
 
-The simple version of the command allows for a where clause and will give back the default set of output columns:
+The simple version of the command allows for a `WHERE` clause and will give back the default set of output columns:
 
 [source, cypher, role=noplay]
 ----
