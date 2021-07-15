@@ -200,7 +200,7 @@ class PatternTest extends DocumentingTest {
           |(a)-[*2]->(b)
           |----
           |""")
-      p("""This describes a subgraph of three nodes and two relationships, all in one path (a path of length 2).
+      p("""This describes a graph of three nodes and two relationships, all in one path (a path of length 2).
           |This is equivalent to:""")
       p("""[source, cypher, role=noplay]
           |----
