@@ -28,7 +28,7 @@ class UsingTest extends DocumentingTest {
     initQueries(
       "CREATE INDEX FOR (n:Scientist) ON (n.name)",
       "CREATE INDEX FOR (n:Science) ON (n.name)",
-
+      "CALL db.awaitIndexes",
       """CREATE
         |(liskov:Scientist {name: 'Liskov', born: 1939})-[:KNOWS]->(wing:Scientist {name: 'Wing', born: 1956})-[:RESEARCHED]->(cs:Science {name: 'Computer Science'})<-[:RESEARCHED]-(conway:Scientist {name: 'Conway', born: 1938}),
         |(liskov)-[:RESEARCHED]->(cs),
