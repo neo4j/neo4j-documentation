@@ -35,6 +35,18 @@ class UsingTest extends DocumentingTest {
       "CREATE INDEX FOR (p:Pioneer) ON (p.born)",
       "CREATE INDEX FOR (c:Country) ON (c.formed)",
       "CREATE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.year)",
+      "CREATE INDEX FOR (n:Scientist) ON (n.name)",
+      "CREATE INDEX FOR (n:Science) ON (n.name)",
+      "CALL db.awaitIndexes",
+      """CREATE
+        |(liskov:Scientist {name: 'Liskov', born: 1939})-[:KNOWS]->(wing:Scientist {name: 'Wing', born: 1956})-[:RESEARCHED]->(cs:Science {name: 'Computer Science'})<-[:RESEARCHED]-(conway:Scientist {name: 'Conway', born: 1938}),
+        |(liskov)-[:RESEARCHED]->(cs),
+        |(wing)-[:RESEARCHED]->(:Science {name: 'Engineering'}),
+        |(chemistry:Science {name: 'Chemistry'})<-[:RESEARCHED]-(:Scientist {name: 'Curie', born: 1867}),
+        |(chemistry)<-[:RESEARCHED]-(:Scientist {name: 'Arden'}),
+        |(chemistry)<-[:RESEARCHED]-(:Scientist {name: 'Franklin'}),
+        |(chemistry)<-[:RESEARCHED]-(:Scientist {name: 'Harrison'})
+      """
     )
     synopsis("A planner hint is used to influence the decisions of the planner when building an execution plan for a query. Planner hints are specified in a query with the `USING` keyword.")
     caution {
