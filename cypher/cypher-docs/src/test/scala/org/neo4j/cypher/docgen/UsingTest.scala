@@ -40,6 +40,7 @@ class UsingTest extends DocumentingTest {
       "CREATE INDEX FOR (c:Country) ON (c.formed)",
       "CREATE INDEX FOR (c:Country) ON (c.name)",
       "CREATE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.year)",
+      "CALL db.awaitIndexes",
     )
     synopsis("A planner hint is used to influence the decisions of the planner when building an execution plan for a query. Planner hints are specified in a query with the `USING` keyword.")
     caution {
