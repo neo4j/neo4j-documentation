@@ -93,6 +93,7 @@ class TemporalTest extends DocumentingTest {
           #* Specifying the offset from UTC in hours and minutes (link:https://en.wikipedia.org/wiki/ISO_8601[ISO 8601])
           #* Specifying a named time zone
           #* Specifying both the offset and the time zone name (with the requirement that these match)""".stripMargin('#'))
+      p("""See <<cypher-temporal-specify-time-zone, Specifying time zones>> for examples.""".stripMargin('#'))
       p("""The named time zone form uses the rules of the IANA time zone database to manage _daylight savings time_ (DST).""")
       p("""The default time zone of the database can be configured using the configuration option <<operations-manual#config_db.temporal.timezone, `db.temporal.timezone`>>.
           #This configuration option influences the creation of temporal types for the following functions:
