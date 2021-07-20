@@ -92,8 +92,15 @@ class WithTest extends DocumentingTest {
       query("""MATCH (person)-[r]->(otherPerson)
               #WITH *, type(r) AS connectionType
               #RETURN person.name, otherPerson.name, connectionType""".stripMargin('#'),
-        ResultAssertions((r) => {
-          r.toList should equal(List(Map("person.name" -> "Caesar", "otherPerson.name" -> "George")))
+        ResultAssertions(r => {
+          r.toList should equal(List(
+            Map("person.name" -> "David", "otherPerson.name" -> "Anders", "connectionType" -> "KNOWS"),
+            Map("person.name" -> "Anders", "otherPerson.name" -> "Bossman", "connectionType" -> "KNOWS"),
+            Map("person.name" -> "Anders", "otherPerson.name" -> "Caesar", "connectionType" -> "BLOCKS"),
+            Map("person.name" -> "Bossman", "otherPerson.name" -> "David", "connectionType" -> "BLOCKS"),
+            Map("person.name" -> "Bossman", "otherPerson.name" -> "George", "connectionType" -> "KNOWS"),
+            Map("person.name" -> "Caesar", "otherPerson.name" -> "George", "connectionType" -> "KNOWS")
+          ))
         })) {
         p("This query returns the names of all related persons and the type of relationship between them.")
         resultTable()
