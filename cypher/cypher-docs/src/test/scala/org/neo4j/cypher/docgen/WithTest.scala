@@ -90,7 +90,7 @@ class WithTest extends DocumentingTest {
     section("Using the wildcard to carry over variables", "with-wildcard") {
       p("""You can use the wildcard `*` to carry over all variables that are in scope, in addition to introducing new variables.""")
       query("""MATCH (person)-[r]->(otherPerson)
-              #WITH *, typeOf(r) AS connectionType
+              #WITH *, type(r) AS connectionType
               #RETURN person.name, otherPerson.name, connectionType""".stripMargin('#'),
         ResultAssertions((r) => {
           r.toList should equal(List(Map("person.name" -> "Caesar", "otherPerson.name" -> "George")))
