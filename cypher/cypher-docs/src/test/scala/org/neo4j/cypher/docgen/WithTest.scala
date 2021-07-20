@@ -59,11 +59,11 @@ class WithTest extends DocumentingTest {
         """Using `WITH`, you can manipulate the output before it is passed on to the following query parts.
           |Manipulations can be done to the shape and/or number of entries in the result set.""".stripMargin)
       p(
-        """One common usage of `WITH` is to limit the number of entries that are then passed on to other `MATCH` clauses.
-          |By combining `ORDER BY` and `LIMIT`, it's possible to get the top X entries by some criteria, and then bring in additional data from the graph.""".stripMargin)
+        """One common usage of `WITH` is to limit the number of entries passed on to other `MATCH` clauses.
+          |By combining `ORDER BY` and `LIMIT`, it is possible to get the top X entries by some criteria and then bring in additional data from the graph.""".stripMargin)
       p(
-        """`WITH` can also be used to introduce new variables containing the results of expressions, for use in the following query parts.
-          |For convenience, the wildcard `*` expands to all variables that are currently in scope, and carries them over to the next query part.""".stripMargin)
+        """`WITH` can also be used to introduce new variables containing the results of expressions for use in the following query parts.
+          |For convenience, the wildcard `*` expands to all variables that are currently in scope and carries them over to the next query part.""".stripMargin)
       p(
         """Another use is to filter on aggregated values.
           |`WITH` is used to introduce aggregates which can then be used in predicates in `WHERE`.
