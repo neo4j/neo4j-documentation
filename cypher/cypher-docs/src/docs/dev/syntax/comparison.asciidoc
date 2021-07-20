@@ -12,9 +12,10 @@ Maps are only equal if they map exactly the same keys to equal values and lists 
 Values of different types are considered as equal according to the following rules:
 
 * Paths are treated as lists of alternating nodes and relationships and are equal to all lists that contain that very same sequence of nodes and relationships.
-* Testing any value against `null` with both the `=` and the `<>` operators always is `null`.
+* Testing any value against `null` with both the `=` and the `<>` operators always evaluates to `null`.
 This includes `null = null` and `null <> null`.
-The only way to reliably test if a value `v` is  `null` is by using the special `v IS NULL`, or `v IS NOT NULL` equality operators.
+The only way to reliably test if a value `v` is `null` is by using the special `v IS NULL`, or `v IS NOT NULL`, equality operators.
+`v IS NOT NULL` is equivalent to `NOT(v IS NULL)`.
 
 All other combinations of types of values cannot be compared with each other.
 Especially, nodes, relationships, and literal maps are incomparable with each other.
