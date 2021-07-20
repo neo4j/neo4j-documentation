@@ -63,11 +63,11 @@ class TemporalTest extends DocumentingTest {
           |[options="header", cols="^,^,^,^", width="85%"]
           ||===
           || Type | Date support | Time support | Time zone support
-          || Date | X  | |
-          || Time | | X | X
-          || LocalTime | | X |
-          || DateTime |  X | X | X
-          || LocalDateTime | X | X |
+          || Date | ✔  | |
+          || Time | | ✔ | ✔
+          || LocalTime | | ✔ |
+          || DateTime |  X | ✔ | ✔
+          || LocalDateTime | ✔ | ✔ |
           || Duration | - | - | -
           ||===
           |
@@ -246,14 +246,14 @@ class TemporalTest extends DocumentingTest {
               |[options="header", width="85%"]
               ||===
               || Format | Description | Example | Supported for `DateTime` | Supported for `Time`
-              || **`Z`** | UTC | `Z` | X | X
-              || `±HH:MM` | `Hour:Minute` | `+09:30` | X | X
-              || `±HH:MM[ZoneName]` | `Hour:Minute[ZoneName]` | `+08:45[Australia/Eucla]` | X |
-              || `±HHMM` | `Hour:Minute` | `+0100` | X | X
-              || `±HHMM[ZoneName]` | `Hour:Minute[ZoneName]` | `+0200[Africa/Johannesburg]` | X |
-              || `±HH` | `Hour` | `-08` | X | X
-              || `±HH[ZoneName]` | `Hour[ZoneName]` | `+08[Asia/Singapore]` | X |
-              || `[ZoneName]` | `[ZoneName]` | `[America/Regina]` | X |
+              || **`Z`** | UTC | `Z` | ✔ | ✔
+              || `±HH:MM` | `Hour:Minute` | `+09:30` | ✔ | ✔
+              || `±HH:MM[ZoneName]` | `Hour:Minute[ZoneName]` | `+08:45[Australia/Eucla]` | ✔ |
+              || `±HHMM` | `Hour:Minute` | `+0100` | ✔ | ✔
+              || `±HHMM[ZoneName]` | `Hour:Minute[ZoneName]` | `+0200[Africa/Johannesburg]` | ✔ |
+              || `±HH` | `Hour` | `-08` | ✔ | ✔
+              || `±HH[ZoneName]` | `Hour[ZoneName]` | `+08[Asia/Singapore]` | ✔ |
+              || `[ZoneName]` | `[ZoneName]` | `[America/Regina]` | ✔ |
               ||===
               |
               |""")
@@ -304,29 +304,29 @@ class TemporalTest extends DocumentingTest {
             |[options="header", cols="2,2,1,2,1,1,1,1,1"]
             ||===
             || Component | Description | Type | Range/Format | Date | DateTime | LocalDateTime | Time | LocalTime
-            || `instant.year` | The `year` component represents the link:https://en.wikipedia.org/wiki/Astronomical_year_numbering[astronomical year number] of the instant.footnote:[This is in accordance with the link:https://en.wikipedia.org/wiki/Gregorian_calendar[Gregorian calendar]; i.e. years AD/CE start at year 1, and the year before that (year 1 BC/BCE) is 0, while year 2 BCE is -1 etc.] | Integer | At least 4 digits. For more information, see the <<cypher-temporal-year, rules for using the `Year` component>> | X | X | X |  |
-            || `instant.quarter` | The _quarter-of-the-year_ component. | Integer | `1` to `4` | X | X | X |  |
-            || `instant.month` | The _month-of-the-year_ component. | Integer | `1` to `12` | X | X | X |  |
-            || `instant.week` | The _week-of-the-year_ component.footnote:[The link:https://en.wikipedia.org/wiki/ISO_week_date#First_week[first week of any year] is the week that contains the first Thursday of the year, and thus always contains January 4.] | Integer | `1` to `53` | X | X | X |  |
-            || `instant.weekYear` | The _year_ that the _week-of-year_ component belongs to.footnote:[For dates from December 29, this could be the next year, and for dates until January 3 this could be the previous year, depending on how week 1 begins.] | Integer | At least 4 digits. For more information, see the <<cypher-temporal-year, rules for using the `Year` component>> | X | X | X |  |
-            || `instant.dayOfQuarter` | The _day-of-the-quarter_ component.  | Integer | `1` to `92` | X | X | X |  |
-            || `instant.quarterDay` | The _day-of-the-quarter_ component. (alias for `instant.dayOfQuarter`)  | Integer | `1` to `92` | X | X | X |  |
-            || `instant.day` | The _day-of-the-month_ component. | Integer | `1` to `31` | X | X | X |  |
-            || `instant.ordinalDay` | The _day-of-the-year_ component. | Integer | `1` to `366` | X | X | X |  |
-            || `instant.dayOfWeek` | The _day-of-the-week_ component (the first day of the week is _Monday_). | Integer | `1` to `7` | X | X | X  | |
-            || `instant.weekDay` | The _day-of-the-week_ component (alias for `instant.dayOfWeek`). | Integer | `1` to `7` | X | X | X  | |
-            || `instant.hour` | The _hour_ component. | Integer | `0` to `23` |   | X  | X | X | X
-            || `instant.minute` | The _minute_ component | Integer | `0` to `59` |  | X | X  | X | X
-            || `instant.second` | The _second_ component | Integer | `0` to `60` |  | X | X  | X | X
-            || `instant.millisecond` | The _millisecond_ component. | Integer  | `0` to `999` |  | X | X | X | X
-            || `instant.microsecond` | The _microsecond_ component. | Integer | `0` to `999999` |  | X | X  | X | X
-            || `instant.nanosecond` | The _nanosecond_ component. | Integer | `0` to `999999999` |  | X | X | X | X
-            || `instant.timezone` | The _timezone_ component. | String | Depending on how the <<cypher-temporal-specify-time-zone, time zone was specified>>, this is either a time zone name or an offset from UTC in the format `±HHMM` |  | X |   | X |
-            || `instant.offset` | The _timezone_ offset | String | `±HHMM` |  | X |  | X |
-            || `instant.offsetMinutes` | The _timezone_ offset in minutes | Integer | `-1080` to `+1080` |  | X |  | X |
-            || `instant.offsetSeconds` | The _timezone_ offset in seconds | Integer | `-64800` to `+64800` |  | X |  | X |
-            || `instant.epochMillis` | The number of milliseconds between `1970-01-01T00:00:00+0000` and the instant.footnote:[The expression `datetime().epochMillis` returns the equivalent value of the `timestamp()` function.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |   | |
-            || `instant.epochSeconds` | The number of seconds between `1970-01-01T00:00:00+0000` and the instant.footnote:[For the _nanosecond_ part of the _epoch_ offset, the regular _nanosecond_ component (`instant.nanosecond`) can be used.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |  |   | |
+            || `instant.year` | The `year` component represents the link:https://en.wikipedia.org/wiki/Astronomical_year_numbering[astronomical year number] of the instant.footnote:[This is in accordance with the link:https://en.wikipedia.org/wiki/Gregorian_calendar[Gregorian calendar]; i.e. years AD/CE start at year 1, and the year before that (year 1 BC/BCE) is 0, while year 2 BCE is -1 etc.] | Integer | At least 4 digits. For more information, see the <<cypher-temporal-year, rules for using the `Year` component>> | ✔ | ✔ | ✔ |  |
+            || `instant.quarter` | The _quarter-of-the-year_ component. | Integer | `1` to `4` | ✔ | ✔ | ✔ |  |
+            || `instant.month` | The _month-of-the-year_ component. | Integer | `1` to `12` | ✔ | ✔ | ✔ |  |
+            || `instant.week` | The _week-of-the-year_ component.footnote:[The link:https://en.wikipedia.org/wiki/ISO_week_date#First_week[first week of any year] is the week that contains the first Thursday of the year, and thus always contains January 4.] | Integer | `1` to `53` | ✔ | ✔ | ✔ |  |
+            || `instant.weekYear` | The _year_ that the _week-of-year_ component belongs to.footnote:[For dates from December 29, this could be the next year, and for dates until January 3 this could be the previous year, depending on how week 1 begins.] | Integer | At least 4 digits. For more information, see the <<cypher-temporal-year, rules for using the `Year` component>> | ✔ | ✔ | ✔ |  |
+            || `instant.dayOfQuarter` | The _day-of-the-quarter_ component.  | Integer | `1` to `92` | ✔ | ✔ | ✔ |  |
+            || `instant.quarterDay` | The _day-of-the-quarter_ component. (alias for `instant.dayOfQuarter`)  | Integer | `1` to `92` | ✔ | ✔ | ✔ |  |
+            || `instant.day` | The _day-of-the-month_ component. | Integer | `1` to `31` | ✔ | ✔ | ✔ |  |
+            || `instant.ordinalDay` | The _day-of-the-year_ component. | Integer | `1` to `366` | ✔ | ✔ | ✔ |  |
+            || `instant.dayOfWeek` | The _day-of-the-week_ component (the first day of the week is _Monday_). | Integer | `1` to `7` | ✔ | ✔ | ✔  | |
+            || `instant.weekDay` | The _day-of-the-week_ component (alias for `instant.dayOfWeek`). | Integer | `1` to `7` | ✔ | ✔ | ✔  | |
+            || `instant.hour` | The _hour_ component. | Integer | `0` to `23` |   | ✔  | ✔ | ✔ | ✔
+            || `instant.minute` | The _minute_ component | Integer | `0` to `59` |  | ✔ | ✔  | ✔ | ✔
+            || `instant.second` | The _second_ component | Integer | `0` to `60` |  | ✔ | ✔  | ✔ | ✔
+            || `instant.millisecond` | The _millisecond_ component. | Integer  | `0` to `999` |  | ✔ | ✔ | ✔ | ✔
+            || `instant.microsecond` | The _microsecond_ component. | Integer | `0` to `999999` |  | ✔ | ✔  | ✔ | ✔
+            || `instant.nanosecond` | The _nanosecond_ component. | Integer | `0` to `999999999` |  | ✔ | ✔ | ✔ | ✔
+            || `instant.timezone` | The _timezone_ component. | String | Depending on how the <<cypher-temporal-specify-time-zone, time zone was specified>>, this is either a time zone name or an offset from UTC in the format `±HHMM` |  | ✔ |   | ✔ |
+            || `instant.offset` | The _timezone_ offset | String | `±HHMM` |  | ✔ |  | ✔ |
+            || `instant.offsetMinutes` | The _timezone_ offset in minutes | Integer | `-1080` to `+1080` |  | ✔ |  | ✔ |
+            || `instant.offsetSeconds` | The _timezone_ offset in seconds | Integer | `-64800` to `+64800` |  | ✔ |  | ✔ |
+            || `instant.epochMillis` | The number of milliseconds between `1970-01-01T00:00:00+0000` and the instant.footnote:[The expression `datetime().epochMillis` returns the equivalent value of the `timestamp()` function.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | ✔ |   | |
+            || `instant.epochSeconds` | The number of seconds between `1970-01-01T00:00:00+0000` and the instant.footnote:[For the _nanosecond_ part of the _epoch_ offset, the regular _nanosecond_ component (`instant.nanosecond`) can be used.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | ✔ |  |   | |
             ||===""")
         p("The following query shows how to extract the components of a _Date_ value:")
         query("""WITH date({year: 1984, month: 10, day: 11}) AS d
