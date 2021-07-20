@@ -96,5 +96,5 @@ a[coalesce($lower,0)..coalesce($upper,size(a))]
 
 [[is-null-is-not-null]]
 == Using `IS NULL` and `IS NOT NULL`
-Testing any value against `null` with both the `=` and the `<>` operators always evaluates to `null`.
-Instead, the special `IS NULL`, or `IS NOT NULL`, equality operators should be used (see <<cypher-comparison>>).
+Testing any value against `null`, either with the `=` operator or with the `<>` operator, always evaluates to `null`.
+Therefore,  use the special equality operators `IS NULL` or `IS NOT NULL` instead (see <<cypher-comparison>>).
