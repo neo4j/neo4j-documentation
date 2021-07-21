@@ -70,7 +70,7 @@ In order to use one or more of these options, the query must be prepended with `
 Occasionally, there is a requirement to use a previous version of the Cypher compiler when running a query.
 Here we detail the available versions:
 
-[options="header",cols="^2m,4a,^1a"]
+[options="header",cols="2m,4a,^1a"]
 |===
 | Query option
 | Description
@@ -120,7 +120,7 @@ It combines some of the advantages of the compiled runtime in a new architecture
 Algorithms are employed to intelligently group the operators in the execution plan in order to generate new combinations and orders of execution which are optimised for performance and memory usage.
 While this should lead to superior performance in most cases (over both the interpreted and slotted runtimes), it is still under development and does not support all possible operators or queries (the slotted runtime covers all operators and queries).
 
-[options="header"]
+[options="header",cols="2m,4a,4a"]
 |===
 |Option
 |Description
@@ -157,7 +157,7 @@ The planner uses a search algorithm to find the execution plan with the lowest e
 
 This table describes the available planner options:
 
-[options="header",cols="^2m,4a,^1a"]
+[options="header",cols="2m,3a,^1a"]
 |===
 | Query option
 | Description
@@ -185,7 +185,7 @@ One part of the Cypher planner is responsible for combining sub-plans for separa
 
 This table describes the available query options for the connect-components planner:
 
-[options="header",cols="2m,2a,^1a"]
+[options="header",cols="2m,3a,^1a"]
 |===
 | Query option
 | Description
@@ -209,7 +209,7 @@ This option affects the eagerness of updating queries.
 
 The possible values are:
 
-[options="header",cols="2m,2a,^1a"]
+[options="header",cols="2m,3a,^1a"]
 |===
 | Query option
 | Description
@@ -231,7 +231,7 @@ This option affects how the runtime evaluates expressions.
 
 The possible values are:
 
-[options="header",cols="2m,2a,^1a"]
+[options="header",cols="2m,3a,^1a"]
 |===
 | Query option
 | Description
@@ -259,7 +259,7 @@ This query option affects whether the pipelined runtime attempts to generate com
 
 The possible values are:
 
-[options="header",cols="2m,2a,^1a"]
+[options="header",cols="2m,3a,^1a"]
 |===
 | Query option
 | Description
@@ -287,7 +287,7 @@ This query option affects how the pipelined runtime behaves for operators it doe
 
 The available options are:
 
-[options="header",cols="2m,2a,^1a"]
+[options="header",cols="2m,3a,^1a"]
 |===
 | Query option
 | Description
@@ -342,7 +342,7 @@ However, replanning one query does not replan any other queries.
 
 There are three different replan options available:
 
-[options="header",cols="2m,2a,^1a"]
+[options="header",cols="2m,3a,^1a"]
 |===
 |Option
 |Description
