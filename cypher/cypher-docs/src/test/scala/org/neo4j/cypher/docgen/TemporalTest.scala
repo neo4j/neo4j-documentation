@@ -66,7 +66,7 @@ class TemporalTest extends DocumentingTest {
           || Date | ✔  | |
           || Time | | ✔ | ✔
           || LocalTime | | ✔ |
-          || DateTime |  X | ✔ | ✔
+          || DateTime | ✔ | ✔ | ✔
           || LocalDateTime | ✔ | ✔ |
           || Duration | - | - | -
           ||===
