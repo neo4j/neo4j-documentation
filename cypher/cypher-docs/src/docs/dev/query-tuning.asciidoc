@@ -5,7 +5,7 @@
 :check-mark: icon:check[]
 
 //Cross Mark
-:cross-mark: icon:cross[]
+:cross-mark: icon:times[]
 
 [abstract]
 --
@@ -84,7 +84,7 @@ Here we detail the available versions:
 | This will force the query to use Neo4j Cypher 4.2.
 |
 
-| 4.3 
+| 4.3
 | This will force the query to use Neo4j Cypher 4.3. As this is the default version, it is not necessary to use this option explicitly.
 | {check-mark}
 |===
