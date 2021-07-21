@@ -11,6 +11,7 @@ This section describes working with the `null` value.
 * <<cypher-null-in-operator, The `IN` operator and `null`>>
 * <<cypher-null-bracket-operator, The `[]` operator and `null`>>
 * <<cypher-expressions-and-null, Expressions that return `null`>>
+* <<is-null-is-not-null, `IS NULL` and `IS NOT NULL`>>
 
 
 [[cypher-null-intro]]
@@ -93,3 +94,7 @@ a[coalesce($lower,0)..coalesce($upper,size(a))]
 * Arithmetic expressions containing `null`: `1 + null`
 * Function calls where any arguments are `null`: `sin(null)`
 
+[[is-null-is-not-null]]
+== Using `IS NULL` and `IS NOT NULL`
+Testing any value against `null`, either with the `=` operator or with the `<>` operator, always evaluates to `null`.
+Therefore,  use the special equality operators `IS NULL` or `IS NOT NULL` instead (see <<cypher-comparison>>).
