@@ -129,4 +129,3 @@ If `LOAD CSV` is invoked with a `file:///` URL that points to your disk `file()`
 +------------------------------------------+
 1 row
 ----
-=======
