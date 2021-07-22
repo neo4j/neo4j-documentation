@@ -24,9 +24,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.FileVisitResult;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.graphdb.config.Setting;
@@ -35,19 +37,52 @@ public final class WebContainerTestUtils
 {
     private WebContainerTestUtils() {}
 
-    public static Path createTempDir() throws IOException {
-        return Files.createTempDirectory("neo4j-test");
+    public static void recursiveDeleteOnShutdownHook(final Path path) {
+        Runtime.getRuntime().addShutdownHook(new Thread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Files.walkFileTree(path,
+                            new SimpleFileVisitor<Path>() {
+                                @Override
+                                public FileVisitResult visitFile(Path file, @SuppressWarnings("unused") BasicFileAttributes attrs) throws IOException {
+                                    Files.delete(file);
+                                    return FileVisitResult.CONTINUE;
+                                }
+
+                                @Override
+                                public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+                                    if (e == null) {
+                                        Files.delete(dir);
+                                        return FileVisitResult.CONTINUE;
+                                    }
+                                    // directory iteration failed
+                                    throw e;
+                                }
+                            }
+                        );
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to delete temporary files at "+path, e);
+                    }
+                }
+            }));
     }
 
-    public static Path createTempConfigFile() throws IOException {
-        return Files.createTempFile( "neo4j", "conf" );
-    }
+    public static Path createTempDir(String name) throws IOException {
+        Path tmpPath = Files.createTempDirectory( name );
+        WebContainerTestUtils.recursiveDeleteOnShutdownHook( tmpPath );
+        return tmpPath;
 
-    public static Path createTempConfigFile( Path parentDir )
-    {
-        Path file = parentDir.resolve( "test-" + new Random().nextInt() + ".properties" );
-        file.toFile().deleteOnExit();
-        return file;
+        //The WebContainerTestUtils.recursiveDeleteOnShutdownHook guarantees that the directory will be purged.
+        //
+        //For example:
+        //
+        //Path tmpPath = Files.createTempDirectory( "neo4j-test-x" );
+        //tmpPath.toFile().deleteOnExit();
+        //
+        //The deleteOnExit requests that the file or directory should be deleted when the virtual machine terminates.
+        //However you cannot delete a directory unless it is empty.
     }
 
     public static String getRelativePath(Path folder, Setting<Path> setting) {
