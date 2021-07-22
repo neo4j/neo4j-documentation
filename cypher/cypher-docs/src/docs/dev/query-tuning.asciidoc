@@ -70,7 +70,7 @@ In order to use one or more of these options, the query must be prepended with `
 Occasionally, there is a requirement to use a previous version of the Cypher compiler when running a query.
 Here we detail the available versions:
 
-[options="header",cols="2m,4a,^1a"]
+[options="header",cols="1m,3a,^1a"]
 |===
 | Query option
 | Description
@@ -120,7 +120,7 @@ It combines some of the advantages of the compiled runtime in a new architecture
 Algorithms are employed to intelligently group the operators in the execution plan in order to generate new combinations and orders of execution which are optimised for performance and memory usage.
 While this should lead to superior performance in most cases (over both the interpreted and slotted runtimes), it is still under development and does not support all possible operators or queries (the slotted runtime covers all operators and queries).
 
-[options="header",cols="2m,4a,4a"]
+[options="header",cols="m,a,a"]
 |===
 |Option
 |Description
