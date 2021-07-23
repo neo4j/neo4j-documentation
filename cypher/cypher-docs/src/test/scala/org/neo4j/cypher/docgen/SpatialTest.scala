@@ -215,14 +215,14 @@ class SpatialTest extends DocumentingTest {
             |[options="header"]
             ||===
             || Component      | Description  | Type | Range/Format   | WGS-84 | WGS-84-3D | Cartesian | Cartesian-3D
-            || `instant.x` | The first element of the _Coordinate_ | Float | Number literal, range depends on CRS | ✔ | ✔ | ✔ | ✔
-            || `instant.y` | The second element of the _Coordinate_ | Float | Number literal, range depends on CRS | ✔ | ✔ | ✔ | ✔
-            || `instant.z` | The third element of the _Coordinate_ | Float | Number literal, range depends on CRS |  | ✔ |  | ✔
-            || `instant.latitude` | The _second_ element of the _Coordinate_ for geographic CRS, degrees North of the equator | Float | Number literal, `-90.0` to `90.0` | ✔ | ✔ |   |
-            || `instant.longitude` | The _first_ element of the _Coordinate_ for geographic CRS, degrees East of the prime meridian | Float | Number literal, `-180.0` to `180.0` | ✔ | ✔ |  |
-            || `instant.height` | The third element of the _Coordinate_ for geographic CRS, meters above the ellipsoid defined by the datum (WGS-84) | Float | Number literal, range limited only by the underlying 64-bit floating point type |  | ✔ |  |
-            || `instant.crs` | The name of the CRS | String | One of `wgs-84`, `wgs-84-3d`, `cartesian`, `cartesian-3d` | ✔ | ✔ | ✔ | ✔
-            || `instant.srid` | The internal Neo4j ID for the CRS | Integer | One of `4326`, `4979`, `7203`, `9157` | ✔ | ✔ | ✔ | ✔
+            || `instant.x` | The first element of the _Coordinate_ | Float | Number literal, range depends on CRS | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+            || `instant.y` | The second element of the _Coordinate_ | Float | Number literal, range depends on CRS | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+            || `instant.z` | The third element of the _Coordinate_ | Float | Number literal, range depends on CRS |  | {check-mark} |  | {check-mark}
+            || `instant.latitude` | The _second_ element of the _Coordinate_ for geographic CRS, degrees North of the equator | Float | Number literal, `-90.0` to `90.0` | {check-mark} | {check-mark} |   |
+            || `instant.longitude` | The _first_ element of the _Coordinate_ for geographic CRS, degrees East of the prime meridian | Float | Number literal, `-180.0` to `180.0` | {check-mark} | {check-mark} |  |
+            || `instant.height` | The third element of the _Coordinate_ for geographic CRS, meters above the ellipsoid defined by the datum (WGS-84) | Float | Number literal, range limited only by the underlying 64-bit floating point type |  | {check-mark} |  |
+            || `instant.crs` | The name of the CRS | String | One of `wgs-84`, `wgs-84-3d`, `cartesian`, `cartesian-3d` | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+            || `instant.srid` | The internal Neo4j ID for the CRS | Integer | One of `4326`, `4979`, `7203`, `9157` | {check-mark} | {check-mark} | {check-mark} | {check-mark}
             ||===
             |
             |""")
