@@ -3,7 +3,7 @@
 
 [abstract]
 --
-This chapter explains how to use Cypher to administer Neo4j database, for the purpose of managing indexes, and managing security.
+This chapter explains how to use Cypher to administer Neo4j databases, for the purpose of managing indexes, and managing security.
 --
 
 * <<administration-indexes-search-performance, Indexes for search performance>>
