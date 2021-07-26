@@ -37,14 +37,12 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       "CREATE DATABASE `northwind-graph`"
     )
     synopsis("This chapter explains how to use Cypher to manage Neo4j databases: creating, deleting, starting and stopping individual databases within a single server.")
-    section("Introduction", "administration-databases-introduction") {
-      p(
-        """Neo4j supports the management of multiple databases within the same DBMS.
-          |The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
-          |All multi-database administrative commands must be run against the `system` database.
-          |These administrative commands are automatically routed to the `system` database when connected to the DBMS over Bolt.""".stripMargin)
-      p("include::databases-command-syntax.asciidoc[]")
-    }
+    p(
+      """Neo4j supports the management of multiple databases within the same DBMS.
+        |The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
+        |All multi-database administrative commands must be run against the `system` database.
+        |These administrative commands are automatically routed to the `system` database when connected to the DBMS over Bolt.""".stripMargin)
+    p("include::databases-command-syntax.asciidoc[]")
     section("Listing databases", "administration-databases-show-databases") {
       p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
       p("All available databases can be seen using the command `SHOW DATABASES`.")
