@@ -542,7 +542,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   def tearDown() {
     if (managementService != null) {
       managementService.shutdown()
-      FileUtils.deleteDirectory(dbFolder)
+      FileUtils.forceDelete(dbFolder)
     }
   }
 
