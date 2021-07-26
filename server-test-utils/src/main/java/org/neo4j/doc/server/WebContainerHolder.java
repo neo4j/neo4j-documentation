@@ -20,6 +20,7 @@ package org.neo4j.doc.server;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.neo4j.doc.server.helpers.CommunityWebContainerBuilder;
 import org.neo4j.doc.server.helpers.TestWebContainer;
@@ -40,7 +41,9 @@ public final class WebContainerHolder extends Thread
         }
         if ( testWebContainer == null )
         {
-            testWebContainer = startServer( Files.createTempDirectory( "webcontainer" ).toFile(), onRandomPorts );
+            File testDirFile = WebContainerTestUtils.createTempDir( "webcontainer-x" ); //This folder will be removed.
+            testWebContainer = startServer( testDirFile, onRandomPorts );
+            //testWebContainer = startServer( Files.createTempDirectory( "webcontainer" ).toFile(), onRandomPorts );
         }
         allocation = new AssertionError( "The server was allocated from here but not released properly" );
         return testWebContainer;
