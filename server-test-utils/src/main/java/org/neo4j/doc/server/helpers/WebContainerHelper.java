@@ -62,7 +62,6 @@ public final class WebContainerHelper
 
     public static TestWebContainer createContainer( CommunityWebContainerBuilder builder, File path, boolean onRandomPorts ) throws Exception
     {
-        //builder = builder.persistent();
         if ( onRandomPorts )
         {
             builder.onRandomPorts();

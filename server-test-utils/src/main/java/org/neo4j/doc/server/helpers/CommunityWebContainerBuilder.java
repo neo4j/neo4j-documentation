@@ -177,28 +177,21 @@ public class CommunityWebContainerBuilder
 
         properties.put( BoltConnector.listen_address.name(), boltAddress.toString() );
 
-        //properties.put( GraphDatabaseSettings.neo4j_home.name(), temporaryFolder.getAbsolutePath() );
         properties.put( GraphDatabaseSettings.neo4j_home.name(), temporaryFolder.toAbsolutePath().toString() );
 
         properties.put( GraphDatabaseSettings.auth_enabled.name(), FALSE );
 
         if ( httpsEnabled )
         {
-            //var certificates = new File( temporaryFolder, "certificates" );
             var certificates = temporaryFolder.resolve( "certificates" );
             SelfSignedCertificateFactory.create( certificates.toFile() );
             SslPolicyConfig policy = SslPolicyConfig.forScope( SslPolicyScope.HTTPS );
             properties.put( policy.enabled.name(), Boolean.TRUE.toString() );
-            //properties.put( policy.base_directory.name(), certificates.getAbsolutePath() );
             properties.put( policy.base_directory.name(), certificates.toAbsolutePath().toString() );
             properties.put( policy.trust_all.name(), SettingValueParsers.TRUE );
             properties.put( policy.client_auth.name(), ClientAuth.NONE.name() );
         }
 
-        // properties.put( GraphDatabaseSettings.logs_directory.name(),
-        //         new File( temporaryFolder, "logs-x" ).getAbsolutePath() );
-        // properties.put( GraphDatabaseSettings.transaction_logs_root_path.name(),
-        //         new File( temporaryFolder, "transaction-logs-x" ).getAbsolutePath() );
         properties.put( GraphDatabaseSettings.logs_directory.name(),
                 temporaryFolder.resolve( "logs-x" ).toAbsolutePath().toString() );
         properties.put( GraphDatabaseSettings.transaction_logs_root_path.name(),
