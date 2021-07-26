@@ -41,9 +41,8 @@ public final class WebContainerHolder extends Thread
         }
         if ( testWebContainer == null )
         {
-            File testDirFile = WebContainerTestUtils.createTempDir( "webcontainer-x" ); //This folder will be removed.
-            testWebContainer = startServer( testDirFile, onRandomPorts );
-            //testWebContainer = startServer( Files.createTempDirectory( "webcontainer" ).toFile(), onRandomPorts );
+            Path testFolderPath = WebContainerTestUtils.createTempDir( "webcontainer-x" ); //This folder will be removed.
+            testWebContainer = startServer( testFolderPath.toFile(), onRandomPorts );
         }
         allocation = new AssertionError( "The server was allocated from here but not released properly" );
         return testWebContainer;

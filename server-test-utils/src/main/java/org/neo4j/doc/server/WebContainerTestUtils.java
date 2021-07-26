@@ -73,40 +73,25 @@ public class WebContainerTestUtils
             }));
     }
 
-    public static File createTempDir(String name) throws IOException {
-        Path tmpDirPath = Files.createTempDirectory( name );
-        WebContainerTestUtils.recursiveDeleteOnShutdownHook( tmpDirPath );
-        return tmpDirPath.toFile();
+    public static Path createTempDir(String name) throws IOException {
+        Path tmpPath = Files.createTempDirectory( name );
+        WebContainerTestUtils.recursiveDeleteOnShutdownHook( tmpPath );
+        return tmpPath;
     }
 
-    // public static File createTempConfigFile() throws IOException {
-    //     File file = File.createTempFile("neo4j", "conf");
-    //     file.delete();
-    //     return file;
-    // }
-
-    // public static File createTempConfigFile( File parentDir )
-    // {
-    //     File file = new File( parentDir, "test-" + new Random().nextInt() + ".properties" );
-    //     file.deleteOnExit();
-    //     return file;
-    // }
-
-    public static String getRelativePath(File folder, Setting<Path> setting) {
-        return folder.toPath().resolve(setting.defaultValue()).toString();
+    public static String getRelativePath(Path folder, Setting<Path> setting) {
+        return folder.resolve(setting.defaultValue()).toString();
     }
-
-    public static void addDefaultRelativeProperties(Map<String, String> properties, File temporaryFolder) {
+    public static void addDefaultRelativeProperties(Map<String, String> properties, Path temporaryFolder) {
         addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.data_directory );
         addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.logs_directory );
     }
-
-    private static void addRelativeProperty(File temporaryFolder, Map<String, String> properties,
+    private static void addRelativeProperty(Path temporaryFolder, Map<String, String> properties,
                                             Setting<Path> setting) {
         properties.put(setting.name(), getRelativePath(temporaryFolder, setting));
     }
 
-    public static void writeConfigToFile(Map<String, String> properties, File file) {
+    public static void writeConfigToFile(Map<String, String> properties, Path file) {
         Properties props = loadProperties(file);
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             props.setProperty(entry.getKey(), entry.getValue());
@@ -123,10 +108,10 @@ public class WebContainerTestUtils
         return builder.toString();
     }
 
-    private static void storeProperties(File file, Properties properties) {
+    private static void storeProperties(Path file, Properties properties) {
         OutputStream out = null;
         try {
-            out = new FileOutputStream(file);
+            out = Files.newOutputStream(file);
             properties.store(out, "");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -135,12 +120,12 @@ public class WebContainerTestUtils
         }
     }
 
-    private static Properties loadProperties(File file) {
+    private static Properties loadProperties(Path file) {
         Properties properties = new Properties();
-        if (file.exists()) {
+        if (Files.exists(file)) {
             InputStream in = null;
             try {
-                in = new FileInputStream(file);
+                in = Files.newInputStream( file );
                 properties.load(in);
             } catch (IOException e) {
                 throw new RuntimeException(e);
