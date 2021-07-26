@@ -42,7 +42,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.visualization.asciidoc.AsciidocHelper;
 
-import static org.apache.commons.io.FileUtils.deleteDirectory;
+import org.apache.commons.io.FileUtils;
 import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 import static org.neo4j.test.GraphDatabaseServiceCleaner.cleanDatabaseContent;
 import static org.neo4j.visualization.asciidoc.AsciidocHelper.createCypherSnippet;
@@ -133,7 +133,7 @@ public class IntroDocTest implements GraphHolder
             if ( managementService != null )
             {
                 managementService.shutdown();
-                deleteDirectory( folder );
+                FileUtils.forceDelete( folder );
             }
         }
         finally

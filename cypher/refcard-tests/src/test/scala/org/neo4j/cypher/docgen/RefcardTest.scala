@@ -250,7 +250,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   def teardown() {
     if (managementService != null) {
       managementService.shutdown()
-      FileUtils.deleteQuietly(folder)
+      FileUtils.forceDelete(folder)
     }
     allQueriesWriter.close()
   }
