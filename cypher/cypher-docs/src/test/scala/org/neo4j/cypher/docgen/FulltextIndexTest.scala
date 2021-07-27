@@ -52,30 +52,29 @@ class FulltextIndexTest extends DocumentingTest {
         #For instance, the _swedish_ analyzer knows how to tokenize and stem Swedish words, and will avoid indexing Swedish stop words.
         #The complete list of stop words for each analyzer is included in the result of the `db.index.fulltext.listAvailableAnalyzers` procedure.
         #""".stripMargin('#'))
-      p("Full-text indexes:")
-      p("""* support the indexing of both nodes and relationships.
-          #* support configuring custom analyzers, including analyzers that are not included with Lucene itself.
-          #* can be queried using the Lucene query language.
-          #* can return the _score_ for each result from a query.
-          #* are kept up to date automatically, as nodes and relationships are added, removed, and modified.
-          #* will automatically populate newly created indexes with the existing data in a store.
-          #* can be checked by the consistency checker, and they can be rebuilt if there is a problem with them.
-          #* are a projection of the store, and can only index nodes and relationships by the contents of their properties.
-          #* can support any number of documents in a single index.
-          #* are created, dropped, and updated transactionally, and is automatically replicated throughout a cluster.
-          #* can be accessed via Cypher procedures.
-          #* can be configured to be _eventually consistent_, in which index updating is moved from the commit path to a background thread.
-          #Using this feature, it is possible to work around the slow Lucene writes from the performance critical commit process, thus removing the main bottlenecks for Neo4j write performance.""".stripMargin('#'))
-      p("""At first sight, the construction of full-text indexes can seem similar to regular indexes.
-          #However there are some things that are interesting to note:
-          #In contrast to <<administration-indexes-search-performance, b-tree indexes>>, a full-text index""".stripMargin('#'))
-      p(
-        """* can be applied to more than one label.
-          #* can be applied to more than one relationship type.
-          #* can be applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-index-for-nodes, _composite index_>>) but with an important difference:
-          #While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.""".stripMargin('#'))
-      p("For information on how to configure full-text indexes, refer to <<operations-manual#index-configuration-fulltext, Operations Manual -> Indexes to support full-text search>>.")
-    }
+    p("Full-text indexes:")
+    p("""* support the indexing of both nodes and relationships.
+        #* support configuring custom analyzers, including analyzers that are not included with Lucene itself.
+        #* can be queried using the Lucene query language.
+        #* can return the _score_ for each result from a query.
+        #* are kept up to date automatically, as nodes and relationships are added, removed, and modified.
+        #* will automatically populate newly created indexes with the existing data in a store.
+        #* can be checked by the consistency checker, and they can be rebuilt if there is a problem with them.
+        #* are a projection of the store, and can only index nodes and relationships by the contents of their properties.
+        #* can support any number of documents in a single index.
+        #* are created, dropped, and updated transactionally, and is automatically replicated throughout a cluster.
+        #* can be accessed via Cypher procedures.
+        #* can be configured to be _eventually consistent_, in which index updating is moved from the commit path to a background thread.
+        #Using this feature, it is possible to work around the slow Lucene writes from the performance critical commit process, thus removing the main bottlenecks for Neo4j write performance.""".stripMargin('#'))
+    p("""At first sight, the construction of full-text indexes can seem similar to regular indexes.
+        #However there are some things that are interesting to note:
+        #In contrast to <<administration-indexes-search-performance, b-tree indexes>>, a full-text index can be:""".stripMargin('#'))
+    p("""* applied to more than one label.
+        #* applied to more than one relationship type.
+        #* applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-index-for-nodes, _composite index_>>) but with an important difference:
+        #While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.""".stripMargin('#'))
+    p("For information on how to configure full-text indexes, refer to <<operations-manual#index-configuration-fulltext, Operations Manual -> Indexes to support full-text search>>.")
+
     section("Full-text search procedures", "administration-indexes-fulltext-search-manage") {
       p("""Full-text indexes are managed through commands and used through built-in procedures, see <<operations-manual#neo4j-procedures, Operations Manual -> Procedures>> for a complete reference.
           #
