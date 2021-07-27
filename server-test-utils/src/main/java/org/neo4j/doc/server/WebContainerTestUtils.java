@@ -28,9 +28,11 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.FileVisitResult;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.graphdb.config.Setting;
@@ -39,38 +41,57 @@ public class WebContainerTestUtils
 {
     private WebContainerTestUtils() {}
 
-    public static File createTempDir() throws IOException {
-        return Files.createTempDirectory("neo4j-test").toFile();
+    public static void recursiveDeleteOnShutdownHook(final Path path) {
+        Runtime.getRuntime().addShutdownHook(new Thread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Files.walkFileTree(path,
+                            new SimpleFileVisitor<Path>() {
+                                @Override
+                                public FileVisitResult visitFile(Path file, @SuppressWarnings("unused") BasicFileAttributes attrs) throws IOException {
+                                    Files.delete(file);
+                                    return FileVisitResult.CONTINUE;
+                                }
+
+                                @Override
+                                public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+                                    if (e == null) {
+                                        Files.delete(dir);
+                                        return FileVisitResult.CONTINUE;
+                                    }
+                                    // directory iteration failed
+                                    throw e;
+                                }
+                            }
+                        );
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to delete temporary files at "+path, e);
+                    }
+                }
+            }));
     }
 
-    public static File createTempConfigFile() throws IOException {
-        File file = File.createTempFile("neo4j", "conf");
-        file.delete();
-        return file;
+    public static Path createTempDir(String name) throws IOException {
+        Path tmpPath = Files.createTempDirectory( name );
+        WebContainerTestUtils.recursiveDeleteOnShutdownHook( tmpPath );
+        return tmpPath;
     }
 
-    public static File createTempConfigFile( File parentDir )
-    {
-        File file = new File( parentDir, "test-" + new Random().nextInt() + ".properties" );
-        file.deleteOnExit();
-        return file;
+    public static String getRelativePath(Path folder, Setting<Path> setting) {
+        return folder.resolve(setting.defaultValue()).toString();
     }
-
-    public static String getRelativePath(File folder, Setting<Path> setting) {
-        return folder.toPath().resolve(setting.defaultValue()).toString();
-    }
-
-    public static void addDefaultRelativeProperties(Map<String, String> properties, File temporaryFolder) {
+    public static void addDefaultRelativeProperties(Map<String, String> properties, Path temporaryFolder) {
         addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.data_directory );
         addRelativeProperty( temporaryFolder, properties, GraphDatabaseSettings.logs_directory );
     }
-
-    private static void addRelativeProperty(File temporaryFolder, Map<String, String> properties,
+    private static void addRelativeProperty(Path temporaryFolder, Map<String, String> properties,
                                             Setting<Path> setting) {
         properties.put(setting.name(), getRelativePath(temporaryFolder, setting));
     }
 
-    public static void writeConfigToFile(Map<String, String> properties, File file) {
+    public static void writeConfigToFile(Map<String, String> properties, Path file) {
         Properties props = loadProperties(file);
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             props.setProperty(entry.getKey(), entry.getValue());
@@ -87,10 +108,10 @@ public class WebContainerTestUtils
         return builder.toString();
     }
 
-    private static void storeProperties(File file, Properties properties) {
+    private static void storeProperties(Path file, Properties properties) {
         OutputStream out = null;
         try {
-            out = new FileOutputStream(file);
+            out = Files.newOutputStream(file);
             properties.store(out, "");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -99,12 +120,12 @@ public class WebContainerTestUtils
         }
     }
 
-    private static Properties loadProperties(File file) {
+    private static Properties loadProperties(Path file) {
         Properties properties = new Properties();
-        if (file.exists()) {
+        if (Files.exists(file)) {
             InputStream in = null;
             try {
-                in = new FileInputStream(file);
+                in = Files.newInputStream( file );
                 properties.load(in);
             } catch (IOException e) {
                 throw new RuntimeException(e);

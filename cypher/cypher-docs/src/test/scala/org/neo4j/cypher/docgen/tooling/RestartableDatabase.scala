@@ -157,7 +157,7 @@ class RestartableDatabase(init: RunnableInitialization)
   private def restart() {
     if (graph == null) return
     managementService.shutdown()
-    FileUtils.deleteQuietly(dbFolder)
+    FileUtils.forceDelete(dbFolder)
     graphs.clear()
     graph = null
     eengine = null
