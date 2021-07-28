@@ -28,6 +28,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.FileVisitResult;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
 import java.util.Properties;
 
@@ -38,8 +41,42 @@ public class ServerTestUtils {
 
     private ServerTestUtils() {}
 
-    public static File createTempDir() throws IOException {
-        return Files.createTempDirectory("neo4j-test").toFile();
+    public static void recursiveDeleteOnShutdownHook(final Path path) {
+        Runtime.getRuntime().addShutdownHook(new Thread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Files.walkFileTree(path,
+                            new SimpleFileVisitor<Path>() {
+                                @Override
+                                public FileVisitResult visitFile(Path file, @SuppressWarnings("unused") BasicFileAttributes attrs) throws IOException {
+                                    Files.delete(file);
+                                    return FileVisitResult.CONTINUE;
+                                }
+
+                                @Override
+                                public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+                                    if (e == null) {
+                                        Files.delete(dir);
+                                        return FileVisitResult.CONTINUE;
+                                    }
+                                    // directory iteration failed
+                                    throw e;
+                                }
+                            }
+                        );
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to delete temporary files at "+path, e);
+                    }
+                }
+            }));
+    }
+
+    public static Path createTempDir( String name ) throws IOException {
+        Path tmpPath = Files.createTempDirectory( name );
+        ServerTestUtils.recursiveDeleteOnShutdownHook( tmpPath );
+        return tmpPath;
     }
 
     public static File createTempConfigFile() throws IOException {
