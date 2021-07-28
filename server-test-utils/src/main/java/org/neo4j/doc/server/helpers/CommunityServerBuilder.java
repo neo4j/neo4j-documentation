@@ -98,7 +98,7 @@ public class CommunityServerBuilder
     public File createConfigFiles() throws IOException
     {
         File temporaryConfigFile = ServerTestUtils.createTempConfigFile();
-        File temporaryFolder = ServerTestUtils.createTempDir();
+        File temporaryFolder = ServerTestUtils.createTempDir( "neo4j-test-x" ).toFile();
 
         ServerTestUtils.writeConfigToFile( createConfiguration( temporaryFolder ), temporaryConfigFile );
 
@@ -133,7 +133,7 @@ public class CommunityServerBuilder
         properties.put( HttpsConnector.listen_address.name(), httpsAddress.toString() );
 
         properties.put( GraphDatabaseSettings.auth_enabled.name(), "false" );
-        properties.put( GraphDatabaseSettings.logs_directory.name(), new File(temporaryFolder, "logs").getAbsolutePath() );
+        properties.put( GraphDatabaseSettings.logs_directory.name(), new File(temporaryFolder, "logs-x").getAbsolutePath() );
         properties.put( GraphDatabaseSettings.pagecache_memory.name(), "8m" );
 
         File certificatesDir = new File(temporaryFolder, "certificates").getAbsoluteFile();
