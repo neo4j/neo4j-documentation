@@ -40,7 +40,6 @@ To read more about the execution plan operators mentioned in this chapter, see <
 * <<query-tuning-indexes,The use of indexes>>
 * <<cypherdoc-basic-query-tuning-example,Basic query tuning example>>
 * <<advanced-query-tuning-example, Advanced query tuning example>>
-** <<advanced-query-tuning-example-introduction, Introduction>>
 ** <<advanced-query-tuning-example-data-set, The data set>>
 ** <<advanced-query-tuning-example-index-backed-property-lookup, Index-backed property-lookup>>
 ** <<advanced-query-tuning-example-index-backed-order-by, Index-backed order by>>
