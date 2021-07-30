@@ -18,9 +18,9 @@ include::ql/functions/index.asciidoc[leveloffset=+1]
 
 // restructuring start
 
-include::ql/administration/indexes-for-search-performance/index.adoc[leveloffset=+1]
+include::ql/administration/indexes-for-search-performance/index.asciidoc[leveloffset=+1]
 
-include::ql/administration/indexes-for-full-text-search/index.adoc[leveloffset=+1]
+include::ql/administration/indexes-for-full-text-search/index.asciidoc[leveloffset=+1]
 
 include::ql/constraints/index.adoc[leveloffset=+1]
 
