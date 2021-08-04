@@ -201,7 +201,7 @@ Rows: 2
 
 Note that while the following **Query 4** looks similar to **Query 3**, it is actually equivalent to **Query 2**.
 
-**Query 4, equvilent to query 2.**
+**Query 4, equivalent to query 2.**
 
 [source, cypher, role=noplay]
 ----
