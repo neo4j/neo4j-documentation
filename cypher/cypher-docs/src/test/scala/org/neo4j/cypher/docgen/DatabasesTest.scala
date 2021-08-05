@@ -216,7 +216,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |
           |* `WAIT n SECONDS` - Wait the specified number of seconds (n) for the command to complete
           |before returning.
-          |* `WAIT` - Wait for the default period for the command to complete before returning.
+          |* `WAIT` - Wait for the default period of 300 seconds for the command to complete before returning.
           |* `NOWAIT` - Return immediately.""")
       p(
         """A command using a `WAIT` clause will automatically commit the current transaction when it executes successfully, as the
