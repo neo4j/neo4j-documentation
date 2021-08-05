@@ -151,6 +151,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |The instance id can be taken from the id column of the `dbms.cluster.overview()` procedure. Can only be used in clusters.
             ||===
             |""")
+        note {
+          p("The `existingData` and `existingDataSeedInstance` options cannot be combined with the `OR REPLACE` part of this command.")
+        }
       }
     }
     section("Stopping databases", "administration-databases-stop-database", "enterprise-edition") {
