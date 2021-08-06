@@ -41,12 +41,12 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
 
     p(
       """
-        |* <<administration-security-subgraph-introduction, The `GRANT`, `DENY` and `REVOKE` commands>>
-        |* <<administration-security-subgraph-show, Listing privileges>>
+        |* <<access-control-graph-privileges, The `GRANT`, `DENY` and `REVOKE` commands>>
+        |* <<access-control-list-privileges, Listing privileges>>
         |** <<administration-security-subgraph-show-all, Examples for listing all privileges>>
         |** <<administration-security-subgraph-show-roles, Examples for listing privileges for specific roles>>
         |** <<administration-security-subgraph-show-users, Examples for listing privileges for specific users>>
-        |* <<administration-security-subgraph-revoke, The `REVOKE` command>>
+        |* <<access-control-revoke-privileges, The `REVOKE` command>>
         |""".stripMargin)
 
     p(
@@ -73,10 +73,10 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
     note {
       p(
         """If a user was not also provided with the database `ACCESS` privilege then access to the entire database will be denied.
-          |Information about the database access privilege can be found in <<administration-security-administration-database-access, The ACCESS privilege>>.
+          |Information about the database access privilege can be found in <<access-control-database-administration-access, The ACCESS privilege>>.
           |""".stripMargin)
     }
-    section("The `GRANT`, `DENY` and `REVOKE` commands", "administration-security-subgraph-introduction", "enterprise-edition") {
+    section("The `GRANT`, `DENY` and `REVOKE` commands", "access-control-graph-privileges", "enterprise-edition") {
       p("include::grant-deny-syntax.asciidoc[]")
       p("The general grant and deny syntax is illustrated in the image below.")
       p("image::grant-privileges-overview.png[title=\"GRANT and DENY Syntax\"]")
@@ -196,7 +196,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
 
         p(
           """It is also possible to get the privilege commands formatted for revoking instead of granting or denying the privileges.
-            |For more info about revoking privileges, please see <<administration-security-subgraph-revoke, The REVOKE command>>.""".stripMargin)
+            |For more info about revoking privileges, please see <<access-control-revoke-privileges, The REVOKE command>>.""".stripMargin)
         query("SHOW PRIVILEGES AS REVOKE COMMANDS", assertPrivilegeShown(Seq(
           // Only checks reader and editor, the rest should be there as well
           Map("command" -> "REVOKE GRANT ACCESS ON DATABASE * FROM `reader`"),
@@ -253,7 +253,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
         }
 
         p("""Again, is it possible to get the privilege commands formatted for revoking instead of granting or denying the privileges.
-            |For more info about revoking privileges, please see <<administration-security-subgraph-revoke, The REVOKE command>>.""".stripMargin)
+            |For more info about revoking privileges, please see <<access-control-revoke-privileges, The REVOKE command>>.""".stripMargin)
         query("SHOW ROLE reader PRIVILEGES AS REVOKE COMMANDS", assertPrivilegeShown(Seq(
           Map("command" -> "REVOKE GRANT ACCESS ON DATABASE * FROM `reader`"),
           Map("command" -> "REVOKE GRANT MATCH {*} ON GRAPH * NODE * FROM `reader`"),
@@ -313,7 +313,7 @@ class SecurityPrivilegesTest extends DocumentingTest with QueryStatisticsTestSup
       }
     }
 
-    section("The `REVOKE` command", "administration-security-subgraph-revoke", "enterprise-edition") {
+    section("The `REVOKE` command", "access-control-revoke-privileges", "enterprise-edition") {
       initQueries(
         "GRANT TRAVERSE ON HOME GRAPH NODES Post TO regularUsers",
         "GRANT TRAVERSE ON HOME GRAPH NODES Payments TO regularUsers",

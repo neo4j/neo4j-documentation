@@ -25,7 +25,7 @@ SHOW USERS
 | List all users.
 
 When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
-| <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
+| <<access-control-dbms-administration-user-management, SHOW USER>>
 
 | [source, cypher, role=noplay]
 ----
@@ -37,8 +37,8 @@ SHOW USER[S] [name[, ...]] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
 | List the privileges granted to the specified users or the current user, if no user is specified.
 
 When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
-| <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>> and
-<<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
+| <<access-control-dbms-administration-privilege-management, SHOW PRIVILEGE>> and
+<<access-control-dbms-administration-user-management, SHOW USER>>
 
 | [source, cypher, role=noplay]
 ----
@@ -49,7 +49,7 @@ CREATE USER name [IF NOT EXISTS]
   [SET HOME DATABASE name]
 ----
 | Create a new user.
-| <<administration-security-administration-dbms-privileges-user-management, CREATE USER>>
+| <<access-control-dbms-administration-user-management, CREATE USER>>
 
 | [source, cypher, role=noplay]
 ----
@@ -60,15 +60,15 @@ CREATE OR REPLACE USER name
   [SET HOME DATABASE name]
 ----
 | Create a new user, or if a user with the same name exists, replace it.
-| <<administration-security-administration-dbms-privileges-user-management, CREATE USER>> and
-<<administration-security-administration-dbms-privileges-user-management, DROP USER>>
+| <<access-control-dbms-administration-user-management, CREATE USER>> and
+<<access-control-dbms-administration-user-management, DROP USER>>
 
 | [source, cypher, role=noplay]
 ----
 RENAME USER name [IF EXISTS] TO otherName
 ----
 | Change the name of a user.
-| <<administration-security-administration-dbms-privileges-user-management, RENAME USER>>
+| <<access-control-dbms-administration-user-management, RENAME USER>>
 
 | [source, cypher, role=noplay]
 ----
@@ -80,9 +80,9 @@ ALTER USER name [IF EXISTS]
   [REMOVE HOME DATABASE]
 ----
 | Modify the settings for an existing user. At least one `SET` or `REMOVE` clause is required. `SET` and `REMOVE` clauses cannot be combined in the same command.
-| <<administration-security-administration-dbms-privileges-user-management, SET PASSWORD>>,
-<<administration-security-administration-dbms-privileges-user-management, SET USER STATUS>> and/or
-<<administration-security-administration-dbms-privileges-user-management, SET USER HOME DATABASE>>
+| <<access-control-dbms-administration-user-management, SET PASSWORD>>,
+<<access-control-dbms-administration-user-management, SET USER STATUS>> and/or
+<<access-control-dbms-administration-user-management, SET USER HOME DATABASE>>
 
 | [source, cypher, role=noplay]
 ----
@@ -97,7 +97,7 @@ ALTER CURRENT USER SET PASSWORD FROM original TO password
 DROP USER name [IF EXISTS]
 ----
 | Remove an existing user.
-| <<administration-security-administration-dbms-privileges-user-management, DROP USER>>
+| <<access-control-dbms-administration-user-management, DROP USER>>
 | `+`
 | `+`
 |===

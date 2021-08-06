@@ -16,7 +16,7 @@ The administrative commands that are specific to the schema of an individual dat
 ** <<administration-security-introduction, Introduction>>
 ** <<administration-security-syntax-rules, Syntax summaries>>
 ** <<administration-security-users-and-roles, User and role management>>
-** <<administration-security-subgraph, Graph and sub-graph access control>>
+** <<access-control-manage-privileges, Graph and sub-graph access control>>
 ** <<administration-security-reads, Read privileges>>
 ** <<administration-security-writes, Write privileges>>
 ** <<administration-security-administration, Security of administration>>

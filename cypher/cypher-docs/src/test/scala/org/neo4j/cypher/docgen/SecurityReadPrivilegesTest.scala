@@ -37,9 +37,9 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
 
     p(
       """
-        |* <<administration-security-reads-traverse, The `TRAVERSE` privilege>>
-        |* <<administration-security-reads-read, The `READ` privilege>>
-        |* <<administration-security-reads-match, The `MATCH` privilege>>
+        |* <<access-control-privileges-reads-traverse, The `TRAVERSE` privilege>>
+        |* <<access-control-privileges-reads-read, The `READ` privilege>>
+        |* <<access-control-privileges-reads-match, The `MATCH` privilege>>
         |""".stripMargin)
 
     p(
@@ -51,7 +51,7 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
         |* `MATCH` - combines both `TRAVERSE` and `READ`, enabling an entity to be found and its properties read.
         |""".stripMargin)
 
-    section("The `TRAVERSE` privilege", "administration-security-reads-traverse", "enterprise-edition") {
+    section("The `TRAVERSE` privilege", "access-control-privileges-reads-traverse", "enterprise-edition") {
       p("Users can be granted the right to find nodes and relationships using the `GRANT TRAVERSE` privilege.")
       p("include::grant-traverse-syntax.asciidoc[]")
       p("For example, we can enable the user `jake`, who has role 'regularUsers' to find all nodes with the label `Post`.")
@@ -71,7 +71,7 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
       }
     }
 
-    section("The `READ` privilege", "administration-security-reads-read", "enterprise-edition") {
+    section("The `READ` privilege", "access-control-privileges-reads-read", "enterprise-edition") {
       p(
         """Users can be granted the right to do property reads on nodes and relationships using the `GRANT READ` privilege.
           |It is very important to note that users can only read properties on entities that they are enabled to find in the first place.""".stripMargin)
@@ -103,7 +103,7 @@ class SecurityReadPrivilegesTest extends DocumentingTest with QueryStatisticsTes
         statsOnlyResultTable()
       }
     }
-    section("The `MATCH` privilege", "administration-security-reads-match", "enterprise-edition") {
+    section("The `MATCH` privilege", "access-control-privileges-reads-match", "enterprise-edition") {
       p(
         """Users can be granted the right to find and do property reads on nodes and relationships using the `GRANT MATCH` privilege.
           |This is semantically the same as having both `TRAVERSE` and `READ` privileges.""".stripMargin)

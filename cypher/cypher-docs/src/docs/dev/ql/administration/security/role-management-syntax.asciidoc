@@ -13,7 +13,7 @@ SHOW [ALL\|POPULATED] ROLES
 | List roles.
 
 When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
-| <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>
+| <<access-control-dbms-administration-role-management, SHOW ROLE>>
 
 | [source, cypher, role=noplay]
 ----
@@ -25,8 +25,8 @@ SHOW [ALL\|POPULATED] ROLES WITH USERS
 | List roles and users assigned to them.
 
 When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
-| <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> and
-<<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
+| <<access-control-dbms-administration-role-management, SHOW ROLE>> and
+<<access-control-dbms-administration-user-management, SHOW USER>>
 
 | [source, cypher, role=noplay]
 ----
@@ -38,48 +38,48 @@ SHOW ROLE[S] name[, ...] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
 | List the privileges granted to the specified roles.
 
 When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
-| <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE PRIVILEGES>>
+| <<access-control-dbms-administration-role-management, SHOW ROLE PRIVILEGES>>
 
 | [source, cypher, role=noplay]
 ----
 CREATE ROLE name [IF NOT EXISTS] [AS COPY OF otherName]
 ----
 | Create a new role.
-| <<administration-security-administration-dbms-privileges-role-management, CREATE ROLE>>
+| <<access-control-dbms-administration-role-management, CREATE ROLE>>
 
 | [source, cypher, role=noplay]
 ----
 CREATE OR REPLACE ROLE name [AS COPY OF otherName]
 ----
 | Create a new role, or if a role with the same name exists, replace it.
-| <<administration-security-administration-dbms-privileges-role-management, CREATE ROLE>> and
-<<administration-security-administration-dbms-privileges-role-management, DROP ROLE>>
+| <<access-control-dbms-administration-role-management, CREATE ROLE>> and
+<<access-control-dbms-administration-role-management, DROP ROLE>>
 
 | [source, cypher, role=noplay]
 ----
 RENAME ROLE name [IF EXISTS] TO otherName
 ----
 | Change the name of a role.
-| <<administration-security-administration-dbms-privileges-role-management, RENAME ROLE>>
+| <<access-control-dbms-administration-role-management, RENAME ROLE>>
 
 | [source, cypher, role=noplay]
 ----
 DROP ROLE name [IF EXISTS]
 ----
 | Remove a role.
-| <<administration-security-administration-dbms-privileges-role-management, DROP ROLE>>
+| <<access-control-dbms-administration-role-management, DROP ROLE>>
 
 | [source, cypher, role=noplay]
 ----
 GRANT ROLE name[, ...] TO user[, ...]
 ----
 | Assign roles to users.
-| <<administration-security-administration-dbms-privileges-role-management, ASSIGN ROLE>>
+| <<access-control-dbms-administration-role-management, ASSIGN ROLE>>
 
 | [source, cypher, role=noplay]
 ----
 REVOKE ROLE name[, ...] FROM user[, ...]
 ----
 | Remove roles from users.
-| <<administration-security-administration-dbms-privileges-role-management, REMOVE ROLE>>
+| <<access-control-dbms-administration-role-management, REMOVE ROLE>>
 |===
