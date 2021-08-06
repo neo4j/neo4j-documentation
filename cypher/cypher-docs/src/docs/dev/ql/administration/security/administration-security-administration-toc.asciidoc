@@ -1,18 +1,18 @@
 * <<administration-security-administration, Security of administration>>
 ** <<administration-security-administration-introduction, The 'admin' role>>
-** <<administration-security-administration-database-privileges, Database administration>>
-*** <<administration-security-administration-database-access, The database ACCESS privilege>>
-*** <<administration-security-administration-database-startstop, The database START/STOP privileges>>
-*** <<administration-security-administration-database-indexes, The INDEX MANAGEMENT privileges>>
-*** <<administration-security-administration-database-constraints, The CONSTRAINT MANAGEMENT privileges>>
-*** <<administration-security-administration-database-tokens, The NAME MANAGEMENT privileges>>
-*** <<administration-security-administration-database-all, Granting `ALL DATABASE PRIVILEGES`>>
-*** <<administration-security-administration-database-transaction, Granting `TRANSACTION MANAGEMENT` privileges>>
-** <<administration-security-administration-dbms-privileges, DBMS administration>>
+** <<access-control-database-administration, Database administration>>
+*** <<access-control-database-administration-access, The database ACCESS privilege>>
+*** <<access-control-database-administration-startstop, The database START/STOP privileges>>
+*** <<access-control-database-administration-index, The INDEX MANAGEMENT privileges>>
+*** <<access-control-database-administration-constraints, The CONSTRAINT MANAGEMENT privileges>>
+*** <<access-control-database-administration-tokens, The NAME MANAGEMENT privileges>>
+*** <<access-control-database-administration-all, Granting `ALL DATABASE PRIVILEGES`>>
+*** <<access-control-database-administration-transaction, Granting `TRANSACTION MANAGEMENT` privileges>>
+** <<access-control-dbms-administration, DBMS administration>>
 *** <<administration-security-administration-dbms-custom, Creating custom roles with DBMS privileges>>
-*** <<administration-security-administration-dbms-privileges-role-management, The dbms ROLE MANAGEMENT privileges>>
-*** <<administration-security-administration-dbms-privileges-user-management, The dbms USER MANAGEMENT privileges>>
-*** <<administration-security-administration-dbms-privileges-database-management, The dbms DATABASE MANAGEMENT privileges>>
-*** <<administration-security-administration-dbms-privileges-privilege-management, The dbms PRIVILEGE MANAGEMENT privileges>>
-*** <<administration-security-administration-dbms-privileges-execute, The dbms EXECUTE privileges>>
-*** <<administration-security-administration-dbms-privileges-all, Granting `ALL DBMS PRIVILEGES`>>
+*** <<access-control-dbms-administration-role-management, The dbms ROLE MANAGEMENT privileges>>
+*** <<access-control-dbms-administration-user-management, The dbms USER MANAGEMENT privileges>>
+*** <<access-control-dbms-administration-database-management, The dbms DATABASE MANAGEMENT privileges>>
+*** <<access-control-dbms-administration-privilege-management, The dbms PRIVILEGE MANAGEMENT privileges>>
+*** <<access-control-dbms-administration-execute, The dbms EXECUTE privileges>>
+*** <<access-control-dbms-administration-all, Granting `ALL DBMS PRIVILEGES`>>

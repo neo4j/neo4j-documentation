@@ -603,7 +603,7 @@ label:added[]
 DEFAULT GRAPH
 ----
 a|
-New optional part of the Cypher commands for <<administration-security-administration-database-privileges,database privileges>>.
+New optional part of the Cypher commands for <<access-control-database-administration,database privileges>>.
 
 
 a|
@@ -660,7 +660,7 @@ EXECUTE
 ----
 a|
 New Cypher commands for administering privileges for executing procedures and user defined functions.
-See <<administration-security-administration-dbms-privileges-execute>>.
+See <<access-control-dbms-administration-execute>>.
 
 
 a|
@@ -884,14 +884,14 @@ New Cypher command for administering privilege for listing constraints.
 | `SHOW ROLES` | Functionality | Added | New support for `YIELD` and `WHERE` clauses to allow filtering results.
 | `SHOW DATABASES` | Functionality | Added | New support for `YIELD` and `WHERE` clauses to allow filtering results.
 | `ALL DATABASE PRIVILEGES` | Functionality | Restricted | No longer includes the privileges `START DATABASE` and `STOP DATABASE`
-| <<administration-security-administration-database-transaction,TRANSACTION MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering transaction management
-| DBMS <<administration-security-administration-dbms-privileges-user-management,USER MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering user management
-| DBMS <<administration-security-administration-dbms-privileges-database-management,DATABASE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering database management
-| DBMS <<administration-security-administration-dbms-privileges-privilege-management,PRIVILEGE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering privilege management
+| <<access-control-database-administration-transaction,TRANSACTION MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering transaction management
+| DBMS <<access-control-dbms-administration-user-management,USER MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering user management
+| DBMS <<access-control-dbms-administration-database-management,DATABASE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering database management
+| DBMS <<access-control-dbms-administration-privilege-management,PRIVILEGE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering privilege management
 | `ALL DBMS PRIVILEGES` | Functionality | Added | New Cypher command for administering role, user, database and privilege management
 | `ALL GRAPH PRIVILEGES` | Functionality | Added | New Cypher command for administering read and write privileges
 | Write privileges | Functionality | Added | New Cypher commands for administering write privileges
-| `ON DEFAULT DATABASE` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges,database privileges>>
+| `ON DEFAULT DATABASE` | Syntax | Added | New optional part of the Cypher commands for <<access-control-database-administration,database privileges>>
 |===
 
 [[cypher-deprecations-additions-removals-4.0]]
@@ -931,7 +931,7 @@ New Cypher command for administering privilege for listing constraints.
 | `WHERE EXISTS {...}` | Clause | Added | Existential sub-queries are sub-clauses used to filter the results of a `MATCH`, `OPTIONAL MATCH`, or `WITH` clause.
 | <<administration-databases,Multi-database administration>> | Functionality | Added | New Cypher commands for administering multiple databases
 | <<administration-security,Security administration>> | Functionality | Added | New Cypher commands for administering role-based access-control
-| <<administration-security-subgraph,Fine-grained security>> | Functionality | Added | New Cypher commands for administering dbms, database, graph and sub-graph access control
+| <<access-control-manage-privileges,Fine-grained security>> | Functionality | Added | New Cypher commands for administering dbms, database, graph and sub-graph access control
 | `USE neo4j` | Clause| Added | New clause to specify which graph a query, or query part, is executed against.
 |===
 

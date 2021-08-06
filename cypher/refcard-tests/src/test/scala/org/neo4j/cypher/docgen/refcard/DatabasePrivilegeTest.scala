@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen.refcard
 
 class DatabasePrivilegeTest extends AdministrationCommandTestBase {
   val title = "(★) Database privileges"
-  override val linkId = "administration/security/administration/#administration-security-administration-database-privileges"
+  override val linkId = "administration/security/administration/#access-control-database-administration"
 
   private def setup() = graph.withTx { tx =>
     tx.execute("CREATE ROLE my_role")

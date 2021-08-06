@@ -68,28 +68,28 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
     p(
       """
         |* <<administration-security-administration-introduction, The `admin` role>>
-        |* <<administration-security-administration-database-privileges, Database administration>>
-        |** <<administration-security-administration-database-access, The database `ACCESS` privilege>>
-        |** <<administration-security-administration-database-startstop, The database `START`/`STOP` privileges>>
-        |** <<administration-security-administration-database-indexes, The `INDEX MANAGEMENT` privileges>>
-        |** <<administration-security-administration-database-constraints, The `CONSTRAINT MANAGEMENT` privileges>>
-        |** <<administration-security-administration-database-tokens, The `NAME MANAGEMENT` privileges>>
-        |** <<administration-security-administration-database-all, Granting `ALL DATABASE PRIVILEGES`>>
-        |** <<administration-security-administration-database-transaction, Granting `TRANSACTION MANAGEMENT` privileges>>
-        |* <<administration-security-administration-dbms-privileges, DBMS administration>>
+        |* <<access-control-database-administration, Database administration>>
+        |** <<access-control-database-administration-access, The database `ACCESS` privilege>>
+        |** <<access-control-database-administration-startstop, The database `START`/`STOP` privileges>>
+        |** <<access-control-database-administration-index, The `INDEX MANAGEMENT` privileges>>
+        |** <<access-control-database-administration-constraints, The `CONSTRAINT MANAGEMENT` privileges>>
+        |** <<access-control-database-administration-tokens, The `NAME MANAGEMENT` privileges>>
+        |** <<access-control-database-administration-all, Granting `ALL DATABASE PRIVILEGES`>>
+        |** <<access-control-database-administration-transaction, Granting `TRANSACTION MANAGEMENT` privileges>>
+        |* <<access-control-dbms-administration, DBMS administration>>
         |** <<administration-security-administration-dbms-custom, Using a custom role to manage DBMS privileges>>
-        |** <<administration-security-administration-dbms-privileges-role-management, The dbms `ROLE MANAGEMENT` privileges>>
-        |** <<administration-security-administration-dbms-privileges-user-management, The dbms `USER MANAGEMENT` privileges>>
-        |** <<administration-security-administration-dbms-privileges-database-management, The dbms `DATABASE MANAGEMENT` privileges>>
-        |** <<administration-security-administration-dbms-privileges-privilege-management, The dbms `PRIVILEGE MANAGEMENT` privileges>>
-        |** <<administration-security-administration-dbms-privileges-execute, The dbms `EXECUTE` privileges>>
+        |** <<access-control-dbms-administration-role-management, The dbms `ROLE MANAGEMENT` privileges>>
+        |** <<access-control-dbms-administration-user-management, The dbms `USER MANAGEMENT` privileges>>
+        |** <<access-control-dbms-administration-database-management, The dbms `DATABASE MANAGEMENT` privileges>>
+        |** <<access-control-dbms-administration-privilege-management, The dbms `PRIVILEGE MANAGEMENT` privileges>>
+        |** <<access-control-dbms-administration-execute, The dbms `EXECUTE` privileges>>
         |*** <<execute-procedure-subsection, The dbms `EXECUTE PROCEDURE` privileges>>
         |*** <<boosted-execute-procedure-subsection, The dbms `EXECUTE BOOSTED PROCEDURE` privileges>>
         |*** <<admin-execute-procedure-subsection, The dbms `EXECUTE ADMIN PROCEDURES` privileges>>
         |*** <<execute-function-subsection, The dbms `EXECUTE USER DEFINED FUNCTION` privileges>>
         |*** <<boosted-execute-function-subsection, The dbms `EXECUTE BOOSTED USER DEFINED FUNCTION` privileges>>
         |*** <<name-globbing, Procedure and user defined function name-globbing>>
-        |** <<administration-security-administration-dbms-privileges-all, Granting `ALL DBMS PRIVILEGES`>>
+        |** <<access-control-dbms-administration-all, Granting `ALL DBMS PRIVILEGES`>>
         |""".stripMargin)
     section("The `admin` role", "administration-security-administration-introduction", "enterprise-edition") {
       p("include::admin-role-introduction.asciidoc[]")
@@ -101,7 +101,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       p("If the built-in admin role has been altered or dropped, and needs to be restored to its original state, see " +
         "<<operations-manual#password-and-user-recovery, Operations Manual -> Password and user recovery>>.")
     }
-    section("Database administration", "administration-security-administration-database-privileges", "enterprise-edition") {
+    section("Database administration", "access-control-database-administration", "enterprise-edition") {
       p("include::database/admin-role-database.asciidoc[]")
       p("The hierarchy between the different database privileges is shown in the image below.")
       p("image::privilege-hierarchy-database.png[title=\"Database privileges hierarchy\"]")
@@ -109,7 +109,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
       p("include::database/admin-database-syntax.asciidoc[]")
       p("image::grant-privileges-database.png[title=\"Syntax of GRANT and DENY Database Privileges\"]")
       // image source: https://docs.google.com/drawings/d/1tQESJp-fcGjiZ97gWY7WkxKijBlwquafgYl_VNSpijk/edit?usp=sharing
-      section("The database `ACCESS` privilege", "administration-security-administration-database-access", "enterprise-edition") {
+      section("The database `ACCESS` privilege", "access-control-database-administration-access", "enterprise-edition") {
         p(
           """The `ACCESS` privilege enables users to connect to a database.
             |With `ACCESS` you can run calculations, for example, `RETURN 2*5 AS answer` or call functions `RETURN timestamp() AS time`.""".stripMargin)
@@ -141,7 +141,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
       }
-      section("The database `START`/`STOP` privileges", "administration-security-administration-database-startstop", "enterprise-edition") {
+      section("The database `START`/`STOP` privileges", "access-control-database-administration-startstop", "enterprise-edition") {
         p(
           """The `START` privilege can be used to enable the ability to start a database.""".stripMargin)
         p("include::database/grant-database-start-syntax.asciidoc[]")
@@ -199,10 +199,10 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
 
         note {
-          p("Note that `START` and `STOP` privileges are not included in the <<administration-security-administration-database-all, `ALL DATABASE PRIVILEGES`>>.")
+          p("Note that `START` and `STOP` privileges are not included in the <<access-control-database-administration-all, `ALL DATABASE PRIVILEGES`>>.")
         }
       }
-      section("The `INDEX MANAGEMENT` privileges", "administration-security-administration-database-indexes", "enterprise-edition") {
+      section("The `INDEX MANAGEMENT` privileges", "access-control-database-administration-index", "enterprise-edition") {
         p(
           """Indexes can be created, deleted, or listed with the `CREATE INDEX`, `DROP INDEX`, and `SHOW INDEXES` commands.
             |The privilege to do this can be granted with `GRANT CREATE INDEX`, `GRANT DROP INDEX`, and `GRANT SHOW INDEX` commands.
@@ -221,7 +221,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           """The `SHOW INDEXES` privilege only affects the <<administration-indexes-list-indexes, `SHOW INDEXES` command>>
             | and not the old procedures for listing indexes, such as `db.indexes`.""".stripMargin)
       }
-      section("The `CONSTRAINT MANAGEMENT` privileges", "administration-security-administration-database-constraints", "enterprise-edition") {
+      section("The `CONSTRAINT MANAGEMENT` privileges", "access-control-database-administration-constraints", "enterprise-edition") {
         p(
           """Constraints can be created, deleted, or listed with the `CREATE CONSTRAINT`, `DROP CONSTRAINT` and `SHOW CONSTRAINTS` commands.
             |The privilege to do this can be granted with `GRANT CREATE CONSTRAINT`, `GRANT DROP CONSTRAINT`, `GRANT SHOW CONSTRAINT` commands.
@@ -240,7 +240,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           """The `SHOW CONSTRAINTS` privilege only affects the <<administration-constraints-syntax-list, `SHOW CONSTRAINTS` command>>
             | and not the old procedures for listing constraints, such as `db.constraints`.""".stripMargin)
       }
-      section("The `NAME MANAGEMENT` privileges", "administration-security-administration-database-tokens", "enterprise-edition") {
+      section("The `NAME MANAGEMENT` privileges", "access-control-database-administration-tokens", "enterprise-edition") {
         p(
           """The right to create new labels, relationship types, and property names is different from the right to create nodes, relationships, and properties.
             |The latter is managed using database `WRITE` privileges, while the former is managed using specific `GRANT/DENY CREATE NEW ...` commands for each type.""".stripMargin)
@@ -254,7 +254,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           statsOnlyResultTable()
         }
       }
-      section("Granting `ALL DATABASE PRIVILEGES`", "administration-security-administration-database-all", "enterprise-edition") {
+      section("Granting `ALL DATABASE PRIVILEGES`", "access-control-database-administration-all", "enterprise-edition") {
         p(
           """The right to access a database, create and drop indexes and constraints and create new labels, relationship types or property names can be achieved with a single command:""".stripMargin)
         p("include::database/all-management-syntax.asciidoc[]")
@@ -280,14 +280,14 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           resultTable()
         }
       }
-      section("Granting `TRANSACTION MANAGEMENT` privileges", "administration-security-administration-database-transaction", "enterprise-edition") {
+      section("Granting `TRANSACTION MANAGEMENT` privileges", "access-control-database-administration-transaction", "enterprise-edition") {
         p(
           """The right to run the procedures `dbms.listTransactions`, `dbms.listQueries`, `dbms.killQuery`, `dbms.killQueries`,
             |`dbms.killTransaction` and `dbms.killTransactions` are managed through the `SHOW TRANSACTION` and `TERMINATE TRANSACTION` privileges.""".stripMargin)
         p("include::database/transaction-management-syntax.asciidoc[]")
 
         note {
-          p("Note that the `TRANSACTION MANAGEMENT` privileges are not included in the <<administration-security-administration-database-all, `ALL DATABASE PRIVILEGES`>>.")
+          p("Note that the `TRANSACTION MANAGEMENT` privileges are not included in the <<access-control-database-administration-all, `ALL DATABASE PRIVILEGES`>>.")
         }
 
         p(
@@ -379,7 +379,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
 
-      section("The dbms `ROLE MANAGEMENT` privileges", "administration-security-administration-dbms-privileges-role-management", "enterprise-edition") {
+      section("The dbms `ROLE MANAGEMENT` privileges", "access-control-dbms-administration-role-management", "enterprise-edition") {
         p("The dbms privileges for role management are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
         p("include::dbms/role-management-syntax.asciidoc[]")
 
@@ -471,7 +471,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
 
-      section("The dbms `USER MANAGEMENT` privileges", "administration-security-administration-dbms-privileges-user-management", "enterprise-edition") {
+      section("The dbms `USER MANAGEMENT` privileges", "access-control-dbms-administration-user-management", "enterprise-edition") {
         p("The dbms privileges for user management are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
         p("include::dbms/user-management-syntax.asciidoc[]")
 
@@ -617,7 +617,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
 
-      section("The dbms `DATABASE MANAGEMENT` privileges", "administration-security-administration-dbms-privileges-database-management", "enterprise-edition") {
+      section("The dbms `DATABASE MANAGEMENT` privileges", "access-control-dbms-administration-database-management", "enterprise-edition") {
         p("The dbms privileges for database management are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
         p("include::dbms/database-management-syntax.asciidoc[]")
 
@@ -660,7 +660,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
 
-      section("The dbms `PRIVILEGE MANAGEMENT` privileges", "administration-security-administration-dbms-privileges-privilege-management", "enterprise-edition") {
+      section("The dbms `PRIVILEGE MANAGEMENT` privileges", "access-control-dbms-administration-privilege-management", "enterprise-edition") {
         p("The dbms privileges for privilege management are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
         p("include::dbms/privilege-management-syntax.asciidoc[]")
 
@@ -721,7 +721,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
 
-      section("The dbms `EXECUTE` privileges", "administration-security-administration-dbms-privileges-execute", "enterprise-edition") {
+      section("The dbms `EXECUTE` privileges", "access-control-dbms-administration-execute", "enterprise-edition") {
         initQueries(
           "CREATE ROLE procedureExecutor",
           "CREATE ROLE deniedProcedureExecutor",
@@ -1080,7 +1080,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
         }
       }
 
-      section("Granting `ALL DBMS PRIVILEGES`", "administration-security-administration-dbms-privileges-all", "enterprise-edition") {
+      section("Granting `ALL DBMS PRIVILEGES`", "access-control-dbms-administration-all", "enterprise-edition") {
         p(
           """The right to perform the following privileges can be achieved with a single command:
             |

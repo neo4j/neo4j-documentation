@@ -1,7 +1,7 @@
 As described in <<administration-indexes-search-performance, Indexes for search performance>>, Neo4j {neo4j-version} supports the creation and use of indexes to improve the performance of Cypher queries.
 The Neo4j security model will impact the results of queries (regardless if the indexes are used).
 When using non full-text Neo4j indexes, a Cypher query will always return the same results it would have if no index existed.
-This means that if the security model causes fewer results to be returned due to restricted read access in <<administration-security-subgraph, Graph and sub-graph access control>>,
+This means that if the security model causes fewer results to be returned due to restricted read access in <<access-control-manage-privileges, Graph and sub-graph access control>>,
 the index will also return the same fewer results.
 
 However, this rule is not fully obeyed by <<administration-indexes-fulltext-search, Indexes for full-text search>>.

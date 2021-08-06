@@ -37,14 +37,14 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
     p(
       """
-        |* <<administration-security-writes-create, The `CREATE` privilege>>
-        |* <<administration-security-writes-delete, The `DELETE` privilege>>
-        |* <<administration-security-writes-set-label, The `SET LABEL` privilege>>
-        |* <<administration-security-writes-remove-label, The `REMOVE LABEL` privilege>>
-        |* <<administration-security-writes-set-property, The `SET PROPERTY` privilege>>
-        |* <<administration-security-writes-merge, The `MERGE` privilege>>
-        |* <<administration-security-writes-write, The `WRITE` privilege>>
-        |* <<administration-security-writes-all, The `ALL GRAPH PRIVILEGES` privilege>>
+        |* <<access-control-privileges-writes-create, The `CREATE` privilege>>
+        |* <<access-control-privileges-writes-delete, The `DELETE` privilege>>
+        |* <<access-control-privileges-writes-set-label, The `SET LABEL` privilege>>
+        |* <<access-control-privileges-writes-remove-label, The `REMOVE LABEL` privilege>>
+        |* <<access-control-privileges-writes-set-property, The `SET PROPERTY` privilege>>
+        |* <<access-control-privileges-writes-merge, The `MERGE` privilege>>
+        |* <<access-control-privileges-writes-write, The `WRITE` privilege>>
+        |* <<access-control-privileges-writes-all, The `ALL GRAPH PRIVILEGES` privilege>>
         |""".stripMargin)
 
         p(
@@ -64,7 +64,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
         |* `ALL GRAPH PRIVILEGES` - allows all read and write operation on an entire graph.
         |""".stripMargin)
 
-    section("The `CREATE` privilege", "administration-security-writes-create", "enterprise-edition") {
+    section("The `CREATE` privilege", "access-control-privileges-writes-create", "enterprise-edition") {
       p(
         """The `CREATE` privilege allows a user to create new node and relationship elements in a graph.
           |See the Cypher <<query-create, CREATE>> clause.""".stripMargin)
@@ -90,12 +90,12 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       note {
         p(
           """If the user attempts to create nodes with a label that does not already exist in the database, then the user must also possess the
-            |<<administration-security-administration-database-tokens, CREATE NEW LABEL>> privilege. The same applies to new relationships - the
-            |<<administration-security-administration-database-tokens, CREATE NEW RELATIONSHIP TYPE>> privilege is required.""".stripMargin)
+            |<<access-control-database-administration-tokens, CREATE NEW LABEL>> privilege. The same applies to new relationships - the
+            |<<access-control-database-administration-tokens, CREATE NEW RELATIONSHIP TYPE>> privilege is required.""".stripMargin)
       }
     }
 
-    section("The `DELETE` privilege", "administration-security-writes-delete", "enterprise-edition") {
+    section("The `DELETE` privilege", "access-control-privileges-writes-delete", "enterprise-edition") {
       p(
         """The `DELETE` privilege allows a user to delete node and relationship elements in a graph.
           |See the Cypher <<query-delete, DELETE>> clause.""".stripMargin)
@@ -125,7 +125,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       }
     }
 
-    section("The `SET LABEL` privilege", "administration-security-writes-set-label", "enterprise-edition") {
+    section("The `SET LABEL` privilege", "access-control-privileges-writes-set-label", "enterprise-edition") {
       p(
         """The `SET LABEL` privilege allows you to set labels on a node using the <<set-set-a-label-on-a-node, SET clause>>.""".stripMargin)
       p("include::grant-set-label-syntax.asciidoc[]")
@@ -151,11 +151,11 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
         statsOnlyResultTable()
       }
       note {
-        p("If no instances of this label exist in the database, then the <<administration-security-administration-database-tokens, CREATE NEW LABEL>> privilege is also required.")
+        p("If no instances of this label exist in the database, then the <<access-control-database-administration-tokens, CREATE NEW LABEL>> privilege is also required.")
       }
     }
 
-    section("The `REMOVE LABEL` privilege", "administration-security-writes-remove-label", "enterprise-edition") {
+    section("The `REMOVE LABEL` privilege", "access-control-privileges-writes-remove-label", "enterprise-edition") {
       p(
         """The `REMOVE LABEL` privilege allows you to remove labels from a node using the <<remove-remove-a-label-from-a-node, REMOVE clause>>.""".stripMargin)
       p("include::grant-remove-label-syntax.asciidoc[]")
@@ -182,7 +182,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       }
     }
 
-    section("The `SET PROPERTY` privilege", "administration-security-writes-set-property", "enterprise-edition") {
+    section("The `SET PROPERTY` privilege", "access-control-privileges-writes-set-property", "enterprise-edition") {
       p(
         """The `SET PROPERTY` privilege allows a user to set a property on a node or relationship element in a graph using the <<set-set-a-property, SET clause>>.""".stripMargin)
       p("include::grant-set-property-syntax.asciidoc[]")
@@ -207,11 +207,11 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       note {
         p(
           """If the users attempts to set a property with a property name that does not already exist in the database the user must also possess the
-            |<<administration-security-administration-database-tokens, CREATE NEW PROPERTY NAME>> privilege.""".stripMargin)
+            |<<access-control-database-administration-tokens, CREATE NEW PROPERTY NAME>> privilege.""".stripMargin)
       }
     }
 
-    section("The `MERGE` privilege", "administration-security-writes-merge", "enterprise-edition") {
+    section("The `MERGE` privilege", "access-control-privileges-writes-merge", "enterprise-edition") {
       p(
         """The `MERGE` privilege is a compound privilege that combines `TRAVERSE` and `READ` (i.e. `MATCH`) with `CREATE` and `SET PROPERTY`. This is intended to
           | permit use of <<query-merge, the MERGE command>> but is applicable to all reads and writes that require these privileges.""".stripMargin)
@@ -227,18 +227,18 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
 
       p(
         """It is not possible to deny the `MERGE` privilege. If it is desirable to prevent a users from creating elements and setting properties, use
-          |<<administration-security-writes-create, DENY CREATE>> or <<administration-security-writes-set-property,DENY SET PROPERTY>>.""".stripMargin)
+          |<<access-control-privileges-writes-create, DENY CREATE>> or <<access-control-privileges-writes-set-property,DENY SET PROPERTY>>.""".stripMargin)
 
       note {
         p(
           """If the users attempts to create nodes with a label that does not already exist in the database the user must also possess the
-            |<<administration-security-administration-database-tokens, CREATE NEW LABEL>> privilege. The same applies to new relationships and properties - the
-            |<<administration-security-administration-database-tokens, CREATE NEW RELATIONSHIP TYPE>> or
-            |<<administration-security-administration-database-tokens, CREATE NEW PROPERTY NAME>> privileges are required.""".stripMargin)
+            |<<access-control-database-administration-tokens, CREATE NEW LABEL>> privilege. The same applies to new relationships and properties - the
+            |<<access-control-database-administration-tokens, CREATE NEW RELATIONSHIP TYPE>> or
+            |<<access-control-database-administration-tokens, CREATE NEW PROPERTY NAME>> privileges are required.""".stripMargin)
       }
     }
 
-    section("The `WRITE` privilege", "administration-security-writes-write", "enterprise-edition") {
+    section("The `WRITE` privilege", "access-control-privileges-writes-write", "enterprise-edition") {
       p(
         """The `WRITE` privilege allows the user to execute any write command on a graph.""".stripMargin)
       p("include::grant-write-syntax.asciidoc[]")
@@ -273,7 +273,7 @@ class SecurityWritePrivilegesTest extends DocumentingTest with QueryStatisticsTe
       }
     }
 
-    section("`ALL GRAPH PRIVILEGES`", "administration-security-writes-all", "enterprise-edition") {
+    section("`ALL GRAPH PRIVILEGES`", "access-control-privileges-writes-all", "enterprise-edition") {
       p(
         """The `ALL GRAPH PRIVILEGES` privilege allows the user to execute any command on a graph.""".stripMargin)
       p("include::grant-all-graph-privileges-syntax.asciidoc[]")

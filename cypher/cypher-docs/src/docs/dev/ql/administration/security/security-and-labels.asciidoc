@@ -1,6 +1,6 @@
 === Traversing the graph with multi-labeled nodes
 
-The general influence of access control privileges on graph traversal is described in detail in <<administration-security-subgraph, Graph and sub-graph access control>>.
+The general influence of access control privileges on graph traversal is described in detail in <<access-control-manage-privileges, Graph and sub-graph access control>>.
 The following section will only focus on nodes because of their ability to have multiple labels. Relationships can only ever have one type
 and thus they do not exhibit the behavior this section aims to clarify.
 While this section will not mention relationships further, the general function of the traverse privilege also applies to them.

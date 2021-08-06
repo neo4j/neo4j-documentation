@@ -37,22 +37,22 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
 
     p(
       """
-        |* <<administration-security-users, User Management>>
+        |* <<access-control-manage-users, User Management>>
         |** <<administration-security-users-show-current, Listing current user>>
-        |** <<administration-security-users-show, Listing users>>
-        |** <<administration-security-users-create, Creating users>>
-        | ** <<administration-security-users-rename, Renaming users>>
-        |** <<administration-security-users-alter, Modifying users>>
-        |** <<administration-security-users-alter-password, Changing the current user's password>>
-        |** <<administration-security-users-drop, Deleting users>>
+        |** <<access-control-list-users, Listing users>>
+        |** <<access-control-create-users, Creating users>>
+        | ** <<access-control-rename-users, Renaming users>>
+        |** <<access-control-alter-users, Modifying users>>
+        |** <<access-control-alter-password, Changing the current user's password>>
+        |** <<access-control-drop-users, Deleting users>>
         |* <<administration-security-roles, Role management>>
         |** <<administration-security-roles-public, The `PUBLIC` role>>
-        |** <<administration-security-roles-show, Listing roles>>
-        |** <<administration-security-roles-create, Creating roles>>
-        |** <<administration-security-roles-rename, Renaming roles>>
-        |** <<administration-security-roles-drop, Deleting roles>>
-        |** <<administration-security-roles-grant, Assigning roles>>
-        |** <<administration-security-roles-revoke, Revoking roles>>
+        |** <<access-control-list-roles, Listing roles>>
+        |** <<access-control-create-roles, Creating roles>>
+        |** <<access-control-rename-roles, Renaming roles>>
+        |** <<access-control-drop-roles, Deleting roles>>
+        |** <<access-control-assign-roles, Assigning roles>>
+        |** <<access-control-revoke-roles, Revoking roles>>
         |""".stripMargin)
 
     section("User Management", "administration-security-users") {
@@ -86,10 +86,10 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             |otherwise it is necessary to change the password after first login.
             |""".stripMargin)
         note {
-          p("The `SHOW USER name PRIVILEGES` command is described in <<administration-security-subgraph-show, Listing privileges>>.")
+          p("The `SHOW USER name PRIVILEGES` command is described in <<access-control-list-privileges, Listing privileges>>.")
         }
       }
-      section("Creating users", "administration-security-users-create") {
+      section("Creating users", "access-control-create-users") {
         p("Users can be created using `CREATE USER`.")
         p("include::user-management-syntax-create-user.asciidoc[]")
         p("""
@@ -159,7 +159,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("User names are case sensitive.")
         }
       }
-      section("Renaming users", "administration-security-users-rename") {
+      section("Renaming users", "access-control-rename-users") {
         p("Users can be renamed using the `RENAME USER` command.")
         query("RENAME USER jake TO bob", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -173,7 +173,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("The `RENAME USER` command is only available when using native authentication and authorization.")
         }
       }
-      section("Modifying users", "administration-security-users-alter") {
+      section("Modifying users", "access-control-alter-users") {
         p("Users can be modified using `ALTER USER`.")
         p("include::user-management-syntax-alter-user.asciidoc[]")
         p("""
@@ -229,7 +229,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           statsOnlyResultTable()
         }
       }
-      section("Changing the current user's password", "administration-security-users-alter-password") {
+      section("Changing the current user's password", "access-control-alter-password") {
         initQueries("CREATE USER bob SET PASSWORD 'abc123' CHANGE NOT REQUIRED")
         p(
           """Users can change their own password using `ALTER CURRENT USER SET PASSWORD`.
@@ -245,7 +245,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("This command only works for a logged in user and cannot be run with auth disabled.")
         }
       }
-      section("Deleting users", "administration-security-users-drop") {
+      section("Deleting users", "access-control-drop-users") {
         p("Users can be deleted using `DROP USER`.")
         query("DROP USER bob", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -279,11 +279,11 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
         p(
           """There exists a special built-in role, `PUBLIC`, which is assigned to all users.
             |This role cannot be dropped or revoked from any user, but its privileges may be modified.
-            |By default, it is assigned the <<administration-security-administration-database-access, ACCESS>> privilege on the home database.
+            |By default, it is assigned the <<access-control-database-administration-access, ACCESS>> privilege on the home database.
             |""".stripMargin)
         p("""In contrast to the `PUBLIC` role, the other built-in roles can be granted, revoked, dropped and re-created.""")
       }
-      section("Listing roles", "administration-security-roles-show", "enterprise-edition") {
+      section("Listing roles", "access-control-list-roles", "enterprise-edition") {
         p("Available roles can be seen using `SHOW ROLES`.")
         query("SHOW ROLES", assertAllNodesShown("Role", column = "role")) {
           p(
@@ -323,10 +323,10 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           resultTable()
         }
         note {
-          p("The `SHOW ROLE name PRIVILEGES` command is found in <<administration-security-subgraph-show, Listing privileges>>.")
+          p("The `SHOW ROLE name PRIVILEGES` command is found in <<access-control-list-privileges, Listing privileges>>.")
         }
       }
-      section("Creating roles", "administration-security-roles-create", "enterprise-edition") {
+      section("Creating roles", "access-control-create-roles", "enterprise-edition") {
         p("Roles can be created using `CREATE ROLE`.")
         query("CREATE ROLE myrole", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -371,7 +371,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("Role names are case sensitive.")
         }
       }
-      section("Renaming roles", "administration-security-roles-rename", "enterprise-edition") {
+      section("Renaming roles", "access-control-rename-roles", "enterprise-edition") {
         p("Roles can be renamed using `RENAME ROLE` command.")
         query("RENAME ROLE mysecondrole TO mythirdrole", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -385,7 +385,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           p("The `RENAME ROLE` command is only available when using native authentication and authorization.")
         }
       }
-      section("Deleting roles", "administration-security-roles-drop", "enterprise-edition") {
+      section("Deleting roles", "access-control-drop-roles", "enterprise-edition") {
         p("Roles can be deleted using `DROP ROLE` command.")
         query("DROP ROLE mythirdrole", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -404,7 +404,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           statsOnlyResultTable()
         }
       }
-      section("Assigning roles to users", "administration-security-roles-grant", "enterprise-edition") {
+      section("Assigning roles to users", "access-control-assign-roles", "enterprise-edition") {
         p("Users can be given access rights by assigning them roles using `GRANT ROLE`.")
         initQueries("CREATE ROLE myrole", "CREATE ROLE role1", "CREATE ROLE role2")
         query("GRANT ROLE myrole TO bob", ResultAssertions(r => {
@@ -426,7 +426,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
           resultTable()
         }
       }
-      section("Revoking roles from users", "administration-security-roles-revoke", "enterprise-edition") {
+      section("Revoking roles from users", "access-control-revoke-roles", "enterprise-edition") {
         p("Users can lose access rights by revoking roles from them using `REVOKE ROLE`.")
         initQueries("CREATE ROLE myrole", "GRANT ROLE myrole TO bob",
           "CREATE ROLE role1", "CREATE ROLE role2", "GRANT ROLES role1, role2 TO user1, user2, user3")
