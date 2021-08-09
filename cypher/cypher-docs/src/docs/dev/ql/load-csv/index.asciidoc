@@ -19,7 +19,7 @@
 * <<load-csv-using-file-with-load-csv, Using file() with LOAD CSV>>
 
 
-[[query-load-csv-introduction,Introduction]]
+[[query-load-csv-introduction]]
 == Introduction
 
 * The URL of the CSV file is specified by using `FROM` followed by an arbitrary expression evaluating to the URL in question.
