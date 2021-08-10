@@ -259,7 +259,7 @@ m|<<query-listing-procedures, SHOW PROCEDURES>>
 [[header-administration-clauses]]
 **Administration clauses**
 
-These comprise clauses used to manage databases, schema and security; further details can found in <<databases, Database management>> and <<access-control, Access Control>>.
+These comprise clauses used to manage databases, schema and security; further details can found in <<administration-databases, Database management>> and <<access-control, Access Control>>.
 
 [options="header"]
 |===
