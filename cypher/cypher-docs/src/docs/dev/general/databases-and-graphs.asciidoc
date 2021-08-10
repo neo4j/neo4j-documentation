@@ -39,7 +39,7 @@ A fresh installation of Neo4j includes two databases:
 * `system` - the system database described above, containing meta-data on the DBMS and security configuration.
 * `neo4j` - the default database, named using the config option `dbms.default_database=neo4j`.
 
-For more information about the _system_ database, see the sections on <<databases, Database management>> and <<access-control, Access Control>>.
+For more information about the _system_ database, see the sections on <<administration-databases, Database management>> and <<access-control, Access Control>>.
 
 == Different editions of Neo4j
 

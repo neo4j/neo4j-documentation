@@ -357,7 +357,7 @@ The following commands are only executable against the `system` database:
 | <<access-control-database-administration-index, DROP INDEX>>                                 | Schema                | Determines whether a user is allowed to drop indexes on a specific database.
 | <<access-control-dbms-administration-role-management, DROP ROLE>>                   | DBMS                  | Determines whether the user can delete roles.
 | <<access-control-dbms-administration-user-management, DROP USER>>                   | DBMS                  | Determines whether the user can delete users.
-| <<access-control-execute-procedure-subsection, EXECUTE ADMIN PROCEDURE>>                                         | DBMS                  | Determines whether the user can execute admin procedures.
+| <<access-control-admin-procedure, EXECUTE ADMIN PROCEDURE>>                                         | DBMS                  | Determines whether the user can execute admin procedures.
 | <<access-control-execute-boosted-user-defined-function, EXECUTE BOOSTED FUNCTION>>                                      | DBMS                  | Determines whether the user can execute functions with elevated privileges.
 | <<access-control-execute-boosted-procedure, EXECUTE BOOSTED PROCEDURE>>                                      | DBMS                  | Determines whether the user can execute procedures with elevated privileges.
 | <<access-control-execute-user-defined-function, EXECUTE FUNCTION>>                                                       | DBMS                  | Determines whether the user can execute functions.
