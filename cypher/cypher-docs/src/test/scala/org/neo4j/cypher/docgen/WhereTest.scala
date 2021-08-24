@@ -20,6 +20,7 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
+import org.scalatest.Inside.inside
 
 class WhereTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/"
@@ -72,6 +73,8 @@ class WhereTest extends DocumentingTest {
         |* <<query-where-ranges, Using ranges>>
         | ** <<simple-range, Simple range>>
         | ** <<composite-range, Composite range>>
+        |* <<pattern-element-predicates, Pattern element predicates>>
+        | ** <<node-pattern-predicates, Node pattern predicates>>
       """.stripMargin)
     section("Introduction", "where-introduction") {
       p("`WHERE` is not a clause in its own right -- rather, it's part of `MATCH`, `OPTIONAL MATCH` and `WITH`.")
@@ -472,6 +475,34 @@ class WhereTest extends DocumentingTest {
         })) {
           p("The name and age values of nodes having a name property lexicographically between *'Andy'* and *'Timothy'* are returned.")
           resultTable()
+        }
+      }
+      section("Pattern element predicates", "pattern-element-predicates") {
+        section("Node pattern predicates", "node-pattern-predicates") {
+          p("`WHERE` clause can appear inside a node pattern in `MATCH` clause or pattern comprehension:")
+          query("""WITH 30 AS minAge
+                  #MATCH (a:Person WHERE a.name = 'Andy')-[:KNOWS]->(b:Person WHERE b.age > minAge)
+                  #RETURN b.name""".stripMargin('#'),
+            ResultAssertions { r =>
+              r.toList shouldBe List(Map("b.name" -> "Peter"))
+            }) {
+            resultTable()
+            p("When used this way, predicates in `WHERE` can reference the node variable that the `WHERE` clause belongs to, but not other elements of the `MATCH` pattern.")
+          }
+          p("The same rule applies to pattern comprehensions:")
+          query("""MATCH (a:Person {name: 'Andy'})
+                  #RETURN [(a)-->(b WHERE b:Person) | b.name] AS friends""".stripMargin('#'),
+            ResultAssertions { r =>
+              val rows = r.toList
+              rows.length shouldBe 1
+
+              inside(rows.head("friends")) {
+                case friends: Seq[_] =>
+                  friends should contain theSameElementsAs Seq("Peter", "Timothy")
+              }
+            }) {
+            resultTable()
+          }
         }
       }
     }
