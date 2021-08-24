@@ -411,7 +411,7 @@ trait QueryResultPlaceHolder {
 
 // NOTE: These must _not_ be case classes, otherwise they will not be compared by identity
 class TablePlaceHolder(val assertions: QueryAssertions, val params: (String, Any)*) extends Content with QueryResultPlaceHolder
-class LimitedTablePlaceHolder(val wantedColumns: List[String], val rows: Int, assertions: QueryAssertions, params: (String, Any)*) extends TablePlaceHolder(assertions, params: _*)
+class LimitedTablePlaceHolder(val maybeWantedColumns: Option[List[String]], val rows: Int, assertions: QueryAssertions, params: (String, Any)*) extends TablePlaceHolder(assertions, params: _*)
 class StatsOnlyTablePlaceHolder(assertions: QueryAssertions, params: (String, Any)*) extends TablePlaceHolder(assertions, params: _*)
 class ErrorOnlyTablePlaceHolder(assertions: QueryAssertions, params: (String, Any)*) extends TablePlaceHolder(assertions, params: _*)
 class GraphVizPlaceHolder(val options: String) extends Content with QueryResultPlaceHolder
