@@ -133,7 +133,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
       query("SHOW FUNCTIONS", ResultAssertions(p => {
         p.columns should contain theSameElementsAs Array("name", "category", "description")
       })) {
-        limitedResultTable(List("name", "category", "description"), 20)
+        limitedResultTable(20)
       }
     }
     section("Listing functions with filtering on output columns") {
@@ -150,7 +150,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
         p.columnAs[String]("name").foreach(_ should startWith("a"))
         p.columnAs[Boolean]("isBuiltIn").foreach(_ should be(true))
       })) {
-        limitedResultTable(List("name", "isBuiltIn"), 15)
+        limitedResultTable(15)
       }
     }
     section("Listing functions with other filtering") {
@@ -172,7 +172,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
         p.columnAs[List[String]]("rolesExecution").foreach(_ should be(null))
         p.columnAs[List[String]]("rolesBoostedExecution").foreach(_ should be(null))
       })) {
-        limitedResultTable(List("name", "category", "description", "rolesExecution", "rolesBoostedExecution"))
+        limitedResultTable(maybeWantedColumns = Some(List("name", "category", "description", "rolesExecution", "rolesBoostedExecution")))
       }
       p("Notice that the two `roles` columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.")
       logout()
@@ -180,7 +180,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
       query("SHOW FUNCTIONS EXECUTABLE BY jake", ResultAssertions(p => {
         p.columns should contain theSameElementsAs Array("name", "category", "description")
       })) {
-        limitedResultTable(List("name", "category", "description"))
+        limitedResultTable()
       }
     }
   }.build()
