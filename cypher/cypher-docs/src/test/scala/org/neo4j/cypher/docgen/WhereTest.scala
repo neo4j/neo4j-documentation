@@ -479,7 +479,7 @@ class WhereTest extends DocumentingTest {
       }
       section("Pattern element predicates", "pattern-element-predicates") {
         section("Node pattern predicates", "node-pattern-predicates") {
-          p("`WHERE` clause can appear inside a node pattern in `MATCH` clause or pattern comprehension:")
+          p("`WHERE` can appear inside a node pattern in a `MATCH` clause or a pattern comprehension:")
           query("""WITH 30 AS minAge
                   #MATCH (a:Person WHERE a.name = 'Andy')-[:KNOWS]->(b:Person WHERE b.age > minAge)
                   #RETURN b.name""".stripMargin('#'),
