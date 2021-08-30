@@ -29,7 +29,7 @@ SHOW ROLE name PRIVILEGES
     [WHERE expression]
 ----
 | List the privileges granted to a role.
-| <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE PRIVILEGES>>
+| <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>>
 
 | [source, cypher, role=noplay]
 ----
