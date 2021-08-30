@@ -36,48 +36,31 @@ class TemporalTest extends DocumentingTest {
 
     doc("Temporal (Date/Time) values", "cypher-temporal")
     synopsis("Cypher has built-in support for handling temporal values, and the underlying database supports storing these temporal values as properties on nodes and relationships.")
-    p("""* <<cypher-temporal-introduction, Introduction>>
-        #* <<cypher-temporal-timezones, Time zones>>
-        #* <<cypher-temporal-instants, Temporal instants>>
-        # ** <<cypher-temporal-specifying-temporal-instants, Specifying temporal instants>>
-        #  *** <<cypher-temporal-specify-date, Specifying dates>>
-        #  *** <<cypher-temporal-specify-time, Specifying times>>
-        #  *** <<cypher-temporal-specify-time-zone, Specifying time zones>>
-        #  *** <<cypher-temporal-specify-instant-examples, Examples>>
-        # ** <<cypher-temporal-accessing-components-temporal-instants, Accessing components of temporal instants>>
-        #* <<cypher-temporal-durations, Durations>>
-        # ** <<cypher-temporal-specifying-durations, Specifying durations>>
-        #  *** <<cypher-temporal-specify-duration-examples, Examples>>
-        # ** <<cypher-temporal-accessing-components-durations, Accessing components of durations>>
-        #* <<cypher-temporal-examples, Examples>>
-        #* <<cypher-temporal-index, Temporal indexing>>""".stripMargin('#'))
     note {
-      p("""Refer to <<query-functions-temporal-instant-types>> for information regarding temporal _functions_ allowing for the creation and manipulation of temporal values.""")
-      p("""Refer to <<query-operators-temporal>> for information regarding temporal _operators_.""")
-      p("""Refer to <<cypher-ordering, Ordering and comparison of values>> for information regarding the comparison and ordering of temporal values.""")
+      p("""* Refer to <<query-functions-temporal-instant-types>> for information regarding temporal _functions_ allowing for the creation and manipulation of temporal values.
+          #* Refer to <<query-operators-temporal>> for information regarding temporal _operators_.
+          #* Refer to <<cypher-ordering, Ordering and comparison of values>> for information regarding the comparison and ordering of temporal values.""".stripMargin('#'))
     }
-    section("Introduction", "cypher-temporal-introduction") {
-      p(
-        """The following table depicts the temporal value types and supported components:
-          |
-          |[options="header", cols="^,^,^,^", width="85%"]
-          ||===
-          || Type | Date support | Time support | Time zone support
-          || Date | {check-mark}  | |
-          || Time | | {check-mark} | {check-mark}
-          || LocalTime | | {check-mark} |
-          || DateTime | {check-mark} | {check-mark} | {check-mark}
-          || LocalDateTime | {check-mark} | {check-mark} |
-          || Duration | - | - | -
-          ||===
-          |
-          |""")
-      p("""_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_ are _temporal instant_ types.
-          #A temporal instant value expresses a point in time with varying degrees of precision.""".stripMargin('#'))
-      p("""By contrast, _Duration_ is not a temporal instant type.
-          #A _Duration_ represents a temporal amount, capturing the difference in time between two instants, and can be negative.
-          #Duration only captures the amount of time between two instants, and thus does not encapsulate a start time and end time.""".stripMargin('#'))
-    }
+    p(
+      """The following table depicts the temporal value types and supported components:
+        |
+        |[options="header", cols="^,^,^,^"]
+        ||===
+        || Type          | Date support | Time support | Time zone support
+        || Date          | {check-mark} |              |
+        || Time          |              | {check-mark} | {check-mark}
+        || LocalTime     |              | {check-mark} |
+        || DateTime      | {check-mark} | {check-mark} | {check-mark}
+        || LocalDateTime | {check-mark} | {check-mark} |
+        || Duration      | `-`          | `-`          | `-`
+        ||===
+        |
+        |""")
+    p("""_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_ are _temporal instant_ types.
+        #A temporal instant value expresses a point in time with varying degrees of precision.""".stripMargin('#'))
+    p("""By contrast, _Duration_ is not a temporal instant type.
+        #A _Duration_ represents a temporal amount, capturing the difference in time between two instants, and can be negative.
+        #Duration only captures the amount of time between two instants, and thus does not encapsulate a start time and end time.""".stripMargin('#'))
     section("Time zones", "cypher-temporal-timezones") {
       p("""Time zones are represented either as an offset from UTC, or as a logical identifier of a _named time zone_ (these are based on the https://www.iana.org/time-zones[IANA time zone database]).
           #In either case the time is stored as UTC internally, and the time zone offset is only applied when the time is presented.
@@ -108,16 +91,16 @@ class TemporalTest extends DocumentingTest {
         p(
           """A temporal instant consists of three parts; the `date`, the `time`, and the `timezone`.
             |These parts may then be combined to produce the various temporal value types.
-            |Literal characters are denoted in **`bold`**.
+            |The character **`T`** is a literal character.
             |
-            |[options="header", width="85%"]
+            |[options="header"]
             ||===
             || Temporal instant type | Composition of parts
-            || _Date_ | `<date>`
-            || _Time_ | `<time><timezone>` or **`T`**`<time><timezone>`
-            || _LocalTime_ | `<time>` or **`T`**`<time>`
-            || _DateTime_* | `<date>`**`T`**`<time><timezone>`
-            || _LocalDateTime_* | `<date>`**`T`**`<time>`
+            || _Date_                | `<date>`
+            || _Time_                | `<time><timezone>` or `T<time><timezone>`
+            || _LocalTime_           | `<time>` or `T<time>`
+            || _DateTime_*           | `<date>T<time><timezone>`
+            || _LocalDateTime_*      | `<date>T<time>`
             ||===
             |
             |*When `date` and `time` are combined, `date` must be complete; i.e. fully identify a particular day.
@@ -126,17 +109,17 @@ class TemporalTest extends DocumentingTest {
           p(
             """
               |
-              |[options="header", width="85%"]
+              |[options="header"]
               ||===
-              || Component | Format | Description
-              || Year  | `YYYY` | Specified with at least four digits (<<cypher-temporal-year, special rules apply in certain cases>>)
-              || Month |  `MM`  | Specified with a double digit number from `01` to `12`
-              || Week  | `ww`   | Always prefixed with **`W`** and specified with a double digit number from `01` to `53`
-              || Quarter | `q`  | Always prefixed with **`Q`** and specified with a single digit number from `1` to `4`
-              || Day of the month | `DD` | Specified with a double digit number from `01` to `31`
-              || Day of the week |  `D` |  Specified with a single digit number from `1` to `7`
-              || Day of the quarter | `DD` | Specified with a double digit number from `01` to `92`
-              || Ordinal day of the year | `DDD` | Specified with a triple digit number from `001` to `366`
+              || Component               | Format | Description
+              || Year                    | `YYYY` | Specified with at least four digits (<<cypher-temporal-year, special rules apply in certain cases>>)
+              || Month                   | `MM`   | Specified with a double digit number from `01` to `12`
+              || Week                    | `ww`   | Always prefixed with **`W`** and specified with a double digit number from `01` to `53`
+              || Quarter                 | `q`    | Always prefixed with **`Q`** and specified with a single digit number from `1` to `4`
+              || Day of the month        | `DD`   | Specified with a double digit number from `01` to `31`
+              || Day of the week         | `D`    | Specified with a single digit number from `1` to `7`
+              || Day of the quarter      | `DD`   | Specified with a double digit number from `01` to `92`
+              || Ordinal day of the year | `DDD`  | Specified with a triple digit number from `001` to `366`
               ||===
               |
               |""")
@@ -157,24 +140,24 @@ class TemporalTest extends DocumentingTest {
           p(
             """The following formats are supported for specifying dates:
               |
-              |[options="header", width="85%"]
+              |[options="header"]
               ||===
-              || Format | Description | Example | Interpretation of example
-              || `YYYY-MM-DD`  | Calendar date: `Year-Month-Day` | `2015-07-21` | `2015-07-21`
-              || `YYYYMMDD`   | Calendar date: `Year-Month-Day`  | `20150721` |  `2015-07-21`
-              || `YYYY-MM`  | Calendar date: `Year-Month`     | `2015-07` |  `2015-07-01`
-              || `YYYYMM`  | Calendar date: `Year-Month`      | `201507` |  `2015-07-01`
-              || `YYYY-`**`W`**`ww-D` | Week date: `Year-Week-Day` |  `2015-W30-2` | `2015-07-21`
-              || `YYYY`**`W`**`wwD`   | Week date: `Year-Week-Day` | `2015W302` | `2015-07-21`
-              || `YYYY-`**`W`**`ww`   | Week date: `Year-Week`    | `2015-W30` | `2015-07-20`
-              || `YYYY`**`W`**`ww`    | Week date: `Year-Week`    | `2015W30`  | `2015-07-20`
-              || `YYYY-`**`Q`**`q-DD` | Quarter date: `Year-Quarter-Day` | `2015-Q2-60` | `2015-05-30`
-              || `YYYY`**`Q`**`qDD`   | Quarter date: `Year-Quarter-Day` | `2015Q260`  | `2015-05-30`
-              || `YYYY-`**`Q`**`q`            | Quarter date: `Year-Quarter`     | `2015-Q2`   | `2015-04-01`
-              || `YYYY`**`Q`**`q`     | Quarter date: `Year-Quarter`   | `2015Q2` | `2015-04-01`
-              || `YYYY-DDD`         | Ordinal date: `Year-Day`   | `2015-202` | `2015-07-21`
-              || `YYYYDDD`          | Ordinal date: `Year-Day`   | `2015202`  | `2015-07-21`
-              || `YYYY`     | Year | `2015` |  `2015-01-01`
+              || Format       | Description                      | Example      | Interpretation of example
+              || `YYYY-MM-DD` | Calendar date: `Year-Month-Day`  | `2015-07-21` | `2015-07-21`
+              || `YYYYMMDD`   | Calendar date: `Year-Month-Day`  | `20150721`   | `2015-07-21`
+              || `YYYY-MM`    | Calendar date: `Year-Month`      | `2015-07`    | `2015-07-01`
+              || `YYYYMM`     | Calendar date: `Year-Month`      | `201507`     | `2015-07-01`
+              || `YYYY-Www-D` | Week date: `Year-Week-Day`       | `2015-W30-2` | `2015-07-21`
+              || `YYYYWwwD`   | Week date: `Year-Week-Day`       | `2015W302`   | `2015-07-21`
+              || `YYYY-Www`   | Week date: `Year-Week`           | `2015-W30`   | `2015-07-20`
+              || `YYYYWww`    | Week date: `Year-Week`           | `2015W30`    | `2015-07-20`
+              || `YYYY-Qq-DD` | Quarter date: `Year-Quarter-Day` | `2015-Q2-60` | `2015-05-30`
+              || `YYYYQqDD`   | Quarter date: `Year-Quarter-Day` | `2015Q260`   | `2015-05-30`
+              || `YYYY-Qq`    | Quarter date: `Year-Quarter`     | `2015-Q2`    | `2015-04-01`
+              || `YYYYQq`     | Quarter date: `Year-Quarter`     | `2015Q2`     | `2015-04-01`
+              || `YYYY-DDD`   | Ordinal date: `Year-Day`         | `2015-202`   | `2015-07-21`
+              || `YYYYDDD`    | Ordinal date: `Year-Day`         | `2015202`    | `2015-07-21`
+              || `YYYY`       | Year                             | `2015`       | `2015-01-01`
               ||===
               |
               |""")
@@ -186,12 +169,12 @@ class TemporalTest extends DocumentingTest {
           p(
             """
               |
-              |[options="header", width="85%"]
+              |[options="header"]
               ||===
-              || Component | Format | Description
-              || `Hour`  | `HH` | Specified with a double digit number from `00` to `23`
-              || `Minute` | `MM` | Specified with a double digit number from `00` to `59`
-              || `Second` | `SS` | Specified with a double digit number from `00` to `59`
+              || Component  | Format      | Description
+              || `Hour`     | `HH`        | Specified with a double digit number from `00` to `23`.
+              || `Minute`   | `MM`        | Specified with a double digit number from `00` to `59`.
+              || `Second`   | `SS`        | Specified with a double digit number from `00` to `59`.
               || `fraction` | `sssssssss` | Specified with a number from `0` to `999999999`. It is not required to specify trailing zeros.
               |  `fraction` is an optional, sub-second component of `Second`.
               |This can be separated from `Second` using either a full stop (`.`) or a comma (`,`).
@@ -204,16 +187,16 @@ class TemporalTest extends DocumentingTest {
           p(
             """The following formats are supported for specifying times:
               |
-              |[options="header", width="85%"]
+              |[options="header"]
               ||===
-              || Format | Description | Example | Interpretation of example
-              || `HH:MM:SS.sssssssss`  | `Hour:Minute:Second.fraction` | `21:40:32.142` | `21:40:32.142`
-              || `HHMMSS.sssssssss`  | `Hour:Minute:Second.fraction` | `214032.142` | `21:40:32.142`
-              || `HH:MM:SS`  | `Hour:Minute:Second` | `21:40:32` | `21:40:32.000`
-              || `HHMMSS`   | `Hour:Minute:Second` | `214032` | `21:40:32.000`
-              || `HH:MM` | `Hour:Minute` | `21:40` | `21:40:00.000`
-              || `HHMM`  | `Hour:Minute` | `2140` | `21:40:00.000`
-              || `HH`   | `Hour` | `21` | `21:00:00.000`
+              || Format               | Description                   | Example        | Interpretation of example
+              || `HH:MM:SS.sssssssss` | `Hour:Minute:Second.fraction` | `21:40:32.142` | `21:40:32.142`
+              || `HHMMSS.sssssssss`   | `Hour:Minute:Second.fraction` | `214032.142`   | `21:40:32.142`
+              || `HH:MM:SS`           | `Hour:Minute:Second`          | `21:40:32`     | `21:40:32.000`
+              || `HHMMSS`             | `Hour:Minute:Second`          | `214032`       | `21:40:32.000`
+              || `HH:MM`              | `Hour:Minute`                 | `21:40`        | `21:40:00.000`
+              || `HHMM`               | `Hour:Minute`                 | `2140`         | `21:40:00.000`
+              || `HH`                 | `Hour`                        | `21`           | `21:00:00.000`
               ||===
               |
               |""")
@@ -243,17 +226,17 @@ class TemporalTest extends DocumentingTest {
           p(
             """The following formats are supported for specifying time zones:
               |
-              |[options="header", width="85%"]
+              |[options="header"]
               ||===
-              || Format | Description | Example | Supported for `DateTime` | Supported for `Time`
-              || **`Z`** | UTC | `Z` | {check-mark} | {check-mark}
-              || `±HH:MM` | `Hour:Minute` | `+09:30` | {check-mark} | {check-mark}
-              || `±HH:MM[ZoneName]` | `Hour:Minute[ZoneName]` | `+08:45[Australia/Eucla]` | {check-mark} |
-              || `±HHMM` | `Hour:Minute` | `+0100` | {check-mark} | {check-mark}
-              || `±HHMM[ZoneName]` | `Hour:Minute[ZoneName]` | `+0200[Africa/Johannesburg]` | {check-mark} |
-              || `±HH` | `Hour` | `-08` | {check-mark} | {check-mark}
-              || `±HH[ZoneName]` | `Hour[ZoneName]` | `+08[Asia/Singapore]` | {check-mark} |
-              || `[ZoneName]` | `[ZoneName]` | `[America/Regina]` | {check-mark} |
+              || Format             | Description             | Example                      | Supported for `DateTime` | Supported for `Time`
+              || `Z`                | UTC                     | `Z`                          | {check-mark}             | {check-mark}
+              || `±HH:MM`           | `Hour:Minute`           | `+09:30`                     | {check-mark}             | {check-mark}
+              || `±HH:MM[ZoneName]` | `Hour:Minute[ZoneName]` | `+08:45[Australia/Eucla]`    | {check-mark}             |
+              || `±HHMM`            | `Hour:Minute`           | `+0100`                      | {check-mark}             | {check-mark}
+              || `±HHMM[ZoneName]`  | `Hour:Minute[ZoneName]` | `+0200[Africa/Johannesburg]` | {check-mark}             |
+              || `±HH`              | `Hour`                  | `-08`                        | {check-mark}             | {check-mark}
+              || `±HH[ZoneName]`    | `Hour[ZoneName]`        | `+08[Asia/Singapore]`        | {check-mark}             |
+              || `[ZoneName]`       | `[ZoneName]`            | `[America/Regina]`           | {check-mark}             |
               ||===
               |
               |""")
@@ -316,8 +299,8 @@ class TemporalTest extends DocumentingTest {
             || `instant.dayOfWeek` | The _day-of-the-week_ component (the first day of the week is _Monday_). | Integer | `1` to `7` | {check-mark} | {check-mark} | {check-mark}  | |
             || `instant.weekDay` | The _day-of-the-week_ component (alias for `instant.dayOfWeek`). | Integer | `1` to `7` | {check-mark} | {check-mark} | {check-mark}  | |
             || `instant.hour` | The _hour_ component. | Integer | `0` to `23` |   | {check-mark}  | {check-mark} | {check-mark} | {check-mark}
-            || `instant.minute` | The _minute_ component | Integer | `0` to `59` |  | {check-mark} | {check-mark}  | {check-mark} | {check-mark}
-            || `instant.second` | The _second_ component | Integer | `0` to `60` |  | {check-mark} | {check-mark}  | {check-mark} | {check-mark}
+            || `instant.minute` | The _minute_ component. | Integer | `0` to `59` |  | {check-mark} | {check-mark}  | {check-mark} | {check-mark}
+            || `instant.second` | The _second_ component.footnote:[Cypher does not support leap seconds; UTC-SLS (UTC with Smoothed Leap Seconds) is used to manage the difference in time between UTC and TAI (International Atomic Time).] | Integer | `0` to `59` |  | {check-mark} | {check-mark}  | {check-mark} | {check-mark}
             || `instant.millisecond` | The _millisecond_ component. | Integer  | `0` to `999` |  | {check-mark} | {check-mark} | {check-mark} | {check-mark}
             || `instant.microsecond` | The _microsecond_ component. | Integer | `0` to `999999` |  | {check-mark} | {check-mark}  | {check-mark} | {check-mark}
             || `instant.nanosecond` | The _nanosecond_ component. | Integer | `0` to `999999999` |  | {check-mark} | {check-mark} | {check-mark} | {check-mark}
@@ -418,23 +401,23 @@ class TemporalTest extends DocumentingTest {
             # ** The value of the last -- and least significant -- component may contain a decimal fraction.
             # ** Each component must be suffixed by a component identifier denoting the unit.
             # ** The unit-based form uses **`M`** as a suffix for both months and minutes. Therefore, time parts must always be preceded with **`T`**, even when no components of the date part are given.
-            #* Date-and-time-based form: **`P`**`<date>`**`T`**`<time>`
+            #* Date-and-time-based form: `P<date>T<time>`.
             # ** Unlike the unit-based form, this form requires each component to be within the bounds of a valid _LocalDateTime_.""".stripMargin('#'))
         p(
           """The following table lists the component identifiers for the unit-based form:
             |
             |[[cypher-temporal-duration-component]]
             |
-            |[options="header", width="85%"]
+            |[options="header"]
             ||===
             || Component identifier | Description | Comments
-            || **`Y`** | Years |
-            || **`M`** | Months | Must be specified before **`T`**
-            || **`W`** | Weeks |
-            || **`D`** | Days |
-            || **`H`** | Hours |
-            || **`M`** | Minutes | Must be specified after **`T`**
-            || **`S`** | Seconds |
+            || **`Y`**              | Years       |
+            || **`M`**              | Months      | Must be specified before **`T`**.
+            || **`W`**              | Weeks       |
+            || **`D`**              | Days        |
+            || **`H`**              | Hours       |
+            || **`M`**              | Minutes     | Must be specified after **`T`**.
+            || **`S`**              | Seconds     |
             ||===
             |
             |""")
