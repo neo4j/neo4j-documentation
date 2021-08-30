@@ -73,9 +73,9 @@ class TemporalTest extends DocumentingTest {
           #However, the absolute time in UTC would remain the same.""".stripMargin('#'))
       p("""There are three ways of specifying a time zone in Cypher:
           #
-          #* Specifying the offset from UTC in hours and minutes (link:https://en.wikipedia.org/wiki/ISO_8601[ISO 8601])
-          #* Specifying a named time zone
-          #* Specifying both the offset and the time zone name (with the requirement that these match)""".stripMargin('#'))
+          #* Specifying the offset from UTC in hours and minutes (link:https://en.wikipedia.org/wiki/ISO_8601[ISO 8601]).
+          #* Specifying a named time zone.
+          #* Specifying both the offset and the time zone name (with the requirement that these match).""".stripMargin('#'))
       p("""The named time zone form uses the rules of the IANA time zone database to manage _daylight savings time_ (DST).""")
       p("""The default time zone of the database can be configured using the configuration option <<operations-manual#config_db.temporal.timezone, `db.temporal.timezone`>>.
           #This configuration option influences the creation of temporal types for the following functions:
@@ -91,7 +91,7 @@ class TemporalTest extends DocumentingTest {
         p(
           """A temporal instant consists of three parts; the `date`, the `time`, and the `timezone`.
             |These parts may then be combined to produce the various temporal value types.
-            |The character **`T`** is a literal character.
+            |The character `T` is a literal character.
             |
             |[options="header"]
             ||===
@@ -112,14 +112,14 @@ class TemporalTest extends DocumentingTest {
               |[options="header"]
               ||===
               || Component               | Format | Description
-              || Year                    | `YYYY` | Specified with at least four digits (<<cypher-temporal-year, special rules apply in certain cases>>)
-              || Month                   | `MM`   | Specified with a double digit number from `01` to `12`
-              || Week                    | `ww`   | Always prefixed with **`W`** and specified with a double digit number from `01` to `53`
-              || Quarter                 | `q`    | Always prefixed with **`Q`** and specified with a single digit number from `1` to `4`
-              || Day of the month        | `DD`   | Specified with a double digit number from `01` to `31`
-              || Day of the week         | `D`    | Specified with a single digit number from `1` to `7`
-              || Day of the quarter      | `DD`   | Specified with a double digit number from `01` to `92`
-              || Ordinal day of the year | `DDD`  | Specified with a triple digit number from `001` to `366`
+              || Year                    | `YYYY` | Specified with at least four digits (<<cypher-temporal-year, special rules apply in certain cases>>).
+              || Month                   | `MM`   | Specified with a double digit number from `01` to `12`.
+              || Week                    | `ww`   | Always prefixed with `W` and specified with a double digit number from `01` to `53`.
+              || Quarter                 | `q`    | Always prefixed with `Q` and specified with a single digit number from `1` to `4`.
+              || Day of the month        | `DD`   | Specified with a double digit number from `01` to `31`.
+              || Day of the week         | `D`    | Specified with a single digit number from `1` to `7`.
+              || Day of the quarter      | `DD`   | Specified with a double digit number from `01` to `92`.
+              || Ordinal day of the year | `DDD`  | Specified with a triple digit number from `001` to `366`.
               ||===
               |
               |""")
@@ -127,12 +127,12 @@ class TemporalTest extends DocumentingTest {
               #
               #If the year is before `0000` or after `9999`, the following additional rules apply:
               #
-              #* **`-`** must prefix any year before `0000`
-              #* **`+`** must prefix any year after `9999`
+              #* Hyphen-minus sign, `-` must prefix any year before `0000`.
+              #* Plus sign, `+` must prefix any year after `9999`.
               #* The year must be separated from the next component with the following characters:
-              # ** **`-`** if the next component is month or day of the year
-              # ** Either **`-`** or **`W`** if the next component is week of the year
-              # ** **`Q`** if the next component is quarter of the year
+              # ** `-` if the next component is month or day of the year.
+              # ** Either `-` or `W` if the next component is week of the year.
+              # ** `Q` if the next component is quarter of the year.
               #
               #If the year component is prefixed with either `-` or `+`, and is separated from the next component, `Year` is allowed to contain up to nine digits.
               #Thus, the allowed range of years is between -999,999,999 and +999,999,999.
@@ -207,11 +207,11 @@ class TemporalTest extends DocumentingTest {
         section("Specifying time zones", "cypher-temporal-specify-time-zone") {
           p("""The time zone is specified in one of the following ways:
               #
-              #* As an offset from UTC
-              #* Using the **`Z`** shorthand for the UTC (`±00:00`) time zone""".stripMargin('#'))
+              #* As an offset from UTC.
+              #* Using the `Z` shorthand for the UTC (`±00:00`) time zone.""".stripMargin('#'))
           p("""When specifying a time zone as an offset from UTC, the rules below apply:
               #
-              #* The time zone always starts with either a plus (`+`) or minus (`-`) sign.
+              #* The time zone always starts with either a plus (`+`) or hyphen-minus (`-`) sign.
               # ** Positive offsets, i.e. time zones beginning with `+`, denote time zones east of UTC.
               # ** Negative offsets, i.e. time zones beginning with `-`, denote time zones west of UTC.
               #
@@ -226,7 +226,7 @@ class TemporalTest extends DocumentingTest {
           p(
             """The following formats are supported for specifying time zones:
               |
-              |[options="header"]
+              |[options="header", cols="<20,<30,<30,^10,^10"]
               ||===
               || Format             | Description             | Example                      | Supported for `DateTime` | Supported for `Time`
               || `Z`                | UTC                     | `Z`                          | {check-mark}             | {check-mark}
@@ -284,7 +284,7 @@ class TemporalTest extends DocumentingTest {
       section("Accessing components of temporal instants", "cypher-temporal-accessing-components-temporal-instants") {
         p("Components of temporal instant values can be accessed as properties.")
         p(""".Components of temporal instant values and where they are supported
-            |[options="header", cols="2,2,1,2,1,1,1,1,1"]
+            |[options="header", cols="2,2,1,2,^1,^1,^1,^1,^1"]
             ||===
             || Component | Description | Type | Range/Format | Date | DateTime | LocalDateTime | Time | LocalTime
             || `instant.year` | The `year` component represents the link:https://en.wikipedia.org/wiki/Astronomical_year_numbering[astronomical year number] of the instant.footnote:[This is in accordance with the link:https://en.wikipedia.org/wiki/Gregorian_calendar[Gregorian calendar]; i.e. years AD/CE start at year 1, and the year before that (year 1 BC/BCE) is 0, while year 2 BCE is -1 etc.] | Integer | At least 4 digits. For more information, see the <<cypher-temporal-year, rules for using the `Year` component>> | {check-mark} | {check-mark} | {check-mark} |  |
@@ -393,14 +393,14 @@ class TemporalTest extends DocumentingTest {
     section("Durations", "cypher-temporal-durations") {
       section("Specifying durations", "cypher-temporal-specifying-durations") {
         p("""A _Duration_ represents a temporal amount, capturing the difference in time between two instants, and can be negative.""")
-        p("""The specification of a _Duration_ is prefixed with a **`P`**, and can use either a _unit-based form_ or a _date-and-time-based form_:
+        p("""The specification of a _Duration_ is prefixed with a `P`, and can use either a _unit-based form_ or a _date-and-time-based form_:
             #
-            #* Unit-based form: **`P`**`[n`**`Y`**`][n`**`M`**`][n`**`W`**`][n`**`D`**`][`**`T`**`[n`**`H`**`][n`**`M`**`][n`**`S`**`]]`
+            #* Unit-based form: `P[nY][nM][nW][nD][T[nH][nM][nS]]`
             # ** The square brackets (`[]`) denote an optional component (components with a zero value may be omitted).
             # ** The `n` denotes a numeric value which can be arbitrarily large.
             # ** The value of the last -- and least significant -- component may contain a decimal fraction.
             # ** Each component must be suffixed by a component identifier denoting the unit.
-            # ** The unit-based form uses **`M`** as a suffix for both months and minutes. Therefore, time parts must always be preceded with **`T`**, even when no components of the date part are given.
+            # ** The unit-based form uses `M` as a suffix for both months and minutes. Therefore, time parts must always be preceded with `T`, even when no components of the date part are given.
             #* Date-and-time-based form: `P<date>T<time>`.
             # ** Unlike the unit-based form, this form requires each component to be within the bounds of a valid _LocalDateTime_.""".stripMargin('#'))
         p(
@@ -411,13 +411,13 @@ class TemporalTest extends DocumentingTest {
             |[options="header"]
             ||===
             || Component identifier | Description | Comments
-            || **`Y`**              | Years       |
-            || **`M`**              | Months      | Must be specified before **`T`**.
-            || **`W`**              | Weeks       |
-            || **`D`**              | Days        |
-            || **`H`**              | Hours       |
-            || **`M`**              | Minutes     | Must be specified after **`T`**.
-            || **`S`**              | Seconds     |
+            || `Y`                  | Years       |
+            || `M`                  | Months      | Must be specified before `T`.
+            || `W`                  | Weeks       |
+            || `D`                  | Days        |
+            || `H`                  | Hours       |
+            || `M`                  | Minutes     | Must be specified after `T`.
+            || `S`                  | Seconds     |
             ||===
             |
             |""")
