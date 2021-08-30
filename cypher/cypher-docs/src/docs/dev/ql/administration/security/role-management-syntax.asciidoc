@@ -38,7 +38,7 @@ SHOW ROLE[S] name[, ...] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
 | List the privileges granted to the specified roles.
 
 When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
-| <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE PRIVILEGES>>
+| <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>>
 
 | [source, cypher, role=noplay]
 ----
