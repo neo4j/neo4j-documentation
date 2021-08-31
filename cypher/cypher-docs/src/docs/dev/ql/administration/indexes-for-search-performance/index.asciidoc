@@ -110,20 +110,22 @@ Index provider and configuration can be specified using the `OPTIONS` clause.
 CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
 FOR (n)
 ON EACH labels(n)
+[OPTIONS "{" option: value[, ...] "}"]
 ----
 | Create a node label lookup index.
 
-Token lookup indexes do not support any `OPTIONS` values.
+Index provider can be specified using the `OPTIONS` clause.
 
 | [source, cypher, role=noplay]
 ----
 CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
 FOR ()-"["r"]"-()
 ON [EACH] type(r)
+[OPTIONS "{" option: value[, ...] "}"]
 ----
 | Create a relationship type lookup index.
 
-Token lookup indexes do not support any `OPTIONS` values.
+Index provider can be specified using the `OPTIONS` clause.
 
 | [source, cypher, role=noplay]
 ----
@@ -248,6 +250,8 @@ include::../indexes/create-a-node-label-lookup-index.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-relationship-type-lookup-index.asciidoc[leveloffset=+1]
 
+include::../indexes/create-a-token-lookup-index-specifying-the-index-provider.asciidoc[leveloffset=+1]
+
 
 [[administration-indexes-list-indexes]]
 == Listing indexes
@@ -332,7 +336,8 @@ Listing indexes also allows for `WHERE` and `YIELD` clauses to filter the return
 
 [NOTE]
 ====
-The deprecated built-in procedures for listing indexes, such as `db.indexes`, work as before and are not affected by the <<administration-security-administration-database-indexes, `SHOW INDEXES` privilege>>.
+While the command for listing indexes require <<administration-security-administration-database-indexes, the `SHOW INDEX` privilege>>,
+the deprecated built-in procedures for listing indexes, such as `db.indexes`, work as before and are not affected by the privilege.
 ====
 
 
@@ -359,7 +364,7 @@ include::../indexes/drop-a-non-existing-index.asciidoc[leveloffset=+1]
 
 [NOTE]
 ====
-This syntax does not support dropping relationship property indexes, these can only be dropped by name.
+This syntax only support dropping node property indexes, all others can only be dropped by name.
 ====
 
 include::../indexes/drop-a-single-property-index.asciidoc[leveloffset=+1]

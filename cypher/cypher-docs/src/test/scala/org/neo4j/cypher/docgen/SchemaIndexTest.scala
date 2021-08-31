@@ -35,6 +35,7 @@ import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.graphdb.schema.IndexType
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
+import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
 import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
 import scala.collection.JavaConverters._
@@ -64,6 +65,16 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   override def parent: Option[String] = Some("Administration")
   override def section = "Indexes"
 
+  private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
+  private val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
+  private val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
+  private val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
+  private val cartesian3dMin = SPATIAL_CARTESIAN_3D_MIN.getSettingName
+  private val cartesian3dMax = SPATIAL_CARTESIAN_3D_MAX.getSettingName
+  private val wgsMin = SPATIAL_WGS84_MIN.getSettingName
+  private val wgsMax = SPATIAL_WGS84_MAX.getSettingName
+  private val wgs3dMin = SPATIAL_WGS84_3D_MIN.getSettingName
+  private val wgs3dMax = SPATIAL_WGS84_3D_MAX.getSettingName
 
   @Test def create_index_on_a_single_property() {
     testQuery(
@@ -92,22 +103,22 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Create a single-property index with specified index provider",
       text =
-        """To create a single property index with a specific index provider, the `OPTIONS` clause is used.
-          |Valid values for the index provider is `native-btree-1.0` and `lucene+native-3.0`, default if nothing is specified is `native-btree-1.0`.""".stripMargin,
-      queryText = "CREATE BTREE INDEX index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: 'native-btree-1.0'}",
+        s"""To create a single property index with a specific index provider, the `OPTIONS` clause is used.
+          |Valid values for the index provider are `$nativeProvider` and `$nativeLuceneProvider`, default if nothing is specified is `$nativeProvider`.""".stripMargin,
+      queryText = s"CREATE BTREE INDEX index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$nativeProvider'}",
       optionalResultExplanation = "Can be combined with specifying index configuration.",
       assertions = _ => assertIndexWithNameExists("index_with_provider", "TYPE", List("prop1"))
     )
     testQuery(
       title = "Create a single-property index with specified index configuration",
       text =
-        """To create a single property index with a specific index configuration, the `OPTIONS` clause is used.
-          |Valid configuration settings are `spatial.cartesian.min`, `spatial.cartesian.max`, `spatial.cartesian-3d.min`, `spatial.cartesian-3d.max`,
-          |`spatial.wgs-84.min`, `spatial.wgs-84.max`, `spatial.wgs-84-3d.min`, and `spatial.wgs-84-3d.max`.
+        s"""To create a single property index with a specific index configuration, the `OPTIONS` clause is used.
+          |Valid configuration settings are `$cartesianMin`, `$cartesianMax`, `$cartesian3dMin`, `$cartesian3dMax`,
+          |`$wgsMin`, `$wgsMax`, `$wgs3dMin`, and `$wgs3dMax`.
           |Non-specified settings get their respective default values.""".stripMargin,
       queryText =
-        """CREATE BTREE INDEX index_with_config FOR (n:Label) ON (n.prop2)
-          |OPTIONS {indexConfig: {`spatial.cartesian.min`: [-100.0, -100.0], `spatial.cartesian.max`: [100.0, 100.0]}}""".stripMargin,
+        s"""CREATE BTREE INDEX index_with_config FOR (n:Label) ON (n.prop2)
+          |OPTIONS {indexConfig: {`$cartesianMin`: [-100.0, -100.0], `$cartesianMax`: [100.0, 100.0]}}""".stripMargin,
       optionalResultExplanation = "Can be combined with specifying index provider.",
       assertions = _ => assertIndexWithNameExists("index_with_config", "Label", List("prop2"))
     )
@@ -142,16 +153,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def create_composite_index_with_options() {
-    val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
-    val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
-    val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
-    val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
-    val cartesian3dMin = SPATIAL_CARTESIAN_3D_MIN.getSettingName
-    val cartesian3dMax = SPATIAL_CARTESIAN_3D_MAX.getSettingName
-    val wgsMin = SPATIAL_WGS84_MIN.getSettingName
-    val wgsMax = SPATIAL_WGS84_MAX.getSettingName
-    val wgs3dMin = SPATIAL_WGS84_3D_MIN.getSettingName
-    val wgs3dMax = SPATIAL_WGS84_3D_MAX.getSettingName
     testQuery(
       title = "Create a composite index with specified index provider and configuration",
       text =
@@ -172,6 +173,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def create_token_lookup_index() {
+    val tokenProvider = TokenIndexProvider.DESCRIPTOR.name()
+
     // remove autogenerated token lookup indexes
     val res = execute("SHOW LOOKUP INDEXES YIELD name")
     res.columnAs[String]("name").foreach(n => execute(s"DROP INDEX $n"))
@@ -191,6 +194,15 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       queryText = "CREATE LOOKUP INDEX rel_type_lookup_index FOR ()-[r]-() ON EACH type(r)",
       optionalResultExplanation = "Note that it can only be created once and that the index name must be unique.",
       assertions = _ => assertTokenLookupIndexExists("rel_type_lookup_index", isNodeIndex = false)
+    )
+    prepareAndTestQuery(
+      title = "Create a token lookup index specifying the index provider",
+      text = "Token lookup indexes allow setting the index provider using the `OPTIONS` clause. " +
+        s"Only one valid value exists for the index provider, `$tokenProvider`, which is the default if nothing is supplied.",
+      prepare = _ => executePreparationQueries(List("DROP INDEX node_label_lookup_index IF EXISTS")),
+      queryText = s"CREATE LOOKUP INDEX node_label_lookup_index_2 FOR (n) ON EACH labels(n) OPTIONS {indexProvider: '$tokenProvider'}",
+      optionalResultExplanation = "There is no supported index configuration for token lookup indexes.",
+      assertions = _ => assertTokenLookupIndexExists("node_label_lookup_index_2", isNodeIndex = true)
     )
   }
 
