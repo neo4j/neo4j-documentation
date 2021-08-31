@@ -42,25 +42,25 @@ class TemporalTest extends DocumentingTest {
           #* Refer to <<cypher-ordering, Ordering and comparison of values>> for information regarding the comparison and ordering of temporal values.""".stripMargin('#'))
     }
     p(
-      """The following table depicts the temporal value types and supported components:
+      """The following table lists the temporal value types and supported components:
         |
         |[options="header", cols="^,^,^,^"]
         ||===
-        || Type          | Date support | Time support | Time zone support
-        || Date          | {check-mark} |              |
-        || Time          |              | {check-mark} | {check-mark}
-        || LocalTime     |              | {check-mark} |
-        || DateTime      | {check-mark} | {check-mark} | {check-mark}
-        || LocalDateTime | {check-mark} | {check-mark} |
-        || Duration      | `-`          | `-`          | `-`
+        || Type            | Date support | Time support | Time zone support
+        || `Date`          | {check-mark} |              |
+        || `Time`          |              | {check-mark} | {check-mark}
+        || `LocalTime`     |              | {check-mark} |
+        || `DateTime`      | {check-mark} | {check-mark} | {check-mark}
+        || `LocalDateTime` | {check-mark} | {check-mark} |
+        || `Duration`      | `-`          | `-`          | `-`
         ||===
         |
         |""")
-    p("""_Date_, _Time_, _LocalTime_, _DateTime_ and _LocalDateTime_ are _temporal instant_ types.
+    p("""`Date`, `Time`, `LocalTime`, `DateTime` and `LocalDateTime` are _temporal instant_ types.
         #A temporal instant value expresses a point in time with varying degrees of precision.""".stripMargin('#'))
-    p("""By contrast, _Duration_ is not a temporal instant type.
-        #A _Duration_ represents a temporal amount, capturing the difference in time between two instants, and can be negative.
-        #Duration only captures the amount of time between two instants, and thus does not encapsulate a start time and end time.""".stripMargin('#'))
+    p("""By contrast, `Duration` is not a temporal instant type.
+        #A `Duration` represents a temporal amount, capturing the difference in time between two instants, and can be negative.
+        #`Duration` captures the amount of time between two instants, it does not capture a start time and end time.""".stripMargin('#'))
     section("Time zones", "cypher-temporal-timezones") {
       p("""Time zones are represented either as an offset from UTC, or as a logical identifier of a _named time zone_ (these are based on the https://www.iana.org/time-zones[IANA time zone database]).
           #In either case the time is stored as UTC internally, and the time zone offset is only applied when the time is presented.
@@ -90,17 +90,17 @@ class TemporalTest extends DocumentingTest {
       section("Specifying temporal instants", "cypher-temporal-specifying-temporal-instants") {
         p(
           """A temporal instant consists of three parts; the `date`, the `time`, and the `timezone`.
-            |These parts may then be combined to produce the various temporal value types.
+            |These parts can be combined to produce the various temporal value types.
             |The character `T` is a literal character.
             |
             |[options="header"]
             ||===
             || Temporal instant type | Composition of parts
-            || _Date_                | `<date>`
-            || _Time_                | `<time><timezone>` or `T<time><timezone>`
-            || _LocalTime_           | `<time>` or `T<time>`
-            || _DateTime_*           | `<date>T<time><timezone>`
-            || _LocalDateTime_*      | `<date>T<time>`
+            || `Date`                | `<date>`
+            || `Time`                | `<time><timezone>` or `T<time><timezone>`
+            || `LocalTime`           | `<time>` or `T<time>`
+            || `DateTime`*           | `<date>T<time><timezone>`
+            || `LocalDateTime`*      | `<date>T<time>`
             ||===
             |
             |*When `date` and `time` are combined, `date` must be complete; i.e. fully identify a particular day.
@@ -127,12 +127,11 @@ class TemporalTest extends DocumentingTest {
               #
               #If the year is before `0000` or after `9999`, the following additional rules apply:
               #
-              #* Hyphen-minus sign, `-` must prefix any year before `0000`.
-              #* Plus sign, `+` must prefix any year after `9999`.
-              #* The year must be separated from the next component with the following characters:
-              # ** `-` if the next component is month or day of the year.
-              # ** Either `-` or `W` if the next component is week of the year.
-              # ** `Q` if the next component is quarter of the year.
+              #* Minus sign, `-` must prefix any year before `0000`, (e.g. `-3000-01-01`).
+              #* Plus sign, `+` must prefix any year after `9999`, (e.g. `+11000-01-01`).
+              #* The year must be separated with `-` from the next component:
+              # ** if the next component is month, (e.g. `+11000-01`).
+              # ** if the next component is day of the year, (e.g. `+11000-123`).
               #
               #If the year component is prefixed with either `-` or `+`, and is separated from the next component, `Year` is allowed to contain up to nine digits.
               #Thus, the allowed range of years is between -999,999,999 and +999,999,999.
@@ -211,7 +210,7 @@ class TemporalTest extends DocumentingTest {
               #* Using the `Z` shorthand for the UTC (`±00:00`) time zone.""".stripMargin('#'))
           p("""When specifying a time zone as an offset from UTC, the rules below apply:
               #
-              #* The time zone always starts with either a plus (`+`) or hyphen-minus (`-`) sign.
+              #* The time zone always starts with either a plus (`+`) or minus (`-`) sign.
               # ** Positive offsets, i.e. time zones beginning with `+`, denote time zones east of UTC.
               # ** Negative offsets, i.e. time zones beginning with `-`, denote time zones west of UTC.
               #
@@ -226,7 +225,7 @@ class TemporalTest extends DocumentingTest {
           p(
             """The following formats are supported for specifying time zones:
               |
-              |[options="header", cols="<20,<30,<30,^10,^10"]
+              |[options="header", cols="<19,<25,<28,^14,^14"]
               ||===
               || Format             | Description             | Example                      | Supported for `DateTime` | Supported for `Time`
               || `Z`                | UTC                     | `Z`                          | {check-mark}             | {check-mark}
