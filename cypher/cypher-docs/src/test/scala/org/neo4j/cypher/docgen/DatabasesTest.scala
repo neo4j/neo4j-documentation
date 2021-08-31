@@ -45,8 +45,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     p("include::databases-command-syntax.asciidoc[]")
     section("Listing databases", "administration-databases-show-databases") {
       p(
-        """There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.
-          |The `SHOW DATABASES` commands return the following columns:""".stripMargin)
+        """There are four different commands for listing databases. Listing all databases, listing a particular database, listing the default database, or listing the home database.
+          |These commands return the following columns:""".stripMargin)
       p("include::show-databases-columns.asciidoc[]")
       p(
         """A summary of all available available databases can be seen using the command `SHOW DATABASES`. """)
@@ -62,7 +62,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           }
       p(
         """In this example, the detailed information for a particular database can be seen using the command `SHOW DATABASE name YIELD *`. When a `YIELD`
-          |is specified, the full set of columns is returned.
+          |clause is provided, the full set of columns is returned.
           |""".stripMargin)
       query("SHOW DATABASE movies YIELD *", assertDatabaseShown("movies")) {
         resultTable()
