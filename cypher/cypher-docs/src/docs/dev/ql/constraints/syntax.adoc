@@ -32,16 +32,16 @@ This command creates a uniqueness constraint on nodes with the specified label a
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON (n:LabelName)
-ASSERT n.propertyName IS UNIQUE
+FOR (n:LabelName)
+REQUIRE n.propertyName IS UNIQUE
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON (n:LabelName)
-ASSERT (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
+FOR (n:LabelName)
+REQUIRE (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
@@ -53,8 +53,8 @@ This command creates a property existence constraint on nodes with the specified
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON (n:LabelName)
-ASSERT n.propertyName IS NOT NULL
+FOR (n:LabelName)
+REQUIRE n.propertyName IS NOT NULL
 ----
 
 [discrete]
@@ -65,8 +65,8 @@ This command creates a property existence constraint on relationships with the s
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON ()-"["R:RELATIONSHIP_TYPE"]"-()
-ASSERT R.propertyName IS NOT NULL
+FOR ()-"["R:RELATIONSHIP_TYPE"]"-()
+REQUIRE R.propertyName IS NOT NULL
 ----
 
 [discrete]
@@ -77,16 +77,16 @@ This command creates a node key constraint on nodes with the specified label and
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON (n:LabelName)
-ASSERT n.propertyName IS NODE KEY
+FOR (n:LabelName)
+REQUIRE n.propertyName IS NODE KEY
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON (n:LabelName)
-ASSERT (n.propertyName_1, …, n.propertyName_n) IS NODE KEY
+FOR (n:LabelName)
+REQUIRE (n.propertyName_1, …, n.propertyName_n) IS NODE KEY
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 

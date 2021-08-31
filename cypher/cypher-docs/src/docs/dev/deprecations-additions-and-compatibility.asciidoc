@@ -50,6 +50,31 @@ Replaced by:
 ----
 DROP CONSTRAINT name [IF EXISTS]
 ----
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT FOR ... REQUIRE ...
+----
+a|
+New syntax for creating constraints, applicable to all constraint types.
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ON ... ASSERT ...
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT FOR ... REQUIRE ...
+----
 |===
 
 

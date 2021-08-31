@@ -95,12 +95,12 @@ Creating a unique constraint also creates a unique index (which is faster than a
 
 [source, cypher]
 ----
-CREATE CONSTRAINT person ON (person:Person) ASSERT person.id IS UNIQUE
+CREATE CONSTRAINT person FOR (person:Person) REQUIRE person.id IS UNIQUE
 ----
 
 [source, cypher]
 ----
-CREATE CONSTRAINT movie ON (movie:Movie) ASSERT movie.id IS UNIQUE
+CREATE CONSTRAINT movie FOR (movie:Movie) REQUIRE movie.id IS UNIQUE
 ----
 
 Now importing the relationships is a matter of finding the nodes and then creating relationships between them.

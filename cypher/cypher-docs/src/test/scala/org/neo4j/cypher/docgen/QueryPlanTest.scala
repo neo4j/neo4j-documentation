@@ -96,8 +96,8 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     "CREATE INDEX FOR (n:Person) ON (n.name)",
     "CREATE INDEX FOR ()-[r:WORKS_IN]-() ON (r.duration)",
     "CREATE INDEX FOR ()-[r:WORKS_IN]-() ON (r.title)",
-    "CREATE CONSTRAINT ON (team:Team) ASSERT team.name is UNIQUE",
-    "CREATE CONSTRAINT ON (team:Team) ASSERT team.id is UNIQUE"
+    "CREATE CONSTRAINT FOR (team:Team) REQUIRE team.name is UNIQUE",
+    "CREATE CONSTRAINT FOR (team:Team) REQUIRE team.id is UNIQUE"
   )
 
   def section = "Query Plan"
@@ -119,7 +119,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
       text =
         """The `CreateUniqueConstraint` operator creates a unique constraint on a set of properties for all nodes having a certain label.
           |The following query will create a unique constraint with the name `uniqueness` on the `name` property of nodes with the `Country` label.""".stripMargin,
-      queryText = """CREATE CONSTRAINT uniqueness ON (c:Country) ASSERT c.name is UNIQUE""",
+      queryText = """CREATE CONSTRAINT uniqueness FOR (c:Country) REQUIRE c.name is UNIQUE""",
       assertions = p => {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("CreateConstraint"))
@@ -130,7 +130,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def dropUniqueConstraint() {
     executePreparationQueries {
-      List("CREATE CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE")
+      List("CREATE CONSTRAINT FOR (c:Country) REQUIRE c.name is UNIQUE")
     }
 
     profileQuery(
@@ -152,7 +152,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |If it finds a constraint with the given name or with the same type and schema it will stop the execution and no new constraint is created.
           |The following query will create a unique constraint with the name `uniqueness` on the `name` property of nodes with the `Country` label only if
           |no constraint named `uniqueness` or unique constraint on `(:Country {name})` already exists.""".stripMargin,
-      queryText = """CREATE CONSTRAINT uniqueness IF NOT EXISTS ON (c:Country) ASSERT c.name is UNIQUE""",
+      queryText = """CREATE CONSTRAINT uniqueness IF NOT EXISTS FOR (c:Country) REQUIRE c.name is UNIQUE""",
       assertions = p => {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("CreateConstraint"))
@@ -169,7 +169,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `CreateNodePropertyExistenceConstraint` operator creates an existence constraint with the name `existence` on a property for all nodes having a certain label.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
-      queryText = """CREATE CONSTRAINT existence ON (p:Person) ASSERT p.name IS NOT NULL""",
+      queryText = """CREATE CONSTRAINT existence FOR (p:Person) REQUIRE p.name IS NOT NULL""",
       assertions = p => {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("CreateConstraint"))
@@ -180,7 +180,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def dropNodePropertyExistenceConstraint() {
     executePreparationQueries {
-      List("CREATE CONSTRAINT ON (p:Person) ASSERT p.name IS NOT NULL")
+      List("CREATE CONSTRAINT FOR (p:Person) REQUIRE p.name IS NOT NULL")
     }
 
     profileQuery(
@@ -202,7 +202,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |that all nodes with a particular label have a set of defined properties whose combined value is unique, and where all properties in the set are present.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
-      queryText = """CREATE CONSTRAINT node_key ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
+      queryText = """CREATE CONSTRAINT node_key FOR (e:Employee) REQUIRE (e.firstname, e.surname) IS NODE KEY""",
       assertions = p => {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("CreateConstraint"))
@@ -213,7 +213,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def dropNodeKeyConstraint() {
     executePreparationQueries {
-      List("CREATE CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY")
+      List("CREATE CONSTRAINT FOR (e:Employee) REQUIRE (e.firstname, e.surname) IS NODE KEY")
     }
 
     profileQuery(
@@ -234,7 +234,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         """The `CreateRelationshipPropertyExistenceConstraint` operator creates an existence constraint with the name `existence` on a property for all relationships of a certain type.
           |This will only appear in Enterprise Edition.
         """.stripMargin,
-      queryText = """CREATE CONSTRAINT existence ON ()-[l:LIKED]-() ASSERT l.when IS NOT NULL""",
+      queryText = """CREATE CONSTRAINT existence FOR ()-[l:LIKED]-() REQUIRE l.when IS NOT NULL""",
       assertions = p => {
         val plan = p.executionPlanString()
         assertThat(plan, containsString("CreateConstraint"))
@@ -245,7 +245,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def dropRelationshipPropertyExistenceConstraint() {
     executePreparationQueries {
-      List("CREATE CONSTRAINT ON ()-[l:LIKED]-() ASSERT l.when IS NOT NULL")
+      List("CREATE CONSTRAINT FOR ()-[l:LIKED]-() REQUIRE l.when IS NOT NULL")
     }
 
     profileQuery(
@@ -260,7 +260,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def dropNamedConstraint() {
     executePreparationQueries {
-      List("CREATE CONSTRAINT name ON (c:Country) ASSERT c.name is UNIQUE")
+      List("CREATE CONSTRAINT name FOR (c:Country) REQUIRE c.name is UNIQUE")
     }
 
     profileQuery(
@@ -278,7 +278,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def showConstraints() {
     executePreparationQueries {
-      List("CREATE CONSTRAINT name ON (c:Country) ASSERT c.name is UNIQUE")
+      List("CREATE CONSTRAINT name FOR (c:Country) REQUIRE c.name is UNIQUE")
     }
 
     profileQuery(

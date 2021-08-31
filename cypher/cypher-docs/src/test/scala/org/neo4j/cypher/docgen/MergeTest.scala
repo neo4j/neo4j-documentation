@@ -28,8 +28,8 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def doc = new DocBuilder {
     doc("MERGE", "query-merge")
     initQueries(
-      "CREATE CONSTRAINT ON (person:Person) ASSERT person.name IS UNIQUE",
-      "CREATE CONSTRAINT ON (movie:Movie) ASSERT movie.title IS UNIQUE",
+      "CREATE CONSTRAINT FOR (person:Person) REQUIRE person.name IS UNIQUE",
+      "CREATE CONSTRAINT FOR (movie:Movie) REQUIRE movie.title IS UNIQUE",
       """CREATE
         #  (charlie:Person {name: 'Charlie Sheen', bornIn: 'New York', chauffeurName: 'John Brown'}),
         #  (martin:Person  {name: 'Martin Sheen', bornIn: 'Ohio', chauffeurName: 'Bob Brown'}),
@@ -306,8 +306,8 @@ class MergeTest extends DocumentingTest with QueryStatisticsTestSupport {
       p("Note that the following examples assume the existence of unique constraints that have been created using:")
       p("""[source,cypher]
           #----
-          #CREATE CONSTRAINT ON (n:Person) ASSERT n.name IS UNIQUE;
-          #CREATE CONSTRAINT ON (n:Person) ASSERT n.role IS UNIQUE;
+          #CREATE CONSTRAINT FOR (n:Person) REQUIRE n.name IS UNIQUE;
+          #CREATE CONSTRAINT FOR (n:Person) REQUIRE n.role IS UNIQUE;
           #----""".stripMargin('#'))
 
       section("Merge using unique constraints creates a new node if no node is found", "merge-merge-using-unique-constraints-creates-a-new-node-if-no-node-is-found") {
