@@ -44,8 +44,12 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         |These administrative commands are automatically routed to the `system` database when connected to the DBMS over Bolt.""".stripMargin)
     p("include::databases-command-syntax.asciidoc[]")
     section("Listing databases", "administration-databases-show-databases") {
-      p("There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.")
-      p("All available databases can be seen using the command `SHOW DATABASES`.")
+      p(
+        """There are three different commands for listing databases. Listing all databases, listing a particular database or listing the default database.
+          |The `SHOW DATABASES` commands return the following columns:""".stripMargin)
+      p("include::show-databases-columns.asciidoc[]")
+      p(
+        """A summary of all available available databases can be seen using the command `SHOW DATABASES`. """)
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
@@ -56,14 +60,17 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |If a user has not been granted `ACCESS` privilege to any databases, the command can still be executed but will only return the `system` database, which is always visible.
             |""".stripMargin)
           }
+      p(
+        """In this example, the detailed information for a particular database can be seen using the command `SHOW DATABASE name YIELD *`. When a `YIELD`
+          |is specified, the full set of columns is returned.
+          |""".stripMargin)
+      query("SHOW DATABASE movies YIELD *", assertDatabaseShown("movies")) {
+        resultTable()
+      }
       p("The number of databases can be seen using a `count()` aggregation with `YIELD` and `RETURN`.")
       query("SHOW DATABASES YIELD * RETURN count(*) as count", ResultAssertions({ r: DocsExecutionResult =>
         r.columnAs[Int]("count").toSet should be(Set(4))
       })){
-        resultTable()
-      }
-      p("A particular database can be seen using the command `SHOW DATABASE name`.")
-      query("SHOW DATABASE system", assertDatabaseShown("system")) {
         resultTable()
       }
       p("The default database can be seen using the command `SHOW DEFAULT DATABASE`.")
