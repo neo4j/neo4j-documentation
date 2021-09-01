@@ -316,15 +316,15 @@ class TemporalTest extends DocumentingTest {
             || `instant.dayOfWeek` | The _day-of-the-week_ component (the first day of the week is _Monday_). | Integer | `1` to `7` | X | X | X  | |
             || `instant.weekDay` | The _day-of-the-week_ component (alias for `instant.dayOfWeek`). | Integer | `1` to `7` | X | X | X  | |
             || `instant.hour` | The _hour_ component. | Integer | `0` to `23` |   | X  | X | X | X
-            || `instant.minute` | The _minute_ component | Integer | `0` to `59` |  | X | X  | X | X
-            || `instant.second` | The _second_ component | Integer | `0` to `60` |  | X | X  | X | X
+            || `instant.minute` | The _minute_ component. | Integer | `0` to `59` |  | X | X  | X | X
+            || `instant.second` | The _second_ component. | Integer | `0` to `59` |  | X | X  | X | X
             || `instant.millisecond` | The _millisecond_ component. | Integer  | `0` to `999` |  | X | X | X | X
             || `instant.microsecond` | The _microsecond_ component. | Integer | `0` to `999999` |  | X | X  | X | X
             || `instant.nanosecond` | The _nanosecond_ component. | Integer | `0` to `999999999` |  | X | X | X | X
             || `instant.timezone` | The _timezone_ component. | String | Depending on how the <<cypher-temporal-specify-time-zone, time zone was specified>>, this is either a time zone name or an offset from UTC in the format `±HHMM` |  | X |   | X |
-            || `instant.offset` | The _timezone_ offset | String | `±HHMM` |  | X |  | X |
-            || `instant.offsetMinutes` | The _timezone_ offset in minutes | Integer | `-1080` to `+1080` |  | X |  | X |
-            || `instant.offsetSeconds` | The _timezone_ offset in seconds | Integer | `-64800` to `+64800` |  | X |  | X |
+            || `instant.offset` | The _timezone_ offset. | String | `±HHMM` |  | X |  | X |
+            || `instant.offsetMinutes` | The _timezone_ offset in minutes. | Integer | `-1080` to `+1080` |  | X |  | X |
+            || `instant.offsetSeconds` | The _timezone_ offset in seconds. | Integer | `-64800` to `+64800` |  | X |  | X |
             || `instant.epochMillis` | The number of milliseconds between `1970-01-01T00:00:00+0000` and the instant.footnote:[The expression `datetime().epochMillis` returns the equivalent value of the `timestamp()` function.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |   | |
             || `instant.epochSeconds` | The number of seconds between `1970-01-01T00:00:00+0000` and the instant.footnote:[For the _nanosecond_ part of the _epoch_ offset, the regular _nanosecond_ component (`instant.nanosecond`) can be used.] | Integer | Positive for instants after and negative for instants before `1970-01-01T00:00:00+0000` |  | X |  |   | |
             ||===""")
