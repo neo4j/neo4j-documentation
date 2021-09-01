@@ -349,7 +349,7 @@ class TemporalTest extends DocumentingTest {
             || `instant.weekDay` | The _day-of-the-week_ component (alias for `instant.dayOfWeek`) | Integer | `1` to `7` | X | X | X  | |
             || `instant.hour` |  The _hour_ component  | Integer | `0` to `23` |   | X  | X | X | X
             || `instant.minute` | The _minute_ component | Integer | `0` to `59` |  | X | X  | X | X
-            || `instant.second` | The _second_ component | Integer | `0` to `60` |  | X | X  | X | X
+            || `instant.second` | The _second_ component | Integer | `0` to `59` |  | X | X  | X | X
             || `instant.millisecond` |  The _millisecond_ component | Integer  | `0` to `999` |  | X | X | X | X
             || `instant.microsecond` | The _microsecond_ component  | Integer | `0` to `999999` |  | X | X  | X | X
             || `instant.nanosecond` | The _nanosecond_ component | Integer | `0` to `999999999` |  | X | X | X | X
