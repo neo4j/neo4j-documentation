@@ -64,6 +64,7 @@ public class AsciiDocListGenerator
             if ( shortenDescription ) {
                 description = shortenDescription(description);
             }
+
             sb.append( "|<<" )
                 .append( id )
                 .append( ',' )
@@ -76,7 +77,7 @@ public class AsciiDocListGenerator
                 .append( ',' )
                 .append( name )
                 .append( ">>: " )
-                .append( description );
+                .append( description.replace("\n\n","\n+\n") );
 
             if ( !description.endsWith( "." ) )
             {
