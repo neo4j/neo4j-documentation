@@ -23,12 +23,19 @@ This comes at the cost of additional storage space and slower writes, so decidin
 Once an index has been created, it will be managed and kept up to date by the DBMS.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
 
-Cypher enables the creation of indexes on one or more properties for all nodes or relationships that have a given label or relationship type:
+There are multiple index types available: b-tree, fulltext, lookup, and text index types.
+See <<administration-indexes-fulltext-search>> for more information about fulltext indexes.
+Token lookup indexes contain nodes with one or more labels or relationship types, without regard for any properties.
+
+Cypher enables the creation of b-tree indexes on one or more properties for all nodes or relationships with a given label or relationship type:
 
 * An index that is created on a single property for any given label or relationship type is called a _single-property index_.
 * An index that is created on more than one property for any given label or relationship type is called a _composite index_.
 
 Differences in the usage patterns between composite and single-property indexes are described in <<administration-indexes-single-vs-composite-index>>.
+
+Additionally, a text index is a kind of single-property index, with the limitation that it only recognizes properties with string values.
+Nodes or relationships with the indexed label or relationship type where the indexed property is of another value type are not included in the index.
 
 The following is true for indexes:
 
@@ -57,7 +64,7 @@ ON (n.propertyName)
 | Create a single-property index on nodes.
 
 Index provider and configuration can be specified using the `OPTIONS` clause.
-.6+.^| Best practice is to give the index a name when it is created.
+.8+.^| Best practice is to give the index a name when it is created.
 If the index is not explicitly named, it will get an auto-generated name.
 
 The index name must be unique among both indexes and constraints.
@@ -129,20 +136,42 @@ Index provider can be specified using the `OPTIONS` clause.
 
 | [source, cypher, role=noplay]
 ----
+CREATE TEXT INDEX [index_name] [IF NOT EXISTS]
+FOR (n:LabelName)
+ON (n.propertyName)
+[OPTIONS "{" option: value[, ...] "}"]
+----
+| Create a text index on nodes where the property has a string value.
+
+Index provider can be specified using the `OPTIONS` clause.
+
+| [source, cypher, role=noplay]
+----
+CREATE TEXT INDEX [index_name] [IF NOT EXISTS]
+FOR ()-"["r:TYPE_NAME"]"-()
+ON (r.propertyName)
+[OPTIONS "{" option: value[, ...] "}"]
+----
+| Create a text index on relationships where the property has a string value.
+
+Index provider can be specified using the `OPTIONS` clause.
+
+| [source, cypher, role=noplay]
+----
 DROP INDEX index_name [IF EXISTS]
 ----
-| Drop an index, either a b-tree, fulltext, or token lookup index.
+| Drop an index of any index type.
 | The command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same index twice.
 With `IF EXISTS`, no error is thrown and nothing happens should the index not exist.
 
 | [source, cypher, role=noplay]
 ----
-SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP] INDEX[ES]
+SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP\|TEXT] INDEX[ES]
     [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
     [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
-| List indexes in the database, either all or filtered on b-tree, fulltext, or token lookup indexes.
+| List indexes in the database, either all or filtered on index type.
 | When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
 
 | [source, cypher, role=noplay]
@@ -252,6 +281,14 @@ include::../indexes/create-a-relationship-type-lookup-index.asciidoc[leveloffset
 
 include::../indexes/create-a-token-lookup-index-specifying-the-index-provider.asciidoc[leveloffset=+1]
 
+include::../indexes/create-a-node-text-index.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-relationship-text-index.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-text-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-text-index-specifying-the-index-provider.asciidoc[leveloffset=+1]
+
 include::../indexes/failure-to-create-an-already-existing-index.asciidoc[leveloffset=+1]
 
 include::../indexes/failure-to-create-an-index-with-the-same-name-as-an-already-existing-index.asciidoc[leveloffset=+1]
@@ -300,7 +337,7 @@ Listing indexes can be done with `SHOW INDEXES`, which will produce a table with
 | `+`
 
 | `type`
-| The IndexType of this index (`BTREE`, `FULLTEXT`, or `LOOKUP`).
+| The IndexType of this index (`BTREE`, `FULLTEXT`, `LOOKUP`, or `TEXT`).
 | `+`
 | `+`
 
