@@ -103,6 +103,16 @@ a|
 Token lookup indexes now allow an `OPTIONS` map to specify the index provider.
 
 
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE TEXT INDEX ...
+----
+a|
+Allows creating text indexes on nodes or relationships with a particular label or relationship type, and property combination.
+They can be dropped by using their name.
 
 a|
 label:functionality[]
@@ -111,8 +121,16 @@ label:deprecated[]
 ----
 CREATE BTREE INDEX ...
 ----
-a|
+.2+.^a|
 B-tree indexes are deprecated and need to be migrated before upgrading to 5.0.
+
+B-tree indexes used for string queries are replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE TEXT INDEX ...
+----
+
+Other index use cases are not fully replaced yet.
 
 a|
 label:functionality[]
@@ -123,8 +141,6 @@ CREATE INDEX
 ...
 OPTIONS "{" btree-option: btree-value[, ...] "}"
 ----
-a|
-B-tree indexes are deprecated and need to be migrated before upgrading to 5.0.
 
 a|
 label:functionality[]
@@ -135,6 +151,12 @@ SHOW BTREE INDEXES
 ----
 a|
 B-tree indexes are deprecated and need to be migrated before upgrading to 5.0.
+
+Partially replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW TEXT INDEXES
+----
 
 a|
 label:functionality[]
