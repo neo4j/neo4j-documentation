@@ -71,7 +71,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
     prepareAndTestQuery(
       title = "Create a unique constraint only if it does not already exist",
-      text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+      text = "If it is not known whether a constraint exists or not, add `IF NOT EXISTS` to ensure it does. " +
         "The uniqueness constraint ensures that your database will never contain more than one node with a specific label and one property value.",
       prepare = _ => executePreparationQueries(List("DROP CONSTRAINT constraint_name IF EXISTS")),
       queryText = "CREATE CONSTRAINT constraint_name IF NOT EXISTS FOR (book:Book) REQUIRE book.isbn IS UNIQUE",
@@ -224,7 +224,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
     prepareAndTestQuery(
       title = "Create a node property existence constraint only if it does not already exist",
-      text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+      text = "If it is not known whether a constraint exists or not, add `IF NOT EXISTS` to ensure it does. " +
         "The node property existence constraint ensures that all nodes with a certain label have a certain property.",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS FOR (book:Book) REQUIRE book.isbn IS UNIQUE")),
       queryText = "CREATE CONSTRAINT constraint_name IF NOT EXISTS FOR (book:Book) REQUIRE book.isbn IS NOT NULL",
@@ -326,7 +326,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
     prepareAndTestQuery(
       title = "Create a relationship property existence constraint only if it does not already exist",
-      text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+      text = "If it is not known whether a constraint exists or not, add `IF NOT EXISTS` to ensure it does. " +
         "The relationship property existence constraint ensures all relationships with a certain type have a certain property.",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT constraint_name IF NOT EXISTS FOR ()-[like:LIKED]-() REQUIRE like.since IS NOT NULL")),
       queryText = "CREATE CONSTRAINT constraint_name IF NOT EXISTS FOR ()-[like:LIKED]-() REQUIRE like.day IS NOT NULL",
@@ -423,7 +423,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
     prepareAndTestQuery(
       title = "Create a node key constraint only if it does not already exist",
-      text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
+      text = "If it is not known whether a constraint exists or not, add `IF NOT EXISTS` to ensure it does. " +
         "The node key constraint ensures that all nodes with a particular label have a set of defined properties whose combined value is unique " +
         "and all properties in the set are present.",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT old_constraint_name IF NOT EXISTS FOR (n:Person) REQUIRE (n.firstname, n.surname) IS NODE KEY")),

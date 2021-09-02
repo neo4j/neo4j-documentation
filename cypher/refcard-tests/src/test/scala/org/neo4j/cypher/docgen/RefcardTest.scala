@@ -28,6 +28,7 @@ import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.apache.commons.io.FileUtils
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.{After, Before, Test}
+import org.neo4j.configuration.GraphDatabaseInternalSettings
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.configuration.helpers.SocketAddress
 import org.neo4j.cypher.GraphIcing
@@ -298,7 +299,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   protected def databaseConfig(): util.Map[Setting[_], Object] = {
     Map[Setting[_], Object](
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
-      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
+      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
+      GraphDatabaseInternalSettings.text_indexes_enabled -> java.lang.Boolean.TRUE
     ).asJava
   }
 }

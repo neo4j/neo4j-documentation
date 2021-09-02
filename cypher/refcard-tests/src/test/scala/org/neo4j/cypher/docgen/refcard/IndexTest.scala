@@ -58,7 +58,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
         assert(result.toList.size === 1)
       case "show" =>
         assertStats(result)
-        assert(result.toList.size === 8)
+        assert(result.toList.size === 10)
     }
   }
 
@@ -152,6 +152,22 @@ CREATE FULLTEXT INDEX rel_fulltext_index_name FOR ()-[r:HAS_PET|BROUGHT_PET]-() 
 ###
 
 Create a fulltext index on relationships with the name `rel_fulltext_index_name`. Fulltext indexes on relationships can only be used by from the procedure `db.index.fulltext.queryRelationships`.
+
+###assertion=create-index
+//
+
+CREATE TEXT INDEX FOR (f:Friend) ON (f.email)
+###
+
+Create a text index on nodes with label `Friend` and property `email`.
+
+###assertion=create-index
+//
+
+CREATE TEXT INDEX text_index_name FOR ()-[h:HAS_PET]-() ON (h.favoriteToy)
+###
+
+Create a text index with the name `text_index_name` on relationships with type `HAS_PET` and property `favoriteToy`.
 
 ###assertion=show
 //
