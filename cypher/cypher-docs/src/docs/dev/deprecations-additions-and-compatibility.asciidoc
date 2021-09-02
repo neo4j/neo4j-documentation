@@ -24,8 +24,8 @@ label:added[]
 [source, cypher, role="noheader"]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON (n:LabelName)
-ASSERT (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
+FOR (n:LabelName)
+REQUIRE (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 a|
@@ -125,8 +125,8 @@ a| Replaced by:
 [source, cypher, role="noheader"]
 ----
 CREATE CONSTRAINT [name]
-ON (node:Label)
-ASSERT node.property IS NOT NULL
+FOR (node:Label)
+REQUIRE node.property IS NOT NULL
 ----
 
 
@@ -144,8 +144,8 @@ Replaced by:
 [source, cypher, role="noheader"]
 ----
 CREATE CONSTRAINT [name]
-ON ()-[rel:REL]-()
-ASSERT rel.property IS NOT NULL
+FOR ()-[rel:REL]-()
+REQUIRE rel.property IS NOT NULL
 ----
 
 

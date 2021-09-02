@@ -201,6 +201,13 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT book.title IS NOT NULL",
       assertions = _ => hasNodeConstraint("Book", "title")
     )
+    testQuery(
+      title = "Create a node property existence constraint using deprecated syntax",
+      text = "The node property existence constraint ensures that all nodes " +
+        "with a certain label have a certain property.",
+      queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.title)",
+      assertions = _ => hasNodeConstraint("Book", "title")
+    )
     prepareAndTestQuery(
       title = "Create a node property existence constraint only if it does not already exist",
       text = "If it is unknown if a constraint exists or not but we want to make sure it does, we add the `IF NOT EXISTS`. " +
@@ -287,6 +294,13 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text = "The relationship property existence constraint ensures all relationships " +
         "with a certain type have a certain property.",
       queryText = "CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT like.week IS NOT NULL",
+      assertions = _ => hasRelationshipConstraint("LIKED", "week")
+    )
+    testQuery(
+      title = "Create a relationship property existence constraint using deprecated syntax",
+      text = "The relationship property existence constraint ensures all relationships " +
+        "with a certain type have a certain property.",
+      queryText = "CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.week)",
       assertions = _ => hasRelationshipConstraint("LIKED", "week")
     )
     prepareAndTestQuery(
