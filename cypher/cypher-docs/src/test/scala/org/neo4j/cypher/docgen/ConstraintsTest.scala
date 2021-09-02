@@ -195,14 +195,14 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
     )
     testQuery(
-      title = "Create a node property existence constraint using deprecated syntax",
+      title = "Create a node property existence constraint using deprecated syntax 1",
       text = "The node property existence constraint ensures that all nodes " +
         "with a certain label have a certain property.",
       queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT book.title IS NOT NULL",
       assertions = _ => hasNodeConstraint("Book", "title")
     )
     testQuery(
-      title = "Create a node property existence constraint using deprecated syntax",
+      title = "Create a node property existence constraint using deprecated syntax 2",
       text = "The node property existence constraint ensures that all nodes " +
         "with a certain label have a certain property.",
       queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.title)",
@@ -290,14 +290,14 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       assertions = _ => assertConstraintWithNameExists("constraint_name", "LIKED", List("day"), forRelationship = true)
     )
     testQuery(
-      title = "Create a relationship property existence constraint using deprecated syntax",
+      title = "Create a relationship property existence constraint using deprecated syntax 1",
       text = "The relationship property existence constraint ensures all relationships " +
         "with a certain type have a certain property.",
       queryText = "CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT like.week IS NOT NULL",
       assertions = _ => hasRelationshipConstraint("LIKED", "week")
     )
     testQuery(
-      title = "Create a relationship property existence constraint using deprecated syntax",
+      title = "Create a relationship property existence constraint using deprecated syntax 2",
       text = "The relationship property existence constraint ensures all relationships " +
         "with a certain type have a certain property.",
       queryText = "CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.week)",
