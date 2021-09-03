@@ -4,13 +4,13 @@
 |name|The name of the database.|{check-mark}|{check-mark}|
 |databaseID|The database unique ID.||{check-mark}|
 |serverID|The server instance ID.||{check-mark}|
-|address|Instance address in a clustered DBMS. The default for standalone database is `neo4j://localhost:7687`|{check-mark}|{check-mark}|
-|role|the current role of the database (`standalone`, `leader`, `follower`, `read_replica`, `unknown`).|{check-mark}|{check-mark}|
+|address|Instance address in a clustered DBMS. The default for a standalone database is `neo4j://localhost:7687`. |{check-mark}|{check-mark}|
+|role|The current role of the database (`standalone`, `leader`, `follower`, `read_replica`, `unknown`).|{check-mark}|{check-mark}|
 |requestedStatus|The expected status of the database.|{check-mark}|{check-mark}|
 |currentStatus|The actual status of the database.|{check-mark}|{check-mark}|
 |error|An error message explaining why the database is not in the correct state.|{check-mark}|{check-mark}|
-|default|Show if this is the default database for the DBMS.|{check-mark}|{check-mark}|Not returned by `SHOW HOME DATABASE` or `SHOW DEFAULT DATABASE`
-|home|Shown if this is the home database for the current user.|{check-mark}|{check-mark}|Not returned by `SHOW HOME DATABASE` or `SHOW DEFAULT DATABASE`
+|default|Show if this is the default database for the DBMS.|{check-mark}|{check-mark}|Not returned by `SHOW HOME DATABASE` or `SHOW DEFAULT DATABASE`.
+|home|Shown if this is the home database for the current user.|{check-mark}|{check-mark}|Not returned by `SHOW HOME DATABASE` or `SHOW DEFAULT DATABASE`.
 |lastCommittedTxn|The ID of the last transaction received.||{check-mark}|
 |replicationLag|Number of transactions the current database is behind compared to the database on the primary instance. The lag is expressed in negative integers. In standalone environments, the value is always 0.||{check-mark}|
 |===
