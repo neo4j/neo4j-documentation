@@ -80,8 +80,8 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
 ###assertion=create-unique-property-constraint
 //
 
-CREATE CONSTRAINT ON (p:Person)
-       ASSERT p.name IS UNIQUE
+CREATE CONSTRAINT FOR (p:Person)
+       REQUIRE p.name IS UNIQUE
 ###
 
 Create a unique property constraint on the label `Person` and property `name`.
@@ -92,8 +92,8 @@ This constraint will create an accompanying index.
 ###assertion=create-unique-property-constraint
 //
 
-CREATE CONSTRAINT uniqueness ON (p:Person)
-       ASSERT (p.firstname, p.age) IS UNIQUE
+CREATE CONSTRAINT uniqueness FOR (p:Person)
+       REQUIRE (p.firstname, p.age) IS UNIQUE
 ###
 
 Create a unique property constraint with the name `uniqueness` on the label `Person` and properties `firstname` and `age`.
@@ -104,8 +104,8 @@ This constraint creates an accompanying index.
 ###assertion=create-unique-property-constraint
 //
 
-CREATE CONSTRAINT ON (p:Person)
-       ASSERT p.surname IS UNIQUE
+CREATE CONSTRAINT FOR (p:Person)
+       REQUIRE p.surname IS UNIQUE
        OPTIONS {indexProvider: '$nativeProvider'}
 ###
 
@@ -114,8 +114,8 @@ Create a unique property constraint on the label `Person` and property `surname`
 ###assertion=create-property-existence-constraint
 //
 
-CREATE CONSTRAINT ON (p:Person)
-       ASSERT p.name IS NOT NULL
+CREATE CONSTRAINT FOR (p:Person)
+       REQUIRE p.name IS NOT NULL
 ###
 
 (★) Create a node property existence constraint on the label `Person` and property `name`, throws an error if the constraint already exists.
@@ -125,8 +125,8 @@ removed from an existing node with the `Person` label, the write operation will 
 ###assertion=create-existing-property-existence-constraint
 //
 
-CREATE CONSTRAINT node_exists IF NOT EXISTS ON (p:Person)
-       ASSERT p.name IS NOT NULL
+CREATE CONSTRAINT node_exists IF NOT EXISTS FOR (p:Person)
+       REQUIRE p.name IS NOT NULL
 ###
 
 (★) If a node property existence constraint on the label `Person` and property `name` or any constraint with the name `node_exists` already exist then nothing happens.
@@ -135,8 +135,8 @@ If no such constraint exists, then it will be created.
 ###assertion=create-property-existence-constraint
 //
 
-CREATE CONSTRAINT ON ()-[l:LIKED]-()
-       ASSERT l.when IS NOT NULL
+CREATE CONSTRAINT FOR ()-[l:LIKED]-()
+       REQUIRE l.when IS NOT NULL
 ###
 
 (★) Create a relationship property existence constraint on the type `LIKED` and property `when`.
@@ -146,8 +146,8 @@ removed from an existing relationship with the `LIKED` type, the write operation
 ###assertion=create-property-existence-constraint
 //
 
-CREATE CONSTRAINT relationship_exists ON ()-[l:LIKED]-()
-       ASSERT l.since IS NOT NULL
+CREATE CONSTRAINT relationship_exists FOR ()-[l:LIKED]-()
+       REQUIRE l.since IS NOT NULL
 ###
 
 (★) Create a relationship property existence constraint with the name `relationship_exists` on the type `LIKED` and property `since`.
@@ -166,8 +166,8 @@ List all unique constraints.
 ###assertion=create-node-key-constraint
 //
 
-CREATE CONSTRAINT ON (p:Person)
-      ASSERT (p.firstname, p.surname) IS NODE KEY
+CREATE CONSTRAINT FOR (p:Person)
+      REQUIRE (p.firstname, p.surname) IS NODE KEY
 ###
 
 (★) Create a node key constraint on the label `Person` and properties `firstname` and `surname`.
@@ -180,8 +180,8 @@ This constraint creates an accompanying index.
 ###assertion=create-node-key-constraint
 //
 
-CREATE CONSTRAINT node_key ON (p:Person)
-      ASSERT p.firstname IS NODE KEY
+CREATE CONSTRAINT node_key FOR (p:Person)
+      REQUIRE p.firstname IS NODE KEY
 ###
 
 (★) Create a node key constraint with the name `node_key` on the label `Person` and property `firstname`.
@@ -194,8 +194,8 @@ This constraint creates an accompanying index.
 ###assertion=create-node-key-constraint
 //
 
-CREATE CONSTRAINT node_key_with_config ON (p:Person)
-      ASSERT (p.name, p.age) IS NODE KEY
+CREATE CONSTRAINT node_key_with_config FOR (p:Person)
+      REQUIRE (p.name, p.age) IS NODE KEY
       OPTIONS {indexConfig: {`${SPATIAL_WGS84_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_WGS84_MAX.getSettingName}`: [100.0, 100.0]}}
 ###
 

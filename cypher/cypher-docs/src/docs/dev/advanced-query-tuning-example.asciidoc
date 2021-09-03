@@ -917,7 +917,7 @@ Predicates that can be used to enable this optimization are:
 [NOTE]
 ====
 If there is an existence constraint on the property, no predicate is required to trigger the optimization.
-For example, `CREATE CONSTRAINT constraint_name ON (p:Person) ASSERT p.name IS NOT NULL`.
+For example, `CREATE CONSTRAINT constraint_name FOR (p:Person) REQUIRE p.name IS NOT NULL`.
 ====
 
 
@@ -1142,7 +1142,7 @@ Predicates that will not work:
 [NOTE]
 ====
 If there is an existence constraint on the property, no predicate is required to trigger the optimization. 
-For example, `CREATE CONSTRAINT constraint_name ON (p:Person) ASSERT p.name IS NOT NULL`
+For example, `CREATE CONSTRAINT constraint_name FOR (p:Person) REQUIRE p.name IS NOT NULL`
 
 As of Neo4j {neo4j-version-exact}, predicates with parameters, such as `WHERE n.prop > $param`, can trigger _index-backed order by_.
 The only exception are queries with parameters of type `Point`.

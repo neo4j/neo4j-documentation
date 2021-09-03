@@ -173,7 +173,7 @@ public class SubGraphExporter
             String name = quote( constraint.getName() );
             String key = quote( id );
             String label = quote( constraint.getLabel().name() );
-            result.add( "create constraint " + name + " on (n:" + label + ") assert n." + key + " is unique" );
+            result.add( "create constraint " + name + " for (n:" + label + ") require n." + key + " is unique" );
         }
         Collections.sort( result );
         return result;

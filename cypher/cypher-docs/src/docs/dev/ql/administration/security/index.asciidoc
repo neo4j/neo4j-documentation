@@ -156,8 +156,8 @@ This is because `(` and `)` are not special characters, and the `[` and `]` indi
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-ON (n:LabelName)
-ASSERT n.propertyName IS NOT NULL
+FOR (n:LabelName)
+REQUIRE n.propertyName IS NOT NULL
 ----
 
 include::administration-security-users-and-roles.adoc[leveloffset=+1]

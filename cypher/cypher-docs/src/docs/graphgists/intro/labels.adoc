@@ -14,7 +14,7 @@ Let's start out adding a constraint -- in this case we decided that all `Movie` 
 
 [source, cypher]
 ----
-CREATE CONSTRAINT ON (movie:Movie) ASSERT movie.title IS UNIQUE
+CREATE CONSTRAINT FOR (movie:Movie) REQUIRE movie.title IS UNIQUE
 ----
 
 [source, querytest]
