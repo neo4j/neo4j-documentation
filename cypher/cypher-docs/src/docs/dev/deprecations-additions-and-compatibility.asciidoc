@@ -56,7 +56,6 @@ REQUIRE (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
 a|
 Unique property constraints now allow multiple properties, ensuring that the combination of property values are unique.
 
-
 a|
 label:functionality[]
 label:added[]
@@ -114,6 +113,31 @@ a|
 Allows creating text indexes on nodes or relationships with a particular label or relationship type, and property combination.
 They can be dropped by using their name.
 
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE RANGE INDEX ...
+----
+a|
+Allows creating range indexes on nodes or relationships with a particular label or relationship type, and properties combination.
+They can be dropped by using their name.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT
+...
+OPTIONS "{" indexProvider: 'range-1.0' "}"
+----
+a|
+Allows creating node key and uniqueness constraints backed by range indexes by providing the range index provider in the `OPTIONS` map.
+
+
 a|
 label:functionality[]
 label:deprecated[]
@@ -130,7 +154,15 @@ B-tree indexes used for string queries are replaced by:
 CREATE TEXT INDEX ...
 ----
 
-Other index use cases are not fully replaced yet.
+B-tree indexes used for general queries or property value types are replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE RANGE INDEX ...
+----
+
+These new indexes may be combined for multiple use cases.
+
+B-tree indexes used for spatial queries are not fully replaced yet.
 
 a|
 label:functionality[]
@@ -141,6 +173,7 @@ CREATE INDEX
 ...
 OPTIONS "{" btree-option: btree-value[, ...] "}"
 ----
+
 
 a|
 label:functionality[]
@@ -155,8 +188,9 @@ B-tree indexes are deprecated and need to be migrated before upgrading to 5.0.
 Partially replaced by:
 [source, cypher, role="noheader"]
 ----
-SHOW TEXT INDEXES
+SHOW {RANGE \| TEXT} INDEXES
 ----
+
 
 a|
 label:functionality[]
@@ -169,6 +203,16 @@ OPTIONS "{" btree-option: btree-value[, ...] "}"
 ----
 a|
 Node key and uniqueness constraints with b-tree options are deprecated and need to be migrated before upgrading to 5.0.
+
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT
+...
+OPTIONS "{" range-option: range-value[, ...] "}"
+----
+Constraints used for string properties will also require an additional text index to cover the string queries properly.
+Constraints used for point properties or spatial queries are not fully replaced yet.
 
 a|
 label:functionality[]
