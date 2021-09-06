@@ -58,7 +58,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
         assert(result.toList.size === 1)
       case "show" =>
         assertStats(result)
-        assert(result.toList.size === 10)
+        assert(result.toList.size === 12)
     }
   }
 
@@ -118,6 +118,22 @@ CREATE INDEX IF NOT EXISTS FOR (p:Person) ON (p.name, p.age)
 ###
 
 Create a composite index on nodes with label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
+
+###assertion=create-index
+//
+
+CREATE RANGE INDEX FOR (p:Person) ON (p.age)
+###
+
+Create a range index on nodes with label `Person` and property `name`.
+
+###assertion=create-index
+//
+
+CREATE RANGE INDEX range_index_name FOR ()-[k:KNOWS]-() ON (k.since, k.friend)
+###
+
+Create a range index with the name `range_index_name` on relationships with type `KNOWS` and properties `since` and `friend`.
 
 ###assertion=create-index
 //

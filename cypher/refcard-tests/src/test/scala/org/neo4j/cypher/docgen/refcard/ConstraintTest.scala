@@ -25,13 +25,13 @@ import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MAX
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MIN
-import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
+import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
 
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "CONSTRAINT"
   override val linkId = "administration/constraints"
-  private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
+  private val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
 
   //noinspection RedundantDefaultArgument
   // Disable warnings for redundant default argument since its used for clarification of the `assertStats` when nothing should have happened
@@ -106,10 +106,10 @@ This constraint creates an accompanying index.
 
 CREATE CONSTRAINT FOR (p:Person)
        REQUIRE p.surname IS UNIQUE
-       OPTIONS {indexProvider: '$nativeProvider'}
+       OPTIONS {indexProvider: '$rangeProvider'}
 ###
 
-Create a unique property constraint on the label `Person` and property `surname` with the index provider `$nativeProvider` for the accompanying index.
+Create a unique property constraint on the label `Person` and property `surname` with the index provider `$rangeProvider` for the accompanying range index.
 
 ###assertion=create-property-existence-constraint
 //
@@ -199,7 +199,7 @@ CREATE CONSTRAINT node_key_with_config FOR (p:Person)
       OPTIONS {indexConfig: {`${SPATIAL_WGS84_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_WGS84_MAX.getSettingName}`: [100.0, 100.0]}}
 ###
 
-(★) Create a node key constraint with the name `node_key_with_config` on the label `Person`, properties `name` and `age`, and given `spatial.wgs-84` settings for the accompanying index.
+(★) Create a node key constraint with the name `node_key_with_config` on the label `Person`, properties `name` and `age`, and given `spatial.wgs-84` settings for the accompanying b-tree index.
 The other index settings will have their default values.
 
 """).concat("""

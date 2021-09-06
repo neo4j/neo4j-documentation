@@ -117,15 +117,16 @@ public class SubGraphExporter
                     {
                         String name = quote( index.getName() );
                         String key = quote( id );
+                        String type = index.getIndexType().name();
                         if ( index.isNodeIndex() )
                         {
                             String label = quote( single( index.getLabels() ).name() );
-                            result.add( "create index " + name + " for (n:" + label + ") ON (n." + key + ")" );
+                            result.add( "create " + type + " index " + name + " for (n:" + label + ") ON (n." + key + ")" );
                         }
                         else
                         {
                             String relType = quote( single( index.getRelationshipTypes() ).name() );
-                            result.add( "create index " + name + " for ()-[r:" + relType + "]-() ON (r." + key + ")" );
+                            result.add( "create " + type + " index " + name + " for ()-[r:" + relType + "]-() ON (r." + key + ")" );
                         }
                     }
                     // We don't know how to deal with multi-token indexes here, so we just ignore them.
