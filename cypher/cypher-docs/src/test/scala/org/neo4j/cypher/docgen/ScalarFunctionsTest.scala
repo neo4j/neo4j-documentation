@@ -129,21 +129,18 @@ class ScalarFunctionsTest extends DocumentingTest {
             #
             #Relationship::
             #Every relationship in a database has an identifier.
-            #The identifier for a relationship is guaranteed to be unique among other relationships' identifiers in the same database, within the scope of a single transaction.""".stripMargin('#'))
+            #The identifier for a relationship is guaranteed to be unique among other relationships' identifiers in the same database, within the scope of a single transaction.
+            #
+            #Therefore, it it is perfecly allowable for `id()` to return the same value, e.g. `3` for both nodes and relationships in the same database.""".stripMargin('#'))
       }
       function("id(expression)",
         "An Integer.",
         ("expression", "An expression that returns a node or a relationship."))
       considerations("`id(null)` returns `null`.")
-      //Fix this example to show that ids between nodes and relationships can have the same id.
-      query("""MATCH (a)
-              #RETURN id(a)""".stripMargin('#'), ResultAssertions((r) => {
-          r.toList should equal(List(
-            Map("id(a)" -> 0),
-            Map("id(a)" -> 1),
-            Map("id(a)" -> 2),
-            Map("id(a)" -> 3),
-            Map("id(a)" -> 4)))
+      query("""MATCH (n1)-[r]->(n2)
+              #WHERE id(n1) = 3 AND id(r) = 3
+              #RETURN id(n1) AS node_id, id(r) AS relationship_id""".stripMargin('#'), ResultAssertions((r) => {
+                r.toList should equal(List(Map("node_id" -> 3, "relationship_id" -> 3)))
         })) {
         p("The node identifier for each of the nodes is returned.")
         resultTable()
