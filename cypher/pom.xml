@@ -25,7 +25,6 @@
     <modules>
         <module>cypher-docs</module>
         <module>cypher-prettifier</module>
-        <module>graphgist</module>
         <module>refcard-tests</module>
     </modules>
 
