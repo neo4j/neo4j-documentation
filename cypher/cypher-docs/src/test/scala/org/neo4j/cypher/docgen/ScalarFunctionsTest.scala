@@ -120,16 +120,34 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("id()", "functions-id") {
-      p(
-        """`id()` returns the id of a relationship or node.""".stripMargin)
-      function("id(expression)", "An Integer.", ("expression", "An expression that returns a node or a relationship."))
+      p("The function `id()` returns an identifier; the function can be utilized for a relationship or a node.")
+      note {
+        //The note has been approved by kernel team.
+        p("""Neo4j implements the id so that:
+            #
+            #Node::
+            #Every node in a database has an identifier.
+            #The identifier for a node is guaranteed to be unique among other nodes' identifiers in the same database, within the scope of a single transaction.
+            #
+            #Relationship::
+            #Every relationship in a database has an identifier.
+            #The identifier for a relationship is guaranteed to be unique among other relationships' identifiers in the same database, within the scope of a single transaction.""".stripMargin('#'))
+      }
+      function("id(expression)",
+        "An Integer.",
+        ("expression", "An expression that returns a node or a relationship."))
       considerations("`id(null)` returns `null`.")
-      query(
-        """MATCH (a)
-          |RETURN id(a)""".stripMargin, ResultAssertions((r) => {
-          r.toList should equal(List(Map("id(a)" -> 0), Map("id(a)" -> 1), Map("id(a)" -> 2), Map("id(a)" -> 3), Map("id(a)" -> 4)))
+      //Fix this example to show that ids between nodes and relationships can have the same id.
+      query("""MATCH (a)
+              #RETURN id(a)""".stripMargin('#'), ResultAssertions((r) => {
+          r.toList should equal(List(
+            Map("id(a)" -> 0),
+            Map("id(a)" -> 1),
+            Map("id(a)" -> 2),
+            Map("id(a)" -> 3),
+            Map("id(a)" -> 4)))
         })) {
-        p("The node id for each of the nodes is returned.")
+        p("The node identifier for each of the nodes is returned.")
         resultTable()
       }
     }
