@@ -24,8 +24,8 @@ For constraints that are backed by an index, the index provider and configuratio
 
 Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>.
 
-[discrete]
 [[administration-constraints-syntax-create-unique]]
+[discrete]
 === Create a unique node property constraint
 
 This command creates a uniqueness constraint on nodes with the specified label and properties.
@@ -48,8 +48,8 @@ REQUIRE (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
 
 Index provider and configuration can be specified using the `OPTIONS` clause.
 
-[discrete]
 [[administration-constraints-syntax-create-node-exists]]
+[discrete]
 === [enterprise-edition]#Create a node property existence constraint#
 
 This command creates a property existence constraint on nodes with the specified label and property.
@@ -64,8 +64,8 @@ REQUIRE n.propertyName IS NOT NULL
 
 There are no supported `OPTIONS` values for existence constraints, but an empty options map is allowed for consistency.
 
-[discrete]
 [[administration-constraints-syntax-create-rel-exists]]
+[discrete]
 === [enterprise-edition]#Create a relationship property existence constraint#
 
 This command creates a property existence constraint on relationships with the specified relationship type and property.
@@ -80,8 +80,8 @@ REQUIRE r.propertyName IS NOT NULL
 
 There are no supported `OPTIONS` values for existence constraints, but an empty options map is allowed for consistency.
 
-[discrete]
 [[administration-constraints-syntax-create-node-key]]
+[discrete]
 === [enterprise-edition]#Create a node key constraint#
 
 This command creates a node key constraint on nodes with the specified label and properties.
