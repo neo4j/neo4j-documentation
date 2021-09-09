@@ -102,6 +102,52 @@ OPTIONS "{" option: value[, ...] "}"
 a|
 Token lookup indexes now allow an `OPTIONS` map to specify the index provider.
 
+
+
+a|
+label:functionality[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE BTREE INDEX ...
+----
+a|
+B-tree indexes are deprecated and will need migration before upgrading to 5.0.
+
+a|
+label:functionality[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE INDEX
+...
+OPTIONS "{" btree-option: btree-value[, ...] "}"
+----
+a|
+B-tree indexes are deprecated and will need migration before upgrading to 5.0.
+
+a|
+label:functionality[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+SHOW BTREE INDEXES
+----
+a|
+B-tree indexes are deprecated and will need migration before upgrading to 5.0.
+
+a|
+label:functionality[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT
+...
+OPTIONS "{" btree-option: btree-value[, ...] "}"
+----
+a|
+Node key and uniqueness constraints with b-tree options are deprecated and will need migration before upgrading to 5.0.
+
 |===
 
 
