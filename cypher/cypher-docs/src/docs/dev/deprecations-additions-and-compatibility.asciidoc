@@ -88,7 +88,7 @@ REQUIRE ... IS NOT NULL
 OPTIONS "{" "}"
 ----
 a|
-Existence constraints now allow an `OPTIONS` map, at this point there are no available values for the map.
+Existence constraints now allow an `OPTIONS` map, however, at this point there are no available values for the map.
 
 a|
 label:functionality[]
