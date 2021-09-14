@@ -24,6 +24,7 @@ For constraints that are backed by an index, the index provider and configuratio
 
 Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>.
 
+[[administration-constraints-syntax-create-unique]]
 [discrete]
 === Create a unique node property constraint
 
@@ -45,6 +46,9 @@ REQUIRE (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
+Index provider and configuration can be specified using the `OPTIONS` clause.
+
+[[administration-constraints-syntax-create-node-exists]]
 [discrete]
 === [enterprise-edition]#Create a node property existence constraint#
 
@@ -55,8 +59,12 @@ This command creates a property existence constraint on nodes with the specified
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 REQUIRE n.propertyName IS NOT NULL
+[OPTIONS "{" "}"]
 ----
 
+There are no supported `OPTIONS` values for existence constraints, but an empty options map is allowed for consistency.
+
+[[administration-constraints-syntax-create-rel-exists]]
 [discrete]
 === [enterprise-edition]#Create a relationship property existence constraint#
 
@@ -65,10 +73,14 @@ This command creates a property existence constraint on relationships with the s
 [source, cypher, role=noplay]
 ----
 CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-FOR ()-"["R:RELATIONSHIP_TYPE"]"-()
-REQUIRE R.propertyName IS NOT NULL
+FOR ()-"["r:RELATIONSHIP_TYPE"]"-()
+REQUIRE r.propertyName IS NOT NULL
+[OPTIONS "{" "}"]
 ----
 
+There are no supported `OPTIONS` values for existence constraints, but an empty options map is allowed for consistency.
+
+[[administration-constraints-syntax-create-node-key]]
 [discrete]
 === [enterprise-edition]#Create a node key constraint#
 
@@ -89,6 +101,8 @@ FOR (n:LabelName)
 REQUIRE (n.propertyName_1, …, n.propertyName_n) IS NODE KEY
 [OPTIONS "{" option: value[, ...] "}"]
 ----
+
+Index provider and configuration can be specified using the `OPTIONS` clause.
 
 [[administration-constraints-syntax-drop]]
 == Syntax for dropping constraints
@@ -147,8 +161,8 @@ An old way of dropping a relationship property existence constraint was to drop 
 [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT
-ON ()-"["R:RELATIONSHIP_TYPE"]"-()
-ASSERT EXISTS (R.propertyName)
+ON ()-"["r:RELATIONSHIP_TYPE"]"-()
+ASSERT EXISTS (r.propertyName)
 ----
 
 [discrete]

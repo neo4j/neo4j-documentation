@@ -75,6 +75,33 @@ Replaced by:
 ----
 DROP CONSTRAINT name [IF EXISTS]
 ----
+
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
+FOR ...
+REQUIRE ... IS NOT NULL
+OPTIONS "{" "}"
+----
+a|
+Existence constraints now allow an `OPTIONS` map, however, at this point there are no available values for the map.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
+FOR ... ON ...
+OPTIONS "{" option: value[, ...] "}"
+----
+a|
+Token lookup indexes now allow an `OPTIONS` map to specify the index provider.
+
 |===
 
 
