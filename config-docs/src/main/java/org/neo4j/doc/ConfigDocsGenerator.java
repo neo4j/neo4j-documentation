@@ -94,9 +94,14 @@ public class ConfigDocsGenerator
         }
         else if ( setting.defaultValue() != null )
         {
-            return Optional.of( setting.valueToString( setting.defaultValue() ) );
+            return Optional.of( escapeAsciiDoc( setting.valueToString( setting.defaultValue() ) ) );
         }
         return Optional.empty();
+    }
+
+    private static String escapeAsciiDoc( String input )
+    {
+        return "+++" + input + "+++"; // https://docs.asciidoctor.org/asciidoc/latest/pass/pass-macro/
     }
 
     private String documentSummary( String id, String title, List<SettingDescription> settingDescriptions )
