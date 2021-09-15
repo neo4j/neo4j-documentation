@@ -40,6 +40,7 @@ import org.neo4j.graphdb.config.Setting
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.graphdb.schema.IndexType
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
+import org.neo4j.kernel.impl.index.schema.PointIndexProvider
 import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
 import org.neo4j.kernel.impl.index.schema.TextIndexProviderFactory
 import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
@@ -342,6 +343,91 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       queryText = s"CREATE TEXT INDEX index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$textProvider'}",
       optionalResultExplanation = "There is no supported index configuration for text indexes.",
       assertions = _ => assertIndexWithNameExists("index_with_provider", "TYPE", List("prop1"))
+    )
+  }
+
+  @Test def create_point_index() {
+    val pointProvider = PointIndexProvider.DESCRIPTOR.name()
+
+    testQuery(
+      title = "Create a node point index",
+      text = "A named point index on a single property for all nodes with a particular label can be created with `CREATE POINT INDEX index_name FOR (n:Label) ON (n.property)`. " +
+        "Note that the index is not immediately available, but is created in the background.",
+      queryText = "CREATE POINT INDEX node_index_name FOR (n:Person) ON (n.location)",
+      optionalResultExplanation = "Note that point indexes only recognize point values, do not support multiple properties, and that the index name must be unique.",
+      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("location"))
+    )
+    testQuery(
+      title = "Create a relationship point index",
+      text = "A named point index on a single property for all relationships with a particular relationship type can be created with `CREATE POINT INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
+        "Note that the index is not immediately available, but is created in the background.",
+      queryText = "CREATE POINT INDEX rel_index_name FOR ()-[r:STREET]-() ON (r.intersection)",
+      optionalResultExplanation = "Note that point indexes only recognize point values, do not support multiple properties, and that the index name must be unique.",
+      assertions = _ => assertIndexWithNameExists("rel_index_name", "STREET", List("intersection"))
+    )
+    testQuery(
+      title = "Create a point index only if it does not already exist",
+      text = "If it is not known whether an index exists or not, add `IF NOT EXISTS` to ensure it does.",
+      queryText = "CREATE POINT INDEX node_index_name IF NOT EXISTS FOR (n:Person) ON (n.location)",
+      optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
+      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("location"))
+    )
+    testQuery(
+      title = "Create a point index specifying the index provider",
+      text =
+        s"""To create a point index with a specific index provider, the `OPTIONS` clause is used.
+           |Only one valid value exists for the index provider, `$pointProvider`, which is the default value.""".stripMargin,
+      queryText = s"CREATE POINT INDEX index_with_provider FOR (n:Label) ON (n.prop1) OPTIONS {indexProvider: '$pointProvider'}",
+      optionalResultExplanation = "Can be combined with specifying index configuration.",
+      assertions = _ => assertIndexWithNameExists("index_with_provider", "Label", List("prop1"))
+    )
+    testQuery(
+      title = "Create a point index specifying the index configuration",
+      text =
+        s"""To create a point index with a specific index configuration, the `OPTIONS` clause is used.
+           |The valid configuration settings are
+           |
+           |* `$cartesianMin`
+           |* `$cartesianMax`
+           |* `$cartesian3dMin`
+           |* `$cartesian3dMax`
+           |* `$wgsMin`
+           |* `$wgsMax`
+           |* `$wgs3dMin`
+           |* `$wgs3dMax`
+           |
+           |Non-specified settings have their respective default values.""".stripMargin,
+      queryText =
+        s"""CREATE POINT INDEX index_with_config FOR (n:Label) ON (n.prop2)
+           |OPTIONS {indexConfig: {`$cartesianMin`: [-100.0, -100.0], `$cartesianMax`: [100.0, 100.0]}}""".stripMargin,
+      optionalResultExplanation = "Can be combined with specifying index provider.",
+      assertions = _ => assertIndexWithNameExists("index_with_config", "Label", List("prop2"))
+    )
+    testQuery(
+      title = "Create a point index specifying both the index provider and configuration",
+      text =
+        s"""To create a point index with a specific index provider and configuration, the `OPTIONS` clause is used.
+           |Only one valid value exists for the index provider, `$pointProvider`, which is the default value.
+           |The valid configuration settings are
+           |
+           |* `$cartesianMin`
+           |* `$cartesianMax`
+           |* `$cartesian3dMin`
+           |* `$cartesian3dMax`
+           |* `$wgsMin`
+           |* `$wgsMax`
+           |* `$wgs3dMin`
+           |* `$wgs3dMax`
+           |
+           |Non-specified settings have their respective default values.""".stripMargin,
+      queryText =
+        s"""CREATE POINT INDEX index_with_options FOR ()-[r:TYPE]-() ON (r.prop1)
+           |OPTIONS {
+           | indexProvider: '$pointProvider',
+           | indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}
+           |}""".stripMargin,
+      optionalResultExplanation = "Specifying index provider and configuration can be done individually.",
+      assertions = _ => assertIndexWithNameExists("index_with_options", "TYPE", List("prop1"))
     )
   }
 

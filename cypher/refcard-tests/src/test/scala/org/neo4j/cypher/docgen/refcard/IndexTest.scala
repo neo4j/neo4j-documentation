@@ -58,7 +58,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
         assert(result.toList.size === 1)
       case "show" =>
         assertStats(result)
-        assert(result.toList.size === 12)
+        assert(result.toList.size === 14)
     }
   }
 
@@ -184,6 +184,24 @@ CREATE TEXT INDEX text_index_name FOR ()-[h:HAS_PET]-() ON (h.favoriteToy)
 ###
 
 Create a text index with the name `text_index_name` on relationships with type `HAS_PET` and property `favoriteToy`.
+
+###assertion=create-index
+//
+
+CREATE POINT INDEX FOR (p:Person) ON (p.location)
+OPTIONS {indexConfig: {`${SPATIAL_CARTESIAN_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_CARTESIAN_MAX.getSettingName}`: [100.0, 100.0]}}
+###
+
+Create a point index on nodes with label `Person` and property `location` with the given `spatial.cartesian` settings.
+The other index settings will have their default values.
+
+###assertion=create-index
+//
+
+CREATE POINT INDEX point_index_name FOR ()-[h:STREET]-() ON (h.intersection)
+###
+
+Create a point index with the name `point_index_name` on relationships with type `STREET` and property `intersection`.
 
 ###assertion=show
 //
