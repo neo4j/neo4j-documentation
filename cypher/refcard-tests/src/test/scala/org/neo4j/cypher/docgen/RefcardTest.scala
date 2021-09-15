@@ -301,7 +301,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
       OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
       GraphDatabaseInternalSettings.text_indexes_enabled -> java.lang.Boolean.TRUE,
-      GraphDatabaseInternalSettings.range_indexes_enabled -> java.lang.Boolean.TRUE
+      GraphDatabaseInternalSettings.range_indexes_enabled -> java.lang.Boolean.TRUE,
+      GraphDatabaseInternalSettings.point_indexes_enabled -> java.lang.Boolean.TRUE
     ).asJava
   }
 }

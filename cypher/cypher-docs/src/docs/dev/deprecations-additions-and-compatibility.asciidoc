@@ -142,6 +142,18 @@ Allows creating node key and uniqueness constraints backed by range indexes by p
 
 a|
 label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE POINT INDEX ...
+----
+a|
+Allows creating point indexes on nodes or relationships with a particular label or relationship type, and property combination.
+They can be dropped by using their name.
+
+
+a|
+label:functionality[]
 label:deprecated[]
 [source, cypher, role="noheader"]
 ----
@@ -156,6 +168,12 @@ B-tree indexes used for string queries are replaced by:
 CREATE TEXT INDEX ...
 ----
 
+B-tree indexes used for spatial queries are replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE POINT INDEX ...
+----
+
 B-tree indexes used for general queries or property value types are replaced by:
 [source, cypher, role="noheader"]
 ----
@@ -163,8 +181,6 @@ CREATE RANGE INDEX ...
 ----
 
 These new indexes may be combined for multiple use cases.
-
-B-tree indexes used for spatial queries are not fully replaced yet.
 
 
 a|
@@ -188,10 +204,10 @@ SHOW BTREE INDEXES
 a|
 B-tree indexes are deprecated and need to be migrated before upgrading to 5.0.
 
-Partially replaced by:
+Replaced by:
 [source, cypher, role="noheader"]
 ----
-SHOW {RANGE \| TEXT} INDEXES
+SHOW {POINT \| RANGE \| TEXT} INDEXES
 ----
 
 
@@ -215,7 +231,7 @@ CREATE CONSTRAINT
 OPTIONS "{" range-option: range-value[, ...] "}"
 ----
 Constraints used for string properties will also require an additional text index to cover the string queries properly.
-Constraints used for point properties or spatial queries are not fully replaced yet.
+Constraints used for point properties will also require an additional point index to cover the spatial queries properly.
 
 |===
 
