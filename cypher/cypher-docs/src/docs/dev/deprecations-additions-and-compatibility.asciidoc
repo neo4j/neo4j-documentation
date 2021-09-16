@@ -112,7 +112,7 @@ label:deprecated[]
 CREATE BTREE INDEX ...
 ----
 a|
-B-tree indexes are deprecated and will need migration before upgrading to 5.0.
+B-tree indexes are deprecated and need to be migrated before upgrading to 5.0.
 
 a|
 label:functionality[]
@@ -124,7 +124,7 @@ CREATE INDEX
 OPTIONS "{" btree-option: btree-value[, ...] "}"
 ----
 a|
-B-tree indexes are deprecated and will need migration before upgrading to 5.0.
+B-tree indexes are deprecated and need to be migrated before upgrading to 5.0.
 
 a|
 label:functionality[]
@@ -134,7 +134,7 @@ label:deprecated[]
 SHOW BTREE INDEXES
 ----
 a|
-B-tree indexes are deprecated and will need migration before upgrading to 5.0.
+B-tree indexes are deprecated and need to be migrated before upgrading to 5.0.
 
 a|
 label:functionality[]
@@ -146,7 +146,7 @@ CREATE CONSTRAINT
 OPTIONS "{" btree-option: btree-value[, ...] "}"
 ----
 a|
-Node key and uniqueness constraints with b-tree options are deprecated and will need migration before upgrading to 5.0.
+Node key and uniqueness constraints with b-tree options are deprecated and need to be migrated before upgrading to 5.0.
 
 |===
 
