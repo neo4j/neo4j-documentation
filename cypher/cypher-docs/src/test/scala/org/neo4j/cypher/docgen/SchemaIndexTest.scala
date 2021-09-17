@@ -19,6 +19,7 @@
  */
 package org.neo4j.cypher.docgen
 
+import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.hamcrest.CoreMatchers._
 import org.hamcrest.Matcher
 import org.junit.Assert._
@@ -31,6 +32,8 @@ import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.DPPlannerName
 import org.neo4j.cypher.internal.planner.spi.IDPPlannerName
 import org.neo4j.cypher.internal.util.Foldable.FoldableAny
+import org.neo4j.dbms.api.DatabaseManagementService
+import org.neo4j.exceptions.CypherExecutionException
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.graphdb.schema.IndexType
@@ -38,6 +41,7 @@ import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
 import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
+import java.io.File
 import scala.collection.JavaConverters._
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
@@ -64,6 +68,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   override def parent: Option[String] = Some("Administration")
   override def section = "Indexes"
+
+  override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory)
+    .setConfig(databaseConfig()).build()
 
   private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
   private val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
@@ -274,6 +281,39 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "If it is uncertain if an index exists and you want to drop it if it does but not get an error should it not, use: ",
       queryText = "DROP INDEX missing_index_name IF EXISTS",
       assertions = _ => assertIndexWithNameDoesNotExists("missing_index_name")
+    )
+  }
+
+  @Test def fail_to_create_index() {
+    generateConsole = false
+    execute("CREATE INDEX preExistingIndex IF NOT EXISTS FOR (book:Book) ON (book.title)")
+    execute("CREATE INDEX indexOnBooks IF NOT EXISTS FOR (book:Book) ON (book.wordCount)")
+    execute("CREATE CONSTRAINT booksShouldHaveUniqueIsbn IF NOT EXISTS FOR (book:Book) REQUIRE book.isbn IS UNIQUE")
+    execute("CREATE CONSTRAINT bookRecommendations IF NOT EXISTS FOR (book:Book) REQUIRE (book.recommendations) IS NOT NULL")
+
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create an already existing index",
+      text = "Create an index on the property `title` on nodes with the `Book` label, when that index already exists.",
+      queryText = "CREATE INDEX bookTitleIndex FOR (book:Book) ON (book.title)",
+      optionalResultExplanation = "In this case the index can't be created because it already exists."
+    )
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create an index with the same name as an already existing index",
+      text = "Create a named index on the property `numberOfPages` on nodes with the `Book` label, when an index with that name already exists.",
+      queryText = "CREATE INDEX indexOnBooks FOR (book:Book) ON (book.numberOfPages)",
+      optionalResultExplanation = "In this case the index can't be created because there already exists an index with that name."
+    )
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create an index when a constraint already exists",
+      text = "Create an index on the property `isbn` on nodes with the `Book` label, when an index-backed constraint already exists on that schema.",
+      queryText = "CREATE INDEX bookIsbnIndex FOR (book:Book) ON (book.isbn)",
+      optionalResultExplanation = "In this case the index can't be created because a index-backed constraint already exists on that label and property combination."
+    )
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create an index with the same name as an already existing constraint",
+      text = "Create a named index on the property `numberOfPages` on nodes with the `Book` label, when a constraint with that name already exists.",
+      queryText = "CREATE INDEX bookRecommendations FOR (book:Book) ON (book.recommendations)",
+      optionalResultExplanation = "In this case the index can't be created because there already exists a constraint with that name."
     )
   }
 

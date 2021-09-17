@@ -252,6 +252,14 @@ include::../indexes/create-a-relationship-type-lookup-index.asciidoc[leveloffset
 
 include::../indexes/create-a-token-lookup-index-specifying-the-index-provider.asciidoc[leveloffset=+1]
 
+include::../indexes/failure-to-create-an-already-existing-index.asciidoc[leveloffset=+1]
+
+include::../indexes/failure-to-create-an-index-with-the-same-name-as-an-already-existing-index.asciidoc[leveloffset=+1]
+
+include::../indexes/failure-to-create-an-index-when-a-constraint-already-exists.asciidoc[leveloffset=+1]
+
+include::../indexes/failure-to-create-an-index-with-the-same-name-as-an-already-existing-constraint.asciidoc[leveloffset=+1]
+
 
 [[administration-indexes-list-indexes]]
 == Listing indexes
