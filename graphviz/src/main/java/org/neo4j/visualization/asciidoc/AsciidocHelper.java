@@ -180,7 +180,7 @@ public class AsciidocHelper
 
     public static String createQueryFailureSnippet( final String output )
     {
-        return "[source]\n----\n" + wrapText( output ) + "\n----\n";
+        return "[source, role=nocopy]\n----\n" + wrapText( output ) + "\n----\n";
     }
 
     private static String wrapText( final String text )
