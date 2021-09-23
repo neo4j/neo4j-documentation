@@ -174,6 +174,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     generateConsole = false
     execute("CREATE (book:Book {isbn: '1449356265', title: 'Graph Databases'})")
     execute("CREATE (book:Book {isbn: '1449356265', title: 'Graph Databases 2'})")
+    execute("CREATE CONSTRAINT preExistingUnique IF NOT EXISTS FOR (book:Book) REQUIRE book.title IS UNIQUE")
+    execute("CREATE INDEX preExistingIndex IF NOT EXISTS FOR (book:Book) ON (book.wordCount)")
 
     testFailingQuery[CypherExecutionException](
       title = "Failure to create a unique property constraint due to conflicting nodes",
@@ -183,6 +185,18 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       optionalResultExplanation = "In this case the constraint can't be created because it is violated by existing " +
         "data. We may choose to use <<administration-indexes-search-performance>> instead or remove the offending nodes and then re-apply the " +
         "constraint."
+    )
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create an already existing unique property constraint",
+      text = "Create a unique property constraint on the property `title` on nodes with the `Book` label, when that constraint already exists.",
+      queryText = "CREATE CONSTRAINT FOR (book:Book) REQUIRE book.title IS UNIQUE",
+      optionalResultExplanation = "In this case the constraint can't be created because it already exists."
+    )
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create a unique property constraint on same schema as existing index",
+      text = "Create a unique property constraint on the property `wordCount` on nodes with the `Book` label, when an index already exists on that label and property combination.",
+      queryText = "CREATE CONSTRAINT FOR (book:Book) REQUIRE book.wordCount IS UNIQUE",
+      optionalResultExplanation = "In this case the constraint can't be created because there already exists an index covering that schema."
     )
   }
 
@@ -270,6 +284,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   @Test def fail_to_create_node_property_existence_constraint() {
     generateConsole = false
     execute("CREATE (book:Book {title: 'Graph Databases'})")
+    execute("CREATE CONSTRAINT preExistingNodePropExist IF NOT EXISTS FOR (book:Book) REQUIRE book.title IS NOT NULL")
 
     testFailingQuery[CypherExecutionException](
       title = "Failure to create a node property existence constraint due to existing node",
@@ -278,6 +293,12 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       queryText = "CREATE CONSTRAINT FOR (book:Book) REQUIRE book.isbn IS NOT NULL",
       optionalResultExplanation = "In this case the constraint can't be created because it is violated by existing " +
         "data. We may choose to remove the offending nodes and then re-apply the constraint."
+    )
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create an already existing node property existence constraint",
+      text = "Create a node property existence constraint on the property `title` on nodes with the `Book` label, when that constraint already exists.",
+      queryText = "CREATE CONSTRAINT booksShouldHaveTitles FOR (book:Book) REQUIRE book.title IS NOT NULL",
+      optionalResultExplanation = "In this case the constraint can't be created because it already exists."
     )
   }
 
@@ -364,7 +385,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   @Test def fail_to_create_relationship_property_existence_constraint() {
     generateConsole = false
-    execute("CREATE (user:User)-[like:LIKED]->(book:Book)")
+    execute("CREATE (user:User)-[like:LIKED {week: 37, year: 2021}]->(book:Book)")
+    execute("CREATE CONSTRAINT relPropExist IF NOT EXISTS FOR ()-[like:LIKED]-() REQUIRE like.year IS NOT NULL")
 
     testFailingQuery[CypherExecutionException](
       title = "Failure to create a relationship property existence constraint due to existing relationship",
@@ -373,6 +395,12 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       queryText = "CREATE CONSTRAINT FOR ()-[like:LIKED]-() REQUIRE like.day IS NOT NULL",
       optionalResultExplanation = "In this case the constraint can't be created because it is violated by existing " +
         "data. We may choose to remove the offending relationships and then re-apply the constraint."
+    )
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create an already existing relationship property existence constraint",
+      text = "Create a named relationship property existence constraint on the property `week` on relationships with the `LIKED` type, when a constraint with that name already exists.",
+      queryText = "CREATE CONSTRAINT relPropExist FOR ()-[like:LIKED]-() REQUIRE like.week IS NOT NULL",
+      optionalResultExplanation = "In this case the constraint can't be created because there already exists a constraint with that name."
     )
   }
 
@@ -485,6 +513,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   @Test def fail_to_create_node_key_constraint() {
     generateConsole = false
     execute("CREATE (p:Person {firstname: 'Jane', age: 34})")
+    execute("CREATE CONSTRAINT preExistingUnique IF NOT EXISTS FOR (p:Person) REQUIRE (p.firstname, p.age) IS UNIQUE")
+    execute("CREATE INDEX bookTitle IF NOT EXISTS FOR (book:Book) ON (book.title, book.isbn)")
 
     testFailingQuery[CypherExecutionException](
       title = "Failure to create a node key constraint due to existing node",
@@ -493,6 +523,19 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       queryText = "CREATE CONSTRAINT FOR (n:Person) REQUIRE (n.firstname, n.surname) IS NODE KEY",
       optionalResultExplanation = "In this case the node key constraint can't be created because it is violated by existing " +
         "data. We may choose to remove the offending nodes and then re-apply the constraint."
+    )
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create a node key constraint when a unique property constraint exists on the same schema",
+      text = "Create a node key constraint on the properties `firstname` and `age` on nodes with the `Person` label, " +
+        "when a unique property constraint already exists on the same label and property combination.",
+      queryText = "CREATE CONSTRAINT FOR (p:Person) REQUIRE (p.firstname, p.age) IS NODE KEY",
+      optionalResultExplanation = "In this case the constraint can't be created because there already exist a conflicting constraint on that label and property combination."
+    )
+    testFailingQuery[CypherExecutionException](
+      title = "Failure to create a node key constraint with the same name as existing index",
+      text = "Create a named node key constraint on the property `title` on nodes with the `Book` label, when an index already exists with that name.",
+      queryText = "CREATE CONSTRAINT bookTitle FOR (book:Book) REQUIRE book.title IS NODE KEY",
+      optionalResultExplanation = "In this case the constraint can't be created because there already exists an index with that name."
     )
   }
 

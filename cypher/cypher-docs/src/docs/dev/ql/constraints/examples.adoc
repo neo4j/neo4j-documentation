@@ -19,6 +19,12 @@ include::../administration/constraints/create-a-unique-constraint-only-if-it-doe
 include::../administration/constraints/create-a-unique-constraint-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+1]
 
 [discrete]
+include::../administration/constraints/failure-to-create-an-already-existing-unique-property-constraint.asciidoc[leveloffset=+1]
+
+[discrete]
+include::../administration/constraints/failure-to-create-a-unique-property-constraint-on-same-schema-as-existing-index.asciidoc[leveloffset=+1]
+
+[discrete]
 include::../administration/constraints/create-a-node-that-complies-with-unique-property-constraints.asciidoc[leveloffset=+1]
 
 [discrete]
@@ -37,6 +43,9 @@ include::../administration/constraints/create-a-node-property-existence-constrai
 
 [discrete]
 include::../administration/constraints/create-a-node-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
+
+[discrete]
+include::../administration/constraints/failure-to-create-an-already-existing-node-property-existence-constraint.asciidoc[leveloffset=+1]
 
 [discrete]
 include::../administration/constraints/create-a-node-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+1]
@@ -60,6 +69,9 @@ include::../administration/constraints/create-a-relationship-property-existence-
 
 [discrete]
 include::../administration/constraints/create-a-relationship-property-existence-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
+
+[discrete]
+include::../administration/constraints/failure-to-create-an-already-existing-relationship-property-existence-constraint.asciidoc[leveloffset=+1]
 
 [discrete]
 include::../administration/constraints/create-a-relationship-that-complies-with-property-existence-constraints.asciidoc[leveloffset=+1]
@@ -89,6 +101,12 @@ include::../administration/constraints/create-a-node-key-constraint-with-specifi
 
 [discrete]
 include::../administration/constraints/create-a-node-key-constraint-with-specified-index-configuration.asciidoc[leveloffset=+1]
+
+[discrete]
+include::../administration/constraints/failure-to-create-a-node-key-constraint-when-a-unique-property-constraint-exists-on-the-same-schema.asciidoc[leveloffset=+1]
+
+[discrete]
+include::../administration/constraints/failure-to-create-a-node-key-constraint-with-the-same-name-as-existing-index.asciidoc[leveloffset=+1]
 
 [discrete]
 include::../administration/constraints/create-a-node-that-complies-with-node-key-constraints.asciidoc[leveloffset=+1]
