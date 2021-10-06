@@ -23,7 +23,7 @@ Examples of this are nodes with missing properties, indexes with the same name, 
 For constraints that are backed by an index, the index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
 Valid values for the index provider are `native-btree-1.0` (deprecated), `lucene+native-3.0` (deprecated), and `range-1.0`, default is `native-btree-1.0`.
 The index type of the backing index is set depending on the provider, the `range-1.0` generates a range index while the other providers generates a b-tree index.
-The range index have no configuration settings. The valid b-tree configuration settings are
+The range index has no configuration settings. The valid b-tree configuration settings are
 
 * `spatial.cartesian.min`
 * `spatial.cartesian.max`
