@@ -56,7 +56,6 @@ REQUIRE (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
 a|
 Unique property constraints now allow multiple properties, ensuring that the combination of property values are unique.
 
-
 a|
 label:functionality[]
 label:added[]
@@ -126,7 +125,6 @@ a|
 Allows creating range indexes on nodes or relationships with a particular label or relationship type, and properties combination.
 They can be dropped by using their name.
 
-
 a|
 label:functionality[]
 label:added[]
@@ -165,7 +163,6 @@ CREATE RANGE INDEX ...
 These new indexes may be combined for multiple use cases.
 
 B-tree indexes used for spatial queries are not fully replaced yet.
-
 
 a|
 label:functionality[]
