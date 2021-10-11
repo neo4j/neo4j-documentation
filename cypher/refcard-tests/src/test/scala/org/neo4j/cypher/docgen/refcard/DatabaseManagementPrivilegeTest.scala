@@ -26,6 +26,7 @@ class DatabaseManagementPrivilegeTest extends AdministrationCommandTestBase {
   private def setup() = graph.withTx { tx =>
     tx.execute("CREATE ROLE my_role")
     tx.execute("DENY DROP DATABASE ON DBMS TO my_role")
+    tx.execute("GRANT ALTER DATABASE ON DBMS TO my_role")
   }
 
   def text: String = {
@@ -46,6 +47,22 @@ REVOKE DENY DROP DATABASE ON DBMS FROM my_role
 ###
 
 Revoke the denied privilege to delete databases from a role.
+
+###assertion=update-one
+//
+
+REVOKE GRANT ALTER DATABASE ON DBMS FROM my_role
+###
+
+Revoke the granted privilege to alter databases from a role.
+
+###assertion=update-one
+//
+
+GRANT SET DATABASE ACCESS ON DBMS TO my_role
+###
+
+Granted privilege to set databases access to a role.
 
 ###assertion=update-one
 //

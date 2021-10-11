@@ -288,6 +288,25 @@ SET ACCESS {READ ONLY \| READ WRITE}
 a|
 New Cypher command for modifying a database.
 
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+ALTER DATABASE
+----
+a|
+New Cypher command for administering privilege for modifying databases.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SET DATABASE ACCESS
+----
+a|
+New Cypher command for admininstering privilege for modifying access of databases.
 |===
 
 
