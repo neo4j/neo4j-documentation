@@ -277,6 +277,17 @@ Terminate transactions on the current server.
 The `transaction-id` is a comma-separated list of one or more quoted strings, a string parameter, or a list parameter.
 
 
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+ALTER DATABASE ...  [IF EXISTS]
+SET ACCESS {READ ONLY \| READ WRITE}
+----
+a|
+New Cypher command for modifying a database.
+
 |===
 
 

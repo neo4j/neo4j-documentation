@@ -2,6 +2,7 @@
 |===
 |Column |Description|Default Output|Full Output| Notes
 |name|The name of the database.|{check-mark}|{check-mark}|
+|access|The database access, either `read-write` or `read-only`.|{check-mark}|{check-mark}|
 |databaseID|The database unique ID.||{check-mark}|
 |serverID|The server instance ID.||{check-mark}|
 |address|Instance address in a clustered DBMS. The default for a standalone database is `neo4j://localhost:7687`. |{check-mark}|{check-mark}|

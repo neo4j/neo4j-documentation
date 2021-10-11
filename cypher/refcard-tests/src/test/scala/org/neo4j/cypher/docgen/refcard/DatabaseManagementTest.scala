@@ -36,6 +36,14 @@ CREATE OR REPLACE DATABASE myDatabase
 ###assertion=update-one
 //
 
+ALTER DATABASE myDatabase SET ACCESS READ ONLY
+###
+
+(★) Modify a database named `myDatabase` to be read-only.
+
+###assertion=update-one
+//
+
 STOP DATABASE myDatabase
 ###
 
