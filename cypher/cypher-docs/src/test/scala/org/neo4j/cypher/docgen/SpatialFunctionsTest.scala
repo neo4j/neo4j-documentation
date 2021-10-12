@@ -76,6 +76,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       """Functions:
         |
         |* <<functions-distance,point.distance()>>
+        |* <<functions-withinBBox,point.withinBBox()>>
         |* <<functions-point-wgs84-2d,point() - WGS 84 2D>>
         |* <<functions-point-wgs84-3d,point() - WGS 84 3D>>
         |* <<functions-point-cartesian-2d,point() - Cartesian 2D>>
@@ -127,6 +128,52 @@ class SpatialFunctionsTest extends DocumentingTest {
         r.toList should equal(List(Map("d" -> null)))
       })) {
         p("If `null` is provided as one or both of the arguments, `null` is returned.")
+        resultTable()
+      }
+    }
+    section("point.withinBBox()", "functions-withinBBox") {
+      p(
+        """`point.withinBBox()` takes three arguments, the first argument is the point to check and the two other define the lower-left (or south-west) and upper-right (or north-east) point of a bounding box respectively.
+          | The return value will be `true` if the provided point is contained in the bounding box (boundary included) otherwise `false`.
+        """.stripMargin)
+      function("point.withinBBox(point, lowerLeft, upperRight)", "A Boolean.", ("point", "A point in either a geographic or cartesian coordinate system."), ("lowerLeft", "A point in the same CRS as 'point'."), ("upperRight", "A point in the same CRS as 'point'."))
+      considerations("`point.withinBBox(p1, p2, p3)` will return `null` if any of the arguments evaluate to `null`.",
+        "Attempting to use points with different Coordinate Reference Systems (such as WGS 84 2D and WGS 84 3D) will return `null`.",
+         "`point.withinBBox` will handle crossing the 180th meridian in geographic coordinates.",
+         "Switching the longitude of the `lowerLeft` and `upperRight` in geographic coordinates will switch the direction of the resulting bounding box.",
+         "Switching the latitude of the `lowerLeft` and `upperRight` in geographic coordinates so that the former is north of the latter will result in an empty range.",
+      )
+      query(
+        """WITH point({x: 0, y: 0, crs: 'cartesian'}) AS lowerLeft, point({x: 10, y: 10, crs: 'cartesian'}) AS upperRight
+          |RETURN point.withinBBox(point({x: 5, y: 5, crs: 'cartesian'}), lowerLeft, upperRight) AS result""".stripMargin, ResultAssertions((r) => {
+          r.toList.head("result").asInstanceOf[Boolean] shouldBe true
+        })) {
+        p("Checking if a point in _Cartesian_ CRS is contained in the bounding box.")
+        resultTable()
+      }
+      query(
+        """WITH point({longitude: 12.53, latitude: 55.66}) AS lowerLeft, point({longitude: 12.614, latitude: 55.70}) AS upperRight
+          |MATCH (t:TrainStation)
+          |WHERE point.withinBBox(point({longitude: t.longitude, latitude: t.latitude}), lowerLeft, upperRight)
+          |RETURN count(t)""".stripMargin, ResultAssertions((r) => {
+          r.toList.head("count(t)").asInstanceOf[Long] should equal(1)
+        })) {
+        p("Finds all train stations contained in a bounding box around Copenhagen.")
+        resultTable()
+      }
+      query(
+        """WITH point({longitude: 179, latitude: 55.66}) AS lowerLeft, point({longitude: -179, latitude: 55.70}) AS upperRight
+          |RETURN point.withinBBox(point({longitude: 180, latitude: 55.66}, lowerLeft, upperRight) AS result
+          |""".stripMargin, ResultAssertions((r) => {
+          r.toList.head("result").asInstanceOf[Boolean] shouldBe true
+        })) {
+        p("A bounding box that crosses the 180th meridian.")
+        resultTable()
+      }
+      query("RETURN point.withinBBox(null, point({longitude: 56.7, latitude: 12.78}),  point({longitude: 57.0, latitude: 13.0})) AS in", ResultAssertions((r) => {
+        r.toList should equal(List(Map("in" -> null)))
+      })) {
+        p("If `null` is provided as any of the arguments, `null` is returned.")
         resultTable()
       }
     }
