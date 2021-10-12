@@ -148,6 +148,20 @@ OPTIONS "{" btree-option: btree-value[, ...] "}"
 a|
 Node key and uniqueness constraints with b-tree options are deprecated and need to be migrated before upgrading to 5.0.
 
+a|
+label:functionality[]
+label:deprecated[]
+[[source, cypher, role="noheader"]
+ ----
+ distance(n.prop, point({x:0, y:0})
+ ----
+ a|
+ Replaced by:
+ [source, cypher, role="noheader"]
+ ----
+ point.distance(n.prop, point({x:0, y:0})
+ ----
+
 |===
 
 

@@ -699,7 +699,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Spatial distance searches (single-property index)",
       text =
         "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries.",
-      queryText = "MATCH ()-[r:KNOWS]->() WHERE distance(r.lastMetPoint, point({x: 1, y: 2})) < 2 RETURN r.lastMetPoint",
+      queryText = "MATCH ()-[r:KNOWS]->() WHERE point.distance(r.lastMetPoint, point({x: 1, y: 2})) < 2 RETURN r.lastMetPoint",
       assertions = {
         p =>
           assertEquals(9, p.size)
@@ -718,12 +718,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries. " +
         "Any following (non-existence check) predicates (here on property `p.name` for index `:Person(place,name)`) " +
         "will be rewritten as existence check with a filter.",
-      queryText = "MATCH (p:Person) WHERE distance(p.place, point({x: 1, y: 2})) < 2 AND p.name IS NOT NULL RETURN p.place",
+      queryText = "MATCH (p:Person) WHERE point.distance(p.place, point({x: 1, y: 2})) < 2 AND p.name IS NOT NULL RETURN p.place",
       assertions = {
         p =>
           assertEquals(9, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("p:Person(place, name) WHERE distance(place, point($autoint_0, $autoint_1)) < $autoint_2 AND name IS NOT NULL")
+          checkPlanDescriptionArgument(p)("p:Person(place, name) WHERE point.distance(place, point($autoint_0, $autoint_1)) < $autoint_2 AND name IS NOT NULL")
       }
     )
   }

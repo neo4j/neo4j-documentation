@@ -162,7 +162,6 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<functions-datetime-transaction, datetime.transaction()>> | Temporal  | Returns the current _DateTime_ using the `transaction` clock.
 | <<functions-datetime-truncate, datetime.truncate()>>  | Temporal | Returns a _DateTime_ obtained by truncating a value at a specific component boundary. <<functions-temporal-truncate-overview, Truncation summary>>.
 |<<functions-degrees, degrees()>>               | Trigonometric     | Converts radians to degrees.
-|<<functions-distance, distance()>>              | Spatial           | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
 | <<functions-duration, duration(+{map}+)>> | Temporal | Returns a _Duration_ from a map of its components.
 | <<functions-duration-create-string, duration(string)>> | Temporal | Returns a _Duration_ by parsing a string.
 | <<functions-duration-between, duration.between()>> | Temporal | Returns a _Duration_ equal to the difference between two given instants.
@@ -216,6 +215,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-point-cartesian-3d,point() - Cartesian 3D>> | Spatial           | Returns a 3D point object, given three coordinate values in the Cartesian coordinate system.
 |<<functions-point-wgs84-2d, point() - WGS 84 2D>>          | Spatial           | Returns a 2D point object, given two coordinate values in the WGS 84 coordinate system.
 |<<functions-point-wgs84-3d,point() - WGS 84 3D>> | Spatial         |  Returns a 3D point object, given three coordinate values in the WGS 84 coordinate system.
+|<<functions-distance, point.distance()>>              | Spatial           | Returns true if the provided point is within the bounding box defined by the two provided points.
+|<<functions-distance, point.withinBBox()>>              | Spatial           | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
 |<<functions-properties, properties()>>          | Scalar            | Returns a map containing all the properties of a node or relationship.
 |<<functions-radians, radians()>>               | Trigonometric     | Converts degrees to radians.
 |<<functions-rand, rand()>>                     | Numeric           | Returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. `[0, 1)`.
