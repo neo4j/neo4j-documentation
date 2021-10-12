@@ -287,7 +287,7 @@ These functions are used to specify 2D or 3D points in a geographic or cartesian
 [options="header"]
 |===
 | Function | Signature | Description
-1.1+| <<functions-distance,`distance()`>>  | `distance(from :: POINT?, to :: POINT?) :: (FLOAT?)` | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
+1.1+| <<functions-distance,`point.distance()`>>  | `point.distance(from :: POINT?, to :: POINT?) :: (FLOAT?)` | Returns a floating point number representing the geodesic distance between any two points in the same CRS.
 1.1+|<<functions-point-cartesian-2d,`point()` - Cartesian 2D>> | `point(input :: MAP?) :: (POINT?)` | Returns a 2D point object, given two coordinate values in the Cartesian coordinate system.
 1.1+|<<functions-point-cartesian-3d,`point()` - Cartesian 3D>> | `point(input :: MAP?) :: (POINT?)`    | Returns a 3D point object, given three coordinate values in the Cartesian coordinate system.
 1.1+|<<functions-point-wgs84-2d,`point()` - WGS 84 2D>> | `point(input :: MAP?) :: (POINT?)`  | Returns a 2D point object, given two coordinate values in the WGS 84 geographic coordinate system.

@@ -1136,7 +1136,7 @@ Predicates that will not work:
 
 * Several predicates combined using `OR`
 * Equality or range predicates querying for points (e.g. `WHERE n.place > point({ x: 1, y: 2 })`)
-* Spatial distance predicates (e.g. `WHERE distance(n.place, point({ x: 1, y: 2 })) < 2`)
+* Spatial distance predicates (e.g. `WHERE point.distance(n.place, point({ x: 1, y: 2 })) < 2`)
 
 
 [NOTE]

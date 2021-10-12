@@ -78,7 +78,7 @@ Returns a point in a 3D geographic coordinate system, with latitude and longitud
 ###assertion=returns-one parameters=distance
 RETURN
 
-distance(point({x: $x1, y: $y1}), point({x: $x2, y: $y2}))
+point.distance(point({x: $x1, y: $y1}), point({x: $x2, y: $y2}))
 ###
 
 Returns a floating point number representing the linear distance between two points.
@@ -87,7 +87,7 @@ The returned units will be the same as those of the point coordinates, and it wi
 ###assertion=returns-one parameters=distance
 RETURN
 
-distance(point({latitude: $y1, longitude: $x1}), point({latitude: $y2, longitude: $x2}))
+point.distance(point({latitude: $y1, longitude: $x1}), point({latitude: $y2, longitude: $x2}))
 ###
 
 Returns the geodesic distance between two points in meters. It can be used for 3D geographic points as well.

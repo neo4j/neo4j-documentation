@@ -75,7 +75,7 @@ class SpatialFunctionsTest extends DocumentingTest {
     p(
       """Functions:
         |
-        |* <<functions-distance,distance()>>
+        |* <<functions-distance,point.distance()>>
         |* <<functions-point-wgs84-2d,point() - WGS 84 2D>>
         |* <<functions-point-wgs84-3d,point() - WGS 84 3D>>
         |* <<functions-point-cartesian-2d,point() - Cartesian 2D>>
@@ -83,9 +83,9 @@ class SpatialFunctionsTest extends DocumentingTest {
       """.stripMargin)
     p("The following graph is used for some of the examples below.")
     graphViz()
-    section("distance()", "functions-distance") {
+    section("point.distance()", "functions-distance") {
       p(
-        """`distance()` returns a floating point number representing the geodesic distance between two points in the same Coordinate Reference System (CRS).
+        """`point.distance()` returns a floating point number representing the geodesic distance between two points in the same Coordinate Reference System (CRS).
           |
           |* If the points are in the _Cartesian_ CRS (2D or 3D), then the units of the returned distance will be the same as the units of the points, calculated using Pythagoras' theorem.
           |* If the points are in the _WGS-84_ CRS (2D), then the units of the returned distance will be meters, based on the haversine formula over a spherical earth approximation.
@@ -96,11 +96,11 @@ class SpatialFunctionsTest extends DocumentingTest {
           | ** This formula works well for points close to the earth's surface; for instance, it is well-suited for calculating the distance of an airplane flight.
           |It is less suitable for greater heights, however, such as when calculating the distance between two satellites.
         """.stripMargin)
-      function("distance(point1, point2)", "A Float.", ("point1", "A point in either a geographic or cartesian coordinate system."), ("point2", "A point in the same CRS as 'point1'."))
-      considerations("`distance(null, null)`, `distance(null, point2)` and `distance(point1, null)` all return `null`.", "Attempting to use points with different Coordinate Reference Systems (such as WGS 84 2D and WGS 84 3D) will return `null`.")
+      function("point.distance(point1, point2)", "A Float.", ("point1", "A point in either a geographic or cartesian coordinate system."), ("point2", "A point in the same CRS as 'point1'."))
+      considerations("`point.distance(null, null)`, `point.distance(null, point2)` and `point.distance(point1, null)` all return `null`.", "Attempting to use points with different Coordinate Reference Systems (such as WGS 84 2D and WGS 84 3D) will return `null`.")
       query(
         """WITH point({x: 2.3, y: 4.5, crs: 'cartesian'}) AS p1, point({x: 1.1, y: 5.4, crs: 'cartesian'}) AS p2
-          |RETURN distance(p1,p2) AS dist""".stripMargin, ResultAssertions((r) => {
+          |RETURN point.distance(p1,p2) AS dist""".stripMargin, ResultAssertions((r) => {
           r.toList.head("dist").asInstanceOf[Double] should equal(1.5)
         })) {
         p("The distance between two 2D points in the _Cartesian_ CRS is returned.")
@@ -108,7 +108,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
       query(
         """WITH point({longitude: 12.78, latitude: 56.7, height: 100}) as p1, point({latitude: 56.71, longitude: 12.79, height: 100}) as p2
-          |RETURN distance(p1,p2) as dist""".stripMargin, ResultAssertions((r) => {
+          |RETURN point.distance(p1,p2) as dist""".stripMargin, ResultAssertions((r) => {
           Math.round(r.toList.head("dist").asInstanceOf[Double]) should equal(1270)
         })) {
         p("The distance between two 3D points in the _WGS 84_ CRS is returned.")
@@ -117,13 +117,13 @@ class SpatialFunctionsTest extends DocumentingTest {
       query(
         """MATCH (t:TrainStation)-[:TRAVEL_ROUTE]->(o:Office)
           |WITH point({longitude: t.longitude, latitude: t.latitude}) AS trainPoint, point({longitude: o.longitude, latitude: o.latitude}) AS officePoint
-          |RETURN round(distance(trainPoint, officePoint)) AS travelDistance""".stripMargin, ResultAssertions((r) => {
+          |RETURN round(point.distance(trainPoint, officePoint)) AS travelDistance""".stripMargin, ResultAssertions((r) => {
           r.toList.head("travelDistance").asInstanceOf[Double] should equal(27842)
         })) {
         p("The distance between the train station in Copenhagen and the Neo4j office in Malmo is returned.")
         resultTable()
       }
-      query("RETURN distance(null, point({longitude: 56.7, latitude: 12.78})) AS d", ResultAssertions((r) => {
+      query("RETURN point.distance(null, point({longitude: 56.7, latitude: 12.78})) AS d", ResultAssertions((r) => {
         r.toList should equal(List(Map("d" -> null)))
       })) {
         p("If `null` is provided as one or both of the arguments, `null` is returned.")

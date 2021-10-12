@@ -98,12 +98,12 @@ class SpatialTest extends DocumentingTest {
             |is necessary to explicitly convert them.
             |For example, if the incoming `$height` is a string field in kilometers, you would need to type `height: toFloat($height) * 1000`. Likewise if the
             |results of the `distance` function are expected to be returned in kilometers, an explicit conversion is required.
-            |For example: `RETURN distance(a,b) / 1000 AS km`. An example demonstrating conversion on incoming and outgoing values is:
+            |For example: `RETURN point.distance(a,b) / 1000 AS km`. An example demonstrating conversion on incoming and outgoing values is:
           """.stripMargin)
         query("""WITH
                 #  point({latitude:toFloat('13.43'), longitude:toFloat('56.21')}) AS p1,
                 #  point({latitude:toFloat('13.10'), longitude:toFloat('56.41')}) AS p2
-                #RETURN toInteger(distance(p1, p2)/1000) AS km""".stripMargin('#'),
+                #RETURN toInteger(point.distance(p1, p2)/1000) AS km""".stripMargin('#'),
         ResultAssertions((r) => {
             withClue("Expect the distance function to return an integer value") {
               r.head("km") should be(42)
@@ -135,8 +135,8 @@ class SpatialTest extends DocumentingTest {
                 #  point({x: 3, y: 0}) AS p2d,
                 #  point({x: 0, y: 4, z: 1}) AS p3d
                 #RETURN
-                #  distance(p2d, p3d) AS bad,
-                #  distance(p2d, point({x: p3d.x, y: p3d.y})) AS good""".stripMargin('#'),
+                #  point.distance(p2d, p3d) AS bad,
+                #  point.distance(p2d, point({x: p3d.x, y: p3d.y})) AS good""".stripMargin('#'),
         ResultAssertions((r) => {
             withClue("Expect the invalid distance function to return null") {
               (r.head("bad") == null) should be(true)
@@ -298,16 +298,16 @@ class SpatialTest extends DocumentingTest {
               #  point({x: 3, y: 0}) AS p2d,
               #  point({x: 0, y: 4, z: 1}) AS p3d
               #RETURN
-              #  distance(p2d, p3d),
+              #  point.distance(p2d, p3d),
               #  p2d < p3d,
               #  p2d = p3d,
               #  p2d <> p3d,
-              #  distance(p2d, point({x: p3d.x, y: p3d.y}))""".stripMargin('#'),
+              #  point.distance(p2d, point({x: p3d.x, y: p3d.y}))""".stripMargin('#'),
       ResultAssertions(r => {
           r.nonEmpty should be(true)
           val record = r.head
           withClue("Expect the invalid distance function to return null") {
-            (record("distance(p2d, p3d)") == null) should be(true)
+            (record("point.distance(p2d, p3d)") == null) should be(true)
           }
           withClue("Expect the inequality test to return null") {
             (record("p2d < p3d") == null) should be(true)
