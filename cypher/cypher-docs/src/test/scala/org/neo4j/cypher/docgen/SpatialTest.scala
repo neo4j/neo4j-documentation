@@ -288,68 +288,11 @@ class SpatialTest extends DocumentingTest {
     section("Comparability and Orderability", "cypher-comparability-orderability") {
       p(
         """
-          |Points with different CRS are not comparable.
-          |This means that any function operating on two points of different types will return `null`.
-          |This is true of the <<functions-distance, distance function>> as well as inequality comparisons.
-          |If these are used in a predicate, they will cause the associated `MATCH` to return no results.
+          |The orderability and comparability is due to change in the upcoming 5.0 release.
+          |This means that queries that rely on the comparing two points using the inequality operators, `<`, `<=`, `>`, and `>=`, or the specific order of an `ORDER BY n.point` query needs to be rewritten.
+          |The easiest way is to specify the ordering explicitly using for example `point.x`, `point.y` in _cartesian coordinates_ or `point.longitude` and point.latitude` in `geographic coordinates`.
         """.stripMargin
       )
-      query("""WITH
-              #  point({x: 3, y: 0}) AS p2d,
-              #  point({x: 0, y: 4, z: 1}) AS p3d
-              #RETURN
-              #  point.distance(p2d, p3d),
-              #  p2d < p3d,
-              #  p2d = p3d,
-              #  p2d <> p3d,
-              #  point.distance(p2d, point({x: p3d.x, y: p3d.y}))""".stripMargin('#'),
-      ResultAssertions(r => {
-          r.nonEmpty should be(true)
-          val record = r.head
-          withClue("Expect the invalid distance function to return null") {
-            (record("point.distance(p2d, p3d)") == null) should be(true)
-          }
-          withClue("Expect the inequality test to return null") {
-            (record("p2d < p3d") == null) should be(true)
-          }
-          withClue("Expect the equality test to return false") {
-            (record("p2d = p3d") == false) should be(true)
-          }
-          withClue("Expect the negative equality test to return true") {
-            (record("p2d <> p3d") == true) should be(true)
-          }
-        })) {
-        resultTable()
-      }
-      p(
-        """
-          |However, all types are orderable.
-          |The Point types will be ordered after Numbers and before Temporal types.
-          |Points with different CRS with be ordered by their SRID numbers.
-          |For the current set of four <<cypher-spatial-crs, CRS>>, this means the order is WGS84, WGS84-3D, Cartesian, Cartesian-3D.
-        """.stripMargin
-      )
-      query("""UNWIND [
-              #  point({x: 3, y: 0}),
-              #  point({x: 0, y: 4, z: 1}),
-              #  point({srid: 4326, x: 12, y: 56}),
-              #  point({srid: 4979, x: 12, y: 56, z: 1000})
-              #] AS point
-              #RETURN point ORDER BY point""".stripMargin('#'),
-      ResultAssertions(r => {
-          r.nonEmpty should be(true)
-          val points = r.toList.map { p =>
-            p("point").asInstanceOf[Point].getCRS.getCode
-          }
-          withClue("Expected four points") {
-            points.length should be(4)
-          }
-          withClue("Expected ascending SRID order") {
-            points should be(Seq(4326, 4979, 7203, 9157))
-          }
-        })) {
-        resultTable()
-      }
     }
   }.build()
 }
