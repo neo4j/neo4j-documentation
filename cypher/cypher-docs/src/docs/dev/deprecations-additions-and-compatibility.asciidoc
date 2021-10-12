@@ -263,6 +263,21 @@ label:deprecated[]
  point.distance(n.prop, point({x:0, y:0})
  ----
 
+ a|
+ label:functionality[]
+ label:deprecated[]
+ [source, cypher, role="noheader"]
+ ----
+ point({x:0, y:0}) <= point({x:1, y:1}) <= point({x:2, y:2})
+ ----
+ a|
+ Using inequality operators `<`, `<=`, `>`, and `>=` on spatial points is deprecated.
+ Please instead use:
+ [source, cypher, role="noheader"]
+ ----
+ point.withinBBox(point({x:1, y:1}), point({x:0, y:0}), point({x:2, y:2}))
+ ----
+
 a|
 label:syntax[]
 label:added[] +
