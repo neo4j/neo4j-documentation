@@ -999,7 +999,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Spatial bounding box searches (single-property index)",
       text = "The ability to do index seeks on bounded ranges works even with the 2D and 3D spatial `Point` types.",
-      queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.location < point({x: 2, y: 6}) RETURN person",
+      queryText = "MATCH (person:Person) WHERE point.withinBBox(person.location, point({x: 1.2, y: 5.4}), point({x: 1.3, y: 5.5})) RETURN person.firstname",
       assertions = {
         p =>
           assertEquals(1, p.size)
@@ -1023,12 +1023,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "will be rewritten as existence check with a filter. " +
         "For index `:Person(firstname,place)`, if the predicate on `firstname` is equality or list membership then the bounded range is handled as a range itself. " +
         "If the predicate on `firstname` is anything else then the bounded range is rewritten to existence and filter.",
-      queryText = "MATCH (person:Person) WHERE point({x: 1, y: 5}) < person.place < point({x: 2, y: 6}) AND person.firstname IS NOT NULL RETURN person",
+      queryText = "MATCH (person:Person) WHERE point.withinBBox(person.place, point({x: 1.2, y: 5.4}), point({x: 1.3, y: 5.5})) AND person.firstname IS NOT NULL RETURN person",
       assertions = {
         p =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("BTREE INDEX person:Person(place, firstname) WHERE place > point({x: $autoint_0, y: $autoint_1}) AND place < point({x: $autoint_2, y: $autoint_3}) AND firstname IS NOT NULL")
+          checkPlanDescriptionArgument(p)("BTREE INDEX person:Person(place, firstname) WHERE point.withinBBox(place, point($autodouble_0, $autodouble_1), point($autodouble_2, $autodouble_3)) AND firstname IS NOT NULL")
       }
     )
   }
