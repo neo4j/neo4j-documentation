@@ -130,8 +130,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
-        p("This command is optionally idempotent, with the default behavior to throw an exception if the database already exists. " +
-          "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database already exist. " +
+        p("This command is optionally idempotent, with the default behavior to fail with an error if the database already exists. " +
+          "Appending `IF NOT EXISTS` to the command will ensure that no error is returned and nothing happens should the database already exist. " +
           "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created.")
         query("CREATE DATABASE customers IF NOT EXISTS", ResultAssertions(r => {
           assertStats(r, systemUpdates = 0)
@@ -165,9 +165,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Altering databases", "administration-databases-alter-database", "enterprise-edition") {
       p("Databases can be modified using the command `ALTER DATABASE`. In this Neo4j version, the only thing that can be modified is the database access. " +
-        "At creation, a database always has read-write access. " +
-        "The database access can be changed to read-only using the `ALTER DATABASE` command with the sub clause `SET ACCESS READ ONLY`. " +
-        "Thereafter, the database access can be changed back to read-write using the sub clause `SET ACCESS READ WRITE`. " +
+        "Unless the configuration parameter `dbms.databases.default_to_read_only` is set to `true`, a database always has read-write access on creation. " +
+        "Database access can be changed to read-only using the `ALTER DATABASE` command with the sub clause `SET ACCESS READ ONLY`. " +
+        "Subsequently, the database access can be changed back to read-write using the sub clause `SET ACCESS READ WRITE`. " +
         "Altering the database access is allowed at all times, whether a database is online or offline. ")
       p("Database access can also be managed using the configuration parameters `dbms.databases.default_to_read_only`, `dbms.databases.read_only`, and " +
         "`dbms.database.writable`. For details, see <<operations-manual#manage-databases-parameters, Configuration parameters>>. " +
@@ -182,8 +182,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES yield name, access", assertDatabasesShown) {
         resultTable()
       }
-      p("This command is optionally idempotent, with the default behavior to throw an exception if the database does not exists. " +
-        "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database not exist.")
+      p("This command is optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
+        "Appending `IF EXISTS` to the command will ensure that no error is returned and nothing happens should the database not exist.")
       query("ALTER DATABASE nonExisting IF EXISTS SET ACCESS READ WRITE", ResultAssertions(r => {
         assertStats(r, systemUpdates = 0)
       })) {}
@@ -223,8 +223,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
-      p("This command is optionally idempotent, with the default behavior to throw an exception if the database does not exists. " +
-        "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database not exist.")
+      p("This command is optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
+        "Appending `IF EXISTS` to the command will ensure that no error is returned and nothing happens should the database not exist.")
       query("DROP DATABASE customers IF EXISTS", ResultAssertions(r => {
         assertStats(r, systemUpdates = 0)
       })) {}
