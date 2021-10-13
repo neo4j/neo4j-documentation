@@ -18,6 +18,8 @@
  */
 package org.neo4j.doc;
 
+import com.neo4j.configuration.SecuritySettings;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Comparator;
@@ -47,7 +49,10 @@ public class ConfigDocsGenerator
 
     public ConfigDocsGenerator()
     {
-        config = Config.defaults( GraphDatabaseSettings.SERVER_DEFAULTS );
+        SecuritySettings.OIDCSetting oidcSetting = SecuritySettings.OIDCSetting.forProvider( "<provider>" );
+        config = Config.newBuilder()
+                       .set( oidcSetting.auth_flow, oidcSetting.auth_flow.defaultValue() )
+                       .setDefaults( GraphDatabaseSettings.SERVER_DEFAULTS ).build();
     }
 
     public String document( Predicate<SettingImpl<Object>> filter, String id, String title, String idPrefix )
