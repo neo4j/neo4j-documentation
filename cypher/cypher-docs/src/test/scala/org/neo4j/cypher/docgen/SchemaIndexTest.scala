@@ -24,6 +24,7 @@ import org.hamcrest.CoreMatchers._
 import org.hamcrest.Matcher
 import org.junit.Assert._
 import org.junit.Test
+import org.neo4j.configuration.GraphDatabaseInternalSettings
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
@@ -35,6 +36,7 @@ import org.neo4j.cypher.internal.util.Foldable.FoldableAny
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.exceptions.CypherExecutionException
 import org.neo4j.graphdb.Label
+import org.neo4j.graphdb.config.Setting
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.graphdb.schema.IndexType
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
@@ -43,9 +45,14 @@ import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
 import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
 import java.io.File
+import java.util
 import scala.collection.JavaConverters._
+import scala.collection.convert.ImplicitConversions.`map AsScala`
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
+
+  override def databaseConfig(): util.Map[Setting[_], Object] =
+    (super.databaseConfig() ++ Map(GraphDatabaseInternalSettings.planning_text_indexes_enabled -> java.lang.Boolean.TRUE)).asJava
 
   //need a couple of 'Person' and 'KNOWS' to make index operations more efficient than label and relType scans
   override val setupQueries: List[String] = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++
@@ -57,12 +64,15 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   )
 
   override val properties = Map(
-    "andy" -> Map("firstname" -> "Andy", "surname" -> "Jones", "age" -> 40, "country" -> "Sweden", "highScore" -> 12345),
-    "john" -> Map("firstname" -> "John", "surname" -> "Smith", "age" -> 35, "country" -> "UK", "highScore" -> 54321)
+    "andy" -> Map("firstname" -> "Andy", "middlename"-> "Mark", "surname" -> "Jones", "age" -> 40, "country" -> "Sweden", "highScore" -> 12345),
+    "john" -> Map("firstname" -> "John", "middlename"-> "Ron", "surname" -> "Smith", "age" -> 35, "country" -> "UK", "highScore" -> 54321)
   )
 
   override val setupConstraintQueries = List(
     "CREATE INDEX FOR (p:Person) ON (p.firstname)",
+    "CREATE INDEX FOR (p:Person) ON (p.middlename)",
+    "CREATE TEXT INDEX FOR (p:Person) ON (p.middlename)",
+    "CREATE TEXT INDEX FOR (p:Person) ON (p.surname)",
     "CREATE INDEX FOR (p:Person) ON (p.location)",
     "CREATE INDEX FOR (p:Person) ON (p.highScore)"
   )
@@ -221,9 +231,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Create a node text index",
       text = "A named text index on a single property for all nodes with a particular label can be created with `CREATE TEXT INDEX index_name FOR (n:Label) ON (n.property)`. " +
         "Note that the index is not immediately available, but is created in the background.",
-      queryText = "CREATE TEXT INDEX node_index_name FOR (n:Person) ON (n.surname)",
+      queryText = "CREATE TEXT INDEX node_index_name FOR (n:Person) ON (n.nickname)",
       optionalResultExplanation = "Note that text indexes only recognize string values, do not support multiple properties, and that the index name must be unique.",
-      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("surname"))
+      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("nickname"))
     )
     testQuery(
       title = "Create a relationship text index",
@@ -236,9 +246,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Create a text index only if it does not already exist",
       text = "If it is not known whether an index exists or not, add `IF NOT EXISTS` to ensure it does.",
-      queryText = "CREATE TEXT INDEX node_index_name IF NOT EXISTS FOR (n:Person) ON (n.surname)",
+      queryText = "CREATE TEXT INDEX node_index_name IF NOT EXISTS FOR (n:Person) ON (n.nickname)",
       optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
-      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("surname"))
+      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("nickname"))
     )
     testQuery(
       title = "Create a text index specifying the index provider",
@@ -263,7 +273,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       optionalResultExplanation =
         """One of the output columns from `SHOW INDEXES` is the name of the index.
           |This can be used to drop the index with the <<administration-indexes-drop-an-index, `DROP INDEX` command>>.""".stripMargin,
-      assertions = p => assertEquals(3, p.size)
+      assertions = p => assertEquals(6, p.size)
     )
     prepareAndTestQuery(
       title = "Listing indexes with filtering",
@@ -279,7 +289,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       optionalResultExplanation =
         """This will only return the default output columns.
           |To get all columns, use `SHOW INDEXES YIELD * WHERE ...`.""".stripMargin,
-      assertions = p => assertEquals(4, p.size)
+      assertions = p => assertEquals(5, p.size)
     )
   }
 
@@ -289,7 +299,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "An index on all nodes with a label and single property combination can be dropped with `DROP INDEX ON :Label(property)`.",
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "DROP INDEX ON :Person(firstname)",
-      assertions = _ => assertIndexesOnLabels("Person", List(List("location"), List("highScore")))
+      assertions = _ => assertIndexesOnLabels("Person", List(List("middlename"), List("surname"), List("location"), List("highScore")))
     )
   }
 
@@ -300,7 +310,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       "The following statement will drop a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
       prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.age, p.country)")),
       queryText = "DROP INDEX ON :Person(age, country)",
-      assertions = _ => assertIndexesOnLabels("Person", List(List("firstname"), List("location"), List("highScore")))
+      assertions = _ => assertIndexesOnLabels("Person", List(List("firstname"), List("middlename"), List("surname"), List("location"), List("highScore")))
     )
   }
 
@@ -355,10 +365,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_index() {
+  @Test def use_btree_index() {
     profileQuery(
-      title = "Node index example",
-      text = "In the example below, the query uses a `Person(firstname)` node index, if it exists. ",
+      title = "Node BTREE index example",
+      text = "In the example below, a `Person(firstname)` node `BTREE` index is available.",
       queryText = "MATCH (person:Person {firstname: 'Andy'}) RETURN person",
       assertions = {
         p =>
@@ -369,10 +379,24 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_relationship_index() {
+  @Test def use_text_index() {
     profileQuery(
-      title = "Relationship index example",
-      text = "In this example, the query uses a `KNOWS(since)` relationship index, if it exists. ",
+      title = "Node TEXT index example",
+      text = "In the example below, a `Person(surname)` node `TEXT` index is available.",
+      queryText = "MATCH (person:Person {surname: 'Smith'}) RETURN person",
+      assertions = {
+        p =>
+          assertEquals(1, p.size)
+
+          checkPlanDescription(p)("NodeIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_relationship_btree_index() {
+    profileQuery(
+      title = "Relationship BTREE index example",
+      text = "In this example, a `KNOWS(since)` relationship `BTREE` index is available. ",
       queryText = "MATCH (person)-[relationship:KNOWS { since: 1992 } ]->(friend) RETURN person, friend",
       prepare = Some(_ => executePreparationQueries(List(
         "create index for ()-[r:KNOWS]-() on (r.since)",
@@ -382,6 +406,38 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("DirectedRelationshipIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_relationship_text_index() {
+    profileQuery(
+      title = "Relationship TEXT index example",
+      text = "In this example, a `KNOWS(lastMetLocation)` relationship `TEXT` index is available. ",
+      queryText = "MATCH (person)-[relationship:KNOWS { metIn: 'Malmo' } ]->(friend) RETURN person, friend",
+      prepare = Some(_ => executePreparationQueries(List(
+        "create text index for ()-[r:KNOWS]-() on (r.metIn)",
+      ))),
+      assertions = {
+        p =>
+          assertEquals(1, p.size)
+
+          checkPlanDescription(p)("DirectedRelationshipIndexSeek")
+      }
+    )
+  }
+
+  @Test def use_text_over_btree_index() {
+    profileQuery(
+      title = "When multiple index types are available",
+      text = "In the example below, both a `Person(middlename)` node `TEXT` index and a `Person(middlename)` node `BTREE` index are available. " +
+        "The `TEXT` node index will be chosen.",
+      queryText = "MATCH (person:Person {middlename: 'Ron'}) RETURN person",
+      assertions = {
+        p =>
+          assertEquals(1, p.size)
+
+          checkPlanDescription(p)("NodeIndexSeek")
       }
     )
   }
@@ -515,13 +571,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_single_property_index_with_in() {
-    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.since)"))
+    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.lastMetIn)"))
 
     profileQuery(
       title = "List membership check using `IN` (single-property index)",
       text =
-        "The `IN` predicate on `r.since` in the following query will use the single-property index `KNOWS(since)` if it exists. ",
-      queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.since IN [1992, 2017] RETURN person, friend",
+        "The `IN` predicate on `r.since` in the following query will use the single-property index `KNOWS(lastMetIn)` if it exists. ",
+      queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.lastMetIn IN ['Malmo', 'Stockholm'] RETURN person, friend",
       assertions = {
         p =>
           assertEquals(1, p.size)
@@ -665,11 +721,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_contains_composite() {
-    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.surname, p.age)"))
+    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.country, p.age)"))
 
     executePreparationQueries {
       val a = (0 to 100).map { _ => "CREATE (:Person)" }.toList
-      val b = (0 to 300).map { i => s"CREATE (:Person {age: $i, surname: '${-i}'})" }.toList
+      val b = (0 to 300).map { i => s"CREATE (:Person {age: $i, country: '${-i}'})" }.toList
       a ++ b
     }
 
@@ -678,12 +734,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Substring search using `CONTAINS` (composite index)",
       text =
-        "The `CONTAINS` predicate on `person.surname` in the following query will use the `Person(surname,age)` index, if it exists. " +
+        "The `CONTAINS` predicate on `person.country` in the following query will use the `Person(country,age)` index, if it exists. " +
           "However, it will be rewritten as existence check and a filter due to the index not supporting actual suffix searches for composite indexes, " +
           "this is still faster than not using an index in the first place. " +
           "Any (non-existence check) predicate on `person.age` will also be rewritten as existence check with a filter. " +
           "More information about how the rewriting works can be found in <<administration-indexes-single-vs-composite-index, composite index limitations>>.",
-      queryText = "MATCH (person:Person) WHERE person.surname CONTAINS '300' AND person.age IS NOT NULL RETURN person",
+      queryText = "MATCH (person:Person) WHERE person.country CONTAINS '300' AND person.age IS NOT NULL RETURN person",
       assertions = {
         p =>
           assertEquals(1, p.size)

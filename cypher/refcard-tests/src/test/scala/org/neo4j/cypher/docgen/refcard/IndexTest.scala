@@ -185,8 +185,31 @@ MATCH (n:Person) WHERE n.name = $$value
 RETURN n
 ###
 
-An index can be automatically used for the equality comparison.
+An BTREE index can be automatically used for the equality comparison.
 Note that for example `toLower(n.name) = $$value` will not use an index.
+
+###assertion=match
+//
+
+MATCH (n:Person) WHERE n.name = "Alice"
+
+RETURN n
+###
+
+An TEXT index can be automatically used for the equality comparison when comparing to a string.
+Note that for example `toLower(n.name) = "string"` will not use an index.
+
+###assertion=match
+//
+
+MATCH (n:Person)
+WHERE n.name < "Bob"
+
+RETURN n
+###
+
+An index can automatically be used for range predicates.
+Note that a TEXT index will only be used if the predicate compares the property with a string.
 
 ###assertion=match parameters=aname
 //
@@ -198,6 +221,17 @@ RETURN n
 ###
 
 An index can automatically be used for the `IN` list checks.
+
+###assertion=match parameters=aname
+//
+
+MATCH (n:Person)
+WHERE n.name IN ['Bob', 'Alice']
+
+RETURN n
+###
+
+An TEXT index can automatically be used for the `IN` list checks when all elements in the list are strings.
 
 ###assertion=match parameters=nameandage
 //
