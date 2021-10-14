@@ -125,12 +125,23 @@ class RestartableDatabase(init: RunnableInitialization)
     graph.beginTransaction(Type.IMPLICIT, loginContext)
   }
 
-  def executeWithParams(tx: InternalTransaction, q: String, params: (String, Any)*): DocsExecutionResult = {
+  def executeWithParams(query: DatabaseQuery, params: (String, Any)*): DocsExecutionResult = {
+    val tx = beginTx(query.database)
+    try {
+      val executionResult = executeWithParams(tx, query.runnable, params.toMap, ClearStateAfterUpdateOrError)
+      tx.commit()
+      executionResult
+    } finally {
+      tx.close()
+    }
+  }
+
+  def executeWithParams(tx: InternalTransaction, q: String, params: Map[String, Any], databaseStateBehavior: DatabaseStateBehavior): DocsExecutionResult = {
     val executionResult: DocsExecutionResult = try {
-      val txContext = graph.transactionalContext(tx, query = q -> params.toMap)
+      val txContext = graph.transactionalContext(tx, query = q -> params)
       val subscriber = new ResultSubscriber(txContext)
       val execution = eengine.execute(q,
-        ValueUtils.asParameterMapValue(ExecutionEngineHelper.asJavaMapDeep(params.toMap)),
+        ValueUtils.asParameterMapValue(ExecutionEngineHelper.asJavaMapDeep(params)),
         txContext,
         profile = false,
         prePopulate = false,
@@ -138,21 +149,13 @@ class RestartableDatabase(init: RunnableInitialization)
       subscriber.init(execution)
       DocsExecutionResult(subscriber, txContext)
     } catch {
-      case e: Throwable => _markedForRestart = true; throw e
+      case e: Throwable =>
+        _markedForRestart |= databaseStateBehavior.clearAfterError
+        throw e
     }
-    _markedForRestart = executionResult.queryStatistics().containsUpdates
+    _markedForRestart |= databaseStateBehavior.clearAfterUpdate && executionResult.queryStatistics().containsUpdates
+    _markedForRestart |= databaseStateBehavior.clearAlways
     executionResult
-  }
-
-  def executeWithParams(query: DatabaseQuery, params: (String, Any)*): DocsExecutionResult = {
-    val tx = beginTx(query.database)
-    try {
-      val executionResult = executeWithParams(tx, query.runnable, params: _*)
-      tx.commit()
-      executionResult
-    } finally {
-      tx.close()
-    }
   }
 
   private def restart() {

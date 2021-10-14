@@ -223,7 +223,16 @@ trait DocBuilder {
   def important(f: => Unit) = inScope(AdmonitionScope(Important.apply), f)
 
   def query(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(innerBlockOfCode: => Unit): Unit =
-    inScope(PreformattedQueryScope(q.stripMargin, assertions, parameters), {
+    addQuery(q, assertions, ClearStateAfterUpdateOrError, parameters)(innerBlockOfCode)
+
+  def queryKeepData(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(innerBlockOfCode: => Unit): Unit =
+    addQuery(q, assertions, KeepState, parameters)(innerBlockOfCode)
+
+  def queryClearData(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(innerBlockOfCode: => Unit): Unit =
+    addQuery(q, assertions, ClearState, parameters)(innerBlockOfCode)
+
+  private def addQuery(q: String, assertions: QueryAssertions, databaseStateBehavior: DatabaseStateBehavior, parameters: Seq[(String, Any)])(innerBlockOfCode: => Unit): Unit =
+    inScope(PreformattedQueryScope(q.stripMargin, assertions, parameters, databaseStateBehavior), {
       innerBlockOfCode
       consoleData() // Always append console data
     })
@@ -319,8 +328,22 @@ object DocBuilder {
     def params: Seq[(String, Any)]
   }
 
-  case class PreformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
-    override def toContent = Query(queryText, assertions, init, content, params, runtime = _runtime, database = _database, login = _login)
+  case class PreformattedQueryScope(
+    queryText: String,
+    assertions: QueryAssertions,
+    params: Seq[(String, Any)],
+    databaseStateBehavior: DatabaseStateBehavior
+  ) extends QueryScope {
+    override def toContent = Query(
+      queryText,
+      assertions,
+      init,
+      content,
+      params,
+      runtime = _runtime,
+      database = _database,
+      login = _login,
+      databaseStateBehavior = databaseStateBehavior)
   }
 
   case class BackgroundQueriesScope(beforeQueries: List[String], params: Seq[(String, Any)]) extends Scope {

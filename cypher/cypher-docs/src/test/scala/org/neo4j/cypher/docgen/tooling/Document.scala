@@ -296,7 +296,12 @@ case class ErrorOnlyQueryResultTable(text: String) extends SimpleQueryResultTabl
   val role: String = "erroronlyqueryresult"
 }
 
-trait DatabaseQuery {
+sealed abstract class DatabaseStateBehavior(val clearAfterUpdate: Boolean, val clearAfterError: Boolean, val clearAlways: Boolean)
+case object ClearStateAfterUpdateOrError extends DatabaseStateBehavior(true, true, false)
+case object KeepState extends DatabaseStateBehavior(false, false, false)
+case object ClearState extends DatabaseStateBehavior(false, false, true)
+
+sealed trait DatabaseQuery {
   def prettified: String
   def database: Option[String]
   def runtime: Option[String]
@@ -304,12 +309,15 @@ trait DatabaseQuery {
   def explain: DatabaseQuery = InitializationQuery(s"EXPLAIN $runnable", runtime, database, login)
   def profile: DatabaseQuery = InitializationQuery(s"PROFILE $runnable", runtime, database, login)
   def runnable: String = if(runtime.isDefined) s"CYPHER runtime=${runtime.get} ${prettified}" else prettified
+  def databaseStateBehavior: DatabaseStateBehavior
 }
 
 case class InitializationQuery(prettified: String,
                                runtime: Option[String] = None,
                                database: Option[String] = None,
-                               login: Option[(String, String)] = None) extends DatabaseQuery
+                               login: Option[(String, String)] = None) extends DatabaseQuery {
+  def databaseStateBehavior: DatabaseStateBehavior = ClearStateAfterUpdateOrError
+}
 
 case class Query(prettified: String,
                  assertions: QueryAssertions,
@@ -318,7 +326,8 @@ case class Query(prettified: String,
                  params: Seq[(String, Any)],
                  runtime: Option[String] = None,
                  database: Option[String] = None,
-                 login: Option[(String, String)] = None) extends Content with DatabaseQuery {
+                 login: Option[(String, String)] = None,
+                 databaseStateBehavior: DatabaseStateBehavior = ClearStateAfterUpdateOrError) extends Content with DatabaseQuery {
 
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 

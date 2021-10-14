@@ -61,20 +61,67 @@ class QueryRunnerTest extends Suite
     result should haveATestFailureOfClass(failingQuery -> classOf[SyntaxException])
   }
 
+  test("query with KeepState keeps data") {
+    runQueriesWithBehavior(Seq(
+      queryContent(
+        query = "CREATE ({prop: 123})",
+        databaseStateBehavior = KeepState),
+      queryContent(
+        query = "MATCH (n) RETURN n.prop",
+        assertions = ResultAssertions(r => r.toSet.shouldEqual(Set(Map("n.prop" -> 123))))),
+    ))
+  }
+
+  test("query with ClearState clears data even if it is a read query") {
+    runQueriesWithBehavior(Seq(
+      queryContent(
+        query = "CREATE ({prop: 123})",
+        databaseStateBehavior = KeepState),
+      queryContent(
+        query = "MATCH (n) RETURN n.prop",
+        databaseStateBehavior = ClearState,
+        assertions = ResultAssertions(r => r.toSet.shouldEqual(Set(Map("n.prop" -> 123))))),
+      queryContent(
+        query = "MATCH (n) RETURN n.prop",
+        assertions = ResultAssertions(r => r.toSet.shouldEqual(Set.empty))),
+    ))
+  }
+
   private def runQuery(query: String, assertions: QueryAssertions = NoAssertions): TestRunResult =
     run(RunnableInitialization.empty, query, new TablePlaceHolder(assertions))
 
   private def run(init: RunnableInitialization, queryText: String, content: QueryResultPlaceHolder): TestRunResult = {
-    val formatter = (_: GraphDatabaseQueryService, _: InternalTransaction) => (_: DocsExecutionResult) => NoContent
-    val runner = new QueryRunner(formatter)
+    val runner = new QueryRunner(noContentFormatter)
     runner.runQueries(contentsWithInit = Seq(ContentWithInit(init, Some(InitializationQuery(queryText)), content)), "title")
   }
+
+  private def runQueriesWithBehavior(content: Seq[ContentWithInit]): TestRunResult =
+    new QueryRunner(noContentFormatter).runQueries(contentsWithInit = content, "title")
+
+  private def queryContent(
+    query: String,
+    databaseStateBehavior: DatabaseStateBehavior = ClearStateAfterUpdateOrError,
+    assertions: QueryAssertions = NoAssertions
+  ) = ContentWithInit(
+    RunnableInitialization.empty,
+    Some(Query(
+      prettified = query,
+      assertions = NoAssertions,
+      myInit = RunnableInitialization.empty,
+      content = NoContent,
+      params = Seq(),
+      databaseStateBehavior = databaseStateBehavior
+    )),
+    new TablePlaceHolder(assertions)
+  )
 
   private def haveATestFailureOfClass[EXCEPTION <: Exception](queryAndClass: (String, Class[EXCEPTION])) =
     new HasATestFailureOfClass(queryAndClass)
 
   private def haveFailureFor(query: String) =
     new HasFailure(query)
+
+  private def noContentFormatter(qg: GraphDatabaseQueryService, tx: InternalTransaction)(r: DocsExecutionResult) = NoContent
 }
 
 class HasATestFailureOfClass[EXCEPTION <: Exception](queryAndClass: (String, Class[EXCEPTION]))
