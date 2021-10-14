@@ -21,6 +21,7 @@ package org.neo4j.cypher.docgen.tooling.tests
 
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.docgen.tooling.Admonitions._
+import org.neo4j.cypher.docgen.tooling.DocBuilder.QueryTextReplacement
 import org.neo4j.cypher.docgen.tooling._
 import org.scalatest.Assertions
 import org.scalatest.FunSuiteLike
@@ -451,5 +452,30 @@ class DocumentQueryTest extends Suite
         |hello world
         |
         |""".stripMargin)
+  }
+
+  test("Document with a query with replacements") {
+    val query = Query("match (@foo) return @foo", NoAssertions, RunnableInitialization.empty, Paragraph("hello world"), Seq.empty,
+      replacements = Seq(QueryTextReplacement("foo", "in_doc", "in_exec"))
+    )
+    val doc = Document("title", "myId", init = RunnableInitialization.empty, query)
+
+    val asciiDocResult = doc.asciiDoc
+    asciiDocResult should equal(
+      """[[myId]]
+        |= title
+        |
+        |
+        |.Query
+        |[source, cypher]
+        |----
+        |match (in_doc) return in_doc
+        |----
+        |
+        |hello world
+        |
+        |""".stripMargin)
+
+    query.runnable should equal("match (in_exec) return in_exec")
   }
 }

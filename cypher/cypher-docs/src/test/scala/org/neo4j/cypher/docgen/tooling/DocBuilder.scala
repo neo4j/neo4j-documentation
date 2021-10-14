@@ -225,14 +225,14 @@ trait DocBuilder {
   def query(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(innerBlockOfCode: => Unit): Unit =
     addQuery(q, assertions, ClearStateAfterUpdateOrError, parameters)(innerBlockOfCode)
 
-  def queryKeepData(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(innerBlockOfCode: => Unit): Unit =
-    addQuery(q, assertions, KeepState, parameters)(innerBlockOfCode)
-
-  def queryClearData(q: String, assertions: QueryAssertions, parameters: (String, Any)*)(innerBlockOfCode: => Unit): Unit =
-    addQuery(q, assertions, ClearState, parameters)(innerBlockOfCode)
-
-  private def addQuery(q: String, assertions: QueryAssertions, databaseStateBehavior: DatabaseStateBehavior, parameters: Seq[(String, Any)])(innerBlockOfCode: => Unit): Unit =
-    inScope(PreformattedQueryScope(q.stripMargin, assertions, parameters, databaseStateBehavior), {
+  def addQuery(
+    q: String,
+    assertions: QueryAssertions,
+    databaseStateBehavior: DatabaseStateBehavior = ClearStateAfterUpdateOrError,
+    parameters: Seq[(String, Any)] = Seq(),
+    replacements: Seq[QueryTextReplacement] = Seq(),
+  )(innerBlockOfCode: => Unit): Unit =
+    inScope(PreformattedQueryScope(q.stripMargin, assertions, parameters, databaseStateBehavior, replacements), {
       innerBlockOfCode
       consoleData() // Always append console data
     })
@@ -332,7 +332,8 @@ object DocBuilder {
     queryText: String,
     assertions: QueryAssertions,
     params: Seq[(String, Any)],
-    databaseStateBehavior: DatabaseStateBehavior
+    databaseStateBehavior: DatabaseStateBehavior,
+    replacements: Seq[QueryTextReplacement]
   ) extends QueryScope {
     override def toContent = Query(
       queryText,
@@ -343,6 +344,7 @@ object DocBuilder {
       runtime = _runtime,
       database = _database,
       login = _login,
+      replacements = replacements,
       databaseStateBehavior = databaseStateBehavior)
   }
 
@@ -350,6 +352,16 @@ object DocBuilder {
     override def toContent: Content =
       BackgroundQueries(beforeQueries, content, params, runtime = _runtime, database = _database, login = _login)
   }
+
+  /**
+   * Represents replacing a placeholder in the query
+   * with one value for the asciidoc output,
+   * and with another value for the executed query. */
+  case class QueryTextReplacement(
+    placeholder: String,
+    renderedValue: String,
+    executedValue: String,
+  )
 }
 
 class LiskovSubstitutionPrincipleException extends Exception

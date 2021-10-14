@@ -105,7 +105,7 @@ class QueryRunnerTest extends Suite
   ) = ContentWithInit(
     RunnableInitialization.empty,
     Some(Query(
-      prettified = query,
+      original = query,
       assertions = NoAssertions,
       myInit = RunnableInitialization.empty,
       content = NoContent,

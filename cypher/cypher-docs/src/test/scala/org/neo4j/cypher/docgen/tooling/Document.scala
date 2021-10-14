@@ -20,6 +20,7 @@
 package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.configuration.GraphDatabaseSettings
+import org.neo4j.cypher.docgen.tooling.DocBuilder.QueryTextReplacement
 import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunction
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
@@ -319,7 +320,7 @@ case class InitializationQuery(prettified: String,
   def databaseStateBehavior: DatabaseStateBehavior = ClearStateAfterUpdateOrError
 }
 
-case class Query(prettified: String,
+case class Query(original: String,
                  assertions: QueryAssertions,
                  myInit: RunnableInitialization,
                  content: Content,
@@ -327,7 +328,16 @@ case class Query(prettified: String,
                  runtime: Option[String] = None,
                  database: Option[String] = None,
                  login: Option[(String, String)] = None,
+                 replacements: Seq[QueryTextReplacement] = Seq(),
                  databaseStateBehavior: DatabaseStateBehavior = ClearStateAfterUpdateOrError) extends Content with DatabaseQuery {
+
+  override def prettified: String = replacements.foldLeft(original) {
+    case (q, rep) => q.replaceAll(rep.placeholder, rep.renderedValue)
+  }
+
+  override def runnable: String = replacements.foldLeft(original) {
+    case (q, rep) => q.replaceAll(rep.placeholder, rep.executedValue)
+  }
 
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
