@@ -6,22 +6,31 @@
 This section describes how Cypher queries work with database transactions.
 --
 
-All Cypher statements are explicitly run within a transaction.
-For read-only queries, the transaction will always succeed.
-For updating queries it is possible that a failure can occur for some reason, for example if the query attempts to violate a constraint, in which case the entire transaction is rolled back, and no changes are made to the graph.
-Every statement is executed within the context of the transaction, and nothing will be persisted to disk until that transaction is successfully committed.
+All Cypher queries run within transactions. Modifications done by updating queries are held in memory by the transaction until it is committed, at which point the changes are persisted to disk and become visible to other transactions.
+If an error occurs - either during query evaluation, such as division by zero, or during commit, such as constraint violations - the transaction is automatically rolled back, and no changes are persisted in the graph.
 
-In short, an updating query will always either fully succeed, or not succeed at all.
+In short, updating queries will always either fully succeed, or not succeed at all.
 
-While it is not possible to run a Cypher query outside a transaction, it is possible to run multiple queries within a single transaction using the following sequence of operations:
-
-. Open a transaction,
-. Run multiple updating Cypher queries.
-. Commit all of them in one go.
-
-Note that the transaction will hold the changes in memory until the whole query, or whole set of queries, has finished executing.
-A query that makes a large number of updates will consequently use large amounts of memory.
+Note that, as the transaction holds changes in memory, a query that makes a large number of updates will consequently use large amounts of memory.
 For memory configuration in Neo4j, see the <<operations-manual#memory-configuration, Neo4j Operations Manual -> Memory configuration>>.
+
+Transactions can be either _explicit_ or _implicit_.
+
+- _Explicit_ transactions,
+  * are opened by the user,
+  * can execute multiple Cypher queries in sequence,
+  * are committed, or rolled back, by the user
+
+- _Implicit_ transactions, sometimes called auto-commit transactions or auto transactions,
+  * are opened automatically,
+  * can execute a single Cypher query,
+  * are committed automatically when the query finishes successfully
+
+Queries that start separate transactions themselves, such as queries using <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>> or <<query-using-periodic-commit-hint, `PERIODIC COMMIT`>> are only allowed in _implicit_ mode.
+
+
+
+
 
 For examples of the API's used to start and commit transactions, refer to the API specific documentation:
 

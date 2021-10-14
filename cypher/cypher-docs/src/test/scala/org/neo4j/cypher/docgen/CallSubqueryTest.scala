@@ -245,7 +245,7 @@ class CallSubqueryTest extends DocumentingTest {
       ) { resultTable() }
       p("""As the size of the CSV file in this example is small, only a single separate transaction is
           #started and committed.""".stripMargin('#'))
-      note(p("""`CALL {} IN TRANSACTIONS` is only allowed in implicit transaction context"""))
+      note(p("""`CALL { ... } IN TRANSACTIONS` is only allowed in <<query-transactions, implicit transactions>>"""))
       section("Batching") {
         p("""The amount of work to do in each separate transaction can be specified in terms of how many input rows
             |to process before committing the current transaction and starting a new one.
@@ -262,10 +262,10 @@ class CallSubqueryTest extends DocumentingTest {
           replacements = Seq(QueryTextReplacement("@csvFile", "file:///artists.csv", artistsCsvPath))
         ) { resultTable() }
         p("""The query now starts and commits two separate transactions""")
-        p("""* The first two executions of the subquery (for the first two input rows from `LOAD CSV`) take place in the first transaction.
-            |* The first transaction is then committed before proceeding.
-            |* The next two executions of the subquery (for the next two input rows) take place in a second transaction.
-            |* The second transaction is committed.""".stripMargin)
+        p(""". The first two executions of the subquery (for the first two input rows from `LOAD CSV`) take place in the first transaction.
+            |. The first transaction is then committed before proceeding.
+            |. The next two executions of the subquery (for the next two input rows) take place in a second transaction.
+            |. The second transaction is committed.""".stripMargin)
       }
       section("Errors") {
         p("""If an error occurs in `CALL {} IN TRANSACTIONS` the entire query fails,
