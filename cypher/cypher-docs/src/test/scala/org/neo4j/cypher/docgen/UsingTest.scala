@@ -256,11 +256,11 @@ class UsingTest extends DocumentingTest {
   }
 
   case class ShouldUseNodeIndexSeekOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"NodeIndexSeek\\s*\\|\\s*$variable".r
+    override def matcher: Matcher[String] = include regex s"NodeIndexSeek\\s*\\|\\s*BTREE INDEX\\s*$variable".r
   }
 
   case class ShouldUseRelationshipIndexSeekOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek\\s*\\|\\s*\\(\\w*\\)-\\[$variable".r
+    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek\\s*\\|\\s*BTREE INDEX\\s*\\(\\w*\\)-\\[$variable".r
   }
 
   case class ShouldUseLabelScanOn(variable: String) extends PlanAssertion {
