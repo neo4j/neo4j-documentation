@@ -509,7 +509,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("person:Person(highScore, name) WHERE highScore > $autoint_0 AND highScore < $autoint_1 AND name IS NOT NULL")
+          checkPlanDescriptionArgument(p)("BTREE INDEX person:Person(highScore, name) WHERE highScore > $autoint_0 AND highScore < $autoint_1 AND name IS NOT NULL")
       }
     )
   }
@@ -594,7 +594,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         p =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescription(p)("person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND surname IS NOT NULL")
+          checkPlanDescriptionArgument(p)("BTREE INDEX person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND surname IS NOT NULL")
       }
     )
   }
@@ -805,7 +805,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         p =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("person:Person(place, firstname) WHERE place > point({x: $autoint_0, y: $autoint_1}) AND place < point({x: $autoint_2, y: $autoint_3}) AND firstname IS NOT NULL")
+          checkPlanDescriptionArgument(p)("BTREE INDEX person:Person(place, firstname) WHERE place > point({x: $autoint_0, y: $autoint_1}) AND place < point({x: $autoint_2, y: $autoint_3}) AND firstname IS NOT NULL")
       }
     )
   }
