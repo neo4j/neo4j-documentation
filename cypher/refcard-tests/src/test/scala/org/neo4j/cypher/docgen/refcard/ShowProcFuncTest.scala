@@ -32,7 +32,7 @@ class ShowProcFuncTest extends RefcardTest with QueryStatisticsTestSupport {
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "functions" =>
-        assert(result.toList.size === 144)
+        assert(result.toList.size === 143)
       case "procedures" =>
         assert(result.toList.size === 73)
     }
