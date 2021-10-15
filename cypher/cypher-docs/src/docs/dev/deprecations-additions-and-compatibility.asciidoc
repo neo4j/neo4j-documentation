@@ -151,7 +151,7 @@ Node key and uniqueness constraints with b-tree options are deprecated and need 
 a|
 label:functionality[]
 label:deprecated[]
-[[source, cypher, role="noheader"]
+[source, cypher, role="noheader"]
  ----
  distance(n.prop, point({x:0, y:0})
  ----

@@ -96,7 +96,7 @@ class SpatialFunctionsTest extends DocumentingTest {
           | ** This formula works well for points close to the earth's surface; for instance, it is well-suited for calculating the distance of an airplane flight.
           |It is less suitable for greater heights, however, such as when calculating the distance between two satellites.
         """.stripMargin)
-      function("point.distance(point1, point2)", "A Float.", ("point1", "A point in either a geographic or cartesian coordinate system."), ("point2", "A point in the same CRS as 'point1'."))
+      function("point.distance(point1, point2)", "A Float.", ("point1", "A point in either a geographic or cartesian coordinate system."), ("point2", "A point in the same CRS as `point1`."))
       considerations("`point.distance(null, null)`, `point.distance(null, point2)` and `point.distance(point1, null)` all return `null`.", "Attempting to use points with different Coordinate Reference Systems (such as WGS 84 2D and WGS 84 3D) will return `null`.")
       query(
         """WITH point({x: 2.3, y: 4.5, crs: 'cartesian'}) AS p1, point({x: 1.1, y: 5.4, crs: 'cartesian'}) AS p2
