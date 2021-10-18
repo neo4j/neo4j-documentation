@@ -25,8 +25,13 @@ import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.cypher.internal.util.Eagerly
 import org.neo4j.exceptions.InternalException
+import org.neo4j.graphdb.Result
+import org.neo4j.internal.kernel.api.security.LoginContext
+import org.neo4j.kernel.api.KernelTransaction
+import org.neo4j.test.DoubleLatch
 
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
 
 
 case class ContentWithInit(init: RunnableInitialization, query: Option[DatabaseQuery], queryResultPlaceHolder: QueryResultPlaceHolder) {
@@ -294,6 +299,8 @@ trait DatabaseQuery {
   def explain: DatabaseQuery = InitializationQuery(s"EXPLAIN $runnable", runtime, database, login)
   def profile: DatabaseQuery = InitializationQuery(s"PROFILE $runnable", runtime, database, login)
   def runnable: String = if(runtime.isDefined) s"CYPHER runtime=${runtime.get} ${prettified}" else prettified
+  def before(dbms: RestartableDatabase): Unit = ()
+  def after(dbms: RestartableDatabase): Unit = ()
 }
 
 case class InitializationQuery(prettified: String,
@@ -301,15 +308,10 @@ case class InitializationQuery(prettified: String,
                                database: Option[String] = None,
                                login: Option[(String, String)] = None) extends DatabaseQuery
 
-case class Query(prettified: String,
-                 assertions: QueryAssertions,
-                 myInit: RunnableInitialization,
-                 content: Content,
-                 params: Seq[(String, Any)],
-                 runtime: Option[String] = None,
-                 database: Option[String] = None,
-                 login: Option[(String, String)] = None) extends Content with DatabaseQuery {
-
+trait ContentQuery extends Content with DatabaseQuery {
+  val params: Seq[(String, Any)]
+  val content: Content
+  val myInit: RunnableInitialization
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
   override def asciiDoc(level: Int) = {
@@ -331,6 +333,70 @@ case class Query(prettified: String,
     case seq: Seq[_]  => seq.map(mapMapValue).asJava
     case v: Any       => v
   }
+}
+
+case class Query(prettified: String,
+                 assertions: QueryAssertions,
+                 override val myInit: RunnableInitialization,
+                 override val content: Content,
+                 override val params: Seq[(String, Any)],
+                 runtime: Option[String] = None,
+                 database: Option[String] = None,
+                 login: Option[(String, String)] = None) extends ContentQuery {
+}
+
+case class ShowTransactionsQuery( beforeQueryText: List[String],
+                 prettified: String,
+                 assertions: QueryAssertions,
+                 override val myInit: RunnableInitialization,
+                 override val content: Content,
+                 override val params: Seq[(String, Any)],
+                 runtime: Option[String] = None,
+                 database: Option[String] = None,
+                 login: Option[(String, String)] = None) extends ContentQuery {
+
+  private val latch: DoubleLatch = new DoubleLatch(beforeQueryText.size + 1)
+
+  override def before(dbms: RestartableDatabase): Unit = {
+    import scala.concurrent.ExecutionContext.Implicits.global
+    super.before(dbms)
+    val graph = dbms.graph
+
+    beforeQueryText.foreach(query =>
+      // Start each background transaction in a Future
+      Future {
+        val tx = graph.beginTransaction(KernelTransaction.Type.EXPLICIT, LoginContext.AUTH_DISABLED)
+
+        try {
+          var result: Result = null
+          try {
+            result = tx.execute(query)
+            latch.startAndWaitForAllToStart()
+          } finally {
+            latch.start()
+            latch.finishAndWaitForAllToFinish()
+          }
+          if (result != null) {
+            result.accept((_: Result.ResultRow) => true)
+            result.close()
+          }
+          tx.commit()
+        } catch {
+          case t: Throwable => t
+        } finally {
+          if (tx != null) tx.close()
+        }
+      })
+
+    // Start the main query
+    latch.startAndWaitForAllToStart()
+  }
+
+  override def after(dbms: RestartableDatabase): Unit = {
+    super.after(dbms)
+    latch.finishAndWaitForAllToFinish()
+  }
+
 }
 
 object ConsoleData {

@@ -17,6 +17,7 @@ This section contains information on all the clauses in the Cypher query languag
 * <<header-multiple-graphs-clauses,Multiple graphs>>
 * <<header-importing-clauses,Importing data>>
 * <<header-listing-procs-functions,Listing functions and procedures>>
+* <<header-transaction-commands,Transaction commands>>
 * <<header-administration-clauses,Administration clauses>>
 
 
@@ -255,6 +256,19 @@ m|<<query-listing-procedures, SHOW PROCEDURES>>
 
 |===
 
+[[header-transaction-commands]]
+**Transaction Commands**
+
+[options="header"]
+|===
+|Clause |Description
+m|<<query-listing-transactions, SHOW TRANSACTIONS>>
+|Lists the available procedures.
+m|<<query-terminate-transactions, TERMINATE TRANSACTIONS>>
+|Terminate transactions by their ids.
+
+|===
+
 
 [[header-administration-clauses]]
 **Administration clauses**
@@ -336,3 +350,5 @@ include::ql/load-csv/index.asciidoc[leveloffset=+1]
 include::ql/listing/query-listing-functions.adoc[leveloffset=+1]
 
 include::ql/listing/query-listing-procedures.adoc[leveloffset=+1]
+
+include::ql/listing/query-listing-transactions.adoc[leveloffset=+1]

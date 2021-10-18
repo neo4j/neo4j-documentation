@@ -227,6 +227,16 @@ trait DocBuilder {
       innerBlockOfCode
       consoleData() // Always append console data
     })
+
+  /**
+   * Show Transactions is special because we need some transactions to be running in the background so that we have something
+   * to show. `backgroundQueries` are the queries to run in the background.
+   */
+  def showTransactionsQuery(q: String, backgroundQueries: List[String], assertions: QueryAssertions, parameters: (String, Any)*)(innerBlockOfCode: => Unit): Unit =
+    inScope(ShowTransactionsQueryScope( q.stripMargin, backgroundQueries.map(_.stripMargin), assertions, parameters), {
+      innerBlockOfCode
+      consoleData() // Always append console data
+    })
 }
 
 object DocBuilder {
@@ -312,6 +322,11 @@ object DocBuilder {
 
   case class PreformattedQueryScope(queryText: String, assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
     override def toContent = Query(queryText, assertions, init, content, params, runtime = _runtime, database = _database, login = _login)
+  }
+
+  case class ShowTransactionsQueryScope(queryText: String, beforeQueries: List[String], assertions: QueryAssertions, params: Seq[(String, Any)]) extends QueryScope {
+    override def toContent: Content =
+      ShowTransactionsQuery(beforeQueries, queryText, assertions, init, content, params, runtime = _runtime, database = _database, login = _login)
   }
 }
 
