@@ -267,6 +267,7 @@ label:deprecated[]
  label:functionality[]
  label:deprecated[]
  [source, cypher, role="noheader"]
+<<<<<<< HEAD
  ----
  point({x:0, y:0}) <= point({x:1, y:1}) <= point({x:2, y:2})
  ----
@@ -288,6 +289,18 @@ IMPERSONATE
 ----
 a|
 New privilege that allows a user to assume privileges of another one.
+=======
+  ----
+  point({x:0, y:0}) <= point({x:1, y:1}) <= point({x:2, y:2})
+  ----
+  a|
+  Using inequality operators `<`, `<=`, `>`, and `>=` on spatial points is deprecated.
+  Please instea use:
+  [source, cypher, role="noheader"]
+  ----
+  point.withinBBox(point({x:1, y:1}), point({x:0, y:0}), point({x:2, y:2}))
+  ----
+>>>>>>> 14fe79a4c9... Apply suggestions from code review
 
 a|
 label:functionality[]
