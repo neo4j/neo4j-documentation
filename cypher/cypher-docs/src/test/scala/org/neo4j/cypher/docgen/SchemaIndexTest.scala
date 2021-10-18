@@ -451,15 +451,15 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         """
           |One way of filtering the output from `SHOW INDEXES` by index type is the use of type keywords,
           |listed in the <<administration-indexes-syntax, syntax table>>.
-          |For example, to show only range indexes, use `SHOW RANGE INDEXES`.
+          |For example, to show only b-tree indexes, use `SHOW BTREE INDEXES`.
           |Another more flexible way of filtering the output is to use the `WHERE` clause.
           |An example is to only show indexes not belonging to constraints.""".stripMargin,
-      prepare = _ => executePreparationQueries(List("create range index for ()-[r:KNOWS]-() on (r.since)")),
-      queryText = "SHOW RANGE INDEXES WHERE uniqueness = 'NONUNIQUE'",
+      prepare = _ => executePreparationQueries(List("create btree index for ()-[r:KNOWS]-() on (r.since)")),
+      queryText = "SHOW BTREE INDEXES WHERE uniqueness = 'NONUNIQUE'",
       optionalResultExplanation =
         """This will only return the default output columns.
           |To get all columns, use `SHOW INDEXES YIELD * WHERE ...`.""".stripMargin,
-      assertions = p => assertEquals(1, p.size)
+      assertions = p => assertEquals(5, p.size)
     )
   }
 
@@ -518,7 +518,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testFailingQuery[CypherExecutionException](
       title = "Failure to create an index with the same name as an already existing index",
       text = "Create a named index on the property `numberOfPages` on nodes with the `Book` label, when an index with that name already exists.",
-      queryText = "CREATE RANGE INDEX indexOnBooks FOR (book:Book) ON (book.numberOfPages)",
+      queryText = "CREATE INDEX indexOnBooks FOR (book:Book) ON (book.numberOfPages)",
       optionalResultExplanation = "In this case the index can't be created because there already exists an index with that name."
     )
     testFailingQuery[CypherExecutionException](

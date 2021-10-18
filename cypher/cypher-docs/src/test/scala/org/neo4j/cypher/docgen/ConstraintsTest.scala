@@ -85,8 +85,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a unique constraint with specified index provider and configuration",
       text =
         s"""To create a unique constraint with a specific index provider and configuration for the backing index, the `OPTIONS` clause is used.
-          |Valid values for the index provider are `$nativeProvider`, `$nativeLuceneProvider`, and `$rangeProvider`, default is `$nativeProvider`.
-          |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a range index while the other providers generates a b-tree index.
+          |Valid values for the index provider are `$nativeProvider` (deprecated), `$nativeLuceneProvider` (deprecated), and `$rangeProvider` (future index), default is `$nativeProvider`.
+          |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a <<indexes-future-indexes, future range index>> while the other providers generates a b-tree index.
           |The range index have no configuration settings. The valid b-tree configuration settings are
           |
           |* `$cartesianMin`
@@ -98,7 +98,9 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
           |* `$wgs3dMin`
           |* `$wgs3dMax`
           |
-          |Non-specified settings have their respective default values.""".stripMargin,
+          |Non-specified settings have their respective default values.
+          |
+          |In 4.4, b-tree index-backed constraints are still the correct alternative to use.""".stripMargin,
       queryText =
         s"""CREATE CONSTRAINT constraint_with_options FOR (n:Label) REQUIRE (n.prop1, n.prop2) IS UNIQUE
           |OPTIONS {
@@ -451,10 +453,11 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a node key constraint with specified index provider",
       text =
         s"""To create a node key constraint with a specific index provider for the backing index, the `OPTIONS` clause is used.
-           |Valid values for the index provider are `$nativeProvider`, `$nativeLuceneProvider`, and `$rangeProvider`, default is `$nativeProvider`.
-           |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a range index while the other providers generates a b-tree index.""".stripMargin,
+           |Valid values for the index provider are `$nativeProvider` (deprecated), `$nativeLuceneProvider` (deprecated), and `$rangeProvider` (future index), default is `$nativeProvider`.
+           |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a <<indexes-future-indexes, future range index>> while the other providers generates a b-tree index.
+           |In 4.4, b-tree index-backed constraints are still the correct alternative to use.""".stripMargin,
       queryText =
-        s"""CREATE CONSTRAINT constraint_with_provider FOR (n:Label) REQUIRE (n.prop1) IS NODE KEY OPTIONS {indexProvider: '$rangeProvider'}""".stripMargin,
+        s"""CREATE CONSTRAINT constraint_with_provider FOR (n:Label) REQUIRE (n.prop1) IS NODE KEY OPTIONS {indexProvider: '$nativeProvider'}""".stripMargin,
       optionalResultExplanation = "B-tree providers can be combined with specifying index configuration.",
       assertions = _ => assertConstraintWithNameExists("constraint_with_provider", "Label", List("prop1"))
     )
@@ -465,7 +468,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a node key constraint with specified index configuration",
       text =
         s"""To create a node key constraint with a specific index configuration for the backing index, the `OPTIONS` clause is used.
-           |The index type of the backing index is set depending on the provider and range indexes have no configuration settings.
+           |The index type of the backing index is set depending on the provider and <<indexes-future-indexes, future range indexes>> have no configuration settings.
            |The valid b-tree configuration settings are
            |
            |* `$cartesianMin`
@@ -481,7 +484,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       queryText =
         s"""CREATE CONSTRAINT constraint_with_config FOR (n:Label) REQUIRE (n.prop2) IS NODE KEY
           |OPTIONS {indexConfig: {`$cartesianMin`: [-100.0, -100.0], `$cartesianMax`: [100.0, 100.0]}}""".stripMargin,
-      optionalResultExplanation = "Can be combined with specifying b-tree index provider.",
+      optionalResultExplanation = "Can be combined with specifying a b-tree index provider.",
       assertions = _ => assertConstraintWithNameExists("constraint_with_config", "Label", List("prop2"))
     )
   }
