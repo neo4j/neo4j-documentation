@@ -40,7 +40,7 @@ class ShowTerminateTransactionsTest extends DocumentingTest {
       p("This command will produce a table with the following columns:")
       p(
         """
-.List functions output
+.List transactions output
 [options="header", cols="4,6"]
 ||===
 || Column
@@ -53,90 +53,91 @@ class ShowTerminateTransactionsTest extends DocumentingTest {
 |a|The id of the transaction label:default-output[]
 
 |m|currentQueryId
-|a|The id of the current query executing in the transaction label:default-output[]
+|a|The id of the query current executing in the transaction label:default-output[]
 
 |m|connectionId
-|a|The id of the database connection attached to the transaction label:default-output[]
+|a|The id of the database connection attached to the transaction or blank for embedded connections. label:default-output[]
 
 |m|clientAddress
-|a|label:default-output[]
+|a|The address the client is connecting from, or blank if this is not available. label:default-output[]
 
 |m|username
-|a|The username of the user executing the function label:default-output[]
+|a|The username of the user executing the transaction. label:default-output[]
 
 |m|startTime
-|a|label:default-output[]
+|a|The time the transaction was started. label:default-output[]
 
 |m|status
-|a|terminated, blocked, closing or running label:default-output[]
+|a|The current status of this transaction (`Terminated`, `Blocked`, `Closing` or `Running`). label:default-output[]
 
 |m|elapsedTime
-|a|label:default-output[]
+|a|The total time elapsed since the start of this transaction. label:default-output[]
 
 |m|allocatedBytes
-|a|label:default-output[]
+|a|The number of bytes allocated on the heap by this transaction. label:default-output[]
 
 m|currentQuery
-a|label:default-output[]
+a|The query text of the query of the query current executing in the transaction. label:default-output[]
 
 |m|outerTransactionId
 |a|
 
 |m|metaData
-|a|
+|a|Metadata attached to the transaction, or empty if there is none.
 
 |m|parameters
-|a|
+|a|The parameters passed to the query currently executing in this transaction.
 
 |m|Planner
-|a|
+|a|The name of the Cypher planned used to plan the query currently executing in this transaction.
 
 |m|runtime
-|a|
+|a|The name of the Cypher runtime used by the query currently executing in this transaction.
 
 |m|indexes
-|a|
+|a|The indexes utilised by the query currently executing in this transaction.
 
 |m|protocol
-|a|
+|a| Which protocol was used for this connection.
+|This is not necessarily an internet protocol (like http et.c.) although it could be. It might also be "embedded" for example, if this connection represents an embedded session.
 
 |m|requestUri
-|a|
+|a|The URI of this server that the client connected to, or null if the URI is not available.
 
 |m|statusDetails
-|a|any string a dedicated kernel API will write to track the transaction progress (for example "X nodes analyzed by the algo Y"
+|a|Provide additional status details from underlying transaction or blank if none is available.
 
 |m|resourceInformation
 |a|
 
 |m|activeLockCount
-|a|
+|a|The number of active locks granted for this transaction.
 
 |m|cpuTime
-|a|
+|a|CPU time (in milliseconds) utilised by this transaction
 
 |m|waitTime
-|a|
+|a|Accumulated transaction waiting time that includes waiting time of all already executed queries plus waiting time of the currently executed query in milliseconds.
 
 |m|idleTime
-|a|
+|a|Idle time (in milliseconds) for this transaction
 
 |m|allocatedDirectBytes
-|a|
+|a|Amount of off-heap (native) memory allocated by this transaction in bytes.
 
 |m|estimatedUsedHeapMemory
-|a|
+|a|The estimated amount of used heap memory allocated by this transaction in bytes.
 
 |m|pageHits
-|a|
+|a|The total number of page cache hits that this transaction performed.
 
 |m|pageFaults
-|a|
+|a|The total number of page cache faults that this transaction performed.
 ||===""")
       section("Syntax") {
         p(
           """
-List functions, either all or only built-in or user-defined::
+List all transactions on the current server::
 
 [source, cypher, role=noplay]
 ----
@@ -156,8 +157,8 @@ Required privilege <<access-control-database-administration-transaction,`SHOW TR
       }
       section("Listing all transactions") {
         p(
-          """To list all available functions with the default output columns, the `SHOW FUNCTIONS` command can be used.
-            #If all columns are required, use `SHOW FUNCTIONS YIELD *`.""".stripMargin('#'))
+          """To list all available transactions with the default output columns, the `SHOW TRANSACTIONS` command can be used.
+            #If all columns are required, use `SHOW TRANSACTIONS YIELD *`.""".stripMargin('#'))
         showTransactionsQuery("SHOW TRANSACTIONS", List("MATCH (n) RETURN n"), ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("database", "transactionId", "currentQueryId", "connectionId", "clientAddress", "username", "currentQuery", "startTime", "status", "elapsedTime", "allocatedBytes")
         })) {
@@ -167,7 +168,7 @@ Required privilege <<access-control-database-administration-transaction,`SHOW TR
       section("Listing transactions with filtering on output columns") {
         p(
           """The listed transactions can be filtered by using the `WHERE` clause.
-            #For example, getting the name of all built-in functions starting with the letter 'a':""".stripMargin('#'))
+            #For example, getting the databases for all transactions where the currently executing query contains 'Mark':""".stripMargin('#'))
         showTransactionsQuery(
           """SHOW TRANSACTIONS YIELD database, currentQuery WHERE currentQuery contains 'Mark'""",
           List(
