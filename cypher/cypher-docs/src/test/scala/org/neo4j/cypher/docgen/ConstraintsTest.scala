@@ -40,9 +40,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   override def parent: Option[String] = Some("Administration")
   override def section: String = "Constraints"
 
-  override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory)
-    .setConfig(databaseConfig()).build()
-
   private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
   private val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
   private val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
