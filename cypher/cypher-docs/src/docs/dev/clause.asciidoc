@@ -351,4 +351,4 @@ include::ql/listing/query-listing-functions.adoc[leveloffset=+1]
 
 include::ql/listing/query-listing-procedures.adoc[leveloffset=+1]
 
-include::ql/listing/query-listing-transactions.adoc[leveloffset=+1]
+include::ql/listing/query-transaction-clauses.adoc[leveloffset=+1]

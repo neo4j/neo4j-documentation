@@ -132,7 +132,7 @@ a|label:default-output[]
 
 |m|pageFaults
 |a|
-|===""")
+||===""")
       section("Syntax") {
         p(
           """
