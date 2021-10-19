@@ -342,8 +342,7 @@ case class Query(prettified: String,
                  override val params: Seq[(String, Any)],
                  runtime: Option[String] = None,
                  database: Option[String] = None,
-                 login: Option[(String, String)] = None) extends ContentQuery {
-}
+                 login: Option[(String, String)] = None) extends ContentQuery
 
 case class ShowTransactionsQuery( beforeQueryText: List[String],
                  prettified: String,

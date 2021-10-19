@@ -151,13 +151,8 @@ SHOW TRANSACTIONS[S]
 When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
 ====
 
-Required privilege <<administration-security-administration-dbms-privileges-user-management,`SHOW USER`>>.
-This command cannot be used for LDAP users.
-
-[NOTE]
-====
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
-====""".stripMargin('#'))
+Required privilege <<access-control-database-administration-transaction,`SHOW TRANSACTION`>>.
+""".stripMargin('#'))
       }
       section("Listing all transactions") {
         p(
