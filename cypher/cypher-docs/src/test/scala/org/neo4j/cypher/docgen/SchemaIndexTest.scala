@@ -64,7 +64,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   override def parent: Option[String] = Some("Administration")
   override def section = "Indexes"
 
-
   @Test def create_index_on_a_single_property() {
     testQuery(
       title = "Create a single-property index for nodes",

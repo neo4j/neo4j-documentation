@@ -20,7 +20,6 @@
 package org.neo4j.cypher.docgen
 
 import java.io.File
-
 import org.neo4j.configuration.Config
 import org.neo4j.configuration.GraphDatabaseSettings.{DEFAULT_DATABASE_NAME, SYSTEM_DATABASE_NAME}
 import org.neo4j.cypher.internal.cache.ExecutorBasedCaffeineCacheFactory
@@ -29,8 +28,9 @@ import org.neo4j.cypher.internal.config.CypherConfiguration
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, MonitoringCacheTracer}
 import org.neo4j.cypher.internal.tracing.TimingCompilationTracer
 import org.neo4j.cypher.internal.{ExecutionEngine, _}
-import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
+import org.neo4j.dbms.api.{DatabaseManagementService}
 import org.neo4j.graphdb.GraphDatabaseService
+import org.neo4j.io.fs.EphemeralFileSystemAbstraction
 import org.neo4j.kernel.api.Kernel
 import org.neo4j.kernel.database.Database
 import org.neo4j.kernel.impl.query.QueryEngineProvider
@@ -38,10 +38,15 @@ import org.neo4j.kernel.internal.GraphDatabaseAPI
 import org.neo4j.logging.internal.LogService
 import org.neo4j.monitoring.Monitors
 import org.neo4j.scheduler.JobScheduler
+import org.neo4j.test.TestDatabaseManagementServiceBuilder
+import org.neo4j.test.rule.TestDirectory
 
 object ExecutionEngineFactory {
   def createDbAndCommunityEngine(): (DatabaseManagementService, GraphDatabaseService, ExecutionEngine) = {
-    val managementService: DatabaseManagementService = new DatabaseManagementServiceBuilder(new File("target/example-db")).build()
+    val fs = new EphemeralFileSystemAbstraction()
+    val td = TestDirectory.testDirectory(this.getClass, fs)
+    val dbFolder = td.prepareDirectoryForTest("target/example-db" + System.nanoTime()).toFile
+    val managementService: DatabaseManagementService = new TestDatabaseManagementServiceBuilder(dbFolder.toPath).setFileSystem(fs).build()
     val graph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
 
     (managementService, graph, createExecutionEngineFromDb(graph))
