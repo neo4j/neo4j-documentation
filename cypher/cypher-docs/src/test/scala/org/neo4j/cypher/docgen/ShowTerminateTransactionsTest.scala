@@ -159,33 +159,79 @@ Required privilege <<access-control-database-administration-transaction,`SHOW TR
         p(
           """To list all available transactions with the default output columns, the `SHOW TRANSACTIONS` command can be used.
             #If all columns are required, use `SHOW TRANSACTIONS YIELD *`.""".stripMargin('#'))
-        showTransactionsQuery("SHOW TRANSACTIONS", List("MATCH (n) RETURN n"), ResultAssertions(p => {
-          p.columns should contain theSameElementsAs Array("database", "transactionId", "currentQueryId", "connectionId", "clientAddress", "username", "currentQuery", "startTime", "status", "elapsedTime", "allocatedBytes")
-        })) {
-          limitedResultTable(20)
+        backgroundQueries(List("MATCH (n) RETURN n")) {
+          query("SHOW TRANSACTIONS", ResultAssertions(p => {
+            p.columns should contain theSameElementsAs Array("database", "transactionId", "currentQueryId", "connectionId", "clientAddress", "username", "currentQuery", "startTime", "status", "elapsedTime", "allocatedBytes")
+          })) {
+            resultTable()
+          }
         }
       }
       section("Listing transactions with filtering on output columns") {
         p(
           """The listed transactions can be filtered by using the `WHERE` clause.
             #For example, getting the databases for all transactions where the currently executing query contains 'Mark':""".stripMargin('#'))
-        showTransactionsQuery(
-          """SHOW TRANSACTIONS YIELD database, currentQuery WHERE currentQuery contains 'Mark'""",
-          List(
-            "MATCH (p:Person) WHERE p.name='Mark' RETURN p",
-            "MATCH (n) RETURN n"
-          ),
+        backgroundQueries(List(
+          "MATCH (p:Person) WHERE p.name='Mark' RETURN p",
+          "MATCH (n) RETURN n"
+        )) {
+        query("""SHOW TRANSACTIONS YIELD database, currentQuery WHERE currentQuery contains 'Mark'""",
           ResultAssertions(p => {
             p.columns should contain theSameElementsAs Array("database", "currentQuery")
             p.columnAs[String]("database").foreach(_ should be("neo4j"))
             p.columnAs[String]("currentQuery").foreach(_ should include("Mark"))
           })) {
-          limitedResultTable(15)
-        }
+          resultTable()
+        }}
       }
     }
     section("TERMINATE TRANSACTIONS", id="query-terminate-transactions") {
       p("The `TERMINATE TRANSACTIONS` command is used to terminate running transactions by their ids.")
+      p("This command will produce a table with the following columns:")
+      p(
+        """
+.Terminate transactions output
+[options="header", cols="4,6"]
+||===
+|| Column
+|| Description
+
+|m|transactionId
+|a|The id of the transaction
+
+|m|username
+|a|The username of the user executing the transaction.
+
+|m|message
+|a|The result of the TERMINATE TRANSACTION command as applied to this transaction.
+||===""")
+      section("Syntax") {
+        p(
+          """
+Terminate transactions by ID on the current server::
+
+[source, cypher, role=noplay]
+----
+TERMINATE TRANSACTIONS[S] transaction_id[, ...]
+----
+Required privilege <<access-control-database-administration-transaction,`TERMINATE TRANSACTION`>>.
+""".stripMargin('#'))
+      }
+    }
+    section("Terminate Transactions") {
+      p(
+        """To end running transactions without waiting for them to complete on their own, the `TERMINATE TRANSACTIONS` command can be used.""")
+        query("""TERMINATE TRANSACTIONS "neo4j-transaction-001"""", ResultAssertions(p => {
+          p.columns should contain theSameElementsAs Array("transactionId", "username", "message")
+        })) { }
+      p(
+""".Result
+|[role="queryresult",options="header,footer",cols="3*<m"]
+||===
+|| +transactionId+ | +username+ | +message+
+|| +"neo4j-transaction-1"+ | neo4j | +"Transaction terminated."+
+|3+d|Rows: 1
+||===""")
     }
   }.build()
 }

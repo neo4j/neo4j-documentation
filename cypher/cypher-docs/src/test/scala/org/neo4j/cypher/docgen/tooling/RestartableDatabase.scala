@@ -64,7 +64,10 @@ class RestartableDatabase(init: RunnableInitialization)
   /*
   This is the public way of controlling when it's safe to restart the database
    */
-  def nowIsASafePointToRestartDatabase(): Unit = if (_markedForRestart) restart()
+  def nowIsASafePointToRestartDatabase(): Unit = {
+    graphs.values.foreach(_.shutdown())
+    if (_markedForRestart) restart()
+  }
 
   private def createAndStartIfNecessary() {
     if (graph == null) {
@@ -192,6 +195,10 @@ class RestartableDatabase(init: RunnableInitialization)
       //wait for any new indexes created to come online
       graph.awaitIndexesOnline()
       results
+    }
+
+    def shutdown(): Unit = {
+      init.postExecutionCode.foreach(_.apply(graph))
     }
   }
 

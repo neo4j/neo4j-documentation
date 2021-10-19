@@ -61,7 +61,9 @@ case class RunnableInitialization(initCode: Seq[InitializationFunction] = Seq.em
                                   initQueries: Seq[DatabaseQuery] = Seq.empty,
                                   userDefinedFunctions: Seq[java.lang.Class[_]] = Seq.empty,
                                   userDefinedAggregationFunctions: Seq[java.lang.Class[_]] = Seq.empty,
-                                  procedures: Seq[java.lang.Class[_]] = Seq.empty) {
+                                  procedures: Seq[java.lang.Class[_]] = Seq.empty,
+                                  postExecutionCode: Seq[InitializationFunction] = Seq.empty
+                                 ) {
 
   def ++(other: RunnableInitialization): RunnableInitialization = {
     RunnableInitialization(
@@ -69,7 +71,8 @@ case class RunnableInitialization(initCode: Seq[InitializationFunction] = Seq.em
       initQueries ++ other.initQueries,
       userDefinedFunctions ++ other.userDefinedFunctions,
       userDefinedAggregationFunctions ++ other.userDefinedAggregationFunctions,
-      procedures ++ other.procedures
+      procedures ++ other.procedures,
+      postExecutionCode ++ other.postExecutionCode
     )
   }
 }
@@ -299,8 +302,6 @@ trait DatabaseQuery {
   def explain: DatabaseQuery = InitializationQuery(s"EXPLAIN $runnable", runtime, database, login)
   def profile: DatabaseQuery = InitializationQuery(s"PROFILE $runnable", runtime, database, login)
   def runnable: String = if(runtime.isDefined) s"CYPHER runtime=${runtime.get} ${prettified}" else prettified
-  def before(dbms: RestartableDatabase): Unit = ()
-  def after(dbms: RestartableDatabase): Unit = ()
 }
 
 case class InitializationQuery(prettified: String,
@@ -308,10 +309,15 @@ case class InitializationQuery(prettified: String,
                                database: Option[String] = None,
                                login: Option[(String, String)] = None) extends DatabaseQuery
 
-trait ContentQuery extends Content with DatabaseQuery {
-  val params: Seq[(String, Any)]
-  val content: Content
-  val myInit: RunnableInitialization
+case class Query(prettified: String,
+                 assertions: QueryAssertions,
+                 myInit: RunnableInitialization,
+                 content: Content,
+                 params: Seq[(String, Any)],
+                 runtime: Option[String] = None,
+                 database: Option[String] = None,
+                 login: Option[(String, String)] = None) extends Content with DatabaseQuery {
+
   val parameterText: String = if (params.isEmpty) "" else JavaExecutionEngineDocTest.parametersToAsciidoc(mapMapValue(params.toMap))
 
   override def asciiDoc(level: Int) = {
@@ -335,31 +341,25 @@ trait ContentQuery extends Content with DatabaseQuery {
   }
 }
 
-case class Query(prettified: String,
-                 assertions: QueryAssertions,
-                 override val myInit: RunnableInitialization,
-                 override val content: Content,
-                 override val params: Seq[(String, Any)],
+case class BackgroundQueries(
+                 beforeQueryText: List[String],
+                 content: Content,
+                 params: Seq[(String, Any)],
                  runtime: Option[String] = None,
                  database: Option[String] = None,
-                 login: Option[(String, String)] = None) extends ContentQuery
-
-case class ShowTransactionsQuery( beforeQueryText: List[String],
-                 prettified: String,
-                 assertions: QueryAssertions,
-                 override val myInit: RunnableInitialization,
-                 override val content: Content,
-                 override val params: Seq[(String, Any)],
-                 runtime: Option[String] = None,
-                 database: Option[String] = None,
-                 login: Option[(String, String)] = None) extends ContentQuery {
+                 login: Option[(String, String)] = None) extends Content {
 
   private val latch: DoubleLatch = new DoubleLatch(beforeQueryText.size + 1)
 
-  override def before(dbms: RestartableDatabase): Unit = {
+  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]) = {
+    val myInit = RunnableInitialization(initCode = Seq(before), postExecutionCode = Seq(after))
+    content.runnableContent(init ++ myInit, queryText = None)
+  }
+
+  override def asciiDoc(level: Int): String = content.asciiDoc(level)
+
+  val before: InitializationFunction = (graph: GraphDatabaseCypherService) => if (!graph.getGraphDatabaseService.databaseId().isSystemDatabase) {
     import scala.concurrent.ExecutionContext.Implicits.global
-    super.before(dbms)
-    val graph = dbms.graph
 
     beforeQueryText.foreach(query =>
       // Start each background transaction in a Future
@@ -391,8 +391,7 @@ case class ShowTransactionsQuery( beforeQueryText: List[String],
     latch.startAndWaitForAllToStart()
   }
 
-  override def after(dbms: RestartableDatabase): Unit = {
-    super.after(dbms)
+  val after: InitializationFunction = (graph: GraphDatabaseCypherService) => if (!graph.getGraphDatabaseService.databaseId().isSystemDatabase) {
     latch.finishAndWaitForAllToFinish()
   }
 

@@ -100,7 +100,6 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
     }
 
     dbms.login(query.login)
-    query.before(dbms)
     val tx: InternalTransaction = dbms.beginTx(query.database)
     try {
       val result: Either[Throwable, InternalTransaction => Content] =
@@ -135,7 +134,6 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
 
       val runResult = QueryRunResult(query.prettified, content, result.right.map(contentBuilder => contentBuilder(tx)))
       if (tx.isOpen) tx.commit()
-      query.after(dbms)
       runResult
     } finally {
       tx.close()
