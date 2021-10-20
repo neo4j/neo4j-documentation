@@ -19,7 +19,6 @@
  */
 package org.neo4j.cypher.docgen
 
-import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.hamcrest.CoreMatchers._
 import org.hamcrest.Matcher
 import org.junit.Assert._
@@ -32,7 +31,6 @@ import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.DPPlannerName
 import org.neo4j.cypher.internal.planner.spi.IDPPlannerName
 import org.neo4j.cypher.internal.util.Foldable.FoldableAny
-import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.exceptions.CypherExecutionException
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.schema.IndexSettingImpl._
@@ -42,7 +40,6 @@ import org.neo4j.kernel.impl.index.schema.TextIndexProviderFactory
 import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
 import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
-import java.io.File
 import scala.collection.JavaConverters._
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
@@ -594,7 +591,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         p =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescription(p)("person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND surname IS NOT NULL")
+          checkPlanDescription(p)("BTREE INDEX person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND surname")
+          // The part IS NOT NULL referring to surname appears in a brand new line
+          checkPlanDescription(p)("IS NOT NULL")
       }
     )
   }
