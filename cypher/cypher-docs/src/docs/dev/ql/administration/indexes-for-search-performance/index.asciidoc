@@ -273,17 +273,17 @@ include::../indexes/create-a-single-property-b-tree-index-for-relationships.asci
 
 include::../indexes/create-a-single-property-b-tree-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
 
-// TODO: add deprecated flag
+[role=deprecated]
 include::../indexes/create-a-single-property-b-tree-index-with-specified-index-provider.asciidoc[leveloffset=+1]
 
-// TODO: add deprecated flag
+[role=deprecated]
 include::../indexes/create-a-single-property-b-tree-index-with-specified-index-configuration.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-composite-b-tree-index-for-nodes.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-composite-b-tree-index-for-relationships.asciidoc[leveloffset=+1]
 
-// TODO: add deprecated flag
+[role=deprecated]
 include::../indexes/create-a-composite-b-tree-index-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-node-label-lookup-index.asciidoc[leveloffset=+1]
