@@ -17,11 +17,10 @@ Please refer to <<administration-indexes-search-performance>> for instructions o
 
 == Index types and predicate compatibility
 
-There are different types of indexes available in Neo4j.
-Not all indexes are compatible with the same property predicates.
+There are different types of indexes available in Neo4j but they are not all compatible with the same property predicates.
 
-In the most common case, indexes are used for `MATCH` and `OPTIONAL MATCH` clauses that combine a label predicate with a property predicate.
-Therefore, it is important to know the kind of predicates that can be solved by the different indexes.
+Indexes are commonly used for `MATCH` and `OPTIONAL MATCH` clauses that combine a label predicate with a property predicate.
+Therefore, it is important to know what kind of predicates that can be solved by the different indexes.
 
 === BTREE indexes
 
@@ -42,7 +41,7 @@ Therefore, it is important to know the kind of predicates that can be solved by 
 === TEXT indexes
 
 `TEXT` indexes only work for predicates operating on strings.
-That means that `TEXT` indexes will only be used when it is known that the predicate will evaluate to `null` for all non-string values.
+That means that `TEXT` indexes are only used when it is known that the predicate evaluates to `null` for all non-string values.
 
 Predicates that only operate on strings are always solvable by a `TEXT` index:
 
@@ -50,13 +49,13 @@ Predicates that only operate on strings are always solvable by a `TEXT` index:
 * `ENDS WITH`
 * `CONTAINS`
 
-Other predicates, however, will only be used when it is known that the property is compared to a string:
+However, other predicates are only used when it is known that the property is compared to a string:
 
 * `n.prop = "string"`
 * `n.prop IN ["a", "b", "c"]`
 * `n.prop > "string"`
 
-That means that a `TEXT` index will not be able to solve e.g. `a.prop = b.prop`.
+This means that a `TEXT` index is not able to solve e.g. `a.prop = b.prop`.
 
 In summary, `TEXT` indexes support the following predicates:
 
@@ -73,10 +72,10 @@ In summary, `TEXT` indexes support the following predicates:
 
 == Index preference
 
-When multiple indexes are available and able to solve a predicate there is an ordering defined that decide on which index to use.
-It is defined such that:
+When multiple indexes are available and able to solve a predicate, there is an order defined that decides which index to use.
+It is defined as such:
 
-* `TEXT` indexes will be preferred over `BTREE` indexes.
+* `TEXT` indexes are preferred over `BTREE` indexes.
 
 include::ql/administration/indexes/node-btree-index-example.asciidoc[leveloffset=2]
 
@@ -86,7 +85,7 @@ include::ql/administration/indexes/relationship-btree-index-example.asciidoc[lev
 
 include::ql/administration/indexes/relationship-text-index-example.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/when-multiple-index-types-are-available.asciidoc[leveloffset=2]
+include::ql/administration/indexes/multiple-available-index-types.asciidoc[leveloffset=2]
 
 include::ql/administration/indexes/equality-check-using-where-single-property-index.asciidoc[leveloffset=2]
 

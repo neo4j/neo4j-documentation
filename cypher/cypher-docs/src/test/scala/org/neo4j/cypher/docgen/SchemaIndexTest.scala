@@ -429,9 +429,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def use_text_over_btree_index() {
     profileQuery(
-      title = "When multiple index types are available",
+      title = "Multiple available index types",
       text = "In the example below, both a `Person(middlename)` node `TEXT` index and a `Person(middlename)` node `BTREE` index are available. " +
-        "The `TEXT` node index will be chosen.",
+        "The `TEXT` node index is chosen.",
       queryText = "MATCH (person:Person {middlename: 'Ron'}) RETURN person",
       assertions = {
         p =>

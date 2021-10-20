@@ -197,7 +197,7 @@ RETURN n
 ###
 
 An TEXT index can be automatically used for the equality comparison when comparing to a string.
-Note that for example `toLower(n.name) = "string"` will not use an index.
+Note that for example `toLower(n.name) = "string"` does not use an index.
 
 ###assertion=match
 //
@@ -209,7 +209,7 @@ RETURN n
 ###
 
 An index can automatically be used for range predicates.
-Note that a TEXT index will only be used if the predicate compares the property with a string.
+Note that a TEXT index is only used if the predicate compares the property with a string.
 
 ###assertion=match parameters=aname
 //
