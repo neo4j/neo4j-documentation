@@ -158,7 +158,7 @@ label:deprecated[]
 CREATE BTREE INDEX ...
 ----
 .2+.^a|
-B-tree indexes are deprecated, partially replaced for now and will be fully replaced in 5.0 by <<indexes-future-indexes>>.
+B-tree indexes are deprecated, partially replaced for now and will be fully replaced in 5.0 by <<indexes-future-indexes, Future indexes>>.
 In 4.4, b-tree indexes are still the correct alternative to use.
 
 B-tree indexes used for string queries are replaced by:
@@ -200,7 +200,7 @@ label:deprecated[]
 SHOW BTREE INDEXES
 ----
 a|
-B-tree indexes are deprecated, partially replaced for now and will be fully replaced in 5.0 by <<indexes-future-indexes>>.
+B-tree indexes are deprecated, partially replaced for now and will be fully replaced in 5.0 by <<indexes-future-indexes, Future indexes>>.
 In 4.4, b-tree indexes are still the correct alternative to use.
 
 Replaced by the new and future index types:
