@@ -47,10 +47,10 @@ class TransactionsCommandTest extends DocumentingTest {
 || Description
 
 |m|database
-|a|This is the name of the database the transaction is executing against.:default-output[]
+|a|This is the name of the database the transaction is executing against. label:default-output[]
 
 |m|transactionId
-|a|This is the ID of the transaction label:default-output[]
+|a|This is the ID of the transaction label. :default-output[]
 
 |m|currentQueryId
 |a|This is the ID of the current query executed by transaction. label:default-output[]
@@ -74,7 +74,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |a|The current status of this transaction (`Terminated`, `Blocked`, `Closing` or `Running`). label:default-output[]
 
 |m|elapsedTime
-|a|This is the time in milliseconds that has elapsed since the transaction was started. label:default-output[]
+|a|This is the time that has elapsed since the transaction was started returned as a duration. label:default-output[]
 
 |m|allocatedBytes
 |a|The number of bytes allocated on the heap so far by this transaction. label:default-output[]
@@ -83,16 +83,16 @@ class TransactionsCommandTest extends DocumentingTest {
 |a|The transaction ID of any outer transaction.
 
 |m|metaData
-|a|This is any metadata associated with the transaction., or empty if there is none.
+|a|This is any metadata associated with the transaction, or empty if there is none.
 
 |m|parameters
 |a|This is a map containing all the parameters used by the query currently executing in this transaction.
 
 |m|planner
-|a|The name of the Cypher planned used to plan the query currently executing in this transaction. For details, see <<cypher-planner, Cypher planner>>
+|a|The name of the Cypher planner used to plan the query currently executing in this transaction. For details, see <<cypher-planner, Cypher planner>>.
 
 |m|runtime
-|a|The name of the Cypher runtime used by the query currently executing in this transaction. For details, see <<cypher-runtime, Cypher runtime>>
+|a|The name of the Cypher runtime used by the query currently executing in this transaction. For details, see <<cypher-runtime, Cypher runtime>>.
 
 |m|indexes
 |a|The indexes utilised by the query currently executing in this transaction.
@@ -111,18 +111,18 @@ class TransactionsCommandTest extends DocumentingTest {
 |a|Information about what transaction is waiting for when it is blocked.
 
 |m|activeLockCount
-|a|Count of active locks held by transaction executing the query.
+|a|Count of active locks held by the transaction.
 
 |m|cpuTime
-|a|CPU time in milliseconds that has been actively spent executing the query.
+|a|CPU time that has been actively spent executing the query returned as a duration.
 |This field will be null unless the config parameter `dbms.track_query_cpu_time` is set to true.
 
 |m|waitTime
-|a|Accumulated transaction waiting time that includes waiting time of all already executed queries plus waiting time of the currently executed query in milliseconds.
+|a|Accumulated transaction waiting time that includes waiting time of all already executed queries plus waiting time of the currently executed query as a duration.
 |This field will be null unless the config parameter `dbms.track_query_cpu_time` is set to true.
 
 |m|idleTime
-|a|Idle time (in milliseconds) for this transaction
+|a|Idle time for this transaction returned as a duration.
 |This field will be null unless the config parameter `dbms.track_query_cpu_time` is set to true.
 
 |m|allocatedDirectBytes
@@ -140,7 +140,7 @@ class TransactionsCommandTest extends DocumentingTest {
       section("Syntax") {
         p(
           """
-List all transactions on the current server:
+List all transactions on the current server::
 
 [source, cypher, role=noplay]
 ----
