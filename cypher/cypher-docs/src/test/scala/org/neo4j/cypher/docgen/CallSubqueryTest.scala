@@ -224,7 +224,8 @@ class CallSubqueryTest extends DocumentingTest {
         Seq("1", "ABBA", "1992"),
         Seq("2", "Roxette", "1986"),
         Seq("3", "Europe", "1979"),
-        Seq("4", "The Cardigans", "1992")
+        Seq("4", "bob hund", "1991"),
+        Seq("5", "The Cardigans", "1992"),
       )
       p("""The following example imports a CSV file using the `LOAD CSV` clause, and
           # creates nodes in separate transactions using `CALL {} IN TRANSACTIONS`
@@ -239,7 +240,7 @@ class CallSubqueryTest extends DocumentingTest {
           #CALL {
           #  WITH line
           #  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
-          #} IN TRANSACTIONS OF 1 ROW""".stripMargin('#'),
+          #} IN TRANSACTIONS""".stripMargin('#'),
         assertions = ResultAssertions(r => r.isEmpty),
         replacements = Seq(QueryTextReplacement("@csvFile", "file:///artists.csv", artistsCsvPath))
       ) { resultTable() }
@@ -261,11 +262,14 @@ class CallSubqueryTest extends DocumentingTest {
           assertions = ResultAssertions(r => r.isEmpty),
           replacements = Seq(QueryTextReplacement("@csvFile", "file:///artists.csv", artistsCsvPath))
         ) { resultTable() }
-        p("""The query now starts and commits two separate transactions""")
+        p("""The query now starts and commits three separate transactions""")
         p(""". The first two executions of the subquery (for the first two input rows from `LOAD CSV`) take place in the first transaction.
             |. The first transaction is then committed before proceeding.
             |. The next two executions of the subquery (for the next two input rows) take place in a second transaction.
-            |. The second transaction is committed.""".stripMargin)
+            |. The second transaction is committed.
+            |. The last execution of the subquery (for the last input row) takes place in a third transaction.
+            |. The third transaction is committed.
+            |""".stripMargin)
       }
       section("Errors") {
         p("""If an error occurs in `CALL {} IN TRANSACTIONS` the entire query fails,
