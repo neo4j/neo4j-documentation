@@ -264,7 +264,7 @@ m|<<query-listing-procedures, SHOW PROCEDURES>>
 |Clause |Description
 m|xref:clauses/transaction-clauses/index.adoc#query-listing-transactions[SHOW TRANSACTIONS]
 |Lists the available procedures.
-m|xref:clauses/transaction-clauses/index.adoc#query-show-transactions[TERMINATE TRANSACTIONS]
+m|xref:clauses/transaction-clauses/index.adoc#query-terminate-transactions[TERMINATE TRANSACTIONS]
 |Terminate transactions by their ids.
 
 |===
