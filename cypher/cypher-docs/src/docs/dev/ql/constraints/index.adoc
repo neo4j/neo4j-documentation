@@ -48,8 +48,8 @@ Databases containing one of these constraint types cannot be opened using Neo4j 
 
 Creating a constraint has the following implications on indexes:
 
-* Adding a node key or unique property constraint on a single property also adds a <<administration-indexes-create-a-single-property-index-for-nodes, single-property index>> on that property and therefore, such an index cannot be added separately.
-* Adding a node key or unique property constraint for a set of properties also adds a <<administration-indexes-create-a-composite-index-for-nodes, composite index>> on those properties and therefore,  such an index cannot be added separately.
+* Adding a node key or unique property constraint on a single property also adds an index on that property and therefore, an index of the same index type, label, and property combination cannot be added separately.
+* Adding a node key or unique property constraint for a set of properties also adds an index on those properties and therefore, an index of the same index type, label, and properties combination cannot be added separately.
 * Cypher will use these indexes for lookups just like other indexes.
   Refer to <<administration-indexes-search-performance>> for more details on indexes.
 * If a node key or unique property constraint is dropped and the backing index is still required, the index need to be created explicitly.

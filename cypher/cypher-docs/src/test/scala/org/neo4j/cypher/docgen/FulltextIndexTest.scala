@@ -71,7 +71,7 @@ class FulltextIndexTest extends DocumentingTest {
         #In contrast to <<administration-indexes-search-performance, b-tree indexes>>, a full-text index can be:""".stripMargin('#'))
     p("""* applied to more than one label.
         #* applied to more than one relationship type.
-        #* applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-index-for-nodes, _composite index_>>) but with an important difference:
+        #* applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-b-tree-index-for-nodes, _composite index_>>) but with an important difference:
         #While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.""".stripMargin('#'))
     p("For information on how to configure full-text indexes, refer to <<operations-manual#index-configuration-fulltext, Operations Manual -> Indexes to support full-text search>>.")
 

@@ -21,6 +21,20 @@ It may still throw an error if conflicting data, indexes, or constraints exist.
 Examples of this are nodes with missing properties, indexes with the same name, or constraints with same schema but a different constraint type.
 
 For constraints that are backed by an index, the index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
+Valid values for the index provider are `native-btree-1.0` (deprecated), `lucene+native-3.0` (deprecated), and `range-1.0` (future index), default is `native-btree-1.0`.
+The index type of the backing index is set depending on the provider, the `range-1.0` generates a <<indexes-future-indexes, future range index>> while the other providers generates a b-tree index.
+The range index has no configuration settings. The valid b-tree configuration settings are
+
+* `spatial.cartesian.min`
+* `spatial.cartesian.max`
+* `spatial.cartesian-3d.min`
+* `spatial.cartesian-3d.max`
+* `spatial.wgs-84.min`
+* `spatial.wgs-84.max`
+* `spatial.wgs-84-3d.min`
+* `spatial.wgs-84-3d.max`
+
+Non-specified settings have their respective default values.
 
 Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>.
 

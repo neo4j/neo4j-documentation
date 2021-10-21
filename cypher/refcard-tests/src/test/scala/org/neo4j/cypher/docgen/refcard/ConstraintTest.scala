@@ -199,7 +199,7 @@ CREATE CONSTRAINT node_key_with_config FOR (p:Person)
       OPTIONS {indexConfig: {`${SPATIAL_WGS84_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_WGS84_MAX.getSettingName}`: [100.0, 100.0]}}
 ###
 
-(★) Create a node key constraint with the name `node_key_with_config` on the label `Person`, properties `name` and `age`, and given `spatial.wgs-84` settings for the accompanying index.
+(★) Create a node key constraint with the name `node_key_with_config` on the label `Person`, properties `name` and `age`, and given `spatial.wgs-84` settings for the accompanying b-tree index.
 The other index settings will have their default values.
 
 """).concat("""
