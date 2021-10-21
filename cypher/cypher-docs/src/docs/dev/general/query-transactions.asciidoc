@@ -6,7 +6,8 @@
 This section describes how Cypher queries work with database transactions.
 --
 
-All Cypher queries run within transactions. Modifications done by updating queries are held in memory by the transaction until it is committed, at which point the changes are persisted to disk and become visible to other transactions.
+All Cypher queries run within transactions.
+Modifications done by updating queries are held in memory by the transaction until it is committed, at which point the changes are persisted to disk and become visible to other transactions.
 If an error occurs - either during query evaluation, such as division by zero, or during commit, such as constraint violations - the transaction is automatically rolled back, and no changes are persisted in the graph.
 
 In short, updating queries will always either fully succeed, or not succeed at all.
