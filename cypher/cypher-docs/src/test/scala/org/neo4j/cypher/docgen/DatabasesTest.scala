@@ -36,7 +36,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       "CREATE DATABASE `movies`",
       "CREATE DATABASE `northwind-graph`"
     )
-    synopsis("This chapter explains how to use Cypher to manage Neo4j databases: creating, modifying, deleting, starting and stopping individual databases within a single server.")
+    synopsis("This chapter explains how to use Cypher to manage Neo4j databases: creating, modifying, deleting, starting, and stopping individual databases within a single server.")
     p(
       """Neo4j supports the management of multiple databases within the same DBMS.
         |The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
@@ -55,8 +55,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       note {
         p(
-          """Note that the results of this command are filtered according to the `ACCESS` privileges the user has.
-            |However, a user with `CREATE/DROP/ALTER DATABASE`, `SET DATABASE ACCESS`, or `DATABASE MANAGEMENT` privileges can see all databases regardless of their `ACCESS` privileges.
+          """Note that the results of this command are filtered according to the `ACCESS` privileges of the user.
+            |However, users with `CREATE/DROP/ALTER DATABASE`, `SET DATABASE ACCESS`, or `DATABASE MANAGEMENT` privileges can see all databases regardless of their `ACCESS` privileges.
             |If a user has not been granted `ACCESS` privilege to any databases, the command can still be executed but will only return the `system` database, which is always visible.
             |""".stripMargin)
           }
@@ -131,7 +131,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
         p("This command is optionally idempotent, with the default behavior to fail with an error if the database already exists. " +
-          "Appending `IF NOT EXISTS` to the command will ensure that no error is returned and nothing happens should the database already exist. " +
+          "Appending `IF NOT EXISTS` to the command ensures that no error is returned and nothing happens should the database already exist. " +
           "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created.")
         query("CREATE DATABASE customers IF NOT EXISTS", ResultAssertions(r => {
           assertStats(r, systemUpdates = 0)
@@ -183,7 +183,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
       p("This command is optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
-        "Appending `IF EXISTS` to the command will ensure that no error is returned and nothing happens should the database not exist.")
+        "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
       query("ALTER DATABASE nonExisting IF EXISTS SET ACCESS READ WRITE", ResultAssertions(r => {
         assertStats(r, systemUpdates = 0)
       })) {}
@@ -224,7 +224,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
       p("This command is optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
-        "Appending `IF EXISTS` to the command will ensure that no error is returned and nothing happens should the database not exist.")
+        "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
       query("DROP DATABASE customers IF EXISTS", ResultAssertions(r => {
         assertStats(r, systemUpdates = 0)
       })) {}
