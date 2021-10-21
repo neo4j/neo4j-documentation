@@ -210,6 +210,9 @@ Duplicates are retained.
 m|<<query-call-subquery, CALL +++{ ... }+++>>
 |Evaluates a subquery, typically used for post-union processing or aggregations.
 
+m|<<subquery-call-in-transactions, CALL +++{ ... }+++ IN TRANSACTIONS>>
+|Evaluates a subquery in separate transactions. Typically used when modifying or importing large amounts of data .
+
 |===
 
 [[header-multiple-graphs-clauses]]

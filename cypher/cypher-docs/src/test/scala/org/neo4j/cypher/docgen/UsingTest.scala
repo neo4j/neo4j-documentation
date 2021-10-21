@@ -220,7 +220,8 @@ class UsingTest extends DocumentingTest {
         }
       }
     }
-    section("`PERIODIC COMMIT` query hint", "query-using-periodic-commit-hint") {
+    section("[deprecated]#`PERIODIC COMMIT` query hint", "query-using-periodic-commit-hint") {
+      p("""The `PERIODIC COMMIT` query hint will be removed in the next major release. It is recommended to use <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>> instead.""")
       p("""Importing large amounts of data using <<query-load-csv, `LOAD CSV`>> with a single Cypher query may fail due to memory constraints.
           #This will manifest itself as an `OutOfMemoryError`.""".stripMargin('#'))
       p("""For this situation _only,_ Cypher provides the global `USING PERIODIC COMMIT` query hint for updating queries using `LOAD CSV`.
