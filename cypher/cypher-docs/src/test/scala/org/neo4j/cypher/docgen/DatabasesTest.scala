@@ -164,21 +164,21 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Altering databases", "administration-databases-alter-database", "enterprise-edition") {
-      p("Database access can be modified using the command `ALTER DATABASE`. " +
-        "Unless the configuration parameter `dbms.databases.default_to_read_only` is set to `true`, a database always has read-write access on creation. " +
-        "Database access can be changed to read-only using the `ALTER DATABASE` command with the sub clause `SET ACCESS READ ONLY`. " +
-        "Subsequently, the database access can be changed back to read-write using the sub clause `SET ACCESS READ WRITE`. " +
-        "Altering the database access is allowed at all times, whether a database is online or offline. ")
-      p("Database access can also be managed using the configuration parameters `dbms.databases.default_to_read_only`, `dbms.databases.read_only`, and " +
+      p("Databases can be modified using the command `ALTER DATABASE`. " +
+        "For example, a database always has read-write access mode on creation, unless the configuration parameter `dbms.databases.default_to_read_only` is set to `true`." +
+        "To change it to read-only, you can use the `ALTER DATABASE` command with the sub-clause `SET ACCESS READ ONLY`. " +
+        "Subsequently, the database access mode can be switched back to read-write using the sub-clause `SET ACCESS READ WRITE`. " +
+        "Altering the database access mode is allowed at all times, whether a database is online or offline. ")
+      p("Database access modes can also be managed using the configuration parameters `dbms.databases.default_to_read_only`, `dbms.databases.read_only`, and " +
         "`dbms.database.writable`. For details, see <<operations-manual#manage-databases-parameters, Configuration parameters>>. " +
-        "If the database access set by the `ALTER DATABASE` command is read-only while the database according to those settings is read-write (or vice versa), " +
+        "If the mode set by the `ALTER DATABASE` command is read-only while the database according to those settings is read-write (or vice versa), " +
         "the database will be read-only and prevent write queries.")
       query("ALTER DATABASE customers SET ACCESS READ ONLY", ResultAssertions((r) => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
       }
-      p("The database access can be seen in the `access` output column of the command `SHOW DATABASES`.")
+      p("The database access mode can be seen in the `access` output column of the command `SHOW DATABASES`.")
       query("SHOW DATABASES yield name, access", assertDatabasesShown) {
         resultTable()
       }

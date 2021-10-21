@@ -62,7 +62,7 @@ Revoke the granted privilege to alter databases from a role.
 GRANT SET DATABASE ACCESS ON DBMS TO my_role
 ###
 
-Granted privilege to set databases access to a role.
+Granted privilege to set database access mode to a role.
 
 ###assertion=update-one
 //
