@@ -262,9 +262,9 @@ m|<<query-listing-procedures, SHOW PROCEDURES>>
 [options="header"]
 |===
 |Clause |Description
-m|<<query-listing-transactions, SHOW TRANSACTIONS>>
+m|xref:clauses/transaction-clauses/index.adoc#query-listing-transactions[SHOW TRANSACTIONS]
 |Lists the available procedures.
-m|<<query-terminate-transactions, TERMINATE TRANSACTIONS>>
+m|xref:clauses/transaction-clauses/index.adoc#query-show-transactions[TERMINATE TRANSACTIONS]
 |Terminate transactions by their ids.
 
 |===
