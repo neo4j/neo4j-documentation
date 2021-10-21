@@ -16,21 +16,17 @@ For memory configuration in Neo4j, see the <<operations-manual#memory-configurat
 
 Transactions can be either _explicit_ or _implicit_.
 
-- _Explicit_ transactions,
-  * are opened by the user,
-  * can execute multiple Cypher queries in sequence,
-  * are committed, or rolled back, by the user
+- _Explicit_ transactions:
+  * Are opened by the user.
+  * Can execute multiple Cypher queries in sequence.
+  * Are committed, or rolled back, by the user.
 
-- _Implicit_ transactions, sometimes called auto-commit transactions or auto transactions,
-  * are opened automatically,
-  * can execute a single Cypher query,
-  * are committed automatically when the query finishes successfully
+- _Implicit_ transactions, sometimes called auto-commit transactions or `:auto` transactions:
+  * Are opened automatically.
+  * Can execute a single Cypher query.
+  * Are committed automatically when the query finishes successfully.
 
 Queries that start separate transactions themselves, such as queries using <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>> or <<query-using-periodic-commit-hint, `PERIODIC COMMIT`>> are only allowed in _implicit_ mode.
-
-
-
-
 
 For examples of the API's used to start and commit transactions, refer to the API specific documentation:
 
