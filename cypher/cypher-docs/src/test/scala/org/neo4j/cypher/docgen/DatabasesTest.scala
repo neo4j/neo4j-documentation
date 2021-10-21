@@ -164,7 +164,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Altering databases", "administration-databases-alter-database", "enterprise-edition") {
-      p("Databases can be modified using the command `ALTER DATABASE`. In this Neo4j version, the only thing that can be modified is the database access. " +
+      p("Database access can be modified using the command `ALTER DATABASE`. " +
         "Unless the configuration parameter `dbms.databases.default_to_read_only` is set to `true`, a database always has read-write access on creation. " +
         "Database access can be changed to read-only using the `ALTER DATABASE` command with the sub clause `SET ACCESS READ ONLY`. " +
         "Subsequently, the database access can be changed back to read-write using the sub clause `SET ACCESS READ WRITE`. " +
