@@ -84,7 +84,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|STRING
 
 |m|elapsedTime
-|a|This is the time that has elapsed since the transaction was started returned as a duration. label:default-output[]
+|a|This is the time that has elapsed since the transaction was started. label:default-output[]
 |m|DURATION
 
 |m|allocatedBytes
@@ -137,18 +137,15 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|LONG
 
 |m|cpuTime
-|a|CPU time that has been actively spent executing the query returned as a duration.
-|This field will be null unless the config parameter `dbms.track_query_cpu_time` is set to true.
+|a|CPU time that has been actively spent executing the transaction.
 |m|DURATION
 
 |m|waitTime
-|a|Accumulated transaction waiting time that includes waiting time of all already executed queries plus waiting time of the currently executed query as a duration.
-|This field will be null unless the config parameter `dbms.track_query_cpu_time` is set to true.
+|a|Wait time that has been spent waiting to acquire locks.
 |m|DURATION
 
 |m|idleTime
-|a|Idle time for this transaction returned as a duration.
-|This field will be null unless the config parameter `dbms.track_query_cpu_time` is set to true.
+|a|Idle time for this transaction.
 |m|DURATION
 
 |m|allocatedDirectBytes
