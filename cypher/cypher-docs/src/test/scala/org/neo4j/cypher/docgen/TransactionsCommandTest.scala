@@ -183,7 +183,7 @@ The format of `transaction-id` is `<databaseName>-transaction-<id>` and they sho
 ====
 When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
 ====
-A user with the <<access-control-database-administration-transaction,`SHOW TRANSACTION`>> privilege is able to view transactions that are currently executing within the instance in accordance with the privilege grants; other users may view all of their own currently-executing transactions.
+A user with the <<access-control-database-administration-transaction,`SHOW TRANSACTION`>> privilege is able to view transactions that are currently executing within the instance in accordance with the privilege grants; all users may view all of their own currently-executing transactions.
 """.stripMargin('#'))
       }
       section("Listing all transactions") {
@@ -267,7 +267,7 @@ TERMINATE TRANSACTIONS[S] transaction_id[, ...]
 
 The format of `transaction-id` is `<databaseName>-transaction-<id>` and they should be supplied as a comma-separated list of one or more quoted strings, a string parameter or a list parameter.
 
-A user with the <<access-control-database-administration-transaction,`TERMINATE TRANSACTION`>> privilege is able to terminate transactions in accordance with the privilege grants; other users may terminate their own currently-executing transactions.
+A user with the <<access-control-database-administration-transaction,`TERMINATE TRANSACTION`>> privilege is able to terminate transactions in accordance with the privilege grants; all users may terminate their own currently-executing transactions.
 
 """.stripMargin('#'))
       }
