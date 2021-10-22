@@ -41,101 +41,131 @@ class TransactionsCommandTest extends DocumentingTest {
       p(
         """
 .List transactions output
-[options="header", cols="4,6"]
+[options="header", cols="4,6,2"]
 ||===
 || Column
 || Description
+|| Type
 
 |m|database
 |a|This is the name of the database the transaction is executing against. label:default-output[]
+|m|STRING
 
 |m|transactionId
 |a|This is the ID of the transaction. label:default-output[]
+|m|STRING
 
 |m|currentQueryId
 |a|This is the ID of the current query executed by transaction. label:default-output[]
+|m|STRING
 
 |m|connectionId
 |a|The ID of the database connection attached to the transaction or blank for embedded connections. label:default-output[]
+|m|STRING
 
 |m|clientAddress
 |a|The client address of the connection issuing the transaction, or blank if this is not available. label:default-output[]
+|m|STRING
 
 |m|username
 |a|This is the username of the user who is executing the transaction. label:default-output[]
+|m|STRING
 
 |m|currentQuery
 |a|The query text of the query of the current query executed by the transaction. label:default-output[]
+|m|STRING
 
 |m|startTime
 |a|The time at which the transaction was started. label:default-output[]
+|m|STRING
 
 |m|status
 |a|The current status of this transaction (`Terminated`, `Blocked`, `Closing` or `Running`). label:default-output[]
+|m|STRING
 
 |m|elapsedTime
 |a|This is the time that has elapsed since the transaction was started returned as a duration. label:default-output[]
+|m|DURATION
 
 |m|allocatedBytes
 |a|The number of bytes allocated on the heap so far by this transaction. label:default-output[]
+|m|LONG
 
 |m|outerTransactionId
 |a|The transaction ID of any outer transaction.
+|m|STRING
 
 |m|metaData
 |a|This is any metadata associated with the transaction, or empty if there is none.
+|m|MAP
 
 |m|parameters
 |a|This is a map containing all the parameters used by the query currently executing in this transaction.
+|m|MAP
 
 |m|planner
 |a|The name of the Cypher planner used to plan the query currently executing in this transaction. For details, see <<cypher-planner, Cypher planner>>.
+|m|STRING
 
 |m|runtime
 |a|The name of the Cypher runtime used by the query currently executing in this transaction. For details, see <<cypher-runtime, Cypher runtime>>.
+|m|STRING
 
 |m|indexes
 |a|The indexes utilised by the query currently executing in this transaction.
+|m|LIST OF MAP
 
 |m|protocol
 |a|The protocol used by connection issuing the transaction.
 |This is not necessarily an internet protocol (like http et.c.) although it could be. It might also be "embedded" for example, if this connection represents an embedded session.
+|m|STRING
 
 |m|requestUri
 |a|The request URI used by the client connection issuing the transaction, or null if the URI is not available.
+|m|STRING
 
 |m|statusDetails
 |a|Provide additional status details from underlying transaction or blank if none is available.
+|m|STRING
 
 |m|resourceInformation
 |a|Information about what transaction is waiting for when it is blocked.
+|m|MAP
 
 |m|activeLockCount
 |a|Count of active locks held by the transaction.
+|m|LONG
 
 |m|cpuTime
 |a|CPU time that has been actively spent executing the query returned as a duration.
 |This field will be null unless the config parameter `dbms.track_query_cpu_time` is set to true.
+|m|DURATION
 
 |m|waitTime
 |a|Accumulated transaction waiting time that includes waiting time of all already executed queries plus waiting time of the currently executed query as a duration.
 |This field will be null unless the config parameter `dbms.track_query_cpu_time` is set to true.
+|m|DURATION
 
 |m|idleTime
 |a|Idle time for this transaction returned as a duration.
 |This field will be null unless the config parameter `dbms.track_query_cpu_time` is set to true.
+|m|DURATION
 
 |m|allocatedDirectBytes
 |a|Amount of off-heap (native) memory allocated by this transaction in bytes.
+|m|LONG
 
 |m|estimatedUsedHeapMemory
 |a|The estimated amount of used heap memory allocated by this transaction in bytes.
+|m|LONG
 
 |m|pageHits
 |a|The total number of page cache hits that this transaction performed.
+|m|LONG
 
 |m|pageFaults
 |a|The total number of page cache faults that this transaction performed.
+|m|LONG
 ||===""")
       section("Syntax") {
         p(
@@ -150,14 +180,13 @@ SHOW TRANSACTIONS[S] [transaction-id[,...]]
 [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 
-The format of `transaction-id` is `<databaseName>-transaction-<id>` and they should be supplied as one or more quoted strings, a string parameter or a list parameter.
+The format of `transaction-id` is `<databaseName>-transaction-<id>` and they should be supplied as a comma-separated list of one or more quoted strings, a string parameter or a list parameter.
 
 [NOTE]
 ====
 When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
 ====
-
-Required privilege <<access-control-database-administration-transaction,`SHOW TRANSACTION`>>.
+A user with the <<access-control-database-administration-transaction,`SHOW TRANSACTION`>> privilege is able to view transactions that are currently executing within the instance in accordance with the privilege grants; other users may view all of their own currently-executing transactions.
 """.stripMargin('#'))
       }
       section("Listing all transactions") {
@@ -191,7 +220,7 @@ Required privilege <<access-control-database-administration-transaction,`SHOW TR
         }
       }
       section("Listing specific transactions") {
-        p("""It is possible to specify which transactions to return in the list by ID.""")
+        p("""It is possible to specify which transactions to return in the list by transaction ID.""")
           query("""SHOW TRANSACTIONS "neo4j-transaction-3"""", NoAssertions) { }
           p(
             """
@@ -211,19 +240,23 @@ Required privilege <<access-control-database-administration-transaction,`SHOW TR
       p(
         """
 .Terminate transactions output
-[options="header", cols="4,6"]
+[options="header", cols="4,6,2"]
 ||===
 || Column
 || Description
+|| Type
 
 |m|transactionId
 |a|The id of the transaction.
+|m|STRING
 
 |m|username
 |a|The username of the user executing the transaction.
+|m|STRING
 
 |m|message
 |a|The result of the `TERMINATE TRANSACTION` command as applied to this transaction.
+|m|STRING
 ||===""")
       section("Syntax") {
         p(
@@ -235,27 +268,28 @@ Terminate transactions by ID on the current server::
 TERMINATE TRANSACTIONS[S] transaction_id[, ...]
 ----
 
-The format of `transaction-id` is `<databaseName>-transaction-<id>` and they should be supplied as one or more quoted strings, a string parameter or a list parameter.
+The format of `transaction-id` is `<databaseName>-transaction-<id>` and they should be supplied as a comma-separated list of one or more quoted strings, a string parameter or a list parameter.
 
-Required privilege <<access-control-database-administration-transaction,`TERMINATE TRANSACTION`>>.
+A user with the <<access-control-database-administration-transaction,`TERMINATE TRANSACTION`>> privilege is able to terminate transactions in accordance with the privilege grants; other users may terminate their own currently-executing transactions.
+
 """.stripMargin('#'))
       }
-    }
-    section("Terminate Transactions") {
-      p(
-        """To end running transactions without waiting for them to complete on their own, the `TERMINATE TRANSACTIONS` command can be used.""")
+      section("Terminate Transactions") {
+        p(
+          """To end running transactions without waiting for them to complete on their own, the `TERMINATE TRANSACTIONS` command can be used.""")
         query("""TERMINATE TRANSACTIONS "neo4j-transaction-1","neo4j-transaction-2"""", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("transactionId", "username", "message")
-        })) { }
-      p(
-""".Result
-|[role="queryresult",options="header,footer",cols="3*<m"]
-||===
-|| +transactionId+ | +username+ | +message+
-|| +"neo4j-transaction-1"+ | +"neo4j"+ | +"Transaction terminated."+
-|| +"neo4j-transaction-2"+ | +null+ | +"Transaction not found."+
-|3+d|Rows: 1
-||===""")
+        })) {}
+        p(
+          """.Result
+            |[role="queryresult",options="header,footer",cols="3*<m"]
+            ||===
+            || +transactionId+ | +username+ | +message+
+            || +"neo4j-transaction-1"+ | +"neo4j"+ | +"Transaction terminated."+
+            || +"neo4j-transaction-2"+ | +null+ | +"Transaction not found."+
+            |3+d|Rows: 1
+            ||===""")
+      }
     }
   }.build()
 }
