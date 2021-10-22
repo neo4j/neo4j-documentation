@@ -163,7 +163,7 @@ class SpatialFunctionsTest extends DocumentingTest {
       }
       query(
         """WITH point({longitude: 179, latitude: 55.66}) AS lowerLeft, point({longitude: -179, latitude: 55.70}) AS upperRight
-          |RETURN point.withinBBox(point({longitude: 180, latitude: 55.66}, lowerLeft, upperRight) AS result
+          |RETURN point.withinBBox(point({longitude: 180, latitude: 55.66}), lowerLeft, upperRight) AS result
           |""".stripMargin, ResultAssertions((r) => {
           r.toList.head("result").asInstanceOf[Boolean] shouldBe true
         })) {
