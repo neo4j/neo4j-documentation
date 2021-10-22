@@ -50,7 +50,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |a|This is the name of the database the transaction is executing against. label:default-output[]
 
 |m|transactionId
-|a|This is the ID of the transaction label. :default-output[]
+|a|This is the ID of the transaction. label:default-output[]
 
 |m|currentQueryId
 |a|This is the ID of the current query executed by transaction. label:default-output[]
