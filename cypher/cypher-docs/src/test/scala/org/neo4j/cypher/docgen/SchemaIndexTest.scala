@@ -1038,7 +1038,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   //noinspection SameParameterValue
   private def assertIndexesOnLabels(label: String, expectedIndexes: List[List[String]]) {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       val indexDefs = transaction.schema.getIndexes(Label.label(label)).asScala.toList
       val properties = indexDefs.map(_.getPropertyKeys.asScala.toList)
@@ -1049,7 +1049,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   private def assertIndexWithNameExists(name: String, expectedEntity: String, expectedProperties: List[String]) {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       val indexDef = transaction.schema.getIndexByName(name)
       val entity = if (indexDef.isNodeIndex) indexDef.getLabels.iterator().next().name() else indexDef.getRelationshipTypes.iterator().next().name()
@@ -1062,7 +1062,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   private def assertTokenLookupIndexExists(name: String, isNodeIndex: Boolean) {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       val indexDef = transaction.schema.getIndexByName(name)
       assert(indexDef.getIndexType.equals(IndexType.LOOKUP))
@@ -1073,7 +1073,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   private def assertIndexWithNameDoesNotExists(name: String) {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       assertThrows[IllegalArgumentException](transaction.schema.getIndexByName(name))
     } finally {

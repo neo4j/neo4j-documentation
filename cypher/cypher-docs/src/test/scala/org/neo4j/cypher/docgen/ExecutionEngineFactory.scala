@@ -40,11 +40,12 @@ import org.neo4j.monitoring.Monitors
 import org.neo4j.scheduler.JobScheduler
 
 object ExecutionEngineFactory {
-  def createDbAndCommunityEngine(): (DatabaseManagementService, GraphDatabaseService, ExecutionEngine) = {
+  def createDbAndCommunityEngine(): (DatabaseManagementService, GraphDatabaseCypherService, ExecutionEngine) = {
     val managementService: DatabaseManagementService = new DatabaseManagementServiceBuilder(new File("target/example-db")).build()
-    val graph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
+    val db: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
+    val graph: GraphDatabaseCypherService = new GraphDatabaseCypherService(db);
 
-    (managementService, graph, createExecutionEngineFromDb(graph))
+    (managementService, graph, createExecutionEngineFromDb(db))
   }
 
   def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {

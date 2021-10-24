@@ -69,6 +69,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   var folder: File = _
   var managementService: DatabaseManagementService = null
+  private var database: GraphDatabaseService = _
   var db: GraphDatabaseCypherService = null
   implicit var engine: ExecutionEngine = null
   var nodes: Map[String, Long] = null
@@ -80,8 +81,6 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   // these 2 methods are need by ExecutionEngineHelper to do its job
   override def graph = db
   override def eengine = engine
-
-  def graphOps: GraphDatabaseService = db.getGraphDatabaseService
 
   def title: String
   def linkId: String = null
@@ -263,15 +262,15 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       StandardCharsets.UTF_8)
     folder = new File("target/example-db" + System.nanoTime())
     managementService = newDatabaseManagementService(folder)
-    val graph = getGraph
-    db = new GraphDatabaseCypherService(graph)
+    database = getGraph
+    db = new GraphDatabaseCypherService(database)
 
     cleanGraph
 
       val g = new GraphImpl(graphDescription.toArray[String])
       val description = GraphDescription.create(g)
 
-      nodes = description.create(db.getGraphDatabaseService).asScala.map {
+      nodes = description.create(database).asScala.map {
         case (name, node) => name -> node.getId
       }.toMap
 
@@ -282,13 +281,13 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       })
 
     } )
-    engine = ExecutionEngineFactory.createExecutionEngineFromDb(graph)
+    engine = ExecutionEngineFactory.createExecutionEngineFromDb(database)
   }
 
   // override to start against SYSTEM_DATABASE_NAME or another database
   protected def getGraph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
 
-  protected def cleanGraph: Unit = GraphDatabaseServiceCleaner.cleanDatabaseContent(db.getGraphDatabaseService)
+  protected def cleanGraph: Unit = GraphDatabaseServiceCleaner.cleanDatabaseContent(database)
 
   protected def newDatabaseManagementService(directory: File): DatabaseManagementService =
     new EnterpriseDatabaseManagementServiceBuilder(directory)

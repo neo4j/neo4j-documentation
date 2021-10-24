@@ -465,6 +465,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
 
   var dbFolder: File = _
   var managementService: DatabaseManagementService = _
+  private var database: GraphDatabaseService = _
   var db: GraphDatabaseCypherService = _
   var engine: ExecutionEngine = _
   var nodeMap: Map[String, Long] = _
@@ -492,8 +493,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   // these 2 methods are need by ExecutionEngineHelper to do its job
   override def graph = db
   override def eengine = engine
-
-  def graphOps: GraphDatabaseService = db.getGraphDatabaseService
 
   def indexProps: List[String] = List()
 
@@ -583,7 +582,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     tearDown()
     dbFolder = new File("target/example-db" + System.nanoTime())
     managementService = newDatabaseManagementService(dbFolder)
-    val database: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
+    database = managementService.database(DEFAULT_DATABASE_NAME)
     db = new GraphDatabaseCypherService(database)
 
     engine = ExecutionEngineFactory.createCommunityEngineFromDb(database) // TODO: This should be Enterprise!
@@ -592,13 +591,13 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   }
 
   override def softReset() {
-    cleanDatabaseContent(db.getGraphDatabaseService)
+    cleanDatabaseContent(database)
 
     db.withTx(tx => tx.schema().awaitIndexesOnline(10, TimeUnit.SECONDS))
 
     val g = new GraphImpl(graphDescription.toArray[String])
     val description = GraphDescription.create(g)
-    nodeMap = description.create(db.getGraphDatabaseService).asScala.map {
+    nodeMap = description.create(database).asScala.map {
         case (name, node) => name -> node.getId
       }.toMap
     db.withTx( tx => {
