@@ -612,7 +612,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   def assertConstraintWithNameExists(name: String, expectedLabelOrType: String, expectedProperties: List[String], forRelationship: Boolean = false) {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       val constraintDef = transaction.schema.getConstraintByName(name)
       val properties = constraintDef.getPropertyKeys.asScala.toSet
@@ -630,7 +630,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   def assertConstraintWithNameDoesNotExists(name: String) {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       assertThrows[IllegalArgumentException](transaction.schema.getConstraintByName(name))
     } finally {
@@ -639,7 +639,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   private def hasNodeConstraint(labelName: String, propName: String): Boolean = {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       val constraints = transaction.schema().getConstraints(Label.label(labelName)).asScala
       constraints.exists(_.getPropertyKeys.asScala.exists(_ == propName))
@@ -649,7 +649,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   private def hasRelationshipConstraint(typeName: String, propName: String): Boolean = {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       val constraints = transaction.schema().getConstraints(RelationshipType.withName(typeName)).asScala
       constraints.exists(_.getPropertyKeys.asScala.exists(_ == propName))
@@ -659,7 +659,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   private def hasNodeKeyConstraint(labelName: String, propNames: Seq[String]): Boolean = {
-      val transaction = graphOps.beginTx()
+      val transaction = db.beginTx()
       try {
         val constraints = transaction.schema().getConstraints( Label.label(labelName) ).asScala
         constraints.nonEmpty && constraints.head.getPropertyKeys.asScala.toList == propNames.toList

@@ -25,7 +25,6 @@ import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, ResultSubscriber}
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.DatabaseManagementService
-import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.values.virtual.VirtualValues
 import org.scalatest._
@@ -41,16 +40,14 @@ class QueryResultContentBuilderTest extends Suite
   def graph: GraphDatabaseCypherService = _graph
   var _managementService: DatabaseManagementService = _
   var _graph: GraphDatabaseCypherService = _
-  var _db: GraphDatabaseService = _
   def eengine: ExecutionEngine = _eengine
   var _eengine: ExecutionEngine = _
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    val (managementService, db, engine) = ExecutionEngineFactory.createDbAndCommunityEngine()
+    val (managementService, graph, engine) = ExecutionEngineFactory.createDbAndCommunityEngine()
     _managementService = managementService
-    _db = db;
-    _graph = new GraphDatabaseCypherService(db)
+    _graph = graph
     _eengine = engine
   }
 
@@ -74,7 +71,7 @@ class QueryResultContentBuilderTest extends Suite
   }
 
   def runQuery(query: String, init: String = ""): Content = {
-    val transaction = _db.beginTx()
+    val transaction = _graph.beginTx()
     try {
       if (init != "") transaction.execute(init)
       val builder = new QueryResultContentBuilder(x => x.toString)
