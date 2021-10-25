@@ -19,12 +19,14 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
+import org.neo4j.configuration.GraphDatabaseSettings
 import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunction
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.cypher.internal.util.Eagerly
 import org.neo4j.exceptions.InternalException
+import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.Result
 import org.neo4j.internal.kernel.api.security.LoginContext
 import org.neo4j.kernel.api.KernelTransaction
@@ -46,7 +48,7 @@ case class ContentWithInit(init: RunnableInitialization, query: Option[DatabaseQ
 }
 
 object  RunnableInitialization {
-  type InitializationFunction = GraphDatabaseCypherService => Unit
+  type InitializationFunction = (GraphDatabaseService, GraphDatabaseCypherService) => Unit
 
   def empty = RunnableInitialization()
 
@@ -358,40 +360,41 @@ case class BackgroundQueries(
 
   override def asciiDoc(level: Int): String = content.asciiDoc(level)
 
-  val before: InitializationFunction = (graph: GraphDatabaseCypherService) => if (!graph.getGraphDatabaseService.databaseId().isSystemDatabase) {
-    import scala.concurrent.ExecutionContext.Implicits.global
+  val before: InitializationFunction = (graph: GraphDatabaseService, cypherService: GraphDatabaseCypherService) =>
+    if (!graph.databaseName().equals(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)) {
+      import scala.concurrent.ExecutionContext.Implicits.global
 
-    beforeQueryText.foreach(query =>
-      // Start each background transaction in a Future
-      Future {
-        val tx = graph.beginTransaction(KernelTransaction.Type.EXPLICIT, LoginContext.AUTH_DISABLED)
+      beforeQueryText.foreach(query =>
+        // Start each background transaction in a Future
+        Future {
+          val tx = cypherService.beginTransaction(KernelTransaction.Type.EXPLICIT, LoginContext.AUTH_DISABLED)
 
-        try {
-          var result: Result = null
           try {
-            result = tx.execute(query)
-            latch.startAndWaitForAllToStart()
+            var result: Result = null
+            try {
+              result = tx.execute(query)
+              latch.startAndWaitForAllToStart()
+            } finally {
+              latch.start()
+              latch.finishAndWaitForAllToFinish()
+            }
+            if (result != null) {
+              result.accept((_: Result.ResultRow) => true)
+              result.close()
+            }
+            tx.commit()
+          } catch {
+            case t: Throwable => t
           } finally {
-            latch.start()
-            latch.finishAndWaitForAllToFinish()
+            if (tx != null) tx.close()
           }
-          if (result != null) {
-            result.accept((_: Result.ResultRow) => true)
-            result.close()
-          }
-          tx.commit()
-        } catch {
-          case t: Throwable => t
-        } finally {
-          if (tx != null) tx.close()
-        }
-      })
+        })
 
-    // Start the main query
-    latch.startAndWaitForAllToStart()
-  }
+      // Start the main query
+      latch.startAndWaitForAllToStart()
+    }
 
-  val after: InitializationFunction = (graph: GraphDatabaseCypherService) => if (!graph.getGraphDatabaseService.databaseId().isSystemDatabase) {
+  val after: InitializationFunction = (graph, _) => if (!graph.databaseName().equals(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)) {
     latch.finishAndWaitForAllToFinish()
   }
 
