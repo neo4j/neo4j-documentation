@@ -19,17 +19,11 @@
  */
 package org.neo4j.cypher.docgen
 
-import java.io.File
-
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.junit.Test
-import org.neo4j.dbms.api.DatabaseManagementService
-import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
-
-  override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
 
   override val setupQueries = List(
     """CREATE (me:Person {name: 'me'})

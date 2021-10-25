@@ -21,28 +21,38 @@ package org.neo4j.cypher.docgen
 
 import java.io._
 import java.nio.charset.StandardCharsets
-
-import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
-import org.apache.commons.io.FileUtils
 import org.apache.maven.artifact.versioning.ComparableVersion
-import org.junit.{After, Before, Test}
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.cypher.GraphIcing
-import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, Prettifier}
+import org.neo4j.cypher.TestEnterpriseDatabaseManagementServiceBuilder
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
+import org.neo4j.cypher.docgen.tooling.Prettifier
 import org.neo4j.cypher.internal.ExecutionEngine
-import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, GraphImpl, ResultSubscriber}
-import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKernelResultValue}
+import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
+import org.neo4j.cypher.internal.javacompat.GraphImpl
+import org.neo4j.cypher.internal.javacompat.ResultSubscriber
+import org.neo4j.cypher.internal.runtime.RuntimeJavaValueConverter
+import org.neo4j.cypher.internal.runtime.isGraphKernelResultValue
 import org.neo4j.dbms.api.DatabaseManagementService
-import org.neo4j.doc.test.{GraphDatabaseServiceCleaner, GraphDescription}
-import org.neo4j.exceptions.{InternalException, Neo4jException}
+import org.neo4j.doc.test.GraphDatabaseServiceCleaner
+import org.neo4j.doc.test.GraphDescription
+import org.neo4j.exceptions.InternalException
+import org.neo4j.exceptions.Neo4jException
 import org.neo4j.graphdb._
+import org.neo4j.graphdb.config.Setting
+import org.neo4j.io.fs.EphemeralFileSystemAbstraction
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.util.ValueUtils
+import org.neo4j.test.rule.TestDirectory
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions
 
+import java.util
 import scala.collection.JavaConverters._
 
 /*
@@ -247,7 +257,6 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   def teardown() {
     if (managementService != null) {
       managementService.shutdown()
-      FileUtils.deleteQuietly(folder)
     }
     allQueriesWriter.close()
   }
@@ -257,8 +266,13 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     dir = createDir(section)
     allQueriesWriter = new OutputStreamWriter(new FileOutputStream(new File("target/all-queries.asciidoc"), true),
       StandardCharsets.UTF_8)
-    folder = new File("target/example-db" + System.nanoTime())
-    managementService = newDatabaseManagementService(folder)
+    val fs = new EphemeralFileSystemAbstraction()
+    val td = TestDirectory.testDirectory(this.getClass, fs)
+    folder = td.prepareDirectoryForTest("target/example-db" + System.nanoTime())
+    managementService = new TestEnterpriseDatabaseManagementServiceBuilder(folder)
+      .setFileSystem(fs)
+      .setConfig(databaseConfig())
+      .build()
     val graph = getGraph
     db = new GraphDatabaseCypherService(graph)
 
@@ -285,7 +299,8 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   // override to start against SYSTEM_DATABASE_NAME or another database
   protected def getGraph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
 
-  protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory).build()
+  protected def cleanGraph: Unit = GraphDatabaseServiceCleaner.cleanDatabaseContent(db.getGraphDatabaseService)
 
+  protected def databaseConfig(): util.Map[Setting[_], Object] = Map[Setting[_], Object]().asJava
 }
 
