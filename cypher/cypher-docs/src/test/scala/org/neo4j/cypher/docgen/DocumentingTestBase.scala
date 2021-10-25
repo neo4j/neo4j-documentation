@@ -23,9 +23,7 @@ import java.io.{ByteArrayOutputStream, File, PrintWriter, StringWriter}
 import java.nio.charset.StandardCharsets
 import java.util
 import java.util.concurrent.TimeUnit
-
 import com.neo4j.configuration.OnlineBackupSettings
-import org.apache.commons.io.FileUtils
 import org.junit.{After, Before}
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.configuration.helpers.SocketAddress
@@ -38,6 +36,9 @@ import org.neo4j.cypher.internal.runtime.{RuntimeJavaValueConverter, isGraphKern
 import org.neo4j.cypher.internal.util.Eagerly
 import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.{DatabaseManagementService, DatabaseManagementServiceBuilder}
+import org.neo4j.cypher.ExecutionEngineHelper
+import org.neo4j.cypher.GraphIcing
+import org.neo4j.cypher.TestEnterpriseDatabaseManagementServiceBuilder
 import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.doc.test.GraphDescription
 import org.neo4j.doc.tools.AsciiDocGenerator
@@ -45,12 +46,14 @@ import org.neo4j.exceptions.Neo4jException
 import org.neo4j.graphdb._
 import org.neo4j.graphdb.config.Setting
 import org.neo4j.internal.kernel.api.security.SecurityContext
+import org.neo4j.io.fs.EphemeralFileSystemAbstraction
 import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.sampling.IndexSamplingMode
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.{Neo4jTransactionalContextFactory, QuerySubscriber, QuerySubscriberAdapter}
 import org.neo4j.kernel.impl.util.ValueUtils
+import org.neo4j.test.rule.TestDirectory
 import org.neo4j.values.virtual.VirtualValues
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.neo4j.visualization.graphviz.{AsciiDocStyle, GraphStyle, GraphvizWriter}
@@ -542,7 +545,6 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   def tearDown() {
     if (managementService != null) {
       managementService.shutdown()
-      FileUtils.forceDelete(dbFolder)
     }
   }
 
@@ -557,15 +559,13 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
       OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
     ).asJava
 
-  protected def newDatabaseManagementService(directory: File): DatabaseManagementService = {
-    new DatabaseManagementServiceBuilder(directory).setConfig(databaseConfig()).build()
-  }
-
   override def hardReset() {
     tearDown()
-    dbFolder = new File("target/example-db" + System.nanoTime())
-    managementService = newDatabaseManagementService(dbFolder)
-    val database: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
+    val fs = new EphemeralFileSystemAbstraction()
+    val td = TestDirectory.testDirectory(this.getClass, fs)
+    dbFolder = td.prepareDirectoryForTest("target/example-db" + System.nanoTime())
+    managementService = new TestEnterpriseDatabaseManagementServiceBuilder(dbFolder).setFileSystem(fs).setConfig(databaseConfig).build()
+    val database = managementService.database( DEFAULT_DATABASE_NAME )
     db = new GraphDatabaseCypherService(database)
 
     engine = ExecutionEngineFactory.createCommunityEngineFromDb(database) // TODO: This should be Enterprise!
