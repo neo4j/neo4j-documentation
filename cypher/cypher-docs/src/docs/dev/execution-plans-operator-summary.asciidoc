@@ -518,6 +518,12 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 |
 |
 
+| <<query-plan-listing-transactions,ShowTransactions>>
+| Lists the available transactions on the current server.
+| label:yes[]
+|
+|
+
 | <<query-plan-skip,Skip>>
 | Skips 'n' rows from the incoming rows.
 |
@@ -529,6 +535,12 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 |
 |
 | label:eager[]
+
+| <<query-plan-terminating-transactions,TerminateTransactions>>
+| Terminate transactions with the given IDs.
+| label:yes[]
+|
+|
 
 | <<query-plan-top,Top>>
 | Returns the first 'n' rows sorted by a provided key.

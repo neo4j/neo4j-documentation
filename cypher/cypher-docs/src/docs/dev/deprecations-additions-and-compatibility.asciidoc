@@ -233,6 +233,7 @@ OPTIONS "{" range-option: range-value[, ...] "}"
 Constraints used for string properties will also require an additional text index to cover the string queries properly.
 Constraints used for point properties will also require an additional point index to cover the spatial queries properly, see <<indexes-future-indexes, point indexes>>.
 
+
 a|
 label:functionality[]
 label:deprecated[]
@@ -246,6 +247,35 @@ label:deprecated[]
  ----
  point.distance(n.prop, point({x:0, y:0})
  ----
+
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SHOW TRANSACTION[S] [transaction-id[,...]]
+[YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+[WHERE expression]
+[RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+----
+a|
+List transactions on the current server.
+
+The `transaction-id` is a comma-separated list of one or more quoted strings, a string parameter, or a list parameter.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+TERMINATE TRANSACTION[S] transaction-id[,...]
+----
+a|
+Terminate transactions on the current server.
+
+The `transaction-id` is a comma-separated list of one or more quoted strings, a string parameter, or a list parameter.
+
 
 |===
 

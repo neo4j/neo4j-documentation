@@ -26,15 +26,15 @@ class TransactionsCommandTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/listing"
 
   override def doc: Document = new DocBuilder {
-    doc("Transaction Commands", "query-transaction-clauses")
+    doc("Transaction commands", "query-transaction-clauses")
     synopsis("This section explains the `SHOW TRANSACTIONS` and `TERMINATION TRANSACTIONS` commands.")
     section("SHOW TRANSACTIONS", id="query-listing-transactions") {
-      p("The `SHOW TRANSACTIONS` command is used to display running transactions.")
+      p("The `SHOW TRANSACTIONS` command is used to display running transactions within the instance.")
       p(
         """
           #[NOTE]
           #====
-          #The command `SHOW TRANSACTIONS` only outputs the default output; for a full output use the optional `YIELD` command.
+          #The command `SHOW TRANSACTIONS` returns only the default output. For a full output use the optional `YIELD` command.
           #Full output: `SHOW TRANSACTIONS YIELD *`.
           #====""".stripMargin('#'))
       p("This command will produce a table with the following columns:")
@@ -48,31 +48,31 @@ class TransactionsCommandTest extends DocumentingTest {
 || Type
 
 |m|database
-|a|This is the name of the database the transaction is executing against. label:default-output[]
+|a|The name of the database the transaction is executing against. label:default-output[]
 |m|STRING
 
 |m|transactionId
-|a|This is the ID of the transaction. label:default-output[]
+|a|The transaction ID. label:default-output[]
 |m|STRING
 
 |m|currentQueryId
-|a|This is the ID of the current query executed by transaction. label:default-output[]
+|a|The ID of the query currently executing in this transaction. label:default-output[]
 |m|STRING
 
 |m|connectionId
-|a|The ID of the database connection attached to the transaction or blank for embedded connections. label:default-output[]
+|a|The ID of the database connection attached to the transaction or an empty string for embedded connections. label:default-output[]
 |m|STRING
 
 |m|clientAddress
-|a|The client address of the connection issuing the transaction, or blank if this is not available. label:default-output[]
+|a|The client address of the connection issuing the transaction or an empty string if unavailable. label:default-output[]
 |m|STRING
 
 |m|username
-|a|This is the username of the user who is executing the transaction. label:default-output[]
+|a|The username of the user executing the transaction. label:default-output[]
 |m|STRING
 
 |m|currentQuery
-|a|The query text of the query of the current query executed by the transaction. label:default-output[]
+|a|The query text of the query currently executing in this transaction. label:default-output[]
 |m|STRING
 
 |m|startTime
@@ -80,27 +80,27 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|STRING
 
 |m|status
-|a|The current status of this transaction (`Terminated`, `Blocked`, `Closing` or `Running`). label:default-output[]
+|a|The current status of the transaction (`Terminated`, `Blocked`, `Closing` or `Running`). label:default-output[]
 |m|STRING
 
 |m|elapsedTime
-|a|This is the time that has elapsed since the transaction was started. label:default-output[]
+|a|The time that has elapsed since the transaction was started. label:default-output[]
 |m|DURATION
 
 |m|allocatedBytes
-|a|The number of bytes allocated on the heap so far by this transaction. label:default-output[]
+|a|The number of bytes allocated on the heap so far by the transaction. label:default-output[]
 |m|LONG
 
 |m|outerTransactionId
-|a|The transaction ID of any outer transaction.
+|a|The ID of an outer transaction.
 |m|STRING
 
 |m|metaData
-|a|This is any metadata associated with the transaction, or empty if there is none.
+|a|Any metadata associated with the transaction or empty if there is none.
 |m|MAP
 
 |m|parameters
-|a|This is a map containing all the parameters used by the query currently executing in this transaction.
+|a|A map containing all the parameters used by the query currently executing in this transaction.
 |m|MAP
 
 |m|planner
@@ -116,8 +116,8 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|LIST OF MAP
 
 |m|protocol
-|a|The protocol used by connection issuing the transaction.
-|This is not necessarily an internet protocol (like http et.c.) although it could be. It might also be "embedded" for example, if this connection represents an embedded session.
+|a|The protocol used by the connection issuing the transaction.
+|This is not necessarily an internet protocol, such as _http_, et.c., although it could be. It might also be "embedded", for example, if this connection represents an embedded session.
 |m|STRING
 
 |m|requestUri
@@ -125,11 +125,11 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|STRING
 
 |m|statusDetails
-|a|Provide additional status details from underlying transaction or blank if none is available.
+|a|Provide additional status details from the underlying transaction or an empty string if none is available.
 |m|STRING
 
 |m|resourceInformation
-|a|Information about what transaction is waiting for when it is blocked.
+|a|Information about any blocked transactions.
 |m|MAP
 
 |m|activeLockCount
@@ -149,46 +149,47 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|DURATION
 
 |m|allocatedDirectBytes
-|a|Amount of off-heap (native) memory allocated by this transaction in bytes.
+|a|Amount of off-heap (native) memory allocated by the transaction in bytes.
 |m|LONG
 
 |m|estimatedUsedHeapMemory
-|a|The estimated amount of used heap memory allocated by this transaction in bytes.
+|a|The estimated amount of used heap memory allocated by the transaction in bytes.
 |m|LONG
 
 |m|pageHits
-|a|The total number of page cache hits that this transaction performed.
+|a|The total number of page cache hits that the transaction performed.
 |m|LONG
 
 |m|pageFaults
-|a|The total number of page cache faults that this transaction performed.
+|a|The total number of page cache faults that the transaction performed.
 |m|LONG
 ||===""")
       section("Syntax") {
         p(
           """
-List all transactions on the current server::
+List transactions on the current server::
 
 [source, cypher, role=noplay]
 ----
-SHOW TRANSACTIONS[S] [transaction-id[,...]]
+SHOW TRANSACTION[S] [transaction-id[,...]]
 [YIELD { * | field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 [WHERE expression]
 [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 
-The format of `transaction-id` is `<databaseName>-transaction-<id>` and they should be supplied as a comma-separated list of one or more quoted strings, a string parameter or a list parameter.
+The format of `transaction-id` is `<databaseName>-transaction-<id>`. Transaction IDs must be supplied as a comma-separated list of one or more quoted strings, a string parameter, or a list parameter.
 
 [NOTE]
 ====
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 ====
-A user with the <<access-control-database-administration-transaction,`SHOW TRANSACTION`>> privilege is able to view transactions that are currently executing within the instance in accordance with the privilege grants; all users may view all of their own currently-executing transactions.
+A user with the <<access-control-database-administration-transaction, `SHOW TRANSACTION`>> privilege can view the currently executing transactions in accordance with the privilege grants.
+All users may view all of their own currently executing transactions.
 """.stripMargin('#'))
       }
       section("Listing all transactions") {
         p(
-          """To list all available transactions with the default output columns, the `SHOW TRANSACTIONS` command can be used.
+          """To list all available transactions with the default output columns, use the `SHOW TRANSACTIONS` command.
             #If all columns are required, use `SHOW TRANSACTIONS YIELD *`.""".stripMargin('#'))
         backgroundQueries(List("MATCH (n) RETURN n")) {
           query("SHOW TRANSACTIONS", ResultAssertions(p => {
@@ -232,7 +233,7 @@ A user with the <<access-control-database-administration-transaction,`SHOW TRANS
       }
     }
     section("TERMINATE TRANSACTIONS", id="query-terminate-transactions") {
-      p("The `TERMINATE TRANSACTIONS` command is used to terminate running transactions by their ids.")
+      p("The `TERMINATE TRANSACTIONS` command is used to terminate running transactions by their IDs.")
       p("This command will produce a table with the following columns:")
       p(
         """
@@ -244,7 +245,7 @@ A user with the <<access-control-database-administration-transaction,`SHOW TRANS
 || Type
 
 |m|transactionId
-|a|The id of the transaction.
+|a|The transaction ID.
 |m|STRING
 
 |m|username
@@ -262,18 +263,18 @@ Terminate transactions by ID on the current server::
 
 [source, cypher, role=noplay]
 ----
-TERMINATE TRANSACTIONS[S] transaction_id[, ...]
+TERMINATE TRANSACTION[S] transaction_id[, ...]
 ----
 
-The format of `transaction-id` is `<databaseName>-transaction-<id>` and they should be supplied as a comma-separated list of one or more quoted strings, a string parameter or a list parameter.
+The format of `transaction-id` is `<databaseName>-transaction-<id>`. Transaction IDs must be supplied as a comma-separated list of one or more quoted strings, a string parameter, or a list parameter.
 
-A user with the <<access-control-database-administration-transaction,`TERMINATE TRANSACTION`>> privilege is able to terminate transactions in accordance with the privilege grants; all users may terminate their own currently-executing transactions.
-
+A user with the <<access-control-database-administration-transaction, `TERMINATE TRANSACTION`>> privilege can terminate transactions in accordance with the privilege grants.
+All users may terminate their own currently executing transactions.
 """.stripMargin('#'))
       }
       section("Terminate Transactions") {
         p(
-          """To end running transactions without waiting for them to complete on their own, the `TERMINATE TRANSACTIONS` command can be used.""")
+          """To end running transactions without waiting for them to complete on their own, use the `TERMINATE TRANSACTIONS` command.""")
         query("""TERMINATE TRANSACTIONS "neo4j-transaction-1","neo4j-transaction-2"""", ResultAssertions(p => {
           p.columns should contain theSameElementsAs Array("transactionId", "username", "message")
         })) {}

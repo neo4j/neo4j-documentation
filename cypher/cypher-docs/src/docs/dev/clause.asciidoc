@@ -249,10 +249,10 @@ m|--- <<query-using-periodic-commit-hint, USING PERIODIC COMMIT>>
 |Clause |Description
 
 m|<<query-listing-functions, SHOW FUNCTIONS>>
-|Lists the available functions.
+|List the available functions.
 
 m|<<query-listing-procedures, SHOW PROCEDURES>>
-|Lists the available procedures.
+|List the available procedures.
 
 |===
 
@@ -263,9 +263,9 @@ m|<<query-listing-procedures, SHOW PROCEDURES>>
 |===
 |Clause |Description
 m|xref:clauses/transaction-clauses/index.adoc#query-listing-transactions[SHOW TRANSACTIONS]
-|Lists the available procedures.
+|List the available transactions.
 m|xref:clauses/transaction-clauses/index.adoc#query-terminate-transactions[TERMINATE TRANSACTIONS]
-|Terminate transactions by their ids.
+|Terminate transactions by their IDs.
 
 |===
 

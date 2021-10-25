@@ -180,7 +180,7 @@ SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP\|TEXT] INDEX[ES]
     [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 | List indexes in the database, either all or filtered on index type.
-| When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+| When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 
 | [source, cypher, role=noplay]
 ----
@@ -516,7 +516,7 @@ SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP\|POINT\|RANGE\|TEXT] INDEX[ES]
     [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 | Extending the existing <<administration-indexes-list-indexes, list index command>> with filters for the new types.
-| When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+| When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 |===
 
 === Create index examples

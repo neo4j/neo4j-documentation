@@ -32,7 +32,7 @@ class ShowFunctionsTest extends DocumentingTest {
     p("""
     #[NOTE]
     #====
-    #The command `SHOW FUNCTIONS` only outputs the default output; for a full output use the optional `YIELD` command.
+    #The command `SHOW FUNCTIONS` returns only the default output. For a full output use the optional `YIELD` command.
     #Full output: `SHOW FUNCTIONS YIELD *`.
     #====""".stripMargin('#'))
     p("This command will produce a table with the following columns:")
@@ -91,7 +91,7 @@ SHOW [ALL|BUILT IN|USER DEFINED] FUNCTION[S]
 
 [NOTE]
 ====
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 ====
 
 List functions that the current user can execute::
@@ -106,7 +106,7 @@ SHOW [ALL|BUILT IN|USER DEFINED] FUNCTION[S] EXECUTABLE [BY CURRENT USER]
 
 [NOTE]
 ====
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 ====
 
 List functions that the specified user can execute::
@@ -124,7 +124,7 @@ This command cannot be used for LDAP users.
 
 [NOTE]
 ====
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 ====""".stripMargin('#'))
     }
     section("Listing all functions") {

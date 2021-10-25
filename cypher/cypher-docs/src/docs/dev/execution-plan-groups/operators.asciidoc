@@ -327,3 +327,7 @@ include::../ql/query-plan/listing-indexes.asciidoc[]
 include::../ql/query-plan/listing-functions.asciidoc[]
 
 include::../ql/query-plan/listing-procedures.asciidoc[]
+
+include::../ql/query-plan/listing-transactions.asciidoc[]
+
+include::../ql/query-plan/terminating-transactions.asciidoc[]
