@@ -141,7 +141,7 @@ Relationship of type `KNOWS` from `n` to `m`.
 ###assertion=related
 MATCH
 
-(n)-[:KNOWS|:LOVES]->(m)
+(n)-[:KNOWS|LOVES]->(m)
 
 WHERE id(n) = %A% AND id(m) = %B%
 
