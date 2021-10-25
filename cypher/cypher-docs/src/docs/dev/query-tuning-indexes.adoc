@@ -75,7 +75,8 @@ In summary, `TEXT` indexes support the following predicates:
 When multiple indexes are available and able to solve a predicate, there is an order defined that decides which index to use.
 It is defined as such:
 
-* `TEXT` indexes are preferred over `BTREE` indexes.
+* `TEXT` indexes are preferred over `BTREE` indexes for `CONTAINS` and `ENDS WITH`.
+* `BTREE` indexes are preferred over `TEXT` indexes in all other cases.
 
 include::ql/administration/indexes/node-btree-index-example.asciidoc[leveloffset=2]
 
