@@ -188,7 +188,7 @@ class PatternTest extends DocumentingTest {
     section("Variable-length pattern matching", "cypher-pattern-varlength") {
       caution {
         p("""Variable length pattern matching in versions 2.1.x and earlier does not enforce relationship uniqueness for patterns described within a single `MATCH` clause.
-            |This means that a query such as the following: `MATCH (a)-[r]\->(b), p = (a)-[*]\->(c) RETURN *, relationships(p) AS rs` may include `r` as part of the `rs` set.
+            |This means that a query such as the following: `MATCH (a)-[r]\->(b), p = (a)-[\*]\->(c) RETURN *, relationships(p) AS rs` may include `r` as part of the `rs` set.
             |This behavior has changed in versions 2.2.0 and later, in such a way that `r` will be excluded from the result set, as this better adheres to the rules of relationship uniqueness as documented here <<cypher-result-uniqueness>>.
             |If you have a query pattern that needs to retrace relationships rather than ignoring them as the relationship uniqueness rules normally dictate, you can accomplish this using multiple match clauses, as follows: `MATCH (a)-[r]\->(b) MATCH p = (a)-[*]\->(c) RETURN *, relationships(p)`.
             |This will work in all versions of Neo4j that support the `MATCH` clause, namely 2.0.0 and later.""")
