@@ -30,6 +30,7 @@ import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.RelationshipType
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
+import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
 import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
 import scala.collection.JavaConverters._
@@ -42,6 +43,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
   private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
   private val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
+  private val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
   private val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
   private val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
   private val cartesian3dMin = SPATIAL_CARTESIAN_3D_MIN.getSettingName
@@ -80,10 +82,22 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a unique constraint with specified index provider and configuration",
       text =
         s"""To create a unique constraint with a specific index provider and configuration for the backing index, the `OPTIONS` clause is used.
-          |Valid values for the index provider is `$nativeProvider` and `$nativeLuceneProvider`, default if nothing is specified is `$nativeProvider`.
-          |Valid configuration settings are `$cartesianMin`, `$cartesianMax`, `$cartesian3dMin`, `$cartesian3dMax`,
-          |`$wgsMin`, `$wgsMax`, `$wgs3dMin`, and `$wgs3dMax`.
-          |Non-specified settings get their respective default values.""".stripMargin,
+          |Valid values for the index provider are `$nativeProvider` (deprecated), `$nativeLuceneProvider` (deprecated), and `$rangeProvider` (future index), default is `$nativeProvider`.
+          |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a <<indexes-future-indexes, future range index>> while the other providers generates a b-tree index.
+          |The range index have no configuration settings. The valid b-tree configuration settings are
+          |
+          |* `$cartesianMin`
+          |* `$cartesianMax`
+          |* `$cartesian3dMin`
+          |* `$cartesian3dMax`
+          |* `$wgsMin`
+          |* `$wgsMax`
+          |* `$wgs3dMin`
+          |* `$wgs3dMax`
+          |
+          |Non-specified settings have their respective default values.
+          |
+          |In 4.4, b-tree index-backed constraints are still the correct alternative to use.""".stripMargin,
       queryText =
         s"""CREATE CONSTRAINT constraint_with_options FOR (n:Label) REQUIRE (n.prop1, n.prop2) IS UNIQUE
           |OPTIONS {
@@ -135,7 +149,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Drop a unique constraint",
-      text = "By using `DROP CONSTRAINT`, you remove a constraint from the database.",
+      text = "By using `DROP CONSTRAINT`, a b-tree index-backed unique constraint is removed from the database.",
       queryText = "DROP CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT FOR (book:Book) REQUIRE book.isbn IS UNIQUE")),
       assertions = _ => assertNodeConstraintDoesNotExist("Book", "isbn")
@@ -236,7 +250,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Drop a node property existence constraint",
-      text = "By using `DROP CONSTRAINT`, you remove a constraint from the database.",
+      text = "By using `DROP CONSTRAINT`, a node property existence constraint is removed from the database.",
       queryText = "DROP CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT FOR (book:Book) REQUIRE book.isbn IS NOT NULL")),
       assertions = _ => assertNodeConstraintDoesNotExist("Book", "isbn")
@@ -338,7 +352,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Drop a relationship property existence constraint",
-      text = "To remove a constraint from the database, use `DROP CONSTRAINT`.",
+      text = "To remove a relationship property existence constraint from the database, use `DROP CONSTRAINT`.",
       queryText = "DROP CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT FOR ()-[like:LIKED]-() REQUIRE like.day IS NOT NULL")),
       assertions = _ => assertRelationshipConstraintDoesNotExist("LIKED", "day")
@@ -436,10 +450,12 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a node key constraint with specified index provider",
       text =
         s"""To create a node key constraint with a specific index provider for the backing index, the `OPTIONS` clause is used.
-          |Valid values for the index provider is `$nativeProvider` and `$nativeLuceneProvider`, default if nothing is specified is `$nativeProvider`.""".stripMargin,
+           |Valid values for the index provider are `$nativeProvider` (deprecated), `$nativeLuceneProvider` (deprecated), and `$rangeProvider` (future index), default is `$nativeProvider`.
+           |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a <<indexes-future-indexes, future range index>> while the other providers generates a b-tree index.
+           |In 4.4, b-tree index-backed constraints are still the correct alternative to use.""".stripMargin,
       queryText =
         s"""CREATE CONSTRAINT constraint_with_provider FOR (n:Label) REQUIRE (n.prop1) IS NODE KEY OPTIONS {indexProvider: '$nativeProvider'}""".stripMargin,
-      optionalResultExplanation = "Can be combined with specifying index configuration.",
+      optionalResultExplanation = "B-tree providers can be combined with specifying index configuration.",
       assertions = _ => assertConstraintWithNameExists("constraint_with_provider", "Label", List("prop1"))
     )
   }
@@ -449,13 +465,23 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a node key constraint with specified index configuration",
       text =
         s"""To create a node key constraint with a specific index configuration for the backing index, the `OPTIONS` clause is used.
-          |Valid configuration settings are `$cartesianMin`, `$cartesianMax`, `$cartesian3dMin`, `$cartesian3dMax`,
-          |`$wgsMin`, `$wgsMax`, `$wgs3dMin`, and `$wgs3dMax`.
-          |Non-specified settings get their respective default values.""".stripMargin,
+           |The index type of the backing index is set depending on the provider and <<indexes-future-indexes, future range indexes>> have no configuration settings.
+           |The valid b-tree configuration settings are
+           |
+           |* `$cartesianMin`
+           |* `$cartesianMax`
+           |* `$cartesian3dMin`
+           |* `$cartesian3dMax`
+           |* `$wgsMin`
+           |* `$wgsMax`
+           |* `$wgs3dMin`
+           |* `$wgs3dMax`
+           |
+           |Non-specified settings have their respective default values.""".stripMargin,
       queryText =
         s"""CREATE CONSTRAINT constraint_with_config FOR (n:Label) REQUIRE (n.prop2) IS NODE KEY
           |OPTIONS {indexConfig: {`$cartesianMin`: [-100.0, -100.0], `$cartesianMax`: [100.0, 100.0]}}""".stripMargin,
-      optionalResultExplanation = "Can be combined with specifying index provider.",
+      optionalResultExplanation = "Can be combined with specifying a b-tree index provider.",
       assertions = _ => assertConstraintWithNameExists("constraint_with_config", "Label", List("prop2"))
     )
   }
@@ -465,7 +491,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
 
     prepareAndTestQuery(
       title = "Drop a node key constraint",
-      text = "Use `DROP CONSTRAINT` to remove a node key constraint from the database.",
+      text = "Use `DROP CONSTRAINT` to remove a b-tree index-backed node key constraint from the database.",
       queryText = "DROP CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
       prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT FOR (n:Person) REQUIRE (n.firstname, n.surname) IS NODE KEY")),
       assertions = _ => assertNodeKeyConstraintDoesNotExist("Person", "firstname", "surname")
@@ -583,7 +609,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   def assertConstraintWithNameExists(name: String, expectedLabelOrType: String, expectedProperties: List[String], forRelationship: Boolean = false) {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       val constraintDef = transaction.schema.getConstraintByName(name)
       val properties = constraintDef.getPropertyKeys.asScala.toSet
@@ -601,7 +627,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   def assertConstraintWithNameDoesNotExists(name: String) {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       assertThrows[IllegalArgumentException](transaction.schema.getConstraintByName(name))
     } finally {
@@ -610,7 +636,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   private def hasNodeConstraint(labelName: String, propName: String): Boolean = {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       val constraints = transaction.schema().getConstraints(Label.label(labelName)).asScala
       constraints.exists(_.getPropertyKeys.asScala.exists(_ == propName))
@@ -620,7 +646,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   private def hasRelationshipConstraint(typeName: String, propName: String): Boolean = {
-    val transaction = graphOps.beginTx()
+    val transaction = db.beginTx()
     try {
       val constraints = transaction.schema().getConstraints(RelationshipType.withName(typeName)).asScala
       constraints.exists(_.getPropertyKeys.asScala.exists(_ == propName))
@@ -630,7 +656,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   }
 
   private def hasNodeKeyConstraint(labelName: String, propNames: Seq[String]): Boolean = {
-      val transaction = graphOps.beginTx()
+      val transaction = db.beginTx()
       try {
         val constraints = transaction.schema().getConstraints( Label.label(labelName) ).asScala
         constraints.nonEmpty && constraints.head.getPropertyKeys.asScala.toList == propNames.toList

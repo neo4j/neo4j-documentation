@@ -18,6 +18,7 @@
  */
 package org.neo4j.doc;
 
+import com.neo4j.configuration.FabricEnterpriseSettings;
 import com.neo4j.configuration.SecuritySettings;
 
 import java.io.ByteArrayOutputStream;
@@ -50,8 +51,11 @@ public class ConfigDocsGenerator
     public ConfigDocsGenerator()
     {
         SecuritySettings.OIDCSetting oidcSetting = SecuritySettings.OIDCSetting.forProvider( "<provider>" );
+        FabricEnterpriseSettings.GraphSetting fabricGraphSetting = FabricEnterpriseSettings.GraphSetting.of( "<graph ID>" );
         config = Config.newBuilder()
+                       // Using one setting from the group is enough to make the config aware of that group
                        .set( oidcSetting.auth_flow, oidcSetting.auth_flow.defaultValue() )
+                       .set( fabricGraphSetting.uris, fabricGraphSetting.uris.defaultValue() )
                        .setDefaults( GraphDatabaseSettings.SERVER_DEFAULTS ).build();
     }
 

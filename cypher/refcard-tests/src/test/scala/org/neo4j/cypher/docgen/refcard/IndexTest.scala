@@ -83,7 +83,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
 CREATE INDEX FOR (p:Person) ON (p.name)
 ###
 
-Create an index on nodes with label `Person` and property `name`.
+Create a b-tree index on nodes with label `Person` and property `name`.
 
 ###assertion=create-index
 //
@@ -91,7 +91,7 @@ Create an index on nodes with label `Person` and property `name`.
 CREATE INDEX index_name FOR ()-[k:KNOWS]-() ON (k.since)
 ###
 
-Create an index with the name `index_name` on relationships with type `KNOWS` and property `since`.
+Create a b-tree index with the name `index_name` on relationships with type `KNOWS` and property `since`.
 
 ###assertion=create-index
 //
@@ -100,7 +100,7 @@ CREATE INDEX FOR (p:Person) ON (p.surname)
 OPTIONS {indexProvider: '$nativeProvider', indexConfig: {`${SPATIAL_CARTESIAN_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_CARTESIAN_MAX.getSettingName}`: [100.0, 100.0]}}
 ###
 
-Create an index on nodes with label `Person` and property `surname` with the index provider `$nativeProvider` and given `spatial.cartesian` settings.
+Create a b-tree index on nodes with label `Person` and property `surname` with the index provider `$nativeProvider` and given `spatial.cartesian` settings.
 The other index settings will have their default values.
 
 ###assertion=create-index
@@ -109,7 +109,7 @@ The other index settings will have their default values.
 CREATE INDEX FOR (p:Person) ON (p.name, p.age)
 ###
 
-Create a composite index on nodes with label `Person` and the properties `name` and `age`, throws an error if the index already exist.
+Create a composite b-tree index on nodes with label `Person` and the properties `name` and `age`, throws an error if the index already exist.
 
 ###assertion=create-existing-index
 //
@@ -117,7 +117,7 @@ Create a composite index on nodes with label `Person` and the properties `name` 
 CREATE INDEX IF NOT EXISTS FOR (p:Person) ON (p.name, p.age)
 ###
 
-Create a composite index on nodes with label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
+Create a composite b-tree index on nodes with label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
 
 ###assertion=create-index
 //
@@ -185,8 +185,31 @@ MATCH (n:Person) WHERE n.name = $$value
 RETURN n
 ###
 
-An index can be automatically used for the equality comparison.
+An BTREE index can be automatically used for the equality comparison.
 Note that for example `toLower(n.name) = $$value` will not use an index.
+
+###assertion=match
+//
+
+MATCH (n:Person) WHERE n.name = "Alice"
+
+RETURN n
+###
+
+An TEXT index can be automatically used for the equality comparison when comparing to a string.
+Note that for example `toLower(n.name) = "string"` does not use an index.
+
+###assertion=match
+//
+
+MATCH (n:Person)
+WHERE n.name < "Bob"
+
+RETURN n
+###
+
+An index can automatically be used for range predicates.
+Note that a TEXT index is only used if the predicate compares the property with a string.
 
 ###assertion=match parameters=aname
 //
@@ -198,6 +221,17 @@ RETURN n
 ###
 
 An index can automatically be used for the `IN` list checks.
+
+###assertion=match parameters=aname
+//
+
+MATCH (n:Person)
+WHERE n.name IN ['Bob', 'Alice']
+
+RETURN n
+###
+
+An TEXT index can automatically be used for the `IN` list checks when all elements in the list are strings.
 
 ###assertion=match parameters=nameandage
 //

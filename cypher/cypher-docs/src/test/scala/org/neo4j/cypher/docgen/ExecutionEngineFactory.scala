@@ -42,14 +42,16 @@ import org.neo4j.test.TestDatabaseManagementServiceBuilder
 import org.neo4j.test.utils.TestDirectory
 
 object ExecutionEngineFactory {
-  def createDbAndCommunityEngine(): (DatabaseManagementService, GraphDatabaseService, ExecutionEngine) = {
+
+  def createDbAndCommunityEngine(): (DatabaseManagementService, GraphDatabaseCypherService, ExecutionEngine) = {
     val fs = new EphemeralFileSystemAbstraction()
     val td = TestDirectory.testDirectory(this.getClass, fs)
     val dbFolder = td.prepareDirectoryForTest("target/example-db" + System.nanoTime()).toFile
     val managementService: DatabaseManagementService = new TestDatabaseManagementServiceBuilder(dbFolder.toPath).setFileSystem(fs).build()
-    val graph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
+    val db: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
+    val graph: GraphDatabaseCypherService = new GraphDatabaseCypherService(db);
 
-    (managementService, graph, createExecutionEngineFromDb(graph))
+    (managementService, graph, createExecutionEngineFromDb(db))
   }
 
   def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
