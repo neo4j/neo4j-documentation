@@ -36,7 +36,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       "CREATE DATABASE `movies`",
       "CREATE DATABASE `northwind-graph`"
     )
-    synopsis("This chapter explains how to use Cypher to manage Neo4j databases: creating, deleting, starting and stopping individual databases within a single server.")
+    synopsis("This chapter explains how to use Cypher to manage Neo4j databases: creating, modifying, deleting, starting, and stopping individual databases within a single server.")
     p(
       """Neo4j supports the management of multiple databases within the same DBMS.
         |The metadata for these databases, including the associated security model, is maintained in a special database called the `system` database.
@@ -55,8 +55,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       note {
         p(
-          """Note that the results of this command are filtered according to the `ACCESS` privileges the user has.
-            |However, a user with `CREATE/DROP DATABASE` or `DATABASE MANAGEMENT` privileges can see all databases regardless of their `ACCESS` privileges.
+          """Note that the results of this command are filtered according to the `ACCESS` privileges of the user.
+            |However, users with `CREATE/DROP/ALTER DATABASE`, `SET DATABASE ACCESS`, or `DATABASE MANAGEMENT` privileges can see all databases regardless of their `ACCESS` privileges.
             |If a user has not been granted `ACCESS` privilege to any databases, the command can still be executed but will only return the `system` database, which is always visible.
             |""".stripMargin)
           }
@@ -130,8 +130,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
-        p("This command is optionally idempotent, with the default behavior to throw an exception if the database already exists. " +
-          "Appending `IF NOT EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database already exist. " +
+        p("This command is optionally idempotent, with the default behavior to fail with an error if the database already exists. " +
+          "Appending `IF NOT EXISTS` to the command ensures that no error is returned and nothing happens should the database already exist. " +
           "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created.")
         query("CREATE DATABASE customers IF NOT EXISTS", ResultAssertions(r => {
           assertStats(r, systemUpdates = 0)
@@ -162,6 +162,31 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           p("The `existingData` and `existingDataSeedInstance` options cannot be combined with the `OR REPLACE` part of this command.")
         }
       }
+    }
+    section("Altering databases", "administration-databases-alter-database", "enterprise-edition") {
+      p("Databases can be modified using the command `ALTER DATABASE`. " +
+        "For example, a database always has read-write access mode on creation, unless the configuration parameter `dbms.databases.default_to_read_only` is set to `true`." +
+        "To change it to read-only, you can use the `ALTER DATABASE` command with the sub-clause `SET ACCESS READ ONLY`. " +
+        "Subsequently, the database access mode can be switched back to read-write using the sub-clause `SET ACCESS READ WRITE`. " +
+        "Altering the database access mode is allowed at all times, whether a database is online or offline. ")
+      p("Database access modes can also be managed using the configuration parameters `dbms.databases.default_to_read_only`, `dbms.databases.read_only`, and " +
+        "`dbms.database.writable`. For details, see <<operations-manual#manage-databases-parameters, Configuration parameters>>. " +
+        "If the mode set by the `ALTER DATABASE` command is read-only while the database according to those settings is read-write (or vice versa), " +
+        "the database will be read-only and prevent write queries.")
+      query("ALTER DATABASE customers SET ACCESS READ ONLY", ResultAssertions((r) => {
+        assertStats(r, systemUpdates = 1)
+      })) {
+        statsOnlyResultTable()
+      }
+      p("The database access mode can be seen in the `access` output column of the command `SHOW DATABASES`.")
+      query("SHOW DATABASES yield name, access", assertDatabasesShown) {
+        resultTable()
+      }
+      p("This command is optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
+        "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
+      query("ALTER DATABASE nonExisting IF EXISTS SET ACCESS READ WRITE", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 0)
+      })) {}
     }
     section("Stopping databases", "administration-databases-stop-database", "enterprise-edition") {
       p("Databases can be stopped using the command `STOP DATABASE`.")
@@ -198,8 +223,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASES", assertDatabasesShown) {
         resultTable()
       }
-      p("This command is optionally idempotent, with the default behavior to throw an exception if the database does not exists. " +
-        "Appending `IF EXISTS` to the command will ensure that no exception is thrown and nothing happens should the database not exist.")
+      p("This command is optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
+        "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
       query("DROP DATABASE customers IF EXISTS", ResultAssertions(r => {
         assertStats(r, systemUpdates = 0)
       })) {}
@@ -217,7 +242,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
 
     }
     section(title="Wait options", id="administration-wait-nowait", role = "enterprise-edition") {
-      p("""Aside from `SHOW DATABASES`, the database management commands all accept an optional
+      p("""Aside from `SHOW DATABASES` and `ALTER DATABASE`, the database management commands all accept an optional
           |`WAIT`/`NOWAIT` clause. The `WAIT`/`NOWAIT` clause allows a user to specify whether to wait
           |for the command to complete before returning. The options are:
           |

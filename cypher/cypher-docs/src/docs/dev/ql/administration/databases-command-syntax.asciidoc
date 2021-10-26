@@ -22,6 +22,9 @@ CREATE DATABASE name [IF NOT EXISTS]
 
 [source]
 CREATE OR REPLACE DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+|Alter Database
+| [source]
+ALTER DATABASE name [IF EXISTS] SET ACCESS {READ ONLY \| READ WRITE}
 |Stop Database
 | [source]
 STOP DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
