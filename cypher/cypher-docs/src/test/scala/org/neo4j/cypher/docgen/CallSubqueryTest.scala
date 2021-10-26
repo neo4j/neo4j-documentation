@@ -272,10 +272,10 @@ class CallSubqueryTest extends DocumentingTest {
             |""".stripMargin)
       }
       section("Errors") {
-        p("""If an error occurs in `CALL {} IN TRANSACTIONS` the entire query fails,
-            |the current inner transaction, and the outer transaction are rolled back.""".stripMargin)
+        p("""If an error occurs in `CALL {} IN TRANSACTIONS` the entire query fails and
+            |both the current inner transaction and the outer transaction are rolled back.""".stripMargin)
         important(p("""On error, any previously committed inner transactions remain committed, and are not rolled back."""))
-        p("""In the following example, the last subquery execution, in the second inner transaction, fails
+        p("""In the following example, the last subquery execution in the second inner transaction fails
             |due to division by zero.
             |""".stripMargin)
         addQuery(
@@ -288,7 +288,7 @@ class CallSubqueryTest extends DocumentingTest {
           assertions = ErrorAssertions(t => t.getMessage should (include("/ by zero"))),
           databaseStateBehavior = KeepState,
         ) { errorOnlyResultTable() }
-        p("""When the failure occurred, the first transaction had already committed, so the database contains two example nodes""")
+        p("""When the failure occurred, the first transaction had already been committed, so the database contains two example nodes""")
         addQuery(
           """MATCH (e:Example)
             #RETURN e.num""".stripMargin('#'),
