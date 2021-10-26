@@ -22,18 +22,18 @@ This comes at the cost of additional storage space and slower writes, so decidin
 Once an index has been created, it will be managed and kept up to date by the DBMS.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
 
-There are multiple index types available: b-tree (deprecated), fulltext, lookup, and text index types.
+There are multiple index types available: b-tree (deprecated), fulltext, lookup, point, range, and text index types.
 See <<administration-indexes-fulltext-search>> for more information about fulltext indexes.
 Token lookup indexes contain nodes with one or more labels or relationship types, without regard for any properties.
 
-Cypher enables the creation of b-tree indexes on one or more properties for all nodes or relationships with a given label or relationship type:
+Cypher enables the creation of b-tree and range indexes on one or more properties for all nodes or relationships with a given label or relationship type:
 
 * An index created on a single property for any given label or relationship type is called a _single-property index_.
 * An index created on more than one property for any given label or relationship type is called a _composite index_.
 
 Differences in the usage patterns between composite and single-property indexes are described in <<administration-indexes-single-vs-composite-index>>.
 
-Additionally, a text index is a kind of single-property index, with the limitation that it only recognizes properties with string values.
+Additionally, text and point indexes are a kind of single-property indexes, with the limitation that they only recognize properties with string and point values, respectively.
 Nodes or relationships with the indexed label or relationship type where the indexed property is of another value type are not included in the index.
 
 The following is true for indexes:
@@ -65,7 +65,7 @@ ON (n.propertyName)
 Index provider and configuration can be specified using the `OPTIONS` clause.
 
 Explicit use of `BTREE` keyword or b-tree options are deprecated in 4.4 and will be replaced in 5.0.
-.8+.^| Best practice is to give the index a name when it is created.
+.12+.^| Best practice is to give the index a name when it is created.
 If the index is not explicitly named, it gets an auto-generated name.
 
 The index name must be unique among both indexes and constraints.
@@ -121,6 +121,34 @@ Explicit use of `BTREE` keyword or b-tree options are deprecated in 4.4 and will
 
 | [source, cypher, role=noplay]
 ----
+CREATE RANGE INDEX [index_name] [IF NOT EXISTS]
+FOR (n:LabelName)
+ON (n.propertyName_1[,
+    n.propertyName_2,
+    …
+    n.propertyName_n])
+[OPTIONS "{" option: value[, ...] "}"]
+----
+| Create a range index on nodes, either on a single property or composite.
+
+Index provider can be specified using the `OPTIONS` clause.
+
+| [source, cypher, role=noplay]
+----
+CREATE RANGE INDEX [index_name] [IF NOT EXISTS]
+FOR ()-"["r:TYPE_NAME"]"-()
+ON (r.propertyName_1[,
+    r.propertyName_2,
+    …
+    r.propertyName_n])
+[OPTIONS "{" option: value[, ...] "}"]
+----
+| Create a range index on relationships, either on a single property or composite.
+
+Index provider can be specified using the `OPTIONS` clause.
+
+| [source, cypher, role=noplay]
+----
 CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
 FOR (n)
 ON EACH labels(n)
@@ -165,6 +193,28 @@ Index provider can be specified using the `OPTIONS` clause.
 
 | [source, cypher, role=noplay]
 ----
+CREATE POINT INDEX [index_name] [IF NOT EXISTS]
+FOR (n:LabelName)
+ON (n.propertyName)
+[OPTIONS "{" option: value[, ...] "}"]
+----
+| Create a point index on nodes where the property has a point value.
+
+Index provider and configuration can be specified using the `OPTIONS` clause.
+
+| [source, cypher, role=noplay]
+----
+CREATE POINT INDEX [index_name] [IF NOT EXISTS]
+FOR ()-"["r:TYPE_NAME"]"-()
+ON (r.propertyName)
+[OPTIONS "{" option: value[, ...] "}"]
+----
+| Create a point index on relationships where the property has a point value.
+
+Index provider and configuration can be specified using the `OPTIONS` clause.
+
+| [source, cypher, role=noplay]
+----
 DROP INDEX index_name [IF EXISTS]
 ----
 | Drop an index of any index type.
@@ -173,7 +223,7 @@ With `IF EXISTS`, no error is thrown and nothing happens should the index not ex
 
 | [source, cypher, role=noplay]
 ----
-SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP\|TEXT] INDEX[ES]
+SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP\|POINT\|RANGE\|TEXT] INDEX[ES]
     [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
     [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
@@ -193,7 +243,7 @@ listing indexes require <<access-control-database-administration-index, the `SHO
 [[administration-indexes-single-vs-composite-index]]
 === Composite index limitations
 
-Like single-property b-tree indexes, composite b-tree indexes support all predicates:
+Like single-property b-tree and range indexes, composite b-tree and range indexes support all predicates:
 
 * equality check: `n.prop = value`
 * list membership check: `n.prop IN list`
@@ -279,6 +329,18 @@ include::../indexes/create-a-composite-b-tree-index-for-relationships.asciidoc[l
 [role=deprecated]
 include::../indexes/create-a-composite-b-tree-index-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+1]
 
+include::../indexes/create-a-single-property-range-index-for-nodes.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-single-property-range-index-for-relationships.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-range-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-range-index-specifying-the-index-provider.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-composite-range-index-for-nodes.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-composite-range-index-for-relationships.asciidoc[leveloffset=+1]
+
 include::../indexes/create-a-node-label-lookup-index.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-relationship-type-lookup-index.asciidoc[leveloffset=+1]
@@ -292,6 +354,18 @@ include::../indexes/create-a-relationship-text-index.asciidoc[leveloffset=+1]
 include::../indexes/create-a-text-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-text-index-specifying-the-index-provider.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-node-point-index.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-relationship-point-index.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-point-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-point-index-specifying-the-index-provider.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-point-index-specifying-the-index-configuration.asciidoc[leveloffset=+1]
+
+include::../indexes/create-a-point-index-specifying-both-the-index-provider-and-configuration.asciidoc[leveloffset=+1]
 
 include::../indexes/failure-to-create-an-already-existing-index.asciidoc[leveloffset=+1]
 
@@ -341,7 +415,7 @@ Listing indexes can be done with `SHOW INDEXES`, which will produce a table with
 | `+`
 
 | `type`
-| The IndexType of this index (`BTREE`, `FULLTEXT`, `LOOKUP`, or `TEXT`).
+| The IndexType of this index (`BTREE`, `FULLTEXT`, `LOOKUP`, `POINT`, `RANGE`, or `TEXT`).
 | `+`
 | `+`
 
@@ -405,134 +479,3 @@ include::../indexes/listing-indexes-with-filtering.asciidoc[leveloffset=+2]
 include::../indexes/drop-an-index.asciidoc[leveloffset=+1]
 
 include::../indexes/drop-a-non-existing-index.asciidoc[leveloffset=+1]
-
-
-[[indexes-future-indexes]]
-== Future indexes
-
-Two new types of indexes, point and range indexes, will be introduced in a future release.
-They cannot be used in queries yet, but they can be created and dropped for migration purposes.
-These new index types together with text indexes will replace the current b-tree indexes.
-For more details on these new types, see the <<operations-manual#future-indexes, Operations Manual -> Future indexes>>.
-
-Like b-tree indexes, range indexes are created on one or more properties for all nodes or relationships with a given label or relationship type:
-
-* An index created on a single property for any given label or relationship type is called a _single-property index_.
-* An index created on more than one property for any given label or relationship type is called a _composite index_.
-
-The differences in the usage patterns between composite and single-property indexes described in <<administration-indexes-single-vs-composite-index>> also applies to range indexes.
-
-Similar to b-tree indexes, range indexes may also back constraints by giving the range index provider when creating an index-backed constraint.
-
-Point indexes, like text indexes, are a kind of single-property indexes, with the limitation that they only recognize properties with point values.
-Nodes or relationships with the indexed label or relationship type where the indexed property is of another value type are not included in the index.
-
-=== Syntax
-
-.Syntax for managing future indexes
-[options="header", width="100%", cols="5a,3, 3a"]
-|===
-| Command | Description | Comment
-| [source, cypher, role=noplay]
-----
-CREATE RANGE INDEX [index_name] [IF NOT EXISTS]
-FOR (n:LabelName)
-ON (n.propertyName_1[,
-    n.propertyName_2,
-    …
-    n.propertyName_n])
-[OPTIONS "{" option: value[, ...] "}"]
-----
-| Create a range index on nodes, either on a single property or composite.
-
-Index provider can be specified using the `OPTIONS` clause.
-
-.4+.^| Best practice is to give the index a name when it is created.
-If the index is not explicitly named, it gets an auto-generated name.
-
-The index name must be unique among both indexes and constraints.
-
-The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same index twice.
-With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name or same schema and index type already exist.
-It may still throw an error if conflicting constraints exist, such as constraints with the same name or schema and backing index type.
-
-| [source, cypher, role=noplay]
-----
-CREATE RANGE INDEX [index_name] [IF NOT EXISTS]
-FOR ()-"["r:TYPE_NAME"]"-()
-ON (r.propertyName_1[,
-    r.propertyName_2,
-    …
-    r.propertyName_n])
-[OPTIONS "{" option: value[, ...] "}"]
-----
-| Create a range index on relationships, either on a single property or composite.
-
-Index provider can be specified using the `OPTIONS` clause.
-
-| [source, cypher, role=noplay]
-----
-CREATE POINT INDEX [index_name] [IF NOT EXISTS]
-FOR (n:LabelName)
-ON (n.propertyName)
-[OPTIONS "{" option: value[, ...] "}"]
-----
-| Create a point index on nodes where the property has a point value.
-
-Index provider and configuration can be specified using the `OPTIONS` clause.
-
-| [source, cypher, role=noplay]
-----
-CREATE POINT INDEX [index_name] [IF NOT EXISTS]
-FOR ()-"["r:TYPE_NAME"]"-()
-ON (r.propertyName)
-[OPTIONS "{" option: value[, ...] "}"]
-----
-| Create a point index on relationships where the property has a point value.
-
-Index provider and configuration can be specified using the `OPTIONS` clause.
-
-| [source, cypher, role=noplay]
-----
-DROP INDEX index_name [IF EXISTS]
-----
-| Drop an index of any index type. This is the <<administration-indexes-drop-indexes, same command>> as for the existing indexes.
-| The command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same index twice.
-With `IF EXISTS`, no error is thrown and nothing happens should the index not exist.
-
-| [source, cypher, role=noplay]
-----
-SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP\|POINT\|RANGE\|TEXT] INDEX[ES]
-    [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
-    [WHERE expression]
-    [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
-----
-| Extending the existing <<administration-indexes-list-indexes, list index command>> with filters for the new types.
-| When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
-|===
-
-=== Create index examples
-
-include::../indexes/create-a-single-property-range-index-for-nodes.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-single-property-range-index-for-relationships.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-range-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-range-index-specifying-the-index-provider.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-composite-range-index-for-nodes.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-composite-range-index-for-relationships.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-node-point-index.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-relationship-point-index.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-point-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-point-index-specifying-the-index-provider.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-point-index-specifying-the-index-configuration.asciidoc[leveloffset=+1]
-
-include::../indexes/create-a-point-index-specifying-both-the-index-provider-and-configuration.asciidoc[leveloffset=+1]
