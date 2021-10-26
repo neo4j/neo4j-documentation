@@ -263,6 +263,16 @@ label:deprecated[]
  point.distance(n.prop, point({x:0, y:0})
  ----
 
+a|
+label:syntax[]
+label:added[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+IMPERSONATE
+----
+a|
+New privilege that allows a user to assume privileges of another one.
 
 a|
 label:functionality[]
