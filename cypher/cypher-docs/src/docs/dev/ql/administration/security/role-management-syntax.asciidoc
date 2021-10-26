@@ -12,7 +12,7 @@ SHOW [ALL\|POPULATED] ROLES
 ----
 | List roles.
 
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>>
 
 | [source, cypher, role=noplay]
@@ -24,7 +24,7 @@ SHOW [ALL\|POPULATED] ROLES WITH USERS
 ----
 | List roles and users assigned to them.
 
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE>> and
 <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
 
@@ -37,7 +37,7 @@ SHOW ROLE[S] name[, ...] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
 ----
 | List the privileges granted to the specified roles.
 
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 | <<administration-security-administration-dbms-privileges-role-management, SHOW ROLE PRIVILEGES>>
 
 | [source, cypher, role=noplay]

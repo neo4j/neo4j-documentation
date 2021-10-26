@@ -12,7 +12,7 @@ SHOW CURRENT USER
 ----
 | List the current user.
 
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 | None
 
 | [source, cypher, role=noplay]
@@ -24,7 +24,7 @@ SHOW USERS
 ----
 | List all users.
 
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 | <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
 
 | [source, cypher, role=noplay]
@@ -36,7 +36,7 @@ SHOW USER[S] [name[, ...]] PRIVILEGE[S] [AS [REVOKE] COMMAND[S]]
 ----
 | List the privileges granted to the specified users or the current user, if no user is specified.
 
-When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be omitted.
+When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 | <<administration-security-administration-dbms-privileges-privilege-management, SHOW PRIVILEGE>> and
 <<administration-security-administration-dbms-privileges-user-management, SHOW USER>>
 

@@ -19,14 +19,21 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
+import org.neo4j.configuration.GraphDatabaseSettings
 import org.neo4j.cypher.docgen.tooling.RunnableInitialization.InitializationFunction
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.cypher.internal.util.Eagerly
 import org.neo4j.exceptions.InternalException
+import org.neo4j.graphdb.GraphDatabaseService
+import org.neo4j.graphdb.Result
+import org.neo4j.internal.kernel.api.security.LoginContext
+import org.neo4j.kernel.api.KernelTransaction
+import org.neo4j.test.DoubleLatch
 
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
 
 
 case class ContentWithInit(init: RunnableInitialization, query: Option[DatabaseQuery], queryResultPlaceHolder: QueryResultPlaceHolder) {
@@ -41,7 +48,7 @@ case class ContentWithInit(init: RunnableInitialization, query: Option[DatabaseQ
 }
 
 object  RunnableInitialization {
-  type InitializationFunction = GraphDatabaseCypherService => Unit
+  type InitializationFunction = (GraphDatabaseService, GraphDatabaseCypherService) => Unit
 
   def empty = RunnableInitialization()
 
@@ -56,7 +63,9 @@ case class RunnableInitialization(initCode: Seq[InitializationFunction] = Seq.em
                                   initQueries: Seq[DatabaseQuery] = Seq.empty,
                                   userDefinedFunctions: Seq[java.lang.Class[_]] = Seq.empty,
                                   userDefinedAggregationFunctions: Seq[java.lang.Class[_]] = Seq.empty,
-                                  procedures: Seq[java.lang.Class[_]] = Seq.empty) {
+                                  procedures: Seq[java.lang.Class[_]] = Seq.empty,
+                                  postExecutionCode: Seq[InitializationFunction] = Seq.empty
+                                 ) {
 
   def ++(other: RunnableInitialization): RunnableInitialization = {
     RunnableInitialization(
@@ -64,7 +73,8 @@ case class RunnableInitialization(initCode: Seq[InitializationFunction] = Seq.em
       initQueries ++ other.initQueries,
       userDefinedFunctions ++ other.userDefinedFunctions,
       userDefinedAggregationFunctions ++ other.userDefinedAggregationFunctions,
-      procedures ++ other.procedures
+      procedures ++ other.procedures,
+      postExecutionCode ++ other.postExecutionCode
     )
   }
 }
@@ -331,6 +341,63 @@ case class Query(prettified: String,
     case seq: Seq[_]  => seq.map(mapMapValue).asJava
     case v: Any       => v
   }
+}
+
+case class BackgroundQueries(
+                 beforeQueryText: List[String],
+                 content: Content,
+                 params: Seq[(String, Any)],
+                 runtime: Option[String] = None,
+                 database: Option[String] = None,
+                 login: Option[(String, String)] = None) extends Content {
+
+  private val latch: DoubleLatch = new DoubleLatch(beforeQueryText.size + 1)
+
+  override def runnableContent(init: RunnableInitialization, queryText: Option[DatabaseQuery]) = {
+    val myInit = RunnableInitialization(initCode = Seq(before), postExecutionCode = Seq(after))
+    content.runnableContent(init ++ myInit, queryText = None)
+  }
+
+  override def asciiDoc(level: Int): String = content.asciiDoc(level)
+
+  val before: InitializationFunction = (graph: GraphDatabaseService, cypherService: GraphDatabaseCypherService) =>
+    if (!graph.databaseName().equals(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)) {
+      import scala.concurrent.ExecutionContext.Implicits.global
+
+      beforeQueryText.foreach(query =>
+        // Start each background transaction in a Future
+        Future {
+          val tx = cypherService.beginTransaction(KernelTransaction.Type.EXPLICIT, LoginContext.AUTH_DISABLED)
+
+          try {
+            var result: Result = null
+            try {
+              result = tx.execute(query)
+              latch.startAndWaitForAllToStart()
+            } finally {
+              latch.start()
+              latch.finishAndWaitForAllToFinish()
+            }
+            if (result != null) {
+              result.accept((_: Result.ResultRow) => true)
+              result.close()
+            }
+            tx.commit()
+          } catch {
+            case t: Throwable => t
+          } finally {
+            if (tx != null) tx.close()
+          }
+        })
+
+      // Start the main query
+      latch.startAndWaitForAllToStart()
+    }
+
+  val after: InitializationFunction = (graph, _) => if (!graph.databaseName().equals(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)) {
+    latch.finishAndWaitForAllToFinish()
+  }
+
 }
 
 object ConsoleData {

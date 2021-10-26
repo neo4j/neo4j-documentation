@@ -407,6 +407,31 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def showTransactions() {profileQuery(
+      title = "Listing transactions",
+      text =
+        """The `ShowTransactions` operator lists transactions.
+          |It may include filtering on given ids and can have either default or full output.""".stripMargin,
+      queryText = """SHOW TRANSACTIONS""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("ShowTransactions"))
+      }
+    )
+  }
+
+  @Test def terminateTransactions() {profileQuery(
+      title = "Terminating transactions",
+      text =
+        """The `TerminateTransactions` operator terminates transactions by ID.""".stripMargin,
+      queryText = """TERMINATE TRANSACTIONS 'database-transaction-123'""",
+      assertions = p => {
+        val plan = p.executionPlanString()
+        assertThat(plan, containsString("TerminateTransactions"))
+      }
+    )
+  }
+
   @Test def distinct() {
     profileQuery(
       title = "Distinct",

@@ -56,9 +56,11 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-set, SET>>                          | Writing     |  Update labels on nodes and properties on nodes and relationships.
 |<<administration-constraints-syntax-list, SHOW [ALL\|UNIQUE\|NODE [PROPERTY] EXIST[ENCE]\|REL[ATIONSHIP] [PROPERTY] EXIST[ENCE]\|[PROPERTY] EXIST[ENCE]\|NODE KEY] CONSTRAINT[S]>> | Schema | List constraints in the database, either all or filtered on type. Also allows `WHERE` and `YIELD` clauses.
 |<<administration-indexes-list-indexes, SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP] INDEX[ES]>> | Schema | List indexes in the database, either all or filtered on b-tree, fulltext or token lookup indexes. Also allows `WHERE` and `YIELD` clauses.
-|<<query-listing-functions, SHOW [ALL\|BUILT IN\|USER DEFINED] FUNCTION[S] [EXECUTABLE [BY {CURRENT USER\|username}]]>> | Listing | List functions, either all or filtered. Available filters are executable by a user or function type (built-in or user defined). Also allows `WHERE` and `YIELD` clauses.
-|<<query-listing-procedures, SHOW PROCEDURE[S] [EXECUTABLE [BY {CURRENT USER\|username}]]>> | Listing | List procedures, either all or filtered on executable by a user. Also allows `WHERE` and `YIELD` clauses.
+|<<query-listing-functions, SHOW [ALL\|BUILT IN\|USER DEFINED] FUNCTION[S] [EXECUTABLE [BY {CURRENT USER\|username}]]>> | DBMS | List functions, either all or filtered. Available filters are executable by a user or function type (built-in or user defined). Also allows `WHERE` and `YIELD` clauses.
+|<<query-listing-procedures, SHOW PROCEDURE[S] [EXECUTABLE [BY {CURRENT USER\|username}]]>> | DBMS | List procedures, either all or filtered on executable by a user. Also allows `WHERE` and `YIELD` clauses.
+|xref:clauses/transaction-clauses/index.adoc#query-listing-transactions[SHOW TRANSACTION[S\] [transaction-id[, ...\]\]]| DBMS | List transactions, either all or filtered on ID. Also allows `WHERE` and `YIELD` clauses.
 |<<query-skip, SKIP>>                            | Reading/Writing | A sub-clause defining from which row to start including the rows in the output.
+|xref:clauses/transaction-clauses/index.adoc#query-terminate-transactions[TERMINATE TRANSACTION[S\] transaction-id[, ...\]]| DBMS | Terminate transactions with the given IDs.
 |<<query-union, UNION>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are removed.
 |<<query-union, UNION ALL>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are retained.
 |<<query-unwind, UNWIND ... [AS]>>                    | Projecting   |  Expands a list into a sequence of rows.
