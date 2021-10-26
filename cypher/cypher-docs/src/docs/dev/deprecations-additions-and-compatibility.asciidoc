@@ -395,6 +395,24 @@ label:syntax[]
 label:added[]
 [source, cypher, role="noheader"]
 ----
+MATCH (n) RETURN n.propertyName_1, n.propertyName_2 + count(*)
+----
+a|
+Aggregation with implicit grouping keys are deprecated. In an expression that contains aggregation, the leaves of expressions must be one of: +
+- An aggregation +
+- A literal +
+- A Parameter +
+- A variable - ONLY IF that variable is also one of: +
+    1) a projection expression on its own (e.g. the `n` in `RETURN n AS myNode, n.value + count(*)`) OR +
+    2) A local variable in the expression (e.g the `x` in `RETURN n, n.prop + size([ x IN range(1, 10) | x ])` +
+- Property access - ONLY IF that property access is also a projection expression on its own (e.g. the `n.prop` in `RETURN n.prop, n.prop + count(*)`) +
+- Map access - ONLY IF that map access is also a projection expression on its own (e.g. the `map.prop` in `WITH {prop: 2} AS map RETURN map.prop, map.prop + count(*)`)
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
 CREATE CONSTRAINT [name]
 ON (node:Label)
 ASSERT node.property IS NOT NULL
