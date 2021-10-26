@@ -82,9 +82,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   override def parent: Option[String] = Some("Administration")
   override def section = "Indexes"
 
-  override protected def newDatabaseManagementService(directory: File): DatabaseManagementService = new EnterpriseDatabaseManagementServiceBuilder(directory)
-    .setConfig(databaseConfig()).build()
-
   private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
   private val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
   private val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
