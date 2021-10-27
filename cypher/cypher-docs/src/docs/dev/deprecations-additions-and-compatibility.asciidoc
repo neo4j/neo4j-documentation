@@ -391,8 +391,8 @@ New Cypher command for dropping a database alias.
 
 
 a|
-label:syntax[]
-label:added[]
+label:functionality[]
+label:deprecated[]
 [source, cypher, role="noheader"]
 ----
 MATCH (n) RETURN n.propertyName_1, n.propertyName_2 + count(*)
