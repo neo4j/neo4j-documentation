@@ -398,7 +398,7 @@ label:added[]
 MATCH (n) RETURN n.propertyName_1, n.propertyName_2 + count(*)
 ----
 a|
-Aggregation with implicit grouping keys are deprecated. In an expression that contains aggregation, the leaves of expressions must be one of: +
+Implied grouping keys are deprecated. Only expressions that do _not_ contain aggregations are grouping keys. In expressions that contain aggregations, the leaves of expressions must be one of: +
 - An aggregation +
 - A literal +
 - A Parameter +
