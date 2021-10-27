@@ -34,5 +34,14 @@ START DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 |Drop Database
 | [source]
 DROP DATABASE name [IF EXISTS] [{DUMP\|DESTROY} [DATA]] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+| Create Alias
+| [source]
+CREATE [OR REPLACE] ALIAS name [IF NOT EXISTS] FOR DATABASE targetName
+| Alter Alias
+| [source]
+ALTER ALIAS name [IF EXISTS] SET DATABASE TARGET targetName
+| Drop Alias
+| [source]
+DROP ALIAS name [IF EXISTS] FOR DATABASE
 |===
 
