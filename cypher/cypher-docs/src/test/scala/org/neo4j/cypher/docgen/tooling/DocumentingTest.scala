@@ -85,6 +85,14 @@ trait DocumentingTest extends CypherFunSuite with Assertions with Matchers with 
     pw.close()
   }
 
+  def createDir(name: String) = {
+    val dir = new File(outputPath, name)
+    if (!dir.exists()) {
+      dir.mkdirs()
+    }
+    dir
+  }
+
   private def reportResults(result: TestRunResult) {
     var count = 0
 

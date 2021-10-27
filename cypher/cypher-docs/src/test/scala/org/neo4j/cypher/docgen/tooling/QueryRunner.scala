@@ -103,7 +103,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
     val tx: InternalTransaction = dbms.beginTx(query.database)
     try {
       val result: Either[Throwable, InternalTransaction => Content] =
-        (assertions, Try(dbms.executeWithParams(tx, query.runnable, content.params: _*))) match {
+        (assertions, Try(dbms.executeWithParams(tx, query.runnable, content.params.toMap, query.databaseStateBehavior))) match {
           // *** Success conditions
 
           case (ResultAssertions(f), Success(r)) =>

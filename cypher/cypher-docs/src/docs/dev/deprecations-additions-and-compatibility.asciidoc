@@ -17,6 +17,21 @@ Replacement syntax for deprecated and removed features are also indicated.
 | Feature
 | Details
 
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+USING PERIODIC COMMIT ...
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CALL {
+  ...
+} IN TRANSACTIONS
+----
 
 a|
 label:syntax[]

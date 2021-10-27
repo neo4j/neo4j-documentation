@@ -19,7 +19,10 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.{DocBuilder, Document, DocumentingTest, ResultAssertions}
+import org.neo4j.cypher.docgen.tooling.DocBuilder.QueryTextReplacement
+import org.neo4j.cypher.docgen.tooling.{ClearState, DocBuilder, Document, DocumentingTest, ErrorAssertions, KeepState, NoAssertions, ResultAssertions}
+
+import java.io.File
 
 class CallSubqueryTest extends DocumentingTest {
 
@@ -42,7 +45,8 @@ class CallSubqueryTest extends DocumentingTest {
         #* <<subquery-post-union, Post-union processing>>
         #* <<subquery-aggregation, Aggregations>>
         #* <<subquery-unit, Unit subqueries and side-effects>>
-        #* <<subquery-correlated-aggregation, Aggregation on imported variables>>""".stripMargin('#'))
+        #* <<subquery-correlated-aggregation, Aggregation on imported variables>>
+        #* <<subquery-call-in-transactions, Subqueries in transactions>>""".stripMargin('#'))
     section("Introduction", "subquery-call-introduction") {
       p("""CALL allows to execute subqueries, i.e. queries inside of other queries.
           #Subqueries allow you to compose queries, which is especially useful when working with `UNION` or aggregations.""".stripMargin('#'))
@@ -208,7 +212,95 @@ class CallSubqueryTest extends DocumentingTest {
           Map("p.name" -> "Charlie", "youngerPersonsCount" -> 3),
           Map("p.name" -> "Dora", "youngerPersonsCount" -> 2)
         )))) { resultTable() }
-  }
+    }
+
+    section("Subqueries in transactions", "subquery-call-in-transactions") {
+      p("""Subqueries can be made to execute in separate, inner transactions, producing intermediate commits.
+          #This can come in handy when doing large write operations, like batch updates or imports.
+          #To execute a subquery in separate transactions you add the modifier `IN TRANSACTIONS` after the subquery.""".stripMargin('#'))
+
+      implicit val csvFilesDir: File = createDir("csv-files")
+      val artistsCsvPath = new CsvFile("artists.csv").withContents(
+        Seq("1", "ABBA", "1992"),
+        Seq("2", "Roxette", "1986"),
+        Seq("3", "Europe", "1979"),
+        Seq("4", "bob hund", "1991"),
+        Seq("5", "The Cardigans", "1992"),
+      )
+      p("""The following example imports a CSV file using the `LOAD CSV` clause, and
+          # creates nodes in separate transactions using `CALL {} IN TRANSACTIONS`
+          #
+          #.artists.csv
+          #[source]
+          #----
+          #include::csv-files/artists.csv[]
+          #----""".stripMargin('#'))
+      addQuery(
+        """LOAD CSV FROM '@csvFile' AS line
+          #CALL {
+          #  WITH line
+          #  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
+          #} IN TRANSACTIONS""".stripMargin('#'),
+        assertions = ResultAssertions(r => r.isEmpty),
+        replacements = Seq(QueryTextReplacement("@csvFile", "file:///artists.csv", artistsCsvPath))
+      ) { resultTable() }
+      p("""As the size of the CSV file in this example is small, only a single separate transaction is
+          #started and committed.""".stripMargin('#'))
+      note(p("""`CALL { ... } IN TRANSACTIONS` is only allowed in <<query-transactions, implicit transactions>>"""))
+      section("Batching") {
+        p("""The amount of work to do in each separate transaction can be specified in terms of how many input rows
+            |to process before committing the current transaction and starting a new one.
+            |The number of input rows is set with the modifier `OF n ROWS` (or `ROW`).
+            |If omitted, the default batch size is 1000 rows.
+            |Here's the same example as above, but with one transaction every 2 input rows""".stripMargin)
+        addQuery(
+          """LOAD CSV FROM '@csvFile' AS line
+            #CALL {
+            #  WITH line
+            #  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
+            #} IN TRANSACTIONS OF 2 ROWS""".stripMargin('#'),
+          assertions = ResultAssertions(r => r.isEmpty),
+          replacements = Seq(QueryTextReplacement("@csvFile", "file:///artists.csv", artistsCsvPath))
+        ) { resultTable() }
+        p("""The query now starts and commits three separate transactions""")
+        p(""". The first two executions of the subquery (for the first two input rows from `LOAD CSV`) take place in the first transaction.
+            |. The first transaction is then committed before proceeding.
+            |. The next two executions of the subquery (for the next two input rows) take place in a second transaction.
+            |. The second transaction is committed.
+            |. The last execution of the subquery (for the last input row) takes place in a third transaction.
+            |. The third transaction is committed.
+            |""".stripMargin)
+      }
+      section("Errors") {
+        p("""If an error occurs in `CALL {} IN TRANSACTIONS` the entire query fails and
+            |both the current inner transaction and the outer transaction are rolled back.""".stripMargin)
+        important(p("""On error, any previously committed inner transactions remain committed, and are not rolled back."""))
+        p("""In the following example, the last subquery execution in the second inner transaction fails
+            |due to division by zero.
+            |""".stripMargin)
+        addQuery(
+          """UNWIND [4, 2, 1, 0] AS i
+            #CALL {
+            #  WITH i
+            #  CREATE (:Example {num: 100/i})
+            #} IN TRANSACTIONS OF 2 ROWS
+            #RETURN i""".stripMargin('#'),
+          assertions = ErrorAssertions(t => t.getMessage should (include("/ by zero"))),
+          databaseStateBehavior = KeepState,
+        ) { errorOnlyResultTable() }
+        p("""When the failure occurred, the first transaction had already been committed, so the database contains two example nodes""")
+        addQuery(
+          """MATCH (e:Example)
+            #RETURN e.num""".stripMargin('#'),
+          assertions = ResultAssertions(r => r.toSet should equal(Set(
+            Map("e.num" -> 25),
+            Map("e.num" -> 50)
+          ))),
+          databaseStateBehavior = ClearState,
+        ) { resultTable() }
+      }
+    }
+
   }.build()
 }
 
