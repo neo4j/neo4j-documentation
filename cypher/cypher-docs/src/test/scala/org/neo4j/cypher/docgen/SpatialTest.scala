@@ -285,12 +285,13 @@ class SpatialTest extends DocumentingTest {
           |<<administration-indexes-spatial-distance-searches-single-property-index, 'Spatial distance searches'>>.
         """.stripMargin)
     }
-    section("Comparability and Orderability", "cypher-comparability-orderability") {
+    section("Comparability and orderability", "cypher-comparability-orderability") {
       p(
         """
-          |The orderability and comparability is due to change in the upcoming 5.0 release.
-          |This means that queries that rely on the comparing two points using the inequality operators, `<`, `<=`, `>`, and `>=`, or the specific order of an `ORDER BY n.point` query needs to be rewritten.
-          |The easiest way is to specify the ordering explicitly using for example `point.x`, `point.y` in _cartesian coordinates_ or `point.longitude` and point.latitude` in `geographic coordinates`.
+          |The comparability and orderability of spacial values are due to change in an upcoming future release.
+          |This means that queries that rely on the comparison of two points using the inequality operators, `<`, `⇐`, `>`, and `>=`, or the specific order of an `ORDER BY n.point` query will need to be rewritten.
+          |
+          |The most efficient way to do this is to explicitly specify the ordering. For example, by using `point.x`, `point.y` in _cartesian coordinates_, or `point.longitude` and `point.latitude` in _geographic coordinates_.
         """.stripMargin
       )
     }
