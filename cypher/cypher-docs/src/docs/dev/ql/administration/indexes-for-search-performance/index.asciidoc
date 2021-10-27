@@ -420,7 +420,7 @@ include::../indexes/drop-a-non-existing-index.asciidoc[leveloffset=+1]
 Two new types of indexes, point and range indexes, will be introduced in a future release.
 They cannot be used in queries yet, but they can be created and dropped for migration purposes.
 These new index types together with text indexes will replace the current b-tree indexes.
-For more details on these new types, see the <<operations-manual#future-indexes, operations manual>>.
+For more details on these new types, see the <<operations-manual#future-indexes, Operations Manual -> Future indexes>>.
 
 Like b-tree indexes, range indexes are created on one or more properties for all nodes or relationships with a given label or relationship type:
 
