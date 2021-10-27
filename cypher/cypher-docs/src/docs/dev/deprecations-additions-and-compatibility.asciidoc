@@ -347,6 +347,38 @@ SET DATABASE ACCESS
 ----
 a|
 New Cypher command for administering the privilege for modifying database access mode.
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+CREATE ALIAS ... [IF EXISTS]
+FOR DATABASE ...
+----
+a|
+New Cypher command for creating an alias for a database name.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+ALTER ALIAS ... [IF NOT EXISTS]
+SET DATABASE TARGET ...
+----
+a|
+New Cypher command for altering an alias to target another database.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+DROP ALIAS ... [IF EXISTS] FOR DATABASE
+----
+a|
+New Cypher command for dropping a database alias.
+
 |===
 
 

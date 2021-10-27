@@ -34,7 +34,10 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     database("system")
     initQueries(
       "CREATE DATABASE `movies`",
-      "CREATE DATABASE `northwind-graph`"
+      "CREATE ALIAS `films` FOR DATABASE `movies`",
+      "CREATE ALIAS `motion pictures` FOR DATABASE `movies`",
+      "CREATE DATABASE `northwind-graph-2020`",
+      "CREATE DATABASE `northwind-graph-2021`"
     )
     synopsis("This chapter explains how to use Cypher to manage Neo4j databases: creating, modifying, deleting, starting, and stopping individual databases within a single server.")
     p(
@@ -69,7 +72,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       p("The number of databases can be seen using a `count()` aggregation with `YIELD` and `RETURN`.")
       query("SHOW DATABASES YIELD * RETURN count(*) as count", ResultAssertions({ r: DocsExecutionResult =>
-        r.columnAs[Int]("count").toSet should be(Set(4))
+        r.columnAs[Int]("count").toSet should be(Set(5))
       })){
         resultTable()
       }
@@ -108,7 +111,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Creating databases", "administration-databases-create-database", "enterprise-edition") {
       p("Databases can be created using `CREATE DATABASE`.")
-      query("CREATE DATABASE customers", ResultAssertions((r) => {
+      query("CREATE DATABASE customers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
@@ -134,7 +137,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           "Appending `IF NOT EXISTS` to the command ensures that no error is returned and nothing happens should the database already exist. " +
           "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created.")
         query("CREATE DATABASE customers IF NOT EXISTS", ResultAssertions(r => {
-          assertStats(r, systemUpdates = 0)
+          assertStats(r)
         })) {}
         query("CREATE OR REPLACE DATABASE customers", ResultAssertions(r => {
           assertStats(r, systemUpdates = 2)
@@ -173,7 +176,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         "`dbms.database.writable`. For details, see <<operations-manual#manage-databases-parameters, Configuration parameters>>. " +
         "If the mode set by the `ALTER DATABASE` command is read-only while the database according to those settings is read-write (or vice versa), " +
         "the database will be read-only and prevent write queries.")
-      query("ALTER DATABASE customers SET ACCESS READ ONLY", ResultAssertions((r) => {
+      query("ALTER DATABASE customers SET ACCESS READ ONLY", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
@@ -185,12 +188,12 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       p("This command is optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
         "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
       query("ALTER DATABASE nonExisting IF EXISTS SET ACCESS READ WRITE", ResultAssertions(r => {
-        assertStats(r, systemUpdates = 0)
+        assertStats(r)
       })) {}
     }
     section("Stopping databases", "administration-databases-stop-database", "enterprise-edition") {
       p("Databases can be stopped using the command `STOP DATABASE`.")
-      query("STOP DATABASE customers", ResultAssertions((r) => {
+      query("STOP DATABASE customers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
@@ -202,7 +205,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Starting databases", "administration-databases-start-database", "enterprise-edition") {
       p("Databases can be started using the command `START DATABASE`.")
-      query("START DATABASE customers", ResultAssertions((r) => {
+      query("START DATABASE customers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
@@ -214,7 +217,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Deleting databases", "administration-databases-drop-database", "enterprise-edition") {
       p("Databases can be deleted using the command `DROP DATABASE`.")
-      query("DROP DATABASE customers", ResultAssertions((r) => {
+      query("DROP DATABASE customers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
@@ -226,18 +229,18 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       p("This command is optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
         "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
       query("DROP DATABASE customers IF EXISTS", ResultAssertions(r => {
-        assertStats(r, systemUpdates = 0)
+        assertStats(r)
       })) {}
       p("The `DROP DATABASE` command will remove a database entirely. " +
         "However, you can request that a dump of the store files is produced first, and stored in the path configured using the `dbms.directories.dumps.root` setting (by default `<neo4j-home>/data/dumps`). " +
         "This can be achieved by appending `DUMP DATA` to the command (or `DESTROY DATA` to explicitly request the default behavior). " +
         "These dumps are equivalent to those produced by `neo4j-admin dump` and can be similarly restored using `neo4j-admin load`.")
       query("DROP DATABASE customers DUMP DATA", ResultAssertions(r => {
-        assertStats(r, systemUpdates = 0)
+        assertStats(r)
       })) {}
       p("The options `IF EXISTS` and  `DUMP DATA`/ `DESTROY DATA` can also be combined. An example could look like this:")
       query("DROP DATABASE customers IF EXISTS DUMP DATA", ResultAssertions(r => {
-        assertStats(r, systemUpdates = 0)
+        assertStats(r)
       })) {}
 
     }
@@ -257,7 +260,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |it is recommended that these commands be run in their own transaction. The default behavior is `NOWAIT`, so if no clause
           |is specified the transaction will behave normally and the action is performed in the background post-commit.""".stripMargin)
     }
-    query("CREATE DATABASE slow WAIT 5 SECONDS", ResultAssertions((r) => {
+    query("CREATE DATABASE slow WAIT 5 SECONDS", ResultAssertions(r => {
       assertStats(r, systemUpdates = 1)
     })) {
       resultTable()
@@ -272,6 +275,79 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """A command with a `WAIT` clause may be interrupted whilst it is waiting to complete. In this event
           |the command will continue to execute in the background and will not be aborted.""".stripMargin)
+    }
+    section(title="Creating database aliases", id="administration-database-aliases-create-alias", role = "enterprise-edition") {
+      p("Aliases can be created using `CREATE ALIAS`.")
+      query("CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 1)
+      })) {
+        statsOnlyResultTable()
+      }
+      note {
+        p("""Alias names are subject to the <<cypher-manual#cypher-naming, standard Cypher restrictions on valid identifiers>>.
+            |The following naming rules apply:""")
+        p(
+          """
+            |* A name is a valid identifier, additionally allowing dots (`main.alias`).
+            |* Name length can be up to 65534 characters.
+            |* Names cannot end with dots.
+            |* Names that begin with an underscore or with the prefix `system` are reserved for internal use.
+            |* Non-alphabetic characters, including numbers, symbols and whitespace characters, can be used in names, but must be escaped using backticks.
+            |
+          """.stripMargin)
+      }
+      p("When a database alias has been created, it will show up in the aliases column provided by the command `SHOW DATABASES`.")
+      query("SHOW DATABASE `northwind`", assertDatabaseShown("northwind-graph-2020")) {
+        resultTable()
+      }
+      p(
+        """An alias can be used as an alternative database name, which can be used in all places where a database name can be used.
+          |A home database can be set to an alias, which will be resolved to the target database on use.
+          |In all all other Cypher commands and queries, the alias will be resolved while executing the command and
+          |privileges are determined on the resolved database.
+        """.stripMargin)
+
+      /**
+       * TODO: verify
+       * - configurations
+       * - procedures
+       * - functions
+       * - browser
+       * - cypher shell
+       * - bloom
+       */
+    }
+    section(title="Altering database aliases", id="administration-database-aliases-alter-alias", role = "enterprise-edition") {
+      p("Aliases can be altered using `ALTER ALIAS` to change its database target.")
+      query("ALTER ALIAS `northwind` SET DATABASE TARGET `northwind-graph-2021`", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 1)
+      })) {
+        statsOnlyResultTable()
+      }
+      p("When a database alias has been altered, it will show up in the aliases column provided by the command `SHOW DATABASES`.")
+      query("SHOW DATABASE `northwind`", assertDatabaseShown("northwind-graph-2021")) {
+        resultTable()
+      }
+    }
+    section(title="Deleting database aliases", id="administration-database-aliases-drop-alias", role = "enterprise-edition") {
+      p("Aliases can be dropped using `DROP ALIAS`.")
+      query("DROP ALIAS `northwind` FOR DATABASE", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 1)
+      })) {
+        statsOnlyResultTable()
+      }
+      p("When a database alias has been deleted, it will no longer show up in the aliases column provided by the command `SHOW DATABASES`.")
+      query("SHOW DATABASE `northwind-graph-2021`", assertDatabaseShown("northwind-graph-2021")) {
+        resultTable()
+      }
+      p(s"""This command is optionally idempotent, with the default behavior to fail with an error if the alias does not exist.
+           |Inserting IF EXISTS after the alias name ensures that no error is returned and nothing happens should the alias not exist."""
+        .stripMargin)
+      query("DROP ALIAS `northwind` IF EXISTS FOR DATABASE", ResultAssertions(r => {
+        assertStats(r)
+      })) {
+        statsOnlyResultTable()
+      }
     }
   }.build()
 
