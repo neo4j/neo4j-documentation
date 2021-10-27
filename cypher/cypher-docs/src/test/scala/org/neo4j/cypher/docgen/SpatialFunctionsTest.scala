@@ -133,8 +133,13 @@ class SpatialFunctionsTest extends DocumentingTest {
     }
     section("point.withinBBox()", "functions-withinBBox") {
       p(
-        """`point.withinBBox()` takes three arguments, the first argument is the point to check and the two other define the lower-left (or south-west) and upper-right (or north-east) point of a bounding box respectively.
-          | The return value will be `true` if the provided point is contained in the bounding box (boundary included) otherwise `false`.
+        """`point.withinBBox()` takes the following arguments:
+          |
+          |* The point to check.
+          |* The lower-left (south-west) point of a bounding box.
+          |* The upper-right (or north-east) point of a bounding box.
+          |
+          | The return value will be true if the provided point is contained in the bounding box (boundary included), otherwise the return value will be false.
         """.stripMargin)
       function("point.withinBBox(point, lowerLeft, upperRight)", "A Boolean.", ("point", "A point in either a geographic or cartesian coordinate system."), ("lowerLeft", "A point in the same CRS as 'point'."), ("upperRight", "A point in the same CRS as 'point'."))
       considerations("`point.withinBBox(p1, p2, p3)` will return `null` if any of the arguments evaluate to `null`.",
