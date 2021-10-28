@@ -227,7 +227,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         resultTable()
       }
       p("This command is optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
-        "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
+        "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist. " +
+        "It will always return an error, if there is an existing alias that targets the database. " +
+        "In that case, the alias needs to be dropped before dropping the database.")
       query("DROP DATABASE customers IF EXISTS", ResultAssertions(r => {
         assertStats(r)
       })) {}
@@ -303,19 +305,24 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """An alias can be used as an alternative database name, which can be used in all places where a database name can be used.
           |A home database can be set to an alias, which will be resolved to the target database on use.
-          |In all all other Cypher commands and queries, the alias will be resolved while executing the command and
-          |privileges are determined on the resolved database.
+          |In all all other Cypher commands and queries, the alias will be resolved while executing the command.
+          |The privileges are determined on the resolved database.
         """.stripMargin)
-
-      /**
-       * TODO: verify
-       * - configurations
-       * - procedures
-       * - functions
-       * - browser
-       * - cypher shell
-       * - bloom
-       */
+      p("This command is optionally idempotent, with the default behavior to fail with an error if the database alias already exists. " +
+        "Inserting `IF NOT EXISTS` after the alias name ensures that no error is returned and nothing happens should the database already exist. " +
+        "Adding `OR REPLACE` to the command will result in any existing database alias being deleted and a new one created. " +
+        "`CREATE OR REPLACE ALIAS` will fail if there exists a database with the same name.")
+      query("CREATE ALIAS `northwind` IF NOT EXISTS FOR DATABASE `northwind-graph-2020` ", ResultAssertions(r => {
+        assertStats(r)
+      })) {}
+      query("CREATE OR REPLACE `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 2)
+      })) {
+        p("This is equivalent to running `DROP ALIAS `northwind` IF EXISTS FOR DATABASE` followed by `CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020`.")
+      }
+      note {
+        p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
+      }
     }
     section(title="Altering database aliases", id="administration-database-aliases-alter-alias", role = "enterprise-edition") {
       p("Aliases can be altered using `ALTER ALIAS` to change its database target.")
