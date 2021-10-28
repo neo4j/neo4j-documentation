@@ -139,7 +139,8 @@ class SpatialFunctionsTest extends DocumentingTest {
           |* The lower-left (south-west) point of a bounding box.
           |* The upper-right (or north-east) point of a bounding box.
           |
-          | The return value will be true if the provided point is contained in the bounding box (boundary included), otherwise the return value will be false.
+          |
+          |The return value will be true if the provided point is contained in the bounding box (boundary included), otherwise the return value will be false.
         """.stripMargin)
       function("point.withinBBox(point, lowerLeft, upperRight)", "A Boolean.", ("point", "A point in either a geographic or cartesian coordinate system."), ("lowerLeft", "A point in the same CRS as 'point'."), ("upperRight", "A point in the same CRS as 'point'."))
       considerations("`point.withinBBox(p1, p2, p3)` will return `null` if any of the arguments evaluate to `null`.",
