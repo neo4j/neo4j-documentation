@@ -33,7 +33,7 @@ USE <graph>
 <other clauses>
 ----
 
-Where `<graph>` refers to the name of a database in the DBMS.
+Where `<graph>` refers to the name or alias of a database in the DBMS.
 
 
 [role=fabric]

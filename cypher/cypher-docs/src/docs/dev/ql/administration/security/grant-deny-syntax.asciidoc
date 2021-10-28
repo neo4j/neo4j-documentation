@@ -11,7 +11,8 @@ The components of the graph privilege commands are:
 
 * _name_
 ** The graph or graphs to associate the privilege with.
-Because in Neo4j {neo4j-version} you can have only one graph per database, this command uses the database name to refer to that graph.
+Because in Neo4j {neo4j-version} you can have only one graph per database, this command uses the database name or alias to refer to that graph.
+When using an alias, the command will be executed on the resolved graph.
 +
 [NOTE]
 ====
