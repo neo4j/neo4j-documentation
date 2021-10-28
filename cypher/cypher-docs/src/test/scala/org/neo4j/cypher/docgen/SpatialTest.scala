@@ -39,7 +39,7 @@ class SpatialTest extends DocumentingTest {
         | ** <<cypher-spatial-specifying-spatial-instants, Creating points>>
         | ** <<cypher-spatial-accessing-components-spatial-instants, Accessing components of points>>
         |* <<cypher-spatial-index, Spatial index>>
-        |* <<cypher-comparability-orderability, Comparability and Orderability>>
+        |* <<cypher-comparability-orderability, Comparability and orderability>>
         |""".stripMargin)
     note{
       p("""Refer to <<query-functions-spatial>> for information regarding spatial _functions_ allowing for the creation and manipulation of spatial values.""")
