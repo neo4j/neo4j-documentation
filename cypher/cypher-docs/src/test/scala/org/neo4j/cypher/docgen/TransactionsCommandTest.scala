@@ -92,7 +92,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|LONG
 
 |m|outerTransactionId
-|a|The ID of an outer transaction.
+|a|The ID of this transaction's outer transaction, if such exists. For details, see <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>>.
 |m|STRING
 
 |m|metaData
