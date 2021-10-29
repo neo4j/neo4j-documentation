@@ -20,6 +20,7 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
+import org.neo4j.graphdb.schema.IndexType
 import org.scalatest.matchers.Matcher
 
 class UsingTest extends DocumentingTest {
@@ -29,17 +30,20 @@ class UsingTest extends DocumentingTest {
     initQueries(
       """FOREACH(i IN range(1, 100) |
         |  CREATE (:Scientist {born: 1800 + i})-[:RESEARCHED]->
-        |         (:Science)<-[:INVENTED_BY {year: 530 + (i % 50)}]-
+        |         (:Science)<-[:INVENTED_BY {year: 530 + (i % 50), location: 'Location' + i}]-
         |         (:Pioneer {born: 500 + (i % 50)})-[:LIVES_IN]->
         |         (:City)-[:PART_OF]->
-        |         (:Country {formed: 400 + i, name:'ACountry' + i})
+        |         (:Country {formed: 400 + i, name:'Country' + i})
         |)
         |""".stripMargin,
       "CREATE INDEX FOR (s:Scientist) ON (s.born)",
       "CREATE INDEX FOR (p:Pioneer) ON (p.born)",
       "CREATE INDEX FOR (c:Country) ON (c.formed)",
       "CREATE INDEX FOR (c:Country) ON (c.name)",
+      "CREATE TEXT INDEX FOR (c:Country) ON (c.name)",
       "CREATE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.year)",
+      "CREATE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.location)",
+      "CREATE TEXT INDEX FOR ()-[i:INVENTED_BY]-() ON (i.location)",
       "CALL db.awaitIndexes",
     )
     synopsis("A planner hint is used to influence the decisions of the planner when building an execution plan for a query. Planner hints are specified in a query with the `USING` keyword.")
@@ -69,15 +73,32 @@ class UsingTest extends DocumentingTest {
       }
     }
     section("Index hints", "query-using-index-hint") {
-      p("""Index hints are used to specify which index, the planner should use as a starting point.
+      p("""Index hints are used to specify which index the planner should use as a starting point.
           |This can be beneficial in cases where the index statistics are not accurate for the specific values that
           |the query at hand is known to use, which would result in the planner picking a non-optimal index.
-          |To supply an index hint, use `USING INDEX variable:Label(property)` or `USING INDEX SEEK variable:Label(property)` after the applicable `MATCH` clause for node indexes,
-          |and `USING INDEX variable:RELATIONSHIP_TYPE(property)` or `USING INDEX SEEK variable:RELATIONSHIP_TYPE(property)` for relationship indexes.""")
+          |An index hint is supplied after an applicable `MATCH` clause. Available index hints are:""")
       p(
-        """`USING INDEX` can be fulfilled by any of the following plans:
-          |`NodeIndexScan`, `DirectedRelationshipIndexScan`, `UndirectedRelationshipIndexScan`, `NodeIndexSeek`, `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`.
-          |`USING INDEX SEEK` can only be fulfilled by `NodeIndexSeek`, `DirectedRelationshipIndexSeek` or `UndirectedRelationshipIndexSeek`.""")
+        """
+          |[options="header"]
+          ||===
+          || Hint                                                                     | Fulfilled by plans
+          || `USING [BTREE \| TEXT] INDEX variable:Label(property)`                   | `NodeIndexScan`, `NodeIndexSeek`
+          || `USING [BTREE \| TEXT] INDEX SEEK variable:Label(property)`              | `NodeIndexSeek`
+          || `USING [BTREE \| TEXT] INDEX variable:RELATIONSHIP_TYPE(property)`       | `DirectedRelationshipIndexScan`, `UndirectedRelationshipIndexScan`, `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`
+          || `USING [BTREE \| TEXT] INDEX SEEK variable:RELATIONSHIP_TYPE(property)`  | `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`
+          ||===
+          """
+      )
+      p(
+        """When specifying an index type for a hint, e.g. `BTREE` or `TEXT`, the hint can only be fulfilled when an index of the specified type is available.
+          |When no index type is specified, the hint can be fulfilled by any index types.
+          |""".stripMargin)
+      caution {
+        p(
+          """Using a hint must never change the result of a query.
+            |Therefore, a hint with a specified index type is only fulfillable when the planner knows that using an index of the specified type does not change the results.
+            |Please refer to <<query-tuning-indexes>> for more details.""".stripMargin)
+      }
       p("""It is possible to supply several index hints, but keep in mind that several starting points
           |will require the use of a potentially expensive join later in the query plan.""")
       section("Query using a node index hint") {
@@ -90,6 +111,17 @@ class UsingTest extends DocumentingTest {
           profileExecutionPlan()
         }
       }
+      section("Query using a node text index hint") {
+        p("""The following query can be tuned to pick a text index.""")
+        query(
+          s"""MATCH (c:Country)
+             |USING TEXT INDEX c:Country(name)
+             |WHERE c.name = 'Country7'
+             |RETURN *""",
+          assertPlan(AND(ShouldUseNodeIndexSeekOn("c", IndexType.TEXT), ShouldNotUseJoins))) {
+          profileExecutionPlan()
+        }
+      }
       section("Query using a relationship index hint") {
         p("""The query above can be tuned to pick a relationship index as the starting point.""")
         query(
@@ -97,6 +129,18 @@ class UsingTest extends DocumentingTest {
              |USING INDEX i:INVENTED_BY(year)
              |RETURN *""",
           assertPlan(AND(ShouldUseRelationshipIndexSeekOn("i"), ShouldNotUseJoins))) {
+          profileExecutionPlan()
+        }
+      }
+
+      section("Query using a relationship text index hint") {
+        p("""The following query can be tuned to pick a text index.""")
+        query(
+          s"""MATCH ()-[i:INVENTED_BY]->()
+             |USING TEXT INDEX i:INVENTED_BY(location)
+             |WHERE i.location = 'Location7'
+             |RETURN *""",
+          assertPlan(AND(ShouldUseRelationshipIndexSeekOn("i", IndexType.TEXT), ShouldNotUseJoins))) {
           profileExecutionPlan()
         }
       }
@@ -256,12 +300,12 @@ class UsingTest extends DocumentingTest {
     def matcher: Matcher[String]
   }
 
-  case class ShouldUseNodeIndexSeekOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"NodeIndexSeek\\s*\\|\\s*BTREE INDEX\\s*$variable".r
+  case class ShouldUseNodeIndexSeekOn(variable: String, indexType: IndexType = IndexType.BTREE) extends PlanAssertion {
+    override def matcher: Matcher[String] = include regex s"NodeIndexSeek\\s*\\|\\s*${indexType.name()} INDEX\\s*$variable".r
   }
 
-  case class ShouldUseRelationshipIndexSeekOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek\\s*\\|\\s*BTREE INDEX\\s*\\(\\w*\\)-\\[$variable".r
+  case class ShouldUseRelationshipIndexSeekOn(variable: String, indexType: IndexType = IndexType.BTREE) extends PlanAssertion {
+    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek\\s*\\|\\s*${indexType.name()} INDEX\\s*\\(\\w*\\)-\\[$variable".r
   }
 
   case class ShouldUseLabelScanOn(variable: String) extends PlanAssertion {
