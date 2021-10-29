@@ -318,8 +318,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("CREATE OR REPLACE ALIAS `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
         assertStats(r, systemUpdates = 2)
       })) {
-        p("This is equivalent to running ``DROP ALIAS `northwind` IF EXISTS FOR DATABASE`` followed by ``CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020` ``.")
+        statsOnlyResultTable()
       }
+      p("This is equivalent to running ``DROP ALIAS `northwind` IF EXISTS FOR DATABASE`` followed by ``CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020` ``.")
       note {
         p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
       }
