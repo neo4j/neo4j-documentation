@@ -315,7 +315,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("CREATE ALIAS `northwind` IF NOT EXISTS FOR DATABASE `northwind-graph-2020` ", ResultAssertions(r => {
         assertStats(r)
       })) {}
-      query("CREATE OR REPLACE `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
+      query("CREATE OR REPLACE ALIAS `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
         assertStats(r, systemUpdates = 2)
       })) {
         p("This is equivalent to running ``DROP ALIAS `northwind` IF EXISTS FOR DATABASE`` followed by ``CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020` ``.")
