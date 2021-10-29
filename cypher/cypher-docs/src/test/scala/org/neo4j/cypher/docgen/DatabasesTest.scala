@@ -247,7 +247,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
 
     }
     section(title="Wait options", id="administration-wait-nowait", role = "enterprise-edition") {
-      p("""`CREATE DATABASES`, `DROP DATABASE`, `START DATABASES` and `STOP DATABASE` commands all accept an optional
+      p("""`CREATE DATABASE`, `DROP DATABASE`, `START DATABASE` and `STOP DATABASE` commands accept an optional
           |`WAIT`/`NOWAIT` clause. The `WAIT`/`NOWAIT` clause allows a user to specify whether to wait
           |for the command to complete before returning. The options are:
           |
@@ -318,7 +318,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("CREATE OR REPLACE `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
         assertStats(r, systemUpdates = 2)
       })) {
-        p("This is equivalent to running `DROP ALIAS `northwind` IF EXISTS FOR DATABASE` followed by `CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020``.")
+        p("This is equivalent to running ``DROP ALIAS `northwind` IF EXISTS FOR DATABASE`` followed by ``CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020` ``.")
       }
       note {
         p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
