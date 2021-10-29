@@ -2,7 +2,7 @@
 |===
 |Column |Description|Default Output|Full Output| Notes
 |name|The name of the database.|{check-mark}|{check-mark}|
-|aliases|The aliases of the database name.|{check-mark}|{check-mark}|
+|aliases|The names of any aliases the database may have.|{check-mark}|{check-mark}|
 |access|The database access mode, either `read-write` or `read-only`.|{check-mark}|{check-mark}|
 |databaseID|The database unique ID.||{check-mark}|
 |serverID|The server instance ID.||{check-mark}|

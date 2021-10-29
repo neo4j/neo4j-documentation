@@ -247,7 +247,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
 
     }
     section(title="Wait options", id="administration-wait-nowait", role = "enterprise-edition") {
-      p("""Aside from `SHOW DATABASES` and `ALTER DATABASE`, the database management commands all accept an optional
+      p("""`CREATE DATABASES`, `DROP DATABASE`, `START DATABASES` and `STOP DATABASE` commands all accept an optional
           |`WAIT`/`NOWAIT` clause. The `WAIT`/`NOWAIT` clause allows a user to specify whether to wait
           |for the command to complete before returning. The options are:
           |
@@ -279,6 +279,12 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |the command will continue to execute in the background and will not be aborted.""".stripMargin)
     }
     section(title="Creating database aliases", id="administration-database-aliases-create-alias", role = "enterprise-edition") {
+      p(
+        """An alias can be used as an alternative database name, which can be used in all places where a database name can be used.
+          |A home database can be set to an alias, which will be resolved to the target database on use.
+          |In all all other Cypher commands and queries, the alias will be resolved while executing the command.
+          |The privileges are determined on the resolved database.
+        """.stripMargin)
       p("Aliases can be created using `CREATE ALIAS`.")
       query("CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
@@ -290,7 +296,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |The following naming rules apply:""")
         p(
           """
-            |* A name is a valid identifier, additionally allowing dots (`main.alias`).
+            |* A name is a valid identifier, additionally allowing dots `main.alias`.
             |* Name length can be up to 65534 characters.
             |* Names cannot end with dots.
             |* Names that begin with an underscore or with the prefix `system` are reserved for internal use.
@@ -302,23 +308,17 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASE `northwind`", assertDatabaseShown("northwind-graph-2020")) {
         resultTable()
       }
-      p(
-        """An alias can be used as an alternative database name, which can be used in all places where a database name can be used.
-          |A home database can be set to an alias, which will be resolved to the target database on use.
-          |In all all other Cypher commands and queries, the alias will be resolved while executing the command.
-          |The privileges are determined on the resolved database.
-        """.stripMargin)
       p("This command is optionally idempotent, with the default behavior to fail with an error if the database alias already exists. " +
-        "Inserting `IF NOT EXISTS` after the alias name ensures that no error is returned and nothing happens should the database already exist. " +
+        "Inserting `IF NOT EXISTS` after the alias name ensures that no error is returned and nothing happens should a database alias with that name already exist. " +
         "Adding `OR REPLACE` to the command will result in any existing database alias being deleted and a new one created. " +
-        "`CREATE OR REPLACE ALIAS` will fail if there exists a database with the same name.")
+        "`CREATE OR REPLACE ALIAS` will fail if there is an existing database with the same name.")
       query("CREATE ALIAS `northwind` IF NOT EXISTS FOR DATABASE `northwind-graph-2020` ", ResultAssertions(r => {
         assertStats(r)
       })) {}
       query("CREATE OR REPLACE `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
         assertStats(r, systemUpdates = 2)
       })) {
-        p("This is equivalent to running `DROP ALIAS `northwind` IF EXISTS FOR DATABASE` followed by `CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020`.")
+        p("This is equivalent to running `DROP ALIAS `northwind` IF EXISTS FOR DATABASE` followed by `CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020``.")
       }
       note {
         p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
@@ -331,7 +331,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       })) {
         statsOnlyResultTable()
       }
-      p("When a database alias has been altered, it will show up in the aliases column provided by the command `SHOW DATABASES`.")
+      p("When a database alias has been altered, it will show up in the aliases column for the target database provided by the command `SHOW DATABASES`.")
       query("SHOW DATABASE `northwind`", assertDatabaseShown("northwind-graph-2021")) {
         resultTable()
       }

@@ -314,8 +314,7 @@ The following commands are only executable against the `system` database:
 | <<administration-database-aliases-drop-alias, DROP ALIAS ... [IF EXISTS] FOR DATABASE>>                                                                                           | Database Alias | Deletes a specified database alias.
 | <<administration-databases-drop-database, DROP DATABASE ... [IF EXISTS] [DUMP DATA \| DESTROY DATA]>>                                                                             | Database       | Deletes a specified database.
 | <<administration-security-roles-drop, DROP ROLE ... [IF EXISTS]>>                                                                                                                 | User and role  | Deletes a specified role.
-| <<administration-security-users-drop, DROP USER ... [IF EXISTS]>>
-| User and role  | Deletes a specified user.
+| <<administration-security-users-drop, DROP USER ... [IF EXISTS]>>                                                                                                                 | User and role  | Deletes a specified user.
 | <<administration-security-administration-database-privileges, GRANT ... ON DATABASE ... TO>>                                                                                      | Privilege      | Assigns a database or schema privilege to one or multiple roles.
 | <<access-control-dbms-administration, GRANT ... ON DBMS TO>>                                                                                                  | Privilege      | Assigns a DBMS privilege to one or multiple roles.
 | <<administration-security-subgraph-introduction, GRANT ... ON GRAPH ... [NODES \| RELATIONSHIPS \| ELEMENTS] ... TO>>                                                             | Privilege      | Assigns a graph privilege for one or multiple specified elements to one or multiple roles.
