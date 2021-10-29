@@ -300,7 +300,7 @@ The following commands are only executable against the `system` database:
 [options="header"]
 |===
 |Command                                                                                                                                                                            | Admin category | Description
-| <<administration-database-aliases-alter-alias, ALTER ALIAS ... [IF EXISTS] SET DATABASE TARGET ...>>                                                                              | Database Alias | Modifies the database alias target.
+| <<administration-database-aliases-alter-alias, ALTER ALIAS ... [IF EXISTS] SET DATABASE TARGET ...>>                                                                              | Database Alias | Modifies the target of a database alias.
 | <<administration-security-users-alter-password, ALTER CURRENT USER SET PASSWORD FROM ... TO>>                                                                                     | User and role  | Change the password of the user that is currently logged in.
 | <<administration-databases-alter-database, ALTER DATABASE ... [IF EXISTS] SET ACCESS {READ ONLY \| READ WRITE}>>                                                                  | Database       | Modifies the database access mode.
 | <<administration-security-users-alter, ALTER USER ... [IF EXISTS] [SET [PLAINTEXT \| ENCRYPTED] PASSWORD {password [CHANGE [NOT] REQUIRED] \| CHANGE [NOT] REQUIRED}] [SET STATUS {ACTIVE \| SUSPENDED}] [SET HOME DATABASE name] [REMOVE HOME DATABASE]>>             | User and role  | Changes a user account. Changes can include setting a new password, setting the account status, setting or removing home database and enabling that the user should change the password upon next login.
