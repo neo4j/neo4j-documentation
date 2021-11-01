@@ -51,23 +51,23 @@ trait QueryStatisticsTestSupport extends MockitoSugar {
                  ): Unit = {
     val expected =
       QueryStatistics(
-        nodesCreated,
-        relationshipsCreated,
-        propertiesWritten,
-        nodesDeleted,
-        relationshipsDeleted,
-        labelsAdded,
-        labelsRemoved,
-        indexesAdded,
-        indexesRemoved,
-        uniqueConstraintsAdded,
-        uniqueConstraintsRemoved,
-        existenceConstraintsAdded,
-        existenceConstraintsRemoved,
-        nodekeyConstraintsAdded,
-        nodekeyConstraintsRemoved,
-        namedConstraintsRemoved,
-        systemUpdates
+        nodesCreated = nodesCreated,
+        relationshipsCreated = relationshipsCreated,
+        propertiesSet = propertiesWritten,
+        nodesDeleted = nodesDeleted,
+        relationshipsDeleted = relationshipsDeleted,
+        labelsAdded = labelsAdded,
+        labelsRemoved = labelsRemoved,
+        indexesAdded = indexesAdded,
+        indexesRemoved = indexesRemoved,
+        uniqueConstraintsAdded = uniqueConstraintsAdded,
+        uniqueConstraintsRemoved = uniqueConstraintsRemoved,
+        existenceConstraintsAdded = existenceConstraintsAdded,
+        existenceConstraintsRemoved = existenceConstraintsRemoved,
+        nodekeyConstraintsAdded = nodekeyConstraintsAdded,
+        nodekeyConstraintsRemoved = nodekeyConstraintsRemoved,
+        namedConstraintsRemoved = namedConstraintsRemoved,
+        systemUpdates = systemUpdates,
       )
 
     assertResult(expected)(result.queryStatistics())
