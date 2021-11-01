@@ -314,7 +314,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         "`CREATE OR REPLACE ALIAS` will fail if there is an existing database with the same name.")
       query("CREATE ALIAS `northwind` IF NOT EXISTS FOR DATABASE `northwind-graph-2020` ", ResultAssertions(r => {
         assertStats(r)
-      })) {}
+      })) {
+        statsOnlyResultTable()
+      }
       query("CREATE OR REPLACE ALIAS `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
         assertStats(r, systemUpdates = 2)
       })) {
