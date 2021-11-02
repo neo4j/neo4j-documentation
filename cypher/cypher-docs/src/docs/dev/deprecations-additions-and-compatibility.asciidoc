@@ -18,6 +18,27 @@ Replacement syntax for deprecated and removed features are also indicated.
 | Details
 
 a|
+label:functionality[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+MATCH (n) RETURN n.propertyName_1, n.propertyName_2 + count(*)
+----
+a|
+Implied grouping keys are deprecated.
+Only expressions that do _not_ contain aggregations are grouping keys.
+In expressions that contain aggregations, the leaves of expressions must be one of:
+
+- An aggregation
+- A literal
+- A Parameter
+- A variable - *ONLY IF* that variable is also one of: +
+1) A projection expression on its own (e.g. the `n` in `RETURN n AS myNode, n.value + count(*)`) +
+2) A local variable in the expression (e.g the `x` in `RETURN n, n.prop + size([ x IN range(1, 10) \| x ]`)
+- Property access - *ONLY IF* that property access is also a projection expression on its own (e.g. the `n.prop` in `RETURN n.prop, n.prop + count(*)`) +
+- Map access - *ONLY IF* that map access is also a projection expression on its own (e.g. the `map.prop` in `WITH {prop: 2} AS map RETURN map.prop, map.prop + count(*)`)
+
+a|
 label:syntax[]
 label:deprecated[]
 [source, cypher, role="noheader"]
@@ -388,7 +409,6 @@ New Cypher command for dropping a database alias.
 |===
 | Feature
 | Details
-
 
 a|
 label:syntax[]
