@@ -284,6 +284,12 @@ Tests for the presence of a pattern predicate in queries containing multiple pat
 |
 |
 
+| <<query-plan-multi-node-index-seek, MultiNodeIndexSeek>>
+| Finds nodes using multiple index seeks.
+| label:yes[]
+|
+|
+
 | <<query-plan-node-by-id-seek,NodeByIdSeek>>
 | Reads one or more nodes by ID from the node store.
 | label:yes[]
