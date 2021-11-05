@@ -54,7 +54,7 @@ public class StatusUpdate
 
     public Person getPerson()
     {
-        return new Person( databaseService, transaction, getPersonNode() );
+        return new Person( databaseService, getPersonNode() );
     }
 
     private Node getPersonNode()

@@ -33,16 +33,14 @@ public class PersonRepository
     private final Label PERSON = Label.label( "Person" );
     private final GraphDatabaseService graphDb;
     private final Node personRefNode;
-    private final Transaction transaction;
 
-    public PersonRepository( GraphDatabaseService graphDb, Transaction transaction )
+    public PersonRepository( GraphDatabaseService graphDb,Transaction transaction )
     {
         this.graphDb = graphDb;
-        this.transaction = transaction;
-        personRefNode = getPersonsRootNode( graphDb );
+        personRefNode = getPersonsRootNode( transaction );
     }
 
-    private Node getPersonsRootNode( GraphDatabaseService graphDb )
+    private Node getPersonsRootNode( Transaction transaction )
     {
         Node node = transaction.findNode( PERSON, "reference", "person" );
         if ( node != null )
@@ -50,18 +48,18 @@ public class PersonRepository
             return node;
         }
 
-        Node refNode = this.transaction.createNode();
+        Node refNode = transaction.createNode();
         refNode.setProperty( "reference", "persons" );
         return refNode;
     }
 
-    public Person createPerson( String name ) throws Exception
+    public Person createPerson( Transaction transaction, String name ) throws Exception
     {
         // to guard against duplications we use the lock grabbed on ref node
         // when
         // creating a relationship and are optimistic about person not existing
         Node newPersonNode = transaction.createNode(PERSON);
-        personRefNode.createRelationshipTo( newPersonNode, A_PERSON );
+        transaction.getNodeById( personRefNode.getId() ).createRelationshipTo( newPersonNode, A_PERSON );
         // lock now taken, we can check if  already exist in index
         Node alreadyExist = transaction.findNode( PERSON, Person.NAME, name );
         if ( alreadyExist != null )
@@ -69,10 +67,10 @@ public class PersonRepository
             throw new Exception( "Person with this name already exists " );
         }
         newPersonNode.setProperty( Person.NAME, name );
-        return new Person( graphDb, transaction, newPersonNode );
+        return new Person( graphDb, newPersonNode );
     }
 
-    public Person getPersonByName( String name )
+    public Person getPersonByName( Transaction transaction, String name )
     {
         Node personNode = transaction.findNode( PERSON, Person.NAME, name );
         if ( personNode == null )
@@ -80,19 +78,19 @@ public class PersonRepository
             throw new IllegalArgumentException( "Person[" + name
                     + "] not found" );
         }
-        return new Person( graphDb, transaction, personNode );
+        return new Person( graphDb, personNode );
     }
 
-    public void deletePerson( Person person )
+    public void deletePerson( Transaction transaction, Person person )
     {
         Node personNode = person.getUnderlyingNode();
-        for ( Person friend : person.getFriends() )
+        for ( Person friend : person.getFriends( transaction ) )
         {
-            person.removeFriend( friend );
+            person.removeFriend( transaction, friend );
         }
         personNode.getSingleRelationship( A_PERSON, Direction.INCOMING ).delete();
 
-        for ( StatusUpdate status : person.getStatus() )
+        for ( StatusUpdate status : person.getStatus( transaction ) )
         {
             Node statusNode = status.getUnderlyingNode();
             for ( Relationship r : statusNode.getRelationships() )
@@ -105,15 +103,14 @@ public class PersonRepository
         personNode.delete();
     }
 
-    public Iterable<Person> getAllPersons()
+    public Iterable<Person> getAllPersons( Transaction transaction )
     {
-        return new IterableWrapper<Person, Relationship>(
-                personRefNode.getRelationships( A_PERSON ) )
+        return new IterableWrapper<>( transaction.getNodeById( personRefNode.getId() ).getRelationships( A_PERSON ) )
         {
             @Override
             protected Person underlyingObjectToObject( Relationship personRel )
             {
-                return new Person( graphDb, transaction, personRel.getEndNode() );
+                return new Person( graphDb, personRel.getEndNode() );
             }
         };
     }

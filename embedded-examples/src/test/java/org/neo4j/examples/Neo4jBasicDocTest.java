@@ -44,7 +44,7 @@ import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAM
 class Neo4jBasicDocTest
 {
     @TempDir
-    private Path directory;
+    Path directory;
     private GraphDatabaseService graphDb;
     private DatabaseManagementService managementService;
 

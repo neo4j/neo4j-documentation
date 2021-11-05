@@ -52,6 +52,10 @@
                             <arguments>
                                 <argument>-classpath</argument>
                                 <classpath/>
+                                <argument>--add-opens</argument>
+                                <argument>java.base/java.lang=ALL-UNNAMED</argument>
+                                <argument>--add-opens</argument>
+                                <argument>java.base/java.nio=ALL-UNNAMED</argument>
                                 <argument>org.neo4j.doc.GenerateProcedureReference</argument>
                                 <argument>--edition=community</argument>
                                 <argument>--id=community-edition-procedure-reference</argument>
@@ -71,6 +75,10 @@
                             <arguments>
                                 <argument>-classpath</argument>
                                 <classpath/>
+                                <argument>--add-opens</argument>
+                                <argument>java.base/java.lang=ALL-UNNAMED</argument>
+                                <argument>--add-opens</argument>
+                                <argument>java.base/java.nio=ALL-UNNAMED</argument>
                                 <argument>org.neo4j.doc.GenerateProcedureReference</argument>
                                 <argument>--edition=enterprise</argument>
                                 <argument>--id=enterprise-edition-procedure-reference</argument>
@@ -90,6 +98,10 @@
                             <arguments>
                                 <argument>-classpath</argument>
                                 <classpath/>
+                                <argument>--add-opens</argument>
+                                <argument>java.base/java.lang=ALL-UNNAMED</argument>
+                                <argument>--add-opens</argument>
+                                <argument>java.base/java.nio=ALL-UNNAMED</argument>
                                 <argument>org.neo4j.doc.GenerateProcedureReference</argument>
                                 <argument>--edition=both</argument>
                                 <argument>--id=complete-procedure-reference</argument>
