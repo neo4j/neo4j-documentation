@@ -15,8 +15,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <neo4j.version>${project.version}</neo4j.version>
         <generate-config-docs-phase>prepare-package</generate-config-docs-phase>
         <attach-java-test-sources-phase>package</attach-java-test-sources-phase>
@@ -24,13 +24,18 @@
         <docs-plugin.filter>false</docs-plugin.filter>
         <docs-plugin.skip>false</docs-plugin.skip>
         <scala-test-compile-phase>process-test-resources</scala-test-compile-phase>
-        <test.runner.jvm.settings.additional>
-            -Dorg.neo4j.kernel.impl.api.KernelStatement.trackStatements=false
-        </test.runner.jvm.settings.additional>
         <license-text.header>build/AGPL-3-header.txt</license-text.header>
-        <jersey.version>2.27</jersey.version>
+        <jersey.version>2.34</jersey.version>
         <junit.version>5.5.2</junit.version>
-        <java9.exports/>
+        <test.runner.jvm.settings>
+            --add-opens java.base/java.lang=ALL-UNNAMED
+            --add-opens java.base/java.nio=ALL-UNNAMED
+            --add-opens java.base/java.io=ALL-UNNAMED
+            --add-opens java.base/java.util=ALL-UNNAMED
+            --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+            --add-opens java.base/sun.net.www.protocol.http=ALL-UNNAMED
+            --add-opens java.base/sun.nio.ch=ALL-UNNAMED
+        </test.runner.jvm.settings>
     </properties>
 
     <modules>
@@ -79,11 +84,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.21.0</version>
+                    <version>2.22.2</version>
                     <configuration>
                         <systemPropertyVariables>
                             <dbms.pagecache.memory.default.override>8m</dbms.pagecache.memory.default.override>
                         </systemPropertyVariables>
+                        <argLine>${test.runner.jvm.settings}</argLine>
+                        <trimStackTrace>false</trimStackTrace>
                         <includes>
                             <include>**/*Test.java</include>
                             <include>**/Test*.java</include>
@@ -98,13 +105,15 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.21.0</version>
+                    <version>2.22.2</version>
                     <configuration>
                         <includes>
                             <include>**/DocIT*.java</include>
                             <include>**/*DocIT.java</include>
                             <include>**/*DocITCase.java</include>
                         </includes>
+                        <argLine>${test.runner.jvm.settings}</argLine>
+                        <trimStackTrace>false</trimStackTrace>
                     </configuration>
                     <executions>
                         <execution>
@@ -247,11 +256,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.8.1</version>
                     <configuration>
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>true</showWarnings>
-                        <compilerArgument>${java9.exports}</compilerArgument>
                     </configuration>
                 </plugin>
 
@@ -324,7 +332,7 @@
 
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
                 <configuration>
                     <configLocation>build/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
@@ -335,7 +343,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>8.29</version>
+                        <version>9.0</version>
                     </dependency>
                 </dependencies>
                 <executions>

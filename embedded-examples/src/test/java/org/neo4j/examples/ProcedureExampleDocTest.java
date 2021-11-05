@@ -45,7 +45,7 @@ class ProcedureExampleDocTest
     private DatabaseManagementService managementService;
 
     @TempDir
-    private Path directory;
+    Path directory;
 
     @Test
     void listDenseNodesShouldWork() throws Throwable

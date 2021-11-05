@@ -659,7 +659,7 @@ class ImportToolDocIT
 
     private Path storeDirForDatabase()
     {
-        return testDirectory.toAbsolutePath().resolve( "data" ).resolve( "databases" );
+        return testDirectory.toAbsolutePath();
     }
 
     private File transactionLogsDirectory()

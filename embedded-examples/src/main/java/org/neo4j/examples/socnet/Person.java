@@ -54,14 +54,12 @@ public class Person
     static final String NAME = "name";
 
     private final GraphDatabaseService databaseService;
-    private final Transaction transaction;
     // tag::the-node[]
     private final Node underlyingNode;
 
-    Person( GraphDatabaseService databaseService, Transaction transaction, Node personNode )
+    Person( GraphDatabaseService databaseService, Node personNode )
     {
         this.databaseService = databaseService;
-        this.transaction = transaction;
         this.underlyingNode = personNode;
     }
 
@@ -94,6 +92,11 @@ public class Person
                 underlyingNode.equals( ( (Person)o ).getUnderlyingNode() );
     }
 
+    public long getId()
+    {
+        return underlyingNode.getId();
+    }
+
     @Override
     public String toString()
     {
@@ -102,11 +105,11 @@ public class Person
 
     // end::override[]
 
-    public void addFriend( Person otherPerson )
+    public void addFriend( Transaction tx, Person otherPerson )
     {
         if ( !this.equals( otherPerson ) )
         {
-            Relationship friendRel = getFriendRelationshipTo( otherPerson );
+            Relationship friendRel = getFriendRelationshipTo( tx, otherPerson );
             if ( friendRel == null )
             {
                 underlyingNode.createRelationshipTo( otherPerson.getUnderlyingNode(), FRIEND );
@@ -114,21 +117,21 @@ public class Person
         }
     }
 
-    public long getNrOfFriends()
+    public long getNrOfFriends( Transaction transaction )
     {
-        return Iterables.size( getFriends() );
+        return Iterables.size( getFriends( transaction ) );
     }
 
-    public Iterable<Person> getFriends()
+    public Iterable<Person> getFriends( Transaction transaction )
     {
-        return getFriendsByDepth( 1 );
+        return getFriendsByDepth( transaction, 1 );
     }
 
-    public void removeFriend( Person otherPerson )
+    public void removeFriend( Transaction tx, Person otherPerson )
     {
         if ( !this.equals( otherPerson ) )
         {
-            Relationship friendRel = getFriendRelationshipTo( otherPerson );
+            Relationship friendRel = getFriendRelationshipTo( tx, otherPerson );
             if ( friendRel != null )
             {
                 friendRel.delete();
@@ -136,38 +139,37 @@ public class Person
         }
     }
 
-    public Iterable<Person> getFriendsOfFriends()
+    public Iterable<Person> getFriendsOfFriends( Transaction transaction )
     {
-        return getFriendsByDepth( 2 );
+        return getFriendsByDepth( transaction, 2 );
     }
 
-    public Iterable<Person> getShortestPathTo( Person otherPerson,
+    public Iterable<Person> getShortestPathTo( Transaction transaction, Person otherPerson,
                                                int maxDepth )
     {
         // use graph algo to calculate a shortest path
         PathFinder<Path> finder = GraphAlgoFactory.shortestPath( new BasicEvaluationContext( transaction, databaseService ),
                 forTypeAndDirection(FRIEND, BOTH ), maxDepth );
 
-        Path path = finder.findSinglePath( underlyingNode,
-                otherPerson.getUnderlyingNode() );
+        Path path = finder.findSinglePath( transaction.getNodeById( underlyingNode.getId() ),
+                transaction.getNodeById( otherPerson.getUnderlyingNode().getId() ) );
         return createPersonsFromNodes( path );
     }
 
-    public Iterable<Person> getFriendRecommendation(
-            int numberOfFriendsToReturn )
+    public Iterable<Person> getFriendRecommendation( Transaction transaction, int numberOfFriendsToReturn )
     {
         HashSet<Person> friends = new HashSet<>();
-        addAll( friends, getFriends() );
+        addAll( friends, getFriends( transaction ) );
 
         HashSet<Person> friendsOfFriends = new HashSet<>();
-        addAll( friendsOfFriends, getFriendsOfFriends() );
+        addAll( friendsOfFriends, getFriendsOfFriends( transaction ) );
 
         friendsOfFriends.removeAll( friends );
 
         ArrayList<RankedPerson> rankedFriends = new ArrayList<>();
         for ( Person friend : friendsOfFriends )
         {
-            long rank = getNumberOfPathsToPerson( friend );
+            long rank = getNumberOfPathsToPerson( transaction, friend );
             rankedFriends.add( new RankedPerson( friend, rank ) );
         }
 
@@ -177,7 +179,7 @@ public class Person
         return onlyFriend( rankedFriends );
     }
 
-    public Iterable<StatusUpdate> getStatus()
+    public Iterable<StatusUpdate> getStatus( Transaction transaction )
     {
         Relationship firstStatus = underlyingNode.getSingleRelationship(
                 STATUS, Direction.OUTGOING );
@@ -203,23 +205,23 @@ public class Person
         };
     }
 
-    public Iterator<StatusUpdate> friendStatuses()
+    public Iterator<StatusUpdate> friendStatuses( Transaction transaction )
     {
-        return new FriendsStatusUpdateIterator( this );
+        return new FriendsStatusUpdateIterator( transaction, this );
     }
 
-    public void addStatus( String text )
+    public void addStatus( Transaction transaction, String text )
     {
         StatusUpdate oldStatus;
-        if ( getStatus().iterator().hasNext() )
+        if ( getStatus( transaction ).iterator().hasNext() )
         {
-            oldStatus = getStatus().iterator().next();
+            oldStatus = getStatus( transaction ).iterator().next();
         } else
         {
             oldStatus = null;
         }
 
-        Node newStatus = createNewStatusNode( text );
+        Node newStatus = createNewStatusNode( transaction, text );
 
         if ( oldStatus != null )
         {
@@ -230,7 +232,7 @@ public class Person
         underlyingNode.createRelationshipTo( newStatus, RelTypes.STATUS );
     }
 
-    private Node createNewStatusNode( String text )
+    private Node createNewStatusNode( Transaction transaction, String text )
     {
         Node newStatus = transaction.createNode();
         newStatus.setProperty( StatusUpdate.TEXT, text );
@@ -291,12 +293,13 @@ public class Person
         return retVal;
     }
 
-    private Relationship getFriendRelationshipTo( Person otherPerson )
+    private Relationship getFriendRelationshipTo( Transaction transaction, Person otherPerson )
     {
         Node otherNode = otherPerson.getUnderlyingNode();
-        for ( Relationship rel : underlyingNode.getRelationships( FRIEND ) )
+        Node node = transaction.getNodeById( underlyingNode.getId() );
+        for ( Relationship rel : node.getRelationships( FRIEND ) )
         {
-            if ( rel.getOtherNode( underlyingNode ).equals( otherNode ) )
+            if ( rel.getOtherNode( node ).equals( otherNode ) )
             {
                 return rel;
             }
@@ -304,7 +307,7 @@ public class Person
         return null;
     }
 
-    private Iterable<Person> getFriendsByDepth( int depth )
+    private Iterable<Person> getFriendsByDepth( Transaction transaction, int depth )
     {
         // return all my friends and their friends using new traversal API
         TraversalDescription travDesc = transaction.traversalDescription()
@@ -314,7 +317,7 @@ public class Person
                 .evaluator( Evaluators.toDepth( depth ) )
                 .evaluator( Evaluators.excludeStartPosition() );
 
-        return createPersonsFromPath( travDesc.traverse( underlyingNode ) );
+        return createPersonsFromPath( travDesc.traverse( transaction.getNodeById( underlyingNode.getId() ) ) );
     }
 
     private IterableWrapper<Person, Path> createPersonsFromPath(
@@ -325,16 +328,16 @@ public class Person
             @Override
             protected Person underlyingObjectToObject( Path path )
             {
-                return new Person( databaseService, transaction, path.endNode() );
+                return new Person( databaseService, path.endNode() );
             }
         };
     }
 
-    private long getNumberOfPathsToPerson( Person otherPerson )
+    private long getNumberOfPathsToPerson( Transaction transaction, Person otherPerson )
     {
         PathFinder<Path> finder = GraphAlgoFactory.allPaths( new BasicEvaluationContext( transaction, databaseService ),
                 forTypeAndDirection( FRIEND, BOTH ), 2 );
-        Iterable<Path> paths = finder.findAllPaths( getUnderlyingNode(), otherPerson.getUnderlyingNode() );
+        Iterable<Path> paths = finder.findAllPaths( transaction.getNodeById( getUnderlyingNode().getId() ), otherPerson.getUnderlyingNode() );
         return Iterables.size( paths );
     }
 
@@ -345,7 +348,7 @@ public class Person
             @Override
             protected Person underlyingObjectToObject( Node node )
             {
-                return new Person( databaseService, transaction, node );
+                return new Person( databaseService, node );
             }
         };
     }

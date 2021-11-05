@@ -23,16 +23,18 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.neo4j.graphdb.Transaction;
 
 class FriendsStatusUpdateIterator implements Iterator<StatusUpdate> {
     private final ArrayList<PositionedIterator<StatusUpdate>> statuses = new ArrayList<>();
     private final StatusUpdateComparator comparator = new StatusUpdateComparator();
 
-    public FriendsStatusUpdateIterator( Person person )
+    public FriendsStatusUpdateIterator( Transaction transaction, Person person )
     {
-        for ( Person friend : person.getFriends() )
+        Iterable<Person> friends = person.getFriends( transaction );
+        for ( Person friend : friends )
         {
-            Iterator<StatusUpdate> iterator = friend.getStatus().iterator();
+            Iterator<StatusUpdate> iterator = friend.getStatus( transaction ).iterator();
             if (iterator.hasNext()) {
                 statuses.add( new PositionedIterator<>( iterator ));
             }
