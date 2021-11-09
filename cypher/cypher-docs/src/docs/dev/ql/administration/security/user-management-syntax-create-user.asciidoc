@@ -2,7 +2,7 @@
 [source, cypher, role=noplay]
 -----
 CREATE [OR REPLACE] USER name [IF NOT EXISTS]
-      SET [PLAINTEXT | ENCRYPTED] PASSWORD password
+      SET [PLAINTEXT | ENCRYPTED] PASSWORD 'password'
       [[SET PASSWORD] CHANGE [NOT] REQUIRED]
       [SET STATUS {ACTIVE | SUSPENDED}]
 -----

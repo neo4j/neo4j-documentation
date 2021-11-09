@@ -49,7 +49,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and may not be o
 | [source, cypher, role=noplay]
 ----
 CREATE USER name [IF NOT EXISTS]
-  SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
+  SET [PLAINTEXT \| ENCRYPTED] PASSWORD 'password'
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
 ----
@@ -61,7 +61,7 @@ CREATE USER name [IF NOT EXISTS]
 | [source, cypher, role=noplay]
 ----
 CREATE OR REPLACE USER name
-  SET [PLAINTEXT \| ENCRYPTED] PASSWORD password
+  SET [PLAINTEXT \| ENCRYPTED] PASSWORD 'password'
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
 ----
@@ -74,7 +74,7 @@ CREATE OR REPLACE USER name
 | [source, cypher, role=noplay]
 ----
 ALTER USER name SET {
-[PLAINTEXT \| ENCRYPTED] PASSWORD password
+[PLAINTEXT \| ENCRYPTED] PASSWORD 'password'
             [[SET PASSWORD] CHANGE [NOT] REQUIRED]
             [SET STATUS {ACTIVE \| SUSPENDED} ] \|
 PASSWORD CHANGE [NOT] REQUIRED
@@ -90,7 +90,7 @@ STATUS {ACTIVE \| SUSPENDED}
 
 | [source, cypher, role=noplay]
 ----
-ALTER CURRENT USER SET PASSWORD FROM original TO password
+ALTER CURRENT USER SET PASSWORD FROM 'original' TO 'password'
 ----
 | Change the current user's password.
 | None
