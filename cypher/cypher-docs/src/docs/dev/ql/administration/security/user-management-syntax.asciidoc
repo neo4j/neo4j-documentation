@@ -90,7 +90,7 @@ STATUS {ACTIVE \| SUSPENDED}
 
 | [source, cypher, role=noplay]
 ----
-ALTER CURRENT USER SET PASSWORD FROM 'original' TO 'password'
+ALTER CURRENT USER SET PASSWORD FROM 'oldPassword' TO 'newPassword'
 ----
 | Change the current user's password.
 | None
