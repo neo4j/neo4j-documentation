@@ -21,8 +21,8 @@ We have indexes on both properties:
 
 [source, cypher]
 ----
-CREATE INDEX singleProp FOR (n:User) FOR (n.name);
-CREATE INDEX composite  FOR (n:User) FOR (n.name, n.surname);
+CREATE INDEX singleProp FOR (n:User) ON (n.name);
+CREATE INDEX composite  FOR (n:User) ON (n.name, n.surname);
 CALL db.index.fulltext.createNodeIndex("userNames",["User", "Person"],["name", "surname"]);
 ----
 
