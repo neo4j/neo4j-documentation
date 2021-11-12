@@ -29,7 +29,7 @@ SHOW USER [name] PRIVILEGES
 | [source, cypher, role=noplay]
 ----
 CREATE USER name [IF NOT EXISTS]
-  SET PASSWORD password
+  SET PASSWORD 'password'
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
 ----
@@ -41,7 +41,7 @@ CREATE USER name [IF NOT EXISTS]
 | [source, cypher, role=noplay]
 ----
 CREATE OR REPLACE USER name
-  SET PASSWORD password
+  SET PASSWORD 'password'
   [[SET PASSWORD] CHANGE [NOT] REQUIRED]
   [SET STATUS {ACTIVE \| SUSPENDED}]
 ----
@@ -54,7 +54,7 @@ CREATE OR REPLACE USER name
 | [source, cypher, role=noplay]
 ----
 ALTER USER name SET {
-PASSWORD password
+PASSWORD 'password'
             [[SET PASSWORD] CHANGE [NOT] REQUIRED]
             [SET STATUS {ACTIVE \| SUSPENDED} ] \|
 PASSWORD CHANGE [NOT] REQUIRED
@@ -70,7 +70,7 @@ STATUS {ACTIVE \| SUSPENDED}
 
 | [source, cypher, role=noplay]
 ----
-ALTER CURRENT USER SET PASSWORD FROM original TO password
+ALTER CURRENT USER SET PASSWORD FROM 'oldPassword' TO 'newPassword'
 ----
 | Change the current user's password.
 | None
