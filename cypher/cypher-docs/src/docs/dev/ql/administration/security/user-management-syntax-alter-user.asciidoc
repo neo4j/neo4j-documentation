@@ -2,7 +2,7 @@
 [source, cypher, role=noplay]
 -----
 ALTER USER name SET {
-      PASSWORD password
+      PASSWORD 'password'
             [[SET PASSWORD] CHANGE [NOT] REQUIRED]
             [SET STATUS {ACTIVE | SUSPENDED} ] |
       PASSWORD CHANGE [NOT] REQUIRED
