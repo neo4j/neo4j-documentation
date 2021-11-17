@@ -1,7 +1,0 @@
-.Command syntax
-[source, cypher, role=noplay]
------
-GRANT ALL [[DBMS] PRIVILEGES]
-    ON DBMS
-    TO role[, ...]
------
