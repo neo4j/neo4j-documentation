@@ -6,7 +6,7 @@
 | [source, cypher, role=noplay]
 ----
 CREATE FULLTEXT INDEX [index_name] [IF NOT EXISTS]
-FOR (n:LabelName[\|...])
+FOR (n:LabelName["\|" ...])
 ON EACH "[" n.propertyName[, ...] "]"
 [OPTIONS "{" option: value[, ...] "}"]
 ----
@@ -25,7 +25,7 @@ It may still throw an error should a constraint with the same name exist.
 | [source, cypher, role=noplay]
 ----
 CREATE FULLTEXT INDEX [index_name] [IF NOT EXISTS]
-FOR ()-"["r:TYPE_NAME[\|...]"]"-()
+FOR ()-"["r:TYPE_NAME["\|" ...]"]"-()
 ON EACH "[" r.propertyName[, ...] "]"
 [OPTIONS "{" option: value[, ...] "}"]
 ----
