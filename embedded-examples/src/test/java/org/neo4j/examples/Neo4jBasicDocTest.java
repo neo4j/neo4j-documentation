@@ -33,6 +33,7 @@ import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.io.ByteUnit;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -76,7 +77,7 @@ class Neo4jBasicDocTest
     {
         // tag::startDbWithConfig[]
         DatabaseManagementService service = new DatabaseManagementServiceBuilder( directory.resolve( "withConfiguration" ) )
-                        .setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
+                        .setConfig( GraphDatabaseSettings.pagecache_memory, ByteUnit.mebiBytes( 512 ) )
                         .setConfig( GraphDatabaseSettings.transaction_timeout, Duration.ofSeconds( 60 ) )
                         .setConfig( GraphDatabaseSettings.preallocate_logical_logs, true ).build();
         // end::startDbWithConfig[]
