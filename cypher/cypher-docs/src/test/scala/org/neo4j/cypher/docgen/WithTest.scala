@@ -19,12 +19,12 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
+import org.neo4j.cypher.docgen.tooling.{DocBuilder, Document, DocumentingTest, ResultAssertions}
 
 class WithTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql"
 
-  override def doc = new DocBuilder {
+  override def doc: Document = new DocBuilder {
     doc("WITH", "query-with")
     initQueries(
       """CREATE
@@ -82,7 +82,7 @@ class WithTest extends DocumentingTest {
               #WITH otherPerson, toUpper(otherPerson.name) AS upperCaseName
               #WHERE upperCaseName STARTS WITH 'C'
               #RETURN otherPerson.name""".stripMargin('#'),
-      ResultAssertions((r) => {
+      ResultAssertions(r => {
           r.toList should equal(List(Map("otherPerson.name" -> "Caesar")))
         })) {
         p("This query returns the name of persons connected to *'George'* whose name starts with a `C`, regardless of capitalization.")
@@ -95,14 +95,14 @@ class WithTest extends DocumentingTest {
               #WITH *, type(r) AS connectionType
               #RETURN person.name, otherPerson.name, connectionType""".stripMargin('#'),
         ResultAssertions(r => {
-          r.toList should equal(List(
+          r.toList should contain theSameElementsAs List(
             Map("person.name" -> "David", "otherPerson.name" -> "Anders", "connectionType" -> "KNOWS"),
             Map("person.name" -> "Anders", "otherPerson.name" -> "Bossman", "connectionType" -> "KNOWS"),
             Map("person.name" -> "Anders", "otherPerson.name" -> "Caesar", "connectionType" -> "BLOCKS"),
             Map("person.name" -> "Bossman", "otherPerson.name" -> "David", "connectionType" -> "BLOCKS"),
             Map("person.name" -> "Bossman", "otherPerson.name" -> "George", "connectionType" -> "KNOWS"),
             Map("person.name" -> "Caesar", "otherPerson.name" -> "George", "connectionType" -> "KNOWS")
-          ))
+          )
         })) {
         p("This query returns the names of all related persons and the type of relationship between them.")
         resultTable()
@@ -114,7 +114,7 @@ class WithTest extends DocumentingTest {
               #WITH otherPerson, count(*) AS foaf
               #WHERE foaf > 1
               #RETURN otherPerson.name""".stripMargin('#'),
-      ResultAssertions((r) => {
+      ResultAssertions(r => {
           r.toList should equal(List(Map("otherPerson.name" -> "Anders")))
         })) {
         p("The name of the person connected to *'David'* with the at least more than one outgoing relationship will be returned by the query.")
@@ -128,7 +128,7 @@ class WithTest extends DocumentingTest {
               #ORDER BY n.name DESC
               #LIMIT 3
               #RETURN collect(n.name)""".stripMargin('#'),
-      ResultAssertions((r) => {
+      ResultAssertions(r => {
           r.toList should equal(List(Map("collect(n.name)" -> List("George", "David", "Caesar"))))
         })) {
         p("A list of the names of people in reverse order, limited to 3, is returned in a list.")
@@ -143,7 +143,7 @@ class WithTest extends DocumentingTest {
               #LIMIT 1
               #MATCH (m)--(o)
               #RETURN o.name""".stripMargin('#'),
-      ResultAssertions((r) => {
+      ResultAssertions(r => {
           r.toSet should equal(Set(Map("o.name" -> "Bossman"), Map("o.name" -> "Anders")))
         })) {
         p("""Starting at *'Anders'*, find all matching nodes, order by name descending and get the top result, then find all the nodes connected to that top result, and return their names.""")
