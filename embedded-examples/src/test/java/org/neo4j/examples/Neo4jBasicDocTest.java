@@ -77,7 +77,7 @@ class Neo4jBasicDocTest
     {
         // tag::startDbWithConfig[]
         DatabaseManagementService service = new DatabaseManagementServiceBuilder( directory.resolve( "withConfiguration" ) )
-                        .setConfig( GraphDatabaseSettings.pagecache_memory, ByteUnit.mebiBytes( 512 ) )
+                        .setConfig( GraphDatabaseSettings.pagecache_memory, "512m" )
                         .setConfig( GraphDatabaseSettings.transaction_timeout, Duration.ofSeconds( 60 ) )
                         .setConfig( GraphDatabaseSettings.preallocate_logical_logs, true ).build();
         // end::startDbWithConfig[]

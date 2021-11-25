@@ -56,7 +56,7 @@ class StartWithConfigurationDocTest
     {
         // tag::startDbWithMapConfig[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory )
-                                .setConfig( GraphDatabaseSettings.pagecache_memory, ByteUnit.mebiBytes( 512 ) )
+                                .setConfig( GraphDatabaseSettings.pagecache_memory, "512" )
                                 .setConfig( GraphDatabaseSettings.transaction_timeout, Duration.ofSeconds( 60 ) )
                                 .setConfig( GraphDatabaseSettings.preallocate_logical_logs, true ).build();
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
