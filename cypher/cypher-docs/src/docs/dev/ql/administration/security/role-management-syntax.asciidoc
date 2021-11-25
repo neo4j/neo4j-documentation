@@ -55,14 +55,14 @@ DROP ROLE name [IF EXISTS]
 
 | [source, cypher, role=noplay]
 ----
-GRANT ROLE name[, ...] TO user[, ...]
+GRANT ROLE[S] name[, ...] TO user[, ...]
 ----
 | Assign roles to users.
 | <<administration-security-administration-dbms-privileges-role-management, ASSIGN ROLE>>
 
 | [source, cypher, role=noplay]
 ----
-REVOKE ROLE name[, ...] FROM user[, ...]
+REVOKE ROLE[S] name[, ...] FROM user[, ...]
 ----
 | Remove roles from users.
 | <<administration-security-administration-dbms-privileges-role-management, REMOVE ROLE>>
