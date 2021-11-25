@@ -233,7 +233,7 @@ class SecurityUserAndRoleManagementTest extends DocumentingTest with QueryStatis
             """This is the same command as `SHOW ALL ROLES`.
               |When first starting a Neo4j DBMS there are a number of built-in roles:
               |
-              |* `PUBLIC` - a role that all users have granted, by default it gives access to the default database and execute privileges for procedures and functions.
+              |* `PUBLIC` - a role that all users have granted, and by default, it gives access to the default database and execute privileges for procedures and functions.
               |* `reader` - can perform traverse and read operations on all databases except `system`.
               |* `editor` - can perform traverse, read, and write operations on all databases except `system`, but cannot make new labels or relationship types.
               |* `publisher` - can do the same as `editor`, but also create new labels and relationship types.
