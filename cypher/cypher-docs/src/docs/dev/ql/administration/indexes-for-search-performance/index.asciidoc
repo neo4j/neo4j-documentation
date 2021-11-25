@@ -194,29 +194,33 @@ any predicates following after will therefore also be planned as such.
 
 For example, an index on nodes with `:Label(prop1,prop2,prop3,prop4,prop5,prop6)` and predicates:
 
-```
+[source, cypher, role=noplay]
+----
 WHERE n.prop1 = 'x' AND n.prop2 = 1 AND n.prop3 > 5 AND n.prop4 < 'e' AND n.prop5 = true AND n.prop6 IS NOT NULL
-```
+----
 
 will be planned as:
 
-```
+[source, cypher, role=noplay]
+----
 WHERE n.prop1 = 'x' AND n.prop2 = 1 AND n.prop3 > 5 AND n.prop4 IS NOT NULL AND n.prop5 IS NOT NULL AND n.prop6 IS NOT NULL
-```
+----
 
 with filters on `n.prop4 < 'e'` and `n.prop5 = true`, since `n.prop3` has a `range search` predicate.
 
 And an index on nodes with `:Label(prop1,prop2)` with predicates:
 
-```
+[source, cypher, role=noplay]
+----
 WHERE n.prop1 ENDS WITH 'x' AND n.prop2 = false
-```
+----
 
 will be planned as:
 
-```
+[source, cypher, role=noplay]
+----
 WHERE n.prop1 IS NOT NULL AND n.prop2 IS NOT NULL
-```
+----
 
 with filters on `n.prop1 ENDS WITH 'x'` and `n.prop2 = false`, since `n.prop1` has a `suffix search` predicate.
 
