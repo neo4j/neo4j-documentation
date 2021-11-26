@@ -196,7 +196,7 @@ public class CommunityWebContainerBuilder
                 temporaryFolder.resolve( "logs-x" ).toAbsolutePath().toString() );
         properties.put( GraphDatabaseSettings.transaction_logs_root_path.name(),
                 temporaryFolder.resolve( "transaction-logs-x" ).toAbsolutePath().toString() );
-        properties.put( GraphDatabaseSettings.pagecache_memory.name(), ByteUnit.mebiBytes( 8 ) );
+        properties.put( GraphDatabaseSettings.pagecache_memory.name(), "8m" );
         properties.put( GraphDatabaseSettings.shutdown_transaction_end_timeout.name(), "0s" );
 
         for ( Object key : arbitraryProperties.keySet() )
