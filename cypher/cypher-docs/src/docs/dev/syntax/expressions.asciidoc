@@ -8,6 +8,7 @@ This section contains an overview of expressions in Cypher with examples.
 
 * <<cypher-expressions-general, Expressions in general>>
 * <<cypher-expressions-string-literals, Note on string literals>>
+* <<cypher-expressions-number-literals, Note on number literals>>
 * <<query-syntax-case, `CASE` expressions>>
  ** <<syntax-simple-case, Simple `CASE` form: comparing an expression against multiple values>>
  ** <<syntax-generic-case, Generic `CASE` form: allowing for multiple conditionals to be expressed>>
@@ -69,5 +70,12 @@ String literals can contain the following escape sequences:
 |`\uxxxx`|Unicode UTF-16 code point (4 hex digits must follow the `\u`)
 |`\Uxxxxxxxx`|Unicode UTF-32 code point (8 hex digits must follow the `\U`)
 |===================
+
+[[cypher-expressions-number-literals]]
+== Note on number literals
+
+Any number literal may contain an underscore `_` between digits.
+There may be an underscore between the `0x` or `0o` and the digits for hexadecimal and octal literals.
+When using the deprecated way to write an octal (`0`), an underscore is not allowed.
 
 include::../ql/query-syntax-case.adoc[leveloffset=+1]
