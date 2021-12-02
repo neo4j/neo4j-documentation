@@ -182,21 +182,6 @@ SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP\|TEXT] INDEX[ES]
 | List indexes in the database, either all or filtered on index type.
 | When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be omitted.
 
-| [source, cypher, role=noplay]
-----
-DROP INDEX ON :LabelName(propertyName)
-----
-| Drop a single-property index on nodes without specifying a name.
-.2+.^| [deprecated]#This syntax is deprecated.#
-
-| [source, cypher, role=noplay]
-----
-DROP INDEX ON :LabelName (n.propertyName_1,
-n.propertyName_2,
-…
-n.propertyName_n)
-----
-| Drop a composite index on nodes without specifying a name.
 |===
 
 Creating an index requires <<administration-security-administration-database-indexes, the `CREATE INDEX` privilege>>,
@@ -547,17 +532,3 @@ include::../indexes/create-a-point-index-specifying-the-index-provider.asciidoc[
 include::../indexes/create-a-point-index-specifying-the-index-configuration.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-point-index-specifying-both-the-index-provider-and-configuration.asciidoc[leveloffset=+1]
-
-
-[role=deprecated]
-[[administration-indexes-examples-deprecated-syntax]]
-== Deprecated syntax
-
-[NOTE]
-====
-This syntax only supports dropping b-tree node property indexes, all others can only be dropped by name.
-====
-
-include::../indexes/drop-a-single-property-index.asciidoc[leveloffset=+1]
-
-include::../indexes/drop-a-composite-index.asciidoc[leveloffset=+1]

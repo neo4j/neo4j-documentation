@@ -116,12 +116,10 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("CREATE INDEX") | // These are for the named versions, sadly they will break the query on the ON keyword
         keyword("CREATE BTREE INDEX") | // Sadly these will break the query on the ON keyword
         keyword("CREATE LOOKUP INDEX") | // Sadly these will break the query on the ON keyword
-        keyword("DROP INDEX ON") | // Deprecated
         keyword("DROP INDEX") |
         showIndexBreakingKeyword |
         keyword("CREATE CONSTRAINT ON") |
         keyword("CREATE CONSTRAINT") | // These are for the named versions, sadly they will break the query on the ON keyword
-        keyword("DROP CONSTRAINT ON") | // Deprecated
         keyword("DROP CONSTRAINT") |
         showConstraintBreakingKeyword |
         keyword("USING PERIODIC COMMIT") |

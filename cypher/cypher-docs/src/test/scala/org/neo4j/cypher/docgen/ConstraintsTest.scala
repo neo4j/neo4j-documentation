@@ -144,18 +144,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def drop_unique_constraint() {
-    generateConsole = false
-
-    prepareAndTestQuery(
-      title = "Drop a unique constraint",
-      text = "By using `DROP CONSTRAINT`, a b-tree index-backed unique constraint is removed from the database.",
-      queryText = "DROP CONSTRAINT ON (book:Book) ASSERT book.isbn IS UNIQUE",
-      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT FOR (book:Book) REQUIRE book.isbn IS UNIQUE")),
-      assertions = _ => assertNodeConstraintDoesNotExist("Book", "isbn")
-    )
-  }
-
   @Test def play_nice_with_unique_property_constraint() {
     generateConsole = false
 
@@ -242,18 +230,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       optionalResultExplanation = "Note no constraint will be created if any other constraint with that name or another node property existence constraint on the same schema already exists. " +
         "Assuming a constraint with the name `constraint_name` already existed:",
       assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
-    )
-  }
-
-  @Test def drop_node_property_existence_constraint() {
-    generateConsole = false
-
-    prepareAndTestQuery(
-      title = "Drop a node property existence constraint",
-      text = "By using `DROP CONSTRAINT`, a node property existence constraint is removed from the database.",
-      queryText = "DROP CONSTRAINT ON (book:Book) ASSERT exists(book.isbn)",
-      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT FOR (book:Book) REQUIRE book.isbn IS NOT NULL")),
-      assertions = _ => assertNodeConstraintDoesNotExist("Book", "isbn")
     )
   }
 
@@ -344,18 +320,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       optionalResultExplanation = "Note no constraint will be created if any other constraint with that name or another relationship property existence constraint on the same schema already exists. " +
         "Assuming a constraint with the name `constraint_name` already existed:",
       assertions = _ => assertConstraintWithNameExists("constraint_name", "LIKED", List("since"), forRelationship = true)
-    )
-  }
-
-  @Test def drop_relationship_property_existence_constraint() {
-    generateConsole = false
-
-    prepareAndTestQuery(
-      title = "Drop a relationship property existence constraint",
-      text = "To remove a relationship property existence constraint from the database, use `DROP CONSTRAINT`.",
-      queryText = "DROP CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.day)",
-      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT FOR ()-[like:LIKED]-() REQUIRE like.day IS NOT NULL")),
-      assertions = _ => assertRelationshipConstraintDoesNotExist("LIKED", "day")
     )
   }
 
@@ -486,18 +450,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def drop_node_key_constraint() {
-    generateConsole = false
-
-    prepareAndTestQuery(
-      title = "Drop a node key constraint",
-      text = "Use `DROP CONSTRAINT` to remove a b-tree index-backed node key constraint from the database.",
-      queryText = "DROP CONSTRAINT ON (n:Person) ASSERT (n.firstname, n.surname) IS NODE KEY",
-      prepare = _ => executePreparationQueries(List("CREATE CONSTRAINT FOR (n:Person) REQUIRE (n.firstname, n.surname) IS NODE KEY")),
-      assertions = _ => assertNodeKeyConstraintDoesNotExist("Person", "firstname", "surname")
-    )
-  }
-
   @Test def play_nice_with_node_key_constraint() {
     generateConsole = false
 
@@ -592,20 +544,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
     assert(hasNodeKeyConstraint(labelName, propNames.toSeq))
   }
 
-  private def assertNodeConstraintDoesNotExist(labelName: String, propName: String) {
-    assert(!hasNodeConstraint(labelName, propName))
-  }
-
-  private def assertNodeKeyConstraintDoesNotExist(labelName: String, propNames: String*) {
-    assert(!hasNodeKeyConstraint(labelName, propNames.toSeq))
-  }
-
   private def assertRelationshipConstraintExist(typeName: String, propName: String) {
     assert(hasRelationshipConstraint(typeName, propName))
-  }
-
-  private def assertRelationshipConstraintDoesNotExist(typeName: String, propName: String) {
-    assert(!hasRelationshipConstraint(typeName, propName))
   }
 
   def assertConstraintWithNameExists(name: String, expectedLabelOrType: String, expectedProperties: List[String], forRelationship: Boolean = false) {

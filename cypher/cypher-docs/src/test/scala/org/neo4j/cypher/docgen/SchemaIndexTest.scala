@@ -460,27 +460,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def drop_index_on_a_label_single_property() {
-    prepareAndTestQuery(
-      title = "Drop a single-property index",
-      text = "A b-tree index on all nodes with a label and single property combination can be dropped with `DROP INDEX ON :Label(property)`.",
-      prepare = _ => executePreparationQueries(List("create btree index for (p:Person) on (p.firstname)")),
-      queryText = "DROP INDEX ON :Person(firstname)",
-      assertions = _ => assertIndexesOnLabels("Person", List(List("middlename"), List("surname"), List("location"), List("highScore")))
-    )
-  }
-
-  @Test def drop_index_on_a_label_composite_property() {
-    prepareAndTestQuery(
-      title = "Drop a composite index",
-      text = "A composite b-tree index on all nodes with a label and multiple property combination can be dropped with `DROP INDEX ON :Label(prop1, ..., propN)`. " +
-      "The following statement will drop a composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
-      prepare = _ => executePreparationQueries(List("create btree index for (p:Person) on (p.age, p.country)")),
-      queryText = "DROP INDEX ON :Person(age, country)",
-      assertions = _ => assertIndexesOnLabels("Person", List(List("firstname"), List("middlename"), List("surname"), List("location"), List("highScore")))
-    )
-  }
-
   @Test def drop_index() {
     prepareAndTestQuery(
       title = "Drop an index",

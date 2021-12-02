@@ -121,10 +121,7 @@ Index provider and configuration can be specified using the `OPTIONS` clause.
 [[administration-constraints-syntax-drop]]
 == Syntax for dropping constraints
 
-[discrete]
-=== Drop a constraint
-
-The preferred way of dropping a constraint is by the name of the constraint.
+Dropping a constraint is done by the name of the constraint.
 
 This drop command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same constraint twice.
 With the `IF EXISTS` flag, no error is thrown and nothing happens should the constraint not exist.
@@ -134,68 +131,6 @@ Dropping a constraint requires the <<administration-security-administration-data
 [source, cypher, role=noplay]
 ----
 DROP CONSTRAINT constraint_name [IF EXISTS]
-----
-
-[discrete]
-=== [deprecated]#Drop a unique constraint without specifying a name#
-
-An old way of dropping a uniqueness constraint was to drop the constraint by specifying the schema of the constraint.
-
-[source, cypher, role=noplay]
-----
-DROP CONSTRAINT
-ON (n:LabelName)
-ASSERT n.propertyName IS UNIQUE
-----
-
-[source, cypher, role=noplay]
-----
-DROP CONSTRAINT
-ON (n:LabelName)
-ASSERT (n.propertyName_1, … n.propertyName_n) IS UNIQUE
-----
-
-[discrete]
-=== [deprecated]#Drop a node property existence constraint without specifying a name#
-
-An old way of dropping a node property existence constraint was to drop the constraint by specifying the schema of the constraint.
-
-[source, cypher, role=noplay]
-----
-DROP CONSTRAINT
-ON (n:LabelName)
-ASSERT EXISTS (n.propertyName)
-----
-
-[discrete]
-=== [deprecated]#Drop a relationship property existence constraint without specifying a name#
-
-An old way of dropping a relationship property existence constraint was to drop the constraint by specifying the schema of the constraint.
-
-[source, cypher, role=noplay]
-----
-DROP CONSTRAINT
-ON ()-"["r:RELATIONSHIP_TYPE"]"-()
-ASSERT EXISTS (r.propertyName)
-----
-
-[discrete]
-=== [deprecated]#Drop a node key constraint without specifying a name#
-
-An old way of dropping a node key constraint was to drop the constraint by specifying the schema of the constraint.
-
-[source, cypher, role=noplay]
-----
-DROP CONSTRAINT
-ON (n:LabelName)
-ASSERT n.propertyName IS NODE KEY
-----
-
-[source, cypher, role=noplay]
-----
-DROP CONSTRAINT
-ON (n:LabelName)
-ASSERT (n.propertyName_1, … n.propertyName_n) IS NODE KEY
 ----
 
 
