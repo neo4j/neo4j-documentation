@@ -121,21 +121,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def dropUniqueConstraint() {
-    executePreparationQueries {
-      List("CREATE CONSTRAINT FOR (c:Country) REQUIRE c.name is UNIQUE")
-    }
-
-    profileQuery(
-      title = "Drop Unique Constraint",
-      text =
-        """The `DropUniqueConstraint` operator removes a unique constraint from all nodes having a certain set of properties and label.
-          |The following query will drop a unique constraint on the `name` property of nodes with the `Country` label.""".stripMargin,
-      queryText = """DROP CONSTRAINT ON (c:Country) ASSERT c.name is UNIQUE""",
-      assertions = p => assertThat(p.executionPlanString(), containsString("DropConstraint"))
-    )
-  }
-
   @Test def doNothingIfExistsForConstraint() {
     profileQuery(
       title = "Create Constraint only if it does not already exist",
@@ -171,22 +156,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def dropNodePropertyExistenceConstraint() {
-    executePreparationQueries {
-      List("CREATE CONSTRAINT FOR (p:Person) REQUIRE p.name IS NOT NULL")
-    }
-
-    profileQuery(
-      title = "Drop Node Property Existence Constraint",
-      text =
-        """The `DropNodePropertyExistenceConstraint` operator removes an existence constraint from a property for all nodes having a certain label.
-          |This will only appear in Enterprise Edition.
-        """.stripMargin,
-      queryText = """DROP CONSTRAINT ON (p:Person) ASSERT exists(p.name)""",
-      assertions = p => assertThat(p.executionPlanString(), containsString("DropConstraint"))
-    )
-  }
-
   @Test def createNodeKeyConstraint() {
     profileQuery(
       title = "Create Node Key Constraint",
@@ -201,22 +170,6 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
         assertThat(plan, containsString("CreateConstraint"))
         assertThat(plan, containsString("node_key"))
       }
-    )
-  }
-
-  @Test def dropNodeKeyConstraint() {
-    executePreparationQueries {
-      List("CREATE CONSTRAINT FOR (e:Employee) REQUIRE (e.firstname, e.surname) IS NODE KEY")
-    }
-
-    profileQuery(
-      title = "Drop Node Key Constraint",
-      text =
-        """The `DropNodeKeyConstraint` operator removes a node key constraint from a set of properties for all nodes having a certain label.
-          |This will only appear in Enterprise Edition.
-        """.stripMargin,
-      queryText = """DROP CONSTRAINT ON (e:Employee) ASSERT (e.firstname, e.surname) IS NODE KEY""",
-      assertions = p => assertThat(p.executionPlanString(), containsString("DropConstraint"))
     )
   }
 
@@ -236,28 +189,13 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
-  @Test def dropRelationshipPropertyExistenceConstraint() {
-    executePreparationQueries {
-      List("CREATE CONSTRAINT FOR ()-[l:LIKED]-() REQUIRE l.when IS NOT NULL")
-    }
-
-    profileQuery(
-      title = "Drop Relationship Property Existence Constraint",
-      text =
-        """The `DropRelationshipPropertyExistenceConstraint` operator removes an existence constraint from a property for all relationships of a certain type.
-          |This will only appear in Enterprise Edition.""".stripMargin,
-      queryText = """DROP CONSTRAINT ON ()-[l:LIKED]-() ASSERT exists(l.when)""",
-      assertions = p => assertThat(p.executionPlanString(), containsString("DropConstraint"))
-    )
-  }
-
-  @Test def dropNamedConstraint() {
+  @Test def dropConstraint() {
     executePreparationQueries {
       List("CREATE CONSTRAINT name FOR (c:Country) REQUIRE c.name is UNIQUE")
     }
 
     profileQuery(
-      title = "Drop Constraint by name",
+      title = "Drop Constraint",
       text =
         """The `DropConstraint` operator removes a constraint using the name of the constraint, no matter the type.""".stripMargin,
       queryText = """DROP CONSTRAINT name""",
@@ -325,26 +263,11 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def dropIndex() {
     executePreparationQueries {
-      List("CREATE INDEX FOR (c:Country) ON (c.name)")
-    }
-
-    profileQuery(
-      title = "Drop Index by schema",
-      text =
-        """The `DropIndex` operator removes an index from a property for all nodes having a certain label.
-          |The following query will drop an index on the `name` property of nodes with the `Country` label.""".stripMargin,
-      queryText = """DROP INDEX ON :Country(name)""",
-      assertions = p => assertThat(p.executionPlanString(), containsString("DropIndex"))
-    )
-  }
-
-  @Test def dropNamedIndex() {
-    executePreparationQueries {
       List("CREATE INDEX name FOR (c:Country) ON (c.name)")
     }
 
     profileQuery(
-      title = "Drop Index by name",
+      title = "Drop Index",
       text =
         """The `DropIndex` operator removes an index using the name of the index.""".stripMargin,
       queryText = """DROP INDEX name""",
