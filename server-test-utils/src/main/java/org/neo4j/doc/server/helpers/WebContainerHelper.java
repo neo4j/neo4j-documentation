@@ -56,7 +56,7 @@ public final class WebContainerHelper
     {
         CommunityWebContainerBuilder builder = CommunityWebContainerBuilder.builder();
         builder.withProperty( "dbms.connector.bolt.listen_address", ":0" );
-        builder.withProperty( GraphDatabaseSettings.read_only.name(), "true" );
+        builder.withProperty( GraphDatabaseSettings.read_only_database_default.name(), "true" );
         return createContainer( builder, path, true );
     }
 
