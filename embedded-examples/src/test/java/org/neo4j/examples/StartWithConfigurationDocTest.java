@@ -44,7 +44,7 @@ class StartWithConfigurationDocTest
         String pathToConfig = "src/test/resources/";
         // tag::startDbWithConfig[]
         DatabaseManagementService managementService = new DatabaseManagementServiceBuilder( directory )
-                                                            .loadPropertiesFromFile( pathToConfig + "neo4j.conf" ).build();
+                                                            .loadPropertiesFromFile( Path.of( pathToConfig + "neo4j.conf" ) ).build();
         GraphDatabaseService graphDb = managementService.database( DEFAULT_DATABASE_NAME );
                 // end::startDbWithConfig[]
         Assertions.assertNotNull( graphDb );

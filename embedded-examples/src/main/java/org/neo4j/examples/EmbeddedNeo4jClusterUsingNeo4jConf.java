@@ -36,7 +36,7 @@ public class EmbeddedNeo4jClusterUsingNeo4jConf
 
         // tag::startCore[]
         var managementService = new ClusterDatabaseManagementServiceBuilder( homeDirectory )
-                .loadPropertiesFromFile( "/path/to/neo4j.conf" )
+                .loadPropertiesFromFile( Path.of( "/path/to/neo4j.conf" ) )
                 .build();
         // end::startCore[]
 
