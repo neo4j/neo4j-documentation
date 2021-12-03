@@ -20,6 +20,7 @@
 package org.neo4j.cypher.docgen
 
 import com.neo4j.configuration.OnlineBackupSettings
+import com.neo4j.configuration.SecuritySettings
 import org.apache.commons.io.FileUtils
 import org.junit.After
 import org.junit.Before
@@ -58,6 +59,7 @@ import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.QuerySubscriber
 import org.neo4j.kernel.impl.query.QuerySubscriberAdapter
 import org.neo4j.kernel.impl.util.ValueUtils
+import org.neo4j.string.SecureString
 import org.neo4j.test.utils.TestDirectory
 import org.neo4j.values.virtual.VirtualValues
 import org.neo4j.visualization.asciidoc.AsciidocHelper
@@ -574,7 +576,10 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   protected def databaseConfig(): util.Map[Setting[_], Object] =
     Map[Setting[_], Object](
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
-      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
+      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
+      SecuritySettings.remote_alias_keystore_path-> java.nio.file.Path.of(getClass.getClassLoader.getResource("keystore_11_0_5.pkcs12").toURI),
+      SecuritySettings.remote_alias_keystore_password -> new SecureString("test24"),
+      SecuritySettings.remote_alias_key_name -> "256bitkey"
     ).asJava
 
   override def hardReset() {

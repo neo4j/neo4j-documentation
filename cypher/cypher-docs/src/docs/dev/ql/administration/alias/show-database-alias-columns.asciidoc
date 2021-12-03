@@ -1,0 +1,11 @@
+[options="header" cols="2l,4,1,1,2"]
+|===
+|Column |Description|Default Output|Full Output| Notes
+|name|The name of the database alias.|{check-mark}|{check-mark}|
+|database|The names of the target database.|{check-mark}|{check-mark}|
+|location| The location of the database, either `local` or `remote`.|{check-mark}|{check-mark}|
+|url| Target location or `null` if the target is local.|{check-mark}|{check-mark}|
+|user| User connecting to the remote database or `null` if the target database is local.|{check-mark}|{check-mark}|
+|driver| The driver options for connection to the remote database or `null` if the target database is local or if no driver settings are added. ||{check-mark}
+| List of <<remote-alias-driver-settings, driver settings>> allowed for remote database aliases.
+|===

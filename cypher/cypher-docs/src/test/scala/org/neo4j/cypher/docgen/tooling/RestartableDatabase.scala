@@ -23,6 +23,7 @@ import java.io.File
 import java.lang.Boolean.{FALSE, TRUE}
 import java.nio.file.Path
 import com.neo4j.configuration.OnlineBackupSettings
+import com.neo4j.configuration.SecuritySettings
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import com.neo4j.kernel.enterprise.api.security.EnterpriseAuthManager
 import org.apache.commons.io.FileUtils
@@ -39,11 +40,13 @@ import org.neo4j.graphdb.config.Setting
 import org.neo4j.internal.kernel.api.connectioninfo.ClientConnectionInfo
 import org.neo4j.internal.kernel.api.security.SecurityContext.AUTH_DISABLED
 import org.neo4j.io.fs.EphemeralFileSystemAbstraction
+import org.neo4j.io.fs.FileSystemAbstraction
 import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.api.procedure.GlobalProcedures
 import org.neo4j.kernel.api.security.AuthToken
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.util.ValueUtils
+import org.neo4j.string.SecureString
 import org.neo4j.test.TestDatabaseManagementServiceBuilder
 import org.neo4j.test.utils.TestDirectory
 
@@ -81,7 +84,10 @@ class RestartableDatabase(init: RunnableInitialization)
       val config: Map[Setting[_], Object] = Map(
         GraphDatabaseSettings.auth_enabled -> TRUE,
         OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
-        OnlineBackupSettings.online_backup_enabled ->  FALSE
+        OnlineBackupSettings.online_backup_enabled ->  FALSE,
+        SecuritySettings.remote_alias_keystore_path-> java.nio.file.Path.of(getClass.getClassLoader.getResource("keystore_11_0_5.pkcs12").toURI),
+        SecuritySettings.remote_alias_keystore_password -> new SecureString("test24"),
+        SecuritySettings.remote_alias_key_name -> "256bitkey"
       )
       managementService = new TestEnterpriseDatabaseManagementServiceBuilder(dbFolder).setFileSystem(fs).setConfig(config.asJava).build()
 
