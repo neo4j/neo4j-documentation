@@ -60,7 +60,7 @@ class CallTest extends DocumentingTest {
         p("""Neo4j comes with a number of built-in procedures.
             #For a list of these, see <<operations-manual#neo4j-procedures, Operations Manual -> Procedures>>.""".stripMargin('#'))
         p("""Users can also develop custom procedures and deploy to the database.
-            #See <<java-reference#extending-neo4j-procedures-and-functions, Java Reference -> Procedures and functions>> for details.""".stripMargin('#'))
+            #See <<java-reference#extending-neo4j-procedures, Java Reference -> User-defined procedures>> for details.""".stripMargin('#'))
       }
     }
 
