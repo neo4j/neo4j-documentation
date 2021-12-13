@@ -130,14 +130,6 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
 
       ("show constraint yield *", Seq(BreakingKeywords("show constraint"), NonBreakingKeywords("yield"), AnyText("*"))),
       ("show constraint where type = 'UNIQUE'", Seq(BreakingKeywords("show constraint"), BreakingKeywords("where"), AnyText("type"), AnyText("="), EscapedText("UNIQUE", '\''))),
-
-      // deprecated
-
-      ("show constraints brief output", Seq(BreakingKeywords("show constraints"), NonBreakingKeywords("brief output"))),
-      ("show constraints verbose", Seq(BreakingKeywords("show constraints"), NonBreakingKeywords("verbose"))),
-      ("show exists constraint", Seq(BreakingKeywords("show exists constraint"))),
-      ("show node exists constraint", Seq(BreakingKeywords("show node exists constraint"))),
-      ("show relationship exists constraint", Seq(BreakingKeywords("show relationship exists constraint"))),
     ).foreach { case (query, result) =>
       // when then
       parsing(query) shouldGive result
@@ -220,9 +212,6 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
       ("show lookup index", Seq(BreakingKeywords("show lookup index"))),
       ("show index yield *", Seq(BreakingKeywords("show index"), NonBreakingKeywords("yield"), AnyText("*"))),
       ("show index where type = 'BTREE'", Seq(BreakingKeywords("show index"), BreakingKeywords("where"), AnyText("type"), AnyText("="), EscapedText("BTREE", '\''))),
-      // deprecated
-      ("show indexes brief", Seq(BreakingKeywords("show indexes"), NonBreakingKeywords("brief"))),
-      ("show btree index verbose output", Seq(BreakingKeywords("show btree index"), NonBreakingKeywords("verbose output"))),
     ).foreach { case (query, result) =>
       // when then
       parsing(query) shouldGive result

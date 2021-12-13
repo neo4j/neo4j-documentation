@@ -10,6 +10,89 @@ New features are added to the language continuously, and occasionally, some feat
 This section list all of the features that have been removed, deprecated, added, or extended in different Cypher versions.
 Replacement syntax for deprecated and removed features are also indicated.
 
+[[cypher-deprecations-additions-removals-5.0]]
+== Version 5.0
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+SHOW EXISTS CONSTRAINTS
+----
+[source, cypher, role="noheader"]
+----
+SHOW NODE EXISTS CONSTRAINTS
+----
+[source, cypher, role="noheader"]
+----
+SHOW RELATIONSHIP EXISTS CONSTRAINTS
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW [PROPERTY] EXIST[ENCE] CONSTRAINTS
+----
+[source, cypher, role="noheader"]
+----
+SHOW NODE [PROPERTY] EXIST[ENCE] CONSTRAINTS
+----
+[source, cypher, role="noheader"]
+----
+SHOW REL[ATIONSHIP] [PROPERTY] EXIST[ENCE] CONSTRAINTS
+----
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES BRIEF
+----
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS BRIEF
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES
+----
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS
+----
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES VERBOSE
+----
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS VERBOSE
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES YIELD *
+----
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS YIELD *
+----
+
+|===
+
 [[cypher-deprecations-additions-removals-4.4]]
 == Version 4.4
 [cols="2", options="header"]

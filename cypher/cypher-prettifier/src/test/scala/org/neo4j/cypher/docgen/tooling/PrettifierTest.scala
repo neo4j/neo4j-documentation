@@ -87,9 +87,6 @@ class PrettifierTest extends Suite
     actual("show btree index yield *") should equal(expected("SHOW BTREE INDEX YIELD *"))
     actual("show fulltext indexes") should equal(expected("SHOW FULLTEXT INDEXES"))
     actual("show lookup indexes") should equal(expected("SHOW LOOKUP INDEXES"))
-    // deprecated
-    actual("show all indexes brief output") should equal(expected("SHOW ALL INDEXES BRIEF OUTPUT"))
-    actual("show btree index verbose") should equal(expected("SHOW BTREE INDEX VERBOSE"))
   }
 
   test("may break SHOW INDEXES with WHERE") {
@@ -199,14 +196,6 @@ class PrettifierTest extends Suite
     actual("show rel property existence constraints") should equal(expected("SHOW REL PROPERTY EXISTENCE CONSTRAINTS"))
 
     actual("show constraint yield *") should equal(expected("SHOW CONSTRAINT YIELD *"))
-
-    // deprecated
-
-    actual("show constraints brief") should equal(expected("SHOW CONSTRAINTS BRIEF"))
-    actual("show constraints verbose output") should equal(expected("SHOW CONSTRAINTS VERBOSE OUTPUT"))
-    actual("show exists constraint") should equal(expected("SHOW EXISTS CONSTRAINT"))
-    actual("show node exists constraint") should equal(expected("SHOW NODE EXISTS CONSTRAINT"))
-    actual("show relationship exists constraint") should equal(expected("SHOW RELATIONSHIP EXISTS CONSTRAINT"))
   }
 
   test("may break SHOW CONSTRAINTS with WHERE") {

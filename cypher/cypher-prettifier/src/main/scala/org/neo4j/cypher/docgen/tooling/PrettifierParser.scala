@@ -93,10 +93,6 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
         keyword("FOR") |
         keyword("IF NOT EXISTS") |
         keyword("IF EXISTS") |
-        keyword("BRIEF OUTPUT") |
-        keyword("BRIEF") |
-        keyword("VERBOSE OUTPUT") |
-        keyword("VERBOSE") |
         keyword("OPTIONS") |
         keyword("EACH")
     ) ~> NonBreakingKeywords
@@ -160,8 +156,6 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
     keyword("SHOW NODE KEY CONSTRAINTS") |
     keyword("SHOW NODE EXIST CONSTRAINT") |
     keyword("SHOW NODE EXIST CONSTRAINTS") |
-    keyword("SHOW NODE EXISTS CONSTRAINT") |
-    keyword("SHOW NODE EXISTS CONSTRAINTS") |
     keyword("SHOW NODE EXISTENCE CONSTRAINT") |
     keyword("SHOW NODE EXISTENCE CONSTRAINTS") |
     keyword("SHOW NODE PROPERTY EXIST CONSTRAINT") |
@@ -170,8 +164,6 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
     keyword("SHOW NODE PROPERTY EXISTENCE CONSTRAINTS") |
     keyword("SHOW RELATIONSHIP EXIST CONSTRAINT") |
     keyword("SHOW RELATIONSHIP EXIST CONSTRAINTS") |
-    keyword("SHOW RELATIONSHIP EXISTS CONSTRAINT") |
-    keyword("SHOW RELATIONSHIP EXISTS CONSTRAINTS") |
     keyword("SHOW RELATIONSHIP EXISTENCE CONSTRAINT") |
     keyword("SHOW RELATIONSHIP EXISTENCE CONSTRAINTS") |
     keyword("SHOW RELATIONSHIP PROPERTY EXIST CONSTRAINT") |
@@ -188,8 +180,6 @@ class PrettifierParser(val keepMyNewlines: Boolean) extends Parser with Base wit
     keyword("SHOW REL PROPERTY EXISTENCE CONSTRAINTS") |
     keyword("SHOW EXIST CONSTRAINT") |
     keyword("SHOW EXIST CONSTRAINTS") |
-    keyword("SHOW EXISTS CONSTRAINT") |
-    keyword("SHOW EXISTS CONSTRAINTS") |
     keyword("SHOW EXISTENCE CONSTRAINT") |
     keyword("SHOW EXISTENCE CONSTRAINTS") |
     keyword("SHOW PROPERTY EXIST CONSTRAINT") |
