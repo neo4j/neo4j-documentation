@@ -38,7 +38,7 @@ class DatabaseManagementPrivilegeTest extends AdministrationCommandTestBase {
 GRANT CREATE DATABASE ON DBMS TO my_role
 ###
 
-Grant the privilege to create databases to a role.
+Grant the privilege to create databases and aliases to a role.
 
 ###assertion=update-one
 //
@@ -46,7 +46,7 @@ Grant the privilege to create databases to a role.
 REVOKE DENY DROP DATABASE ON DBMS FROM my_role
 ###
 
-Revoke the denied privilege to delete databases from a role.
+Revoke the denied privilege to delete databases and aliases from a role.
 
 ###assertion=update-one
 //
@@ -54,7 +54,7 @@ Revoke the denied privilege to delete databases from a role.
 REVOKE GRANT ALTER DATABASE ON DBMS FROM my_role
 ###
 
-Revoke the granted privilege to alter databases from a role.
+Revoke the granted privilege to alter databases and aliases from a role.
 
 ###assertion=update-one
 //
@@ -70,7 +70,7 @@ Granted privilege to set database access mode to a role.
 DENY DATABASE MANAGEMENT ON DBMS TO my_role
 ###
 
-Deny all privileges to manage database to a role.
+Deny all privileges to manage databases and aliases to a role.
 
 """
   }
