@@ -36,12 +36,12 @@ class DbmsPrivilegeTest extends AdministrationCommandTestBase {
 GRANT ALL ON DBMS TO my_role
 ###
 
-Grant privilege to perform all role, user, database, privilege, procedure, function and impersonation management to a role.
+Grant privilege to perform all role, user, database, alias, privilege, procedure, function and impersonation management to a role.
 
 ###assertion=update-one
 //
 
-DENY IMPERSONATE (alice) TO my_role
+DENY IMPERSONATE (alice) ON DBMS TO my_role
 ###
 
 Deny privilege to impersonate the specified user to a role.
