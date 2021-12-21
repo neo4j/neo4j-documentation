@@ -76,6 +76,5 @@ String literals can contain the following escape sequences:
 
 Any number literal may contain an underscore `_` between digits.
 There may be an underscore between the `0x` or `0o` and the digits for hexadecimal and octal literals.
-When using the deprecated way to write an octal (`0`), an underscore is not allowed.
 
 include::../ql/query-syntax-case.adoc[leveloffset=+1]
