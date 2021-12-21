@@ -346,24 +346,24 @@ The following commands are only executable against the `system` database:
 | <<administration-security-administration-database-all, ALL DATABASE PRIVILEGES>>                        | Database and schema   | Determines whether a user is allowed to access, create, drop, and list indexes and constraints, create new labels, types and property names on a specific database.
 | <<access-control-dbms-administration-all, ALL DBMS PRIVILEGES>>                     | DBMS                  | Determines whether a user is allowed to perform role, user, database and privilege management.
 | <<administration-security-writes-all, ALL GRAPH PRIVILEGES>>                                            | GRAPH                 | Determines whether a user is allowed to perform reads and writes.
-| <<access-control-dbms-administration-database-management, ALTER DATABASE>>          | DBMS                  | Determines whether the user can modify databases.
+| <<access-control-dbms-administration-database-management, ALTER DATABASE>>          | DBMS                  | Determines whether the user can modify databases and aliases.
 | <<access-control-dbms-administration-user-management, ALTER USER>>                  | DBMS                  | Determines whether the user can modify users.
 | <<access-control-dbms-administration-privilege-management, ASSIGN PRIVILEGE>>       | DBMS                  | Determines whether the user can assign privileges using the GRANT and DENY commands.
 | <<access-control-dbms-administration-role-management, ASSIGN ROLE>>                 | DBMS                  | Determines whether the user can grant roles.
 | <<administration-security-administration-database-constraints, CONSTRAINT MANAGEMENT>>                  | Schema                | Determines whether a user is allowed to create, drop, and list constraints on a specific database.
 | <<administration-security-writes-create, CREATE>>                                                       | GRAPH                 | Determines whether the user can create a new element (node, relationship or both).
 | <<administration-security-administration-database-constraints, CREATE CONSTRAINT>>                      | Schema                | Determines whether a user is allowed to create constraints on a specific database.
-| <<access-control-dbms-administration-database-management, CREATE DATABASE>>         | DBMS                  | Determines whether the user can create new databases.
+| <<access-control-dbms-administration-database-management, CREATE DATABASE>>         | DBMS                  | Determines whether the user can create new databases and aliases.
 | <<administration-security-administration-database-indexes, CREATE INDEX>>                               | Schema                | Determines whether a user is allowed to create indexes on a specific database.
 | <<administration-security-administration-database-tokens, CREATE NEW NODE LABEL>>                       | Schema                | Determines whether a user is allowed to create new node labels on a specific database.
 | <<administration-security-administration-database-tokens, CREATE NEW PROPERTY NAME>>                    | Schema                | Determines whether a user is allowed to create new property names on a specific database.
 | <<administration-security-administration-database-tokens, CREATE NEW RELATIONSHIP TYPE>>                | Schema                | Determines whether a user is allowed to create new relationship types on a specific database.
 | <<access-control-dbms-administration-role-management, CREATE ROLE>>                 | DBMS                  | Determines whether the user can create new roles.
 | <<access-control-dbms-administration-user-management, CREATE USER>>                 | DBMS                  | Determines whether the user can create new users.
-| <<access-control-dbms-administration-database-management, DATABASE MANAGEMENT>>     | DBMS                  | Determines whether the user can create and delete databases.
+| <<access-control-dbms-administration-database-management, DATABASE MANAGEMENT>>     | DBMS                  | Determines whether the user can create, delete and modify databases and aliases.
 | <<administration-security-writes-delete, DELETE>>                                                       | GRAPH                 | Determines whether the user can delete an element (node, relationship or both).
 | <<administration-security-administration-database-constraints, DROP CONSTRAINT>>                        | Schema                | Determines whether a user is allowed to drop constraints on a specific database.
-| <<access-control-dbms-administration-database-management, DROP DATABASE>>           | DBMS                  | Determines whether the user can delete databases.
+| <<access-control-dbms-administration-database-management, DROP DATABASE>>           | DBMS                  | Determines whether the user can delete databases and aliases.
 | <<administration-security-administration-database-indexes, DROP INDEX>>                                 | Schema                | Determines whether a user is allowed to drop indexes on a specific database.
 | <<access-control-dbms-administration-role-management, DROP ROLE>>                   | DBMS                  | Determines whether the user can delete roles.
 | <<access-control-dbms-administration-user-management, DROP USER>>                   | DBMS                  | Determines whether the user can delete users.
