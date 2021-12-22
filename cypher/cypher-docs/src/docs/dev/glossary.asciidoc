@@ -360,7 +360,7 @@ The following commands are only executable against the `system` database:
 | <<administration-security-administration-database-tokens, CREATE NEW RELATIONSHIP TYPE>>                | Schema                | Determines whether a user is allowed to create new relationship types on a specific database.
 | <<access-control-dbms-administration-role-management, CREATE ROLE>>                 | DBMS                  | Determines whether the user can create new roles.
 | <<access-control-dbms-administration-user-management, CREATE USER>>                 | DBMS                  | Determines whether the user can create new users.
-| <<access-control-dbms-administration-database-management, DATABASE MANAGEMENT>>     | DBMS                  | Determines whether the user can create, delete and modify databases and aliases.
+| <<access-control-dbms-administration-database-management, DATABASE MANAGEMENT>>     | DBMS                  | Determines whether the user can create, delete, and modify databases and aliases.
 | <<administration-security-writes-delete, DELETE>>                                                       | GRAPH                 | Determines whether the user can delete an element (node, relationship or both).
 | <<administration-security-administration-database-constraints, DROP CONSTRAINT>>                        | Schema                | Determines whether a user is allowed to drop constraints on a specific database.
 | <<access-control-dbms-administration-database-management, DROP DATABASE>>           | DBMS                  | Determines whether the user can delete databases and aliases.
