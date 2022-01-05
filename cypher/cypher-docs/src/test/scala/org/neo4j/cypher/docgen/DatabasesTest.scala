@@ -210,13 +210,12 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
 
     }
     section(title="Wait options", id="administration-wait-nowait", role = "enterprise-edition") {
-      p("""Aside from `SHOW DATABASES`, the database management commands all accept an optional
-          |`WAIT`/`NOWAIT` clause. The `WAIT`/`NOWAIT` clause allows a user to specify whether to wait
-          |for the command to complete before returning. The options are:
+      p("""Aside from `SHOW DATABASES`, all database management commands accept an optional
+          |`WAIT`/`NOWAIT` clause. The `WAIT`/`NOWAIT` clause allows you to specify a time limit in 
+          |which the command must complete and return. The options are:
           |
-          |* `WAIT n SECONDS` - Wait the specified number of seconds (n) for the command to complete
-          |before returning.
-          |* `WAIT` - Wait for the default period of 300 seconds for the command to complete before returning.
+          |* `WAIT n SECONDS` - Return once completed or when the specified time limit of `n` seconds is up.
+          |* `WAIT` - Return once completed or when the default time limit of 300 seconds is up.
           |* `NOWAIT` - Return immediately.""")
       p(
         """A command using a `WAIT` clause will automatically commit the current transaction when it executes successfully, as the
