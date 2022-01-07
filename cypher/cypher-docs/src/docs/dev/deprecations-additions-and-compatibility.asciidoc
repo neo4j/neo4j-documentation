@@ -89,7 +89,7 @@ prop IS NULL
 a|
 label:syntax[]
 label:deprecated[] +
-`BRIEF [OUTPUT]` for `SHOW INDEXES` and `SHOW CONSTRAINTS`
+`BRIEF [OUTPUT]` for `SHOW INDEXES` and `SHOW CONSTRAINTS`.
 a|
 Replaced by default output columns.
 
@@ -314,6 +314,18 @@ Allows `YIELD` and `WHERE` but not `BRIEF` or `VERBOSE`.
 | Feature
 | Details
 
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE DATABASE ...
+[OPTIONS {...}]
+----
+a|
+New syntax to pass options to `CREATE DATABASE`.
+This can be used to specify a specific cluster node to seed data from.
+
 
 a|
 label:syntax[]
@@ -402,7 +414,8 @@ New syntax for showing the home database of the current user.
 
 a|
 label:syntax[]
-label:new[]
+label:new[] +
+New privilege:
 [source, cypher, role="noheader"]
 ----
 SET USER HOME DATABASE
@@ -434,6 +447,16 @@ ON HOME GRAPH
 a|
 New syntax for privileges affecting home graph.
 
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE FULLTEXT INDEX ...
+----
+a|
+Allows creating fulltext indexes on nodes or relationships.
+They can be dropped by using their name.
 
 a|
 label:functionality[]
@@ -457,20 +480,6 @@ CREATE LOOKUP INDEX ...
 a|
 Create token lookup index for nodes with any labels or relationships with any relationship type.
 They can be dropped by using their name.
-
-
-a|
-label:syntax[]
-label:new[]
-[source, cypher, role="noheader"]
-----
-CREATE DATABASE ...
-[OPTIONS {...}]
-----
-a|
-New syntax to pass options to `CREATE DATABASE`.
-This can be used to specify a specific cluster node to seed data from.
-
 
 a|
 label:functionality[]
@@ -523,17 +532,6 @@ SHOW [ALL \| BUILT IN \| USER DEFINED] FUNCTION[S]
 a|
 New Cypher commands for listing functions.
 
-
-a|
-label:syntax[]
-label:new[]
-[source, cypher, role="noheader"]
-----
-CREATE FULLTEXT INDEX ...
-----
-a|
-Allows creating fulltext indexes on nodes or relationships.
-They can be dropped by using their name.
 |===
 
 [[cypher-deprecations-additions-removals-4.2]]
@@ -1002,7 +1000,7 @@ The returned privileges are a closer match to the original grants and denies, e.
 a|
 label:functionality[]
 label:new[] +
-For roles:
+New role:
 [source, cypher, role="noheader"]
 ----
 PUBLIC
@@ -1013,7 +1011,7 @@ The `PUBLIC` role is automatically assigned to all users, giving them a set of b
 a|
 label:syntax[]
 label:new[] +
-For priviledges:
+For privileges:
 [source, cypher, role="noheader"]
 ----
 REVOKE MATCH
@@ -1423,7 +1421,7 @@ The create constraint syntax can now include a name.
 a|
 label:functionality[]
 label:new[] +
-For pipelined runtime:
+Pipelined runtime:
 [source, cypher, role="noheader"]
 ----
 CYPHER runtime=pipelined
