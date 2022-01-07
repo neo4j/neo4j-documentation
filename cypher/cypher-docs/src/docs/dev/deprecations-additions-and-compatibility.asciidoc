@@ -132,7 +132,7 @@ The returned privileges are a closer match to the original grants and denies, e.
 a|
 label:functionality[]
 label:new[] +
-For roles:
+New role:
 [source, cypher, role="noheader"]
 ----
 PUBLIC
@@ -143,7 +143,7 @@ The `PUBLIC` role is automatically assigned to all users, giving them a set of b
 a|
 label:syntax[]
 label:new[] +
-For priviledges:
+For privileges:
 [source, cypher, role="noheader"]
 ----
 REVOKE MATCH
@@ -553,7 +553,7 @@ The create constraint syntax can now include a name.
 a|
 label:functionality[]
 label:new[] +
-For pipelined runtime:
+Pipelined runtime:
 [source, cypher, role="noheader"]
 ----
 CYPHER runtime=pipelined
