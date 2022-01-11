@@ -4,28 +4,10 @@
 [abstract]
 --
 Cypher is a language that is constantly evolving.
-New features get added to the language continuously, and occasionally, some features become deprecated and are subsequently removed.
+New features are added to the language continuously, and occasionally, some features become deprecated and are subsequently removed.
 --
 
-* <<cypher-deprecations-additions-removals, Removals, deprecations, additions, and extensions>>
-** <<cypher-deprecations-additions-removals-4.2, Version 4.2>>
-** <<cypher-deprecations-additions-removals-4.1.3, Version 4.1.3>>
-** <<cypher-deprecations-additions-removals-4.1, Version 4.1>>
-** <<cypher-deprecations-additions-removals-4.0, Version 4.0>>
-** <<cypher-deprecations-additions-removals-3.5, Version 3.5>>
-** <<cypher-deprecations-additions-removals-3.4, Version 3.4>>
-** <<cypher-deprecations-additions-removals-3.3, Version 3.3>>
-** <<cypher-deprecations-additions-removals-3.2, Version 3.2>>
-** <<cypher-deprecations-additions-removals-3.1, Version 3.1>>
-** <<cypher-deprecations-additions-removals-3.0, Version 3.0>>
-* <<cypher-compatibility, Compatibility>>
-* <<cypher-versions, Supported language versions>>
-
-
-[[cypher-deprecations-additions-removals]]
-== Removals, deprecations, additions, and extensions
-
-The following tables list all of the features which have been removed, deprecated, added, or extended in Cypher.
+This section list all of the features that have been removed, deprecated, added, or extended in different Cypher versions.
 Replacement syntax for deprecated and removed features are also indicated.
 
 [[cypher-deprecations-additions-removals-4.2]]
