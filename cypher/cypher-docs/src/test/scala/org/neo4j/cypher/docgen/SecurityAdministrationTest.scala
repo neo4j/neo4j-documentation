@@ -688,7 +688,8 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           "CREATE ROLE globbing2",
           "CREATE ROLE globbing3",
           "CREATE ROLE globbing4",
-          "CREATE ROLE globbing5"
+          "CREATE ROLE globbing5",
+          "CREATE ROLE globbing6"
         )
         p("The dbms privileges for procedure and user defined function execution are assignable using Cypher administrative commands. They can be granted, denied and revoked like other privileges.")
         p("include::dbms/execute-syntax.asciidoc[]")
@@ -980,6 +981,14 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           p(
             """The name-globbing for procedure and user defined function names is a simplified version of globbing for filename expansions, only allowing two wildcard characters -- `+*+` and `?`.
               |They are used for multiple and single character matches, where `+*+` means 0 or more characters and `?` matches exactly one character.""".stripMargin)
+          note {
+            p("""The name-globbing is subject to the <<cypher-manual#cypher-naming, standard Cypher restrictions on valid identifiers>>,
+              |with the exception that it may include dots, stars, and question marks without the need for escaping using backticks.
+              |Each part of the name-globbing separated by dots may be individually escaped, for example `++mine.`procedureWith%`++` but not `++mine.procedure`With%`++`.
+              |Also good to keep in mind is that the wildcard characters will still behave as wildcards even when escaped,
+              |as an example using `++`*`++` is equivalent to using `+*+` and thus allows executing all functions or procedures and not only the procedure or function named `+*+`.
+              |""".stripMargin)
+          }
           p(
             """The examples below only use procedures but the same rules apply to user defined function names.
               |For the examples below, assume we have the following procedures:
@@ -987,9 +996,11 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
               |* mine.public.exampleProcedure
               |* mine.public.exampleProcedure1
               |* mine.public.exampleProcedure42
+              |* mine.public.with#Special§Characters
               |* mine.private.exampleProcedure
               |* mine.private.exampleProcedure1
               |* mine.private.exampleProcedure2
+              |* mine.private.with#Special§Characters
               |* your.exampleProcedure
               |""".stripMargin)
 
@@ -1026,6 +1037,16 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           })) {
             statsOnlyResultTable()
             p("Users with the role 'globbing5' can then run procedures `mine.public.exampleProcedure`, `mine.public.exampleProcedure1` and `mine.public.exampleProcedure42`, but none of the others.")
+          }
+
+          query("GRANT EXECUTE PROCEDURE `mine.public.with#*§Characters`, mine.private.`with#Spec???§Characters` ON DBMS TO globbing6", ResultAssertions(r => {
+            assertStats(r, systemUpdates = 2)
+          })) {
+            statsOnlyResultTable()
+            p("Users with the role 'globbing6' can then run procedures `mine.public.with#Special§Characters` and `mine.private.with#Special§Characters`, but none of the others.")
+            note {
+              p("The name-globbing may be fully or partially escaped and both the `+*+` and `+?+` are interpreted as wildcards either way.")
+            }
           }
         }
       }
