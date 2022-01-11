@@ -29,123 +29,1016 @@ The following tables list all of the features which have been removed, deprecate
 Replacement syntax for deprecated and removed features are also indicated.
 
 [[cypher-deprecations-additions-removals-4.2]]
-=== Version 4.2
-[options="header"]
+== Version 4.2
+
+=== Deprecated features
+
+[cols="2", options="header"]
 |===
-| Feature     | Type | Change | Details
-| `SHOW PRIVILEGES [AS [REVOKE] COMMAND[S]]` | Functionality | Added | Privileges can now be shown as Cypher commands
-| `SHOW ROLE name PRIVILEGES` | Functionality | Updated | Can now handle multiple roles, `SHOW ROLES n1, n2, ... PRIVILEGES`
-| `SHOW USER name PRIVILEGES` | Functionality | Updated | Can now handle multiple users, `SHOW USERS n1, n2, ... PRIVILEGES`
-| `round(expression, precision)` | Functionality | Updated | round()-function can now take an additional argument to specify rounding precision.
-| `round(expression, precision, mode)` | Functionality | Updated | round()-function can now take two additional arguments to specify rounding precision, and rounding mode.
-| `DEFAULT GRAPH` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges, database privileges>>
-| `0o...`                     | Syntax        | Added   | Cypher will now interpret literals with prefix `0o` as an octal integer literal.
-| `0...`                      | Syntax        | Deprecated   | Replaced by `0o...` (see above).
-| `0X...`                     | Syntax        | Deprecated   | Only `0x...` (lowercase x) will be supported.
-| `SET [PLAINTEXT \| ENCRYPTED] PASSWORD` | Syntax | Added | For `CREATE USER` and `ALTER USER` it is now possible to set (or update) a password when the plaintext password is unknown, but the encrypted password is available.
-| <<administration-security-administration-dbms-privileges-execute, EXECUTE>> privileges | Functionality | Added | New Cypher commands for administering privileges for executing procedures and user defined functions.
-| `CREATE [BTREE] INDEX ... [OPTIONS {...}]`            | Syntax | Added | Allows setting index provider and index configuration when creating an index.
-| `CREATE CONSTRAINT ... IS NODE KEY [OPTIONS {...}]`   | Syntax | Added | Allows setting index provider and index configuration for the backing index when creating a node key constraint.
-| `CREATE CONSTRAINT ... IS UNIQUE [OPTIONS {...}]`     | Syntax | Added | Allows setting index provider and index configuration for the backing index when creating a uniqueness constraint.
-| `db.createIndex`                      | Procedure | Deprecated | Replaced by `CREATE INDEX` command.
-| `db.createNodeKey`                    | Procedure | Deprecated | Replaced by `CREATE CONSTRAINT ... IS NODE KEY` command.
-| `db.createUniquePropertyConstraint`   | Procedure | Deprecated | Replaced by `CREATE CONSTRAINT ... IS UNIQUE` command.
-| `SHOW CURRENT USER`         | Syntax  | Added     | New Cypher command for showing current logged-in user and roles.
-| `SHOW [ALL \| BTREE] INDEX[ES] [BRIEF \| VERBOSE [OUTPUT]]`                                                                        | Functionality | Added | New Cypher commands for listing indexes.
-| `SHOW [ALL \| UNIQUE \| NODE EXIST[S] \| RELATIONSHIP EXIST[S] \| EXIST[S] \| NODE KEY] CONSTRAINT[S] [BRIEF \| VERBOSE [OUTPUT]]` | Functionality | Added | New Cypher commands for listing constraints.
-| `db.indexes`                | Procedure     | Deprecated | Replaced by `SHOW INDEXES`
-| `db.indexDetails`           | Procedure     | Deprecated | Replaced by `SHOW INDEXES VERBOSE`
-| `db.constraints`            | Procedure     | Deprecated | Replaced by `SHOW CONSTRAINTS`
-| `db.schemaStatements`       | Procedure     | Deprecated | Replaced by `SHOW INDEXES VERBOSE` and `SHOW CONSTRAINTS VERBOSE`
-| `SHOW INDEX` privilege      | Functionality | Added      | New Cypher command for administering privilege for listing indexes.
-| `SHOW CONSTRAINT` privilege | Functionality | Added      | New Cypher command for administering privilege for listing constraints.
+| Feature
+| Details
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+0...
+----
+a|
+Replaced by `+0o...+`.
+
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+0X...
+----
+a|
+Only `+0x...+` (lowercase x) is supported.
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, role="noheader"]
+----
+db.createIndex
+----
+a|
+Replaced by `CREATE INDEX` command.
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, role="noheader"]
+----
+db.createNodeKey
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ... IS NODE KEY
+----
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, role="noheader"]
+----
+db.createUniquePropertyConstraint
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ... IS UNIQUE
+----
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, role="noheader"]
+----
+db.indexes
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES
+----
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, role="noheader"]
+----
+db.indexDetails
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES YIELD *
+----
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, role="noheader"]
+----
+db.constraints
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS
+----
+
+
+a|
+label:procedure[]
+label:deprecated[]
+[source, role="noheader"]
+----
+db.schemaStatements
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES YIELD *
+----
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS YIELD *
+----
+|===
+
+=== Updated features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW ROLE name PRIVILEGES
+----
+a|
+Can now handle multiple roles.
+[source, cypher, role="noheader"]
+----
+SHOW ROLES n1, n2, ... PRIVILEGES
+----
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW USER name PRIVILEGES
+----
+a|
+Can now handle multiple users.
+[source, cypher, role="noheader"]
+----
+SHOW USERS n1, n2, ... PRIVILEGES
+----
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+round(expression, precision)
+----
+a|
+The `round()` function can now take an additional argument to specify rounding precision.
+
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+round(expression, precision, mode)
+----
+a|
+The `round()` function can now take two additional arguments to specify rounding precision and rounding mode.
+|===
+
+=== New features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+SHOW PRIVILEGES [AS [REVOKE] COMMAND[S]]
+----
+a|
+Privileges can now be shown as Cypher commands.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+DEFAULT GRAPH
+----
+a|
+New optional part of the Cypher commands for <<access-control-database-administration,database privileges>>.
+
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+0o...
+----
+a|
+Cypher now interprets literals with prefix `0o` as an octal integer literal.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+SET [PLAINTEXT \| ENCRYPTED] PASSWORD
+----
+a|
+For `CREATE USER` and `ALTER USER`, it is now possible to set (or update) a password when the plaintext password is unknown, but the encrypted password is available.
+
+
+a|
+label:functionality[]
+label:new[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+EXECUTE
+----
+a|
+New Cypher commands for administering privileges for executing procedures and user defined functions.
+See <<administration-security-administration-dbms-privileges-execute>>.
+
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE [BTREE] INDEX ... [OPTIONS {...}]
+----
+a|
+Allows setting index provider and index configuration when creating an index.
+
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ... IS NODE KEY [OPTIONS {...}]
+----
+a|
+Allows setting index provider and index configuration for the backing index when creating a node key constraint.
+
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ... IS UNIQUE [OPTIONS {...}]
+----
+a|
+Allows setting index provider and index configuration for the backing index when creating a uniqueness constraint.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+SHOW CURRENT USER
+----
+a|
+New Cypher command for showing current logged-in user and roles.
+
+
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+SHOW [ALL \| BTREE] INDEX[ES] [BRIEF \| VERBOSE [OUTPUT]]
+----
+a|
+New Cypher commands for listing indexes.
+
+
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+SHOW [ALL \| UNIQUE \| NODE EXIST[S] \| RELATIONSHIP EXIST[S] \| EXIST[S] \| NODE KEY] CONSTRAINT[S] [BRIEF \| VERBOSE [OUTPUT]]
+----
+a|
+New Cypher commands for listing constraints.
+
+a|
+label:functionality[]
+label:new[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+SHOW INDEX
+----
+a|
+New Cypher command for administering privilege for listing indexes.
+
+
+a|
+label:functionality[]
+label:new[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINT
+----
+a|
+New Cypher command for administering privilege for listing constraints.
 |===
 
 [[cypher-deprecations-additions-removals-4.1.3]]
-=== Version 4.1.3
-[options="header"]
+== Version 4.1.3
+
+
+=== New features
+
+[cols="2", options="header"]
 |===
-| Feature     | Type | Change | Details
-| `CREATE INDEX [name] IF NOT EXISTS FOR ...` | Syntax | Added | Makes index creation idempotent. If an index with the name or schema already exists no error will be thrown
-| `DROP INDEX name IF EXISTS` | Syntax | Added | Makes index deletion idempotent. If no index with the name exists no error will be thrown
-| `CREATE CONSTRAINT [name] IF NOT EXISTS ON ...` | Syntax | Added | Makes constraint creation idempotent. If a constraint with the name or type and schema already exists no error will be thrown
-| `DROP CONSTRAINT name IF EXISTS` | Syntax | Added | Makes constraint deletion idempotent. If no constraint with the name exists no error will be thrown
+| Feature
+| Details
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE INDEX [name] IF NOT EXISTS FOR ...
+----
+a|
+Makes index creation idempotent. If an index with the name or schema already exists no error will be thrown.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+DROP INDEX name IF EXISTS
+----
+a|
+Makes index deletion idempotent. If no index with the name exists no error will be thrown.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [name] IF NOT EXISTS ON ...
+----
+a|
+Makes constraint creation idempotent. If a constraint with the name or type and schema already exists no error will be thrown.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT name IF EXISTS
+----
+a|
+Makes constraint deletion idempotent. If no constraint with the name exists no error will be thrown.
+
 |===
 
 [[cypher-deprecations-additions-removals-4.1]]
-=== Version 4.1
-[options="header"]
+== Version 4.1
+
+=== Restricted features
+
+[cols="2", options="header"]
 |===
-| Feature     | Type | Change | Details
-| `queryId` | Procedure | Updated | The `queryId` procedure format has changed, and no longer includes the database name. For example, `mydb-query-123` is now `query-123`. This change affects built-in procedures `dbms.listQueries()`, `dbms.listActiveLocks(queryId)`, `dbms.killQueries(queryIds)` `and dbms.killQuery(queryId)` 
-| `PUBLIC` role | Functionality | Added | The `PUBLIC` role is automatically assigned to all users, giving them a set of base privileges
-| `REVOKE MATCH` | Syntax | Added | The `MATCH` privilege can now be revoked
-| `REVOKE ...` | Functionality | Restricted | No longer revokes sub-privileges when revoking a compound privilege, e.g. when revoking `INDEX MANAGEMENT`, any `CREATE INDEX` and `DROP INDEX` privileges will no longer be revoked
-| `SHOW PRIVILEGES` | Functionality | Updated | The returned privileges are a closer match to the original grants and denies, e.g. if granted `MATCH` the command will show that specific privilege and not the `TRAVERSE` and `READ` privileges. Added support for `YIELD` and `WHERE` clauses to allow filtering results.
-| `SHOW USERS` | Functionality | Added | New support for `YIELD` and `WHERE` clauses to allow filtering results.
-| `SHOW ROLES` | Functionality | Added | New support for `YIELD` and `WHERE` clauses to allow filtering results.
-| `SHOW DATABASES` | Functionality | Added | New support for `YIELD` and `WHERE` clauses to allow filtering results.
-| `ALL DATABASE PRIVILEGES` | Functionality | Restricted | No longer includes the privileges `START DATABASE` and `STOP DATABASE`
-| <<administration-security-administration-database-transaction, TRANSACTION MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering transaction management
-| DBMS <<administration-security-administration-dbms-privileges-user-management, USER MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering user management
-| DBMS <<administration-security-administration-dbms-privileges-database-management, DATABASE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering database management
-| DBMS <<administration-security-administration-dbms-privileges-privilege-management, PRIVILEGE MANAGEMENT>> privileges | Functionality | Added | New Cypher commands for administering privilege management
-| `ALL DBMS PRIVILEGES` | Functionality | Added | New Cypher command for administering role, user, database and privilege management
-| `ALL GRAPH PRIVILEGES` | Functionality | Added | New Cypher command for administering read and write privileges
-| Write privileges | Functionality | Added | New Cypher commands for administering write privileges
-| `ON DEFAULT DATABASE` | Syntax | Added | New optional part of the Cypher commands for <<administration-security-administration-database-privileges, database privileges>>
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:restricted[]
+[source, cypher, role="noheader"]
+----
+REVOKE ...
+----
+a|
+No longer revokes sub-privileges when revoking a compound privilege, e.g. when revoking `INDEX MANAGEMENT`, any `CREATE INDEX` and `DROP INDEX` privileges will no longer be revoked.
+
+a|
+label:functionality[]
+label:restricted[]
+[source, cypher, role="noheader"]
+----
+ALL DATABASE PRIVILEGES
+----
+a|
+No longer includes the privileges `START DATABASE` and `STOP DATABASE`.
+|===
+
+=== Updated features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:procedure[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+queryId
+----
+a|
+The `queryId` procedure format has changed, and no longer includes the database name. For example, `mydb-query-123` is now `query-123`. This change affects built-in procedures `dbms.listQueries()`, `dbms.listActiveLocks(queryId)`, `dbms.killQueries(queryIds)` `and dbms.killQuery(queryId)`.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW PRIVILEGES
+----
+a|
+The returned privileges are a closer match to the original grants and denies, e.g. if granted `MATCH` the command will show that specific privilege and not the `TRAVERSE` and `READ` privileges. Added support for `YIELD` and `WHERE` clauses to allow filtering results.
+|===
+
+=== New features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:new[] +
+New role:
+[source, cypher, role="noheader"]
+----
+PUBLIC
+----
+a|
+The `PUBLIC` role is automatically assigned to all users, giving them a set of base privileges.
+
+a|
+label:syntax[]
+label:new[] +
+For privileges:
+[source, cypher, role="noheader"]
+----
+REVOKE MATCH
+----
+a|
+The `MATCH` privilege can now be revoked.
+
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+SHOW USERS
+----
+a|
+New support for `YIELD` and `WHERE` clauses to allow filtering results.
+
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+SHOW ROLES
+----
+a|
+New support for `YIELD` and `WHERE` clauses to allow filtering results.
+
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+SHOW DATABASES
+----
+a|
+New support for `YIELD` and `WHERE` clauses to allow filtering results.
+
+a|
+label:functionality[]
+label:new[] +
+<<access-control-database-administration-transaction,TRANSACTION MANAGEMENT>> privileges
+a|
+New Cypher commands for administering transaction management.
+
+a|
+label:functionality[]
+label:new[] +
+DBMS <<access-control-dbms-administration-user-management,USER MANAGEMENT>> privileges
+a|
+New Cypher commands for administering user management.
+
+a|
+label:functionality[]
+label:new[] +
+DBMS <<access-control-dbms-administration-database-management,DATABASE MANAGEMENT>> privileges
+a|
+New Cypher commands for administering database management.
+
+
+a|
+label:functionality[]
+label:new[] +
+DBMS <<access-control-dbms-administration-privilege-management,PRIVILEGE MANAGEMENT>> privileges
+a|
+New Cypher commands for administering privilege management.
+
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+ALL DBMS PRIVILEGES
+----
+a|
+New Cypher command for administering role, user, database and privilege management.
+
+
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+ALL GRAPH PRIVILEGES
+----
+a|
+New Cypher command for administering read and write privileges.
+
+a|
+label:functionality[]
+label:new[] +
+Write privileges
+a|
+New Cypher commands for administering write privileges.
+
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+ON DEFAULT DATABASE
+----
+a|
+New optional part of the Cypher commands for <<access-control-database-administration,database privileges>>.
 |===
 
 [[cypher-deprecations-additions-removals-4.0]]
-=== Version 4.0
-[options="header"]
+== Version 4.0
+
+=== Removed features
+
+[cols="2", options="header"]
 |===
-| Feature     | Type | Change | Details
-| `rels()`    | Function  | Removed | Replaced by <<functions-relationships, relationships()>>
-| `toInt()`   | Function  | Removed | Replaced by <<functions-tointeger, toInteger()>>
-| `lower()`   | Function  | Removed | Replaced by <<functions-tolower, toLower()>>
-| `upper()`   | Function  | Removed | Replaced by <<functions-toupper, toUpper()>>
-| `extract()` | Function  | Removed | Replaced by <<cypher-list-comprehension, list comprehension>>
-| `filter()`  | Function  | Removed | Replaced by <<cypher-list-comprehension, list comprehension>>
-| `length()`  | Function  | Restricted | Restricted to only work on paths. See <<functions-length, length()>> for more details.
-| `size()`    | Function  | Restricted | No longer works for paths. Only works for strings, lists and pattern expressions. See <<query-functions-scalar, size()>> for more details.
-| `CYPHER planner=rule` (Rule planner)    | Functionality | Removed | The `RULE` planner was removed in 3.2, but still possible to trigger using `START` or `CREATE UNIQUE` clauses. Now it is completely removed.
-| `CREATE UNIQUE`     | Clause | Removed | Running queries with this clause will cause a syntax error. Running with `CYPHER 3.5` will cause a runtime error due to the removal of the rule planner.
-| `START`     | Clause | Removed | Running queries with this clause will cause a syntax error. Running with `CYPHER 3.5` will cause a runtime error due to the removal of the rule planner.
-| Explicit indexes |  Functionality | Removed | The removal of the `RULE` planner in 3.2 was the beginning of the end for explicit indexes. Now they are completely removed, including the removal of the link:https://neo4j.com/docs/cypher-manual/3.5/schema/index/#explicit-indexes-procedures[built-in procedures for Neo4j 3.3 to 3.5].
-| `MATCH (n)-[rs*]-() RETURN rs`     | Syntax | Deprecated | As in Cypher 3.2, this is replaced by `MATCH p=(n)-[*]-() RETURN relationships(p) AS rs`
-| `MATCH (n)-[:A\|:B\|:C {foo: 'bar'}]-() RETURN n`     | Syntax | Removed | Replaced by `MATCH (n)-[:A\|B\|C {foo: 'bar'}]-() RETURN n`
-| `MATCH (n)-[x:A\|:B\|:C]-() RETURN n`     | Syntax | Removed | Replaced by `MATCH (n)-[x:A\|B\|C]-() RETURN n`
-| `MATCH (n)-[x:A\|:B\|:C*]-() RETURN n`     | Syntax | Removed | Replaced by `MATCH (n)-[x:A\|B\|C*]-() RETURN n`
-| `+{parameter}+` | Syntax | Removed | Replaced by <<cypher-parameters, $parameter>>
-| `CYPHER runtime=pipelined` (Pipelined runtime) | Functionality | Added| This Neo4j Enterprise Edition only feature involves a new runtime that has many performance enhancements.
-| `CYPHER runtime=compiled` (Compiled runtime) | Functionality | Removed| Replaced by the new `pipelined` runtime which covers a much wider range of queries.
-| `CREATE INDEX [name] FOR (n:Label) ON (n.prop)` | Syntax | Added | New syntax for creating indexes, which can include a name.
-| `CREATE CONSTRAINT [name] ON ...` | Syntax | Extended | The create constraint syntax can now include a name.
-| `DROP INDEX name` | Syntax | Added | <<administration-indexes-drop-an-index,New command>> for dropping an index by name.
-| `DROP CONSTRAINT name` | Syntax | Added | <<administration-constraints-drop-constraint,New command>> for dropping a constraint by name, no matter the type.
-| `CREATE INDEX ON :Label(prop)` | Syntax | Deprecated | Replaced by `CREATE INDEX FOR (n:Label) ON (n.prop)`
-| `DROP INDEX ON :Label(prop)` | Syntax | Deprecated | Replaced by `DROP INDEX name`
-| `DROP CONSTRAINT ON (n:Label) ASSERT (n.prop) IS NODE KEY` | Syntax | Deprecated | Replaced by `DROP CONSTRAINT name`
-| `DROP CONSTRAINT ON (n:Label) ASSERT (n.prop) IS UNIQUE` | Syntax | Deprecated | Replaced by `DROP CONSTRAINT name`
-| `DROP CONSTRAINT ON (n:Label) ASSERT exists(n.prop)` | Syntax | Deprecated | Replaced by `DROP CONSTRAINT name`
-| `DROP CONSTRAINT ON ()-[r:Type]-() ASSERT exists(r.prop)` | Syntax | Deprecated | Replaced by `DROP CONSTRAINT name`
-| `WHERE EXISTS {...}` | Clause | Added | Existential sub-queries are sub-clauses used to filter the results of a `MATCH`, `OPTIONAL MATCH`, or `WITH` clause.
-| <<administration-databases, Multi-database administration>> | Functionality | Added | New Cypher commands for administering multiple databases
-| <<administration-security, Security administration>> | Functionality | Added | New Cypher commands for administering role-based access-control
-| <<administration-security-subgraph, Fine-grained security>> | Functionality | Added | New Cypher commands for administering dbms, database, graph and sub-graph access control
-| `USE neo4j` | Clause| Added | New clause to specify which graph a query, or query part, is executed against.
+| Feature
+| Details
+
+a|
+label:function[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+rels()
+----
+a|
+Replaced by <<functions-relationships,relationships()>>.
+
+a|
+label:function[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+toInt()
+----
+a|
+Replaced by <<functions-tointeger,toInteger()>>.
+
+a|
+label:function[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+lower()
+----
+a|
+Replaced by <<functions-tolower,toLower()>>.
+
+a|
+label:function[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+upper()
+----
+a|
+Replaced by <<functions-toupper,toUpper()>>.
+
+a|
+label:function[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+extract()
+----
+a|
+Replaced by <<cypher-list-comprehension,list comprehension>>.
+
+a|
+label:function[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+filter()
+----
+a|
+Replaced by <<cypher-list-comprehension,list comprehension>>.
+
+a|
+label:functionality[]
+label:removed[] +
+For Rule planner:
+[source, cypher, role="noheader"]
+----
+CYPHER planner=rule  
+----
+a|
+The `RULE` planner was removed in 3.2, but still possible to trigger using `START` or `CREATE UNIQUE` clauses. Now it is completely removed.
+
+
+a|
+label:functionality[]
+label:removed[] +
+Explicit indexes
+a|
+The removal of the `RULE` planner in 3.2 was the beginning of the end for explicit indexes. Now they are completely removed, including the removal of the link:https://neo4j.com/docs/cypher-manual/3.5/schema/index/#explicit-indexes-procedures[built-in procedures for Neo4j 3.3 to 3.5].
+
+
+a|
+label:functionality[]
+label:removed[] +
+For compiled runtime:
+[source, cypher, role="noheader"]
+----
+CYPHER runtime=compiled
+----
+a|
+Replaced by the new `pipelined` runtime which covers a much wider range of queries.
+
+
+a|
+label:clause[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+CREATE UNIQUE
+----
+a|
+Running queries with this clause will cause a syntax error. Running with `CYPHER 3.5` will cause a runtime error due to the removal of the rule planner.
+
+a|
+label:clause[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+START
+----
+a|
+Running queries with this clause will cause a syntax error. Running with `CYPHER 3.5` will cause a runtime error due to the removal of the rule planner.
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+MATCH (n)-[:A\|:B\|:C {foo: 'bar'}]-() RETURN n
+----
+a|
+Replaced by `MATCH (n)-[:A\|B\|C {foo: 'bar'}]-() RETURN n`.
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+MATCH (n)-[x:A\|:B\|:C]-() RETURN n
+----
+a|
+Replaced by `MATCH (n)-[x:A\|B\|C]-() RETURN n`.
+
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+MATCH (n)-[x:A\|:B\|:C*]-() RETURN n
+----
+a|
+Replaced by `MATCH (n)-[x:A\|B\|C*]-() RETURN n`.
+
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+{parameter}
+----
+a|
+Replaced by <<cypher-parameters,$parameter>>.
+|===
+
+=== Deprecated features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+MATCH (n)-[rs*]-() RETURN rs
+----
+a|
+As in Cypher 3.2, this is replaced by: 
+[source, cypher, role="noheader"]
+----
+MATCH p=(n)-[*]-() RETURN relationships(p) AS rs
+----
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE INDEX ON :Label(prop)
+----
+a|
+Replaced by `CREATE INDEX FOR (n:Label) ON (n.prop)`.
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+DROP INDEX ON :Label(prop)
+----
+a|
+Replaced by `DROP INDEX name`.
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT ON (n:Label) ASSERT (n.prop) IS NODE KEY
+----
+a|
+Replaced by `DROP CONSTRAINT name`.
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT ON (n:Label) ASSERT (n.prop) IS UNIQUE
+----
+a|
+Replaced by `DROP CONSTRAINT name`.
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT ON (n:Label) ASSERT exists(n.prop)
+----
+a|
+Replaced by `DROP CONSTRAINT name`.
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT ON ()-[r:Type]-() ASSERT exists(r.prop)
+----
+a|
+Replaced by `DROP CONSTRAINT name`.
+
+|===
+
+=== Restricted features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:function[]
+label:restricted[]
+[source, cypher, role="noheader"]
+----
+length()
+----
+a|
+Restricted to only work on paths. See <<functions-length,length()>> for more details.
+
+a|
+label:function[]
+label:restricted[]
+[source, cypher, role="noheader"]
+----
+size()
+----
+a|
+No longer works for paths. Only works for strings, lists and pattern expressions. See <<query-functions-scalar,size()>> for more details.
+|===
+
+=== Updated features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:syntax[]
+label:extended[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [name] ON ...
+----
+a|
+The create constraint syntax can now include a name.
+
+|===
+=== New features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:new[] +
+Pipelined runtime:
+[source, cypher, role="noheader"]
+----
+CYPHER runtime=pipelined
+----
+a|
+This Neo4j Enterprise Edition only feature involves a new runtime that has many performance enhancements.
+
+a|
+label:functionality[]
+label:new[] +
+<<administration-databases,Multi-database administration>>
+a|
+New Cypher commands for administering multiple databases.
+
+a|
+label:functionality[]
+label:new[] +
+<<administration-security,Security administration>>
+a|
+New Cypher commands for administering role-based access-control.
+
+a|
+label:functionality[]
+label:new[] +
+<<access-control-manage-privileges,Fine-grained security>>
+a|
+New Cypher commands for administering dbms, database, graph and sub-graph access control.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE INDEX [name] FOR (n:Label) ON (n.prop)
+----
+a|
+New syntax for creating indexes, which can include a name.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+DROP INDEX name
+----
+a|
+<<administration-indexes-drop-an-index,New command>> for dropping an index by name.
+
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT name
+----
+a|
+<<administration-constraints-syntax-drop,New command>> for dropping a constraint by name, no matter the type.
+
+
+a|
+label:clause[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+WHERE EXISTS {...} 
+----
+a|
+Existential sub-queries are sub-clauses used to filter the results of a `MATCH`, `OPTIONAL MATCH`, or `WITH` clause.
+
+a|
+label:clause[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+USE neo4j
+----
+a|
+New clause to specify which graph a query, or query part, is executed against.
+
 |===
 
 
 [[cypher-deprecations-additions-removals-3.5]]
-=== Version 3.5
-[options="header"]
+== Version 3.5
+
+=== Deprecated features
+
+[cols="2", options="header"]
 |===
-| Feature     | Type | Change | Details
-| `CYPHER runtime=compiled` (Compiled runtime)    | Functionality | Deprecated | The compiled runtime will be discontinued in the next major release. It might still be used for default queries in order to not cause regressions, but explicitly requesting it will not be possible.
-| `extract()` | Function  | Deprecated | Replaced by <<cypher-list-comprehension, list comprehension>>
-| `filter()`  | Function  | Deprecated | Replaced by <<cypher-list-comprehension, list comprehension>>
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:deprecated[] +
+Compiled runtime:
+[source, cypher, role="noheader"]
+----
+CYPHER runtime=compiled
+----
+a|
+The compiled runtime will be discontinued in the next major release. It might still be used for default queries in order to not cause regressions, but explicitly requesting it will not be possible.
+
+a|
+label:function[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+extract()
+----
+a|
+Replaced by <<cypher-list-comprehension,list comprehension>>.
+
+a|
+label:function[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+filter()
+----
+a|
+Replaced by <<cypher-list-comprehension,list comprehension>>.
 |===
 
 
