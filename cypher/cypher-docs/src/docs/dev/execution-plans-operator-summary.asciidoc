@@ -512,6 +512,12 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 | label:yes[]
 |
 
+| <<query-plan-shortest-path,ShortestPath>>
+| Finds one or all shortest paths between two previously matches node variables.
+|
+|
+|
+
 | <<query-plan-listing-constraints,ShowConstraints>>
 | Lists the available constraints.
 | label:yes[]
