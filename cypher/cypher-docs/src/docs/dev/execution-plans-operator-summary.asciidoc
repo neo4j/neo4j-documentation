@@ -215,7 +215,9 @@ Tests for the absence of a pattern predicate.
 |
 
 | <<query-plan-exhaustive-limit,ExhaustiveLimit>>
-| The `ExhaustiveLimit` operator is similar to the `Limit` operator, but will always exhaust the input. Used when combining `LIMIT` and updates.
+a|
+The `ExhaustiveLimit` operator is similar to the `Limit` operator, but will always exhaust the input.
+Used when combining `LIMIT` and updates.
 |
 |
 |
