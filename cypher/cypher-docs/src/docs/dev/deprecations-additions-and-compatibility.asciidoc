@@ -71,7 +71,6 @@ Replaced by:
 CREATE CONSTRAINT FOR ... REQUIRE ...
 ----
 
-
 a|
 label:functionality[]
 label:deprecated[]
@@ -184,26 +183,6 @@ Please instead use:
 ----
 point.withinBBox(point({x:1, y:1}), point({x:0, y:0}), point({x:2, y:2}))
 ----
-
-a|
-label:functionality[]
-label:deprecated[]
-label:new[]
-[source, cypher, role="noheader"]
-----
-DROP CONSTRAINT
-ON (n:LabelName)
-ASSERT (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
-----
-a|
-Unique property constraints now allow multiple properties.
-
-Replaced by:
-[source, cypher, role="noheader"]
-----
-DROP CONSTRAINT name [IF EXISTS]
-----
-
 |===
 
 === New features
@@ -223,21 +202,6 @@ CREATE CONSTRAINT FOR ... REQUIRE ...
 a|
 New syntax for creating constraints, applicable to all constraint types.
 
-
-a|
-label:syntax[]
-label:new[]
-[source, cypher, role="noheader"]
-----
-CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
-FOR ...
-REQUIRE ... IS NOT NULL
-OPTIONS "{" "}"
-----
-a|
-Existence constraints now allow an `OPTIONS` map, however, at this point there are no available values for the map.
-
-
 a|
 label:functionality[]
 label:new[]
@@ -254,6 +218,38 @@ Unique property constraints now allow multiple properties, ensuring that the com
 a|
 label:functionality[]
 label:new[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT
+ON (n:LabelName)
+ASSERT (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
+----
+a|
+Unique property constraints now allow multiple properties.
+
+Replaced by:
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT name [IF EXISTS]
+----
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT [constraint_name] [IF NOT EXISTS]
+FOR ...
+REQUIRE ... IS NOT NULL
+OPTIONS "{" "}"
+----
+a|
+Existence constraints now allow an `OPTIONS` map, however, at this point there are no available values for the map.
+
+a|
+label:functionality[]
+label:added[]
 [source, cypher, role="noheader"]
 ----
 CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
@@ -363,23 +359,25 @@ New Cypher command for modifying a database by changing its access mode.
 
 a|
 label:functionality[]
-label:new[]
+label:new[] +
+New privilege:
 [source, cypher, role="noheader"]
 ----
 ALTER DATABASE
 ----
 a|
-New Cypher command for administering privilege for modifying databases.
+New privilege that allows a user to modify databases.
 
 a|
 label:functionality[]
-label:new[]
+label:new[] +
+New privilege:
 [source, cypher, role="noheader"]
 ----
 SET DATABASE ACCESS
 ----
 a|
-New Cypher command for administering the privilege for modifying database access mode.
+New privilege that allows a user to modify database access mode.
 a|
 label:functionality[]
 label:new[]
