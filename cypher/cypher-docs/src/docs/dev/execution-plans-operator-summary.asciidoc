@@ -216,7 +216,7 @@ Tests for the absence of a pattern predicate.
 
 | <<query-plan-exhaustive-limit,ExhaustiveLimit>>
 a|
-The `ExhaustiveLimit` operator is similar to the `Limit` operator, but will always exhaust the input.
+The `ExhaustiveLimit` operator is similar to the `Limit` operator, but always exhausts the input.
 Used when combining `LIMIT` and updates.
 |
 |
@@ -395,7 +395,7 @@ Tests for the presence of a pattern predicate in queries containing multiple pat
 |
 
 | <<query-plan-optional-expand-into,OptionalExpand(Into)>>
-| Traverses all relationships between two nodes, producing a single row with the relationship and end node set to `null` if no matching relationships are found (the start node will be the node with the smallest degree).
+| Traverses all relationships between two nodes, producing a single row with the relationship and end node set to `null` if no matching relationships are found (the start node is the node with the smallest degree).
 |
 |
 |
