@@ -76,6 +76,12 @@ Tests for the absence of a pattern predicate.
 |
 |
 
+| <<query-plan-create-nodes---relationships,Create>>
+| Creates nodes and relationships.
+|
+| label:yes[]
+|
+
 | <<query-plan-create-index,CreateIndex>>
 | Creates an index for either nodes or relationships.
 |
@@ -84,12 +90,6 @@ Tests for the absence of a pattern predicate.
 
 | <<query-plan-create-node-key-constraint,CreateNodeKeyConstraint>>
 | Creates a node key constraint on a set of properties for all nodes having a certain label.
-|
-| label:yes[]
-|
-
-| <<query-plan-create-nodes---relationships,Create>>
-| Creates nodes and relationships.
 |
 | label:yes[]
 |
@@ -148,6 +148,12 @@ Tests for the absence of a pattern predicate.
 |
 |
 
+| <<query-plan-drop-constraint-by-name,DropConstraint>>
+| Drops a constraint using its name.
+| label:yes[]
+| label:yes[]
+|
+
 | <<query-plan-drop-index-by-schema,DropIndex>>
 | Drops an index from a property for all nodes having a certain label.
 | label:yes[]
@@ -156,12 +162,6 @@ Tests for the absence of a pattern predicate.
 
 | <<query-plan-drop-index-by-name,DropIndex>>
 | Drops an index using its name.
-| label:yes[]
-| label:yes[]
-|
-
-| <<query-plan-drop-constraint-by-name,DropConstraint>>
-| Drops a constraint using its name.
 | label:yes[]
 | label:yes[]
 |
@@ -254,18 +254,18 @@ Tests for the absence of a pattern predicate in queries containing multiple patt
 |
 |
 
-| <<query-plan-let-select-or-semi-apply,LetSelectOrSemiApply>>
-a|
-Performs a nested loop.
-Tests for the presence of a pattern predicate that is combined with other predicates.
-|
-|
-|
-
 | <<query-plan-let-select-or-anti-semi-apply,LetSelectOrAntiSemiApply>>
 a|
 Performs a nested loop.
 Tests for the absence of a pattern predicate that is combined with other predicates.
+|
+|
+|
+
+| <<query-plan-let-select-or-semi-apply,LetSelectOrSemiApply>>
+a|
+Performs a nested loop.
+Tests for the presence of a pattern predicate that is combined with other predicates.
 |
 |
 |
@@ -380,20 +380,6 @@ Tests for the presence of a pattern predicate in queries containing multiple pat
 |
 |
 
-| <<query-plan-ordered-aggregation,OrderedAggregation>>
-a|
-Like `EagerAggregation` but relies on the ordering of incoming rows.
-Is not eager.
-|
-|
-|
-
-| <<query-plan-ordered-distinct,OrderedDistinct>>
-| Like `Distinct` but relies on the ordering of incoming rows.
-|
-|
-|
-
 | <<query-plan-optional,Optional>>
 | Yields a single row with all columns set to `null` if no data is returned by its source.
 |
@@ -408,6 +394,20 @@ Is not eager.
 
 | <<query-plan-optional-expand-into,OptionalExpand(Into)>>
 | Traverses all relationships between two nodes, producing a single row with the relationship and end node set to `null` if no matching relationships are found (the start node will be the node with the smallest degree).
+|
+|
+|
+
+| <<query-plan-ordered-aggregation,OrderedAggregation>>
+a|
+Like `EagerAggregation` but relies on the ordering of incoming rows.
+Is not eager.
+|
+|
+|
+
+| <<query-plan-ordered-distinct,OrderedDistinct>>
+| Like `Distinct` but relies on the ordering of incoming rows.
 |
 |
 |
