@@ -572,6 +572,18 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 |
 | label:eager[]
 
+| <<query-plan-triadic-build,TriadicBuild>>
+| The `TriadicBuild` operator is used in conjunction with `TriadicFilter` to solve triangular queries.
+|
+|
+|
+
+| <<query-plan-triadic-filter,TriadicFilter>>
+| The `TriadicFilter` operator is used in conjunction with `TriadicBuild` to solve triangular queries.
+|
+|
+|
+
 | <<query-plan-triadic-selection,TriadicSelection>>
 | Solves triangular queries, such as the very common 'find my friend-of-friends that are not already my friend'.
 |
