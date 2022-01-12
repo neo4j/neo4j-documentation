@@ -31,6 +31,12 @@ This table comprises all the execution plan operators ordered lexicographically.
 |
 |
 
+| <<query-plan-anti,Anti>>
+| Tests for the absence of a pattern.
+|
+|
+|
+
 | <<query-plan-anti-semi-apply,AntiSemiApply>>
 a|
 Performs a nested loop.
