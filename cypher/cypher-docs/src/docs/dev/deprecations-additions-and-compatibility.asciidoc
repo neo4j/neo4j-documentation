@@ -7,25 +7,55 @@ Cypher is a language that is constantly evolving.
 New features get added to the language continuously, and occasionally, some features become deprecated and are subsequently removed.
 --
 
-* <<cypher-deprecations-additions-removals, Removals, deprecations, additions and extensions>>
- ** <<cypher-deprecations-additions-removals-3.0, Version 3.0>>
- ** <<cypher-deprecations-additions-removals-3.1, Version 3.1>>
- ** <<cypher-deprecations-additions-removals-3.2, Version 3.2>>
- ** <<cypher-deprecations-additions-removals-3.3, Version 3.3>>
- ** <<cypher-deprecations-additions-removals-3.4, Version 3.4>>
-* <<cypher-compatibility, Compatibility>>
-* <<cypher-versions, Supported language versions>>
-
-
-[[cypher-deprecations-additions-removals]]
-== Removals, deprecations, additions and extensions
-
-The following tables lists all the features which have been removed, deprecated, added or extended in Cypher.
+This section list all of the features that have been removed, deprecated, added, or extended in different Cypher versions.
 Replacement syntax for deprecated and removed features are also indicated.
 
 
-[[cypher-deprecations-additions-removals-3.0]]
-=== Version 3.0
+[[cypher-deprecations-additions-removals-3.5]]
+== Version 3.5
+
+=== Deprecated features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:deprecated[] +
+Compiled runtime:
+[source, cypher, role="noheader"]
+----
+CYPHER runtime=compiled
+----
+a|
+The compiled runtime will be discontinued in the next major release. It might still be used for default queries in order to not cause regressions, but explicitly requesting it will not be possible.
+
+a|
+label:function[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+extract()
+----
+a|
+Replaced by <<cypher-list-comprehension,list comprehension>>.
+
+a|
+label:function[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+filter()
+----
+a|
+Replaced by <<cypher-list-comprehension,list comprehension>>.
+|===
+
+
+[[cypher-deprecations-additions-removals-3.4]]
+=== Version 3.4
 [options="header"]
 |===
 | Feature          | Type | Change | Details
