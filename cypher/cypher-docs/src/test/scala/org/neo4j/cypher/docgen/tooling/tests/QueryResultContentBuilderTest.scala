@@ -28,6 +28,7 @@ import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.values.virtual.VirtualValues
 import org.scalatest._
+import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 
 class QueryResultContentBuilderTest extends Suite
                                     with FunSuiteLike
@@ -45,10 +46,10 @@ class QueryResultContentBuilderTest extends Suite
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    val (managementService, graph, engine) = ExecutionEngineFactory.createDbAndCommunityEngine()
-    _managementService = managementService
-    _graph = graph
-    _eengine = engine
+    _managementService = ExecutionEngineFactory.createCommunityDbms()
+    val db = _managementService.database(DEFAULT_DATABASE_NAME)
+    _graph = new GraphDatabaseCypherService(db)
+    _eengine = ExecutionEngineFactory.getExecutionEngine(db)
   }
 
   override protected def afterAll(): Unit = {
