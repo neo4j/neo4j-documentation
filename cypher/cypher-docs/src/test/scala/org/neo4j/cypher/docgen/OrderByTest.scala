@@ -43,8 +43,7 @@ class OrderByTest extends DocumentingTest {
         #* <<order-null, Ordering `null`>>""".stripMargin('#'))
     section("Introduction", "order-introduction") {
       p("""`ORDER BY` relies on comparisons to sort the output, see <<cypher-ordering, Ordering and comparison of values>>.
-          #It is possible to sort on nodes or relationships, without specifying a specific property.
-          #In such scenarios, the results are sorted by the node or relationship IDs.""".stripMargin('#'))
+          #You can sort on either node/relationship properties, or the node/relationship ids.""".stripMargin('#'))
       p("""In terms of scope of variables, `ORDER BY` follows special rules, depending on if the projecting `RETURN` or `WITH` clause is either aggregating or `DISTINCT`.
           #If it is an aggregating or `DISTINCT` projection, only the variables available in the projection are available.
           #If the projection does not alter the output cardinality (which aggregation and `DISTINCT` do), variables available from before the projecting clause are also available.
