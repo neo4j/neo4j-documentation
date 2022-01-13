@@ -58,7 +58,7 @@ class OrderByTest extends DocumentingTest {
 
     note(
       p("""Strings that contain special characters can have inconsistent or non-deterministic ordering in Neo4j.
-          #For details, see <<property-types-sip-note>>.""".stripMargin('#'))
+          #For details, see <<property-types-sip-note, Sorting of special characters>>.""".stripMargin('#'))
     )
 
     section("Order nodes by id", "order-nodes-by-id") {
