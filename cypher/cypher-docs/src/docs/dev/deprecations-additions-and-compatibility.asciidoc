@@ -332,7 +332,7 @@ Existence constraints now allow an `OPTIONS` map, however, at this point there a
 
 a|
 label:functionality[]
-label:added[]
+label:new[]
 [source, cypher, role="noheader"]
 ----
 CREATE LOOKUP INDEX [index_name] [IF NOT EXISTS]
