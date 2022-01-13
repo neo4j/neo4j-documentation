@@ -39,7 +39,8 @@ class LoadCSVFunctionsTest extends DocumentingTest {
     section("linenumber()", "functions-linenumber") {
       p("`linenumber()` returns the line number that `LOAD CSV` is currently using.")
       function("linenumber()", "An Integer.")
-      considerations("`null` will be returned if this function is called without a `LOAD CSV` context.")
+      considerations("`null` will be returned if this function is called without a `LOAD CSV` context.",
+                     "If the CSV file contains headers, the headers will be `linenumber` 1 and the 1st row of data will have a `linenumber` of 2.")
     }
     section("file()", "functions-file") {
       p("`file()` returns the absolute path of the file that `LOAD CSV` is using.")
