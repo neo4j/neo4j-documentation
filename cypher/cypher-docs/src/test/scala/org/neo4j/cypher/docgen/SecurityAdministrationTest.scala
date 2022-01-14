@@ -984,9 +984,9 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
           note {
             p("""The name-globbing is subject to the <<cypher-manual#cypher-naming, standard Cypher restrictions on valid identifiers>>,
               |with the exception that it may include dots, stars, and question marks without the need for escaping using backticks.
-              |Each part of the name-globbing separated by dots may be individually escaped, for example `++mine.`procedureWith%`++` but not `++mine.procedure`With%`++`.
-              |Also good to keep in mind is that the wildcard characters will still behave as wildcards even when escaped,
-              |as an example using `++`*`++` is equivalent to using `+*+` and thus allows executing all functions or procedures and not only the procedure or function named `+*+`.
+              |Each part of the name-globbing separated by dots may be individually escaped, for example, `++mine.`procedureWith%`++` but not `++mine.procedure`With%`++`.
+              |Also good to keep in mind is that the wildcard characters behave as wildcards even when escaped.
+              |As an example, using `++`*`++` is equivalent to using `+*+`, and thus allows executing all functions or procedures and not only the procedure or function named `+*+`.
               |""".stripMargin)
           }
           p(
@@ -1045,7 +1045,7 @@ class SecurityAdministrationTest extends DocumentingTest with QueryStatisticsTes
             statsOnlyResultTable()
             p("Users with the role 'globbing6' can then run procedures `mine.public.with#Special§Characters` and `mine.private.with#Special§Characters`, but none of the others.")
             note {
-              p("The name-globbing may be fully or partially escaped and both the `+*+` and `+?+` are interpreted as wildcards either way.")
+              p("The name-globbing may be fully or partially escaped, and both the `+*+` and `+?+` are interpreted as wildcards either way.")
             }
           }
         }
