@@ -141,6 +141,11 @@ Like single-property indexes, composite indexes support all predicates:
 * suffix search: `ENDS WITH`
 * substring search: `CONTAINS`
 
+[NOTE]
+====
+For details about each operator, see <<query-operators, Operators>>.
+====
+
 However, predicates might be planned as existence check and a filter.
 For most predicates, this can be avoided by following these restrictions:
 
