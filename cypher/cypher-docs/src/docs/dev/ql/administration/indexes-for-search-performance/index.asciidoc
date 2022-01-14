@@ -13,7 +13,6 @@ See specifically <<query-tuning-indexes>> for examples of how various index scen
 
 For information on index configuration and limitations, refer to <<operations-manual#index-configuration, Operations Manual -> Index configuration>>.
 
-
 [[administration-indexes-types]]
 == Indexes (types and limitations)
 
@@ -218,6 +217,11 @@ Like single-property b-tree indexes, composite b-tree indexes support all predic
 * prefix search: `STARTS WITH`
 * suffix search: `ENDS WITH`
 * substring search: `CONTAINS`
+
+[NOTE]
+====
+For details about each operator, see <<query-operators, Operators>>.
+====
 
 However, predicates might be planned as existence check and a filter.
 For most predicates, this can be avoided by following these restrictions:
