@@ -39,11 +39,12 @@ class OrderByTest extends DocumentingTest {
         #* <<order-nodes-by-property, Order nodes by property>>
         #* <<order-nodes-by-multiple-properties, Order nodes by multiple properties>>
         #* <<order-nodes-by-id, Order nodes by id>>
+        #* <<order-nodes-by-expressions, Order nodes by expressions>>
         #* <<order-nodes-in-descending-order, Order nodes in descending order>>
         #* <<order-null, Ordering `null`>>""".stripMargin('#'))
     section("Introduction", "order-introduction") {
       p("""`ORDER BY` relies on comparisons to sort the output, see <<cypher-ordering, Ordering and comparison of values>>.
-          #You can sort on either node/relationship properties, or the node/relationship ids.
+          #You can sort on many different values, e.g. node/relationship properties, the node/relationship ids, or on most expressions.
           #If you do not specify what to sort on, there is a risk that the results are arbitrarily sorted and therefore it is best practice to be specific when using `ORDER BY`.""".stripMargin('#'))
       p("""In terms of scope of variables, `ORDER BY` follows special rules, depending on if the projecting `RETURN` or `WITH` clause is either aggregating or `DISTINCT`.
           #If it is an aggregating or `DISTINCT` projection, only the variables available in the projection are available.
@@ -105,6 +106,19 @@ class OrderByTest extends DocumentingTest {
         #This means that applications using, and relying on, internal Neo4j ids, are brittle or at risk of making mistakes.
         #It is therefore recommended to use application-generated ids instead.""".stripMargin('#'))
     )
+  }
+  section("Order nodes by expressions", "order-nodes-by-expressions") {
+    p("""`ORDER BY` is used to sort the output.""")
+    query("""MATCH (n)
+            #RETURN n
+            #ORDER BY keys(n)""".stripMargin('#'),
+    ResultAssertions((r) => {
+      r.toList should equal(List(Map("n" -> "{"length":"177","name":"A","age":"34"}"), Map("n" -> "{"length":"185","name":"C","age":"32"}"), Map("n" -> "{"name":"B","age":"34"}")))
+    })) {
+      p("The nodes are returned, sorted by their their property names.")
+      resultTable()
+    }
+  }
     section("Order nodes in descending order", "order-nodes-in-descending-order") {
       p("""By adding `DESC[ENDING]` after the variable to sort on, the sort will be done in reverse order.""")
       query("""MATCH (n)
