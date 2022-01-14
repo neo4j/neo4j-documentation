@@ -6,7 +6,7 @@
 
     <groupId>org.neo4j.doc</groupId>
     <artifactId>neo4j-manual-parent</artifactId>
-    <version>4.4.0-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
 
     <name>Neo4j - Reference Manual Build</name>
     <description>Neo4j Reference Manual Build.</description>
@@ -45,7 +45,6 @@
         <module>neo4j-harness-enterprise-test</module>
         <module>embedded-examples</module>
         <module>server-examples</module>
-        <module>import-tool</module>
         <module>server-docs</module>
         <module>kernel</module>
         <module>metrics-docs</module>

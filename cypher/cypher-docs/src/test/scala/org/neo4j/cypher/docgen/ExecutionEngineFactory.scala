@@ -19,91 +19,28 @@
  */
 package org.neo4j.cypher.docgen
 
-import java.io.File
-import org.neo4j.configuration.Config
-import org.neo4j.configuration.GraphDatabaseSettings.{DEFAULT_DATABASE_NAME, SYSTEM_DATABASE_NAME}
-import org.neo4j.cypher.internal.cache.ExecutorBasedCaffeineCacheFactory
-import org.neo4j.cypher.internal.compiler.CypherPlannerConfiguration
-import org.neo4j.cypher.internal.config.CypherConfiguration
-import org.neo4j.cypher.internal.javacompat.{GraphDatabaseCypherService, MonitoringCacheTracer}
-import org.neo4j.cypher.internal.tracing.TimingCompilationTracer
-import org.neo4j.cypher.internal.{ExecutionEngine, _}
-import org.neo4j.dbms.api.{DatabaseManagementService}
+import org.neo4j.cypher.internal._
+import org.neo4j.cypher.internal.javacompat.ExecutionEngineGetter
+import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.io.fs.EphemeralFileSystemAbstraction
-import org.neo4j.kernel.api.Kernel
-import org.neo4j.kernel.database.Database
-import org.neo4j.kernel.impl.query.QueryEngineProvider
 import org.neo4j.kernel.internal.GraphDatabaseAPI
-import org.neo4j.logging.internal.LogService
-import org.neo4j.monitoring.Monitors
-import org.neo4j.scheduler.JobScheduler
 import org.neo4j.test.TestDatabaseManagementServiceBuilder
 import org.neo4j.test.utils.TestDirectory
 
 object ExecutionEngineFactory {
 
-  def createDbAndCommunityEngine(): (DatabaseManagementService, GraphDatabaseCypherService, ExecutionEngine) = {
+  def createCommunityDbms(): DatabaseManagementService = {
     val fs = new EphemeralFileSystemAbstraction()
     val td = TestDirectory.testDirectory(this.getClass, fs)
     val dbFolder = td.prepareDirectoryForTest("target/example-db" + System.nanoTime()).toFile
-    val managementService: DatabaseManagementService = new TestDatabaseManagementServiceBuilder(dbFolder.toPath).setFileSystem(fs).build()
-    val db: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
-    val graph: GraphDatabaseCypherService = new GraphDatabaseCypherService(db);
-
-    (managementService, graph, createExecutionEngineFromDb(db))
+    new TestDatabaseManagementServiceBuilder(dbFolder.toPath).setFileSystem(fs).build()
   }
 
-  def createCommunityEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
-    val spi = new DocsKernelSPI(graph.asInstanceOf[GraphDatabaseAPI])
-    val cacheFactory = new ExecutorBasedCaffeineCacheFactory((_:Runnable).run())
-    createEngineFromDb(spi, (queryService, plannerConfig, runtimeConfig) => new CommunityCompilerFactory(queryService, spi.monitors, cacheFactory,
-      spi.logProvider, plannerConfig, runtimeConfig))
-  }
-
-  def createExecutionEngineFromDb(graph: GraphDatabaseService): ExecutionEngine = {
-    val spi = new DocsKernelSPI(graph.asInstanceOf[GraphDatabaseAPI])
-    createEngineFromDb(spi, (queryService, plannerConfig, runtimeConfig) => new EnterpriseCompilerFactory(queryService, spi, plannerConfig, runtimeConfig))
-  }
-
-  private def createEngineFromDb(spi: DocsKernelSPI,
-                                 newCompatibilityFactory: (GraphDatabaseCypherService, CypherPlannerConfiguration, CypherRuntimeConfiguration) => CompilerFactory
-                                ): ExecutionEngine = {
-    val isSystemDatabase = spi.graphAPI.databaseName().equals(SYSTEM_DATABASE_NAME)
-    val queryService = new GraphDatabaseCypherService(spi.graphAPI)
-    val cypherConfig = CypherConfiguration.fromConfig(spi.config)
-    val plannerConfig = CypherPlannerConfiguration.fromCypherConfiguration(cypherConfig, spi.config, isSystemDatabase)
-    val runtimeConfig = CypherRuntimeConfiguration.fromCypherConfiguration(cypherConfig)
-    val compilerFactory = newCompatibilityFactory(queryService, plannerConfig, runtimeConfig)
-    val cacheFactory = new ExecutorBasedCaffeineCacheFactory((_:Runnable).run())
-    val cacheTracer = new MonitoringCacheTracer(spi.monitors.newMonitor(classOf[ExecutionEngineQueryCacheMonitor]))
-    val tracer = new TimingCompilationTracer(spi.monitors.newMonitor(classOf[TimingCompilationTracer.EventListener]))
-    if (isSystemDatabase) {
-      val innerPlannerConfig: CypherPlannerConfiguration = CypherPlannerConfiguration.fromCypherConfiguration(cypherConfig, spi.config, planSystemCommands = false)
-      val innerCompilerFactory: CompilerFactory = newCompatibilityFactory(queryService, innerPlannerConfig, runtimeConfig)
-      // The following lines are only needed for the ContextSwitchingSystemGraphQueryExecutor, which is only needed for some specific cases
-//      val inner: JavaExecutionEngine = new JavaExecutionEngine(queryService, spi.logProvider, innerCompilerFactory)
-//      val innerEngine: SystemDatabaseInnerEngine = (query, parameters, context, subscriber) => inner.executeQuery(query, parameters, context, false, subscriber)
-//      val innerAccessor: SystemDatabaseInnerAccessor = new SystemDatabaseInnerAccessor(spi.graphAPI, innerEngine)
-//      spi.resolver.asInstanceOf[Dependencies].satisfyDependency(innerAccessor)
-      val innerExecutionEngine = new ExecutionEngine(queryService, spi.monitors, tracer, cacheTracer, cypherConfig,
-        new CompilerLibrary(innerCompilerFactory, () => null), cacheFactory, spi.logProvider)
-      new ExecutionEngine(queryService, spi.monitors, tracer, cacheTracer, cypherConfig, new CompilerLibrary(compilerFactory, () => innerExecutionEngine), cacheFactory, spi.logProvider)
-    } else {
-      new ExecutionEngine(queryService, spi.monitors, tracer, cacheTracer, cypherConfig, new CompilerLibrary(compilerFactory, () => null), cacheFactory, spi.logProvider)
-    }
-  }
-
-  class DocsKernelSPI(val graphAPI: GraphDatabaseAPI) extends QueryEngineProvider.SPI {
-    val resolver = graphAPI.getDependencyResolver
-    val logService = resolver.resolveDependency(classOf[LogService])
-    val logProvider = logService.getInternalLogProvider
-    val monitors = resolver.resolveDependency(classOf[Monitors])
-    val config = resolver.resolveDependency(classOf[Config])
-    val jobScheduler = resolver.resolveDependency(classOf[JobScheduler])
-    val kernel = resolver.resolveDependency(classOf[Kernel])
-    val database = resolver.resolveDependency(classOf[Database])
-    val lifeSupport = database.getLife
+  def getExecutionEngine(graph: GraphDatabaseService): ExecutionEngine = {
+    val resolver = graph.asInstanceOf[GraphDatabaseAPI].getDependencyResolver
+    val ee = resolver.resolveDependency(classOf[org.neo4j.cypher.internal.javacompat.ExecutionEngine])
+    ExecutionEngineGetter.getCypherExecutionEngine(ee)
   }
 
 }

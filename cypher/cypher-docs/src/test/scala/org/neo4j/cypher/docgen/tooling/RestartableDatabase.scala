@@ -177,7 +177,7 @@ class RestartableDatabase(init: RunnableInitialization)
   class MetaData(database: String) extends GraphIcing with ExecutionEngineHelper {
     val db = managementService.database(database)
     val graph = new GraphDatabaseCypherService(db)
-    val eengine = ExecutionEngineFactory.createExecutionEngineFromDb(db)
+    val eengine = ExecutionEngineFactory.getExecutionEngine(db)
     val failures: Seq[QueryRunResult] = initialize(init)
 
     private def initialize(init: RunnableInitialization): Seq[QueryRunResult] = {
