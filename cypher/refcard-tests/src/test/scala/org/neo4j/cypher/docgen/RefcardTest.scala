@@ -294,7 +294,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       })
 
     } )
-    engine = ExecutionEngineFactory.createExecutionEngineFromDb(database)
+    engine = ExecutionEngineFactory.getExecutionEngine(database)
   }
 
   // override to start against SYSTEM_DATABASE_NAME or another database

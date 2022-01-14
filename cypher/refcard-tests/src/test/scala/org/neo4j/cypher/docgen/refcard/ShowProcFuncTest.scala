@@ -34,7 +34,7 @@ class ShowProcFuncTest extends RefcardTest with QueryStatisticsTestSupport {
       case "functions" =>
         assert(result.toList.size === 143)
       case "procedures" =>
-        assert(result.toList.size === 73)
+        assert(result.toList.size === 66)
     }
   }
 
