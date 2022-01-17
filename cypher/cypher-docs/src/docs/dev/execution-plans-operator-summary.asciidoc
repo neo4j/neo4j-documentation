@@ -89,13 +89,13 @@ Tests for the absence of a pattern predicate.
 |
 
 | <<query-plan-create-node-key-constraint,CreateNodeKeyConstraint>>
-| Creates a node key constraint on a set of properties for all nodes having a certain label.
+| Creates a node key constraint on a set of properties for all nodes with a certain label.
 |
 | label:yes[]
 |
 
 | <<query-plan-create-node-property-existence-constraint,CreateNodePropertyExistenceConstraint>>
-| Creates an existence constraint on a property for all nodes having a certain label.
+| Creates an existence constraint on a property for all nodes with a certain label.
 |
 | label:yes[]
 |
@@ -107,7 +107,7 @@ Tests for the absence of a pattern predicate.
 |
 
 | <<query-plan-create-unique-constraint,CreateUniqueConstraint>>
-| Creates a unique constraint on a set of properties for all nodes having a certain label.
+| Creates a unique constraint on a set of properties for all nodes with a certain label.
 |
 | label:yes[]
 |
@@ -155,7 +155,7 @@ Tests for the absence of a pattern predicate.
 |
 
 | <<query-plan-drop-index-by-schema,DropIndex>>
-| Drops an index from a property for all nodes having a certain label.
+| Drops an index from a property for all nodes with a certain label.
 | label:yes[]
 | label:yes[]
 | label:deprecated[]
@@ -167,13 +167,13 @@ Tests for the absence of a pattern predicate.
 |
 
 | <<query-plan-drop-node-key-constraint,DropNodeKeyConstraint>>
-| Drops a node key constraint from a set of properties for all nodes having a certain label.
+| Drops a node key constraint from a set of properties for all nodes with a certain label.
 | label:yes[]
 | label:yes[]
 | label:deprecated[]
 
 | <<query-plan-drop-node-property-existence-constraint,DropNodePropertyExistenceConstraint>>
-| Drops an existence constraint from a property for all nodes having a certain label.
+| Drops an existence constraint from a property for all nodes with a certain label.
 | label:yes[]
 | label:yes[]
 | label:deprecated[]
@@ -185,7 +185,7 @@ Tests for the absence of a pattern predicate.
 | label:deprecated[]
 
 | <<query-plan-drop-unique-constraint,DropUniqueConstraint>>
-| Drops a unique constraint from a set of properties for all nodes having a certain label.
+| Drops a unique constraint from a set of properties for all nodes with a certain label.
 | label:yes[]
 | label:yes[]
 | label:deprecated[]
@@ -341,7 +341,7 @@ Tests for the presence of a pattern predicate in queries containing multiple pat
 |
 
 | <<query-plan-node-index-scan,NodeIndexScan>>
-| Examines all values stored in an index, returning all nodes with a particular label having a specified property.
+| Examines all values stored in an index, returning all nodes with a particular label with a specified property.
 | label:yes[]
 |
 |
