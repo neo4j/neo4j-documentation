@@ -98,15 +98,13 @@ class CallSubqueryTest extends DocumentingTest {
           Map("innerReturn" -> "hello"),
         )))) { resultTable() }
 
-      p(
-        """Each execution of a `CALL` clause can observe changes from previous executions.
-          #""".stripMargin('#'))
+      p("Each execution of a `CALL` clause can observe changes from previous executions.")
 
       query("""UNWIND [0, 1, 2] AS x
               #CALL {
               #  MATCH (n:Counter)
               #  SET n.count = n.count + 1
-              #  RETURN n.count as innerCount
+              #  RETURN n.count AS innerCount
               #}
               #WITH innerCount
               #MATCH (n:Counter)
