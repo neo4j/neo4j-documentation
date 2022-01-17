@@ -110,10 +110,10 @@ class OrderByTest extends DocumentingTest {
     section("Order nodes by expression", "order-nodes-by-expression") {
       p("""`ORDER BY` is used to sort the output.""")
       query("""MATCH (n)
-              #RETURN n.length, n.age, n.name
+              #RETURN n.name, n.age, n.length
               #ORDER BY keys(n)""".stripMargin('#'),
       ResultAssertions((r) => {
-        r.toList should equal(List(Map("n.length" -> 177, "n.age" -> 34, "n.name" -> "A"), Map("n.length" -> 185, "n.age" -> 32, "n.name" -> "C"), Map("n.length" -> null, "n.name" -> "B", "n.age" -> 34)))
+        r.toList should equal(List(Map("n.name" -> "A", "n.age" -> 34, "n.length" -> 177), Map("n.name" -> "B", "n.age" -> 34, "n.length" -> null), Map("n.name" -> "C", "n.age" -> 32, "n.length" -> 185)))
       })) {
         p("The nodes are returned, sorted by their property names.")
         resultTable()
