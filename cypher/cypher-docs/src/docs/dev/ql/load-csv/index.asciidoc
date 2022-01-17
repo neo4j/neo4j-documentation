@@ -17,7 +17,7 @@
 * <<load-csv-import-data-containing-escaped-characters, Import data containing escaped characters>>
 
 
-[[query-load-csv-introduction,Introduction]]
+[[query-load-csv-introduction]]
 == Introduction
 
 * The URL of the CSV file is specified by using `FROM` followed by an arbitrary expression evaluating to the URL in question.

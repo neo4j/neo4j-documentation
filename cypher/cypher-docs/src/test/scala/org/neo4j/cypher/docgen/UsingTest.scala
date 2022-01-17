@@ -169,7 +169,7 @@ class UsingTest extends DocumentingTest {
       p("""`PERIODIC COMMIT` will process the rows until the number of rows reaches a limit.
           |Then the current transaction will be committed and replaced with a newly opened transaction.
           |If no limit is set, a default value will be used.""")
-      p("""See <<load-csv-importing-large-amounts-of-data>> in <<query-load-csv>> for examples of `USING PERIODIC COMMIT` with and without setting the number of rows per commit.""")
+      p("""See <<load-csv-importing-large-amounts-of-data, Importing large amounts of data>> in <<query-load-csv>> for examples of `USING PERIODIC COMMIT` with and without setting the number of rows per commit.""")
       important {
         p("""Using `PERIODIC COMMIT` will prevent running out of memory when importing large amounts of data.
                 |However, it will also break transactional isolation and thus it should only be used where needed.""")
