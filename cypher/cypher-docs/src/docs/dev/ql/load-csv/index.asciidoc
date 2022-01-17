@@ -49,6 +49,7 @@ This is definitely not recommended.
 File URLs will be resolved relative to the `dbms.directories.import` directory.
 For example, a file URL will typically look like `+file:///myfile.csv+` or `+file:///myproject/myfile.csv+`.
 
+* When using `+file:///+` URLs, spaces and other non-alphanumeric characters need to be URL encoded. footnote:[See https://developer.mozilla.org/en-US/docs/Glossary/percent-encoding].
 *  If `dbms.directories.import` is set to the default value _import_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/import/myfile.csv_ and _<NEO4J_HOME>/import/myproject/myfile.csv_ respectively.
 *  If it is set to _/data/csv_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/data/csv/myfile.csv_ and _<NEO4J_HOME>/data/csv/myproject/myfile.csv_ respectively.
 
