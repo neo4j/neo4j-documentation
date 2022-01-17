@@ -106,19 +106,21 @@ class OrderByTest extends DocumentingTest {
         #This means that applications using, and relying on, internal Neo4j ids, are brittle or at risk of making mistakes.
         #It is therefore recommended to use application-generated ids instead.""".stripMargin('#'))
     )
-  }
-  section("Order nodes by expressions", "order-nodes-by-expressions") {
-    p("""`ORDER BY` is used to sort the output.""")
-    query("""MATCH (n)
-            #RETURN n.length, n.age, n.name
-            #ORDER BY keys(n)""".stripMargin('#'),
-    ResultAssertions((r) => {
-      r.toList should equal(List(Map("n.length" -> 177, "n.age" -> 34, "n.name" -> "A"), Map("n.length" -> 185, "n.age" -> 32, "n.name" -> "C"), Map"n.length" -> null, "n.age" -> 34, "n.name" -> "B")))
-    })) {
-      p("The nodes are returned, sorted by their their property names.")
-      resultTable()
+
+    section("Order nodes by expression", "order-nodes-by-expression") {
+      p("""`ORDER BY` is used to sort the output.""")
+      query("""MATCH (n)
+              #RETURN n.length, n.age, n.name
+              #ORDER BY keys(n)""".stripMargin('#'),
+      ResultAssertions((r) => {
+        r.toList should equal(List(Map("n.length" -> 177, "n.age" -> 34, "n.name" -> "A"), Map("n.length" -> 185, "n.age" -> 32, "n.name" -> "C"), Map("n.length" -> null, "n.name" -> "B", "n.age" -> 34)))
+      })) {
+        p("The nodes are returned, sorted by their property names.")
+        resultTable()
+      }
     }
-  }
+
+
     section("Order nodes in descending order", "order-nodes-in-descending-order") {
       p("""By adding `DESC[ENDING]` after the variable to sort on, the sort will be done in reverse order.""")
       query("""MATCH (n)
