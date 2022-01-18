@@ -12,6 +12,9 @@ Replacement syntax for deprecated and removed features are also indicated.
 
 [[cypher-deprecations-additions-removals-5.0]]
 == Version 5.0
+
+=== Removed features
+
 [cols="2", options="header"]
 |===
 | Feature
