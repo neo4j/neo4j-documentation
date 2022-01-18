@@ -84,7 +84,7 @@ class CallSubqueryTest extends DocumentingTest {
     section("Semantics, call-semantics") {
       p(
         """A `CALL` clause is executed once for each incoming row.
-          #For the below query, the `CALL` clause will executes three times.
+          #For the query below, the `CALL` clause executes three times.
           #""".stripMargin('#'))
 
       query("""UNWIND [0, 1, 2] AS x
@@ -147,7 +147,7 @@ class CallSubqueryTest extends DocumentingTest {
 
       p(
         """The below query creates a linked list of all `:Person` nodes in order of ascending age.
-          #The `CALL` clause is relying on the incoming row ordering to ensure that a correctly linked list is created, so the incoming rows must be ordered with a preceding `ORDER BY`.
+          #The `CALL` clause is relying on the incoming row ordering to ensure that a correctly linked list is created, thus the incoming rows must be ordered with a preceding `ORDER BY`.
           #""".stripMargin.stripMargin('#')
       )
 
