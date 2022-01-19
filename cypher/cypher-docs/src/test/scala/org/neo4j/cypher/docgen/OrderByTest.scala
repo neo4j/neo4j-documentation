@@ -115,7 +115,7 @@ class OrderByTest extends DocumentingTest {
               #RETURN n.name, n.age, n.length
               #ORDER BY keys(n)""".stripMargin('#'),
       ResultAssertions((r) => {
-        r.toList should equal(List(Map("n.length" -> null, "n.name" -> "B", "n.age" -> 36), Map("n.length" -> 170, "n.name" -> "A", "n.age" -> 34), Map("n.length" -> 185, "n.name" -> "C", "n.age" -> 32)))
+        r.toList should equal(List(Map("n.length" -> 170, "n.name" -> "A", "n.age" -> 34), Map("n.length" -> 185, "n.name" -> "C", "n.age" -> 32), Map("n.length" -> null, "n.name" -> "B", "n.age" -> 36)))
       })) {
         p("The nodes are returned, sorted by their properties.")
         resultTable()
