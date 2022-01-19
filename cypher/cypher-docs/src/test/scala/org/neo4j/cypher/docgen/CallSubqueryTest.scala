@@ -20,7 +20,13 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling.DocBuilder.QueryTextReplacement
-import org.neo4j.cypher.docgen.tooling.{ClearState, DocBuilder, Document, DocumentingTest, ErrorAssertions, KeepState, NoAssertions, ResultAssertions}
+import org.neo4j.cypher.docgen.tooling.ClearState
+import org.neo4j.cypher.docgen.tooling.DocBuilder
+import org.neo4j.cypher.docgen.tooling.Document
+import org.neo4j.cypher.docgen.tooling.DocumentingTest
+import org.neo4j.cypher.docgen.tooling.ErrorAssertions
+import org.neo4j.cypher.docgen.tooling.KeepState
+import org.neo4j.cypher.docgen.tooling.ResultAssertions
 
 import java.io.File
 
@@ -36,11 +42,13 @@ class CallSubqueryTest extends DocumentingTest {
                   #  (a:Person:Child {age: 20, name: 'Alice'}),
                   #  (b:Person {age: 27, name: 'Bob'}),
                   #  (c:Person:Parent {age: 65, name: 'Charlie'}),
-                  #  (d:Person {age: 30, name: 'Dora'})
+                  #  (d:Person {age: 30, name: 'Dora'}),
+                  #  (:Counter {count: 0})
                   #  CREATE (a)-[:FRIEND_OF]->(b)
                   #  CREATE (a)-[:CHILD_OF]->(c)""".stripMargin('#'))
     synopsis("The `CALL {}` clause evaluates a subquery that returns some values.")
     p("""* <<subquery-call-introduction, Introduction>>
+        #* <<call-semantics, Semantics>>
         #* <<subquery-correlated-importing, Importing variables into subqueries>>
         #* <<subquery-post-union, Post-union processing>>
         #* <<subquery-aggregation, Aggregations>>
@@ -48,7 +56,7 @@ class CallSubqueryTest extends DocumentingTest {
         #* <<subquery-correlated-aggregation, Aggregation on imported variables>>
         #* <<subquery-call-in-transactions, Subqueries in transactions>>""".stripMargin('#'))
     section("Introduction", "subquery-call-introduction") {
-      p("""CALL allows to execute subqueries, i.e. queries inside of other queries.
+      p("""`CALL` allows to execute subqueries, i.e. queries inside of other queries.
           #Subqueries allow you to compose queries, which is especially useful when working with `UNION` or aggregations.""".stripMargin('#'))
       tip{
         p("""The `CALL` clause is also used for calling procedures.
@@ -73,6 +81,41 @@ class CallSubqueryTest extends DocumentingTest {
       graphViz()
     }
 
+    section("Semantics, call-semantics") {
+      p(
+        """A `CALL` clause is executed once for each incoming row.
+          #For the query below, the `CALL` clause executes three times.
+          #""".stripMargin('#'))
+
+      query("""UNWIND [0, 1, 2] AS x
+              #CALL {
+              #  RETURN 'hello' AS innerReturn
+              #}
+              #RETURN innerReturn""".stripMargin('#'),
+        ResultAssertions(r => r.toSet should equal(Set(
+          Map("innerReturn" -> "hello"),
+          Map("innerReturn" -> "hello"),
+          Map("innerReturn" -> "hello"),
+        )))) { resultTable() }
+
+      p("Each execution of a `CALL` clause can observe changes from previous executions.")
+
+      query("""UNWIND [0, 1, 2] AS x
+              #CALL {
+              #  MATCH (n:Counter)
+              #  SET n.count = n.count + 1
+              #  RETURN n.count AS innerCount
+              #}
+              #WITH innerCount
+              #MATCH (n:Counter)
+              #RETURN innerCount, n.count AS totalCount""".stripMargin('#'),
+        ResultAssertions(r => r.toSet should equal(Set(
+          Map("innerCount" -> 1, "totalCount" -> 3),
+          Map("innerCount" -> 2, "totalCount" -> 3),
+          Map("innerCount" -> 3, "totalCount" -> 3),
+        )))) { resultTable() }
+    }
+
     section("Importing variables into subqueries", "subquery-correlated-importing") {
       p("""Variables are imported into a subquery using an importing `WITH` clause.
           #As the subquery is evaluated for each incoming input row, the imported variables get bound to the corresponding values from the input row in each
@@ -94,6 +137,41 @@ class CallSubqueryTest extends DocumentingTest {
       p("""* Consist only of simple references to outside variables - e.g. `WITH x, y, z`. Aliasing or expressions are not supported in importing `WITH`
           #clauses - e.g. `WITH a AS b` or `WITH a+1 AS b`.
           #* Be the first clause of a subquery (or the second clause, if directly following a `USE` clause).""".stripMargin('#'))
+
+      caution{
+        p(
+          """The order in which subqueries are executed is not defined.
+            #If a query result depends on the order of execution of subqueries, an `ORDER BY` clause should precede the `CALL` clause.
+            #""".stripMargin('#'))
+      }
+
+      p(
+        """The below query creates a linked list of all `:Person` nodes in order of ascending age.
+          #The `CALL` clause is relying on the incoming row ordering to ensure that a correctly linked list is created, thus the incoming rows must be ordered with a preceding `ORDER BY`.
+          #""".stripMargin.stripMargin('#')
+      )
+
+        query("""MATCH (person: Person)
+                #WITH person ORDER BY person.age ASC LIMIT 1
+                #SET person:ListHead
+                #WITH *
+                #MATCH (next: Person) WHERE NOT next:ListHead
+                #WITH next ORDER BY next.age
+                #CALL {
+                #  WITH next
+                #  MATCH (current:ListHead)
+                #  REMOVE current:ListHead
+                #  SET next:ListHead
+                #  CREATE(current)-[r:IS_YOUNGER_THAN]->(next)
+                #  RETURN current AS from, next AS to
+                #}
+                #RETURN from.name AS name, from.age AS age, to.name AS closestOlderName, to.age AS closestOlderAge
+                #""".stripMargin('#'),
+          ResultAssertions(r => r.toSet should equal(Set(
+            Map("name" -> "Alice", "age" -> 20, "closestOlderName" -> "Bob", "closestOlderAge" -> 27),
+            Map("name" -> "Bob", "age" -> 27, "closestOlderName" -> "Dora", "closestOlderAge" -> 30),
+            Map("name" -> "Dora", "age" -> 30, "closestOlderName" -> "Charlie", "closestOlderAge" -> 65))
+          ))) { resultTable() }
     }
 
     section("Post-union processing", "subquery-post-union") {
