@@ -31,6 +31,12 @@ This table comprises all the execution plan operators ordered lexicographically.
 |
 |
 
+| <<query-plan-anti,Anti>>
+| Tests for the absence of a pattern.
+|
+|
+|
+
 | <<query-plan-anti-semi-apply,AntiSemiApply>>
 a|
 Performs a nested loop.
@@ -70,6 +76,12 @@ Tests for the absence of a pattern predicate.
 |
 |
 
+| <<query-plan-create-nodes---relationships,Create>>
+| Creates nodes and relationships.
+|
+| label:yes[]
+|
+
 | <<query-plan-create-index,CreateIndex>>
 | Creates an index for either nodes or relationships.
 |
@@ -77,19 +89,13 @@ Tests for the absence of a pattern predicate.
 |
 
 | <<query-plan-create-node-key-constraint,CreateNodeKeyConstraint>>
-| Creates a node key constraint on a set of properties for all nodes having a certain label.
-|
-| label:yes[]
-|
-
-| <<query-plan-create-nodes---relationships,Create>>
-| Creates nodes and relationships.
+| Creates a node key constraint on a set of properties for all nodes with a certain label.
 |
 | label:yes[]
 |
 
 | <<query-plan-create-node-property-existence-constraint,CreateNodePropertyExistenceConstraint>>
-| Creates an existence constraint on a property for all nodes having a certain label.
+| Creates an existence constraint on a property for all nodes with a certain label.
 |
 | label:yes[]
 |
@@ -101,7 +107,7 @@ Tests for the absence of a pattern predicate.
 |
 
 | <<query-plan-create-unique-constraint,CreateUniqueConstraint>>
-| Creates a unique constraint on a set of properties for all nodes having a certain label.
+| Creates a unique constraint on a set of properties for all nodes with a certain label.
 |
 | label:yes[]
 |
@@ -142,14 +148,14 @@ Tests for the absence of a pattern predicate.
 |
 |
 
-| <<query-plan-drop-index,DropIndex>>
-| Drops an index using its name.
+| <<query-plan-drop-constraint-by-name,DropConstraint>>
+| Drops a constraint using its name.
 | label:yes[]
 | label:yes[]
 |
 
-| <<query-plan-drop-constraint,DropConstraint>>
-| Drops a constraint using its name.
+| <<query-plan-drop-index,DropIndex>>
+| Drops an index using its name.
 | label:yes[]
 | label:yes[]
 |
@@ -175,6 +181,14 @@ Tests for the absence of a pattern predicate.
 | <<query-plan-empty-row,EmptyRow>>
 | Returns a single row with no columns.
 | label:yes[]
+|
+|
+
+| <<query-plan-exhaustive-limit,ExhaustiveLimit>>
+a|
+The `ExhaustiveLimit` operator is similar to the `Limit` operator, but always exhausts the input.
+Used when combining `LIMIT` and updates.
+|
 |
 |
 
@@ -212,18 +226,18 @@ Tests for the absence of a pattern predicate in queries containing multiple patt
 |
 |
 
-| <<query-plan-let-select-or-semi-apply,LetSelectOrSemiApply>>
-a|
-Performs a nested loop.
-Tests for the presence of a pattern predicate that is combined with other predicates.
-|
-|
-|
-
 | <<query-plan-let-select-or-anti-semi-apply,LetSelectOrAntiSemiApply>>
 a|
 Performs a nested loop.
 Tests for the absence of a pattern predicate that is combined with other predicates.
+|
+|
+|
+
+| <<query-plan-let-select-or-semi-apply,LetSelectOrSemiApply>>
+a|
+Performs a nested loop.
+Tests for the presence of a pattern predicate that is combined with other predicates.
 |
 |
 |
@@ -297,7 +311,7 @@ Tests for the presence of a pattern predicate in queries containing multiple pat
 |
 
 | <<query-plan-node-index-scan,NodeIndexScan>>
-| Examines all values stored in an index, returning all nodes with a particular label having a specified property.
+| Examines all values stored in an index, returning all nodes with a particular label with a specified property.
 | label:yes[]
 |
 |
@@ -338,20 +352,6 @@ Tests for the presence of a pattern predicate in queries containing multiple pat
 |
 |
 
-| <<query-plan-ordered-aggregation,OrderedAggregation>>
-a|
-Like `EagerAggregation` but relies on the ordering of incoming rows.
-Is not eager.
-|
-|
-|
-
-| <<query-plan-ordered-distinct,OrderedDistinct>>
-| Like `Distinct` but relies on the ordering of incoming rows.
-|
-|
-|
-
 | <<query-plan-optional,Optional>>
 | Yields a single row with all columns set to `null` if no data is returned by its source.
 |
@@ -365,7 +365,21 @@ Is not eager.
 |
 
 | <<query-plan-optional-expand-into,OptionalExpand(Into)>>
-| Traverses all relationships between two nodes, producing a single row with the relationship and end node set to `null` if no matching relationships are found (the start node will be the node with the smallest degree).
+| Traverses all relationships between two nodes, producing a single row with the relationship and end node set to `null` if no matching relationships are found (the start node is the node with the smallest degree).
+|
+|
+|
+
+| <<query-plan-ordered-aggregation,OrderedAggregation>>
+a|
+Like `EagerAggregation` but relies on the ordering of incoming rows.
+Is not eager.
+|
+|
+|
+
+| <<query-plan-ordered-distinct,OrderedDistinct>>
+| Like `Distinct` but relies on the ordering of incoming rows.
 |
 |
 |
@@ -470,6 +484,12 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 | label:yes[]
 |
 
+| <<query-plan-shortest-path,ShortestPath>>
+| Finds one or all shortest paths between two previously matches node variables.
+|
+|
+|
+
 | <<query-plan-listing-constraints,ShowConstraints>>
 | Lists the available constraints.
 | label:yes[]
@@ -523,6 +543,18 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 |
 |
 | label:eager[]
+
+| <<query-plan-triadic-build,TriadicBuild>>
+| The `TriadicBuild` operator is used in conjunction with `TriadicFilter` to solve triangular queries.
+|
+|
+|
+
+| <<query-plan-triadic-filter,TriadicFilter>>
+| The `TriadicFilter` operator is used in conjunction with `TriadicBuild` to solve triangular queries.
+|
+|
+|
 
 | <<query-plan-triadic-selection,TriadicSelection>>
 | Solves triangular queries, such as the very common 'find my friend-of-friends that are not already my friend'.
