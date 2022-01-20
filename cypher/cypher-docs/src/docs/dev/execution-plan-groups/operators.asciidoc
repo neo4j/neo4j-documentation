@@ -10,11 +10,45 @@ All operators are listed here, grouped by the similarity of their characteristic
 Certain operators are only used by a subset of the <<cypher-runtime,runtimes>> that Cypher can choose from.
 If that is the case, the example queries will be prefixed with an option to choose one of these runtimes.
 
+// --- scan and seek operators ---
+
 // AllNodesScan
 include::../ql/query-plan/all-nodes-scan.asciidoc[]
 
+// DirectedRelationshipIndexScan
+include::../ql/query-plan/directed-relationship-index-scan.asciidoc[]
+// UndirectedRelationshipIndexScan
+include::../ql/query-plan/undirected-relationship-index-scan.asciidoc[]
+
+// DirectedRelationshipIndexSeek
+include::../ql/query-plan/directed-relationship-index-seek.asciidoc[]
+// UndirectedRelationshipIndexSeek
+include::../ql/query-plan/undirected-relationship-index-seek.asciidoc[]
+
 // DirectedRelationshipByIdSeek
 include::../ql/query-plan/directed-relationship-by-id-seek.asciidoc[]
+// UndirectedRelationshipByIdSeek
+include::../ql/query-plan/undirected-relationship-by-id-seek.asciidoc[]
+
+// DirectedRelationshipIndexContainsScan
+include::../ql/query-plan/directed-relationship-index-contains-scan.asciidoc[]
+// UndirectedRelationshipIndexContainsScan
+include::../ql/query-plan/undirected-relationship-index-contains-scan.asciidoc[]
+
+// DirectedRelationshipIndexEndsWithScan
+include::../ql/query-plan/directed-relationship-index-ends-with-scan.asciidoc[]
+// UndirectedRelationshipIndexEndsWithScan
+include::../ql/query-plan/undirected-relationship-index-ends-with-scan.asciidoc[]
+
+// DirectedRelationshipIndexSeekByRange
+include::../ql/query-plan/directed-relationship-index-seek-by-range.asciidoc[]
+// UndirectedRelationshipIndexSeekByRange
+include::../ql/query-plan/undirected-relationship-index-seek-by-range.asciidoc[]
+
+// DirectedRelationshipTypeScan
+include::../ql/query-plan/directed-relationship-type-scan.asciidoc[]
+// UndirectedRelationshipTypeScan
+include::../ql/query-plan/undirected-relationship-type-scan.asciidoc[]
 
 // NodeByIdSeek
 include::../ql/query-plan/node-by-id-seek.asciidoc[]
@@ -49,8 +83,8 @@ include::../ql/query-plan/node-index-ends-with-scan.asciidoc[]
 // NodeIndexScan
 include::../ql/query-plan/node-index-scan.asciidoc[]
 
-// UndirectedRelationshipByIdSeek
-include::../ql/query-plan/undirected-relationship-by-id-seek.asciidoc[]
+
+// --- apply operators ---
 
 // Apply
 include::../ql/query-plan/apply.asciidoc[]
@@ -82,16 +116,22 @@ include::../ql/query-plan/let-select-or-semi-apply.asciidoc[]
 // LetSelectOrAntiSemiApply
 include::../ql/query-plan/let-select-or-anti-semi-apply.asciidoc[]
 
-//ConditionalApply - changed in 4.3 to Merge.
-//AntiConditionalApply - removed in 4.3 (by Merge).
-//Merge
+// ConditionalApply - changed in 4.3 to Merge.
+// AntiConditionalApply - removed in 4.3 (by Merge).
+// Merge
 include::../ql/query-plan/merge.asciidoc[]
+
+// LockingMerge
+include::../ql/query-plan/locking-merge.asciidoc[]
 
 // RollUpApply
 include::../ql/query-plan/roll-up-apply.asciidoc[]
 
 // Argument
 include::../ql/query-plan/argument.asciidoc[]
+
+
+// --- expand operators ---
 
 // Expand(All)
 include::../ql/query-plan/expand-all.asciidoc[]
@@ -159,8 +199,10 @@ include::../ql/query-plan/node-left-right-outer-hash-join.asciidoc[]
 // TriadicSelection
 include::../ql/query-plan/triadic-selection.asciidoc[]
 
+// TriadicBuild
 include::../ql/query-plan/triadic-build.asciidoc[]
 
+// TriadicFilter
 include::../ql/query-plan/triadic-filter.asciidoc[]
 
 // CartesianProduct
@@ -217,8 +259,8 @@ include::../ql/query-plan/union.asciidoc[]
 // Unwind
 include::../ql/query-plan/unwind.asciidoc[]
 
-//LockNodes - changed in 4.3
-//ExhaustiveLimit
+// LockNodes - changed in 4.3
+// ExhaustiveLimit
 include::../ql/query-plan/exhaustive-limit.asciidoc[]
 
 // Optional
@@ -251,11 +293,11 @@ include::../ql/query-plan/delete.asciidoc[]
 // DetachDelete
 include::../ql/query-plan/detach-delete.asciidoc[]
 
-//include::../ql/query-plan/merge-create-node.asciidoc[]
-//Removed in 4.3
+// include::../ql/query-plan/merge-create-node.asciidoc[]
+// Removed in 4.3
 
-//include::../ql/query-plan/merge-create-relationship.asciidoc[]
-//Removed in 4.3
+// include::../ql/query-plan/merge-create-relationship.asciidoc[]
+// Removed in 4.3
 
 // SetLabels
 include::../ql/query-plan/set-labels.asciidoc[]
@@ -279,6 +321,7 @@ include::../ql/query-plan/create-unique-constraint.asciidoc[]
 [role=deprecated]
 include::../ql/query-plan/drop-unique-constraint.asciidoc[]
 
+// DoNothingIfExists(CONSTRAINT)
 include::../ql/query-plan/create-constraint-only-if-it-does-not-already-exist.asciidoc[]
 
 // CreateNodePropertyExistenceConstraint
@@ -305,11 +348,13 @@ include::../ql/query-plan/drop-relationship-property-existence-constraint.asciid
 // DropConstraint
 include::../ql/query-plan/drop-constraint-by-name.asciidoc[]
 
+// ShowConstraints
 include::../ql/query-plan/listing-constraints.asciidoc[]
 
-// CreateIndex>>
+// CreateIndex
 include::../ql/query-plan/create-index.asciidoc[]
 
+// DoNothingIfExists(INDEX)
 include::../ql/query-plan/create-index-only-if-it-does-not-already-exist.asciidoc[]
 
 // DropIndex (deprecated)
@@ -319,8 +364,11 @@ include::../ql/query-plan/drop-index-by-schema.asciidoc[]
 // DropIndex
 include::../ql/query-plan/drop-index-by-name.asciidoc[]
 
+// ShowIndexes
 include::../ql/query-plan/listing-indexes.asciidoc[]
 
+// ShowFunctions
 include::../ql/query-plan/listing-functions.asciidoc[]
 
+// ShowProcedures
 include::../ql/query-plan/listing-procedures.asciidoc[]

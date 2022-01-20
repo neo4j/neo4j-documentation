@@ -57,6 +57,11 @@ Tests for the absence of a pattern predicate.
 |
 |
 
+| <<query-plan-asserting-multi-node-index-seek,AssertingMultiNodeIndexSeek>>
+| Used to ensure that no unique constraints are violated.
+|
+|
+|
 
 | <<query-plan-cache-properties,CacheProperties>>
 | Reads node or relationship properties and caches them.
@@ -121,6 +126,42 @@ Tests for the absence of a pattern predicate.
 | <<query-plan-directed-relationship-by-id-seek,DirectedRelationshipByIdSeek>>
 | Reads one or more relationships by id from the relationship store.
 | label:yes[]
+|
+|
+
+| <<query-plan-directed-relationship-index-contains-scan,DirectedRelationshipIndexContainsScan>>
+| Examines all values stored in an index, searching for entries containing a specific string; for example, in queries including `CONTAINS`.
+|
+|
+|
+
+| <<query-plan-directed-relationship-index-ends-with-scan,DirectedRelationshipIndexEndsWithScan>>
+| Examines all values stored in an index, searching for entries ending in a specific string; for example, in queries containing `ENDS WITH`.
+|
+|
+|
+
+| <<query-plan-directed-relationship-index-scan,DirectedRelationshipIndexScan>>
+| Examines all values stored in an index, returning all relationships and their start and end nodes with a particular relationship type and a specified property.
+|
+|
+|
+
+| <<query-plan-directed-relationship-index-seek,DirectedRelationshipIndexSeek>>
+| Finds relationships and their start and end nodes using an index seek.
+|
+|
+|
+
+| <<query-plan-directed-relationship-index-seek-by-range,DirectedRelationshipIndexSeekByRange>>
+| Finds relationships and their start and end nodes using an index seek where the value of the property matches a given prefix string.
+|
+|
+|
+
+| <<query-plan-directed-relationship-type-scan,DirectedRelationshipTypeScan>>
+| Fetches all relationships and their start and end nodes with a specific type from the relationship type index.
+|
 |
 |
 
@@ -275,6 +316,12 @@ Tests for the presence of a pattern predicate in queries containing multiple pat
 | <<query-plan-load-csv,LoadCSV>>
 | Loads data from a CSV source into the query.
 | label:yes[]
+|
+|
+
+| <<query-plan-locking-merge,LockingMerge>>
+| Similar to the `Merge` operator but will lock the start and end node when creating a relationship if necessary.
+|
 |
 |
 
@@ -545,6 +592,42 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 | <<query-plan-undirected-relationship-by-id-seek,UndirectedRelationshipByIdSeek>>
 | Reads one or more relationships by ID from the relationship store.
 | label:yes[]
+|
+|
+
+| <<query-plan-undirected-relationship-index-contains-scan,UndirectedRelationshipIndexContainsScan>>
+| Examines all values stored in an index, searching for entries containing a specific string; for example, in queries including `CONTAINS`.
+|
+|
+|
+
+| <<query-plan-undirected-relationship-index-ends-with-scan,UndirectedRelationshipIndexEndsWithScan>>
+| Examines all values stored in an index, searching for entries ending in a specific string; for example, in queries containing `ENDS WITH`.
+|
+|
+|
+
+| <<query-plan-undirected-relationship-index-scan,UndirectedRelationshipIndexScan>>
+| Examines all values stored in an index, returning all relationships and their start and end nodes with a particular relationship type and a specified property.
+|
+|
+|
+
+| <<query-plan-undirected-relationship-index-seek,UndirectedRelationshipIndexSeek>>
+| Finds relationships and their start and end nodes using an index seek.
+|
+|
+|
+
+| <<query-plan-undirected-relationship-index-seek-by-range,UndirectedRelationshipIndexSeekByRange>>
+| Finds relationships and their start and end nodes using an index seek where the value of the property matches a given prefix string.
+|
+|
+|
+
+| <<query-plan-undirected-relationship-type-scan,UndirectedRelationshipTypeScan>>
+| Fetches all relationships and their start and end nodes with a specific type from the relationship type index.
+|
 |
 |
 
