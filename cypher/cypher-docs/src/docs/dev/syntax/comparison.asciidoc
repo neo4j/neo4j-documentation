@@ -87,9 +87,16 @@ is equivalent to
 MATCH (n) WHERE 21 < n.age AND n.age <= 30 RETURN n
 ----
 
-Thus it will match all nodes where the age is between 21 and 30.
+Thus, it matches all nodes where the age is between 21 and 30.
 
-This syntax extends to all equality and inequality comparisons, as well as extending to chains longer than three.
+This syntax extends to all equality `=` and inequality `<>` comparisons, as well as to chains longer than three.
+
+[NOTE]
+====
+Chains of `=` and `<>` are treated in a special way in Cypher.
+
+This means that `1=1=true` is equivalent to `1=1 AND 1=true` and not to `(1=1)=true` or `1=(1=true)`.
+====
 
 For example:
 
