@@ -36,13 +36,15 @@ class ListsTest extends DocumentingTest {
         #  (thereplacements:Movie {title: 'The Replacements', released: 2000}),
         #  (thematrix:Movie {title: 'The Matrix', released: 1999}),
         #  (thedevilsadvocate:Movie {title: 'The Devils Advocate', released: 1997}),
+        #  (matrix4:Movie {title: 'The Matrix Resurrections', released: 2021}),
         #  (keanu)-[:ACTED_IN]->(johnnymnemonic),
         #  (keanu)-[:ACTED_IN]->(somethingsgottagive),
         #  (keanu)-[:ACTED_IN]->(thematrixrevolutions),
         #  (keanu)-[:ACTED_IN]->(thematrixreloaded),
         #  (keanu)-[:ACTED_IN]->(thereplacements),
         #  (keanu)-[:ACTED_IN]->(thematrix),
-        #  (keanu)-[:ACTED_IN]->(thedevilsadvocate)""".stripMargin('#'))
+        #  (keanu)-[:ACTED_IN]->(thedevilsadvocate),
+        #  (keanu)-[:ACTED_IN]->(matrix4)""".stripMargin('#'))
     synopsis("Cypher has comprehensive support for lists.")
     p("""* <<cypher-lists-general,Lists in general>>
         #* <<cypher-list-comprehension,List comprehension>>
@@ -140,15 +142,30 @@ class ListsTest extends DocumentingTest {
       p("""Pattern comprehension is a syntactic construct available in Cypher for creating a list based on matchings of a pattern.
           #A pattern comprehension will match the specified pattern just like a normal `MATCH` clause, with predicates just
           #like a normal `WHERE` clause, but will yield a custom projection as specified.""".stripMargin('#'))
-      p("The following graph is used for the example below:")
+      p("The following graph is used for the following pattern comprehension examples:")
       graphViz()
+      p("""The following example returns a list that contains the year when the movies was released.
+          #The pattern matching in the pattern comprehension look for `Matrix` in the movie title and that the node `a` (`Person` node with the name `Keanu Reeves`) has a relationship with the movie.""".stripMargin('#'))
       query("""MATCH (a:Person {name: 'Keanu Reeves'})
-              #RETURN [(a)-->(b) WHERE b:Movie | b.released] AS years""".stripMargin('#'), ResultAssertions((r) => {
-          r.toList.head("years").equals(List(1995, 1997, 1999, 2000, 2003, 2003, 2003))
+              #RETURN [(a)-->(b:Movie) WHERE b.title CONTAINS 'Matrix' | b.released] AS years""".stripMargin('#'), ResultAssertions((r) => {
+          r.toList.head("years").equals(List(1999, 2003, 2003, 2021))
         })) {
         resultTable()
       }
       p("The whole predicate, including the `WHERE` keyword, is optional and may be omitted.")
+
+
+      p("""The following example returns a sorted list that contains years.
+          #The pattern matching in the pattern comprehension look for movie nodes that has a relationship with the node `a` (`Person` node with the name `Keanu Reeves`).""".stripMargin('#'))
+      query("""MATCH (a:Person {name: 'Keanu Reeves'})
+              #WITH [(a)-->(b:Movie) | b.released] AS years
+              #UNWIND years AS year
+              #WITH year ORDER BY year
+              #RETURN COLLECT(year) AS sorted_years""".stripMargin('#'), ResultAssertions((r) => {
+          r.toList.head("sorted_years").equals(List(1995, 1997, 1999, 2000, 2003, 2003, 2003, 2021))
+        })) {
+        resultTable()
+      }
     }
   }.build()
 }
