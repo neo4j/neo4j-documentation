@@ -66,7 +66,7 @@ class ListsTest extends DocumentingTest {
           #It gives you a list containing all numbers between given start and end numbers.
           #Range is inclusive in both ends.""".stripMargin('#'))
       p("""To access individual elements in the list, you can use the square brackets again.
-          #This extracts from the start index and up, to but not including, the end index.""".stripMargin('#'))
+          #This extracts from the start index and up to, but not including, the end index.""".stripMargin('#'))
       query("RETURN range(0, 10)[3]", ResultAssertions((r) => {
           r.toList should equal(List(Map("range(0, 10)[3]" -> 3)))
         })) {
