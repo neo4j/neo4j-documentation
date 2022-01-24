@@ -45,12 +45,13 @@ class ListsTest extends DocumentingTest {
         #  (keanu)-[:ACTED_IN]->(thematrix),
         #  (keanu)-[:ACTED_IN]->(thedevilsadvocate),
         #  (keanu)-[:ACTED_IN]->(matrix4)""".stripMargin('#'))
+    // Note that 'Somethings Gotta Give' should be 'Something\'s Gotta Give', but this do output on the graphviz as Somethings\\'s Gotta Give.
     synopsis("Cypher has comprehensive support for lists.")
     p("""* <<cypher-lists-general,Lists in general>>
         #* <<cypher-list-comprehension,List comprehension>>
         #* <<cypher-pattern-comprehension,Pattern comprehension>>""".stripMargin('#'))
     note{
-      p("""Information regarding operators such as list concatenation (`+`), element existence checking (`IN`) and access (`[]`) can be found <<query-operators-list,here>>.
+      p("""Information regarding operators, such as list concatenation (`+`), element existence checking (`IN`), and access (`[]`) can be found <<query-operators-list,here>>.
           #The behavior of the `IN` and `[]` operators with respect to `null` is detailed <<cypher-working-with-null,here>>.""".stripMargin('#'))
     }
     section("Lists in general", "cypher-lists-general") {
@@ -61,11 +62,11 @@ class ListsTest extends DocumentingTest {
         })) {
         resultTable()
       }
-      p("""In the examples, you will use the <<functions-range,`range`>> function.
+      p("""In the examples, you use the <<functions-range,`range`>> function.
           #It gives you a list containing all numbers between given start and end numbers.
           #Range is inclusive in both ends.""".stripMargin('#'))
-      p("""To access individual elements in the list, we use the square brackets again.
-          #This will extract from the start index and up to but not including the end index.""".stripMargin('#'))
+      p("""To access individual elements in the list, you can use the square brackets again.
+          #This extracts from the start index and up, to but not including, the end index.""".stripMargin('#'))
       query("RETURN range(0, 10)[3]", ResultAssertions((r) => {
           r.toList should equal(List(Map("range(0, 10)[3]" -> 3)))
         })) {
@@ -140,12 +141,11 @@ class ListsTest extends DocumentingTest {
     }
     section("Pattern comprehension", "cypher-pattern-comprehension") {
       p("""Pattern comprehension is a syntactic construct available in Cypher for creating a list based on matchings of a pattern.
-          #A pattern comprehension will match the specified pattern just like a normal `MATCH` clause, with predicates just
-          #like a normal `WHERE` clause, but will yield a custom projection as specified.""".stripMargin('#'))
-      p("The following graph is used for the following pattern comprehension examples:")
+          #A pattern comprehension matches the specified pattern like a normal `MATCH` clause, with predicates like a normal `WHERE` clause, but yields a custom projection as specified.""".stripMargin('#'))
+      p("The following graph is used for the pattern comprehension examples:")
       graphViz()
-      p("""The following example returns a list that contains the year when the movies was released.
-          #The pattern matching in the pattern comprehension look for `Matrix` in the movie title and that the node `a` (`Person` node with the name `Keanu Reeves`) has a relationship with the movie.""".stripMargin('#'))
+      p("""This example returns a list that contains the year when the movies was released.
+          #The pattern matching in the pattern comprehension looks for `Matrix` in the movie title and that the node `a` (`Person` node with the name `Keanu Reeves`) has a relationship with the movie.""".stripMargin('#'))
       query("""MATCH (a:Person {name: 'Keanu Reeves'})
               #RETURN [(a)-->(b:Movie) WHERE b.title CONTAINS 'Matrix' | b.released] AS years""".stripMargin('#'), ResultAssertions((r) => {
           r.toList.head("years").equals(List(1999, 2003, 2003, 2021))
@@ -155,8 +155,8 @@ class ListsTest extends DocumentingTest {
       p("The whole predicate, including the `WHERE` keyword, is optional and may be omitted.")
 
 
-      p("""The following example returns a sorted list that contains years.
-          #The pattern matching in the pattern comprehension look for movie nodes that has a relationship with the node `a` (`Person` node with the name `Keanu Reeves`).""".stripMargin('#'))
+      p("""This example returns a sorted list that contains years.
+          #The pattern matching in the pattern comprehension looks for movie nodes that has a relationship with the node `a` (`Person` node with the name `Keanu Reeves`).""".stripMargin('#'))
       query("""MATCH (a:Person {name: 'Keanu Reeves'})
               #WITH [(a)-->(b:Movie) | b.released] AS years
               #UNWIND years AS year
