@@ -71,12 +71,12 @@ The following points give some details on how the comparison is performed.
   *** <<structural-types, `Relationship`>>
   *** <<cypher-lists, `List`>>
   *** <<cypher-pattern-path-variables, `Path`>>
-  *** <<cypher-temporal-introduction, `DateTime`>>
-  *** <<cypher-temporal-introduction, `LocalDateTime`>>
-  *** <<cypher-temporal-introduction, `Date`>>
-  *** <<cypher-temporal-introduction, `Time`>>
-  *** <<cypher-temporal-introduction, `LocalTime`>>
-  *** <<cypher-temporal-introduction, `Duration`>>
+  *** <<cypher-temporal, `DateTime`>>
+  *** <<cypher-temporal, `LocalDateTime`>>
+  *** <<cypher-temporal, `Date`>>
+  *** <<cypher-temporal, `Time`>>
+  *** <<cypher-temporal, `LocalTime`>>
+  *** <<cypher-temporal, `Duration`>>
   *** <<cypher-expressions-general, `String`>>
   *** <<cypher-expressions-general, `Boolean`>>
   *** <<cypher-expressions-general, `Number`>>

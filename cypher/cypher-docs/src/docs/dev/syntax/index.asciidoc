@@ -46,7 +46,6 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-pattern-varlength, Variable-length pattern matching>>
  ** <<cypher-pattern-path-variables, Assigning to path variables>>
 * <<cypher-temporal, Temporal (Date/Time) values>>
- ** <<cypher-temporal-introduction, Introduction>>
  ** <<cypher-temporal-timezones, Time zones>>
  ** <<cypher-temporal-instants, Temporal instants>>
   *** <<cypher-temporal-specifying-temporal-instants, Specifying temporal instants>>
