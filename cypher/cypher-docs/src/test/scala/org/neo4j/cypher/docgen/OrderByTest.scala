@@ -39,7 +39,7 @@ class OrderByTest extends DocumentingTest {
         #* <<order-nodes-by-property, Order nodes by property>>
         #* <<order-nodes-by-multiple-properties, Order nodes by multiple properties>>
         #* <<order-nodes-by-id, Order nodes by id>>
-        #* <<order-nodes-by-expressions, Order nodes by expressions>>
+        #* <<order-nodes-by-expression, Order nodes by expression>>
         #* <<order-nodes-in-descending-order, Order nodes in descending order>>
         #* <<order-null, Ordering `null`>>
         #* <<order-with, Ordering in a `WITH` clause>>""".stripMargin('#'))
