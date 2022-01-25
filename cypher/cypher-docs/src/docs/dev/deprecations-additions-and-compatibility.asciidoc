@@ -96,6 +96,25 @@ SHOW CONSTRAINTS YIELD *
 
 |===
 
+=== New features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:syntax[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+1_000_000, 0x_FF_FF, 0o_88_88
+----
+a|
+Cypher now supports number literals with underscores between digits.
+
+|===
+
 [[cypher-deprecations-additions-removals-4.4]]
 == Version 4.4
 
@@ -1682,7 +1701,7 @@ label:removed[] +
 For Rule planner:
 [source, cypher, role="noheader"]
 ----
-CYPHER planner=rule  
+CYPHER planner=rule
 ----
 a|
 The `RULE` planner was removed in 3.2, but still possible to trigger using `START` or `CREATE UNIQUE` clauses. Now it is completely removed.
@@ -1786,7 +1805,7 @@ label:deprecated[]
 MATCH (n)-[rs*]-() RETURN rs
 ----
 a|
-As in Cypher 3.2, this is replaced by: 
+As in Cypher 3.2, this is replaced by:
 [source, cypher, role="noheader"]
 ----
 MATCH p=(n)-[*]-() RETURN relationships(p) AS rs
@@ -1976,7 +1995,7 @@ label:clause[]
 label:new[]
 [source, cypher, role="noheader"]
 ----
-WHERE EXISTS {...} 
+WHERE EXISTS {...}
 ----
 a|
 Existential sub-queries are sub-clauses used to filter the results of a `MATCH`, `OPTIONAL MATCH`, or `WITH` clause.
