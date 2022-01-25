@@ -728,7 +728,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
   @Test def undirectedRelationshipIndexSeek() {
     profileQuery(
-      title = "Relationship Index Seek",
+      title = "Undirected Relationship Index Seek",
       text =
         """The `UndirectedRelationshipIndexSeek` operator finds relationships and their start and end nodes using an index seek.
           |The relationship variable and the index used are shown in the arguments of the operator.""".stripMargin,
