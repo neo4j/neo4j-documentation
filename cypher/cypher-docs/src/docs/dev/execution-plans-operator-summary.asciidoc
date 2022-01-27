@@ -189,7 +189,7 @@ Tests for the absence of a pattern predicate.
 |
 |
 
-| <<query-plan-drop-constraint-by-name,DropConstraint>>
+| <<query-plan-drop-constraint,DropConstraint>>
 | Drops a constraint using its name.
 | label:yes[]
 | label:yes[]

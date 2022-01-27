@@ -25,6 +25,13 @@ import org.junit.Test
 
 class QueryPlanTest extends DocumentingTestBase with SoftReset {
 
+  /*
+   * These are being generated to: cypher/cypher-docs/target/docs/dev/ql/query-plan
+   * Dont forget to include the planner in:
+   * cypher/cypher-docs/src/docs/dev/execution-plans-operator-summary.asciidoc
+   * cypher/cypher-docs/src/docs/dev/execution-plan-groups/operators.asciidoc
+  */
+
   override val setupQueries = List(
     """CREATE (me:Person {name: 'me'})
        CREATE (andy:Person {name: 'Andy'})
