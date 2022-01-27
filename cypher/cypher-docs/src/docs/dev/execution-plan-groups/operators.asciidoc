@@ -330,7 +330,7 @@ include::../ql/query-plan/create-node-key-constraint.asciidoc[]
 include::../ql/query-plan/create-relationship-property-existence-constraint.asciidoc[]
 
 // DropConstraint
-include::../ql/query-plan/drop-constraint-by-name.asciidoc[]
+include::../ql/query-plan/drop-constraint.asciidoc[]
 
 // ShowConstraints
 include::../ql/query-plan/listing-constraints.asciidoc[]
