@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit
 class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "INDEX"
-  override val linkId = "administration/indexes-for-search-performance"
+  override val linkId = "indexes-for-search-performance"
   private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
 
   //noinspection RedundantDefaultArgument
