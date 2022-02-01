@@ -1,7 +1,0 @@
-.Command syntax
-[source, cypher, role=noplay]
------
-GRANT WRITE
-    ON {HOME GRAPH | GRAPH[S] { * | name[, ...] }}
-    TO role[, ...]
------

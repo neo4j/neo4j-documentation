@@ -1,7 +1,0 @@
-.Command syntax
-[source, cypher, role=noplay]
------
-GRANT ALL [ [ GRAPH ] PRIVILEGES ]
-    ON {HOME GRAPH | GRAPH[S] { * | name[, ...] }}
-    TO role[, ...]
------
