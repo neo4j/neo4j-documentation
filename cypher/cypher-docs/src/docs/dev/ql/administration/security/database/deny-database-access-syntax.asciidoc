@@ -1,7 +1,0 @@
-.Command syntax
-[source, cypher, role=noplay]
------
-DENY ACCESS
-    ON {HOME DATABASE | DATABASE[S] {* | name[, ...]}}
-    TO role[, ...]
------

@@ -1,7 +1,0 @@
-.Command syntax
-[source, cypher, role=noplay]
------
-DENY REMOVE LABEL { * | label[, ...] }
-    ON {HOME GRAPH | GRAPH[S] { * | name[, ...] }}
-    TO role[, ...]
------
