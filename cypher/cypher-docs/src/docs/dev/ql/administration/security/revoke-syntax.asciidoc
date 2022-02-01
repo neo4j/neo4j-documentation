@@ -1,7 +1,0 @@
-.Command syntax
-[source, cypher, role=noplay]
------
-REVOKE
-    [ GRANT | DENY ] graph-privilege
-    FROM role[, ...]
------
