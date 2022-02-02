@@ -80,12 +80,33 @@ Reverse the order of the elements in the list.
 ###assertion=returns-one parameters=list
 RETURN
 
-head($list), last($list), tail($list)
+head($list)
 ###
 
-`head()` returns the first, `last()` the last element
-of the list. `tail()` returns all but the first element.
-All return `null` for an empty list.
+Get the first element of the list.
+Return `null` for an empty list.
+Eqivalent to the list indexing `$list[0]`.
+
+###assertion=returns-one parameters=list
+RETURN
+
+last($list)
+###
+
+Get the last element of the list.
+Return `null` for an empty list.
+Eqivalent to the list indexing `$list[-1]`.
+
+###assertion=returns-one parameters=list
+RETURN
+
+tail($list)
+###
+
+Get all elements except for the first element.
+Return `[]` for an empty list.
+Eqivalent to the list slice `$list[1..]`.
+Out-of-bound slices are truncated to an empty list `[]`.
 
 ###assertion=returns-one
 MATCH (n)
