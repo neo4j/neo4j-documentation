@@ -36,7 +36,7 @@ The range index has no configuration settings. The valid b-tree configuration se
 
 Non-specified settings have their respective default values.
 
-Creating a constraint requires <<administration-security-administration-database-constraints, the `CREATE CONSTRAINT` privilege>>.
+Creating a constraint requires <<access-control-database-administration-constraints, the `CREATE CONSTRAINT` privilege>>.
 
 [[administration-constraints-syntax-create-unique]]
 [discrete]
@@ -129,7 +129,7 @@ The preferred way of dropping a constraint is by the name of the constraint.
 This drop command is optionally idempotent, with the default behavior to throw an error if you attempt to drop the same constraint twice.
 With the `IF EXISTS` flag, no error is thrown and nothing happens should the constraint not exist.
 
-Dropping a constraint requires the <<administration-security-administration-database-constraints, `DROP CONSTRAINT`>>  privilege.
+Dropping a constraint requires the <<access-control-database-administration-constraints, `DROP CONSTRAINT`>>  privilege.
 
 [source, cypher, role=noplay]
 ----
@@ -203,7 +203,7 @@ ASSERT (n.propertyName_1, … n.propertyName_n) IS NODE KEY
 == Syntax for listing constraints
 
 List constraints in the database, either all or filtered on constraint type.
-This requires  the<<administration-security-administration-database-constraints, `SHOW CONSTRAINT` >> privilege.
+This requires  the<<access-control-database-administration-constraints, `SHOW CONSTRAINT` >> privilege.
 
 The simple version of the command allows for a `WHERE` clause and will give back the default set of output columns:
 
@@ -280,4 +280,4 @@ The returned columns from the show command is:
 |===
 
 [NOTE]
-The deprecated built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the <<administration-security-administration-database-constraints, `SHOW CONSTRAINTS` privilege>>.
+The deprecated built-in procedures for listing constraints, such as `db.constraints`, work as before and are not affected by the <<access-control-database-administration-constraints, `SHOW CONSTRAINTS` privilege>>.

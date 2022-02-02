@@ -70,12 +70,12 @@ class ShowFunctionsTest extends DocumentingTest {
 |m| rolesExecution
 |a|
 List of roles permitted to execute this function.
-Is `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
+Is `null` without the <<access-control-dbms-administration-role-management,`SHOW ROLE`>> privilege.
 
 |m| rolesBoostedExecution
 |a|
 List of roles permitted to use boosted mode when executing this function.
-Is `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
+Is `null` without the <<access-control-dbms-administration-role-management,`SHOW ROLE`>> privilege.
 ||===""")
     section("Syntax") {
       p("""
@@ -119,7 +119,7 @@ SHOW [ALL|BUILT IN|USER DEFINED] FUNCTION[S] EXECUTABLE BY username
 [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 
-Required privilege <<administration-security-administration-dbms-privileges-user-management,`SHOW USER`>>.
+Required privilege <<access-control-dbms-administration-user-management,`SHOW USER`>>.
 This command cannot be used for LDAP users.
 
 [NOTE]
@@ -174,7 +174,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be 
       })) {
         limitedResultTable(maybeWantedColumns = Some(List("name", "category", "description", "rolesExecution", "rolesBoostedExecution")))
       }
-      p("Notice that the two `roles` columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.")
+      p("Notice that the two `roles` columns are empty due to missing the <<access-control-dbms-administration-role-management,`SHOW ROLE`>> privilege.")
       logout()
       p("The second option, is to filter for a specific user:")
       query("SHOW FUNCTIONS EXECUTABLE BY jake", ResultAssertions(p => {

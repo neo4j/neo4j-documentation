@@ -18,7 +18,7 @@ Cypher administrative queries cannot be combined with normal reading and writing
 Each administrative query will perform either an update action to the `system` or a read of status information from the `system`.
 Some administrative commands make changes to a specific database, and will therefore be possible to run only when connected to the database of interest.
 Others make changes to the state of the entire DBMS and can only be run against the special `system` database.
-All administrative queries are described in more detail in the section on <<administration, Administration>>.
+// All administrative queries are described in more detail in the section on <<administration, Administration>>.
 
 [[cypher-updating-queries]]
 == The structure of update queries
