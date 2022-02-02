@@ -69,7 +69,7 @@ Here we detail the available versions:
 | Query option | Description | Default
 | `3.5` | This will force the query to use Neo4j Cypher 3.5. |
 | `4.1` | This will force the query to use Neo4j Cypher 4.1. |
-| `4.2` | This will force the query to use Neo4j Cypher 4.2. As this is the default version, it is not necessary to use this option explicitly. | X
+| `4.2` | This will force the query to use Neo4j Cypher 4.2. As this is the default version, it is not necessary to use this option explicitly. | {check-mark}
 |===
 
 [WARNING]
@@ -148,7 +148,7 @@ This table describes the available planner options:
 
 | planner=cost
 | Use cost based planning with default limits on plan search space and time.
-| X
+| {check-mark}
 
 | planner=idp
 | Synonym for `planner=cost`.
@@ -176,12 +176,14 @@ This table describes the available query options for the connect-components plan
 
 | connectComponentsPlanner=greedy
 | Use a greedy approach when combining sub-plans.
-| X
+[NOTE]
+Using this option can significantly _reduce_ the planning time of the query.
+| {check-mark}
 
 | connectComponentsPlanner=idp
 | Use the cost based IDP search algorithm when combining sub-plans.
-
-Note that using this option can significantly increase the planning time of the query.
+[NOTE]
+Using this option can significantly _increase_ the planning time of the query but usually finds better plans.
 |
 |===
 
@@ -200,7 +202,7 @@ The possible values are:
 
 | updateStrategy=default
 | Update queries are executed eagerly when needed.
-| X
+| {check-mark}
 
 | updateStrategy=eager
 | Update queries are always executed eagerly.
@@ -222,7 +224,7 @@ The possible values are:
 
 | expressionEngine=default
 | Compile expressions and use the compiled expression engine when needed.
-| X
+| {check-mark}
 
 | expressionEngine=interpreted
 | Always use the _interpreted_ expression engine.
@@ -250,7 +252,7 @@ The possible values are:
 
 | operatorEngine=default
 | Attempt to generate compiled operators when applicable.
-| X
+| {check-mark}
 
 | operatorEngine=interpreted
 | Never attempt to generate compiled operators.
@@ -278,7 +280,7 @@ The available options are:
 
 | interpretedPipesFallback=default
 | Equivalent to `interpretedPipesFallback=whitelisted_plans_only`
-| X
+| {check-mark}
 
 | interpretedPipesFallback=disabled
 | If the plan contains any operators not supported by the pipelined runtime then another runtime is chosen to execute the entire plan.
