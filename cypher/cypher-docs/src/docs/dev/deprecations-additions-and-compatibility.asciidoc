@@ -1295,7 +1295,7 @@ EXECUTE
 ----
 a|
 New Cypher commands for administering privileges for executing procedures and user defined functions.
-See <<administration-security-administration-dbms-privileges-execute>>.
+See <<access-control-dbms-administration-execute>>.
 
 
 a|
