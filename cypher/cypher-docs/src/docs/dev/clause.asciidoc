@@ -259,7 +259,7 @@ m|<<query-listing-procedures, SHOW PROCEDURES>>
 [[header-administration-clauses]]
 **Administration clauses**
 
-These comprise clauses used to manage databases, schema and security; further details can found in <<administration-databases, Database management>> and <<access-control, Access Control>>.
+These comprise clauses used to manage databases, schema and security; further details can found in <<administration-databases, Database management>> and <<access-control,Access control>>.
 
 [options="header"]
 |===
@@ -274,9 +274,8 @@ m|<<administration-indexes-syntax, CREATE \| DROP INDEX>>
 m|<<administration-constraints-syntax, CREATE \| DROP CONSTRAINT>>
 |Create or drop a constraint pertaining to either a node label or relationship type, and a property.
 
-//Users, roles, privileges
-|<<administration-security, Users&#44; roles&#44; privileges>>
-|Manage users, roles and privileges for database, graph and sub-graph access control.
+|<<access-control,Access control>>
+|Manage users, roles, and privileges for database, graph and sub-graph access control.
 
 |===
 

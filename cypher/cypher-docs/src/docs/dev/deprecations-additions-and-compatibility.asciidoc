@@ -1439,9 +1439,9 @@ New Cypher commands for administering multiple databases.
 a|
 label:functionality[]
 label:new[] +
-<<administration-security,Security administration>>
+<<access-control,Access control>>
 a|
-New Cypher commands for administering role-based access-control.
+New Cypher commands for administering role-based access control.
 
 a|
 label:functionality[]
