@@ -25,23 +25,21 @@ In Neo4j Fabric it is possible to refer to multiple graphs within the same query
 Database::
 A database is a storage and retrieval mechanism for collecting data in a defined space on disk and in memory.
 
-Most of the time Cypher queries are <<cypher-querying-updating-administering, reading or updating queries>> which are run against a graph.
-There are, however, <<administration, administrative>> commands that apply to a database, or to the entire DBMS.
-Such commands cannot be run in a session connected to a normal user database, but instead need to be run within a session connected to the special _system_ database.
-
-More on this requirement is described in the chapter on <<administration, Administration>>.
-
+Most of the time Cypher queries are <<cypher-querying-updating-administering, reading or updating queries>>, which are run against a graph.
+There are also administrative commands that apply to a database, or to the entire DBMS.
+Administrative commands cannot be run in a session connected to a normal user database, but instead need to be run within a session connected to the _system_ database.
 
 == The system database and the default database
 
-All Neo4j servers will contain a built-in database called `system` which behaves differently than all other databases.
-This database stores system data and you can not perform graph queries against it.
+All Neo4j servers contain a built-in database called `system`, which behaves differently than all other databases.
+The `system` database stores system data and you can not perform graph queries against it.
 
-A fresh installation of Neo4j will include two databases:
+A fresh installation of Neo4j includes two databases:
 
 * `system` - the system database described above, containing meta-data on the DBMS and security configuration.
 * `neo4j` - the default database, named using the config option `dbms.default_database=neo4j`.
 
+For more information about the _system_ database, see the sections on <<administration-databases, Database management>> and <<access-control, Access Control>>.
 
 == Different editions of Neo4j
 
@@ -55,7 +53,7 @@ However it is worth listing up-front the key areas that are not supported in the
 |===
 | Feature | Enterprise | Community
 | <<administration-databases, Multi-database>> | Any number of user databases | Only `system` and one user database
-| Role-based security | <<administration-security, User, Role and Privilege management>> for flexible access control and <<administration-security-subgraph, sub-graph access control>>. | <<administration-security-users, Multi-user management>>. All users have full access rights.
+| Role-based security | <<administration-security, User, Role and Privilege management>> for flexible access control and <<access-control-manage-privileges, sub-graph access control>>. | <<access-control-manage-users, Multi-user management>>. All users have full access rights.
 | Constraints | <<administration-constraints-prop-exist-nodes, Existence constraints>>, <<administration-constraints-unique-nodes, uniqueness constraints>>, and <<administration-constraints-node-key, `NODE KEY` constraints>>.  | Only <<administration-constraints-unique-nodes, uniqueness constraints>>
 |===
 

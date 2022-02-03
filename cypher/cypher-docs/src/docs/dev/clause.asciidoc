@@ -277,7 +277,7 @@ m|xref:clauses/transaction-clauses/index.adoc#query-terminate-transactions[TERMI
 [[header-administration-clauses]]
 **Administration clauses**
 
-These comprise clauses used to manage databases, schema and security; further details can found in <<administration>>.
+These comprise clauses used to manage databases, schema and security; for further details see <<administration-databases,Database management>> and <<access-control,Access Control>>.
 
 [options="header"]
 |===
