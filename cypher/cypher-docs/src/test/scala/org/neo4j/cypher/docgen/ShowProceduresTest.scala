@@ -70,12 +70,12 @@ class ShowProceduresTest extends DocumentingTest {
 |m| rolesExecution
 |a|
 List of roles permitted to execute this procedure.
-Is `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
+Is `null` without the <<access-control-dbms-administration-role-management,`SHOW ROLE`>> privilege.
 
 |m| rolesBoostedExecution
 |a|
 List of roles permitted to use boosted mode when executing this procedure.
-Is `null` without the <<administration-security-administration-dbms-privileges-role-management,`SHOW ROLE`>> privilege.
+Is `null` without the <<access-control-dbms-administration-role-management,`SHOW ROLE`>> privilege.
 
 |m| option
 |a| Map of extra output, e.g. if the procedure is deprecated.
@@ -122,7 +122,7 @@ SHOW PROCEDURE[S] EXECUTABLE BY username
 [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 
-Requires the privilege <<administration-security-administration-dbms-privileges-user-management,`SHOW USER`>>.
+Requires the privilege <<access-control-dbms-administration-user-management,`SHOW USER`>>.
 This command cannot be used for LDAP users.
 
 [NOTE]
@@ -174,7 +174,7 @@ When using the `RETURN` clause, the `YIELD` clause is mandatory and must not be 
       })) {
         limitedResultTable(maybeWantedColumns = Some(List("name", "description", "rolesExecution", "rolesBoostedExecution")))
       }
-      p("Note that the two `roles` columns are empty due to missing the <<administration-security-administration-dbms-privileges-role-management,SHOW ROLE>> privilege.")
+      p("Note that the two `roles` columns are empty due to missing the <<access-control-dbms-administration-role-management,SHOW ROLE>> privilege.")
       logout()
       p("The second option, filters the list to only contain procedures executable by a specific user:")
       query("SHOW PROCEDURES EXECUTABLE BY jake", ResultAssertions(p => {
