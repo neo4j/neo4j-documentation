@@ -94,6 +94,37 @@ SHOW INDEXES YIELD *
 SHOW CONSTRAINTS YIELD *
 ----
 
+a|
+label:syntax[]
+label:removed[] +
+For privilege commands:
+[source, cypher, role="noheader"]
+----
+ON DEFAULT DATABASE
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+ON HOME DATABASE
+----
+
+
+a|
+label:syntax[]
+label:removed[] +
+For privilege commands:
+[source, cypher, role="noheader"]
+----
+ON DEFAULT GRAPH
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+ON HOME GRAPH
+----
+
 |===
 
 === New features
