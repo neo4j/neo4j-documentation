@@ -81,7 +81,7 @@ class CallSubqueryTest extends DocumentingTest {
       graphViz()
     }
 
-    section("Semantics, call-semantics") {
+    section("Semantics", "call-semantics") {
       p(
         """A `CALL` clause is executed once for each incoming row.
           #For the query below, the `CALL` clause executes three times.
