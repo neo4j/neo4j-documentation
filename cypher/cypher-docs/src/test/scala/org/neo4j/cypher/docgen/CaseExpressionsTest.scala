@@ -40,7 +40,7 @@ class CaseExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppor
         |       (charlie)-[:KNOWS]->(daniel),
         |       (bob)-[:MARRIED]->(eskil)""")
     p(
-      """Generic conditional expressions may be expressed using the well-known `CASE` construct.
+      """Generic conditional expressions may be expressed using the `CASE` construct.
         |Two variants of `CASE` exist within Cypher: the simple form, which allows an expression to be compared against multiple values, and the generic form, which allows multiple conditional statements to be expressed.
       """.stripMargin)
     note{
