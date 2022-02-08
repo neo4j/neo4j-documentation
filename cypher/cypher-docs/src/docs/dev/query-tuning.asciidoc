@@ -1,6 +1,12 @@
 [[query-tuning]]
 = Query tuning
 
+//Check Mark
+:check-mark: icon:check[]
+
+//Cross Mark
+:cross-mark: icon:cross[]
+
 [abstract]
 --
 This section describes query tuning for the Cypher query language.
@@ -64,7 +70,7 @@ In order to use one or more of these options, the query must be prepended with `
 Occasionally, there is a requirement to use a previous version of the Cypher compiler when running a query.
 Here we detail the available versions:
 
-[options="header"]
+[options="header",cols="^2m,4a,^1a"]
 |===
 | Query option | Description | Default
 | `3.5` | This will force the query to use Neo4j Cypher 3.5. |
@@ -103,7 +109,7 @@ It combines some of the advantages of the compiled runtime in a new architecture
 Algorithms are employed to intelligently group the operators in the execution plan in order to generate new combinations and orders of execution which are optimised for performance and memory usage.
 While this should lead to superior performance in most cases (over both the interpreted and slotted runtimes), it is still under development and does not support all possible operators or queries (the slotted runtime covers all operators and queries).
 
-[options="header",cols="m,a,a"]
+[options="header",cols="2m,2a,^1a"]
 |===
 |Option
 |Description
@@ -140,7 +146,7 @@ The planner uses a search algorithm to find the execution plan with the lowest e
 
 This table describes the available planner options:
 
-[options="header",cols="m,a,a"]
+[options="header",cols="2m,2a,^1a"]
 |===
 | Query option
 | Description
@@ -156,8 +162,10 @@ This table describes the available planner options:
 
 | planner=dp
 | Use cost based planning without limits on plan search space and time to perform an exhaustive search for the best execution plan.
-
-Note that using this option may significantly increase the planning time of the query.
+[NOTE]
+====
+Using this option can significantly _increase_ the planning time of the query.
+====
 |
 |===
 
@@ -168,7 +176,7 @@ One part of the Cypher planner is responsible for combining sub-plans for separa
 
 This table describes the available query options for the connect-components planner:
 
-[options="header",cols="m,a,a"]
+[options="header",cols="2m,2a,^1a"]
 |===
 | Query option
 | Description
@@ -177,7 +185,9 @@ This table describes the available query options for the connect-components plan
 | connectComponentsPlanner=greedy
 | Use a greedy approach when combining sub-plans.
 [NOTE]
+====
 Using this option can significantly _reduce_ the planning time of the query.
+====
 | {check-mark}
 
 | connectComponentsPlanner=idp
@@ -196,7 +206,7 @@ This option affects the eagerness of updating queries.
 
 The possible values are:
 
-[options="header",cols="m,a,a"]
+[options="header",cols="2m,2a,^1a"]
 |===
 | Query option
 | Description
@@ -218,7 +228,7 @@ This option affects how the runtime evaluates expressions.
 
 The possible values are:
 
-[options="header",cols="m,a,a"]
+[options="header",cols="2m,2a,^1a"]
 |===
 | Query option
 | Description
@@ -246,7 +256,7 @@ This query option affects whether the pipelined runtime attempts to generate com
 
 The possible values are:
 
-[options="header",cols="m,a,a"]
+[options="header",cols="2m,2a,^1a"]
 |===
 | Query option
 | Description
@@ -274,7 +284,7 @@ This query option affects how the pipelined runtime behaves for operators it doe
 
 The available options are:
 
-[options="header",cols="m,a,a"]
+[options="header",cols="2m,2a,^1a"]
 |===
 | Query option
 | Description
@@ -329,7 +339,7 @@ However, replanning one query does not replan any other queries.
 
 There are three different replan options available:
 
-[options="header",cols="m,a,a"]
+[options="header",cols="2m,2a,^1a"]
 |===
 |Option
 |Description
@@ -382,7 +392,7 @@ The statement will always return an empty result and make no changes to the data
 `PROFILE`::
 If you want to run the statement and see which operators are doing most of the work, use `PROFILE`.
 This will run your statement and keep track of how many rows pass through each operator, and how much each operator needs to interact with the storage layer to retrieve the necessary data.
-Please note that _profiling your query uses more resources,_ so you should not profile unless you are actively working on a query.
+Note that _profiling your query uses more resources,_ so you should not profile unless you are actively working on a query.
 
 See <<execution-plans>> for a detailed explanation of each of the operators contained in an execution plan.
 
