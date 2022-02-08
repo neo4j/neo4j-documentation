@@ -183,7 +183,9 @@ Using this option can significantly _reduce_ the planning time of the query.
 | connectComponentsPlanner=idp
 | Use the cost based IDP search algorithm when combining sub-plans.
 [NOTE]
+====
 Using this option can significantly _increase_ the planning time of the query but usually finds better plans.
+====
 |
 |===
 
