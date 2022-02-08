@@ -294,53 +294,54 @@ class CallSubqueryTest extends DocumentingTest {
 
     section("Subqueries in transactions", "subquery-call-in-transactions") {
       p("""Subqueries can be made to execute in separate, inner transactions, producing intermediate commits.
-          #This can come in handy when doing large write operations, like batch updates or imports.
-          #To execute a subquery in separate transactions you add the modifier `IN TRANSACTIONS` after the subquery.""".stripMargin('#'))
+          #This can come in handy when doing large write operations, like batch updates, imports, and deletes.
+          #To execute a subquery in separate transactions, you add the modifier `IN TRANSACTIONS` after the subquery.""".stripMargin('#'))
 
       implicit val csvFilesDir: File = createDir("csv-files")
-      val artistsCsvPath = new CsvFile("artists.csv").withContents(
-        Seq("1", "ABBA", "1992"),
-        Seq("2", "Roxette", "1986"),
-        Seq("3", "Europe", "1979"),
-        Seq("4", "bob hund", "1991"),
-        Seq("5", "The Cardigans", "1992"),
+      val friendsCsvPath = new CsvFile("friends.csv").withContents(
+        Seq("1", "Bill", "26"),
+        Seq("2", "Max", "27"),
+        Seq("3", "Anna", "22"),
+        Seq("4", "Gladys", "29"),
+        Seq("5", "Summer", "24"),
       )
-      p("""The following example imports a CSV file using the `LOAD CSV` clause, and
-          # creates nodes in separate transactions using `CALL {} IN TRANSACTIONS`
+      p("""The following example uses a CSV file and the `LOAD CSV` clause to import more data to the example graph.
+          # It creates nodes in separate transactions using `CALL {} IN TRANSACTIONS`:
           #
-          #.artists.csv
+          #.friends.csv
           #[source]
           #----
-          #include::csv-files/artists.csv[]
+          #include::csv-files/friends.csv[]
           #----""".stripMargin('#'))
       addQuery(
         """LOAD CSV FROM '@csvFile' AS line
           #CALL {
           #  WITH line
-          #  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
+          #  CREATE (:PERSON {name: line[1], age: toInteger(line[2])})
           #} IN TRANSACTIONS""".stripMargin('#'),
         assertions = ResultAssertions(r => r.isEmpty),
-        replacements = Seq(QueryTextReplacement("@csvFile", "file:///artists.csv", artistsCsvPath))
+        replacements = Seq(QueryTextReplacement("@csvFile", "file:///friends.csv", friendsCsvPath))
       ) { resultTable() }
       p("""As the size of the CSV file in this example is small, only a single separate transaction is
           #started and committed.""".stripMargin('#'))
-      note(p("""`CALL { ... } IN TRANSACTIONS` is only allowed in <<query-transactions, implicit transactions>>"""))
+      note(p("""`CALL { ... } IN TRANSACTIONS` is only allowed in <<query-transactions, implicit transactions>>."""))
       section("Batching") {
         p("""The amount of work to do in each separate transaction can be specified in terms of how many input rows
             |to process before committing the current transaction and starting a new one.
             |The number of input rows is set with the modifier `OF n ROWS` (or `ROW`).
             |If omitted, the default batch size is 1000 rows.
-            |Here's the same example as above, but with one transaction every 2 input rows""".stripMargin)
+            |The following is the same example but with one transaction every 2 input rows:""".stripMargin)
         addQuery(
           """LOAD CSV FROM '@csvFile' AS line
             #CALL {
             #  WITH line
-            #  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
+            #  CREATE (:Person {name: line[1], age: toInteger(line[2])})
             #} IN TRANSACTIONS OF 2 ROWS""".stripMargin('#'),
           assertions = ResultAssertions(r => r.isEmpty),
-          replacements = Seq(QueryTextReplacement("@csvFile", "file:///artists.csv", artistsCsvPath))
+          replacements = Seq(QueryTextReplacement("@csvFile", "file:///friends.csv", friendsCsvPath)),
+          databaseStateBehavior = KeepState, 
         ) { resultTable() }
-        p("""The query now starts and commits three separate transactions""")
+        p("""The query now starts and commits three separate transactions:""")
         p(""". The first two executions of the subquery (for the first two input rows from `LOAD CSV`) take place in the first transaction.
             |. The first transaction is then committed before proceeding.
             |. The next two executions of the subquery (for the next two input rows) take place in a second transaction.
@@ -348,6 +349,17 @@ class CallSubqueryTest extends DocumentingTest {
             |. The last execution of the subquery (for the last input row) takes place in a third transaction.
             |. The third transaction is committed.
             |""".stripMargin)
+        p("""You can also use `CALL { …​ } IN TRANSACTIONS of n ROWS` to delete all your data in batches in order to avoid a huge garbage collection or an `OutOfMemory` exception.
+        |For example:""".stripMargin)
+        addQuery(
+          """MATCH (n)
+            #CALL {
+            #  WITH n
+            #  DETACH DELETE n
+            #} IN TRANSACTIONS OF 2 ROWS""".stripMargin('#'),
+          assertions = ResultAssertions(r => r.isEmpty),
+          databaseStateBehavior = ClearState,
+        ) { resultTable() }
       }
       section("Errors") {
         p("""If an error occurs in `CALL {} IN TRANSACTIONS` the entire query fails and
