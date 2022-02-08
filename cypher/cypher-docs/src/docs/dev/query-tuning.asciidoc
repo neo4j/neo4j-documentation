@@ -347,7 +347,7 @@ There are three different replan options available:
 
 |replan=default
 |This is the planning and replanning option as described above.
-|X
+| {check-mark}
 
 |replan=force
 |This will force a replan, even if the plan is valid according to the planning rules.
