@@ -142,11 +142,11 @@ class CaseExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppor
               #  ELSE 3
               #END AS colourCode
               #SET n.colourCode = colourCode""".stripMargin('#'),
-      ResultAssertions((r) => {
-            assertStats(r, propertiesWritten = 5)
-          })) {
-          p("For more information about using the `SET` clause, see <<query-set>>.")
-          resultTable()
+        ResultAssertions((r) => {
+          assertStats(r, propertiesWritten = 5)
+        })) {
+        p("For more information about using the `SET` clause, see <<query-set>>.")
+        resultTable()
       }
     }
   }.build()
