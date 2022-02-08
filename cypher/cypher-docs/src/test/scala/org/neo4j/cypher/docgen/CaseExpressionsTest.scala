@@ -27,20 +27,22 @@ class CaseExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppor
 
   override def doc = new DocBuilder {
     doc("`CASE` expressions", "query-syntax-case")
-    runtime("interpreted")
-    initQueries("""CREATE
-                  #  (alice:A {name:'Alice', age: 38, eyes: 'brown'}),
-                  #  (bob:B {name: 'Bob', age: 25, eyes: 'blue'}),
-                  #  (charlie:C {name: 'Charlie', age: 53, eyes: 'green'}),
-                  #  (daniel:D {name: 'Daniel', eyes: 'brown'}),
-                  #  (eskil:E {name: 'Eskil', age: 41, eyes: 'blue', array: ['one', 'two', 'three']}),
-                  #  (alice)-[:KNOWS]->(bob),
-                  #  (alice)-[:KNOWS]->(charlie),
-                  #  (bob)-[:KNOWS]->(daniel),
-                  #  (charlie)-[:KNOWS]->(daniel),
-                  #  (bob)-[:MARRIED]->(eskil)""".stripMargin('#'))
-    p("""Generic conditional expressions may be expressed using the `CASE` construct.
-        #Two variants of `CASE` exist within Cypher: the simple form, which allows an expression to be compared against multiple values, and the generic form, which allows multiple conditional statements to be expressed.""".stripMargin('#'))
+    initQueries(
+      """CREATE (alice:A {name:'Alice', age: 38, eyes: 'brown'}),
+        |       (bob:B {name: 'Bob', age: 25, eyes: 'blue'}),
+        |       (charlie:C {name: 'Charlie', age: 53, eyes: 'green'}),
+        |       (daniel:D {name: 'Daniel', eyes: 'brown'}),
+        |       (eskil:E {name: 'Eskil', age: 41, eyes: 'blue', array: ['one', 'two', 'three']}),
+        |
+        |       (alice)-[:KNOWS]->(bob),
+        |       (alice)-[:KNOWS]->(charlie),
+        |       (bob)-[:KNOWS]->(daniel),
+        |       (charlie)-[:KNOWS]->(daniel),
+        |       (bob)-[:MARRIED]->(eskil)""")
+    p(
+      """Generic conditional expressions may be expressed using the well-known `CASE` construct.
+        |Two variants of `CASE` exist within Cypher: the simple form, which allows an expression to be compared against multiple values, and the generic form, which allows multiple conditional statements to be expressed.
+      """.stripMargin)
     note{
       p("""CASE can only be used as part of RETURN or WITH if you want to use the result in the succeeding clause or statement.""".stripMargin('#'))
     }
