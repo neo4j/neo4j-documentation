@@ -280,7 +280,6 @@ class CallSubqueryTest extends DocumentingTest {
             #  DETACH DELETE n
             #} IN TRANSACTIONS OF 2 ROWS""".stripMargin('#'),
           assertions = ResultAssertions(r => r.isEmpty),
-          replacements = Seq(QueryTextReplacement("@csvFile", "file:///friends.csv", friendsCsvPath)),
           databaseStateBehavior = ClearState,
         ) { resultTable() }
       }
