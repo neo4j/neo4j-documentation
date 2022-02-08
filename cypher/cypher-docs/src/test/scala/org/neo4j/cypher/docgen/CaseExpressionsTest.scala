@@ -39,7 +39,7 @@ class CaseExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppor
                   #  (bob)-[:KNOWS]->(daniel),
                   #  (charlie)-[:KNOWS]->(daniel),
                   #  (bob)-[:MARRIED]->(eskil)""".stripMargin('#'))
-   p("""Generic conditional expressions may be expressed using the `CASE` construct.
+    p("""Generic conditional expressions may be expressed using the `CASE` construct.
         #Two variants of `CASE` exist within Cypher: the simple form, which allows an expression to be compared against multiple values, and the generic form, which allows multiple conditional statements to be expressed.""".stripMargin('#'))
     note{
       p("""CASE can only be used as part of RETURN or WITH if you want to use the result in the succeeding clause or statement.""".stripMargin('#'))
