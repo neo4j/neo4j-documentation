@@ -133,7 +133,7 @@ class CaseExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppor
     }
     section("Using the result of `CASE` in the succeeding clause or statement", "syntax-use-case-result") {
       p("""You can use the result of `CASE` to set a property(s) or a label(s) on a node or relationship.
-       #For example, instead of specifying the node directly, you can set a property for a node selected by an expression:""".stripMargin('#'))
+          #For example, instead of specifying the node directly, you can set a property for a node selected by an expression:""".stripMargin('#'))
       query("""MATCH (n)
               #WITH n,
               #CASE n.eyes
