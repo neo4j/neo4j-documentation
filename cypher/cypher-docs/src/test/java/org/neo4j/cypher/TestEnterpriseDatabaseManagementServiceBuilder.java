@@ -34,6 +34,7 @@ import org.neo4j.graphdb.factory.module.edition.AbstractEditionModule;
 import org.neo4j.graphdb.security.URLAccessRule;
 import org.neo4j.io.fs.FileSystemAbstraction;
 import org.neo4j.kernel.impl.factory.DbmsInfo;
+import org.neo4j.logging.InternalLogProvider;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.monitoring.Monitors;
 import org.neo4j.test.TestDatabaseManagementServiceBuilder;
@@ -97,7 +98,7 @@ public class TestEnterpriseDatabaseManagementServiceBuilder extends TestDatabase
     }
 
     @Override
-    public TestEnterpriseDatabaseManagementServiceBuilder setInternalLogProvider( LogProvider internalLogProvider )
+    public TestEnterpriseDatabaseManagementServiceBuilder setInternalLogProvider( InternalLogProvider internalLogProvider )
     {
         return (TestEnterpriseDatabaseManagementServiceBuilder) super.setInternalLogProvider( internalLogProvider );
     }
