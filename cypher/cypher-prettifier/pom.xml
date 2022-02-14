@@ -83,7 +83,7 @@
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-parser</artifactId>
+            <artifactId>neo4j-cypher-ast-factory</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
         <dependency>

@@ -25,7 +25,7 @@ import org.junit.Rule;
 
 import java.util.Map;
 
-import org.neo4j.cypher.docgen.tooling.Prettifier;
+import org.neo4j.cypher.docgen.tooling.CypherPrettifier;
 import org.neo4j.doc.test.GraphDescription;
 import org.neo4j.doc.test.GraphHolder;
 import org.neo4j.doc.test.TestData;
@@ -56,7 +56,7 @@ public abstract class AbstractJavaDocTestBase implements GraphHolder
 
     protected String createCypherSnippet( String cypherQuery )
     {
-        String snippet = Prettifier.apply( cypherQuery, false );
+        String snippet = CypherPrettifier.apply( cypherQuery );
         return AsciidocHelper.createAsciiDocSnippet( "cypher", snippet );
     }
 
