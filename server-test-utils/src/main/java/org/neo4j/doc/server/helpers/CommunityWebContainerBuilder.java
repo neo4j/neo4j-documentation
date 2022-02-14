@@ -44,6 +44,7 @@ import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.doc.server.WebContainerTestUtils;
 import org.neo4j.graphdb.config.Setting;
 import org.neo4j.io.ByteUnit;
+import org.neo4j.logging.InternalLog;
 import org.neo4j.logging.Log;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
@@ -107,7 +108,7 @@ public class CommunityWebContainerBuilder
                 .setDefaults( GraphDatabaseSettings.SERVER_DEFAULTS )
                 .fromFile( configFile )
                 .build();
-        config.setLogger( log );
+        config.setLogger( (InternalLog) log );
         return new TestWebContainer( build( config ) );
     }
 
