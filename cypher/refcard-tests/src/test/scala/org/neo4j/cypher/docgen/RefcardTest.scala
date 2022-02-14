@@ -30,7 +30,7 @@ import org.neo4j.configuration.helpers.SocketAddress
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.TestEnterpriseDatabaseManagementServiceBuilder
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
-import org.neo4j.cypher.docgen.tooling.Prettifier
+import org.neo4j.cypher.docgen.tooling.CypherPrettifier
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.internal.javacompat.GraphImpl
@@ -111,7 +111,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       val testQuery = filePaths.foldLeft(query)((acc, entry) => acc.replace(entry._1, entry._2))
       val docQuery = urls.foldLeft(query)((acc, entry) => acc.replace(entry._1, entry._2))
 
-      val fullQuerySnippet = AsciidocHelper.createCypherSnippetFromPreformattedQuery(Prettifier(docQuery), true)
+      val fullQuerySnippet = AsciidocHelper.createCypherSnippetFromPreformattedQuery(CypherPrettifier(docQuery), true)
       allQueriesWriter.append(fullQuerySnippet).append("\n\n")
 
       val contextFactory = Neo4jTransactionalContextFactory.create(db)

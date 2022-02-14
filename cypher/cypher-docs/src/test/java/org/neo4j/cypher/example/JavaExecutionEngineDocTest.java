@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.neo4j.cypher.docgen.tooling.Prettifier;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.doc.tools.AsciiDocGenerator;
 import org.neo4j.graphdb.GraphDatabaseService;
