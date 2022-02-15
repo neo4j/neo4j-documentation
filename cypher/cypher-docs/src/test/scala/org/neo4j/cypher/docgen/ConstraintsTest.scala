@@ -80,7 +80,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text =
         s"""To create a unique constraint with a specific index provider and configuration for the backing index, the `OPTIONS` clause is used.
           |Valid values for the index provider are `$nativeProvider` (deprecated), `$nativeLuceneProvider` (deprecated), and `$rangeProvider`, default is `$rangeProvider`.
-          |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a range index while the other providers generates a b-tree index.
+          |The index type of the backing index is set depending on the provider, the `$rangeProvider` generate a range index while the other providers generates a b-tree index.
           |The range index have no configuration settings. The valid b-tree configuration settings are
           |
           |* `$cartesianMin`
@@ -410,7 +410,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       text =
         s"""To create a node key constraint with a specific index provider for the backing index, the `OPTIONS` clause is used.
            |Valid values for the index provider are `$nativeProvider` (deprecated), `$nativeLuceneProvider` (deprecated), and `$rangeProvider`, default is `$rangeProvider`.
-           |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a range index while the other providers generates a b-tree index.""".stripMargin,
+           |The index type of the backing index is set depending on the provider, the `$rangeProvider` generate a range index while the other providers generates a b-tree index.""".stripMargin,
       queryText =
         s"""CREATE CONSTRAINT constraint_with_provider FOR (n:Label) REQUIRE (n.prop1) IS NODE KEY OPTIONS {indexProvider: '$rangeProvider'}""".stripMargin,
       optionalResultExplanation = "B-tree providers can be combined with specifying index configuration.",
