@@ -36,13 +36,13 @@ class UsingTest extends DocumentingTest {
         |         (:Country {formed: 400 + i, name:'Country' + i})
         |)
         |""".stripMargin,
-      "CREATE INDEX FOR (s:Scientist) ON (s.born)",
-      "CREATE INDEX FOR (p:Pioneer) ON (p.born)",
-      "CREATE INDEX FOR (c:Country) ON (c.formed)",
-      "CREATE INDEX FOR (c:Country) ON (c.name)",
+      "CREATE BTREE INDEX FOR (s:Scientist) ON (s.born)",
+      "CREATE BTREE INDEX FOR (p:Pioneer) ON (p.born)",
+      "CREATE BTREE INDEX FOR (c:Country) ON (c.formed)",
+      "CREATE BTREE INDEX FOR (c:Country) ON (c.name)",
       "CREATE TEXT INDEX FOR (c:Country) ON (c.name)",
-      "CREATE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.year)",
-      "CREATE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.location)",
+      "CREATE BTREE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.year)",
+      "CREATE BTREE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.location)",
       "CREATE TEXT INDEX FOR ()-[i:INVENTED_BY]-() ON (i.location)",
       "CALL db.awaitIndexes",
     )

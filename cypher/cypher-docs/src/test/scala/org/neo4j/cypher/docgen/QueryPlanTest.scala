@@ -92,10 +92,10 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     """.stripMargin)
 
   override val setupConstraintQueries = List(
-    "CREATE INDEX FOR (n:Location) ON (n.name)",
+    "CREATE BTREE INDEX FOR (n:Location) ON (n.name)",
     "CREATE INDEX FOR (n:Person) ON (n.name)",
     "CREATE INDEX FOR ()-[r:WORKS_IN]-() ON (r.duration)",
-    "CREATE INDEX FOR ()-[r:WORKS_IN]-() ON (r.title)",
+    "CREATE BTREE INDEX FOR ()-[r:WORKS_IN]-() ON (r.title)",
     "CREATE CONSTRAINT FOR (team:Team) REQUIRE team.name is UNIQUE",
     "CREATE CONSTRAINT FOR (team:Team) REQUIRE team.id is UNIQUE"
   )

@@ -19,7 +19,6 @@
  */
 package org.neo4j.cypher.docgen
 
-import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.hamcrest.CoreMatchers._
 import org.hamcrest.Matcher
 import org.junit.Assert._
@@ -33,7 +32,6 @@ import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.DPPlannerName
 import org.neo4j.cypher.internal.planner.spi.IDPPlannerName
 import org.neo4j.cypher.internal.util.Foldable.FoldableAny
-import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.exceptions.CypherExecutionException
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.config.Setting
@@ -46,7 +44,6 @@ import org.neo4j.kernel.impl.index.schema.TextIndexProviderFactory
 import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
 import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
-import java.io.File
 import java.util
 import scala.collection.JavaConverters._
 import scala.collection.convert.ImplicitConversions.`map AsScala`
@@ -54,11 +51,14 @@ import scala.collection.convert.ImplicitConversions.`map AsScala`
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
 
   override def databaseConfig(): util.Map[Setting[_], Object] =
-    (super.databaseConfig() ++ Map(GraphDatabaseInternalSettings.planning_text_indexes_enabled -> java.lang.Boolean.TRUE)).asJava
+    (super.databaseConfig() ++ Map(
+      GraphDatabaseInternalSettings.planning_text_indexes_enabled -> java.lang.Boolean.TRUE,
+      GraphDatabaseInternalSettings.planning_point_indexes_enabled -> java.lang.Boolean.TRUE
+    )).asJava
 
   //need a couple of 'Person' and 'KNOWS' to make index operations more efficient than label and relType scans
   override val setupQueries: List[String] = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++
-  //some additonal data
+  //some additional data
     Seq("create ()-[:KNOWS {since: 1992, metIn: 'Malmo', lastMet: 2021, lastMetIn: 'Stockholm'}]->()")
 
   override def graphDescription = List(
@@ -71,11 +71,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   )
 
   override val setupConstraintQueries = List(
-    "CREATE INDEX FOR (p:Person) ON (p.firstname)",
-    "CREATE INDEX FOR (p:Person) ON (p.middlename)",
+    "CREATE BTREE INDEX FOR (p:Person) ON (p.firstname)",
+    "CREATE BTREE INDEX FOR (p:Person) ON (p.middlename)",
     "CREATE TEXT INDEX FOR (p:Person) ON (p.middlename)",
     "CREATE TEXT INDEX FOR (p:Person) ON (p.surname)",
-    "CREATE INDEX FOR (p:Person) ON (p.location)",
+    "CREATE BTREE INDEX FOR (p:Person) ON (p.location)",
     "CREATE INDEX FOR (p:Person) ON (p.highScore)"
   )
 
@@ -96,24 +96,24 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   @Test def create_index_on_a_single_property() {
     testQuery(
       title = "Create a single-property b-tree index for nodes",
-      text = "A named b-tree index on a single property for all nodes with a particular label can be created with `CREATE INDEX index_name FOR (n:Label) ON (n.property)`. " +
+      text = "A named b-tree index on a single property for all nodes with a particular label can be created with `CREATE BTREE INDEX index_name FOR (n:Label) ON (n.property)`. " +
         "Note that the index is not immediately available, but is created in the background.",
-      queryText = "CREATE INDEX node_index_name FOR (n:Person) ON (n.surname)",
+      queryText = "CREATE BTREE INDEX node_index_name FOR (n:Person) ON (n.surname)",
       optionalResultExplanation = "Note that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("surname"))
     )
     testQuery(
       title = "Create a single-property b-tree index for relationships",
-      text = "A named b-tree index on a single property for all relationships with a particular relationship type can be created with `CREATE INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
+      text = "A named b-tree index on a single property for all relationships with a particular relationship type can be created with `CREATE BTREE INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
         "Note that the index is not immediately available, but is created in the background.",
-      queryText = "CREATE INDEX rel_index_name FOR ()-[r:KNOWS]-() ON (r.since)",
+      queryText = "CREATE BTREE INDEX rel_index_name FOR ()-[r:KNOWS]-() ON (r.since)",
       optionalResultExplanation = "Note that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("rel_index_name", "KNOWS", List("since"))
     )
     testQuery(
       title = "Create a single-property b-tree index only if it does not already exist",
       text = "If it is not known whether an index exists or not, add `IF NOT EXISTS` to ensure it does.",
-      queryText = "CREATE INDEX node_index_name IF NOT EXISTS FOR (n:Person) ON (n.surname)",
+      queryText = "CREATE BTREE INDEX node_index_name IF NOT EXISTS FOR (n:Person) ON (n.surname)",
       optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
       assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("surname"))
     )
@@ -154,11 +154,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Create a composite b-tree index for nodes",
       text = "A named b-tree index on multiple properties for all nodes with a particular label -- i.e. a composite index -- can be created with " +
-      "`CREATE INDEX index_name FOR (n:Label) ON (n.prop1, ..., n.propN)`. " +
+      "`CREATE BTREE INDEX index_name FOR (n:Label) ON (n.prop1, ..., n.propN)`. " +
       "Only nodes with the specified label and that contain all the properties in the index definition will be added to the index. " +
       "Note that the composite index is not immediately available, but is created in the background. " +
       "The following statement will create a named composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
-      queryText = "CREATE INDEX node_index_name FOR (n:Person) ON (n.age, n.country)",
+      queryText = "CREATE BTREE INDEX node_index_name FOR (n:Person) ON (n.age, n.country)",
       optionalResultExplanation = "Note that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("age", "country"))
     )
@@ -168,11 +168,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Create a composite b-tree index for relationships",
       text = "A named b-tree index on multiple properties for all relationships with a particular relationship type -- i.e. a composite index -- can be created with " +
-      "`CREATE INDEX index_name FOR ()-[r:TYPE]-() ON (r.prop1, ..., r.propN)`. " +
+      "`CREATE BTREE INDEX index_name FOR ()-[r:TYPE]-() ON (r.prop1, ..., r.propN)`. " +
       "Only relationships with the specified type and that contain all the properties in the index definition will be added to the index. " +
       "Note that the composite index is not immediately available, but is created in the background. " +
       "The following statement will create a named composite index on all relationships labeled with `PURCHASED` and which have both a `date` and `amount` property: ",
-      queryText = "CREATE INDEX rel_index_name FOR ()-[r:PURCHASED]-() ON (r.date, r.amount)",
+      queryText = "CREATE BTREE INDEX rel_index_name FOR ()-[r:PURCHASED]-() ON (r.date, r.amount)",
       optionalResultExplanation = "Note that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("rel_index_name", "PURCHASED", List("date", "amount"))
     )
@@ -197,7 +197,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           |
           |Non-specified settings have their respective default values.""".stripMargin,
       queryText =
-        s"""CREATE INDEX index_with_options FOR (n:Label) ON (n.prop1, n.prop2)
+        s"""CREATE BTREE INDEX index_with_options FOR (n:Label) ON (n.prop1, n.prop2)
           |OPTIONS {
           | indexProvider: '$nativeLuceneProvider',
           | indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}
@@ -212,17 +212,17 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
     testQuery(
       title = "Create a single-property range index for nodes",
-      text = "A named range index on a single property for all nodes with a particular label can be created with `CREATE RANGE INDEX index_name FOR (n:Label) ON (n.property)`. " +
+      text = "A named range index on a single property for all nodes with a particular label can be created with `CREATE INDEX index_name FOR (n:Label) ON (n.property)`. " +
         "Note that the index is not immediately available, but is created in the background.",
-      queryText = "CREATE RANGE INDEX node_range_index_name FOR (n:Person) ON (n.surname)",
+      queryText = "CREATE INDEX node_range_index_name FOR (n:Person) ON (n.surname)",
       optionalResultExplanation = "Note that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("node_range_index_name", "Person", List("surname"))
     )
     testQuery(
       title = "Create a single-property range index for relationships",
-      text = "A named range index on a single property for all relationships with a particular relationship type can be created with `CREATE RANGE INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
+      text = "A named range index on a single property for all relationships with a particular relationship type can be created with `CREATE INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
         "Note that the index is not immediately available, but is created in the background.",
-      queryText = "CREATE RANGE INDEX rel_range_index_name FOR ()-[r:KNOWS]-() ON (r.since)",
+      queryText = "CREATE INDEX rel_range_index_name FOR ()-[r:KNOWS]-() ON (r.since)",
       optionalResultExplanation = "Note that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("rel_range_index_name", "KNOWS", List("since"))
     )
@@ -238,7 +238,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text =
         s"""To create a range index with a specific index provider, the `OPTIONS` clause is used.
            |Only one valid value exists for the index provider, `$rangeProvider`, which is the default value.""".stripMargin,
-      queryText = s"CREATE RANGE INDEX range_index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$rangeProvider'}",
+      queryText = s"CREATE INDEX range_index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$rangeProvider'}",
       optionalResultExplanation = "There is no supported index configuration for range indexes.",
       assertions = _ => assertIndexWithNameExists("range_index_with_provider", "TYPE", List("prop1"))
     )
@@ -248,11 +248,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Create a composite range index for nodes",
       text = "A named range index on multiple properties for all nodes with a particular label -- i.e. a composite index -- can be created with " +
-        "`CREATE RANGE INDEX index_name FOR (n:Label) ON (n.prop1, ..., n.propN)`. " +
+        "`CREATE INDEX index_name FOR (n:Label) ON (n.prop1, ..., n.propN)`. " +
         "Only nodes with the specified label and that contain all the properties in the index definition will be added to the index. " +
         "Note that the composite index is not immediately available, but is created in the background. " +
         "The following statement will create a named composite range index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
-      queryText = "CREATE RANGE INDEX composite_range_node_index_name FOR (n:Person) ON (n.age, n.country)",
+      queryText = "CREATE INDEX composite_range_node_index_name FOR (n:Person) ON (n.age, n.country)",
       optionalResultExplanation = "Note that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("composite_range_node_index_name", "Person", List("age", "country"))
     )
@@ -262,11 +262,11 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Create a composite range index for relationships",
       text = "A named range index on multiple properties for all relationships with a particular relationship type -- i.e. a composite index -- can be created with " +
-        "`CREATE RANGE INDEX index_name FOR ()-[r:TYPE]-() ON (r.prop1, ..., r.propN)`. " +
+        "`CREATE INDEX index_name FOR ()-[r:TYPE]-() ON (r.prop1, ..., r.propN)`. " +
         "Only relationships with the specified type and that contain all the properties in the index definition will be added to the index. " +
         "Note that the composite index is not immediately available, but is created in the background. " +
         "The following statement will create a named composite range index on all relationships labeled with `PURCHASED` and which have both a `date` and `amount` property: ",
-      queryText = "CREATE RANGE INDEX composite_range_rel_index_name FOR ()-[r:PURCHASED]-() ON (r.date, r.amount)",
+      queryText = "CREATE INDEX composite_range_rel_index_name FOR ()-[r:PURCHASED]-() ON (r.date, r.amount)",
       optionalResultExplanation = "Note that the index name must be unique.",
       assertions = _ => assertIndexWithNameExists("composite_range_rel_index_name", "PURCHASED", List("date", "amount"))
     )
@@ -440,7 +440,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       optionalResultExplanation =
         """One of the output columns from `SHOW INDEXES` is the name of the index.
           |This can be used to drop the index with the <<administration-indexes-drop-an-index, `DROP INDEX` command>>.""".stripMargin,
-      assertions = p => assertEquals(6, p.size)
+      assertions = p => assertEquals(7, p.size)
     )
     prepareAndTestQuery(
       title = "Listing indexes with filtering",
@@ -451,12 +451,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           |For example, to show only range indexes, use `SHOW RANGE INDEXES`.
           |Another more flexible way of filtering the output is to use the `WHERE` clause.
           |An example is to only show indexes not belonging to constraints.""".stripMargin,
-      prepare = _ => executePreparationQueries(List("create range index for ()-[r:KNOWS]-() on (r.since)")),
+      prepare = _ => executePreparationQueries(List("create index for ()-[r:KNOWS]-() on (r.since)")),
       queryText = "SHOW RANGE INDEXES WHERE uniqueness = 'NONUNIQUE'",
       optionalResultExplanation =
         """This will only return the default output columns.
           |To get all columns, use `SHOW INDEXES YIELD * WHERE ...`.""".stripMargin,
-      assertions = p => assertEquals(1, p.size)
+      assertions = p => assertEquals(3, p.size)
     )
   }
 
@@ -466,7 +466,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text =
         """An index can be dropped using the name with the `DROP INDEX index_name` command. This command can drop indexes of any type, except those backing constraints.
           |The name of the index can be found using the <<administration-indexes-list-indexes, `SHOW INDEXES` command>>, given in the output column `name`.""".stripMargin,
-      prepare = _ => executePreparationQueries(List("CREATE RANGE INDEX index_name FOR (n:Person) ON (n.surname)")),
+      prepare = _ => executePreparationQueries(List("CREATE INDEX index_name FOR (n:Person) ON (n.surname)")),
       queryText = "DROP INDEX index_name",
       assertions = _ => assertIndexWithNameDoesNotExists("index_name")
     )
@@ -494,7 +494,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testFailingQuery[CypherExecutionException](
       title = "Failure to create an index with the same name as an already existing index",
       text = "Create a named index on the property `numberOfPages` on nodes with the `Book` label, when an index with that name already exists.",
-      queryText = "CREATE RANGE INDEX indexOnBooks FOR (book:Book) ON (book.numberOfPages)",
+      queryText = "CREATE INDEX indexOnBooks FOR (book:Book) ON (book.numberOfPages)",
       optionalResultExplanation = "In this case the index can't be created because there already exists an index with that name."
     )
     testFailingQuery[CypherExecutionException](
@@ -545,7 +545,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "In this example, a `KNOWS(since)` relationship `BTREE` index is available. ",
       queryText = "MATCH (person)-[relationship:KNOWS { since: 1992 } ]->(friend) RETURN person, friend",
       prepare = Some(_ => executePreparationQueries(List(
-        "create index for ()-[r:KNOWS]-() on (r.since)",
+        "create btree index for ()-[r:KNOWS]-() on (r.since)",
       ))),
       assertions = {
         p =>
@@ -626,7 +626,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "But in these cases rewrites might happen depending on which properties have which predicates, " +
         "see <<administration-indexes-single-vs-composite-index, composite index limitations>>. " +
         "The following query will use the composite index defined <<administration-indexes-create-a-composite-b-tree-index-for-nodes, earlier>>: ",
-      prepare = _ => executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.age, p.country)")),
+      prepare = _ => executePreparationQueries(List("CREATE BTREE INDEX FOR (p:Person) ON (p.age, p.country)")),
       queryText = "MATCH (n:Person) WHERE n.age = 35 AND n.country = 'UK' RETURN n",
       optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, " +
         "as the query does not contain a predicate on the `country` property. " +
@@ -711,7 +711,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           assertEquals(1, p.size)
 
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("BTREE INDEX person:Person(highScore, name) WHERE highScore > $autoint_0 AND highScore < $autoint_1 AND name IS NOT NULL")
+          checkPlanDescriptionArgument(p)("RANGE INDEX person:Person(highScore, name) WHERE highScore > $autoint_0 AND highScore < $autoint_1 AND name IS NOT NULL")
       }
     )
   }
@@ -796,13 +796,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         p =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("BTREE INDEX person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND surname IS NOT NULL")
+          checkPlanDescriptionArgument(p)("RANGE INDEX person:Person(firstname, surname) WHERE firstname STARTS WITH $autostring_0 AND surname IS NOT NULL")
       }
     )
   }
 
   @Test def use_index_with_ends_with() {
-    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.metIn)"))
+    executePreparationQueries(List("CREATE BTREE INDEX FOR ()-[r:KNOWS]-() ON (r.metIn)"))
 
     sampleAllIndexesAndWait()
 
@@ -934,7 +934,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       (for(_ <- 1 to 300) yield s"CREATE ()-[:SOME_TYPE]->()").toList ++
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE ()-[:KNOWS {lastMetPoint: point({x:$x, y:$y})}]->()").toList)
 
-    executePreparationQueries(List("CREATE INDEX FOR ()-[r:KNOWS]-() ON (r.lastMetPoint)"))
+    executePreparationQueries(List("CREATE POINT INDEX FOR ()-[r:KNOWS]-() ON (r.lastMetPoint)"))
     profileQuery(
       title = "Spatial distance searches (single-property index)",
       text =
@@ -949,7 +949,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_distance_query_composite() {
-    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.place,p.name)"))
+    executePreparationQueries(List("CREATE BTREE INDEX FOR (p:Person) ON (p.place,p.name)"))
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {place: point({x:$x, y:$y}), name: '${x+y}' } )").toList)
     profileQuery(
@@ -988,7 +988,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_bbox_query_composite() {
-    executePreparationQueries(List("CREATE INDEX FOR (p:Person) ON (p.place,p.firstname)"))
+    executePreparationQueries(List("CREATE BTREE INDEX FOR (p:Person) ON (p.place,p.firstname)"))
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {place: point({x:$x, y:$y}), firstname: '${x+y}'})").toList ++ List(
         "MATCH (n:Person {firstname: 'Andy'}) SET n.place = point({x: 1.2345, y: 5.4321})",

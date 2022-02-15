@@ -55,7 +55,7 @@ Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error wil
 
 | [source, cypher, role=noplay]
 ----
-CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
+CREATE BTREE INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 ON (n.propertyName)
 [OPTIONS "{" option: value[, ...] "}"]
@@ -76,7 +76,7 @@ It may still throw an error if conflicting constraints exist, such as constraint
 
 | [source, cypher, role=noplay]
 ----
-CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
+CREATE BTREE INDEX [index_name] [IF NOT EXISTS]
 FOR ()-"["r:TYPE_NAME"]"-()
 ON (r.propertyName)
 [OPTIONS "{" option: value[, ...] "}"]
@@ -89,7 +89,7 @@ Explicit use of `BTREE` keyword or b-tree options are deprecated in 4.4 and will
 
 | [source, cypher, role=noplay]
 ----
-CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
+CREATE BTREE INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 ON (n.propertyName_1,
     n.propertyName_2,
@@ -105,7 +105,7 @@ Explicit use of `BTREE` keyword or b-tree options are deprecated in 4.4 and will
 
 | [source, cypher, role=noplay]
 ----
-CREATE [BTREE] INDEX [index_name] [IF NOT EXISTS]
+CREATE BTREE INDEX [index_name] [IF NOT EXISTS]
 FOR ()-"["r:TYPE_NAME"]"-()
 ON (r.propertyName_1,
     r.propertyName_2,
@@ -121,7 +121,7 @@ Explicit use of `BTREE` keyword or b-tree options are deprecated in 4.4 and will
 
 | [source, cypher, role=noplay]
 ----
-CREATE RANGE INDEX [index_name] [IF NOT EXISTS]
+CREATE [RANGE] INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 ON (n.propertyName_1[,
     n.propertyName_2,
@@ -135,7 +135,7 @@ Index provider can be specified using the `OPTIONS` clause.
 
 | [source, cypher, role=noplay]
 ----
-CREATE RANGE INDEX [index_name] [IF NOT EXISTS]
+CREATE [RANGE] INDEX [index_name] [IF NOT EXISTS]
 FOR ()-"["r:TYPE_NAME"]"-()
 ON (r.propertyName_1[,
     r.propertyName_2,
@@ -310,10 +310,13 @@ To get this kind of fallback behavior, it is necessary to create additional inde
 [[administration-indexes-examples]]
 == Creating indexes
 
+[role=deprecated]
 include::../indexes/create-a-single-property-b-tree-index-for-nodes.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::../indexes/create-a-single-property-b-tree-index-for-relationships.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::../indexes/create-a-single-property-b-tree-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
 
 [role=deprecated]
@@ -322,8 +325,10 @@ include::../indexes/create-a-single-property-b-tree-index-with-specified-index-p
 [role=deprecated]
 include::../indexes/create-a-single-property-b-tree-index-with-specified-index-configuration.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::../indexes/create-a-composite-b-tree-index-for-nodes.asciidoc[leveloffset=+1]
 
+[role=deprecated]
 include::../indexes/create-a-composite-b-tree-index-for-relationships.asciidoc[leveloffset=+1]
 
 [role=deprecated]

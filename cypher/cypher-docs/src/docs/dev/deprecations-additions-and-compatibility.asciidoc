@@ -127,6 +127,24 @@ ON HOME GRAPH
 
 |===
 
+=== Updated features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+CREATE INDEX ...
+----
+a|
+The default index type is changed from b-tree to range index.
+|===
+
 === New features
 
 [cols="2", options="header"]

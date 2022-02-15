@@ -50,10 +50,10 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
         assertStats(result, nodekeyConstraintsAdded = 1)
         assert(result.toList.size === 0)
       case "drop-named-constraint" =>
-        assertStats(result, namedConstraintsRemoved = 1)
+        assertStats(result, constraintsRemoved = 1)
         assert(result.toList.size === 0)
       case "drop-non-existing-constraint" =>
-        assertStats(result, namedConstraintsRemoved = 0)
+        assertStats(result, constraintsRemoved = 0)
         assert(result.toList.size === 0)
       case "match" =>
         assertStats(result, nodesCreated = 0)
