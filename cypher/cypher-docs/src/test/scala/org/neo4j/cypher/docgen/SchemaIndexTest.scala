@@ -42,7 +42,6 @@ import org.neo4j.kernel.impl.index.schema.PointIndexProvider
 import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
 import org.neo4j.kernel.impl.index.schema.TextIndexProviderFactory
 import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
-import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
 import java.util
 import scala.collection.JavaConverters._
@@ -83,7 +82,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   override def section = "Indexes"
 
   private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
-  private val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
   private val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
   private val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
   private val cartesian3dMin = SPATIAL_CARTESIAN_3D_MIN.getSettingName
@@ -121,7 +119,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Create a single-property b-tree index with specified index provider",
       text =
         s"""To create a single property b-tree index with a specific index provider, the `OPTIONS` clause is used.
-          |Valid values for the index provider are `$nativeProvider` and `$nativeLuceneProvider`, default is `$nativeProvider`.""".stripMargin,
+          |Only one valid value exists for the index provider, `$nativeProvider`, which is the default value.""".stripMargin,
       queryText = s"CREATE BTREE INDEX index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$nativeProvider'}",
       optionalResultExplanation = "Can be combined with specifying index configuration.",
       assertions = _ => assertIndexWithNameExists("index_with_provider", "TYPE", List("prop1"))
@@ -183,7 +181,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Create a composite b-tree index with specified index provider and configuration",
       text =
         s"""To create a composite b-tree index with a specific index provider and configuration, the `OPTIONS` clause is used.
-          |Valid values for the index provider are `$nativeProvider` and `$nativeLuceneProvider`, default is `$nativeProvider`.
+          |Only one valid value exists for the index provider, `$nativeProvider`, which is the default value.
           |The valid configuration settings are
           |
           |* `$cartesianMin`
@@ -199,7 +197,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       queryText =
         s"""CREATE BTREE INDEX index_with_options FOR (n:Label) ON (n.prop1, n.prop2)
           |OPTIONS {
-          | indexProvider: '$nativeLuceneProvider',
+          | indexProvider: '$nativeProvider',
           | indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}
           |}""".stripMargin,
       optionalResultExplanation = "Specifying index provider and configuration can be done individually.",

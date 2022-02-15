@@ -28,7 +28,6 @@ import org.neo4j.graphdb.RelationshipType
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
-import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
 import scala.collection.JavaConverters._
 
@@ -39,7 +38,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   override def section: String = "Constraints"
 
   private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
-  private val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
   private val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
   private val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
   private val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
@@ -79,8 +77,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a unique constraint with specified index provider and configuration",
       text =
         s"""To create a unique constraint with a specific index provider and configuration for the backing index, the `OPTIONS` clause is used.
-          |Valid values for the index provider are `$nativeProvider` (deprecated), `$nativeLuceneProvider` (deprecated), and `$rangeProvider`, default is `$rangeProvider`.
-          |The index type of the backing index is set depending on the provider, the `$rangeProvider` generate a range index while the other providers generates a b-tree index.
+          |Valid values for the index provider are `$nativeProvider` (deprecated) and `$rangeProvider`, default is `$rangeProvider`.
+          |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a range index while the `$nativeProvider` generates a b-tree index.
           |The range index have no configuration settings. The valid b-tree configuration settings are
           |
           |* `$cartesianMin`
@@ -96,7 +94,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       queryText =
         s"""CREATE CONSTRAINT constraint_with_options FOR (n:Label) REQUIRE (n.prop1, n.prop2) IS UNIQUE
           |OPTIONS {
-          | indexProvider: '$nativeLuceneProvider',
+          | indexProvider: '$nativeProvider',
           | indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}
           |}""".stripMargin,
       optionalResultExplanation = "Index provider can be specified without configuration.",
@@ -409,8 +407,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a node key constraint with specified index provider",
       text =
         s"""To create a node key constraint with a specific index provider for the backing index, the `OPTIONS` clause is used.
-           |Valid values for the index provider are `$nativeProvider` (deprecated), `$nativeLuceneProvider` (deprecated), and `$rangeProvider`, default is `$rangeProvider`.
-           |The index type of the backing index is set depending on the provider, the `$rangeProvider` generate a range index while the other providers generates a b-tree index.""".stripMargin,
+           |Valid values for the index provider are `$nativeProvider` (deprecated) and `$rangeProvider`, default is `$rangeProvider`.
+           |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a range index while the `$nativeProvider` generates a b-tree index.""".stripMargin,
       queryText =
         s"""CREATE CONSTRAINT constraint_with_provider FOR (n:Label) REQUIRE (n.prop1) IS NODE KEY OPTIONS {indexProvider: '$rangeProvider'}""".stripMargin,
       optionalResultExplanation = "B-tree providers can be combined with specifying index configuration.",
