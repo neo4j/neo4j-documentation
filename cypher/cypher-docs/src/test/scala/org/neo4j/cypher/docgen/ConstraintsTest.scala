@@ -19,11 +19,8 @@
  */
 package org.neo4j.cypher.docgen
 
-import java.io.File
 
-import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import org.junit.Test
-import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.exceptions.CypherExecutionException
 import org.neo4j.graphdb.ConstraintViolationException
 import org.neo4j.graphdb.Label
@@ -31,7 +28,6 @@ import org.neo4j.graphdb.RelationshipType
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
 import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
-import org.neo4j.kernel.impl.index.schema.fusion.NativeLuceneFusionIndexProviderFactory30
 
 import scala.collection.JavaConverters._
 
@@ -42,7 +38,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
   override def section: String = "Constraints"
 
   private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
-  private val nativeLuceneProvider = NativeLuceneFusionIndexProviderFactory30.DESCRIPTOR.name()
   private val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
   private val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
   private val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
@@ -82,8 +77,8 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a unique constraint with specified index provider and configuration",
       text =
         s"""To create a unique constraint with a specific index provider and configuration for the backing index, the `OPTIONS` clause is used.
-          |Valid values for the index provider are `$nativeProvider` (deprecated), `$nativeLuceneProvider` (deprecated), and `$rangeProvider` (future index), default is `$nativeProvider`.
-          |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a <<indexes-future-indexes, future range index>> while the other providers generates a b-tree index.
+          |Valid values for the index provider are `$nativeProvider` (deprecated) and `$rangeProvider`, default is `$rangeProvider`.
+          |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a range index while the `$nativeProvider` generates a b-tree index.
           |The range index have no configuration settings. The valid b-tree configuration settings are
           |
           |* `$cartesianMin`
@@ -95,16 +90,14 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
           |* `$wgs3dMin`
           |* `$wgs3dMax`
           |
-          |Non-specified settings have their respective default values.
-          |
-          |In 4.4, b-tree index-backed constraints are still the correct alternative to use.""".stripMargin,
+          |Non-specified settings have their respective default values.""".stripMargin,
       queryText =
         s"""CREATE CONSTRAINT constraint_with_options FOR (n:Label) REQUIRE (n.prop1, n.prop2) IS UNIQUE
           |OPTIONS {
-          | indexProvider: '$nativeLuceneProvider',
+          | indexProvider: '$nativeProvider',
           | indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}
           |}""".stripMargin,
-      optionalResultExplanation = "Specifying index provider and configuration can be done individually.",
+      optionalResultExplanation = "Index provider can be specified without configuration.",
       assertions = _ => assertConstraintWithNameExists("constraint_with_options", "Label", List("prop1", "prop2"))
     )
   }
@@ -414,11 +407,10 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a node key constraint with specified index provider",
       text =
         s"""To create a node key constraint with a specific index provider for the backing index, the `OPTIONS` clause is used.
-           |Valid values for the index provider are `$nativeProvider` (deprecated), `$nativeLuceneProvider` (deprecated), and `$rangeProvider` (future index), default is `$nativeProvider`.
-           |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a <<indexes-future-indexes, future range index>> while the other providers generates a b-tree index.
-           |In 4.4, b-tree index-backed constraints are still the correct alternative to use.""".stripMargin,
+           |Valid values for the index provider are `$nativeProvider` (deprecated) and `$rangeProvider`, default is `$rangeProvider`.
+           |The index type of the backing index is set depending on the provider, the `$rangeProvider` generates a range index while the `$nativeProvider` generates a b-tree index.""".stripMargin,
       queryText =
-        s"""CREATE CONSTRAINT constraint_with_provider FOR (n:Label) REQUIRE (n.prop1) IS NODE KEY OPTIONS {indexProvider: '$nativeProvider'}""".stripMargin,
+        s"""CREATE CONSTRAINT constraint_with_provider FOR (n:Label) REQUIRE (n.prop1) IS NODE KEY OPTIONS {indexProvider: '$rangeProvider'}""".stripMargin,
       optionalResultExplanation = "B-tree providers can be combined with specifying index configuration.",
       assertions = _ => assertConstraintWithNameExists("constraint_with_provider", "Label", List("prop1"))
     )
@@ -429,7 +421,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       title = "Create a node key constraint with specified index configuration",
       text =
         s"""To create a node key constraint with a specific index configuration for the backing index, the `OPTIONS` clause is used.
-           |The index type of the backing index is set depending on the provider and <<indexes-future-indexes, future range indexes>> have no configuration settings.
+           |The index type of the backing index is set depending on the provider and range indexes have no configuration settings.
            |The valid b-tree configuration settings are
            |
            |* `$cartesianMin`
@@ -444,8 +436,7 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
            |Non-specified settings have their respective default values.""".stripMargin,
       queryText =
         s"""CREATE CONSTRAINT constraint_with_config FOR (n:Label) REQUIRE (n.prop2) IS NODE KEY
-          |OPTIONS {indexConfig: {`$cartesianMin`: [-100.0, -100.0], `$cartesianMax`: [100.0, 100.0]}}""".stripMargin,
-      optionalResultExplanation = "Can be combined with specifying a b-tree index provider.",
+          |OPTIONS {indexProvider: '$nativeProvider', indexConfig: {`$cartesianMin`: [-100.0, -100.0], `$cartesianMax`: [100.0, 100.0]}}""".stripMargin,
       assertions = _ => assertConstraintWithNameExists("constraint_with_config", "Label", List("prop2"))
     )
   }

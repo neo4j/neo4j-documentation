@@ -180,11 +180,11 @@ class PrettifierParserTest extends ParserTestBase[Seq[SyntaxToken], Seq[SyntaxTo
     // given
     val wgsMin = SPATIAL_WGS84_MIN.getSettingName
     val wgsMax = SPATIAL_WGS84_MAX.getSettingName
-    val query = s"create index for (person:Person) on (person.age) options {indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}}"
+    val query = s"create point index for (person:Person) on (person.age) options {indexProvider: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}}"
 
     // when then
     parsing(query) shouldGive
-      Seq(BreakingKeywords("create index"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq(AnyText("person:Person"))), BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))),
+      Seq(BreakingKeywords("create point index"), NonBreakingKeywords("for"), GroupToken("(", ")", Seq(AnyText("person:Person"))), BreakingKeywords("on"), GroupToken("(", ")", Seq(AnyText("person.age"))),
         NonBreakingKeywords("options"), GroupToken("{", "}", Seq(AnyText("indexConfig:"), GroupToken("{", "}", Seq(
           AnyText(s"`$wgsMin`:"), GroupToken("[", "]", Seq(AnyText("-100.0,"), AnyText("-80.0"))),
           Comma,

@@ -25,13 +25,13 @@ import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MAX
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MIN
-import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
+import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
 
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "CONSTRAINT"
   override val linkId = "administration/constraints"
-  private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
+  private val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
 
   //noinspection RedundantDefaultArgument
   // Disable warnings for redundant default argument since its used for clarification of the `assertStats` when nothing should have happened
@@ -50,10 +50,10 @@ class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
         assertStats(result, nodekeyConstraintsAdded = 1)
         assert(result.toList.size === 0)
       case "drop-named-constraint" =>
-        assertStats(result, namedConstraintsRemoved = 1)
+        assertStats(result, constraintsRemoved = 1)
         assert(result.toList.size === 0)
       case "drop-non-existing-constraint" =>
-        assertStats(result, namedConstraintsRemoved = 0)
+        assertStats(result, constraintsRemoved = 0)
         assert(result.toList.size === 0)
       case "match" =>
         assertStats(result, nodesCreated = 0)
@@ -106,10 +106,10 @@ This constraint creates an accompanying index.
 
 CREATE CONSTRAINT FOR (p:Person)
        REQUIRE p.surname IS UNIQUE
-       OPTIONS {indexProvider: '$nativeProvider'}
+       OPTIONS {indexProvider: '$rangeProvider'}
 ###
 
-Create a unique property constraint on the label `Person` and property `surname` with the index provider `$nativeProvider` for the accompanying index.
+Create a unique property constraint on the label `Person` and property `surname` with the index provider `$rangeProvider` for the accompanying range index.
 
 ###assertion=create-property-existence-constraint
 //

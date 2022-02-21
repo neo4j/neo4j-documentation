@@ -26,7 +26,7 @@ import org.neo4j.graphdb.Transaction
 import org.neo4j.graphdb.schema.IndexSettingImpl.FULLTEXT_ANALYZER
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MAX
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MIN
-import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
+import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
 
 import java.util.concurrent.TimeUnit
 
@@ -34,7 +34,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "INDEX"
   override val linkId = "indexes-for-search-performance"
-  private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
+  private val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
 
   //noinspection RedundantDefaultArgument
   // Disable warnings for redundant default argument since its used for clarification of the `assertStats` when nothing should have happened
@@ -58,7 +58,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
         assert(result.toList.size === 1)
       case "show" =>
         assertStats(result)
-        assert(result.toList.size === 10)
+        assert(result.toList.size === 14)
     }
   }
 
@@ -83,7 +83,7 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
 CREATE INDEX FOR (p:Person) ON (p.name)
 ###
 
-Create a b-tree index on nodes with label `Person` and property `name`.
+Create a range index on nodes with label `Person` and property `name`.
 
 ###assertion=create-index
 //
@@ -91,17 +91,16 @@ Create a b-tree index on nodes with label `Person` and property `name`.
 CREATE INDEX index_name FOR ()-[k:KNOWS]-() ON (k.since)
 ###
 
-Create a b-tree index with the name `index_name` on relationships with type `KNOWS` and property `since`.
+Create a range index with the name `index_name` on relationships with type `KNOWS` and property `since`.
 
 ###assertion=create-index
 //
 
 CREATE INDEX FOR (p:Person) ON (p.surname)
-OPTIONS {indexProvider: '$nativeProvider', indexConfig: {`${SPATIAL_CARTESIAN_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_CARTESIAN_MAX.getSettingName}`: [100.0, 100.0]}}
+OPTIONS {indexProvider: '$rangeProvider'}
 ###
 
-Create a b-tree index on nodes with label `Person` and property `surname` with the index provider `$nativeProvider` and given `spatial.cartesian` settings.
-The other index settings will have their default values.
+Create a range index on nodes with label `Person` and property `surname` with the index provider `$rangeProvider`.
 
 ###assertion=create-index
 //
@@ -109,7 +108,7 @@ The other index settings will have their default values.
 CREATE INDEX FOR (p:Person) ON (p.name, p.age)
 ###
 
-Create a composite b-tree index on nodes with label `Person` and the properties `name` and `age`, throws an error if the index already exist.
+Create a composite range index on nodes with label `Person` and the properties `name` and `age`, throws an error if the index already exist.
 
 ###assertion=create-existing-index
 //
@@ -117,7 +116,23 @@ Create a composite b-tree index on nodes with label `Person` and the properties 
 CREATE INDEX IF NOT EXISTS FOR (p:Person) ON (p.name, p.age)
 ###
 
-Create a composite b-tree index on nodes with label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
+Create a composite range index on nodes with label `Person` and the properties `name` and `age` if it does not already exist, does nothing if it did exist.
+
+###assertion=create-index
+//
+
+CREATE BTREE INDEX FOR (p:Person) ON (p.age)
+###
+
+Create a B-tree index on nodes with label `Person` and property `name`.
+
+###assertion=create-index
+//
+
+CREATE BTREE INDEX btree_index_name FOR ()-[k:KNOWS]-() ON (k.since, k.friend)
+###
+
+Create a B-tree index with the name `btree_index_name` on relationships with type `KNOWS` and properties `since` and `friend`.
 
 ###assertion=create-index
 //
@@ -168,6 +183,24 @@ CREATE TEXT INDEX text_index_name FOR ()-[h:HAS_PET]-() ON (h.favoriteToy)
 ###
 
 Create a text index with the name `text_index_name` on relationships with type `HAS_PET` and property `favoriteToy`.
+
+###assertion=create-index
+//
+
+CREATE POINT INDEX FOR (p:Person) ON (p.location)
+OPTIONS {indexConfig: {`${SPATIAL_CARTESIAN_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_CARTESIAN_MAX.getSettingName}`: [100.0, 100.0]}}
+###
+
+Create a point index on nodes with label `Person` and property `location` with the given `spatial.cartesian` settings.
+The other index settings will have their default values.
+
+###assertion=create-index
+//
+
+CREATE POINT INDEX point_index_name FOR ()-[h:STREET]-() ON (h.intersection)
+###
+
+Create a point index with the name `point_index_name` on relationships with type `STREET` and property `intersection`.
 
 ###assertion=show
 //
