@@ -139,26 +139,3 @@ include::../administration/constraints/listing-all-constraints.asciidoc[leveloff
 
 [discrete]
 include::../administration/constraints/listing-constraints-with-filtering.asciidoc[leveloffset=+1]
-
-
-[role=deprecated]
-[[administration-constraints-deprecated-syntax]]
-== Deprecated syntax
-
-[discrete]
-include::../administration/constraints/create-a-unique-constraint-using-deprecated-syntax.asciidoc[leveloffset=+1]
-
-[discrete]
-include::../administration/constraints/create-a-node-property-existence-constraint-using-deprecated-syntax-1.asciidoc[leveloffset=+1]
-
-[discrete]
-include::../administration/constraints/create-a-node-property-existence-constraint-using-deprecated-syntax-2.asciidoc[leveloffset=+1]
-
-[discrete]
-include::../administration/constraints/create-a-relationship-property-existence-constraint-using-deprecated-syntax-1.asciidoc[leveloffset=+1]
-
-[discrete]
-include::../administration/constraints/create-a-relationship-property-existence-constraint-using-deprecated-syntax-2.asciidoc[leveloffset=+1]
-
-[discrete]
-include::../administration/constraints/create-a-node-key-constraint-using-deprecated-syntax.asciidoc[leveloffset=+1]
