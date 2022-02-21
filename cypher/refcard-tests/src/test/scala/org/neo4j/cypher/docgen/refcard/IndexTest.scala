@@ -124,7 +124,7 @@ Create a composite range index on nodes with label `Person` and the properties `
 CREATE BTREE INDEX FOR (p:Person) ON (p.age)
 ###
 
-Create a b-tree index on nodes with label `Person` and property `name`.
+Create a B-tree index on nodes with label `Person` and property `name`.
 
 ###assertion=create-index
 //
@@ -132,7 +132,7 @@ Create a b-tree index on nodes with label `Person` and property `name`.
 CREATE BTREE INDEX btree_index_name FOR ()-[k:KNOWS]-() ON (k.since, k.friend)
 ###
 
-Create a b-tree index with the name `btree_index_name` on relationships with type `KNOWS` and properties `since` and `friend`.
+Create a B-tree index with the name `btree_index_name` on relationships with type `KNOWS` and properties `since` and `friend`.
 
 ###assertion=create-index
 //

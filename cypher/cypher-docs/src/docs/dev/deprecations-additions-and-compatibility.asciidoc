@@ -142,7 +142,7 @@ label:updated[]
 CREATE INDEX ...
 ----
 a|
-The default index type is changed from b-tree to range index.
+The default index type is changed from B-tree to range index.
 |===
 
 === New features
@@ -293,7 +293,7 @@ CREATE CONSTRAINT
 OPTIONS "{" btree-option: btree-value[, ...] "}"
 ----
 a|
-Node key and uniqueness constraints with b-tree options are deprecated.
+Node key and uniqueness constraints with B-tree options are deprecated.
 
 Replaced by:
 [source, cypher, role="noheader"]

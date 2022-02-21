@@ -22,11 +22,23 @@ This comes at the cost of additional storage space and slower writes, so decidin
 Once an index has been created, it will be managed and kept up to date by the DBMS.
 Neo4j will automatically pick up and start using the index once it has been created and brought online.
 
-There are multiple index types available: b-tree (deprecated), fulltext, lookup, point, range, and text index types.
+There are multiple index types available:
+
+* Fulltext index.
+* Lookup index.
+* Point index.
+* Range index.
+* Text index types.
+* B-tree. label:deprecated[]
+
+[NOTE]
+====
+The deprecated B-tree index type has been replaced by more specific index types (Range, Point, and Text).
+====
 See <<administration-indexes-fulltext-search>> for more information about fulltext indexes.
 Token lookup indexes contain nodes with one or more labels or relationship types, without regard for any properties.
 
-Cypher enables the creation of b-tree and range indexes on one or more properties for all nodes or relationships with a given label or relationship type:
+Cypher enables the creation of B-tree and range indexes on one or more properties for all nodes or relationships with a given label or relationship type:
 
 * An index created on a single property for any given label or relationship type is called a _single-property index_.
 * An index created on more than one property for any given label or relationship type is called a _composite index_.
@@ -117,7 +129,7 @@ ON (r.propertyName_1,
 
 Index provider and configuration can be specified using the `OPTIONS` clause.
 
-Explicit use of `BTREE` keyword or b-tree options are deprecated in 4.4 and will be replaced in 5.0.
+Explicit use of `BTREE` keyword or B-tree options are deprecated in 4.4 and will be replaced in 5.0.
 
 | [source, cypher, role=noplay]
 ----
@@ -243,7 +255,7 @@ listing indexes require <<access-control-database-administration-index, the `SHO
 [[administration-indexes-single-vs-composite-index]]
 === Composite index limitations
 
-Like single-property b-tree and range indexes, composite b-tree and range indexes support all predicates:
+Like single-property B-tree and range indexes, composite B-tree and range indexes support all predicates:
 
 * equality check: `n.prop = value`
 * list membership check: `n.prop IN list`
