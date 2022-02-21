@@ -26,7 +26,7 @@
         <scala-test-compile-phase>process-test-resources</scala-test-compile-phase>
         <license-text.header>build/AGPL-3-header.txt</license-text.header>
         <jersey.version>2.34</jersey.version>
-        <junit.version>5.5.2</junit.version>
+        <junit.version>5.7.2</junit.version>
         <test.runner.jvm.settings>
             --add-opens java.base/java.lang=ALL-UNNAMED
             --add-opens java.base/java.nio=ALL-UNNAMED
