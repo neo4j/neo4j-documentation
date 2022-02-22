@@ -96,6 +96,46 @@ SHOW CONSTRAINTS YIELD *
 
 a|
 label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+DROP INDEX ON :Label(prop)
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+DROP INDEX name
+----
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT ON (n:Label) ASSERT (n.prop) IS NODE KEY
+----
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT ON (n:Label) ASSERT (n.prop) IS UNIQUE
+----
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT ON (n:Label) ASSERT exists(n.prop)
+----
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT ON ()-[r:Type]-() ASSERT exists(r.prop)
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+DROP CONSTRAINT name
+----
+
+a|
+label:syntax[]
 label:removed[] +
 For privilege commands:
 [source, cypher, role="noheader"]
