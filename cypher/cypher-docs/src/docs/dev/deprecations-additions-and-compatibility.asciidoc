@@ -95,7 +95,7 @@ SHOW CONSTRAINTS YIELD *
 ----
 
 a|
-label:syntax[]
+label:functionality[]
 label:removed[]
 [source, cypher, role="noheader"]
 ----
@@ -109,7 +109,7 @@ DROP INDEX name
 ----
 
 a|
-label:syntax[]
+label:functionality[]
 label:removed[]
 [source, cypher, role="noheader"]
 ----
@@ -132,6 +132,34 @@ Replaced by:
 [source, cypher, role="noheader"]
 ----
 DROP CONSTRAINT name
+----
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+CREATE INDEX ON :Label(prop)
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE INDEX FOR (n:Label) ON (n.prop)
+----
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ON ... ASSERT ...
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT FOR ... REQUIRE ...
 ----
 
 a|
