@@ -30,7 +30,7 @@ import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
   val graphDescription = List("A:Person KNOWS B:Person")
   val title = "CONSTRAINT"
-  override val linkId = "administration/constraints"
+  override val linkId = "constraints"
   private val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
 
   //noinspection RedundantDefaultArgument
