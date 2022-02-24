@@ -56,13 +56,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       queryText = "CREATE CONSTRAINT constraint_name FOR (book:Book) REQUIRE book.isbn IS UNIQUE",
       assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
     )
-    testQuery(
-      title = "Create a unique constraint using deprecated syntax",
-      text = "The unique constraint ensures that your database " +
-        "will never contain more than one node with a specific label and one property value.",
-      queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT book.title IS UNIQUE",
-      assertions = _ => hasNodeConstraint("Book", "title")
-    )
     prepareAndTestQuery(
       title = "Create a unique constraint only if it does not already exist",
       text = "If it is not known whether a constraint exists or not, add `IF NOT EXISTS` to ensure it does. " +
@@ -200,20 +193,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
       queryText = "CREATE CONSTRAINT constraint_name FOR (book:Book) REQUIRE book.isbn IS NOT NULL",
       assertions = _ => assertConstraintWithNameExists("constraint_name", "Book", List("isbn"))
     )
-    testQuery(
-      title = "Create a node property existence constraint using deprecated syntax 1",
-      text = "The node property existence constraint ensures that all nodes " +
-        "with a certain label have a certain property.",
-      queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT book.title IS NOT NULL",
-      assertions = _ => hasNodeConstraint("Book", "title")
-    )
-    testQuery(
-      title = "Create a node property existence constraint using deprecated syntax 2",
-      text = "The node property existence constraint ensures that all nodes " +
-        "with a certain label have a certain property.",
-      queryText = "CREATE CONSTRAINT ON (book:Book) ASSERT exists(book.title)",
-      assertions = _ => hasNodeConstraint("Book", "title")
-    )
     prepareAndTestQuery(
       title = "Create a node property existence constraint only if it does not already exist",
       text = "If it is not known whether a constraint exists or not, add `IF NOT EXISTS` to ensure it does. " +
@@ -289,20 +268,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
         "with a certain type have a certain property.",
       queryText = "CREATE CONSTRAINT constraint_name FOR ()-[like:LIKED]-() REQUIRE like.day IS NOT NULL",
       assertions = _ => assertConstraintWithNameExists("constraint_name", "LIKED", List("day"), forRelationship = true)
-    )
-    testQuery(
-      title = "Create a relationship property existence constraint using deprecated syntax 1",
-      text = "The relationship property existence constraint ensures all relationships " +
-        "with a certain type have a certain property.",
-      queryText = "CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT like.week IS NOT NULL",
-      assertions = _ => hasRelationshipConstraint("LIKED", "week")
-    )
-    testQuery(
-      title = "Create a relationship property existence constraint using deprecated syntax 2",
-      text = "The relationship property existence constraint ensures all relationships " +
-        "with a certain type have a certain property.",
-      queryText = "CREATE CONSTRAINT ON ()-[like:LIKED]-() ASSERT exists(like.week)",
-      assertions = _ => hasRelationshipConstraint("LIKED", "week")
     )
     prepareAndTestQuery(
       title = "Create a relationship property existence constraint only if it does not already exist",
@@ -380,14 +345,6 @@ class ConstraintsTest extends DocumentingTestBase with SoftReset {
         "and all properties in the set are present.",
       queryText = "CREATE CONSTRAINT constraint_name FOR (n:Person) REQUIRE (n.firstname, n.surname) IS NODE KEY",
       assertions = _ => assertConstraintWithNameExists("constraint_name", "Person", List("firstname", "surname"))
-    )
-    testQuery(
-      title = "Create a node key constraint using deprecated syntax",
-      text = "The node key constraint ensures that all nodes " +
-        "with a particular label have a set of defined properties whose combined value is unique " +
-        "and all properties in the set are present.",
-      queryText = "CREATE CONSTRAINT ON (n:Person) ASSERT (n.firstname) IS NODE KEY",
-      assertions = _ => hasNodeKeyConstraint("Person", List("firstname"))
     )
     prepareAndTestQuery(
       title = "Create a node key constraint only if it does not already exist",
