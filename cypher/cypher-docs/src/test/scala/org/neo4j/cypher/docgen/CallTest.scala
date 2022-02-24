@@ -82,7 +82,7 @@ class CallTest extends DocumentingTest {
       p("""To `CALL` a procedure, its input parameters need to be known, and to use `YIELD`, its output parameters need to be known.
           #The `SHOW PROCEDURES` command can return the name, signature and description for all procedures.
           #The default return columns for `SHOW PROCEDURES` are name, description, mode and worksOnSystem.
-          #To get the signature, make sure to use the YIELD clause.
+          #To get the signature, make sure to use the `YIELD` clause.
           #The following query can be used to return the signature for a particular procedure:""".stripMargin('#'))
       query("""SHOW PROCEDURES YIELD name, signature
               #WHERE name='dbms.listConfig'
