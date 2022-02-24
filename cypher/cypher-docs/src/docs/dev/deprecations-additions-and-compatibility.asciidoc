@@ -395,10 +395,10 @@ label:new[]
 [source, cypher, role="noheader"]
 ----
 ALTER ALIAS ... [IF NOT EXISTS]
-SET DATABASE TARGET ...
+SET DATABASE ...
 ----
 a|
-New Cypher command for altering an alias to target another database. Remote aliases are only supported from version 4.4.6.
+New Cypher command for altering an alias. Remote aliases are only supported from version 4.4.6.
 
 a|
 label:functionality[]
@@ -418,7 +418,7 @@ label:new[]
 SHOW ALIASES FOR DATABASE
 ----
 a|
-New Cypher command for listing database aliases.
+New Cypher command for listing database aliases. Only supported since version 4.4.6.
 
 a|
 label:functionality[]
@@ -429,7 +429,7 @@ New privilege:
 ALIAS MANAGEMENT
 ----
 a|
-New privilege that allows a user to create, modify and delete aliases. Only supported since version 4.4.6.
+New privilege that allows a user to create, modify, delete and list aliases. Only supported since version 4.4.6.
 
 a|
 label:functionality[]

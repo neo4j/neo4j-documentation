@@ -114,7 +114,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section(title="Creating database aliases", id="alias-management-create-database-alias", role = "enterprise-edition") {
-      p("Aliases can be created using `CREATE ALIAS`.")
+      p("Aliases can be created using `CREATE ALIAS`. The required privileges are described <<cypher-manual#access-control-dbms-administration-alias-management, here>>.")
       p("include::alias-management-syntax-create-alias.asciidoc[]")
       p(
         """This command is optionally idempotent, with the default behavior to fail with an error if the database alias already exists.
