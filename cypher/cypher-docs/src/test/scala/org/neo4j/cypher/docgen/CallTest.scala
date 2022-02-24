@@ -80,7 +80,7 @@ class CallTest extends DocumentingTest {
 
     section("View the signature for a procedure", "call-view-the-signature-for-a-procedure") {
       p("""To `CALL` a procedure, its input parameters need to be known, and to use `YIELD`, its output parameters need to be known.
-          #Use SHOW PROCEDURES which returns the name, signature and description for all procedures.
+          #The `SHOW PROCEDURES` command returns the name, signature and description for all procedures.
           #The following query can be used to return the signature for a particular procedure:""".stripMargin('#'))
       query("""SHOW PROCEDURES YIELD name, signature
               #WHERE name='dbms.listConfig'
