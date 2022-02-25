@@ -216,6 +216,26 @@ All users may view all of their own currently executing transactions.
             resultTable()
           }
         }
+        p(
+          """Several of the output columns have the `duration` type which can be hard to read.
+            #They can instead be returned in more readable format:""".stripMargin('#'))
+        backgroundQueries(List(
+          "MATCH (n) RETURN n",
+          "UNWIND range(1,100000) AS x CREATE (:Number {value: x}) RETURN x"
+        )) {
+          query(
+            """SHOW TRANSACTIONS YIELD transactionId, elapsedTime, cpuTime, waitTime, idleTime
+              #RETURN transactionId AS txId,
+              #       elapsedTime.milliseconds AS elapsedTimeMillis,
+              #       cpuTime.milliseconds AS cpuTimeMillis,
+              #       waitTime.milliseconds AS waitTimeMillis,
+              #       idleTime.seconds AS idleTimeSeconds""".stripMargin('#'),
+            ResultAssertions(p => {
+              p.columns should contain theSameElementsAs Array("txId", "elapsedTimeMillis", "cpuTimeMillis", "waitTimeMillis", "idleTimeSeconds")
+            })) {
+            resultTable()
+          }
+        }
       }
       section("Listing specific transactions") {
         p("""It is possible to specify which transactions to return in the list by transaction ID.""")
