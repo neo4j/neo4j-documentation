@@ -16,7 +16,7 @@ include::../administration/constraints/create-a-unique-constraint.asciidoc[level
 include::../administration/constraints/create-a-unique-constraint-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
 
 [discrete]
-include::../administration/constraints/create-a-unique-constraint-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+1]
+include::../administration/constraints/create-a-unique-constraint-with-specified-index-provider.asciidoc[leveloffset=+1]
 
 [discrete]
 include::../administration/constraints/failure-to-create-an-already-existing-unique-property-constraint.asciidoc[leveloffset=+1]
@@ -98,9 +98,6 @@ include::../administration/constraints/create-a-node-key-constraint-only-if-it-d
 
 [discrete]
 include::../administration/constraints/create-a-node-key-constraint-with-specified-index-provider.asciidoc[leveloffset=+1]
-
-[discrete]
-include::../administration/constraints/create-a-node-key-constraint-with-specified-index-configuration.asciidoc[leveloffset=+1]
 
 [discrete]
 include::../administration/constraints/failure-to-create-a-node-key-constraint-when-a-unique-property-constraint-exists-on-the-same-schema.asciidoc[leveloffset=+1]

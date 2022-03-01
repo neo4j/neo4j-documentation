@@ -20,21 +20,9 @@ With the `IF NOT EXISTS` flag, no error is thrown and nothing happens should a c
 It may still throw an error if conflicting data, indexes, or constraints exist.
 Examples of this are nodes with missing properties, indexes with the same name, or constraints with same schema but a different constraint type.
 
-For constraints that are backed by an index, the index provider and configuration for the backing index can be specified using the `OPTIONS` clause.
-Valid values for the index provider are `native-btree-1.0` (deprecated) and `range-1.0`, default is `range-1.0`.
-The index type of the backing index is set depending on the provider, the `range-1.0` generates a range index while the `native-btree-1.0` generates a B-tree index.
-The range index has no configuration settings. The valid b-tree configuration settings are
-
-* `spatial.cartesian.min`
-* `spatial.cartesian.max`
-* `spatial.cartesian-3d.min`
-* `spatial.cartesian-3d.max`
-* `spatial.wgs-84.min`
-* `spatial.wgs-84.max`
-* `spatial.wgs-84-3d.min`
-* `spatial.wgs-84-3d.max`
-
-Non-specified settings have their respective default values.
+For constraints that are backed by an index, the index provider for the backing index can be specified using the `OPTIONS` clause.
+Only one valid value exists for the index provider, `range-1.0`, which is the default value.
+There is no supported index configuration for range indexes.
 
 Creating a constraint requires <<access-control-database-administration-constraints, the `CREATE CONSTRAINT` privilege>>.
 
@@ -60,7 +48,7 @@ REQUIRE (n.propertyName_1, …, n.propertyName_n) IS UNIQUE
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
-Index provider and configuration can be specified using the `OPTIONS` clause.
+Index provider can be specified using the `OPTIONS` clause.
 
 [[administration-constraints-syntax-create-node-exists]]
 [discrete]
@@ -116,7 +104,7 @@ REQUIRE (n.propertyName_1, …, n.propertyName_n) IS NODE KEY
 [OPTIONS "{" option: value[, ...] "}"]
 ----
 
-Index provider and configuration can be specified using the `OPTIONS` clause.
+Index provider can be specified using the `OPTIONS` clause.
 
 [[administration-constraints-syntax-drop]]
 == Syntax for dropping constraints

@@ -23,8 +23,6 @@ import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.docgen.tooling.QueryStatisticsTestSupport
 import org.neo4j.graphdb.Transaction
-import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MAX
-import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MIN
 import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
 
 class ConstraintTest extends RefcardTest with QueryStatisticsTestSupport {
@@ -194,13 +192,12 @@ This constraint creates an accompanying index.
 ###assertion=create-node-key-constraint
 //
 
-CREATE CONSTRAINT node_key_with_config FOR (p:Person)
+CREATE CONSTRAINT node_key_with_provider FOR (p:Person)
       REQUIRE (p.name, p.age) IS NODE KEY
-      OPTIONS {indexConfig: {`${SPATIAL_WGS84_MIN.getSettingName}`: [-100.0, -100.0], `${SPATIAL_WGS84_MAX.getSettingName}`: [100.0, 100.0]}}
+      OPTIONS {indexProvider: '$rangeProvider'}
 ###
 
-(★) Create a node key constraint with the name `node_key_with_config` on the label `Person`, properties `name` and `age`, and given `spatial.wgs-84` settings for the accompanying b-tree index.
-The other index settings will have their default values.
+(★) Create a node key constraint with the name `node_key_with_provider` on the label `Person`, properties `name` and `age`, and given index provider `$rangeProvider` for the accompanying range index.
 
 """).concat("""
 ###assertion=drop-named-constraint
