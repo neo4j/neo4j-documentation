@@ -217,8 +217,8 @@ All users may view all of their own currently executing transactions.
           }
         }
         p(
-          """Several of the output columns have the `duration` type which can be hard to read.
-            #They can instead be returned in more readable format:""".stripMargin('#'))
+          """Several of the output columns have the `duration` type, which can be hard to read.
+            #They can instead be returned in a more readable format:""".stripMargin('#'))
         backgroundQueries(List(
           "MATCH (n) RETURN n",
           "UNWIND range(1,100000) AS x CREATE (:Number {value: x}) RETURN x"
