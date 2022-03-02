@@ -28,7 +28,7 @@ import scala.collection.JavaConverters._
 
 class MatchTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/"
-  override def doc = new DocBuilder {
+  override def doc: Document = new DocBuilder {
     doc("MATCH", "query-match")
     initQueries("""CREATE
                   #  (charlie:Person {name: 'Charlie Sheen'}),
@@ -229,8 +229,11 @@ class MatchTest extends DocumentingTest {
             #The dots may also be omitted when setting only one bound and this implies a fixed length pattern.""".stripMargin('#'))
         query("""MATCH (charlie {name: 'Charlie Sheen'})-[:ACTED_IN*1..3]-(movie:Movie)
                 #RETURN movie.title""".stripMargin('#'),
-        assertAllMoviesAreReturned) {
-          p("Returns all movies related to *'Charlie Sheen'* by 1 to 3 hops.")
+          assertAllMoviesRelatedToCharlieAreReturned) {
+          p(
+            """Returns all movies related to *'Charlie Sheen'* by 1 to 3 hops:
+              |*'Wall Street'* is found through the direct connection whereas the other two results are found via *'Michael Douglas'* and *'Martin Sheen'* respectively.
+              |As one can see from this example, variable length relationships do not impose any requirements on the intermediate nodes.""".stripMargin)
           resultTable()
         }
       }
@@ -420,6 +423,14 @@ class MatchTest extends DocumentingTest {
 
   private def assertRowCount(count: Int) = ResultAssertions(result =>
     result.toList.length should equal(count)
+  )
+
+  private def assertAllMoviesRelatedToCharlieAreReturned = ResultAssertions(result =>
+    result.toList should contain theSameElementsAs List(
+      Map("movie.title" -> "The American President"),
+      Map("movie.title" -> "The American President"),
+      Map("movie.title" -> "Wall Street")
+    )
   )
 
   private def assertAllMoviesAreReturned = ResultAssertions(result =>
