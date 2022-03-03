@@ -20,6 +20,7 @@ package org.neo4j.examples.backup;
 
 import com.neo4j.backup.OnlineBackup;
 import com.neo4j.configuration.OnlineBackupSettings;
+import com.neo4j.dbms.DatabaseStartupAwaitingListener;
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder;
 import org.junit.After;
 import org.junit.Before;
@@ -30,12 +31,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.List;
 
+import org.neo4j.collection.Dependencies;
 import org.neo4j.configuration.helpers.SocketAddress;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.test.ports.PortAuthority;
 
 import static org.junit.Assert.assertTrue;
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class TestBackup
 {
@@ -47,10 +51,15 @@ public class TestBackup
     @Before
     public void before() throws IOException
     {
+        var databaseStartAwaitListener = DatabaseStartupAwaitingListener.createWithDefaultTimeout();
+        var externalDependencies = new Dependencies();
+        externalDependencies.satisfyDependency( databaseStartAwaitListener );
         Files.createDirectories( backupDirectory );
         managementService = new EnterpriseDatabaseManagementServiceBuilder( databaseDirectory )
-                .setConfig( Collections.singletonMap( OnlineBackupSettings.online_backup_listen_address, new SocketAddress( "127.0.0.1", backupPort)))
+                .setConfig( Collections.singletonMap( OnlineBackupSettings.online_backup_listen_address, new SocketAddress( "127.0.0.1", backupPort ) ) )
+                .setExternalDependencies( externalDependencies )
                 .build();
+        databaseStartAwaitListener.await( List.of( DEFAULT_DATABASE_NAME ) );
     }
 
     @After
