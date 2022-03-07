@@ -23,18 +23,23 @@
 package org.neo4j.doc;
 
 import com.neo4j.configuration.OnlineBackupSettings;
+import com.neo4j.dbms.DatabaseStartupAwaitingListener;
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
+import org.neo4j.collection.Dependencies;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.configuration.helpers.SocketAddress;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
+
+import static org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME;
 
 public class Neo4jInstance {
 
@@ -42,13 +47,21 @@ public class Neo4jInstance {
 
     public DatabaseManagementService newEnterpriseInstance() throws IOException {
         Files.createDirectories( baseDatabaseDirectory );
+
+        var databaseStartAwaitListener = DatabaseStartupAwaitingListener.createWithDefaultTimeout();
+        var externalDependencies = new Dependencies();
+        externalDependencies.satisfyDependency( databaseStartAwaitListener );
+
         DatabaseManagementService managementService =
                 new EnterpriseDatabaseManagementServiceBuilder( databaseDirectory() ).setConfig(
                         Map.of( OnlineBackupSettings.online_backup_listen_address, new SocketAddress( "127.0.0.1", 0 ),
                                 OnlineBackupSettings.online_backup_enabled, java.lang.Boolean.FALSE,
                                 GraphDatabaseSettings.auth_enabled, true
-                        ) ).build();
+                        ) ).setExternalDependencies( externalDependencies ).build();
+
+        databaseStartAwaitListener.await( List.of( DEFAULT_DATABASE_NAME ) );
         registerShutdownHook(managementService);
+
         return managementService;
     }
 
