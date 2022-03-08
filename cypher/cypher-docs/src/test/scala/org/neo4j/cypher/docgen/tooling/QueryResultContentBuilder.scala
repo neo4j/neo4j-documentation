@@ -68,7 +68,7 @@ class LimitedQueryResultContentBuilder(maybeWantedColumns: Option[List[String]],
     val (oldResult, resultColumns) = super.getResultList(result)
     val wantedColumns = maybeWantedColumns.getOrElse(resultColumns.toList) // if no columns are given, use those from the result
     val limitedOnRows = oldResult.slice(0, numberOfRows)
-    val limitedOnColumns = limitedOnRows.map(m => m.filterKeys(k => wantedColumns.contains(k)))
+    val limitedOnColumns = limitedOnRows.map(m => m.view.filterKeys(k => wantedColumns.contains(k)).toMap)
     val columnsRemoved = limitedOnColumns.head.keySet.size < limitedOnRows.head.keySet.size // assumes we have at least one row
 
     // This will add a new (empty) column if any columns were removed.

@@ -43,7 +43,7 @@ class QueryRunner(formatter: (GraphDatabaseQueryService, InternalTransaction) =>
   def runQueries(contentsWithInit: Seq[ContentWithInit], title: String): TestRunResult = {
 
     val groupedByInits: Map[RunnableInitialization, Seq[(DatabaseQuery, QueryResultPlaceHolder)]] =
-      contentsWithInit.groupBy(_.initKey).mapValues(_.map(cwi => cwi.queryToPresent -> cwi.queryResultPlaceHolder))
+      contentsWithInit.groupBy(_.initKey).view.mapValues(_.map(cwi => cwi.queryToPresent -> cwi.queryResultPlaceHolder)).toMap
     var graphVizCounter = 0
 
     val results: Iterable[RunResult] = groupedByInits.flatMap {

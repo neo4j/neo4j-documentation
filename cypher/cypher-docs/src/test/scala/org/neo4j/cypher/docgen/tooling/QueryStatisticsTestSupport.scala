@@ -21,7 +21,7 @@ package org.neo4j.cypher.docgen.tooling
 
 import org.neo4j.cypher.internal.runtime.QueryStatistics
 import org.scalatest.Assertions
-import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 /**
   * This class was forked form the Neo4j repo QueryStatisticsTestSupport, to remove the

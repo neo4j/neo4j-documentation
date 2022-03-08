@@ -20,12 +20,12 @@
 package org.neo4j.cypher.docgen
 
 import java.util
-
 import org.neo4j.cypher.docgen.tooling._
 import org.neo4j.graphdb.spatial
 import org.neo4j.graphdb.spatial.Coordinate
+import org.neo4j.graphdb.spatial.Point
 
-import collection.JavaConverters._
+import scala.jdk.CollectionConverters.SeqHasAsJava
 
 class SpatialFunctionsTest extends DocumentingTest {
 
@@ -48,6 +48,14 @@ class SpatialFunctionsTest extends DocumentingTest {
     override def getCRS: spatial.CRS = crs
 
     override def getCoordinates: util.List[Coordinate] = List(new Coordinate(x, y)).asJava
+
+    override def equals(obj: Any): Boolean = {
+      obj match {
+        case other: Point =>
+          (other.getCRS.getHref == this.getCRS.getHref) && other.getCoordinates == this.getCoordinates
+        case _ => false
+      }
+    }
   }
 
   class TestPoint3D(x: Double, y: Double, z: Double, crs: CRS) extends TestPoint2D(x, y, crs) {
