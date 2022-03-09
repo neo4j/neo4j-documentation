@@ -38,7 +38,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       "CREATE ALIAS `motion pictures` FOR DATABASE `movies`",
       "CREATE DATABASE `northwind-graph-2020`",
       "CREATE DATABASE `northwind-graph-2021`",
-      """CREATE ALIAS `movie scripts` FOR DATABASE `scripts` AT "neo4j://localhost:7687" USER alice PASSWORD "password" DRIVER {
+      """CREATE ALIAS `movie scripts` FOR DATABASE `scripts` AT "neo4j+s://location:7687" USER alice PASSWORD "password" DRIVER {
         |    ssl_enabled: true,
         |    connection_timeout: duration({seconds: 5}),
         |    connection_max_lifetime: duration({hours: 1}),
@@ -170,7 +170,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p(
           """Database aliases can also point to remote databases by providing an url and the credentials of a user on the remote Neo4j DBMS.
             |See <<operations-manual#manage-remote-aliases, Connecting remote databases>> for the necessary configurations.""".stripMargin)
-        query("""CREATE ALIAS `remote-northwind` FOR DATABASE `northwind-graph-2020` AT "neo4j://localhost:7687" USER alice PASSWORD 'password'""", ResultAssertions(r => {
+        query("""CREATE ALIAS `remote-northwind` FOR DATABASE `northwind-graph-2020` AT "neo4j+s://location:7687" USER alice PASSWORD 'password'""", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
@@ -178,7 +178,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("""It is possible to override the default driver settings per alias, which are used for connecting to the remote database.
             |The full list of supported driver settings can be seen <<remote-alias-driver-settings, here>>.""".stripMargin)
         query(
-          """CREATE ALIAS `remote-with-driver-settings` FOR DATABASE `northwind-graph-2020` AT "neo4j://localhost:7687" USER alice PASSWORD 'password'
+          """CREATE ALIAS `remote-with-driver-settings` FOR DATABASE `northwind-graph-2020` AT "neo4j+s://location:7687" USER alice PASSWORD 'password'
             |DRIVER { connection_timeout: duration({ minutes: 1 }), connection_pool_max_size: 10 }""".stripMargin, ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -212,7 +212,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         statsOnlyResultTable()
       }
       p("Example of altering a remote alias target.")
-      query("""ALTER ALIAS `remote-northwind` SET DATABASE TARGET `northwind-graph-2020` AT "neo4j://other-location:7687"""", ResultAssertions(r => {
+      query("""ALTER ALIAS `remote-northwind` SET DATABASE TARGET `northwind-graph-2020` AT "neo4j+s://other-location:7687"""", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()

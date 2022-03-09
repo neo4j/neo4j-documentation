@@ -41,7 +41,7 @@ Create a local alias `myAlias` for the database with name `myDatabase`.
 ###assertion=update-one
 //
 
-CREATE ALIAS myRemote FOR DATABASE myDatabase AT "url"
+CREATE ALIAS myRemote FOR DATABASE myDatabase AT "neo4j+s://location:7687"
 USER alice PASSWORD "password"
 DRIVER { connection_timeout : duration({ minutes: 1 }) }
 ###
@@ -60,7 +60,7 @@ Alter the local alias `myAlias` to target the database with name `myDatabase`.
 //
 
 ALTER ALIAS myRemote SET
-DATABASE TARGET myDatabase AT "url"
+DATABASE TARGET myDatabase AT "neo4j+s://location:7687"
 USER bob PASSWORD "password"
 DRIVER { connection_timeout : duration({ minutes: 1 }) }
 ###
