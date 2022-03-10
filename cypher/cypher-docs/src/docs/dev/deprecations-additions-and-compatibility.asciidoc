@@ -1599,7 +1599,7 @@ label:updated[]
 queryId
 ----
 a|
-The `queryId` procedure format has changed, and no longer includes the database name. For example, `mydb-query-123` is now `query-123`. This change affects built-in procedures `dbms.listQueries()`, `dbms.listActiveLocks(queryId)`, `dbms.killQueries(queryIds)` `and dbms.killQuery(queryId)`.
+The `queryId` procedure format has changed, and no longer includes the database name. For example, `mydb-query-123` is now `query-123`. This change affects the built-in procedure `dbms.listActiveLocks(queryId)`.
 
 a|
 label:functionality[]
