@@ -24,7 +24,7 @@ package org.neo4j.doc;
 
 import com.neo4j.configuration.OnlineBackupSettings;
 import com.neo4j.dbms.DatabaseStartupAwaitingListener;
-import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder;
+import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilderImplementation;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -53,7 +53,7 @@ public class Neo4jInstance {
         externalDependencies.satisfyDependency( databaseStartAwaitListener );
 
         DatabaseManagementService managementService =
-                new EnterpriseDatabaseManagementServiceBuilder( databaseDirectory() ).setConfig(
+                new EnterpriseDatabaseManagementServiceBuilderImplementation( databaseDirectory() ).setConfig(
                         Map.of( OnlineBackupSettings.online_backup_listen_address, new SocketAddress( "127.0.0.1", 0 ),
                                 OnlineBackupSettings.online_backup_enabled, java.lang.Boolean.FALSE,
                                 GraphDatabaseSettings.auth_enabled, true
