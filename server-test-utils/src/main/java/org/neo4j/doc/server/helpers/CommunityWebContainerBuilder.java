@@ -40,10 +40,9 @@ import org.neo4j.configuration.ssl.ClientAuth;
 import org.neo4j.configuration.ssl.SslPolicyConfig;
 import org.neo4j.configuration.ssl.SslPolicyScope;
 import org.neo4j.dbms.api.DatabaseManagementService;
-import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilderImplementation;
 import org.neo4j.doc.server.WebContainerTestUtils;
 import org.neo4j.graphdb.config.Setting;
-import org.neo4j.io.ByteUnit;
 import org.neo4j.logging.InternalLog;
 import org.neo4j.logging.Log;
 import org.neo4j.logging.LogProvider;
@@ -124,15 +123,15 @@ public class CommunityWebContainerBuilder
                 .setExternalDependencies( dependencies ).build();
     }
 
-    protected DatabaseManagementServiceBuilder createManagementServiceBuilder()
+    protected DatabaseManagementServiceBuilderImplementation createManagementServiceBuilder()
     {
-        return new DatabaseManagementServiceBuilder( Path.of( dataDir ) );
+        return new DatabaseManagementServiceBuilderImplementation( Path.of( dataDir ) );
     }
 
     private Path createConfigFiles() throws IOException
     {
         Path testFolderPath;
-        if ( persistent == true ) {
+        if ( persistent ) {
             testFolderPath = Path.of( dataDir );
         } else {
             testFolderPath = WebContainerTestUtils.createTempDir("neo4j-test-x"); //This folder will be removed.

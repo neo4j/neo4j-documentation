@@ -31,6 +31,7 @@ import org.neo4j.graphdb.config.Setting;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.neo4j.configuration.GroupSettingHelper.getBuilder;
 
 public class SettingsDocumenterTest
 {
@@ -211,15 +212,23 @@ public class SettingsDocumenterTest
         static Setting<String> internal_with_default = SettingImpl.newBuilder("unsupported.internal.default", SettingValueParsers.STRING, "something").build();
     }
 
-    public abstract static class Animal extends GroupSetting
+    public static class Animal implements GroupSetting
     {
         @Description( "Animal type" )
         public final Setting<String> type;
 
+        private final String key;
+
         Animal( String key, String typeDefault )
         {
-            super( key );
-            type = getBuilder( "type", SettingValueParsers.STRING, typeDefault ).build();
+            this.key = key;
+            type = getBuilder( getPrefix(), key,"type", SettingValueParsers.STRING, typeDefault ).build();
+        }
+
+        @Override
+        public String name()
+        {
+            return key;
         }
 
         @Override
@@ -233,7 +242,7 @@ public class SettingsDocumenterTest
     public static class Giraffe extends Animal
     {
         @Description( "Number of spots this giraffe has, in number." )
-        public final Setting<Integer> number_of_spots = getBuilder( "spot_count", SettingValueParsers.INT, 12 ).build();
+        public final Setting<Integer> number_of_spots;
 
         public Giraffe()
         {
@@ -243,6 +252,7 @@ public class SettingsDocumenterTest
         public Giraffe( String key )
         {
             super( key, /* type=*/"mammal" );
+            number_of_spots = getBuilder( getPrefix(), key, "spot_count", SettingValueParsers.INT, 12 ).build();
         }
 
         @Override
