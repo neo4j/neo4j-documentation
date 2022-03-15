@@ -60,6 +60,9 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
       case "update-two" =>
         assertStats(result, systemUpdates = 2)
         assert(result.toList.size === 0)
+      case "update-nothing" =>
+        assertStats(result, systemUpdates = 0)
+        assert(result.toList.size === 0)
       case "show-one" =>
         assertStats(result, systemUpdates = 0)
         assert(result.toList.size === 1) // there are no default roles or users
