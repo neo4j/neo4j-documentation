@@ -48,7 +48,7 @@ These functions return either true or false for the given arguments.
 | Function | Signature | Description
 1.1+| <<functions-all,`all()`>>  | `all(variable :: VARIABLE IN list :: LIST OF ANY? WHERE predicate :: ANY?) :: (BOOLEAN?)` | Returns true if the predicate holds for all elements in the given list.
 1.1+| <<functions-any,`any()`>>  | `any(variable :: VARIABLE IN list :: LIST OF ANY? WHERE predicate :: ANY?) :: (BOOLEAN?)` | Returns true if the predicate holds for at least one element in the given list.
-1.1+| <<functions-exists,`exists()`>>  | `exists(input :: ANY?) :: (BOOLEAN?)` | Returns true if a match for the pattern exists in the graph, or if the specified property exists in the node, relationship or map.
+1.1+| <<functions-exists,`exists()`>>  | `exists(input :: ANY?) :: (BOOLEAN?)` | Returns true if a match for the pattern exists in the graph.
 1.3+| <<functions-isempty,`isEmpty()`>>  | `isEmpty(input :: LIST? OF ANY?) :: (BOOLEAN?)` | Checks whether a list is empty.
 | `isEmpty(input :: MAP?) :: (BOOLEAN?)` | Checks whether a map is empty.
 | `isEmpty(input :: STRING?) :: (BOOLEAN?)` | Checks whether a string is empty.

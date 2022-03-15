@@ -98,13 +98,13 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
     }
     section("exists()", "functions-exists") {
-      p("""The function `exists()` returns `true` if a match for the given pattern exists in the graph, or if the specified property exists in the node, relationship or map.
+      p("""The function `exists()` returns `true` if a match for the given pattern exists in the graph.
           #`null` is returned if the input argument is `null`.""".stripMargin('#'))
-      function("exists(pattern-or-property)",
+      function("exists(pattern)",
         "A Boolean.",
-        ("pattern-or-property", "A pattern or a property (in the form 'variable.prop')."))
+        ("pattern", "A pattern"))
       query("""MATCH (n)
-              #WHERE exists(n.name)
+              #WHERE n.name IS NOT NULL
               #RETURN
               #  n.name AS name,
               #  exists((n)-[:MARRIED]->()) AS is_married""".stripMargin('#'),
@@ -117,36 +117,6 @@ class PredicateFunctionsTest extends DocumentingTest {
             Map("name" -> "Eskil", "is_married" -> false)))
         })) {
         p("The names of all nodes with the `name` property are returned, along with a boolean (`true` or `false`) indicating if they are married.")
-        resultTable()
-      }
-      query("""MATCH
-              #  (a),
-              #  (b)
-              #WHERE
-              #  exists(a.name)
-              #  AND NOT exists(b.name)
-              #OPTIONAL MATCH (c:DoesNotExist)
-              #RETURN
-              #  a.name AS a_name,
-              #  b.name AS b_name,
-              #  exists(b.name) AS b_has_name,
-              #  c.name AS c_name,
-              #  exists(c.name) AS c_has_name
-              #ORDER BY a_name, b_name, c_name
-              #LIMIT 1""".stripMargin('#'),
-      /*Result:
-      +-----------------------------------------------------+
-      | a_name  | b_name | b_has_name | c_name | c_has_name |
-      +-----------------------------------------------------+
-      | "Alice" | NULL   | FALSE      | NULL   | NULL       |
-      +-----------------------------------------------------+
-      */
-      ResultAssertions(r => {
-          r.toList should equal(List(
-            Map("a_name" -> "Alice", "b_name" -> null, "b_has_name" -> false, "c_name" -> null, "c_has_name" -> null)))
-        })) {
-        p("""Three nodes are returned: one with a property `name`, one without a property `name`, and one that does not exist (e.g., is `null`).
-            #This query exemplifies the behavior of `exists()` when operating on `null` nodes.""".stripMargin('#'))
         resultTable()
       }
     }
