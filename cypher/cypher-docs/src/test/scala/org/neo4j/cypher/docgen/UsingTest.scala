@@ -36,13 +36,13 @@ class UsingTest extends DocumentingTest {
         |         (:Country {formed: 400 + i, name:'Country' + i})
         |)
         |""".stripMargin,
-      "CREATE BTREE INDEX FOR (s:Scientist) ON (s.born)",
-      "CREATE BTREE INDEX FOR (p:Pioneer) ON (p.born)",
-      "CREATE BTREE INDEX FOR (c:Country) ON (c.formed)",
-      "CREATE BTREE INDEX FOR (c:Country) ON (c.name)",
+      "CREATE RANGE INDEX FOR (s:Scientist) ON (s.born)",
+      "CREATE RANGE INDEX FOR (p:Pioneer) ON (p.born)",
+      "CREATE RANGE INDEX FOR (c:Country) ON (c.formed)",
+      "CREATE RANGE INDEX FOR (c:Country) ON (c.name)",
       "CREATE TEXT INDEX FOR (c:Country) ON (c.name)",
-      "CREATE BTREE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.year)",
-      "CREATE BTREE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.location)",
+      "CREATE RANGE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.year)",
+      "CREATE RANGE INDEX FOR ()-[i:INVENTED_BY]-() ON (i.location)",
       "CREATE TEXT INDEX FOR ()-[i:INVENTED_BY]-() ON (i.location)",
       "CALL db.awaitIndexes",
     )
@@ -82,15 +82,15 @@ class UsingTest extends DocumentingTest {
           |[options="header"]
           ||===
           || Hint                                                                     | Fulfilled by plans
-          || `USING [BTREE \| TEXT] INDEX variable:Label(property)`                   | `NodeIndexScan`, `NodeIndexSeek`
-          || `USING [BTREE \| TEXT] INDEX SEEK variable:Label(property)`              | `NodeIndexSeek`
-          || `USING [BTREE \| TEXT] INDEX variable:RELATIONSHIP_TYPE(property)`       | `DirectedRelationshipIndexScan`, `UndirectedRelationshipIndexScan`, `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`
-          || `USING [BTREE \| TEXT] INDEX SEEK variable:RELATIONSHIP_TYPE(property)`  | `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`
+          || `USING [RANGE \| TEXT] INDEX variable:Label(property)`                   | `NodeIndexScan`, `NodeIndexSeek`
+          || `USING [RANGE \| TEXT] INDEX SEEK variable:Label(property)`              | `NodeIndexSeek`
+          || `USING [RANGE \| TEXT] INDEX variable:RELATIONSHIP_TYPE(property)`       | `DirectedRelationshipIndexScan`, `UndirectedRelationshipIndexScan`, `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`
+          || `USING [RANGE \| TEXT] INDEX SEEK variable:RELATIONSHIP_TYPE(property)`  | `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`
           ||===
           """
       )
       p(
-        """When specifying an index type for a hint, e.g. `BTREE` or `TEXT`, the hint can only be fulfilled when an index of the specified type is available.
+        """When specifying an index type for a hint, e.g. `RANGE` or `TEXT`, the hint can only be fulfilled when an index of the specified type is available.
           |When no index type is specified, the hint can be fulfilled by any index types.
           |""".stripMargin)
       caution {
@@ -300,11 +300,11 @@ class UsingTest extends DocumentingTest {
     def matcher: Matcher[String]
   }
 
-  case class ShouldUseNodeIndexSeekOn(variable: String, indexType: IndexType = IndexType.BTREE) extends PlanAssertion {
+  case class ShouldUseNodeIndexSeekOn(variable: String, indexType: IndexType = IndexType.RANGE) extends PlanAssertion {
     override def matcher: Matcher[String] = include regex s"NodeIndexSeek\\s*\\|\\s*${indexType.name()} INDEX\\s*$variable".r
   }
 
-  case class ShouldUseRelationshipIndexSeekOn(variable: String, indexType: IndexType = IndexType.BTREE) extends PlanAssertion {
+  case class ShouldUseRelationshipIndexSeekOn(variable: String, indexType: IndexType = IndexType.RANGE) extends PlanAssertion {
     override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek\\s*\\|\\s*${indexType.name()} INDEX\\s*\\(\\w*\\)-\\[$variable".r
   }
 
