@@ -95,8 +95,6 @@ If any reserved keyword is escaped -- i.e. is encapsulated by backticks ```, suc
 
 * `INDEX`
 * `JOIN`
-* `PERIODIC`
-* `COMMIT`
 * `SCAN`
 * `USING`
 

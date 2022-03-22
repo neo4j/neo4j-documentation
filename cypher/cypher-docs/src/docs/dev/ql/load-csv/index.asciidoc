@@ -13,7 +13,7 @@
 * <<load-csv-import-data-from-a-csv-file-containing-headers, Import data from a CSV file containing headers>>
 * <<load-csv-import-data-from-a-csv-file-with-a-custom-field-delimiter, Import data from a CSV file with a custom field delimiter>>
 * <<load-csv-importing-large-amounts-of-data, Importing large amounts of data>>
-* <<load-csv-setting-the-rate-of-periodic-commits, Setting the rate of periodic commits>>
+* <<load-csv-setting-the-rate-of-call-in-transactions, Setting the rate of CALL {} IN TRANSACTIONS>>
 * <<load-csv-import-data-containing-escaped-characters, Import data containing escaped characters>>
 * <<load-csv-using-linenumber-with-load-csv, Using linenumber() with LOAD CSV>>
 * <<load-csv-using-file-with-load-csv, Using file() with LOAD CSV>>
@@ -28,7 +28,7 @@
   Alternatively, `LOAD CSV` also supports accessing CSV files via _HTTPS_, _HTTP_, and _FTP_.
 * `LOAD CSV` supports resources compressed with _gzip_ and _Deflate_. Additionally `LOAD CSV` supports locally stored CSV files compressed with _ZIP_.
 * `LOAD CSV` will follow _HTTP_ redirects but for security reasons it will not follow redirects that changes the protocol, for example if the redirect is going from _HTTPS_ to _HTTP_.
-* `LOAD CSV` is often used in conjunction with the query hint `PERIODIC COMMIT`; more information on this may be found in <<query-using-periodic-commit-hint>>.
+* `LOAD CSV` is often used in conjunction with the query clause `CALL +++{ ... }+++ TRANSACTIONS`. More information on this may be found in <<subquery-call-in-transactions, CALL +++{ ... }+++ IN TRANSACTIONS>>.
 
 .Configuration settings for file URLs
 <<operations-manual#config_dbms.security.allow_csv_import_from_file_urls, dbms.security.allow_csv_import_from_file_urls>>::
@@ -87,7 +87,7 @@ include::import-data-from-a-csv-file-with-a-custom-field-delimiter.asciidoc[]
 
 include::importing-large-amounts-of-data.asciidoc[]
 
-include::setting-the-rate-of-periodic-commits.asciidoc[]
+include::setting-the-rate-of-call-in-transactions.asciidoc[]
 
 include::import-data-containing-escaped-characters.asciidoc[]
 

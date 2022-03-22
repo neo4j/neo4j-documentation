@@ -239,8 +239,8 @@ m|<<query-use, USE>>
 m|<<query-load-csv, LOAD CSV>>
 |Use when importing data from CSV files.
 
-m|--- <<query-using-periodic-commit-hint, USING PERIODIC COMMIT>>
-|This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
+m|<<subquery-call-in-transactions, CALL +++{ ... }+++ IN TRANSACTIONS>>
+|This clause may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
 
 |===
 

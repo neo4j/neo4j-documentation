@@ -53,8 +53,7 @@ class UsingTest extends DocumentingTest {
     p("""* <<query-using-introduction,Introduction>>
         |* <<query-using-index-hint,Index hints>>
         |* <<query-using-scan-hint,Scan hints>>
-        |* <<query-using-join-hint,Join hints>>
-        |* <<query-using-periodic-commit-hint,`PERIODIC COMMIT` query hint>>""")
+        |* <<query-using-join-hint,Join hints>>""")
     section("Introduction", "query-using-introduction") {
       p("""When executing a query, Neo4j needs to decide where in the query graph to start matching.
           |This is done by looking at the `MATCH` clause and the `WHERE` conditions and using that information to find useful indexes, or other starting points.""")
@@ -62,7 +61,7 @@ class UsingTest extends DocumentingTest {
           |Sometimes multiple indexes are possible candidates, and the query planner picks the suboptimal one from a performance point of view.
           |Moreover, in some circumstances (albeit rarely) it is better not to use an index at all.""")
       p("""Neo4j can be forced to use a specific starting point through the `USING` keyword. This is called giving a planner hint.
-          |There are four types of planner hints: index hints, scan hints, join hints, and the `PERIODIC COMMIT` query hint.""")
+          |There are three types of planner hints: index hints, scan hints and join hints.""")
       query(
         s"""$matchString
            |RETURN *""", assertPlan(AND(OR(ShouldUseNodeIndexSeekOn("s"), ShouldUseNodeIndexSeekOn("cc")), ShouldNotUseJoins))) {
@@ -262,29 +261,6 @@ class UsingTest extends DocumentingTest {
           p("Now the planner uses a join to solve the `OPTIONAL MATCH`.")
           profileExecutionPlan()
         }
-      }
-    }
-    section("[deprecated]#`PERIODIC COMMIT` query hint", "query-using-periodic-commit-hint") {
-      p("""The `PERIODIC COMMIT` query hint will be removed in the next major release. It is recommended to use <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>> instead.""")
-      p("""Importing large amounts of data using <<query-load-csv, `LOAD CSV`>> with a single Cypher query may fail due to memory constraints.
-          #This will manifest itself as an `OutOfMemoryError`.""".stripMargin('#'))
-      p("""For this situation _only,_ Cypher provides the global `USING PERIODIC COMMIT` query hint for updating queries using `LOAD CSV`.
-          #If required, the limit for the number of rows per commit may be set as follows: `USING PERIODIC COMMIT 500`.""".stripMargin('#'))
-      p("""`PERIODIC COMMIT` will process the rows until the number of rows reaches a limit.
-          #Then the current transaction will be committed and replaced with a newly opened transaction.
-          #If no limit is set, a default value will be used.""".stripMargin('#'))
-      p("See <<load-csv-importing-large-amounts-of-data, Importing large amounts of data>> in <<query-load-csv>> for examples of `USING PERIODIC COMMIT` with and without setting the number of rows per commit.")
-      important {
-        p("""Using `PERIODIC COMMIT` will prevent running out of memory when importing large amounts of data.
-            #However, it will also break transactional isolation and thus it should only be used where needed.""".stripMargin('#'))
-      }
-      note {
-        p("The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` query hint.")
-      }
-      note {
-        p(
-          """Queries with the `PERIODIC COMMIT` query hint can not be routed by <<operations-manual#causal-clustering-routing, Server-side routing>>.
-            |Such queries must rely on standard client-side routing, done by the Neo4j Driver.""".stripMargin)
       }
     }
   }.build()

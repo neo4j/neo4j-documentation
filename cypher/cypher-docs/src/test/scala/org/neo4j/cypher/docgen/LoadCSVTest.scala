@@ -152,32 +152,33 @@ Note that this applies to all variations of CSV files (see examples below for ot
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
 
-  @Test def should_import_data_from_a_csv_file_with_periodic_commit() {
+  @Test def should_import_data_from_a_csv_file_with_call_in_transactions() {
     testQuery(
       title = "Importing large amounts of data",
-      text = """If the CSV file contains a significant number of rows (approaching hundreds of thousands or millions), `USING PERIODIC COMMIT` can be used to instruct Neo4j to perform a commit after a number of rows.
+      text = """If the CSV file contains a significant number of rows (approaching hundreds of thousands or millions), `CALL {} IN TRANSACTIONS` can be used to instruct Neo4j to commit a transaction after a number of rows.
                #This reduces the memory overhead of the transaction state.
-               #By default, the commit happens every 1000 rows.
-               #Note that `PERIODIC COMMIT` is only allowed in <<query-transactions, implicit (auto-commit or `:auto`) transactions>>. 
-               #For more information, see <<query-using-periodic-commit-hint>>.
-               #
-               #Note: The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` query hint.
-               #
-               #Note: Queries with the `PERIODIC COMMIT` query hint can not be routed by <<operations-manual#causal-clustering-routing, Server-side routing>>.""".stripMargin('#'),
-      queryText = """USING PERIODIC COMMIT LOAD CSV FROM '%ARTIST%' AS line
-                    #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
+               #Note that `CALL {} IN TRANSACTIONS` is only allowed in <<query-transactions, implicit (auto-commit or `:auto`) transactions>>.
+               #For more information, see <<subquery-call-in-transactions>>.""".stripMargin('#'),
+      queryText = """LOAD CSV FROM '%ARTIST%' AS line
+                    #CALL {
+                    #  WITH line
+                    #  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
+                    #} IN TRANSACTIONS""".stripMargin('#'),
       optionalResultExplanation = "",
-      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
+      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4, transactionsCommitted = 1))
   }
 
-  @Test def should_import_data_from_a_csv_file_with_periodic_commit_after_500_rows() {
+  @Test def should_import_data_from_a_csv_file_with_call_in_transactions_after_500_rows() {
     testQuery(
-      title = "Setting the rate of periodic commits",
+      title = "Setting the rate of CALL IN TRANSACTIONS",
       text = "You can set the number of rows as in the example, where it is set to 500 rows.",
-      queryText = """USING PERIODIC COMMIT 500 LOAD CSV FROM '%ARTIST%' AS line
-                    #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
+      queryText = """LOAD CSV FROM '%ARTIST%' AS line
+                    #CALL {
+                    #  WITH line
+                    #  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
+                    #} IN TRANSACTIONS OF 500 ROWS""".stripMargin('#'),
       optionalResultExplanation = "",
-      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
+      assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4, transactionsCommitted = 1))
   }
 
   @Test def should_import_data_from_a_csv_file_which_uses_the_escape_char() {

@@ -30,7 +30,7 @@ Transactions can be either _explicit_ or _implicit_.
   * Can execute a single Cypher query.
   * Are committed automatically when the query finishes successfully.
 
-Queries that start separate transactions themselves, such as queries using <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>> or <<query-using-periodic-commit-hint, `PERIODIC COMMIT`>> are only allowed in _implicit_ mode.
+Queries that start separate transactions themselves, such as queries using <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>>, are only allowed in _implicit_ mode.
 
 For examples of the API's used to start and commit transactions, refer to the API specific documentation:
 
