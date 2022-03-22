@@ -18,10 +18,6 @@ The `USE` clause determines which graph a query, or query part, is executed agai
 The `USE` clause determines which graph a query, or query part, is executed against.
 It is supported for queries and schema commands.
 
-[NOTE]
-The `USE` clause can not be used together with the <<load-csv-importing-large-amounts-of-data, `PERIODIC COMMIT` clause>>.
-
-
 [[query-use-syntax]]
 == Syntax
 

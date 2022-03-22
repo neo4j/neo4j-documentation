@@ -117,7 +117,7 @@ MERGE (a)-[:ACTED_IN {roles:split(line.characters, ',') }]->(m)
 
 //graph
 
-If you import a large amount of data (more than 10000 rows), it is recommended to prefix your `LOAD CSV` clause with a `PERIODIC COMMIT` hint.
+If you import a large amount of data (more than 10000 rows), it is recommended to combine your `LOAD CSV` with a <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>>.
 This allows Neo4j to regularly commit the import transactions to avoid memory churn for large transaction-states.
 
 

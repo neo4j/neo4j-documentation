@@ -381,7 +381,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
         /*
         Note on transaction handling here:
 
-        We have to execute the query in an implicit top-level transaction, because otherwise PERIODIC COMMIT
+        We have to execute the query in an implicit top-level transaction, because otherwise CALL { ... } IN TRANSACTIONS
         does not work. Depending on the kind of query, the query might be completely executed and materialized
         under the hood by the cypher execution engine before returning from execute, and in some cases
         `executeTransaction` is also closed.

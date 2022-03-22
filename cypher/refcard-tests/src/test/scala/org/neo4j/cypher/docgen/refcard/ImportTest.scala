@@ -66,6 +66,8 @@ class ImportTest extends RefcardTest with QueryStatisticsTestSupport {
     name match {
       case "created" =>
         assertStats(result, nodesCreated = 4, labelsAdded = 4, propertiesWritten = 8)
+      case "createdInTransactions" =>
+        assertStats(result, nodesCreated = 4, labelsAdded = 4, propertiesWritten = 8, transactionsCommitted = 1)
       case "file" =>
         assertStats(result, nodesCreated = 0, labelsAdded = 0, propertiesWritten = 0)
         assert(result.toList.size === 1)
@@ -96,16 +98,18 @@ CREATE (:Artist {name: line.Name, year: toInteger(line.Year)})
 
 Load CSV data which has headers.
 
-###assertion=created
+###assertion=createdInTransactions
 //
 
-USING PERIODIC COMMIT 500
 LOAD CSV WITH HEADERS FROM
 '%ARTIS_WITH_HEADER%' AS line
-CREATE (:Artist {name: line.Name, year: toInteger(line.Year)})
+CALL {
+  WITH line
+  CREATE (:Artist {name: line.Name, year: toInteger(line.Year)})
+} IN TRANSACTIONS OF 500 ROWS
 ###
 
-Commit the current transaction after every 500 rows when importing large amounts of data.
+Commit a transaction after every 500 rows when importing large amounts of data.
 
 ###assertion=created
 //

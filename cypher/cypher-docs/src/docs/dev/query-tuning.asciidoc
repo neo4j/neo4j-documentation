@@ -48,7 +48,6 @@ To read more about the execution plan operators mentioned in this chapter, see <
 ** <<query-using-index-hint,Index hints>>
 ** <<query-using-scan-hint,Scan hints>>
 ** <<query-using-join-hint,Join hints>>
-** <<query-using-periodic-commit-hint,`PERIODIC COMMIT` query hint>>
 
 
 [[cypher-query-options]]
