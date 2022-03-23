@@ -46,6 +46,7 @@ class ScalarFunctionsTest extends DocumentingTest {
     p("""Functions:
         #
         #* <<functions-coalesce, coalesce()>>
+        #* <<functions-element-id, elementId()>>
         #* <<functions-endnode, endNode()>>
         #* <<functions-head, head()>>
         #* <<functions-id, id()>>
@@ -87,6 +88,42 @@ class ScalarFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
+    section("elementId()", "functions-element-id") {
+      p("""The function `elementId()` returns a node or relationship identifier, unique within a specific transaction and DBMS.
+        """.stripMargin('#'))
+      note {
+        p("""Guarantees:
+            #
+            #* Every node and relationship has an element id.
+            #* The identifier is unique among other nodes' and relationships' identifiers within the scope of a single transaction and DBMS.
+            #  In other words, element id is also unique across different databases/graphs in the same DBMS.
+            #
+            #Example of properties that are NOT guaranteed:
+            #
+            #* No guarantees are given regarding the order of the returned id values.
+            #* No guarantees are given about the length of the id string values.
+            #* Outside of the scope of a single transaction, no guarantees are given about the mapping between id values and elements.
+          """.stripMargin('#'))
+      }
+      function("elementId(expression)",
+        "A String.",
+        ("expression", "An expression that returns a node or a relationship."))
+      considerations(
+        """* `elementId(null)` returns `null`.
+          |* `elementId` on values other than a node, relationship or null will fail the query.
+          |""".stripMargin
+      )
+      query("""MATCH (a)
+              #RETURN elementId(a)""".stripMargin('#'), ResultAssertions((r) => {
+        r.toList.size shouldBe 5
+        r.toList.foreach { row =>
+          row("elementId(a)").asInstanceOf[String] should have size 0
+        }
+      })) {
+        p("The node identifier for each of the nodes is returned.")
+        resultTable()
+      }
+    }
     section("endNode()", "functions-endnode") {
       p("The function `endNode()` returns the end node of a relationship.")
       function("endNode(relationship)",
@@ -120,7 +157,8 @@ class ScalarFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("id()", "functions-id") {
+    section("[deprecated]#id()", "functions-id") {
+      p("""The `id()` function will be removed in the next major release. It is recommended to use <<functions-element-id, `elementId()`>> instead.""")
       p("""The function `id()` returns a node or a relationship identifier, unique by an object type and a database.
             #Therefore, it is perfectly allowable for `id()` to return the same value for both nodes and relationships in the same database.
             #For examples on how to get a node and a relationship by ID, see <<get-node-rel-by-id>>.""".stripMargin('#'))
