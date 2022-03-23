@@ -24,24 +24,17 @@ import org.hamcrest.Matcher
 import org.junit.Assert._
 import org.junit.Test
 import org.neo4j.configuration.GraphDatabaseInternalSettings
-import org.neo4j.cypher.GraphIcing
-import org.neo4j.cypher.QueryStatisticsTestSupport
+import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.internal.logical.plans.NodeIndexSeek
 import org.neo4j.cypher.internal.plandescription.Arguments.Planner
-import org.neo4j.cypher.internal.planner.spi.DPPlannerName
-import org.neo4j.cypher.internal.planner.spi.IDPPlannerName
-import org.neo4j.cypher.internal.util.Foldable.FoldableAny
+import org.neo4j.cypher.internal.planner.spi.{DPPlannerName, IDPPlannerName}
 import org.neo4j.exceptions.CypherExecutionException
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.config.Setting
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.graphdb.schema.IndexType
-import org.neo4j.kernel.impl.index.schema.GenericNativeIndexProvider
-import org.neo4j.kernel.impl.index.schema.PointIndexProvider
-import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
-import org.neo4j.kernel.impl.index.schema.TextIndexProviderFactory
-import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
+import org.neo4j.kernel.impl.index.schema._
 
 import java.util
 import scala.collection.JavaConverters._
@@ -1083,7 +1076,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   private def checkPlanDescriptionArgument(result: DocsExecutionResult)(expected: String): Unit = {
     val planDescription = result.executionPlanDescription()
 
-    val res = planDescription.treeExists {
+    val res = planDescription.folder.treeExists {
       case str: String => str.contains(expected)
     }
 
