@@ -1083,7 +1083,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   private def checkPlanDescriptionArgument(result: DocsExecutionResult)(expected: String): Unit = {
     val planDescription = result.executionPlanDescription()
 
-    val res = planDescription.treeExists {
+    val res = planDescription.folder.treeExists {
       case str: String => str.contains(expected)
     }
 
