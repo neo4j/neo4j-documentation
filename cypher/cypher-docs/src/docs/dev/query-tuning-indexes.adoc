@@ -22,9 +22,9 @@ There are different types of indexes available in Neo4j but they are not all com
 Indexes are commonly used for `MATCH` and `OPTIONAL MATCH` clauses that combine a label predicate with a property predicate.
 Therefore, it is important to know what kind of predicates that can be solved by the different indexes.
 
-=== BTREE indexes
+=== RANGE indexes
 
-`BTREE` indexes support all types of predicates:
+`RANGE` indexes support most types of predicates:
 
 [options="header"]
 |===
@@ -34,8 +34,6 @@ Therefore, it is important to know what kind of predicates that can be solved by
 |existence check| `n.prop IS NOT NULL`
 |range search| `n.prop > value`
 |prefix search| `STARTS WITH`
-|suffix search| `ENDS WITH`
-|substring search| `CONTAINS`
 |===
 
 === TEXT indexes
@@ -75,8 +73,8 @@ In summary, `TEXT` indexes support the following predicates:
 When multiple indexes are available and able to solve a predicate, there is an order defined that decides which index to use.
 It is defined as such:
 
-* `TEXT` indexes are preferred over `BTREE` indexes for `CONTAINS` and `ENDS WITH`.
-* `BTREE` indexes are preferred over `TEXT` indexes in all other cases.
+* `TEXT` indexes are used over `RANGE` indexes for `CONTAINS` and `ENDS WITH`.
+* `RANGE` indexes are preferred over `TEXT` indexes in most other cases.
 
 include::ql/administration/indexes/node-range-index-example.asciidoc[leveloffset=2]
 
