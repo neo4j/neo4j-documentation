@@ -36,6 +36,20 @@ Therefore, it is important to know what kind of predicates that can be solved by
 |prefix search| `STARTS WITH`
 |===
 
+=== POINT indexes
+`POINT` indexes only work for predicates operating on points.
+That means that `POINT` indexes are only used when it is known that the predicate evaluates to `null` for all non-point values.
+
+`POINT` indexes only support point type predicates:
+
+[options="header"]
+|===
+|Predicate | Syntax
+|property point value| `n.prop = point({x:value, y:value})`
+|within bounding box| `point.withinBBox(n.prop, lowerLeftCorner, upperRightCorner)`
+|distance| `point.distance(n.prop, center) < = distance`
+|===
+
 === TEXT indexes
 
 `TEXT` indexes only work for predicates operating on strings.
@@ -73,8 +87,9 @@ In summary, `TEXT` indexes support the following predicates:
 When multiple indexes are available and able to solve a predicate, there is an order defined that decides which index to use.
 It is defined as such:
 
-* `TEXT` indexes are used over `RANGE` indexes for `CONTAINS` and `ENDS WITH`.
-* `RANGE` indexes are preferred over `TEXT` indexes in most other cases.
+* `TEXT` indexes are used over `RANGE` and `POINT` indexes for `CONTAINS` and `ENDS WITH`.
+* `POINT` indexes are used over `RANGE` and `TEXT` indexes for distance and within bounding box.
+* `RANGE` indexes are preferred over `TEXT` and `POINT` indexes in all other cases.
 
 include::ql/administration/indexes/node-range-index-example.asciidoc[leveloffset=2]
 

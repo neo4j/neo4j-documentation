@@ -81,15 +81,15 @@ class UsingTest extends DocumentingTest {
           |[options="header"]
           ||===
           || Hint                                                                     | Fulfilled by plans
-          || `USING [RANGE \| TEXT] INDEX variable:Label(property)`                   | `NodeIndexScan`, `NodeIndexSeek`
-          || `USING [RANGE \| TEXT] INDEX SEEK variable:Label(property)`              | `NodeIndexSeek`
-          || `USING [RANGE \| TEXT] INDEX variable:RELATIONSHIP_TYPE(property)`       | `DirectedRelationshipIndexScan`, `UndirectedRelationshipIndexScan`, `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`
-          || `USING [RANGE \| TEXT] INDEX SEEK variable:RELATIONSHIP_TYPE(property)`  | `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`
+          || `USING [RANGE \| TEXT \| POINT] INDEX variable:Label(property)`                   | `NodeIndexScan`, `NodeIndexSeek`
+          || `USING [RANGE \| TEXT \| POINT] INDEX SEEK variable:Label(property)`              | `NodeIndexSeek`
+          || `USING [RANGE \| TEXT \| POINT] INDEX variable:RELATIONSHIP_TYPE(property)`       | `DirectedRelationshipIndexScan`, `UndirectedRelationshipIndexScan`, `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`
+          || `USING [RANGE \| TEXT \| POINT] INDEX SEEK variable:RELATIONSHIP_TYPE(property)`  | `DirectedRelationshipIndexSeek`, `UndirectedRelationshipIndexSeek`
           ||===
           """
       )
       p(
-        """When specifying an index type for a hint, e.g. `RANGE` or `TEXT`, the hint can only be fulfilled when an index of the specified type is available.
+        """When specifying an index type for a hint, e.g. `RANGE`, `TEXT` or `POINT`, the hint can only be fulfilled when an index of the specified type is available.
           |When no index type is specified, the hint can be fulfilled by any index types.
           |""".stripMargin)
       caution {
