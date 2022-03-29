@@ -93,16 +93,12 @@ class ScalarFunctionsTest extends DocumentingTest {
         """.stripMargin('#'))
       note {
         p("""
+            #Every node and relationship is guaranteed an element id.
+            #This id is unique among both nodes and relationships across all databases in the same DBMS within the scope of a single transaction.
             #
-            
-         Every node and relationship is guaranteed an element id.
-         This id is unique among both nodes and relationships across all databases in the same DBMS within the scope of a single transaction.
+            #However, no guarantees are given regarding the order of the returned id values or the length of the id string values.
             #
-            # However, no guarantees are given regarding the order of the returned id values or the length of the id string values.
-            #
-            
-          
-            #* Outside of the scope of a single transaction, no guarantees are given about the mapping between id values and elements.
+            #Outside of the scope of a single transaction, no guarantees are given about the mapping between id values and elements.
           """.stripMargin('#'))
       }
       function("elementId(expression)",
@@ -115,10 +111,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       )
       query("""MATCH (a)
               #RETURN elementId(a)""".stripMargin('#'), ResultAssertions((r) => {
-        r.toList.size shouldBe 5
-        r.toList.foreach { row =>
-          row("elementId(a)").asInstanceOf[String] should have size 0
-        }
+        r.toList.toSet.size shouldBe 5
       })) {
         p("The node identifier for each of the nodes is returned.")
         resultTable()
