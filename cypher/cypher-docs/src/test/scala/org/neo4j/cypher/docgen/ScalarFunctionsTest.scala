@@ -92,7 +92,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       p("""The function `elementId()` returns a node or relationship identifier, unique within a specific transaction and DBMS.
         """.stripMargin('#'))
       note {
-        p("""Guarantees:
+        p("""
             #
             #* Every node and relationship has an element id.
          Every node and relationship is guaranteed an element id.
