@@ -98,7 +98,7 @@ class ScalarFunctionsTest extends DocumentingTest {
          Every node and relationship is guaranteed an element id.
          This id is unique among both nodes and relationships across all databases in the same DBMS within the scope of a single transaction.
             #
-            #Example of properties that are NOT guaranteed:
+            # However, no guarantees are given regarding the order of the returned id values or the length of the id string values.
             #
             #* No guarantees are given regarding the order of the returned id values.
             #* No guarantees are given about the length of the id string values.
