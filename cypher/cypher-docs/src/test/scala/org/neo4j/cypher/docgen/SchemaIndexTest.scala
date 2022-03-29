@@ -568,13 +568,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     profileQuery(
       title = "Multiple available index types",
       text = "In the example below, both a `Person(middlename)` node `TEXT` index and a `Person(middlename)` node `RANGE` index are available. " +
-        "The `TEXT` node index is chosen.",
+        "The `RANGE` node index is chosen.",
       queryText = "MATCH (person:Person {middlename: 'Ron'}) RETURN person",
       assertions = {
         p =>
           assertEquals(1, p.size)
-
           checkPlanDescription(p)("NodeIndexSeek")
+          checkPlanDescriptionArgument(p)("RANGE INDEX person:Person(middlename) WHERE middlename = $autostring_0")
       }
     )
   }
