@@ -95,7 +95,8 @@ class ScalarFunctionsTest extends DocumentingTest {
         p("""Guarantees:
             #
             #* Every node and relationship has an element id.
-            #* The identifier is unique among other nodes' and relationships' identifiers within the scope of a single transaction and DBMS.
+         Every node and relationship is guaranteed an element id.
+         This id is unique among both nodes and relationships across all databases in the same DBMS within the scope of a single transaction.
             #  In other words, element id is also unique across different databases/graphs in the same DBMS.
             #
             #Example of properties that are NOT guaranteed:
