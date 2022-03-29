@@ -94,7 +94,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       note {
         p("""
             #
-            #* Every node and relationship has an element id.
+            
          Every node and relationship is guaranteed an element id.
          This id is unique among both nodes and relationships across all databases in the same DBMS within the scope of a single transaction.
             #  In other words, element id is also unique across different databases/graphs in the same DBMS.
