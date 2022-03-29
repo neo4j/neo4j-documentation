@@ -78,11 +78,11 @@ It is defined as such:
 * `TEXT` indexes are preferred over `BTREE` indexes for `CONTAINS` and `ENDS WITH`.
 * `BTREE` indexes are preferred over `TEXT` indexes in all other cases.
 
-include::ql/administration/indexes/node-btree-index-example.asciidoc[leveloffset=2]
+include::ql/administration/indexes/node-range-index-example.asciidoc[leveloffset=2]
 
 include::ql/administration/indexes/node-text-index-example.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/relationship-btree-index-example.asciidoc[leveloffset=2]
+include::ql/administration/indexes/relationship-range-index-example.asciidoc[leveloffset=2]
 
 include::ql/administration/indexes/relationship-text-index-example.asciidoc[leveloffset=2]
 
@@ -122,8 +122,4 @@ include::ql/administration/indexes/existence-check-using-is-not-null-composite-i
 
 include::ql/administration/indexes/spatial-distance-searches-single-property-index.asciidoc[leveloffset=2]
 
-include::ql/administration/indexes/spatial-distance-searches-composite-index.asciidoc[leveloffset=2]
-
 include::ql/administration/indexes/spatial-bounding-box-searches-single-property-index.asciidoc[leveloffset=2]
-
-include::ql/administration/indexes/spatial-bounding-box-searches-composite-index.asciidoc[leveloffset=2]

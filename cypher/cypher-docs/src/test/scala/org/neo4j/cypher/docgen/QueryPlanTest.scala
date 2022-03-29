@@ -92,12 +92,14 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     """.stripMargin)
 
   override val setupConstraintQueries = List(
-    "CREATE BTREE INDEX FOR (n:Location) ON (n.name)",
+    "CREATE INDEX FOR (n:Location) ON (n.name)",
     "CREATE INDEX FOR (n:Person) ON (n.name)",
     "CREATE INDEX FOR ()-[r:WORKS_IN]-() ON (r.duration)",
-    "CREATE BTREE INDEX FOR ()-[r:WORKS_IN]-() ON (r.title)",
+    "CREATE INDEX FOR ()-[r:WORKS_IN]-() ON (r.title)",
     "CREATE CONSTRAINT FOR (team:Team) REQUIRE team.name is UNIQUE",
-    "CREATE CONSTRAINT FOR (team:Team) REQUIRE team.id is UNIQUE"
+    "CREATE CONSTRAINT FOR (team:Team) REQUIRE team.id is UNIQUE",
+    "CREATE TEXT INDEX FOR (n:Location) ON (n.name)",
+    "CREATE TEXT INDEX FOR ()-[r:WORKS_IN]-() ON (r.title)"
   )
 
   def section = "Query Plan"
@@ -235,7 +237,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     profileQuery(
       title = "Create Index",
       text =
-        """The `CreateIndex` operator creates an index. This index can either be a B-tree, fulltext, point, range, text, or token lookup index.
+        """The `CreateIndex` operator creates an index. This index can either be a fulltext, point, range, text, or token lookup index.
           |The following query will create an index with the name `my_index` on the `name` property of nodes with the `Country` label.""".stripMargin,
       queryText = """CREATE INDEX my_index FOR (c:Country) ON (c.name)""",
       assertions = p => {

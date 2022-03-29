@@ -63,12 +63,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   )
 
   override val setupConstraintQueries = List(
-    "CREATE BTREE INDEX FOR (p:Person) ON (p.firstname)",
-    "CREATE BTREE INDEX FOR (p:Person) ON (p.middlename)",
+    "CREATE RANGE INDEX FOR (p:Person) ON (p.firstname)",
+    "CREATE RANGE INDEX FOR (p:Person) ON (p.middlename)",
+    "CREATE TEXT INDEX FOR (p:Person) ON (p.firstname)",
     "CREATE TEXT INDEX FOR (p:Person) ON (p.middlename)",
     "CREATE TEXT INDEX FOR (p:Person) ON (p.surname)",
-    "CREATE BTREE INDEX FOR (p:Person) ON (p.location)",
-    "CREATE INDEX FOR (p:Person) ON (p.highScore)"
+    "CREATE INDEX FOR (p:Person) ON (p.highScore)",
+    "CREATE POINT INDEX FOR (p:Person) ON (p.location)"
   )
 
   override def parent: Option[String] = Some("Administration")
@@ -341,9 +342,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Create a node point index",
       text = "A named point index on a single property for all nodes with a particular label can be created with `CREATE POINT INDEX index_name FOR (n:Label) ON (n.property)`. " +
         "Note that the index is not immediately available, but is created in the background.",
-      queryText = "CREATE POINT INDEX node_index_name FOR (n:Person) ON (n.location)",
+      queryText = "CREATE POINT INDEX node_index_name FOR (n:Person) ON (n.sublocation)",
       optionalResultExplanation = "Note that point indexes only recognize point values, do not support multiple properties, and that the index name must be unique.",
-      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("location"))
+      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("sublocation"))
     )
     testQuery(
       title = "Create a relationship point index",
@@ -356,9 +357,9 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Create a point index only if it does not already exist",
       text = "If it is not known whether an index exists or not, add `IF NOT EXISTS` to ensure it does.",
-      queryText = "CREATE POINT INDEX node_index_name IF NOT EXISTS FOR (n:Person) ON (n.location)",
+      queryText = "CREATE POINT INDEX node_index_name IF NOT EXISTS FOR (n:Person) ON (n.sublocation)",
       optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
-      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("location"))
+      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("sublocation"))
     )
     testQuery(
       title = "Create a point index specifying the index provider",
@@ -420,13 +421,12 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def list_indexes() {
-    prepareAndTestQuery(
+    testQuery(
       title = "Listing all indexes",
       text =
         """
           |To list all indexes with the default output columns, the `SHOW INDEXES` command can be used.
           |If all columns are required, use `SHOW INDEXES YIELD *`.""".stripMargin,
-      prepare = _ => executePreparationQueries(List("create index for (p:Person) on (p.firstname)")),
       queryText = "SHOW INDEXES",
       optionalResultExplanation =
         """One of the output columns from `SHOW INDEXES` is the name of the index.
@@ -447,7 +447,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       optionalResultExplanation =
         """This will only return the default output columns.
           |To get all columns, use `SHOW INDEXES YIELD * WHERE ...`.""".stripMargin,
-      assertions = p => assertEquals(3, p.size)
+      assertions = p => assertEquals(4, p.size)
     )
   }
 
@@ -502,10 +502,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_btree_index() {
+  @Test def use_range_index() {
     profileQuery(
-      title = "Node BTREE index example",
-      text = "In the example below, a `Person(firstname)` node `BTREE` index is available.",
+      title = "Node RANGE index example",
+      text = "In the example below, a `Person(firstname)` node `RANGE` index is available.",
       queryText = "MATCH (person:Person {firstname: 'Andy'}) RETURN person",
       assertions = {
         p =>
@@ -530,13 +530,13 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_relationship_btree_index() {
+  @Test def use_relationship_range_index() {
     profileQuery(
-      title = "Relationship BTREE index example",
-      text = "In this example, a `KNOWS(since)` relationship `BTREE` index is available. ",
+      title = "Relationship RANGE index example",
+      text = "In this example, a `KNOWS(since)` relationship `RANGE` index is available. ",
       queryText = "MATCH (person)-[relationship:KNOWS { since: 1992 } ]->(friend) RETURN person, friend",
       prepare = Some(_ => executePreparationQueries(List(
-        "create btree index for ()-[r:KNOWS]-() on (r.since)",
+        "create range index for ()-[r:KNOWS]-() on (r.since)",
       ))),
       assertions = {
         p =>
@@ -564,10 +564,10 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_text_over_btree_index() {
+  @Test def use_text_over_range_index() {
     profileQuery(
       title = "Multiple available index types",
-      text = "In the example below, both a `Person(middlename)` node `TEXT` index and a `Person(middlename)` node `BTREE` index are available. " +
+      text = "In the example below, both a `Person(middlename)` node `TEXT` index and a `Person(middlename)` node `RANGE` index are available. " +
         "The `TEXT` node index is chosen.",
       queryText = "MATCH (person:Person {middlename: 'Ron'}) RETURN person",
       assertions = {
@@ -617,7 +617,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "But in these cases rewrites might happen depending on which properties have which predicates, " +
         "see <<administration-indexes-single-vs-composite-index, composite index limitations>>. " +
         "The following query will use the composite index defined <<administration-indexes-create-a-composite-b-tree-index-for-nodes, earlier>>: ",
-      prepare = _ => executePreparationQueries(List("CREATE BTREE INDEX FOR (p:Person) ON (p.age, p.country)")),
+      prepare = _ => executePreparationQueries(List("CREATE RANGE INDEX FOR (p:Person) ON (p.age, p.country)")),
       queryText = "MATCH (n:Person) WHERE n.age = 35 AND n.country = 'UK' RETURN n",
       optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, " +
         "as the query does not contain a predicate on the `country` property. " +
@@ -793,17 +793,17 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def use_index_with_ends_with() {
-    executePreparationQueries(List("CREATE BTREE INDEX FOR ()-[r:KNOWS]-() ON (r.metIn)"))
+    executePreparationQueries(List("CREATE TEXT INDEX FOR ()-[r:KNOWS]-() ON (r.metIn)"))
 
     sampleAllIndexesAndWait()
 
-    profileQuery(
+    testQuery(
       title = "Suffix search using `ENDS WITH` (single-property index)",
       text =
-        "The `ENDS WITH` predicate on `r.metIn` in the following query uses the `KNOWS(metIn)` index, if it exists. " +
-          "All values stored in the `KNOWS(metIn)` index are searched, and entries ending with `'mo'` are returned. " +
-          "This means that although the search is not optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place.",
+      "The `ENDS WITH` predicate on `r.metIn` in the following query uses the `KNOWS(metIn)` text index, if it exists. " +
+        "Text indexes are optimized for `CONTAINS` and `ENDS WITH` and they are the only indexes that can solve those predicates.",
       queryText = "MATCH (person)-[r:KNOWS]->(friend) WHERE r.metIn ENDS WITH 'mo' RETURN person, friend",
+      optionalResultExplanation = "Text indexes only index String values and therefore do not find other values.",
       assertions = {
         p =>
           assertEquals(1, p.size)
@@ -841,14 +841,14 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
     sampleAllIndexesAndWait()
 
-    profileQuery(
+    testQuery(
       title = "Substring search using `CONTAINS` (single-property index)",
       text =
         "The `CONTAINS` predicate on `person.firstname` in the following query will use the `Person(firstname)` index, if it exists. " +
-          "All values stored in the `Person(firstname)` index will be searched, and entries containing `'h'` will be returned. " +
-          "This means that although the search will not be optimized to the extent of queries using `=`, `IN`, `>`, `<` or `STARTS WITH`, it is still faster than not using an index in the first place. " +
+          "Text indexes are optimized for `CONTAINS` and `ENDS WITH` and they are the only indexes that can solve those predicates." +
           "Composite indexes are currently not able to support `CONTAINS`. ",
       queryText = "MATCH (person:Person) WHERE person.firstname CONTAINS 'h' RETURN person",
+      optionalResultExplanation = "Text indexes only index String values and therefore do not find other values.",
       assertions = {
         p =>
           assertEquals(1, p.size)
@@ -939,26 +939,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     )
   }
 
-  @Test def use_index_with_distance_query_composite() {
-    executePreparationQueries(List("CREATE BTREE INDEX FOR (p:Person) ON (p.place,p.name)"))
-    executePreparationQueries(
-      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {place: point({x:$x, y:$y}), name: '${x+y}' } )").toList)
-    profileQuery(
-      title = "Spatial distance searches (composite index)",
-      text =
-        "If a property with point values is indexed, the index is used for spatial distance searches as well as for range queries. " +
-        "Any following (non-existence check) predicates (here on property `p.name` for index `:Person(place,name)`) " +
-        "will be rewritten as existence check with a filter.",
-      queryText = "MATCH (p:Person) WHERE point.distance(p.place, point({x: 1, y: 2})) < 2 AND p.name IS NOT NULL RETURN p.place",
-      assertions = {
-        p =>
-          assertEquals(9, p.size)
-          checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("p:Person(place, name) WHERE point.distance(place, point($autoint_0, $autoint_1)) < $autoint_2 AND name IS NOT NULL")
-      }
-    )
-  }
-
   @Test def use_index_with_bbox_query() {
     executePreparationQueries(
       (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {location: point({x:$x, y:$y})})").toList ++ List(
@@ -974,31 +954,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         p =>
           assertEquals(1, p.size)
           checkPlanDescription(p)("NodeIndexSeek")
-      }
-    )
-  }
-
-  @Test def use_index_with_bbox_query_composite() {
-    executePreparationQueries(List("CREATE BTREE INDEX FOR (p:Person) ON (p.place,p.firstname)"))
-    executePreparationQueries(
-      (for(x <- -10 to 10; y <- -10 to 10) yield s"CREATE (:Person {place: point({x:$x, y:$y}), firstname: '${x+y}'})").toList ++ List(
-        "MATCH (n:Person {firstname: 'Andy'}) SET n.place = point({x: 1.2345, y: 5.4321})",
-        "MATCH (n:Person {firstname: 'Mark'}) SET n.place = point({y: 1.2345, x: 5.4321})"
-      )
-    )
-    profileQuery(
-      title = "Spatial bounding box searches (composite index)",
-      text = "The ability to do index seeks on bounded ranges works even with the 2D and 3D spatial `Point` types. " +
-        "Any following (non-existence check) predicates (here on property `p.firstname` for index `:Person(place,firstname)`) " +
-        "will be rewritten as existence check with a filter. " +
-        "For index `:Person(firstname,place)`, if the predicate on `firstname` is equality or list membership then the bounded range is handled as a range itself. " +
-        "If the predicate on `firstname` is anything else then the bounded range is rewritten to existence and filter.",
-      queryText = "MATCH (person:Person) WHERE point.withinBBox(person.place, point({x: 1.2, y: 5.4}), point({x: 1.3, y: 5.5})) AND person.firstname IS NOT NULL RETURN person",
-      assertions = {
-        p =>
-          assertEquals(1, p.size)
-          checkPlanDescription(p)("NodeIndexSeek")
-          checkPlanDescriptionArgument(p)("BTREE INDEX person:Person(place, firstname) WHERE point.withinBBox(place, point($autodouble_0, $autodouble_1), point($autodouble_2, $autodouble_3)) AND firstname IS NOT NULL")
       }
     )
   }
