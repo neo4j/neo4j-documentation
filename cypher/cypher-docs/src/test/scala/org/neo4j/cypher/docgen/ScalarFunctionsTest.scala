@@ -100,7 +100,7 @@ class ScalarFunctionsTest extends DocumentingTest {
             #
             # However, no guarantees are given regarding the order of the returned id values or the length of the id string values.
             #
-            #* No guarantees are given regarding the order of the returned id values.
+            
             #* No guarantees are given about the length of the id string values.
             #* Outside of the scope of a single transaction, no guarantees are given about the mapping between id values and elements.
           """.stripMargin('#'))
