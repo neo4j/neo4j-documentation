@@ -110,7 +110,7 @@ class ScalarFunctionsTest extends DocumentingTest {
         ("expression", "An expression that returns a node or a relationship."))
       considerations(
         """* `elementId(null)` returns `null`.
-          |* `elementId` on values other than a node, relationship or null will fail the query.
+          |* `elementId` on values other than a node, relationship, or null will fail the query.
           |""".stripMargin
       )
       query("""MATCH (a)
