@@ -105,9 +105,9 @@ CREATE CONSTRAINT movie FOR (movie:Movie) REQUIRE movie.id IS UNIQUE
 
 Now importing the relationships is a matter of finding the nodes and then creating relationships between them.
 
-For this query we'll use `CALL +++{ ... }+++ IN TRANSACTIONS` (see <<cypher-manual#subquery-call-in-transactions>>) which is helpful for queries that operate on large CSV files.
-This is a way to periodically commit progress in a new transaction.
-In this case we also set the limit to `500` rows per transaction.
+For this query, we will use `CALL +++{ ... }+++ IN TRANSACTIONS` (see <<cypher-manual#subquery-call-in-transactions>>) to periodically commit progress in a new transaction. 
+This is helpful for queries that operate on large CSV files.
+In this case, you also set the limit to `500` rows per transaction.
 
 [source, subs=attributes+]
 ----

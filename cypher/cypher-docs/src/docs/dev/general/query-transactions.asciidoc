@@ -32,7 +32,7 @@ Transactions can be either _explicit_ or _implicit_.
 
 Queries that start separate transactions themselves, such as queries using <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>>, are only allowed in _implicit_ mode.
 
-For examples of the API's used to start and commit transactions, refer to the API specific documentation:
+For examples of the APIs used to start and commit transactions, refer to the API specific documentation:
 
 * For information on using transactions with a Neo4j driver, see _The session API_ in the link:{docs-base-uri}[Neo4j Driver manuals].
 * For information on using transactions over the HTTP API, see the <<http-api#http-api-actions, HTTP API documentation -> Using the HTTP API>>.

@@ -28,7 +28,7 @@
   Alternatively, `LOAD CSV` also supports accessing CSV files via _HTTPS_, _HTTP_, and _FTP_.
 * `LOAD CSV` supports resources compressed with _gzip_ and _Deflate_. Additionally `LOAD CSV` supports locally stored CSV files compressed with _ZIP_.
 * `LOAD CSV` will follow _HTTP_ redirects but for security reasons it will not follow redirects that changes the protocol, for example if the redirect is going from _HTTPS_ to _HTTP_.
-* `LOAD CSV` is often used in conjunction with the query clause `CALL +++{ ... }+++ TRANSACTIONS`. More information on this may be found in <<subquery-call-in-transactions, CALL +++{ ... }+++ IN TRANSACTIONS>>.
+* `LOAD CSV` is often used in conjunction with the query clause `CALL +++{ ... }+++ TRANSACTIONS`. For more information, see <<subquery-call-in-transactions, CALL +++{ ... }+++ IN TRANSACTIONS>>.
 
 .Configuration settings for file URLs
 <<operations-manual#config_dbms.security.allow_csv_import_from_file_urls, dbms.security.allow_csv_import_from_file_urls>>::
