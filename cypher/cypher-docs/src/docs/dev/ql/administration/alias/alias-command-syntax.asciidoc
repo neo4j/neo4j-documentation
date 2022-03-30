@@ -8,12 +8,12 @@ The syntax of the alias management commands is as follows:
 |
 [source]
 -----
-SHOW ALIASES FOR DATABASE
+SHOW ALIASES FOR DATABASE[S]
 [WHERE expression]
 -----
 [source]
 -----
-SHOW ALIASES FOR DATABASE
+SHOW ALIASES FOR DATABASE[S]
 YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]
 [WHERE expression]
 [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
