@@ -1,12 +1,11 @@
 This is the list of the allowed driver settings for remote aliases.
 
 [[remote-alias-driver-settings]]
-.ssl_enabled
+.ssl_enforced
 [width="100%", cols="1s, 4a"]
 |===
-| Description | SSL for remote alias drivers is configured using 'remote' SSL policy.
-This setting can be used to instruct the driver not to use SSL even though a 'remote' SSL policy is configured.
-The driver will use SSL if 'remote' SSL policy is configured and this setting is set to 'true'
+| Description | SSL for remote alias drivers is configured through the target url scheme.
+If `ssl_enforced` is set to true, a secure url scheme is enforced. This will be validated when the command is executed.
 | Valid values | Boolean
 | Default value | true
 |===

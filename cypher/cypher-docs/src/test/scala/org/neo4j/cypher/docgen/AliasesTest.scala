@@ -39,7 +39,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       "CREATE DATABASE `northwind-graph-2020`",
       "CREATE DATABASE `northwind-graph-2021`",
       """CREATE ALIAS `movie scripts` FOR DATABASE `scripts` AT "neo4j+s://location:7687" USER alice PASSWORD "password" DRIVER {
-        |    ssl_enabled: true,
+        |    ssl_enforced: true,
         |    connection_timeout: duration({seconds: 5}),
         |    connection_max_lifetime: duration({hours: 1}),
         |    connection_pool_acquisition_timeout: duration({minutes: 1}),
