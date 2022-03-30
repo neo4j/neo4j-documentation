@@ -216,7 +216,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                    queryText: String,
                    realQuery: Option[String] = None,
                    prepare: Option[GraphDatabaseCypherService => Unit] = None,
-                   assertions: DocsExecutionResult => Unit) {
+                   assertions: DocsExecutionResult => Unit): Unit = {
     internalProfileQuery(title, text, queryText, realQuery, None, prepare, assertions)
   }
 
@@ -226,7 +226,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
                                    realQuery: Option[String],
                                    expectedException: Option[ClassTag[_ <: Neo4jException]],
                                    prepare: Option[GraphDatabaseCypherService => Unit],
-                                   assertions: DocsExecutionResult => Unit) {
+                                   assertions: DocsExecutionResult => Unit): Unit = {
     preparationQueries = List()
 
     dumpSetupConstraintsQueries(setupConstraintQueries, dir)

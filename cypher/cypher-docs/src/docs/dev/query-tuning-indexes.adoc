@@ -17,14 +17,33 @@ Please refer to <<administration-indexes-search-performance>> for instructions o
 
 == Index types and predicate compatibility
 
-There are different types of indexes available in Neo4j but they are not all compatible with the same property predicates.
+Generally, an index solves some combination of a label/relationship type predicate and property predicates at the same time.
+There are different types of indexes available in Neo4j and these are compatible with different property predicates.
 
-Indexes are commonly used for `MATCH` and `OPTIONAL MATCH` clauses that combine a label predicate with a property predicate.
-Therefore, it is important to know what kind of predicates that can be solved by the different indexes.
+Indexes are most often used for `MATCH` and `OPTIONAL MATCH` clauses that combine a label/relationship type predicate with a property predicate.
+Therefore, it is important to know what kind of predicates can be solved by the different indexes.
+An important exception to this is `TOKEN LOOKUP` indexes, which solve only label predicates.
+
+=== TOKEN LOOKUP indexes
+
+`TOKEN LOOKUP` indexes are present by default and solve only label and relationship type predicates:
+
+[options="header"]
+|===
+|Label and relationship type predicates
+|`MATCH (n:Label)`
+|`MATCH (n) WHERE n:Label`
+|`MATCH ()-[r:REL]\->()`
+|`MATCH ()-[r]->() WHERE r:REL`
+|===
+
+The lookup indexes are the most important indexes in the database and greatly improve the performance of Cypher queries, as well as the population of other indexes.
+Dropping these indexes may lead to severe performance degradations.
+Therefore, carefully consider the consequences before doing so.
 
 === RANGE indexes
 
-`RANGE` indexes support most types of predicates:
+In combination with label and relationship type predicates, `RANGE` indexes support most types of predicates:
 
 [options="header"]
 |===
@@ -53,7 +72,7 @@ Therefore, `POINT` indexes are only used when it is known that the predicate eva
 
 === TEXT indexes
 
-`TEXT` indexes only work for predicates operating on strings.
+In combination with label and relationship type predicates, `TEXT` indexes only solve predicates operating on strings.
 That means that `TEXT` indexes are only used when it is known that the predicate evaluates to `null` for all non-string values.
 
 Predicates that only operate on strings are always solvable by a `TEXT` index:
@@ -91,6 +110,14 @@ It is defined as such:
 * `TEXT` indexes are used over `RANGE` and `POINT` indexes for `CONTAINS` and `ENDS WITH`.
 * `POINT` indexes are used over `RANGE` and `TEXT` indexes for distance and within a bounding box.
 * `RANGE` indexes are preferred over `TEXT` and `POINT` indexes in all other cases.
+
+`TOKEN LOOKUP` indexes are not defined in this order since they never solve the same set of predicates as the other indexes.
+
+include::ql/administration/indexes/node-label-lookup-index-example.asciidoc[leveloffset=2]
+
+include::ql/administration/indexes/relationship-type-lookup-index-example.asciidoc[leveloffset=2]
+
+include::ql/administration/indexes/relationship-range-index-example.asciidoc[leveloffset=2]
 
 include::ql/administration/indexes/node-range-index-example.asciidoc[leveloffset=2]
 

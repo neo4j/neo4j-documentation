@@ -50,7 +50,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   //need a couple of 'Person' and 'KNOWS' to make index operations more efficient than label and relType scans
   override val setupQueries: List[String] = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++
-  //some additional data
+    (1 to 20 map (_ => """CREATE ()-[:REL]->()""")).toList ++
+    //some additional data
     Seq("create ()-[:KNOWS {since: 1992, metIn: 'Malmo', lastMet: 2021, lastMetIn: 'Stockholm'}]->()")
 
   override def graphDescription = List(
@@ -499,6 +500,40 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       text = "Create a named index on the property `numberOfPages` on nodes with the `Book` label, when a constraint with that name already exists.",
       queryText = "CREATE INDEX bookRecommendations FOR (book:Book) ON (book.recommendations)",
       optionalResultExplanation = "In this case the index can't be created because there already exists a constraint with that name."
+    )
+  }
+
+  @Test def use_node_token_lookup_index() {
+    profileQuery(
+      title = "Node label LOOKUP index example",
+      text = "In the example below, a node TOKEN LOOKUP index is available.",
+      prepare = Some(_ => executePreparationQueries(List(
+        "CREATE LOOKUP INDEX node_label_lookup_index FOR (n) ON EACH labels(n)",
+      ))),
+      queryText = "MATCH (person:Person) RETURN person",
+      assertions = {
+        p =>
+          assertEquals(42, p.size)
+
+          checkPlanDescription(p)("NodeByLabelScan")
+      },
+    )
+  }
+
+  @Test def use_rel_token_lookup_index() {
+    profileQuery(
+      title = "Relationship type LOOKUP index example",
+      text = "In the example below, a relationship TOKEN LOOKUP index is available.",
+      prepare = Some(_ => executePreparationQueries(List(
+        "CREATE LOOKUP INDEX rel_type_lookup_index FOR ()-[r]->() ON EACH type(r)",
+      ))),
+      queryText = "MATCH ()-[r:KNOWS]->() RETURN r",
+      assertions = {
+        p =>
+          assertEquals(22, p.size)
+
+          checkPlanDescription(p)("DirectedRelationshipTypeScan")
+      },
     )
   }
 
