@@ -53,7 +53,8 @@ class MatchTest extends DocumentingTest {
         | ** <<get-all-nodes, Get all nodes>>
         | ** <<get-all-nodes-with-label, Get all nodes with a label>>
         | ** <<related-nodes, Related nodes>>
-        | ** <<match-with-labels, Match with labels>>
+        | ** <<match-with-labels, Match with a label expression for the node labels>>
+        | ** <<syntax-or-label, Match with labels>>
         |* <<relationship-basics, Relationship basics>>
         | ** <<outgoing-relationships, Outgoing relationships>>
         | ** <<directed-rels-and-variable, Directed relationships and variable>>
@@ -136,6 +137,17 @@ class MatchTest extends DocumentingTest {
                 #RETURN movie.title""".stripMargin('#'),
         assertWallStreetIsReturned) {
           p("Returns any nodes connected with the `Person` *'Oliver'* that are labeled `Movie`.")
+          resultTable()
+        }
+      }
+      section("Match with a label expression for the node labels", "syntax-or-label") {
+        p(
+          """A match with an `OR` expression for the node label returns the nodes that contains both the specified labels.
+            #For more label expressions see <<query-syntax-label, label expressions>>""".stripMargin('#'))
+        query("""MATCH (n:Movie|Person) RETURN n.name AS name, n.title AS title""".stripMargin('#'),
+          ResultAssertions((r) => {
+            r.toList should equal(List(Map("name" -> "Charlie Sheen", "title" -> null), Map("name" -> "Martin Sheen", "title" -> null), Map("name" -> "Michael Douglas", "title" -> null), Map("name" -> "Oliver Stone", "title" -> null), Map("name" -> "Rob Reiner", "title" -> null), Map("name" -> null, "title" -> "Wall Street"), Map("name" -> null, "title" -> "The American President")))
+          })) {
           resultTable()
         }
       }
