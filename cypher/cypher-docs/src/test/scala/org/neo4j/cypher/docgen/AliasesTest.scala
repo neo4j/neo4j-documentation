@@ -131,7 +131,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |The following naming rules apply:""")
         p(
           """
-            |* A name is a valid identifier, additionally allowing dots e.g. `main.alias`.
+            |* A name is a valid identifier, additionally allowing dots e.g. `main.alias` for local aliases.
             |* Name length can be up to 65534 characters.
             |* Names cannot end with dots.
             |* Names that begin with an underscore or with the prefix `system` are reserved for internal use.
