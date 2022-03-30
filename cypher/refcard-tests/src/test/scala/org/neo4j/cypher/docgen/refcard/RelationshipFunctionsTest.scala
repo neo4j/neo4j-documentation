@@ -85,7 +85,7 @@ MATCH (n)-[a_relationship]->(m)
 WHERE id(n) = %A% AND id(m) = %B%
 RETURN
 
-id(a_relationship)###
+elementId(a_relationship)###
 
 The internal id of the relationship.
 """
