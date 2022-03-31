@@ -339,6 +339,23 @@ New columns for the current query are added:
 * `currentQueryPageFaults`
 
 These columns are only returned in the full set (with `YIELD`) and not by default.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+TERMINATE TRANSACTIONS
+YIELD { * \| field[, ...] }
+[ORDER BY field[, ...]]
+[SKIP n]
+[LIMIT n]
+[WHERE expression]
+[RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+----
+a|
+Terminate transaction now allows `YIELD`.
+The `WHERE` clause is not allowed on its own, as it is for `SHOW`, but needs the `YIELD` clause.
 |===
 
 === New features
