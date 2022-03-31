@@ -287,6 +287,16 @@ Replaced by:
 prop IS NULL
 ----
 
+a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+SHOW TRANSACTIONS YIELD allocatedBytes
+----
+a|
+This column has been removed as it wasn't tracked and always returned 0.
+
 |===
 
 
@@ -306,6 +316,29 @@ CREATE INDEX ...
 ----
 a|
 The default index type is changed from B-tree to range index.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW TRANSACTIONS YIELD *
+----
+a|
+New columns for the current query are added:
+
+* `currentQueryStartTime`
+* `currentQueryStatus`
+* `currentQueryActiveLockCount`
+* `currentQueryElapsedTime`
+* `currentQueryCpuTime`
+* `currentQueryWaitTime`
+* `currentQueryIdleTime`
+* `currentQueryAllocatedBytes`
+* `currentQueryPageHits`
+* `currentQueryPageFaults`
+
+These columns are only returned in the full set (with `YIELD`) and not by default.
 |===
 
 === New features

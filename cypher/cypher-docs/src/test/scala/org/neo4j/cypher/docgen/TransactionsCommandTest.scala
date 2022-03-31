@@ -87,10 +87,6 @@ class TransactionsCommandTest extends DocumentingTest {
 |a|The time that has elapsed since the transaction was started. label:default-output[]
 |m|DURATION
 
-|m|allocatedBytes
-|a|The number of bytes allocated on the heap so far by the transaction. label:default-output[]
-|m|LONG
-
 |m|outerTransactionId
 |a|The ID of this transaction's outer transaction, if such exists. For details, see <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>>.
 |m|STRING
@@ -115,6 +111,10 @@ class TransactionsCommandTest extends DocumentingTest {
 |a|The indexes utilised by the query currently executing in this transaction.
 |m|LIST OF MAP
 
+m|currentQueryStartTime
+a|The time at which the query currently executing in this transaction was started.
+m|STRING
+
 |m|protocol
 |a|The protocol used by the connection issuing the transaction.
 |This is not necessarily an internet protocol, such as _http_, et.c., although it could be. It might also be "embedded", for example, if this connection represents an embedded session.
@@ -123,6 +123,10 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|requestUri
 |a|The request URI used by the client connection issuing the transaction, or null if the URI is not available.
 |m|STRING
+
+m|currentQueryStatus
+a|The current status of the query currently executing in this transaction (`parsing`, `planning`, `planned`, `running`, or `waiting`).
+m|STRING
 
 |m|statusDetails
 |a|Provide additional status details from the underlying transaction or an empty string if none is available.
@@ -136,6 +140,10 @@ class TransactionsCommandTest extends DocumentingTest {
 |a|Count of active locks held by the transaction.
 |m|LONG
 
+|m|currentQueryActiveLockCount
+|a|Count of active locks held by the query currently executing in this transaction.
+|m|LONG
+
 |m|cpuTime
 |a|CPU time that has been actively spent executing the transaction.
 |m|DURATION
@@ -147,6 +155,26 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|idleTime
 |a|Idle time for this transaction.
 |m|DURATION
+
+m|currentQueryElapsedTime
+a|The time that has elapsed since the query currently executing in this transaction was started.
+m|DURATION
+
+|m|currentQueryCpuTime
+|a|CPU time that has been actively spent executing the query currently executing in this transaction.
+|m|DURATION
+
+|m|currentQueryWaitTime
+|a|Wait time that has been spent waiting to acquire locks for the query currently executing in this transaction.
+|m|DURATION
+
+|m|currentQueryIdleTime
+|a|Idle time for the query currently executing in this transaction.
+|m|DURATION
+
+m|currentQueryAllocatedBytes
+a|The number of bytes allocated on the heap so far by the query currently executing in this transaction.
+m|LONG
 
 |m|allocatedDirectBytes
 |a|Amount of off-heap (native) memory allocated by the transaction in bytes.
@@ -162,6 +190,14 @@ class TransactionsCommandTest extends DocumentingTest {
 
 |m|pageFaults
 |a|The total number of page cache faults that the transaction performed.
+|m|LONG
+
+|m|currentQueryPageHits
+|a|The total number of page cache hits that the query currently executing in this transaction performed.
+|m|LONG
+
+|m|currentQueryPageFaults
+|a|The total number of page cache faults that the query currently executing in this transaction performed.
 |m|LONG
 ||===""")
       section("Syntax") {
@@ -193,7 +229,8 @@ All users may view all of their own currently executing transactions.
             #If all columns are required, use `SHOW TRANSACTIONS YIELD *`.""".stripMargin('#'))
         backgroundQueries(List("MATCH (n) RETURN n")) {
           query("SHOW TRANSACTIONS", ResultAssertions(p => {
-            p.columns should contain theSameElementsAs Array("database", "transactionId", "currentQueryId", "connectionId", "clientAddress", "username", "currentQuery", "startTime", "status", "elapsedTime", "allocatedBytes")
+            p.columns should contain theSameElementsAs
+              Array("database", "transactionId", "currentQueryId", "connectionId", "clientAddress", "username", "currentQuery", "startTime", "status", "elapsedTime")
           })) {
             resultTable()
           }
@@ -224,14 +261,30 @@ All users may view all of their own currently executing transactions.
           "UNWIND range(1,100000) AS x CREATE (:Number {value: x}) RETURN x"
         )) {
           query(
-            """SHOW TRANSACTIONS YIELD transactionId, elapsedTime, cpuTime, waitTime, idleTime
+            """SHOW TRANSACTIONS
+              #YIELD transactionId, elapsedTime, cpuTime, waitTime, idleTime,
+              #      currentQueryElapsedTime, currentQueryCpuTime, currentQueryWaitTime, currentQueryIdleTime
               #RETURN transactionId AS txId,
               #       elapsedTime.milliseconds AS elapsedTimeMillis,
               #       cpuTime.milliseconds AS cpuTimeMillis,
               #       waitTime.milliseconds AS waitTimeMillis,
-              #       idleTime.seconds AS idleTimeSeconds""".stripMargin('#'),
+              #       idleTime.seconds AS idleTimeSeconds,
+              #       currentQueryElapsedTime.milliseconds AS currentQueryElapsedTimeMillis,
+              #       currentQueryCpuTime.milliseconds AS currentQueryCpuTimeMillis,
+              #       currentQueryWaitTime.microseconds AS currentQueryWaitTimeMicros,
+              #       currentQueryIdleTime.seconds AS currentQueryIdleTimeSeconds""".stripMargin('#'),
             ResultAssertions(p => {
-              p.columns should contain theSameElementsAs Array("txId", "elapsedTimeMillis", "cpuTimeMillis", "waitTimeMillis", "idleTimeSeconds")
+              p.columns should contain theSameElementsAs Array(
+                "txId",
+                "elapsedTimeMillis",
+                "cpuTimeMillis",
+                "waitTimeMillis",
+                "idleTimeSeconds",
+                "currentQueryElapsedTimeMillis",
+                "currentQueryCpuTimeMillis",
+                "currentQueryWaitTimeMicros",
+                "currentQueryIdleTimeSeconds"
+              )
             })) {
             resultTable()
           }
@@ -243,11 +296,11 @@ All users may view all of their own currently executing transactions.
           p(
             """
               |.Result
-              |[role="queryresult",options="header,footer",cols="11*<m"]
+              |[role="queryresult",options="header,footer",cols="10*<m"]
               ||===
-              || +database+ | +transactionId+ | +currentQueryId+ | +connectionId+ | +clientAddress+ | +username+ | +currentQuery+ | +startTime+ | +status+ | +elapsedTime+ | +allocatedBytes+
-              || +"neo4j"+ | +"neo4j-transaction-3"+ | +"query-1"+ | +""+ | +""+ | +""+ | +"MATCH (n) RETURN n"+ | +"2021-10-20T08:29:39.423Z"+ | +"Running"+ | +PT2.603S+ | +0+
-              |11+d|Rows: 2
+              || +database+ | +transactionId+ | +currentQueryId+ | +connectionId+ | +clientAddress+ | +username+ | +currentQuery+ | +startTime+ | +status+ | +elapsedTime+
+              || +"neo4j"+ | +"neo4j-transaction-3"+ | +"query-1"+ | +""+ | +""+ | +""+ | +"MATCH (n) RETURN n"+ | +"2021-10-20T08:29:39.423Z"+ | +"Running"+ | +PT2.603S+
+              |10+d|Rows: 2
               ||===
               |""")
       }
