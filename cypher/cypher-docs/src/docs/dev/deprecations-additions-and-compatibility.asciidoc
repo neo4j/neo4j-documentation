@@ -259,6 +259,34 @@ Replaced by:
 TERMINATE TRANSACTION[S] transaction-id[,...]
 ----
 
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+exists(prop)
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+prop IS NOT NULL
+----
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+NOT exists(prop)
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+prop IS NULL
+----
+
 |===
 
 
