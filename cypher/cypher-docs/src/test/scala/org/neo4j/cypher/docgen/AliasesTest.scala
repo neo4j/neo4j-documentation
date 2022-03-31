@@ -64,8 +64,8 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     p(
       """A remote alias can be used for connecting to a database of a remote Neo4j DBMS, use clauses, setting a user's home database and defining the
         |access privileges to the remote database. Remote aliases requires configuration to safely connect to the remote target, which is described in
-        |<<operations-manual#manage-remote-aliases, Connecting remote databases>>. It is not possible to execute an administration command on the
-        |remote database via a remote alias.
+        |<<operations-manual#manage-remote-aliases, Connecting remote databases>>. It is not possible to impersonate a user on the remote database or to
+        |execute an administration command on the remote database via a remote alias.
         """.stripMargin)
     p(
       """Aliases can be created and managed using a set of Cypher administration commands executed against the `system` database.
