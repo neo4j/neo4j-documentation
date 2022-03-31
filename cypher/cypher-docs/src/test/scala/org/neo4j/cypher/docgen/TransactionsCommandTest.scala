@@ -307,6 +307,12 @@ All users may view all of their own currently executing transactions.
     }
     section("TERMINATE TRANSACTIONS", id="query-terminate-transactions") {
       p("The `TERMINATE TRANSACTIONS` command is used to terminate running transactions by their IDs.")
+      p(
+        """
+          #[NOTE]
+          #====
+          #For the `TERMINATE TRANSACTIONS` command there is no difference between the default output and full output, all columns are default.
+          #====""".stripMargin('#'))
       p("This command will produce a table with the following columns:")
       p(
         """
@@ -337,15 +343,27 @@ Terminate transactions by ID on the current server::
 [source, cypher, role=noplay]
 ----
 TERMINATE TRANSACTION[S] transaction_id[, ...]
+[YIELD { * \| field[, ...] }
+  [ORDER BY field[, ...]]
+  [SKIP n]
+  [LIMIT n]
+  [WHERE expression]
+  [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+]
 ----
 
 The format of `transaction-id` is `<databaseName>-transaction-<id>`. Transaction IDs must be supplied as a comma-separated list of one or more quoted strings, a string parameter, or a list parameter.
+
+[NOTE]
+====
+When using the `WHERE` or `RETURN` clauses, the `YIELD` clause is mandatory and must not be omitted.
+====
 
 A user with the <<access-control-database-administration-transaction, `TERMINATE TRANSACTION`>> privilege can terminate transactions in accordance with the privilege grants.
 All users may terminate their own currently executing transactions.
 """.stripMargin('#'))
       }
-      section("Terminate Transactions") {
+      section("Terminate transactions") {
         p(
           """To end running transactions without waiting for them to complete on their own, use the `TERMINATE TRANSACTIONS` command.""")
         query("""TERMINATE TRANSACTIONS "neo4j-transaction-1","neo4j-transaction-2"""", ResultAssertions(p => {
@@ -358,8 +376,35 @@ All users may terminate their own currently executing transactions.
             || +transactionId+ | +username+ | +message+
             || +"neo4j-transaction-1"+ | +"neo4j"+ | +"Transaction terminated."+
             || +"neo4j-transaction-2"+ | +null+ | +"Transaction not found."+
-            |3+d|Rows: 1
+            |3+d|Rows: 2
             ||===""")
+      }
+      section("Terminate transactions with filtering on output columns") {
+        p(
+          """The output from the `TERMINATE TRANSACTIONS` command can be filtered using the `YIELD` and `WHERE` clauses.
+            #For example, returning the transaction ids and message for the transactions that didn't terminate:""".stripMargin('#'))
+        query(
+          """TERMINATE TRANSACTIONS "neo4j-transaction-1","neo4j-transaction-2"
+            #YIELD transactionId, message
+            #WHERE message <> "Transaction terminated."""".stripMargin('#'), ResultAssertions(p => {
+          p.columns should contain theSameElementsAs Array("transactionId", "message")
+        })) {}
+        p(
+          """.Result
+            |[role="queryresult",options="header,footer",cols="2*<m"]
+            ||===
+            || +transactionId+ | +message+
+            || +"neo4j-transaction-2"+ | +"Transaction not found."+
+            |2+d|Rows: 1
+            ||===""")
+        p("""In difference to `SHOW TRANSACTIONS`, `TERMINATE TRANSACTIONS` doesn't allow `WHERE` without `YIELD`:""")
+        query(
+          """TERMINATE TRANSACTIONS "neo4j-transaction-1","neo4j-transaction-2"
+            #WHERE message <> "Transaction terminated."""".stripMargin('#'), ErrorAssertions(error =>
+            error.getMessage should startWith("`WHERE` is not allowed by itself, please use `TERMINATE TRANSACTION ... YIELD ... WHERE ...` instead")
+          )) {
+          errorOnlyResultTable()
+        }
       }
     }
   }.build()
