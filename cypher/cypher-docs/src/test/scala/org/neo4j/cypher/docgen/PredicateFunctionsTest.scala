@@ -119,6 +119,11 @@ class PredicateFunctionsTest extends DocumentingTest {
         p("The names of all nodes with the `name` property are returned, along with a boolean (`true` or `false`) indicating if they are married.")
         resultTable()
       }
+      note {
+        p(
+          """Note that the **function** `exists()` looks very similar to the **clause** `EXISTS {...}`, but they are not the same and should not be confused.
+            #See <<existential-subqueries, Using existential subqueries in `WHERE`>> for more information.""".stripMargin('#'))
+      }
     }
     section("isEmpty()", "functions-isempty") {
       p("The function `isEmpty()` returns `true` if the given list or map contains no elements or if the given string contains no characters.")
