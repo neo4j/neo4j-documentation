@@ -300,7 +300,7 @@ All users may view all of their own currently executing transactions.
               ||===
               || +database+ | +transactionId+ | +currentQueryId+ | +connectionId+ | +clientAddress+ | +username+ | +currentQuery+ | +startTime+ | +status+ | +elapsedTime+
               || +"neo4j"+ | +"neo4j-transaction-3"+ | +"query-1"+ | +""+ | +""+ | +""+ | +"MATCH (n) RETURN n"+ | +"2021-10-20T08:29:39.423Z"+ | +"Running"+ | +PT2.603S+
-              |10+d|Rows: 2
+              |10+d|Rows: 1
               ||===
               |""")
       }
