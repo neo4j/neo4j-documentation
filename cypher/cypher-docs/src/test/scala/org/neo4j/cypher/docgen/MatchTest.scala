@@ -232,7 +232,7 @@ class MatchTest extends DocumentingTest {
           assertAllMoviesRelatedToCharlieAreReturned) {
           p(
             """Returns all movies related to *'Charlie Sheen'* by 1 to 3 hops:
-              |*'Wall Street'* is found through the direct connection whereas the other two results are found via *'Michael Douglas'* and *'Martin Sheen'* respectively.
+              |*'Wall Street'* is found through the direct connection, whereas the other two results are found via *'Michael Douglas'* and *'Martin Sheen'* respectively.
               |As one can see from this example, variable length relationships do not impose any requirements on the intermediate nodes.""".stripMargin)
           resultTable()
         }
