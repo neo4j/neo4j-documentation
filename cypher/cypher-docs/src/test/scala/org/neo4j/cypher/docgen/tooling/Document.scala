@@ -382,6 +382,7 @@ case class BackgroundQueries(
   val before: InitializationFunction = (graph: GraphDatabaseService, cypherService: GraphDatabaseCypherService) =>
     if (!graph.databaseName().equals(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)) {
       import scala.concurrent.ExecutionContext.Implicits.global
+      cypherService.executeTransactionally(s"CALL dbms.setConfigValue('${GraphDatabaseSettings.track_query_cpu_time.name}', 'true')")
 
       beforeQueryText.foreach(query =>
         // Start each background transaction in a Future
@@ -413,7 +414,8 @@ case class BackgroundQueries(
       latch.startAndWaitForAllToStart()
     }
 
-  val after: InitializationFunction = (graph, _) => if (!graph.databaseName().equals(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)) {
+  val after: InitializationFunction = (graph, cypherService) => if (!graph.databaseName().equals(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)) {
+    cypherService.executeTransactionally(s"CALL dbms.setConfigValue('${GraphDatabaseSettings.track_query_cpu_time.name}', 'false')")
     latch.finishAndWaitForAllToFinish()
   }
 
