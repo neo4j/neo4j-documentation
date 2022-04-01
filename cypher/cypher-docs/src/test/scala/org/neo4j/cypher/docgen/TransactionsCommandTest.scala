@@ -247,7 +247,7 @@ All users may view all of their own currently executing transactions.
               ||===
               || +database+ | +transactionId+ | +currentQueryId+ | +connectionId+ | +clientAddress+ | +username+ | +currentQuery+ | +startTime+ | +status+ | +elapsedTime+ | +allocatedBytes+
               || +"neo4j"+ | +"neo4j-transaction-3"+ | +"query-1"+ | +""+ | +""+ | +""+ | +"MATCH (n) RETURN n"+ | +"2021-10-20T08:29:39.423Z"+ | +"Running"+ | +PT2.603S+ | +0+
-              |11+d|Rows: 2
+              |11+d|Rows: 1
               ||===
               |""")
       }
@@ -292,7 +292,7 @@ A user with the <<access-control-database-administration-transaction, `TERMINATE
 All users may terminate their own currently executing transactions.
 """.stripMargin('#'))
       }
-      section("Terminate Transactions") {
+      section("Terminate transactions") {
         p(
           """To end running transactions without waiting for them to complete on their own, use the `TERMINATE TRANSACTIONS` command.""")
         query("""TERMINATE TRANSACTIONS "neo4j-transaction-1","neo4j-transaction-2"""", ResultAssertions(p => {
@@ -305,7 +305,7 @@ All users may terminate their own currently executing transactions.
             || +transactionId+ | +username+ | +message+
             || +"neo4j-transaction-1"+ | +"neo4j"+ | +"Transaction terminated."+
             || +"neo4j-transaction-2"+ | +null+ | +"Transaction not found."+
-            |3+d|Rows: 1
+            |3+d|Rows: 2
             ||===""")
       }
     }
