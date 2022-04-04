@@ -39,7 +39,7 @@ Therefore, it is important to know what kind of predicates that can be solved by
 === POINT indexes
 
 `POINT` indexes only work for predicates operating on points.
-That means that `POINT` indexes are only used when it is known that the predicate evaluates to `null` for all non-point values.
+Therefore, `POINT` indexes are only used when it is known that the predicate evaluates to `null` for all non-point values.
 
 `POINT` indexes only support point type predicates:
 
