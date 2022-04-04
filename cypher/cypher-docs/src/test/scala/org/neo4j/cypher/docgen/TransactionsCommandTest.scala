@@ -56,7 +56,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|STRING
 
 |m|currentQueryId
-|a|The ID of the query currently executing in this transaction. label:default-output[]
+|a|The ID of the query currently executing in this transaction, or an empty string if no query is currently executing. label:default-output[]
 |m|STRING
 
 |m|connectionId
@@ -72,7 +72,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|STRING
 
 |m|currentQuery
-|a|The query text of the query currently executing in this transaction. label:default-output[]
+|a|The query text of the query currently executing in this transaction, or an empty string if no query is currently executing. label:default-output[]
 |m|STRING
 
 |m|startTime
@@ -88,31 +88,31 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|DURATION
 
 |m|outerTransactionId
-|a|The ID of this transaction's outer transaction, if such exists. For details, see <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>>.
+|a|The ID of this transaction's outer transaction, if such exists, otherwise an empty string. For details, see <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>>.
 |m|STRING
 
 |m|metaData
-|a|Any metadata associated with the transaction or empty if there is none.
+|a|Any metadata associated with the transaction or an empty map if there is none.
 |m|MAP
 
 |m|parameters
-|a|A map containing all the parameters used by the query currently executing in this transaction.
+|a|A map containing all the parameters used by the query currently executing in this transaction, or an empty map if no query is currently executing.
 |m|MAP
 
 |m|planner
-|a|The name of the Cypher planner used to plan the query currently executing in this transaction. For details, see <<cypher-planner, Cypher planner>>.
+|a|The name of the Cypher planner used to plan the query currently executing in this transaction, or an empty string if no query is currently executing. For details, see <<cypher-planner, Cypher planner>>.
 |m|STRING
 
 |m|runtime
-|a|The name of the Cypher runtime used by the query currently executing in this transaction. For details, see <<cypher-runtime, Cypher runtime>>.
+|a|The name of the Cypher runtime used by the query currently executing in this transaction, or an empty string if no query is currently executing. For details, see <<cypher-runtime, Cypher runtime>>.
 |m|STRING
 
 |m|indexes
-|a|The indexes utilised by the query currently executing in this transaction.
+|a|The indexes utilised by the query currently executing in this transaction, or an empty list if no query is currently executing.
 |m|LIST OF MAP
 
 m|currentQueryStartTime
-a|The time at which the query currently executing in this transaction was started.
+a|The time at which the query currently executing in this transaction was started, or an empty string if no query is currently executing.
 m|STRING
 
 |m|protocol
@@ -121,11 +121,11 @@ m|STRING
 |m|STRING
 
 |m|requestUri
-|a|The request URI used by the client connection issuing the transaction, or null if the URI is not available.
+|a|The request URI used by the client connection issuing the transaction, or `null` if the URI is not available.
 |m|STRING
 
 m|currentQueryStatus
-a|The current status of the query currently executing in this transaction (`parsing`, `planning`, `planned`, `running`, or `waiting`).
+a|The current status of the query currently executing in this transaction (`parsing`, `planning`, `planned`, `running`, or `waiting`), or an empty string if no query is currently executing.
 m|STRING
 
 |m|statusDetails
@@ -133,7 +133,7 @@ m|STRING
 |m|STRING
 
 |m|resourceInformation
-|a|Information about any blocked transactions.
+|a|Information about any blocked transactions or an empty map if there is none.
 |m|MAP
 
 |m|activeLockCount
@@ -141,11 +141,11 @@ m|STRING
 |m|LONG
 
 |m|currentQueryActiveLockCount
-|a|Count of active locks held by the query currently executing in this transaction.
+|a|Count of active locks held by the query currently executing in this transaction, or `null` if no query is currently executing.
 |m|LONG
 
 |m|cpuTime
-|a|CPU time that has been actively spent executing the transaction.
+|a|CPU time that has been actively spent executing the transaction or `null` if unavailable.
 |m|DURATION
 
 |m|waitTime
@@ -153,35 +153,35 @@ m|STRING
 |m|DURATION
 
 |m|idleTime
-|a|Idle time for this transaction.
+|a|Idle time for this transaction or `null` if unavailable.
 |m|DURATION
 
 m|currentQueryElapsedTime
-a|The time that has elapsed since the query currently executing in this transaction was started.
+a|The time that has elapsed since the query currently executing in this transaction was started, or `null` if no query is currently executing.
 m|DURATION
 
 |m|currentQueryCpuTime
-|a|CPU time that has been actively spent executing the query currently executing in this transaction.
+|a|CPU time that has been actively spent executing the query currently executing in this transaction, or `null` if unavailable or no query is currently executing.
 |m|DURATION
 
 |m|currentQueryWaitTime
-|a|Wait time that has been spent waiting to acquire locks for the query currently executing in this transaction.
+|a|Wait time that has been spent waiting to acquire locks for the query currently executing in this transaction, or `null` if no query is currently executing.
 |m|DURATION
 
 |m|currentQueryIdleTime
-|a|Idle time for the query currently executing in this transaction.
+|a|Idle time for the query currently executing in this transaction, or `null` if unavailable or no query is currently executing.
 |m|DURATION
 
 m|currentQueryAllocatedBytes
-a|The number of bytes allocated on the heap so far by the query currently executing in this transaction.
+a|The number of bytes allocated on the heap so far by the query currently executing in this transaction, or `null` if unavailable or no query is currently executing.
 m|LONG
 
 |m|allocatedDirectBytes
-|a|Amount of off-heap (native) memory allocated by the transaction in bytes.
+|a|Amount of off-heap (native) memory allocated by the transaction in bytes or `null` if unavailable.
 |m|LONG
 
 |m|estimatedUsedHeapMemory
-|a|The estimated amount of used heap memory allocated by the transaction in bytes.
+|a|The estimated amount of used heap memory allocated by the transaction in bytes or `null` if unavailable.
 |m|LONG
 
 |m|pageHits
@@ -199,6 +199,10 @@ m|LONG
 |m|currentQueryPageFaults
 |a|The total number of page cache faults that the query currently executing in this transaction performed.
 |m|LONG
+
+|m|initializationStackTrace
+|a|The initialization stacktrace for this transaction or an empty string if unavailable.
+|m|STRING
 ||===""")
       section("Syntax") {
         p(
