@@ -56,7 +56,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|STRING
 
 |m|currentQueryId
-|a|The ID of the query currently executing in this transaction. label:default-output[]
+|a|The ID of the query currently executing in this transaction, or an empty string if no query is currently executing. label:default-output[]
 |m|STRING
 
 |m|connectionId
@@ -72,7 +72,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|STRING
 
 |m|currentQuery
-|a|The query text of the query currently executing in this transaction. label:default-output[]
+|a|The query text of the query currently executing in this transaction, or an empty string if no query is currently executing. label:default-output[]
 |m|STRING
 
 |m|startTime
@@ -88,31 +88,31 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|DURATION
 
 |m|allocatedBytes
-|a|The number of bytes allocated on the heap so far by the transaction. label:default-output[]
+|a|The number of bytes allocated on the heap so far by the transaction or 0 if unavailable. label:default-output[]
 |m|LONG
 
 |m|outerTransactionId
-|a|The ID of this transaction's outer transaction, if such exists. For details, see <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>>.
+|a|The ID of this transaction's outer transaction, if such exists, otherwise an empty string. For details, see <<subquery-call-in-transactions, `CALL { ... } IN TRANSACTIONS`>>.
 |m|STRING
 
 |m|metaData
-|a|Any metadata associated with the transaction or empty if there is none.
+|a|Any metadata associated with the transaction or an empty map if there is none.
 |m|MAP
 
 |m|parameters
-|a|A map containing all the parameters used by the query currently executing in this transaction.
+|a|A map containing all the parameters used by the query currently executing in this transaction, or an empty map if no query is currently executing.
 |m|MAP
 
 |m|planner
-|a|The name of the Cypher planner used to plan the query currently executing in this transaction. For details, see <<cypher-planner, Cypher planner>>.
+|a|The name of the Cypher planner used to plan the query currently executing in this transaction, or an empty string if no query is currently executing. For details, see <<cypher-planner, Cypher planner>>.
 |m|STRING
 
 |m|runtime
-|a|The name of the Cypher runtime used by the query currently executing in this transaction. For details, see <<cypher-runtime, Cypher runtime>>.
+|a|The name of the Cypher runtime used by the query currently executing in this transaction, or an empty string if no query is currently executing. For details, see <<cypher-runtime, Cypher runtime>>.
 |m|STRING
 
 |m|indexes
-|a|The indexes utilised by the query currently executing in this transaction.
+|a|The indexes utilised by the query currently executing in this transaction, or an empty list if no query is currently executing.
 |m|LIST OF MAP
 
 |m|protocol
@@ -121,7 +121,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|STRING
 
 |m|requestUri
-|a|The request URI used by the client connection issuing the transaction, or null if the URI is not available.
+|a|The request URI used by the client connection issuing the transaction, or `null` if the URI is not available.
 |m|STRING
 
 |m|statusDetails
@@ -129,7 +129,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|STRING
 
 |m|resourceInformation
-|a|Information about any blocked transactions.
+|a|Information about any blocked transactions or an empty map if there is none.
 |m|MAP
 
 |m|activeLockCount
@@ -137,7 +137,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|LONG
 
 |m|cpuTime
-|a|CPU time that has been actively spent executing the transaction.
+|a|CPU time that has been actively spent executing the transaction or 0 if unavailable.
 |m|DURATION
 
 |m|waitTime
@@ -145,15 +145,15 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|DURATION
 
 |m|idleTime
-|a|Idle time for this transaction.
+|a|Idle time for this transaction or 0 if unavailable.
 |m|DURATION
 
 |m|allocatedDirectBytes
-|a|Amount of off-heap (native) memory allocated by the transaction in bytes.
+|a|Amount of off-heap (native) memory allocated by the transaction in bytes or 0 if unavailable.
 |m|LONG
 
 |m|estimatedUsedHeapMemory
-|a|The estimated amount of used heap memory allocated by the transaction in bytes.
+|a|The estimated amount of used heap memory allocated by the transaction in bytes or 0 if unavailable.
 |m|LONG
 
 |m|pageHits
@@ -163,6 +163,10 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|pageFaults
 |a|The total number of page cache faults that the transaction performed.
 |m|LONG
+
+m|initializationStackTrace
+a|The initialization stacktrace for this transaction or an empty string if unavailable.
+m|STRING
 ||===""")
       section("Syntax") {
         p(
@@ -193,7 +197,8 @@ All users may view all of their own currently executing transactions.
             #If all columns are required, use `SHOW TRANSACTIONS YIELD *`.""".stripMargin('#'))
         backgroundQueries(List("MATCH (n) RETURN n")) {
           query("SHOW TRANSACTIONS", ResultAssertions(p => {
-            p.columns should contain theSameElementsAs Array("database", "transactionId", "currentQueryId", "connectionId", "clientAddress", "username", "currentQuery", "startTime", "status", "elapsedTime", "allocatedBytes")
+            p.columns should contain theSameElementsAs
+              Array("database", "transactionId", "currentQueryId", "connectionId", "clientAddress", "username", "currentQuery", "startTime", "status", "elapsedTime", "allocatedBytes")
           })) {
             resultTable()
           }
@@ -224,14 +229,16 @@ All users may view all of their own currently executing transactions.
           "UNWIND range(1,100000) AS x CREATE (:Number {value: x}) RETURN x"
         )) {
           query(
-            """SHOW TRANSACTIONS YIELD transactionId, elapsedTime, cpuTime, waitTime, idleTime
+            """SHOW TRANSACTIONS
+              #YIELD transactionId, elapsedTime, cpuTime, waitTime, idleTime
               #RETURN transactionId AS txId,
               #       elapsedTime.milliseconds AS elapsedTimeMillis,
               #       cpuTime.milliseconds AS cpuTimeMillis,
               #       waitTime.milliseconds AS waitTimeMillis,
               #       idleTime.seconds AS idleTimeSeconds""".stripMargin('#'),
             ResultAssertions(p => {
-              p.columns should contain theSameElementsAs Array("txId", "elapsedTimeMillis", "cpuTimeMillis", "waitTimeMillis", "idleTimeSeconds")
+              p.columns should contain theSameElementsAs
+                Array("txId", "elapsedTimeMillis", "cpuTimeMillis", "waitTimeMillis", "idleTimeSeconds")
             })) {
             resultTable()
           }
