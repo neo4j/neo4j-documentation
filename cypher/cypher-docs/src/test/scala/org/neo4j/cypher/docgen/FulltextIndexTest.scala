@@ -29,9 +29,10 @@ class FulltextIndexTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/administration/indexes"
 
   override def doc: Document = new DocBuilder {
-    private val createMatrixMovieNode = """CREATE (m:Movie {title: "The Matrix"}) RETURN m.title"""
+    private val createMatrixMovieNode = """CREATE (m:Movie {title: "The Matrix", reviews: ["The best movie ever", "The movie is nonsense"]}) RETURN m.title"""
     private val createJacketMovies = """CREATE (:Movie {title: "Full Metal Jacket"}), (:Movie {title: "The Jacket"}), (:Movie {title: "Yellow Jacket"}), (:Movie {title: "Full Moon High"}), (:Movie {title: "Metallica Through The Never", description: "The movie follows the young roadie Trip through his surreal adventure with the band."}) """
     private val createTitleAndDescriptionFulltextIndex = "CREATE FULLTEXT INDEX titlesAndDescriptions FOR (n:Movie|Book) ON EACH [n.title, n.description]"
+    private val createReviewsFulltextIndex = "CREATE FULLTEXT INDEX reviews FOR (n:Movie) ON EACH [n.reviews]"
     private val awaitIndexesOnline = """CALL db.awaitIndexes(1000)"""
     private val queryForMatrixNode = """CALL db.index.fulltext.queryNodes("titlesAndDescriptions", "matrix") YIELD node, score
                                        #RETURN node.title, node.description, score""".stripMargin('#')
@@ -42,6 +43,7 @@ class FulltextIndexTest extends DocumentingTest {
       createMatrixMovieNode,
       createJacketMovies,
       createTitleAndDescriptionFulltextIndex,
+      createReviewsFulltextIndex,
       awaitIndexesOnline)
     synopsis("This chapter describes how to use full-text indexes, to enable full-text search.")
     p("""Full-text indexes are powered by the link:https://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
@@ -61,6 +63,7 @@ class FulltextIndexTest extends DocumentingTest {
         #* will automatically populate newly created indexes with the existing data in a store.
         #* can be checked by the consistency checker, and they can be rebuilt if there is a problem with them.
         #* are a projection of the store, and can only index nodes and relationships by the contents of their properties.
+        #* include only property values of types String or String Array.
         #* can support any number of documents in a single index.
         #* are created, dropped, and updated transactionally, and is automatically replicated throughout a cluster.
         #* can be accessed via Cypher procedures.
@@ -173,6 +176,25 @@ class FulltextIndexTest extends DocumentingTest {
         resultTable()
       }
       p("A complete description of the Lucene query syntax can be found in the link:https://lucene.apache.org/core/8_2_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description[Lucene documentation].")
+    }
+
+    section( "Handling of Text Array properties", id="administration-indexes-fulltext-search-query") {
+      p(
+        """If the indexed property contains a text array, each element of this array is analyzed independently and all produced terms are associated with the same property name.
+           #This means that when querying such an indexed node or relationship, there is a match if any of the array elements match the query.
+           #For example, both of the following queries match the same node while referring different elements""".stripMargin('#'))
+      query("""CALL db.index.fulltext.queryNodes("reviews", 'best') YIELD node, score
+              #RETURN node.title, node.reviews, score;""".stripMargin('#'), ResultAssertions(r => {
+        r.size should equal(1)
+      })) {
+        resultTable()
+      }
+      query("""CALL db.index.fulltext.queryNodes("reviews", 'nonsense') YIELD node, score
+              #RETURN node.title, node.reviews, score;""".stripMargin('#'), ResultAssertions(r => {
+        r.size should equal(1)
+      })) {
+        resultTable()
+      }
     }
 
     section("Drop full-text indexes", "administration-indexes-fulltext-search-drop") {
