@@ -179,9 +179,9 @@ class FulltextIndexTest extends DocumentingTest {
 
     section( "Handling of Text Array properties", id="administration-indexes-fulltext-search-query") {
       p(
-        """If indexes property contains text array each element of this array will be analysed independently and all produced terms will be associated with the same property name.
-           #This mean that when quering such index node or relationship will match if any of array elements match the query.
-           #For example both following queries match the same node while referring different elements""".stripMargin('#'))
+        """If the indexed property contains a text array, each element of this array is analyzed independently and all produced terms are associated with the same property name.
+           #This means that when querying such an indexed node or relationship, there is a match if any of the array elements match the query.
+           #For example, both of the following queries match the same node while referring different elements""".stripMargin('#'))
       query("""CALL db.index.fulltext.queryNodes("reviews", 'best') YIELD node, score
               #RETURN node.title, node.reviews, score;""".stripMargin('#'), ResultAssertions(r => {
         r.size should equal(1)
