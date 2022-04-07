@@ -43,6 +43,7 @@ class FulltextIndexTest extends DocumentingTest {
       createMatrixMovieNode,
       createJacketMovies,
       createTitleAndDescriptionFulltextIndex,
+      createReviewsFulltextIndex,
       awaitIndexesOnline)
     synopsis("This chapter describes how to use full-text indexes, to enable full-text search.")
     p("""Full-text indexes are powered by the link:https://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
