@@ -6,14 +6,17 @@
 This section describes the query plans when indexes are used in various scenarios.
 --
 
-The task of tuning calls for different indexes depending on what the queries look like.
+The task of tuning calls for different indexes depends on what the queries look like.
 Therefore, it is important to have a fundamental understanding of how the indexes operate.
 This section describes the query plans that result from different index scenarios.
 
+[NOTE]
+====
 Node indexes and relationship indexes operate in the same way.
 Therefore, node and relationship indexes are used interchangeably in this section.
+====
 
-Please refer to <<administration-indexes-search-performance>> for instructions on how to create and maintain the indexes themselves.
+For instructions on how to create and maintain indexes, refer to <<administration-indexes-search-performance>>.
 
 == Index types and predicate compatibility
 
@@ -22,7 +25,6 @@ There are different types of indexes available in Neo4j and these are compatible
 
 Indexes are most often used for `MATCH` and `OPTIONAL MATCH` clauses that combine a label/relationship type predicate with a property predicate.
 Therefore, it is important to know what kind of predicates can be solved by the different indexes.
-An important exception to this is `TOKEN LOOKUP` indexes, which solve only label predicates.
 
 === TOKEN LOOKUP indexes
 
@@ -37,9 +39,12 @@ An important exception to this is `TOKEN LOOKUP` indexes, which solve only label
 |`MATCH ()-[r]->() WHERE r:REL`
 |===
 
-The lookup indexes are the most important indexes in the database and greatly improve the performance of Cypher queries, as well as the population of other indexes.
-Dropping these indexes may lead to severe performance degradations.
+[WARNING]
+====
+`TOKEN LOOKUP` are the most important indexes in the database because they improve the performance of the Cypher queries and the population of other indexes.
+Dropping these indexes may lead to severe performance degradation.
 Therefore, carefully consider the consequences before doing so.
+====
 
 === RANGE indexes
 
