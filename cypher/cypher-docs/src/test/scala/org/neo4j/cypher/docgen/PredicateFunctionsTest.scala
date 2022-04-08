@@ -149,6 +149,10 @@ class PredicateFunctionsTest extends DocumentingTest {
             #This query exemplifies the behavior of `exists()` when operating on `null` nodes.""".stripMargin('#'))
         resultTable()
       }
+      note {
+        p(
+          """Note that the `exists()` function is deprecated for property input. Please use the <<cypher-comparison, `IS NOT NULL` predicate>> instead.""".stripMargin('#'))
+      }
     }
     section("isEmpty()", "functions-isempty") {
       p("The function `isEmpty()` returns `true` if the given list or map contains no elements or if the given string contains no characters.")
