@@ -163,6 +163,82 @@ CREATE CONSTRAINT FOR ... REQUIRE ...
 ----
 
 a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+CREATE BTREE INDEX ...
+----
+.2+.^a|
+B-tree indexes are removed.
+
+B-tree indexes used for string queries are replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE TEXT INDEX ...
+----
+
+B-tree indexes used for spatial queries are replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE POINT INDEX ...
+----
+
+B-tree indexes used for general queries or property value types are replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE [RANGE] INDEX ...
+----
+
+These new indexes may be combined for multiple use cases.
+
+a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+CREATE INDEX
+...
+OPTIONS "{" btree-option: btree-value[, ...] "}"
+----
+
+a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+SHOW BTREE INDEXES
+----
+a|
+B-tree indexes are removed.
+
+Replaced by:
+[source, cypher, role="noheader"]
+----
+SHOW {POINT \| RANGE \| TEXT} INDEXES
+----
+
+a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT
+...
+OPTIONS "{" btree-option: btree-value[, ...] "}"
+----
+a|
+Node key and uniqueness constraints backed by B-tree indexes are removed.
+
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CREATE CONSTRAINT ...
+----
+Constraints used for string properties require an additional text index to cover the string queries properly.
+Constraints used for point properties require an additional point index to cover the spatial queries properly.
+
+a|
 label:syntax[]
 label:removed[] +
 For privilege commands:

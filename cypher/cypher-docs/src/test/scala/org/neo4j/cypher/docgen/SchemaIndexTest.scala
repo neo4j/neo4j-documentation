@@ -30,7 +30,6 @@ import org.neo4j.cypher.internal.logical.plans.NodeIndexSeek
 import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.{DPPlannerName, IDPPlannerName}
 import org.neo4j.exceptions.CypherExecutionException
-import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.config.Setting
 import org.neo4j.graphdb.schema.IndexSettingImpl._
 import org.neo4j.graphdb.schema.IndexType
@@ -76,7 +75,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   override def parent: Option[String] = Some("Administration")
   override def section = "Indexes"
 
-  private val nativeProvider = GenericNativeIndexProvider.DESCRIPTOR.name()
   private val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
   private val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
   private val cartesian3dMin = SPATIAL_CARTESIAN_3D_MIN.getSettingName
@@ -85,120 +83,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   private val wgsMax = SPATIAL_WGS84_MAX.getSettingName
   private val wgs3dMin = SPATIAL_WGS84_3D_MIN.getSettingName
   private val wgs3dMax = SPATIAL_WGS84_3D_MAX.getSettingName
-
-  @Test def create_index_on_a_single_property() {
-    testQuery(
-      title = "Create a single-property b-tree index for nodes",
-      text = "A named b-tree index on a single property for all nodes with a particular label can be created with `CREATE BTREE INDEX index_name FOR (n:Label) ON (n.property)`. " +
-        "Note that the index is not immediately available, but is created in the background.",
-      queryText = "CREATE BTREE INDEX node_index_name FOR (n:Person) ON (n.surname)",
-      optionalResultExplanation = "Note that the index name must be unique.",
-      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("surname"))
-    )
-    testQuery(
-      title = "Create a single-property b-tree index for relationships",
-      text = "A named b-tree index on a single property for all relationships with a particular relationship type can be created with `CREATE BTREE INDEX index_name FOR ()-[r:TYPE]-() ON (r.property)`. " +
-        "Note that the index is not immediately available, but is created in the background.",
-      queryText = "CREATE BTREE INDEX rel_index_name FOR ()-[r:KNOWS]-() ON (r.since)",
-      optionalResultExplanation = "Note that the index name must be unique.",
-      assertions = _ => assertIndexWithNameExists("rel_index_name", "KNOWS", List("since"))
-    )
-    testQuery(
-      title = "Create a single-property b-tree index only if it does not already exist",
-      text = "If it is not known whether an index exists or not, add `IF NOT EXISTS` to ensure it does.",
-      queryText = "CREATE BTREE INDEX node_index_name IF NOT EXISTS FOR (n:Person) ON (n.surname)",
-      optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
-      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("surname"))
-    )
-    testQuery(
-      title = "Create a single-property b-tree index with specified index provider",
-      text =
-        s"""To create a single property b-tree index with a specific index provider, the `OPTIONS` clause is used.
-          |Only one valid value exists for the index provider, `$nativeProvider`, which is the default value.""".stripMargin,
-      queryText = s"CREATE BTREE INDEX index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$nativeProvider'}",
-      optionalResultExplanation = "Can be combined with specifying index configuration.",
-      assertions = _ => assertIndexWithNameExists("index_with_provider", "TYPE", List("prop1"))
-    )
-    testQuery(
-      title = "Create a single-property b-tree index with specified index configuration",
-      text =
-        s"""To create a single property b-tree index with a specific index configuration, the `OPTIONS` clause is used.
-          |The valid configuration settings are
-          |
-          |* `$cartesianMin`
-          |* `$cartesianMax`
-          |* `$cartesian3dMin`
-          |* `$cartesian3dMax`
-          |* `$wgsMin`
-          |* `$wgsMax`
-          |* `$wgs3dMin`
-          |* `$wgs3dMax`
-          |
-          |Non-specified settings have their respective default values.""".stripMargin,
-      queryText =
-        s"""CREATE BTREE INDEX index_with_config FOR (n:Label) ON (n.prop2)
-          |OPTIONS {indexConfig: {`$cartesianMin`: [-100.0, -100.0], `$cartesianMax`: [100.0, 100.0]}}""".stripMargin,
-      optionalResultExplanation = "Can be combined with specifying index provider.",
-      assertions = _ => assertIndexWithNameExists("index_with_config", "Label", List("prop2"))
-    )
-  }
-
-  @Test def create_index_on_a_node_composite_property() {
-    testQuery(
-      title = "Create a composite b-tree index for nodes",
-      text = "A named b-tree index on multiple properties for all nodes with a particular label -- i.e. a composite index -- can be created with " +
-      "`CREATE BTREE INDEX index_name FOR (n:Label) ON (n.prop1, ..., n.propN)`. " +
-      "Only nodes with the specified label and that contain all the properties in the index definition will be added to the index. " +
-      "Note that the composite index is not immediately available, but is created in the background. " +
-      "The following statement will create a named composite index on all nodes labeled with `Person` and which have both an `age` and `country` property: ",
-      queryText = "CREATE BTREE INDEX node_index_name FOR (n:Person) ON (n.age, n.country)",
-      optionalResultExplanation = "Note that the index name must be unique.",
-      assertions = _ => assertIndexWithNameExists("node_index_name", "Person", List("age", "country"))
-    )
-  }
-
-  @Test def create_index_on_a_relationship_composite_property() {
-    testQuery(
-      title = "Create a composite b-tree index for relationships",
-      text = "A named b-tree index on multiple properties for all relationships with a particular relationship type -- i.e. a composite index -- can be created with " +
-      "`CREATE BTREE INDEX index_name FOR ()-[r:TYPE]-() ON (r.prop1, ..., r.propN)`. " +
-      "Only relationships with the specified type and that contain all the properties in the index definition will be added to the index. " +
-      "Note that the composite index is not immediately available, but is created in the background. " +
-      "The following statement will create a named composite index on all relationships labeled with `PURCHASED` and which have both a `date` and `amount` property: ",
-      queryText = "CREATE BTREE INDEX rel_index_name FOR ()-[r:PURCHASED]-() ON (r.date, r.amount)",
-      optionalResultExplanation = "Note that the index name must be unique.",
-      assertions = _ => assertIndexWithNameExists("rel_index_name", "PURCHASED", List("date", "amount"))
-    )
-  }
-
-  @Test def create_composite_index_with_options() {
-    testQuery(
-      title = "Create a composite b-tree index with specified index provider and configuration",
-      text =
-        s"""To create a composite b-tree index with a specific index provider and configuration, the `OPTIONS` clause is used.
-          |Only one valid value exists for the index provider, `$nativeProvider`, which is the default value.
-          |The valid configuration settings are
-          |
-          |* `$cartesianMin`
-          |* `$cartesianMax`
-          |* `$cartesian3dMin`
-          |* `$cartesian3dMax`
-          |* `$wgsMin`
-          |* `$wgsMax`
-          |* `$wgs3dMin`
-          |* `$wgs3dMax`
-          |
-          |Non-specified settings have their respective default values.""".stripMargin,
-      queryText =
-        s"""CREATE BTREE INDEX index_with_options FOR (n:Label) ON (n.prop1, n.prop2)
-          |OPTIONS {
-          | indexProvider: '$nativeProvider',
-          | indexConfig: {`$wgsMin`: [-100.0, -80.0], `$wgsMax`: [100.0, 80.0]}
-          |}""".stripMargin,
-      optionalResultExplanation = "Specifying index provider and configuration can be done individually.",
-      assertions = _ => assertIndexWithNameExists("index_with_options", "Label", List("prop1", "prop2"))
-    )
-  }
 
   @Test def create_single_prop_range_index() {
     val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
@@ -991,18 +875,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           checkPlanDescription(p)("NodeIndexSeek")
       }
     )
-  }
-
-  //noinspection SameParameterValue
-  private def assertIndexesOnLabels(label: String, expectedIndexes: List[List[String]]) {
-    val transaction = db.beginTx()
-    try {
-      val indexDefs = transaction.schema.getIndexes(Label.label(label)).asScala.toList
-      val properties = indexDefs.map(_.getPropertyKeys.asScala.toList)
-      assert(properties.toSet === expectedIndexes.toSet)
-    } finally {
-      transaction.close()
-    }
   }
 
   private def assertIndexWithNameExists(name: String, expectedEntity: String, expectedProperties: List[String]) {

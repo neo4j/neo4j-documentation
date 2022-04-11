@@ -29,16 +29,15 @@ There are multiple index types available:
 * Point index.
 * Range index.
 * Text index types.
-* B-tree. label:deprecated[]
 
 [NOTE]
 ====
-The deprecated B-tree index type has been replaced by more specific index types (Range, Point, and Text).
+The B-tree index type has been replaced by more specific index types (Range, Point, and Text).
 ====
 See <<administration-indexes-fulltext-search>> for more information about fulltext indexes.
 Token lookup indexes contain nodes with one or more labels or relationship types, without regard for any properties.
 
-Cypher enables the creation of B-tree and range indexes on one or more properties for all nodes or relationships with a given label or relationship type:
+Cypher enables the creation of range indexes on one or more properties for all nodes or relationships with a given label or relationship type:
 
 * An index created on a single property for any given label or relationship type is called a _single-property index_.
 * An index created on more than one property for any given label or relationship type is called a _composite index_.
@@ -67,72 +66,6 @@ Using the keyword `IF NOT EXISTS` makes the command idempotent, and no error wil
 
 | [source, cypher, role=noplay]
 ----
-CREATE BTREE INDEX [index_name] [IF NOT EXISTS]
-FOR (n:LabelName)
-ON (n.propertyName)
-[OPTIONS "{" option: value[, ...] "}"]
-----
-| Create a single-property index on nodes.
-
-Index provider and configuration can be specified using the `OPTIONS` clause.
-
-Explicit use of `BTREE` keyword or b-tree options are deprecated in 4.4 and will be replaced in 5.0.
-.12+.^| Best practice is to give the index a name when it is created.
-If the index is not explicitly named, it gets an auto-generated name.
-
-The index name must be unique among both indexes and constraints.
-
-The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same index twice.
-With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name or same schema and index type already exist.
-It may still throw an error if conflicting constraints exist, such as constraints with the same name or schema and backing index type.
-
-| [source, cypher, role=noplay]
-----
-CREATE BTREE INDEX [index_name] [IF NOT EXISTS]
-FOR ()-"["r:TYPE_NAME"]"-()
-ON (r.propertyName)
-[OPTIONS "{" option: value[, ...] "}"]
-----
-| Create a single-property index on relationships.
-
-Index provider and configuration can be specified using the `OPTIONS` clause.
-
-Explicit use of `BTREE` keyword or b-tree options are deprecated in 4.4 and will be replaced in 5.0.
-
-| [source, cypher, role=noplay]
-----
-CREATE BTREE INDEX [index_name] [IF NOT EXISTS]
-FOR (n:LabelName)
-ON (n.propertyName_1,
-    n.propertyName_2,
-    …
-    n.propertyName_n)
-[OPTIONS "{" option: value[, ...] "}"]
-----
-| Create a composite index on nodes.
-
-Index provider and configuration can be specified using the `OPTIONS` clause.
-
-Explicit use of `BTREE` keyword or b-tree options are deprecated in 4.4 and will be replaced in 5.0.
-
-| [source, cypher, role=noplay]
-----
-CREATE BTREE INDEX [index_name] [IF NOT EXISTS]
-FOR ()-"["r:TYPE_NAME"]"-()
-ON (r.propertyName_1,
-    r.propertyName_2,
-    …
-    r.propertyName_n)
-[OPTIONS "{" option: value[, ...] "}"]
-----
-| Create a composite index on relationships.
-
-Index provider and configuration can be specified using the `OPTIONS` clause.
-
-Explicit use of `BTREE` keyword or B-tree options are deprecated in 4.4 and will be replaced in 5.0.
-
-| [source, cypher, role=noplay]
-----
 CREATE [RANGE] INDEX [index_name] [IF NOT EXISTS]
 FOR (n:LabelName)
 ON (n.propertyName_1[,
@@ -144,6 +77,14 @@ ON (n.propertyName_1[,
 | Create a range index on nodes, either on a single property or composite.
 
 Index provider can be specified using the `OPTIONS` clause.
+.8+.^| Best practice is to give the index a name when it is created.
+If the index is not explicitly named, it gets an auto-generated name.
+
+The index name must be unique among both indexes and constraints.
+
+The command is optionally idempotent, with the default behavior to throw an error if you attempt to create the same index twice.
+With `IF NOT EXISTS`, no error is thrown and nothing happens should an index with the same name or same schema and index type already exist.
+It may still throw an error if conflicting constraints exist, such as constraints with the same name or schema and backing index type.
 
 | [source, cypher, role=noplay]
 ----
@@ -235,7 +176,7 @@ With `IF EXISTS`, no error is thrown and nothing happens should the index not ex
 
 | [source, cypher, role=noplay]
 ----
-SHOW [ALL\|BTREE\|FULLTEXT\|LOOKUP\|POINT\|RANGE\|TEXT] INDEX[ES]
+SHOW [ALL\|FULLTEXT\|LOOKUP\|POINT\|RANGE\|TEXT] INDEX[ES]
     [YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
     [WHERE expression]
     [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
@@ -255,7 +196,7 @@ listing indexes require <<access-control-database-administration-index, the `SHO
 [[administration-indexes-single-vs-composite-index]]
 === Composite index limitations
 
-Like single-property B-tree and range indexes, composite B-tree and range indexes support all predicates:
+Like single-property range indexes, composite range indexes support all predicates:
 
 * equality check: `n.prop = value`
 * list membership check: `n.prop IN list`
@@ -321,30 +262,6 @@ To get this kind of fallback behavior, it is necessary to create additional inde
 
 [[administration-indexes-examples]]
 == Creating indexes
-
-[role=deprecated]
-include::../indexes/create-a-single-property-b-tree-index-for-nodes.asciidoc[leveloffset=+1]
-
-[role=deprecated]
-include::../indexes/create-a-single-property-b-tree-index-for-relationships.asciidoc[leveloffset=+1]
-
-[role=deprecated]
-include::../indexes/create-a-single-property-b-tree-index-only-if-it-does-not-already-exist.asciidoc[leveloffset=+1]
-
-[role=deprecated]
-include::../indexes/create-a-single-property-b-tree-index-with-specified-index-provider.asciidoc[leveloffset=+1]
-
-[role=deprecated]
-include::../indexes/create-a-single-property-b-tree-index-with-specified-index-configuration.asciidoc[leveloffset=+1]
-
-[role=deprecated]
-include::../indexes/create-a-composite-b-tree-index-for-nodes.asciidoc[leveloffset=+1]
-
-[role=deprecated]
-include::../indexes/create-a-composite-b-tree-index-for-relationships.asciidoc[leveloffset=+1]
-
-[role=deprecated]
-include::../indexes/create-a-composite-b-tree-index-with-specified-index-provider-and-configuration.asciidoc[leveloffset=+1]
 
 include::../indexes/create-a-single-property-range-index-for-nodes.asciidoc[leveloffset=+1]
 
@@ -432,7 +349,7 @@ Listing indexes can be done with `SHOW INDEXES`, which will produce a table with
 | `+`
 
 | `type`
-| The IndexType of this index (`BTREE`, `FULLTEXT`, `LOOKUP`, `POINT`, `RANGE`, or `TEXT`).
+| The IndexType of this index (`FULLTEXT`, `LOOKUP`, `POINT`, `RANGE`, or `TEXT`).
 | `+`
 | `+`
 
