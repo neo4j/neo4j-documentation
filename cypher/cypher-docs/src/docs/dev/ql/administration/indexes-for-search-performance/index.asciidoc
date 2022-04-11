@@ -32,7 +32,7 @@ There are multiple index types available:
 
 [NOTE]
 ====
-The previous B-tree index type has been replaced by more specific index types (Range, Point, and Text).
+The B-tree index type has been replaced by more specific index types (Range, Point, and Text).
 ====
 See <<administration-indexes-fulltext-search>> for more information about fulltext indexes.
 Token lookup indexes contain nodes with one or more labels or relationship types, without regard for any properties.

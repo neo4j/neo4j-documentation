@@ -235,8 +235,8 @@ Replaced by:
 ----
 CREATE CONSTRAINT ...
 ----
-Constraints used for string properties will also require an additional text index to cover the string queries properly.
-Constraints used for point properties will also require an additional point index to cover the spatial queries properly.
+Constraints used for string properties require an additional text index to cover the string queries properly.
+Constraints used for point properties require an additional point index to cover the spatial queries properly.
 
 a|
 label:syntax[]
