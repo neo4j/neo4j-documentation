@@ -218,7 +218,7 @@ Find all shortest paths.
 MATCH (n:Person {name: $value})
 RETURN
 
-size((n)-->()-->())
+size([p=(n)-->()-->() | p])
 
 AS fof###
 
