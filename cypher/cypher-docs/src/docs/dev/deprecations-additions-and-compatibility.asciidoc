@@ -479,6 +479,19 @@ YIELD { * \| field[, ...] }
 a|
 Terminate transaction now allows `YIELD`.
 The `WHERE` clause is not allowed on its own, as it is for `SHOW`, but needs the `YIELD` clause.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+GRANT EXECUTE BOOSTED PROCEDURE ...
+GRANT EXECUTE BOOSTED FUNCTION ...
+----
+a|
+Not a syntax change but a semantic one.
+The `EXECUTE BOOSTED` privilege will no longer include an implicit `EXECUTE` privilege when granted.
+That means that to execute a procedure or a function with boosted privileges both `EXECUTE` and `EXECUTE BOOSTED` are needed.
 |===
 
 === New features
