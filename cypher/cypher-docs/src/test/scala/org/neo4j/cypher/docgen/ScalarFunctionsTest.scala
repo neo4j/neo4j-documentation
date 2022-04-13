@@ -54,7 +54,7 @@ class ScalarFunctionsTest extends DocumentingTest {
         #* <<functions-properties, properties()>>
         #* <<functions-randomuuid, randomUUID()>>
         #* <<functions-size, size()>>
-        #* <<functions-size-of-pattern-expression, Size of pattern expression>>
+        #* <<functions-size-of-pattern-comprehension, Size of pattern comprehension>>
         #* <<functions-size-of-string, Size of string>>
         #* <<functions-startnode, startNode()>>
         #* <<functions-timestamp, timestamp()>>
@@ -69,7 +69,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       p("""The `length()` and `size()` functions are quite similar, and so it is important to take note of the difference.
           #
           #Function `length()`:: Only works for <<functions-length, paths>>.
-          #Function `size()`:: Only works for the three types: <<functions-size-of-string, strings>>, <<functions-size, lists>>, and <<functions-size-of-pattern-expression, pattern expressions>>.""".stripMargin('#'))
+          #Function `size()`:: Only works for the three types: <<functions-size-of-string, strings>>, <<functions-size, lists>>, and <<functions-size-of-pattern-comprehension, pattern comprehension>>.""".stripMargin('#'))
     }
     graphViz()
     section("coalesce()", "functions-coalesce") {
@@ -234,14 +234,14 @@ class ScalarFunctionsTest extends DocumentingTest {
         p("The number of elements in the list is returned.")
       }
     }
-    section("size() applied to pattern expression", "functions-size-of-pattern-expression") {
-      p("""This is the same function `size()` as described above, but you pass in a pattern expression, instead of a list.
+    section("size() applied to pattern comprehension", "functions-size-of-pattern-comprehension") {
+      p("""This is the same function `size()` as described above, but you pass in a pattern comprehension.
           #The function size will then calculate on a _list_ of paths.""".stripMargin('#'))
       function("size(pattern expression)",
         ("pattern expression", "A pattern expression that returns a list."))
       query("""MATCH (a)
               #WHERE a.name = 'Alice'
-              #RETURN size((a)-->()-->()) AS fof""".stripMargin('#'),
+              #RETURN size([p=(a)-->()-->() | p]) AS fof""".stripMargin('#'),
       ResultAssertions((r) => {
           r.toList should equal(List(Map("fof" -> 3)))
         })) {
