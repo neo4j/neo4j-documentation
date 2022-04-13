@@ -131,7 +131,7 @@ class ReturnTest extends DocumentingTest {
     section("Other expressions", "return-other-expressions") {
       p("""Any expression can be used as a return item -- literals, predicates, properties, functions, and everything else.""")
       query("""MATCH (a {name: 'A'})
-              #RETURN a.age > 30, "I'm a literal", (a)-->()""".stripMargin('#'),
+              #RETURN a.age > 30, "I'm a literal", [p=(a)-->() | p] AS `(a)-->()`""".stripMargin('#'),
       ResultAssertions(r => {
           r.toList.head("a.age > 30") shouldBe true
           r.toList.head("\"I'm a literal\"") shouldBe "I'm a literal"

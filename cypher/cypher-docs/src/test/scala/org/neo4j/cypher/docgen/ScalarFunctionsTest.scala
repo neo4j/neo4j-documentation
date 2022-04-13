@@ -266,13 +266,13 @@ class ScalarFunctionsTest extends DocumentingTest {
       }
     }
     section("size() applied to pattern expression", "functions-size-of-pattern-expression") {
-      p("""This is the same function `size()` as described above, but you pass in a pattern expression, instead of a list.
+      p("""This is the same function `size()` as described above, but you pass in a pattern comprehension.
           #The function size will then calculate on a _list_ of paths.""".stripMargin('#'))
       function("size(pattern expression)",
         ("pattern expression", "A pattern expression that returns a list."))
       query("""MATCH (a)
               #WHERE a.name = 'Alice'
-              #RETURN size((a)-->()-->()) AS fof""".stripMargin('#'),
+              #RETURN size([p=(a)-->()-->() | p]) AS fof""".stripMargin('#'),
       ResultAssertions((r) => {
           r.toList should equal(List(Map("fof" -> 3)))
         })) {
