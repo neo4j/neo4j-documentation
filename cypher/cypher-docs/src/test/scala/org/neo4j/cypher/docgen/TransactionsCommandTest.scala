@@ -153,7 +153,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|LONG
 
 |m|estimatedUsedHeapMemory
-|a|The estimated amount of used heap memory allocated by the transaction in bytes or 0 if unavailable.
+|a|The estimated amount of used heap memory allocated by the transaction in bytes, or `0` if unavailable.
 |m|LONG
 
 |m|pageHits
