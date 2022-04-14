@@ -88,7 +88,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|DURATION
 
 |m|allocatedBytes
-|a|The number of bytes allocated on the heap so far by the transaction or 0 if unavailable. label:default-output[]
+|a|The number of bytes allocated on the heap so far by the transaction, or `0` if unavailable. label:default-output[]
 |m|LONG
 
 |m|outerTransactionId
