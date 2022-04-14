@@ -137,7 +137,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|LONG
 
 |m|cpuTime
-|a|CPU time that has been actively spent executing the transaction or 0 if unavailable.
+|a|CPU time that has been actively spent executing the transaction, or `0` if unavailable.
 |m|DURATION
 
 |m|waitTime
