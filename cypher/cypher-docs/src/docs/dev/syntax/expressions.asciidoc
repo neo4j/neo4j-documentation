@@ -95,30 +95,31 @@ include::../ql/query-syntax-label.adoc[leveloffset=+1]
 
 The following table displays whether the `LABEL` expression matches the node:
 
-[%header, cols="2h,1,1,1,1,1,1,1,1"]
+[cols="^3,^2,^2,^2,^2,^2,^2,^2,^2"]
 |===
 |
-8+^|Node
-1.1+|`LABEL` expression | `()` | `(:A)` | `(:B)` | `(:C)` | `(:A:B)` | `(:A:C)` | `(:B:C)` | `(:A:B:C)`
-1.1+| () | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
-1.1+| (:A) | | {check-mark} | | | {check-mark} | {check-mark} | | {check-mark}
-1.1+| (:A&B) | | | | | {check-mark} | | | {check-mark}
-1.1+| (:A\|B) | | {check-mark} | {check-mark} | | {check-mark} | {check-mark} | {check-mark} | {check-mark}
-1.1+| (:!A) | {check-mark} | | {check-mark} | {check-mark} | | | {check-mark} |
-1.1+| (:!!A) | | {check-mark} | | | {check-mark} | {check-mark} | | {check-mark}
-1.1+| (:A&!A) | | | | | | | |
-1.1+| (:A\|!A) | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
-1.1+| (:%) | | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
-1.1+| (:!%) | {check-mark} | | | | | | |
-1.1+| (:%\|!%) | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
-1.1+| (:%&!%) | | | | | | | |
-1.1+| (:A&%) | | {check-mark} | | | {check-mark} | {check-mark} | | {check-mark}
-1.1+| (:A\|%) | | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
-1.1+| (:(A&B)&!(B&C)) | | | | | {check-mark} | | |
-1.1+| (:!(A&%)&%)) | | | {check-mark} | {check-mark} | | | {check-mark} |
+8+^|*Node*
+
+|*`LABEL` expression* | `()` | `(:A)` | `(:B)` | `(:C)` | `(:A:B)` | `(:A:C)` | `(:B:C)` | `(:A:B:C)`
+| `()` | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+| `(:A)` | | {check-mark} | | | {check-mark} | {check-mark} | | {check-mark}
+| `(:A&B)` | | | | | {check-mark} | | | {check-mark}
+| `(:A\|B)` | | {check-mark} | {check-mark} | | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+| `(:!A)` | {check-mark} | | {check-mark} | {check-mark} | | | {check-mark} |
+| `(:!!A)` | | {check-mark} | | | {check-mark} | {check-mark} | | {check-mark}
+| `(:A&!A)` | | | | | | | |
+| `(:A\|!A)` | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+| `(:%)` | | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+| `(:!%)` | {check-mark} | | | | | | |
+| `(:%\|!%)` | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+| `(:%&!%)` | | | | | | | |
+| `(:A&%)` | | {check-mark} | | | {check-mark} | {check-mark} | | {check-mark}
+| `(:A\|%)` | | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+| `(:(A&B)&!(B&C))` | | | | | {check-mark} | | |
+| `(:!(A&%)&%))` | | | {check-mark} | {check-mark} | | | {check-mark} |
 |===
 
-[NOTE]
+[WARNING]
 Label expressions cannot be combined with label syntax.
 For example, `:A:B&C` will throw an error.
 Instead, use either `:A&B&C` or `:A:B:C`.
