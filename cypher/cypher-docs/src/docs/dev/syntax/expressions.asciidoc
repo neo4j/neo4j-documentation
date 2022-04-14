@@ -13,6 +13,12 @@ This section contains an overview of expressions in Cypher with examples.
  ** <<syntax-simple-case, Simple `CASE` form: comparing an expression against multiple values>>
  ** <<syntax-generic-case, Generic `CASE` form: allowing for multiple conditionals to be expressed>>
  ** <<syntax-distinguish-case, Distinguishing between when to use the simple and generic `CASE` forms>>
+* <<query-syntax-label, `Label` expressions>>
+ ** <<syntax-no-label, Match on single node label>>
+ ** <<syntax-and-label, Match with an `AND` expression for the node labels>>
+ ** <<syntax-or-label, Match with an `OR` expression for the node labels>>
+ ** <<syntax-not-label, Match with a `NOT` expression for the node labels>>
+ ** <<syntax-wild-label, Match with a `%` expression for the node labels>>
 
 [[cypher-expressions-general]]
 == Expressions in general
@@ -78,3 +84,33 @@ Any number literal may contain an underscore `_` between digits.
 There may be an underscore between the `0x` or `0o` and the digits for hexadecimal and octal literals.
 
 include::../ql/query-syntax-case.adoc[leveloffset=+1]
+include::../ql/query-syntax-label.adoc[leveloffset=+1]
+
+=== List of Label Expressions examples and what they match
+In the following table, a green tick is shown if the `Label Expression` would match the node.
+
+[%header, cols="2h,1,1,1,1,1,1,1,1"]
+|===
+|
+8+^|Node
+1.1+|Label expression|()|(:A)|(:B)|(:C)|(:A:B)|(:A:C)|(:B:C)|(:A:B:C)
+1.1+|()|✅|✅|✅|✅|✅|✅|✅|✅
+1.1+|(:A)||✅|||✅|✅||✅
+1.1+|(:A&B)|||||✅|||✅
+1.1+|(:A\|B)||✅|✅||✅|✅|✅|✅
+1.1+|(:!A)|✅||✅|✅|||✅|
+1.1+|(:!!A)||✅|||✅|✅||✅
+1.1+|(:A&!A)||||||||
+1.1+|(:A\|!A)|✅|✅|✅|✅|✅|✅|✅|✅
+1.1+|(:%)||✅|✅|✅|✅|✅|✅|✅
+1.1+|(:!%)|✅|||||||
+1.1+|(:%\|!%)|✅|✅|✅|✅|✅|✅|✅|✅
+1.1+|(:%&!%)||||||||
+1.1+|(:A&%)||✅|||✅|✅||✅
+1.1+|(:A\|%)||✅|✅|✅|✅|✅|✅|✅
+1.1+|(:(A&B)&!(B&C))|||||✅|||
+1.1+|(:!(A&%)&%))|||✅|✅|||✅|
+|===
+
+=== Limitations
+Label expressions cannot be combined with label syntax eg. `:A:B&C` this will instead throw an error. Instead user either `:A&B&C` or `:A:B:C`.
