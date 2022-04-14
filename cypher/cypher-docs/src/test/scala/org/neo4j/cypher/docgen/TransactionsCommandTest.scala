@@ -165,7 +165,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|LONG
 
 m|initializationStackTrace
-a|The initialization stacktrace for this transaction or an empty string if unavailable.
+a|The initialization stacktrace for this transaction, or an empty string if unavailable.
 m|STRING
 ||===""")
       section("Syntax") {
