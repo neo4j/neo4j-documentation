@@ -96,7 +96,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|STRING
 
 |m|metaData
-|a|Any metadata associated with the transaction or an empty map if there is none.
+|a|Any metadata associated with the transaction, or an empty map if there is none.
 |m|MAP
 
 |m|parameters
