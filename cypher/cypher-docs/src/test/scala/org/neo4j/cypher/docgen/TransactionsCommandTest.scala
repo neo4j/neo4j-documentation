@@ -149,7 +149,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|DURATION
 
 |m|allocatedDirectBytes
-|a|Amount of off-heap (native) memory allocated by the transaction in bytes or 0 if unavailable.
+|a|Amount of off-heap (native) memory allocated by the transaction in bytes, or `0` if unavailable.
 |m|LONG
 
 |m|estimatedUsedHeapMemory
