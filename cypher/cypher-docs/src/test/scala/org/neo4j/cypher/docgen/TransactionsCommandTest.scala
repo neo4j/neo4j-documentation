@@ -145,7 +145,7 @@ class TransactionsCommandTest extends DocumentingTest {
 |m|DURATION
 
 |m|idleTime
-|a|Idle time for this transaction or 0 if unavailable.
+|a|Idle time for this transaction, or `0` if unavailable.
 |m|DURATION
 
 |m|allocatedDirectBytes
