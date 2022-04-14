@@ -13,12 +13,14 @@ This section contains an overview of expressions in Cypher with examples.
  ** <<syntax-simple-case, Simple `CASE` form: comparing an expression against multiple values>>
  ** <<syntax-generic-case, Generic `CASE` form: allowing for multiple conditionals to be expressed>>
  ** <<syntax-distinguish-case, Distinguishing between when to use the simple and generic `CASE` forms>>
-* <<query-syntax-label, `Label` expressions>>
- ** <<syntax-no-label, Match on single node label>>
+* <<query-syntax-label, `LABEL` expressions>>
+ ** <<syntax-no-label, Match without label expression>>
+ ** <<syntax-on-single-label, Match on single node label>>
  ** <<syntax-and-label, Match with an `AND` expression for the node labels>>
  ** <<syntax-or-label, Match with an `OR` expression for the node labels>>
  ** <<syntax-not-label, Match with a `NOT` expression for the node labels>>
  ** <<syntax-wild-label, Match with a `%` expression for the node labels>>
+ ** <<syntax-list-label, List of `LABEL` expressions examples>>
 
 [[cypher-expressions-general]]
 == Expressions in general
@@ -77,6 +79,7 @@ String literals can contain the following escape sequences:
 |`\Uxxxxxxxx`|Unicode UTF-32 code point (8 hex digits must follow the `\U`)
 |===================
 
+
 [[cypher-expressions-number-literals]]
 == Note on number literals
 
@@ -86,31 +89,36 @@ There may be an underscore between the `0x` or `0o` and the digits for hexadecim
 include::../ql/query-syntax-case.adoc[leveloffset=+1]
 include::../ql/query-syntax-label.adoc[leveloffset=+1]
 
-=== List of Label Expressions examples and what they match
-In the following table, a green tick is shown if the `Label Expression` would match the node.
+
+[[syntax-list-label]]
+=== List of `LABEL` expressions examples
+
+The following table displays whether the `LABEL` expression matches the node:
 
 [%header, cols="2h,1,1,1,1,1,1,1,1"]
 |===
 |
 8+^|Node
-1.1+|Label expression|()|(:A)|(:B)|(:C)|(:A:B)|(:A:C)|(:B:C)|(:A:B:C)
-1.1+|()|✅|✅|✅|✅|✅|✅|✅|✅
-1.1+|(:A)||✅|||✅|✅||✅
-1.1+|(:A&B)|||||✅|||✅
-1.1+|(:A\|B)||✅|✅||✅|✅|✅|✅
-1.1+|(:!A)|✅||✅|✅|||✅|
-1.1+|(:!!A)||✅|||✅|✅||✅
-1.1+|(:A&!A)||||||||
-1.1+|(:A\|!A)|✅|✅|✅|✅|✅|✅|✅|✅
-1.1+|(:%)||✅|✅|✅|✅|✅|✅|✅
-1.1+|(:!%)|✅|||||||
-1.1+|(:%\|!%)|✅|✅|✅|✅|✅|✅|✅|✅
-1.1+|(:%&!%)||||||||
-1.1+|(:A&%)||✅|||✅|✅||✅
-1.1+|(:A\|%)||✅|✅|✅|✅|✅|✅|✅
-1.1+|(:(A&B)&!(B&C))|||||✅|||
-1.1+|(:!(A&%)&%))|||✅|✅|||✅|
+1.1+|`LABEL` expression | `()` | `(:A)` | `(:B)` | `(:C)` | `(:A:B)` | `(:A:C)` | `(:B:C)` | `(:A:B:C)`
+1.1+| () | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+1.1+| (:A) | | {check-mark} | | | {check-mark} | {check-mark} | | {check-mark}
+1.1+| (:A&B) | | | | | {check-mark} | | | {check-mark}
+1.1+| (:A\|B) | | {check-mark} | {check-mark} | | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+1.1+| (:!A) | {check-mark} | | {check-mark} | {check-mark} | | | {check-mark} |
+1.1+| (:!!A) | | {check-mark} | | | {check-mark} | {check-mark} | | {check-mark}
+1.1+| (:A&!A) | | | | | | | |
+1.1+| (:A\|!A) | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+1.1+| (:%) | | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+1.1+| (:!%) | {check-mark} | | | | | | |
+1.1+| (:%\|!%) | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+1.1+| (:%&!%) | | | | | | | |
+1.1+| (:A&%) | | {check-mark} | | | {check-mark} | {check-mark} | | {check-mark}
+1.1+| (:A\|%) | | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark} | {check-mark}
+1.1+| (:(A&B)&!(B&C)) | | | | | {check-mark} | | |
+1.1+| (:!(A&%)&%)) | | | {check-mark} | {check-mark} | | | {check-mark} |
 |===
 
-=== Limitations
-Label expressions cannot be combined with label syntax eg. `:A:B&C` this will instead throw an error. Instead user either `:A&B&C` or `:A:B:C`.
+[NOTE]
+Label expressions cannot be combined with label syntax.
+For example, `:A:B&C` will throw an error.
+Instead, use either `:A&B&C` or `:A:B:C`.

@@ -37,7 +37,7 @@ class labelExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppo
                   #  (:B:C {name:'Frank'}),
                   #  (:A:B:C {name:'George'}),
                   #  ({name:'Henry'})""".stripMargin('#'))
-    p("""The label expressions evaluate to true or false when applied to the label set of a node or the type of a relationship.
+    p("""`LABEL` expressions evaluate to true or false when applied to the label set of a node, or the type of a relationship.
         # Assuming no other filters are applied, then a label expression evaluating to true means the node or relationship is matched.""".stripMargin('#'))
     p("The following graph is used for the examples below:")
     graphViz()
@@ -50,7 +50,7 @@ class labelExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppo
         resultTable()
       }
     }
-    section("Match on single node label", "syntax-no-label") {
+    section("Match on single node label", "syntax-on-single-label") {
       p("""A match on a single node label returns the nodes that contains the specified label""".stripMargin('#'))
       query("""MATCH (n:A) RETURN n.name AS name""".stripMargin('#'),
         ResultAssertions((r) => {
