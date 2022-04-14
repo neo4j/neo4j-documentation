@@ -53,8 +53,8 @@ class MatchTest extends DocumentingTest {
         | ** <<get-all-nodes, Get all nodes>>
         | ** <<get-all-nodes-with-label, Get all nodes with a label>>
         | ** <<related-nodes, Related nodes>>
-        | ** <<match-with-labels, Match with a label expression for the node labels>>
-        | ** <<syntax-or-label, Match with labels>>
+        | ** <<match-with-labels, Match with labels>>
+        | ** <<syntax-or-label, Match with a label expression for the node labels>>
         |* <<relationship-basics, Relationship basics>>
         | ** <<outgoing-relationships, Outgoing relationships>>
         | ** <<directed-rels-and-variable, Directed relationships and variable>>
