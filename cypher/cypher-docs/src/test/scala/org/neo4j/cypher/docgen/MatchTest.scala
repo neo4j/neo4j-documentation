@@ -238,7 +238,9 @@ class MatchTest extends DocumentingTest {
             #`+-[:TYPE*minHops..maxHops]->+`.
             #`minHops` and `maxHops` are optional and default to 1 and infinity respectively.
             #When no bounds are given the dots may be omitted.
-            #The dots may also be omitted when setting only one bound and this implies a fixed length pattern.""".stripMargin('#'))
+            #The dots may also be omitted when setting only one bound and this implies a fixed length pattern.
+            #
+            #Note, variable length relationships can be planned with an optimisation under certain circumstances, see the <<query-plan-varlength-expand-pruning, VarLength Expand Pruning>> query plan.""".stripMargin('#'))
         query("""MATCH (charlie {name: 'Charlie Sheen'})-[:ACTED_IN*1..3]-(movie:Movie)
                 #RETURN movie.title""".stripMargin('#'),
           assertAllMoviesRelatedToCharlieAreReturned) {
