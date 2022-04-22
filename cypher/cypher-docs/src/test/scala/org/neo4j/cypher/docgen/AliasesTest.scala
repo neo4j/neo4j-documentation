@@ -73,6 +73,12 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         |When connected to the DBMS over bolt, administration commands are automatically routed to the `system` database.""".stripMargin)
     p("include::alias/alias-command-syntax.asciidoc[]")
     p("include::alias/alias-driver-settings-table.asciidoc[]")
+    note {
+      p(
+        """If transaction modifies an alias, other transactions concurrently executing against that alias may be aborted and rolled back for safety.
+          | This prevents issues such as a transaction executing against multiple target databases
+      for the same alias.""".stripMargin)
+    }
     section("Listing database aliases", "alias-management-show-alias", role = "enterprise-edition" ) {
       p(
         """Available database aliases can be seen using `SHOW ALIASES FOR DATABASE`.
