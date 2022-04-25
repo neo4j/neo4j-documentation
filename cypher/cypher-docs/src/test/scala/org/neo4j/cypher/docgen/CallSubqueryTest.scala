@@ -278,7 +278,7 @@ class CallSubqueryTest extends DocumentingTest {
             #CALL {
             #  WITH n
             #  DETACH DELETE n
-            #} IN TRANSACTIONS OF 2 ROWS""".stripMargin('#'),
+            #} IN TRANSACTIONS OF 1000 ROWS""".stripMargin('#'),
           assertions = ResultAssertions(r => r.isEmpty),
           databaseStateBehavior = ClearState,
         ) { resultTable() }
