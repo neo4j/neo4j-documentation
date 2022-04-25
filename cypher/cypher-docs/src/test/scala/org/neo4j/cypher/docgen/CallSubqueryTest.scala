@@ -278,10 +278,14 @@ class CallSubqueryTest extends DocumentingTest {
             #CALL {
             #  WITH n
             #  DETACH DELETE n
-            #} IN TRANSACTIONS OF 1000 ROWS""".stripMargin('#'),
+            #} IN TRANSACTIONS OF 2 ROWS""".stripMargin('#'),
           assertions = ResultAssertions(r => r.isEmpty),
           databaseStateBehavior = ClearState,
         ) { resultTable() }
+        note{
+          p("""The preceding usage of `IN TRANSACTIONS OF 2 ROWS` is an example given the data set described on the page.
+          #However, if you have a larger data set, you might want to use `IN TRANSACTIONS OF 10000 ROWS`.""".stripMargin('#'))
+    }
       }
       section("Errors") {
         p("""If an error occurs in `CALL {} IN TRANSACTIONS` the entire query fails and
