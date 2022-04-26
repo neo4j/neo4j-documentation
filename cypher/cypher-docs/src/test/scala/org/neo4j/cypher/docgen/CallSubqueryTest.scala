@@ -283,7 +283,7 @@ class CallSubqueryTest extends DocumentingTest {
           databaseStateBehavior = ClearState,
         ) { resultTable() }
         note{
-          p("""Up to a point, using a larger batch size will be more performant. The batch size of `2 ROWS` is an example given the small data set used here. For larger data sets you might want to use larger batch sizes, like `10000 ROWS`.""".stripMargin('#'))
+          p("""Up to a point, using a larger batch size will be more performant. The batch size of `2 ROWS` is an example given the small data set used here. For larger data sets you might want to use larger batch sizes, like `10000 ROWS`.""".stripMargin)
       }
       section("Errors") {
         p("""If an error occurs in `CALL {} IN TRANSACTIONS` the entire query fails and
