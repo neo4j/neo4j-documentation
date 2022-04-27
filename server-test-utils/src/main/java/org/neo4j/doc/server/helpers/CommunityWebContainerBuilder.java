@@ -171,11 +171,14 @@ public class CommunityWebContainerBuilder
 
         properties.put( HttpConnector.enabled.name(), String.valueOf( httpEnabled ) );
         properties.put( HttpConnector.listen_address.name(), address.toString() );
+        properties.put( HttpConnector.advertised_address.name(), ":" + address.getPort() );
 
         properties.put( HttpsConnector.enabled.name(), String.valueOf( httpsEnabled ) );
         properties.put( HttpsConnector.listen_address.name(), httpsAddress.toString() );
+        properties.put( HttpsConnector.advertised_address.name(), ":" + httpsAddress.getPort() );
 
         properties.put( BoltConnector.listen_address.name(), boltAddress.toString() );
+        properties.put( BoltConnector.advertised_address.name(), ":" + boltAddress.getPort() );
 
         properties.put( GraphDatabaseSettings.neo4j_home.name(), temporaryFolder.toAbsolutePath().toString() );
 

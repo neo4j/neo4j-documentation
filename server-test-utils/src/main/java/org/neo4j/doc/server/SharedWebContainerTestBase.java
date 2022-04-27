@@ -47,6 +47,7 @@ public class SharedWebContainerTestBase
         setWebContainerBuilderProperty( GraphDatabaseSettings.cypher_hints_error.name(), TRUE );
         setWebContainerBuilderProperty( BoltConnector.enabled.name(), TRUE );
         setWebContainerBuilderProperty( BoltConnector.listen_address.name(), "localhost:0" );
+        setWebContainerBuilderProperty( BoltConnector.advertised_address.name(), ":0" );
         setWebContainerBuilderProperty( GraphDatabaseSettings.transaction_timeout.name(), "300s" );
         setWebContainerBuilderProperty( ServerSettings.transaction_idle_timeout.name(), "300s" );
         testWebContainer = WebContainerHolder.allocate( false );
