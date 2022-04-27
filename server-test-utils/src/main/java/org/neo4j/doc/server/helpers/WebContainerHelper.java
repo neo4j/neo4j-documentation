@@ -21,6 +21,7 @@ package org.neo4j.doc.server.helpers;
 import java.io.File;
 
 import org.neo4j.configuration.GraphDatabaseSettings;
+import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -55,7 +56,8 @@ public final class WebContainerHelper
     public static TestWebContainer createReadOnlyContainer( File path ) throws Exception
     {
         CommunityWebContainerBuilder builder = CommunityWebContainerBuilder.builder();
-        builder.withProperty( "dbms.connector.bolt.listen_address", ":0" );
+        builder.withProperty( BoltConnector.listen_address.name(), ":0" );
+        builder.withProperty( BoltConnector.advertised_address.name(), ":0" );
         builder.withProperty( GraphDatabaseSettings.read_only_database_default.name(), "true" );
         return createContainer( builder, path, true );
     }
