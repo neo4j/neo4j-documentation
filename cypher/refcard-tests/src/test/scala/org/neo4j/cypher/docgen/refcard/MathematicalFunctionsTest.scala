@@ -61,6 +61,14 @@ The absolute value.
 ###assertion=returns-one parameters=expression
 RETURN
 
+isNaN($expr)
+###
+
+Returns whether a number is `NaN`.
+
+###assertion=returns-one parameters=expression
+RETURN
+
 rand()
 ###
 

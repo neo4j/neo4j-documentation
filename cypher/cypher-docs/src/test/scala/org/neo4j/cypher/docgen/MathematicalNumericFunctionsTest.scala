@@ -46,6 +46,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
         |* <<functions-abs, abs()>>
         |* <<functions-ceil, ceil()>>
         |* <<functions-floor, floor()>>
+        |* <<functions-isnan, isNaN()>>
         |* <<functions-rand, rand()>>
         |* <<functions-round, round()>>
         |* <<functions-round2, round(), with precision>>
@@ -84,6 +85,17 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
         r.toList.head("floor(0.9)") should equal(0.0)
       })) {
         p("The floor of `0.9` is returned.")
+        resultTable()
+      }
+    }
+    section("isNaN()", "functions-isnan") {
+      p("`isNaN()` returns whether the given number is `NaN`.")
+      function("isNaN(expression)", "A Boolean.", ("expression", "A numeric expression."))
+      considerations("`isNaN(null)` returns `null`.")
+      query("RETURN isNaN(0/0.0)", ResultAssertions((r) => {
+        r.toList.head("isNaN(0/0.0)") should equal(true)
+      })) {
+        p("`true` is returned since the value is `NaN`.")
         resultTable()
       }
     }

@@ -181,6 +181,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-head, head()>>                      | Scalar            | Returns the first element in a list.
 |<<functions-id, id()>>                          | Scalar            | Returns the id of a relationship or node.
 |<<functions-isempty, isEmpty()>>                          | Predicate            | Returns true if the given list or map contains no elements or if the given string contains no characters.
+|<<functions-isnan, isNaN()>>                    | Numeric           | Returns whether a value is `NaN`.
 |<<functions-keys, keys()>>                      | List              | Returns a list containing the string representations for all the property names of a node, relationship, or map.
 |<<functions-labels, labels()>>                  | List              | Returns a list containing the string representations for all the labels of a node.
 |<<functions-last, last()>>                      | Scalar            | Returns the last element in a list.

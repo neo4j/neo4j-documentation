@@ -451,6 +451,16 @@ label:added[]
 a|
 Cypher now supports number literals with underscores between digits.
 
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+isNaN(n.prop)
+----
+a|
+New function which returns whether the given number is `NaN`.
+
 |===
 
 [[cypher-deprecations-additions-removals-4.4]]
