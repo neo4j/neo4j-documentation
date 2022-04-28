@@ -336,6 +336,16 @@ TERMINATE TRANSACTION[S] transaction-id[,...]
 ----
 
 a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+SHOW TRANSACTIONS YIELD allocatedBytes
+----
+a|
+This column has been removed as it wasn't tracked and always returned 0.
+
+a|
 label:syntax[]
 label:removed[]
 [source, cypher, role="noheader"]
@@ -364,14 +374,26 @@ prop IS NULL
 ----
 
 a|
-label:functionality[]
+label:syntax[]
 label:removed[]
 [source, cypher, role="noheader"]
 ----
-SHOW TRANSACTIONS YIELD allocatedBytes
+0...
 ----
 a|
-This column has been removed as it wasn't tracked and always returned 0.
+Replaced by `+0o...+`.
+
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+0X...
+----
+a|
+Only `+0x...+` (lowercase x) is supported.
+
 
 |===
 
