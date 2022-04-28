@@ -174,7 +174,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         "Altering the database access mode is allowed at all times, whether a database is online or offline. ")
       p("Database access modes can also be managed using the configuration parameters `dbms.databases.default_to_read_only`, `dbms.databases.read_only`, and " +
         "`dbms.database.writable`. For details, see <<operations-manual#manage-databases-parameters, Configuration parameters>>. " +
-        "If the mode set by the `ALTER DATABASE` command is read-only while the database according to those settings is read-write (or vice versa), " +
+        "If conflicting modes are set by the `ALTER DATABASE` command and the configuration parameters, i.e. one says read-write and the other read-only, " +
         "the database will be read-only and prevent write queries.")
       query("ALTER DATABASE customers SET ACCESS READ ONLY", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
@@ -248,7 +248,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section(title="Wait options", id="administration-wait-nowait", role = "enterprise-edition") {
       p("""Aside from `SHOW DATABASES` and `ALTER DATABASE`, all database management commands accept an optional
-          |`WAIT`/`NOWAIT` clause. The `WAIT`/`NOWAIT` clause allows you to specify a time limit in 
+          |`WAIT`/`NOWAIT` clause. The `WAIT`/`NOWAIT` clause allows you to specify a time limit in
           |which the command must complete and return. The options are:
           |
           |* `WAIT n SECONDS` - Return once completed or when the specified time limit of `n` seconds is up.
