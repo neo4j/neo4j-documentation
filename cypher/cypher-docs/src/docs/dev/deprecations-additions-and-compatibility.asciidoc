@@ -343,7 +343,7 @@ label:removed[]
 SHOW TRANSACTIONS YIELD allocatedBytes
 ----
 a|
-This column has been removed as it wasn't tracked and always returned 0.
+The `allocatedBytes` output has been removed, because it was never tracked and thus was always 0.
 
 a|
 label:syntax[]
