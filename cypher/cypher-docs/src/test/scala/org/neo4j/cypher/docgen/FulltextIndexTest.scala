@@ -48,7 +48,7 @@ class FulltextIndexTest extends DocumentingTest {
     synopsis("This chapter describes how to use full-text indexes, to enable full-text search.")
     p("""Full-text indexes are powered by the link:https://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
         #A full-text index allows you to write queries that match within the _contents_ of indexed string properties.
-        #For instance, the b-tree indexes described in previous sections can only do exact matching or prefix matches on strings.
+        #For instance, the range and text indexes described in previous sections can only do some matching on strings - exact, prefix, substring or suffix matches.
         #A full-text index will instead tokenize the indexed string values, so it can match _terms_ anywhere within the strings.
         #How the indexed strings are tokenized and broken into terms, is determined by what analyzer the full-text index is configured with.
         #For instance, the _swedish_ analyzer knows how to tokenize and stem Swedish words, and will avoid indexing Swedish stop words.
@@ -71,10 +71,10 @@ class FulltextIndexTest extends DocumentingTest {
         #Using this feature, it is possible to work around the slow Lucene writes from the performance critical commit process, thus removing the main bottlenecks for Neo4j write performance.""".stripMargin('#'))
     p("""At first sight, the construction of full-text indexes can seem similar to regular indexes.
         #However there are some things that are interesting to note:
-        #In contrast to <<administration-indexes-search-performance, b-tree indexes>>, a full-text index can be:""".stripMargin('#'))
+        #In contrast to the <<administration-indexes-search-performance, other indexes>>, a full-text index can be:""".stripMargin('#'))
     p("""* applied to more than one label.
         #* applied to more than one relationship type.
-        #* applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-b-tree-index-for-nodes, _composite index_>>) but with an important difference:
+        #* applied to more than one property at a time (similar to a <<administration-indexes-create-a-composite-range-index-for-nodes, _composite index_>>) but with an important difference:
         #While a composite index applies only to entities that match the indexed label and _all_ of the indexed properties, full-text index will index entities that have at least one of the indexed labels or relationship types, and at least one of the indexed properties.""".stripMargin('#'))
     p("For information on how to configure full-text indexes, refer to <<operations-manual#index-configuration-fulltext, Operations Manual -> Indexes to support full-text search>>.")
 
