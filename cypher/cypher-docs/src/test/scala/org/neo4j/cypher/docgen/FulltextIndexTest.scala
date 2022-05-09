@@ -48,7 +48,7 @@ class FulltextIndexTest extends DocumentingTest {
     synopsis("This chapter describes how to use full-text indexes, to enable full-text search.")
     p("""Full-text indexes are powered by the link:https://lucene.apache.org/[Apache Lucene] indexing and search library, and can be used to index nodes and relationships by string properties.
         #A full-text index allows you to write queries that match within the _contents_ of indexed string properties.
-        #For instance, the range and text indexes described in previous sections can only do some matching on strings - exact, prefix, substring or suffix matches.
+        #For instance, the range and text indexes described in previous sections can only perform limited matching on strings - exact, prefix, substring or suffix matches.
         #A full-text index will instead tokenize the indexed string values, so it can match _terms_ anywhere within the strings.
         #How the indexed strings are tokenized and broken into terms, is determined by what analyzer the full-text index is configured with.
         #For instance, the _swedish_ analyzer knows how to tokenize and stem Swedish words, and will avoid indexing Swedish stop words.
