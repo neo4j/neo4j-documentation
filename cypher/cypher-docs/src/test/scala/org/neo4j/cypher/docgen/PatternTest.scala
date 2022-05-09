@@ -184,6 +184,12 @@ class PatternTest extends DocumentingTest {
           |(a)-[:REL_TYPE]->(b)
           |----
           |""")
+      p("Within a pattern it is not possible to use the same name for a relationship multiple times due to <<relationship-isomorphism, relationship isomorphism>>. The following example is not allowed:")
+      p("""[source, cypher, role=noplay]
+          |----
+          |()-[r:REL_TYPE]-()-[r:REL_TYPE]-()
+          |----
+          |""")
     }
     section("Variable-length pattern matching", "cypher-pattern-varlength") {
       caution {

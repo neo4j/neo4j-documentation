@@ -72,7 +72,7 @@ RETURN nodes(p)
 This will return the two resulting records if *node isomorphism* was used, `[a, b]`, as well as `[b, a]`.
 ====
 
-
+[[relationship-isomorphism]]
 == Relationship isomorphism
 
 **Constraints:** The same relationship cannot be returned more than once for each path matching record.
