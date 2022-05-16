@@ -19,8 +19,10 @@
  */
 package org.neo4j.cypher.docgen
 
+import org.neo4j.cypher.docgen.tooling.DocBuilder
 import org.neo4j.cypher.docgen.tooling.Document
-import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
+import org.neo4j.cypher.docgen.tooling.DocumentingTest
+import org.neo4j.cypher.docgen.tooling.ResultAssertions
 
 class PatternTest extends DocumentingTest {
   override def outputPath = "target/docs/dev/ql/"
@@ -28,22 +30,25 @@ class PatternTest extends DocumentingTest {
   override def doc: Document = new DocBuilder {
     doc("Patterns", "cypher-patterns")
     synopsis("This section contains an overview of data patterns in Cypher.")
+
     initQueries(
       """CREATE (a {name: 'Anders'}),
-                |(b {name: 'Becky'}),
-                |(c {name: 'Cesar'}),
-                |(d {name: 'Dilshad'}),
-                |(e {name: 'George'}),
-                |(f {name: 'Filipa'}),
-                |
-                |(a)-[:KNOWS]->(b),
-                |(a)-[:KNOWS]->(c),
-                |(a)-[:KNOWS]->(d),
-                |(b)-[:KNOWS]->(e),
-                |(c)-[:KNOWS]->(e),
-                |(d)-[:KNOWS]->(f)
+        |(b {name: 'Becky'}),
+        |(c {name: 'Cesar'}),
+        |(d {name: 'Dilshad'}),
+        |(e {name: 'George'}),
+        |(f {name: 'Filipa'}),
+        |
+        |(a)-[:KNOWS]->(b),
+        |(a)-[:KNOWS]->(c),
+        |(a)-[:KNOWS]->(d),
+        |(b)-[:KNOWS]->(e),
+        |(c)-[:KNOWS]->(e),
+        |(d)-[:KNOWS]->(f)
 
-      """.stripMargin)
+      """.stripMargin
+    )
+
     p("""* <<cypher-pattern-node-introduction,Introduction>>
         |* <<cypher-pattern-node,Patterns for nodes>>
         |* <<cypher-pattern-related-nodes,Patterns for related nodes>>
@@ -52,13 +57,18 @@ class PatternTest extends DocumentingTest {
         |* <<cypher-pattern-relationship,Patterns for relationships>>
         |* <<cypher-pattern-varlength, Variable-length pattern matching>>
         |* <<cypher-pattern-path-variables,Assigning to path variables>>""")
+
     section("Introduction", "cypher-pattern-node-introduction") {
       p(
-        """Patterns and pattern-matching are at the very heart of Cypher, so being effective with Cypher requires a good understanding of patterns.""".stripMargin)
+        """Patterns and pattern-matching are at the very heart of Cypher, so being effective with Cypher requires a good understanding of patterns.""".stripMargin
+      )
       p(
         """Using patterns, you describe the shape of the data you are looking for.
-          |For example, in the `MATCH` clause you describe the shape with a pattern, and Cypher will figure out how to get that data for you.""".stripMargin)
-      p("""The pattern describes the data using a form that is very similar to how one typically draws the shape of property graph data on a whiteboard: usually as circles (representing nodes) and arrows between them to represent relationships.""")
+          |For example, in the `MATCH` clause you describe the shape with a pattern, and Cypher will figure out how to get that data for you.""".stripMargin
+      )
+      p(
+        """The pattern describes the data using a form that is very similar to how one typically draws the shape of property graph data on a whiteboard: usually as circles (representing nodes) and arrows between them to represent relationships."""
+      )
       p("""Patterns appear in multiple places in Cypher: in `MATCH`, `CREATE` and `MERGE` clauses, and in pattern expressions.
      Each of these is described in more detail in:
           |
@@ -68,8 +78,8 @@ class PatternTest extends DocumentingTest {
           |* <<query-merge>>
           |* <<query-where-patterns>>""")
     }
-    section ("Patterns for nodes", "cypher-pattern-node")
-    {
+
+    section("Patterns for nodes", "cypher-pattern-node") {
       p("""The very simplest 'shape' that can be described in a pattern is a node.
      A node is described using a pair of parentheses, and is typically given a name.
      For example:""")
@@ -80,8 +90,8 @@ class PatternTest extends DocumentingTest {
           |""")
       p("""This simple pattern describes a single node, and names that node using the variable `a`.""")
     }
-    section ("Patterns for related nodes", "cypher-pattern-related-nodes")
-    {
+
+    section("Patterns for related nodes", "cypher-pattern-related-nodes") {
       p("""A more powerful construct is a pattern that describes multiple nodes and relationships between them.
           |Cypher patterns describe relationships by employing an arrow between two nodes.
           |For example:""")
@@ -90,9 +100,13 @@ class PatternTest extends DocumentingTest {
           |(a)-->(b)
           |----
           |""")
-      p("""This pattern describes a very simple data shape: two nodes, and a single relationship from one to the other.
-          |In this example, the two nodes are both named as `a` and `b` respectively, and the relationship is 'directed': it goes from `a` to `b`.""")
-      p("""This manner of describing nodes and relationships can be extended to cover an arbitrary number of nodes and the relationships between them, for example:""")
+      p(
+        """This pattern describes a very simple data shape: two nodes, and a single relationship from one to the other.
+          |In this example, the two nodes are both named as `a` and `b` respectively, and the relationship is 'directed': it goes from `a` to `b`."""
+      )
+      p(
+        """This manner of describing nodes and relationships can be extended to cover an arbitrary number of nodes and the relationships between them, for example:"""
+      )
       p("""[source, cypher, role=noplay]
           |----
           |(a)-->(b)<--(c)
@@ -107,6 +121,7 @@ class PatternTest extends DocumentingTest {
           |----
           |""")
     }
+
     section("Patterns for labels", "cypher-pattern-label") {
       p("""In addition to simply describing the shape of a node in the pattern, one can also describe attributes.
           |The most simple attribute that can be described in the pattern is a label that the node must have.
@@ -123,8 +138,11 @@ class PatternTest extends DocumentingTest {
           |----
           |""")
     }
+
     section("Specifying properties", "cypher-pattern-properties") {
-      p("""Nodes and relationships are the fundamental structures in a graph. Neo4j uses properties on both of these to allow for far richer models.""")
+      p(
+        """Nodes and relationships are the fundamental structures in a graph. Neo4j uses properties on both of these to allow for far richer models."""
+      )
       p("""Properties can be expressed in patterns using a map-construct: curly brackets surrounding a number of key-expression pairs, separated by commas.
           |E.g. a node with two properties on it would look like:""")
       p("""[source, cypher, role=noplay]
@@ -138,17 +156,24 @@ class PatternTest extends DocumentingTest {
           |(a)-[{blocked: false}]->(b)
           |----
           |""")
-      p("""When properties appear in patterns, they add an additional constraint to the shape of the data.
+      p(
+        """When properties appear in patterns, they add an additional constraint to the shape of the data.
           |In the case of a `CREATE` clause, the properties will be set in the newly-created nodes and relationships.
           |In the case of a `MERGE` clause, the properties will be used as additional constraints on the shape any existing data must have (the specified properties must exactly match any existing data in the graph).
-          |If no matching data is found, then `MERGE` behaves like `CREATE` and the properties will be set in the newly created nodes and relationships.""")
-      p("""Note that patterns supplied to `CREATE` may use a single parameter to specify properties, e.g: `CREATE (node $paramName)`.
-          |This is not possible with patterns used in other clauses, as Cypher needs to know the property names at the time the query is compiled, so that matching can be done effectively.""")
+          |If no matching data is found, then `MERGE` behaves like `CREATE` and the properties will be set in the newly created nodes and relationships."""
+      )
+      p(
+        """Note that patterns supplied to `CREATE` may use a single parameter to specify properties, e.g: `CREATE (node $paramName)`.
+          |This is not possible with patterns used in other clauses, as Cypher needs to know the property names at the time the query is compiled, so that matching can be done effectively."""
+      )
     }
+
     section("Patterns for relationships", "cypher-pattern-relationship") {
-      p("""The simplest way to describe a relationship is by using the arrow between two nodes, as in the previous examples.
+      p(
+        """The simplest way to describe a relationship is by using the arrow between two nodes, as in the previous examples.
           |Using this technique, you can describe that the relationship should exist and the directionality of it.
-          |If you don't care about the direction of the relationship, the arrow head can be omitted, as exemplified by:""")
+          |If you don't care about the direction of the relationship, the arrow head can be omitted, as exemplified by:"""
+      )
       p("""[source, cypher, role=noplay]
           |----
           |(a)--(b)
@@ -169,28 +194,35 @@ class PatternTest extends DocumentingTest {
           |(a)-[r:REL_TYPE]->(b)
           |----
           |""")
-      p("""Unlike labels, relationships can only have one type.
-          |But if we'd like to describe some data such that the relationship could have any one of a set of types, then they can all be listed in the pattern, separating them with the pipe symbol `|` like this:""")
+      p(
+        """Unlike labels, relationships can only have one type.
+          |But if we'd like to describe some data such that the relationship could have any one of a set of types, then they can all be listed in the pattern, separating them with the pipe symbol `|` like this:"""
+      )
       p("""[source, cypher, role=noplay]
           |----
           |(a)-[r:TYPE1|TYPE2]->(b)
           |----
           |""")
-      p("""Note that this form of pattern can only be used to describe existing data (ie. when using a pattern with `MATCH` or as an expression).
-          |It will not work with `CREATE` or `MERGE`, since it's not possible to create a relationship with multiple types.""")
+      p(
+        """Note that this form of pattern can only be used to describe existing data (ie. when using a pattern with `MATCH` or as an expression).
+          |It will not work with `CREATE` or `MERGE`, since it's not possible to create a relationship with multiple types."""
+      )
       p("As with nodes, the name of the relationship can always be omitted, as exemplified by:")
       p("""[source, cypher, role=noplay]
           |----
           |(a)-[:REL_TYPE]->(b)
           |----
           |""")
-      p("Within a pattern it is not possible to use the same name for a relationship multiple times due to <<relationship-isomorphism, relationship isomorphism>>. The following example is not allowed:")
+      p(
+        "It is not possible to use the same name for a relationship multiple times within a pattern due to <<relationship-isomorphism, relationship isomorphism>>. The following example is therefore not allowed:"
+      )
       p("""[source, cypher, role=noplay]
           |----
           |()-[r:REL_TYPE]-()-[r:REL_TYPE]-()
           |----
           |""")
     }
+
     section("Variable-length pattern matching", "cypher-pattern-varlength") {
       caution {
         p("""Variable length pattern matching in versions 2.1.x and earlier does not enforce relationship uniqueness for patterns described within a single `MATCH` clause.
@@ -220,8 +252,10 @@ class PatternTest extends DocumentingTest {
           |(a)-[*3..5]->(b)
           |----
           |""")
-      p("""This is a minimum length of 3, and a maximum of 5.
-          |It describes a graph of either 4 nodes and 3 relationships, 5 nodes and 4 relationships or 6 nodes and 5 relationships, all connected together in a single path.""")
+      p(
+        """This is a minimum length of 3, and a maximum of 5.
+          |It describes a graph of either 4 nodes and 3 relationships, 5 nodes and 4 relationships or 6 nodes and 5 relationships, all connected together in a single path."""
+      )
       p("Either bound can be omitted. For example, to describe paths of length 3 or more, use:")
       p("""[source, cypher, role=noplay]
           |----
@@ -234,7 +268,9 @@ class PatternTest extends DocumentingTest {
           |(a)-[*..5]->(b)
           |----
           |""")
-      p("""Omitting both bounds is equivalent to specifying a minimum of 1, allowing paths of any positive length to be described:""")
+      p(
+        """Omitting both bounds is equivalent to specifying a minimum of 1, allowing paths of any positive length to be described:"""
+      )
       p("""[source, cypher, role=noplay]
           |----
           |(a)-[*]->(b)
@@ -245,16 +281,20 @@ class PatternTest extends DocumentingTest {
       query(
         """MATCH (me)-[:KNOWS*1..2]-(remote_friend)
           |WHERE me.name = 'Filipa'
-          |RETURN remote_friend.name""".stripMargin, ResultAssertions(r => {
+          |RETURN remote_friend.name""".stripMargin,
+        ResultAssertions(r => {
           r.toList should equal(List(Map("remote_friend.name" -> "Dilshad"), Map("remote_friend.name" -> "Anders")))
-        })) {
+        })
+      ) {
         resultTable()
       }
       p(
         """This query finds data in the graph with a shape that fits the pattern: specifically a node (with the name property *'Filipa'*) and then the `KNOWS` related nodes, one or two hops away.
-          |This is a typical example of finding first and second degree friends.""".stripMargin)
+          |This is a typical example of finding first and second degree friends.""".stripMargin
+      )
       p("Note that variable length relationships cannot be used with `CREATE` and `MERGE`.")
     }
+
     section("Assigning to path variables", "cypher-pattern-path-variables") {
       p("""As described above, a series of connected nodes and relationships is called a "path". Cypher allows paths to be named
           |using an identifer, as exemplified by:""")
@@ -268,6 +308,3 @@ class PatternTest extends DocumentingTest {
 
   }.build()
 }
-
-
-
