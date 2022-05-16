@@ -215,28 +215,6 @@ public class TransactionDocIT extends AbstractRestFunctionalTestBase
     }
 
     @Test
-    @Documented( "Begin and commit a legacy transaction in one request\n" +
-                 "\n" +
-                 "If there is no need to keep a transaction open across multiple HTTP requests, you can begin a transaction,\n" +
-                 "execute statements, and commit with just a single HTTP request." )
-    public void begin_and_commit_a_legacy_transaction_in_one_request() throws JsonParseException
-    {
-        // Document
-        ResponseEntity response = gen.get()
-                                     .noGraph()
-                                     .expectedStatus( 200 )
-                                     .payload( quotedJson( "{ 'statements': [ { 'statement': 'CREATE (n) RETURN id(n)' } ] }" ) )
-                                     .post( getDatabaseUri() + "data/transaction/commit" );
-
-        // Then
-        Map<String, Object> result = jsonToMap( response.entity() );
-        assertNoErrors( result );
-
-        Integer id = resultCell( result, 0, 0 );
-        verifyNodeExists( id );
-    }
-
-    @Test
     @Documented( "Execute multiple statements\n" +
                  "\n" +
                  "You can send multiple Cypher statements in the same request.\n" +
