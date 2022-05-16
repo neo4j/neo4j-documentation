@@ -36,9 +36,9 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   override val linkId = "indexes-for-search-performance"
   private val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
 
-  //noinspection RedundantDefaultArgument
+  // noinspection RedundantDefaultArgument
   // Disable warnings for redundant default argument since its used for clarification of the `assertStats` when nothing should have happened
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "create-index" =>
         assertStats(result, indexesAdded = 1)
@@ -63,15 +63,16 @@ class IndexTest extends RefcardTest with QueryStatisticsTestSupport {
   }
 
   override val properties: Map[String, Map[String, Any]] = Map(
-    "A" -> Map("name" -> "Alice", "age" -> 18 ),
-    "B" -> Map("name" -> "Timothy", "age" -> 22 ))
+    "A" -> Map("name" -> "Alice", "age" -> 18),
+    "B" -> Map("name" -> "Timothy", "age" -> 22)
+  )
 
   override def parameters(name: String): Map[String, Any] =
     name match {
       case "parameters=aname" =>
         Map("value" -> "Alice")
       case "parameters=nameandage" =>
-        Map("value" -> "Alice" , "value2" -> 18 )
+        Map("value" -> "Alice", "value2" -> 18)
       case _ =>
         Map()
     }
@@ -202,7 +203,7 @@ MATCH (n:Person) WHERE n.name = $$value
 RETURN n
 ###
 
-An BTREE index can be automatically used for the equality comparison.
+An RANGE index can be automatically used for the equality comparison.
 Note that for example `toLower(n.name) = $$value` will not use an index.
 
 ###assertion=match

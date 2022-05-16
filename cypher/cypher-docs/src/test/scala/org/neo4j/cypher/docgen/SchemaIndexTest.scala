@@ -535,7 +535,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
         "However, the query does not need to have equality on all properties. It can have ranges and existence predicates as well. " +
         "But in these cases rewrites might happen depending on which properties have which predicates, " +
         "see <<administration-indexes-single-vs-composite-index, composite index limitations>>. " +
-        "The following query will use the composite index defined <<administration-indexes-create-a-composite-b-tree-index-for-nodes, earlier>>: ",
+        "The following query will use the composite index defined <<administration-indexes-create-a-composite-range-index-for-nodes, earlier>>: ",
       prepare = _ => executePreparationQueries(List("CREATE RANGE INDEX FOR (p:Person) ON (p.age, p.country)")),
       queryText = "MATCH (n:Person) WHERE n.age = 35 AND n.country = 'UK' RETURN n",
       optionalResultExplanation = "However, the query `MATCH (n:Person) WHERE n.age = 35 RETURN n` will not be backed by the composite index, " +
