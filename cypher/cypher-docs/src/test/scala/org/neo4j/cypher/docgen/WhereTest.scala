@@ -60,10 +60,6 @@ class WhereTest extends DocumentingTest {
         | ** <<filter-on-patterns-using-not, Filter on patterns using `NOT`>>
         | ** <<filter-on-patterns-with-properties, Filter on patterns with properties>>
         | ** <<filter-on-relationship-type, Filter on relationship type>>
-        | * <<existential-subqueries, Using existential subqueries in `WHERE`>>
-        | ** <<existential-subquery-simple-case, Simple existential subquery>>
-        | ** <<existential-subquery-with-where, Existential subquery with `WHERE` clause>>
-        | ** <<existential-subquery-nesting, Nesting existential subqueries>>
         |* <<query-where-lists, Lists>>
         | ** <<where-in-operator, `IN` operator>>
         |* <<missing-properties-and-values, Missing properties and values>>
@@ -329,67 +325,6 @@ class WhereTest extends DocumentingTest {
           r.toList should equal(List(Map("type(r)" -> "KNOWS", "r.since" -> 1999), Map("type(r)" -> "KNOWS", "r.since" -> 2012)))
         })) {
           p("This returns all relationships having a type whose name starts with *'K'*.")
-          resultTable()
-        }
-      }
-    }
-    p("""An existential subquery can be used to find out if a specified pattern exists at least once in the data.
-        #It can be used in the same way as a path pattern but it allows you to use `MATCH` and `WHERE` clauses internally.
-        #A subquery has a scope, as indicated by the opening and closing braces, `{` and `}`.
-        #Any variable that is defined in the outside scope can be referenced inside the subquery's own scope.
-        #Variables introduced inside the subquery are not part of the outside scope and therefore can't be accessed on the outside.
-        #If the subquery evaluates even once to anything that is not null, the whole expression will become true.
-        #This also means that the system only needs to calculate the first occurrence where the subquery evaluates to something that is not null and can skip the rest of the work.""".stripMargin('#'))
-    functionWithCypherStyleFormatting("""EXISTS {
-                                        #  MATCH [Pattern]
-                                        #  WHERE [Expression]
-                                        #}""".stripMargin('#'))
-    p("It is worth noting that the `MATCH` keyword can be omitted in subqueries and that the `WHERE` clause is optional.")
-    section("Using existential subqueries in `WHERE`", "existential-subqueries") {
-      section("Simple existential subquery", "existential-subquery-simple-case") {
-        p("""Variables introduced by the outside scope can be used in the inner `MATCH` clause. The following example shows this:""")
-        query("""MATCH (person:Person)
-                            #WHERE EXISTS {
-                            #  MATCH (person)-[:HAS_DOG]->(:Dog)
-                            #}
-                            #RETURN person.name AS name""".stripMargin('#'),
-        ResultAssertions(r => {
-            r.toList should equal(List(Map("name" -> "Andy"), Map("name" -> "Peter")))
-          })) {
-          resultTable()
-        }
-      }
-      section("Existential subquery with `WHERE` clause", "existential-subquery-with-where") {
-        p("""A `WHERE` clause can be used in conjunction to the `MATCH`.
-            #Variables introduced by the `MATCH` clause and the outside scope can be used in this scope.""".stripMargin('#'))
-        query("""MATCH (person:Person)
-                            #WHERE EXISTS {
-                            #  MATCH (person)-[:HAS_DOG]->(dog:Dog)
-                            #  WHERE person.name = dog.name
-                            #}
-                            #RETURN person.name AS name""".stripMargin('#'),
-        ResultAssertions(r => {
-            r.toList should equal(List(Map("name" -> "Andy")))
-          })) {
-          resultTable()
-        }
-      }
-      section("Nesting existential subqueries", "existential-subquery-nesting") {
-        p("""Existential subqueries can be nested like the following example shows.
-            #The nesting also affects the scopes.
-            #That means that it is possible to access all variables from inside the subquery which are either on the outside scope or defined in the very same subquery.""".stripMargin('#'))
-        query("""MATCH (person:Person)
-                            #WHERE EXISTS {
-                            #  MATCH (person)-[:HAS_DOG]->(dog:Dog)
-                            #  WHERE EXISTS {
-                            #    MATCH (dog)-[:HAS_TOY]->(toy:Toy)
-                            #    WHERE toy.name = 'Banana'
-                            #  }
-                            #}
-                            #RETURN person.name AS name""".stripMargin('#'),
-        ResultAssertions(r => {
-            r.toList should equal(List(Map("name" -> "Peter")))
-          })) {
           resultTable()
         }
       }

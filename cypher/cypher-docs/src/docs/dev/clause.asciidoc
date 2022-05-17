@@ -313,6 +313,10 @@ include::ql/query-unwind.adoc[leveloffset=+1]
 //Reading sub-clauses
 include::ql/query-where.adoc[leveloffset=+1]
 
+include::ql/query-exists.adoc[leveloffset=+1]
+
+include::ql/query-count.adoc[leveloffset=+1]
+
 include::ql/query-order.adoc[leveloffset=+1]
 
 include::ql/query-skip.adoc[leveloffset=+1]
