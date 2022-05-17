@@ -279,6 +279,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |Name           | Description
 | <<query-syntax-case, CASE Expression>>   | A generic conditional expression, similar to if/else statements available in other languages.
 | <<existential-subqueries, EXISTS {...}>> | An EXISTS expression is used to evaluate the existence of a subquery.
+| <<count-subqueries, COUNT {...}>>  | An expression used to compute the number of results of a subquery.
 |===
 
 

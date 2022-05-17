@@ -43,8 +43,17 @@ class SubqueryExpressionsTest extends DocumentingTest {
         # ** <<existential-subquery-with-where, EXISTS subquery with `WHERE` clause>>
         # ** <<existential-subquery-nesting, Nesting EXISTS subqueries>>
         # ** <<existential-subquery-outside-where, EXISTS subquery outside of a WHERE clause>>
+        #* <<count-subqueries, COUNT subqueries>>
+        # ** <<count-subquery-simple-case, Simple COUNT subquery>>
+        # ** <<count-subquery-with-where, COUNT subquery with `WHERE` clause>>
+        # ** <<count-subqueries-other-clauses, Using COUNT subqueries inside other clauses>>
         # """.stripMargin('#'))
-    p("""Subquery expressions can appear anywhere that an expression is valid.""".stripMargin('#'))
+    p(
+      """Subquery expressions can appear anywhere that an expression is valid.
+        #A subquery has a scope, as indicated by the opening and closing braces, `{` and `}`.
+        #Any variable that is defined in the outside scope can be referenced inside the subquery's own scope.
+        #Variables introduced inside the subquery are not part of the outside scope and therefore can't be accessed on the outside.
+        #""".stripMargin('#'))
     p("The following graph is used for the examples below:")
     graphViz()
 
@@ -53,9 +62,6 @@ class SubqueryExpressionsTest extends DocumentingTest {
         """An EXISTS subquery can be used to find out if a specified pattern exists at least once in the data.
           #It serves the same purpose as a <<filter-on-patterns, path pattern>> but is more powerful because it allows you to use `MATCH` and `WHERE` clauses internally.
           #Moreover, it can appear in any expression position, unlike path patterns.
-          #A subquery has a scope, as indicated by the opening and closing braces, `{` and `}`.
-          #Any variable that is defined in the outside scope can be referenced inside the subquery's own scope.
-          #Variables introduced inside the subquery are not part of the outside scope and therefore can't be accessed on the outside.
           #If the subquery evaluates to at least one row, the whole expression will become true.
           #This also means that the system only needs to evaluate if there is at least one row and can skip the rest of the work.""".stripMargin('#'))
       functionWithCypherStyleFormatting(
@@ -137,6 +143,91 @@ class SubqueryExpressionsTest extends DocumentingTest {
             ))
           })) {
           resultTable()
+        }
+      }
+    }
+
+    section("COUNT subqueries", "count-subqueries") {
+      p("An count subquery can be used to find out how many times a specified pattern appears in the data.")
+      functionWithCypherStyleFormatting(
+        """COUNT {
+          #  [Pattern]
+          #  WHERE [Expression]
+          #}""".stripMargin('#'))
+      p("It is worth noting that the `MATCH` keyword can be omitted in subqueries and that the `WHERE` clause is optional.")
+
+      section("Simple count subquery", "count-subquery-simple-case") {
+        p(
+          """Variables introduced by the outside scope can be used in the `COUNT` subquery without importing them
+            #<<subquery-correlated-importing|as necessary with `CALL` subqueries>>.
+            #The following query exemplifies this and outputs the owners of more than one dog:
+            #""".stripMargin('#'))
+        query(
+          """MATCH (person:Person)
+            #WHERE COUNT { (person)-[:HAS_DOG]->(:Dog) } > 1
+            #RETURN person.name AS name""".stripMargin('#'),
+          ResultAssertions(r => {
+            r.toList should equal(List(Map("name" -> "Peter")))
+          })) {
+          resultTable()
+        }
+      }
+      section("Count subquery with `WHERE` clause", "count-subquery-with-where") {
+        p(
+          """A `WHERE` clause can be used inside the `COUNT` pattern.
+            #Variables introduced by the `MATCH` clause and the outside scope can be used in this scope.""".stripMargin('#'))
+        query(
+          """MATCH (person:Person)
+            #WHERE COUNT {
+            #  (person)-[:HAS_DOG]->(dog:Dog)
+            #  WHERE person.name = dog.name
+            #} = 1
+            #RETURN person.name AS name""".stripMargin('#'),
+          ResultAssertions(r => {
+            r.toList should equal(List(Map("name" -> "Andy")))
+          })) {
+          resultTable()
+        }
+      }
+      section("Using count subqueries inside other clauses", "count-subqueries-other-clauses") {
+        p("COUNT can be used in any position in a query, with the exception of administration commands, where it is restricted. We provide a few examples below.")
+        section("Using count in RETURN", "count-subqueries-with-return") {
+          query(
+            """MATCH (person:Person)
+              #RETURN person.name, COUNT { (person)-[:HAS_DOG]->(:Dog) } as howManyDogs
+      """.stripMargin('#'),
+            ResultAssertions(r => {
+              r.toList should equal(List(Map("howManyDogs" -> 1, "person.name" -> "Andy"), Map("howManyDogs" -> 0, "person.name" -> "Timothy"), Map("howManyDogs" -> 2, "person.name" -> "Peter")))
+            })) {
+            resultTable()
+          }
+        }
+        section("Using count in SET", "count-subqueries-with-set") {
+          query(
+            """MATCH (person:Person) WHERE person.name ="Andy"
+              #SET person.howManyDogs = COUNT { (person)-[:HAS_DOG]->(:Dog) } + 1
+              #RETURN person.howManyDogs as howManyDogs
+      """.stripMargin('#'),
+            ResultAssertions(r => {
+              r.toList should equal(List(Map("howManyDogs" -> 2)))
+            })) {
+            resultTable()
+          }
+        }
+        section("Using count in CASE", "count-subqueries-with-case") {
+          query(
+            """MATCH (person:Person)
+              #RETURN
+              #   CASE
+              #     WHEN COUNT { (person)-[:HAS_DOG]->(:Dog) } > 1 THEN "Doglover " + person.name
+              #     ELSE person.name
+              #   END AS result
+              """.stripMargin('#'),
+            ResultAssertions(r => {
+              r.toList should equal(List(Map("result" -> "Andy"), Map("result" -> "Timothy"), Map("result" -> "Doglover Peter")))
+            })) {
+            resultTable()
+          }
         }
       }
     }

@@ -877,6 +877,16 @@ Cypher now supports float literals for the values `Infinity` and `NaN`.
 `NaN` defines a quiet not-a-number value and does not throw any exceptions in arithmetic operations.
 Both values are implemented according to the Floating-Point Standard IEEE 754.
 
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+COUNT { (n) WHERE n.foo = "bar" }
+----
+a|
+New expression which returns the number of occurrences of a pattern.
+
 |===
 
 [[cypher-deprecations-additions-removals-4.4]]
