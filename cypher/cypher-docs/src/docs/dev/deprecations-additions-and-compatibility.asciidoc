@@ -394,7 +394,32 @@ label:removed[]
 a|
 Only `+0x...+` (lowercase x) is supported.
 
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+MATCH ()-[r]-()
+RETURN [ ()-[r]-()-[r]-() \| r ] AS rs
+----
+a|
+Remaining support for repeated relationship variables is removed.
 
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+WHERE [1,2,3]
+----
+a|
+Automatic coercion of a list to a boolean is removed.
+
+Replaced by:
+[source, cypher, role="noheader"]
+----
+WHERE NOT isEmpty([1, 2, 3])
+----
 |===
 
 
