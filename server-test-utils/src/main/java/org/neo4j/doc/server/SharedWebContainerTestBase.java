@@ -25,7 +25,6 @@ import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.doc.server.helpers.TestWebContainer;
 import org.neo4j.doc.server.helpers.WebContainerHelper;
-import org.neo4j.server.configuration.ServerSettings;
 
 import static org.neo4j.configuration.SettingValueParsers.TRUE;
 import static org.neo4j.doc.server.WebContainerHolder.release;
@@ -49,7 +48,6 @@ public class SharedWebContainerTestBase
         setWebContainerBuilderProperty( BoltConnector.listen_address.name(), "localhost:0" );
         setWebContainerBuilderProperty( BoltConnector.advertised_address.name(), ":0" );
         setWebContainerBuilderProperty( GraphDatabaseSettings.transaction_timeout.name(), "300s" );
-        setWebContainerBuilderProperty( ServerSettings.transaction_idle_timeout.name(), "300s" );
         testWebContainer = WebContainerHolder.allocate( false );
         WebContainerHelper.cleanTheDatabase( testWebContainer );
     }
