@@ -387,7 +387,7 @@ CREATE ALIAS ... [IF EXISTS]
 FOR DATABASE ...
 ----
 a|
-New Cypher command for creating an alias for a database name. Remote aliases are only supported from version 4.4.7.
+New Cypher command for creating an alias for a database name. Remote aliases are only supported from version 4.4.8.
 
 a|
 label:functionality[]
@@ -398,7 +398,7 @@ ALTER ALIAS ... [IF NOT EXISTS]
 SET DATABASE ...
 ----
 a|
-New Cypher command for altering an alias. Remote aliases are only supported from version 4.4.7.
+New Cypher command for altering an alias. Remote aliases are only supported from version 4.4.8.
 
 a|
 label:functionality[]
@@ -418,7 +418,7 @@ label:new[]
 SHOW ALIASES FOR DATABASE
 ----
 a|
-New Cypher command for listing database aliases. Only supported since version 4.4.7.
+New Cypher command for listing database aliases. Only supported since version 4.4.8.
 
 a|
 label:functionality[]
@@ -429,7 +429,7 @@ New privilege:
 ALIAS MANAGEMENT
 ----
 a|
-New privilege that allows a user to create, modify, delete and list aliases. Only supported since version 4.4.7.
+New privilege that allows a user to create, modify, delete and list aliases. Only supported since version 4.4.8.
 
 a|
 label:functionality[]
@@ -440,7 +440,7 @@ New privilege:
 CREATE ALIAS
 ----
 a|
-New privilege that allows a user to create aliases. Only supported since version 4.4.7.
+New privilege that allows a user to create aliases. Only supported since version 4.4.8.
 
 a|
 label:functionality[]
@@ -451,7 +451,7 @@ New privilege:
 ALTER ALIAS
 ----
 a|
-New privilege that allows a user to modify aliases. Only supported since version 4.4.7.
+New privilege that allows a user to modify aliases. Only supported since version 4.4.8.
 
 a|
 label:functionality[]
@@ -462,7 +462,7 @@ New privilege:
 DROP ALIAS
 ----
 a|
-New privilege that allows a user to delete aliases. Only supported since version 4.4.7.
+New privilege that allows a user to delete aliases. Only supported since version 4.4.8.
 
 a|
 label:functionality[]
@@ -473,7 +473,7 @@ New privilege:
 SHOW ALIAS
 ----
 a|
-New privilege that allows a user to show aliases. Only supported since version 4.4.7.
+New privilege that allows a user to show aliases. Only supported since version 4.4.8.
 |===
 
 
