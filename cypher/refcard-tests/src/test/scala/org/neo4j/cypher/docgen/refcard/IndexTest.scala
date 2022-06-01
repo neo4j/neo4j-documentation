@@ -203,7 +203,7 @@ MATCH (n:Person) WHERE n.name = $$value
 RETURN n
 ###
 
-An RANGE index can be automatically used for the equality comparison.
+A RANGE index can be automatically used for the equality comparison.
 Note that for example `toLower(n.name) = $$value` will not use an index.
 
 ###assertion=match
