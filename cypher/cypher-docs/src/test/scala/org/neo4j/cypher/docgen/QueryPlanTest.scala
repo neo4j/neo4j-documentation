@@ -1084,6 +1084,26 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def bfsVarlengthExpandPruning() {
+    profileQuery(
+      title = "Breadth First VarLength Expand Pruning",
+      text =
+        """Given a start node, the `VarLengthExpand(Pruning, BFS)` operator will traverse variable-length relationships much like the <<query-plan-varlength-expand-all, `VarLengthExpand(All)`>> operator.
+          |However, as an optimization, it will instead perform a breadth-first search (BFS) and while expanding some paths will not be explored if they are guaranteed to produce an end node that has already been found (by means of a previous path traversal).
+          |This will only be used in cases where the individual paths are not of interest.
+          |
+          |This kind of expand is only planned when:
+          |
+          |* The individual paths are not of interest.
+          |* The relationships have an upper bound.
+          |* The lower bound is either 0 or 1 (default).
+          |
+          |This operator guarantees that all the end nodes produced will be unique.""".stripMargin,
+      queryText = """MATCH (p:Person)-[:FRIENDS_WITH *..4]-(q:Person) RETURN DISTINCT p, q""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("VarLengthExpand(Pruning,BFS)"))
+    )
+  }
+
   @Test def directedRelationshipById() {
     profileQuery(
       title = "Directed Relationship By Id Seek",
