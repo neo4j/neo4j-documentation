@@ -204,7 +204,7 @@ class UsingTest extends DocumentingTest {
       section("Query using multiple scan hints with a disjunction") {
         p(
           """Supplying multiple scan hints can also be useful if the query contains a disjunction (`OR`) in the `WHERE` clause.
-            |This makes sure that all involved label predicates are solved by a `NodeByLabelScan` and the results are joined together with a `Union` and a `Distinct` afterwards.""".stripMargin)
+            |This makes sure that all involved label predicates are solved by a `UnionNodeByLabelsScan`.""".stripMargin)
         query(
           s"""
              |MATCH (person)
@@ -212,7 +212,7 @@ class UsingTest extends DocumentingTest {
              |USING SCAN person:Scientist
              |WHERE person:Pioneer OR person:Scientist
              |RETURN *""",
-          assertPlan(AND(ShouldUseLabelScanOn("person"), ShouldUseUnionDistinct("person")))) {
+          assertPlan(ShouldUseUnionLabelsScanOn("person"))) {
           profileExecutionPlan()
         }
         p(
@@ -286,6 +286,10 @@ class UsingTest extends DocumentingTest {
 
   case class ShouldUseLabelScanOn(variable: String) extends PlanAssertion {
     override def matcher: Matcher[String] = include regex s"NodeByLabelScan\\s*\\|\\s*$variable".r
+  }
+
+  case class ShouldUseUnionLabelsScanOn(variable: String) extends PlanAssertion {
+    override def matcher: Matcher[String] = include regex s"UnionNodeByLabelsScan\\s*\\|\\s*$variable".r
   }
 
   case class ShouldUseRelationshipTypeScanOn(variable: String) extends PlanAssertion {
