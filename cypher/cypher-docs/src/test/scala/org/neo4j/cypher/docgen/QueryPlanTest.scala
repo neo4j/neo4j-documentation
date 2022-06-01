@@ -578,6 +578,19 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def unionNodeByLabelScan() {
+    executePreparationQueries {
+      List("CREATE LOOKUP INDEX lookup_index_name FOR (n) ON EACH labels(n)")
+    }
+
+    profileQuery(
+      title = "Union Node By Labels Scan",
+      text = """The `UnionNodeByLabelsScan` operator fetches all nodes having at least one of the provided labels from the node label index.""".stripMargin,
+      queryText = """MATCH (countryOrLocation:Country|Location) RETURN countryOrLocation""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UnionNodeByLabelsScan"))
+    )
+  }
+
   @Test def directedRelationshipTypeScan() {
     executePreparationQueries {
       List("CREATE LOOKUP INDEX rel_lookup_index_name FOR ()-[r]-() ON EACH type(r)")
