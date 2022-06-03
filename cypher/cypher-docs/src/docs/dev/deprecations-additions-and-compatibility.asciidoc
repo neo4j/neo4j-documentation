@@ -468,7 +468,7 @@ label:functionality[]
 label:updated[]
 [source, cypher, role="noheader"]
 ----
-TERMINATE TRANSACTIONS
+TERMINATE TRANSACTIONS transaction-id[,...]
 YIELD { * \| field[, ...] }
 [ORDER BY field[, ...]]
 [SKIP n]
@@ -479,6 +479,50 @@ YIELD { * \| field[, ...] }
 a|
 Terminate transaction now allows `YIELD`.
 The `WHERE` clause is not allowed on its own, as it is for `SHOW`, but needs the `YIELD` clause.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW TRANSACTIONS [transaction-id[,...]]
+----
+[source, cypher, role="noheader"]
+----
+TERMINATE TRANSACTIONS transaction-id[,...]
+----
+a|
+The `transaction-id` now allows general expressions resolving to a string or a list of strings instead of just parameter.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW TRANSACTIONS [transaction-id[,...]]
+YIELD field[, ...]
+  [ORDER BY field[, ...]]
+  [SKIP n]
+  [LIMIT n]
+  [WHERE expression]
+TERMINATE TRANSACTIONS transaction-id[,...]
+YIELD field[, ...]
+  [ORDER BY field[, ...]]
+  [SKIP n]
+  [LIMIT n]
+  [WHERE expression]
+RETURN field[, ...]
+  [ORDER BY field[, ...]]
+  [SKIP n]
+  [LIMIT n]
+----
+a|
+The `SHOW` and `TERMINATE TRANSACTIONS` commands can be combined in the same query.
+The order of the commands does not matter and there can be more than one of each command.
+
+When the command is not in standalone mode, the `YIELD` and `RETURN` are mandatory and `YIELD *` is not allowed.
+
+The `transaction-id` is a comma-separated list of one or more quoted strings or an expression resolving to a string or a list of strings (for example the output column from `SHOW`).
 
 a|
 label:functionality[]
