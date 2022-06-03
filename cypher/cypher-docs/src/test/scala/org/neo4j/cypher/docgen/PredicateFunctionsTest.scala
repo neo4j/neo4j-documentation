@@ -104,7 +104,7 @@ class PredicateFunctionsTest extends DocumentingTest {
         "A Boolean.",
         ("pattern-or-property", "A pattern or a property (in the form 'variable.prop')."))
       query("""MATCH (n)
-              #WHERE exists(n.name)
+              #WHERE n.name IS NOT NULL
               #RETURN
               #  n.name AS name,
               #  exists((n)-[:MARRIED]->()) AS is_married""".stripMargin('#'),
@@ -165,7 +165,7 @@ class PredicateFunctionsTest extends DocumentingTest {
       /*Result:
       ({name: "Eskil", eyes: "blue", age: 41, liked_colors: ["pink", "yellow", "black"]})
       ({alias: "Frank", eyes: "", age: 61, liked_colors: ["blue", "green"]})
-      */ 
+      */
       ResultAssertions(r => {
           r.toList.length should equal(2)
         })) {
