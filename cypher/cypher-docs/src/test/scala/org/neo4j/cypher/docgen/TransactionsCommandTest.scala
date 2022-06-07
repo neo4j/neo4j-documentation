@@ -418,7 +418,7 @@ All users may terminate their own currently executing transactions.
     section("Combining transaction commands", id="query-combine-tx-commands") {
       p(
         """
-In difference to other show commands, the show and terminate transactions commands can be combined in the same query.
+In difference to other show commands, the `SHOW` and `TERMINATE TRANSACTIONS` commands can be combined in the same query.
 
 [NOTE]
 ====
@@ -456,7 +456,7 @@ At this point in time, no other cypher clauses are allowed to be combined with t
           """To terminate transactions that have been waiting for more than 30 minutes,
             #first find the transactions using `SHOW TRANSACTIONS` then pass them onto `TERMINATE TRANSACTIONS`.
             #
-            #The following example finds one such transaction that have been waiting for 40 minutes.""".stripMargin('#'))
+            #The following example finds one such transaction that has been waiting for 40 minutes.""".stripMargin('#'))
         query(
           """SHOW TRANSACTIONS
             #YIELD transactionId, waitTime
@@ -473,7 +473,7 @@ At this point in time, no other cypher clauses are allowed to be combined with t
             |4+d|Rows: 1
             ||===""")
       }
-      section("Listing other transactions by same user that was terminated") {
+      section("Listing other transactions by the same user that was terminated") {
         p(
           """To list remaining transactions by users whose transactions got terminated,
             #first terminate the transactions using `TERMINATE TRANSACTIONS` then filter on the users from `SHOW TRANSACTIONS`.""".stripMargin('#'))
@@ -495,7 +495,7 @@ At this point in time, no other cypher clauses are allowed to be combined with t
             |4+d|Rows: 2
             ||===""")
       }
-      section("Listing other transactions by same user as a given transaction") {
+      section("Listing other transactions by the same user as a given transaction") {
         p(
           """To list the other transactions by the same user as a given transaction,
             #first find the transactions using `SHOW TRANSACTIONS` then filter on the users in a second `SHOW TRANSACTIONS`.""".stripMargin('#'))
