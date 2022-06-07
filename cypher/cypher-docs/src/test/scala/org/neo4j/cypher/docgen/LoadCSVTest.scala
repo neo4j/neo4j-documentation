@@ -110,7 +110,7 @@ Note that this applies to all variations of CSV files (see examples below for ot
 4,The Cardigans,1992
 ----
 """,
-      queryText = s"LOAD CSV FROM 'http://data.neo4j.com/bands/artists.csv' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
+      queryText = s"LOAD CSV FROM 'https://data.neo4j.com/bands/artists.csv' AS line CREATE (:Artist {name: line[1], year: toInteger(line[2])})",
       assertions = p => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4))
   }
 
