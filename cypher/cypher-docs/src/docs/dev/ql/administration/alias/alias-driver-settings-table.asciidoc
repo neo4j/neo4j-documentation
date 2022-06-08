@@ -1,0 +1,72 @@
+This is the list of the allowed driver settings for remote aliases.
+
+[[remote-alias-driver-settings]]
+.ssl_enforced
+[width="100%", cols="1s, 4a"]
+|===
+| Description | SSL for remote alias drivers is configured through the target url scheme.
+If `ssl_enforced` is set to true, a secure url scheme is enforced. This will be validated when the command is executed.
+| Valid values | Boolean
+| Default value | true
+|===
+
+.connection_timeout
+[width="100%", cols="1s, 4a"]
+|===
+| Description | Socket connection timeout.
+A timeout of zero is treated as an infinite timeout and will be bound by the timeout configured on the operating system level.
+| Valid values | Duration
+| Default value |
+<<operations-manual#config_dbms.routing.driver.connection.connect_timeout, dbms.routing.driver.connection.connect_timeout>>
+|===
+
+.connection_max_lifetime
+[width="100%", cols="1s, 4a"]
+|===
+| Description | Pooled connections older than this threshold will be closed and removed from the pool.
+Setting this option to a low value will cause a high connection churn and might result in a performance hit.
+It is recommended to set maximum lifetime to a slightly smaller value than the one configured in network equipment (load balancer, proxy, firewall, etc. can also limit maximum connection lifetime).
+
+| Valid values | Duration.
+
+Zero and negative values result in lifetime not being checked.
+| Default value |
+<<operations-manual#config_dbms.routing.driver.connection.max_lifetime, dbms.routing.driver.connection.max_lifetime>>
+|===
+
+.connection_pool_acquisition_timeout
+[width="100%", cols="1s, 4a"]
+|===
+| Description | Maximum amount of time spent attempting to acquire a connection from the connection pool.
+This timeout only kicks in when all existing connections are being used and no new connections can be created
+because maximum connection pool size has been reached. Error is raised when connection can’t be acquired within configured time.
+| Valid values | Duration.
+
+Negative values are allowed and result in unlimited acquisition timeout.
+Value of 0 is allowed and results in no timeout and immediate failure when connection is unavailable.
+| Default value |
+<<operations-manual#config_dbms.routing.driver.connection.pool.acquisition_timeout, dbms.routing.driver.connection.pool.acquisition_timeout>>
+|===
+
+.connection_pool_max_size
+[width="100%", cols="1s, 4a"]
+|===
+| Description | Maximum total number of connections to be managed by a connection pool.
+The limit is enforced for a combination of a host and user.
+| Valid values | Integer.
+
+Negative values are allowed and result in unlimited pool. Value of 0 is not allowed.
+| Default value |
+<<operations-manual#config_dbms.routing.driver.connection.pool.max_size, dbms.routing.driver.connection.pool.max_size>>
+|===
+
+.logging_level
+[width="100%", cols="1s, 4a"]
+|===
+| Description | Sets level for driver internal logging.
+| Valid values |  org.neo4j.logging.Level.
+
+One of `DEBUG`, `INFO`, `WARN`, `ERROR`, or `NONE`.
+| Default value |
+<<operations-manual#config_dbms.routing.driver.logging.level, dbms.routing.driver.logging.level>>
+|===
