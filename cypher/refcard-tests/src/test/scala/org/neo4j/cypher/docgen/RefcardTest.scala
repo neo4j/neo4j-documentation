@@ -20,6 +20,7 @@
 package org.neo4j.cypher.docgen
 
 import com.neo4j.configuration.OnlineBackupSettings
+import com.neo4j.configuration.SecuritySettings
 import org.apache.commons.io.FileUtils
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.After
@@ -49,6 +50,7 @@ import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.util.ValueUtils
+import org.neo4j.string.SecureString
 import org.neo4j.test.utils.TestDirectory
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions
@@ -305,7 +307,10 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   protected def databaseConfig(): util.Map[Setting[_], Object] = {
     Map[Setting[_], Object](
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
-      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
+      OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
+      SecuritySettings.systemdb_secrets_keystore_path-> java.nio.file.Path.of(getClass.getClassLoader.getResource("keystore_11_0_5.pkcs12").toURI),
+      SecuritySettings.systemdb_secrets_keystore_password -> new SecureString("test24"),
+      SecuritySettings.systemdb_secrets_key_name -> "256bitkey"
     ).asJava
   }
 }

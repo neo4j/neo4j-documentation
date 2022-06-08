@@ -1,0 +1,21 @@
+.Create alias command syntax
+[options="header", width="100%", cols="5a,2"]
+|===
+| Syntax | Comment
+|
+[source, cypher, role=noplay]
+-----
+CREATE [OR REPLACE] ALIAS name [IF NOT EXISTS] FOR DATABASE targetName
+-----
+| Create a local alias.
+
+|
+[source, cypher, role=noplay]
+-----
+CREATE [OR REPLACE] ALIAS name [IF NOT EXISTS] FOR DATABASE targetName
+AT 'url' USER username PASSSWORD 'password'
+[DRIVER "{" setting: value[, ...] "}"]
+-----
+| Create a remote alias.
+
+|===

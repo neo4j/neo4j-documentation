@@ -35,9 +35,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     initQueries(
       "CREATE DATABASE `movies`",
       "CREATE ALIAS `films` FOR DATABASE `movies`",
-      "CREATE ALIAS `motion pictures` FOR DATABASE `movies`",
-      "CREATE DATABASE `northwind-graph-2020`",
-      "CREATE DATABASE `northwind-graph-2021`"
+      "CREATE ALIAS `motion pictures` FOR DATABASE `movies`"
     )
     synopsis("This chapter explains how to use Cypher to manage Neo4j databases: creating, modifying, deleting, starting, and stopping individual databases within a single server.")
     p(
@@ -67,26 +65,26 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         """In this example, the detailed information for a particular database can be displayed using the command `SHOW DATABASE name YIELD *`. When a `YIELD`
           |clause is provided, the full set of columns is returned.
           |""".stripMargin)
-      query("SHOW DATABASE movies YIELD *", assertDatabaseShown("movies")) {
+      query("SHOW DATABASE movies YIELD *", assertNameField("movies")) {
         resultTable()
       }
       p("The number of databases can be seen using a `count()` aggregation with `YIELD` and `RETURN`.")
       query("SHOW DATABASES YIELD * RETURN count(*) as count", ResultAssertions({ r: DocsExecutionResult =>
-        r.columnAs[Int]("count").toSet should be(Set(5))
+        r.columnAs[Int]("count").toSet should be(Set(3))
       })){
         resultTable()
       }
       p("The default database can be seen using the command `SHOW DEFAULT DATABASE`.")
-      query("SHOW DEFAULT DATABASE", assertDatabaseShown("neo4j")) {
+      query("SHOW DEFAULT DATABASE", assertNameField("neo4j")) {
         resultTable()
       }
       p("The home database for the current user can be seen using the command `SHOW HOME DATABASE`.")
-      query("SHOW HOME DATABASE", assertDatabaseShown("neo4j")) {
+      query("SHOW HOME DATABASE", assertNameField("neo4j")) {
         resultTable()
       }
       p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`.")
       query("SHOW DATABASES YIELD name, currentStatus, requestedStatus ORDER BY currentStatus WHERE name CONTAINS 'e'",
-        assertDatabaseShown("neo4j", "system", "movies")) {
+        assertNameField("neo4j", "system", "movies")) {
         p(
           """In this example:
             |
@@ -199,7 +197,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         statsOnlyResultTable()
       }
       p("The status of the stopped database can be seen using the command `SHOW DATABASE name`.")
-      query("SHOW DATABASE customers", assertDatabaseShown("customers")) {
+      query("SHOW DATABASE customers", assertNameField("customers")) {
         resultTable()
       }
     }
@@ -211,7 +209,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         statsOnlyResultTable()
       }
       p("The status of the started database can be seen using the command `SHOW DATABASE name`.")
-      query("SHOW DATABASE customers", assertDatabaseShown("customers")) {
+      query("SHOW DATABASE customers", assertNameField("customers")) {
         resultTable()
       }
     }
@@ -260,102 +258,21 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |therefore be performed in a new transaction. This is different to the usual transactional behavior, and for this reason
           |it is recommended that these commands be run in their own transaction. The default behavior is `NOWAIT`, so if no clause
           |is specified the transaction will behave normally and the action is performed in the background post-commit.""".stripMargin)
-    }
-    query("CREATE DATABASE slow WAIT 5 SECONDS", ResultAssertions(r => {
-      assertStats(r, systemUpdates = 1)
-    })) {
-      resultTable()
-      p(
-        """The `success` column provides an aggregate status of whether or not the command is considered
-          |successful and thus every row will have the same value. The intention of this column is to make it
-          |easy to determine, for example in a script, whether or not the command completed successfully without
-          |timing out.""".stripMargin
-       )
-    }
-    note {
-      p(
-        """A command with a `WAIT` clause may be interrupted whilst it is waiting to complete. In this event
-          |the command will continue to execute in the background and will not be aborted.""".stripMargin)
-    }
-    section(title="Creating database aliases", id="administration-database-aliases-create-alias", role = "enterprise-edition") {
-      p(
-        """An alias can be used as an alternative database name, which can be used in all places where a database name can be used.
-          |A home database can be set to an alias, which will be resolved to the target database on use.
-          |In all all other Cypher commands and queries, the alias will be resolved while executing the command.
-          |The privileges are determined on the resolved database.
-        """.stripMargin)
-      p("Aliases can be created using `CREATE ALIAS`.")
-      query("CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
+      query("CREATE DATABASE slow WAIT 5 SECONDS", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
-        statsOnlyResultTable()
-      }
-      note {
-        p("""Alias names are subject to the <<cypher-manual#cypher-naming, standard Cypher restrictions on valid identifiers>>.
-            |The following naming rules apply:""")
+        resultTable()
         p(
-          """
-            |* A name is a valid identifier, additionally allowing dots e.g. `main.alias`.
-            |* Name length can be up to 65534 characters.
-            |* Names cannot end with dots.
-            |* Names that begin with an underscore or with the prefix `system` are reserved for internal use.
-            |* Non-alphabetic characters, including numbers, symbols and whitespace characters, can be used in names, but must be escaped using backticks.
-            |
-          """.stripMargin)
+          """The `success` column provides an aggregate status of whether or not the command is considered
+            |successful and thus every row will have the same value. The intention of this column is to make it
+            |easy to determine, for example in a script, whether or not the command completed successfully without
+            |timing out.""".stripMargin
+        )
       }
-      p("When a database alias has been created, it will show up in the aliases column provided by the command `SHOW DATABASES`.")
-      query("SHOW DATABASE `northwind`", assertDatabaseShown("northwind-graph-2020")) {
-        resultTable()
-      }
-      p("This command is optionally idempotent, with the default behavior to fail with an error if the database alias already exists. " +
-        "Inserting `IF NOT EXISTS` after the alias name ensures that no error is returned and nothing happens should a database alias with that name already exist. " +
-        "Adding `OR REPLACE` to the command will result in any existing database alias being deleted and a new one created. " +
-        "`CREATE OR REPLACE ALIAS` will fail if there is an existing database with the same name.")
-      query("CREATE ALIAS `northwind` IF NOT EXISTS FOR DATABASE `northwind-graph-2020` ", ResultAssertions(r => {
-        assertStats(r)
-      })) {
-        statsOnlyResultTable()
-      }
-      query("CREATE OR REPLACE ALIAS `northwind` FOR DATABASE `northwind-graph-2020`", ResultAssertions(r => {
-        assertStats(r, systemUpdates = 2)
-      })) {
-        statsOnlyResultTable()
-      }
-      p("This is equivalent to running ``DROP ALIAS `northwind` IF EXISTS FOR DATABASE`` followed by ``CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020` ``.")
       note {
-        p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
-      }
-    }
-    section(title="Altering database aliases", id="administration-database-aliases-alter-alias", role = "enterprise-edition") {
-      p("Aliases can be altered using `ALTER ALIAS` to change its database target.")
-      query("ALTER ALIAS `northwind` SET DATABASE TARGET `northwind-graph-2021`", ResultAssertions(r => {
-        assertStats(r, systemUpdates = 1)
-      })) {
-        statsOnlyResultTable()
-      }
-      p("When a database alias has been altered, it will show up in the aliases column for the target database provided by the command `SHOW DATABASES`.")
-      query("SHOW DATABASE `northwind`", assertDatabaseShown("northwind-graph-2021")) {
-        resultTable()
-      }
-    }
-    section(title="Deleting database aliases", id="administration-database-aliases-drop-alias", role = "enterprise-edition") {
-      p("Aliases can be dropped using `DROP ALIAS`.")
-      query("DROP ALIAS `northwind` FOR DATABASE", ResultAssertions(r => {
-        assertStats(r, systemUpdates = 1)
-      })) {
-        statsOnlyResultTable()
-      }
-      p("When a database alias has been deleted, it will no longer show up in the aliases column provided by the command `SHOW DATABASES`.")
-      query("SHOW DATABASE `northwind-graph-2021`", assertDatabaseShown("northwind-graph-2021")) {
-        resultTable()
-      }
-      p(s"""This command is optionally idempotent, with the default behavior to fail with an error if the alias does not exist.
-           |Inserting IF EXISTS after the alias name ensures that no error is returned and nothing happens should the alias not exist."""
-        .stripMargin)
-      query("DROP ALIAS `northwind` IF EXISTS FOR DATABASE", ResultAssertions(r => {
-        assertStats(r)
-      })) {
-        statsOnlyResultTable()
+        p(
+          """A command with a `WAIT` clause may be interrupted whilst it is waiting to complete. In this event
+            |the command will continue to execute in the background and will not be aborted.""".stripMargin)
       }
     }
   }.build()
@@ -372,7 +289,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
   })
 
-  private def assertDatabaseShown(expected: String*) = ResultAndDbAssertions((p, db) => {
+  private def assertNameField(expected: String*) = ResultAndDbAssertions((p, db) => {
     val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
     try {
       val result = p.columnAs[String]("name").toSet

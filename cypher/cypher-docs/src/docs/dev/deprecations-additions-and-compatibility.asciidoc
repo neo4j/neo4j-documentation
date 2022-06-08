@@ -387,7 +387,7 @@ CREATE ALIAS ... [IF EXISTS]
 FOR DATABASE ...
 ----
 a|
-New Cypher command for creating an alias for a database name.
+New Cypher command for creating an alias for a database name. Remote aliases are only supported from version 4.4.8.
 
 a|
 label:functionality[]
@@ -395,10 +395,10 @@ label:new[]
 [source, cypher, role="noheader"]
 ----
 ALTER ALIAS ... [IF NOT EXISTS]
-SET DATABASE TARGET ...
+SET DATABASE ...
 ----
 a|
-New Cypher command for altering an alias to target another database.
+New Cypher command for altering an alias. Remote aliases are only supported from version 4.4.8.
 
 a|
 label:functionality[]
@@ -410,6 +410,70 @@ DROP ALIAS ... [IF EXISTS] FOR DATABASE
 a|
 New Cypher command for dropping a database alias.
 
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+SHOW ALIASES FOR DATABASE
+----
+a|
+New Cypher command for listing database aliases. Only supported since version 4.4.8.
+
+a|
+label:functionality[]
+label:new[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+ALIAS MANAGEMENT
+----
+a|
+New privilege that allows a user to create, modify, delete and list aliases. Only supported since version 4.4.8.
+
+a|
+label:functionality[]
+label:new[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+CREATE ALIAS
+----
+a|
+New privilege that allows a user to create aliases. Only supported since version 4.4.8.
+
+a|
+label:functionality[]
+label:new[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+ALTER ALIAS
+----
+a|
+New privilege that allows a user to modify aliases. Only supported since version 4.4.8.
+
+a|
+label:functionality[]
+label:new[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+DROP ALIAS
+----
+a|
+New privilege that allows a user to delete aliases. Only supported since version 4.4.8.
+
+a|
+label:functionality[]
+label:new[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+SHOW ALIAS
+----
+a|
+New privilege that allows a user to show aliases. Only supported since version 4.4.8.
 |===
 
 
