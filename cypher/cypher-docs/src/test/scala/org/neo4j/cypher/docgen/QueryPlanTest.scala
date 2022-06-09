@@ -629,6 +629,32 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def directedUnionRelationshipTypeScan(): Unit ={
+    executePreparationQueries {
+      List("CREATE LOOKUP INDEX rel_lookup_index_name FOR ()-[r]-() ON EACH type(r)")
+    }
+
+    profileQuery(
+      title = "Directed Union Relationship Types Scan",
+      text = """The `DirectedUnionRelationshipTypeScan` operator fetches all relationships and their start and end nodes with at least one of the provided types from the relationship type index.""".stripMargin,
+      queryText = """MATCH ()-[friendOrFoe: FRIENDS_WITH|FOE]->() RETURN friendOrFoe""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DirectedUnionRelationshipTypesScan"))
+    )
+  }
+
+  @Test def undirectedUnionRelationshipTypeScan(): Unit ={
+    executePreparationQueries {
+      List("CREATE LOOKUP INDEX rel_lookup_index_name FOR ()-[r]-() ON EACH type(r)")
+    }
+
+    profileQuery(
+      title = "Undirected Union Relationship Types Scan",
+      text = """The `UndirectedUnionRelationshipTypeScan` operator fetches all relationships and their start and end nodes with at least one of the provided types from the relationship type index.""".stripMargin,
+      queryText = """MATCH ()-[friendOrFoe: FRIENDS_WITH|FOE]-() RETURN friendOrFoe""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedUnionRelationshipTypesScan"))
+    )
+  }
+
   @Test def nodeByIndexSeek() {
     profileQuery(
       title = "Node Index Seek",
