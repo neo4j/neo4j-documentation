@@ -162,19 +162,8 @@ class AggregatingFunctionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Using `count(expression)` to return the number of values") {
-        p("Instead of simply returning the number of rows with `count(*)`, it may be more useful to return the actual number of values returned by an expression.")
-        query("""MATCH (n {name: 'A'})-->(x)
-                #RETURN count(x)""".stripMargin('#'),
-        ResultAssertions((r) => {
-          r.toList should equal(List(Map("count(x)" -> 4L)))
-        })) {
-          p("The number of nodes that are connected directly (one relationship) to the node, with the name `'A'`, is returned.")
-          resultTable()
-        }
-      }
       section("Counting non-`null` values") {
-        p("The function `count(expression)` can be used to return the number of non-`null` values returned by the expression.")
+        p("Instead of simply returning the number of rows with `count(*)`, the function `count(expression)` can be used to return the number of non-`null` values returned by the expression.")
         query("""MATCH (n:Person)
                 #RETURN count(n.age)""".stripMargin('#'),
         ResultAssertions((r) => {
