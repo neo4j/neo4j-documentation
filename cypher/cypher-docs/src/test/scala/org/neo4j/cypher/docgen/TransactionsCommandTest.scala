@@ -423,7 +423,7 @@ In difference to other show commands, the `SHOW` and `TERMINATE TRANSACTIONS` co
 [NOTE]
 ====
 When combining multiple commands the `YIELD` and `RETURN` clauses are mandatory and must not be omitted.
-In addition, the `YIELD` clause needs to explicitly list the yielded columns, `YIELD *` is not permitted.
+In addition, the `YIELD` clause needs to explicitly list the yielded columns. `YIELD *` is not permitted.
 ====
 
 [NOTE]
@@ -473,10 +473,10 @@ At this point in time, no other cypher clauses are allowed to be combined with t
             |4+d|Rows: 1
             ||===""")
       }
-      section("Listing other transactions by the same user that was terminated") {
+      section("Listing other transactions by the same user that were terminated") {
         p(
-          """To list remaining transactions by users whose transactions got terminated,
-            #first terminate the transactions using `TERMINATE TRANSACTIONS` then filter on the users from `SHOW TRANSACTIONS`.""".stripMargin('#'))
+          """To list remaining transactions by users whose transactions were terminated,
+            #first terminate the transactions using `TERMINATE TRANSACTIONS` then filter users through `SHOW TRANSACTIONS`.""".stripMargin('#'))
         query(
           """TERMINATE TRANSACTION 'neo4j-transaction-1', 'neo4j-transaction-2'
             #YIELD username AS terminatedUser
@@ -497,8 +497,8 @@ At this point in time, no other cypher clauses are allowed to be combined with t
       }
       section("Listing other transactions by the same user as a given transaction") {
         p(
-          """To list the other transactions by the same user as a given transaction,
-            #first find the transactions using `SHOW TRANSACTIONS` then filter on the users in a second `SHOW TRANSACTIONS`.""".stripMargin('#'))
+          """To list other transactions by the same user as a given transaction,
+            #first find the transactions using `SHOW TRANSACTIONS` then filter users in a second `SHOW TRANSACTIONS`.""".stripMargin('#'))
         query(
           """SHOW TRANSACTION 'neo4j-transaction-1'
             #YIELD username AS originalUser, transactionId AS originalTxId

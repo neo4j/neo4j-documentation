@@ -492,7 +492,7 @@ SHOW TRANSACTIONS [transaction-id[,...]]
 TERMINATE TRANSACTIONS transaction-id[,...]
 ----
 a|
-The `transaction-id` now allows general expressions resolving to a string or a list of strings instead of just parameter.
+The `transaction-id` now allows general expressions resolving to a string or a list of strings instead of just parameters.
 
 a|
 label:functionality[]
