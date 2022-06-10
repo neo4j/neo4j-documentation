@@ -30,7 +30,8 @@ The comparison operators `\<=`, `<` (for ascending) and `>=`, `>` (for descendin
 The following points give some details on how the comparison is performed.
 
 * Numerical values are compared for ordering using numerical order (e.g. `3 < 4` is true).
-* All comparability tests (<, <=, >, >=) with `java.lang.Double.NaN` evaluate as false. For exemple, `1 > b` and `1 < b` are both false when b is NaN.
+* All comparability tests (<, <=, >, >=) with `java.lang.Double.NaN` evaluate as false. 
+For exemple, `1 > b` and `1 < b` are both false when b is NaN.
 * String values are compared for ordering using lexicographic order (e.g. `"x" < "xy"`).
 * Boolean values are compared for ordering such that `false < true`.
 * *Comparison* of spatial values:
