@@ -157,6 +157,7 @@ Note that this applies to all variations of CSV files (see examples below for ot
       title = "Importing large amounts of data",
       text = """If the CSV file contains a significant number of rows (approaching hundreds of thousands or millions), `CALL {} IN TRANSACTIONS` can be used to instruct Neo4j to commit a transaction after a number of rows.
                #This reduces the memory overhead of the transaction state.
+<<<<<<< HEAD
                #Note that `CALL {} IN TRANSACTIONS` is only allowed in <<query-transactions, implicit (auto-commit or `:auto`) transactions>>.
                #For more information, see <<subquery-call-in-transactions>>.""".stripMargin('#'),
       queryText = """LOAD CSV FROM '%ARTIST%' AS line
@@ -164,6 +165,17 @@ Note that this applies to all variations of CSV files (see examples below for ot
                     #  WITH line
                     #  CREATE (:Artist {name: line[1], year: toInteger(line[2])})
                     #} IN TRANSACTIONS""".stripMargin('#'),
+=======
+               #By default, the commit happens every 1000 rows.
+               #Note that `PERIODIC COMMIT` is only allowed in <<query-transactions, implicit (auto-commit or `:auto`) transactions>>.
+               #For more information, see <<query-using-periodic-commit-hint>>.
+               #
+               #Note: The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` query hint.
+               #
+               #Note: Queries with the `PERIODIC COMMIT` query hint can not be routed by <<operations-manual#causal-clustering-routing, Server-side routing>>.""".stripMargin('#'),
+      queryText = """USING PERIODIC COMMIT LOAD CSV FROM '%ARTIST%' AS line
+                    #CREATE (:Artist {name: line[1], year: toInteger(line[2])})""".stripMargin('#'),
+>>>>>>> 6df8ca20e9 (4.4 nancompare (#1509))
       optionalResultExplanation = "",
       assertions = (p) => assertStats(p, nodesCreated = 4, propertiesWritten = 8, labelsAdded = 4, transactionsCommitted = 1))
   }
