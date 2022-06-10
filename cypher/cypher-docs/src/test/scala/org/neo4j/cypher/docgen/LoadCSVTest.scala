@@ -158,7 +158,7 @@ Note that this applies to all variations of CSV files (see examples below for ot
       text = """If the CSV file contains a significant number of rows (approaching hundreds of thousands or millions), `USING PERIODIC COMMIT` can be used to instruct Neo4j to perform a commit after a number of rows.
                #This reduces the memory overhead of the transaction state.
                #By default, the commit happens every 1000 rows.
-               #Note that `PERIODIC COMMIT` is only allowed in <<query-transactions, implicit (auto-commit or `:auto`) transactions>>. 
+               #Note that `PERIODIC COMMIT` is only allowed in <<query-transactions, implicit (auto-commit or `:auto`) transactions>>.
                #For more information, see <<query-using-periodic-commit-hint>>.
                #
                #Note: The <<query-use, `USE` clause>> can not be used together with the `PERIODIC COMMIT` query hint.
