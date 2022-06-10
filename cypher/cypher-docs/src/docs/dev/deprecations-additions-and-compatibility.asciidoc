@@ -518,7 +518,7 @@ RETURN field[, ...]
 ----
 a|
 The `SHOW` and `TERMINATE TRANSACTIONS` commands can be combined in the same query.
-The order of the commands does not matter and there can be more than one of each command.
+The query does not require a specific order and there can be zero or more of each command type, however at least one command is needed.
 
 When the command is not in standalone mode, the `YIELD` and `RETURN` are mandatory and `YIELD *` is not allowed.
 
