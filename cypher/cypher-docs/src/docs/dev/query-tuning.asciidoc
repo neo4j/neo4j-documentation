@@ -28,7 +28,6 @@ This allows Cypher to re-use your queries instead of having to parse and build n
 To read more about the execution plan operators mentioned in this chapter, see <<execution-plans>>.
 
 * xref:query-tuning/query-options/index.adoc#cypher-query-options[Cypher query options]
-** <<cypher-version,Cypher version>>
 ** <<cypher-runtime,Cypher runtime>>
 ** <<cypher-connect-components-planner,Cypher connect-components planner>>
 ** <<cypher-update-strategy,Cypher update strategy>>
