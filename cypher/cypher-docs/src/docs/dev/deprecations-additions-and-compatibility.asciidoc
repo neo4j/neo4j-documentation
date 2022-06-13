@@ -383,12 +383,22 @@ label:functionality[]
 label:new[]
 [source, cypher, role="noheader"]
 ----
-CREATE [OR REPLACE] ALIAS ... [IF NOT EXISTS]
+CREATE ALIAS ... [IF NOT EXISTS]
 FOR DATABASE ...
 ----
 a|
 New Cypher command for creating an alias for a database name. Remote aliases are only supported from version 4.4.8.
 
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE OR REPLACE ALIAS ...
+FOR DATABASE ...
+----
+a|
+New Cypher command for creating or replacing an alias for a database name. Remote aliases are only supported from version 4.4.8.
 a|
 label:functionality[]
 label:new[]
