@@ -73,6 +73,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-with, WITH ... [AS]>>                        | Projecting   |  Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
 |<<query-where, WHERE>>                          | Reading sub-clause | A sub-clause used to add constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause, or to filter the results of a `WITH` clause.
 |<<existential-subqueries, WHERE EXISTS {...}>>  | Reading sub-clause | An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
+|<<count-subqueries, COUNT {...}>>  | Reading sub-clause | An expression used to compute the number of results of a subquery inside another clause, e.g. `MATCH`, `WITH`, `SET`, etc.
+
 |===
 
 

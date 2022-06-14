@@ -58,10 +58,9 @@ class CountTest extends DocumentingTest {
                                         #  WHERE [Expression]
                                         #}""".stripMargin('#'))
     p("The `WHERE` clause is optional.")
-    p("It is worth noting that the `MATCH` keyword can be omitted in subqueries and that the `WHERE` clause is optional.")
     section("Using count subqueries in `WHERE`", "count-subqueries") {
       section("Simple count subquery", "count-subquery-simple-case") {
-        p("""Variables introduced by the outside scope can be used in the inner `MATCH` clause. The following query exemplifies this and would output the owners of more tahan one dog:""")
+        p("""Variables introduced by the outside scope can be used in the inner `MATCH` clause. The following query exemplifies this and would output the owners of more than one dog:""")
         query("""MATCH (person:Person)
                 #WHERE COUNT { (person)-[:HAS_DOG]->(:Dog) } > 1
                 #RETURN person.name AS name""".stripMargin('#'),

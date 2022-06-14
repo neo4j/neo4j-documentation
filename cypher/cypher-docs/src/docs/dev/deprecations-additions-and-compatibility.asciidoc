@@ -521,6 +521,16 @@ isNaN(n.prop)
 a|
 New function which returns whether the given number is `NaN`.
 
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+COUNT { (n) WHERE n.foo = "bar" }
+----
+a|
+New expression which returns whether the number of elements of a pattern.
+
 |===
 
 [[cypher-deprecations-additions-removals-4.4]]
