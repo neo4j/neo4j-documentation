@@ -19,7 +19,7 @@
  */
 package org.neo4j.cypher;
 
-import com.neo4j.enterprise.edition.EnterpriseEditionModule;
+import com.neo4j.causalclustering.core.MixedEditionModule;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -62,7 +62,7 @@ public class TestEnterpriseDatabaseManagementServiceBuilder extends TestDatabase
     @Override
     protected Function<GlobalModule,AbstractEditionModule> getEditionFactory( Config config )
     {
-        return EnterpriseEditionModule::new;
+        return MixedEditionModule::new;
     }
 
     @Override
