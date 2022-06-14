@@ -70,18 +70,16 @@ Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used
 Interpreted::
 In this runtime, the operators in the execution plan are chained together in a tree, where each non-leaf operator feeds from one or two child operators.
 The tree thus comprises nested iterators, and the records are streamed in a pipelined manner from the top iterator, which pulls from the next iterator and so on.
-
-[enterprise-edition]#Slotted#::
-This is very similar to the interpreted runtime, except that there are additional optimizations regarding the way in which the records are streamed through the iterators.
+Starting with 5.0 the community interpreted runtime has been updated to use the slotted runtime which used to be an enterprise-only feature.
+The slotted runtime works similar, except that there are additional optimizations regarding the way in which the records are streamed through the iterators.
 This results in improvements to both the performance and memory usage of the query.
-In effect, this can be thought of as the 'faster interpreted' runtime.
 
 [enterprise-edition]#Pipelined#::
 The pipelined runtime was introduced in Neo4j 4.0 as a replacement for the older compiled runtime used in the Neo4j 3.x versions.
 It combines some of the advantages of the compiled runtime in a new architecture that allows for support of a wider range of queries.
 +
 Algorithms are employed to intelligently group the operators in the execution plan in order to generate new combinations and orders of execution which are optimised for performance and memory usage.
-While this should lead to superior performance in most cases (over both the interpreted and slotted runtimes), it is still under development and does not support all possible operators or queries (the slotted runtime covers all operators and queries).
+While this should lead to superior performance in most cases, it is still under development and does not support all possible operators or queries (the slotted runtime covers all operators and queries).
 
 [options="header",cols="2m,2a,^1a"]
 |===
@@ -90,13 +88,10 @@ While this should lead to superior performance in most cases (over both the inte
 |Default
 
 |runtime=interpreted
-|This will force the query planner to use the interpreted runtime.
+|This will force the query planner to use the interpreted (also known as slotted) runtime.
 |This is not used in Enterprise Edition unless explicitly asked for.
 It is the only option for all queries in Community Edition--it is not necessary to specify this option in Community Edition.
-
-|[enterprise-edition]#runtime=slotted#
-|This will cause the query planner to use the slotted runtime.
-|This is the default option for all queries which are not supported by `runtime=pipelined` in Enterprise Edition.
+Specifying `runtime=slotted` is completely synonymous to specifying `runtime=interpreted`.
 
 |[enterprise-edition]#runtime=pipelined#
 |This will cause the query planner to use the pipelined runtime if it supports the query.
@@ -108,9 +103,6 @@ In Enterprise Edition, the Cypher query planner selects the runtime, falling bac
 
 * Try the pipelined runtime first.
 * If the pipelined runtime does not support the query, then fall back to use the slotted runtime.
-* Finally, if the slotted runtime does not support the query, fall back to the interpreted runtime.
-  The interpreted runtime supports all queries, and is the only option in Neo4j Community Edition.
-
 
 [[cypher-planner]]
 === Cypher planner
