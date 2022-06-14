@@ -18,7 +18,7 @@
  */
 package org.neo4j.examples;
 
-import com.neo4j.configuration.CausalClusteringSettings;
+import com.neo4j.configuration.ClusterSettings;
 import com.neo4j.configuration.DiscoveryType;
 import com.neo4j.dbms.api.ClusterDatabaseManagementServiceBuilder;
 
@@ -57,8 +57,8 @@ public class EmbeddedNeo4jClusterUsingBuilder
                 .setConfig( GraphDatabaseSettings.mode, CORE )
                 .setConfig( GraphDatabaseSettings.default_advertised_address, defaultAdvertised )
                 .setConfig( GraphDatabaseSettings.default_listen_address, defaultListen )
-                .setConfig( CausalClusteringSettings.discovery_type, DiscoveryType.LIST )
-                .setConfig( CausalClusteringSettings.initial_discovery_members, initialMembers )
+                .setConfig( ClusterSettings.discovery_type, DiscoveryType.LIST )
+                .setConfig( ClusterSettings.initial_discovery_members, initialMembers )
                 .setConfig( BoltConnector.enabled, true )
                 .setConfig( HttpConnector.enabled, true )
                 .build();

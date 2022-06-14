@@ -18,6 +18,13 @@
  */
 package org.neo4j.doc.server.helpers;
 
+import static org.neo4j.configuration.SettingValueParsers.FALSE;
+import static org.neo4j.doc.server.WebContainerTestUtils.addDefaultRelativeProperties;
+import static org.neo4j.doc.server.WebContainerTestUtils.asOneLine;
+import static org.neo4j.doc.server.WebContainerTestUtils.writeConfigToFile;
+import static org.neo4j.internal.helpers.collection.MapUtil.stringMap;
+import static org.neo4j.util.Preconditions.checkState;
+
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -26,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
-
 import org.neo4j.collection.Dependencies;
 import org.neo4j.common.DependencyResolver;
 import org.neo4j.configuration.Config;
@@ -43,19 +49,13 @@ import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilderImplementation;
 import org.neo4j.doc.server.WebContainerTestUtils;
 import org.neo4j.graphdb.config.Setting;
+import org.neo4j.io.fs.DefaultFileSystemAbstraction;
 import org.neo4j.logging.InternalLog;
 import org.neo4j.logging.Log;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
 import org.neo4j.server.configuration.ServerSettings;
 import org.neo4j.test.ssl.SelfSignedCertificateFactory;
-
-import static org.neo4j.configuration.SettingValueParsers.FALSE;
-import static org.neo4j.doc.server.WebContainerTestUtils.addDefaultRelativeProperties;
-import static org.neo4j.doc.server.WebContainerTestUtils.asOneLine;
-import static org.neo4j.doc.server.WebContainerTestUtils.writeConfigToFile;
-import static org.neo4j.internal.helpers.collection.MapUtil.stringMap;
-import static org.neo4j.util.Preconditions.checkState;
 
 public class CommunityWebContainerBuilder
 {
@@ -185,7 +185,7 @@ public class CommunityWebContainerBuilder
         if ( httpsEnabled )
         {
             var certificates = temporaryFolder.resolve( "certificates" );
-            SelfSignedCertificateFactory.create( certificates );
+            SelfSignedCertificateFactory.create( new DefaultFileSystemAbstraction(), certificates );
             SslPolicyConfig policy = SslPolicyConfig.forScope( SslPolicyScope.HTTPS );
             properties.put( policy.enabled.name(), Boolean.TRUE.toString() );
             properties.put( policy.base_directory.name(), certificates.toAbsolutePath().toString() );

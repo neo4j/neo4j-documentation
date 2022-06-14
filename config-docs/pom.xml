@@ -156,7 +156,7 @@
                                     <arg value="org.neo4j.server.configuration.ServerSettings" />
                                     <arg value="org.neo4j.configuration.GraphDatabaseSettings" />
                                     <arg value="com.neo4j.configuration.MetricsSettings" />
-                                    <arg value="com.neo4j.configuration.CausalClusteringSettings" />
+                                    <arg value="com.neo4j.configuration.ClusterSettings" />
                                     <arg value="com.neo4j.server.enterprise.EnterpriseServerSettings" />
                                     <arg value="com.neo4j.configuration.SecuritySettings" />
                                     <arg value="com.neo4j.configuration.EnterpriseEditionSettings" />

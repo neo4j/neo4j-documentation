@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.doc.server.helpers.TestWebContainer;
 import org.neo4j.server.configuration.ServerSettings;
 
@@ -53,7 +54,7 @@ public class TransactionTimeoutDocIT extends ExclusiveWebContainerTestBase
     {
         // Given
         webContainer = builder()
-                .withProperty( ServerSettings.transaction_idle_timeout.name(), "1" )
+                .withProperty( GraphDatabaseSettings.transaction_timeout.name(), "1" )
                 .onRandomPorts()
                 .usingDataDir( folder.getAbsolutePath() ).build();
 

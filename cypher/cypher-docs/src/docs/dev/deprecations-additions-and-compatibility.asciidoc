@@ -394,7 +394,32 @@ label:removed[]
 a|
 Only `+0x...+` (lowercase x) is supported.
 
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+MATCH ()-[r]-()
+RETURN [ ()-[r]-()-[r]-() \| r ] AS rs
+----
+a|
+Remaining support for repeated relationship variables is removed.
 
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+WHERE [1,2,3]
+----
+a|
+Automatic coercion of a list to a boolean is removed.
+
+Replaced by:
+[source, cypher, role="noheader"]
+----
+WHERE NOT isEmpty([1, 2, 3])
+----
 |===
 
 
@@ -454,6 +479,19 @@ YIELD { * \| field[, ...] }
 a|
 Terminate transaction now allows `YIELD`.
 The `WHERE` clause is not allowed on its own, as it is for `SHOW`, but needs the `YIELD` clause.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+GRANT EXECUTE BOOSTED PROCEDURE ...
+GRANT EXECUTE BOOSTED FUNCTION ...
+----
+a|
+Not a syntax change but a semantic one.
+The `EXECUTE BOOSTED` privilege will no longer include an implicit `EXECUTE` privilege when granted.
+That means that to execute a procedure or a function with boosted privileges both `EXECUTE` and `EXECUTE BOOSTED` are needed.
 |===
 
 === New features
@@ -2102,7 +2140,7 @@ label:removed[]
 CREATE UNIQUE
 ----
 a|
-Running queries with this clause will cause a syntax error. Running with `CYPHER 3.5` will cause a runtime error due to the removal of the rule planner.
+Running queries with this clause will cause a syntax error.
 
 a|
 label:clause[]
@@ -2112,7 +2150,7 @@ label:removed[]
 START
 ----
 a|
-Running queries with this clause will cause a syntax error. Running with `CYPHER 3.5` will cause a runtime error due to the removal of the rule planner.
+Running queries with this clause will cause a syntax error.
 
 a|
 label:syntax[]
@@ -2506,66 +2544,3 @@ An example of this is `CALL db.index.explicit.searchNodes('my_index','email:me*'
 | <<java-reference#extending-neo4j-procedures,User-defined procedures>> | Functionality | Added |
 | <<functions-tostring,toString()>>   | Function  | Extended | Now also allows Boolean values as input
 |===
-
-
-[[cypher-compatibility]]
-== Compatibility
-
-[NOTE]
-====
-Neo4j’s ability to support multiple older versions of the Cypher language has changed over time.
-In versions prior to Neo4j 3.4, the backwards compatibility layer included the Cypher language parser, planner, and runtime.
-All supported versions of Cypher ran on the same Neo4j kernel.
-However, this changed in Neo4j 3.4 when the runtime was excluded from the compatibility layer.
-When you run, e.g. a `CYPHER 3.1` query in Neo4j 3.5, the query is planned with the 3.1 planner, but run with 3.5 runtime and kernel.
-The compatibility layer changed again in Neo4j 4.0 and it now includes only the Cypher language parser.
-When you run a `CYPHER 3.5` query, e.g., in Neo4j 4.4, Neo4j parses the older language features, but uses the 4.4 planner, runtime, and kernel to plan and run the query.
-The primary reason for these changes is the optimizations in the Cypher runtime to allow Cypher queries to perform better.
-====
-
-Older versions of the language can still be accessed if required.
-There are two ways to select which version to use in queries.
-
-. Setting a version for all queries:
-You can configure your database with the configuration parameter `cypher.default_language_version`, and enter which version you'd like to use (see <<cypher-versions>>).
-Every Cypher query will use this version, provided the query hasn't explicitly been configured as described in the next item below.
-
-. Setting a version on a query by query basis:
-The other method is to set the version for a particular query.
-Prepending a query with `CYPHER 3.5` will execute the query with the version of Cypher included in Neo4j 3.5.
-
-Below is an example using the older parameter syntax `+{param}+`:
-
-[source, cypher, role="nocopy,norun"]
-----
-CYPHER 3.5
-MATCH (n:Person)
-WHERE n.age > {agelimit}
-RETURN n.name, n.age
-----
-
-Without the `CYPHER 3.5` prefix this query would fail with a syntax error. With `CYPHER 3.5` however, it will only generate a warning and still work.
-
-[WARNING]
-====
-In Neo4j {neo4j-version} the Cypher parser understands some older language features, even if they are no longer supported by the Neo4j kernel.
-These features result in runtime errors.
-See the table at <<cypher-deprecations-additions-removals-4.0,Cypher Version 4.0>> for the list of affected features.
-====
-
-
-[[cypher-versions]]
-== Supported language versions
-
-Neo4j {neo4j-version} supports the following versions of the Cypher language:
-
-* Neo4j Cypher 3.5
-* Neo4j Cypher 4.3
-* Neo4j Cypher 4.4
-
-[TIP]
-====
-Each release of Neo4j supports a limited number of old Cypher Language Versions.
-When you upgrade to a new release of Neo4j, please make sure that it supports the Cypher language version you need.
-If not, you may need to modify your queries to work with a newer Cypher language version.
-====

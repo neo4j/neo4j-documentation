@@ -38,7 +38,7 @@ class SpatialTest extends DocumentingTest {
         |* <<cypher-spatial-instants, Spatial instants>>
         | ** <<cypher-spatial-specifying-spatial-instants, Creating points>>
         | ** <<cypher-spatial-accessing-components-spatial-instants, Accessing components of points>>
-        |* <<cypher-spatial-index, Spatial index>>
+        |* <<cypher-spatial-index, Point index>>
         |* <<cypher-comparability-orderability, Comparability and orderability>>
         |""".stripMargin)
     note{
@@ -53,8 +53,7 @@ class SpatialTest extends DocumentingTest {
           |* Each point can have either 2 or 3 dimensions. This means it contains either 2 or 3 64-bit floating point values, which together are called the _Coordinate_.
           |* Each point will also be associated with a specific <<cypher-spatial-crs,Coordinate Reference System>> (CRS) that determines the meaning of the values in the _Coordinate_.
           |* Instances of _Point_ and lists of _Point_ can be assigned to node and relationship properties.
-          |* Nodes with _Point_ or _List(Point)_ properties can be indexed using a spatial index. This is true for all CRS (and for both 2D and 3D).
-          |  There is no special syntax for creating spatial indexes, as it is supported using the existing <<administration-indexes-create-a-single-property-b-tree-index-for-nodes,indexes>>.
+          |* Nodes with _Point_ or _List(Point)_ properties can be indexed using a point index. This is true for all CRS (and for both 2D and 3D).
           |* The <<functions-distance,distance function>> will work on points in all CRS and in both 2D and 3D but only if the two points have the same CRS (and therefore also same dimension).
         """.stripMargin)
     }
@@ -270,11 +269,11 @@ class SpatialTest extends DocumentingTest {
         }
       }
     }
-    section("Spatial index", "cypher-spatial-index") {
+    section("Point index", "cypher-spatial-index") {
       p(
         """
-          |If there is a <<administration-indexes-create-a-single-property-b-tree-index-for-nodes,index>> on a particular `:Label(property)` combination, and a spatial point
-          |is assigned to that property on a node with that label, the node will be indexed in a spatial index. For spatial indexing, Neo4j uses
+          |If there is a <<administration-indexes-create-a-node-point-index,index>> on a particular `:Label(property)` combination, and a spatial point
+          |is assigned to that property on a node with that label, the node will be indexed in a point index. For point indexing, Neo4j uses
           |space filling curves in 2D or 3D over an underlying generalized B+Tree. Points will be stored in up to four different trees, one for each of the
           |<<cypher-spatial-crs, four coordinate reference systems>>.
           |This allows for both <<administration-indexes-equality-check-using-where-single-property-index, equality>>

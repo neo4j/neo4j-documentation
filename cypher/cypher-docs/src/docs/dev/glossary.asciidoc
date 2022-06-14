@@ -368,11 +368,11 @@ The following commands are only executable against the `system` database:
 | <<access-control-database-administration-index, DROP INDEX>>                                 | Schema                | Determines whether a user is allowed to drop indexes on a specific database.
 | <<access-control-dbms-administration-role-management, DROP ROLE>>                   | DBMS                  | Determines whether the user can delete roles.
 | <<access-control-dbms-administration-user-management, DROP USER>>                   | DBMS                  | Determines whether the user can delete users.
-| <<access-control-admin-procedure, EXECUTE ADMIN PROCEDURE>>                                         | DBMS                  | Determines whether the user can execute admin procedures.
-| <<access-control-execute-boosted-user-defined-function, EXECUTE BOOSTED FUNCTION>>                                      | DBMS                  | Determines whether the user can execute functions with elevated privileges.
-| <<access-control-execute-boosted-procedure, EXECUTE BOOSTED PROCEDURE>>                                      | DBMS                  | Determines whether the user can execute procedures with elevated privileges.
-| <<access-control-execute-user-defined-function, EXECUTE FUNCTION>>                                                       | DBMS                  | Determines whether the user can execute functions.
-| <<access-control-execute-procedure, EXECUTE PROCEDURE>>                                                     | DBMS                  | Determines whether the user can execute procedures.
+| <<access-control-admin-procedure, EXECUTE ADMIN PROCEDURE>>                           | DBMS  | Determines whether the user can execute admin procedures.
+| <<access-control-execute-boosted-user-defined-function, EXECUTE BOOSTED FUNCTION>>    | DBMS  | Determines whether the user gets elevated privileges when executing functions.
+| <<access-control-execute-boosted-procedure, EXECUTE BOOSTED PROCEDURE>>               | DBMS  | Determines whether the user gets elevated privileges when executing procedures.
+| <<access-control-execute-user-defined-function, EXECUTE FUNCTION>>                    | DBMS  | Determines whether the user can execute functions.
+| <<access-control-execute-procedure, EXECUTE PROCEDURE>>                               | DBMS  | Determines whether the user can execute procedures.
 | <<access-control-dbms-administration-impersonation, IMPERSONATE>>                                       | DBMS              | Determines whether a user can impersonate another one and assume their privileges.
 | <<access-control-database-administration-index, INDEX MANAGEMENT>>                           | Schema                | Determines whether a user is allowed to create, drop, and list indexes on a specific database.
 | <<access-control-database-administration-index, MATCH>>                                                          | GRAPH                 | Determines whether the properties of an element (node, relationship or both) can be read and the element can be found and traversed while executing queries on the specified graph.

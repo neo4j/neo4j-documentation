@@ -28,7 +28,6 @@ This allows Cypher to re-use your queries instead of having to parse and build n
 To read more about the execution plan operators mentioned in this chapter, see <<execution-plans>>.
 
 * xref:query-tuning/query-options/index.adoc#cypher-query-options[Cypher query options]
-** <<cypher-version,Cypher version>>
 ** <<cypher-runtime,Cypher runtime>>
 ** <<cypher-connect-components-planner,Cypher connect-components planner>>
 ** <<cypher-update-strategy,Cypher update strategy>>
@@ -60,49 +59,6 @@ This section describes the query options available in Cypher.
 
 Query execution can be fine-tuned through the use of query options.
 In order to use one or more of these options, the query must be prepended with `CYPHER`, followed by the query option(s), as exemplified thus: `CYPHER query-option [further-query-options] query`.
-
-
-[[cypher-version]]
-=== Cypher version
-
-Occasionally, there is a requirement to use a previous version of the Cypher compiler when running a query.
-Here we detail the available versions:
-
-[options="header",cols="1m,3a,^1a"]
-|===
-| Query option
-| Description
-| Default
-
-| 3.5
-| This will force the query to use Neo4j Cypher 3.5.
-|
-
-| 4.2
-| This will force the query to use Neo4j Cypher 4.2.
-|
-
-| 4.3
-| This will force the query to use Neo4j Cypher 4.3.
-| 
-
-| 4.4
-| This will force the query to use Neo4j Cypher 4.4. 
-| 
-
-| 5.0
-| This will force the query to use Neo4j Cypher 5.0. 
-As this is the default version, it is not necessary to use this option explicitly.
-| {check-mark}
-|===
-
-[WARNING]
-====
-In Neo4j {neo4j-version}, the support for Cypher 3.5 is provided only at the parser level.
-The consequence is that some underlying features available in Neo4j 3.5 are no longer available and will result in runtime errors.
-
-Please refer to the discussion in <<cypher-compatibility, Cypher Compatibility>> for more information on which features are affected.
-====
 
 
 [[cypher-runtime]]

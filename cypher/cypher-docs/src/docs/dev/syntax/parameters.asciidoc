@@ -40,14 +40,6 @@ For example:
 We provide below a comprehensive list of examples of parameter usage.
 In these examples, parameters are given in JSON; the exact manner in which they are to be submitted depends upon the driver being used.
 
-[NOTE]
-====
-The old parameter syntax `+{param}+` was deprecated in Neo4j 3.0 and removed entirely in Neo4j 4.0.
-Using it will result in a syntax error.
-However, it is still possible to use it, with warnings, if you prefix the query with `CYPHER 3.5`.
-See <<cypher-compatibility, Cypher Compatibility>> for further information.
-====
-
 [[cypher-parameters-auto-parameterization]]
 == Auto-parameterization
 
