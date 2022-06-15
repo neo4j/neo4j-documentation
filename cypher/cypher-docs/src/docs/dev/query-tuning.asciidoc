@@ -70,8 +70,8 @@ Depending on whether Neo4j Enterprise Edition or Neo4j Community Edition is used
 Interpreted::
 In this runtime, the operators in the execution plan are chained together in a tree, where each non-leaf operator feeds from one or two child operators.
 The tree thus comprises nested iterators, and the records are streamed in a pipelined manner from the top iterator, which pulls from the next iterator and so on.
-Starting with 5.0 the community interpreted runtime has been updated to use the slotted runtime which used to be an enterprise-only feature.
-The slotted runtime works similar, except that there are additional optimizations regarding the way in which the records are streamed through the iterators.
+In Neo4j 5.0, the community interpreted runtime has been updated to use the slotted runtime, which used to be an enterprise-only feature.
+The slotted runtime works similarly, except for some additional optimizations regarding how the records are streamed through the iterators.
 This results in improvements to both the performance and memory usage of the query.
 
 [enterprise-edition]#Pipelined#::
