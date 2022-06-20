@@ -239,6 +239,29 @@ Constraints used for string properties require an additional text index to cover
 Constraints used for point properties require an additional point index to cover the spatial queries properly.
 
 a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES YIELD uniqueness
+----
+a|
+The `uniqueness` output has been removed, as the concept of index uniqueness are removed.
+The uniqueness concept belongs with the constraint and not the index.
+
+A new column, `owningConstraint`, is introduced keep information about the index belonging to a constraint or not.
+
+a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS YIELD ownedIndexId
+----
+a|
+The `ownedIndexId` output has been removed. Replaced by new `ownedIndex` column.
+
+a|
 label:syntax[]
 label:removed[] +
 For privilege commands:
@@ -439,6 +462,28 @@ CREATE INDEX ...
 ----
 a|
 The default index type is changed from B-tree to range index.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW INDEXES
+----
+a|
+A new column is added, `owningConstraint`. The column is returned by default.
+This column returns the name of the constraint the index is associated to, or `null` if it is not associated with any constraint.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW CONSTRAINTS
+----
+a|
+A new column is added, `ownedIndex`. The column is returned by default.
+This column returns the name of the index associated to the constraint, or `null` if no index is associated with the constraint.
 
 a|
 label:functionality[]

@@ -343,11 +343,6 @@ Listing indexes can be done with `SHOW INDEXES`, which will produce a table with
 | `+`
 | `+`
 
-| `uniqueness`
-| Tells if the index is only meant to allow one value per key.
-| `+`
-| `+`
-
 | `type`
 | The IndexType of this index (`FULLTEXT`, `LOOKUP`, `POINT`, `RANGE`, or `TEXT`).
 | `+`
@@ -370,6 +365,11 @@ Listing indexes can be done with `SHOW INDEXES`, which will produce a table with
 
 | `indexProvider`
 | The index provider for this index.
+| `+`
+| `+`
+
+| `owningConstraint`
+| The name of the constraint the index is associated to, or `null` if it is not associated with any constraint.
 | `+`
 | `+`
 
