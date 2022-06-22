@@ -471,7 +471,7 @@ SHOW INDEXES
 ----
 a|
 The new column `owningConstraint` was added and will be returned by default from now on.
-This column returns the name of the constraint the index is associated with, or `null` if it is not associated with any constraint.
+It will list the name of the constraint that the index is associated with or `null`, in case it is not associated with any constraint.
 
 a|
 label:functionality[]
