@@ -6,273 +6,19 @@
 This section contains information on all the clauses in the Cypher query language.
 --
 
-* <<header-reading-clauses,Reading clauses>>
+* <<header-administration-clauses,Administration clauses>>
+* <<header-importing-clauses,Importing data>>
+* <<header-listing-procs-functions,Listing functions and procedures>>
+* <<header-multiple-graphs-clauses,Multiple graphs>>
 * <<header-projecting-clauses,Projecting clauses>>
-* <<header-reading-sub-clauses,Reading sub-clauses>>
+* <<header-reading-clauses,Reading clauses>>
 * <<header-reading-hints,Reading hints>>
-* <<header-writing-clauses,Writing clauses>>
+* <<header-reading-sub-clauses,Reading sub-clauses>>
 * <<header-reading-writing-clauses,Reading/Writing clauses>>
 * <<header-set-operations-clauses,Set operations>>
 * <<header-subquery-clauses,Subquery clauses>>
-* <<header-multiple-graphs-clauses,Multiple graphs>>
-* <<header-importing-clauses,Importing data>>
-* <<header-listing-procs-functions,Listing functions and procedures>>
 * <<header-transaction-commands,Transaction commands>>
-* <<header-administration-clauses,Administration clauses>>
-
-
-[[header-reading-clauses]]
-**Reading clauses**
-
-These comprise clauses that read data from the database.
-
-The flow of data within a Cypher query is an unordered sequence of maps with key-value pairs -- a set of possible bindings between the variables in the query and values derived from the database.
-This set is refined and augmented by subsequent parts of the query.
-
-[options="header"]
-|===
-|Clause |Description
-
-m|<<query-match, MATCH>>
-|Specify the patterns to search for in the database.
-
-m|<<query-optional-match, OPTIONAL MATCH>>
-|Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
-
-|===
-
-
-[[header-projecting-clauses]]
-**Projecting clauses**
-
-These comprise clauses that define which expressions to return in the result set.
-The returned expressions may all be aliased using `AS`.
-
-[options="header"]
-|===
-|Clause |Description
-
-//RETURN ... [AS]
-m|<<query-return, RETURN +++...+++ [AS]>>
-|Defines what to include in the query result set.
-
-//WITH ... [AS]
-m|<<query-with, WITH +++...+++ [AS]>>
-|Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
-
-//UNWIND ... [AS]
-m|<<query-unwind, UNWIND +++...+++ [AS]>>
-|Expands a list into a sequence of rows.
-
-|===
-
-
-[[header-reading-sub-clauses]]
-**Reading sub-clauses**
-
-These comprise sub-clauses that must operate as part of reading clauses.
-
-[options="header"]
-|===
-|Sub-clause | Description
-
-m|<<query-where, WHERE>>
-|Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.
-
-//WHERE EXISTS { ... }
-m|<<existential-subqueries, WHERE EXISTS +++{ ... }+++>>
-|An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
-
-//ORDER BY [ASC[ENDING] | DESC[ENDING]]
-m|<<query-order, ORDER BY &#91;ASC&#91;ENDING&#93; &#124; DESC&#91;ENDING&#93;&#93;>>
-|A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in either ascending (the default) or descending order.
-
-m|<<query-skip, SKIP>>
-|Defines from which row to start including the rows in the output.
-
-m|<<query-limit, LIMIT>>
-|Constrains the number of rows in the output.
-
-|===
-
-
-[[header-reading-hints]]
-**Reading hints**
-
-These comprise clauses used to specify planner hints when tuning a query.
-More details regarding the usage of these -- and query tuning in general -- can be found in <<query-using>>.
-
-[options="header"]
-|===
-|Hint |Description
-
-m|<<query-using-index-hint, USING INDEX>>
-|Index hints are used to specify which index, if any, the planner should use as a starting point.
-
-m|<<query-using-index-hint, USING INDEX SEEK>>
-|Index seek hint instructs the planner to use an index seek for this clause.
-
-m|<<query-using-scan-hint, USING SCAN>>
-|Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
-
-m|<<query-using-join-hint, USING JOIN>>
-|Join hints are used to enforce a join operation at specified points.
-
-|===
-
-
-[[header-writing-clauses]]
-**Writing clauses**
-
-These comprise clauses that write the data to the database.
-
-[options="header"]
-|===
-|Clause |Description
-
-m|<<query-create, CREATE>>
-|Create nodes and relationships.
-
-m|<<query-delete, DELETE>>
-a|
-Delete nodes, relationships or paths.
-Any node to be deleted must also have all associated relationships explicitly deleted.
-
-m|<<query-delete, DETACH DELETE>>
-a|
-Delete a node or set of nodes.
-All associated relationships will automatically be deleted.
-
-m|<<query-set, SET>>
-|Update labels on nodes and properties on nodes and relationships.
-
-m|<<query-remove, REMOVE>>
-|Remove properties and labels from nodes and relationships.
-
-m|<<query-foreach, FOREACH>>
-|Update data within a list, whether components of a path, or the result of aggregation.
-
-|===
-
-
-[[header-reading-writing-clauses]]
-**Reading/Writing clauses**
-
-These comprise clauses that both read data from and write data to the database.
-
-[options="header"]
-|===
-|Clause |Description
-
-m|<<query-merge, MERGE>>
-|Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
-
-m|--- <<query-merge-on-create-on-match, ON CREATE>>
-|Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
-
-m|--- <<query-merge-on-create-on-match, ON MATCH>>
-|Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
-
-//CALL ... [YIELD ... ]
-m|<<query-call, CALL +++...+++ &#91;YIELD +++...+++ &#93;>>
-|Invokes a procedure deployed in the database and return any results.
-
-|===
-
-
-[[header-set-operations-clauses]]
-**Set operations**
-
-[options="header"]
-|===
-|Clause |Description
-
-m|<<query-union, UNION>>
-a|
-Combines the result of multiple queries into a single result set.
-Duplicates are removed.
-
-m|<<query-union, UNION ALL>>
-a|
-Combines the result of multiple queries into a single result set.
-Duplicates are retained.
-
-|===
-
-[[header-subquery-clauses]]
-**Subquery clauses**
-
-[options="header"]
-|===
-|Clause |Description
-
-//CALL { ... }
-m|<<query-call-subquery, CALL +++{ ... }+++>>
-|Evaluates a subquery, typically used for post-union processing or aggregations.
-
-m|<<subquery-call-in-transactions, CALL +++{ ... }+++ IN TRANSACTIONS>>
-|Evaluates a subquery in separate transactions. 
-Typically used when modifying or importing large amounts of data.
-
-|===
-
-[[header-multiple-graphs-clauses]]
-**Multiple graphs**
-
-[options="header"]
-|===
-|Clause |Description
-
-m|<<query-use, USE>>
-|[fabric]#Determines which graph a query, or query part, is executed against.#
-
-|===
-
-
-[[header-importing-clauses]]
-**Importing data**
-
-[options="header"]
-|===
-|Clause |Description
-
-m|<<query-load-csv, LOAD CSV>>
-|Use when importing data from CSV files.
-
-m|--- <<query-using-periodic-commit-hint, USING PERIODIC COMMIT>>
-|This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
-
-|===
-
-
-[[header-listing-procs-functions]]
-**Listing functions and procedures**
-
-[options="header"]
-|===
-|Clause |Description
-
-m|<<query-listing-functions, SHOW FUNCTIONS>>
-|List the available functions.
-
-m|<<query-listing-procedures, SHOW PROCEDURES>>
-|List the available procedures.
-
-|===
-
-[[header-transaction-commands]]
-**Transaction Commands**
-
-[options="header"]
-|===
-|Clause |Description
-m|xref:clauses/transaction-clauses/index.adoc#query-listing-transactions[SHOW TRANSACTIONS]
-|List the available transactions.
-m|xref:clauses/transaction-clauses/index.adoc#query-terminate-transactions[TERMINATE TRANSACTIONS]
-|Terminate transactions by their IDs.
-
-|===
-
+* <<header-writing-clauses,Writing clauses>>
 
 [[header-administration-clauses]]
 **Administration clauses**
@@ -355,3 +101,248 @@ include::ql/listing/query-listing-functions.adoc[leveloffset=+1]
 include::ql/listing/query-listing-procedures.adoc[leveloffset=+1]
 
 include::ql/listing/query-transaction-clauses.adoc[leveloffset=+1]
+
+[[header-importing-clauses]]
+**Importing data**
+
+[options="header"]
+|===
+|Clause |Description
+
+m|<<query-load-csv, LOAD CSV>>
+|Use when importing data from CSV files.
+
+m|--- <<query-using-periodic-commit-hint, USING PERIODIC COMMIT>>
+|This query hint may be used to prevent an out-of-memory error from occurring when importing large amounts of data using `LOAD CSV`.
+
+|===
+
+
+[[header-listing-procs-functions]]
+**Listing functions and procedures**
+
+[options="header"]
+|===
+|Clause |Description
+
+m|<<query-listing-functions, SHOW FUNCTIONS>>
+|List the available functions.
+
+m|<<query-listing-procedures, SHOW PROCEDURES>>
+|List the available procedures.
+
+|===
+
+[[header-multiple-graphs-clauses]]
+**Multiple graphs**
+
+[options="header"]
+|===
+|Clause |Description
+
+m|<<query-use, USE>>
+|[fabric]#Determines which graph a query, or query part, is executed against.#
+
+|===
+
+[[header-projecting-clauses]]
+**Projecting clauses**
+
+These comprise clauses that define which expressions to return in the result set.
+The returned expressions may all be aliased using `AS`.
+
+[options="header"]
+|===
+|Clause |Description
+
+//RETURN ... [AS]
+m|<<query-return, RETURN +++...+++ [AS]>>
+|Defines what to include in the query result set.
+
+//WITH ... [AS]
+m|<<query-with, WITH +++...+++ [AS]>>
+|Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
+
+//UNWIND ... [AS]
+m|<<query-unwind, UNWIND +++...+++ [AS]>>
+|Expands a list into a sequence of rows.
+
+|===
+
+[[header-reading-clauses]]
+**Reading clauses**
+
+These comprise clauses that read data from the database.
+
+The flow of data within a Cypher query is an unordered sequence of maps with key-value pairs -- a set of possible bindings between the variables in the query and values derived from the database.
+This set is refined and augmented by subsequent parts of the query.
+
+[options="header"]
+|===
+|Clause |Description
+
+m|<<query-match, MATCH>>
+|Specify the patterns to search for in the database.
+
+m|<<query-optional-match, OPTIONAL MATCH>>
+|Specify the patterns to search for in the database while using `nulls` for missing parts of the pattern.
+
+|===
+
+[[header-reading-hints]]
+**Reading hints**
+
+These comprise clauses used to specify planner hints when tuning a query.
+More details regarding the usage of these -- and query tuning in general -- can be found in <<query-using>>.
+
+[options="header"]
+|===
+|Hint |Description
+
+m|<<query-using-index-hint, USING INDEX>>
+|Index hints are used to specify which index, if any, the planner should use as a starting point.
+
+m|<<query-using-index-hint, USING INDEX SEEK>>
+|Index seek hint instructs the planner to use an index seek for this clause.
+
+m|<<query-using-scan-hint, USING SCAN>>
+|Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
+
+m|<<query-using-join-hint, USING JOIN>>
+|Join hints are used to enforce a join operation at specified points.
+
+|===
+
+[[header-reading-sub-clauses]]
+**Reading sub-clauses**
+
+These comprise sub-clauses that must operate as part of reading clauses.
+
+[options="header"]
+|===
+|Sub-clause | Description
+
+m|<<query-where, WHERE>>
+|Adds constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause or filters the results of a `WITH` clause.
+
+//WHERE EXISTS { ... }
+m|<<existential-subqueries, WHERE EXISTS +++{ ... }+++>>
+|An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
+
+//ORDER BY [ASC[ENDING] | DESC[ENDING]]
+m|<<query-order, ORDER BY &#91;ASC&#91;ENDING&#93; &#124; DESC&#91;ENDING&#93;&#93;>>
+|A sub-clause following `RETURN` or `WITH`, specifying that the output should be sorted in either ascending (the default) or descending order.
+
+m|<<query-skip, SKIP>>
+|Defines from which row to start including the rows in the output.
+
+m|<<query-limit, LIMIT>>
+|Constrains the number of rows in the output.
+
+|===
+
+[[header-reading-writing-clauses]]
+**Reading/Writing clauses**
+
+These comprise clauses that both read data from and write data to the database.
+
+[options="header"]
+|===
+|Clause |Description
+
+m|<<query-merge, MERGE>>
+|Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
+
+m|--- <<query-merge-on-create-on-match, ON CREATE>>
+|Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
+
+m|--- <<query-merge-on-create-on-match, ON MATCH>>
+|Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
+
+//CALL ... [YIELD ... ]
+m|<<query-call, CALL +++...+++ &#91;YIELD +++...+++ &#93;>>
+|Invokes a procedure deployed in the database and return any results.
+
+|===
+
+[[header-set-operations-clauses]]
+**Set operations**
+
+[options="header"]
+|===
+|Clause |Description
+
+m|<<query-union, UNION>>
+a|
+Combines the result of multiple queries into a single result set.
+Duplicates are removed.
+
+m|<<query-union, UNION ALL>>
+a|
+Combines the result of multiple queries into a single result set.
+Duplicates are retained.
+
+|===
+
+[[header-subquery-clauses]]
+**Subquery clauses**
+
+[options="header"]
+|===
+|Clause |Description
+
+//CALL { ... }
+m|<<query-call-subquery, CALL +++{ ... }+++>>
+|Evaluates a subquery, typically used for post-union processing or aggregations.
+
+m|<<subquery-call-in-transactions, CALL +++{ ... }+++ IN TRANSACTIONS>>
+|Evaluates a subquery in separate transactions.
+Typically used when modifying or importing large amounts of data.
+
+|===
+
+[[header-transaction-commands]]
+**Transaction Commands**
+
+[options="header"]
+|===
+|Clause |Description
+m|xref:clauses/transaction-clauses/index.adoc#query-listing-transactions[SHOW TRANSACTIONS]
+|List the available transactions.
+m|xref:clauses/transaction-clauses/index.adoc#query-terminate-transactions[TERMINATE TRANSACTIONS]
+|Terminate transactions by their IDs.
+
+|===
+
+[[header-writing-clauses]]
+**Writing clauses**
+
+These comprise clauses that write the data to the database.
+
+[options="header"]
+|===
+|Clause |Description
+
+m|<<query-create, CREATE>>
+|Create nodes and relationships.
+
+m|<<query-delete, DELETE>>
+a|
+Delete nodes, relationships or paths.
+Any node to be deleted must also have all associated relationships explicitly deleted.
+
+m|<<query-delete, DETACH DELETE>>
+a|
+Delete a node or set of nodes.
+All associated relationships will automatically be deleted.
+
+m|<<query-set, SET>>
+|Update labels on nodes and properties on nodes and relationships.
+
+m|<<query-remove, REMOVE>>
+|Remove properties and labels from nodes and relationships.
+
+m|<<query-foreach, FOREACH>>
+|Update data within a list, whether components of a path, or the result of aggregation.
+
+|===
