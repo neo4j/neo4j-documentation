@@ -369,7 +369,7 @@ Listing indexes can be done with `SHOW INDEXES`, which will produce a table with
 | `+`
 
 | `owningConstraint`
-| The name of the constraint the index is associated with, or `null` if it is not associated with any constraint.
+| The name of the constraint the index is associated with or `null`, in case it is not associated with any constraint.
 | `+`
 | `+`
 
