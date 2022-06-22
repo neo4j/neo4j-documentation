@@ -246,7 +246,7 @@ label:removed[]
 SHOW INDEXES YIELD uniqueness
 ----
 a|
-The `uniqueness` output has been removed altogether with the concept of index uniqueness, as it actually belongs to the constraint and not the index.
+The `uniqueness` output has been removed along with the concept of index uniqueness, as it actually belongs to the constraint and not the index.
 
 The new column `owningConstraint` was introduced to indicate whether an index belongs to a constraint or not.
 
