@@ -246,10 +246,9 @@ label:removed[]
 SHOW INDEXES YIELD uniqueness
 ----
 a|
-The `uniqueness` output has been removed, as the concept of index uniqueness has been removed.
-The uniqueness concept belongs with the constraint and not the index.
+The `uniqueness` output has been removed altogether with the concept of index uniqueness, as it actually belongs to the constraint and not the index.
 
-A new column, `owningConstraint`, is introduced to indicate whether an index belongs to a constraint or not.
+The new column `owningConstraint` was introduced to indicate whether an index belongs to a constraint or not.
 
 a|
 label:functionality[]
@@ -259,7 +258,7 @@ label:removed[]
 SHOW CONSTRAINTS YIELD ownedIndexId
 ----
 a|
-The `ownedIndexId` output has been removed. Replaced by new `ownedIndex` column.
+The `ownedIndexId` output has been removed and replaced by the new `ownedIndex` column.
 
 a|
 label:syntax[]
@@ -471,7 +470,7 @@ label:updated[]
 SHOW INDEXES
 ----
 a|
-A new column is added, `owningConstraint`. The column is returned by default.
+The new column `owningConstraint` was added and will be returned by default from now on.
 This column returns the name of the constraint the index is associated with, or `null` if it is not associated with any constraint.
 
 a|
@@ -482,7 +481,7 @@ label:updated[]
 SHOW CONSTRAINTS
 ----
 a|
-A new column is added, `ownedIndex`. The column is returned by default.
+The new column `ownedIndex` was added and will be returned by default from now on.
 This column returns the name of the index associated with the constraint, or `null` if no index is associated with the constraint.
 
 a|

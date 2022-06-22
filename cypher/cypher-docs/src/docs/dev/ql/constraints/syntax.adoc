@@ -187,7 +187,7 @@ The returned columns from the show command is:
 | {check-mark}
 
 | ownedIndex
-| The name of the index associated with the constraint, or `null` if no index is associated with the constraint.
+| The name of the index associated with the constraint or `null`, in case no index is associated with it.
 | {check-mark}
 | {check-mark}
 
