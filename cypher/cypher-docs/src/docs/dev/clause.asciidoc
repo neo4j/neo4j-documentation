@@ -12,9 +12,9 @@ This section contains information on all the clauses in the Cypher query languag
 * <<header-multiple-graphs-clauses,Multiple graphs>>
 * <<header-projecting-clauses,Projecting clauses>>
 * <<header-reading-clauses,Reading clauses>>
-* <<header-reading-writing-clauses,Reading/Writing clauses>>
 * <<header-reading-hints,Reading hints>>
 * <<header-reading-sub-clauses,Reading sub-clauses>>
+* <<header-reading-writing-clauses,Reading/Writing clauses>>
 * <<header-set-operations-clauses,Set operations>>
 * <<header-subquery-clauses,Subquery clauses>>
 * <<header-transaction-commands,Transaction commands>>
@@ -189,30 +189,6 @@ m|<<query-optional-match, OPTIONAL MATCH>>
 
 |===
 
-[[header-reading-writing-clauses]]
-**Reading/Writing clauses**
-
-These comprise clauses that both read data from and write data to the database.
-
-[options="header"]
-|===
-|Clause |Description
-
-m|<<query-merge, MERGE>>
-|Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
-
-m|--- <<query-merge-on-create-on-match, ON CREATE>>
-|Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
-
-m|--- <<query-merge-on-create-on-match, ON MATCH>>
-|Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
-
-//CALL ... [YIELD ... ]
-m|<<query-call, CALL +++...+++ &#91;YIELD +++...+++ &#93;>>
-|Invokes a procedure deployed in the database and return any results.
-
-|===
-
 [[header-reading-hints]]
 **Reading hints**
 
@@ -262,6 +238,30 @@ m|<<query-skip, SKIP>>
 
 m|<<query-limit, LIMIT>>
 |Constrains the number of rows in the output.
+
+|===
+
+[[header-reading-writing-clauses]]
+**Reading/Writing clauses**
+
+These comprise clauses that both read data from and write data to the database.
+
+[options="header"]
+|===
+|Clause |Description
+
+m|<<query-merge, MERGE>>
+|Ensures that a pattern exists in the graph. Either the pattern already exists, or it needs to be created.
+
+m|--- <<query-merge-on-create-on-match, ON CREATE>>
+|Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern needs to be created.
+
+m|--- <<query-merge-on-create-on-match, ON MATCH>>
+|Used in conjunction with `MERGE`, this write sub-clause specifies the actions to take if the pattern already exists.
+
+//CALL ... [YIELD ... ]
+m|<<query-call, CALL +++...+++ &#91;YIELD +++...+++ &#93;>>
+|Invokes a procedure deployed in the database and return any results.
 
 |===
 
