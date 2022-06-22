@@ -433,7 +433,7 @@ At this point in time, no other cypher clauses are allowed to be combined with t
 """.stripMargin('#'))
       section("Terminating all transactions by a given user") {
         p(
-          """To terminate all transactions by a user, first find the transactions using `SHOW TRANSACTIONS` then pass them onto `TERMINATE TRANSACTIONS`.""")
+          """To terminate all transactions by a user, first find the transactions using `SHOW TRANSACTIONS`, then pass them onto `TERMINATE TRANSACTIONS`.""")
         query(
           """SHOW TRANSACTIONS
             #YIELD transactionId AS txId, username AS user
@@ -454,9 +454,9 @@ At this point in time, no other cypher clauses are allowed to be combined with t
       section("Terminating starving transactions") {
         p(
           """To terminate transactions that have been waiting for more than 30 minutes,
-            #first find the transactions using `SHOW TRANSACTIONS` then pass them onto `TERMINATE TRANSACTIONS`.
+            #first find the transactions using `SHOW TRANSACTIONS`, then pass them onto `TERMINATE TRANSACTIONS`.
             #
-            #The following example finds one such transaction that has been waiting for 40 minutes.""".stripMargin('#'))
+            #The following example shows a transaction that has been waiting for 40 minutes.""".stripMargin('#'))
         query(
           """SHOW TRANSACTIONS
             #YIELD transactionId, waitTime
@@ -476,7 +476,7 @@ At this point in time, no other cypher clauses are allowed to be combined with t
       section("Listing other transactions by the same user that were terminated") {
         p(
           """To list remaining transactions by users whose transactions were terminated,
-            #first terminate the transactions using `TERMINATE TRANSACTIONS` then filter users through `SHOW TRANSACTIONS`.""".stripMargin('#'))
+            #first terminate the transactions using `TERMINATE TRANSACTIONS`, then filter users through `SHOW TRANSACTIONS`.""".stripMargin('#'))
         query(
           """TERMINATE TRANSACTION 'neo4j-transaction-1', 'neo4j-transaction-2'
             #YIELD username AS terminatedUser
@@ -498,7 +498,7 @@ At this point in time, no other cypher clauses are allowed to be combined with t
       section("Listing other transactions by the same user as a given transaction") {
         p(
           """To list other transactions by the same user as a given transaction,
-            #first find the transactions using `SHOW TRANSACTIONS` then filter users in a second `SHOW TRANSACTIONS`.""".stripMargin('#'))
+            #first find the transactions using `SHOW TRANSACTIONS`, then filter users through a second `SHOW TRANSACTIONS`.""".stripMargin('#'))
         query(
           """SHOW TRANSACTION 'neo4j-transaction-1'
             #YIELD username AS originalUser, transactionId AS originalTxId

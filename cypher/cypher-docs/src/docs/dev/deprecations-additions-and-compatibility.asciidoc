@@ -520,9 +520,11 @@ a|
 The `SHOW` and `TERMINATE TRANSACTIONS` commands can be combined in the same query.
 The query does not require a specific order and there can be zero or more of each command type, however at least one command is needed.
 
-When the command is not in standalone mode, the `YIELD` and `RETURN` are mandatory and `YIELD *` is not allowed.
+When the command is not in standalone mode, the `YIELD` and `RETURN` are mandatory. 
+`YIELD *` is not allowed.
 
-The `transaction-id` is a comma-separated list of one or more quoted strings or an expression resolving to a string or a list of strings (for example the output column from `SHOW`).
+The `transaction-id` is a comma-separated list of one or more quoted strings.
+It could also be an expression resolving to a string or a list of strings (for example the output column from `SHOW`).
 
 a|
 label:functionality[]
