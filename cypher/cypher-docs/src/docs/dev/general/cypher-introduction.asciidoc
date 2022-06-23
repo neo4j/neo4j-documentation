@@ -12,10 +12,10 @@ Some of the list semantics are borrowed from languages such as Haskell and Pytho
 Cypher's constructs, based on English prose and neat iconography, make queries easy, both to write and to read.
 
 NOTE
-====
+****
 Names are case-sensitive.
 `:PERSON`, `:Person` and `:person` are three different labels, as well as `n` and `N` are two different variables.
-====
+****
 
 **Structure**
 
