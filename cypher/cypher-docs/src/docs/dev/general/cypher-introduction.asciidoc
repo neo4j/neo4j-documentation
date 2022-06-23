@@ -11,6 +11,12 @@ Pattern matching borrows expression approaches from http://en.wikipedia.org/wiki
 Some of the list semantics are borrowed from languages such as Haskell and Python.
 Cypher's constructs, based on English prose and neat iconography, make queries easy, both to write and to read.
 
+[NOTE]
+====
+Names are case-sensitive.
+`:PERSON`, `:Person` and `:person` are three different labels, as well as `n` and `N` are two different variables.
+====
+
 **Structure**
 
 Cypher borrows its structure from SQL -- queries are built up using various clauses.
