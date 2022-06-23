@@ -19,13 +19,12 @@
  */
 package org.neo4j.cypher.docgen.tooling
 
-import java.io.File
+import com.neo4j.configuration.EnterpriseEditionInternalSettings
+
 import java.lang.Boolean.{FALSE, TRUE}
 import java.nio.file.Path
 import com.neo4j.configuration.OnlineBackupSettings
-import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder
 import com.neo4j.kernel.enterprise.api.security.EnterpriseAuthManager
-import org.apache.commons.io.FileUtils
 import org.neo4j.configuration.GraphDatabaseSettings
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.configuration.helpers.SocketAddress
@@ -44,10 +43,9 @@ import org.neo4j.kernel.api.procedure.GlobalProcedures
 import org.neo4j.kernel.api.security.AuthToken
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.util.ValueUtils
-import org.neo4j.test.TestDatabaseManagementServiceBuilder
 import org.neo4j.test.utils.TestDirectory
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.MapHasAsJava
 import scala.collection.mutable
 import scala.util.Try
 
@@ -80,6 +78,7 @@ class RestartableDatabase(init: RunnableInitialization)
       dbFolder = td.prepareDirectoryForTest("target/example-db" + System.nanoTime())
       val config: Map[Setting[_], Object] = Map(
         GraphDatabaseSettings.auth_enabled -> TRUE,
+        EnterpriseEditionInternalSettings.replication_enabled -> FALSE,
         OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
         OnlineBackupSettings.online_backup_enabled ->  FALSE
       )
