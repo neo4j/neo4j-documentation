@@ -30,8 +30,8 @@ class TransactionsCommandTest extends DocumentingTest {
     synopsis("This section explains the `SHOW TRANSACTIONS` and `TERMINATION TRANSACTIONS` commands.")
     section("SHOW TRANSACTIONS", id="query-listing-transactions") {
       p("The `SHOW TRANSACTIONS` command is used to display running transactions within the instance." +
-        " This also include fabric transactions. For remote database aliases, transactions can be tracked by running " +
-        "SHOW TRANSACTIONS when connected to the remote database alias.")
+        " This also includes fabric transactions." +
+        "For remote database aliases, transactions can be tracked by running `SHOW TRANSACTIONS` when connected to the remote database alias.")
       p(
         """
           #[NOTE]
