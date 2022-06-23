@@ -587,7 +587,7 @@ a|
 The `SHOW` and `TERMINATE TRANSACTIONS` commands can be combined in the same query.
 The query does not require a specific order and there can be zero or more of each command type, however at least one command is needed.
 
-When the command is not in standalone mode, the `YIELD` and `RETURN` clauses are mandatory. 
+When the command is not in standalone mode, the `YIELD` and `RETURN` clauses are mandatory.
 `YIELD *` is not allowed.
 
 `transaction-id` is a comma-separated list of one or more quoted strings.
