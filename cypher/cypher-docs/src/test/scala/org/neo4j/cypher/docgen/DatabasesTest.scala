@@ -20,11 +20,11 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling._
-import org.neo4j.graphdb.Label
+import org.neo4j.dbms.database.TopologyGraphDbmsModel
 import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.api.security.AnonymousContext
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.IteratorHasAsScala
 
 class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql/administration/"
@@ -363,8 +363,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
   private def assertDatabasesShown = ResultAndDbAssertions((p, db) => {
     val tx = db.beginTransaction(Type.EXPLICIT, AnonymousContext.read())
     try {
-      val dbNodes = tx.findNodes(Label.label("Database")).asScala.toList
-      val dbNames = dbNodes.map(n => n.getProperty("name")).toSet
+      val dbNodes = tx.findNodes(TopologyGraphDbmsModel.DATABASE_NAME_LABEL, TopologyGraphDbmsModel.PRIMARY_PROPERTY, true).asScala.toList
+      val dbNames = dbNodes.map(n => n.getProperty(TopologyGraphDbmsModel.DATABASE_NAME_PROPERTY).asInstanceOf[String]).toSet
       val result = p.columnAs[String]("name").toSet
       result should equal(dbNames)
     } finally {
