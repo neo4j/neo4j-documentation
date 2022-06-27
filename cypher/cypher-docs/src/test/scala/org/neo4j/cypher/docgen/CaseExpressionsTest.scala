@@ -149,5 +149,22 @@ class CaseExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppor
         resultTable()
       }
     }
+    section("Using `CASE` with null values", "syntax-use-case-with-null") {
+      p("""When using the simple `CASE` form, it is useful to remember that in Cypher `null = null` yields `null`.
+          #For example, you might expect `age_10_years_ago` to be `-1` for the node named `Daniel`:""".stripMargin('#'))
+      query("""MATCH (n)
+              #RETURN n.name,
+              #CASE n.age
+              #  WHEN null THEN -1
+              #  ELSE n.age - 10
+              #END AS age_10_years_ago""".stripMargin('#'),
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("age_10_years_ago" -> 28, "n.name" -> "Alice"), Map("age_10_years_ago" -> 15, "n.name" -> "Bob"), Map("age_10_years_ago" -> 43, "n.name" -> "Charlie"), Map("age_10_years_ago" -> null, "n.name" -> "Daniel"), Map("age_10_years_ago" -> 31, "n.name" -> "Eskil")))
+        })) {
+        p("""However, as `null = null` does not yield true, the `WHEN null THEN -1` branch is never taken,
+            #resulting in the `ELSE n.age - 10` branch being taken instead, returning `null`.""".stripMargin('#'))
+        resultTable()
+      }
+    }
   }.build()
 }
