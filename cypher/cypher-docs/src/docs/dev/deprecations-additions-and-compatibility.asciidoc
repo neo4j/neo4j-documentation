@@ -216,7 +216,24 @@ Replaced by:
 [source, cypher, role="noheader"]
 ----
 SHOW {POINT \| RANGE \| TEXT} INDEXES
+
 ----
+a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+USING BTREE INDEXES
+----
+a|
+B-tree indexes are removed.
+
+Replaced by:
+[source, cypher, role="noheader"]
+----
+USING {POINT \| RANGE \| TEXT} INDEX
+----
+
 
 a|
 label:functionality[]
@@ -442,6 +459,113 @@ Replaced by:
 ----
 WHERE NOT isEmpty([1, 2, 3])
 ----
+
+a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+distance(n.prop, point({x:0, y:0})
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+point.distance(n.prop, point({x:0, y:0})
+----
+
+a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+point({x:0, y:0}) <= point({x:1, y:1}) <= point({x:2, y:2})
+----
+a|
+The ability to use operators `<`, `<=`, `>`, and `>=` on spatial points is removed.
+Instead, use:
+[source, cypher, role="noheader"]
+----
+point.withinBBox(point({x:1, y:1}), point({x:0, y:0}), point({x:2, y:2}))
+----
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+USING PERIODIC COMMIT ...
+----
+a|
+Replaced by:
+[source, cypher, role="noheader"]
+----
+CALL {
+  ...
+} IN TRANSACTIONS
+----
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+CREATE (a {prop:7})-[r:R]->(b {prop: a.prop})
+----
+a|
+It is no longer allowed to have `CREATE` clauses in which a variable introduced in the pattern is also referenced from the same pattern.
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+CALL { RETURN 1 }
+----
+a|
+Unaliased expressions are no longer supported in subquery `RETURN` clauses. Replaced by:
+[source, cypher, role="noheader"]
+----
+CALL { RETURN 1 AS one }
+----
+
+a|
+label:syntax[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+MATCH (a) RETURN (a)--()
+----
+a|
+Pattern expressions producing lists of paths are no longer supported, but they can still be used as existence predicates, for example in `WHERE` clauses.
+Instead, use a pattern comprehension:
+[source, cypher, role="noheader"]
+----
+MATCH (a) RETURN [p=(a)--() \| p]
+----
+
+a|
+label:functionality[]
+label:removed[]
+[source, cypher, role="noheader"]
+----
+MATCH (n) RETURN n.propertyName_1, n.propertyName_2 + count(*)
+----
+a|
+Implied grouping keys are no longer supported.
+Only expressions that do _not_ contain aggregations are still considered grouping keys.
+In expressions that contain aggregations, the leaves must be either:
+
+- An aggregation
+- A literal
+- A parameter
+- A variable, *ONLY IF* it is either:
+1) A projection expression on its own (e.g. the `n` in `RETURN n AS myNode, n.value + count(*)`) +
+2) A local variable in the expression (e.g the `x` in `RETURN n, n.prop + size([ x IN range(1, 10) \| x ]`)
+- Property access, *ONLY IF* it is also a projection expression on its own (e.g. the `n.prop` in `RETURN n.prop, n.prop + count(*)`) +
+- Map access, *ONLY IF* it is also a projection expression on its own (e.g. the `map.prop` in `WITH {prop: 2} AS map RETURN map.prop, map.prop + count(*)`)
+
+
 |===
 
 === Deprecated features
@@ -655,17 +779,17 @@ MATCH (n) RETURN n.propertyName_1, n.propertyName_2 + count(*)
 ----
 a|
 Implied grouping keys are deprecated.
-Only expressions that do _not_ contain aggregations are grouping keys.
-In expressions that contain aggregations, the leaves of expressions must be one of:
+Only expressions that do _not_ contain aggregations are still considered grouping keys.
+In expressions that contain aggregations, the leaves must be either:
 
 - An aggregation
 - A literal
-- A Parameter
-- A variable - *ONLY IF* that variable is also one of: +
+- A parameter
+- A variable, *ONLY IF* it is either: +
 1) A projection expression on its own (e.g. the `n` in `RETURN n AS myNode, n.value + count(*)`) +
 2) A local variable in the expression (e.g the `x` in `RETURN n, n.prop + size([ x IN range(1, 10) \| x ]`)
-- Property access - *ONLY IF* that property access is also a projection expression on its own (e.g. the `n.prop` in `RETURN n.prop, n.prop + count(*)`) +
-- Map access - *ONLY IF* that map access is also a projection expression on its own (e.g. the `map.prop` in `WITH {prop: 2} AS map RETURN map.prop, map.prop + count(*)`)
+- Property access, *ONLY IF* it is also a projection expression on its own (e.g. the `n.prop` in `RETURN n.prop, n.prop + count(*)`) +
+- Map access, *ONLY IF* it is also a projection expression on its own (e.g. the `map.prop` in `WITH {prop: 2} AS map RETURN map.prop, map.prop + count(*)`)
 
 a|
 label:syntax[]
@@ -682,6 +806,17 @@ CALL {
   ...
 } IN TRANSACTIONS
 ----
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE (a {prop:7})-[r:R]->(b {prop: a.prop})
+----
+a|
+`CREATE` clauses in which a variable introduced in the pattern is also referenced from the same pattern are deprecated.
+
 
 a|
 label:syntax[]
@@ -754,6 +889,21 @@ Replaced by:
 SHOW {POINT \| RANGE \| TEXT} INDEXES
 ----
 
+a|
+label:functionality[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+USING BTREE INDEX
+----
+a|
+B-tree indexes are deprecated.
+
+Replaced by:
+[source, cypher, role="noheader"]
+----
+USING {POINT \| RANGE \| TEXT} INDEX
+----
 
 a|
 label:functionality[]
@@ -800,8 +950,8 @@ label:deprecated[]
 point({x:0, y:0}) <= point({x:1, y:1}) <= point({x:2, y:2})
 ----
 a|
-Using inequality operators `<`, `<=`, `>`, and `>=` on spatial points is deprecated.
-Please instead use:
+The ability to use the inequality operators `<`, `<=`, `>`, and `>=` on spatial points is deprecated.
+Instead, use:
 [source, cypher, role="noheader"]
 ----
 point.withinBBox(point({x:1, y:1}), point({x:0, y:0}), point({x:2, y:2}))
@@ -1221,6 +1371,21 @@ Replaced by:
 [source, cypher, role="noheader"]
 ----
 ON HOME GRAPH
+----
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+MATCH (a) RETURN (a)--()
+----
+a|
+Pattern expressions producing lists of paths are deprecated, but they can still be used as existence predicates, for example in `WHERE` clauses.
+Instead, use a pattern comprehension:
+[source, cypher, role="noheader"]
+----
+MATCH (a) RETURN [p=(a)--() \| p]
 ----
 |===
 
@@ -1706,6 +1871,20 @@ SHOW INDEXES YIELD *
 [source, cypher, role="noheader"]
 ----
 SHOW CONSTRAINTS YIELD *
+----
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CALL { RETURN 1 }
+----
+a|
+Unaliased expressions are deprecated in subquery `RETURN` clauses. Replaced by:
+[source, cypher, role="noheader"]
+----
+CALL { RETURN 1 AS one }
 ----
 |===
 
