@@ -47,7 +47,7 @@ This time, you will also create a relationship to the country in which the movie
 If you are storing your data in a SQL database, this is a one-to-many relationship type.
 
 Use `MERGE` to create nodes that represent countries.
-This avoids creating duplicate country nodes in case multiple movies have been made in a same country.
+This avoids creating duplicate country nodes when multiple movies were made in the same country.
 
 [IMPORTANT]
 When using `MERGE` or `MATCH` with `LOAD CSV`, make sure you have an index (see <<cypher-manual#administration-indexes-search-performance>>) or a unique constraint (see <<cypher-manual#administration-constraints>>) on the property to be merged.
