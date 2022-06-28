@@ -46,8 +46,8 @@ Now, let's import the movies.
 This time, we're also creating a relationship to the country in which the movie was made.
 If you are storing your data in a SQL database, this is the one-to-many relationship type.
 
-We're using `MERGE` to create nodes that represent countries.
-Using `MERGE` avoids creating duplicate country nodes in the case where multiple movies have been made in the same country.
+Use `MERGE` to create nodes that represent countries.
+This avoids creating duplicate country nodes when multiple movies were made in the same country.
 
 [IMPORTANT]
 When using `MERGE` or `MATCH` with `LOAD CSV` we need to make sure we have an index (see <<cypher-manual#administration-indexes-search-performance>>) or a unique constraint (see <<cypher-manual#administration-constraints>>) on the property we're merging.
@@ -105,7 +105,7 @@ CREATE CONSTRAINT movie FOR (movie:Movie) REQUIRE movie.id IS UNIQUE
 
 Now importing the relationships is a matter of finding the nodes and then creating relationships between them.
 
-For this query, we will use `CALL +++{ ... }+++ IN TRANSACTIONS` (see <<cypher-manual#subquery-call-in-transactions>>) to periodically commit progress in a new transaction. 
+For this query, we will use `CALL +++{ ... }+++ IN TRANSACTIONS` (see <<cypher-manual#subquery-call-in-transactions>>) to periodically commit progress in a new transaction.
 This is helpful for queries that operate on large CSV files.
 In this case, you also set the limit to `500` rows per transaction.
 
@@ -154,4 +154,3 @@ REMOVE n.id
 ----
 Properties set: 8
 ----
-
