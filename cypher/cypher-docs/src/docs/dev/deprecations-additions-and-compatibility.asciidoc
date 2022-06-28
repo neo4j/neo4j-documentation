@@ -193,6 +193,20 @@ point.withinBBox(point({x:1, y:1}), point({x:0, y:0}), point({x:2, y:2}))
 | Details
 
 a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CALL {
+  ...
+} IN TRANSACTIONS
+----
+a|
+New clause for evaluating a subquery in separate transactions.
+Typically used when modifying or importing large amounts of data.
+See <<subquery-call-in-transactions, CALL +++{ ... }+++ IN TRANSACTIONS>>.
+
+a|
 label:syntax[]
 label:new[]
 [source, cypher, role="noheader"]
