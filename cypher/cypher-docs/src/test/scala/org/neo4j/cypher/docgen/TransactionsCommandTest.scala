@@ -423,7 +423,8 @@ In difference to other show commands, the `SHOW` and `TERMINATE TRANSACTIONS` co
 [NOTE]
 ====
 When combining multiple commands the `YIELD` and `RETURN` clauses are mandatory and must not be omitted.
-In addition, the `YIELD` clause needs to explicitly list the yielded columns. `YIELD *` is not permitted.
+In addition, `YIELD *` is not permitted.
+Instead, the `YIELD` clause needs to explicitly list the yielded columns.
 ====
 
 [NOTE]
