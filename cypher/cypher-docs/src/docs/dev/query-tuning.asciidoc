@@ -48,7 +48,7 @@ To read more about the execution plan operators mentioned in this chapter, see <
 ** <<query-using-index-hint,Index hints>>
 ** <<query-using-scan-hint,Scan hints>>
 ** <<query-using-join-hint,Join hints>>
-** <<query-using-periodic-commit-hint,`PERIODIC COMMIT` query hint>>
+** [deprecated]#<<query-using-periodic-commit-hint,`PERIODIC COMMIT` query hint>>#
 
 
 [[cypher-query-options]]
@@ -85,10 +85,10 @@ Here we detail the available versions:
 
 | 4.3
 | This will force the query to use Neo4j Cypher 4.3.
-| 
+|
 
 | 4.4
-| This will force the query to use Neo4j Cypher 4.4. 
+| This will force the query to use Neo4j Cypher 4.4.
 As this is the default version, it is not necessary to use this option explicitly.
 | {check-mark}
 |===
@@ -203,7 +203,7 @@ This table describes the available query options for the connect-components plan
 ====
 Using this option can significantly _reduce_ the planning time of the query.
 ====
-| 
+|
 
 | connectComponentsPlanner=idp
 | Use the cost based IDP search algorithm when combining sub-plans.
