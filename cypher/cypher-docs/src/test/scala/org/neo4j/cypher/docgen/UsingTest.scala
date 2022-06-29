@@ -54,7 +54,7 @@ class UsingTest extends DocumentingTest {
         |* <<query-using-index-hint,Index hints>>
         |* <<query-using-scan-hint,Scan hints>>
         |* <<query-using-join-hint,Join hints>>
-        |* <<query-using-periodic-commit-hint,`PERIODIC COMMIT` query hint>>""")
+        |* [deprecated]#<<query-using-periodic-commit-hint,`PERIODIC COMMIT` query hint>>#""")
     section("Introduction", "query-using-introduction") {
       p("""When executing a query, Neo4j needs to decide where in the query graph to start matching.
           |This is done by looking at the `MATCH` clause and the `WHERE` conditions and using that information to find useful indexes, or other starting points.""")
