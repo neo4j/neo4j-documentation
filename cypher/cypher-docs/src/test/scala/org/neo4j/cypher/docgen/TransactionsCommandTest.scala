@@ -204,6 +204,7 @@ m|LONG
 |a|The initialization stacktrace for this transaction or an empty string if unavailable.
 |m|STRING
 ||===""")
+      p("The `SHOW TRANSACTIONS` command can be combined with multiple `SHOW TRANSACTIONS` and `TERMINATE TRANSACTIONS`, see <<query-combine-tx-commands, transaction commands combination>>.")
       section("Syntax") {
         p(
           """
@@ -217,7 +218,8 @@ SHOW TRANSACTION[S] [transaction-id[,...]]
 [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 ----
 
-The format of `transaction-id` is `<databaseName>-transaction-<id>`. Transaction IDs must be supplied as a comma-separated list of one or more quoted strings, a string parameter, or a list parameter.
+The format of `transaction-id` is `<databaseName>-transaction-<id>`.
+Transaction IDs must be supplied as one or more comma-separated quoted strings or as an expression resolving to a string or a list of strings.
 
 [NOTE]
 ====
@@ -339,6 +341,7 @@ All users may view all of their own currently executing transactions.
 |a|The result of the `TERMINATE TRANSACTION` command as applied to this transaction.
 |m|STRING
 ||===""")
+      p("The `TERMINATE TRANSACTIONS` command can be combined with multiple `SHOW TRANSACTIONS` and `TERMINATE TRANSACTIONS`, see <<query-combine-tx-commands, transaction commands combination>>.")
       section("Syntax") {
         p(
           """
@@ -356,7 +359,8 @@ TERMINATE TRANSACTION[S] transaction_id[, ...]
 ]
 ----
 
-The format of `transaction-id` is `<databaseName>-transaction-<id>`. Transaction IDs must be supplied as a comma-separated list of one or more quoted strings, a string parameter, or a list parameter.
+The format of `transaction-id` is `<databaseName>-transaction-<id>`.
+Transaction IDs must be supplied as one or more comma-separated quoted strings or as an expression resolving to a string or a list of strings.
 
 [NOTE]
 ====
@@ -409,6 +413,109 @@ All users may terminate their own currently executing transactions.
           )) {
           errorOnlyResultTable()
         }
+      }
+    }
+    section("Combining transaction commands", id="query-combine-tx-commands") {
+      p(
+        """
+In difference to other show commands, the `SHOW` and `TERMINATE TRANSACTIONS` commands can be combined in the same query.
+
+[NOTE]
+====
+When combining multiple commands the `YIELD` and `RETURN` clauses are mandatory and must not be omitted.
+In addition, `YIELD *` is not permitted.
+Instead, the `YIELD` clause needs to explicitly list the yielded columns.
+====
+
+[NOTE]
+====
+At this point in time, no other cypher clauses are allowed to be combined with the transaction commands.
+====
+""".stripMargin('#'))
+      section("Terminating all transactions by a given user") {
+        p(
+          """To terminate all transactions by a user, first find the transactions using `SHOW TRANSACTIONS`, then pass them onto `TERMINATE TRANSACTIONS`.""")
+        query(
+          """SHOW TRANSACTIONS
+            #YIELD transactionId AS txId, username AS user
+            #WHERE user = "Alice"
+            #TERMINATE TRANSACTIONS txId
+            #YIELD message
+            #RETURN txId, message""".stripMargin('#'), NoAssertions) {}
+        p(
+          """.Result
+            |[role="queryresult",options="header,footer",cols="2*<m"]
+            ||===
+            || +txId+ | +message+
+            || +"neo4j-transaction-1"+ | +"Transaction terminated."+
+            || +"neo4j-transaction-2"+ | +"Transaction terminated."+
+            |2+d|Rows: 2
+            ||===""")
+      }
+      section("Terminating starving transactions") {
+        p(
+          """To terminate transactions that have been waiting for more than 30 minutes,
+            #first find the transactions using `SHOW TRANSACTIONS`, then pass them onto `TERMINATE TRANSACTIONS`.
+            #
+            #The following example shows a transaction that has been waiting for 40 minutes.""".stripMargin('#'))
+        query(
+          """SHOW TRANSACTIONS
+            #YIELD transactionId, waitTime
+            #WHERE waitTime > duration({minutes: 30})
+            #TERMINATE TRANSACTIONS transactionId
+            #YIELD username, message
+            #RETURN *""".stripMargin('#'), NoAssertions) {}
+        p(
+          """.Result
+            |[role="queryresult",options="header,footer",cols="4*<m"]
+            ||===
+            || +transactionId+ | +waitTime+ | +username+ | +message+
+            || +"neo4j-transaction-1"+ | +PT40M+ | +"Alice"+ | +"Transaction terminated."+
+            |4+d|Rows: 1
+            ||===""")
+      }
+      section("Listing other transactions by the same user that were terminated") {
+        p(
+          """To list remaining transactions by users whose transactions were terminated,
+            #first terminate the transactions using `TERMINATE TRANSACTIONS`, then filter users through `SHOW TRANSACTIONS`.""".stripMargin('#'))
+        query(
+          """TERMINATE TRANSACTION 'neo4j-transaction-1', 'neo4j-transaction-2'
+            #YIELD username AS terminatedUser
+            #SHOW TRANSACTIONS
+            #YIELD username AS showUser, transactionId AS txId, database, currentQuery, status
+            #WHERE showUser = terminatedUser AND NOT status STARTS WITH 'Terminated'
+            #RETURN txId, showUser AS user, database, currentQuery""".stripMargin('#'), NoAssertions) {}
+        p(
+          """.Result
+            |[role="queryresult",options="header,footer",cols="4*<m"]
+            ||===
+            || +txId+ | +user+ | +database+ | +currentQuery+
+            || +"neo4j-transaction-3"+ | +"Alice"+ | +"neo4j"+ | +"MATCH (n) RETURN n"+
+            || +"mydb-transaction-1"+ | +"Bob"+ | +"mydb"+ | +"MATCH (n:Label) SET n.prop=false"+
+            || +"system-transaction-999"+ | +"Bob"+ | +"system"+ | +"SHOW DATABASES"+
+            |4+d|Rows: 2
+            ||===""")
+      }
+      section("Listing other transactions by the same user as a given transaction") {
+        p(
+          """To list other transactions by the same user as a given transaction,
+            #first find the transactions using `SHOW TRANSACTIONS`, then filter users through a second `SHOW TRANSACTIONS`.""".stripMargin('#'))
+        query(
+          """SHOW TRANSACTION 'neo4j-transaction-1'
+            #YIELD username AS originalUser, transactionId AS originalTxId
+            #SHOW TRANSACTIONS
+            #YIELD username AS newUser, transactionId AS txId, database, currentQuery, status
+            #WHERE newUser = originalUser AND NOT txId = originalTxId
+            #RETURN txId, newUser AS user, database, currentQuery, status""".stripMargin('#'), NoAssertions) {}
+        p(
+          """.Result
+            |[role="queryresult",options="header,footer",cols="5*<m"]
+            ||===
+            || +txId+ | +user+ | +database+ | +currentQuery+ | +status+
+            || +"mydb-transaction-1"+ | +"Bob"+ | +"mydb"+ | +"MATCH (n:Label) SET n.prop=false"+ | +"Running"+
+            || +"system-transaction-999"+ | +"Bob"+ | +"system"+ | +"SHOW DATABASES"+ | +"Running"+
+            |5+d|Rows: 2
+            ||===""")
       }
     }
   }.build()

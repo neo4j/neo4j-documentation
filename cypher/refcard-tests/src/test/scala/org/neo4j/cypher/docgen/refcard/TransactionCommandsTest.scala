@@ -33,6 +33,8 @@ class TransactionCommandsTest extends RefcardTest with QueryStatisticsTestSuppor
     name match {
       case "show" =>
         assert(result.toList.size === 1)
+      case "empty" =>
+        assert(result.toList.size === 0)
     }
   }
 
@@ -52,6 +54,19 @@ TERMINATE TRANSACTIONS 'neo4j-transaction-42'
 ###
 
 Terminate the transaction with ID `neo4j-transaction-42`.
+
+###empty
+//
+
+SHOW TRANSACTIONS
+YIELD username, transactionId AS txId
+WHERE username = 'MyUser'
+TERMINATE TRANSACTIONS txId
+YIELD message
+RETURN message, txId
+###
+
+Terminate all transactions by MyUser.
 
 """
 }
