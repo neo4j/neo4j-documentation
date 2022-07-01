@@ -328,7 +328,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
           |Another more flexible way of filtering the output is to use the `WHERE` clause.
           |An example is to only show indexes not belonging to constraints.""".stripMargin,
       prepare = _ => executePreparationQueries(List("create index for ()-[r:KNOWS]-() on (r.since)")),
-      queryText = "SHOW RANGE INDEXES WHERE uniqueness = 'NONUNIQUE'",
+      queryText = "SHOW RANGE INDEXES WHERE owningConstraint IS NULL",
       optionalResultExplanation =
         """This will only return the default output columns.
           |To get all columns, use `SHOW INDEXES YIELD * WHERE ...`.""".stripMargin,
