@@ -229,7 +229,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
     testQuery(
       title = "Create a range index only if it does not already exist",
       text = "If it is not known whether an index exists or not, add `IF NOT EXISTS` to ensure it does.",
-      queryText = "CREATE INDEX node_range_index_name IF NOT EXISTS FOR (n:Person) ON (n.surname)",
+      queryText = "CREATE RANGE INDEX node_range_index_name IF NOT EXISTS FOR (n:Person) ON (n.surname)",
       optionalResultExplanation = "Note that the index will not be created if there already exists an index with the same schema and type, same name or both.",
       assertions = _ => assertIndexWithNameExists("node_range_index_name", "Person", List("surname"))
     )
