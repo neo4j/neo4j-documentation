@@ -123,7 +123,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Copy properties between nodes and relationships", "set-copying-properties-between-nodes-and-relationships") {
-      p("""`SET` can be used to copy all properties from one node or relationship to another using the function properties(),
+      p("""`SET` can be used to copy all properties from one node or relationship to another using the `properties()` function,
           #This will remove _all_ other properties on the node or relationship being copied to.""".stripMargin('#'))
       query("""MATCH
               #  (at {name: 'Andy'}),

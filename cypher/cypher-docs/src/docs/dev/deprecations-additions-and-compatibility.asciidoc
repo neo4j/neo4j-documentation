@@ -459,8 +459,8 @@ label:deprecated[]
 MATCH (n)-[r:REL]->(m) SET n=r
 ----
 a|
-Use the properties() function instead to get the map of properties of nodes/relationships that
-can then be used in a SET clause:
+Use the `properties()` function instead to get the map of properties of nodes/relationships that
+can then be used in a `SET` clause:
 [source, cypher, role="noheader"]
 ----
 MATCH (n)-[r:REL]->(m) SET n=properties(r)
