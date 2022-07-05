@@ -137,6 +137,12 @@ class PatternTest extends DocumentingTest {
           |(a:User:Admin)-->(b)
           |----
           |""")
+      p("""[source, cypher, role=noplay]
+          |----
+          |(a:User&Admin)-->(b)
+          |----
+          |""")
+      p("""For more information on how to use label expressions see <<query-syntax-label, here>>""")
     }
 
     section("Specifying properties", "cypher-pattern-properties") {
@@ -207,6 +213,7 @@ class PatternTest extends DocumentingTest {
         """Note that this form of pattern can only be used to describe existing data (ie. when using a pattern with `MATCH` or as an expression).
           |It will not work with `CREATE` or `MERGE`, since it's not possible to create a relationship with multiple types."""
       )
+      p("""For more information on use relationship type expressions see <<query-syntax-type, here>>""")
       p("As with nodes, the name of the relationship can always be omitted, as exemplified by:")
       p("""[source, cypher, role=noplay]
           |----
