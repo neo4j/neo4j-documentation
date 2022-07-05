@@ -444,6 +444,29 @@ WHERE NOT isEmpty([1, 2, 3])
 ----
 |===
 
+=== Deprecated features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+MATCH (n)-[r:REL]->(m) SET n=r
+----
+a|
+Use the `properties()` function instead to get the map of properties of nodes/relationships that
+can then be used in a `SET` clause:
+[source, cypher, role="noheader"]
+----
+MATCH (n)-[r:REL]->(m) SET n=properties(r)
+----
+
+|===
 
 === Updated features
 
@@ -564,7 +587,7 @@ a|
 The `SHOW` and `TERMINATE TRANSACTIONS` commands can be combined in the same query.
 The query does not require a specific order and there can be zero or more of each command type, however at least one command is needed.
 
-When the command is not in standalone mode, the `YIELD` and `RETURN` clauses are mandatory. 
+When the command is not in standalone mode, the `YIELD` and `RETURN` clauses are mandatory.
 `YIELD *` is not allowed.
 
 `transaction-id` is a comma-separated list of one or more quoted strings.

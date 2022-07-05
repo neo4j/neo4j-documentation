@@ -50,7 +50,7 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
         #* <<set-set-a-label-on-a-node, Set a label on a node>>
         #* <<set-set-multiple-labels-on-a-node, Set multiple labels on a node>>""".stripMargin('#'))
     section("Introduction", "query-set-introduction") {
-      p("""`SET` can be used with a map -- provided as a literal, a parameter, or a node or relationship -- to set properties.""")
+      p("""`SET` can be used with a map -- provided as a literal or a parameter -- to set properties.""")
       note {
         p("""Setting labels on a node is an idempotent operation -- nothing will occur if an attempt is made to set a label on a node that already has that label.
             #The query statistics will state whether any updates actually took place.""".stripMargin('#'))
@@ -123,12 +123,12 @@ class SetTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Copy properties between nodes and relationships", "set-copying-properties-between-nodes-and-relationships") {
-      p("""`SET` can be used to copy all properties from one node or relationship to another.
+      p("""`SET` can be used to copy all properties from one node or relationship to another using the `properties()` function,
           #This will remove _all_ other properties on the node or relationship being copied to.""".stripMargin('#'))
       query("""MATCH
               #  (at {name: 'Andy'}),
               #  (pn {name: 'Peter'})
-              #SET at = pn
+              #SET at = properties(pn)
               #RETURN at.name, at.age, at.hungry, pn.name, pn.age""".stripMargin('#'),
       ResultAssertions((r) => {
           r.toList should equal(List(Map("at.name" -> "Peter", "at.age" -> 34, "at.hungry" -> null, "pn.name" -> "Peter", "pn.age" -> 34)))
