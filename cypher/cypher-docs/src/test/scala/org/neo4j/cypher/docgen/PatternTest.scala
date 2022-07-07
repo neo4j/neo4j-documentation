@@ -221,6 +221,14 @@ class PatternTest extends DocumentingTest {
           |()-[r:REL_TYPE]-()-[r:REL_TYPE]-()
           |----
           |""")
+      p(
+        "You can specify additional constraints by introducing a <<relationship-pattern-predicates,relationship pattern predicate>>:"
+      )
+      p("""[source, cypher, role=noplay]
+          |----
+          |(a)-[r:KNOWS WHERE r.since < 2000]->(b)
+          |----
+          |""")
     }
 
     section("Variable-length pattern matching", "cypher-pattern-varlength") {

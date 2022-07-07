@@ -19,6 +19,7 @@
  */
 package org.neo4j.cypher.docgen
 
+import org.neo4j.cypher.docgen.tooling.ErrorAssertions
 import org.neo4j.cypher.docgen.tooling.{DocBuilder, DocumentingTest, ResultAssertions}
 import org.scalatest.Inside.inside
 
@@ -75,6 +76,7 @@ class WhereTest extends DocumentingTest {
         | ** <<composite-range, Composite range>>
         |* <<pattern-element-predicates, Pattern element predicates>>
         | ** <<node-pattern-predicates, Node pattern predicates>>
+        | ** <<relationship-pattern-predicates, Relationship pattern predicates>>
       """.stripMargin)
     section("Introduction", "where-introduction") {
       p("`WHERE` is not a clause in its own right -- rather, it's part of `MATCH`, `OPTIONAL MATCH` and `WITH`.")
@@ -452,12 +454,13 @@ class WhereTest extends DocumentingTest {
     section("Using ranges", "query-where-ranges") {
       section("Simple range", "simple-range") {
         p("""To check for an element being inside a specific range, use the inequality operators `<`, `\<=`, `>=`, `>`.""")
-        query("""MATCH (a:Person)
-                #WHERE a.name >= 'Peter'
-                #RETURN a.name, a.age""".stripMargin('#'),
-        ResultAssertions((r) => {
-          r.toList should equal(List(Map("a.name" -> "Timothy", "a.age" -> 25l), Map("a.name" -> "Peter", "a.age" -> 35l)))
-        })) {
+        query(
+          """MATCH (a:Person)
+            #WHERE a.name >= 'Peter'
+            #RETURN a.name, a.age""".stripMargin('#'),
+          ResultAssertions((r) => {
+            r.toList should equal(List(Map("a.name" -> "Timothy", "a.age" -> 25l), Map("a.name" -> "Peter", "a.age" -> 35l)))
+          })) {
           p("The name and age values of nodes having a name property lexicographically greater than or equal to *'Peter'* are returned.")
           resultTable()
         }
@@ -467,39 +470,78 @@ class WhereTest extends DocumentingTest {
         query("""MATCH (a:Person)
                 #WHERE a.name > 'Andy' AND a.name < 'Timothy'
                 #RETURN a.name, a.age""".stripMargin('#'),
-        ResultAssertions((r) => {
-          r.toList should equal(List(Map("a.name" -> "Peter", "a.age" -> 35l)))
-        })) {
+          ResultAssertions((r) => {
+            r.toList should equal(List(Map("a.name" -> "Peter", "a.age" -> 35l)))
+          })) {
           p("The name and age values of nodes having a name property lexicographically between *'Andy'* and *'Timothy'* are returned.")
           resultTable()
         }
       }
-      section("Pattern element predicates", "pattern-element-predicates") {
-        section("Node pattern predicates", "node-pattern-predicates") {
-          p("`WHERE` can appear inside a node pattern in a `MATCH` clause or a pattern comprehension:")
-          query("""WITH 30 AS minAge
-                  #MATCH (a:Person WHERE a.name = 'Andy')-[:KNOWS]->(b:Person WHERE b.age > minAge)
-                  #RETURN b.name""".stripMargin('#'),
-            ResultAssertions { r =>
-              r.toList shouldBe List(Map("b.name" -> "Peter"))
-            }) {
-            resultTable()
-            p("When used this way, predicates in `WHERE` can reference the node variable that the `WHERE` clause belongs to, but not other elements of the `MATCH` pattern.")
-          }
-          p("The same rule applies to pattern comprehensions:")
-          query("""MATCH (a:Person {name: 'Andy'})
-                  #RETURN [(a)-->(b WHERE b:Person) | b.name] AS friends""".stripMargin('#'),
-            ResultAssertions { r =>
-              val rows = r.toList
-              rows.length shouldBe 1
+    }
+    section("Pattern element predicates", "pattern-element-predicates") {
+      p("`WHERE` clauses can be added to <<cypher-patterns,pattern elements>> in order to specify additional constraints.")
+      section("Node pattern predicates", "node-pattern-predicates") {
+        p("`WHERE` can appear inside a node pattern in a `MATCH` clause or a pattern comprehension:")
+        query("""WITH 30 AS minAge
+                #MATCH (a:Person WHERE a.name = 'Andy')-[:KNOWS]->(b:Person WHERE b.age > minAge)
+                #RETURN b.name""".stripMargin('#'),
+          ResultAssertions { r =>
+            r.toList shouldBe List(Map("b.name" -> "Peter"))
+          }) {
+          resultTable()
+        }
+        p("The same rule applies to pattern comprehensions:")
+        query("""MATCH (a:Person {name: 'Andy'})
+                #RETURN [(a)-->(b WHERE b:Person) | b.name] AS friends""".stripMargin('#'),
+          ResultAssertions { r =>
+            val rows = r.toList
+            rows.length shouldBe 1
 
-              inside(rows.head("friends")) {
-                case friends: Seq[_] =>
-                  friends should contain theSameElementsAs Seq("Peter", "Timothy")
-              }
-            }) {
-            resultTable()
-          }
+            inside(rows.head("friends")) {
+              case friends: Seq[_] =>
+                friends should contain theSameElementsAs Seq("Peter", "Timothy")
+            }
+          }) {
+          resultTable()
+        }
+      }
+      section("Relationship pattern predicates", "relationship-pattern-predicates") {
+        p("`WHERE` can also appear inside a relationship pattern in a `MATCH` clause:")
+        query("""WITH 2000 AS minYear
+                #MATCH (a:Person)-[r:KNOWS WHERE r.since < minYear]->(b:Person)
+                #RETURN r.since""".stripMargin('#'),
+          ResultAssertions { r =>
+            r.toList shouldBe List(Map("r.since" -> 1999))
+          }) {
+          resultTable()
+        }
+        p("However, it cannot be used inside of variable length relationships:")
+        query(
+          """WITH 2000 AS minYear
+            #MATCH (a:Person)-[r:KNOWS*1..3 WHERE r.since > b.yearOfBirth]->(b:Person)
+            #RETURN r.since""".stripMargin('#'),
+          ErrorAssertions(_.getMessage should startWith("Relationship pattern predicates are not supported for variable-length relationships"))
+        )(
+          p("this would lead to an error.")
+        )
+        p("Putting predicates inside a relationship pattern helps with readability, note that it is strictly equivalent to using a standalone `WHERE` sub-clause:")
+        query("""WITH 2000 AS minYear
+                #MATCH (a:Person)-[r:KNOWS]->(b:Person)
+                #WHERE r.since < minYear
+                #RETURN r.since""".stripMargin('#'),
+          ResultAssertions { r =>
+            r.toList shouldBe List(Map("r.since" -> 1999))
+          }) {
+          resultTable()
+        }
+        p("Finally, relationship pattern predicates can also be used inside pattern comprehensions, where the same caveats apply:")
+        query("""WITH 2000 AS minYear
+                #MATCH (a:Person {name: 'Andy'})
+                #RETURN [(a)-[r:KNOWS WHERE r.since < minYear]->(b:Person) | r.since] AS years""".stripMargin('#'),
+          ResultAssertions { r =>
+            r.toList shouldBe List(Map("years" -> List(1999)))
+          }) {
+          resultTable()
         }
       }
     }
