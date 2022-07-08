@@ -275,7 +275,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       })) {
         statsOnlyResultTable()
       }
-      p("When a database alias has been deleted, it will no longer show up in the aliases column provided by the command `SHOW DATABASES` or in the `SHOW ALIAS FOR DATABASE` command.")
+      p("When a database alias has been deleted, it will no longer show up in the aliases column provided by the command `SHOW DATABASES` or in the `SHOW ALIASES FOR DATABASE` command.")
       query("SHOW DATABASE `northwind-graph-2021`", assertNameField("northwind-graph-2021")) {
         resultTable()
       }
