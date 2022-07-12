@@ -68,7 +68,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |clause is provided, the full set of columns is returned.
           |""".stripMargin)
       query("SHOW DATABASE movies YIELD *", assertDatabaseShown("movies")) {
-        resultTable()
+        limitedResultTable(maybeWantedColumns = Some(List("name", "aliases", "access", "databaseID", "serverID", "address")))
       }
       p("The number of databases can be seen using a `count()` aggregation with `YIELD` and `RETURN`.")
       query("SHOW DATABASES YIELD * RETURN count(*) as count", ResultAssertions({ r: DocsExecutionResult =>
