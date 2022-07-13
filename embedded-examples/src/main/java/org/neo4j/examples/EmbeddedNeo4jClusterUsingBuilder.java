@@ -58,7 +58,7 @@ public class EmbeddedNeo4jClusterUsingBuilder
                 .setConfig( GraphDatabaseSettings.default_advertised_address, defaultAdvertised )
                 .setConfig( GraphDatabaseSettings.default_listen_address, defaultListen )
                 .setConfig( ClusterSettings.discovery_type, DiscoveryType.LIST )
-                .setConfig( ClusterSettings.initial_discovery_members, initialMembers )
+                .setConfig( ClusterSettings.discovery_initial_members, initialMembers )
                 .setConfig( BoltConnector.enabled, true )
                 .setConfig( HttpConnector.enabled, true )
                 .build();
