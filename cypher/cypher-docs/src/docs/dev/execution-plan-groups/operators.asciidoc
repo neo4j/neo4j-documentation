@@ -50,6 +50,11 @@ include::../ql/query-plan/directed-relationship-type-scan.asciidoc[]
 // UndirectedRelationshipTypeScan
 include::../ql/query-plan/undirected-relationship-type-scan.asciidoc[]
 
+// directedUnionRelationshipTypeScan
+include::../ql/query-plan/directed-union-relationship-types-scan.asciidoc[]
+// undirectedUnionRelationshipTypeScan
+include::../ql/query-plan/undirected-union-relationship-types-scan.asciidoc[]
+
 // NodeByIdSeek
 include::../ql/query-plan/node-by-id-seek.asciidoc[]
 
