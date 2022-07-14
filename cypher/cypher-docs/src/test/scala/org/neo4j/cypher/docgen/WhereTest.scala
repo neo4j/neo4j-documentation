@@ -521,7 +521,7 @@ class WhereTest extends DocumentingTest {
             #MATCH (a:Person)-[r:KNOWS*1..3 WHERE r.since > b.yearOfBirth]->(b:Person)
             #RETURN r.since""".stripMargin('#'),
           ErrorAssertions(_.getMessage should startWith("Relationship pattern predicates are not supported for variable-length relationships"))
-        )
+        ) {}
         p("Putting predicates inside a relationship pattern can help with readability. Please note that it is strictly equivalent to using a standalone `WHERE` sub-clause:")
         query("""WITH 2000 AS minYear
                 #MATCH (a:Person)-[r:KNOWS]->(b:Person)
