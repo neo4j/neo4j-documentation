@@ -29,8 +29,8 @@ import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.configuration.helpers.SocketAddress
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.TestEnterpriseDatabaseManagementServiceBuilder
-import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.docgen.tooling.CypherPrettifier
+import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.internal.ExecutionEngine
 import org.neo4j.cypher.internal.javacompat.GraphDatabaseCypherService
 import org.neo4j.cypher.internal.javacompat.GraphImpl
@@ -42,7 +42,11 @@ import org.neo4j.doc.test.GraphDatabaseServiceCleaner
 import org.neo4j.doc.test.GraphDescription
 import org.neo4j.exceptions.InternalException
 import org.neo4j.exceptions.Neo4jException
-import org.neo4j.graphdb._
+import org.neo4j.graphdb.GraphDatabaseService
+import org.neo4j.graphdb.Node
+import org.neo4j.graphdb.NotFoundException
+import org.neo4j.graphdb.Relationship
+import org.neo4j.graphdb.Transaction
 import org.neo4j.graphdb.config.Setting
 import org.neo4j.io.fs.EphemeralFileSystemAbstraction
 import org.neo4j.kernel.api.KernelTransaction
@@ -54,10 +58,15 @@ import org.neo4j.test.utils.TestDirectory
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions
 
-import java.io._
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
+import java.io.PrintWriter
+import java.io.Writer
 import java.nio.charset.StandardCharsets
 import java.util
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.MapHasAsJava
+import scala.jdk.CollectionConverters.MapHasAsScala
 
 /*
 Use this base class for refcard tests
@@ -78,19 +87,19 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   }
 
   var folder: File = _
-  var managementService: DatabaseManagementService = null
+  var managementService: DatabaseManagementService = _
   private var database: GraphDatabaseService = _
-  var db: GraphDatabaseCypherService = null
-  implicit var engine: ExecutionEngine = null
-  var nodes: Map[String, Long] = null
+  var db: GraphDatabaseCypherService = _
+  implicit var engine: ExecutionEngine = _
+  var nodes: Map[String, Long] = _
   val properties: Map[String, Map[String, Any]] = Map()
   var generateConsole: Boolean = true
   var dir: File = createDir(section)
-  var allQueriesWriter: Writer = null
+  var allQueriesWriter: Writer = _
 
   // these 2 methods are need by ExecutionEngineHelper to do its job
-  override def graph = db
-  override def eengine = engine
+  override def graph: GraphDatabaseCypherService = db
+  override def eengine: ExecutionEngine = engine
 
   def title: String
   def linkId: String = null
@@ -100,7 +109,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   def graphDescription: List[String]
   def indexProps: List[String] = List()
 
-  protected val baseUrl = System.getProperty("remote-csv-upload")
+  protected val baseUrl: String = System.getProperty("remote-csv-upload")
   var filePaths: Map[String, String] = Map.empty
   var urls: Map[String, String] = Map.empty
 
@@ -135,7 +144,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   def replaceNodeIds(tx:InternalTransaction, _query: String): String = {
     var query = _query
-    nodes.keySet.foreach((key) => query = query.replace("%" + key + "%", node(tx, key).getId.toString))
+    nodes.keySet.foreach(key => query = query.replace("%" + key + "%", node(tx, key).getId.toString))
     query
   }
 
@@ -145,7 +154,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   def text: String
 
-  def expandQuery(query: String, queryPart: String, dir: File, possibleAssertion: Seq[String], parametersChoice: String, doRun: Boolean): String = {
+  def expandQuery(query: String, queryPart: String, possibleAssertion: Seq[String], parametersChoice: String, doRun: Boolean): String = {
     if (doRun) runQuery(query, possibleAssertion, parametersChoice)
 
     queryPart
@@ -224,9 +233,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     }
   }
 
-  val assertiongRegEx = "assertion=([^\\s]*)".r
-  val parametersRegEx = "parameters=([^\\s]*)".r
-  val dontRunRegEx = "dontrun".r
+  private val assertiongRegEx = "assertion=([^\\s]*)".r
+  private val parametersRegEx = "parameters=([^\\s]*)".r
+  private val dontRunRegEx = "dontrun".r
 
   private def includeQueries(query: String, dir: File) = {
     val startText = includeGraphviz(query, dir)
@@ -249,7 +258,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
           val q = rest.replaceAll("#", "")
           val parts = q.split("\n\n")
           val publishPart = if (parts.length > 1) parts(1) else parts(0)
-          producedText = producedText.replace(query, expandQuery(q, publishPart, dir, asserts, parameterChoice, doRun))
+          producedText = producedText.replace(query, expandQuery(q, publishPart, asserts, parameterChoice, doRun))
         }
     }
 
@@ -279,7 +288,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
     database = getGraph
     db = new GraphDatabaseCypherService(database)
 
-    cleanGraph
+    cleanGraph()
 
       val g = new GraphImpl(graphDescription.toArray[String])
       val description = GraphDescription.create(g)
@@ -289,9 +298,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       }.toMap
 
     db.withTx( tx => {
-      properties.foreach((n) => {
+      properties.foreach(n => {
         val nod = node(tx, n._1)
-        n._2.foreach((kv) => nod.setProperty(kv._1, kv._2))
+        n._2.foreach(kv => nod.setProperty(kv._1, kv._2))
       })
 
     } )
@@ -301,7 +310,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   // override to start against SYSTEM_DATABASE_NAME or another database
   protected def getGraph: GraphDatabaseService = AsyncDatabaseOperation.findDatabaseEventually(managementService, DEFAULT_DATABASE_NAME)
 
-  protected def cleanGraph: Unit = GraphDatabaseServiceCleaner.cleanDatabaseContent(database)
+  protected def cleanGraph(): Unit = GraphDatabaseServiceCleaner.cleanDatabaseContent(database)
 
   protected def databaseConfig(): util.Map[Setting[_], Object] = {
     Map[Setting[_], Object](

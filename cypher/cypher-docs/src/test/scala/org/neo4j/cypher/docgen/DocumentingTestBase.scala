@@ -25,6 +25,9 @@ import org.junit.After
 import org.junit.Before
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
 import org.neo4j.configuration.helpers.SocketAddress
+import org.neo4j.cypher.ExecutionEngineHelper
+import org.neo4j.cypher.GraphIcing
+import org.neo4j.cypher.TestEnterpriseDatabaseManagementServiceBuilder
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.example.JavaExecutionEngineDocTest
 import org.neo4j.cypher.export.DatabaseSubGraph
@@ -36,21 +39,22 @@ import org.neo4j.cypher.internal.javacompat.ResultSubscriber
 import org.neo4j.cypher.internal.runtime.RuntimeJavaValueConverter
 import org.neo4j.cypher.internal.runtime.isGraphKernelResultValue
 import org.neo4j.cypher.internal.util.Eagerly
-import org.neo4j.cypher.ExecutionEngineHelper
-import org.neo4j.cypher.GraphIcing
-import org.neo4j.cypher.TestEnterpriseDatabaseManagementServiceBuilder
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.doc.test.GraphDatabaseServiceCleaner.cleanDatabaseContent
 import org.neo4j.doc.test.GraphDescription
 import org.neo4j.doc.tools.AsciiDocGenerator
 import org.neo4j.exceptions.Neo4jException
-import org.neo4j.graphdb._
+import org.neo4j.graphdb.GraphDatabaseService
+import org.neo4j.graphdb.Node
+import org.neo4j.graphdb.NotFoundException
+import org.neo4j.graphdb.Relationship
+import org.neo4j.graphdb.Transaction
 import org.neo4j.graphdb.config.Setting
 import org.neo4j.internal.kernel.api.security.SecurityContext
 import org.neo4j.io.fs.EphemeralFileSystemAbstraction
 import org.neo4j.kernel.api.KernelTransaction.Type
-import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.api.index.IndexSamplingMode
+import org.neo4j.kernel.impl.api.index.IndexingService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.query.QuerySubscriber
@@ -64,7 +68,8 @@ import org.neo4j.visualization.graphviz.AsciiDocStyle
 import org.neo4j.visualization.graphviz.GraphStyle
 import org.neo4j.visualization.graphviz.GraphvizWriter
 import org.neo4j.walk.Walker
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
+
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintWriter
@@ -73,7 +78,9 @@ import java.nio.charset.StandardCharsets
 import java.util
 import java.util.concurrent.TimeUnit
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.MapHasAsJava
+import scala.jdk.CollectionConverters.MapHasAsScala
+import scala.jdk.CollectionConverters.SeqHasAsJava
 import scala.reflect.ClassTag
 
 trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
@@ -154,7 +161,7 @@ trait DocumentationHelper extends GraphIcing with ExecutionEngineHelper {
 
   def path: File = new File("target/docs/dev/ql/")
 
-  val graphvizFileName = "cypher-" + simpleName + "-graph"
+  private val graphvizFileName = "cypher-" + simpleName + "-graph"
 
   def dumpGraphViz(dir: File, graphVizOptions: String): String = {
     emitGraphviz(dir, graphvizFileName, graphVizOptions)
@@ -480,7 +487,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   val graphvizExecutedAfter: Boolean = false
   var preparationQueries: List[String] = List()
 
-  protected val baseUrl = System.getProperty("remote-csv-upload")
+  protected val baseUrl: String = System.getProperty("remote-csv-upload")
   var filePaths: Map[String, String] = Map.empty
   var urls: Map[String, String] = Map.empty
 
@@ -494,8 +501,8 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
   val setupConstraintQueries: List[String] = List()
 
   // these 2 methods are need by ExecutionEngineHelper to do its job
-  override def graph = db
-  override def eengine = engine
+  override def graph: GraphDatabaseCypherService = db
+  override def eengine: ExecutionEngine = engine
 
   def indexProps: List[String] = List()
 
@@ -545,9 +552,9 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     } }
   }
 
-  protected def indexingService = db.getDependencyResolver.resolveDependency(classOf[IndexingService])
+  protected def indexingService: IndexingService = db.getDependencyResolver.resolveDependency(classOf[IndexingService])
 
-  protected def sampleAllIndexesAndWait(mode: IndexSamplingMode = IndexSamplingMode.backgroundRebuildAll(), time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS) = {
+  protected def sampleAllIndexesAndWait(mode: IndexSamplingMode = IndexSamplingMode.backgroundRebuildAll(), time: Long = 10, unit: TimeUnit = TimeUnit.SECONDS): Unit = {
     indexingService.triggerIndexSampling(mode)
     unit.sleep(time)
   }
@@ -582,7 +589,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     val fs = new EphemeralFileSystemAbstraction()
     val td = TestDirectory.testDirectory(this.getClass, fs)
     dbFolder = td.prepareDirectoryForTest("target/example-db" + System.nanoTime()).toFile
-    managementService = new TestEnterpriseDatabaseManagementServiceBuilder(dbFolder.toPath).setFileSystem(fs).setConfig(databaseConfig).build()
+    managementService = new TestEnterpriseDatabaseManagementServiceBuilder(dbFolder.toPath).setFileSystem(fs).setConfig(databaseConfig()).build()
     database = AsyncDatabaseOperation.findDatabaseEventually(managementService, DEFAULT_DATABASE_NAME )
     db = new GraphDatabaseCypherService(database)
 
@@ -638,7 +645,7 @@ abstract class DocumentingTestBase extends JUnitSuite with DocumentationHelper w
     output.append(createCypherSnippet(query))
     writer.println(AsciiDocGenerator.dumpToSeparateFile(dir, testId + ".query", output.toString()))
     writer.println()
-    if (returns != null && !returns.isEmpty) {
+    if (returns != null && returns.nonEmpty) {
       writer.println(returns)
       writer.println()
     }
