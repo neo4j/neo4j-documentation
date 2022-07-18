@@ -19,6 +19,7 @@
  */
 package org.neo4j.cypher.docgen
 
+import com.neo4j.configuration.EnterpriseEditionInternalSettings
 import com.neo4j.configuration.OnlineBackupSettings
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.After
@@ -304,6 +305,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
 
   protected def databaseConfig(): util.Map[Setting[_], Object] = {
     Map[Setting[_], Object](
+      EnterpriseEditionInternalSettings.replication_enabled -> java.lang.Boolean.FALSE,
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
       OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE
     ).asJava
