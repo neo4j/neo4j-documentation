@@ -63,7 +63,7 @@ An expression in Cypher can be:
 * A path-pattern: `+(a)-[r]->(b)+`, `+(a)-[r]-(b)+`, `+(a)--(b)+`, `+(a)-->()<--(b)+`.
 * An operator application: `1 + 2`, `3 < 4`.
 * A predicate expression is an expression that returns true or false: `a.prop = 'Hello'`, `length(p) > 10`, `a.name IS NOT NULL`.
-* A special case of predicates are label and relationship type expressions: `(n:A|B)`, `()-[r:R1|R2]->().
+* A special case of predicates are label and relationship type expressions: `(n:A|B)`, `()-[r:R1|R2]->()`.
 * An existential subquery is an expression that returns true or false:
 `EXISTS {
   MATCH (n)-[r]->(p)
@@ -141,9 +141,40 @@ Instead, use either `:A&B&C` or `:A:B:C`.
 
 include::../ql/query-syntax-type.adoc[leveloffset=+1]
 
+[[syntax-list-type]]
+=== List of relationship type expressions examples
+
+The following table displays whether the relationship type expression matches the node:
+
+[cols="^3,^2,^2,^2"]
+|===
+|
+3+^|*Relationship Type*
+
+|*Relationship Type expression* |  `[:A]` | `[:B]` | `[:C]`
+| `[]` | {check-mark} | {check-mark} | {check-mark}
+| `[:A]` | {check-mark} |  |
+| `[:A&B]` |||
+| `[:A\|B]` | {check-mark} | {check-mark} |
+| `[:!A]` || {check-mark} | {check-mark}
+| `[:!!A]` | {check-mark} | |
+| `[:A&!A]` |||
+| `[:A\|!A]` | {check-mark} | {check-mark} | {check-mark}
+| `[:%]` | {check-mark} | {check-mark} | {check-mark}
+| `[:!%]` |||
+| `[:%\|!%]` | {check-mark} | {check-mark} | {check-mark}
+| `[:%&!%]` |||
+| `[:A&%]` |||
+| `[:A\|%]` | {check-mark} | {check-mark} | {check-mark}
+|===
+
 [NOTE]
+====
 <<cypher-pattern-varlength, Variable length relationships>> may only have relationship type expressions consisting of `|`.
 That means that `()-[r:!R*]-()` is not allowed, whereas `()-[r:Q|R*]-()` is allowed.
+====
 
 [WARNING]
+====
 Relationships must have exactly one type so for example, `(a)-[r:R&Q]-(b)` or `(a)-[r:!%]-(b)` will never return any results.
+====

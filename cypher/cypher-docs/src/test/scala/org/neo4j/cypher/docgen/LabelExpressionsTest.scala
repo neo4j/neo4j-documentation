@@ -78,7 +78,7 @@ class labelExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppo
       }
     }
     section("Match with a `NOT` expression for the node labels", "syntax-not-label") {
-      p("""A match with an `NOT` expression for the node label returns the nodes that does not contain the specified label""".stripMargin('#'))
+      p("""A match with a `NOT` expression for the node label returns the nodes that does not contain the specified label""".stripMargin('#'))
       query("""MATCH (n:!A) RETURN n.name AS name""".stripMargin('#'),
         ResultAssertions((r) => {
           r.toList should equal(List(Map("name" -> "Bob"), Map("name" -> "Charlie"), Map("name" -> "Frank"), Map("name" -> "Henry")))
@@ -105,7 +105,7 @@ class labelExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppo
       }
     }
     section("Match with label expressions in the predicate", "syntax-predicate-label") {
-      p("""A label expression can also be used as a predicate in the WHERE clause""".stripMargin('#'))
+      p("""A label expression can also be used as a predicate in the `WHERE` clause""".stripMargin('#'))
       query("""MATCH (n) WHERE n:A|B RETURN n.name AS name""".stripMargin('#'),
         ResultAssertions((r) => {
           r.toList should equal(List(Map("name" -> "Alice"), Map("name" -> "Bob"), Map("name" -> "Daniel"), Map("name" -> "Eskil"), Map("name" -> "Frank"), Map("name" -> "George")))
@@ -114,7 +114,7 @@ class labelExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppo
       }
     }
     section("Match with label expressions in the return", "syntax-return-label") {
-      p("""A label expression can also be used in the with or return statement""".stripMargin('#'))
+      p("""A label expression can also be used in the `WITH` or `RETURN` statement""".stripMargin('#'))
       query("""MATCH (n) RETURN n:A&B""".stripMargin('#'),
         ResultAssertions((r) => {
           r.toList should equal(List(Map("n:A&B" -> false), Map("n:A&B" -> false), Map("n:A&B" -> false), Map("n:A&B" -> true), Map("n:A&B" -> false), Map("n:A&B" -> false), Map("n:A&B" -> true), Map("n:A&B" -> false)))

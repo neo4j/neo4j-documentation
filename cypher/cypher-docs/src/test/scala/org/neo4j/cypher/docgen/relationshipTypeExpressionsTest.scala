@@ -64,7 +64,7 @@ class relationshipTypeExpressionsTest extends DocumentingTest with QueryStatisti
       }
     }
     section("Match with a `NOT` expression for the relationship types", "syntax-not-type") {
-      p("""A match with an `NOT` expression for the relationship type returns the relationships that does not contain the specified type""".stripMargin('#'))
+      p("""A match with a `NOT` expression for the relationship type returns the relationships that does not contain the specified type""".stripMargin('#'))
       query("""MATCH ()-[r:!R1]->() RETURN r.name AS name""".stripMargin('#'),
         ResultAssertions((r) => {
           r.toList should equal(List(Map("name" -> "Studies"), Map("name" -> "Parents")))
@@ -82,7 +82,7 @@ class relationshipTypeExpressionsTest extends DocumentingTest with QueryStatisti
       }
     }
     section("Match with relationship type expressions in the predicate", "syntax-predicate-type") {
-      p("""A relationship type expression can also be used as a predicate in the where clause""".stripMargin('#'))
+      p("""A relationship type expression can also be used as a predicate in the `WHERE` clause""".stripMargin('#'))
       query("""MATCH (n)-[r]->(m) WHERE r:R1|R2 RETURN r.name AS name""".stripMargin('#'),
         ResultAssertions((r) => {
           r.toList should equal(List(Map("name" -> "Teaches"), Map("name" -> "Studies")))
@@ -91,7 +91,7 @@ class relationshipTypeExpressionsTest extends DocumentingTest with QueryStatisti
       }
     }
     section("Match with relationship type expression in the return", "syntax-return-type") {
-      p("""A relationship type expression can also be used in the with or return statement""".stripMargin('#'))
+      p("""A relationship type expression can also be used in the `WITH` or `RETURN` statement""".stripMargin('#'))
       query(
         """MATCH (n)-[r]->(m) RETURN r:R1|R2 AS result""".stripMargin('#'),
         ResultAssertions((r) => {
