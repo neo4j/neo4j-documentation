@@ -20,7 +20,7 @@ package org.neo4j.examples;
 
 import com.neo4j.configuration.ClusterSettings;
 import com.neo4j.configuration.DiscoveryType;
-import com.neo4j.dbms.api.ClusterDatabaseManagementServiceBuilder;
+import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -31,8 +31,6 @@ import org.neo4j.configuration.connectors.BoltConnector;
 import org.neo4j.configuration.connectors.HttpConnector;
 import org.neo4j.configuration.helpers.SocketAddress;
 import org.neo4j.io.fs.FileUtils;
-
-import static org.neo4j.configuration.GraphDatabaseSettings.Mode.CORE;
 
 public class EmbeddedNeo4jClusterUsingBuilder
 {
@@ -53,8 +51,7 @@ public class EmbeddedNeo4jClusterUsingBuilder
                 new SocketAddress( "core03.example.com" )
         );
 
-        var managementService = new ClusterDatabaseManagementServiceBuilder( homeDirectory )
-                .setConfig( GraphDatabaseSettings.mode, CORE )
+        var managementService = new EnterpriseDatabaseManagementServiceBuilder( homeDirectory )
                 .setConfig( GraphDatabaseSettings.default_advertised_address, defaultAdvertised )
                 .setConfig( GraphDatabaseSettings.default_listen_address, defaultListen )
                 .setConfig( ClusterSettings.discovery_type, DiscoveryType.LIST )
