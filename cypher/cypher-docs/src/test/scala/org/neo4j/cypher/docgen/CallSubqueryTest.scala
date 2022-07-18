@@ -316,6 +316,13 @@ class CallSubqueryTest extends DocumentingTest {
           databaseStateBehavior = ClearState,
         ) { resultTable() }
       }
+      section("Restrictions") {
+        p("These are the restrictions on queries that use `CALL { ... } IN TRANSACTIONS`:")
+        p("""* A nested `CALL { ... } IN TRANSACTIONS` inside a `CALL { ... }` clause is not supported.
+            #* A `CALL { ... } IN TRANSACTIONS` in a `UNION` is not supported.
+            #* A `CALL { ... } IN TRANSACTIONS` after a write clause is not supported, unless that write clause is inside a `CALL { ... } IN TRANSACTIONS`.""".stripMargin('#'))
+      }
+
     }
 
   }.build()
