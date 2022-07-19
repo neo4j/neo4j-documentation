@@ -19,11 +19,6 @@
  */
 package org.neo4j.cypher.docgen.refcard
 
-import java.util
-
-import com.neo4j.configuration.EnterpriseEditionInternalSettings
-import org.neo4j.graphdb.config.Setting
-
 class DatabaseManagementTest extends AdministrationCommandTestBase {
   val title = "Database management"
   override val linkId = "administration/databases"
@@ -137,13 +132,4 @@ DROP DATABASE myDatabase IF EXISTS
 (★) Delete the database `myDatabase`, if it exists.
 
 """
-
-  // there is no way around this at this moment the script about is doing DDL operations:
-  //  they can be made synchronous either by this hack, or with `WAIT`.
-  //  `WAIT` fails 'update-one' assertion - so this remains
-  override protected def databaseConfig(): util.Map[Setting[_], Object] = {
-    val config = new util.HashMap[Setting[_], Object](super.databaseConfig());
-    config.put(EnterpriseEditionInternalSettings.replication_enabled, java.lang.Boolean.FALSE);
-    return util.Map.copyOf(config);
-  }
 }
