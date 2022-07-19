@@ -20,7 +20,6 @@
 package org.neo4j.cypher.docgen
 
 import com.neo4j.configuration.OnlineBackupSettings
-import org.apache.commons.io.FileUtils
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.junit.After
 import org.junit.Before
@@ -49,6 +48,7 @@ import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.kernel.impl.util.ValueUtils
+import org.neo4j.test.AsyncDatabaseOperation
 import org.neo4j.test.utils.TestDirectory
 import org.neo4j.visualization.asciidoc.AsciidocHelper
 import org.scalatest.Assertions
@@ -298,7 +298,7 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
   }
 
   // override to start against SYSTEM_DATABASE_NAME or another database
-  protected def getGraph: GraphDatabaseService = managementService.database(DEFAULT_DATABASE_NAME)
+  protected def getGraph: GraphDatabaseService = AsyncDatabaseOperation.findDatabaseEventually(managementService, DEFAULT_DATABASE_NAME)
 
   protected def cleanGraph: Unit = GraphDatabaseServiceCleaner.cleanDatabaseContent(database)
 

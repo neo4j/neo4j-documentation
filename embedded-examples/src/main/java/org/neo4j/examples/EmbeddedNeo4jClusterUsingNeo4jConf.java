@@ -18,7 +18,7 @@
  */
 package org.neo4j.examples;
 
-import com.neo4j.dbms.api.ClusterDatabaseManagementServiceBuilder;
+import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -35,7 +35,7 @@ public class EmbeddedNeo4jClusterUsingNeo4jConf
         FileUtils.deleteDirectory( homeDirectory );
 
         // tag::startCore[]
-        var managementService = new ClusterDatabaseManagementServiceBuilder( homeDirectory )
+        var managementService = new EnterpriseDatabaseManagementServiceBuilder( homeDirectory )
                 .loadPropertiesFromFile( Path.of( "/path/to/neo4j.conf" ) )
                 .build();
         // end::startCore[]
