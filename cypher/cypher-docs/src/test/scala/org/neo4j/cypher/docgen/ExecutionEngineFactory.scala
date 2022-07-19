@@ -22,7 +22,6 @@ package org.neo4j.cypher.docgen
 import org.neo4j.cypher.internal._
 import org.neo4j.cypher.internal.javacompat.ExecutionEngineGetter
 import org.neo4j.dbms.api.DatabaseManagementService
-import org.neo4j.exceptions.UnsatisfiedDependencyException
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.io.fs.EphemeralFileSystemAbstraction
 import org.neo4j.kernel.internal.GraphDatabaseAPI
@@ -40,17 +39,7 @@ object ExecutionEngineFactory {
 
   def getExecutionEngine(graph: GraphDatabaseService): ExecutionEngine = {
     val resolver = graph.asInstanceOf[GraphDatabaseAPI].getDependencyResolver
-    def ee: org.neo4j.cypher.internal.javacompat.ExecutionEngine = {
-      for (i <- 0 until 100) {
-        try return resolver.resolveDependency(classOf[org.neo4j.cypher.internal.javacompat.ExecutionEngine]) catch {
-          case e: UnsatisfiedDependencyException =>
-            try Thread.sleep(25) catch {
-              case ex: InterruptedException =>
-            }
-        }
-      }
-      throw new UnsatisfiedDependencyException(classOf[org.neo4j.cypher.internal.javacompat.ExecutionEngine])
-    }
+    val ee = resolver.resolveDependency(classOf[org.neo4j.cypher.internal.javacompat.ExecutionEngine])
     ExecutionEngineGetter.getCypherExecutionEngine(ee)
   }
 
