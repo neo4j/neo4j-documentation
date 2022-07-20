@@ -19,33 +19,38 @@
  */
 package org.neo4j.cypher.docgen
 
-import org.hamcrest.CoreMatchers._
+import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
-import org.junit.Assert._
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.neo4j.configuration.GraphDatabaseInternalSettings
-import org.neo4j.cypher.{GraphIcing, QueryStatisticsTestSupport}
+import org.neo4j.cypher.GraphIcing
+import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.cypher.internal.logical.plans.NodeIndexSeek
 import org.neo4j.cypher.internal.plandescription.Arguments.Planner
-import org.neo4j.cypher.internal.planner.spi.{DPPlannerName, IDPPlannerName}
+import org.neo4j.cypher.internal.planner.spi.DPPlannerName
+import org.neo4j.cypher.internal.planner.spi.IDPPlannerName
 import org.neo4j.exceptions.CypherExecutionException
-import org.neo4j.graphdb.config.Setting
-import org.neo4j.graphdb.schema.IndexSettingImpl._
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_3D_MAX
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_3D_MIN
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MAX
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MIN
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_3D_MAX
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_3D_MIN
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MAX
+import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MIN
 import org.neo4j.graphdb.schema.IndexType
-import org.neo4j.kernel.impl.index.schema._
+import org.neo4j.kernel.impl.index.schema.PointIndexProvider
+import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
+import org.neo4j.kernel.impl.index.schema.TextIndexProviderFactory
+import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
 
-import java.util
-import scala.collection.JavaConverters._
-import scala.collection.convert.ImplicitConversions.`map AsScala`
+import scala.jdk.CollectionConverters.IterableHasAsScala
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
-
-  override def databaseConfig(): util.Map[Setting[_], Object] =
-    (super.databaseConfig() ++ Map(
-      GraphDatabaseInternalSettings.planning_text_indexes_enabled -> java.lang.Boolean.TRUE,
-      GraphDatabaseInternalSettings.planning_point_indexes_enabled -> java.lang.Boolean.TRUE
-    )).asJava
 
   //need a couple of 'Person' and 'KNOWS' to make index operations more efficient than label and relType scans
   override val setupQueries: List[String] = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++
@@ -74,15 +79,6 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   override def parent: Option[String] = Some("Administration")
   override def section = "Indexes"
-
-  private val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
-  private val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
-  private val cartesian3dMin = SPATIAL_CARTESIAN_3D_MIN.getSettingName
-  private val cartesian3dMax = SPATIAL_CARTESIAN_3D_MAX.getSettingName
-  private val wgsMin = SPATIAL_WGS84_MIN.getSettingName
-  private val wgsMax = SPATIAL_WGS84_MAX.getSettingName
-  private val wgs3dMin = SPATIAL_WGS84_3D_MIN.getSettingName
-  private val wgs3dMax = SPATIAL_WGS84_3D_MAX.getSettingName
 
   @Test def create_single_prop_range_index() {
     val rangeProvider = RangeIndexProvider.DESCRIPTOR.name()
@@ -222,6 +218,14 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
 
   @Test def create_point_index() {
     val pointProvider = PointIndexProvider.DESCRIPTOR.name()
+    val cartesianMin = SPATIAL_CARTESIAN_MIN.getSettingName
+    val cartesianMax = SPATIAL_CARTESIAN_MAX.getSettingName
+    val cartesian3dMin = SPATIAL_CARTESIAN_3D_MIN.getSettingName
+    val cartesian3dMax = SPATIAL_CARTESIAN_3D_MAX.getSettingName
+    val wgsMin = SPATIAL_WGS84_MIN.getSettingName
+    val wgsMax = SPATIAL_WGS84_MAX.getSettingName
+    val wgs3dMin = SPATIAL_WGS84_3D_MIN.getSettingName
+    val wgs3dMax = SPATIAL_WGS84_3D_MAX.getSettingName
 
     testQuery(
       title = "Create a node point index",

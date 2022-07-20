@@ -32,7 +32,7 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
 
   override protected def getGraph: GraphDatabaseService = managementService.database(GraphDatabaseSettings.SYSTEM_DATABASE_NAME)
 
-  override protected def cleanGraph: Unit = {
+  override protected def cleanGraph(): Unit = {
     val tx = db.beginTransaction(KernelTransaction.Type.EXPLICIT, LoginContext.AUTH_DISABLED)
     try {
       // delete all roles
