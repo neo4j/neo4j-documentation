@@ -92,7 +92,8 @@ class MapsTest extends DocumentingTest {
           """Find *'Charlie Sheen'* and return data about him and the movies he has acted in.
             |This example shows an example of map projection with a literal entry, which in turn also uses map projection inside the aggregating `collect()`.""")
         query("""MATCH (actor:Person {name: 'Charlie Sheen'})-[:ACTED_IN]->(movie:Movie)
-                #RETURN actor{.name, .realName, movies: collect(movie{.title, .year})}""".stripMargin('#'),
+                #WITH actor, collect(movie{.title, .year}) AS movies
+                #RETURN actor{.name, .realName, movies: movies}""".stripMargin('#'),
         ResultAssertions((r) => {
             r.toList should equal(
               List(Map("actor" -> Map("name" -> "Charlie Sheen", "realName" -> "Carlos Irwin Estévez", "movies" -> List(Map("title" -> "Apocalypse Now", "year" -> 1979), Map("title" -> "Red Dawn", "year" -> 1984), Map("title" -> "Wall Street", "year" -> 1987))))))
