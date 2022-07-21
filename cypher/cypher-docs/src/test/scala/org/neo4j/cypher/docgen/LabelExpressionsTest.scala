@@ -26,7 +26,7 @@ class labelExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppo
   override def outputPath = "target/docs/dev/ql/"
 
   override def doc = new DocBuilder {
-    doc("`LABEL` expressions", "query-syntax-label")
+    doc("Label expressions", "query-syntax-label")
     runtime("pipelined") // A:Teacher, B:Student, C:Parent
     initQueries("""CREATE
                   #  (:A {name:'Alice'}),
@@ -37,7 +37,7 @@ class labelExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppo
                   #  (:B:C {name:'Frank'}),
                   #  (:A:B:C {name:'George'}),
                   #  ({name:'Henry'})""".stripMargin('#'))
-    p("""`LABEL` expressions evaluate to true or false when applied to the label set of a node, or the type of a relationship.
+    p("""Label expressions evaluate to true or false when applied to the label set of a node, or the type of a relationship.
         # Assuming no other filters are applied, then a label expression evaluating to true means the node or relationship is matched.""".stripMargin('#'))
     p("The following graph is used for the examples below:")
     graphViz()
@@ -78,7 +78,7 @@ class labelExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppo
       }
     }
     section("Match with a `NOT` expression for the node labels", "syntax-not-label") {
-      p("""A match with an `NOT` expression for the node label returns the nodes that does not contain the specified label""".stripMargin('#'))
+      p("""A match with a `NOT` expression for the node label returns the nodes that does not contain the specified label""".stripMargin('#'))
       query("""MATCH (n:!A) RETURN n.name AS name""".stripMargin('#'),
         ResultAssertions((r) => {
           r.toList should equal(List(Map("name" -> "Bob"), Map("name" -> "Charlie"), Map("name" -> "Frank"), Map("name" -> "Henry")))
@@ -91,6 +91,33 @@ class labelExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppo
       query("""MATCH (n:%) RETURN n.name AS name""".stripMargin('#'),
         ResultAssertions((r) => {
           r.toList should equal(List(Map("name" -> "Alice"), Map("name" -> "Bob"), Map("name" -> "Charlie"), Map("name" -> "Daniel"), Map("name" -> "Eskil"), Map("name" -> "Frank"), Map("name" -> "George")))
+        })) {
+        resultTable()
+      }
+    }
+    section("Match with a nesting of label expressions for the node labels", "syntax-nesting-label") {
+      p("""A match with a nesting of label expressions for the node label returns the nodes for which the full expression is true""".stripMargin('#'))
+      query("""MATCH (n:(!A&!B)|C) RETURN n.name AS name""".stripMargin('#'),
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("name" -> "Charlie"), Map("name" -> "Eskil"), Map("name" -> "Frank"), Map("name" -> "George"), Map("name" -> "Henry")))
+        })) {
+        resultTable()
+      }
+    }
+    section("Match with label expressions in the predicate", "syntax-predicate-label") {
+      p("""A label expression can also be used as a predicate in the `WHERE` clause""".stripMargin('#'))
+      query("""MATCH (n) WHERE n:A|B RETURN n.name AS name""".stripMargin('#'),
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("name" -> "Alice"), Map("name" -> "Bob"), Map("name" -> "Daniel"), Map("name" -> "Eskil"), Map("name" -> "Frank"), Map("name" -> "George")))
+        })) {
+        resultTable()
+      }
+    }
+    section("Match with label expressions in the return", "syntax-return-label") {
+      p("""A label expression can also be used in the `WITH` or `RETURN` statement""".stripMargin('#'))
+      query("""MATCH (n) RETURN n:A&B""".stripMargin('#'),
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("n:A&B" -> false), Map("n:A&B" -> false), Map("n:A&B" -> false), Map("n:A&B" -> true), Map("n:A&B" -> false), Map("n:A&B" -> false), Map("n:A&B" -> true), Map("n:A&B" -> false)))
         })) {
         resultTable()
       }
