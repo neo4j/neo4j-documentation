@@ -775,11 +775,14 @@ CASE n.prop
     ELSE 'two'
 END
 ----
-Previously, if n.prop is null, 'one' would be returned. Now 'two' is returned.
 a|
+Previously, if `n.prop` is `null`, `'one'` would be returned.
+Now, `'two'` is returned.
+
 This is a semantic change only.
-Since null = null returns false in Cypher, a when expression no longer matches on null.
-If matching on null is desired, please use `IS NULL` instead.
+Since `null = null` returns `false` in Cypher, a `WHEN` expression no longer matches on `null`.
+
+If matching on `null` is required, please use `IS NULL` instead:
 [source, cypher, role="noheader"]
 ----
 MATCH (n)
@@ -1029,10 +1032,11 @@ CASE n.prop
     ELSE 'two'
 END
 ----
-Currently, if n.prop is null, 'one' would be returned.
 a|
-The matching of null == null in CASE expressions is deprecated and in future versions will no longer be able to be matched on.
-Please use `IS NULL` instead.
+Currently, if `n.prop` is `null`, `'one'` would be returned.
+Since `null = null` returns `false` in Cypher, a `WHEN` expression will no longer match in future versions.
+
+Please use `IS NULL` instead:
 [source, cypher, role="noheader"]
 ----
 MATCH (n)
