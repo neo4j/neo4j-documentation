@@ -183,6 +183,32 @@ Please instead use:
 ----
 point.withinBBox(point({x:1, y:1}), point({x:0, y:0}), point({x:2, y:2}))
 ----
+
+a|
+label:functionality[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+MATCH (n)
+RETURN
+CASE n.prop
+    WHEN null THEN 'one'
+    ELSE 'two'
+END
+----
+Currently, if n.prop is null, 'one' would be returned.
+a|
+The matching of null == null in CASE expressions is deprecated and in future versions will no longer be able to be matched on.
+Please use `IS NULL` instead.
+[source, cypher, role="noheader"]
+----
+MATCH (n)
+RETURN
+CASE
+    WHEN n.prop IS NULL THEN 'one'
+    ELSE 'two'
+END
+----
 |===
 
 === New features
