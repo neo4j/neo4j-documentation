@@ -651,6 +651,18 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 |
 |
 
+| <<query-plan-directed-union-relationship-types-scan,Directed Union Relationship Types Scan>>
+| Fetches all relationships and their start and end nodes with at least one of the provided types from the relationship type index.
+|
+|
+|
+
+| <<query-plan-undirected-union-relationship-types-scan,Undirected Union Relationship Types Scan>>
+| Fetches all relationships and their start and end nodes with at least one of the provided types from the relationship type index.
+|
+|
+|
+
 | <<query-plan-union,Union>>
 | Concatenates the results from the right-hand operator with the results from the left-hand operator.
 |
