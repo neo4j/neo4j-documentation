@@ -45,6 +45,9 @@ include::../ql/query-plan/directed-relationship-index-seek-by-range.asciidoc[]
 // UndirectedRelationshipIndexSeekByRange
 include::../ql/query-plan/undirected-relationship-index-seek-by-range.asciidoc[]
 
+// UnionNodeByLabelsScan
+include::../ql/query-plan/union-node-by-labels-scan.asciidoc[]
+
 // DirectedRelationshipTypeScan
 include::../ql/query-plan/directed-relationship-type-scan.asciidoc[]
 // UndirectedRelationshipTypeScan
@@ -158,6 +161,9 @@ include::../ql/query-plan/varlength-expand-into.asciidoc[]
 
 // VarLengthExpand(Pruning)
 include::../ql/query-plan/varlength-expand-pruning.asciidoc[]
+
+// VarLengthExpand(Pruning, BFS)
+include::../ql/query-plan/breadth-first-varlength-expand-pruning.asciidoc[]
 
 // AssertSameNode
 include::../ql/query-plan/assert-same-node.asciidoc[]

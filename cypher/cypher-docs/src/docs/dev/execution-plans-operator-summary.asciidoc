@@ -669,6 +669,12 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 |
 |
 
+| <<query-plan-union-node-by-labels-scan,UnionNodeByLabelsScan>>
+| Fetches all nodes that have at least one of the provided labels from the node label index.
+|
+|
+|
+
 | <<query-plan-unwind,Unwind>>
 | Returns one row per item in a list.
 |
@@ -695,6 +701,13 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 
 | <<query-plan-varlength-expand-pruning,VarLengthExpand(Pruning)>>
 | Traverses variable-length relationships from a given node and only returns unique end nodes.
+|
+|
+|
+
+| <<query-plan-varlength-expand-pruning,VarLengthExpand(Pruning, BFS)>>
+| Traverses variable-length relationships much like the <<query-plan-varlength-expand-all, `VarLengthExpand(All)`>> operator.
+However, as an optimization, it instead performs a breadth-first search (BFS) and while expanding, some paths are not explored if they are guaranteed to produce an end node that has already been found (by means of a previous path traversal).
 |
 |
 |
