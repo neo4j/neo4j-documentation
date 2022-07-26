@@ -738,7 +738,7 @@ label:updated[]
 SHOW DATABASES YIELD *
 ----
 a|
-New columns have been added the result:
+New columns have been added to the result:
 
 * `creationTime`
 * `lastStartTime`
