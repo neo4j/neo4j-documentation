@@ -729,6 +729,22 @@ a|
 Not a syntax change but a semantic one.
 The `EXECUTE BOOSTED` privilege will no longer include an implicit `EXECUTE` privilege when granted.
 That means that to execute a procedure or a function with boosted privileges both `EXECUTE` and `EXECUTE BOOSTED` are needed.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW DATABASES YIELD *
+----
+a|
+New columns have been added to the result:
+
+* `creationTime`
+* `lastStartTime`
+* `lastStopTime`
+
+These columns are only returned in the full result set (with `YIELD`) and not by default.
 |===
 
 === New features
