@@ -777,7 +777,8 @@ END
 ----
 Previously, if n.prop is null, 'one' would be returned. Now 'two' is returned.
 a|
-The matching of null == null in CASE expressions was updated and is no longer able to be matched on.
+This is a semantic change only.
+Since null = null returns false in Cypher, a when expression no longer matches on null.
 If matching on null is desired, please use `IS NULL` instead.
 [source, cypher, role="noheader"]
 ----
