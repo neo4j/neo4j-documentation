@@ -198,7 +198,7 @@ END
 ----
 Currently, if n.prop is null, 'one' would be returned.
 a|
-The matching of null == null in CASE expressions is deprecated and in future versions will no longer be able to be matched on.
+Since null = null returns false in Cypher, a when expression will no longer match in future versions.
 Please use `IS NULL` instead.
 [source, cypher, role="noheader"]
 ----
