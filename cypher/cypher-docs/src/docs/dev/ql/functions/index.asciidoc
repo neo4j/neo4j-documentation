@@ -158,11 +158,11 @@ These functions all operate on numerical expressions only, and will return an er
 1.2+| <<functions-isnan, `isNaN()`>> | `isNaN(input :: FLOAT?) :: (BOOLEAN?)` | Returns whether a floating point number is `NaN`.
 | `isNaN(input :: INTEGER?) :: (BOOLEAN?)` | Returns whether an integer number is `NaN`.
 1.1+| <<functions-rand,`rand()`>>  | `rand() :: (FLOAT?)` | Returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e. [0,1).
-1.3+| <<functions-round,`round()`>>  | `round(input :: FLOAT?) :: (FLOAT?)` | Returns the value of a number rounded to the nearest integer.
-| `round(value :: FLOAT?, precision :: NUMBER?) :: (FLOAT?)` | Returns the value of a number rounded to the specified precision using rounding mode HALF_UP.
-| `round(value :: FLOAT?, precision :: NUMBER?, mode :: STRING?) :: (FLOAT?)` | Returns the value of a number rounded to the specified precision with the specified rounding mode.
-1.2+| <<functions-sign,`sign()`>>  | `sign(input :: FLOAT?) :: (INTEGER?)` | Returns the signum of a floating point number: 0 if the number is 0, -1 for any negative number, and 1 for any positive number.
-| `sign(input :: INTEGER?) :: (INTEGER?)` | Returns the signum of an integer number: 0 if the number is 0, -1 for any negative number, and 1 for any positive number.
+1.3+| <<functions-round,`round()`>>  | `round(input :: FLOAT?) :: (FLOAT?)` | Returns the floating point value of a number rounded to the nearest mathematical integer.
+| `round(value :: FLOAT?, precision :: NUMBER?) :: (FLOAT?)` | Returns the floating point value of a number rounded to the specified precision using rounding mode HALF_UP.
+| `round(value :: FLOAT?, precision :: NUMBER?, mode :: STRING?) :: (FLOAT?)` | Returns the floating point value of a number rounded to the specified precision with the specified rounding mode.
+1.2+| <<functions-sign,`sign()`>>  | `sign(input :: FLOAT?) :: (INTEGER?)` | Returns the signum of a floating point number: 0 if the number is 0 or NaN, -1 for any negative number, and 1 for any positive number.
+| `sign(input :: INTEGER?) :: (INTEGER?)` | Returns the signum of an integer number: 0 if the number is 0 or NaN, -1 for any negative number, and 1 for any positive number.
 |===
 
 [[header-query-functions-logarithmic]]

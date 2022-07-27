@@ -112,7 +112,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("round()", "functions-round") {
-      p("`round()` returns the value of the given number rounded to the nearest integer, with half-way values always rounded up.")
+      p("`round()` returns the floating point value of the given number rounded to the nearest mathematical integer, with half-way values always rounded up.")
       function("round(expression)", "A Float.", ("expression", "A numeric expression to be rounded."))
       considerations("`round(null)` returns `null`.")
       query("RETURN round(3.141592)", ResultAssertions((r) => {
@@ -123,7 +123,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("round(), with precision", "functions-round2") {
-      p("`round()` returns the value of the given number rounded with the specified precision, with half-values always being rounded up.")
+      p("`round()` returns the floating point value of the given number rounded with the specified precision, with half-values always being rounded up.")
       function("round(expression, precision)", "A Float.",
         ("expression", "A numeric expression to be rounded."),
         ("precision", "A numeric expression specifying precision."))
@@ -136,7 +136,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("round(), with precision and rounding mode", "functions-round3") {
-      p("`round()` returns the value of the given number rounded with the specified precision and the specified rounding mode.")
+      p("`round()` returns the floating point value of the given number rounded with the specified precision and the specified rounding mode.")
       function("round(expression, precision, mode)", "A Float.",
         ("expression", "A numeric expression to be rounded."),
         ("precision", "A numeric expression specifying precision."),
@@ -160,7 +160,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("sign()", "functions-sign") {
-      p("`sign()` returns the signum of the given number: `0` if the number is `0`, `-1` for any negative number, and `1` for any positive number.")
+      p("`sign()` returns the signum of the given number: `0` if the number is `0` or `NaN`, `-1` for any negative number, and `1` for any positive number.")
       function("sign(expression)", "An Integer.", ("expression", "A numeric expression."))
       considerations("`sign(null)` returns `null`.")
       query("RETURN sign(-17), sign(0.1)", ResultAssertions((r) => {
