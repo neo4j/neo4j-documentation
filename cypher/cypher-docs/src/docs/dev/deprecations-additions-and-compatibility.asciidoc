@@ -590,6 +590,22 @@ can then be used in a `SET` clause:
 MATCH (n)-[r:REL]->(m) SET n=properties(r)
 ----
 
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+MATCH (a), (b), allShortestPaths((a)-[r]->(b)) RETURN b
+
+MATCH (a), (b), shortestPath((a)-[r]->(b)) RETURN b
+----
+a|
+`shortestPath` and `allShortestPaths` with fixed length relationships has been deprecated because of redundancy instead use a Match with a limit of 1 or:
+[source, cypher, role="noheader"]
+----
+MATCH (a), (b), shortestPath((a)-[r*1..1]->(b)) RETURN b
+----
+
 |===
 
 === Updated features
