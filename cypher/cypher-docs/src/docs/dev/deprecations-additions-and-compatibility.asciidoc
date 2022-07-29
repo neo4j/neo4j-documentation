@@ -222,10 +222,11 @@ CASE n.prop
     ELSE 'two'
 END
 ----
-Currently, if n.prop is null, 'one' would be returned.
 a|
-Since null = null returns false in Cypher, a when expression will no longer match in future versions.
-Please use `IS NULL` instead.
+Currently, if `n.prop` is `null`, `'one'` would be returned.
+Since `null = null` returns `false` in Cypher, a `WHEN` expression will no longer match in future versions.
+
+Please use `IS NULL` instead:
 [source, cypher, role="noheader"]
 ----
 MATCH (n)
