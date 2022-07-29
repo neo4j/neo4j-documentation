@@ -743,6 +743,7 @@ New columns have been added to the result:
 * `creationTime`
 * `lastStartTime`
 * `lastStopTime`
+* `store`
 
 These columns are only returned in the full result set (with `YIELD`) and not by default.
 |===
