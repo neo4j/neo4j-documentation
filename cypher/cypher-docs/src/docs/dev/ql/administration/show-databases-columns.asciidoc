@@ -16,6 +16,7 @@
 |creationTime|The date and time at which the database was created.||{check-mark}|
 |lastStartTime|The date and time at which the database was last started.||{check-mark}|
 |lastStopTime|The date and time at which the database was last stopped.||{check-mark}|
+|store|Information about the storage engine and format in use by this database. The value is a string formatted as follows: `{storage engine}-{store format}-{major version}.{minor version}`.||{check-mark}|
 |lastCommittedTxn|The ID of the last transaction received.||{check-mark}|
 |replicationLag|Number of transactions the current database is behind compared to the database on the primary instance. The lag is expressed in negative integers. In standalone environments, the value is always 0.||{check-mark}|
 |===
