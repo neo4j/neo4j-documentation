@@ -600,7 +600,7 @@ MATCH (a), (b), allShortestPaths((a)-[r]->(b)) RETURN b
 MATCH (a), (b), shortestPath((a)-[r]->(b)) RETURN b
 ----
 a|
-`shortestPath` and `allShortestPaths` without <<cypher-pattern-varlength, variable-length relationship>> have been deprecated. Instead, use a `MATCH` with a `LIMIT` of 1 or:
+`shortestPath` and `allShortestPaths` without <<cypher-pattern-varlength, variable-length relationship>> are deprecated. Instead, use a `MATCH` with a `LIMIT` of 1 or:
 [source, cypher, role="noheader"]
 ----
 MATCH (a), (b), shortestPath((a)-[r*1..1]->(b)) RETURN b
