@@ -326,7 +326,7 @@ class CallSubqueryTest extends DocumentingTest {
           #started and committed.""".stripMargin('#'))
       note(p("""`CALL { ... } IN TRANSACTIONS` is only allowed in <<query-transactions, implicit transactions>>."""))
       section("Deleting a large amount of nodes", "delete-with-call-in-transactions") {
-        p("""Using `CALL {} IN TRANSACTIONS` is the recommended way of deleting a large amount nodes.""".stripMargin)
+        p("""Using `CALL {} IN TRANSACTIONS` is the recommended way of deleting a large volume of nodes:""".stripMargin)
         addQuery(
           """MATCH (n)
             #CALL {
@@ -337,9 +337,9 @@ class CallSubqueryTest extends DocumentingTest {
           databaseStateBehavior = ClearState,
         ) { resultTable() }
         important(p(
-          """The `CALL { } IN TRANSACTIONS` subquery above has a special treatment in the database to ensure optimal performance.
+          """The `CALL { } IN TRANSACTIONS` subquery is handled by the database so as to ensure optimal performance.
             |Modifying the clause may result in `OutOfMemory` exceptions for sufficiently large datasets.""".stripMargin))
-        p("""While the `CALL { } IN TRANSACTIONS` subquery should not be rewritten, any necessary filtering can be done before the clause.""".stripMargin)
+        p("""While the `CALL { } IN TRANSACTIONS` subquery should not be rewritten, any necessary filtering can be done before the clause:""".stripMargin)
         addQuery(
           """MATCH (n:Label) WHERE n.prop > 100
             #CALL {
