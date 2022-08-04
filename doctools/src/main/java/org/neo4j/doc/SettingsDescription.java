@@ -69,11 +69,12 @@ public class SettingsDescription
                         boolean deprecated = field.isAnnotationPresent( Deprecated.class );
                         String deprecationMsg = deprecated ? "The `" + name + "` configuration setting has been deprecated." : null;
                         String validationMsg = setting.toString();
+                        boolean isEnterprise = field.getDeclaringClass().getName().startsWith("com.neo4j");
                         Optional<String> descr = field.isAnnotationPresent( Description.class ) ? Optional.of( field.getAnnotation( Description.class ).value() ) : Optional.of( "No description" );
                         boolean hasDefault = setting.defaultValue() != null;
                         String defaultValue = hasDefault ? setting.valueToString( setting.defaultValue() ) : null;
 
-                        settings.add( new SettingDescriptionImpl( id, name, descr, deprecationMsg, validationMsg, defaultValue, deprecated, hasDefault ) );
+                        settings.add( new SettingDescriptionImpl( id, name, descr, deprecationMsg, validationMsg, defaultValue, deprecated, hasDefault, isEnterprise ) );
                     }
                     catch ( Exception e )
                     {

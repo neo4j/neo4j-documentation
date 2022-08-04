@@ -35,6 +35,7 @@ public class DocsConfigValue implements SettingDescription {
     private final boolean deprecated;
     private final Optional<String> replacement;
     private final boolean dynamic;
+    private final boolean enterprise;
 
     public DocsConfigValue(String id,
                            String name,
@@ -44,7 +45,8 @@ public class DocsConfigValue implements SettingDescription {
                            Optional<String> defaultValue,
                            boolean internal,
                            Optional<String> replacement,
-                           boolean dynamic) {
+                           boolean dynamic,
+                           boolean enterprise) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -54,6 +56,7 @@ public class DocsConfigValue implements SettingDescription {
         this.deprecated = deprecated;
         this.replacement = replacement;
         this.dynamic = dynamic;
+        this.enterprise = enterprise;
     }
 
     @Override
@@ -116,6 +119,11 @@ public class DocsConfigValue implements SettingDescription {
     }
 
     @Override
+    public boolean isEnterprise() {
+        return enterprise;
+    }
+
+    @Override
     public SettingDescription formatted(Function<String, String> format)
     {
         Function<String, String> f = ( str ) -> str == null ? null : format.apply(str);
@@ -131,7 +139,8 @@ public class DocsConfigValue implements SettingDescription {
                 defaultValue,
                 internal,
                 replacement,
-                dynamic);
+                dynamic,
+                enterprise);
     }
 
     /**

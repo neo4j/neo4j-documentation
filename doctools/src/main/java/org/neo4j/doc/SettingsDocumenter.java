@@ -137,10 +137,12 @@ public class SettingsDocumenter
                    ".%s%n" +
                    "[cols=\"<1s,<4\", options=\"noheader\"]%n" +
                    "|===%n" +
-                   "|Description a|%s%n" +
+                   "|Description a|%s%s%n" +
                    "|Valid values a|%s%n",
                 item.id(), item.name(),
-                item.description().get(), item.validationMessage() );
+                item.isEnterprise() ? "label:enterprise-edition[Enterprise only]" : "",
+                item.description().get(),
+                item.validationMessage() );
 
         if ( item.hasDefault() )
         {

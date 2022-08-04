@@ -39,6 +39,8 @@ public interface SettingDescription {
 
     boolean isDynamic();
 
+    boolean isEnterprise();
+
     String replacedBy();
 
     String defaultValue();

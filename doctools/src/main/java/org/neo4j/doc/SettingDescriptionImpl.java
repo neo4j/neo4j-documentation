@@ -36,11 +36,12 @@ public final class SettingDescriptionImpl implements SettingDescription {
     private final String defaultValue;
     private final boolean isDeprecated;
     private final boolean hasDefault;
+    private final boolean isEnterprise;
 
     public SettingDescriptionImpl( String id, String name, Optional<String> description,
                                String deprecationDescription,
                                String validationDescription, String defaultValue,
-                               boolean isDeprecated, boolean hasDefault )
+                               boolean isDeprecated, boolean hasDefault,boolean isEnterprise )
     {
         this.id = id;
         this.deprecationDescription = deprecationDescription;
@@ -50,11 +51,12 @@ public final class SettingDescriptionImpl implements SettingDescription {
         this.name = name.replace( "{", "\\{" ).replace( "}", "\\}" );
         this.description = description;
         this.hasDefault = hasDefault;
+        this.isEnterprise = isEnterprise;
     }
 
     public SettingDescriptionImpl( String id, String name, Optional<String> description )
     {
-        this( id, name, description, null, null, null, false, false  );
+        this( id, name, description, null, null, null, false, false, false );
     }
 
     @Override
@@ -110,6 +112,11 @@ public final class SettingDescriptionImpl implements SettingDescription {
     }
 
     @Override
+    public boolean isEnterprise() {
+        return isEnterprise;
+    }
+
+    @Override
     public String defaultValue()
     {
         return defaultValue;
@@ -147,7 +154,7 @@ public final class SettingDescriptionImpl implements SettingDescription {
                 // which is what the old impl did, and improve the formatters at some point
                 validationDescription,
                 defaultValue,
-                isDeprecated, hasDefault );
+                isDeprecated, hasDefault, isEnterprise );
     }
 
     @Override
