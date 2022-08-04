@@ -61,6 +61,9 @@ public class AsciiDocListGenerator
             String id = item.id();
             String name = item.name();
             String description = item.description().orElse(String.format("No description available for `%s`.", name));
+            if ( item.isEnterprise() ) {
+                description = "label:enterprise-edition[Enterprise only]" + description;
+            }
             if ( shortenDescription ) {
                 description = shortenDescription(description);
             }

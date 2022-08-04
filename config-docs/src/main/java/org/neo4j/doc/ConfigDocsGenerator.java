@@ -73,7 +73,8 @@ public class ConfigDocsGenerator
                 valueAsString( setting ),
                 setting.internal(),
                 Optional.empty(), //Should be in the description if deprecated
-                setting.dynamic()
+                setting.dynamic(),
+                setting.sourceLocation() != null && setting.sourceLocation().startsWith("com.neo4j")
             ) ).collect( Collectors.toList() );
         out.print( documentSummary( id, title, settingDescriptions ) );
         settingDescriptions.forEach( this::documentForAllOutputs );
@@ -139,8 +140,8 @@ public class ConfigDocsGenerator
 
     private void document( SettingDescription item )
     {
-        out.printf( "[[%s]]%n" + ".%s%n" + "[cols=\"<1s,<4\"]%n" + "|===%n" + "|Description%n" + "a|%s%n" + "|Valid values%n" + "a|%s%n", item.id(),
-                item.name(), item.description().orElse( "No description available." ), item.validationMessage() );
+        out.printf("[[%s]]%n" + ".%s%n" + "[cols=\"<1s,<4\"]%n" + "|===%n" + "|Description%n" + "a|%s%s%n" + "|Valid values%n" + "a|%s%n", item.id(),
+                item.name(), item.isEnterprise() ? "label:enterprise-edition[Enterprise only]" : "", item.description().orElse("No description available."), item.validationMessage());
 
         if ( item.isDynamic() )
         {
