@@ -58,7 +58,7 @@ class DeleteTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Delete all nodes and relationships", "delete-delete-all-nodes-and-relationships") {
-      warning(p(
+      important(p(
         """This query is not for deleting large amounts of data, but is useful when experimenting with small example data sets.
           |When deleting large amounts of data, use <<delete-with-call-in-transactions, CALL { } IN TRANSACTIONS>>.""".stripMargin))
       query("""MATCH (n)
