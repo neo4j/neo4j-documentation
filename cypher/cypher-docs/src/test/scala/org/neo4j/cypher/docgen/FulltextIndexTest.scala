@@ -182,7 +182,7 @@ class FulltextIndexTest extends DocumentingTest {
       p(
         """If the indexed property contains a text array, each element of this array is analyzed independently and all produced terms are associated with the same property name.
            #This means that when querying such an indexed node or relationship, there is a match if any of the array elements match the query.
-           #For scoring purposes, index treats it as a single property value, the score will represent how close the query is to matching the entire array.
+           #For scoring purposes, the index treats it as a single-property value, and the score will represent how close the query is to matching the entire array.
            #For example, both of the following queries match the same node while referring different elements""".stripMargin('#'))
       query("""CALL db.index.fulltext.queryNodes("reviews", 'best') YIELD node, score
               #RETURN node.title, node.reviews, score;""".stripMargin('#'), ResultAssertions(r => {
