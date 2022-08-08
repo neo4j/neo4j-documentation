@@ -132,3 +132,27 @@ Is equivalent to:
 ----
 a < b AND b = c AND c <= d AND d <> e
 ----
+
+[[syntax-using-a-regular-expression-to-filter-words]]
+=== Using a regular expression with `=~` to filter words
+
+.Query
+[source, cypher, indent=0]
+----
+WITH ['mouse', 'chair', 'door', 'house'] AS wordlist
+UNWIND wordlist AS word
+WITH word
+WHERE word =~ '.*ous.*'
+RETURN word
+----
+
+.Result
+[role="queryresult",options="header,footer",cols="1*<m"]
+|===
+| +word+
+| +"mouse"+
+| +"house"+
+1+d|Rows: 2
+|===
+
+Further information and examples regarding the use of regular expressions in filtering can be found in xref::clauses/where.adoc#query-where-regex[Regular expressions].
