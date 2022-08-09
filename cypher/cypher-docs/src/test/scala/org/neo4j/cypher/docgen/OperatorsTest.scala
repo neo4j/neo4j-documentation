@@ -229,7 +229,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           """* `STARTS WITH`: perform case-sensitive prefix searching on strings
             |* `ENDS WITH`: perform case-sensitive suffix searching on strings
             |* `CONTAINS`: perform case-sensitive inclusion searching in strings
-            |* `=~`: matching a regular expression""".stripMargin)""".stripMargin)
+            |* `=~`: matching a regular expression""".stripMargin)
       }
       section("Comparing two numbers", "syntax-comparing-two-numbers") {
         query("""WITH 4 AS one, 3 AS two
@@ -267,8 +267,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           })) {
           resultTable()
         }
-      }
-      p("""Further information and examples regarding the use of regular expressions in filtering can be found in <<query-where-regex>>.""".stripMargin('#'))
+      p("""Further information and examples regarding the use of regular expressions in filtering can be found in <<query-where-regex>>.""")
     }
     section("Boolean operators", "query-operators-boolean") {
       p(
@@ -315,9 +314,9 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           |
           |* concatenating strings: `+`""".stripMargin)
       section("Concatenating two strings with `+`", "syntax-concatenating-two-strings") {
-        query("""RETURN ['neo'] + ['4j'] AS result""".stripMargin('#'),
+        query("""RETURN 'neo' + '4j' AS result""",
         ResultAssertions((r) => {
-            r.toList should equal(List(Map("result" -> List(neo, 4j)))
+            r.toList should equal(List(Map("result" -> List("neo4j"))))
           })) {
           resultTable()
         }
