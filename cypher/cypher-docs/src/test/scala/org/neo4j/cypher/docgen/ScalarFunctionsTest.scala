@@ -126,7 +126,7 @@ class ScalarFunctionsTest extends DocumentingTest {
       query("""MATCH (x:Developer)-[r]-()
               #RETURN endNode(r)""".stripMargin('#'),
       ResultAssertions((r) => {
-          r.columnAs[Node]("endNode(r)").toList.map(_.getId) should equal(Array(2, 1))
+          r.columnAs[Node]("endNode(r)").toList.map(_.getId).sorted should equal(Array(1, 2))
         })) {
         resultTable()
       }

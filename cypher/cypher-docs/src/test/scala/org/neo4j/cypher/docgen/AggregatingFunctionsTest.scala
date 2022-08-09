@@ -154,7 +154,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         query("""MATCH (n {name: 'A'})-[r]->()
                 #RETURN type(r), count(*)""".stripMargin('#'),
         ResultAssertions((r) => {
-          r.toList should equal(List(
+          r.toSet should equal(Set(
             Map("type(r)" -> "KNOWS", "count(*)" -> 3L),
             Map("type(r)" -> "READS", "count(*)" -> 1L)))
         })) {
