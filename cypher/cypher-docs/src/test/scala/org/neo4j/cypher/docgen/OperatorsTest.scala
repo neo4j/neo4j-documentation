@@ -223,13 +223,13 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           |* less than or equal to: `\<=`
           |* greater than or equal to: `>=`
           |* `IS NULL`
-          |* `IS NOT NULL`
-          |* matching a regular expression: `=~`""".stripMargin)
+          |* `IS NOT NULL`""".stripMargin)
       section("String-specific comparison operators comprise:", "query-operator-comparison-string-specific") {
         p(
           """* `STARTS WITH`: perform case-sensitive prefix searching on strings
             |* `ENDS WITH`: perform case-sensitive suffix searching on strings
-            |* `CONTAINS`: perform case-sensitive inclusion searching in strings""".stripMargin)
+            |* `CONTAINS`: perform case-sensitive inclusion searching in strings
+            |* `=~`: matching a regular expression""".stripMargin)""".stripMargin)
       }
       section("Comparing two numbers", "syntax-comparing-two-numbers") {
         query("""WITH 4 AS one, 3 AS two
