@@ -50,6 +50,8 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         | ** <<syntax-using-a-regular-expression-to-filter-words, Using a regular expression with `=~` to filter words>>
         |* <<query-operators-boolean, Boolean operators>>
         | ** <<syntax-using-boolean-operators-to-filter-numbers, Using boolean operators to filter numbers>>
+        |* <<query-operators-string, String operators>>
+        | ** <<syntax-concatenation-two-strings, Concatenating two strings using `+`>>
         |* <<query-operators-temporal, Temporal operators>>
         | ** <<syntax-add-subtract-duration-to-temporal-instant, Adding and subtracting a _Duration_ to or from a temporal instant>>
         | ** <<syntax-add-subtract-duration-to-duration, Adding and subtracting a _Duration_ to or from another _Duration_>>
@@ -76,6 +78,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
           || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`, `=~` for regex matching
           || <<query-operators-boolean, Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
+          || <<query-operators-string, String operators>>   | `+` for concatenation
           || <<query-operators-temporal, Temporal operators>>   | `+` and `-` for operations between durations and temporal instants/durations, `*` and `/` for operations between durations and numbers
           || <<query-operators-map, Map operators>>       |  `.` for static value access by key, `[]` for dynamic value access by key
           || <<query-operators-list, List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s) dynamically
@@ -253,6 +256,20 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
       p("""<<query-where-string>> contains more information regarding the string-specific comparison operators as well as additional examples illustrating the usage thereof.""")
       p("include::../syntax/comparison.asciidoc[leveloffset=+1]")
     }
+    section("Using a regular expression with `=~` to filter words", "syntax-using-a-regular-expression-to-filter-words") {
+        query("""WITH ['mouse', 'chair', 'door', 'house'] AS wordlist
+                #UNWIND wordlist AS word
+                #WITH word
+                #WHERE word =~ '.*ous.*'
+                #RETURN word""".stripMargin('#'),
+        ResultAssertions((r) => {
+            r.toList should equal(List(Map("word" -> "mouse"), Map("word" -> "house")))
+          })) {
+          resultTable()
+        }
+      }
+      p("""Further information and examples regarding the use of regular expressions in filtering can be found in <<query-where-regex>>.""".stripMargin('#'))
+    }
     section("Boolean operators", "query-operators-boolean") {
       p(
         """The boolean operators -- also known as logical operators -- comprise:
@@ -287,6 +304,20 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
                 #RETURN number""".stripMargin('#'),
         ResultAssertions((r) => {
             r.toList should equal(List(Map("number" -> 4l), Map("number" -> 7l), Map("number" -> 9l)))
+          })) {
+          resultTable()
+        }
+      }
+    }
+    section("String operators", "query-operators-string") {
+      p(
+        """The string operators comprise:
+          |
+          |* concatenating strings: `+`""".stripMargin)
+      section("Concatenating two strings with `+`", "syntax-concatenating-two-strings") {
+        query("""RETURN ['neo'] + ['4j'] AS result""".stripMargin('#'),
+        ResultAssertions((r) => {
+            r.toList should equal(List(Map("result" -> List(neo, 4j)))
           })) {
           resultTable()
         }
