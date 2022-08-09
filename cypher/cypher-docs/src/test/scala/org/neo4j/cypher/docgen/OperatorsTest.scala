@@ -46,10 +46,11 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         | ** <<cypher-comparison, Equality and comparison of values>>
         | ** <<cypher-ordering, Ordering and comparison of values>>
         | ** <<cypher-operations-chaining, Chaining comparison operations>>
+        | ** <<syntax-using-a-regular-expression-to-filter-words, Using a regular expression with `=~` to filter words>>
         |* <<query-operators-boolean, Boolean operators>>
         | ** <<syntax-using-boolean-operators-to-filter-numbers, Using boolean operators to filter numbers>>
         |* <<query-operators-string, String operators>>
-        | ** <<syntax-using-a-regular-expression-to-filter-words, Using a regular expression with `=~` to filter words>>
+        | ** <<syntax-concatenating-two-strings, Concatenating two strings using `+`>>
         |* <<query-operators-temporal, Temporal operators>>
         | ** <<syntax-add-subtract-duration-to-temporal-instant, Adding and subtracting a _Duration_ to or from a temporal instant>>
         | ** <<syntax-add-subtract-duration-to-duration, Adding and subtracting a _Duration_ to or from another _Duration_>>
@@ -74,9 +75,9 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
           || <<query-operators-property, Property operators>> | `.` for static property access, `[]` for dynamic property access, `=` for replacing all properties, `+=` for mutating specific properties
           || <<query-operators-mathematical, Mathematical operators>> | `+`, `-`, `*`, `/`, `%`, `^`
           || <<query-operators-comparison, Comparison operators>>     | `=`, `<>`, `<`, `>`, `+<=+`, `>=`, `IS NULL`, `IS NOT NULL`
-          || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`
+          || <<query-operators-comparison, String-specific comparison operators>> | `STARTS WITH`, `ENDS WITH`, `CONTAINS`, `=~` for regex matching
           || <<query-operators-boolean, Boolean operators>> | `AND`, `OR`, `XOR`, `NOT`
-          || <<query-operators-string, String operators>>   | `+` for concatenation, `=~` for regex matching
+          || <<query-operators-string, String operators>>   | `+` for concatenation
           || <<query-operators-temporal, Temporal operators>>   | `+` and `-` for operations between durations and temporal instants/durations, `*` and `/` for operations between durations and numbers
           || <<query-operators-map, Map operators>>       |  `.` for static value access by key, `[]` for dynamic value access by key
           || <<query-operators-list, List operators>>       | `+` for concatenation, `IN` to check existence of an element in a list, `[]` for accessing element(s) dynamically
@@ -226,7 +227,8 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         p(
           """* `STARTS WITH`: perform case-sensitive prefix searching on strings
             |* `ENDS WITH`: perform case-sensitive suffix searching on strings
-            |* `CONTAINS`: perform case-sensitive inclusion searching in strings""".stripMargin)
+            |* `CONTAINS`: perform case-sensitive inclusion searching in strings
+            |* `=~`: matching a regular expression""".stripMargin)
       }
       section("Comparing two numbers", "syntax-comparing-two-numbers") {
         query("""WITH 4 AS one, 3 AS two
@@ -252,6 +254,19 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       p("""<<query-where-string>> contains more information regarding the string-specific comparison operators as well as additional examples illustrating the usage thereof.""")
       p("include::../syntax/comparison.asciidoc[leveloffset=+1]")
+    }
+    section("Using a regular expression with `=~` to filter words", "syntax-using-a-regular-expression-to-filter-words") {
+        query("""WITH ['mouse', 'chair', 'door', 'house'] AS wordlist
+                #UNWIND wordlist AS word
+                #WITH word
+                #WHERE word =~ '.*ous.*'
+                #RETURN word""".stripMargin('#'),
+        ResultAssertions((r) => {
+            r.toList should equal(List(Map("word" -> "mouse"), Map("word" -> "house")))
+          })) {
+          resultTable()
+        }
+      p("""Further information and examples regarding the use of regular expressions in filtering can be found in <<query-where-regex>>.""")
     }
     section("Boolean operators", "query-operators-boolean") {
       p(
@@ -296,22 +311,15 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
       p(
         """The string operators comprise:
           |
-          |* concatenating strings: `+`
-          |* matching a regular expression: `=~`""".stripMargin)
-      section("Using a regular expression with `=~` to filter words", "syntax-using-a-regular-expression-to-filter-words") {
-        query("""WITH ['mouse', 'chair', 'door', 'house'] AS wordlist
-                #UNWIND wordlist AS word
-                #WITH word
-                #WHERE word =~ '.*ous.*'
-                #RETURN word""".stripMargin('#'),
+          |* concatenating strings: `+`""".stripMargin)
+      section("Concatenating two strings with `+`", "syntax-concatenating-two-strings") {
+        query("""RETURN 'neo' + '4j' AS result""",
         ResultAssertions((r) => {
-            r.toList should equal(List(Map("word" -> "mouse"), Map("word" -> "house")))
+            r.toList should equal(List(Map("result" -> "neo4j")))
           })) {
           resultTable()
         }
       }
-      p("""Further information and examples regarding the use of regular expressions in filtering can be found in <<query-where-regex>>.
-          #In addition, refer to <<query-operator-comparison-string-specific>> for details on string-specific comparison operators.""".stripMargin('#'))
     }
     section("Temporal operators", "query-operators-temporal") {
       p(
