@@ -51,7 +51,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
         |* <<query-operators-boolean, Boolean operators>>
         | ** <<syntax-using-boolean-operators-to-filter-numbers, Using boolean operators to filter numbers>>
         |* <<query-operators-string, String operators>>
-        | ** <<syntax-concatenation-two-strings, Concatenating two strings using `+`>>
+        | ** <<syntax-concatenating-two-strings, Concatenating two strings using `+`>>
         |* <<query-operators-temporal, Temporal operators>>
         | ** <<syntax-add-subtract-duration-to-temporal-instant, Adding and subtracting a _Duration_ to or from a temporal instant>>
         | ** <<syntax-add-subtract-duration-to-duration, Adding and subtracting a _Duration_ to or from another _Duration_>>
