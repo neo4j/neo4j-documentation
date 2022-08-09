@@ -316,7 +316,7 @@ class OperatorsTest extends DocumentingTest with QueryStatisticsTestSupport {
       section("Concatenating two strings with `+`", "syntax-concatenating-two-strings") {
         query("""RETURN 'neo' + '4j' AS result""",
         ResultAssertions((r) => {
-            r.toList should equal(List(Map("result" -> List("neo4j"))))
+            r.toList should equal(List(Map("result" -> "neo4j")))
           })) {
           resultTable()
         }
