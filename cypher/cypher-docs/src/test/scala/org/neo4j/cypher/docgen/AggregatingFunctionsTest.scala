@@ -419,7 +419,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           })) {
           resultTable()
         }
-        p("Mix of the aggregation function `max` and the literal `1`.")
+        p("Mixing literal `1` with an aggregation function.")
         query("""MATCH (p: Person) RETURN 1 + max(p.age)""",
           ResultAssertions((r) => {
             r.toList.head("1 + max(p.age)") should equal(45L)
@@ -441,8 +441,14 @@ class AggregatingFunctionsTest extends DocumentingTest {
           })) {
           resultTable()
         }
-        p("Using the property `n.age`, which is not a grouping key will throw an exception.")
+        p("Using the property `n.age` will throw an exception, since `n.age` is not a grouping keys.")
         query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n.age - max(f.age)""",
+          ErrorAssertions((t) => {
+            t.getMessage should include("Aggregation column contains implicit grouping expressions.")
+          })) {
+        }
+        p("`n.age + n.age` is the grouping key, but since the expression is not a literal, parameter, variable or property/map access it can not be used in the expression which contains the aggregation function.")
+        query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n.age + n.age, n.age + n.age - max(f.age)""",
           ErrorAssertions((t) => {
             t.getMessage should include("Aggregation column contains implicit grouping expressions.")
           })) {
@@ -450,7 +456,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         note {
           p(
             """The above query could be rewritten to:
-              #`MATCH (n: Person{name:\"A\"})-[:KNOWS]-(f:Person) WITH n.age AS age, max(f.age) AS oldestFriend RETURN age - oldestFriend`""".stripMargin('#'))
+              #`MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) WITH n.age + n.age AS groupingKey, f RETURN groupingKey, groupingKey - max(f.age)`""".stripMargin('#'))
         }
       }
     }
