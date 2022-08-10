@@ -328,7 +328,7 @@ class WhereTest extends DocumentingTest {
                 #WHERE n.name='Andy' AND type(r) =~ 'K.*'
                 #RETURN type(r), r.since""".stripMargin('#'),
         ResultAssertions((r) => {
-          r.toList should equal(List(Map("type(r)" -> "KNOWS", "r.since" -> 1999), Map("type(r)" -> "KNOWS", "r.since" -> 2012)))
+          r.toSet should equal(Set(Map("type(r)" -> "KNOWS", "r.since" -> 1999), Map("type(r)" -> "KNOWS", "r.since" -> 2012)))
         })) {
           p("This returns all relationships having a type whose name starts with *'K'*.")
           resultTable()
