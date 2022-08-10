@@ -69,6 +69,14 @@ class AggregatingFunctionsTest extends DocumentingTest {
         #The latter, `+count(*)+` is an aggregate expression.
         #The matching paths will be divided into different buckets, depending on the grouping key.
         #The aggregate function will then be run on these buckets, calculating an aggregate value per bucket.""".stripMargin('#'))
+    p("""An aggregation functions input expression can contain non-grouping variables, for example `+sum(1 + n.x)+`.
+        #However, it is not possible to mix non-grouping variables and aggregation functions.
+        #The example below will throw an error since we mix `n.x`, which is not a grouping key, with the aggregation expression `+count(*)+`.
+        #For more information see <<grouping-keys,Grouping keys>>.""".stripMargin('#'))
+    p("""[source, cypher]
+        #----
+        #RETURN n.x + count(*)
+        #----""".stripMargin('#'))
     p("To use aggregations to sort the result set, the aggregation must be included in the `RETURN` to be used in the `ORDER BY`.")
     p("""The `DISTINCT` operator works in conjunction with aggregation.
         #It is used to make all values unique before running them through an aggregate function.
@@ -384,6 +392,67 @@ class AggregatingFunctionsTest extends DocumentingTest {
       })) {
         p("The sum of the two supplied Durations is returned.")
         resultTable()
+      }
+    }
+    section("Grouping keys", "grouping-keys") {
+      p("""The expressions which does not contain any aggregation function are the grouping keys of the aggregation.
+          #If there are no grouping keys, the aggregation will be over all rows.
+          #For expressions that contain an aggregation function, the leaves of the expressions must be one of:
+          #
+          #* An aggregation
+          #* A literal
+          #* A Parameter
+          #* A variable - ONLY IF that variable is also one of:
+          #** A projection expression on its own (e.g. the `n` in `RETURN n AS myNode, n.value + count(*)`)
+          #** A local variable in the expression (e.g the `x` in `RETURN n, n.prop + size([ x IN range(1, 10) | x ])`)
+          #* Property access - ONLY IF that property access is also a projection expression on its own (e.g. the `n.prop` in `RETURN n.prop, n.prop + count(*)`)
+          #* Map access - ONLY IF that map access is also a projection expression on its own (e.g. the `map.prop` in `WITH {prop: 2} AS map RETURN map.prop, map.prop + count(*)`)""".stripMargin(
+          '#'))
+      note {
+        p("The same rules apply to expressions in ORDER BY if there is an aggregation in preceding WITH or RETURN clause.")
+      }
+      section("Examples of expressions which mix aggregation and non-aggregation expressions.", "grouping-key-examples") {
+        p("Using non-grouping variables inside an aggregation.")
+        query("""MATCH (p: Person) RETURN max(p.age)""",
+          ResultAssertions((r) => {
+            r.toList.head("max(p.age)") should equal(44L)
+          })) {
+          resultTable()
+        }
+        p("Mix of the aggregation function `max` and the literal `1`.")
+        query("""MATCH (p: Person) RETURN 1 + max(p.age)""",
+          ResultAssertions((r) => {
+            r.toList.head("1 + max(p.age)") should equal(45L)
+          })) {
+          resultTable()
+        }
+        p("Using a variable `n`, which is also a grouping key.")
+        query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n, n.age - max(f.age)""",
+          ResultAssertions((r) => {
+            r.toList.size shouldBe 1
+            r.head.get("n.age - max(f.age)") should equal(Some(-31L))
+          })) {
+          resultTable()
+        }
+        p("Using the property `n.age`, which is also a grouping key.")
+        query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n.age, n.age - max(f.age)""",
+          ResultAssertions((r) => {
+            r.toList should equal(List(Map("n.age" -> 13L, "n.age - max(f.age)" -> -31)))
+          })) {
+          resultTable()
+        }
+        p("Using the property `n.age`, which is not a grouping key will throw an exception.")
+        query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n.age - max(f.age)""",
+          ErrorAssertions((t) => {
+            t.getMessage should include("Aggregation column contains implicit grouping expressions.")
+          })) {
+          errorOnlyResultTable()
+        }
+        note {
+          p(
+            """The above query could be rewritten to:
+              #`MATCH (n: Person{name:\"A\"})-[:KNOWS]-(f:Person) WITH n.age AS age, max(f.age) AS oldestFriend RETURN age - oldestFriend`""".stripMargin('#'))
+        }
       }
     }
   }.build()
