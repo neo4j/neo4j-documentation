@@ -446,7 +446,6 @@ class AggregatingFunctionsTest extends DocumentingTest {
           ErrorAssertions((t) => {
             t.getMessage should include("Aggregation column contains implicit grouping expressions.")
           })) {
-          errorOnlyResultTable()
         }
         note {
           p(
