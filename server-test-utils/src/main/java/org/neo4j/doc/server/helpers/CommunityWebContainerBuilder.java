@@ -35,7 +35,6 @@ import java.util.Properties;
 import java.util.Random;
 import org.neo4j.collection.Dependencies;
 import org.neo4j.common.DependencyResolver;
-import org.neo4j.configuration.Config;
 import org.neo4j.configuration.GraphDatabaseSettings;
 import org.neo4j.configuration.SettingValueParsers;
 import org.neo4j.configuration.connectors.BoltConnector;
@@ -48,10 +47,7 @@ import org.neo4j.configuration.ssl.SslPolicyScope;
 import org.neo4j.dbms.api.DatabaseManagementService;
 import org.neo4j.dbms.api.DatabaseManagementServiceBuilderImplementation;
 import org.neo4j.doc.server.WebContainerTestUtils;
-import org.neo4j.graphdb.config.Setting;
 import org.neo4j.io.fs.DefaultFileSystemAbstraction;
-import org.neo4j.logging.InternalLog;
-import org.neo4j.logging.Log;
 import org.neo4j.logging.LogProvider;
 import org.neo4j.logging.NullLogProvider;
 import org.neo4j.server.configuration.ServerSettings;
@@ -101,25 +97,13 @@ public class CommunityWebContainerBuilder
         checkState( dataDir != null || !persistent, "Must specify path" );
         final Path configFile = createConfigFiles();
 
-        Log log = logProvider.getLog( getClass() );
-        Config config = Config.newBuilder()
-                .setDefaults( GraphDatabaseSettings.SERVER_DEFAULTS )
-                .fromFile( configFile )
-                .build();
-        config.setLogger( (InternalLog) log );
-        return new TestWebContainer( build( config ) );
-    }
+        DatabaseManagementService databaseManagementService = createManagementServiceBuilder()
+                .setConfig(GraphDatabaseSettings.SERVER_DEFAULTS)
+                .loadPropertiesFromFile(configFile)
+                .setUserLogProvider(logProvider)
+                .setExternalDependencies(dependencies).build();
 
-    private DatabaseManagementService build( Config config )
-    {
-        var managementServiceBuilder = createManagementServiceBuilder();
-        for ( Map.Entry<Setting<Object>,Object> entry : config.getValues().entrySet() )
-        {
-            managementServiceBuilder.setConfig( entry.getKey(), entry.getValue() );
-        }
-        return managementServiceBuilder
-                .setUserLogProvider( logProvider )
-                .setExternalDependencies( dependencies ).build();
+        return new TestWebContainer( databaseManagementService );
     }
 
     protected DatabaseManagementServiceBuilderImplementation createManagementServiceBuilder()
