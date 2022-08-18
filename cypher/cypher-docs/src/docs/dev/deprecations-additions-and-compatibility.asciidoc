@@ -751,17 +751,25 @@ label:functionality[]
 label:updated[]
 [source, cypher, role="noheader"]
 ----
-SHOW DATABASES YIELD *
+SHOW DATABASES
 ----
 a|
-New columns have been added to the result:
+Changes have been made to the default columns in the result:
+
+* The `writer` columns has been added.
+* The values returned in the `role` column have changes to be just `primary` and `secondary` or `unknown`
+* The `error` column has been renamed to `statusMessage`
+
+The following columns have been added to the full result set (with `YIELD`) and not by default:
 
 * `creationTime`
 * `lastStartTime`
 * `lastStopTime`
 * `store`
-
-These columns are only returned in the full result set (with `YIELD`) and not by default.
+* `currentPrimariesCount`
+* `currentSecondariesCount`
+* `requestedPrimariesCount`
+* `requestedSecondariesCount`
 
 a|
 label:functionality[]
