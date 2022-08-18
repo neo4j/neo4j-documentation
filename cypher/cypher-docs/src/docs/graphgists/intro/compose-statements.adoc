@@ -22,7 +22,7 @@ Expressing references between nodes as visual patterns makes them easy to unders
 
 If you want to combine the results of two statements that have the same result structure, you can use `UNION [ALL]`.
 
-For instance if you want to list both actors and directors without using the alternative relationship-type syntax `()-[:ACTED_IN|:DIRECTED]->()` you can do this:
+For instance if you want to list both actors and directors without using the alternative relationship-type syntax `()-[:ACTED_IN|DIRECTED]->()` you can do this:
 
 [source, cypher]
 ----

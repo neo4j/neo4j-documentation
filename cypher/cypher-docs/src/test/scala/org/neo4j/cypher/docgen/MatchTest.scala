@@ -170,7 +170,7 @@ class MatchTest extends DocumentingTest {
       }
       section("Match on multiple relationship types", "match-on-multiple-rel-types") {
         p("To match on one of multiple types, you can specify this by chaining them together with the pipe symbol `|`.")
-        query("""MATCH (wallstreet {title: 'Wall Street'})<-[:ACTED_IN|:DIRECTED]-(person)
+        query("""MATCH (wallstreet {title: 'Wall Street'})<-[:ACTED_IN|DIRECTED]-(person)
                 #RETURN person.name""".stripMargin('#'),
         assertEveryoneConnectedToWallStreetIsFound) {
           p("Returns nodes with an `ACTED_IN` or `DIRECTED` relationship to *'Wall Street'*.")
