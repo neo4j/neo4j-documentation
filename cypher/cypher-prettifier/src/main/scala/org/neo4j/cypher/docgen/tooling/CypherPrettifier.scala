@@ -23,7 +23,6 @@ import org.neo4j.cypher.internal.ast.Statement
 import org.neo4j.cypher.internal.ast.factory.neo4j.JavaCCParser
 import org.neo4j.cypher.internal.ast.prettifier.ExpressionStringifier
 import org.neo4j.cypher.internal.ast.prettifier.Prettifier
-import org.neo4j.cypher.internal.util.AnonymousVariableNameGenerator
 import org.neo4j.cypher.internal.util.OpenCypherExceptionFactory
 
 trait Prettifying {
@@ -38,7 +37,7 @@ case object CypherPrettifier extends Prettifying {
   override def apply(input: String): String = {
     val prettifier: Prettifier = Prettifier(ExpressionStringifier())
 
-    val parsingResults: Statement = JavaCCParser.parse(input, OpenCypherExceptionFactory(None), new AnonymousVariableNameGenerator())
+    val parsingResults: Statement = JavaCCParser.parse(input, OpenCypherExceptionFactory(None))
     prettifier.asString(parsingResults)
   }
 }
