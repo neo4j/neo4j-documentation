@@ -72,7 +72,6 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-using-scan-hint, USING SCAN variable:Label>>              | Hint | Scan hints are used to force the planner to do a label scan (followed by a filtering operation) instead of using an index.
 |<<query-with, WITH ... [AS]>>                        | Projecting   |  Allows query parts to be chained together, piping the results from one to be used as starting points or criteria in the next.
 |<<query-where, WHERE>>                          | Reading sub-clause | A sub-clause used to add constraints to the patterns in a `MATCH` or `OPTIONAL MATCH` clause, or to filter the results of a `WITH` clause.
-|<<existential-subqueries, WHERE EXISTS {...}>>  | Reading sub-clause | An existential sub-query used to filter the results of a `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
 |===
 
 
@@ -278,7 +277,8 @@ This section comprises a glossary of all the keywords -- grouped by category and
 [options="header"]
 |===
 |Name           | Description
-| <<query-syntax-case, CASE Expression>>  | A generic conditional expression, similar to if/else statements available in other languages.
+| <<query-syntax-case, CASE Expression>>   | A generic conditional expression, similar to if/else statements available in other languages.
+| <<existential-subqueries, EXISTS {...}>> | An EXISTS expression is used to evaluate the existence of a subquery.
 |===
 
 
