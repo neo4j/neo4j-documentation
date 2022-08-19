@@ -69,7 +69,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         #The latter, `+count(*)+` is an aggregate expression.
         #The matching paths will be divided into different buckets, depending on the grouping key.
         #The aggregate function will then be run on these buckets, calculating an aggregate value per bucket.""".stripMargin('#'))
-    p("""An aggregation functions input expression can contain non-grouping variables, for example `+sum(1 + n.x)+`.
+    p("""The input expression of an aggregation function can contain non-grouping variables, for example `+sum(1 + n.x)+`.
         #However, it is not possible to mix non-grouping variables and aggregation functions.
         #The example below will throw an error since we mix `n.x`, which is not a grouping key, with the aggregation expression `+count(*)+`.
         #For more information see <<grouping-keys,Grouping keys>>.""".stripMargin('#'))
@@ -395,7 +395,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
       }
     }
     section("Grouping keys", "grouping-keys") {
-      p("""The expressions which does not contain any aggregation function are the grouping keys of the aggregation.
+      p("""Expressions which do not contain any aggregation function are the grouping keys of the aggregation.
           #If there are no grouping keys, the aggregation will be over all rows.
           #For expressions that contain an aggregation function, the leaves of the expressions must be one of:
           #
@@ -409,7 +409,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           #* Map access - ONLY IF that map access is also a projection expression on its own (e.g. the `map.prop` in `WITH {prop: 2} AS map RETURN map.prop, map.prop + count(*)`)""".stripMargin(
           '#'))
       note {
-        p("The same rules apply to expressions in ORDER BY if there is an aggregation in preceding WITH or RETURN clause.")
+        p("The same rules apply to expressions in ORDER BY if there is an aggregation in the WITH or RETURN clause that it belongs to.")
       }
       section("Examples of expressions which mix aggregation and non-aggregation expressions.", "grouping-key-examples") {
         p("Using non-grouping variables inside an aggregation.")
