@@ -129,6 +129,12 @@ Tests for the absence of a pattern predicate.
 | label:yes[]
 |
 
+| <<query-plan-directed-all-relationships-scan,DirectedAllRelationshipsScan>>
+| Fetches all relationships and their start and end nodes from the database.
+|
+|
+|
+
 | <<query-plan-directed-relationship-by-id-seek,DirectedRelationshipByIdSeek>>
 | Reads one or more relationships by id from the relationship store.
 | label:yes[]
@@ -605,6 +611,12 @@ Tests for the absence of a pattern predicate if an expression predicate evaluate
 
 | <<query-plan-triadic-selection,TriadicSelection>>
 | Solves triangular queries, such as the very common 'find my friend-of-friends that are not already my friend'.
+|
+|
+|
+
+| <<query-plan-undirected-all-relationships-scan,UndirectedAllRelationshipsScan>>
+| Fetches all relationships and their start and end nodes from the database.
 |
 |
 |
