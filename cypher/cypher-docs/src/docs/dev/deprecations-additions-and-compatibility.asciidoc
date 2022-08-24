@@ -863,6 +863,16 @@ isNaN(n.prop)
 a|
 New function which returns whether the given number is `NaN`.
 
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+NaN, Inf, Infinity
+----
+a|
+Cypher now supports special float literals for infinity and `NaN`, which defines a quiet not-a-number value in accordance to IEEE 754.
+
 |===
 
 [[cypher-deprecations-additions-removals-4.4]]
