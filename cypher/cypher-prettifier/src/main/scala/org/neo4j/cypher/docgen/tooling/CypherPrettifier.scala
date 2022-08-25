@@ -38,7 +38,7 @@ case object CypherPrettifier extends Prettifying {
   override def apply(input: String): String = {
     val prettifier: Prettifier = Prettifier(ExpressionStringifier())
 
-    val parsingResults: Statement = JavaCCParser.parse(input, OpenCypherExceptionFactory(None), new AnonymousVariableNameGenerator())
+    val parsingResults: Statement = JavaCCParser.parse(input, OpenCypherExceptionFactory(None))
     prettifier.asString(parsingResults)
   }
 }
