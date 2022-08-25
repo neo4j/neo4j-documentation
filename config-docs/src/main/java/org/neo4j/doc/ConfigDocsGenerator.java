@@ -18,7 +18,7 @@
  */
 package org.neo4j.doc;
 
-import com.neo4j.configuration.FabricEnterpriseSettings;
+import com.neo4j.fabric.configuration.FabricEnterpriseSettings;
 import com.neo4j.configuration.SecuritySettings;
 
 import java.io.ByteArrayOutputStream;
