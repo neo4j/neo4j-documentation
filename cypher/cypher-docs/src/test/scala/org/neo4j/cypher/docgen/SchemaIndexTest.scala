@@ -43,9 +43,9 @@ import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_3D_MIN
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MAX
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_WGS84_MIN
 import org.neo4j.graphdb.schema.IndexType
+import org.neo4j.kernel.api.impl.schema.TextIndexProvider
 import org.neo4j.kernel.impl.index.schema.PointIndexProvider
 import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
-import org.neo4j.kernel.impl.index.schema.TextIndexProviderFactory
 import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
 
 import scala.jdk.CollectionConverters.IterableHasAsScala
@@ -180,7 +180,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def create_text_index() {
-    val textProvider = TextIndexProviderFactory.DESCRIPTOR.name()
+    val textProvider = TextIndexProvider.DESCRIPTOR.name()
 
     testQuery(
       title = "Create a node text index",
