@@ -754,7 +754,7 @@ label:updated[]
 SHOW DATABASES
 ----
 a|
-Changes have been made to the default columns in the result:
+Changes to the default columns in the result:
 
 * The `writer` columns has been added.
 * The values returned in the `role` column have changes to be just `primary` and `secondary` or `unknown`.

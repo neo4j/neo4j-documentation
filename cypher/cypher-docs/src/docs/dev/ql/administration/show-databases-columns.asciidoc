@@ -8,7 +8,7 @@
 |serverID|The server instance ID.||{check-mark}|
 |address|Instance address in a clustered DBMS. The default for a standalone database is `neo4j://localhost:7687`. |{check-mark}|{check-mark}|
 |role|The current role of the database (`primary`, `secondary`, `unknown`).|{check-mark}|{check-mark}|
-|writer|This will be true if this database node accepts writes which will be the case if this node is the leader for this database in a cluster or if this is a standalone instance.|{check-mark}|{check-mark}|
+|writer| `true` for the database node that accepts writes (this node is the leader for this database in a cluster or  this is a standalone instance.|{check-mark}|{check-mark}|
 |requestedStatus|The expected status of the database.|{check-mark}|{check-mark}|
 |currentStatus|The actual status of the database.|{check-mark}|{check-mark}|
 |statusMessage|A message explaining the current state of the database.|{check-mark}|{check-mark}|
