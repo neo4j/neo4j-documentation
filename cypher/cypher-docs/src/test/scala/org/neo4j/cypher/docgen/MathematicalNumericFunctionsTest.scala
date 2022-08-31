@@ -89,7 +89,7 @@ class MathematicalNumericFunctionsTest extends DocumentingTest {
       }
     }
     section("isNaN()", "functions-isnan") {
-      p("`isNaN()` returns whether the given number is `NaN`.")
+      p("`isNaN()` returns whether the given number is `NaN`, a special floating point number defined in the Floating-Point Standard IEEE 754.")
       function("isNaN(expression)", "A Boolean.", ("expression", "A numeric expression."))
       considerations("`isNaN(null)` returns `null`.")
       query("RETURN isNaN(0/0.0)", ResultAssertions((r) => {

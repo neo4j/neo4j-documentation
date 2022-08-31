@@ -862,6 +862,8 @@ isNaN(n.prop)
 ----
 a|
 New function which returns whether the given number is `NaN`.
+`NaN` is a special floating point number defined in the Floating-Point Standard IEEE 754.
+This function was introduced since comparisons including `NaN = ǸaN` will return false.
 
 a|
 label:functionality[]
@@ -871,7 +873,9 @@ label:added[]
 NaN, Inf, Infinity
 ----
 a|
-Cypher now supports special float literals for infinity and `NaN`, which defines a quiet not-a-number value in accordance to IEEE 754.
+Cypher now supports special float literals for infinity and `NaN`.
+`NaN` defines a quiet not-a-number value and does not throw any exceptions in arithmetic operations.
+Both values are implemented according to the Floating-Point Standard IEEE 754.
 
 |===
 

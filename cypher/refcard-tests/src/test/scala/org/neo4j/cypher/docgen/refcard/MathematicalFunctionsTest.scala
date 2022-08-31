@@ -64,7 +64,7 @@ RETURN
 isNaN($expr)
 ###
 
-Returns whether a number is `NaN`.
+Returns whether a number is `NaN`, a special floating point number defined in the Floating-Point Standard IEEE 754.
 
 ###assertion=returns-one parameters=expression
 RETURN
