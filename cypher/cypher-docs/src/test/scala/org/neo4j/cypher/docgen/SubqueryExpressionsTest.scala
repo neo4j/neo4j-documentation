@@ -35,7 +35,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
         #(andy)-[:KNOWS {since: 1999}]->(peter),
         #(andy)-[:HAS_DOG {since: 2016}]->(:Dog {name:'Andy'}),
         #(fido:Dog {name:'Fido'})<-[:HAS_DOG {since: 2010}]-(peter)-[:HAS_DOG {since: 2018}]->(:Dog {name:'Ozzy'}),
-        #(fido)-[:HAS_TOY]->(:Toy{name:'Banana'})"""".stripMargin('#'))
+        #(fido)-[:HAS_TOY]->(:Toy{name:'Banana'})""".stripMargin('#'))
     synopsis("Cypher has expressions that evaluate a subquery and aggregate the result in different fashions.")
     p(
       """* <<existential-subqueries,EXISTS subqueries>>
@@ -49,12 +49,13 @@ class SubqueryExpressionsTest extends DocumentingTest {
     section("EXISTS subqueries", "existential-subqueries") {
       p(
         """An EXISTS subquery can be used to find out if a specified pattern exists at least once in the data.
-          #It can be used in the same way as a path pattern but it allows you to use `MATCH` and `WHERE` clauses internally.
+          #It serves the same purpose as a path pattern but is more powerful because it allows you to use `MATCH` and `WHERE` clauses internally.
+          #Moreover, it can appear in any expression position, unlike path patterns.
           #A subquery has a scope, as indicated by the opening and closing braces, `{` and `}`.
           #Any variable that is defined in the outside scope can be referenced inside the subquery's own scope.
           #Variables introduced inside the subquery are not part of the outside scope and therefore can't be accessed on the outside.
-          #If the subquery evaluates even once to anything that is not null, the whole expression will become true.
-          #This also means that the system only needs to calculate the first occurrence where the subquery evaluates to something that is not null and can skip the rest of the work.""".stripMargin('#'))
+          #If the subquery evaluates to at least one row, the whole expression will become true.
+          #This also means that the system only needs to evaluate if there is at least one row and can skip the rest of the work.""".stripMargin('#'))
       functionWithCypherStyleFormatting(
         """EXISTS {
           #  MATCH [Pattern]
@@ -63,7 +64,10 @@ class SubqueryExpressionsTest extends DocumentingTest {
       p("It is worth noting that the `MATCH` keyword can be omitted in subqueries and that the `WHERE` clause is optional.")
 
       section("Simple EXISTS subquery", "existential-subquery-simple-case") {
-        p("""Variables introduced by the outside scope can be used in the inner `MATCH` clause. The following example shows this:""")
+        p(
+          """Variables introduced by the outside scope can be used in the `EXISTS` subquery without importing them
+            #<<subquery-correlated-importing|as necessary with `CALL` subqueries>>.
+            #The following example shows this:""".stripMargin('#'))
         query(
           """MATCH (person:Person)
             #WHERE EXISTS {
@@ -93,11 +97,11 @@ class SubqueryExpressionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Nesting EXISTS subqueries", "existential-subquery-nesting") {
+      section("Nesting Existential subqueries", "existential-subquery-nesting") {
         p(
           """Existential subqueries can be nested like the following example shows.
             #The nesting also affects the scopes.
-            #That means that it is possible to access all variables from inside the subquery which are either on the outside scope or defined in the very same subquery.""".stripMargin('#'))
+            #That means that it is possible to access all variables from inside the subquery which are either from the outside scope or defined in the very same subquery.""".stripMargin('#'))
         query(
           """MATCH (person:Person)
             #WHERE EXISTS {
@@ -115,7 +119,9 @@ class SubqueryExpressionsTest extends DocumentingTest {
         }
       }
       section("EXISTS subquery outside of a WHERE cluase", "existential-subquery-outside-where") {
-        p("""EXISTS subquery expressions can appear anywhere that an expression is valid. Here the result if the subquery is returned""")
+        p(
+          """EXISTS subquery expressions can appear anywhere that an expression is valid.
+            |Here the result if the subquery can find the given pattern is returned.""".stripMargin)
         query(
           """MATCH (person:Person)
             #RETURN person.name AS name, EXISTS {
