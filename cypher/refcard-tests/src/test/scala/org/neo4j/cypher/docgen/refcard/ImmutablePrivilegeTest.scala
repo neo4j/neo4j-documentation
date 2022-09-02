@@ -36,7 +36,7 @@ class ImmutablePrivilegeTest extends AdministrationCommandTestBase {
 ###assertion=update-one
 //
 
-DENY IMMUTABLE DATABASE MANAGEMENT ON DBMS TO my_role
+DENY IMMUTABLE DATABASE MANAGEMENT ON DBMS TO `my_role`
 ###
 
 Immutably deny the database management privilege to a role.
