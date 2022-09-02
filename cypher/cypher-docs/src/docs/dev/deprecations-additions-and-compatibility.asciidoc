@@ -751,6 +751,26 @@ label:functionality[]
 label:updated[]
 [source, cypher, role="noheader"]
 ----
+[GRANT\|DENY] [IMMUTABLE] ...
+----
+a|
+Privileges can be specified as `IMMUTABLE` which means that they cannot be altered by users with Privilege Management. They can only be administered when running with full access.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+REVOKE [IMMUTABLE] ...
+----
+a|
+`IMMUTABLE` can now be specified with the `REVOKE` command to specify that only immutable privileges should be revoked.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
 SHOW DATABASES
 ----
 a|

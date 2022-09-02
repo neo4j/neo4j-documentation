@@ -26,7 +26,7 @@ class ListPrivilegeTest extends AdministrationCommandTestBase {
   private def setup() = graph.withTx { tx =>
     tx.execute("CREATE ROLE my_role")
     tx.execute("CREATE ROLE my_second_role")
-    tx.execute("GRANT ACCESS ON DATABASE * TO my_role")
+    tx.execute("GRANT IMMUTABLE ACCESS ON DATABASE * TO my_role")
     tx.execute("GRANT TRAVERSE ON GRAPH * NODES * TO my_second_role")
     tx.execute("CREATE USER alice SET PASSWORD 'secret'")
     tx.execute("GRANT ROLE my_role TO alice")
@@ -59,7 +59,18 @@ YIELD role, action, access
 WHERE role = 'my_role'
 ###
 
-List information about privileges, filtered by role, action and access and further refined by the name of the role.
+List information about privileges including the name of the role, action and access. Filter on the name of the role.
+
+###assertion=show-one
+//
+
+SHOW PRIVILEGES
+YIELD role, action, access, immutable
+WHERE role = 'my_role' 
+AND immutable
+###
+
+List all immutable privileges for `myrole`
 
 ###assertion=show-one
 //
@@ -68,6 +79,14 @@ SHOW ROLE my_role PRIVILEGES AS COMMANDS
 ###
 
 List all privileges assigned to a role as Cypher commands.
+
+###assertion=show-one
+//
+
+SHOW ROLE my_role PRIVILEGES AS COMMANDS WHERE immutable
+###
+
+List all immutable privileges assigned to a role as Cypher commands.
 
 ###assertion=show-two
 //
