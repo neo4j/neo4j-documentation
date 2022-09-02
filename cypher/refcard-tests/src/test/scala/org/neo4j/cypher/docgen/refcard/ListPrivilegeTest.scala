@@ -59,7 +59,8 @@ YIELD role, action, access
 WHERE role = 'my_role'
 ###
 
-List information about privileges including the name of the role, action and access. Filter on the name of the role.
+List information about privileges including the name of the role, action and access. +
+Filter on the name of the role.
 
 ###assertion=show-one
 //
