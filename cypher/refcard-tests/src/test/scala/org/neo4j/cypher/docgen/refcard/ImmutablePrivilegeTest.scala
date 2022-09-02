@@ -44,7 +44,7 @@ Immutably deny the database management privilege to a role.
 ###assertion=update-one
 //
 
-REVOKE IMMUTABLE DATABASE MANAGEMENT ON DBMS TO `my_role`
+REVOKE IMMUTABLE DATABASE MANAGEMENT ON DBMS FROM `my_role`
 ###
 
 Remove only immutable database management privileges.
