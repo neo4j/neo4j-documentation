@@ -800,6 +800,40 @@ CASE
     ELSE 'two'
 END
 ----
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+RETURN round(val, precision)
+----
+a|
+Rounding infinity and NaN values will now return the original value instead of
+returning an integer approximation for precision 0 and throwing an exception for precision > 0:
+
+[cols="1,1,1"]
+!===
+! !old value !new value
+
+!round(Inf)
+!9223372036854776000.0
+!Inf
+
+!round(Inf, 1)
+!exception
+!Inf
+
+!round(NaN)
+!0
+!NaN
+
+!round(Inf, 1)
+!exception
+!NaN
+
+!===
+To get an integer value use the `toInteger` function.
 |===
 
 === New features

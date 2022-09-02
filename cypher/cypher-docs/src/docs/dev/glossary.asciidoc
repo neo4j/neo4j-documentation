@@ -233,11 +233,11 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<functions-reverse-list, reverse()>>           | List              | Returns a list in which the order of all elements in the original list have been reversed.
 |<<functions-reverse, reverse()>>                | String            | Returns a string in which the order of all characters in the original string have been reversed.
 |<<functions-right, right()>>                    | String            | Returns a string containing the specified number of rightmost characters of the original string.
-|<<functions-round, round()>>                   | Numeric           | Returns the value of the given number rounded to the nearest integer, with half-way values always rounded up.
-|<<functions-round2, round(), with precision>>   | Numeric           | Returns the value of the given number rounded with the specified precision, with half-values always being rounded up.
-|<<functions-round3, round(), with precision and rounding mode>>  | Numeric           | Returns the value of the given number rounded with the specified precision and the specified rounding mode.
+|<<functions-round, round()>>                   | Numeric           | Returns the floating point value of the given number rounded to the nearest mathematical integer, with half-way values always rounded up.
+|<<functions-round2, round(), with precision>>   | Numeric           | Returns the floating point value of the given number rounded with the specified precision, with half-values always being rounded up.
+|<<functions-round3, round(), with precision and rounding mode>>  | Numeric           | Returns the floating point value of the given number rounded with the specified precision and the specified rounding mode.
 |<<functions-rtrim, rTrim()>>                    | String            | Returns the original string with trailing whitespace removed.
-|<<functions-sign, sign()>>                     | Numeric           | Returns the signum of a number: `0` if the number is `0`, `-1` for any negative number, and `1` for any positive number.
+|<<functions-sign, sign()>>                     | Numeric           | Returns the signum of a number: `0` if the number is `0` or `NaN`, `-1` for any negative number, and `1` for any positive number.
 |<<functions-sin, sin()>>                       | Trigonometric     | Returns the sine of a number.
 |<<functions-single, single()>>                  | Predicate         | Returns true if the predicate holds for exactly one of the elements in a list.
 |<<functions-size, size()>>                      | Scalar            | Returns the number of items in a list.
