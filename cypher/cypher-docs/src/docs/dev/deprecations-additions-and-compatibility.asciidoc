@@ -863,7 +863,7 @@ isNaN(n.prop)
 a|
 New function which returns whether the given number is `NaN`.
 `NaN` is a special floating point number defined in the Floating-Point Standard IEEE 754.
-This function was introduced since comparisons including `NaN = NaN` will return false.
+This function was introduced since comparisons including `NaN = NaN` returns false.
 
 a|
 label:functionality[]
