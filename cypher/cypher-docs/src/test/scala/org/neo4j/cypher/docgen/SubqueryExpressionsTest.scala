@@ -28,11 +28,9 @@ class SubqueryExpressionsTest extends DocumentingTest {
     doc("Subquery expressions", "cypher-subquery-expressions")
     initQueries(
       """CREATE
-        #(andy:Swedish:Person {name: 'Andy', age: 36, belt: 'white'}),
-        #(timothy:Person {name: 'Timothy', age: 25, address: 'Sweden/Malmo'}),
-        #(peter:Person {name: 'Peter', age: 35, email: 'peter_n@example.com'}),
-        #(andy)-[:KNOWS {since: 2012}]->(timothy),
-        #(andy)-[:KNOWS {since: 1999}]->(peter),
+        #(andy:Swedish:Person {name: 'Andy', age: 36}),
+        #(timothy:Person {name: 'Timothy', age: 25}),
+        #(peter:Person {name: 'Peter', age: 35}),
         #(andy)-[:HAS_DOG {since: 2016}]->(:Dog {name:'Andy'}),
         #(fido:Dog {name:'Fido'})<-[:HAS_DOG {since: 2010}]-(peter)-[:HAS_DOG {since: 2018}]->(:Dog {name:'Ozzy'}),
         #(fido)-[:HAS_TOY]->(:Toy{name:'Banana'})""".stripMargin('#'))
@@ -225,6 +223,23 @@ class SubqueryExpressionsTest extends DocumentingTest {
               """.stripMargin('#'),
             ResultAssertions(r => {
               r.toList should equal(List(Map("result" -> "Andy"), Map("result" -> "Timothy"), Map("result" -> "Doglover Peter")))
+            })) {
+            resultTable()
+          }
+        }
+        section("Using count as a grouping key", "count-subqueries-as-grouping-key") {
+          p(
+            """The following query groups all persons by how many dogs they own,
+              #and then calculates the average age for each group.
+              #""".stripMargin('#'))
+          query(
+            """MATCH (person:Person)
+              #RETURN COUNT { (person)-[:HAS_DOG]->(:Dog) } AS numDogs,
+              #       avg(person.age) AS averageAge
+              # ORDER BY numDogs
+              """.stripMargin('#'),
+            ResultAssertions(r => {
+              r.toList should equal(List(Map("numDogs" -> 0, "averageAge" -> 25), Map("numDogs" -> 1, "averageAge" -> 36), Map("numDogs" -> 2, "averageAge" -> 35)))
             })) {
             resultTable()
           }
