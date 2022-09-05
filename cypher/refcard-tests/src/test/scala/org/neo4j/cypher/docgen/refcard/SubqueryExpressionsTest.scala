@@ -53,5 +53,17 @@ EXISTS {
 RETURN n###
 
 Use an EXISTS subquery to test for existence.
+
+###assertion=returns-one
+MATCH (n) WHERE
+
+COUNT {
+  MATCH (n)-[:KNOWS]->(m) WHERE n.age = m.age
+}
+
+= 1
+RETURN n###
+
+Use a COUNT subquery to count the occurrences of the subquery.
 """
 }
