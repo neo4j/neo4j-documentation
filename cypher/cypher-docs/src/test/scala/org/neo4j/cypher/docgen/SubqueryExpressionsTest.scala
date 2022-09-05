@@ -41,7 +41,9 @@ class SubqueryExpressionsTest extends DocumentingTest {
       """* <<existential-subqueries,EXISTS subqueries>>
         # ** <<existential-subquery-simple-case, Simple EXISTS subquery>>
         # ** <<existential-subquery-with-where, EXISTS subquery with `WHERE` clause>>
-        # ** <<existential-subquery-nesting, Nesting EXISTS subqueries>>""".stripMargin('#'))
+        # ** <<existential-subquery-nesting, Nesting EXISTS subqueries>>
+        # ** <<existential-subquery-outside-where, EXISTS subquery outside of a WHERE cluase>>
+        # """.stripMargin('#'))
     p("""Subquery expressions can appear anywhere that an expression is valid.""".stripMargin('#'))
     p("The following graph is used for the examples below:")
     graphViz()
