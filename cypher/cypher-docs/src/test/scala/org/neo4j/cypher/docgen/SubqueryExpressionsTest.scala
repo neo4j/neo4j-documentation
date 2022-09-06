@@ -82,7 +82,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Existential subquery with `WHERE` clause", "existential-subquery-with-where") {
+      section("EXISTS subquery with `WHERE` clause", "existential-subquery-with-where") {
         p(
           """A `WHERE` clause can be used in conjunction to the `MATCH`.
             #Variables introduced by the `MATCH` clause and the outside scope can be used in this scope.""".stripMargin('#'))
@@ -99,9 +99,9 @@ class SubqueryExpressionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Nesting Existential subqueries", "existential-subquery-nesting") {
+      section("Nesting EXISTS subqueries", "existential-subquery-nesting") {
         p(
-          """Existential subqueries can be nested like the following example shows.
+          """EXISTS subqueries can be nested like the following example shows.
             #The nesting also affects the scopes.
             #That means that it is possible to access all variables from inside the subquery which are either from the outside scope or defined in the very same subquery.""".stripMargin('#'))
         query(
