@@ -90,7 +90,6 @@ However, other predicates are only used when it is known that the property is co
 
 * `n.prop = "string"`
 * `n.prop IN ["a", "b", "c"]`
-* `n.prop > "string"`
 
 This means that a `TEXT` index is not able to solve e.g. `a.prop = b.prop`.
 
@@ -101,7 +100,6 @@ In summary, `TEXT` indexes support the following predicates:
 |Predicate | Syntax
 |equality check| `n.prop = "string"`
 |list membership check | `n.prop IN ["a", "b", "c"]`
-|range search| `n.prop > "string"`
 |prefix search| `STARTS WITH`
 |suffix search| `ENDS WITH`
 |substring search| `CONTAINS`
