@@ -6,7 +6,7 @@
     <parent>
         <artifactId>neo4j-manual-parent</artifactId>
         <groupId>org.neo4j.doc</groupId>
-        <version>4.4.11-SNAPSHOT</version>
+        <version>4.4.12-SNAPSHOT</version>
     </parent>
 
     <artifactId>test-framework</artifactId>
