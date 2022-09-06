@@ -51,7 +51,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
     section("EXISTS subqueries", "existential-subqueries") {
       p(
         """An EXISTS subquery can be used to find out if a specified pattern exists at least once in the data.
-          #It serves the same purpose as a path pattern but is more powerful because it allows you to use `MATCH` and `WHERE` clauses internally.
+          #It serves the same purpose as a <<filter-on-patterns, path pattern>> but is more powerful because it allows you to use `MATCH` and `WHERE` clauses internally.
           #Moreover, it can appear in any expression position, unlike path patterns.
           #A subquery has a scope, as indicated by the opening and closing braces, `{` and `}`.
           #Any variable that is defined in the outside scope can be referenced inside the subquery's own scope.
