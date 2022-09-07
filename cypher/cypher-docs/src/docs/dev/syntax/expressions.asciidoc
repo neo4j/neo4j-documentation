@@ -16,8 +16,8 @@ This section contains an overview of expressions in Cypher with examples.
  ** <<syntax-use-case-result, Using the result of `CASE` in the succeeding clause or statement>>
  ** <<syntax-use-case-with-null, Using `CASE` with null values>>
 * <<cypher-subquery-expressions, Subquery expressions>>
- ** <<existential-subqueries, EXISTS subqueries>>
- ** <<count-subqueries, COUNT subqueries>>
+ ** <<existential-subqueries, `EXISTS` subqueries>>
+ ** <<count-subqueries, `COUNT` subqueries>>
 * <<query-syntax-label, Label expressions>>
  ** <<syntax-no-label, Match without label expression>>
  ** <<syntax-on-single-label, Match on single node label>>

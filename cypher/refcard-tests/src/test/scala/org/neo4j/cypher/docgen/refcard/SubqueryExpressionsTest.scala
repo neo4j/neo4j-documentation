@@ -52,7 +52,7 @@ EXISTS {
 
 RETURN n###
 
-Use an EXISTS subquery to test for existence.
+Use an `EXISTS` subquery to test for existence.
 
 ###assertion=returns-one
 MATCH (n) WHERE

@@ -36,15 +36,15 @@ class SubqueryExpressionsTest extends DocumentingTest {
         #(fido)-[:HAS_TOY]->(:Toy{name:'Banana'})""".stripMargin('#'))
     synopsis("Cypher has expressions that evaluate a subquery and aggregate the result in different fashions.")
     p(
-      """* <<existential-subqueries,EXISTS subqueries>>
-        # ** <<existential-subquery-simple-case, Simple EXISTS subquery>>
-        # ** <<existential-subquery-with-where, EXISTS subquery with `WHERE` clause>>
-        # ** <<existential-subquery-nesting, Nesting EXISTS subqueries>>
-        # ** <<existential-subquery-outside-where, EXISTS subquery outside of a WHERE clause>>
-        #* <<count-subqueries, COUNT subqueries>>
-        # ** <<count-subquery-simple-case, Simple COUNT subquery>>
-        # ** <<count-subquery-with-where, COUNT subquery with `WHERE` clause>>
-        # ** <<count-subqueries-other-clauses, Using COUNT subqueries inside other clauses>>
+      """* <<existential-subqueries,`EXISTS` subqueries>>
+        # ** <<existential-subquery-simple-case, Simple `EXISTS` subquery>>
+        # ** <<existential-subquery-with-where, `EXISTS` subquery with `WHERE` clause>>
+        # ** <<existential-subquery-nesting, Nesting `EXISTS` subqueries>>
+        # ** <<existential-subquery-outside-where, `EXISTS` subquery outside of a WHERE clause>>
+        #* <<count-subqueries, `COUNT subqueries>>
+        # ** <<count-subquery-simple-case, Simple `COUNT` subquery>>
+        # ** <<count-subquery-with-where, `COUNT` subquery with `WHERE` clause>>
+        # ** <<count-subqueries-other-clauses, Using `COUNT` subqueries inside other clauses>>
         # """.stripMargin('#'))
     p(
       """Subquery expressions can appear anywhere that an expression is valid.
@@ -55,9 +55,9 @@ class SubqueryExpressionsTest extends DocumentingTest {
     p("The following graph is used for the examples below:")
     graphViz()
 
-    section("EXISTS subqueries", "existential-subqueries") {
+    section("`EXISTS` subqueries", "existential-subqueries") {
       p(
-        """An EXISTS subquery can be used to find out if a specified pattern exists at least once in the data.
+        """An `EXISTS` subquery can be used to find out if a specified pattern exists at least once in the data.
           #It serves the same purpose as a <<filter-on-patterns, path pattern>> but is more powerful because it allows you to use `MATCH` and `WHERE` clauses internally.
           #Moreover, it can appear in any expression position, unlike path patterns.
           #If the subquery evaluates to at least one row, the whole expression will become true.
@@ -69,7 +69,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
           #}""".stripMargin('#'))
       p("It is worth noting that the `MATCH` keyword can be omitted in such subqueries and that the `WHERE` clause is optional.")
 
-      section("Simple EXISTS subquery", "existential-subquery-simple-case") {
+      section("Simple `EXISTS` subquery", "existential-subquery-simple-case") {
         p(
           """Variables introduced by the outside scope can be used in the `EXISTS` subquery without importing them
             #<<subquery-correlated-importing|as necessary with `CALL` subqueries>>.
@@ -86,7 +86,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("EXISTS subquery with `WHERE` clause", "existential-subquery-with-where") {
+      section("`EXISTS` subquery with `WHERE` clause", "existential-subquery-with-where") {
         p(
           """A `WHERE` clause can be used in conjunction to the `MATCH`.
             #Variables introduced by the `MATCH` clause and the outside scope can be used in this scope.""".stripMargin('#'))
@@ -103,9 +103,9 @@ class SubqueryExpressionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Nesting EXISTS subqueries", "existential-subquery-nesting") {
+      section("Nesting `EXISTS` subqueries", "existential-subquery-nesting") {
         p(
-          """EXISTS subqueries can be nested like the following example shows.
+          """`EXISTS` subqueries can be nested like the following example shows.
             #The nesting also affects the scopes.
             #That means that it is possible to access all variables from inside the subquery which are either from the outside scope or defined in the very same subquery.""".stripMargin('#'))
         query(
@@ -124,9 +124,9 @@ class SubqueryExpressionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("EXISTS subquery outside of a WHERE clause", "existential-subquery-outside-where") {
+      section("`EXISTS` subquery outside of a WHERE clause", "existential-subquery-outside-where") {
         p(
-          """EXISTS subquery expressions can appear anywhere that an expression is valid.
+          """`EXISTS` subquery expressions can appear anywhere that an expression is valid.
             |Here the result if the subquery can find the given pattern is returned.""".stripMargin)
         query(
           """MATCH (person:Person)
@@ -154,7 +154,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
           #}""".stripMargin('#'))
       p("It is worth noting that the `MATCH` keyword can be omitted in such subqueries and that the `WHERE` clause is optional.")
 
-      section("Simple count subquery", "count-subquery-simple-case") {
+      section("Simple `COUNT` subquery", "count-subquery-simple-case") {
         p(
           """Variables introduced by the outside scope can be used in the `COUNT` subquery without importing them
             #<<subquery-correlated-importing|as necessary with `CALL` subqueries>>.
@@ -170,7 +170,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Count subquery with `WHERE` clause", "count-subquery-with-where") {
+      section("`COUNT` subquery with `WHERE` clause", "count-subquery-with-where") {
         p(
           """A `WHERE` clause can be used inside the `COUNT` pattern.
             #Variables introduced by the `MATCH` clause and the outside scope can be used in this scope.""".stripMargin('#'))
@@ -187,9 +187,9 @@ class SubqueryExpressionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("Using count subqueries inside other clauses", "count-subqueries-other-clauses") {
-        p("COUNT can be used in any position in a query, with the exception of administration commands, where it is restricted. We provide a few examples below.")
-        section("Using count in RETURN", "count-subqueries-with-return") {
+      section("Using `COUNT` subqueries inside other clauses", "count-subqueries-other-clauses") {
+        p("`COUNT` can be used in any position in a query, with the exception of administration commands, where it is restricted. We provide a few examples below.")
+        section("Using `COUNT` in `RETURN`", "count-subqueries-with-return") {
           query(
             """MATCH (person:Person)
               #RETURN person.name, COUNT { (person)-[:HAS_DOG]->(:Dog) } as howManyDogs
@@ -200,7 +200,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("Using count in SET", "count-subqueries-with-set") {
+        section("Using `COUNT` in `SET`", "count-subqueries-with-set") {
           query(
             """MATCH (person:Person) WHERE person.name ="Andy"
               #SET person.howManyDogs = COUNT { (person)-[:HAS_DOG]->(:Dog) }
@@ -212,7 +212,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("Using count in CASE", "count-subqueries-with-case") {
+        section("Using `COUNT` in `CASE", "count-subqueries-with-case") {
           query(
             """MATCH (person:Person)
               #RETURN
@@ -227,7 +227,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("Using count as a grouping key", "count-subqueries-as-grouping-key") {
+        section("Using `COUNT` as a grouping key", "count-subqueries-as-grouping-key") {
           p(
             """The following query groups all persons by how many dogs they own,
               #and then calculates the average age for each group.
