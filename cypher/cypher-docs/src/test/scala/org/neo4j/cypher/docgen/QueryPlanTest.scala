@@ -603,6 +603,24 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
     )
   }
 
+  @Test def directedAllRelationshipsScan() {
+    profileQuery(
+      title = "Directed All Relationships Scan",
+      text = """The `DirectedAllRelationshipsScan` operator fetches all relationships and their start and end nodes in the database.""".stripMargin,
+      queryText = """MATCH ()-[r]->() RETURN r""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("DirectedAllRelationshipsScan"))
+    )
+  }
+
+  @Test def undirectedAllRelationshipsScan() {
+    profileQuery(
+      title = "Undirected All Relationships Scan",
+      text = """The `UndirectedAllRelationshipsScan` operator fetches all relationships and their start and end nodes in the database.""".stripMargin,
+      queryText = """MATCH ()-[r]-() RETURN r""",
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("UndirectedAllRelationshipsScan"))
+    )
+  }
+
   @Test def directedRelationshipTypeScan() {
     executePreparationQueries {
       List("CREATE LOOKUP INDEX rel_lookup_index_name FOR ()-[r]-() ON EACH type(r)")

@@ -48,6 +48,11 @@ include::../ql/query-plan/undirected-relationship-index-seek-by-range.asciidoc[]
 // UnionNodeByLabelsScan
 include::../ql/query-plan/union-node-by-labels-scan.asciidoc[]
 
+/ DirectedAllRelationshipsScan
+include::../ql/query-plan/directed-relationships-scan.asciidoc[]
+// UndirectedAllRelationshipsScan
+include::../ql/query-plan/undirected-relationships-scan.asciidoc[]
+
 // DirectedRelationshipTypeScan
 include::../ql/query-plan/directed-relationship-type-scan.asciidoc[]
 // UndirectedRelationshipTypeScan
