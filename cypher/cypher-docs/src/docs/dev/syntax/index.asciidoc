@@ -11,6 +11,9 @@ This section describes the syntax of the Cypher query language.
 * <<cypher-expressions, Expressions>>
  ** <<cypher-expressions-general, Expressions in general>>
  ** <<cypher-expressions-string-literals, Note on string literals>>
+ ** <<cypher-subquery-expressions, Subquery expressions>>
+  *** <<existential-subqueries, `EXISTS` subqueries>>
+  *** <<count-subqueries, `COUNT` subqueries>>
  ** <<query-syntax-case, `CASE` Expressions>>
 * <<cypher-variables, Variables>>
 * <<cypher-reserved, Reserved keywords>>
@@ -45,9 +48,6 @@ This section describes the syntax of the Cypher query language.
  ** <<cypher-pattern-relationship, Patterns for relationships>>
  ** <<cypher-pattern-varlength, Variable-length pattern matching>>
  ** <<cypher-pattern-path-variables, Assigning to path variables>>
-* <<cypher-subquery-expressions, Subquery expressions>>
- ** <<existential-subqueries, `EXISTS` subqueries>>
- ** <<count-subqueries, `COUNT` subqueries>>
 * <<cypher-temporal, Temporal (Date/Time) values>>
  ** <<cypher-temporal-timezones, Time zones>>
  ** <<cypher-temporal-instants, Temporal instants>>
@@ -103,8 +103,6 @@ include::../ql/query-operators.adoc[leveloffset=+1]
 include::comments.asciidoc[leveloffset=+1]
 
 include::../ql/cypher-patterns.adoc[leveloffset=+1]
-
-include::../ql/cypher-subquery-expressions.adoc[leveloffset=+1]
 
 include::../ql/cypher-temporal.adoc[leveloffset=+1]
 

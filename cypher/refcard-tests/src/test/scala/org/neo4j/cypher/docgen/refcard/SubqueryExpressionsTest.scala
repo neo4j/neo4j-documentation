@@ -27,7 +27,7 @@ class SubqueryExpressionsTest extends RefcardTest with QueryStatisticsTestSuppor
   def graphDescription = List(
     "A KNOWS B")
   val title = "Subquery Expressions"
-  override val linkId = "syntax/Subquery expressions"
+  override val linkId = "syntax/expressions"
 
   override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {

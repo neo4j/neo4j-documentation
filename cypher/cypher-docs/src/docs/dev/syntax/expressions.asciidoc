@@ -106,6 +106,7 @@ Any number literal may contain an underscore `_` between digits.
 There may be an underscore between the `0x` or `0o` and the digits for hexadecimal and octal literals.
 
 include::../ql/query-syntax-case.adoc[leveloffset=+1]
+include::../ql/cypher-subquery-expressions.adoc[leveloffset=+1]
 include::../ql/query-syntax-label.adoc[leveloffset=+1]
 
 
