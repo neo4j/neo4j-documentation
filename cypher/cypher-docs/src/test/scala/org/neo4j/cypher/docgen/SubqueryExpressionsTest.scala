@@ -71,8 +71,8 @@ class SubqueryExpressionsTest extends DocumentingTest {
 
       section("Simple `EXISTS` subquery", "existential-subquery-simple-case") {
         p(
-          """Variables introduced by the outside scope can be used in the `EXISTS` subquery without importing them
-            #<<subquery-correlated-importing,as necessary with `CALL` subqueries>>.
+          """Variables introduced by the outside scope can be used in the `EXISTS` subquery without importing them,
+            #unlike the case for `CALL` subqueries, <<subquery-correlated-importing,as they require importing>>.
             #The following example shows this:""".stripMargin('#'))
         query(
           """MATCH (person:Person)
@@ -127,7 +127,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
       section("`EXISTS` subquery outside of a `WHERE` clause", "existential-subquery-outside-where") {
         p(
           """`EXISTS` subquery expressions can appear anywhere that an expression is valid.
-            |Here the result if the subquery can find the given pattern is returned.""".stripMargin)
+            |Here the result is a boolean that shows whether the subquery can find the given pattern.""".stripMargin)
         query(
           """MATCH (person:Person)
             #RETURN person.name AS name, EXISTS {
@@ -146,7 +146,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
     }
 
     section("`COUNT` subqueries", "count-subqueries") {
-      p("A `COUNT` subquery expression can be used to to count the number of results of the subquery.")
+      p("A `COUNT` subquery expression can be used to count the number of results of the subquery.")
       functionWithCypherStyleFormatting(
         """COUNT {
           #  MATCH [Pattern]
@@ -156,8 +156,8 @@ class SubqueryExpressionsTest extends DocumentingTest {
 
       section("Simple `COUNT` subquery", "count-subquery-simple-case") {
         p(
-          """Variables introduced by the outside scope can be used in the `COUNT` subquery without importing them
-            #<<subquery-correlated-importing,as necessary with `CALL` subqueries>>.
+          """Variables introduced by the outside scope can be used in the `COUNT` subquery without importing them,
+            #unlike the case for `CALL` subqueries, <<subquery-correlated-importing,as they require importing>>.
             #The following query exemplifies this and outputs the owners of more than one dog:
             #""".stripMargin('#'))
         query(
@@ -188,7 +188,9 @@ class SubqueryExpressionsTest extends DocumentingTest {
         }
       }
       section("Using `COUNT` subqueries inside other clauses", "count-subqueries-other-clauses") {
-        p("`COUNT` can be used in any position in a query, with the exception of administration commands, where it is restricted. We provide a few examples below.")
+        p(
+          """`COUNT` can be used in any position in a query, with the exception of administration commands, where it is restricted.
+            #See a few examples below:""".stripMargin('#'))
         section("Using `COUNT` in `RETURN`", "count-subqueries-with-return") {
           query(
             """MATCH (person:Person)

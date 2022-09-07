@@ -2865,7 +2865,7 @@ label:new[]
 WHERE EXISTS {...}
 ----
 a|
-EXISTS sub-queries are sub-clauses used to filter the results of a `MATCH`, `OPTIONAL MATCH`, or `WITH` clause.
+`EXISTS` subqueries are subclauses used to filter the results of a `MATCH`, `OPTIONAL MATCH`, or `WITH` clause.
 
 a|
 label:clause[]
