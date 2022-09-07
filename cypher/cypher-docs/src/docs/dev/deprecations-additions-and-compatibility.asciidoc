@@ -885,7 +885,7 @@ label:added[]
 COUNT { (n) WHERE n.foo = "bar" }
 ----
 a|
-New expression which returns the number of occurrences of a pattern.
+New expression which returns the number of results of a subquery.
 
 |===
 

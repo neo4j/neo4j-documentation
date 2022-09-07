@@ -64,6 +64,6 @@ COUNT {
 = 1
 RETURN n###
 
-Use a COUNT subquery to count the occurrences of the subquery.
+Use a `COUNT` subquery expression to count the number of results of a subquery.
 """
 }

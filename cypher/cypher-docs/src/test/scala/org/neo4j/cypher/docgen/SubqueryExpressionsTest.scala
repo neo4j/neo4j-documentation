@@ -67,7 +67,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
           #  MATCH [Pattern]
           #  WHERE [Expression]
           #}""".stripMargin('#'))
-      p("It is worth noting that the `MATCH` keyword can be omitted in subqueries and that the `WHERE` clause is optional.")
+      p("It is worth noting that the `MATCH` keyword can be omitted in such subqueries and that the `WHERE` clause is optional.")
 
       section("Simple EXISTS subquery", "existential-subquery-simple-case") {
         p(
@@ -145,14 +145,14 @@ class SubqueryExpressionsTest extends DocumentingTest {
       }
     }
 
-    section("COUNT subqueries", "count-subqueries") {
-      p("An count subquery can be used to find out how many times a specified pattern appears in the data.")
+    section("`COUNT` subqueries", "count-subqueries") {
+      p("A `COUNT` subquery expression can be used to to count the number of results of the subquery.")
       functionWithCypherStyleFormatting(
         """COUNT {
           #  [Pattern]
           #  WHERE [Expression]
           #}""".stripMargin('#'))
-      p("It is worth noting that the `MATCH` keyword can be omitted in subqueries and that the `WHERE` clause is optional.")
+      p("It is worth noting that the `MATCH` keyword can be omitted in such subqueries and that the `WHERE` clause is optional.")
 
       section("Simple count subquery", "count-subquery-simple-case") {
         p(
@@ -203,11 +203,11 @@ class SubqueryExpressionsTest extends DocumentingTest {
         section("Using count in SET", "count-subqueries-with-set") {
           query(
             """MATCH (person:Person) WHERE person.name ="Andy"
-              #SET person.howManyDogs = COUNT { (person)-[:HAS_DOG]->(:Dog) } + 1
+              #SET person.howManyDogs = COUNT { (person)-[:HAS_DOG]->(:Dog) }
               #RETURN person.howManyDogs as howManyDogs
       """.stripMargin('#'),
             ResultAssertions(r => {
-              r.toList should equal(List(Map("howManyDogs" -> 2)))
+              r.toList should equal(List(Map("howManyDogs" -> 1)))
             })) {
             resultTable()
           }
