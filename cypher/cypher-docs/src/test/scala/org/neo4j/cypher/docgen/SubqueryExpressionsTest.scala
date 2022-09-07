@@ -149,7 +149,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
       p("A `COUNT` subquery expression can be used to to count the number of results of the subquery.")
       functionWithCypherStyleFormatting(
         """COUNT {
-          #  [Pattern]
+          #  MATCH [Pattern]
           #  WHERE [Expression]
           #}""".stripMargin('#'))
       p("It is worth noting that the `MATCH` keyword can be omitted in such subqueries and that the `WHERE` clause is optional.")
