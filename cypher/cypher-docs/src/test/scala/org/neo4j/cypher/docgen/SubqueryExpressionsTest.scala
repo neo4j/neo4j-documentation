@@ -40,8 +40,8 @@ class SubqueryExpressionsTest extends DocumentingTest {
         # ** <<existential-subquery-simple-case, Simple `EXISTS` subquery>>
         # ** <<existential-subquery-with-where, `EXISTS` subquery with `WHERE` clause>>
         # ** <<existential-subquery-nesting, Nesting `EXISTS` subqueries>>
-        # ** <<existential-subquery-outside-where, `EXISTS` subquery outside of a WHERE clause>>
-        #* <<count-subqueries, `COUNT subqueries>>
+        # ** <<existential-subquery-outside-where, `EXISTS` subquery outside of a `WHERE` clause>>
+        #* <<count-subqueries, `COUNT` subqueries>>
         # ** <<count-subquery-simple-case, Simple `COUNT` subquery>>
         # ** <<count-subquery-with-where, `COUNT` subquery with `WHERE` clause>>
         # ** <<count-subqueries-other-clauses, Using `COUNT` subqueries inside other clauses>>
@@ -72,7 +72,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
       section("Simple `EXISTS` subquery", "existential-subquery-simple-case") {
         p(
           """Variables introduced by the outside scope can be used in the `EXISTS` subquery without importing them
-            #<<subquery-correlated-importing|as necessary with `CALL` subqueries>>.
+            #<<subquery-correlated-importing,as necessary with `CALL` subqueries>>.
             #The following example shows this:""".stripMargin('#'))
         query(
           """MATCH (person:Person)
@@ -124,7 +124,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
           resultTable()
         }
       }
-      section("`EXISTS` subquery outside of a WHERE clause", "existential-subquery-outside-where") {
+      section("`EXISTS` subquery outside of a `WHERE` clause", "existential-subquery-outside-where") {
         p(
           """`EXISTS` subquery expressions can appear anywhere that an expression is valid.
             |Here the result if the subquery can find the given pattern is returned.""".stripMargin)
@@ -157,7 +157,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
       section("Simple `COUNT` subquery", "count-subquery-simple-case") {
         p(
           """Variables introduced by the outside scope can be used in the `COUNT` subquery without importing them
-            #<<subquery-correlated-importing|as necessary with `CALL` subqueries>>.
+            #<<subquery-correlated-importing,as necessary with `CALL` subqueries>>.
             #The following query exemplifies this and outputs the owners of more than one dog:
             #""".stripMargin('#'))
         query(
@@ -212,7 +212,7 @@ class SubqueryExpressionsTest extends DocumentingTest {
             resultTable()
           }
         }
-        section("Using `COUNT` in `CASE", "count-subqueries-with-case") {
+        section("Using `COUNT` in `CASE`", "count-subqueries-with-case") {
           query(
             """MATCH (person:Person)
               #RETURN
