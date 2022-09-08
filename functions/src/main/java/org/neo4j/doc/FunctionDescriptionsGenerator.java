@@ -60,7 +60,7 @@ public class FunctionDescriptionsGenerator
         Temporal_instant_types( "Values of the <<cypher-temporal, temporal types>> -- _Date_, _Time_, _LocalTime_, _DateTime_, and _LocalDateTime_ -- can be created manipulated using the following functions:" ),
         Temporal_duration( "Duration values of the <<cypher-temporal, temporal types>> can be created manipulated using the following functions:" ),
         Spatial( "These functions are used to specify 2D or 3D points in a geographic or cartesian Coordinate Reference System and to calculate the geodesic distance between two points." ),
-        LOAD_CSV( "LOAD CSV functions can be used to get information about the file that is processed by `LOAD CSV`." ),
+        LOAD_CSV( "LOAD CSV functions can be used to get information about the file processed by `LOAD CSV`." ),
         Graph( "These functions return information about graphs." );
 
         private final String description;
