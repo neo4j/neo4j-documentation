@@ -61,7 +61,7 @@ public class FunctionDescriptionsGenerator
         Temporal_duration( "Duration values of the <<cypher-temporal, temporal types>> can be created manipulated using the following functions:" ),
         Spatial( "These functions are used to specify 2D or 3D points in a geographic or cartesian Coordinate Reference System and to calculate the geodesic distance between two points." ),
         LOAD_CSV( "LOAD CSV functions can be used to get information about the file that is processed by `LOAD CSV`." ),
-        Graph( "These functions returns information about the given graph." );
+        Graph( "These functions return information about graphs." );
 
         private final String description;
 
