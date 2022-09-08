@@ -15,6 +15,9 @@ This section contains an overview of expressions in Cypher with examples.
  ** <<syntax-distinguish-case, Distinguishing between when to use the simple and generic `CASE` forms>>
  ** <<syntax-use-case-result, Using the result of `CASE` in the succeeding clause or statement>>
  ** <<syntax-use-case-with-null, Using `CASE` with null values>>
+* <<cypher-subquery-expressions, Subquery expressions>>
+ ** <<existential-subqueries, `EXISTS` subqueries>>
+ ** <<count-subqueries, `COUNT` subqueries>>
 * <<query-syntax-label, Label expressions>>
  ** <<syntax-no-label, Match without label expression>>
  ** <<syntax-on-single-label, Match on single node label>>
@@ -65,7 +68,7 @@ An expression in Cypher can be:
 * An operator application: `1 + 2`, `3 < 4`.
 * A predicate expression is an expression that returns true or false: `a.prop = 'Hello'`, `length(p) > 10`, `a.name IS NOT NULL`.
 * A special case of predicates are label and relationship type expressions: `(n:A|B)`, `()-[r:R1|R2]->()`.
-* An existential subquery is an expression that returns true or false:
+* A subquery expression, for example:
 `EXISTS {
   MATCH (n)-[r]->(p)
   WHERE p.name = 'Sven'
@@ -103,6 +106,7 @@ Any number literal may contain an underscore `_` between digits.
 There may be an underscore between the `0x` or `0o` and the digits for hexadecimal and octal literals.
 
 include::../ql/query-syntax-case.adoc[leveloffset=+1]
+include::../ql/cypher-subquery-expressions.adoc[leveloffset=+1]
 include::../ql/query-syntax-label.adoc[leveloffset=+1]
 
 

@@ -877,6 +877,16 @@ Cypher now supports float literals for the values `Infinity` and `NaN`.
 `NaN` defines a quiet not-a-number value and does not throw any exceptions in arithmetic operations.
 Both values are implemented according to the Floating-Point Standard IEEE 754.
 
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+COUNT { (n) WHERE n.foo = "bar" }
+----
+a|
+New expression which returns the number of results of a subquery.
+
 |===
 
 [[cypher-deprecations-additions-removals-4.4]]
@@ -2855,7 +2865,7 @@ label:new[]
 WHERE EXISTS {...}
 ----
 a|
-Existential sub-queries are sub-clauses used to filter the results of a `MATCH`, `OPTIONAL MATCH`, or `WITH` clause.
+`EXISTS` subqueries are subclauses used to filter the results of a `MATCH`, `OPTIONAL MATCH`, or `WITH` clause.
 
 a|
 label:clause[]

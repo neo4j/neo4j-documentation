@@ -121,8 +121,8 @@ class PredicateFunctionsTest extends DocumentingTest {
       }
       note {
         p(
-          """Note that the **function** `exists()` looks very similar to the **clause** `EXISTS {...}`, but they are not the same and should not be confused.
-            #See <<existential-subqueries, Using existential subqueries in `WHERE`>> for more information.""".stripMargin('#'))
+          """Note that the **function** `exists()` looks very similar to the **expression** `EXISTS {...}`, but they are not the same and should not be confused.
+            #See <<existential-subqueries, Using EXISTS subqueries>> for more information.""".stripMargin('#'))
       }
     }
     section("isEmpty()", "functions-isempty") {

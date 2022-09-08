@@ -268,8 +268,8 @@ class ScalarFunctionsTest extends DocumentingTest {
     section("size() applied to pattern comprehension", "functions-size-of-pattern-comprehension") {
       p("""This is the same function `size()` as described above, but you pass in a pattern comprehension.
           #The function size will then calculate on a _list_ of paths.""".stripMargin('#'))
-      function("size(pattern expression)",
-        ("pattern expression", "A pattern expression that returns a list."))
+      function("size(pattern comprehension)",
+        ("pattern comprehension", "A pattern comprehension that returns a list."))
       query("""MATCH (a)
               #WHERE a.name = 'Alice'
               #RETURN size([p=(a)-->()-->() | p]) AS fof""".stripMargin('#'),

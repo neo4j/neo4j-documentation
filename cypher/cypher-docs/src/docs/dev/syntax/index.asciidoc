@@ -11,6 +11,9 @@ This section describes the syntax of the Cypher query language.
 * <<cypher-expressions, Expressions>>
  ** <<cypher-expressions-general, Expressions in general>>
  ** <<cypher-expressions-string-literals, Note on string literals>>
+ ** <<cypher-subquery-expressions, Subquery expressions>>
+  *** <<existential-subqueries, `EXISTS` subqueries>>
+  *** <<count-subqueries, `COUNT` subqueries>>
  ** <<query-syntax-case, `CASE` Expressions>>
 * <<cypher-variables, Variables>>
 * <<cypher-reserved, Reserved keywords>>

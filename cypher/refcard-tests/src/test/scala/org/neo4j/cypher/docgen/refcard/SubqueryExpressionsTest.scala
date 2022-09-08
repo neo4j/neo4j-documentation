@@ -23,12 +23,13 @@ import org.neo4j.cypher.docgen.RefcardTest
 import org.neo4j.cypher.docgen.tooling.{DocsExecutionResult, QueryStatisticsTestSupport}
 import org.neo4j.graphdb.Transaction
 
-class WhereTest extends RefcardTest with QueryStatisticsTestSupport {
-  val graphDescription = List("ROOT FRIEND A", "A FRIEND B", "B FRIEND C", "C FRIEND ROOT")
-  val title = "WHERE"
-  override val linkId = "clauses/where"
+class SubqueryExpressionsTest extends RefcardTest with QueryStatisticsTestSupport {
+  def graphDescription = List(
+    "A KNOWS B")
+  val title = "Subquery Expressions"
+  override val linkId = "syntax/expressions"
 
-  override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {
+  override def assert(tx: Transaction, name: String, result: DocsExecutionResult): Unit = {
     name match {
       case "returns-one" =>
         assertStats(result)
@@ -36,29 +37,33 @@ class WhereTest extends RefcardTest with QueryStatisticsTestSupport {
     }
   }
 
-  override def parameters(name: String): Map[String, Any] =
-    name match {
-      case "parameters=aname" =>
-        Map("value" -> "Bob")
-      case _ => Map.empty
-    }
-
   override val properties: Map[String, Map[String, Any]] = Map(
     "A" -> Map("property" -> "Andy", "age" -> 39),
-    "B" -> Map("property" -> "Timothy", "age" -> 39),
-    "C" -> Map("property" -> "Chris", "age" -> 22))
+    "B" -> Map("property" -> "Timothy", "age" -> 39)
+  )
 
   def text = """
-###assertion=returns-one parameters=aname
-MATCH (n)-->(m)
+###assertion=returns-one
+MATCH (n) WHERE
 
-WHERE n.property <> $value
+EXISTS {
+  MATCH (n)-->(m) WHERE n.age = m.age
+}
 
-AND id(n) = %A% AND id(m) = %B%
-RETURN n, m###
+RETURN n###
 
-Use a predicate to filter.
-Note that `WHERE` is always part of a  `MATCH`, `OPTIONAL MATCH` or `WITH` clause.
-Putting it after a different clause in a query will alter what it does.
+Use an `EXISTS` subquery expression to test for the existence of a subquery.
+
+###assertion=returns-one
+MATCH (n) WHERE
+
+COUNT {
+  MATCH (n)-[:KNOWS]->(m) WHERE n.age = m.age
+}
+
+= 1
+RETURN n###
+
+Use a `COUNT` subquery expression to count the number of results of a subquery.
 """
 }

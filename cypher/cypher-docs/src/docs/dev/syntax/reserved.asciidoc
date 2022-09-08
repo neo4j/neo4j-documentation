@@ -24,7 +24,6 @@ If any reserved keyword is escaped -- i.e. is encapsulated by backticks ```, suc
 * `CREATE`
 * `DELETE`
 * `DETACH`
-* `EXISTS`
 * `FOREACH`
 * `LOAD`
 * `MATCH`
@@ -61,8 +60,10 @@ If any reserved keyword is escaped -- i.e. is encapsulated by backticks ```, suc
 
 * `ALL`
 * `CASE`
+* `COUNT`
 * `ELSE`
 * `END`
+* `EXISTS`
 * `THEN`
 * `WHEN`
 
