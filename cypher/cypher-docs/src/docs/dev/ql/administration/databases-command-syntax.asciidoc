@@ -24,6 +24,15 @@ CREATE DATABASE name [IF NOT EXISTS]
 [source]
 CREATE OR REPLACE DATABASE name
 [TOPOLOGY n PRIMAR{Y\|IES} [m SECONDAR{Y\|IES}]]
+[OPTIONS "{" option: value[, ...] "}"]
+[WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+| Create Composite Database
+| [source]
+CREATE COMPOSITE DATABASE name [IF NOT EXISTS]
+[WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+
+[source]
+CREATE OR REPLACE COMPOSITE DATABASE name
 [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 |Alter Database
 | [source]
@@ -40,6 +49,6 @@ STOP DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 START DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 |Drop Database
 | [source]
-DROP DATABASE name [IF EXISTS] [{DUMP\|DESTROY} [DATA]] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+DROP [COMPOSITE] DATABASE name [IF EXISTS] [{DUMP\|DESTROY} [DATA]] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 |===
 

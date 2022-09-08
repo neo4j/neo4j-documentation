@@ -2,13 +2,14 @@
 |===
 |Column |Description|Default Output|Full Output| Notes
 |name|The name of the database.|{check-mark}|{check-mark}|
+|type|The type of the database, either `system`, `standard`, or `composite`.|{check-mark}|{check-mark}|
 |aliases|The names of any aliases the database may have.|{check-mark}|{check-mark}|
 |access|The database access mode, either `read-write` or `read-only`.|{check-mark}|{check-mark}|
 |databaseID|The database unique ID.||{check-mark}|
 |serverID|The server instance ID.||{check-mark}|
 |address|Instance address in a clustered DBMS. The default for a standalone database is `neo4j://localhost:7687`. |{check-mark}|{check-mark}|
 |role|The current role of the database (`primary`, `secondary`, `unknown`).|{check-mark}|{check-mark}|
-|writer| `true` for the database node that accepts writes (this node is the leader for this database in a cluster or  this is a standalone instance.|{check-mark}|{check-mark}|
+|writer| `true` for the database node that accepts writes (this node is the leader for this database in a cluster or this is a standalone instance).|{check-mark}|{check-mark}|
 |requestedStatus|The expected status of the database.|{check-mark}|{check-mark}|
 |currentStatus|The actual status of the database.|{check-mark}|{check-mark}|
 |statusMessage|A message explaining the current state of the database.|{check-mark}|{check-mark}|
@@ -24,5 +25,6 @@
 |store|Information about the storage engine and format in use by this database. The value is a string formatted as follows: `{storage engine}-{store format}-{major version}.{minor version}`.||{check-mark}|
 |lastCommittedTxn|The ID of the last transaction received.||{check-mark}|
 |replicationLag|Number of transactions the current database is behind compared to the database on the primary instance. The lag is expressed in negative integers. In standalone environments, the value is always 0.||{check-mark}|
+|constituents|The names of any constituents the database may have.|{check-mark}|{check-mark}|
 |===
 
