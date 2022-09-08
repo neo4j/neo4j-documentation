@@ -881,6 +881,19 @@ Text indexes no longer support finding entries using comparison operators like `
 | Details
 
 a|
+label:functionality[]
+label:new[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+CREATE COMPOSITE DATABASE
+DROP COMPOSITE DATABASE
+COMPOSITE DATABASE MANAGEMENT
+----
+a|
+New privileges that allow a user to create and/or drop composite databases.
+
+a|
 label:syntax[]
 label:added[]
 [source, cypher, role="noheader"]

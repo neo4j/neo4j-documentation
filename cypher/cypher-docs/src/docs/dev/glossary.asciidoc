@@ -354,9 +354,11 @@ The following commands are only executable against the `system` database:
 | <<access-control-dbms-administration-user-management, ALTER USER>>                  | DBMS                  | Determines whether the user can modify users.
 | <<access-control-dbms-administration-privilege-management, ASSIGN PRIVILEGE>>       | DBMS                  | Determines whether the user can assign privileges using the GRANT and DENY commands.
 | <<access-control-dbms-administration-role-management, ASSIGN ROLE>>                 | DBMS                  | Determines whether the user can grant roles.
+| <<access-control-dbms-administration-database-management, COMPOSITE DATABASE MANAGEMENT>>     | DBMS                  | Determines whether the user can create and delete composite databases.
 | <<access-control-database-administration-constraints, CONSTRAINT MANAGEMENT>>                  | Schema                | Determines whether a user is allowed to create, drop, and list constraints on a specific database.
 | <<access-control-privileges-writes-create, CREATE>>                                                       | GRAPH                 | Determines whether the user can create a new element (node, relationship or both).
 | <<access-control-dbms-administration-alias-management, CREATE ALIAS>>                | DBMS                  | Determines whether the user can create new aliases.
+| <<access-control-dbms-administration-database-management, CREATE COMPOSITE DATABASE>>         | DBMS                  | Determines whether the user can create new composite databases.
 | <<access-control-database-administration-constraints, CREATE CONSTRAINT>>                      | Schema                | Determines whether a user is allowed to create constraints on a specific database.
 | <<access-control-dbms-administration-database-management, CREATE DATABASE>>         | DBMS                  | Determines whether the user can create new databases and aliases.
 | <<access-control-database-administration-index, CREATE INDEX>>                               | Schema                | Determines whether a user is allowed to create indexes on a specific database.
@@ -369,6 +371,7 @@ The following commands are only executable against the `system` database:
 | <<access-control-dbms-administration-database-management, DATABASE MANAGEMENT>>     | DBMS                  | Determines whether the user can create, delete, and modify databases and aliases.
 | <<access-control-privileges-writes-delete, DELETE>>                                                       | GRAPH                 | Determines whether the user can delete an element (node, relationship or both).
 | <<access-control-dbms-administration-alias-management, DROP ALIAS>>                 | DBMS                  | Determines whether the user can delete aliases.
+| <<access-control-dbms-administration-database-management, DROP COMPOSITE DATABASE>>           | DBMS                  | Determines whether the user can delete composite databases.
 | <<access-control-database-administration-constraints, DROP CONSTRAINT>>                        | Schema                | Determines whether a user is allowed to drop constraints on a specific database.
 | <<access-control-dbms-administration-database-management, DROP DATABASE>>           | DBMS                  | Determines whether the user can delete databases and aliases.
 | <<access-control-database-administration-index, DROP INDEX>>                                 | Schema                | Determines whether a user is allowed to drop indexes on a specific database.
