@@ -20,6 +20,7 @@ package org.neo4j.examples;
 
 import com.neo4j.configuration.ClusterSettings;
 import com.neo4j.configuration.DiscoveryType;
+import com.neo4j.configuration.EnterpriseEditionSettings;
 import com.neo4j.dbms.api.EnterpriseDatabaseManagementServiceBuilder;
 
 import java.io.IOException;
@@ -55,7 +56,8 @@ public class EmbeddedNeo4jClusterUsingBuilder
                 .setConfig( GraphDatabaseSettings.default_advertised_address, defaultAdvertised )
                 .setConfig( GraphDatabaseSettings.default_listen_address, defaultListen )
                 .setConfig( ClusterSettings.discovery_type, DiscoveryType.LIST )
-                .setConfig( ClusterSettings.discovery_initial_members, initialMembers )
+                .setConfig( ClusterSettings.discovery_endpoints, initialMembers )
+                .setConfig( EnterpriseEditionSettings.initial_default_primaries_count, 3 )
                 .setConfig( BoltConnector.enabled, true )
                 .setConfig( HttpConnector.enabled, true )
                 .build();
