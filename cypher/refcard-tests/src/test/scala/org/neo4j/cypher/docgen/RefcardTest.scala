@@ -319,9 +319,9 @@ abstract class RefcardTest extends Assertions with DocumentationHelper with Grap
       EnterpriseEditionInternalSettings.replication_enabled -> java.lang.Boolean.FALSE,
       OnlineBackupSettings.online_backup_listen_address -> new SocketAddress("127.0.0.1", 0),
       OnlineBackupSettings.online_backup_enabled -> java.lang.Boolean.FALSE,
-      SecuritySettings.systemdb_secrets_keystore_path-> java.nio.file.Path.of(getClass.getClassLoader.getResource("keystore_11_0_5.pkcs12").toURI),
-      SecuritySettings.systemdb_secrets_keystore_password -> new SecureString("test24"),
-      SecuritySettings.systemdb_secrets_key_name -> "256bitkey"
+      SecuritySettings.keystore_path-> java.nio.file.Path.of(getClass.getClassLoader.getResource("keystore_11_0_5.pkcs12").toURI),
+      SecuritySettings.keystore_password -> new SecureString("test24"),
+      SecuritySettings.key_name -> "256bitkey"
     ).asJava
   }
 }
