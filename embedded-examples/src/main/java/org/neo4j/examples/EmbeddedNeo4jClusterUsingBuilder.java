@@ -46,7 +46,7 @@ public class EmbeddedNeo4jClusterUsingBuilder
         var defaultAdvertised = new SocketAddress( "core01.example.com" );
         var defaultListen = new SocketAddress( "0.0.0.0" );
 
-        var initialMembers = List.of(
+        var     initialMembers = List.of(
                 new SocketAddress( "core01.example.com" ),
                 new SocketAddress( "core02.example.com" ),
                 new SocketAddress( "core03.example.com" )
@@ -68,13 +68,13 @@ public class EmbeddedNeo4jClusterUsingBuilder
 
         /* tag::neo4jConf[]
 
-        dbms.mode=CORE
-        dbms.default_advertised_address=core01.example.com
-        dbms.default_listen_address=0.0.0.0
-        causal_clustering.discovery_type=LIST
-        causal_clustering.initial_discovery_members=core01.example.com,core02.example.com,core03.example.com
-        dbms.connector.bolt.enabled=true
-        dbms.connector.http.enabled=true
+        server.default_advertised_address=core01.example.com
+        server.default_listen_address=0.0.0.0
+        dbms.cluster.discovery.type=LIST
+        dbms.cluster.discovery.endpoints=core01.example.com,core02.example.com,core03.example.com
+        initial.dbms.default_primaries_count=3
+        server.bolt.enabled=true
+        server.http.enabled=true
 
         end::neo4jConf[] */
 
