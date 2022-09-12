@@ -36,10 +36,34 @@ CREATE OR REPLACE DATABASE myDatabase
 ###assertion=update-one
 //
 
+CREATE DATABASE myDatabase TOPOLOGY 1 PRIMARY 0 SECONDARIES
+###
+
+(★) Create a database named `myDatabase`, in a cluster environment, with 3 primary servers and 4 secondary servers.
+
+###assertion=update-one
+//
+
 ALTER DATABASE myDatabase SET ACCESS READ ONLY
 ###
 
 (★) Modify a database named `myDatabase` to be read-only.
+
+###assertion=update-one
+//
+
+ALTER DATABASE myDatabase SET TOPOLOGY 3 PRIMARIES
+###
+
+(★) Modify a database named `myDatabase`, in a cluster environment, to use 3 primary servers.
+
+###assertion=update-one
+//
+
+ALTER DATABASE myDatabase SET TOPOLOGY 1 PRIMARY 2 SECONDARIES
+###
+
+(★) Modify a database named `myDatabase`, in a cluster environment, to use 1 primary server and 2 secondary servers.
 
 ###assertion=update-one
 //
