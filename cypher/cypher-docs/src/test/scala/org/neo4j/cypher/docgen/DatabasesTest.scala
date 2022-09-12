@@ -132,15 +132,13 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
 
       section("Cluster Topology", "administration-databases-create-database-topology", "enterprise-edition") {
-        // todo add link to cluster docs
-        p("In a cluster environment, it may be desirable to control the number of servers used to host a database." +
-          "The number of primary and secondary servers can be specified using the following command." +
-          "For more details on primary and secondary server roles, see <TODO add link here>")
+        p("In a cluster environment, it may be desirable to control the number of servers used to host a database. " +
+          "The number of primary and secondary servers can be specified using the following command. " +
+          "For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
         query("CREATE DATABASE customers TOPOLOGY 1 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {}
       }
-        // TODO update ALTER DATABASE
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
         p("This command is optionally idempotent, with the default behavior to fail with an error if the database already exists. " +
           "Appending `IF NOT EXISTS` to the command ensures that no error is returned and nothing happens should the database already exist. " +
@@ -177,15 +175,23 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Altering databases", "administration-databases-alter-database", "enterprise-edition") {
       p("Databases can be modified using the command `ALTER DATABASE`. ")
-      section("ACCESS", "administration-databases-alter-database-access") {
-        p("Databases can be modified using the command `ALTER DATABASE`. " +
-          "For example, a database has read-write access mode on creation, unless the configuration parameter `dbms.databases.default_to_read_only` is set to `true`. " +
+
+      // TODO weird to put this before sub-clause definition, dis-connected from
+      p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
+        "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
+      query("ALTER DATABASE nonExisting IF EXISTS SET ACCESS READ WRITE", ResultAssertions(r => {
+        assertStats(r)
+      })) {}
+      section("Access", "administration-databases-alter-database-access") {
+        p("By default, a database has read-write access mode on creation. " +
+          "The database can be limited to read-only mode on creation using the configuration parameters " +
+          "dbms.databases.default_to_read_only, dbms.databases.read_only, and dbms.database.writable. " +
+          "For details, see <<operations-manual#manage-databases-parameters, Configuration parameters>>.")
+        p("A database which was created with read-write access mode can be changed to read-only. " +
           "To change it to read-only, you can use the `ALTER DATABASE` command with the sub-clause `SET ACCESS READ ONLY`. " +
           "Subsequently, the database access mode can be switched back to read-write using the sub-clause `SET ACCESS READ WRITE`. " +
           "Altering the database access mode is allowed at all times, whether a database is online or offline. ")
-        p("Database access modes can also be managed using the configuration parameters `dbms.databases.default_to_read_only`, `dbms.databases.read_only`, and " +
-          "`dbms.database.writable`. For details, see <<operations-manual#manage-databases-parameters, Configuration parameters>>. " +
-          "If conflicting modes are set by the `ALTER DATABASE` command and the configuration parameters, i.e. one says read-write and the other read-only, " +
+        p("If conflicting modes are set by the `ALTER DATABASE` command and the configuration parameters, i.e. one says read-write and the other read-only, " +
           "the database will be read-only and prevent write queries.")
         query("ALTER DATABASE customers SET ACCESS READ ONLY", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -196,17 +202,17 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         query("SHOW DATABASES yield name, access", assertDatabasesShown) {
           resultTable()
         }
-        p("This command is optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
-          "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
-        query("ALTER DATABASE nonExisting IF EXISTS SET ACCESS READ WRITE", ResultAssertions(r => {
-          assertStats(r)
-        })) {}
       }
-      section("TOPOLOGY", "administration-databases-alter-database") {
-        p("TODO explain topology alter")
+      section("Topology", "administration-databases-alter-database-topology") {
+        p("In a cluster environment, it may be desirable to change the number of servers used to host a database. " +
+          "The number of primary and secondary servers can be specified using the following command. " +
+          "For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
         query("ALTER DATABASE SET TOPOLOGY 1 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {}
+        query("SHOW DATABASES yield name, access", assertDatabasesShown) {
+          resultTable()
+        }
       }
     }
     section("Stopping databases", "administration-databases-stop-database", "enterprise-edition") {
