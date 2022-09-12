@@ -33,13 +33,13 @@ CREATE OR REPLACE DATABASE myDatabase
 
 (★) Create a database named `myDatabase`. If a database with that name exists, then the existing database is deleted and a new one created.
 
-###assertion=update-one
+###assertion=update-two
 //
 
-CREATE DATABASE myDatabase TOPOLOGY 1 PRIMARY 0 SECONDARIES
+CREATE OR REPLACE DATABASE myDatabase TOPOLOGY 1 PRIMARY 0 SECONDARIES
 ###
 
-(★) Create a database named `myDatabase`, in a cluster environment, with 3 primary servers and 4 secondary servers.
+(★) Create a database named `myDatabase`, in a cluster environment, with 3 primary servers and 0 secondary servers.
 
 ###assertion=update-one
 //
@@ -52,18 +52,18 @@ ALTER DATABASE myDatabase SET ACCESS READ ONLY
 ###assertion=update-one
 //
 
-ALTER DATABASE myDatabase SET TOPOLOGY 3 PRIMARIES
+ALTER DATABASE myDatabase SET TOPOLOGY 1 PRIMARIES
 ###
 
-(★) Modify a database named `myDatabase`, in a cluster environment, to use 3 primary servers.
+(★) Modify a database named `myDatabase`, in a cluster environment, to use 1 primary servers.
 
 ###assertion=update-one
 //
 
-ALTER DATABASE myDatabase SET TOPOLOGY 1 PRIMARY 2 SECONDARIES
+ALTER DATABASE myDatabase SET TOPOLOGY 1 PRIMARY 0 SECONDARIES
 ###
 
-(★) Modify a database named `myDatabase`, in a cluster environment, to use 1 primary server and 2 secondary servers.
+(★) Modify a database named `myDatabase`, in a cluster environment, to use 1 primary server and 0 secondary servers.
 
 ###assertion=update-one
 //
