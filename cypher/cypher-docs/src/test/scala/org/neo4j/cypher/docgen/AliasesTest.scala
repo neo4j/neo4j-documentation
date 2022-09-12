@@ -76,8 +76,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     note {
       p(
         """If transaction modifies an alias, other transactions concurrently executing against that alias may be aborted and rolled back for safety.
-          | This prevents issues such as a transaction executing against multiple target databases
-      for the same alias.""".stripMargin)
+          | This prevents issues such as a transaction executing against multiple target databases for the same alias.""".stripMargin)
     }
     section("Listing database aliases", "alias-management-show-alias", role = "enterprise-edition" ) {
       p(
