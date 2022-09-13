@@ -65,7 +65,7 @@ This section comprises a glossary of all the keywords -- grouped by category and
 |<<query-union, UNION>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are removed.
 |<<query-union, UNION ALL>>                      | Set operations   |  Combines the result of multiple queries. Duplicates are retained.
 |<<query-unwind, UNWIND ... [AS]>>                    | Projecting   |  Expands a list into a sequence of rows.
-|<<query-use, USE>>                           | Multiple graphs | [fabric]#Determines which graph a query, or query part, is executed against.#
+|<<query-use, USE>>                           | Multiple graphs | Determines which graph a query, or query part, is executed against.
 |<<query-using-index-hint, USING INDEX variable:Label(property)>>  | Hint | Index hints are used to specify which index, if any, the planner should use as a starting point.
 |<<query-using-index-hint, USING INDEX SEEK variable:Label(property)>>  | Hint | Index seek hint instructs the planner to use an index seek for this clause.
 |<<query-using-join-hint, USING JOIN ON variable>>                 | Hint | Join hints are used to enforce a join operation at specified points.
