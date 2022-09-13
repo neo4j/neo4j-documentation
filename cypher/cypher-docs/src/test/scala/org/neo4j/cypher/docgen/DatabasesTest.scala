@@ -212,7 +212,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         query("ALTER DATABASE `topology-example` SET TOPOLOGY 1 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
-          statsOnlyResultTable()
+
+//          statsOnlyResultTable()
         }
         query("SHOW DATABASES yield name, currentPrimariesCount, currentSecondariesCount, requestedPrimariesCount, requestedSecondariesCount", assertDatabasesShown) {
           resultTable()
