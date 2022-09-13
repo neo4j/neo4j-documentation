@@ -135,9 +135,11 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("In a cluster environment, it may be desirable to control the number of servers used to host a database. " +
           "The number of primary and secondary servers can be specified using the following command. " +
           "For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
-        query("CREATE DATABASE customers TOPOLOGY 1 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
+        query("CREATE DATABASE `topology-example` TOPOLOGY 1 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
-        })) {}
+        })) {
+          statsOnlyResultTable()
+        }
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
         p("This command is optionally idempotent, with the default behavior to fail with an error if the database already exists. " +
@@ -174,14 +176,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Altering databases", "administration-databases-alter-database", "enterprise-edition") {
+      initQueries("CREATE DATABASE customers")
       p("Databases can be modified using the command `ALTER DATABASE`. ")
-
-      // TODO weird to put this before sub-clause definition, dis-connected from
-      p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
-        "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
-      query("ALTER DATABASE nonExisting IF EXISTS SET ACCESS READ WRITE", ResultAssertions(r => {
-        assertStats(r)
-      })) {}
       section("Access", "administration-databases-alter-database-access") {
         p("By default, a database has read-write access mode on creation. " +
           "The database can be limited to read-only mode on creation using the configuration parameters " +
@@ -202,20 +198,36 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         query("SHOW DATABASES yield name, access", assertDatabasesShown) {
           resultTable()
         }
+        p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
+          "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
+        query("ALTER DATABASE nonExisting IF EXISTS SET ACCESS READ WRITE", ResultAssertions(r => {
+          assertStats(r)
+        })) {}
       }
       section("Topology", "administration-databases-alter-database-topology") {
+        initQueries("CREATE DATABASE `topology-example`")
         p("In a cluster environment, it may be desirable to change the number of servers used to host a database. " +
           "The number of primary and secondary servers can be specified using the following command. " +
           "For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
-        query("ALTER DATABASE SET TOPOLOGY 1 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
+        query("ALTER DATABASE `topology-example` SET TOPOLOGY 1 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
-        })) {}
-        query("SHOW DATABASES yield name, access", assertDatabasesShown) {
+        })) {
+          statsOnlyResultTable()
+        }
+        query("SHOW DATABASES yield name, currentPrimariesCount, currentSecondariesCount, requestedPrimariesCount, requestedSecondariesCount", assertDatabasesShown) {
           resultTable()
+        }
+        p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
+          "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
+        query("ALTER DATABASE nonExisting IF EXISTS SET TOPOLOGY 1 PRIMARY 0 SECONDARY", ResultAssertions(r => {
+          assertStats(r)
+        })) {
+          statsOnlyResultTable()
         }
       }
     }
     section("Stopping databases", "administration-databases-stop-database", "enterprise-edition") {
+      initQueries("CREATE DATABASE customers")
       p("Databases can be stopped using the command `STOP DATABASE`.")
       query("STOP DATABASE customers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
@@ -228,6 +240,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Starting databases", "administration-databases-start-database", "enterprise-edition") {
+      initQueries("CREATE DATABASE customers")
       p("Databases can be started using the command `START DATABASE`.")
       query("START DATABASE customers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
@@ -240,6 +253,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section("Deleting databases", "administration-databases-drop-database", "enterprise-edition") {
+      initQueries("CREATE DATABASE customers")
       p("Databases can be deleted using the command `DROP DATABASE`.")
       query("DROP DATABASE customers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
