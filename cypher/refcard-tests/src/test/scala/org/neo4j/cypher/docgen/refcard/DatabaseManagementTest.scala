@@ -36,7 +36,7 @@ CREATE OR REPLACE DATABASE myDatabase
 ###assertion=update-two
 //
 
-CREATE IF NOT EXISTS myDatabase TOPOLOGY 1 PRIMARY 0 SECONDARIES
+CREATE OR REPLACE DATABASE myDatabase TOPOLOGY 1 PRIMARY 0 SECONDARIES
 ###
 
 (★) Create a database named `myDatabase`, in a cluster environment, with 1 primary servers and 0 secondary servers.
