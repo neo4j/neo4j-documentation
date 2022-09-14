@@ -133,13 +133,13 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
 
       section("Cluster Topology", "administration-databases-create-database-topology", "enterprise-edition") {
         p("In a cluster environment, it may be desirable to control the number of servers used to host a database. " +
-          "The number of primary and secondary servers can be specified using the following command. " +
-          "For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
+          "The number of primary and secondary servers can be specified using the following command:")
         query("CREATE DATABASE `topology-example` TOPOLOGY 1 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
           statsOnlyResultTable()
         }
+        p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
         p("This command is optionally idempotent, with the default behavior to fail with an error if the database already exists. " +
@@ -207,8 +207,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       section("Topology", "administration-databases-alter-database-topology") {
         initQueries("CREATE DATABASE `topology-example`")
         p("In a cluster environment, it may be desirable to change the number of servers used to host a database. " +
-          "The number of primary and secondary servers can be specified using the following command. " +
-          "For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
+          "The number of primary and secondary servers can be specified using the following command:")
         query("ALTER DATABASE `topology-example` SET TOPOLOGY 3 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
@@ -230,6 +229,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             "Rows: 7"
           )
         }
+        p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
         p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
           "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
         query("ALTER DATABASE nonExisting IF EXISTS SET TOPOLOGY 1 PRIMARY 0 SECONDARY", ResultAssertions(r => {
