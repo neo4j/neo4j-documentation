@@ -409,12 +409,13 @@ class AggregatingFunctionsTest extends DocumentingTest {
       p(
         """For aggregation expressions to be correctly computable for the buckets formed by the grouping key(s), they have to fulfill some requirements.
           #Specifically, each sub expression in an aggregation expression has to be either:
-          #- an aggregation function, e.g. `SUM(x.a)`,
-          #- a constant, e.g. `0.1`,
-          #- a parameter, e.g. `$param`,
-          #- a grouping key, e.g. the `a` in `RETURN a, count(*)`
-          #- a local variable, e.g. the `x` in  `count(*) + size([ x IN range(1, 10) | x ])`, or
-          #- a subexpression, all whose operands are operands allowed in an aggregation expression.
+          #
+          #* an aggregation function, e.g. `SUM(x.a)`,
+          #* a constant, e.g. `0.1`,
+          #* a parameter, e.g. `$param`,
+          #* a grouping key, e.g. the `a` in `RETURN a, count(*)`
+          #* a local variable, e.g. the `x` in  `count(*) + size([ x IN range(1, 10) | x ])`, or
+          #* a subexpression, all whose operands are operands allowed in an aggregation expression.
           #""".stripMargin('#'))
 
       section("Examples of aggregation expressions.", "grouping-key-examples") {
