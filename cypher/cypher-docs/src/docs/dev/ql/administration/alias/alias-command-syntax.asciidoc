@@ -1,0 +1,75 @@
+The syntax of the alias management commands is as follows:
+
+.Alias management command syntax
+[options="header", width="100%", cols="1,5a"]
+|===
+| Command | Syntax
+| Show Database Alias
+|
+[source]
+-----
+SHOW ALIASES FOR DATABASE[S]
+[WHERE expression]
+-----
+[source]
+-----
+SHOW ALIASES FOR DATABASE[S]
+YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]
+[WHERE expression]
+[RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
+-----
+Lists both local and remote database aliases.
+
+| Create Local Alias
+|
+[source]
+-----
+CREATE ALIAS name [IF NOT EXISTS] FOR DATABASE targetName
+-----
+[source]
+-----
+CREATE OR REPLACE ALIAS name FOR DATABASE targetName
+-----
+
+| Create Remote Alias
+|
+[source]
+-----
+CREATE ALIAS name [IF NOT EXISTS] FOR DATABASE targetName
+AT 'url' USER username PASSSWORD 'password'
+[DRIVER "{" setting: value[, ...] "}"]
+-----
+[source]
+-----
+CREATE OR REPLACE ALIAS name FOR DATABASE targetName
+AT 'url' USER username PASSSWORD 'password'
+[DRIVER "{" setting: value[, ...] "}"]
+-----
+
+| Alter Local Alias
+|
+[source]
+-----
+ALTER ALIAS name [IF EXISTS] SET DATABASE TARGET targetName
+-----
+
+| Alter Remote Alias
+|
+[source]
+-----
+ALTER ALIAS name [IF EXISTS] SET DATABASE
+[TARGET targetName AT 'url']
+[USER username]
+[PASSWORD 'password']
+[DRIVER "{" setting: value[, ...] "}"]
+-----
+
+| Drop Alias
+|
+[source]
+-----
+DROP ALIAS name [IF EXISTS] FOR DATABASE
+-----
+Drop either a local or remote database alias.
+
+|===
