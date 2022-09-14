@@ -139,7 +139,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         })) {
           statsOnlyResultTable()
         }
-        p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
+        p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>.")
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
         p("This command is optionally idempotent, with the default behavior to fail with an error if the database already exists. " +
@@ -229,7 +229,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             "Rows: 7"
           )
         }
-        p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
+        p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>.")
         p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
           "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
         query("ALTER DATABASE nonExisting IF EXISTS SET TOPOLOGY 1 PRIMARY 0 SECONDARY", ResultAssertions(r => {
