@@ -895,8 +895,7 @@ label:added[]
 CREATE DATABASE ... TOPOLOGY n PRIMAR{Y\|IES} [m SECONDAR{Y\|IES}]
 ----
 a|
-New sub-clause for `CREATE DATABASE`, which allows modifying the number of servers hosting a database in cluster environments.
-
+New sub-clause for `CREATE DATABASE`, to specify the number of servers hosting a database, when creating a database in cluster environments.
 
 a|
 label:functionality[]
