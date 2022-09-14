@@ -153,6 +153,13 @@ trait DocBuilder {
     queryScope.addContent(new StatsOnlyTablePlaceHolder(queryScope.assertions, queryScope.params:_*))
   }
 
+  def hardcodedResultTable(columns: Seq[String], rows: Seq[ResultRow], footer: String): Unit = {
+    val queryScope = scope.collectFirst {
+      case q: QueryScope => q
+    }.get
+    queryScope.addContent(QueryResultTable(columns, rows, footer))
+  }
+
   def errorOnlyResultTable(): Unit = {
     val queryScope = scope.collectFirst {
       case q: QueryScope => q

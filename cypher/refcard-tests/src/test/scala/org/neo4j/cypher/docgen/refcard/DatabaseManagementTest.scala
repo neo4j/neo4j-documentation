@@ -33,10 +33,10 @@ CREATE OR REPLACE DATABASE myDatabase
 
 (★) Create a database named `myDatabase`. If a database with that name exists, then the existing database is deleted and a new one created.
 
-###assertion=update-two
+###assertion=update-one
 //
 
-CREATE OR REPLACE DATABASE myDatabase TOPOLOGY 1 PRIMARY 0 SECONDARIES
+CREATE DATABASE `topology-example` IF NOT EXISTS TOPOLOGY 1 PRIMARY 0 SECONDARIES
 ###
 
 (★) Create a database named `myDatabase`, in a cluster environment, with 1 primary servers and 0 secondary servers.
@@ -81,7 +81,31 @@ START DATABASE myDatabase
 
 (★) Start the database `myDatabase`.
 
-###assertion=show-three
+###assertion=update-one
+//
+
+CREATE ALIAS myAlias FOR DATABASE myDatabase
+###
+
+(★) Create an alias `myAlias` for the database with name `myDatabase`.
+
+###assertion=update-one
+//
+
+ALTER ALIAS myAlias SET DATABASE TARGET myDatabase
+###
+
+(★) Alter the alias `myAlias` to target the database with name `myDatabase`.
+
+###assertion=update-one
+//
+
+DROP ALIAS myAlias FOR DATABASE
+###
+
+(★) Drop the database alias `myAlias`.
+
+###assertion=show-four
 //
 
 SHOW DATABASES

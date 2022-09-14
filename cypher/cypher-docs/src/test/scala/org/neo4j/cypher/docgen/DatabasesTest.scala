@@ -209,14 +209,22 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("In a cluster environment, it may be desirable to change the number of servers used to host a database. " +
           "The number of primary and secondary servers can be specified using the following command. " +
           "For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>")
-        query("ALTER DATABASE `topology-example` SET TOPOLOGY 1 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
+        query("ALTER DATABASE `topology-example` SET TOPOLOGY 3 PRIMARY 0 SECONDARIES", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) {
-
-//          statsOnlyResultTable()
+          // execution disabled because `ALTER DATABASE ... SET TOPOLOGY n` fails when running against non-cluster db
         }
         query("SHOW DATABASES yield name, currentPrimariesCount, currentSecondariesCount, requestedPrimariesCount, requestedSecondariesCount", assertDatabasesShown) {
-          resultTable()
+          // Hardcoding results because ALTER DATABASE command doesn't actually execute
+          //resultTable()
+          hardcodedResultTable(Seq("name", "currentPrimariesCount",	"currentSecondariesCount",	"requestedPrimariesCount",	"requestedSecondariesCount"),
+            Seq(
+              ResultRow(Seq("customers", "1", "0", "1", "0")),
+              ResultRow(Seq("topology-example", "3", "0", "3", "0")),
+              ResultRow(Seq("system", "1", "0", "<null>", "<null>"))
+            ),
+            "Rows: 3"
+          )
         }
         p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
           "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
