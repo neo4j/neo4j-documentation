@@ -220,10 +220,14 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           hardcodedResultTable(Seq("name", "currentPrimariesCount",	"currentSecondariesCount",	"requestedPrimariesCount",	"requestedSecondariesCount"),
             Seq(
               ResultRow(Seq("customers", "1", "0", "1", "0")),
+              ResultRow(Seq("movies", "1", "0", "1", "0")),
+              ResultRow(Seq("neo4j", "1", "0", "1", "0")),
+              ResultRow(Seq("northwind-graph-2020", "1", "0", "1", "0")),
+              ResultRow(Seq("northwind-graph-2021", "1", "0", "1", "0")),
               ResultRow(Seq("topology-example", "3", "0", "3", "0")),
               ResultRow(Seq("system", "1", "0", "<null>", "<null>"))
             ),
-            "Rows: 3"
+            "Rows: 7"
           )
         }
         p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
