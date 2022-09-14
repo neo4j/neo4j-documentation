@@ -39,7 +39,7 @@ CREATE OR REPLACE DATABASE myDatabase
 CREATE DATABASE `topology-example` IF NOT EXISTS TOPOLOGY 1 PRIMARY 0 SECONDARIES
 ###
 
-(★) Create a database named `myDatabase`, in a cluster environment, with 1 primary servers and 0 secondary servers.
+(★) Create a database named `topology-example`, in a cluster environment, with 1 primary servers and 0 secondary servers.
 
 ###assertion=update-one
 //
@@ -52,18 +52,18 @@ ALTER DATABASE myDatabase SET ACCESS READ ONLY
 ###assertion=update-one
 //
 
-ALTER DATABASE myDatabase SET TOPOLOGY 1 PRIMARY 0 SECONDARIES
+ALTER DATABASE `topology-example` SET TOPOLOGY 1 PRIMARY 0 SECONDARIES
 ###
 
-(★) Modify a database named `myDatabase`, in a cluster environment, to use 1 primary servers and 0 secondary servers.
+(★) Modify a database named `topology-example`, in a cluster environment, to use 1 primary servers and 0 secondary servers.
 
 ###assertion=update-one
 //
 
-ALTER DATABASE myDatabase SET TOPOLOGY 1 PRIMARY SET ACCESS READ ONLY
+ALTER DATABASE `topology-example` SET TOPOLOGY 1 PRIMARY SET ACCESS READ ONLY
 ###
 
-(★) Modify a database named `myDatabase`, in a cluster environment, to use 1 primary server and set access mode to read-only.
+(★) Modify a database named `topology-example`, in a cluster environment, to use 1 primary server and set access mode to read-only.
 
 ###assertion=update-one
 //
