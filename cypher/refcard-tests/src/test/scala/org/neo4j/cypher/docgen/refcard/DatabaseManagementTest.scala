@@ -57,30 +57,6 @@ START DATABASE myDatabase
 
 (★) Start the database `myDatabase`.
 
-###assertion=update-one
-//
-
-CREATE ALIAS myAlias FOR DATABASE myDatabase
-###
-
-(★) Create an alias `myAlias` for the database with name `myDatabase`.
-
-###assertion=update-one
-//
-
-ALTER ALIAS myAlias SET DATABASE TARGET myDatabase
-###
-
-(★) Alter the alias `myAlias` to target the database with name `myDatabase`.
-
-###assertion=update-one
-//
-
-DROP ALIAS myAlias FOR DATABASE
-###
-
-(★) Drop the database alias `myAlias`.
-
 ###assertion=show-three
 //
 

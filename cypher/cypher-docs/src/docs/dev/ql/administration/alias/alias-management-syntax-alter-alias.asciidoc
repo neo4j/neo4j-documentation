@@ -1,0 +1,25 @@
+.Alter alias command syntax
+[options="header", width="100%", cols="5a,2"]
+|===
+| Syntax | Comment
+|
+[source, cypher, role=noplay]
+-----
+ALTER ALIAS name [IF EXISTS] SET DATABASE TARGET targetName
+-----
+| Modify database target of a local alias.
+
+|
+[source, cypher, role=noplay]
+-----
+ALTER ALIAS name [IF EXISTS] SET DATABASE
+[TARGET targetName AT 'url']
+[USER username]
+[PASSSWORD 'password']
+[DRIVER "{" setting: value[, ...] "}"]
+-----
+| Modify a remote alias.
+
+The clauses can be applied in any order, while at least one clause needs to be set.
+
+|===
