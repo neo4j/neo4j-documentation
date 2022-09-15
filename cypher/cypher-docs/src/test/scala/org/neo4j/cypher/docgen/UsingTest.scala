@@ -277,31 +277,31 @@ class UsingTest extends DocumentingTest {
   }
 
   case class ShouldUseNodeIndexSeekOn(variable: String, indexType: IndexType = IndexType.RANGE) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"NodeIndexSeek\\s*\\|\\s*${indexType.name()} INDEX\\s*$variable".r
+    override def matcher: Matcher[String] = include regex s"NodeIndexSeek[ |0-9]+${indexType.name()} INDEX\\s*$variable".r
   }
 
   case class ShouldUseRelationshipIndexSeekOn(variable: String, indexType: IndexType = IndexType.RANGE) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek\\s*\\|\\s*${indexType.name()} INDEX\\s*\\(\\w*\\)-\\[$variable".r
+    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipIndexSeek[ |0-9]+${indexType.name()} INDEX\\s*\\(\\w*\\)-\\[$variable".r
   }
 
   case class ShouldUseLabelScanOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"NodeByLabelScan\\s*\\|\\s*$variable".r
+    override def matcher: Matcher[String] = include regex s"NodeByLabelScan[ |0-9]+$variable".r
   }
 
   case class ShouldUseUnionLabelsScanOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"UnionNodeByLabelsScan\\s*\\|\\s*$variable".r
+    override def matcher: Matcher[String] = include regex s"UnionNodeByLabelsScan[ |0-9]+$variable".r
   }
 
   case class ShouldUseRelationshipTypeScanOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipTypeScan\\s*\\|\\s*\\(\\w*\\)-\\[$variable".r
+    override def matcher: Matcher[String] = include regex s"(Undirected|Directed)RelationshipTypeScan[ |0-9]+\\(\\w*\\)-\\[$variable".r
   }
 
   case class ShouldUseJoinOn(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include regex s"Node(LeftOuter|RightOuter)?HashJoin\\s*\\|\\s*$variable".r
+    override def matcher: Matcher[String] = include regex s"Node(LeftOuter|RightOuter)?HashJoin[ |0-9]+$variable".r
   }
 
   case class ShouldUseUnionDistinct(variable: String) extends PlanAssertion {
-    override def matcher: Matcher[String] = include("Union") and include regex s"Distinct\\s*\\|\\s*$variable".r
+    override def matcher: Matcher[String] = include("Union") and include regex s"Distinct[ |0-9]+$variable".r
   }
 
   case object ShouldNotUseJoins extends PlanAssertion {
