@@ -84,7 +84,7 @@ List all privileges assigned to a role as Cypher commands.
 ###assertion=show-one
 //
 
-SHOW ROLE my_role PRIVILEGES AS COMMANDS WHERE immutable
+SHOW ROLE my_role PRIVILEGES AS COMMANDS YIELD command, immutable WHERE immutable
 ###
 
 List all immutable privileges assigned to a role as Cypher commands.
