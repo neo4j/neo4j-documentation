@@ -397,10 +397,11 @@ class TemporalTest extends DocumentingTest {
             #
             #* Unit-based form: `P[nY][nM][nW][nD][T[nH][nM][nS]]`
             # ** The square brackets (`[]`) denote an optional component (components with a zero value may be omitted).
-            # ** The `n` denotes a numeric value which can be arbitrarily large.
+            # ** The `n` denotes a numeric value within the bounds of a 64-bit integer.
             # ** The value of the last -- and least significant -- component may contain a decimal fraction.
             # ** Each component must be suffixed by a component identifier denoting the unit.
             # ** The unit-based form uses `M` as a suffix for both months and minutes. Therefore, time parts must always be preceded with `T`, even when no components of the date part are given.
+            # ** The maximum total length of a _Duration_ is bounded by the number of seconds that can be held in a 64-bit integer.
             #* Date-and-time-based form: `P<date>T<time>`.
             # ** Unlike the unit-based form, this form requires each component to be within the bounds of a valid _LocalDateTime_.""".stripMargin('#'))
         p(
