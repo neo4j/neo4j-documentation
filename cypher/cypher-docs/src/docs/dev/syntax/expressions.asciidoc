@@ -143,7 +143,7 @@ The following table displays whether the label expression matches the node:
 [[syntax-restrictions-label]]
 === Restrictions on using the different types of label expression syntax
 
-The release of Neo4j version 5.0 introduced an ampersand operator, which is equivalent to the colon conjunction operator.
+Neo4j version 5.0 introduced an ampersand operator, which is equivalent to the colon conjunction operator.
 Mixing the colon conjunction operator with any of the new label expression operators in the same clause will raise a syntax error.
 
 For example, each of the following clauses will raise syntax errors:
