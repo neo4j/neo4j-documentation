@@ -69,9 +69,9 @@ class AggregatingFunctionsTest extends DocumentingTest {
         #The latter, `+count(*)+` is an aggregate expression.
         #The matching paths will be divided into different buckets, depending on the grouping key.
         #The aggregate function will then be run on these buckets, calculating an aggregate value per bucket.""".stripMargin('#'))
-    p("""The input expression of an aggregation function can contain non-grouping variables, for example `+sum(1 + n.x)+`.
-        #However, it is not possible to mix non-grouping variables and aggregation functions.
-        #The example below will throw an error since we mix `n.x`, which is not a grouping key, with the aggregation expression `+count(*)+`.
+    p("""The input expression of an aggregation function can contain any expression, including expressions that are not grouping keys.
+        #However, not all expressions can be composed with aggregation functions.
+        #The example below will throw an error since we compose `n.x`, which is not a grouping key, with the aggregation expression `+count(*)+`.
         #For more information see <<grouping-keys,Grouping keys>>.""".stripMargin('#'))
     p("""[source, cypher]
         #----
@@ -452,7 +452,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
         p(
           """
             #Grouping keys themselves can be complex expressions.
-            #For better query readability, Cypher only recognizes sub-expressions in aggregation expressions to be grouping key if the grouping key is either:
+            #For better query readability, Cypher only recognizes a sub-expression in aggregation expressions as a grouping key if the grouping key is either:
             #
             #- A variable - e.g. the `n` in `RETURN n, n.age - max(f.age)`
             #- A property access - e.g. the `n.age` in `RETURN n.age, n.age - max(f.age)`
