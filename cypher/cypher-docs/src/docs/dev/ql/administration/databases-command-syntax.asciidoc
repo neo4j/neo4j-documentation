@@ -17,14 +17,21 @@ YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]
 | Create Database
 | [source]
 CREATE DATABASE name [IF NOT EXISTS]
+[TOPOLOGY n PRIMAR{Y\|IES} [m SECONDAR{Y\|IES}]]
 [OPTIONS "{" option: value[, ...] "}"]
 [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 
 [source]
-CREATE OR REPLACE DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+CREATE OR REPLACE DATABASE name
+[TOPOLOGY n PRIMAR{Y\|IES} [m SECONDAR{Y\|IES}]]
+[WAIT [n [SEC[OND[S]]]]\|NOWAIT]
 |Alter Database
 | [source]
-ALTER DATABASE name [IF EXISTS] SET ACCESS {READ ONLY \| READ WRITE}
+ALTER DATABASE name [IF EXISTS]
+{
+SET ACCESS {READ ONLY \| READ WRITE} \|
+SET TOPOLOGY n PRIMAR{Y\|IES} [m SECONDAR{Y\|IES}]
+}
 |Stop Database
 | [source]
 STOP DATABASE name [WAIT [n [SEC[OND[S]]]]\|NOWAIT]

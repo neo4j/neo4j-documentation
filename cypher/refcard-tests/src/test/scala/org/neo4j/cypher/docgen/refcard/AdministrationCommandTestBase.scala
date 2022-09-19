@@ -72,6 +72,9 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
       case "show-three" =>
         assertStats(result, systemUpdates = 0)
         assert(result.toList.size === 3) // default and system database are shown
+      case "show-four" =>
+        assertStats(result, systemUpdates = 0)
+        assert(result.toList.size === 4)
       case "show-nothing" =>
         assertStats(result, systemUpdates = 0)
         assert(result.toList.size === 0)
