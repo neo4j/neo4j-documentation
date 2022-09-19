@@ -35,6 +35,12 @@ Such operators need to complete execution in its entirety before any rows are se
 These operators are called _eager_ operators, and are denoted as such in <<execution-plan-operators-summary>>.
 Eagerness can cause high memory usage and may therefore be the cause of query performance issues.
 
+[[id-column]]
+.IDs
+Each operator is assigned a unique ID, which is shown in the execution plan.
+The IDs can be used to refer unambiguously to operators.
+There are no guarantees about the order of IDs, although they will usually start with 0 at the root, and will increase towards the leaves of the tree.
+
 .Statistics
 Each operator is annotated with statistics.
 
