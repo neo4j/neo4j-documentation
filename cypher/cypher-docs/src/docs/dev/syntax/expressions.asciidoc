@@ -139,10 +139,48 @@ The following table displays whether the label expression matches the node:
 | `(:!(A&%)&%))` | | | {check-mark} | {check-mark} | | | {check-mark} |
 |===
 
-[WARNING]
-Label expressions cannot be combined with label syntax.
-For example, `:A:B&C` will throw an error.
-Instead, use either `:A&B&C` or `:A:B:C`.
+
+[[syntax-restrictions-label]]
+=== Restrictions on using the different types of label expression syntax
+
+Neo4j version 5.0 introduced an ampersand operator, which is equivalent to the colon conjunction operator.
+Mixing the colon conjunction operator with any of the new label expression operators in the same clause will raise a syntax error.
+
+For example, each of the following clauses will raise syntax errors:
+
+* `MATCH (n:A|B:C)`
+* `MATCH (n:A:B)-[]-(m:(A&B)|C)`
+* `MATCH (n:A:B)--(m), (n)-->(o:(A&B)|C)`
+* `RETURN n:A&B, n:A:B`
+* `MATCH (n:A:B)-[]-(m) WHERE m:(A&B)|C`
+
+In earlier versions of Neo4j (version 4.4 and earlier), relationship type expressions only had the pipe operator.
+As the pipe operator will continue to act as an `OR` operator, it can continue to be used alongside the new operators.
+
+To make it easier to use the new syntax when extending existing queries, using the different syntax types in separate clauses will be supported.
+
+For example, the following query will not raise a syntax error:
+
+[source, cypher, role=noplay]
+----
+MATCH (m:A:B:C)-[]->()
+MATCH (n:(A&B)|C)-[]->(m)
+RETURN m,n
+----
+
+Queries that exclusively use syntax from earlier versions of Neo4j (version 4.4 and earlier) will continue to be supported.
+
+For example, the following will not raise a syntax error:
+
+[source, cypher, role=noplay]
+----
+MATCH (m:A:B:C)-[:S|T]->()
+RETURN
+  CASE
+    WHEN m:D:E THEN m.p
+    ELSE null
+  END AS result
+----
 
 include::../ql/query-syntax-type.adoc[leveloffset=+1]
 

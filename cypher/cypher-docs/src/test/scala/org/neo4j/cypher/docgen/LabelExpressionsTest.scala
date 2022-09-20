@@ -37,6 +37,13 @@ class labelExpressionsTest extends DocumentingTest with QueryStatisticsTestSuppo
                   #  (:B:C {name:'Frank'}),
                   #  (:A:B:C {name:'George'}),
                   #  ({name:'Henry'})""".stripMargin('#'))
+    note{
+      p("""In earlier versions of Neo4j, label expressions for nodes had a single colon operator that represented the `AND` operator.
+        # With the release of version 5.0, a new label expression with an extended set of logical operators is being introduced,
+        # in addition to the single colon operator.
+        # It is important to note that you cannot mix these different types of label expression syntax.
+        # For more information, see <<syntax-restrictions-label, Restrictions on using the different types of label expression syntax>>.""".stripMargin('#'))
+    }
     p("""Label expressions evaluate to true or false when applied to the label set of a node, or the type of a relationship.
         # Assuming no other filters are applied, then a label expression evaluating to true means the node or relationship is matched.""".stripMargin('#'))
     p("The following graph is used for the examples below:")
