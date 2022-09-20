@@ -755,7 +755,7 @@ label:updated[]
 ----
 a|
 Privileges can be specified as `IMMUTABLE`, which means that they cannot be altered by users with Privilege Management. 
-They can only be administered when running with full access or by disabling auth.
+They can only be administered with auth disabled.
 
 a|
 label:functionality[]
