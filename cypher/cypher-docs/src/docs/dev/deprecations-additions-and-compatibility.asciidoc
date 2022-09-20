@@ -610,6 +610,8 @@ MATCH (a), (b), shortestPath((a)-[r*1..1]->(b)) RETURN b
 
 === Updated features
 
+
+
 [cols="2", options="header"]
 |===
 | Feature
@@ -834,6 +836,22 @@ returning an integer approximation for precision 0 and throwing an exception for
 
 !===
 To get an integer value use the `toInteger` function.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+CREATE TEXT INDEX ...
+----
+
+[source, cypher, role="noheader"]
+----
+MATCH ... WHERE n.prop < 42 ...
+----
+a|
+Text indexes no longer support finding entries using comparison operators like `<`, `+<=+`, `+>=+`, `>`.
+
 |===
 
 === New features
