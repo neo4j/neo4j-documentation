@@ -134,11 +134,6 @@ class PatternTest extends DocumentingTest {
       p("""One can also describe a node that has multiple labels:""")
       p("""[source, cypher, role=noplay]
           |----
-          |(a:User:Admin)-->(b)
-          |----
-          |""")
-      p("""[source, cypher, role=noplay]
-          |----
           |(a:User&Admin)-->(b)
           |----
           |""")
