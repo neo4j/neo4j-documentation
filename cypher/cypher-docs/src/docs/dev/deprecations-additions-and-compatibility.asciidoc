@@ -989,7 +989,7 @@ label:functionality[]
 label:added[]
 [source, cypher, role="noheader"]
 ----
-DEALLOCATE DATABASES FROM SERVERS ...
+DEALLOCATE DATABASE[S] FROM SERVER[S] ...
 ----
 a|
 New Cypher command for moving all databases from servers.

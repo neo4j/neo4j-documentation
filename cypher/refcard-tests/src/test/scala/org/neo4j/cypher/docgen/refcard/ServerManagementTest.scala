@@ -32,8 +32,8 @@ class ServerManagementTest extends RefcardTest with QueryStatisticsTestSupport {
   override def assert(tx:Transaction, name: String, result: DocsExecutionResult): Unit = {}
 
   def text = """
-// Can't be run since there is no cluster available.
 ###dontrun
+// Can't be run since there is no cluster available.
 
 ENABLE SERVER 'serverId'
 ###
@@ -41,6 +41,7 @@ ENABLE SERVER 'serverId'
 Make the server with the id 'serverId' an active member of the cluster
 
 ###dontrun
+// Can't be run since there is no cluster available.
 
 RENAME SERVER 'oldName' TO 'newName'
 ###
@@ -48,6 +49,7 @@ RENAME SERVER 'oldName' TO 'newName'
 Rename the server 'oldName' to 'newName'
 
 ###dontrun
+// Can't be run since there is no cluster available.
 
 ALTER SERVER 'name' SET OPTIONS {modeConstraint: 'PRIMARY'}
 ###
@@ -55,6 +57,7 @@ ALTER SERVER 'name' SET OPTIONS {modeConstraint: 'PRIMARY'}
 Only allow the server 'name' to host databases in primary mode.
 
 ###dontrun
+// Can't be run since there is no cluster available.
 
 REALLOCATE DATABASES
 ###
@@ -62,16 +65,17 @@ REALLOCATE DATABASES
 Makes the system re-balance databases among the servers.
 
 ###dontrun
+// Can't be run since there is no cluster available.
 
-DEALLOCATE DATABASES FROM SERVERS 'name'
+DEALLOCATE DATABASES FROM SERVER 'name'
 ###
 
 Remove all databases from the server 'name', adding them to other servers as needed, and the server is not allowed to host any new databases.
 
 ###dontrun
+// Can't be run since there is no cluster available.
 
 DROP SERVER 'name'
-
 ###
 
 Removes the server 'name' from the cluster.

@@ -41,7 +41,7 @@ Grant the privilege to manage servers.
 ###assertion=update-one
 //
 
-DENY SHOW SERVERS TO my_role
+DENY SHOW SERVERS ON DBMS TO my_role
 ###
 
 Deny the privilege to show information about the servers.
