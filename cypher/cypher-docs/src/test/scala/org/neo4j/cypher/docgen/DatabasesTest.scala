@@ -37,10 +37,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       "CREATE ALIAS `films` FOR DATABASE `movies`",
       "CREATE ALIAS `motion pictures` FOR DATABASE `movies`",
       "CREATE DATABASE `sci-fi-books`",
-      "CREATE DATABASE `romance-books`",
       "CREATE COMPOSITE DATABASE `library`",
       "CREATE ALIAS `library`.`sci-fi` FOR DATABASE `sci-fi-books`",
-      "CREATE ALIAS `library`.`romance` FOR DATABASE `romance-books`"
+      "CREATE ALIAS `library`.`romance` FOR DATABASE `romance-books` AT 'neo4j+s://location:7687' USER alice PASSWORD 'password'"
     )
     synopsis("This chapter explains how to use Cypher to manage Neo4j databases: creating, modifying, deleting, starting, and stopping individual databases within a single server.")
     p(
@@ -81,7 +80,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       p("The number of databases can be seen using a `count()` aggregation with `YIELD` and `RETURN`.")
       query("SHOW DATABASES YIELD * RETURN count(*) as count", ResultAssertions({ r: DocsExecutionResult =>
-        r.columnAs[Int]("count").toSet should be(Set(6))
+        r.columnAs[Int]("count").toSet should be(Set(5))
       })){
         resultTable()
       }
@@ -95,7 +94,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`.")
       query("SHOW DATABASES YIELD name, currentStatus, requestedStatus ORDER BY currentStatus WHERE name CONTAINS 'e'",
-        assertNameField("neo4j", "system", "movies", "romance-books")) {
+        assertNameField("neo4j", "system", "movies")) {
         p(
           """In this example:
             |
@@ -117,6 +116,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |The possible statuses are `initial`, `online`, `offline`, `store copying` and `unknown`.
             |""".stripMargin)
       }
+      p("For composite databases the `constituents` columns is particularly interesting as it lists the aliases belonging to the composite database:")
+      query("SHOW DATABASE library YIELD name, constituents", assertNameField("library")) { resultTable() }
     }
     section("Creating databases", "administration-databases-create-database", "enterprise-edition") {
       p("Databases can be created using `CREATE DATABASE`.")
@@ -156,7 +157,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
       }
       section("Creating composite databases", "administration-databases-create-composite-database", "enterprise-edition") {
-        // TODO: expand first paragraph with proper info about composite databases or link to such a place
+        // TODO: add a link to the place explaining what composite databases are
         p(
           """Composite databases are a type of database that instead of containing data holds other databases though aliases.""".stripMargin)
         p("Composite databases can be created using `CREATE COMPOSITE DATABASE`.")
@@ -173,6 +174,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         query("SHOW DATABASES", assertDatabasesShown) {
           resultTable()
         }
+        p(
+          """To create database aliases in the composite database the composite database is given as namespace for the alias.
+            |For information about creating aliases in the composite database, see <<database-management-create-database-alias-in-composite, here>>.""".stripMargin)
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
         p("These commands are optionally idempotent, with the default behavior to fail with an error if the database already exists. " +

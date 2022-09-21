@@ -24,7 +24,7 @@ import org.neo4j.graphdb.Label
 import org.neo4j.kernel.api.KernelTransaction.Type
 import org.neo4j.kernel.api.security.AnonymousContext
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.IteratorHasAsScala
 
 class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
   override def outputPath = "target/docs/dev/ql/administration/"
@@ -35,9 +35,10 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     initQueries(
       "CREATE DATABASE `movies`",
       "CREATE ALIAS `films` FOR DATABASE `movies`",
-      "CREATE ALIAS `motion pictures` FOR DATABASE `movies`",
+      "CREATE ALIAS `motion pictures` FOR DATABASE `movies` PROPERTIES { nameContainsSpace: true }",
       "CREATE DATABASE `northwind-graph-2020`",
       "CREATE DATABASE `northwind-graph-2021`",
+      "CREATE DATABASE `northwind-graph-2022`",
       """CREATE ALIAS `movie scripts` FOR DATABASE `scripts` AT "neo4j+s://location:7687" USER alice PASSWORD "password" DRIVER {
         |    ssl_enforced: true,
         |    connection_timeout: duration({seconds: 5}),
@@ -46,7 +47,13 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         |    connection_pool_idle_test: duration({minutes: 2}),
         |    connection_pool_max_size: 10,
         |    logging_level: 'info'
-        |}""".stripMargin
+        |}""".stripMargin,
+      "CREATE DATABASE `sci-fi-books`",
+      "CREATE COMPOSITE DATABASE `library`",
+      "CREATE ALIAS `library`.`sci-fi` FOR DATABASE `sci-fi-books`",
+      "CREATE ALIAS `library`.`romance` FOR DATABASE `romance-books` AT 'neo4j+s://location:7687' USER alice PASSWORD 'password'",
+      "CREATE COMPOSITE DATABASE garden",
+      "CREATE DATABASE `perennial-flowers`"
     )
     synopsis("This chapter explains how to use Cypher to manage database aliases in Neo4j.")
     p(
@@ -55,6 +62,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         |A remote alias may target a database from another Neo4j DBMS.
         |When a query is run against an alias, it will be redirected to the target database.
         |The home database for users can be set to an alias, which will be resolved to the target database on use.
+        |Both local and remote database aliases can be created as part of a <<cypher-manual#administration-databases-create-composite-database, composite database>>.
         """.stripMargin)
     p(
       """A local alias can be used in all other Cypher commands in place of the target database.
@@ -95,18 +103,18 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           |The detailed information for a particular database alias can be displayed using the command `SHOW ALIASES FOR DATABASE YIELD *`.
           |When a `YIELD *` clause is provided, the full set of columns is returned.
           |""".stripMargin)
-      query("SHOW ALIASES FOR DATABASE YIELD *", assertNameField("films", "motion pictures", "movie scripts")) {
+      query("SHOW ALIASES FOR DATABASE YIELD *", assertNameField("films", "motion pictures", "movie scripts", "library.sci-fi", "library.romance")) {
         resultTable()
       }
       p("The number of database aliases can be seen using a `count()` aggregation with `YIELD` and `RETURN`.")
       query("SHOW ALIASES FOR DATABASE YIELD * RETURN count(*) as count", ResultAssertions({ r: DocsExecutionResult =>
-        r.columnAs[Int]("count").toSet should be(Set(3))
+        r.columnAs[Int]("count").toSet should be(Set(5))
       })){
         resultTable()
       }
       p("It is also possible to filter and sort the results by using `YIELD`, `ORDER BY` and `WHERE`.")
       query("SHOW ALIASES FOR DATABASE YIELD name, url, database ORDER BY database WHERE name CONTAINS 'e'",
-        assertNameField("motion pictures", "movie scripts")) {
+        assertNameField("motion pictures", "movie scripts", "library.romance")) {
         p(
           """In this example:
             |
@@ -119,6 +127,9 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |""".stripMargin)
         resultTable()
       }
+      p("To list just one database alias, the `SHOW ALIASES` command takes an alias name:")
+      query("SHOW ALIAS films FOR DATABASES", assertNameField("films")){ resultTable() }
+      query("SHOW ALIAS library.romance FOR DATABASES", assertNameField("library.romance")){ resultTable() }
     }
     section(title="Creating database aliases", id="alias-management-create-database-alias", role = "enterprise-edition") {
       p("Aliases can be created using `CREATE ALIAS`. The required privileges are described <<cypher-manual#access-control-dbms-administration-alias-management, here>>.")
@@ -136,7 +147,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |The following naming rules apply:""")
         p(
           """
-            |* A name is a valid identifier, additionally allowing dots e.g. `main.alias` for local aliases.
+            |* A name is a valid identifier.
             |* Name length can be up to 65534 characters.
             |* Names cannot end with dots.
             |* Names that begin with an underscore or with the prefix `system` are reserved for internal use.
@@ -151,13 +162,19 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         })) {
           statsOnlyResultTable()
         }
-        p("When a local database alias has been created, it will show up in the aliases column provided by the command `SHOW DATABASES` and in the `SHOW ALIASES FOR DATABASE` command.")
+        p("When a local database alias has been created, it will show up in the `aliases` column provided by the command `SHOW DATABASES` and in the `SHOW ALIASES FOR DATABASE` command.")
         query("SHOW DATABASE `northwind`", assertNameField("northwind-graph-2021")) {
           resultTable()
         }
-        query("SHOW ALIASES FOR DATABASE WHERE name = 'northwind'", assertNameField("northwind")) {
+        query("SHOW ALIAS `northwind` FOR DATABASE", assertNameField("northwind")) {
           resultTable()
         }
+        p("Local database aliases can also be given properties.")
+        query("CREATE ALIAS `northwind-2022` FOR DATABASE `northwind-graph-2022` PROPERTIES { newestNorthwind: true, index: 3 }", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) { statsOnlyResultTable() }
+        p("The properties are then shown in the `SHOW ALIASES FOR DATABASE YIELD ...` command.")
+        query("SHOW ALIAS `northwind-2022` FOR DATABASE YIELD name, properties", assertNameField("northwind-2022")) { resultTable() }
         p("Adding a local alias with the same name as an existing local or remote alias will do nothing with the `IF NOT EXISTS` clause but fail without it.")
         query("CREATE ALIAS `northwind` IF NOT EXISTS FOR DATABASE `northwind-graph-2020` ", ResultAssertions(r => {
           assertStats(r)
@@ -192,20 +209,69 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           statsOnlyResultTable()
         }
         p("When a database alias pointing to a remote database has been created, its details can be shown with the `SHOW ALIASES FOR DATABASE` command.")
-        query("SHOW ALIASES FOR DATABASE WHERE name = 'remote-northwind'", assertNameField("remote-northwind")) {
+        query("SHOW ALIAS `remote-northwind` FOR DATABASE", assertNameField("remote-northwind")) {
           resultTable()
         }
-        query("SHOW ALIASES FOR DATABASE YIELD * WHERE name = 'remote-with-driver-settings'", assertNameField("remote-with-driver-settings")) {
+        query("SHOW ALIAS `remote-with-driver-settings` FOR DATABASE YIELD *", assertNameField("remote-with-driver-settings")) {
           resultTable()
         }
+        p("Just as the local aliases, the remote database aliases can be given properties.")
+        query(
+          """CREATE ALIAS `remote-northwind-2021`
+            |FOR DATABASE `northwind-graph-2021` AT 'neo4j+s://location:7687'
+            |USER alice PASSWORD 'password'
+            |PROPERTIES { newestNorthwind: false, index: 6 }""".stripMargin,
+          ResultAssertions(r => { assertStats(r, systemUpdates = 1) })
+        ) { statsOnlyResultTable() }
+        p("The properties are then shown in the `SHOW ALIASES FOR DATABASE YIELD ...` command.")
+        query("SHOW ALIAS `remote-northwind-2021` FOR DATABASE YIELD name, properties", assertNameField("remote-northwind-2021")) { resultTable() }
         p(
           """Creating remote aliases also allows `IF NOT EXISTS` and `OR REPLACE` clauses.
             |Both check for any remote or local database aliases.""".stripMargin)
       }
+
+      section(title = "Create database aliases in composite databases", id = "database-management-create-database-alias-in-composite", role = "enterprise-edition") {
+        p(
+          """Both local and remote database aliases can be part of <<cypher-manual#administration-databases-create-composite-database, composite databases>>.
+            |Creating a database alias in a composite database is done by giving the composite database name as namespace for the alias name.""".stripMargin)
+        query(
+          """CREATE ALIAS garden.flowers
+            |FOR DATABASE `perennial-flowers`""".stripMargin,
+          ResultAssertions(r => { assertStats(r, systemUpdates = 1) })
+        ) { statsOnlyResultTable() }
+        query(
+          """CREATE ALIAS garden.trees
+            |FOR DATABASE trees AT 'neo4j+s://location:7687'
+            |USER alice PASSWORD 'password'""".stripMargin,
+          ResultAssertions(r => { assertStats(r, systemUpdates = 1) })
+        ) { statsOnlyResultTable() }
+        p("When a database alias has been created in a composite database, it will show up in the `constituents` column provided by the command `SHOW DATABASES` and in the `SHOW ALIASES FOR DATABASE` command.")
+        query("SHOW DATABASE garden YIELD name, constituents", assertNameField("garden")) { resultTable() }
+        query("SHOW ALIASES FOR DATABASE WHERE name STARTS WITH 'garden'", assertNameField("garden.flowers", "garden.trees")) { resultTable() }
+        note {
+          p("Aliases cannot point to a composite database.")
+        }
+        // Query fails with `key not found: org.neo4j.cypher.docgen.tooling.ErrorOnlyTablePlaceHolder@4f1502d7`
+        // if it is placed inside the note :(
+        query("CREATE ALIAS yard FOR DATABASE garden", ErrorAssertions(error =>
+          error.getMessage should startWith("Failed to create the specified database alias 'yard': Database 'garden' is composite.")
+        )) { errorOnlyResultTable() }
+      }
     }
     section(title="Altering database aliases", id="alias-management-alter-database-alias", role = "enterprise-edition") {
+      initQueries(
+        "CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2020`",
+        """CREATE ALIAS `remote-northwind` FOR DATABASE `northwind-graph-2020` AT "neo4j+s://location:7687" USER alice PASSWORD 'password'""",
+        """CREATE ALIAS `remote-with-driver-settings` FOR DATABASE `northwind-graph-2020` AT "neo4j+s://location:7687" USER alice PASSWORD 'password'
+          |DRIVER { connection_timeout: duration({ minutes: 1 }), connection_pool_max_size: 10 }""".stripMargin,
+        """CREATE ALIAS garden.flowers
+          |FOR DATABASE `perennial-flowers`""".stripMargin,
+        """CREATE ALIAS garden.trees
+          |FOR DATABASE trees AT 'neo4j+s://location:7687'
+          |USER alice PASSWORD 'password'""".stripMargin
+      )
       p(
-        s"""Aliases can be altered using `ALTER ALIAS` to change its database target, url, user credentials, or driver settings.
+        s"""Aliases can be altered using `ALTER ALIAS` to change its database target, properties, url, user credentials, or driver settings.
            |The required privileges are described <<cypher-manual#access-control-dbms-administration-alias-management, here>>.
            |Only the clauses used will be altered.""".stripMargin)
       p("include::alias-management-syntax-alter-alias.asciidoc[]")
@@ -243,13 +309,35 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       })) {
         statsOnlyResultTable()
       }
+      p("Examples of altering local and remote database alias properties.")
+      query("ALTER ALIAS `motion pictures` SET DATABASE PROPERTIES { nameContainsSpace: true, moreInfo: 'no, not really' }", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 1)
+      })) {
+        statsOnlyResultTable()
+      }
+      query("ALTER ALIAS `movie scripts` SET DATABASE PROPERTIES { nameContainsSpace: true }", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 1)
+      })) {
+        statsOnlyResultTable()
+      }
+      p("Examples of altering local and remote database alias in composite databases.")
+      query("ALTER ALIAS garden.flowers SET DATABASE PROPERTIES { perennial: true }", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 1)
+      })) {
+        statsOnlyResultTable()
+      }
+      query("ALTER ALIAS garden.trees SET DATABASE TARGET updatedTrees AT 'neo4j+s://location:7687' PROPERTIES { treeVersion: 2 }", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 1)
+      })) {
+        statsOnlyResultTable()
+      }
       p("When a local database alias has been altered, it will show up in the aliases column for the target database provided by the command `SHOW DATABASES`.")
       query("SHOW DATABASE `northwind`", assertNameField("northwind-graph-2021")) {
         resultTable()
       }
       p("The changes for all database aliases will show up in the `SHOW ALIASES FOR DATABASE` command.")
-      query("SHOW ALIASES FOR DATABASE YIELD * WHERE name in ['northwind', 'remote-northwind', 'remote-with-driver-settings', 'movie scripts']",
-        assertNameField("northwind", "remote-northwind", "remote-with-driver-settings", "movie scripts")) {
+      query("SHOW ALIASES FOR DATABASE YIELD * WHERE name in ['northwind', 'remote-northwind', 'remote-with-driver-settings', 'movie scripts', 'motion pictures', 'garden.flowers', 'garden.trees']",
+        assertNameField("northwind", "remote-northwind", "remote-with-driver-settings", "movie scripts", "motion pictures", "garden.flowers", "garden.trees")) {
         resultTable()
       }
       p("""This command is optionally idempotent, with the default behavior to fail with an error if the alias does not exist.
@@ -261,6 +349,24 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
     }
     section(title="Deleting database aliases", id="alias-management-drop-database-alias", role = "enterprise-edition") {
+      initQueries(
+        "CREATE ALIAS `northwind` FOR DATABASE `northwind-graph-2021`",
+        """CREATE ALIAS `remote-northwind` FOR DATABASE `northwind-graph-2020` AT "neo4j+s://other-location:7687" USER alice PASSWORD 'password'""",
+        """CREATE ALIAS `remote-with-driver-settings` FOR DATABASE `northwind-graph-2020` AT "neo4j+s://location:7687" USER bob PASSWORD 'newPassword'
+          |DRIVER { connection_timeout: duration({ minutes: 1 }), logging_level: "debug" }""".stripMargin,
+        "CREATE ALIAS `northwind-2022` FOR DATABASE `northwind-graph-2022` PROPERTIES { newestNorthwind: true, index: 3 }",
+        """CREATE ALIAS `remote-northwind-2021`
+          |FOR DATABASE `northwind-graph-2021` AT 'neo4j+s://location:7687'
+          |USER alice PASSWORD 'password'
+          |PROPERTIES { newestNorthwind: false, index: 6 }""".stripMargin,
+        """CREATE ALIAS garden.flowers
+          |FOR DATABASE `perennial-flowers`
+          |PROPERTIES { perennial: true }""".stripMargin,
+        """CREATE ALIAS garden.trees
+          |FOR DATABASE updatedTrees AT 'neo4j+s://location:7687'
+          |USER alice PASSWORD 'password'
+          |PROPERTIES { treeVersion: 2 }""".stripMargin
+      )
       p(
         """Both local and remote aliases can be deleted using the `DROP ALIAS` command.
           |The required privileges are described <<cypher-manual#access-control-dbms-administration-alias-management, here>>.""".stripMargin)
@@ -270,6 +376,11 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         statsOnlyResultTable()
       }
       query("DROP ALIAS `remote-northwind` FOR DATABASE", ResultAssertions(r => {
+        assertStats(r, systemUpdates = 1)
+      })) {
+        statsOnlyResultTable()
+      }
+      query("DROP ALIAS garden.flowers FOR DATABASE", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
         statsOnlyResultTable()
@@ -297,7 +408,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     try {
       val aliasNodes = tx.findNodes(Label.label("DatabaseName")).asScala.toList
         .filter(n => Option(n.getProperty("primary")).contains(false))
-      val aliasNames = aliasNodes.map(n => n.getProperty("name")).toSet
+      val aliasNames = aliasNodes.map(n => n.getProperty("displayName")).toSet
       val result = p.columnAs[String]("name").toSet
       result should equal(aliasNames)
     } finally {

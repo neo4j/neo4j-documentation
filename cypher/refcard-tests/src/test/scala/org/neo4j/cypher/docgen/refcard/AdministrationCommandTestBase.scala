@@ -69,6 +69,9 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
       case "show-two" =>
         assertStats(result, systemUpdates = 0)
         assert(result.toList.size === 2)
+      case "show-three" =>
+        assertStats(result, systemUpdates = 0)
+        assert(result.toList.size === 3)
       case "show-five" =>
         assertStats(result, systemUpdates = 0)
         assert(result.toList.size === 5)
