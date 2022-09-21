@@ -38,7 +38,7 @@ class ServerManagementTest extends RefcardTest with QueryStatisticsTestSupport {
 ENABLE SERVER 'serverId'
 ###
 
-Make the server with the id 'serverId' an active member of the cluster
+Make the server with the id 'serverId' an active member of the cluster.
 
 ###dontrun
 // Can't be run since there is no cluster available.
@@ -46,7 +46,7 @@ Make the server with the id 'serverId' an active member of the cluster
 RENAME SERVER 'oldName' TO 'newName'
 ###
 
-Rename the server 'oldName' to 'newName'
+Rename the server 'oldName' to 'newName'.
 
 ###dontrun
 // Can't be run since there is no cluster available.

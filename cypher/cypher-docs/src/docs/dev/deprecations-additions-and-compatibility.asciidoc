@@ -959,7 +959,7 @@ label:functionality[]
 label:added[]
 [source, cypher, role="noheader"]
 ----
-ALTER SERVER SET OPTIONS
+ALTER SERVER ... SET OPTIONS ...
 ----
 a|
 New Cypher command for setting options for a server.
@@ -1003,6 +1003,31 @@ DROP SERVER ...
 ----
 a|
 New Cypher command for dropping servers.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SHOW SERVERS
+----
+a|
+New Cypher command for listing servers.
+
+a|
+label:functionality[]
+label:new[] +
+New privileges:
+[source, cypher, role="noheader"]
+----
+SERVER MANAGEMENT
+----
+[source, cypher, role="noheader"]
+----
+SHOW SERVERS
+----
+a|
+New privilege that allows a user to create, modify, reallocate, deallocate, drop and list servers.
 
 |===
 
