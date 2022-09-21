@@ -37,7 +37,7 @@ Such URLs identify files on the filesystem of the database server.
 Default is _true_.
 Setting `dbms.security.allow_csv_import_from_file_urls=false` will completely disable access to the file system for `LOAD CSV`.
 
-<<operations-manual#config_dbms.directories.import, dbms.directories.import>>::
+<<operations-manual#config_server.directories.import, server.directories.import>>::
 Sets the root directory for `+file:///+` URLs used with the Cypher `LOAD CSV` clause.
 This should be set to a single directory relative to the Neo4j installation path on the database server.
 All requests to load from `+file:///+` URLs will then be relative to the specified directory.
@@ -48,17 +48,17 @@ Setting this to an empty field will allow access to all files within the Neo4j i
 Commenting out this setting will disable the security feature, allowing all files in the local system to be imported.
 This is definitely not recommended.
 
-File URLs will be resolved relative to the `dbms.directories.import` directory.
+File URLs will be resolved relative to the `server.directories.import` directory.
 For example, a file URL will typically look like `+file:///myfile.csv+` or `+file:///myproject/myfile.csv+`.
 
 * When using `+file:///+` URLs, spaces and other non-alphanumeric characters need to be URL encoded. footnote:[See https://developer.mozilla.org/en-US/docs/Glossary/percent-encoding].
-*  If `dbms.directories.import` is set to the default value _import_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/import/myfile.csv_ and _<NEO4J_HOME>/import/myproject/myfile.csv_ respectively.
+*  If `server.directories.import` is set to the default value _import_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/import/myfile.csv_ and _<NEO4J_HOME>/import/myproject/myfile.csv_ respectively.
 *  If it is set to _/data/csv_, using the above URLs in `LOAD CSV` would read from _<NEO4J_HOME>/data/csv/myfile.csv_ and _<NEO4J_HOME>/data/csv/myproject/myfile.csv_ respectively.
 
 [NOTE]
 ====
 The file location is relative to the import.
-The config setting `dbms.directories.import` only applies to local disc and **not** to remote URLs.
+The config setting `server.directories.import` only applies to local disc and **not** to remote URLs.
 ====
 
 See the examples below for further details.

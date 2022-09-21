@@ -293,8 +293,8 @@ This setting is experimental, and using it in a production environment is discou
 Cypher replanning occurs in the following circumstances:
 
 * When the query is not in the cache.
-This can either be when the server is first started or restarted, if the cache has recently been cleared, or if <<operations-manual#config_dbms.query_cache_size,dbms.query_cache_size>> was exceeded.
-* When the time has past the <<operations-manual#config_cypher.min_replan_interval,cypher.min_replan_interval>> value, and the database statistics have changed more than the <<operations-manual#config_cypher.statistics_divergence_threshold,cypher.statistics_divergence_threshold>> value.
+This can either be when the server is first started or restarted, if the cache has recently been cleared, or if <<operations-manual#config_server.db.query_cache_size,server.db.query_cache_size>> was exceeded.
+* When the time has past the <<operations-manual#config_dbms.cypher.min_replan_interval,dbms.cypher.min_replan_interval>> value, and the database statistics have changed more than the <<operations-manual#config_dbms.cypher.statistics_divergence_threshold,dbms.cypher.statistics_divergence_threshold>> value.
 
 There may be situations where <<execution-plans,Cypher query planning>> can occur at a non-ideal time.
 For example, when a query must be as fast as possible and a valid plan is already in place.
