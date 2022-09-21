@@ -419,21 +419,21 @@ class AggregatingFunctionsTest extends DocumentingTest {
           #""".stripMargin('#'))
 
       section("Examples of aggregation expressions.", "grouping-key-examples") {
-        p("Simple aggregation without any grouping keys.")
+        p("Simple aggregation without any grouping keys:")
         query("""MATCH (p: Person) RETURN max(p.age)""",
           ResultAssertions((r) => {
             r.toList.head("max(p.age)") should equal(44L)
           })) {
           resultTable()
         }
-        p("Addition of an aggregation and a constant, without any grouping keys.")
+        p("Addition of an aggregation and a constant, without any grouping keys:")
         query("""MATCH (p: Person) RETURN max(p.age) + 1""",
           ResultAssertions((r) => {
             r.toList.head("max(p.age) + 1") should equal(45L)
           })) {
           resultTable()
         }
-        p("Subtraction of a property access and an aggregation. Note that `n` is a grouping key.")
+        p("Subtraction of a property access and an aggregation. Note that `n` is a grouping key:")
         query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n, n.age - max(f.age)""",
           ResultAssertions((r) => {
             r.toList.size shouldBe 1
@@ -441,7 +441,7 @@ class AggregatingFunctionsTest extends DocumentingTest {
           })) {
           resultTable()
         }
-        p("Subtraction of a property access and an aggregation. Note that `n.age` is a grouping key.")
+        p("Subtraction of a property access and an aggregation. Note that `n.age` is a grouping key:")
         query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n.age, n.age - max(f.age)""",
           ResultAssertions((r) => {
             r.toList should equal(List(Map("n.age" -> 13L, "n.age - max(f.age)" -> -31)))
@@ -461,14 +461,14 @@ class AggregatingFunctionsTest extends DocumentingTest {
             #If more complex grouping keys are needed as operands in aggregation expression, it is always possible to project them in advance with `WITH`.
             #""".stripMargin('#'))
 
-        p("Using the property `n.age` will throw an exception, since `n.age` is not a grouping keys.")
+        p("Using the property `n.age` will throw an exception, since `n.age` is not a grouping keys:")
         query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n.age - max(f.age)""",
           ErrorAssertions((t) => {
             t.getMessage should include("Aggregation column contains implicit grouping expressions.")
           })) {
         }
         p("`n.age + n.age` is not a valid grouping key, since the expression is not a variable, property access or map access. " +
-          "It can therefore not be used in the expression which contains the aggregation function.")
+          "It can therefore not be used in the expression which contains the aggregation function:")
         query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n.age + n.age, n.age + n.age - max(f.age)""",
           ErrorAssertions((t) => {
             t.getMessage should include("Aggregation column contains implicit grouping expressions.")
