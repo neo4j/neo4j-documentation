@@ -754,7 +754,7 @@ label:updated[]
 [GRANT\|DENY] [IMMUTABLE] ...
 ----
 a|
-Privileges can be specified as `IMMUTABLE`, which means that they cannot be altered by users with Privilege Management. 
+Privileges can be specified as `IMMUTABLE`, which means that they cannot be altered by users with Privilege Management.
 They can only be administered with auth disabled.
 
 a|
@@ -855,6 +855,22 @@ returning an integer approximation for precision 0 and throwing an exception for
 
 !===
 To get an integer value use the `toInteger` function.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+CREATE TEXT INDEX ...
+----
+
+[source, cypher, role="noheader"]
+----
+MATCH ... WHERE n.prop < 42 ...
+----
+a|
+Text indexes no longer support finding entries using comparison operators like `<`, `+<=+`, `+>=+`, `>`.
+
 |===
 
 === New features
