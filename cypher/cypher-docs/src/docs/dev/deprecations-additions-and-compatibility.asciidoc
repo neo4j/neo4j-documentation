@@ -581,109 +581,6 @@ a|
 Only `+0x...+` (lowercase x) is supported.
 
 a|
-label:procedure[]
-label:deprecated[]
-[source, role="noheader"]
-----
-db.createIndex
-----
-a|
-Replaced by `CREATE INDEX` command.
-
-
-a|
-label:procedure[]
-label:deprecated[]
-[source, role="noheader"]
-----
-db.createNodeKey
-----
-a|
-Replaced by:
-[source, cypher, role="noheader"]
-----
-CREATE CONSTRAINT ... IS NODE KEY
-----
-
-
-a|
-label:procedure[]
-label:deprecated[]
-[source, role="noheader"]
-----
-db.createUniquePropertyConstraint
-----
-a|
-Replaced by:
-[source, cypher, role="noheader"]
-----
-CREATE CONSTRAINT ... IS UNIQUE
-----
-
-a|
-label:procedure[]
-label:deprecated[]
-[source, role="noheader"]
-----
-db.indexes
-----
-a|
-Replaced by:
-[source, cypher, role="noheader"]
-----
-SHOW INDEXES
-----
-
-
-a|
-label:procedure[]
-label:deprecated[]
-[source, role="noheader"]
-----
-db.indexDetails
-----
-a|
-Replaced by:
-[source, cypher, role="noheader"]
-----
-SHOW INDEXES YIELD *
-----
-
-
-a|
-label:procedure[]
-label:deprecated[]
-[source, role="noheader"]
-----
-db.constraints
-----
-a|
-Replaced by:
-[source, cypher, role="noheader"]
-----
-SHOW CONSTRAINTS
-----
-
-
-a|
-label:procedure[]
-label:deprecated[]
-[source, role="noheader"]
-----
-db.schemaStatements
-----
-a|
-Replaced by:
-[source, cypher, role="noheader"]
-----
-SHOW INDEXES YIELD *
-----
-[source, cypher, role="noheader"]
-----
-SHOW CONSTRAINTS YIELD *
-----
-
-a|
 label:syntax[]
 label:deprecated[]
 [source, cypher, role="noheader"]
@@ -872,6 +769,7 @@ SHOW [ALL \| BTREE] INDEX[ES] [BRIEF \| VERBOSE [OUTPUT]]
 a|
 New Cypher commands for listing indexes.
 
+Replaces the procedures `db.indexes`, `db.indexDetails` (verbose), and partially `db.schemaStatements` (verbose).
 
 a|
 label:functionality[]
@@ -882,6 +780,8 @@ SHOW [ALL \| UNIQUE \| NODE EXIST[S] \| RELATIONSHIP EXIST[S] \| EXIST[S] \| NOD
 ----
 a|
 New Cypher commands for listing constraints.
+
+Replaces the procedures `db.constraints` and partially `db.schemaStatements` (verbose).
 
 a|
 label:functionality[]
@@ -1439,6 +1339,8 @@ CREATE CONSTRAINT [name] ON ...
 a|
 The create constraint syntax can now include a name.
 
+The `IS NODE KEY` and `IS UNIQUE` versions of this command replaces the procedures `db.createNodeKey` and `db.createUniquePropertyConstraint`, respectively.
+
 |===
 === New features
 
@@ -1488,6 +1390,8 @@ CREATE INDEX [name] FOR (n:Label) ON (n.prop)
 ----
 a|
 New syntax for creating indexes, which can include a name.
+
+Replaces the `db.createIndex` procedure.
 
 a|
 label:syntax[]
