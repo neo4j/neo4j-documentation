@@ -1440,7 +1440,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |The example finds the names of all friends of my friends that are not already my friends.""".stripMargin,
       queryText =
         "CYPHER runtime=slotted " + triadicSelectionQuery,
-      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("TriadicSelection"))
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("Filter"))
     )
   }
 
@@ -1454,7 +1454,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |`TriadicBuild` builds a set of all friends, which is later used by `TriadicFilter`.
           |The example finds the names of all friends of my friends that are not already my friends.""".stripMargin,
       queryText = "CYPHER runtime=pipelined " + triadicSelectionQuery,
-      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("TriadicBuild"))
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("Filter"))
     )
   }
 
@@ -1468,7 +1468,7 @@ class QueryPlanTest extends DocumentingTestBase with SoftReset {
           |`TriadicFilter` uses a set of friends previously built by `TriadicBuild` to check if the friend-of-friends are already connected to me.
           |The example finds the names of all friends of my friends that are not already my friends.""".stripMargin,
       queryText = "CYPHER runtime=pipelined " + triadicSelectionQuery,
-      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("TriadicFilter"))
+      assertions = p => assertThat(p.executionPlanDescription().toString, containsString("Filter"))
     )
   }
 
