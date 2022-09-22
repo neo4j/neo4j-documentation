@@ -170,7 +170,10 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           resultTable()
         }
         p("Local database aliases can also be given properties.")
-        query("CREATE ALIAS `northwind-2022` FOR DATABASE `northwind-graph-2022` PROPERTIES { newestNorthwind: true, index: 3 }", ResultAssertions(r => {
+        query(
+          """CREATE ALIAS `northwind-2022`
+            |FOR DATABASE `northwind-graph-2022`
+            |PROPERTIES { newestNorthwind: true, index: 3 }""".stripMargin, ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
         })) { statsOnlyResultTable() }
         p("The properties are then shown in the `SHOW ALIASES FOR DATABASE YIELD ...` command.")
@@ -246,7 +249,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           ResultAssertions(r => { assertStats(r, systemUpdates = 1) })
         ) { statsOnlyResultTable() }
         p("When a database alias has been created in a composite database, it will show up in the `constituents` column provided by the command `SHOW DATABASES` and in the `SHOW ALIASES FOR DATABASE` command.")
-        query("SHOW DATABASE garden YIELD name, constituents", assertNameField("garden")) { resultTable() }
+        query("SHOW DATABASE garden YIELD name, type, constituents", assertNameField("garden")) { resultTable() }
         query("SHOW ALIASES FOR DATABASE WHERE name STARTS WITH 'garden'", assertNameField("garden.flowers", "garden.trees")) { resultTable() }
         note {
           p("Aliases cannot point to a composite database.")

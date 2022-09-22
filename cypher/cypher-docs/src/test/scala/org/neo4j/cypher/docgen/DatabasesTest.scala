@@ -61,7 +61,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       note {
         p(
           """Note that the results of this command are filtered according to the `ACCESS` privileges of the user.
-            |However, some privileges enables users to see additional databases regardless of their `ACCESS` privileges:
+            |However, some privileges enable users to see additional databases regardless of their `ACCESS` privileges:
             |
             | * Users with `CREATE/DROP/ALTER DATABASE` or `SET DATABASE ACCESS` privileges can see all standard databases.
             | * Users with `CREATE/DROP COMPOSITE DATABASE` or `COMPOSITE DATABASE MANAGEMENT` privileges can see all composite databases.
@@ -116,7 +116,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |The possible statuses are `initial`, `online`, `offline`, `store copying` and `unknown`.
             |""".stripMargin)
       }
-      p("For composite databases the `constituents` columns is particularly interesting as it lists the aliases belonging to the composite database:")
+      p("For composite databases the `constituents` columns is particularly interesting as it lists the aliases that make up the composite database:")
       query("SHOW DATABASE library YIELD name, constituents", assertNameField("library")) { resultTable() }
     }
     section("Creating databases", "administration-databases-create-database", "enterprise-edition") {
@@ -153,13 +153,15 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
         p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>.")
         note {
-          p("The `TOPOLOGY` are only available to standard databases and not composite databases.")
+          p(
+            """The `TOPOLOGY` are only available to standard databases and not composite databases.
+              |Composite databases are always available on all servers.""".stripMargin)
         }
       }
       section("Creating composite databases", "administration-databases-create-composite-database", "enterprise-edition") {
         // TODO: add a link to the place explaining what composite databases are
         p(
-          """Composite databases are a type of database that instead of containing data holds other databases though aliases.""".stripMargin)
+          """Composite databases are a type of database that instead of containing data holds references to other databases that can be queried together through its constituent aliases.""".stripMargin)
         p("Composite databases can be created using `CREATE COMPOSITE DATABASE`.")
         query("CREATE COMPOSITE DATABASE inventory", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -168,10 +170,11 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
         note {
           p("""Composite database names are subject to the same rules as standard databases.
-              |One difference is however that both dots and dashes needs to be enclosed within backticks, not just dashes.""")
+              |One difference is however that the deprecated syntax using dots without enclosing the name in backticks is not available.
+              |Both dots and dashes needs to be enclosed within backticks when using composite databases.""")
         }
         p("When a composite database has been created, it will show up in the listing provided by the command `SHOW DATABASES`.")
-        query("SHOW DATABASES", assertDatabasesShown) {
+        query("SHOW DATABASES YIELD name, type, access, role, writer, constituents", assertDatabasesShown) {
           resultTable()
         }
         p(
