@@ -123,7 +123,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section(title="Creating database aliases", id="alias-management-create-database-alias", role = "enterprise-edition") {
       p("Aliases can be created using `CREATE ALIAS`. The required privileges are described <<cypher-manual#access-control-dbms-administration-alias-management, here>>.")
-      p("include::alias-management-syntax-create-alias.asciidoc[]")
+      p("include::alias/alias-management-syntax-create-alias.asciidoc[]")
       p(
         """This command is optionally idempotent, with the default behavior to fail with an error if the database alias already exists.
           |Inserting `IF NOT EXISTS` after the alias name ensures that no error is returned and nothing happens should a database alias with that name already exist.
@@ -209,7 +209,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         s"""Aliases can be altered using `ALTER ALIAS` to change its database target, url, user credentials, or driver settings.
            |The required privileges are described <<cypher-manual#access-control-dbms-administration-alias-management, here>>.
            |Only the clauses used will be altered.""".stripMargin)
-      p("include::alias-management-syntax-alter-alias.asciidoc[]")
+      p("include::alias/alias-management-syntax-alter-alias.asciidoc[]")
       note {
         p("Local aliases can not be altered to remote aliases or vice versa.")
       }
