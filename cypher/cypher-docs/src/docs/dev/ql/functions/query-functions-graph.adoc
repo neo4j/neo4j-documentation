@@ -1,0 +1,71 @@
+[[query-functions-graph]]
+= Graph functions
+
+[abstract]
+--
+Graph functions provide information about the constituent graphs in <<operations-manual#composite-databases-introduction, composite databases>>.
+--
+
+Functions:
+
+* <<functions-graph-names,graph.names()>>
+* <<functions-graph-byname,graph.byName()>>
+
+
+[[functions-graph-names]]
+== graph.names()
+
+`graph.names()` returns a list containing the names of all graphs in the current composite database.
+
+*Syntax:* `graph.names()`
+
+*Returns:*
+|===
+|
+A list containing String elements.
+|===
+
+*Considerations:*
+|===
+|`graph.names()` is only supported on <<operations-manual#composite-databases-introduction, composite databases>>.
+|===
+
+.Query
+[source, cypher]
+----
+RETURN graph.names()
+----
+
+a list containing the names of all graphs in the current composite database is returned.
+
+.Result
+[role="queryresult",options="header,footer",cols="1*<m"]
+|===
+| +graph.names()+
+| +["composite.first", "composite.second", "composite.third"]+
+1+d|Rows: 1
+|===
+
+[[functions-graph-byname]]
+== graph.byName()
+
+`graph.byName()` resolves a constituent graph by name.
+
+*Syntax:* `USE graph.byName(graphName)`
+
+*Considerations:*
+|===
+|`graph.byName()` is only supported in the <<query-use,`USE` clause>>, on <<operations-manual#composite-databases-introduction, composite databases>>
+|===
+
+.Query
+[source, cypher]
+----
+UNWIND graph.names() AS graphName
+CALL {
+  USE graph.byName(graphName)
+  MATCH (n)
+  RETURN n
+}
+RETURN n
+----
