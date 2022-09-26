@@ -83,7 +83,7 @@ public class ConfigDocsGenerator
 
     private String idFromName( String idPrefix, String name )
     {
-        return idPrefix + name.replace( '<', '-' ).replace( '>', '-' );
+        return idPrefix + name.replace( '<', '-' ).replace( '>', '-' ).replace( ' ', '-' );
     }
 
     private Optional<String> description( SettingImpl<Object> setting )
