@@ -177,7 +177,7 @@ class WhereTest extends DocumentingTest {
         ResultAssertions((r) => {
           r.toList should equal(List(Map("name" -> "Timothy")))
         })) {
-          p("""The name for the *'Timothy'* node is returned because the `WHERE` clause still acted as a filter on the `MATCH`.
+          p("""The name for the *'Timothy'* node is returned because the `WHERE` clause still acts as a filter on the `MATCH`.
               #The `WITH` reduces the scope for the rest of the query moving forward.
               #In this case 'name' is now the only variable in scope for the `RETURN` clause.""".stripMargin('#'))
           resultTable()
