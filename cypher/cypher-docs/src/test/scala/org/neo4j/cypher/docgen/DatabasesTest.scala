@@ -178,7 +178,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           resultTable()
         }
         p(
-          """To create database aliases in the composite database the composite database is given as namespace for the alias.
+          """To create database aliases in the composite database the composite database is given as the namespace for the alias.
             |For information about creating aliases in the composite database, see <<database-management-create-database-alias-in-composite, here>>.""".stripMargin)
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
