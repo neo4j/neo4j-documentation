@@ -390,6 +390,6 @@ include::user-defined-functions.adoc[leveloffset=+1]
 
 include::query-functions-load-csv.adoc[leveloffset=+1]
 
-//Load csv functions
+//Graph functions
 
 include::query-functions-graph.adoc[leveloffset=+1]

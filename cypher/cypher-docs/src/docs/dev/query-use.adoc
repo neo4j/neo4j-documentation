@@ -8,9 +8,11 @@ The `USE` clause determines which graph a query, or query part, is executed agai
 
 * <<query-use-introduction, Introduction>>
 * <<query-use-syntax, Syntax>>
+** <<query-use-syntax-composite, Composite database syntax>>
 * <<query-use-examples, Examples>>
-** <<query-use-examples-query-graph-by-name, Query remote graph by name>>
-** <<query-use-examples-query-graph-by-graph-id, Query remote graph by graph ID>>
+** <<query-use-examples-query-graph, Query a graph>>
+** <<query-use-examples-query-composite-database-constituent-graph, Query a composite database constituent graph>>
+** <<query-use-examples-query-composite-database-constituent-graph-dynamically, Query a composite database constituent graph dynamically>>
 
 [[query-use-introduction]]
 == Introduction
@@ -60,17 +62,17 @@ CALL {
 +
 In subqueries, a `USE` clause may appear as the second clause, if directly following an <<subquery-correlated-importing, importing `WITH` clause>>
 
-When executing queries against a composite database, the USE clause must only refer to graphs that are constituents of the current composite database.
+When executing queries against a composite database, the `USE` clause must only refer to graphs that are constituents of the current composite database.
 
 
 [[query-use-examples]]
 == Examples
 
 
-[[query-use-examples-query-graph-by-name]]
+[[query-use-examples-query-graph]]
 === Query a graph
 
-In this example we assume that our DBMS contains a database named `myDatabase`:
+In this example it is assumed that the DBMS contains a database named `myDatabase`:
 
 .Query.
 [source, cypher]
@@ -80,10 +82,10 @@ MATCH (n) RETURN n
 ----
 
 
-[[query-use-examples-query-composite-graph-by-name]]
+[[query-use-examples-query-composite-database-constituent-graph]]
 === Query a composite database constituent graph
 
-In this example we assume that our DBMS contains a composite database named `myComposite`, containing an alias named `myConstituent`:
+In this example it is assumed that the DBMS contains a composite database named `myComposite`, containing an alias named `myConstituent`:
 
 .Query.
 [source, cypher]
@@ -93,7 +95,7 @@ MATCH (n) RETURN n
 ----
 
 
-[[query-use-examples-query-graph-by-graph-id]]
+[[query-use-examples-query-composite-database-constituent-graph-dynamically]]
 === Query a composite database constituent graph dynamically
 
 The built-in function `graph.byName()` can be used in the `USE` clause to resolve a constituent graph from a string value containing the qualified name of a constituent.
