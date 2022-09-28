@@ -76,8 +76,8 @@ class ShortestPathPlanningTest extends DocumentingTest {
     p(
       """Please note that falling back to the exhaustive search may prove to be a very time consuming strategy in some
         |cases; such as when there is no shortest path between two nodes.
-        |Therefore, in these cases, it is recommended to set `cypher.forbid_exhaustive_shortestpath` to `true`,
-        |as explained in <<operations-manual#config_cypher.forbid_exhaustive_shortestpath, Operations Manual -> Configuration settings>>""".stripMargin)
+        |Therefore, in these cases, it is recommended to set `dbms.cypher.forbid_exhaustive_shortestpath` to `true`,
+        |as explained in <<operations-manual#config_dbms.cypher.forbid_exhaustive_shortestpath, Operations Manual -> Configuration settings>>""".stripMargin)
     section("Shortest path with fast algorithm") {
       query(
         """MATCH (KevinB:Person {name: 'Kevin Bacon'} ),
@@ -116,7 +116,7 @@ class ShortestPathPlanningTest extends DocumentingTest {
             |if the path variable is pointing to `null` instead of a path.""")
         p(
           """An `ErrorPlan` operator will appear in the execution plan in cases where (i)
-            |`cypher.forbid_exhaustive_shortestpath` is set to `true`, and (ii) the fast algorithm is not able to find the shortest path.""".stripMargin
+            |`dbms.cypher.forbid_exhaustive_shortestpath` is set to `true`, and (ii) the fast algorithm is not able to find the shortest path.""".stripMargin
         )
       }
       section("Prevent the exhaustive search from being used as a fallback") {
