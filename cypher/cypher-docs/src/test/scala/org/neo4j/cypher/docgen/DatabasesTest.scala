@@ -178,7 +178,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           resultTable()
         }
         p(
-          """To create database aliases in the composite database the composite database is given as the namespace for the alias.
+          """In order to create database aliases in the composite database, give the composite database as namespace for the alias.
             |For information about creating aliases in composite databases, see <<database-management-create-database-alias-in-composite, here>>.""".stripMargin)
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
@@ -351,7 +351,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("DROP DATABASE customers IF EXISTS DUMP DATA", ResultAssertions(r => {
         assertStats(r)
       })) {}
-      p("It is also possible to ensure that we only drop composite databases. This would then fail if a the database is a standard database.")
+      p("It is also possible to ensure that only composite databases are dropped. A `DROP COMPOSITE` request would then fail if the targeted database is a standard database.")
       query("DROP COMPOSITE DATABASE inventory", ResultAssertions(r => assertStats(r, systemUpdates = 1))) {
         statsOnlyResultTable()
       }

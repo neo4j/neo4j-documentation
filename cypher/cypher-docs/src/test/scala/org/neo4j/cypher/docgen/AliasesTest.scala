@@ -236,7 +236,7 @@ class AliasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       section(title = "Create database aliases in composite databases", id = "database-management-create-database-alias-in-composite", role = "enterprise-edition") {
         p(
           """Both local and remote database aliases can be part of <<cypher-manual#administration-databases-create-composite-database, composite databases>>.
-            |Creating a database alias in a composite database is done by giving the composite database name as namespace for the alias name.""".stripMargin)
+            |Create a database alias in a composite database by giving the name of the composite database as namespace for the alias.""".stripMargin)
         query(
           """CREATE ALIAS garden.flowers
             |FOR DATABASE `perennial-flowers`""".stripMargin,

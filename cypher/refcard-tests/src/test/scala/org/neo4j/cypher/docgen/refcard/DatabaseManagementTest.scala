@@ -169,7 +169,7 @@ DROP DATABASE myDatabase IF EXISTS
 DROP COMPOSITE DATABASE myCompositeDatabase
 ###
 
-(★) Delete the composite database `myCompositeDatabase`, throw error if it doesn't exist or isn't composite.
+(★) Delete the composite database `myCompositeDatabase`. In case this database doesn't exist or isn't composite, an error will be thrown.
 
 """
 }
