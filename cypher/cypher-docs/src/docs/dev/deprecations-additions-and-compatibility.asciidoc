@@ -20,6 +20,36 @@ Replacement syntax for deprecated and removed features are also indicated.
 | Feature
 | Details
 
+a|
+label:functionality[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE TEXT INDEX ... OPTIONS {indexProvider: `text-1.0`}
+----
+a|
+
+The text index provider `text-1.0` is deprecated and replaced by `text-2.0`.
+
+|===
+
+=== Updated features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+CREATE TEXT INDEX ... OPTIONS {indexProvider: `text-2.0`}
+----
+a|
+
+A new text index provider is available, `text-2.0`. This is also the default provider if none is given.
 
 |===
 
