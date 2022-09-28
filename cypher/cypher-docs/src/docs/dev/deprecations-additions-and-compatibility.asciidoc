@@ -937,7 +937,7 @@ DROP COMPOSITE DATABASE
 COMPOSITE DATABASE MANAGEMENT
 ----
 a|
-New privileges that allow a user to create and/or drop composite databases.
+New privileges that allow a user to `CREATE` and/or `DROP` composite databases.
 
 a|
 label:syntax[]

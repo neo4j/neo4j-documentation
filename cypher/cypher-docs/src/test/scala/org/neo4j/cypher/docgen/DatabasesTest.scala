@@ -116,7 +116,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |The possible statuses are `initial`, `online`, `offline`, `store copying` and `unknown`.
             |""".stripMargin)
       }
-      p("For composite databases the `constituents` columns is particularly interesting as it lists the aliases that make up the composite database:")
+      p("For composite databases the `constituents` column is particularly interesting as it lists the aliases that make up the composite database:")
       query("SHOW DATABASE library YIELD name, constituents", assertNameField("library")) { resultTable() }
     }
     section("Creating databases", "administration-databases-create-database", "enterprise-edition") {
@@ -154,14 +154,14 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>.")
         note {
           p(
-            """The `TOPOLOGY` are only available to standard databases and not composite databases.
+            """`TOPOLOGY` is only available for standard databases and not composite databases.
               |Composite databases are always available on all servers.""".stripMargin)
         }
       }
       section("Creating composite databases", "administration-databases-create-composite-database", "enterprise-edition") {
         // TODO: add a link to the place explaining what composite databases are
         p(
-          """Composite databases are a type of database that instead of containing data holds references to other databases that can be queried together through its constituent aliases.""".stripMargin)
+          """Composite databases do not contain data, but they reference to other databases that can be queried together through their constituent aliases.""".stripMargin)
         p("Composite databases can be created using `CREATE COMPOSITE DATABASE`.")
         query("CREATE COMPOSITE DATABASE inventory", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
@@ -179,13 +179,13 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
         p(
           """To create database aliases in the composite database the composite database is given as the namespace for the alias.
-            |For information about creating aliases in the composite database, see <<database-management-create-database-alias-in-composite, here>>.""".stripMargin)
+            |For information about creating aliases in composite databases, see <<database-management-create-database-alias-in-composite, here>>.""".stripMargin)
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
         p("These commands are optionally idempotent, with the default behavior to fail with an error if the database already exists. " +
           "Appending `IF NOT EXISTS` to the command ensures that no error is returned and nothing happens should the database already exist. " +
           "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created. " +
-          "These behaviour flags apply to both standard and composite databases, for example a composite database may replace a standard one or another composite.")
+          "These behavior flags apply to both standard and composite databases (e.g. a composite database may replace a standard one or another composite.)")
         query("CREATE COMPOSITE DATABASE customers IF NOT EXISTS", ResultAssertions(r => {
           assertStats(r)
         })) {}
@@ -199,7 +199,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
       }
       section("Options", "administration-databases-create-database-options", "enterprise-edition") {
-        p("The create database command can have a map of options, e.g. `OPTIONS { key : 'value'}`.")
+        p("The `CREATE DATABASE` command can have a map of options, e.g. `OPTIONS { key : 'value'}`.")
         note {
           p("The `OPTIONS` are only available to standard databases and not composite databases.")
         }
@@ -243,7 +243,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           resultTable()
         }
         note {
-          p("Modifying access mode are only available to standard databases and not composite databases.")
+          p("Modifying access mode is only available to standard databases and not composite databases.")
         }
         p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
           "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
@@ -278,7 +278,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         }
         p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>.")
         note {
-          p("Modifying database topology are only available to standard databases and not composite databases.")
+          p("Modifying database topology is only available to standard databases and not composite databases.")
         }
         p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
           "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
