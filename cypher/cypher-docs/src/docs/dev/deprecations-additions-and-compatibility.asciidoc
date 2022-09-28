@@ -1883,7 +1883,7 @@ CREATE CONSTRAINT [name] ON ...
 a|
 The create constraint syntax can now include a name.
 
-The `IS NODE KEY` and `IS UNIQUE` versions of this command replaces the procedures `db.createNodeKey` and `db.createUniquePropertyConstraint`, respectively.
+The `IS NODE KEY` and `IS UNIQUE` versions of this command replace the procedures `db.createNodeKey` and `db.createUniquePropertyConstraint`, respectively.
 
 |===
 === New features
