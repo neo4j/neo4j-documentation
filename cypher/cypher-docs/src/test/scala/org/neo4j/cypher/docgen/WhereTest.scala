@@ -168,6 +168,21 @@ class WhereTest extends DocumentingTest {
           resultTable()
         }
       }
+      section("Usage with `WITH`", "usage-with-with-clause") {
+        p("As `WHERE` is not considered a clause in its own right, its scope is not limited by a `WITH` directly before it.")
+        query("""MATCH (n:Person)
+                #WITH n.name as name
+                #WHERE n.age = 25
+                #RETURN name""".stripMargin('#'),
+        ResultAssertions((r) => {
+          r.toList should equal(List(Map("name" -> "Timothy")))
+        })) {
+          p("""The name for the *'Timothy'* node is returned because the `WHERE` clause still acts as a filter on the `MATCH`.
+              #The `WITH` reduces the scope for the rest of the query moving forward.
+              #In this case 'name' is now the only variable in scope for the `RETURN` clause.""".stripMargin('#'))
+          resultTable()
+        }
+      }
     }
     section("String matching", "query-where-string") {
       p("""The prefix and suffix of a string can be matched using `STARTS WITH` and `ENDS WITH`.
