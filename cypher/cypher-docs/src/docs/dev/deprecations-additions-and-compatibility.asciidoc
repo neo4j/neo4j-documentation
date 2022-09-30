@@ -827,6 +827,27 @@ SHOW ALIAS[ES] compositeDatabase.aliasName FOR DATABASE[S]
 ----
 a| `SHOW ALIAS` now allows for easy filtering on alias name.
 
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+CREATE [OR REPLACE] ALIAS compositeDatabase.aliasName ...
+ALTER ALIAS compositeDatabase.aliasName
+DROP ALIAS compositeDatabase.aliasName
+----
+a| The alias commands can now handle aliases in composite databases.
+
+a|
+label:syntax[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW ALIAS[ES] aliasName FOR DATABASE[S]
+SHOW ALIAS[ES] compositeDatabase.aliasName FOR DATABASE[S]
+----
+a| `SHOW ALIAS` now allows for easy filtering on alias name.
+
 |===
 
 === New features
