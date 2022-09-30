@@ -8,27 +8,29 @@ The syntax of the alias management commands is as follows:
 |
 [source]
 -----
-SHOW ALIASES FOR DATABASE[S]
+SHOW ALIAS[ES] [name] FOR DATABASE[S]
 [WHERE expression]
 -----
 [source]
 -----
-SHOW ALIASES FOR DATABASE[S]
+SHOW ALIAS[ES] [name] FOR DATABASE[S]
 YIELD { * \| field[, ...] } [ORDER BY field[, ...]] [SKIP n] [LIMIT n]
 [WHERE expression]
 [RETURN field[, ...] [ORDER BY field[, ...]] [SKIP n] [LIMIT n]]
 -----
-Lists both local and remote database aliases.
+Lists both local and remote database aliases, optionally filtered on the alias name.
 
 | Create Local Alias
 |
 [source]
 -----
 CREATE ALIAS name [IF NOT EXISTS] FOR DATABASE targetName
+[PROPERTIES "{" key: value[, ...] "}"]
 -----
 [source]
 -----
 CREATE OR REPLACE ALIAS name FOR DATABASE targetName
+[PROPERTIES "{" key: value[, ...] "}"]
 -----
 
 | Create Remote Alias
@@ -38,19 +40,23 @@ CREATE OR REPLACE ALIAS name FOR DATABASE targetName
 CREATE ALIAS name [IF NOT EXISTS] FOR DATABASE targetName
 AT 'url' USER username PASSSWORD 'password'
 [DRIVER "{" setting: value[, ...] "}"]
+[PROPERTIES "{" key: value[, ...] "}"]
 -----
 [source]
 -----
 CREATE OR REPLACE ALIAS name FOR DATABASE targetName
 AT 'url' USER username PASSSWORD 'password'
 [DRIVER "{" setting: value[, ...] "}"]
+[PROPERTIES "{" key: value[, ...] "}"]
 -----
 
 | Alter Local Alias
 |
 [source]
 -----
-ALTER ALIAS name [IF EXISTS] SET DATABASE TARGET targetName
+ALTER ALIAS name [IF EXISTS] SET DATABASE
+[TARGET targetName]
+[PROPERTIES "{" key: value[, ...] "}"]
 -----
 
 | Alter Remote Alias
@@ -62,6 +68,7 @@ ALTER ALIAS name [IF EXISTS] SET DATABASE
 [USER username]
 [PASSWORD 'password']
 [DRIVER "{" setting: value[, ...] "}"]
+[PROPERTIES "{" key: value[, ...] "}"]
 -----
 
 | Drop Alias

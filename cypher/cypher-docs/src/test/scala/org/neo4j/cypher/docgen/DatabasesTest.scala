@@ -35,7 +35,11 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     initQueries(
       "CREATE DATABASE `movies`",
       "CREATE ALIAS `films` FOR DATABASE `movies`",
-      "CREATE ALIAS `motion pictures` FOR DATABASE `movies`"
+      "CREATE ALIAS `motion pictures` FOR DATABASE `movies`",
+      "CREATE DATABASE `sci-fi-books`",
+      "CREATE COMPOSITE DATABASE `library`",
+      "CREATE ALIAS `library`.`sci-fi` FOR DATABASE `sci-fi-books`",
+      "CREATE ALIAS `library`.`romance` FOR DATABASE `romance-books` AT 'neo4j+s://location:7687' USER alice PASSWORD 'password'"
     )
     synopsis("This chapter explains how to use Cypher to manage Neo4j databases: creating, modifying, deleting, starting, and stopping individual databases within a single server.")
     p(
@@ -57,8 +61,14 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       note {
         p(
           """Note that the results of this command are filtered according to the `ACCESS` privileges of the user.
-            |However, users with `CREATE/DROP/ALTER DATABASE`, `SET DATABASE ACCESS`, or `DATABASE MANAGEMENT` privileges can see all databases regardless of their `ACCESS` privileges.
-            |If a user has not been granted `ACCESS` privilege to any databases, the command can still be executed but will only return the `system` database, which is always visible.
+            |However, some privileges enable users to see additional databases regardless of their `ACCESS` privileges:
+            |
+            | * Users with `CREATE/DROP/ALTER DATABASE` or `SET DATABASE ACCESS` privileges can see all standard databases.
+            | * Users with `CREATE/DROP COMPOSITE DATABASE` or `COMPOSITE DATABASE MANAGEMENT` privileges can see all composite databases.
+            | * Users with `DATABASE MANAGEMENT` privilege can see all databases.
+            |
+            |If a user has not been granted `ACCESS` privilege to any databases nor any of the above special cases,
+            |the command can still be executed but will only return the `system` database, which is always visible.
             |""".stripMargin)
           }
       p(
@@ -70,7 +80,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       }
       p("The number of databases can be seen using a `count()` aggregation with `YIELD` and `RETURN`.")
       query("SHOW DATABASES YIELD * RETURN count(*) as count", ResultAssertions({ r: DocsExecutionResult =>
-        r.columnAs[Int]("count").toSet should be(Set(3))
+        r.columnAs[Int]("count").toSet should be(Set(5))
       })){
         resultTable()
       }
@@ -106,6 +116,8 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
             |The possible statuses are `initial`, `online`, `offline`, `store copying` and `unknown`.
             |""".stripMargin)
       }
+      p("For composite databases the `constituents` column is particularly interesting as it lists the aliases that make up the composite database:")
+      query("SHOW DATABASE library YIELD name, constituents", assertNameField("library")) { resultTable() }
     }
     section("Creating databases", "administration-databases-create-database", "enterprise-edition") {
       p("Databases can be created using `CREATE DATABASE`.")
@@ -140,12 +152,41 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           statsOnlyResultTable()
         }
         p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>.")
+        note {
+          p(
+            """`TOPOLOGY` is only available for standard databases and not composite databases.
+              |Composite databases are always available on all servers.""".stripMargin)
+        }
+      }
+      section("Creating composite databases", "administration-databases-create-composite-database", "enterprise-edition") {
+        // TODO: add a link to the place explaining what composite databases are
+        p(
+          """Composite databases do not contain data, but they reference to other databases that can be queried together through their constituent aliases.""".stripMargin)
+        p("Composite databases can be created using `CREATE COMPOSITE DATABASE`.")
+        query("CREATE COMPOSITE DATABASE inventory", ResultAssertions(r => {
+          assertStats(r, systemUpdates = 1)
+        })) {
+          statsOnlyResultTable()
+        }
+        note {
+          p("""Composite database names are subject to the same rules as standard databases.
+              |One difference is however that the deprecated syntax using dots without enclosing the name in backticks is not available.
+              |Both dots and dashes needs to be enclosed within backticks when using composite databases.""")
+        }
+        p("When a composite database has been created, it will show up in the listing provided by the command `SHOW DATABASES`.")
+        query("SHOW DATABASES YIELD name, type, access, role, writer, constituents", assertDatabasesShown) {
+          resultTable()
+        }
+        p(
+          """In order to create database aliases in the composite database, give the composite database as namespace for the alias.
+            |For information about creating aliases in composite databases, see <<database-management-create-database-alias-in-composite, here>>.""".stripMargin)
       }
       section("Handling Existing Databases", "administration-databases-create-database-existing", "enterprise-edition") {
-        p("This command is optionally idempotent, with the default behavior to fail with an error if the database already exists. " +
+        p("These commands are optionally idempotent, with the default behavior to fail with an error if the database already exists. " +
           "Appending `IF NOT EXISTS` to the command ensures that no error is returned and nothing happens should the database already exist. " +
-          "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created.")
-        query("CREATE DATABASE customers IF NOT EXISTS", ResultAssertions(r => {
+          "Adding `OR REPLACE` to the command will result in any existing database being deleted and a new one created. " +
+          "These behavior flags apply to both standard and composite databases (e.g. a composite database may replace a standard one or another composite.)")
+        query("CREATE COMPOSITE DATABASE customers IF NOT EXISTS", ResultAssertions(r => {
           assertStats(r)
         })) {}
         query("CREATE OR REPLACE DATABASE customers", ResultAssertions(r => {
@@ -154,11 +195,14 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           p("This is equivalent to running `DROP DATABASE customers IF EXISTS` followed by `CREATE DATABASE customers`.")
         }
         note {
-          p("The `IF NOT EXISTS` and `OR REPLACE` parts of this command cannot be used together.")
+          p("The `IF NOT EXISTS` and `OR REPLACE` parts of these commands cannot be used together.")
         }
       }
       section("Options", "administration-databases-create-database-options", "enterprise-edition") {
-        p("The create database command can have a map of options, e.g. `OPTIONS { key : 'value'}`")
+        p("The `CREATE DATABASE` command can have a map of options, e.g. `OPTIONS { key : 'value'}`.")
+        note {
+          p("The `OPTIONS` are only available to standard databases and not composite databases.")
+        }
         p(
           """
             |[options="header"]
@@ -177,7 +221,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
     }
     section("Altering databases", "administration-databases-alter-database", "enterprise-edition") {
       initQueries("CREATE DATABASE customers")
-      p("Databases can be modified using the command `ALTER DATABASE`. ")
+      p("Standard databases can be modified using the command `ALTER DATABASE`. ")
       section("Access", "administration-databases-alter-database-access") {
         p("By default, a database has read-write access mode on creation. " +
           "The database can be limited to read-only mode on creation using the configuration parameters " +
@@ -197,6 +241,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
         p("The database access mode can be seen in the `access` output column of the command `SHOW DATABASES`.")
         query("SHOW DATABASES yield name, access", assertDatabasesShown) {
           resultTable()
+        }
+        note {
+          p("Modifying access mode is only available to standard databases and not composite databases.")
         }
         p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
           "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
@@ -230,6 +277,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
           )
         }
         p("For more details on primary and secondary server roles, see <<operations-manual#clustering-introduction-operational, Cluster overview>>.")
+        note {
+          p("Modifying database topology is only available to standard databases and not composite databases.")
+        }
         p("`ALTER DATABASE` commands are optionally idempotent, with the default behavior to fail with an error if the database does not exist. " +
           "Appending `IF EXISTS` to the command ensures that no error is returned and nothing happens should the database not exist.")
         query("ALTER DATABASE nonExisting IF EXISTS SET TOPOLOGY 1 PRIMARY 0 SECONDARY", ResultAssertions(r => {
@@ -251,6 +301,9 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASE customers", assertNameField("customers")) {
         resultTable()
       }
+      note {
+        p("Both standard databases and composite databases can be stopped using this command.")
+      }
     }
     section("Starting databases", "administration-databases-start-database", "enterprise-edition") {
       initQueries("CREATE DATABASE customers")
@@ -264,10 +317,13 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("SHOW DATABASE customers", assertNameField("customers")) {
         resultTable()
       }
+      note {
+        p("Both standard databases and composite databases can be started using this command.")
+      }
     }
     section("Deleting databases", "administration-databases-drop-database", "enterprise-edition") {
-      initQueries("CREATE DATABASE customers")
-      p("Databases can be deleted using the command `DROP DATABASE`.")
+      initQueries("CREATE DATABASE customers", "CREATE COMPOSITE DATABASE inventory")
+      p("Databases (both standard and composite) can be deleted using the command `DROP DATABASE`.")
       query("DROP DATABASE customers", ResultAssertions(r => {
         assertStats(r, systemUpdates = 1)
       })) {
@@ -295,10 +351,15 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       query("DROP DATABASE customers IF EXISTS DUMP DATA", ResultAssertions(r => {
         assertStats(r)
       })) {}
-
+      p("It is also possible to ensure that only composite databases are dropped. A `DROP COMPOSITE` request would then fail if the targeted database is a standard database.")
+      query("DROP COMPOSITE DATABASE inventory", ResultAssertions(r => assertStats(r, systemUpdates = 1))) {
+        statsOnlyResultTable()
+      }
+      p("To ensure the database to be dropped is standard and not composite, the user first need to check the `type` column of `SHOW DATABASES` manually.")
     }
     section(title="Wait options", id="administration-wait-nowait", role = "enterprise-edition") {
-      p("""Aside from `SHOW DATABASES` and `ALTER DATABASE`, all database management commands accept an optional
+      p(
+        """Aside from `SHOW DATABASES` and `ALTER DATABASE`, all database management commands accept an optional
           |`WAIT`/`NOWAIT` clause. The `WAIT`/`NOWAIT` clause allows you to specify a time limit in
           |which the command must complete and return. The options are:
           |
