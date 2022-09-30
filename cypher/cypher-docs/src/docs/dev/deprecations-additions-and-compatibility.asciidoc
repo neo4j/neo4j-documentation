@@ -541,6 +541,21 @@ a|
 MATCH (a), (b), shortestPath((a)-[r*1..1]->(b)) RETURN b
 ----
 
+a|
+label:syntax[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE DATABASE databaseName.withDot ...
+----
+a|
+Creating a database with unescaped dots in the name has been deprecated, instead escape the database name:
+
+[source, cypher, role="noheader"]
+----
+CREATE DATABASE `databaseName.withDot` ...
+----
+
 |===
 
 === Updated features
@@ -689,7 +704,7 @@ label:updated[]
 [GRANT\|DENY] [IMMUTABLE] ...
 ----
 a|
-Privileges can be specified as `IMMUTABLE`, which means that they cannot be altered by users with Privilege Management. 
+Privileges can be specified as `IMMUTABLE`, which means that they cannot be altered by users with Privilege Management.
 They can only be administered with auth disabled.
 
 a|
@@ -712,8 +727,8 @@ SHOW DATABASES
 a|
 Changes to the default columns in the result:
 
-* The `writer` columns has been added.
-* The values returned in the `role` column have changes to be just `primary` and `secondary` or `unknown`.
+* The `writer`, `type`, and `constituents` columns have been added.
+* The values returned in the `role` column have changes to be just `primary`, `secondary`, or `unknown`.
 * The `error` column has been renamed to `statusMessage`.
 
 The following columns have been added to the full result set (with `YIELD`) and not by default:
@@ -790,6 +805,28 @@ returning an integer approximation for precision 0 and throwing an exception for
 
 !===
 To get an integer value use the `toInteger` function.
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+CREATE [OR REPLACE] ALIAS compositeDatabase.aliasName ...
+ALTER ALIAS compositeDatabase.aliasName
+DROP ALIAS compositeDatabase.aliasName
+----
+a| The alias commands can now handle aliases in composite databases.
+
+a|
+label:syntax[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+SHOW ALIAS[ES] aliasName FOR DATABASE[S]
+SHOW ALIAS[ES] compositeDatabase.aliasName FOR DATABASE[S]
+----
+a| `SHOW ALIAS` now allows for easy filtering on alias name.
+
 |===
 
 === New features
@@ -798,6 +835,29 @@ To get an integer value use the `toInteger` function.
 |===
 | Feature
 | Details
+
+a|
+label:functionality[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+CREATE [OR REPLACE] COMPOSITE DATABASE databaseName [IF NOT EXISTS] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+DROP COMPOSITE DATABASE databaseName [IF EXISTS] [DUMP DATA \| DESTROY DATA] [WAIT [n [SEC[OND[S]]]]\|NOWAIT]
+----
+a| New Cypher command for creating and dropping composite databases.
+
+a|
+label:functionality[]
+label:new[] +
+New privilege:
+[source, cypher, role="noheader"]
+----
+CREATE COMPOSITE DATABASE
+DROP COMPOSITE DATABASE
+COMPOSITE DATABASE MANAGEMENT
+----
+a|
+New privileges that allow a user to `CREATE` and/or `DROP` composite databases.
 
 a|
 label:syntax[]

@@ -44,6 +44,14 @@ CREATE DATABASE `topology-example` IF NOT EXISTS TOPOLOGY 1 PRIMARY 0 SECONDARIE
 ###assertion=update-one
 //
 
+CREATE COMPOSITE DATABASE myCompositeDatabase IF NOT EXISTS
+###
+
+(★) Create a composite database named `myCompositeDatabase`. If any database with that name exists, then no new database will be created.
+
+###assertion=update-one
+//
+
 ALTER DATABASE myDatabase SET ACCESS READ ONLY
 ###
 
@@ -105,7 +113,7 @@ DROP ALIAS myAlias FOR DATABASE
 
 (★) Drop the database alias `myAlias`.
 
-###assertion=show-four
+###assertion=show-five
 //
 
 SHOW DATABASES
@@ -113,7 +121,7 @@ SHOW DATABASES
 
 List all databases in the system and information about them.
 
-###assertion=show-one
+###assertion=show-two
 //
 
 SHOW DATABASES
@@ -154,6 +162,14 @@ DROP DATABASE myDatabase IF EXISTS
 ###
 
 (★) Delete the database `myDatabase`, if it exists.
+
+###assertion=update-one
+//
+
+DROP COMPOSITE DATABASE myCompositeDatabase
+###
+
+(★) Delete the composite database `myCompositeDatabase`. In case this database doesn't exist or isn't composite, an error will be thrown.
 
 """
 }

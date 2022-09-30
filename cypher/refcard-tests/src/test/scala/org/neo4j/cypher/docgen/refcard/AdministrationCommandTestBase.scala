@@ -65,16 +65,16 @@ abstract class AdministrationCommandTestBase extends RefcardTest with QueryStati
         assert(result.toList.size === 0)
       case "show-one" =>
         assertStats(result, systemUpdates = 0)
-        assert(result.toList.size === 1) // there are no default roles or users
+        assert(result.toList.size === 1)
       case "show-two" =>
         assertStats(result, systemUpdates = 0)
-        assert(result.toList.size === 2) // there are no default users
+        assert(result.toList.size === 2)
       case "show-three" =>
         assertStats(result, systemUpdates = 0)
-        assert(result.toList.size === 3) // default and system database are shown
-      case "show-four" =>
+        assert(result.toList.size === 3)
+      case "show-five" =>
         assertStats(result, systemUpdates = 0)
-        assert(result.toList.size === 4)
+        assert(result.toList.size === 5)
       case "show-nothing" =>
         assertStats(result, systemUpdates = 0)
         assert(result.toList.size === 0)

@@ -27,6 +27,8 @@ class DatabaseManagementPrivilegeTest extends AdministrationCommandTestBase {
     tx.execute("CREATE ROLE my_role")
     tx.execute("DENY DROP DATABASE ON DBMS TO my_role")
     tx.execute("GRANT ALTER DATABASE ON DBMS TO my_role")
+    tx.execute("GRANT DROP COMPOSITE DATABASE ON DBMS TO my_role")
+    tx.execute("DENY DROP COMPOSITE DATABASE ON DBMS TO my_role")
   }
 
   def text: String = {
@@ -63,6 +65,30 @@ GRANT SET DATABASE ACCESS ON DBMS TO my_role
 ###
 
 Granted privilege to set database access mode to a role.
+
+###assertion=update-one
+//
+
+DENY CREATE COMPOSITE DATABASE ON DBMS TO my_role
+###
+
+Deny the privilege to create composite databases to a role.
+
+###assertion=update-two
+//
+
+REVOKE DROP COMPOSITE DATABASE ON DBMS FROM my_role
+###
+
+Revoke the granted and denied privileges to delete composite databases from a role.
+
+###assertion=update-one
+//
+
+GRANT COMPOSITE DATABASE MANAGEMENT ON DBMS TO my_role
+###
+
+Grant all privileges to manage composite databases to a role.
 
 ###assertion=update-one
 //
