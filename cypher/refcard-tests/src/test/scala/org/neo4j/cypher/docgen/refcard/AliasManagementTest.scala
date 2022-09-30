@@ -25,6 +25,7 @@ class AliasManagementTest extends AdministrationCommandTestBase {
 
   private def setup() = graph.withTx { tx =>
     tx.execute("CREATE DATABASE myDatabase")
+    tx.execute("CREATE COMPOSITE DATABASE myCompositeDatabase")
   }
 
   def text: String = {
@@ -51,6 +52,15 @@ Create a remote alias `myRemote` for the database with name `myDatabase`.
 ###assertion=update-one
 //
 
+CREATE ALIAS myCompositeDatabase.remote FOR DATABASE yourDatabase AT "neo4j+s://location:7687"
+USER alice PASSWORD "password"
+###
+
+Create a remote alias `remote` in the composite database `myCompositeDatabase` for the database with name `yourDatabase`.
+
+###assertion=update-one
+//
+
 ALTER ALIAS myAlias SET DATABASE TARGET myDatabase
 ###
 
@@ -67,7 +77,7 @@ DRIVER { connection_timeout : duration({ minutes: 1 }) }
 
 Alter the remote alias `myRemote` with possible subclauses.
 
-###assertion=show-two
+###assertion=show-three
 //
 
 SHOW ALIASES FOR DATABASE

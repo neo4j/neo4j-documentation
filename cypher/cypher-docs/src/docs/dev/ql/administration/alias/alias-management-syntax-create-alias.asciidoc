@@ -5,16 +5,18 @@
 |
 [source, cypher, role=noplay]
 -----
-CREATE [OR REPLACE] ALIAS name [IF NOT EXISTS] FOR DATABASE targetName
+CREATE [OR REPLACE] ALIAS [compositeDatabaseName.]aliasName [IF NOT EXISTS] FOR DATABASE targetName
+[PROPERTIES "{" key: value[, ...] "}"]
 -----
 | Create a local alias.
 
 |
 [source, cypher, role=noplay]
 -----
-CREATE [OR REPLACE] ALIAS name [IF NOT EXISTS] FOR DATABASE targetName
+CREATE [OR REPLACE] ALIAS [compositeDatabaseName.]aliasName [IF NOT EXISTS] FOR DATABASE targetName
 AT 'url' USER username PASSSWORD 'password'
 [DRIVER "{" setting: value[, ...] "}"]
+[PROPERTIES "{" key: value[, ...] "}"]
 -----
 | Create a remote alias.
 

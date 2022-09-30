@@ -5,18 +5,23 @@
 |
 [source, cypher, role=noplay]
 -----
-ALTER ALIAS name [IF EXISTS] SET DATABASE TARGET targetName
+ALTER ALIAS [compositeDatabaseName.]aliasName [IF EXISTS] SET DATABASE
+[TARGET targetName]
+[PROPERTIES "{" key: value[, ...] "}"]
 -----
 | Modify database target of a local alias.
+
+The clauses can be applied in any order, while at least one clause needs to be set.
 
 |
 [source, cypher, role=noplay]
 -----
-ALTER ALIAS name [IF EXISTS] SET DATABASE
+ALTER ALIAS [compositeDatabaseName.]aliasName [IF EXISTS] SET DATABASE
 [TARGET targetName AT 'url']
 [USER username]
 [PASSSWORD 'password']
 [DRIVER "{" setting: value[, ...] "}"]
+[PROPERTIES "{" key: value[, ...] "}"]
 -----
 | Modify a remote alias.
 
