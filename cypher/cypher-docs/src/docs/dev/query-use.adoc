@@ -62,7 +62,7 @@ CALL {
 +
 In subqueries, a `USE` clause may appear as the second clause, if directly following an <<subquery-correlated-importing, importing `WITH` clause>>
 
-When executing queries against a composite database, the `USE` clause must only refer to graphs that are constituents of the current composite database.
+When executing queries against a composite database, the `USE` clause must only refer to graphs that are part of the current composite database.
 
 
 [[query-use-examples]]
@@ -85,7 +85,7 @@ MATCH (n) RETURN n
 [[query-use-examples-query-composite-database-constituent-graph]]
 === Query a composite database constituent graph
 
-In this example it is assumed that the DBMS contains a composite database named `myComposite`, containing an alias named `myConstituent`:
+In this example it is assumed that the DBMS contains a composite database named `myComposite`, which includes an alias named `myConstituent`:
 
 .Query.
 [source, cypher]
@@ -100,7 +100,7 @@ MATCH (n) RETURN n
 
 The built-in function `graph.byName()` can be used in the `USE` clause to resolve a constituent graph from a string value containing the qualified name of a constituent.
 
-This examples assumes the same setup as the previous one: a composite database named `myComposite`, containing an alias named `myConstituent`:
+This examples uses the same setup as the previous one, that is, a composite database named `myComposite`, which includes an alias named `myConstituent`:
 
 .Query.
 [source, cypher]

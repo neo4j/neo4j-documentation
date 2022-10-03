@@ -15,14 +15,14 @@ Functions:
 [[functions-graph-names]]
 == graph.names()
 
-`graph.names()` returns a list containing the names of all graphs in the current composite database.
+`graph.names()` returns a list containing the names of all graphs on the current composite database.
 
 *Syntax:* `graph.names()`
 
 *Returns:*
 |===
 |
-A list containing String elements.
+A list containing `String` elements.
 |===
 
 *Considerations:*
@@ -36,7 +36,7 @@ A list containing String elements.
 RETURN graph.names()
 ----
 
-a list containing the names of all graphs in the current composite database is returned.
+Returns a list containing the names of all graphs on the current composite database.
 
 .Result
 [role="queryresult",options="header,footer",cols="1*<m"]
@@ -55,7 +55,7 @@ a list containing the names of all graphs in the current composite database is r
 
 *Considerations:*
 |===
-|`graph.byName()` is only supported in the <<query-use,`USE` clause>>, on <<operations-manual#composite-databases-introduction, composite databases>>
+|`graph.byName()` is only supported in the <<query-use,`USE` clause>>, on <<operations-manual#composite-databases-introduction, composite databases>>.
 |===
 
 .Query

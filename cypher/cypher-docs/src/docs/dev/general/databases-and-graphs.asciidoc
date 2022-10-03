@@ -29,7 +29,8 @@ A database is a storage and retrieval mechanism for collecting data in a defined
 Most of the time Cypher queries are <<cypher-querying-updating-administering, reading or updating queries>>, which are run against a graph.
 There are also administrative commands that apply to a database, or to the entire DBMS.
 Administrative commands cannot be run in a session connected to a normal user database, but instead need to be run within a session connected to the _system_ database.
-Administrative commands execute on the _system_ database. If an administrative command is submitted to a user database, it is rerouted to the _system_ database.
+Administrative commands execute on the _system_ database.
+If an administrative command is submitted to a user database, it is rerouted to the _system_ database.
 
 == The system database and the default database
 
