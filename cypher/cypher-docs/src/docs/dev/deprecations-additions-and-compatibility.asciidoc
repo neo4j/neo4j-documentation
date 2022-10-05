@@ -1027,7 +1027,7 @@ SERVER MANAGEMENT
 SHOW SERVERS
 ----
 a|
-New privilege that allows a user to create, modify, reallocate, deallocate, drop and list servers.
+New privileges that allow a user to create, modify, reallocate, deallocate, drop and list servers.
 
 |===
 
