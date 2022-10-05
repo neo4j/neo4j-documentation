@@ -43,16 +43,10 @@ In these examples, parameters are given in JSON; the exact manner in which they 
 [[cypher-parameters-auto-parameterization]]
 == Auto-parameterization
 
-When a query does not use parameters, Cypher will try to infer parameters anyway.
+From version 5 onwards, even when a query is partially parameterized, Cypher will try to infer parameters anyway.
 Each literal in the query is replaced with a parameter.
 This increases the re-usability of the computed plan for queries that are identical except for the literals.
 It is not recommended to rely on this behavior - users should rather use parameters where they think it is appropriate.
-
-[NOTE]
-====
-If at least one parameter is used in the query, auto-parameterization is turned off for that query.
-This means that any remaining literals will not be turned into parameters.
-====
 
 
 [[cypher-parameters-string-literal]]
