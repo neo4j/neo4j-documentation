@@ -542,7 +542,7 @@ It assumes that your current work directory is the _<neo4j-home>_ directory of t
 [NOTE]
 ====
 * For the default directory of other installations see, <<operations-manual#file-locations,Operations Manual -> File locations>>.
-* The import location can be configured with <<operations-manual#config_dbms.directories.import,Operations Manual -> `dbms.directories.import`>>.
+* The import location can be configured with <<operations-manual#config_server.directories.import,Operations Manual -> `server.directories.import`>>.
 ====
 
 == Importing the data
