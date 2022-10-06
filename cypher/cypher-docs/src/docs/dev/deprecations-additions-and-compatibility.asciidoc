@@ -923,6 +923,91 @@ ALTER DATABASE ... SET TOPOLOGY n PRIMAR{Y\|IES} [m SECONDAR{Y\|IES}]
 a|
 New sub-clause for `ALTER DATABASE`, which allows modifying the number of servers hosting a database in cluster environments.
 
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+ENABLE SERVER ...
+----
+a|
+New Cypher command for enabling servers.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+ALTER SERVER ... SET OPTIONS ...
+----
+a|
+New Cypher command for setting options for a server.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+RENAME SERVER ... TO ...
+----
+a|
+New Cypher command for changing the name of a server.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+REALLOCATE DATABASES
+----
+a|
+New Cypher command for re-balancing what servers host which databases.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+DEALLOCATE DATABASE[S] FROM SERVER[S] ...
+----
+a|
+New Cypher command for moving all databases from servers.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+DROP SERVER ...
+----
+a|
+New Cypher command for dropping servers.
+
+a|
+label:functionality[]
+label:added[]
+[source, cypher, role="noheader"]
+----
+SHOW SERVERS
+----
+a|
+New Cypher command for listing servers.
+
+a|
+label:functionality[]
+label:new[] +
+New privileges:
+[source, cypher, role="noheader"]
+----
+SERVER MANAGEMENT
+----
+[source, cypher, role="noheader"]
+----
+SHOW SERVERS
+----
+a|
+New privileges that allow a user to create, modify, reallocate, deallocate, drop and list servers.
+
 |===
 
 [[cypher-deprecations-additions-removals-4.4]]
