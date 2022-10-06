@@ -7,7 +7,7 @@ Graph functions provide information about the constituent graphs in <<operations
 --
 
 .Graph functions
-[options="header", width="100%", cols="1,3a,1a,1"]
+[options="header", width="100%", cols="2,2a,2a,2"]
 |===
 | Syntax | Query | Result | Description
 
