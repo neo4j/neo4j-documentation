@@ -474,13 +474,13 @@ class AggregatingFunctionsTest extends DocumentingTest {
             t.getMessage should include("Aggregation column contains implicit grouping expressions.")
           })) {
         }
-        note {
-          p("The above query could be rewritten to:")
-          query("""#`MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) WITH n.age + n.age AS groupingKey, f RETURN groupingKey, groupingKey - max(f.age)`""".stripMargin('#'),
-            ResultAssertions((r) => {
-              r.toList should equal(List(Map("groupingKey" -> 26, "groupingKey - max(f.age)" -> -18)))
-            })) {}
-        }
+        p("The above query could be rewritten to:")
+        query(
+          """MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) WITH n.age + n.age AS groupingKey, f RETURN groupingKey, groupingKey - max(f.age)""",
+          ResultAssertions((r) => {
+            r.toList should equal(List(Map("groupingKey" -> 26, "groupingKey - max(f.age)" -> -18)))
+          })) {}
+
       }
     }
   }.build()
