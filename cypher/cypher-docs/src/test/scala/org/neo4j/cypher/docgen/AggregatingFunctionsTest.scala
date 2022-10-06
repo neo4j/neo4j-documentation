@@ -69,6 +69,14 @@ class AggregatingFunctionsTest extends DocumentingTest {
         #The latter, `+count(*)+` is an aggregate expression.
         #The matching paths will be divided into different buckets, depending on the grouping key.
         #The aggregate function will then be run on these buckets, calculating an aggregate value per bucket.""".stripMargin('#'))
+    p("""The input expression of an aggregation function can contain any expression, including expressions that are not grouping keys.
+        #However, not all expressions can be composed with aggregation functions.
+        #The example below will throw an error since we compose `n.x`, which is not a grouping key, with the aggregation expression `+count(*)+`.
+        #For more information see <<grouping-keys,Grouping keys>>.""".stripMargin('#'))
+    p("""[source, cypher]
+        #----
+        #RETURN n.x + count(*)
+        #----""".stripMargin('#'))
     p("To use aggregations to sort the result set, the aggregation must be included in the `RETURN` to be used in the `ORDER BY`.")
     p("""The `DISTINCT` operator works in conjunction with aggregation.
         #It is used to make all values unique before running them through an aggregate function.
@@ -384,6 +392,95 @@ class AggregatingFunctionsTest extends DocumentingTest {
       })) {
         p("The sum of the two supplied Durations is returned.")
         resultTable()
+      }
+    }
+    section("Grouping keys", "grouping-keys") {
+      p("""Aggregation expressions are expressions which contain one or more aggregation functions.
+          #A simple aggregation expression consists of a single aggregation function.
+          #For instance, `SUM(x.a)` is an aggregation expression that only consists of the aggregation function `SUM( )` with `x.a` as its argument.
+          #Aggregation expressions are also allowed to be more complex, where the result of one or more aggregation functions
+          #are input arguments to other expressions.
+          #For instance, `0.1 * (SUM(x.a) / COUNT(x.b))` is an aggregation expression that contains two aggregation functions,
+          #`SUM( )` with `x.a` as its argument and `COUNT( )` with `x.b` as its argument.
+          #Both are input arguments to the division expression.
+          #""".stripMargin(
+          '#'))
+
+      p(
+        """For aggregation expressions to be correctly computable for the buckets formed by the grouping key(s), they have to fulfill some requirements.
+          #Specifically, each sub expression in an aggregation expression has to be either:
+          #
+          #* an aggregation function, e.g. `SUM(x.a)`,
+          #* a constant, e.g. `0.1`,
+          #* a parameter, e.g. `$param`,
+          #* a grouping key, e.g. the `a` in `RETURN a, count(*)`
+          #* a local variable, e.g. the `x` in  `count(*) + size([ x IN range(1, 10) | x ])`, or
+          #* a subexpression, all whose operands are operands allowed in an aggregation expression.
+          #""".stripMargin('#'))
+
+      section("Examples of aggregation expressions.", "grouping-key-examples") {
+        p("Simple aggregation without any grouping keys:")
+        query("""MATCH (p: Person) RETURN max(p.age)""",
+          ResultAssertions((r) => {
+            r.toList.head("max(p.age)") should equal(44L)
+          })) {
+          resultTable()
+        }
+        p("Addition of an aggregation and a constant, without any grouping keys:")
+        query("""MATCH (p: Person) RETURN max(p.age) + 1""",
+          ResultAssertions((r) => {
+            r.toList.head("max(p.age) + 1") should equal(45L)
+          })) {
+          resultTable()
+        }
+        p("Subtraction of a property access and an aggregation. Note that `n` is a grouping key:")
+        query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n, n.age - max(f.age)""",
+          ResultAssertions((r) => {
+            r.toList.size shouldBe 1
+            r.head.get("n.age - max(f.age)") should equal(Some(-31L))
+          })) {
+          resultTable()
+        }
+        p("Subtraction of a property access and an aggregation. Note that `n.age` is a grouping key:")
+        query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n.age, n.age - max(f.age)""",
+          ResultAssertions((r) => {
+            r.toList should equal(List(Map("n.age" -> 13L, "n.age - max(f.age)" -> -31)))
+          })) {
+          resultTable()
+        }
+
+        p(
+          """
+            #Grouping keys themselves can be complex expressions.
+            #For better query readability, Cypher only recognizes a sub-expression in aggregation expressions as a grouping key if the grouping key is either:
+            #
+            #- A variable - e.g. the `n` in `RETURN n, n.age - max(f.age)`
+            #- A property access - e.g. the `n.age` in `RETURN n.age, n.age - max(f.age)`
+            #- A map access - e.g. the `n.age` in `WITH {age: 34, name:Chris} AS n RETURN n.age, n.age - max(n.age)`
+            #
+            #If more complex grouping keys are needed as operands in aggregation expression, it is always possible to project them in advance with `WITH`.
+            #""".stripMargin('#'))
+
+        p("Using the property `n.age` will throw an exception, since `n.age` is not a grouping keys:")
+        query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n.age - max(f.age)""",
+          ErrorAssertions((t) => {
+            t.getMessage should include("Aggregation column contains implicit grouping expressions.")
+          })) {
+        }
+        p("`n.age + n.age` is not a valid grouping key, since the expression is not a variable, property access or map access. " +
+          "It can therefore not be used in the expression which contains the aggregation function:")
+        query("""MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) RETURN n.age + n.age, n.age + n.age - max(f.age)""",
+          ErrorAssertions((t) => {
+            t.getMessage should include("Aggregation column contains implicit grouping expressions.")
+          })) {
+        }
+        p("The above query could be rewritten to:")
+        query(
+          """MATCH (n: Person{name:"A"})-[:KNOWS]-(f:Person) WITH n.age + n.age AS groupingKey, f RETURN groupingKey, groupingKey - max(f.age)""",
+          ResultAssertions((r) => {
+            r.toList should equal(List(Map("groupingKey" -> 26, "groupingKey - max(f.age)" -> -18)))
+          })) {}
+
       }
     }
   }.build()
