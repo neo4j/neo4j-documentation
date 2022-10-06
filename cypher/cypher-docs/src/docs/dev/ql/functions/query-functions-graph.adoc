@@ -6,60 +6,27 @@
 Graph functions provide information about the constituent graphs in <<operations-manual#composite-databases-introduction, composite databases>>.
 --
 
-Functions:
-
-* <<functions-graph-names,graph.names()>>
-* <<functions-graph-byname,graph.byName()>>
-
-
-[[functions-graph-names]]
-== graph.names()
-
-`graph.names()` returns a list containing the names of all graphs on the current composite database.
-
-*Syntax:* `graph.names()`
-
-*Returns:*
+.Graph functions
+[options="header", width="100%", cols="1,3a,1a,1"]
 |===
-|
-A list containing `String` elements.
-|===
+| Syntax | Query | Result | Description
 
-*Considerations:*
-|===
-|`graph.names()` is only supported on <<operations-manual#composite-databases-introduction, composite databases>>.
-|===
-
-.Query
-[source, cypher]
+| `graph.names()`
+| [source, cypher, role=noplay]
 ----
 RETURN graph.names()
 ----
-
-Returns a list containing the names of all graphs on the current composite database.
-
-.Result
+|
 [role="queryresult",options="header,footer",cols="1*<m"]
-|===
-| +graph.names()+
-| +["composite.first", "composite.second", "composite.third"]+
-1+d|Rows: 1
-|===
-
-[[functions-graph-byname]]
-== graph.byName()
-
-`graph.byName()` resolves a constituent graph by name.
-
-*Syntax:* `USE graph.byName(graphName)`
-
-*Considerations:*
-|===
-|`graph.byName()` is only supported in the <<query-use,`USE` clause>>, on <<operations-manual#composite-databases-introduction, composite databases>>.
-|===
-
-.Query
-[source, cypher]
+!===
+! +graph.names()+
+! +["composite.first", "composite.second", "composite.third"]+
+1+d!Rows: 1
+!===
+| Returns a list containing the names of all graphs on the current composite database.
+It is only supported on <<operations-manual#composite-databases-introduction, composite databases>>.
+| `USE graph.byName(graphName)`
+| [source, cypher, role=noplay]
 ----
 UNWIND graph.names() AS graphName
 CALL {
@@ -69,3 +36,8 @@ CALL {
 }
 RETURN n
 ----
+| Returns all nodes from all graphs on the current composite database.
+| Resolves a constituent graph by name.
+It is only supported in the <<query-use,`USE` clause>>, on <<operations-manual#composite-databases-introduction, composite databases>>.
+
+|===
