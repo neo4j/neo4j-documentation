@@ -53,7 +53,8 @@ class PredicateFunctionsTest extends DocumentingTest {
     graphViz()
     section("all()", "functions-all") {
       p("""The function `all()` returns `true` if the predicate holds for all elements in the given list.
-          #`null` is returned if the list is `null` or if one of the comparisons evaluates to `null`.""".stripMargin('#'))
+          #`null` is returned if the list is `null` or if the predicate evaluates to `null` for at least one element and
+          #does not evaluate to `false` for any other element.""".stripMargin('#'))
       function("all(variable IN list WHERE predicate)",
         "A Boolean.",
         ("list",
@@ -77,7 +78,8 @@ class PredicateFunctionsTest extends DocumentingTest {
     }
     section("any()", "functions-any") {
       p("""The function `any()` returns `true` if the predicate holds for at least one element in the given list.
-          #`null` is returned if the list is `null` or if one of the comparisons evaluates to `null` and no other has evaluated to true.""".stripMargin('#'))
+          #`null` is returned if the list is `null`, or if the predicate evaluates to `null` for at least one element
+          #and does not evaluate to `true` for any other element.""".stripMargin('#'))
       function("any(variable IN list WHERE predicate)",
         "A Boolean.",
         ("list",
@@ -179,7 +181,8 @@ class PredicateFunctionsTest extends DocumentingTest {
     }
     section("none()", "functions-none") {
       p("""The function `none()` returns `true` if the predicate does _not_ hold for any element in the given list.
-          #`null` is returned if the list is `null` or if one of the comparisons evaluates to `null` and no other has evaluated to true.""".stripMargin('#'))
+          #`null` is returned if the list is `null`, or if the predicate evaluates to `null` for at least one element
+          #and does not evaluate to `true` for any other element.""".stripMargin('#'))
       function("none(variable IN list WHERE predicate)",
         "A Boolean.",
         ("list",
@@ -206,7 +209,8 @@ class PredicateFunctionsTest extends DocumentingTest {
     }
     section("single()", "functions-single") {
       p("""The function `single()` returns `true` if the predicate holds for exactly _one_ of the elements in the given list.
-          #`null` is returned if the list is `null` or if one of the comparisons evaluates to `null`.""".stripMargin('#'))
+          #`null` is returned if the list is `null`, or if the predicate evaluates to `null` for at least one element
+          #and `true` for max one element.""".stripMargin('#'))
       function("single(variable IN list WHERE predicate)",
         "A Boolean.",
         ("list", "An expression that returns a list."),
