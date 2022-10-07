@@ -8,9 +8,11 @@ The `USE` clause determines which graph a query, or query part, is executed agai
 
 * <<query-use-introduction, Introduction>>
 * <<query-use-syntax, Syntax>>
+** <<query-use-syntax-composite, Composite database syntax>>
 * <<query-use-examples, Examples>>
-** <<query-use-examples-query-graph-by-name, Query remote graph by name>>
-** <<query-use-examples-query-graph-by-graph-id, Query remote graph by graph ID>>
+** <<query-use-examples-query-graph, Query a graph>>
+** <<query-use-examples-query-composite-database-constituent-graph, Query a composite database constituent graph>>
+** <<query-use-examples-query-composite-database-constituent-graph-dynamically, Query a composite database constituent graph dynamically>>
 
 [[query-use-introduction]]
 == Introduction
@@ -32,11 +34,10 @@ USE <graph>
 Where `<graph>` refers to the name or alias of a database in the DBMS.
 
 
-[role=fabric]
-[[query-use-syntax-fabric]]
-=== Fabric syntax
+[[query-use-syntax-composite]]
+=== Composite database syntax
 
-When running queries against a Fabric database, the `USE` clause can also appear as the first clause of:
+When running queries against a <<composite-databases, composite database>>, the `USE` clause can also appear as the first clause of:
 
 * Union parts:
 +
@@ -61,18 +62,17 @@ CALL {
 +
 In subqueries, a `USE` clause may appear as the second clause, if directly following an <<subquery-correlated-importing, importing `WITH` clause>>
 
-When executing queries against a Fabric database, in addition to referring to databases in the DBMS, the `<graph>` may also refer to a graph mounted through the Fabric configuration.
-For more information, see <<operations-manual#fabric, Operations Manual -> Fabric>>.
+When executing queries against a composite database, the `USE` clause must only refer to graphs that are part of the current composite database.
 
 
 [[query-use-examples]]
 == Examples
 
 
-[[query-use-examples-query-graph-by-name]]
-=== Query a graph by name
+[[query-use-examples-query-graph]]
+=== Query a graph
 
-In this example we assume that your DBMS contains a database named `myDatabase`:
+In this example it is assumed that the DBMS contains a database named `myDatabase`:
 
 .Query.
 [source, cypher]
@@ -82,32 +82,38 @@ MATCH (n) RETURN n
 ----
 
 
-[role=fabric]
-[[query-use-examples-query-fabric-graph-by-name]]
-=== Query a Fabric graph by name
+[[query-use-examples-query-composite-database-constituent-graph]]
+=== Query a composite database constituent graph
 
-In this example we assume that we have configured a Fabric database called `exampleFabricSetup`.
-The graph that we wish to query is named `exampleDatabaseName`:
+In this example it is assumed that the DBMS contains a composite database named `myComposite`, which includes an alias named `myConstituent`:
 
 .Query.
 [source, cypher]
 ----
-USE exampleFabricSetup.exampleDatabaseName
+USE myComposite.myConstituent
 MATCH (n) RETURN n
 ----
 
 
-[role=fabric]
-[[query-use-examples-query-graph-by-graph-id]]
-=== Query a Fabric graph by graph ID
+[[query-use-examples-query-composite-database-constituent-graph-dynamically]]
+=== Query a composite database constituent graph dynamically
 
-This examples continues with a Fabric database called `exampleFabricSetup`.
+The built-in function `graph.byName()` can be used in the `USE` clause to resolve a constituent graph from a string value containing the qualified name of a constituent.
 
-The graph we wish to query is configured with the graph id `0`, which is why we can refer to it using the built-in function `graph()` with the argument `0`:
+This examples uses the same setup as the previous one, that is, a composite database named `myComposite`, which includes an alias named `myConstituent`:
 
 .Query.
 [source, cypher]
 ----
-USE exampleFabricSetup.graph(0)
+USE graph.byName('myComposite.myConstituent')
+MATCH (n) RETURN n
+----
+
+The argument can be any expression that evaluates to the name of a constituent graph - for example a parameter:
+
+.Query.
+[source, cypher]
+----
+USE graph.byName($graphName)
 MATCH (n) RETURN n
 ----

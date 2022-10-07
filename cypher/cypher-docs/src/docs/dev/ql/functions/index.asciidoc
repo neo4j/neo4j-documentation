@@ -19,6 +19,7 @@ This section contains information on all functions in the Cypher query language.
 * Temporal functions - duration [<<header-query-functions-temporal-duration, Summary>>|<<query-functions-temporal-duration, Detail>>]
 * Spatial functions [<<header-query-functions-spatial, Summary>>|<<query-functions-spatial, Detail>>]
 * LOAD CSV functions [<<header-query-functions-load-csv, Summary>>|<<query-functions-load-csv, Detail>>]
+* Graph functions [<<header-query-functions-graph, Summary>>|<<query-functions-graph, Detail>>]
 * User-defined functions [<<header-query-functions-user-defined, Summary>>|<<query-functions-user-defined, Detail>>]
 
 Related information may be found in <<query-operators>>.
@@ -310,6 +311,19 @@ LOAD CSV functions can be used to get information about the file that is process
 1.1+| <<functions-linenumber,`linenumber()`>>  | `linenumber() :: (INTEGER?)` | Returns the line number that LOAD CSV is currently using.
 |===
 
+[[header-query-functions-graph]]
+**<<query-functions-graph, Graph functions>>**
+
+Graph functions provide information about the constituent graphs in composite databases.
+
+[options="header"]
+|===
+| Function | Signature | Description
+1.1+| <<functions-graph-names,`graph.names()`>>  | `graph.names() :: (LIST? OF STRING?)` | Returns a list containing the names of all graphs in the current composite database.
+1.1+| <<functions-graph-byname,`graph.byName()`>>  | `USE graph.byName(name :: STRING?)` | Resolves a constituent graph by name.
+|===
+
+
 
 [[header-query-functions-user-defined]]
 **<<query-functions-user-defined, User-defined functions>>**
@@ -375,3 +389,7 @@ include::user-defined-functions.adoc[leveloffset=+1]
 //Load csv functions
 
 include::query-functions-load-csv.adoc[leveloffset=+1]
+
+//Graph functions
+
+include::query-functions-graph.adoc[leveloffset=+1]
