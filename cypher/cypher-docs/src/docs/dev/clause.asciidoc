@@ -220,7 +220,7 @@ Typically used when modifying or importing large amounts of data.
 |Clause |Description
 
 m|<<query-use, USE>>
-|[fabric]#Determines which graph a query, or query part, is executed against.#
+|Determines which graph a query, or query part, is executed against.
 
 |===
 

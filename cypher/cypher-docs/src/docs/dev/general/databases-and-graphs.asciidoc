@@ -20,7 +20,8 @@ Normally there is only one graph within each database, and many <<cypher-queryin
 +
 Cypher queries executed in a session may declare which graph they apply to, or use a default, given by the session.
 +
-In Neo4j Fabric it is possible to refer to multiple graphs within the same query.
+<<composite-databases, Composite databases>> may contain multiple graphs, by means of aliases to other databases.
+Queries submitted to composite databases may refer to multiple graphs within the same query.
 
 Database::
 A database is a storage and retrieval mechanism for collecting data in a defined space on disk and in memory.
@@ -28,6 +29,8 @@ A database is a storage and retrieval mechanism for collecting data in a defined
 Most of the time Cypher queries are <<cypher-querying-updating-administering, reading or updating queries>>, which are run against a graph.
 There are also administrative commands that apply to a database, or to the entire DBMS.
 Administrative commands cannot be run in a session connected to a normal user database, but instead need to be run within a session connected to the _system_ database.
+Administrative commands execute on the _system_ database.
+If an administrative command is submitted to a user database, it is rerouted to the _system_ database.
 
 == The system database and the default database
 
@@ -47,7 +50,7 @@ Neo4j has two editions, a commercial Enterprise Edition with additional performa
 Cypher works almost identically between the two editions, and as such most of this manual will not differentiate between them.
 In the few cases where there is a difference in Cypher language support or behaviour between editions, these are highlighted as described below in <<cypher-limited-support>>.
 
-However it is worth listing up-front the key areas that are not supported in the open-source edition:
+However, it is worth listing up-front the key areas that are not supported in the open-source edition:
 
 [options="header"]
 |===
@@ -70,6 +73,4 @@ Some elements of Cypher do not work in all deployments of Neo4j, and we use spec
 | [deprecated]#`DROP INDEX ON :Label(property)`#
 | `enterprise-only`     | This feature only works in the enterprise edition of Neo4j
 | [enterprise-edition]#`CREATE DATABASE foo`#
-| `fabric`   | This feature only works in a fabric deployment of Neo4j.
-| [fabric]#`USE fabric.graph(0)`#
 |===
