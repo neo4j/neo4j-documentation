@@ -222,7 +222,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Create a text index specifying the index provider",
       text =
         s"""To create a text index with a specific index provider, the `OPTIONS` clause is used.
-          |The valid values for the index provider is `$textProvider` and `$oldTextProvider` (deprecated), the default value is $textProvider.""".stripMargin,
+          |The valid values for the index provider are `$textProvider` and `$oldTextProvider` (deprecated). The default provider is $textProvider.""".stripMargin,
       queryText = s"CREATE TEXT INDEX index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$textProvider'}",
       optionalResultExplanation = "There is no supported index configuration for text indexes.",
       assertions = _ => assertIndexWithNameExists("index_with_provider", "TYPE", List("prop1"))
