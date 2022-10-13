@@ -145,7 +145,6 @@ This table describes the available query options for the connect-components plan
 ====
 Using this option can significantly _reduce_ the planning time of the query.
 ====
-|
 
 | connectComponentsPlanner=idp
 | Use the cost based IDP search algorithm when combining sub-plans.
