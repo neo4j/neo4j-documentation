@@ -161,7 +161,7 @@ class DatabasesTest extends DocumentingTest with QueryStatisticsTestSupport {
       section("Creating composite databases", "administration-databases-create-composite-database", "enterprise-edition") {
         p(
           """Composite databases do not contain data, but they reference to other databases that can be queried together through their constituent aliases.
-            |For more information about composite databases, see <<operations-manual#composite-databases-introduction, Composite database introduction>>.""".stripMargin)
+            |For more information about composite databases, see <<operations-manual#composite-databases-introduction, Operations Manual -> Composite database introduction>>.""".stripMargin)
         p("Composite databases can be created using `CREATE COMPOSITE DATABASE`.")
         query("CREATE COMPOSITE DATABASE inventory", ResultAssertions(r => {
           assertStats(r, systemUpdates = 1)
