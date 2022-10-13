@@ -26,6 +26,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThat
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.neo4j.configuration.GraphDatabaseInternalSettings
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.QueryStatisticsTestSupport
 import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
@@ -34,6 +35,7 @@ import org.neo4j.cypher.internal.plandescription.Arguments.Planner
 import org.neo4j.cypher.internal.planner.spi.DPPlannerName
 import org.neo4j.cypher.internal.planner.spi.IDPPlannerName
 import org.neo4j.exceptions.CypherExecutionException
+import org.neo4j.graphdb.config.Setting
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_3D_MAX
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_3D_MIN
 import org.neo4j.graphdb.schema.IndexSettingImpl.SPATIAL_CARTESIAN_MAX
@@ -47,10 +49,20 @@ import org.neo4j.kernel.impl.index.schema.PointIndexProvider
 import org.neo4j.kernel.impl.index.schema.RangeIndexProvider
 import org.neo4j.kernel.impl.index.schema.TokenIndexProvider
 import org.neo4j.kernel.api.impl.schema.TextIndexProvider
+import org.neo4j.kernel.api.impl.schema.trigram.TrigramIndexProvider
 
+import java.util
 import scala.jdk.CollectionConverters.IterableHasAsScala
+import scala.jdk.CollectionConverters.MapHasAsJava
+import scala.jdk.CollectionConverters.MapHasAsScala
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
+
+  // can be removed once we use Neo4j 5.1 and not 5.0 snapshot
+  override def databaseConfig(): util.Map[Setting[_], Object] = {
+    val config = super.databaseConfig().asScala
+    (config ++ Map(GraphDatabaseInternalSettings.trigram_index -> java.lang.Boolean.TRUE)).asJava
+  }
 
   //need a couple of 'Person' and 'KNOWS' to make index operations more efficient than label and relType scans
   override val setupQueries: List[String] = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++
@@ -180,7 +192,8 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
   }
 
   @Test def create_text_index() {
-    val textProvider = TextIndexProvider.DESCRIPTOR.name()
+    val oldTextProvider = TextIndexProvider.DESCRIPTOR.name()
+    val textProvider = TrigramIndexProvider.DESCRIPTOR.name()
 
     testQuery(
       title = "Create a node text index",
@@ -209,7 +222,7 @@ class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSuppor
       title = "Create a text index specifying the index provider",
       text =
         s"""To create a text index with a specific index provider, the `OPTIONS` clause is used.
-          |Only one valid value exists for the index provider, `$textProvider`, which is the default value.""".stripMargin,
+          |The valid values for the index provider are `$textProvider` and `$oldTextProvider` (deprecated). The default provider is $textProvider.""".stripMargin,
       queryText = s"CREATE TEXT INDEX index_with_provider FOR ()-[r:TYPE]-() ON (r.prop1) OPTIONS {indexProvider: '$textProvider'}",
       optionalResultExplanation = "There is no supported index configuration for text indexes.",
       assertions = _ => assertIndexWithNameExists("index_with_provider", "TYPE", List("prop1"))

@@ -10,6 +10,50 @@ New features are added to the language continuously, and occasionally, some feat
 This section list all of the features that have been removed, deprecated, added, or extended in different Cypher versions.
 Replacement syntax for deprecated and removed features are also indicated.
 
+[[cypher-deprecations-additions-removals-5.1]]
+== Version 5.1
+
+=== Deprecated features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:deprecated[]
+[source, cypher, role="noheader"]
+----
+CREATE TEXT INDEX ... OPTIONS {indexProvider: `text-1.0`}
+----
+a|
+
+The text index provider `text-1.0` is deprecated and replaced by `text-2.0`.
+
+|===
+
+=== Updated features
+
+[cols="2", options="header"]
+|===
+| Feature
+| Details
+
+a|
+label:functionality[]
+label:updated[]
+[source, cypher, role="noheader"]
+----
+CREATE TEXT INDEX ... OPTIONS {indexProvider: `text-2.0`}
+----
+a|
+
+A new text index provider is available, `text-2.0`. 
+This is also the default provider if none is given.
+
+|===
+
 [[cypher-deprecations-additions-removals-5.0]]
 == Version 5.0
 
