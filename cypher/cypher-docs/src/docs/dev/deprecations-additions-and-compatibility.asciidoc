@@ -1567,6 +1567,17 @@ SHOW ALIAS
 ----
 a|
 New privilege that allows a user to show aliases. Only supported since version 4.4.8.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+MATCH (n:N {prop1: 42} WHERE n.prop2 > 42)
+----
+a|
+New syntax that enables inlining of `WHERE` clauses inside node patterns.
+
 |===
 
 
