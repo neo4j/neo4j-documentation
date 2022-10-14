@@ -1073,6 +1073,36 @@ SHOW SERVERS
 a|
 New privileges that allow a user to create, modify, reallocate, deallocate, drop and list servers.
 
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+MATCH (n: A&(B\|C)&!D)
+----
+a|
+New concise syntax for expressing predicates for which labels a node may have, referred to as label expression.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+MATCH ()-[r:(!A&!B)]->()
+----
+a|
+New concise syntax for expressing predicates for which relationship types a relationship may have, referred to as relationship type expression.
+
+a|
+label:syntax[]
+label:new[]
+[source, cypher, role="noheader"]
+----
+MATCH ()-[r:R {prop1: 42} WHERE r.prop2 > 42]->()
+----
+a|
+New syntax that enables inlining of `WHERE` clauses inside relationship patterns.
+
 |===
 
 [[cypher-deprecations-additions-removals-4.4]]
