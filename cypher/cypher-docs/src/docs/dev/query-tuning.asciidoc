@@ -69,13 +69,13 @@ Depending on the Neo4j edition, there are two different runtimes available:
 
 Slotted::
 In the _slotted_ runtime, the operators in the execution plan are chained together in a tree, where each non-leaf operator feeds from one or two child operators.
-The tree comprises nested iterators, which stream records in a pipelined manner starting from the top iterator, which pulls from the next iterator, and so on.
+The tree comprises nested iterators, which stream records from the top iterator, which pulls from the next iterator, and so on.
 Each variable in the query gets a dedicated "slot" or offset, which the runtime uses for accessing (e.g., `slotRow[0]`). +
 The slotted runtime covers all operators and queries. +
 In Neo4j 5, it is the default for Community Edition.
 
 [enterprise-edition]#Pipelined#::
-In the _pipelined_ runtime, the operators are grouped in the execution plan to generate new combinations and orders of execution, which are optimized for performance and memory usage. +
+In the _pipelined_ runtime, the operators are grouped into pipelines in the execution plan to generate new combinations and orders of execution, which are optimized for performance and memory usage. +
 The pipelined runtime covers most operators and queries.
 If the `pipelined` runtime does not support a query, the planner falls back to the `slotted` runtime. +
 It is the default for Enterprise Edition.
