@@ -70,6 +70,20 @@ In summary, `TEXT` indexes support the following predicates:
 |substring search| `CONTAINS`
 |===
 
+In some cases it is not possible for the system to determine an expression to be of type string.
+
+[source, cypher, role="noheader"]
+----
+MATCH (n:Label) WHERE n.prop = $param
+----
+
+In such cases the author of the query can modify the query to provide this information. Depending on how values which are not of type string should be treated, there are two options:
+
+* If rows in which the expression is not of type string should be discarded, then adding `WHERE <expression> STARTS WITH ''` is the right option:
+`MATCH (n:Label) WHERE $param STARTS WITH '' AND n.prop = $param`
+* If expressions which are not of type string should be converted to string, then wrapping these in `toString(<expression>)` is the right choice:
+`MATCH (n:Label) WHERE n.prop = toString($param)`
+
 == Index preference
 
 When multiple indexes are available and able to solve a predicate, there is an order defined that decides which index to use.
