@@ -46,7 +46,6 @@ class PredicateFunctionsTest extends DocumentingTest {
         #
         #* <<functions-all,all()>>
         #* <<functions-any,any()>>
-        #* <<functions-exists,exists()>>
         #* <<functions-isempty,isEmpty()>>
         #* <<functions-none,none()>>
         #* <<functions-single,single()>>""".stripMargin('#'))
@@ -97,34 +96,6 @@ class PredicateFunctionsTest extends DocumentingTest {
         resultTable()
       }
     }
-    section("exists()", "functions-exists") {
-      p("""The function `exists()` returns `true` if a match for the given pattern exists in the graph.
-          #`null` is returned if the input argument is `null`.""".stripMargin('#'))
-      function("exists(pattern)",
-        "A Boolean.",
-        ("pattern", "A pattern"))
-      query("""MATCH (n)
-              #WHERE n.name IS NOT NULL
-              #RETURN
-              #  n.name AS name,
-              #  exists((n)-[:MARRIED]->()) AS is_married""".stripMargin('#'),
-      ResultAssertions(r => {
-          r.toList should equal(List(
-            Map("name" -> "Alice", "is_married" -> false),
-            Map("name" -> "Bob", "is_married" -> true),
-            Map("name" -> "Charlie", "is_married" -> false),
-            Map("name" -> "Daniel", "is_married" -> false),
-            Map("name" -> "Eskil", "is_married" -> false)))
-        })) {
-        p("The names of all nodes with the `name` property are returned, along with a boolean (`true` or `false`) indicating if they are married.")
-        resultTable()
-      }
-      note {
-        p(
-          """Note that the **function** `exists()` looks very similar to the **expression** `EXISTS {...}`, but they are not the same and should not be confused.
-            #See <<existential-subqueries, Using EXISTS subqueries>> for more information.""".stripMargin('#'))
-      }
-    }
     section("isEmpty()", "functions-isempty") {
       p("The function `isEmpty()` returns `true` if the given list or map contains no elements or if the given string contains no characters.")
       function("isEmpty(list)",
@@ -136,7 +107,7 @@ class PredicateFunctionsTest extends DocumentingTest {
       /*Result:
       ({name: "Eskil", eyes: "blue", age: 41, liked_colors: ["pink", "yellow", "black"]})
       ({alias: "Frank", eyes: "", age: 61, liked_colors: ["blue", "green"]})
-      */ 
+      */
       ResultAssertions(r => {
           r.toList.length should equal(2)
         })) {

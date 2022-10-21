@@ -173,7 +173,6 @@ This section comprises a glossary of all the keywords -- grouped by category and
 | <<functions-duration-inseconds, duration.inSeconds()>> | Temporal | Returns a _Duration_ equal to the difference in seconds and fractions of seconds, or minutes or hours, between two given instants.
 |<<functions-e, e()>>                           | Logarithmic       | Returns the base of the natural logarithm, `e`.
 |<<functions-endnode, endNode()>>                | Scalar            | Returns the end node of a relationship.
-|<<functions-exists, exists()>>                  | Predicate         | Returns true if a match for the pattern exists in the graph.
 |<<functions-exp, exp()>>                       | Logarithmic       | Returns `e^n`, where `e` is the base of the natural logarithm, and `n` is the value of the argument expression.
 |<<functions-floor, floor()>>                   | Numeric           | Returns the largest floating point number that is less than or equal to a number and equal to a mathematical integer.
 |<<functions-haversin, haversin()>>             | Trigonometric     | Returns half the versine of a number.
