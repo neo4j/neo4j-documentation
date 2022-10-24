@@ -67,6 +67,19 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>org.scalatestplus</groupId>
+            <artifactId>junit-4-12_${scala.binary.version}</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>scala-library</artifactId>
+                    <groupId>org.scala-lang</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
         <!-- neo4j-documentation -->
         <dependency>
             <groupId>org.neo4j.doc</groupId>

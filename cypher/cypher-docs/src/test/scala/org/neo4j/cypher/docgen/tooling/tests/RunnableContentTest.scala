@@ -22,12 +22,12 @@ package org.neo4j.cypher.docgen.tooling.tests
 import org.neo4j.cypher.GraphIcing
 import org.neo4j.cypher.docgen.tooling._
 import org.scalatest.Assertions
-import org.scalatest.FunSuiteLike
-import org.scalatest.Matchers
 import org.scalatest.Suite
+import org.scalatest.funsuite.AnyFunSuiteLike
+import org.scalatest.matchers.should.Matchers
 
 class RunnableContentTest extends Suite
-                          with FunSuiteLike
+                          with AnyFunSuiteLike
                           with Assertions
                           with Matchers
                           with GraphIcing  {

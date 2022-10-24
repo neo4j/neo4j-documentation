@@ -58,12 +58,6 @@ import scala.jdk.CollectionConverters.MapHasAsScala
 
 class SchemaIndexTest extends DocumentingTestBase with QueryStatisticsTestSupport with GraphIcing {
 
-  // can be removed once we use Neo4j 5.1 and not 5.0 snapshot
-  override def databaseConfig(): util.Map[Setting[_], Object] = {
-    val config = super.databaseConfig().asScala
-    (config ++ Map(GraphDatabaseInternalSettings.trigram_index -> java.lang.Boolean.TRUE)).asJava
-  }
-
   //need a couple of 'Person' and 'KNOWS' to make index operations more efficient than label and relType scans
   override val setupQueries: List[String] = (1 to 20 map (_ => """CREATE (:Person)-[:KNOWS]->(:Person)""")).toList ++
     (1 to 20 map (_ => """CREATE ()-[:REL]->()""")).toList ++

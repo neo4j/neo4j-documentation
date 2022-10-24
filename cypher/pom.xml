@@ -85,7 +85,7 @@
             <dependency>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest_${scala.binary.version}</artifactId>
-                <version>3.0.9</version>
+                <version>3.2.13</version>
                 <scope>test</scope>
                 <exclusions>
                     <exclusion>
@@ -98,6 +98,20 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
+            <dependency>
+                <groupId>org.scalatestplus</groupId>
+                <artifactId>junit-4-12_${scala.binary.version}</artifactId>
+                <version>3.2.2.0</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>scala-library</artifactId>
+                        <groupId>org.scala-lang</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <dependency>
                 <groupId>org.scalautils</groupId>
                 <artifactId>scalautils_${scala.binary.version}</artifactId>

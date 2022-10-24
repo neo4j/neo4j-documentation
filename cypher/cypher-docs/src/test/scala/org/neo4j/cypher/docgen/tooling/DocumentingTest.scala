@@ -31,7 +31,8 @@ import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.kernel.impl.query.Neo4jTransactionalContextFactory
 import org.neo4j.values.virtual.VirtualValues.EMPTY_MAP
-import org.scalatest.{Assertions, Matchers}
+import org.scalatest.Assertions
+import org.scalatest.matchers.should.Matchers
 
 /**
  * Base class for documentation classes

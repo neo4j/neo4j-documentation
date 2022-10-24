@@ -26,14 +26,14 @@ import org.neo4j.cypher.docgen.tooling.DocsExecutionResult
 import org.neo4j.kernel.GraphDatabaseQueryService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.scalatest.Assertions
-import org.scalatest.FunSuiteLike
-import org.scalatest.Matchers
 import org.scalatest.Suite
 import org.scalatest.exceptions.TestFailedException
+import org.scalatest.funsuite.AnyFunSuiteLike
 import org.scalatest.matchers.{MatchResult, Matcher}
+import org.scalatest.matchers.should.Matchers
 
 class QueryRunnerTest extends Suite
-                      with FunSuiteLike
+                      with AnyFunSuiteLike
                       with Assertions
                       with Matchers
                       with GraphIcing  {

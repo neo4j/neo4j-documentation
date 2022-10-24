@@ -24,12 +24,12 @@ import org.neo4j.cypher.docgen.tooling.Admonitions._
 import org.neo4j.cypher.docgen.tooling.DocBuilder.QueryTextReplacement
 import org.neo4j.cypher.docgen.tooling._
 import org.scalatest.Assertions
-import org.scalatest.FunSuiteLike
-import org.scalatest.Matchers
+import org.scalatest.funsuite.AnyFunSuiteLike
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.Suite
 
 class DocumentAsciiDocTest extends Suite
-                           with FunSuiteLike
+                           with AnyFunSuiteLike
                            with Assertions
                            with Matchers
                            with GraphIcing  {
@@ -356,7 +356,7 @@ class DocumentAsciiDocTest extends Suite
 }
 
 class DocumentQueryTest extends Suite
-                        with FunSuiteLike
+                        with AnyFunSuiteLike
                         with Assertions
                         with Matchers
                         with GraphIcing  {

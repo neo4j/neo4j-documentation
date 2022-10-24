@@ -27,11 +27,15 @@ import org.neo4j.cypher.{ExecutionEngineHelper, GraphIcing}
 import org.neo4j.dbms.api.DatabaseManagementService
 import org.neo4j.kernel.impl.coreapi.InternalTransaction
 import org.neo4j.values.virtual.VirtualValues
-import org.scalatest._
 import org.neo4j.configuration.GraphDatabaseSettings.DEFAULT_DATABASE_NAME
+import org.scalatest.Assertions
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.Suite
+import org.scalatest.funsuite.AnyFunSuiteLike
+import org.scalatest.matchers.should.Matchers
 
 class QueryResultContentBuilderTest extends Suite
-                                    with FunSuiteLike
+                                    with AnyFunSuiteLike
                                     with Assertions
                                     with Matchers
                                     with GraphIcing

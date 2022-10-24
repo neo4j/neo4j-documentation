@@ -20,7 +20,7 @@
 package org.neo4j.cypher.docgen
 
 import org.neo4j.cypher.docgen.tooling.ResultAssertions
-import org.scalatest.Matchers._
+import org.scalatest.matchers.should.Matchers._
 
 trait PrivilegesTestBase {
   def assertPrivilegeShown(expected: Seq[Map[String, AnyRef]]): ResultAssertions = ResultAssertions(p => {
